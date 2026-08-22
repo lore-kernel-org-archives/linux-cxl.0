@@ -1,56 +1,95 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B7438AC78
-	for <linux-cxl@vger.kernel.org>; Sat, 22 Aug 2026 08:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCF3386576;
+	Sat, 22 Aug 2026 08:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787385916; cv=none; b=fgwscB7EkVJvxpA9gBtJ9GJpyuNcv/6DKWWGB9/6ggXgQM2rh8mIWnUlch4X17qR32XNKAT5iGbarbB9eGtJFYqHrhg1RcfHQhpHRAcvwiB17VBEtS0QROL51QFoSmBZDUhXZXM0QnavjYT9pxj5MZbrA3ttPXPFxpbFFx6qyrw=
+	t=1787387026; cv=none; b=mhQRUZMqc0ViFMC14OWmJAXUXC8lqH9ez93BXnmC9pdBTG6BBn7LKootv5UjtsveZJcyniC2p7sQVVAz8ouZP8st1Tkr3GMaNKd8to6itarjU/EO666Sg0KLZseb3cHCnBNRmgqw674Ghw42N6gKj3Vl0qaOlb/9k3Hr0MKAB2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787385916; c=relaxed/simple;
-	bh=ZQTpR5m2HYemScE6+fxCLUrN5DDI2sT+aIhkpWEB6dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iW2/h/6NGJz/p3I0H1CNEnuCcj04wUnhdD6RP2omrIcs/iAOXtabnC+veqtLu3Uz+85pEFLJB8NVQHgjOg0yaap42SPPIwumruJFGQCJSBeOACy20ZOrxi169cQTRvZJ7cKvqFp2kokGFJzt4WdRHrTLrOIMAHOGyWD/BEQ7Hsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgbTstjU; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1787387026; c=relaxed/simple;
+	bh=mKX771uc3lutMQpZFJQnhdt7GyWKMRqSH02u/uA/bLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QgbwXoQNVzoTliKS+JPZE1r6rytneytzW4h4IMdeG1YwpX5BRpbNIR7o7y8WzFzLeIoRR0xygT6E/LURrYETnnfdqpYMya0j4YyaVRoGP22iCVTVGPnTTO2uk8+B5TOn0W79kDY4iEZOOf6BSnNXYKrYEgVdQwkqwKtu/ig7SkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzSa0KwD; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgbTstjU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzSa0KwD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787385915; x=1818921915;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZQTpR5m2HYemScE6+fxCLUrN5DDI2sT+aIhkpWEB6dM=;
-  b=LgbTstjUX0C9PwrVIhO4ThuDDCpmCtPfbra9i8XmmA3yoaJalp4RJKFn
-   BmvLkvXIHsofAtNe80qUZA+GFUQQk/u12Zp3hxz/QxBjIznlTCSDqt6f6
-   nGs1FabgW1glwDDVqipubQVgskOK9b8jgwD+ZXUCOulaNBPnpGiXYjtnV
-   Qwa0q+sMCkF73sJGsV7mzlbPO3A+bKqbdbH5mwIDK+R/KKzaSwUcEXwzp
-   nTc0sq4iANwCYbpLmfqrk4g40gzcNzTg4aN7z1NUzGDFH/LTp56xzYhJY
-   CfDDtRBgFadicea6sDqNfDEtf/T+oy3Y3ftPvzUZKU7PGv3uVJiqM5iex
-   A==;
-X-CSE-ConnectionGUID: FAnXS+BSTZC3bTNF+anGUA==
-X-CSE-MsgGUID: HLv3u/7wQ/eWFNZJSIWD5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="91796016"
+  t=1787387022; x=1818923022;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mKX771uc3lutMQpZFJQnhdt7GyWKMRqSH02u/uA/bLk=;
+  b=bzSa0KwDi1DBgMaq4thWtU5swOsHWuXZbFAC+TaVl3PKByxIcl/6UoZZ
+   Ik7jl1HUZdcYJwqEl1+PSjgDIncqjyyy+lf5V8PWcDLJOdEHeUGUbhuUz
+   Foi9Ex5sLZTII0bjnNTpOhGbxGndQNX8pskuWIKLcfUFNbZtjWu5xWQoO
+   FcjRLeMaBJGImmh3w5czrFE9aTorUnyVbM8x6qOHCVln2D1QtIvJ8zbPC
+   69bOhTi0UtsIT3dAfIeCcd7rWrRBpvZqYxCQD9P3+snx8LNusY4RdFZ6j
+   2qAsdhmY5xkvMdVNSaxRcpOOH6DN8O1SBSWR/LzpgH9WzibxYnaAzXLs8
+   g==;
+X-CSE-ConnectionGUID: p6fEkXQ1RrW54SOZ3w9TqA==
+X-CSE-MsgGUID: T8aGbqAJTBCsquNHPr1dvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="91796496"
 X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="91796016"
+   d="scan'208";a="91796496"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:05:15 -0700
-X-CSE-ConnectionGUID: 0ydaDvUJS3WXKU+NoTnpBw==
-X-CSE-MsgGUID: Y8FloF0nTMKA/9UkbFQ9Fw==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:23:37 -0700
+X-CSE-ConnectionGUID: /YgIAr4mQsGKCSsoRiV6zA==
+X-CSE-MsgGUID: VVsAZtviQCa29IMg3EZXjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="265239305"
+   d="scan'208";a="265242919"
 Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:05:13 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:23:30 -0700
 From: Junjie Cao <junjie.cao@intel.com>
-To: qemu-devel@nongnu.org
-Cc: Jonathan Cameron <jic23@kernel.org>,
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <djbw@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Robert Richter <rrichter@amd.com>,
+	linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	qemu-stable@nongnu.org
-Subject: [PATCH] hw/cxl: Fix heap buffer overflow in Set Feature cleanup path
-Date: Sat, 22 Aug 2026 16:05:08 +0800
-Message-ID: <20260822080508.300921-1-junjie.cao@intel.com>
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Alejandro Lucero <alucerop@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Breno Leitao <leitao@debian.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Gregory Price <gourry@gourry.net>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC] cxl: Device protocol AER injection
+Date: Sat, 22 Aug 2026 16:23:25 +0800
+Message-ID: <20260822082325.301100-1-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260717225700.3543801-1-terry.bowman@amd.com>
+References: <20260717225700.3543801-1-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,72 +98,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cmd_features_set_feature() uses set_feat_info->data_size as the memset
-length when zeroing write-attribute buffers on Finish/Abort.  data_size
-accumulates bytes_to_copy across transfer parts but is only reset on
-INITIATE.  Since QEMU never returns Feature Transfer Out of Order,
-repeated transfers at the same offset grow data_size past sizeof(struct),
-and the final memset overflows the target buffer.
+Hi Terry,
 
-b71a179148 bounded the per-transfer memcpy against sizeof, but the
-cleanup memset still runs on the accumulated data_size, so the overflow
-survives that fix.
+On Fri, 17 Jul 2026 17:57:00 -0500, Terry Bowman wrote:
+> This patch is intended to provide a method of testing the recently
+> submitted cxl series "cxl: Enable CXL PCIe Port Protocol Error
+> handling and logging"
 
-Pass sizeof() of the target struct to memset instead of data_size.
+Ran this on 7.2-rc3 with v18, under QEMU with a switch topology so all
+four port classes are present.  v19 wasn't out yet when I ran it; the
+findings below are in the RFC's own code and don't move with the delta.
+It works -- one CE per class with a different RAS status bit each time,
+attribution correct in all four:
 
-Fixes: d88f66741410 ("hw/cxl/cxl-mailbox-utils: Add device patrol scrub control feature")
-Fixes: 2d41ce38fb9a ("hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS control feature")
-Fixes: 5e5a86bab830 ("hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)")
-Fixes: da5cafdc4ddd ("hw/cxl: Add emulation for memory sparing control feature")
-Cc: qemu-stable@nongnu.org
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
----
- hw/cxl/cxl-mailbox-utils.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+  RP  ras=0x1  port=port1 dport=0000:0c:00.0  'Cache Data ECC Error'
+  USP ras=0x2  port=port2 dport=              'Memory Data ECC Error'
+  DSP ras=0x4  port=port2 dport=0000:0e:00.0  'CRC Threshold Hit'
+  EP  ras=0x8  memdev=mem1 port=endpoint4     'Retry Threshold'
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index ec18338b42..f81b7b3303 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1947,22 +1947,28 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
-         data_transfer_flag ==  CXL_SET_FEATURE_FLAG_ABORT_DATA_TRANSFER) {
-         memset(&set_feat_info->uuid, 0, sizeof(QemuUUID));
-         if (qemu_uuid_is_equal(&hdr->uuid, &patrol_scrub_uuid)) {
--            memset(&ct3d->patrol_scrub_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->patrol_scrub_wr_attrs, 0,
-+                   sizeof(ct3d->patrol_scrub_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &ecs_uuid)) {
--            memset(&ct3d->ecs_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->ecs_wr_attrs, 0, sizeof(ct3d->ecs_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &soft_ppr_uuid)) {
--            memset(&ct3d->soft_ppr_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->soft_ppr_wr_attrs, 0,
-+                   sizeof(ct3d->soft_ppr_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &hard_ppr_uuid)) {
--            memset(&ct3d->hard_ppr_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->hard_ppr_wr_attrs, 0,
-+                   sizeof(ct3d->hard_ppr_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &cacheline_sparing_uuid)) {
-             memset(&ct3d->cacheline_sparing_wr_attrs, 0,
--                   set_feat_info->data_size);
-+                   sizeof(ct3d->cacheline_sparing_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &row_sparing_uuid)) {
--            memset(&ct3d->row_sparing_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->row_sparing_wr_attrs, 0,
-+                   sizeof(ct3d->row_sparing_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &bank_sparing_uuid)) {
--            memset(&ct3d->bank_sparing_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->bank_sparing_wr_attrs, 0,
-+                   sizeof(ct3d->bank_sparing_wr_attrs));
-         } else if (qemu_uuid_is_equal(&hdr->uuid, &rank_sparing_uuid)) {
--            memset(&ct3d->rank_sparing_wr_attrs, 0, set_feat_info->data_size);
-+            memset(&ct3d->rank_sparing_wr_attrs, 0,
-+                   sizeof(ct3d->rank_sparing_wr_attrs));
-         }
-         set_feat_info->data_transfer_flag = 0;
-         set_feat_info->data_saved_across_reset = false;
+A UCE panics via cxl_pci_error_detected() as the series intends, and six
+malformed inputs are rejected.  Only VH here, so I can't say anything
+about whether the RCH branch is right.
 
-base-commit: af06b5df2610fe5de6c02d17c17bced9e9f0d47d
--- 
-2.43.0
+Tested-by: Junjie Cao <junjie.cao@intel.com>
 
+> +	depends on PCIEAER_INJECT
+
+Beyond Jonathan's question about asking at all -- a bool depending on a
+tristate means kconfig will give you PCIEAER_INJECT=m with CXL_BUS=y
+and this =y.  olddefconfig produces that from a defconfig and it
+doesn't link:
+
+  ld: ras.c: undefined reference to `aer_inject'
+
+Deriving it from the combination rather than asking would take the
+broken config with the question.
+
+> +	cxl_aer_einj.aer_registers[aer_offset] = aer_status;
+
+Only reference to aer_registers[] in the tree.  aer_inject() builds
+its own AER config space and the RCH path skips
+cxl_rch_get_aer_info(), so nothing reads it.  Is it still needed, or
+can it go with the core/ras_einj.c move?
+
+> +	cxl_aer_einj.dev = NULL;
+
+Clears the pointer but not the reference.  Every non-RCH arm takes a
+pci_dev_get() below; to_einj_ras_base() on a match and
+cxl_ras_exit() drop it.  Both need .dev to still point there.  So an
+arm not consumed before the next write is orphaned.
+
+Thirty back-to-back injections gave 26 trace events, with aer_inject
+run 30 times and the kfifo-add-failed, port-not-found, port-unbound,
+dport-not-found and RAS-not-mapped counts all zero (kfifo is 128 deep,
+so no overflow).  Four arms were never disarmed.  I can't tell whether
+the AER core folded them into one pass or the next write replaced .dev
+first, and either way the reference goes.  I couldn't make it fire on
+demand -- unbinding cxl_port fails the arm-time lookup instead -- so
+it's a race, but it's the one a test loop hits.
+
+Behind it the handshake has no single owner: the mutex is writer-only,
+while to_einj_ras_base() mutates the same fields and drops a reference
+without it.  Both consumers are live: the CE runs consume arms from
+the kfifo work, and the UCE backtrace has cxl_pci_error_detected()
+doing it from the AER IRQ thread.  A disarm helper
+owning the reference would cover this and the asymmetry Jonathan
+raised about putting a reference it didn't get.
+
+> +	cxl_aer_einj.is_rch = (nargs == 5 && strcmp(topology, "RCH") == 0);
+
+RCH on a VH device is accepted:
+
+  # echo "0000:0c:00.0 CE 0 0x80 RCH" > .../aer_einj_inject   -> 0
+
+aer_inject() fires and AER logs it, but no CXL trace event appears --
+the RCH branch can't match a VH dport.  Reproduces every time.  So a
+typo gets you a real AER error with the CXL path silently skipped,
+which reads as "the handler didn't fire".  is_cxl_restricted(pdev),
+already used further down the file, would make it -EINVAL.
+
+> Also worth discussing is the commandline takes multiple parameters for
+> a single sysfs file
+
+One file also suits the state handling above better.  Several files
+spread one request over several writes with no commit point.
+
+> How do we incorporate this with the existing CXL EINJ functionality
+
+core/ras_einj.c sounds right, and the Kconfig above is another reason
+for both in one place.  Worth a line in the ABI doc that ACPI EINJ is
+a real injection but Root Port only while this covers every class with
+software registers -- that's what decides which one a test wants.
+
+Last thing, off this patch: with the registers a kernel-side array this
+can't exercise the MMIO readback, the offsets against a real capability
+block, or the header log.  QEMU has RAS on root and switch ports but
+injects only on endpoints, so it can't cover the classes today either.
+I'm looking at adding port-level injection there as a second path
+through the real reads.
+
+Many thanks,
+Junjie
