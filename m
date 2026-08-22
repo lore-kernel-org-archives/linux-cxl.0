@@ -1,118 +1,130 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B115137750
-	for <linux-cxl@vger.kernel.org>; Sat, 22 Aug 2026 04:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B7438AC78
+	for <linux-cxl@vger.kernel.org>; Sat, 22 Aug 2026 08:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787372344; cv=none; b=Se3iraAcqGwCy8e9kdDyNe5rHOfM8TAPXNSW2g1GI8RrxCyIZQbg1FskXRMDOh+7NdF6CTwro+gUeD560Y/ClvlZYFBv0f528AEw94ZuHGQ27a5rGJLVIlXIGB6AEkMf+X8xargDwAHTX128AWMRoQazymxRL32w/8OYONi0GlE=
+	t=1787385916; cv=none; b=fgwscB7EkVJvxpA9gBtJ9GJpyuNcv/6DKWWGB9/6ggXgQM2rh8mIWnUlch4X17qR32XNKAT5iGbarbB9eGtJFYqHrhg1RcfHQhpHRAcvwiB17VBEtS0QROL51QFoSmBZDUhXZXM0QnavjYT9pxj5MZbrA3ttPXPFxpbFFx6qyrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787372344; c=relaxed/simple;
-	bh=/Q12GR875iD93KhzcjUTpLysJ1kI3/4TfP0uOO6zmB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=imK3h4t3K7uydUSJ3F2jOLiaexWAK3npjk9u+Co/X8ZTHlVYNdcll2Y8fTxMXRz1PgEoyJunhHcktAK6lSeIVZ7H2SnJfx2Af7t2UD6M8RlJRfhc0zlbNt5SposOvNH3eUR/WlTqndKChjiGFa3mtzMUZHNiL8qZ3g9ILL2/g54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=THhyu0up; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1787385916; c=relaxed/simple;
+	bh=ZQTpR5m2HYemScE6+fxCLUrN5DDI2sT+aIhkpWEB6dM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iW2/h/6NGJz/p3I0H1CNEnuCcj04wUnhdD6RP2omrIcs/iAOXtabnC+veqtLu3Uz+85pEFLJB8NVQHgjOg0yaap42SPPIwumruJFGQCJSBeOACy20ZOrxi169cQTRvZJ7cKvqFp2kokGFJzt4WdRHrTLrOIMAHOGyWD/BEQ7Hsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgbTstjU; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="THhyu0up"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-52b6543169fso11693461cf.2
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 21:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1787372342; x=1787977142; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=bV2EmVqYabp31e4KZo4BjvE2tm+i0eWvAIeJunRO/yE=;
-        b=THhyu0up9pDDkhcf62wTIZYViQLq/cJwTfNR2ZMcY7vgtfRIu0XTTrTnctZ2Rkyl5z
-         OTCGrPlYMvBVlgd27wCbOfsiQF2xOwHJkiz16KTcjLKpNqOLH0jPsXu9zbsy3X2syX9B
-         oz5WCbMoLt5+smI92QbGiUGV1+hyE3IkFB+K+F+52HooS2VFJ0HAuQj/ah5rvSgnBkMQ
-         ZhT+0CYXJ1pOXUYziIujTNFjqboyrtBIdB4LV+r8k/obUy6PcrBYBj3UH2sPm8ucfkoM
-         2zRV8CVUPYQvHB086yPizUecls8pHdti4Zss+CM7XoF42UJXDT6AXrhCRQIDQPfNVYQG
-         V9Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787372342; x=1787977142;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bV2EmVqYabp31e4KZo4BjvE2tm+i0eWvAIeJunRO/yE=;
-        b=ilCyyOKYnwA01aNQPIIVZdPGlMbdjNIPBgRn/x5HpR4xASGWcQId/sUCk7vxG8faE8
-         k6fFoxfG51HzGbfKauGD4eNFxEL1HaP4ScvWfwmtkqkRtJaB2tnpzBPlAspZUxnIAJ39
-         5enGWd52/Ojvdyl6Y398D7K0lwpO38jl2mHl2nvpSCNOize03WVAr46rLKFqCpOEQKMb
-         CbUmn/RIHgSnOer343TidLESRN4E1VvMj0cwGni1Yn9iiE5gTBeZx7B99GplYtNlGWeG
-         Fha5T5SLD/Q9XbEQEAeJVPcz0Pp2f6bjRQMcQaYBGpxSdfIF1EmVFY67iDcvrU5OT25o
-         RaiA==
-X-Forwarded-Encrypted: i=1; AHgh+RosBDcU5fowm8g5uCHtMJKUa4KvHnGQbsQNKT8VdFIqNCkNwEpIcrbSBnxNnyDyMT65E6+oxmhvBi8=@vger.kernel.org
-X-Gm-Message-State: AFuF++kWeOMmG5XH0dvH/OlqsaayZH06Qetm1VsyRu1+Me1FfKDNhlth
-	emsIQdVUpbIvlUTSQ7k69BXJZqn12Z7DolQBYENPRCZTmVql4y0WDVXRAoUuASI+tng=
-X-Gm-Gg: AR+sD11lE6RWsuFVT0f5XKkwLq+D4BwCHOE8iu4PhuBb4B/iL3xnPUX0ZiLG/FeDXIC
-	HHwS4WH4ChFrZRc2eGhPFZRP/RhtotbhDTfBDODxv/naYxuWFVDrPNqGCl8S1D21OgIlWzHniUf
-	c09wUDD7XzJu7JXx05IEUPnW2k1I3r1CxK8fMH1ifw5FScToz+dpwbpkDJgIvktJjfh38jfhczD
-	/TxA8yUjA8sK9pPtv+ZHGpoaSuOuGkv8FpfueiBomOQKHfEEwkrTtPrsK4Sd0czFTuwLbR9bkmr
-	MJnHI1VDtn2FQsxyCXuh+ldsxL94+vQhrdKYZwx8C7AflmIiwJ2KdoSydNwIOzIpm41HOVGpNzH
-	X1Pk6UTE1MBpuZKggoXxJN5uKZJHNZMGiIccvQg3xqU4NVxf7AWLZWUXJhPM+vihwjFAGqHA/18
-	p8MvLNCMtKGezEtbWplUeaNVmsZGUV42Pz1/xEG6n73AJpDf579+g1KCcf6k0U1zux57FmrU0cS
-	OrnhoKDz1/Y8DlGQXkm5WfrBj9jkzgPRBnOIWIMzKdG
-X-Received: by 2002:a05:622a:17c5:b0:52d:a247:bf5f with SMTP id d75a77b69052e-52df5a54f6dmr101297051cf.33.1787372341767;
-        Fri, 21 Aug 2026 21:19:01 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c939314d2sm4857616d6.25.2026.08.21.21.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 21:19:01 -0700 (PDT)
-Date: Sat, 22 Aug 2026 00:18:58 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Groves <john@jagalactic.com>, John Groves <John@groves.net>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Dan Williams <djbw@kernel.org>, 
-	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ira Weiny <iweiny@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Haren Myneni <haren@linux.ibm.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>, 
-	Jiri Slaby <jirislaby@kernel.org>, Ethan Nelson-Moore <enelsonmoore@gmail.com>, 
-	Gabriel Whigham <gabewhigham@gmail.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Subject: Re: [PATCH v13 10/12] famfs: Add runtime operation-permission (opts)
- framework
-Message-ID: <aokdSo9li0RtEt35@gourry-fedora-PF4VCD3F>
-References: <0100019fed5850ec-2bdfb17a-3086-44ea-8fdd-777d3ce12a33-000000@email.amazonses.com>
- <20260810202539.96378-1-john@jagalactic.com>
- <0100019fed5a5210-a09f1bdb-c705-44fc-8108-a7e7995a7af0-000000@email.amazonses.com>
- <20260822000728.GB6047@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgbTstjU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787385915; x=1818921915;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZQTpR5m2HYemScE6+fxCLUrN5DDI2sT+aIhkpWEB6dM=;
+  b=LgbTstjUX0C9PwrVIhO4ThuDDCpmCtPfbra9i8XmmA3yoaJalp4RJKFn
+   BmvLkvXIHsofAtNe80qUZA+GFUQQk/u12Zp3hxz/QxBjIznlTCSDqt6f6
+   nGs1FabgW1glwDDVqipubQVgskOK9b8jgwD+ZXUCOulaNBPnpGiXYjtnV
+   Qwa0q+sMCkF73sJGsV7mzlbPO3A+bKqbdbH5mwIDK+R/KKzaSwUcEXwzp
+   nTc0sq4iANwCYbpLmfqrk4g40gzcNzTg4aN7z1NUzGDFH/LTp56xzYhJY
+   CfDDtRBgFadicea6sDqNfDEtf/T+oy3Y3ftPvzUZKU7PGv3uVJiqM5iex
+   A==;
+X-CSE-ConnectionGUID: FAnXS+BSTZC3bTNF+anGUA==
+X-CSE-MsgGUID: HLv3u/7wQ/eWFNZJSIWD5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="91796016"
+X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
+   d="scan'208";a="91796016"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:05:15 -0700
+X-CSE-ConnectionGUID: 0ydaDvUJS3WXKU+NoTnpBw==
+X-CSE-MsgGUID: Y8FloF0nTMKA/9UkbFQ9Fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
+   d="scan'208";a="265239305"
+Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:05:13 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: qemu-devel@nongnu.org
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	linux-cxl@vger.kernel.org,
+	qemu-stable@nongnu.org
+Subject: [PATCH] hw/cxl: Fix heap buffer overflow in Set Feature cleanup path
+Date: Sat, 22 Aug 2026 16:05:08 +0800
+Message-ID: <20260822080508.300921-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260822000728.GB6047@frogsfrogsfrogs>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 21, 2026 at 05:07:28PM -0700, Darrick J. Wong wrote:
-> 
-> But what prevents a malicious program that is /not/ the famfs client
-> software but has CAP_SYS_ADMIN from doing that?
-> 
+cmd_features_set_feature() uses set_feat_info->data_size as the memset
+length when zeroing write-attribute buffers on Finish/Abort.  data_size
+accumulates bytes_to_copy across transfer parts but is only reset on
+INITIATE.  Since QEMU never returns Feature Transfer Out of Order,
+repeated transfers at the same offset grow data_size past sizeof(struct),
+and the final memset overflows the target buffer.
 
-Such a program can already unmount famfs, rebind the device to
-device_dax, and mmap the whole range directly. MAP_CREATE isn't
-handing it reach it didn't have.
+b71a179148 bounded the per-transfer memcpy against sizeof, but the
+cleanup memset still runs on the accumulated data_size, so the overflow
+survives that fix.
 
-~Gregory
+Pass sizeof() of the target struct to memset instead of data_size.
+
+Fixes: d88f66741410 ("hw/cxl/cxl-mailbox-utils: Add device patrol scrub control feature")
+Fixes: 2d41ce38fb9a ("hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS control feature")
+Fixes: 5e5a86bab830 ("hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)")
+Fixes: da5cafdc4ddd ("hw/cxl: Add emulation for memory sparing control feature")
+Cc: qemu-stable@nongnu.org
+Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+---
+ hw/cxl/cxl-mailbox-utils.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index ec18338b42..f81b7b3303 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -1947,22 +1947,28 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+         data_transfer_flag ==  CXL_SET_FEATURE_FLAG_ABORT_DATA_TRANSFER) {
+         memset(&set_feat_info->uuid, 0, sizeof(QemuUUID));
+         if (qemu_uuid_is_equal(&hdr->uuid, &patrol_scrub_uuid)) {
+-            memset(&ct3d->patrol_scrub_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->patrol_scrub_wr_attrs, 0,
++                   sizeof(ct3d->patrol_scrub_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &ecs_uuid)) {
+-            memset(&ct3d->ecs_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->ecs_wr_attrs, 0, sizeof(ct3d->ecs_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &soft_ppr_uuid)) {
+-            memset(&ct3d->soft_ppr_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->soft_ppr_wr_attrs, 0,
++                   sizeof(ct3d->soft_ppr_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &hard_ppr_uuid)) {
+-            memset(&ct3d->hard_ppr_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->hard_ppr_wr_attrs, 0,
++                   sizeof(ct3d->hard_ppr_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &cacheline_sparing_uuid)) {
+             memset(&ct3d->cacheline_sparing_wr_attrs, 0,
+-                   set_feat_info->data_size);
++                   sizeof(ct3d->cacheline_sparing_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &row_sparing_uuid)) {
+-            memset(&ct3d->row_sparing_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->row_sparing_wr_attrs, 0,
++                   sizeof(ct3d->row_sparing_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &bank_sparing_uuid)) {
+-            memset(&ct3d->bank_sparing_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->bank_sparing_wr_attrs, 0,
++                   sizeof(ct3d->bank_sparing_wr_attrs));
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &rank_sparing_uuid)) {
+-            memset(&ct3d->rank_sparing_wr_attrs, 0, set_feat_info->data_size);
++            memset(&ct3d->rank_sparing_wr_attrs, 0,
++                   sizeof(ct3d->rank_sparing_wr_attrs));
+         }
+         set_feat_info->data_transfer_flag = 0;
+         set_feat_info->data_saved_across_reset = false;
+
+base-commit: af06b5df2610fe5de6c02d17c17bced9e9f0d47d
+-- 
+2.43.0
+
