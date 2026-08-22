@@ -1,212 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010038.outbound.protection.outlook.com [52.101.201.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDAD19C54E;
-	Sat, 22 Aug 2026 00:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787358073; cv=none; b=snoY6zzsdid/Vntdq0B1qazEsErZ0+ZM/NXjwetWiA6pejyx77L2rOWL7rnJKWvG/Fhy+XpkybTxYkMTq7xVs5IhLtJ2zeNbfiYX2rp6lJ9/zQXAJYQlvT8BlZuJ2YxTGiGgWqRnUwck+u6e/wOrK1ag44kge6MTUYTHaECYERM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787358073; c=relaxed/simple;
-	bh=04PGfN321LwPxDHkvZJH9jNKMJ5U8N2Xg8WIG2yNewI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QB2tb8Uf8t+f5wGuHHDhIksnSRN/PPnhNFh7NpHaqMcD8Pkc3VzVNdcUUnmIfzvGtOVOgOMAF1OYYX9vJ89PwZ0lec0CMUrkAF3F/LVNzut01cmi4YB36uuxO4shg+7sl+gP858speiXxYJ29LkVHxxPUdJ+HWvHkNZ3ZAA40Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRVk+b5S; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FAA1C75F9;
+	Sat, 22 Aug 2026 01:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787361743; cv=fail; b=doDGMnRxIrxixLs/mJ3HGG7N3KU5Q/YuKZ2tnXXwEcvp8tJgUYmr8zWku+N2lAmI9rHMUeS5BMKdmR8/5Iof/7ylvpAp5z83acZ8eQ5o4I1CeDU8AqPU3bNWiw7xkqqglcXilnyt70rnDdOFFfzoMMpa6H9occJgmV7Jeei43Lc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787361743; c=relaxed/simple;
+	bh=MxjlgoZXN49PBfIkGgxosirQ2dkVbVl5Bl0Vb+FJgQY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OMrEIMW6haYSobaBJX5ODYAwNqIsmqtK27eriJqdvWmFNMtMkSTN0Zuo46lmb4lP7Um+ijD2m77C8V2zopdr203Xq/0rPzx/1duznSm/QYcSZz909hWTprW3fLXRbGaBS/t8q1Tbh51VeC1Uv7YzXjGYYtm5YmzSTKeXVkLpgQE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oudMrmkQ; arc=fail smtp.client-ip=52.101.201.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRVk+b5S"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 90A741F00A3A;
-	Sat, 22 Aug 2026 00:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787358071;
-	bh=VnvrSWBU7Chzu0SZv3q18yghO955t8NOUwvVgQ/xaaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kRVk+b5Sop0HwCx+SSMbe4rjsYgAs8JF2NrwyMJI9YyB5z17JKbkaAOzCgryr1EK9
-	 yrUGr676QyvZELzBIs9M57Hl1Xo7+3niOlPyFQNVJW7ymPwfQZpGU2FzluXUqU15/P
-	 8VQT2+wydynZN9LuA2zIhZbNwWk1oTEbdBS/qJJNUX2VQU4asP+5fjmy4Zx9rMpBlK
-	 L2RbugVc525uF9y0yVkJ6gVNgS5NhMF+9qmldM8sTtalNDlbz1HjJpuEXYnPMc9scK
-	 Sv9w1bv9aMpcvHe5Eu6Du8acU5HIZQrhCvDL28EOufzi/2P3tqFxdA1LarpMyoPh5H
-	 VB0dOtE+te6PQ==
-Date: Fri, 21 Aug 2026 17:21:11 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	John Groves <john@jagalactic.com>, John Groves <John@groves.net>,
-	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shivank Garg <shivankg@amd.com>,
-	Ackerley Tng <ackerleytng@google.com>,
-	Gregory Price <gourry@gourry.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Gabriel Whigham <gabewhigham@gmail.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	"venkataravis@micron.com" <venkataravis@micron.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oudMrmkQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UeFGc56WUxTI3nS9VvzI0J9S3idLxKxHOXmsq+14KvHolWga2PRahOLfBmSABs+2Xibt9rHwDft728ELU6JqbYmDSdUUhRFapzmIeFSdoZqWDLsNShqzT4vnyzSyArLrglTFhobNQSxJolPY4m1S2e9dUbI4v6wcbzJCFupxVt2ksFwIr0vxbV2IfkAxKeYIblpyBDyX2lQ0T6rmsOB3rPUleep9hO1X9xkP2iUeTSRSz0uxqIWhfaK9lGuQVw/WoT3bwUr530nJ6GtySVjoau5/OqZd+EEjcwqhCOCeMhT3bs4cZ2nQmrfVbQMBwZGxQrDWTMAD9UdE1aNYnQ9lfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o4EK0df8tl7enDX3G9pC49SGU+ZH/UtLv4DYLfGFwC4=;
+ b=JNjJ+XXUwL/t4NEUTGEumFlREiFxA5Wbj9j+bYzpFSmz5GF221UipFvZ7MB4tyGeFwEIuAQ/qSbyvEzks+yiGvXQwILrLMDKwYVS8xMt78jTGCsKcauHsPqRmFByRyVtNc9kcK05JNAxLDtXWD/rorQ6dK35uYZ94W+ESXgoace8souq/K4Id8UBxeQi7/7DOjolrTOmgGVz1YCwz66LDKmDkcwQ/i74yYoqfu0v+KEk39jF6vtqUSSFS8WHfS+z4vKi4TlLVuOVFrPGSy9cyHSvLEQAYXSagjkPXhF16VKSa4oy8cIOe/2t3dZqLQsdityyAjOKhvQf5wDIBFI4GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o4EK0df8tl7enDX3G9pC49SGU+ZH/UtLv4DYLfGFwC4=;
+ b=oudMrmkQbE/s0/j38eEgSB2g0TPukfSP51X3WeifVM3wSSd6LGHoefjsdq4y8U+b66sW6CCzW9u81s9CmjP5mLiUa1IGCcyJM2d/yOs7OjHq3R0pBg4nXbs8YJWX43d4J1ktg/8urc2mgJcnKLpKKkMDVCWAhKGt6Mbhg0bmaSvMO+FyvYGYjxEDgMN/UFLpDXhDvMG5BIbKHQXOP7+ffse+s7twdP4ZDAMA6xqAgqmDar4SM3GH9Qhkoa5IQAdl1Fyt306R3oHiEa8W3LkgTpdNtECWad19D9IWbk9KJS57hcQpfutBlgqSUl/eTcsUOZ7ZqCoM8zV1rpUQ9NRpdQ==
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
+ by DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Sat, 22 Aug
+ 2026 01:22:13 +0000
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2%7]) with mapi id 15.21.0339.010; Sat, 22 Aug 2026
+ 01:22:13 +0000
+From: Manish Honap <mhonap@nvidia.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: "alex@shazbot.org" <alex@shazbot.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	Ankit Agrawal <ankita@nvidia.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alejandro.lucero-palau@amd.com"
+	<alejandro.lucero-palau@amd.com>, Srirangan Madhavan <smadhavan@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "skhan@linuxfoundation.org"
+	<skhan@linuxfoundation.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "iweiny@kernel.org"
+	<iweiny@kernel.org>, "ming.li@zohomail.com" <ming.li@zohomail.com>, Yishai
+ Hadas <yishaih@nvidia.com>, Shameer Kolothum Thodi <skolothumtho@nvidia.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "dmatlack@google.com" <dmatlack@google.com>,
+	"kees@kernel.org" <kees@kernel.org>, "gustavoars@kernel.org"
+	<gustavoars@kernel.org>, Neo Jia <cjia@nvidia.com>, Krishnakant Jaju
+	<kjaju@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Zhi Wang
+	<zhiw@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-Message-ID: <20260822002111.GA6110@frogsfrogsfrogs>
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com>
- <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs>
- <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
- <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner>
- <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
- <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, Manish Honap <mhonap@nvidia.com>
+Subject: RE: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+ cxl_restore_hdm_after_pci_reset
+Thread-Topic: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+ cxl_restore_hdm_after_pci_reset
+Thread-Index: AQHdKwdkZtSAYgnzrkys1MolqR67xrapKXoAgAAoXpA=
+Date: Sat, 22 Aug 2026 01:22:13 +0000
+Message-ID:
+ <IA1PR12MB9030AE4B775F69B27AED4350BDA22@IA1PR12MB9030.namprd12.prod.outlook.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-2-mhonap@nvidia.com>
+ <20260821235240.7926351d@jic23-huawei>
+In-Reply-To: <20260821235240.7926351d@jic23-huawei>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|DS0PR12MB6630:EE_
+x-ms-office365-filtering-correlation-id: dea78357-0706-4e5e-c6fa-08deffebcbe8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|1800799024|7416014|23010399003|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info:
+ pQfm/lxdVeWxdxcY+Jj65FOhzyvABlL8s+zhY2MQAjveCUbdoqSQGVFxRi93wwSfAMD77EczQN64YN8GD7Kyezo74GCNRajA8YiNojrl64EQWeVNGsQjmTqqIK65H+CIJe+z2GKhpRoxTV4/6RvS3rowu3u7La4qmOrQ+/uIDbS2/Ky6ykWVuVzyRFNFBikovbpHaakZtxLT4Azk4TLB4QNnUaJ6i7BAneJlcLlsIGCoyUmmAMRu5QfBaobngVdlYSnO4bxMB0ZmIIlIUD/qJJnwtk7EF+9NDiqmC0rSQlvNsgDlCNT2UYXwQsrQj3L0uC9dj1V71QKtq0VhTce6KHVKo0uIGDg12Yqbv+Mc/7SqqL2vGbJ24pfpcg5gwcb0+l7+zYqE6PK+qqXhZoHNoJwOkJ7Lb37zM+A2vKQTPManlwslXFRgkaNVIZw5apiVyIqsK3OQC+CDEy5ZFHvqYrTbpSYe1quISgmjKFDnd/QnwSHjxx4zg0OtAGLF4hdY2tV1w9Sk7Q6ba78YkawKr8QWzxjX0f7pB6ibpPHNktLxS2+8aHvurJcRDV+5zyzGijzyculcWgb5ZtIhIuTywIvhEA/k4Ana12ARa5qCbzDaFscRj0nBPsGFCsZj+sQNt0/PI9CEMRvZFd2YwbmvrOVyovyst2OnesiOsqsxPT/jbMuoW5FCsVLa8FE22KOqEzuGhyysTeStr7xtRrtTBgpykgSMfDXYF6hLcy0iMJo=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(23010399003)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?BCTPsPgx/VPzKjykmN+V8Eu+xT/8AdmtzHkyFU9cdhSc+pyysTTWl879sd8J?=
+ =?us-ascii?Q?nQQgSDfEpo1dsTg610BPQhmdc8YbsgojtZGYglkpmPn30hWb+5eQ6lbpfouP?=
+ =?us-ascii?Q?7Brd+9gFYmAdISnoY/067A/BTEqV20EG9ae60AFFD8OjGSLwMd727bSEMJit?=
+ =?us-ascii?Q?59o/81bAHN7cB9QFkiNhrjeIkiJlvcr9YAhEdyVdNeJAxuaaSZixfTn6AuYv?=
+ =?us-ascii?Q?wQUH2THWtcXsolbvkl3Y6N+UEy6RqyzrNWjf163LBM94QX5F4GgNBSF+hscR?=
+ =?us-ascii?Q?W77nWuwBAnQdpF3W9OYKWzvU1h7+uXgx1cc5Kw4Nvz4l9feyz+5nTfhA1tDG?=
+ =?us-ascii?Q?2TQqBLxuFGy4twt6gAKO5AN+bbPmwwtlnYOAfLPsAi/y0GIFNNb8q6/6RO/d?=
+ =?us-ascii?Q?516G7OyTki926bxP5RpFkAXzNJrqpzn787Lzs1EscRNYRbrV3PuocGes4HGE?=
+ =?us-ascii?Q?Q2Yxnv0H4HAzmiLwXP/z6W5WDAFUapzxNVi/jXB6u7kc5S3B7G6f2Ra+rLlB?=
+ =?us-ascii?Q?T1YlRCxWjeengGxo8V16mrBAOJIzuyVVWYo4MUCxQSMnVcLPYBUJKPRt7nLR?=
+ =?us-ascii?Q?/4qD7xfhz2xtEbvaEicuLe9Ylu4ibYrn5ocFqzc7I+/hqH06aVka0iieS1RV?=
+ =?us-ascii?Q?+cUzLz2WMnVD8a7j1r0CSqxBs88b0uD0ObKKv6DqkutZRTYIfDYNLwhEyDVV?=
+ =?us-ascii?Q?mUXELZ1bIXU1YKU4LgjqKYnJ0DITVoo991oDh5Y0X4xRUhXWTkX1YI/6LrQ8?=
+ =?us-ascii?Q?N/OQGXQQMj7rxnGDCUzBVQSA5P3c9GWL8IsxUsLnTnj7tTVCzqAg+wijDx6V?=
+ =?us-ascii?Q?5UqeOfMhlmrYrarQoJGiFbPpxBQddpOWiS/BRuPaVC3bE5J8vdLz25lfyJjf?=
+ =?us-ascii?Q?D5wLBQVio5VgIb+t6SaXZ6lVx827U8dMivML+D4DsIPMzM6xHeEf6cpOv5xw?=
+ =?us-ascii?Q?Uw7Wrv6ZzbRSBDrqTnsqnmDlod/LHoo3ExDtjbsuUmWB/E/kkCHYaVSPx4+f?=
+ =?us-ascii?Q?yrN1Zm6kBAByfvM+XbxyRBrgW+t/TOIuXX7SuIB8Pnx5nlicxhcYLs71k+9t?=
+ =?us-ascii?Q?fzgiKXJjvz47x8aDu77T814F9Sht58/7Wm1wlVD2PMT8RER4MKs4zQNqSfR3?=
+ =?us-ascii?Q?c1ue/sf/eDTc73Jxr5E7A5YV28oqKgipRCgQStrbfnkU0ozCQ1rBm6z6KM4G?=
+ =?us-ascii?Q?Bc2SUafUmkwMbK9PSS/BynAO8cprHDPCPn/bUj2qfkYFWZ57ihExRaNp8gAF?=
+ =?us-ascii?Q?zba/s+edehTkDRTzy811jNVeheLx0iBa7s9iYMjinRKFfzvvKXB21MYrCHPA?=
+ =?us-ascii?Q?edAEAP37NhnpGAWMTKHMmGz4mSpI4L5YAid9qhIiJx0i55nkCYSNMFSDoDW4?=
+ =?us-ascii?Q?ESYJhsXCMZ0gLeuDEa0lBPc2BDMp++7pSuLArPlmlj5ixpE58bOihD1Kip6g?=
+ =?us-ascii?Q?QQi25hjUxeOYDVrkwgf6xUUDe70ZT7AqjyOYDM81qdr3T3IKZFL+Bmh6Bevo?=
+ =?us-ascii?Q?TSV9OhvcIje6c3Cs/LlwXh6GljVQeOB8xlmgGC2BULbXtKdCIgdugrrV6k0s?=
+ =?us-ascii?Q?1T1cDTeDYw3R8BP9Xpdl2+djrRMDMKV9mzCZnVcg64v+U24wZ0MUU0vzHzC1?=
+ =?us-ascii?Q?WaoIUipVLFv11Fol/VD0eKm4n5Vg9uWRp3+BjzPbown4bCkp/WrF6Usxcynz?=
+ =?us-ascii?Q?Q/RYJSOzt0K+6zM5iYJ5k8/sF8nAip/4wYNrf65CBACXcss4?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dea78357-0706-4e5e-c6fa-08deffebcbe8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2026 01:22:13.6584
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iOqQXgxSNiBFtNbsMnx5nToUMDEHBppnBuM4c0fQOZu9jQ+EOEu6pflxTSrpmiMzgsAy80EXOaPFqIevlQRJAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
 
-On Fri, Aug 21, 2026 at 09:39:26PM +0200, Miklos Szeredi wrote:
-> On Fri, 21 Aug 2026 at 13:40, David Hildenbrand (Arm) <david@kernel.org> wrote:
-> 
-> > (a) Whether a fuse-based approach is feasible.
-> >
-> >     Are there any major blockers remaining?
-> 
-> No.
-> 
-> > (b) Whether a fuse-based approach is inefficient.
-> >
-> >     Are there scenarios remaining where performance or metadata overhead would
-> >     be bad without an easy way to improve the situation?
-> 
-> Lookups can be cached, extent mappings can also be cached.   After the
-> inode is in cache and the mapping is set up zero requests are needed
-> for open/mmap/read/write/close.
-> 
-> > (c) Whether a fuse-based approach is a bad conceptual fit.
-> >
-> >     Will fuse have to carry a lot of famfs special sauce that cannot
-> >     really be used elsewhere / generalized?
-> 
-> None.
-> 
-> But "can" and "will" are not the same.  The striping code might not be
-> very useful outside of famfs.
-> 
-> > (d) Whether a fuse-based approach is too invasive.
-> >
-> >     Will fuse extensions to support famfs actually make it harder to maintain or
-> >     slower on some paths?
-> 
-> No.
-> 
-> > (e) Whether a fuse-based approach will make famfs harder to extend.
-> >
-> >     Is there known follow-up work that will be hard/impossible to model in fuse?
-> 
-> It would actually make famfs much easier to extend, since the
-> directory structure, metadata, etc. is now controllable within the
-> userspace server.
-> 
-> > (f) Whether a fuse-based approach will reduce maintenance effor
-> >
-> >     Will maintaining fuse extensions possibly be harder than maintaining
-> >     standalone famfs?
-> 
-> Testing is a key point.  Famfs needs special hardware or emulation, so
-> it's not straightforward to test.  This could be solved by adding a
-> "dummy" mode to famfs server that exercises the same fuse API, but
-> instead of special hardware would just use plain memory.
-> 
-> > (g) Whether a fuse-based approach would make famfs more complex.
-> >
-> >     Will the shift to user space result in a significantly more complicated
-> >     overall solution that must be maintained?
-> 
-> The server would be somewhat more complex, since it's now implementing
-> things like pathname lookup, etc.  But the other stuff (managing file
-> maps) should be very similar.
-> 
-> > (h) Who would help drive the fuse approach?
-> >
-> >     Fuse people seem to be willing to help, but I expect that there must be a
-> >     close cooperation with John to make this fly. I don't expect that John
-> >     himself can easily (or understandably wants to :) ) do the heavy fuse
-> >     lifting.
-> 
-> Yes, this is where previous efforts seem to have gone off the rails.
-> So I agree to take responsibility for implementing the kernel side and
-> help with the server side on the condition that John has trust in
-> this.   I'm not promising -7.4, but can at least try.
-> 
-> Without John's trust I'm not taking this on.
 
-Whatever path you and John decide on, I would very much like to see the
-question of Which famfs driver do we merge? to be resolved for 7.4.
+> -----Original Message-----
+> From: Jonathan Cameron <jic23@kernel.org>
+> Sent: 22 August 2026 04:23
+> To: Manish Honap <mhonap@nvidia.com>
+> Cc: alex@shazbot.org; jgg@ziepe.ca; Ankit Agrawal <ankita@nvidia.com>;
+> dave.jiang@intel.com; alejandro.lucero-palau@amd.com; Srirangan Madhavan
+> <smadhavan@nvidia.com>; corbet@lwn.net; skhan@linuxfoundation.org;
+> dave@stgolabs.net; alison.schofield@intel.com; vishal.l.verma@intel.com;
+> iweiny@kernel.org; ming.li@zohomail.com; Yishai Hadas
+> <yishaih@nvidia.com>; Shameer Kolothum Thodi <skolothumtho@nvidia.com>;
+> kevin.tian@intel.com; bhelgaas@google.com; dmatlack@google.com;
+> kees@kernel.org; gustavoars@kernel.org; Neo Jia <cjia@nvidia.com>;
+> Krishnakant Jaju <kjaju@nvidia.com>; Vikram Sethi <vsethi@nvidia.com>;
+> Zhi Wang <zhiw@nvidia.com>; linux-doc@vger.kernel.org; linux-
+> kernel@vger.kernel.org; kvm@vger.kernel.org; linux-cxl@vger.kernel.org;
+> linux-pci@vger.kernel.org; linux-kselftest@vger.kernel.org; linux-
+> hardening@vger.kernel.org
+> Subject: Re: [PATCH v4 01/27] cxl: Fix resource.c include path and
+> export cxl_restore_hdm_after_pci_reset
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> On Thu, 13 Aug 2026 15:06:05 +0530
+> <mhonap@nvidia.com> wrote:
+>=20
+> > From: Manish Honap <mhonap@nvidia.com>
+> >
+> > The vfio-cxl Type-2 driver restores the endpoint HDM decoder after a
+> > D3hot->D0 soft reset by calling cxl_restore_hdm_after_pci_reset(), so
+> > export it to the CXL namespace. While here, correct the resource.c
+> > include of the CXL PCI definitions from <cxlpci.h> to <cxl/pci.h>.
+>=20
+> Why?  + if this makes sense (I haven't checked) please make that a
+> separate patch (for now) + make sure to call it out in review of
+> Srirangan Madhavan series where this file comes from and which hasn't
+> merged yet. I think it is in patch 5.
+>=20
+> Jonathan
 
---D
+Hello Jonathan,
 
-> > (i) Who would maintain any famfs fuse extensions and own any bugs?
+My patch series is dependent on Alejandro's v30 "type2-device-basic-support=
+" which
+moves the CXL_REGLOC_RBI_COMPONENT from cxlpci.h to cxl/pci.h; this series =
+is accepted
+but not yet available on the commit I tested/sent current series.
+
+This should get resolved when Srirangan rebases his code to kernel latest.
+I will drop this patch once Srirangan updates this in CXL-Reset series.
+
+I will also update on Srirangan's series regarding the export symbol.
+
+>=20
 > >
-> >     famfs will possibly depend on fuse extensions that might initially only be
-> >     used by famfs. Would the fuse maintainers just naturally deal with that?
-> 
-> I can take responsibility for the fuse kernel bits.
-> 
-> > (j) Whether a fuse-based approach has an end in sight.
+> > Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> > ---
+> >  drivers/cxl/core/resource.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> >     famfs goes back .... quite a long time. It would be nice to close that
-> >     chapter :)
+> > diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
+> > index daa5e7fa2509..492ffe8e3576 100644
+> > --- a/drivers/cxl/core/resource.c
+> > +++ b/drivers/cxl/core/resource.c
+> > @@ -16,7 +16,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
 > >
-> >     Is there an end in sight, or could we end up in the same situation in 6m/1y/
-> >     ...
+> > -#include <cxlpci.h>
+> > +#include <cxl/pci.h>
 > >
-> >     IOW, is there a way to agree on an MVP that won't require a lot of further
-> >     re-planning and changes to a fuse-based design?
-> 
-> I already sent patches to implement the dax dev mapping, and the
-> striping.  We've discussed adding support for fixed backing ID, which
-> was something that John asked for.  The only missing piece was adding
-> a protocol extension to set up  simple extent mappings, which already
-> existed in the famfs_fuse patch, just needed to be renamed and unused
-> fields changed to "spare".
-> 
-> We (Amir, Joanne, me) explained to John how this is exactly what's
-> needed to make famfs work.  We've not seen an acceptance of that yet.
-> 
-> From my PoV this would be extra work, but in the longer term would
-> expect to be less overall maintenance work and fuse would gain some
-> useful features in the process.
-> 
-> Thanks,
-> Miklos
+> >  #include "cxl.h"
+> >  #include "core.h"
+> > @@ -850,6 +850,7 @@ int cxl_restore_hdm_after_pci_reset(struct pci_dev
+> > *pdev)
+> >
+> >       return cxl_reset_save_restored_state(pdev, command);  }
+> > +EXPORT_SYMBOL_NS_GPL(cxl_restore_hdm_after_pci_reset, "CXL");
+> >
+> >  static void cxl_hdm_range_context_init(struct cxl_hdm_range_context
+> *ctx)
+> >  {
+>=20
+
