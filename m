@@ -1,161 +1,295 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C1739989D
-	for <linux-cxl@vger.kernel.org>; Mon, 24 Aug 2026 07:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635C62F6565;
+	Mon, 24 Aug 2026 07:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787557276; cv=pass; b=dXK4cNeAhAskFs4xPq6pUWKxzIQOQ7aMqd2TVpaObS+Hzu9JswYgpKU8mZljpvhESlXiaQmUZDWqRLNA7FM/sH7DSRLGH3bnCqx83KCBxbQYIysjMpG6GZOVBnRGiTyjeWNNt6tGRvD7nXGf6JoE99XEBXf7o9p90wgbl/j5G9g=
+	t=1787558010; cv=pass; b=jCliFhVHW2ysywPvW4+so8qKmF0dnVn6qZIXXmK2Kuf44I+e4NHP81OI0OW01dFyWpZIWEtviJ2Cz/ZGY9NIoOXwlmq6UlbtsUkvbeYhB948IIwHf7qI7dGAEEMzSJn6PnIT5NnI8owiFuWoN6ooyRRux8I/JLlEUKd5rIJLZrw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787557276; c=relaxed/simple;
-	bh=mdsvrY0ISPRS0P8l6Q2ATVhO2qJcd3GXtM94ZK/661M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KV9ksOM0lugrjFGsTlM+od8QGKiUEc+ZbfrMQs1GPeDVxJX4SUhEx3mnfq7gnTjV3xfQ0pZsBKThFxxUQylA2qqKli8vviVVftU6ph3k7gRRqm54vEUEQXSIe9OxujPSj3PAF/6AHpE4+D7d3ig/inDcwZAXkxNdwDg+2EejeQk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Q/GjEk//; arc=pass smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1787558010; c=relaxed/simple;
+	bh=MkampgrpGK2RNmvGey3S6d1t2Ya5/013PoJ6MOd9+dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aU4LuGjVYSwWZbaiNjU33o35S5z+Q3Ab0NWNdkslLKBe92d2MNHE4lvND1L6pUYRe8NxrzA2dqmTghm5AjXMXlahO8Og7793XcbCYOtXBIOWnXyQ76AEbUxyvFaoRI9RfjnehkL5b8QAE6YW3HviZwr6MoSp1Ens8ap9pe/qQOc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=TPNMnCdE; arc=pass smtp.client-ip=165.173.180.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Q/GjEk//"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c08df8513so19135531cf.3
-        for <linux-cxl@vger.kernel.org>; Mon, 24 Aug 2026 00:41:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787557272; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HPOeukgS2CTzpUaHu0LzeE8ciiP4Z50DPcW1Lgdkh01M0khGs8sWUwgbtfft6S+PX6
-         +b158dZxavR9+CnrhtD08DCkbwwMM+wVEanY8poNpPhkopTrcTUFT6xxMYK/wjoD3TS3
-         +k1PCcBK+li/hIi5ruZhiVzdVItUyQhME2M34SsalQNwA541NXNBsfEmp6nnjOrApx1s
-         yElflBa2rMRWZwAIvW63U8pDdrOMlTiKyFVQrDwg5HCIT8A6CyX5ZqZoilgkoMoNy5tZ
-         Q+uNQokYlrkRi4ZrVH+owkWsD2qmpf/2xiw6ox6ViQlqHcgkgEfnGwvCIZ5/AepTiPrX
-         EKyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Klk3k/9iOZSzHajoiDP/ePmCKQpQct/Ey07OIgVaiL8=;
-        fh=2sc5DYN9L2J8kddQLrHf35b0ngF+I657vG5iWm1hwec=;
-        b=eySAInPfbHFu8d56tg3iiqHbIzQMJqNG95PQs31e4ok4e2Afg9cJdqhdfV1DtMNgGZ
-         Zy+TG7YOyqVm4OULhbkrx+gGlNVrWgG+OBL5w+ADq9khYaOLIvYgJJn1rquPf2zJ0jhn
-         CJuj69QsWLAvYFlfdefF0BesCR73hittba20cSeC5j6MqoayfdqHq+oh44D4fOXr8HNa
-         0SIDJwjKuQxOlFpcvp16mKkIV2hirBrJdrSHjQJ9qPNlWKBUS+A2SlK47urdMxMZpfIH
-         +f5tu8Mns7fFJ3Pi2ze37fFBn67Uv0yqaze0Bo4nmYOq0Ug2YU+QerWsPnU5crUnE+b0
-         t4dQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1787557272; x=1788162072; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Klk3k/9iOZSzHajoiDP/ePmCKQpQct/Ey07OIgVaiL8=;
-        b=Q/GjEk//wp5xYL0vEr/+Agzjq//Un/YfKCErgxJp8r92qnipH2D8XXriluj8rI9O+p
-         OROlfSSqPMyu6evEHcBJrDoN6E/NWadT+iOazfy8ukAc/+N+wat4eM5mPINHc44W0etI
-         ummcPk0e15zddKt/9Gkx/GbWoKVDhyvdILB9s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787557272; x=1788162072;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Klk3k/9iOZSzHajoiDP/ePmCKQpQct/Ey07OIgVaiL8=;
-        b=ZhgaBvlvmrhN/kM+X4vT9VEWB8ETOHTHd+Mrm7iZnnJCuS/FGyKagRwBIb4wk3iJbr
-         H23tnUXZ3GmFKar87yh5K+wHR7N1Gls+GORFyjUiknV8wmm+WUKDnLmtphWXBLi0HE/8
-         NbQXQ1ISgl2g02wkCd2H8cIAwGtz6RyLaOkL6PWQSGs41b39N4KOO5TLYQA3mggcVz5S
-         srB6NPch2lwxkIICKs7EiCWHe5evPaWNB7R5THjJ2itLc6XwwaCIoz1aSQcEnn7KJ6kD
-         L60wyJeTTruhJ0s7eDOZcgnc1laNSOvd2+jwNAmdlovsGCJBls0hluM12Dqi2xWLBeaW
-         QFcg==
-X-Forwarded-Encrypted: i=1; AHgh+RoGGR4MTTUx+BMA3pw8ZNUq/yQJLbIy+WPvXptHe258YdXpJ3Anj5Gq6jPe+xjqHfbgwd7BfqTkjMg=@vger.kernel.org
-X-Gm-Message-State: AFuF++mIm8h3dqmLIE/4iyvTlQ8fDv0PXI2OSbTT6GMzh4sj8J49OPPw
-	PMNQR5aPcu123sLkL1FhUqKGqIdKkH94o2ZrgKX1l44D5ttPRGK07UXNhLFnYyBWF7DwbJVdLW1
-	w/ZH77O3JZSSvay6/r+wRThZ4Z83cSe5ZU7Wgh+rKeA==
-X-Gm-Gg: AR+sD12egmoY2bH+0At1KwejuP2Fa0lcjS5gLJdKxPcPICgEgRwrcHzMQ4ctPcjDP/n
-	tWIVyQNIVLuD+fmDl93SZqOrONrrV3PKO52kL8kTTyYDsMC1uWcr2a4QK2jsjlOC0+WDmHawz2v
-	ZZYbfTSKEg2Fuf9BKjxMtRFDhxHXjCwhSNMt1/JpmeQ4F2mmW12p0uwVloWuStK9impzdDXADAc
-	+DULXok3crxiAMU3BoRfwnmAEnMMWNwLEzcV0yJ6xIJK0Uq6ODut8HxONtlXf3A1yhUjboTPLXJ
-	p/vdmhh2rLL85MES8jIbWdRU6bJgzt3yBzOLKHUCrofJSPRRaluLQq5DGSurbZt5/uCj8kSTirc
-	TtSI=
-X-Received: by 2002:ac8:5815:0:b0:51c:1117:c6a with SMTP id
- d75a77b69052e-52df56f0b73mr226396731cf.4.1787557272431; Mon, 24 Aug 2026
- 00:41:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="TPNMnCdE"
+ARC-Seal: i=1; a=rsa-sha256; t=1787557998; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=h0ekdRNzK+JXSgTbEaVJ5v3B/vEIHonPH49+VZwW8+PtdlYB8fFUM+9TP6fD2NERNqTDkThHfr4OWR4O2SmBeTezaowMNXdMUBm4cA6S4gS22sa3Pf6nTiCIbiMAe9ko1UueSLp4fJwo+mNkqCkhBLfXJO/CURJNmEMxLbPlfsw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1787557998; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=LNmoHF/KqY72cRrJkqQazIsWsQhyca+P+7hHMiY6ZYM=; 
+	b=ab2ttOAq5CXs9lhttmLXJ7Fp+VPjWCpemyMUmCfVOtngfjpH1fF1jUt0oohzinVkdH/i0aNNR/mULSFe4X5T79gSttJbMzsMliTkFylA2m4r8weL9rnF2QgaDgKEtHRpPeJfYveyJovjCwsF8hSSQ+ZMQF45wlqUgsWGh7CO4fA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1787557998;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=LNmoHF/KqY72cRrJkqQazIsWsQhyca+P+7hHMiY6ZYM=;
+	b=TPNMnCdEtbxI5hqp3Mm5baZejDb9ikJb6DQPmvPHtYjTMwUe2P4JP9Ag91tApGt3
+	VyvYMrpDj556zJfJIwnL8Y5XK2HYPu2waeQSKAnZbixtQpxQdb0EAuyXk9WjKRO44DB
+	V1rHD/8pBtpSm/9Hc8g4ewhPcFOXJz+gAJjwRz3g=
+Received: by mx.zohomail.com with SMTPS id 1787557997202730.4855151599179;
+	Mon, 24 Aug 2026 00:53:17 -0700 (PDT)
+Message-ID: <cd115bea-68b4-4b7c-8cad-93f5fedfb6fc@zohomail.com>
+Date: Mon, 24 Aug 2026 15:53:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com> <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs> <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
- <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner> <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
- <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com> <ea56c85b-d564-4451-b704-58448a07bfa6@app.fastmail.com>
-In-Reply-To: <ea56c85b-d564-4451-b704-58448a07bfa6@app.fastmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 24 Aug 2026 09:41:00 +0200
-X-Gm-Features: AcwNN1XWfONgBRIlU-yXy6CPly98fZpO_MCf0GW5eGggOdo-Gs861y_E4L66dCQ
-Message-ID: <CAJfpeguuL8He4dKC0+CQU3c=Ss9nDEH=9VckB5mqxOr01X2q4Q@mail.gmail.com>
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-To: John Groves <john@groves.net>
-Cc: David Hildenbrand <david@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, John Groves <john@jagalactic.com>, Dan Williams <djbw@kernel.org>, 
-	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>, 
-	"John Groves (jgroves)" <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 04/12] cxl: Cache decoder settings on PCI devices
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Vishal Verma
+ <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20260804192958.1823952-1-smadhavan@nvidia.com>
+ <20260804192958.1823952-5-smadhavan@nvidia.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260804192958.1823952-5-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: zu08011227af36c92431c1f613a752d92e000088fb1d2f244f04e898c19f2e1b244fdfff28ccb470c5da0a6c:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Sat, 22 Aug 2026 at 23:55, John Groves <john@groves.net> wrote:
-
-> Famfs does work in fuse, but some of the asks are things that I don't see
-> how I can agree to. I think Miklos and I should discuss those 1:1, to figure
-> out if there is a way forward.
+On 8/5/2026 3:29 AM, Srirangan Madhavan wrote:
+> Add CXL core plumbing to refresh a PCI device HDM decoder cache when
+> decoders are enumerated, committed, or reset. PCI reset paths can use
+> this snapshot to restore HDM programming without walking CXL topology
+> during reset recovery.
 >
-> I think the virtual backing-dev thing is a non-starter,
+> The cache is populated by PCI-side discovery in a follow-on patch. Until
+> then, the CXL core update path is a no-op when no PCI HDM cache is
+> present.
+>
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> ---
+>  drivers/cxl/core/hdm.c | 114 ++++++++++++++++++++++++++++++++++++++++-
+>  include/cxl/cxl.h      |  12 +++++
+>  include/linux/pci.h    |   6 +++
+>  3 files changed, 131 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 6e132b4f092b..ec988e7b7c0c 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -84,6 +84,110 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>  		cxlhdm->iw_cap_mask |= BIT(16);
+>  }
+>  
+> +static int cxl_pci_hdm_info_match(struct pci_dev *pdev, int decoder_count,
+> +				      bool *present)
+> +{
+> +	struct cxl_hdm_info *info;
+> +	int rc = 0;
+> +
+> +	*present = false;
+> +	down_read(&cxl_rwsem.dpa);
+> +	info = pdev->hdm;
+> +	if (info) {
+> +		*present = true;
+> +		if (info->decoder_count != decoder_count) {
+> +			pci_warn(pdev,
+> +				 "CXL HDM cache decoder count mismatch: cached=%d hdm=%d\n",
+> +				 info->decoder_count, decoder_count);
+> +			rc = -ENXIO;
+> +		}
+> +	}
+> +	up_read(&cxl_rwsem.dpa);
+> +
+> +	return rc;
+> +}
+> +
+> +static int cxl_pci_setup_hdm_info(struct cxl_hdm *cxlhdm)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
+> +	bool present;
+This 'present' is unused in this patch and used in the follow-on patch, I suggest moving this 'present' related implementation into the follow-on patch.
+> +
+> +	if (!pdev)
+> +		return 0;
+> +
+> +	return cxl_pci_hdm_info_match(pdev, cxlhdm->decoder_count, &present);
+> +}
+> +
+> +static u64 cxl_switch_target_list(struct cxl_switch_decoder *cxlsd)
+> +{
+> +	struct cxl_decoder *cxld = &cxlsd->cxld;
+> +	u64 targets = 0;
+> +	int ways = min(cxld->interleave_ways, cxlsd->nr_targets);
+> +
+> +	/* target_map[] holds the raw list before target[] is resolved. */
+> +	for (int i = 0; i < ways && i < 8; i++) {
+> +		u8 port_id;
+> +
+> +		if (cxlsd->target[i])
+> +			port_id = cxlsd->target[i]->port_id;
+> +		else
+> +			port_id = cxld->target_map[i];
+> +
+> +		targets |= (u64)port_id << (i * 8);
+> +	}
+> +
+> +	return targets;
+> +}
+> +
+> +static void cxl_decoder_snapshot(struct cxl_decoder *cxld,
+> +				 struct cxl_decoder_settings *settings)
+> +{
+> +	*settings = (struct cxl_decoder_settings) {
+> +		.id = cxld->id,
+> +		.hpa_range = cxld->hpa_range,
+> +		.interleave_ways = cxld->interleave_ways,
+> +		.interleave_granularity = cxld->interleave_granularity,
+> +		.target_type = cxld->target_type,
+> +		.flags = cxld->flags,
+> +	};
+> +
+> +	if (is_endpoint_decoder(&cxld->dev)) {
+> +		struct cxl_endpoint_decoder *cxled =
+> +			to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +		settings->target_or_skip = cxled->skip;
+> +	} else if (is_switch_decoder(&cxld->dev)) {
+> +		struct cxl_switch_decoder *cxlsd =
+> +			to_cxl_switch_decoder(&cxld->dev);
+> +
+> +		settings->target_or_skip = cxl_switch_target_list(cxlsd);
+> +	}
+> +}
+> +
+> +static void cxl_hdm_info_set_decoder(struct cxl_hdm *cxlhdm,
+> +				     struct cxl_decoder *cxld)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
+> +	struct cxl_hdm_info *info;
+> +
+> +	if (!pdev)
+> +		return;
+> +
+> +	guard(rwsem_write)(&cxl_rwsem.dpa);
+> +	info = pdev->hdm;
+> +	if (!info || cxld->id >= info->decoder_count)
+> +		return;
+> +
+> +	if (cxld->flags & CXL_DECODER_F_ENABLE)
+> +		cxl_decoder_snapshot(cxld, &info->settings[cxld->id]);
+> +	else
+> +		info->settings[cxld->id] = (struct cxl_decoder_settings) {
+> +			.id = cxld->id,
+> +		};
+> +}
+> +
+>  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  {
+>  	struct cxl_hdm *cxlhdm;
+> @@ -767,6 +871,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  	}
+>  	port->commit_end++;
+>  	cxld->flags |= CXL_DECODER_F_ENABLE;
+> +	cxl_hdm_info_set_decoder(cxlhdm, cxld);
+>  
+>  	return 0;
+>  }
+> @@ -839,6 +944,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
+>  	writel(0, hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+>  
+>  	cxld->flags &= ~CXL_DECODER_F_ENABLE;
+> +	cxl_hdm_info_set_decoder(cxlhdm, cxld);
+>  
+>  	/* Userspace is now responsible for reconfiguring this decoder */
+>  	if (is_endpoint_decoder(&cxld->dev)) {
+> @@ -1058,11 +1164,16 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>  	struct cxl_port *port = cxlhdm->port;
+>  	int i;
+>  	u64 dpa_base = 0;
+> +	int rc;
+>  
+>  	cxl_settle_decoders(cxlhdm);
+>  
+> +	rc = cxl_pci_setup_hdm_info(cxlhdm);
+> +	if (rc)
+> +		return rc;
+> +
+>  	for (i = 0; i < cxlhdm->decoder_count; i++) {
+> -		int rc, target_count = cxlhdm->target_count;
+> +		int target_count = cxlhdm->target_count;
+>  		struct cxl_decoder *cxld;
+>  
+>  		if (is_cxl_endpoint(port)) {
+> @@ -1097,6 +1208,7 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>  			put_device(&cxld->dev);
+>  			return rc;
+>  		}
+> +		cxl_hdm_info_set_decoder(cxlhdm, cxld);
+>  		rc = add_hdm_decoder(port, cxld);
+>  		if (rc) {
+>  			dev_warn(&port->dev,
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 85e895d9b31c..703285966946 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -133,6 +133,18 @@ struct cxl_regs {
+>  	);
+>  };
+>  
+> +#define CXL_HDM_DECODER_MAX_COUNT 32
+> +
+> +/**
+> + * struct cxl_hdm_info - PCI device HDM decoder programming cache
+> + * @decoder_count: number of decoder settings entries
+> + * @settings: cached per-decoder programming state
+> + */
+> +struct cxl_hdm_info {
+> +	int decoder_count;
+> +	struct cxl_decoder_settings settings[CXL_HDM_DECODER_MAX_COUNT];
+> +};
+> +
+>  struct cxl_reg_map {
+>  	bool valid;
+>  	int id;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 64b308b6e61c..a8e5cec96bae 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -335,6 +335,9 @@ struct pcie_link_state;
+>  struct pci_sriov;
+>  struct pci_p2pdma;
+>  struct rcec_ea;
+> +#ifdef CONFIG_CXL_HDM
+> +struct cxl_hdm_info;
+> +#endif
+>  
+>  /* struct pci_dev - describes a PCI device
+>   *
+> @@ -562,6 +565,9 @@ struct pci_dev {
+>  #ifdef CONFIG_PCI_DOE
+>  	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
+>  #endif
+> +#ifdef CONFIG_CXL_HDM
+> +	struct cxl_hdm_info *hdm;	/* CXL HDM decoder reset state */
+> +#endif
+>  #ifdef CONFIG_PCI_NPEM
+>  	struct npem	*npem;		/* Native PCIe Enclosure Management */
+>  #endif
 
-The virtual backing-dev is an abstraction.
 
-Is it sufficient for you if I promise that this is going to do the
-same thing as the standalone famfs at the same performance level?
-
->  and I think that the famfs
-> portion of the fuse ABI basically can't live without extents that are
-> (daxdev, offset, length).
-
-Sigh.  My proposal was (backing-id, offset, length).  Again this is an
-abstraction.  A backing ID can be a daxdev, a striped logical device
-or it can be a block dev or even a plain file.
-
-> Also, I'm curious: if you don't know of a use case for the striping code outside
-> of famfs, why ask famfs to completely rewrite that?  (and I agree, other
-> than the eventual remote possibility of competing 'famfs-ng' fuse servers,
-> I don't see much likelihood that this piece will be shared.)
-
-Because the striping feature fits much better into a virtual device
-API than the extent mapping API.  This is how striping has worked in
-linux for the last 30 years.
-
-> Miklos, I trust that you are a good faith actor, although you seem to be
-> spread pretty thin. Can you commit to a series of 1:1 conversations with
-> me to try to work through the disconnects?
-
-Fine, let's find a time.
-
-Thanks,
-Miklos
