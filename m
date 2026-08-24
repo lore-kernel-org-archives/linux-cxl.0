@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C88732ED34;
-	Mon, 24 Aug 2026 21:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3433331EBB;
+	Mon, 24 Aug 2026 22:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787608650; cv=none; b=NuXi/E6wW4tWmBW44TkB4VqiucelWkSqOtZDSCkwK2Yugh0oCo8iA+T7t4TA34IVIAg2fTWJN7S5WHORVke84udaKk86upfmyujBJk2mfX6PbId4/Zs3aY6G8bGnD/koRhmTRChqY4nJQlMm2eVMgHN940nRWnF4+kXfC1WtI4Y=
+	t=1787610180; cv=none; b=thxUXQGJXz+biatK0WhUAL5wqrEt3G80f4KlaFKv7zNoOWdIUZ9J4+wtfMh7SssRsICnag2C+GjbevHTxDKc6tPvZMlF4exVCwGGOMzSIlQ5u23negbqCmmtSmhbX97T/4E86F21iV/m/z7ObpXymnb+WI5zAYwZ5SE0wQCjabc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787608650; c=relaxed/simple;
-	bh=MzmOvpz+U+9t1SxHAtgipGhgzy0JiVCd4fKdVLz2tNM=;
+	s=arc-20240116; t=1787610180; c=relaxed/simple;
+	bh=LXwTLpDAQHCPcPoIwMgEtMxNEZBYBXUflkeJE1yaBms=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oOfCpGsyP4rdmPyZ9YpF7wl5Cf0a137OdljY9gDXHrcnDnymKRH7BT7RFTbTlC15bKI3fWIn2XUS0k5TfRtVxX6EoTzjU65tyIcL7PvQ8kTJBeOX4C2rGRN4Wnzf5sAEskYqmbTKwc2fK6ZV3BBfhQKDRqRwYHWAo7rBWlGb2DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smk3eS/j; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=hIKVixxVEVVe6Y+V4nfFplkI0rhIaQs9ONZTdtjv3kw9uJ4SvdpkU56GYy5hK7qVcS8mQHpdv33p646TqT6RWbRF28elqS63SPBKVoHjcJDcN1h4NMfW4856QcO5XZvRSNp18E/Ph2XhlWW9AN5iTfwTIcc/jv2hrEImOXRYqlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7sHsjSu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smk3eS/j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5B81F000E9;
-	Mon, 24 Aug 2026 21:57:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7sHsjSu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817D61F000E9;
+	Mon, 24 Aug 2026 22:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787608649;
-	bh=5mbymy+AQXtUUJmvEUwvTk7uwYJj2fB3OetWpSercIA=;
+	s=k20260515; t=1787610178;
+	bh=TKqVgqauEruTPN1rpen48G1YgM9WzoBZfpr2ypzAplU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Smk3eS/jAlx3rxH5GRJqGErheW2+ABxVqiDFSv1sOj3krTb7f4zmxss6J/slFkG6p
-	 jlsXBNEgitXppRduldzwXfKo+5v0QXWRg3QxsL9F9lAKQjBeySlGBkgPR+ReGNmKUF
-	 b97+8HimWGy4Sm9JOrISuVtH1ZKjnHAd6NockfMteJKzABuomyxbcrEsSm5KaaeCfP
-	 ClOxHPMuYEZUICyXUz43XoZ6l25cu2L+fsqFBbg+v5rgcCTz3LFfn6ag+b9wQ2kpl5
-	 VVA+IOmElz2rhjrRY2ZJxJd13q6jKxLzeMRsgjot+c+P2RC/CXT+ZttC8YE7tFvare
-	 SFnEp2w1fGSHA==
-Date: Mon, 24 Aug 2026 22:57:20 +0100
+	b=U7sHsjSuYFRsSHEe7tzYY0kqzg0ybfF0B/AEPqhoqFTvJ8jFVXyBCr6Wd/MuSGj4v
+	 SLNCcLd03EBiN1G8xj5pbLcDqbFsVmdDLAGDmdwGQbvBDuF/vEb9+V3Jf5bzmfvTVT
+	 M/w0JxLaudBKDsVWqwCFC/JqT7+eVdLtT0Ifmwe2s1aQ0Aa47Gn68Rr4Xbf2M61zl0
+	 +1oPY2MxlGN0kCn6snYBYNrFJ6ZZp49hauK0XiJEDvpWUQX8mxybo3yQyacSR7rPjM
+	 ek5h8D5VpiyvGUkRR3/2RzGdo680LQrU3877C7diIo2WI67iV45nkzY/cw+a3xWP/w
+	 7uWk3lt6LAALQ==
+Date: Mon, 24 Aug 2026 23:22:39 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
@@ -34,12 +34,12 @@ Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
  mchehab@kernel.org, xueshuai@linux.alibaba.com, terry.bowman@amd.com,
  benjamin.cheatham@amd.com, alison.schofield@intel.com,
  sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 01/13] efi/cper: Reject CPER records with an
- out-of-range error_data_length
-Message-ID: <20260824225720.60a4fdcf@jic23-huawei>
-In-Reply-To: <20260824174936.939059-2-dave.jiang@intel.com>
+Subject: Re: [PATCH v4 02/13] efi/cper: Reject an error status block length
+ that wraps a u32
+Message-ID: <20260824232239.44c76252@jic23-huawei>
+In-Reply-To: <20260824174936.939059-3-dave.jiang@intel.com>
 References: <20260824174936.939059-1-dave.jiang@intel.com>
-	<20260824174936.939059-2-dave.jiang@intel.com>
+	<20260824174936.939059-3-dave.jiang@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,101 +50,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 24 Aug 2026 10:49:24 -0700
+On Mon, 24 Aug 2026 10:49:25 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> cper_estatus_check() sizes each section with acpi_hest_get_record_size(),
-> which adds the firmware-controlled u32 error_data_length to the header size
-> as a signed int (see <acpi/ghes.h>). A value in the top sizeof(*gdata)
-> bytes of the u32 range wraps the sum small rather than large, so it slips
-> past the "record_size > data_len" check: against the 72-byte v300 header,
-> 0xffffffb9 sizes the record at 1 and acpi_hest_get_next() walks it a byte
-> at a time, off the end. 0xffffffb8 sizes it at 0 and loops forever.
+> cper_estatus_len() sums the firmware-controlled data_length (or
+> raw_data_offset plus raw_data_length) into a u32. A data_length of
+> 0xffffffec wraps that sum to 0, and a length that reads back short defeats
+> every bound built on it: bert_print_all() passes its "remain <
+> estatus_len" check, then advances "estatus += estatus_len" by zero and
+> loops forever. GHES survives only because __ghes_check_estatus() rejects a
+> length below sizeof(*estatus) first.
 > 
-> Sum in u64 so the check sees the real size, and reject a size the int
-> helpers cannot carry, since the walk advances by their return value.
-> 
-> This is the per-section upper bound the later "len < sizeof(*foo)" guards
-> rely on; they are lower bounds only.
+> Reject a length that cannot be expressed in a u32 in
+> cper_estatus_check_header(), which both of today's callers reach: GHES via
+> __ghes_check_estatus() and BERT via cper_estatus_check(). extlog reaches
+> neither yet; a later patch routes it through cper_estatus_check(), whose
+> ELOG_ENTRY_LEN bound needs this to hold.
 > 
 > Reported-by: sashiko-bot@kernel.org
 > Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=1
-> Fixes: 45b14a4ffcc1 ("efi: cper: Fix possible out-of-bounds access")
+> Fixes: 06d65deade9a ("ACPI, APEI, UEFI Common Platform Error Record (CPER) header")
 > Assisted-by: Claude:claude-opus-4-8
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-I know I'm late to the discussion but maybe it would just be simpler to
-use check_add_overflow()?
+Seems fine to me and to use the overflow.h stuff here we'd have to invent some
+local variables which rather outweighs their documentation benefit.
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
 > ---
 > v4:
-> - Do the arithmetic in u64 at the choke point instead of bounding the u32
->   error_data_length against data_len, so the check no longer depends on the
->   signed helpers in <acpi/ghes.h> behaving (Tony Luck). Bounding the u32
->   still left a window when data_length itself was within a header of
->   U32_MAX, and it did not stop acpi_hest_get_next() advancing by a wrapped
->   int. The v3 "< 0" arm was dead either way, since data_len is unsigned and
->   promoted the int back (Tony Luck, Shuai Xue).
-> - Dropped Alison's and Shuai's Reviewed-by; the check was reworked after
->   they reviewed it.
+> - New patch. sashiko-bot's review of v4 pointed out that the u32 sum in
+>   cper_estatus_len() wraps, which bypasses the bounds added by the
+>   surrounding patches.
 > ---
->  drivers/firmware/efi/cper.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>  drivers/firmware/efi/cper.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
 > diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 06b4fdb59917..ec092729cacc 100644
+> index ec092729cacc..ea1c999089bc 100644
 > --- a/drivers/firmware/efi/cper.c
 > +++ b/drivers/firmware/efi/cper.c
-> @@ -752,7 +752,7 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
->  int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
->  {
->  	struct acpi_hest_generic_data *gdata;
-> -	unsigned int data_len, record_size;
-> +	unsigned int data_len;
->  	int rc;
+> @@ -745,6 +745,17 @@ int cper_estatus_check_header(const struct acpi_hest_generic_status *estatus)
+>  	    estatus->raw_data_offset < sizeof(*estatus) + estatus->data_length)
+>  		return -EINVAL;
 >  
->  	rc = cper_estatus_check_header(estatus);
-> @@ -762,11 +762,21 @@ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
->  	data_len = estatus->data_length;
->  
->  	apei_estatus_for_each_section(estatus, gdata) {
-> +		u64 record_size;
+> +	/*
+> +	 * cper_estatus_len() sums these into a u32, and a wrapped sum reads
+> +	 * back smaller than the record. Reject a length that cannot be
+> +	 * expressed so no caller is handed the short value.
+> +	 */
+> +	if ((u64)sizeof(*estatus) + estatus->data_length > U32_MAX)
+> +		return -EINVAL;
+> +	if (estatus->raw_data_length &&
+> +	    (u64)estatus->raw_data_offset + estatus->raw_data_length > U32_MAX)
+> +		return -EINVAL;
 > +
->  		if (acpi_hest_get_size(gdata) > data_len)
->  			return -EINVAL;
->  
-> -		record_size = acpi_hest_get_record_size(gdata);
-> -		if (record_size > data_len)
-> +		/*
-> +		 * acpi_hest_get_record_size() sums these as a signed int (see
-> +		 * <acpi/ghes.h>), which wraps small for a huge
-> +		 * error_data_length and slips past the check below. Sum in u64,
-> +		 * and reject what those helpers cannot carry, since the walk
-> +		 * advances by their return value.
-> +		 */
-> +		record_size = (u64)acpi_hest_get_size(gdata) +
-> +			      gdata->error_data_length;
-
-I'm late to the game obviously and what you have works but could this have
-used some explicit overflow checking?  Something like
-
-		if (check_add_overflow(acpi_hest_get_size(gdata),
-				       gdata->error_data_length, &record_size))
-			return -EINVAL;
-
-		if (record_size > data_len)
-			return -EINVAL;
-
-That uses the compiler __builtin_add_overflow() which checks if the infinite
-precision result of the sum of the parameters would have wrapped when written
-to the output one.
-
-I think you could then drop the earlier check as well as
-record_size is at least as big as acpi_hest_get_size() and we know there
-was no wrap around.
-
-	
-> +		if (record_size > data_len || record_size > INT_MAX)
->  			return -EINVAL;
->  
->  		data_len -= record_size;
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(cper_estatus_check_header);
 
