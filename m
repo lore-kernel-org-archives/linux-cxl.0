@@ -1,176 +1,227 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4914B43553A;
-	Mon, 24 Aug 2026 14:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127F937AA78;
+	Mon, 24 Aug 2026 17:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787581521; cv=none; b=P5Q1htna//nQCCMefrEI8EZ7m8TB3hh7FPTnkBlxyoqZM0jsWkB6eDBcimfkVSHc/NHlW1CadTE4Dxj/BOzTX+JeLW5ktiSwUiuznEBftpGqoz4WL8gCNaQPrUVSggc8hgQ11evpyebYnEM4VVkRaEwuTHy6jG79tXUM6Pw8UmQ=
+	t=1787593780; cv=none; b=Bsp7l03zBRS0rYojoN/k82vWCwNzuLbszcvO1KrfhBQj2uVIulo8f0DLHrht21PNoCd40TrITVg0g/BxBjEMfh/JMJRMMlHF28j+JJzOoCujV8rDT3KkwKQZ1Is0kxWv2VtfFgGHaL2c5nyb1I6TwQbYb6WSvUIXBIzaiud8Mbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787581521; c=relaxed/simple;
-	bh=esKFE2dLfD7i26+NbesYp0TnsWSV4i+ufozFlUg2USE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iEBcJV6zCt6vj9eBKWa1Me3eQ7CMqedS8wSK1T7+tBQjmv6Oj4rrIxJNK0t5bqaxRgvOdueKy92MRGihJ1YpkDCxkYFx2l0n1VRKPEVIMGbamPTYuQDq9Fg14awE6P4AFHK7MWkRs7TN/E/U7fVcn1gDMppirntX4ayIw5fDnzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+KJ2E6T; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+KJ2E6T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852921F000E9;
-	Mon, 24 Aug 2026 14:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787581519;
-	bh=kx7nJEikJd2gAo7BYzCy7HT2bzgfxWIFVO4K1fhLNjI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=G+KJ2E6TIDYSCodKeXSegNEfNhDILpnmt10ek/yTqJuG37bTXWi9OAf/f7dyDOpSg
-	 3xamtGf2DEYEUwIyHfkl+ZGx3O39oIRrBHSSxUAvfwWWWdpq9eC/YO9tMwLvaf4rui
-	 6mapgKJk+K6fRTJE9Arfmm/dJyAObm/kY/orCTisBk9UfSV7C/6eLEAfTe/vc6I9iL
-	 j1cSmIjSszUIQUKXhg9K5gvpywJPV5Vb4vktf3OpHJvOaI9dDLwwz478TxF8bniwoc
-	 +vvF2rzbWJx1TcPY+xGgJ7i/P1JwHVlsMTMf3LH1Vq3itRk+Glr84qWCBbDNdJpS2A
-	 uiLGrIAliyIKQ==
-Message-ID: <8b916c0f-a2ae-45df-90c1-f712bc4fffd9@kernel.org>
-Date: Mon, 24 Aug 2026 16:25:03 +0200
+	s=arc-20240116; t=1787593780; c=relaxed/simple;
+	bh=CLw/eMF0/YJgPSmPEusffNcYPb5lUMe041XHS9SRf8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DxoDu9wAlJBcrvmCuVHIWuoOV/SCpIp20g2zPioLqql3hYifPoAKdYecZ0rgFqn+szGN6BOzAOvrxVJ0Td5cmHRxFr0gD3YaF363LLIFt5eW9oeEaD0CZNchIGzWt9pHWND6Lus6avtD00vvM5H+gwGiWJCAsquSlkHvRiQSa5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4A411F00A3E;
+	Mon, 24 Aug 2026 17:49:38 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Cc: rafael@kernel.org,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	guohanjun@huawei.com,
+	mchehab@kernel.org,
+	xueshuai@linux.alibaba.com,
+	terry.bowman@amd.com,
+	benjamin.cheatham@amd.com,
+	alison.schofield@intel.com
+Subject: [PATCH v4 00/13] ACPI: APEI: GHES: Collection of fixes for issues reported by sashiko
+Date: Mon, 24 Aug 2026 10:49:23 -0700
+Message-ID: <20260824174936.939059-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-To: John Groves <john@groves.net>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: Christian Brauner <brauner@kernel.org>,
- "Darrick J . Wong" <djwong@kernel.org>, John Groves <john@jagalactic.com>,
- Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>,
- Alison Schofield <alison.schofield@intel.com>,
- "John Groves (jgroves)" <jgroves@micron.com>,
- Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <jic23@kernel.org>,
- Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
- <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>,
- Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>,
- Shivank Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>,
- Gregory Price <gourry@gourry.net>, Andrew Morton
- <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Jiri Slaby <jirislaby@kernel.org>,
- Ethan Nelson-Moore <enelsonmoore@gmail.com>,
- Gabriel Whigham <gabewhigham@gmail.com>, Aravind Ramesh
- <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
- "venkataravis@micron.com" <venkataravis@micron.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com>
- <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs>
- <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
- <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner>
- <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
- <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
- <ea56c85b-d564-4451-b704-58448a07bfa6@app.fastmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
- ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
- AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
- 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
- g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
- ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
- 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
- /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
- jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
- DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
- HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
- 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
- LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <ea56c85b-d564-4451-b704-58448a07bfa6@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/22/26 23:55, John Groves wrote:
-> 
-> 
-> On Fri, Aug 21, 2026, at 2:39 PM, Miklos Szeredi wrote:
->> On Fri, 21 Aug 2026 at 13:40, David Hildenbrand (Arm) <david@kernel.org> wrote:
->>
->>> (a) Whether a fuse-based approach is feasible.
->>>
->>>     Are there any major blockers remaining?
->>
->> No.
+Fixes for pre-existing issues sashiko-bot found while reviewing patches in the
+CPER, extlog and GHES paths. v1 through v3 fixed successive batches as the
+review widened; see the links below.
+
+v4 answers Tony Luck's question on v3: is there a common early point where an
+oversized gdata->error_data_length gets rejected, rather than each caller
+checking only "len < sizeof(*foo)"?
+
+cper_estatus_check() walks every section and runs before any handler
+on all three paths - the IRQ path via ghes_read_estatus(), the NMI path via
+ghes_in_nmi_queue_one_entry(), and bert_print_all() for BERT. Patch 1 bounds
+error_data_length there, so the handlers' own checks are lower bounds only, by
+design, and ghes_do_proc() and ghes_handle_aer() need nothing extra.
+
+Patch 1 also stops that bound depending on the signed helpers the question
+points at. The wrap goes the wrong way to be caught: against the 72-byte v300
+header, an error_data_length of 0xffffffb9 makes acpi_hest_get_record_size()
+return 1 rather than something huge, so it passes "record_size > data_len" and
+acpi_hest_get_next() advances by that 1. Summing in u64 and rejecting what an
+int cannot carry removes the dependency.
+
+A record needs a second, independent bound, since cper_estatus_check() sees
+the record alone and never the buffer it was read into. That one belongs to
+each caller: bert_print_all() bounds against the remaining BERT region, and
+extlog_print() gains an ELOG_ENTRY_LEN bound in patch 3.
+
+GHES is the one caller without it - __ghes_read_estatus() copies buf_len bytes
+over the header buf_len came from, and never re-checks. No patch here:
+reaching it needs something to rewrite the block while block_status is still
+set, which the ACPI read-acknowledge handshake forbids, and I have no instance
+of firmware doing that. Better as a separate look than a Fixes: tag and a trip
+to stable for a window nobody can show is real.
+
+The series is grouped in three parts, plus a cleanup.
+
+Bound the record before anything walks it:
+
+1/13:  Reject CPER records with an out-of-range error_data_length.
+2/13:  Reject an error status block length that wraps a u32.
+3/13:  Validate the extlog record length before walking sections.
+
+Fix the extlog error paths, then enable them:
+
+4/13:  Defer CXL protocol error handling to avoid a lock inversion.
+5/13:  Avoid populating software AER metadata from the raw hardware buffer.
+6/13:  Validate the PCIe error section length before payload access.
+7/13:  Fix the CONFIG_ACPI_APEI_PCIEAER guard typo in extlog.c.
+
+Bound each section payload before its consumers read it:
+
+8/13:  Bound the CXL event record copy to the firmware section length.
+9/13:  Validate the CXL protocol error section length before the RAS cap copy.
+10/13: Read only validated fields in cper_mem_err_pack().
+11/13: Validate the memory error section length before payload access.
+12/13: Bound the AER info copy and sanitize software metadata in ghes.c.
+
+Then drop an export patch 4 made redundant:
+
+13/13: Make cxl_cper_handle_prot_err() static.
+
+Patches 1, 2 and 10 touch drivers/firmware/efi/cper.c, closing the holes at
+the shared choke point the rest of the series relies on. Patch 2 also fixes an
+infinite loop in bert_print_all(), unrelated to this series but the same root
+cause.
+
+Known gaps, left for separate patches:
+
+  - cxl_cper_print_prot_err() in drivers/firmware/efi/cper_cxl.c uses
+    dvsec_len without bounding it against the section length.
+  - cxl_rch_get_aer_info() in drivers/cxl/core/ras_rch.c reads the RCH AER
+    capability from MMIO without clearing header_len/flit, the same class as
+    patches 5 and 12.
+  - struct pcie_tlp_log grew to 60 bytes for Flit mode, so the 96-byte CPER
+    AER info no longer maps 1:1 onto struct aer_capability_regs: Root Error
+    Command, Root Error Status and Error Source ID land in
+    header_log.prefix[0..2] and print as end-to-end TLP prefixes. Patch 7
+    makes this visible in extlog by fixing the guard typo, but the misdecode
+    is the same before and after; patches 5 and 12 only stop the
+    out-of-bounds reads around it.
+
+v1: https://lore.kernel.org/linux-cxl/20260709162807.1957783-1-dave.jiang@intel.com/
+v2: https://lore.kernel.org/linux-cxl/20260714231835.303081-1-dave.jiang@intel.com/
+v3: https://lore.kernel.org/linux-cxl/20260717161647.1493259-1-dave.jiang@intel.com/
+
+Review tags from the v3 thread are carried over. Patches 2, 10 and 13 are new
+in v4 and have none. Patches 1 and 11 were reworked, so their v3 Reviewed-by
+tags are dropped. Patches 4, 5, 6, 7 and 9 changed in smaller ways and keep
+theirs. Patches 3, 8 and 12 are unchanged.
+
+Changes since v3
+----------------
+- Regrouped into three parts: bound the record, fix and enable the extlog
+  paths, then bound each section payload. v3 interleaved them, so patch 1
+  checked a section before the patch establishing that contract. No code
+  changed.
+- Moved the extlog lock inversion fix (patch 4) ahead of the CXL protocol
+  error length validation (patch 9). The former deletes
+  extlog_cxl_cper_handle_prot_err(), which the v3 order plumbed a new len
+  argument through three patches before removing it. No functional change.
+- Patch 1: sum in u64 and reject a size the int helpers cannot carry, so the
+  choke point no longer depends on acpi_hest_get_record_size() not wrapping
+  (Tony Luck). The v3 "< 0" check was dead code, and bounding the u32 alone
+  would have left the sum unchecked. Reviewed-by dropped; not the same check.
+- New patch 2: reject an error status block length that wraps the u32 sum in
+  cper_estatus_len(). A data_length of 0xffffffec makes it read back as 0,
+  slipping past the extlog bound in patch 3 and leaving bert_print_all()
+  advancing by zero forever (sashiko). Its commit message no longer claims
+  extlog already reached cper_estatus_check_header() (sashiko).
+- Patch 4: moved the cxl_cper_post_prot_err() declaration inside the
+  CONFIG_ACPI_APEI_GHES block in <acpi/ghes.h> (Shuai Xue). The GHES=n plus
+  EXTLOG=m failure that prompted it is unreachable, since ACPI_EXTLOG selects
+  ACPI_APEI_GHES, but the declaration belongs there anyway.
+- Patch 5: dropped a pointless aer alias; the local aer_regs goes straight to
+  pci_print_aer().
+- Patch 6: warn instead of returning silently on a short PCIe section (Shuai
+  Xue), and added the Closes: link v3 omitted.
+- Patch 7: corrected the Fixes tag to e778ffefa34d, the commit that added the
+  "#ifdef ACPI_APEI_PCIEAER" guard, and dropped its Reported-by; sashiko-bot
+  reviewed that patch rather than reporting the typo.
+- Patch 9: made the two prot-err length messages distinguishable; both printed
+  the same text. The second now reports dvsec_len (Shuai Xue).
+- New patch 10: read only validated fields in cper_mem_err_pack(). It copied
+  extended, rank, mem_array_handle and mem_dev_handle unconditionally from
+  offsets 73 to 79, past the end of the 73-byte UEFI 2.1/2.2 layout (sashiko).
+- Patch 11: derive the required length from the claimed validation bits. A
+  single size gets it wrong both ways: 73 bytes let a 74 to 79 byte record
+  through, so patch 10 could read mem_dev_handle at offset 78 off the end, and
+  80 bytes rejected a 76-byte record legitimately carrying rank, or one
+  claiming only bank at offset 38 (sashiko).
+- New patch 13: make cxl_cper_handle_prot_err() static. Patch 4 removed its
+  last external caller.
+- Condensed the commit logs and comments throughout; prose only.
+
+Changes since v2
+----------------
+- Dropped the standalone spin_lock_irqsave() change; a separate issue being
+  handled by Terry Bowman.
+- New patch 2: reject a section whose error_data_length is out of range in
+  cper_estatus_check(), closing the signed-int overflow that let a crafted
+  section defeat the per-caller size guards (sashiko).
+- New patch 9: apply the same AER buffer sanitization to ghes_handle_aer()
+  that patch 4 applies to extlog (sashiko).
+- New patch 10: bound the extlog record and run cper_estatus_check() before
+  walking its sections, which extlog did not do (sashiko).
+- Patch 8: move the memory error length check into ghes_do_proc() so the
+  report chain and arch reporter are covered too, and bound against the older
+  UEFI 2.1/2.2 layout rather than the full struct (sashiko).
+- Reordered so the extlog PCIe path is hardened, and CXL protocol error
+  handling deferred to the workqueue, before the typo fix that activates it.
+
+Changes since v1
+----------------
+- See the v2 posting for the full v1 -> v2 changelog.
+
+Dave Jiang (13):
+  efi/cper: Reject CPER records with an out-of-range error_data_length
+  efi/cper: Reject an error status block length that wraps a u32
+  ACPI: extlog: Validate elog record length before walking sections
+  ACPI: extlog: Defer CXL protocol error handling to avoid lock
+    inversion
+  ACPI: extlog: Avoid populating software AER metadata from raw hardware
+    buffer
+  ACPI: extlog: Validate PCIe error section length before payload access
+  ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
+  ACPI: APEI: GHES: Bound CXL event record copy to the firmware section
+    length
+  ACPI: APEI: GHES: Validate CXL protocol error section length before
+    RAS cap copy
+  efi/cper: Read only validated fields in cper_mem_err_pack()
+  ACPI: APEI: GHES: Validate memory error section length before payload
+    access
+  ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
+  cxl/ras: Make cxl_cper_handle_prot_err() static
+
+ drivers/acpi/acpi_extlog.c       | 49 +++++++++---------
+ drivers/acpi/apei/ghes.c         | 89 +++++++++++++++++++++++++++-----
+ drivers/acpi/apei/ghes_helpers.c | 18 ++++++-
+ drivers/cxl/core/ras.c           |  3 +-
+ drivers/firmware/efi/cper.c      | 53 ++++++++++++++++---
+ include/acpi/ghes.h              |  4 ++
+ include/cxl/event.h              |  6 +--
+ 7 files changed, 170 insertions(+), 52 deletions(-)
 
 
-Thanks both for your input. I see still some disagreement, but ...
-
-> 
-> Famfs does work in fuse, but some of the asks are things that I don't see
-> how I can agree to. I think Miklos and I should discuss those 1:1, to figure
-> out if there is a way forward.
-
-... I think this is the right approach. If you want more people involved, just
-speak up.
-
->>
->> We (Amir, Joanne, me) explained to John how this is exactly what's
->> needed to make famfs work.  We've not seen an acceptance of that yet.
-> 
-> I am not feeling that my technical concerns have been heard and 
-> understood, and I have not thought that the suggested changes to famfs 
-> would preserve its fitness for purpose. 
-> 
-> Whether I'm right or wrong can be figured out if we discuss it 1:1. The 
-> on-list conversations have been something that my cardiologist asked
-> me to stop reading. (only semi-joking)
-
-Yeah, I think there are some misunderstandings, and if you can figure that out
-in a 1:1, and let the outcome be known to the rest of us, that would be great.
-
+base-commit: 075b74841bd0065a3bda3440873c747938e69b68
 -- 
-Cheers,
+2.54.0
 
-David
