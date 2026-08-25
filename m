@@ -1,147 +1,204 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BF748CD4A
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 22:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A02C3D7D64;
+	Tue, 25 Aug 2026 22:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787696109; cv=none; b=SGQNH0vdOwTghWtxLAEBWiu/JkCcIB45uHJ9pQJ5Ty+NjUKYvHTqHDK5MA7mS0jBqMRbLhR4uV/0iMcXG6xBeQcXCReIFsxopNR2FfT2gB/UC0VGNgJBYbq7Kl7EgfYBfoPsFdLMQnXhcGzQKzlQlZ569wjUrOhp2w0jATikpAs=
+	t=1787696327; cv=none; b=r6sGTcd7oga6l71ya3xeSM1NEJuZPVoJ73f/bhnPQkLBKkKXiY6n6hSLj6ceqyzlAJEb0D7mj5fgiCCwZrUQ2+f3oeLbj+rUD5TkqNOuFg0KsUusVOMqssfSX6+2aYY/ae3D/Sp9Fo2joAievlU3vqhhW67kJFl6BCv9YIC7ixI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787696109; c=relaxed/simple;
-	bh=ALvTtQS/ZvvUR9gxm8qmzRxg51/e/os61XAFTpQzc/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZI9fhanjiu4R7FRZMwA4VyRuScDRBawGVBQ7AQMXTOYt9JsxcgpcWnVdNWm4plj6rSxMovwbyRZSuKzLwKMceSO8eU272wJQwKiKOhZR686xBBXWZFzSbWVjrYIs1uUOZKxGaNboPS+GpIEvKmgM6DLTjH6gddpW2Qxg5Lob3iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-97c940ef65cso152468241.2
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 15:15:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787696106; x=1788300906;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ALvTtQS/ZvvUR9gxm8qmzRxg51/e/os61XAFTpQzc/U=;
-        b=kX2U8TslVoPEg1yCfZDhMmrocY7bRdluE2m2pOXFRVSJaL+paDQIMKSeSpDXbOteON
-         2vmTTzCwhC8ydseUoD+xEJR77lCLJlBacLtolVyeA8QsosYdkRMzKOFMxm1WZWR93bwM
-         BOW+PDPN7z7xuUI4ofPo2GuEL87qV7oHkGNGMkMsNdfSin8+KiUuYOM/hSNaXbFmdkI9
-         IgcG6Ouwm7NMVtw49Oil1CTg0I3WEOSaRThVoKkZtwz/7crKjhpdZNIWb/CKqXfShaA6
-         NXdbAfOwCMSu7jAy8MCK+0eawrxCQoIBOyJp5UovaxhyKB2BUnRY3MAYVFO60UWS81c5
-         urgQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrKqvBxP5KbzHXpRsu9zk5+ilTMrli8YbXTH25k3o5tTo6wPgkn84glNmYBwTA7ZmqKsz9ip3X2RAk=@vger.kernel.org
-X-Gm-Message-State: AFuF++m9LqVchOSvb5Y3MdEivEZS5QwQbckNZT0fdZOQgIlcicnGvt4R
-	FGr6xhjHkE0YtE9EoaduN8bMK0K7bDSnFJgFPWU4hFfzfeP9mx7ooMEMabKjOKyv
-X-Gm-Gg: AR+sD12KqzHB/QpTEtC1b7KfyhGYL5hS287jHrqKKZ8sAcvig3z3/3VJmd+9h0gtRTl
-	LhTPcS9Y9MiYdFodyrh962Cbu+PTWnd1RtVytS8whJ1rYHI9+Q6V400M9VanCgPOZM7c67reIlt
-	mbnllsnqbH0VLAtZRTUfLr30K43nR8TO61IBntexfeWWpdq1DX3kuHtlLznySQGQuoj4nWlZCwz
-	QNAYEihRKV1xj5Qkw3r+dLENsPAWj0LjghoP8MKcKYyfNuGod4NR6VGUEiD+6k8n62L1+LfTyVU
-	JYfoTjrv88ll/c6ljr1iss0OE9msYr6hYrFYpJUSo8XYWGeBaEwv33js3QJajsSi+NI0b68JHxe
-	9K1v534WB8s40NK2MOHnREp15OhGAJz8ohmq5OYZ5dMqh7WbR6IdNkGi8VdDtxC7rYJEt58f7ZV
-	3MExMIrQrVWJDs0gSgESygOznQvDztWiuWOPDMYcGdhVM1Zx/bhq0We+nxSWPid8bm8gjZlLxNC
-	h6ZOVUu+Te9MScO2gIB3MG2TnIk49/j3niGwQMNUGZG5JbjHyjU2aDW+W+BbDXoP8wwrOrx4HyT
-	tRH9Uvn5SXqCsZpDGaf74JCB/g06Uk6y79o=
-X-Received: by 2002:a05:6102:3a09:b0:77f:f475:2037 with SMTP id ada2fe7eead31-782c1a0314cmr914341137.10.1787696106365;
-        Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7830581026csm182093137.3.2026.08.25.15.15.06
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-782df51b4c1so147908137.3
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rq92id46qASdnLnJzool1hwFnnE/2wap+FGm7GUkoUx5CgK0e4q3OoKHFDNFR5V7faUB/MbaTLqd+Q=@vger.kernel.org
-X-Received: by 2002:a05:6830:7104:b0:7f1:ddf1:c731 with SMTP id
- 46e09a7af769-7f4c5097628mr2648400a34.13.1787695731676; Tue, 25 Aug 2026
- 15:08:51 -0700 (PDT)
+	s=arc-20240116; t=1787696327; c=relaxed/simple;
+	bh=GRSprL89g8KwxCCZBOedFkXrZGtaPJpQUg2j1eBIuYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LHLvzXzKlTEFyDPKyfqNR9V1i6WJuGeyoGW01m27mDbeFVlEN0PpdNiS0JwuoS+4c6+vf+cJgVJH9lea3KB6GL+JhK5EFJo3fxnlU6KaZ9vh1TpRoNRbVTPcTgrgiryzOgySWjUJanXmcHNVcpdEAcd7gu/kmHgzhTQqNV1kgcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=E9yT43Vs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WZtdtjkk; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="E9yT43Vs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WZtdtjkk"
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 924FFEC0226;
+	Tue, 25 Aug 2026 18:18:44 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 25 Aug 2026 18:18:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1787696324;
+	 x=1787782724; bh=DS1rqdlZjbF5D6n64SjidqCOql965Pf+tbcCHMSWHL4=; b=
+	E9yT43VsoKGiFH9z0/GJUpUWsY/Wxd8+QpixpsV35DZlIMj9QFGC4ZCyCoOSbbf4
+	hB4kWhYql7aKVCK3Xkigjht7Tk5EhG4kT5tM0zXJQv6ZehJ9SNFAjBNK3ECDF96J
+	69RSFH8vw8B1puOPNudzO0+ePzu0Xf6dMIvnultLbXqk16HB8P1hdPYLfHIbkOdM
+	OsCN2tc62P5Wd43VM5+kuI9PuJsjyWU6bHdhIRXRePejVBkop+1b7WQSKBYhXGE8
+	NFouwFaxQj3YIDeEs1Fig9bB7nqzkatLKqvKogy+C2ZAjnphOlfc+9cyHCvfXvp1
+	7UI22vP3wuEno0eJGKp9KQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787696324; x=
+	1787782724; bh=DS1rqdlZjbF5D6n64SjidqCOql965Pf+tbcCHMSWHL4=; b=W
+	ZtdtjkkzmSfCUlaaABoK7L0l7QCiOhIrrYPabDuMrW+M2qlNVTnu+G2Rv2wqIK4k
+	dnnAfREF90j8aF3RRmX0iRYTSn2uouJBRM23t9TI6KsseThv0frzvBh3x9hvF+o4
+	lIcGcJf9YXrWVbHgl/t0kJckzwvhH648/Lvc+LbfK9u8Osipat+dK84BqhGWrRxX
+	i8tRRCUwHLSODDs1a/y0WnFBm54VF9U6WzlMcnguRmNvS5hycTZizOc6apaWujnp
+	lsqIaonbHkUc7RgrbTqKIaFZ441WA13PSEMbYo9H40x70dA20IordEVq+7eQClWZ
+	zyeIRppiUTRP2MDYMPR1g==
+X-ME-Sender: <xms:xBSOavFxHl-UJ3goCl2YrGlZitprkBNx_KoYaHXPEQ_DFy8CXNv5oA>
+    <xme:xBSOagnWqLSNSjopKQHWik0dskIQw6MXqrhM0StIS3DG29eOXl6Hau9LB1d1owQQ_
+    1i2IIgoCBcId50G2tBuY4XOb3Wds2m5gxKssFsvRofhNs6wSZuFseo>
+X-ME-Received: <xmr:xBSOauHvYsT87A3mFfuTyGaayg4N6X67SvpK7wvQa9-y3qlYf6ouP_8ZfTa73Q>
+X-ME-Proxy-Cause: dmFkZTEmJqB+14a23EMh3zlbGN5McyDDOFH3/cb967qFV3hOvQQBCN+8jLhN2laifAEsA+
+    tjqL4YOdn902aZdmyOsHt4ZkcRH6ifdB6xqBYnBbxdJjM2YxmWv1QPQcN4MzUvpafah5rL
+    sAK7tkszXhn+LUFo/2HeQFtXTSnT5en1V5shSSgnXCnPyHuGDQMITW2T6YTrpBsSHDuttw
+    M6RdsUSZu85nrF01VSk7EFuHCISU6y+f8ZS2wIObiqTSQRrK44l/efaRvcrd1nzXBvyF/x
+    P3nl1gecL1Icbn0H/2mWMT+2J9+dUqJRXZxKZ9lW1ZKHmxRo+GTEvgmMrBt1VE44XdX5Ef
+    7KuJl18j90LFJHcYZQkGzjWowY66kzS94nJqtcDnDTnQ2q7/T+HR9TrSc6wOl7oT2rtEHh
+    rMqd/ShYLU+83Y7VUaQ9UPkkeAxEvLUYF/Z8K1rLBZMcfvkW2KH3maG7RVjPbXSc2tCPbq
+    FctdaASa2Uee5VS0zXiB5//4sXo/sW5bgk8LhwTZGI9032Vv6fxTk/dJGXPdWKcmmkEsNt
+    qSEw7XNRuQkFSdexEUsrdWdTTTw2RrF5NYvvFrG3IisYKa+60KW6WPC/ZTUZHBqVzeD6Zk
+    MCwLHN4a1vIb7r5k/pRY0d4lX64h5ChPyWmqPw1J08paB9bmf5AGsI+r+d8g
+X-ME-Proxy: <xmx:xBSOarzJn6b2XJc9vnZarCYhS_OvVB3tbCM9v1aBJFe9mCepSF8MlA>
+    <xmx:xBSOavYXdo1s9vnqiYtTgxOjzOI9Nr-IhkmETHNvf5KcNI12kKOTmQ>
+    <xmx:xBSOaulT7HwoF5dOU4wU60-juqQ2U99Sath7ssCZ4eLPv06krTQS4g>
+    <xmx:xBSOakl1skB_fm3CwXGqYVO6a3hH8N9gitpXezS6tjTuzWm8usOD5g>
+    <xmx:xBSOajY1YKFt_OEFUXpzGZB6g63yIXUppOQglZ3QKdtQ_PmRmTGkDDJL>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Aug 2026 18:18:41 -0400 (EDT)
+Date: Tue, 25 Aug 2026 16:18:39 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: <mhonap@nvidia.com>
+Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ alex@shazbot.org
+Subject: Re: [PATCH v4 04/27] cxl: Establish media readiness in
+ cxl_mem_probe()
+Message-ID: <20260825161839.2cb3a6c7@shazbot.org>
+In-Reply-To: <20260813093631.2288172-5-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-5-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com> <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs> <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
- <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner> <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
- <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
- <20260822002111.GA6110@frogsfrogsfrogs> <20260825-hinab-kanarienvogel-mitschnitt-04a662533a24@brauner>
-In-Reply-To: <20260825-hinab-kanarienvogel-mitschnitt-04a662533a24@brauner>
-From: Neal Gompa <neal@gompa.dev>
-Date: Tue, 25 Aug 2026 18:08:14 -0400
-X-Gmail-Original-Message-ID: <CAEg-Je8d0kKH=kPiG7RDK4jGiTvECyOA_uFkZzbuvDpR+owJEA@mail.gmail.com>
-X-Gm-Features: AcwNN1Ug6ZjMUQh0-6_7H39nZVAq6SWCLa31cOPu7pwraCiDoCVhUYh7Q1UxHT4
-Message-ID: <CAEg-Je8d0kKH=kPiG7RDK4jGiTvECyOA_uFkZzbuvDpR+owJEA@mail.gmail.com>
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
-	"David Hildenbrand (Arm)" <david@kernel.org>, John Groves <john@jagalactic.com>, John Groves <John@groves.net>, 
-	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 25, 2026 at 9:44=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> > > Without John's trust I'm not taking this on.
-> >
-> > Whatever path you and John decide on, I would very much like to see the
-> > question of Which famfs driver do we merge? to be resolved for 7.4.
->
-> While it is reasonable to place limits on how long a series is pushed
-> out (I like to move with some speed myself.) we have two competing
-> implementations and that will have to play out. We should not merge an
-> fs just to finally merge _something_. The fact that this was more
-> contentious than usual doesn't imply we need to merge a version, doesn't
-> matter which one it is. That's a bad reason.
->
+On Thu, 13 Aug 2026 15:06:08 +0530
+<mhonap@nvidia.com> wrote:
 
-Well, after 12 iterations in this version alone (working on this for
-three years) and forcing multiple side quests on John, I think it's
-not very fair to him to keep stringing him along like this.
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> media_ready was only ever set by cxl_pci, in advance of registering a
+> memdev and with CXL Memory Device register assumptions. A consumer that
+> creates a memdev without cxl_pci, such as a mailbox-less Type-2
+> accelerator brought up through devm_cxl_probe_mem(), therefore handed
+> cxl_mem a device with media_ready still false, and cxl_mem_probe()
+> rejected it with -EBUSY. __devm_cxl_add_memdev() turns that into -ENXIO
+> back to the caller and the bind fails.
+> 
+> Move the readiness wait into cxl_mem_probe() so every memdev consumer
+> gets a ready resource regardless of how the memdev was created. When
+> media_ready is not already set, wait on the device's DVSEC
+> Mem_Info_Valid and Mem_Active bits and mark it ready. cxl_pci keeps
+> setting media_ready before it registers its memdev, so that path skips
+> the wait.
+> 
+> The CXL Memory Device register group is optional and many Type-2 devices
+> do not implement it, so cxl_await_media_ready() must not read the Memdev
+> Status register unless the group is mapped. Reading regs.memdev on a
+> device that lacks it would fault. Gate that read on regs.memdev; the
+> DVSEC bits already prove readiness for such devices.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c | 15 +++++++++++----
+>  drivers/cxl/mem.c      |  9 +++++++--
+>  2 files changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 08d4c955137d..9b372d5a1aa4 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -151,7 +151,6 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
+>  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+>  	int d = cxlds->cxl_dvsec;
+>  	int rc, i, hdm_count;
+> -	u64 md_status;
+>  	u16 cap;
+>  
+>  	rc = pci_read_config_word(pdev,
+> @@ -172,9 +171,17 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
+>  			return rc;
+>  	}
+>  
+> -	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> -	if (!CXLMDEV_READY(md_status))
+> -		return -EIO;
+> +	/*
+> +	 * It is possible some Type-2 devices (CXL_DEVTYPE_DEVMEM) do not
+> +	 * implement regs.memdev; only consult the Memdev Status register when
+> +	 * the group is actually present.
+> +	 */
+> +	if (cxlds->regs.memdev) {
+> +		u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +		if (!CXLMDEV_READY(md_status))
+> +			return -EIO;
+> +	}
+>  
+>  	return 0;
+>  }
 
-At this point, I find it hard to believe there's much more to discuss
-about a not-a-filesystem that is relatively isolated from the rest of
-us. I've been following this discussion and while I don't necessarily
-grok everything, I understand it well enough to know that someone
-should just shepherd it through with John and just work things out in
-post. Honestly, the amount of metaphorical heartburn that must have
-been generated by this is insane. If I had any say worth a damn, I'd
-say let's just have Darrick work with John to close it out and get it
-landed for 7.4.
+This looks like it should be two separate patches.  The change below
+depends on the above, but the above change stands on its own.
 
-Ultimately, the question of which famfs should be merged should be
-decided by John and Darrick (presuming we just all let Darrick
-shepherd this through). This has gone on way too long, I'm getting
-echoes of the sched_ext mess... :/
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 798e5c369cfc..9c6e99b9124c 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -105,8 +105,13 @@ static int cxl_mem_probe(struct device *dev)
+>  	struct dentry *dentry;
+>  	int rc;
+>  
+> -	if (!cxlds->media_ready)
+> -		return -EBUSY;
+> +	if (!cxlds->media_ready) {
+> +		rc = cxl_await_media_ready(cxlds);
+> +		if (rc)
+> +			return rc;
+> +		cxlds->media_ready = true;
+> +		dev_dbg(dev, "CXL media ready\n");
+> +	}
+>  
+>  	/*
+>  	 * Someone is trying to reattach this device after it lost its port
 
+LLM review is noting a plausible behavioral change here; if there is an
+actual media issue, it seems it's flagged in cxl_pci_probe() by leaving
+cxlds.media_ready false.  That path can then go on to find memory
+devices, add a CXL_DEVICE_MEMORY_EXPANDER, and via the .probe callback
+reach cxl_mem_probe() and wait another timeout delay here for the same
+media issue.
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+Should the mailbox-less path test and set media_ready before adding the
+CXL_DEVICE_MEMORY_EXPANDER and getting to this .probe callback, making
+it consistently tested upstream of this function?  Thanks,
+
+Alex
