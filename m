@@ -1,142 +1,147 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B3E3D649C;
-	Tue, 25 Aug 2026 21:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BF748CD4A
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 22:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787693182; cv=none; b=Hso1R/zMB2h2V+6HsJLlMyVn+d5v0xRmXAcZw2bKyKo7CHlrPf6BZqaBzehLnLoGkDUclHOhEgglDR3CCOd2nkfFMoJBg4jFRYdZhx5hOtTKnO67g5ExA6K9fV2JSuPwwvqq7ww+juPhzLYSqXhkgCpFTtX9dj9pJ7lQZM/aw/w=
+	t=1787696109; cv=none; b=SGQNH0vdOwTghWtxLAEBWiu/JkCcIB45uHJ9pQJ5Ty+NjUKYvHTqHDK5MA7mS0jBqMRbLhR4uV/0iMcXG6xBeQcXCReIFsxopNR2FfT2gB/UC0VGNgJBYbq7Kl7EgfYBfoPsFdLMQnXhcGzQKzlQlZ569wjUrOhp2w0jATikpAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787693182; c=relaxed/simple;
-	bh=fyxOKeBBeK3d6FRXyXiUs1QmsIWUVKH+V6Vz4D3pMZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CwafAGmeBJQ7YCAnEOMMBU1A+5OEkP0RVlODiU7YEmK94AMNxvPAOsBKVBzpaXRnxydCWXNU++yaCvXn3B0ys/1rAC5+xhLPDBYA4HWOVbnNlkWlyGrlNSa8wvwZs9wsPmHHcpjMI7XRZsYZGjMoahyxwNp+lZqShzmUylUcuV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=gnuBbRks; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B+TRJWUF; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="gnuBbRks";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B+TRJWUF"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A882B1400028;
-	Tue, 25 Aug 2026 17:26:17 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 25 Aug 2026 17:26:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1787693177;
-	 x=1787779577; bh=TI3LYYdNPFkkgbQYpNaHoiAiGm3EHWu4t1KyT0USaQg=; b=
-	gnuBbRksEM4IVJKkNrBcekDrkwduiHEBy59k85/ZIMDNBoaXr17k7Hutww0R6KEB
-	bEPfdMJkrQIAqXwMm9KxAbamu4TJq11ir5aToXac1QgF3E9kjN2b643whh5u4o4v
-	kOE1E6fKqxODFreGRtS2jrDFy+UQ4Uvg1UuT46O3g1+j5tqN14bHo/Z5HvXpKPHX
-	XmperEbm2KPqVAFa765egvNzDfTxllWhPxAodO+bLUZ0Ss/oxzu4BNvvXGMVgdRy
-	+DC0CBkiZubnlnFXQiyNVulj2VB2jUrCZFRjQ0DS7p5L1uiUYeSh4l6sGttqla2g
-	6YJVjQjTJOreJwqlgL3JcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787693177; x=
-	1787779577; bh=TI3LYYdNPFkkgbQYpNaHoiAiGm3EHWu4t1KyT0USaQg=; b=B
-	+TRJWUFMr7kQhUHWTf/KZh914+bi6aFlCMFomNTFT2HBbBUAlhrwxbw8bBatnTyW
-	Y9Ut1551d2miN2PdGgBbJbfYmjM4tpcHlMPOmt/TIJ3apPg8g4KUOCHtYbojv6Kz
-	78ISFzmd30iT5YB5BogrWwQnfgUG0xXErIaGgNlx5wac32gjLrkCzv58vRtKNShw
-	g855wpA+6ttHk4f6qx5hDSVky1cufwqukKyIBfASKQUcbJnZbFjfXoWToW/xDXz3
-	uK/UXO4tTiYEzdm3SQEiMkp7PvSRu0c4V8kjaHpkEC7dMsgHSZ+sHPVd8EDJXI39
-	IUpaeSKqwTBQh9xcz8/XQ==
-X-ME-Sender: <xms:eQiOarI-bJ04mimDcA6hHrNVB_ySrKFWcaQ9ohaGh0BFk6FDlo-QmQ>
-    <xme:eQiOasxYIr32WkH9UDsd79wHHmo5h9Pe_kMou3e4O3OPvI_ZRpOa5MH43wY0uhxwq
-    ijiQyPWGufcC9Ze139FKxvMUZd_yoNguVd-cFeSGFPo6dvusuSJ5_w>
-X-ME-Received: <xmr:eQiOarGor_aqez3tlDVXWfoT2b42s6KnP10PKlNVPaDPMweFd96IOi8fSaeIIg>
-X-ME-Proxy-Cause: dmFkZTFDCnzeDWsxERS9FkI6DBSsnwLXGNSWypdSO0vpo1L1cZ8qp7QTaKQyexIgzTaE7y
-    22Sl/fGmqHlnzDyaWz6mLYf7N1NKWsNS1yWa8h+RMNhmImKeztb0335u58TuenXGTYAuIM
-    EzZrRtRJnbOGSdwAORlEh7eGMi4Q/uY4YeY3hmJjacATb6krK+zMebxYE90E5xPiDyVxe2
-    lpo4XOgv+3AUMv3dwuNSn9S72Z8pgfr4gHzcI3ve+tXB+i4MgABrLXN/b0/D7mGtvP0vYc
-    sQVr8Fby7N+48sEUHUgf4xT3oIUTzbVCPMJfPtVzAI7j1tNMyPPcSuiYenxt6LN++NWQh7
-    IQS3kipUKf2kie4KllVx84HoEoBbHWbfV30SOiEFizWDgc1M0Ki1sDoGzMgDPiEGcW5CCP
-    KzhSgd4oap2TXH3vwCdby1qDPEMXf3MWws1Om9gFLvjxrcEB7jqAh2fQtpRPXEhWOFQ70T
-    7p7Hpcnnx6WUhMB00f4+rkEt65qC7BTtfuI+8u55y6+YGIltZVmq6m92LQ1d87gWe8q1qv
-    LDCTpAC9qcEq8uHJlBp/CEFqwm7WkcrPOAd5Kkx44Ul7MGpzbKoQFhN+AsMiAMYbCaO/VM
-    4M0Nvop9e8XtF/T+lvuQISTXgw3ED4ysLjLbtR8DeqPjk92R1Z1HPq7ITAMw
-X-ME-Proxy: <xmx:eQiOasmlra1DxmP3CFzeMZFlzubXYtJyp_tE9yzs5jcZ-RLKLbjrsg>
-    <xmx:eQiOaqHkFSOihEFH0PRkk1nhlBjxY9tQBY8807526HcEDl3zc5XydA>
-    <xmx:eQiOanx_tuHgMdgbSNNzDqyVxBPZWcLXyXR_e4sMA_nk_PCTPiY6dw>
-    <xmx:eQiOarb6ayr9RwBBqXNYhTVNKVvuiXmGQKxfiIWNmdQRvvvXj5OW8g>
-    <xmx:eQiOaklv75D2NAx4jFmSn2PQW2pK53_lavG9FGwr_V87iKZPc42dCb_L>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Aug 2026 17:26:14 -0400 (EDT)
-Date: Tue, 25 Aug 2026 15:26:12 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v4 02/27] cxl/regs: Skip sub-block region request for
- BAR-owning drivers
-Message-ID: <20260825152612.5b8452f7@shazbot.org>
-In-Reply-To: <20260813093631.2288172-3-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-3-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1787696109; c=relaxed/simple;
+	bh=ALvTtQS/ZvvUR9gxm8qmzRxg51/e/os61XAFTpQzc/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZI9fhanjiu4R7FRZMwA4VyRuScDRBawGVBQ7AQMXTOYt9JsxcgpcWnVdNWm4plj6rSxMovwbyRZSuKzLwKMceSO8eU272wJQwKiKOhZR686xBBXWZFzSbWVjrYIs1uUOZKxGaNboPS+GpIEvKmgM6DLTjH6gddpW2Qxg5Lob3iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-97c940ef65cso152468241.2
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 15:15:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787696106; x=1788300906;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ALvTtQS/ZvvUR9gxm8qmzRxg51/e/os61XAFTpQzc/U=;
+        b=kX2U8TslVoPEg1yCfZDhMmrocY7bRdluE2m2pOXFRVSJaL+paDQIMKSeSpDXbOteON
+         2vmTTzCwhC8ydseUoD+xEJR77lCLJlBacLtolVyeA8QsosYdkRMzKOFMxm1WZWR93bwM
+         BOW+PDPN7z7xuUI4ofPo2GuEL87qV7oHkGNGMkMsNdfSin8+KiUuYOM/hSNaXbFmdkI9
+         IgcG6Ouwm7NMVtw49Oil1CTg0I3WEOSaRThVoKkZtwz/7crKjhpdZNIWb/CKqXfShaA6
+         NXdbAfOwCMSu7jAy8MCK+0eawrxCQoIBOyJp5UovaxhyKB2BUnRY3MAYVFO60UWS81c5
+         urgQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrKqvBxP5KbzHXpRsu9zk5+ilTMrli8YbXTH25k3o5tTo6wPgkn84glNmYBwTA7ZmqKsz9ip3X2RAk=@vger.kernel.org
+X-Gm-Message-State: AFuF++m9LqVchOSvb5Y3MdEivEZS5QwQbckNZT0fdZOQgIlcicnGvt4R
+	FGr6xhjHkE0YtE9EoaduN8bMK0K7bDSnFJgFPWU4hFfzfeP9mx7ooMEMabKjOKyv
+X-Gm-Gg: AR+sD12KqzHB/QpTEtC1b7KfyhGYL5hS287jHrqKKZ8sAcvig3z3/3VJmd+9h0gtRTl
+	LhTPcS9Y9MiYdFodyrh962Cbu+PTWnd1RtVytS8whJ1rYHI9+Q6V400M9VanCgPOZM7c67reIlt
+	mbnllsnqbH0VLAtZRTUfLr30K43nR8TO61IBntexfeWWpdq1DX3kuHtlLznySQGQuoj4nWlZCwz
+	QNAYEihRKV1xj5Qkw3r+dLENsPAWj0LjghoP8MKcKYyfNuGod4NR6VGUEiD+6k8n62L1+LfTyVU
+	JYfoTjrv88ll/c6ljr1iss0OE9msYr6hYrFYpJUSo8XYWGeBaEwv33js3QJajsSi+NI0b68JHxe
+	9K1v534WB8s40NK2MOHnREp15OhGAJz8ohmq5OYZ5dMqh7WbR6IdNkGi8VdDtxC7rYJEt58f7ZV
+	3MExMIrQrVWJDs0gSgESygOznQvDztWiuWOPDMYcGdhVM1Zx/bhq0We+nxSWPid8bm8gjZlLxNC
+	h6ZOVUu+Te9MScO2gIB3MG2TnIk49/j3niGwQMNUGZG5JbjHyjU2aDW+W+BbDXoP8wwrOrx4HyT
+	tRH9Uvn5SXqCsZpDGaf74JCB/g06Uk6y79o=
+X-Received: by 2002:a05:6102:3a09:b0:77f:f475:2037 with SMTP id ada2fe7eead31-782c1a0314cmr914341137.10.1787696106365;
+        Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7830581026csm182093137.3.2026.08.25.15.15.06
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-782df51b4c1so147908137.3
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Aug 2026 15:15:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rq92id46qASdnLnJzool1hwFnnE/2wap+FGm7GUkoUx5CgK0e4q3OoKHFDNFR5V7faUB/MbaTLqd+Q=@vger.kernel.org
+X-Received: by 2002:a05:6830:7104:b0:7f1:ddf1:c731 with SMTP id
+ 46e09a7af769-7f4c5097628mr2648400a34.13.1787695731676; Tue, 25 Aug 2026
+ 15:08:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
+ <20260803022828.75776-1-john@jagalactic.com> <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
+ <20260806043712.GB3560084@frogsfrogsfrogs> <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
+ <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner> <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
+ <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
+ <20260822002111.GA6110@frogsfrogsfrogs> <20260825-hinab-kanarienvogel-mitschnitt-04a662533a24@brauner>
+In-Reply-To: <20260825-hinab-kanarienvogel-mitschnitt-04a662533a24@brauner>
+From: Neal Gompa <neal@gompa.dev>
+Date: Tue, 25 Aug 2026 18:08:14 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je8d0kKH=kPiG7RDK4jGiTvECyOA_uFkZzbuvDpR+owJEA@mail.gmail.com>
+X-Gm-Features: AcwNN1Ug6ZjMUQh0-6_7H39nZVAq6SWCLa31cOPu7pwraCiDoCVhUYh7Q1UxHT4
+Message-ID: <CAEg-Je8d0kKH=kPiG7RDK4jGiTvECyOA_uFkZzbuvDpR+owJEA@mail.gmail.com>
+Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
+To: Christian Brauner <brauner@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	"David Hildenbrand (Arm)" <david@kernel.org>, John Groves <john@jagalactic.com>, John Groves <John@groves.net>, 
+	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Aug 2026 15:06:06 +0530
-<mhonap@nvidia.com> wrote:
+On Tue, Aug 25, 2026 at 9:44=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> > > Without John's trust I'm not taking this on.
+> >
+> > Whatever path you and John decide on, I would very much like to see the
+> > question of Which famfs driver do we merge? to be resolved for 7.4.
+>
+> While it is reasonable to place limits on how long a series is pushed
+> out (I like to move with some speed myself.) we have two competing
+> implementations and that will have to play out. We should not merge an
+> fs just to finally merge _something_. The fact that this was more
+> contentious than usual doesn't imply we need to merge a version, doesn't
+> matter which one it is. That's a bad reason.
+>
 
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> cxl_map_component_regs() claims each mapped sub-block with
-> devm_request_mem_region(). A driver that owns the whole component
-> register BAR, such as vfio-cxl, has already claimed the full BAR, so
-> the per-sub-block claim collides and the mapping fails.
-> 
-> Add a bar_owned parameter to cxl_pci_setup_regs() and record it in
-> skip_sub_bar_request on the register map. When set, cxl-core maps the
-> sub-block without requesting the region and leaves ownership with the
-> upper driver. cxl_pci passes false and keeps its existing claim,
-> preserving /dev/mem tooling access to the rest of the component space.
+Well, after 12 iterations in this version alone (working on this for
+three years) and forcing multiple side quests on John, I think it's
+not very fair to him to keep stringing him along like this.
 
-The bool arg itself is an undesirable shape, but then threading it
-through @bar_owned to @skip_sub_bar_request to @request is difficult to
-follow with limited utility.
+At this point, I find it hard to believe there's much more to discuss
+about a not-a-filesystem that is relatively isolated from the rest of
+us. I've been following this discussion and while I don't necessarily
+grok everything, I understand it well enough to know that someone
+should just shepherd it through with John and just work things out in
+post. Honestly, the amount of metaphorical heartburn that must have
+been generated by this is insane. If I had any say worth a damn, I'd
+say let's just have Darrick work with John to close it out and get it
+landed for 7.4.
 
-What if instead cxl allowed drivers to register the resources they've
-already requested into the reg_map, ex:
+Ultimately, the question of which famfs should be merged should be
+decided by John and Darrick (presuming we just all let Darrick
+shepherd this through). This has gone on way too long, I'm getting
+echoes of the sched_ext mess... :/
 
-int cxl_reg_map_add_owned_resource(struct cxl_register_map *reg_map,
-				   struct resource *res)
 
-Then before cxl does any devm_request_mem_region() calls it creates a
-temporary struct resource for the range it wants to request and
-compares it to the resources the driver already reported as owned via
-resource_contains()?
-
-I'm picking reg_map vs cxlds because it seems easier to thread through
-to where we need it.  In this flow, devm_cxl_iomap_block() could be
-split into devm_cxl_request_block() and devm_cxl_ioremap_block(), where
-cxl_map_component_regs() would conditionally call the former when
-resource_contains() finds no matches for driver owned resources, and
-the latter is called unconditionally.  devm_cxl_iomap_block() could
-remain as the unconditional user of both.  Thanks,
-
-Alex
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
