@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090993C9EE0
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 13:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855C922423A
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 13:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787751464; cv=none; b=uIsmNtXcXsHL4uegST591/KbRQbbigVYLwoODDRBkZT8m8RgGaQAXs3edS/KhkfyGCZ+hIwdXvpyta5OUl0E6tQJcWZi+7qDbGuFcIVkcHtEyG+yC/LZCX+aTdwwJzj7JRDvYciTNiJBYLXhR18JrRds23qvo8v1RTxizfc76c8=
+	t=1787751489; cv=none; b=ZTmjSncKsHev2zaxAqAD50IeuKwKfNEV/YYIcy9MBRcA6brp/+3bBAQrwCPZdWaL6s+Mlu4saRhltTEJeIn0DiqkFgwwElKoicg6VH+mncpS8UJZsB48vEs2uwh8B9KPS0uZCbjvP7ZcR81dZUMg47uW1+bCRhBvUS8i9i9pBe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787751464; c=relaxed/simple;
-	bh=N/ewH1XUjCFXF1ttKhEJj8Pkw0zsvEYKLlERLNbB4Is=;
+	s=arc-20240116; t=1787751489; c=relaxed/simple;
+	bh=JeiFOZyQ5BCZUlGNebhGmJWjUNstn0Bfc1Pre6PhqmI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uQyoqQ88DOh+nnD3wkuS3IoAcD0GmvxazTfF4lWwMcTvNqRPoFluQOS6/lv53IK2U+k9i1PM+21ny9OydV+pWmrswUQrSdbNUaJ88buSfjNxOMEO+J7djsppkFhnEcabj5uBCawF+qiy0NY0Ghf0YDthftr5pFQmpZO4gfN4aeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ANe9qPfK; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=kI0UL/Z4j5+OnUkPwdmAGwjYu/eyU92Iv+SO8eEsGNQ9265t7LjtRZNrFUAMgTPNlfWy6fcCTNUjokCMwrTAbaJyvjvMdF/k7F/5JfFRh3Ad6e593hLNHpYaRbFUsrYnH/f/Uza/kPAiMxtZFy41FjeyOin/eDmrNh6eGkHekBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UPUU+kQn; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ANe9qPfK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UPUU+kQn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787751462; x=1819287462;
+  t=1787751487; x=1819287487;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=N/ewH1XUjCFXF1ttKhEJj8Pkw0zsvEYKLlERLNbB4Is=;
-  b=ANe9qPfKOwhdzLL4UJq2+yzI8QV8RWcLLuys2V9P2vk/M58QRFlxG15+
-   HhTs7son5Em1SW+yaTO+lC8q5rtRpNz5r4zomOCsdoWwaoIYnWNYt7H5f
-   VuAk+l9nRVAMcvSk547wvkPWd3iBu/MMbFdPkIdQXqUCLWr3nRTzPuyi7
-   FPWr2l+/47TbriLuQ+tq4H6OWWhLG6E2cG3GNvKTkRFEvA3f+vK1j+BSf
-   699D6js5Yi9QxTiyt+6uW39d7wTIJPUslb8NUtFWYy//75c+ky50Tli4l
-   d/E+h3UUlaAw1w59jK7DqZyDAv+0up4QSNXt6umIutLWeUWx/OXaHJToP
-   Q==;
-X-CSE-ConnectionGUID: rzIl/MoOTdeuoQJJlcCk4w==
-X-CSE-MsgGUID: 2BPMIio4RWC/VS8oduABMQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88249824"
+  bh=JeiFOZyQ5BCZUlGNebhGmJWjUNstn0Bfc1Pre6PhqmI=;
+  b=UPUU+kQnCveJ8Yh9BECzh0RcqGy7avD5sN1QG3FsZHCBBs54HFHjv3LD
+   BwDfLr6EPC3/zno+vCxfFvJO3aGJ6SEhPrgU+8kgmXTdy9psu7+Rl+CkC
+   SRw6MpL46enTq6829L5okrO//M6Wj7Tq7tFKCi9Q174QB6VSEZum7VgH1
+   JyWTuWIviOM2PwHoeslJeT6/ELko09ttuaCJP61sDO3Ykcu1mou7QHbjJ
+   YzHOFGEDeh6NE89h1JEu29IpOqPODIO/C2j+xiqUT1Y6fovmrjndYwHP5
+   NJXd64LK8rg7C63XLDx50FskAyjyqzhyoeNVHxNtiy2OePR1NBPJBoFgn
+   g==;
+X-CSE-ConnectionGUID: j3JHsKPVRfOERp9oA+DKwQ==
+X-CSE-MsgGUID: QvqGnYMET5WTgoP1yy8VNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88249854"
 X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="88249824"
+   d="scan'208";a="88249854"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:37:41 -0700
-X-CSE-ConnectionGUID: 8Bi5SUYJTHWTAzEIU7h1wA==
-X-CSE-MsgGUID: KGVcK7WGQfy5sjzSoFgxnA==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:38:07 -0700
+X-CSE-ConnectionGUID: Z2UJbQyXTn6sN5RYza5cKA==
+X-CSE-MsgGUID: ZJa26qTuQ1iE6rSsQABBmw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="269529694"
+   d="scan'208";a="269529862"
 Received: from junjie-desk-dev.bj.intel.com (HELO junjie-desk-dev.tail2c02c1.ts.net) ([10.238.152.71])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:37:37 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:38:02 -0700
 From: Junjie Cao <junjie.cao@intel.com>
 To: Chen Pei <cp0613@linux.alibaba.com>
 Cc: palmer@dabbelt.com,
@@ -64,12 +64,12 @@ Cc: palmer@dabbelt.com,
 	qemu-riscv@nongnu.org,
 	qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 0/4] hw/riscv/virt: Add CXL support to the RISC-V virt machine
-Date: Wed, 26 Aug 2026 21:37:24 +0800
-Message-ID: <20260826133725.355433-1-junjie.cao@intel.com>
+Subject: Re: [PATCH 3/4] hw/riscv/virt: Provide a 32-bit MMIO window for CXL host bridges
+Date: Wed, 26 Aug 2026 21:37:53 +0800
+Message-ID: <20260826133754.355453-1-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260821081954.1171-1-cp0613@linux.alibaba.com>
-References: <20260821081954.1171-1-cp0613@linux.alibaba.com>
+In-Reply-To: <20260821081954.1171-4-cp0613@linux.alibaba.com>
+References: <20260821081954.1171-4-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -80,31 +80,66 @@ Content-Transfer-Encoding: 8bit
 
 Hi Chen Pei,
 
-On Fri, 21 Aug 2026 16:19:50 +0800, Chen Pei wrote:
->   - hw/riscv/virt: The MMIO-window patch no longer touches the common
->     gpex code (Igor).  The gpex_cfg.cxl_mmio32 field and the is_cxl
->     static _CRS branch are dropped; the ACPI0016 _CRS now comes from the
->     generic build_crs() path.  Since EDK2 does not enumerate the pxb-cxl
->     expander bridge, riscv simulates the firmware PCI initialization
->     (reserved window + depth-first bridge bus numbers) and re-applies it
->     via a reset handler.
+On Fri, 21 Aug 2026 16:19:53 +0800, Chen Pei wrote:
+> - The CXL host bridge _CRS is produced by the generic build_crs()
+>   path.  EDK2's PciBusDxe only recurses into PCI-to-PCI bridges, while
+>   the pxb-cxl expander bridge presents as a class 0x0600 host bridge
+>   with a type-0 header, so firmware never enumerates behind it and
+>   leaves the CXL root port's window and bus-number registers unset;
+>   build_crs() would therefore return an empty _CRS.  Simulate the
 
-Ran this on master eea8fe61b8 (it still applies clean on bde2492aac).
-riscv64 bios-tables-test passes. In the generated DSDT the PC0C _CRS
-now comes out of build_crs() with the reserved window
-0x70000000-0x7FFFFFFF and a bus range [0x0C,0x0D] taken from the real
-subordinate, PCI0 shrunk to 0x40000000-0x6FFFFFFF, and the CEDT CHBS
-and CFMWS matching the machine memmap. The machine-global window
-synthesis and the +15 bus range from v2 are gone.
+I see the same empty _CRS you traced for Igor on v2, but the cause
+sits one level up: riscv virt never tells the firmware that the
+expander bus is there.
 
-system_reset from the monitor leaves the root port with the same
-window and secondary/subordinate numbers, so the reset handler does
-what it says.
+etc/extra-pci-roots is how the other machines advertise expander root
+buses. hw/arm/virt.c, hw/i386/pc.c and hw/hppa/machine.c all call
+pci_bus_add_fw_cfg_extra_pci_roots(); arm got it in 09fad16744 as
+part of the pxb enablement there. hw/riscv/virt.c has no such call,
+and since PXB is default y only for Q35 and ARM_VIRT, this series is
+what first brings pxb to riscv at all -- so nothing has needed that
+fw_cfg entry until now.
 
-One larger question on 3/4 about where that enumeration should come
-from, and a note on 4/4.
+Same binary, in-tree edk2-riscv, only difference on the command line
+being -fw_cfg name=etc/extra-pci-roots,file=<le64 1>:
 
-Tested-by: Junjie Cao <junjie.cao@intel.com>
+  PciHostBridgeUtilityGetRootBridgesBusScan: 1 extra root buses ...
+  PciHostBridgeUtilityInitRootBridge: populated root bus 12, ...
+  PciBus: Resource Map for Bridge [0C|00|00]
+  Type =  Mem32; Base = 0x40400000; Length = 0x200000; ...
+     Base = 0x40400000; Length = 0x10000; ... Owner = PCI [0D|00|00:10]
+
+so PciBusDxe does go behind the pxb-cxl once it knows the root bus
+exists, and it assigns the root port window and the Type3 BARs itself.
+
+With this patch dropped and pci_bus_add_fw_cfg_extra_pci_roots()
+called from virt_machine_done() instead, next to
+cxl_fmws_link_targets(), the regenerated DSDT has PC0C as
+
+    DWordMemory (ResourceProducer, ...)
+        0x40400000,         // Range Minimum
+        0x405FFFFF,         // Range Maximum
+    QWordMemory (ResourceProducer, ...)
+        0x0000000400100000, // Range Minimum
+        0x000000040010FFFF, // Range Maximum
+    WordBusNumber (...)
+        0x000C,             // Range Minimum
+        0x000D,             // Range Maximum
+
+with PCI0 keeping the rest of the 32-bit aperture
+(0x40000000-0x403FFFFF and 0x40600000-0x7FFFFFFF). Firmware
+partitions the aperture itself, sizes the window to what is actually
+behind the bridge, and the 64-bit window comes along too. With a
+second pxb-cxl added (bus_nr 12 and 200), the two bridges get
+0x40400000-0x405FFFFF and 0x40600000-0x407FFFFF, so the
+single-bridge limitation in the TODO would not arise either.
+
+I have only looked at firmware enumeration and the generated tables
+here, not at a booting CXL guest, so your RVA22 run may well turn up
+something this misses. But if it holds, it drops the 256 MiB carve-out,
+virt_cxl_init_bridge_windows() and the reset handler, and it is the
+"fix UEFI to perform required initialization" option Igor raised on
+v2, with the UEFI side already in place.
 
 Many thanks,
 Junjie
