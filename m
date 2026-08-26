@@ -1,57 +1,57 @@
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8493822A9
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 08:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A753B14A7
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 08:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787732290; cv=none; b=NN/iKbpkYeAB2TNLtSdS6YWGcO9FD316QXr6MdRe3LsDKPpDZVgx+EpltVWKtxJs9E1QMGkYTq7pq2GKXUKgS7a+JrxomuXo6gjRTbJooUKvvB1nRdvq9JkIA/Mn2G7+EXDtTJOcyj+pyI8PG9o9Sp2F/VWpwPSG8fymUDGid40=
+	t=1787732293; cv=none; b=hZrScHLO0SJbFy7DzL8UFogAPmBz2PgQR9enA830yb6Ncor+as/vppShJsaXzDUGxlmBT8JSosqekExR0zZmBuUQvItVJ9IB0XXmJCg6Ps/012HDrYoJSxdOIHg3G+31sF/G3mMYzn+eMaaLuSucjxQ8Sm6hwmWQSpF32H+YafQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787732290; c=relaxed/simple;
-	bh=FP1RQgROVAAGjDxUlvmP+alu4Et+dHsAwrSwnlCqLy0=;
+	s=arc-20240116; t=1787732293; c=relaxed/simple;
+	bh=ZFJ5HuGwEF2aKqbHDrrMM4Wb/hdOQPnFGNemhUHVxuU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=JMWyPnvRwHZm5R+YZ7a7i+PCqsP2r0foO4MYoDSE09t6lvv1g1ag6BBu37ii1EYvhfXSCRRGQZAYApAM7zlk3wl+p69Mkg/Z3XZ+sYO3leEAwVbbP4dSuJMK5LhsSP9tP8tU0dA8DooSoe3AoXmWn2PtgxVTUoTkuoiLNvmH2qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HdBCloQk; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=jLBnzJXCduGi8T18C4A6cYKUZY9k39AhgKa5D1kRfC/eurgv5QAsH7xzlKb8iXH/0DxjGJIKGx6yAZFbebLEDfrMiaJLi7ZUkzwOlBbh6HViz/VEePAVBFOBLxTlairVcE0ZRUTmJqybjQYv8Hb/mN3FWDkbYxbZpoTPCp73OUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Z4BW9wQi; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HdBCloQk"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260826081803epoutp032dedfc13cca2e1df1963181066eeb04e~PTQox88am2123421234epoutp03v
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z4BW9wQi"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260826081803epoutp039486f8e17c05942f760943ca43f82f5a~PTQo4Lscc2103221032epoutp03o
 	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 08:18:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260826081803epoutp032dedfc13cca2e1df1963181066eeb04e~PTQox88am2123421234epoutp03v
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260826081803epoutp039486f8e17c05942f760943ca43f82f5a~PTQo4Lscc2103221032epoutp03o
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1787732283;
-	bh=Vtbd2n0Q60hLv5lgLLEXETA9TtHgTBHeXPmUSvh+e28=;
+	bh=5kslehkSYQQJNBS8XWxJXetHXlzoZPOct6pcbzD15eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HdBCloQkopl7/XBGsA4RjL3Ypu3339n+453YW8Sge7vJ5FVswSdlO9508Sy7O6My0
-	 WlD8Ofuh2CU7EoGukt50wXR3M/u1vi/5ZnNyOi7aTR8hYxbHIOIABDIbbctTU2WVSx
-	 WJ/E6C229p4vBKGJtNVSZoNS8xEflyzqEolhzRFU=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260826081802epcas5p456e877443ef3ad49bfacdd58f1c9a738~PTQoOcAWk1534715347epcas5p4W;
+	b=Z4BW9wQi8z4bdneEDiwZSLzFG9u+QzVA7ANhAesomcGQM/EPp2oeBtgid2l6wFriU
+	 0aqMWi/LyG151JBoRKaZKH79AsYVtAKS2rsgx2Y18us9x48s1K/Sb8GvNZSjnhkte1
+	 OUkMYVtlU/Ktk1e5A9ZS7ZQkVq6uC7Gz+e6IxSAY=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260826081802epcas5p3f2006a1c5855d921de4f612365435511~PTQoYKbKs1603216032epcas5p3C;
 	Wed, 26 Aug 2026 08:18:02 +0000 (GMT)
 Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4hVHZy4Yr9z3hhT7; Wed, 26 Aug
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4hVHZy5kx0z2SSKp; Wed, 26 Aug
 	2026 08:18:02 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
 	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20260826052054epcas5p465329951e4377c63c450fd60aa2258b3~PQ19z-Mbx3144831448epcas5p4D;
-	Wed, 26 Aug 2026 05:20:54 +0000 (GMT)
+	20260826052048epcas5p4abd91ab8d33794807359613bdb709d2d~PQ14CsV1w1804318043epcas5p40;
+	Wed, 26 Aug 2026 05:20:48 +0000 (GMT)
 Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
 	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260826052052epsmtip237c411953b7b1552d4c6e9367759e0e7~PQ18NKU0g1001010010epsmtip2V;
-	Wed, 26 Aug 2026 05:20:52 +0000 (GMT)
+	20260826052046epsmtip213a6feab2cdc5350a1b655652fc35bbb~PQ12YvSQl1126911269epsmtip2R;
+	Wed, 26 Aug 2026 05:20:46 +0000 (GMT)
 From: Shrihari E S <shrihari.s@samsung.com>
 To: jic23@kernel.org, junjie.cao@intel.com, linux-cxl@vger.kernel.org,
 	linux-pci@vger.kernel.org, qemu-devel@nongnu.org
 Cc: shrihari.s@samsung.com, arun.george@samsung.com, cpgs@samsung.com,
 	dave@stgolabs.net, dongjoo.seo1@samsung.com, gost.dev@samsung.com,
 	s.neeraj@samsung.com, vikash.k5@samsung.com
-Subject: [RFC V2 09/10] hw/cxl: Wire SVC and Dev3 capability to CXL Type 3
- device
-Date: Wed, 26 Aug 2026 11:04:09 +0530
-Message-Id: <1437941060.21787732282637.JavaMail.epsvc@epcpadp2new>
+Subject: [RFC V2 07/10] hw/pci: hw/cxl: Wire SVC initialization into port
+ realize functions.
+Date: Wed, 26 Aug 2026 11:04:07 +0530
+Message-Id: <111374580.41787732282793.JavaMail.epsvc@epcpadp2new>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260826053410.1322176-1-shrihari.s@samsung.com>
 Precedence: bulk
@@ -61,71 +61,205 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260826052054epcas5p465329951e4377c63c450fd60aa2258b3
+X-CMS-MailID: 20260826052048epcas5p4abd91ab8d33794807359613bdb709d2d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20260826052054epcas5p465329951e4377c63c450fd60aa2258b3
+X-CMS-RootMailID: 20260826052048epcas5p4abd91ab8d33794807359613bdb709d2d
 References: <20260826053410.1322176-1-shrihari.s@samsung.com>
-	<CGME20260826052054epcas5p465329951e4377c63c450fd60aa2258b3@epcas5p4.samsung.com>
+	<CGME20260826052048epcas5p4abd91ab8d33794807359613bdb709d2d@epcas5p4.samsung.com>
 
-Adds SVC and Dev3 capability to CXL type 3 device to make
-it work as a UIO completer.
+Integrate Streamlined Virtual Channel (SVC) capability initialization into the
+realize() functions of both PCIe and CXL ports. This change ensures that the
+'uio_capable' flag is correctly populated in CXL ports during the initialization
+sequence.
+
+'uio_capable' in CXL ports is responsible for enabling UIO capability in
+HDM decoder registers.
 
 Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
 Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
 ---
- hw/mem/cxl_type3.c          | 15 +++++++++++++++
- include/hw/cxl/cxl_device.h |  1 +
- 2 files changed, 16 insertions(+)
+ hw/pci-bridge/cxl_downstream.c     |  7 ++++++-
+ hw/pci-bridge/cxl_root_port.c      | 11 ++++++++++-
+ hw/pci-bridge/cxl_upstream.c       | 10 +++++++++-
+ hw/pci-bridge/gen_pcie_root_port.c |  3 +++
+ hw/pci-bridge/pcie_root_port.c     |  4 ++++
+ hw/pci-bridge/xio3130_downstream.c |  3 +++
+ hw/pci-bridge/xio3130_upstream.c   |  3 +++
+ include/hw/pci/pcie_port.h         |  1 +
+ 8 files changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 0adf2e8b3e..74ddcf6e58 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1195,6 +1195,20 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     pcie_doe_init(pci_dev, &ct3d->doe_comp, 0x1b0, doe_comp_prot, true,
-                   CXL_T3_MSIX_PCIE_DOE_COMPLIANCE);
+diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
+index 8f034991d8..de6d2f7306 100644
+--- a/hw/pci-bridge/cxl_downstream.c
++++ b/hw/pci-bridge/cxl_downstream.c
+@@ -33,8 +33,10 @@ typedef struct CXLDownstreamPort {
+ #define CXL_DOWNSTREAM_PORT_MSI_NR_VECTOR 2
+ #define CXL_DOWNSTREAM_PORT_EXP_OFFSET 0x90
+ #define CXL_DOWNSTREAM_PORT_AER_OFFSET 0x100
+-#define CXL_DOWNSTREAM_PORT_DVSEC_OFFSET        \
++#define CXL_DOWNSTREAM_PORT_SVC_OFFSET          \
+     (CXL_DOWNSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
++#define CXL_DOWNSTREAM_PORT_DVSEC_OFFSET        \
++    (CXL_DOWNSTREAM_PORT_SVC_OFFSET + PCI_SVC_SIZEOF)
  
-+    if (ct3d->svc) {
-+        /* SVC capability of the type3 device */
-+        rc = pcie_svc_cap_init(pci_dev, 0x200 + PCI_ERR_SIZEOF, errp);
-+        if ((rc >= 0) && ct3d->flitmode && ct3d->uio_comp_capable) {
-+
-+            /*
-+             * The Dev3 Capability is initialized  after AER in the PCIe config
-+             * space. Also initializing CXL type3 device as a UIO completer.
-+             */
-+            pcie_dev3_cap_init(pci_dev, 0x200 + PCI_ERR_SIZEOF + PCI_SVC_SIZEOF,
-+                               false, true, errp);
+ static void latch_registers(CXLDownstreamPort *dsp)
+ {
+@@ -229,6 +231,9 @@ static void cxl_dsp_realize(PCIDevice *d, Error **errp)
+                      PCI_BASE_ADDRESS_SPACE_MEMORY |
+                          PCI_BASE_ADDRESS_MEM_TYPE_64,
+                      &dsp->bar);
++    if (p->svc) {
++        pcie_svc_cap_init(d, CXL_DOWNSTREAM_PORT_SVC_OFFSET, errp);
++    }
+ 
+     return;
+ 
+diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+index 4be2b400f9..19dd75b79f 100644
+--- a/hw/pci-bridge/cxl_root_port.c
++++ b/hw/pci-bridge/cxl_root_port.c
+@@ -40,8 +40,10 @@
+ #define GEN_PCIE_ROOT_PORT_AER_OFFSET 0x100
+ #define GEN_PCIE_ROOT_PORT_ACS_OFFSET \
+     (GEN_PCIE_ROOT_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
+-#define CXL_ROOT_PORT_DVSEC_OFFSET \
++#define GEN_PCIE_ROOT_PORT_SVC_OFFSET \
+     (GEN_PCIE_ROOT_PORT_ACS_OFFSET + PCI_ACS_SIZEOF)
++#define CXL_ROOT_PORT_DVSEC_OFFSET \
++    (GEN_PCIE_ROOT_PORT_SVC_OFFSET + PCI_SVC_SIZEOF)
+ 
+ typedef struct CXLRootPort {
+     /*< private >*/
+@@ -164,6 +166,7 @@ static void cxl_rp_realize(DeviceState *dev, Error **errp)
+ {
+     PCIDevice *pci_dev     = PCI_DEVICE(dev);
+     PCIERootPortClass *rpc = PCIE_ROOT_PORT_GET_CLASS(dev);
++    PCIEPort *p            = PCIE_PORT(dev);
+     CXLRootPort *crp       = CXL_ROOT_PORT(dev);
+     CXLComponentState *cxl_cstate = &crp->cxl_cstate;
+     ComponentRegisters *cregs = &cxl_cstate->crb;
+@@ -212,6 +215,12 @@ static void cxl_rp_realize(DeviceState *dev, Error **errp)
+                      PCI_BASE_ADDRESS_SPACE_MEMORY |
+                      PCI_BASE_ADDRESS_MEM_TYPE_64,
+                      &crp->bar);
++    if (p->svc) {
++        rc = pcie_svc_cap_init(pci_dev, GEN_PCIE_ROOT_PORT_SVC_OFFSET, errp);
++        if (p->flitmode && rc >= 0) {
++            crp->uio_capable = true;
 +        }
 +    }
-+
-     /* Set default value for patrol scrub attributes */
-     ct3d->patrol_scrub_attrs.scrub_cycle_cap =
-                            CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_DEFAULT |
-@@ -1560,6 +1574,7 @@ static const Property ct3_props[] = {
-                                 width, PCIE_LINK_WIDTH_16),
-     DEFINE_PROP_BOOL("x-256b-flit", CXLType3Dev, flitmode, false),
-     DEFINE_PROP_BOOL("hdm-db", CXLType3Dev, hdmdb, false),
-+    DEFINE_PROP_BOOL("x-svc", CXLType3Dev, svc, false),
-     DEFINE_PROP_BOOL("x-uio", CXLType3Dev, uio_comp_capable, false),
-     DEFINE_PROP_UINT16("chmu-port", CXLType3Dev, cxl_dstate.chmu[0].port, 0),
- };
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 3d92d3f46c..5505aefe37 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -885,6 +885,7 @@ struct CXLType3Dev {
-     bool flitmode;
-     bool uio_comp_capable;
-     bool uio_enabled;
-+    bool svc;
+ }
  
-     /* DOE */
-     DOECap doe_cdat;
+ static void cxl_rp_reset_hold(Object *obj, ResetType type)
+diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+index e8f2e57819..3ed6a89bf3 100644
+--- a/hw/pci-bridge/cxl_upstream.c
++++ b/hw/pci-bridge/cxl_upstream.c
+@@ -27,8 +27,10 @@
+ #define CXL_UPSTREAM_PORT_MSI_OFFSET 0x70
+ #define CXL_UPSTREAM_PORT_PCIE_CAP_OFFSET 0x90
+ #define CXL_UPSTREAM_PORT_AER_OFFSET 0x100
++#define CXL_UPSTREAM_PORT_SVC_OFFSET \
++     (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
+ #define CXL_UPSTREAM_PORT_SN_OFFSET \
+-    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
++    (CXL_UPSTREAM_PORT_SVC_OFFSET + PCI_SVC_SIZEOF)
+ #define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
+     (CXL_UPSTREAM_PORT_SN_OFFSET + PCI_EXT_CAP_DSN_SIZEOF)
+ 
+@@ -411,6 +413,12 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
+         goto err_cap;
+     }
+ 
++    if (p->svc) {
++        rc = pcie_svc_cap_init(d, CXL_UPSTREAM_PORT_SVC_OFFSET, errp);
++        if (p->flitmode && rc >= 0) {
++            usp->uio_capable = true;
++        }
++    }
+     return;
+ 
+ err_cap:
+diff --git a/hw/pci-bridge/gen_pcie_root_port.c b/hw/pci-bridge/gen_pcie_root_port.c
+index 2f7257d166..d4df4a7c16 100644
+--- a/hw/pci-bridge/gen_pcie_root_port.c
++++ b/hw/pci-bridge/gen_pcie_root_port.c
+@@ -26,6 +26,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(GenPCIERootPort, GEN_PCIE_ROOT_PORT)
+ #define GEN_PCIE_ROOT_PORT_AER_OFFSET           0x100
+ #define GEN_PCIE_ROOT_PORT_ACS_OFFSET \
+         (GEN_PCIE_ROOT_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
++#define GEN_PCIE_ROOT_PORT_SVC_OFFSET \
++        (GEN_PCIE_ROOT_PORT_ACS_OFFSET + PCI_ACS_SIZEOF)
+ 
+ #define GEN_PCIE_ROOT_PORT_MSIX_NR_VECTOR       1
+ #define GEN_PCIE_ROOT_DEFAULT_IO_RANGE          4096
+@@ -166,6 +168,7 @@ static void gen_rp_dev_class_init(ObjectClass *klass, const void *data)
+     rpc->interrupts_uninit = gen_rp_interrupts_uninit;
+     rpc->aer_offset = GEN_PCIE_ROOT_PORT_AER_OFFSET;
+     rpc->acs_offset = GEN_PCIE_ROOT_PORT_ACS_OFFSET;
++    rpc->svc_offset = GEN_PCIE_ROOT_PORT_SVC_OFFSET;
+ }
+ 
+ static const TypeInfo gen_rp_dev_info = {
+diff --git a/hw/pci-bridge/pcie_root_port.c b/hw/pci-bridge/pcie_root_port.c
+index 0ae7b10fbd..9c325aa5f4 100644
+--- a/hw/pci-bridge/pcie_root_port.c
++++ b/hw/pci-bridge/pcie_root_port.c
+@@ -120,6 +120,10 @@ static void rp_realize(PCIDevice *d, Error **errp)
+     if (rpc->acs_offset && !s->disable_acs) {
+         pcie_acs_init(d, rpc->acs_offset);
+     }
++    if (!pci_is_cxl(d) && p->svc) {
++        pcie_svc_cap_init(d, rpc->svc_offset, errp);
++    }
++
+     return;
+ 
+ err:
+diff --git a/hw/pci-bridge/xio3130_downstream.c b/hw/pci-bridge/xio3130_downstream.c
+index 090a3fdfc9..a2546d5060 100644
+--- a/hw/pci-bridge/xio3130_downstream.c
++++ b/hw/pci-bridge/xio3130_downstream.c
+@@ -110,6 +110,9 @@ static void xio3130_downstream_realize(PCIDevice *d, Error **errp)
+     if (rc < 0) {
+         goto err;
+     }
++    if (p->svc) {
++        pcie_svc_cap_init(d, XIO3130_AER_OFFSET + PCI_ERR_SIZEOF, errp);
++    }
+ 
+     return;
+ 
+diff --git a/hw/pci-bridge/xio3130_upstream.c b/hw/pci-bridge/xio3130_upstream.c
+index 767b7d17f2..fd15e8c943 100644
+--- a/hw/pci-bridge/xio3130_upstream.c
++++ b/hw/pci-bridge/xio3130_upstream.c
+@@ -92,6 +92,9 @@ static void xio3130_upstream_realize(PCIDevice *d, Error **errp)
+     if (rc < 0) {
+         goto err;
+     }
++    if (p->svc) {
++        pcie_svc_cap_init(d, XIO3130_AER_OFFSET + PCI_ERR_SIZEOF, errp);
++    }
+ 
+     return;
+ 
+diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
+index 0b3e0efb8c..8de95d71ef 100644
+--- a/include/hw/pci/pcie_port.h
++++ b/include/hw/pci/pcie_port.h
+@@ -97,6 +97,7 @@ struct PCIERootPortClass {
+     int aer_offset;
+     int ssvid_offset;
+     int acs_offset;    /* If nonzero, optional ACS capability offset */
++    int svc_offset;    /* optional SVC capability */
+     int ssid;
+ };
+ 
 -- 
 2.34.1
 
