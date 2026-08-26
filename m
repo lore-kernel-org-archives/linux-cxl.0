@@ -1,315 +1,397 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012070.outbound.protection.outlook.com [40.93.195.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C76345EBE
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 08:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787732432; cv=none; b=bn9EUf2r1dRscIV8yriNImFSIgS7M1vb0deumP21nmfgYRS0gI2cKs7UFew5Sg9PGBJHDq48vuDO5W8FIfoINEWXpELMtG7nlO4ym/h+ejoPlSOnEQNWlOnjR7lngc7XORE0zQSkVlQJWj6YjuN1Uj/Uod/Q8v1aMw9euX8Gmp4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787732432; c=relaxed/simple;
-	bh=XUS0WCwQCANhq74bTtR7ipXUkpVzRae0nvhbzCe7t84=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=oXAA2zQW/v6KmpFiC+TAoz3E8kiWEadse/xt0C0AKuuh1YdzGvcgGjogMkLWjDihlDxwNkf5kVbiCwT+PIMrbhzUNJnqlsQkQZWiq7nTvpqL+HDrFQ3v4gHgBnugjXfrLZlvNmuJG1YpPmWQpUfvrDjOlqk8l/3QKyGO96JNLkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Hz3/zw8c; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA3315E8B;
+	Wed, 26 Aug 2026 08:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787734084; cv=fail; b=r49RZi6hQHUNTfBb7ecXQywOhoeXHHSXpO7Wk8dq1vffgeDpo4oLSng1WnFNVu7P7GGEmxbkTpLOWenKUe3j8IdFMnTJDOLY0y9fOmioQ9hhzctInodV12CMw+Fq3ambCLfpeKSd8frVIf9DE5skCQ29mTQkp3PzA8y1XKSv1TQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787734084; c=relaxed/simple;
+	bh=5e+oWS1TRJSU5sA7Ru9yPGqdJ53Z02151ZQnEPZRGeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IK7U0u3d1g2LxTkdftBjZmaYL/XRCNELdO+SpGdqtGykI5W4fQO4d2b+oEvTYcLJKKFgl0mw7/dOcaXFewy9MVn9CFXFb3p8JnrJfUNskSdeMuoHkqvkJu07UyL6xYz5+AajaQFOjy8sg5SG7rsUyF8d3ToP7CZl5KMpPvyjung=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TSipHWTG; arc=fail smtp.client-ip=40.93.195.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Hz3/zw8c"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260826081504epoutp0101aa92ebd229a3b1272e4f00ae1caea9~PTOCLu8pW0629106291epoutp01U
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 08:15:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260826081504epoutp0101aa92ebd229a3b1272e4f00ae1caea9~PTOCLu8pW0629106291epoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1787732104;
-	bh=Ya82nNtSEL/OD8UZxS1mJIc7NJaKSwiOS6KRNMG/Tx8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hz3/zw8cZuOvOimkBwGAFpwyK8s8S7X2xt/WWi25nPDggHQ5UqFw1RPl067+mlA2Z
-	 c1AxRJdDrtDbpX0uKsHbcGZnaZl1RKFyql8qx1SSlvDiZsbtU4u6uKFcDawY49Dwia
-	 egadkCyhMRdtpNBOOQhMoRbiQcFlB1YwUGd7uUws=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260826081503epcas5p4d79d497c8bdb356206468d2ebccc6058~PTOBxss2M1503715037epcas5p4d;
-	Wed, 26 Aug 2026 08:15:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4hVHWW6Qvqz6B9mS; Wed, 26 Aug
-	2026 08:15:03 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260826052037epcas5p2a0eaaa537d20851123181472026a6b1b~PQ1ujSGG61272312723epcas5p2K;
-	Wed, 26 Aug 2026 05:20:37 +0000 (GMT)
-Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
-	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260826052036epsmtip2f89ed8b8ce5097a66b83af6656172418~PQ1s7PUbS1126611266epsmtip2s;
-	Wed, 26 Aug 2026 05:20:36 +0000 (GMT)
-From: Shrihari E S <shrihari.s@samsung.com>
-To: jic23@kernel.org, junjie.cao@intel.com, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, qemu-devel@nongnu.org
-Cc: shrihari.s@samsung.com, arun.george@samsung.com, cpgs@samsung.com,
-	dave@stgolabs.net, dongjoo.seo1@samsung.com, gost.dev@samsung.com,
-	s.neeraj@samsung.com, vikash.k5@samsung.com
-Subject: [RFC V2 05/10] hw/cxl: Wire UIO capability into HDM decoder and
- DVSEC registers
-Date: Wed, 26 Aug 2026 11:04:05 +0530
-Message-Id: <1646464088.101787732103895.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260826053410.1322176-1-shrihari.s@samsung.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TSipHWTG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uqNYWhx5w1INu5PEZ6FR9Da+yCBcmaCTx7+MBrLGiJ21BNjWadP/qJIDdK5fyCMWYNXyX1thq2s5dakqmRMz9o/K25n/MxxDW/gHH/oYpUHHvpywjDV8d/n6yDweMFYezWHPYapFcID5lGSPRl8j0j5DtCQwUvXDnSAZfx7ZZuLAhSTBd7518d1qiFH97y+hpjfvP5Xs/hgKaFOivxetXLATXQkt6xIsc8KIJSgYrtRd/kOHu+7JPt04+u8Dtb+ZJJdW1UclqB0n5GV4/qsmANT4xUkUojU5Pwc71pZ4sdDWHUD8trLbNynH/KBw5HHsQQzGUVSctMRYINUmhLzJ7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Er0qwZ47ZMfsu10+Zk3MkK4DNMxUDx6hXs0q9AGHotE=;
+ b=BNE1xJIpUKUzJQvlm187fgXl2eRcAVJ9w1cOnZFsPN9uFGdJMMd5pKTPTEcGoqddL93rIERWFrBY6Mzaz6QIZTWPoopj26/DDZHsiUMNapmuTiN2Ywbkc0wHpUiEuIXERGM5afR/4vqL6LyQ6BW2SYFEdgY/nkO21+e7LbSrg57mArvgNEp+ZCmF1QRzYahQw6HU9h7gzrfKfD/tkGMV8Wrud3ckdl/xeXZkz2SLXkkiTwEfbhKDyo54mW7FkxU+v/eTnKF8sjaT14enFZ1iFdCT6O29yVlXF2Vt6MRgR+H8uBCM8BV9sAUXuIfEVFtT34PAKUW50yKpTFBkvXOUuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Er0qwZ47ZMfsu10+Zk3MkK4DNMxUDx6hXs0q9AGHotE=;
+ b=TSipHWTGPxNJ9+WEtc64aWBPzQRaJB6bbes696Bc1t9Ds5sqcRQPE3QmQcD+tD0UkULh/P0lTaQW949p4unx4rmCrOG8SAHISv2eb+VFYZDHXlXrvWO3pluA+LOLI7HIlU1l5vBFASvLAKcfsOmuYCdnOETgdENP3KoDnAF55Yr8nn6WOh1Ak2XIfgqFIVWf8cWRH3qNDAi3U5ZkreXFYoMYBPqIP7iQVhyAeEImsM4KIHCPjNG+OzXZL0btMhZpg+IuAAHK6iv2FR+K5daEGtGjTppjuHqWNuva9390bu/QAsFnbZAqo0vc2K94asbCFliHpKf1dubTGi1nh7vnHA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by CH2PR12MB4198.namprd12.prod.outlook.com (2603:10b6:610:7e::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Wed, 26 Aug
+ 2026 08:47:55 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0360.005; Wed, 26 Aug 2026
+ 08:47:55 +0000
+Date: Wed, 26 Aug 2026 16:47:46 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, David Hildenbrand <david@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, driver-core@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 10/13] PCI/CXL: Clear ACS SV across an SBR of a CXL
+ DPort
+Message-ID: <ao6mpWvrooxUOvZH@MWDK4CY14F>
+References: <20260825022628.3651434-1-fabio.m.de.francesco@linux.intel.com>
+ <20260825022628.3651434-11-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260825022628.3651434-11-fabio.m.de.francesco@linux.intel.com>
+X-ClientProxiedBy: SG2PR04CA0214.apcprd04.prod.outlook.com
+ (2603:1096:4:187::17) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260826052037epcas5p2a0eaaa537d20851123181472026a6b1b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260826052037epcas5p2a0eaaa537d20851123181472026a6b1b
-References: <20260826053410.1322176-1-shrihari.s@samsung.com>
-	<CGME20260826052037epcas5p2a0eaaa537d20851123181472026a6b1b@epcas5p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CH2PR12MB4198:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9526f251-8f8a-4ae6-283c-08df034eb7e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|23010399003|10067099003|56012099006|6133799003|18002099003|22082099003|11063799006|5023799004|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	1mkZcimQ/1PAmDzizx7vs6oZYyn4ubFf0n5Tb98Xc4AuKKVD7dTlRrZ1UP7k6+uwXddR2H1p6k4IrSpVA6+AH9aKN5yyDbjXuwFGxGcBHPNe29e7FBzbNWSE7Sb8kQj/zD19baFwETNqGG/kE645Lne7VkWkGn6ibWjbc3AadwYneVM/Fk/tDiV77kzUBbn49jclO19DAU7fZOpvpPT0PTOiosVBVaH1+CwjSl1miBRo4Z7SsnzEdPfF2363KR1rGWGO720uFHN0SmBi8GdFKb9GFQwAs+E0fmbXP0wz4Eso/sf2VnNGbU+LkQ9g1LQM/ENk+ZThk7Lh3guHDhUsdU0LJZkKVOWJ/7r/UvuHfV5g4r/DjrUTZLzKYypzlMej9fcFYdjRTO9ZLkoBa167L/t1nWoNbo16KQ4M/UTtzKRVIP7SaTeD31+k32eUG+r9WYvIr1EEegGQGSX1BHnAWBVQ7V3gwoKRY57AklnA47jdUx2YnDdtCauKq3IWaAr0xQH5X6K8XOXMcZuB3tF5zrT4UHYBXGb+L0r0MzT3HuAWz/4zNUjdej/mb8EafQoIyrKm59o7NNGkuyBM2FtcoNp8Yj1pTr+obME/LZMfK4FqGmft8X3mzcCreBTfo5llfQcD2As2uOw3XC9Z5xYQ5nGy3PXa1s9Nj4dLZ1N0/sM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(23010399003)(10067099003)(56012099006)(6133799003)(18002099003)(22082099003)(11063799006)(5023799004)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?owcHqNVbbeV+ZGntqDpNWxzd0lLpiL6k6zsIf4cQlCYwxMQNWUNtD/CVr2to?=
+ =?us-ascii?Q?SyEKeOeu6WIXVJxAcatICKPerJbTZ+wnLnM9IKOn7S9HZ/bDfjs8nJKlUg/J?=
+ =?us-ascii?Q?ICZ/Ty4V4X+u9dWSVaS02eF0ci/KBvnoWGGdmit4Iim8VEW687ieIc2S7r0X?=
+ =?us-ascii?Q?xNHzMoEo3vvtCM0Np7xtbjalOR77KxPJaKre6XPyt0MIvRSJnHH3HAHHF1+l?=
+ =?us-ascii?Q?DJsN/XSz2kc7G5hCMrBgbDfiSdrBCsl1gL0cnFkghLladwDW69D8Pq9jRb3H?=
+ =?us-ascii?Q?jv7y4GBPsA+lL3TxxwBo4A35QnHd3tSjwu3dGTEn53nIvm24xlCFHfb79rx3?=
+ =?us-ascii?Q?z9RVhuLCShfWcfutgHV54T78M34bF6qq0d1GHmrn79vSCHBJdTik5f6Tocrk?=
+ =?us-ascii?Q?sbUGKqFetCZaFjhtl/YwNb+fuLnrsCJAqYnFXBj8DOsBw3a/JCpAi7K2DsVU?=
+ =?us-ascii?Q?Rz2q/ySsRzP+KXOXcmIGb6BaqPmAaZi0zyTcI+OfcTOTxUrW2khBnNvKnQNI?=
+ =?us-ascii?Q?3ITpGf3f4fMVD12tY2wSIZyV8YVN9+0ho1vaYwnn5Id+Q/iVxWneTKIKLK2P?=
+ =?us-ascii?Q?AImSExe5/kYMcOAcjZrQaxuc4k7af1YVJWLPttV8GHRAe8pK3YvPb5RLwfz6?=
+ =?us-ascii?Q?3Ik1AFHYNNwnsrAWk9cM8mrBTjcLmr0qi8L5/scOlkq1a5v3EiuL6m2amTqe?=
+ =?us-ascii?Q?HKmsyCcyboLz5/rG/Aj/awa5oHl2jTDBS+WEh3zo1mXRGeyJjsuUNwTKwkMg?=
+ =?us-ascii?Q?mW7Yju3+ay0EVxencHYHIjJr0CUSa1hiPNmx4A/gnCswkScLDZMDKp3wuAUn?=
+ =?us-ascii?Q?cT04rxCcxZIoMcjJOh7SV0IUvpaDBimEAOcbdLFv8c0+CsfF0OdlrslgyWjA?=
+ =?us-ascii?Q?vHlFs1l58m0FgwYuT9Pf+DvURJ1pgxHIy7n3u4nj+wFULJMSqOqO5w8IyC2o?=
+ =?us-ascii?Q?G2B95TNiTqFzKPOpow6gdXOwmMysM+yK0q5zC7d5VmYxoVWLyIgw4zcTsCHC?=
+ =?us-ascii?Q?GCNEiMjvRR9wGvwgIbq5A6nBzhqOBi9T838K5OZpDcQkOL8aM/amVipqzLB5?=
+ =?us-ascii?Q?US+KqYdrNA7u77bj8jtwtGKD75+6dqtg1IA1Fl+bP8cVb7mim1La6JlJqCzb?=
+ =?us-ascii?Q?2hwNnMmgmr1xmURtwpQ5Ko6eFs+aagyZSfdJUWPjeaoJgARt3JtjxPA4JF1F?=
+ =?us-ascii?Q?tAMziIgYmecvbozvyPzrFKcYupRfFi9GxIy/mOa5+wUYCWGVSqhqTEj9XIb1?=
+ =?us-ascii?Q?NAC9PLA79OXKXq/0kbclgs0sen8efLkosWRPMlxPcPhM5Ns7YVuTv2Sjsaul?=
+ =?us-ascii?Q?C/uJUK84Xua000pQmy5nOCFshBSZA8t3Grvgfl+vFGEDEQhmtsY57m66BSrR?=
+ =?us-ascii?Q?c95jQgQ/d82UNchWi+saSCu7UnKsp5apPE6prcm10RM1f7gg6FIFPgJw+faa?=
+ =?us-ascii?Q?DbNIdWK7JgdhmSgiV1z1m2MKfjiwdCbHjmpnE1CfkG1GVse/m5dNv1wlJ/Ay?=
+ =?us-ascii?Q?bqEFsm3LxJTrd29osTtlXJtWG9rwwQ3NkFJdGv/XShyX4on7/ry9Jw//n6kU?=
+ =?us-ascii?Q?DDl7bSXslYgenYIzqlO9zWP6ibn5RNH3Az5G/m81YYf5wwKIND2WrAgtmOm9?=
+ =?us-ascii?Q?9BmZo7yV8c6yM6/tzyVrCB4Xj8i/K+ZkdqXH8w1CDubE60N5J4gy1zBYWgQm?=
+ =?us-ascii?Q?U6j82nQBBqZS3TvkyGDI9fCkYZSaP1eiLx4VtNlZnFt8K0a2jnZ0o2KCMbcp?=
+ =?us-ascii?Q?KaqdBS/6GA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9526f251-8f8a-4ae6-283c-08df034eb7e5
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2026 08:47:54.9876
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CoT5/S3mCllsPwXu/PR8RLDdN7cE8+5ffB7+HzWs9c/c9wUT4YLVm2lkp1UoaJeDZ/lQ7ii+bcvfmbX78kBKHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4198
 
-Plumb the 'uio_capable' flag to CXL HDM decoder capability and
-control register interfaces. The UIO bit in the capability register
-is now set for CXL Type3 devices and ports when UIO support is
-enabled in them.
+On Tue, Aug 25, 2026 at 04:26:25AM +0800, Fabio M. De Francesco wrote:
+> A Secondary Bus Reset (SBR) of a CXL Downstream Port clears the
+> Downstream Component's (DPort) captured Bus Number. CXL r4.0 sec 8.1.5.1
+> notes that if a Downstream Component issues PM Init messages to a DPort
+> with Access Control Services (ACS) Source Validation (SV) bit enabled,
+> PM Initialization may then fail to complete, and that a further SBR
+> alone does not recover it. PCIe r7.0 sec 6.12.1.1 makes that rejection
+> an error that is a reported as ACS Violation.
+> 
+> Reuse the recovery sequence described in sec 8.1.5.1 but make it
+> preventive, so that PM Init don't fail and don't need to be recovered.
+> 
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> ---
+>  drivers/pci/pci.c             | 177 ++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/pci_regs.h |   2 +
+>  2 files changed, 172 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 417b6b44473e..f3781d1e8f6e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/module.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/string.h>
+> +#include <linux/string_choices.h>
+>  #include <linux/log2.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/device.h>
+> @@ -4857,21 +4858,189 @@ void pci_cxl_set_sbr_region_ops(const struct pci_cxl_sbr_region_ops *ops)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_cxl_set_sbr_region_ops);
+>  
+> +struct cxl_sbr_ctx {
+> +	u16 port_ctl;
+> +	u16 acs_ctrl;
+> +	u16 command;
+> +};
+> +
+> +static bool is_cxl_dport(struct pci_dev *dev)
+> +{
+> +	return pcie_is_cxl(dev) && pcie_downstream_port(dev);
+> +}
+> +
+> +static u16 cxl_port_dvsec(struct pci_dev *dev)
+> +{
+> +	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+> +					 PCI_DVSEC_CXL_PORT);
+> +}
+> +
+> +static int cxl_sbr_prepare(struct pci_dev *bridge, u16 dvsec,
+> +			   struct cxl_sbr_ctx *ctx)
+> +{
+> +	int rc;
+> +
+> +	/* Abort before touching hardware if the regions cannot be disabled. */
+> +	if (cxl_sbr_region_ops) {
+> +		rc = cxl_sbr_region_ops->disable_regions(bridge);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	/* CXL r4.0 sec 8.1.5.2, Table 8-32: set Unmask SBR so the Port issues Hot Reset. */
+> +	pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &ctx->port_ctl);
+> +	pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+> +			      ctx->port_ctl | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
+> +
+> +	pci_read_config_word(bridge, PCI_COMMAND, &ctx->command);
+> +	pci_clear_master(bridge);
+> +
+> +	/* CXL r4.0 sec 8.1.5.1: Disable ACS SV bit before SBR */
+> +	if (bridge->acs_cap) {
+> +		pci_read_config_word(bridge, bridge->acs_cap + PCI_ACS_CTRL, &ctx->acs_ctrl);
+> +		pci_dbg(bridge, "%s: ACS SV %s\n", __func__,
+> +			str_enabled_disabled(ctx->acs_ctrl & PCI_ACS_SV));
+> +		pci_write_config_word(bridge, bridge->acs_cap + PCI_ACS_CTRL,
+> +				      ctx->acs_ctrl & ~PCI_ACS_SV);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * CXL r4.0 sec 8.1.5.1, Table 8-31: the Port sets PM Init Complete within
+> + * 100 ms of link-up. Restoring ACS Source Validation before then makes the
+> + * Port reject the downstream Component's Requester-Bus-0 IP2PM message, so
+> + * poll for completion before restoring config.
+> + */
+> +static bool cxl_port_pm_init_is_complete(struct pci_dev *bridge, u16 dvsec)
+> +{
+> +	unsigned long start = jiffies;
+> +	unsigned long timeout = start + msecs_to_jiffies(100);
+> +	u16 status;
+> +
+> +	do {
+> +		pci_read_config_word(bridge,
+> +				     dvsec + PCI_DVSEC_CXL_PORT_EXT_STATUS,
+> +				     &status);
+> +		if (!PCI_POSSIBLE_ERROR(status) &&
+> +		    (status & PCI_DVSEC_CXL_PORT_EXT_STATUS_PM_INIT_COMP)) {
+> +			pci_dbg(bridge, "%s: PM Init Complete set after %u ms, ext status %#06x\n",
+> +				__func__, jiffies_to_msecs(jiffies - start), status);
+> +			return true;
+> +		}
+> +		msleep(10);
+> +	} while (time_before(jiffies, timeout));
+> +
+> +	pci_warn(bridge, "%s: PM Init Complete not set after %u ms, ext status %#06x\n",
+> +		 __func__, jiffies_to_msecs(jiffies - start), status);
+> +
+> +	return false;
+> +}
+> +
+> +static int cxl_sbr_restore_config_space(struct pci_dev *dev, void *userdata)
+> +{
+> +	pci_restore_config_space(dev);
+> +	pci_dbg(dev, "%s: config space restored\n", __func__);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * The CXL region ops that run next read the HDM Decoders through a Base Address
+> + * Register the reset returned to its initialization value, so restore the
+> + * header of every device below @bridge first. Restoring also re-captures each
+> + * Bus Number before the Port's ACS Source Validation comes back: a device that
+> + * has completed no Type 0 Configuration Write since the reset sources Requests
+> + * with Bus 0, which the Port rejects as an ACS Violation.
+> + *
+> + * Only the header is restored. The capability state each caller saved is its own
+> + * to replay, and the ->reset_done() callbacks pci_dev_restore() invokes must
+> + * fire once, from the caller that owns the reset.
+> + */
+> +static void cxl_sbr_restore_subordinate(struct pci_dev *bridge)
+> +{
+> +	if (!bridge->subordinate)
+> +		return;
+> +
+> +	/* Parents before children: a child answers once its parent forwards. */
+> +	pci_walk_bus(bridge->subordinate, cxl_sbr_restore_config_space, NULL);
+> +}
+> +
+> +static void cxl_sbr_complete(struct pci_dev *bridge, u16 dvsec,
+> +			     const struct cxl_sbr_ctx *ctx)
+> +{
+> +	u16 val;
+> +
+> +	/* CXL r4.0 sec 8.1.5.1: wait for PM Init before restoring ACS SV. */
+> +	if (!cxl_port_pm_init_is_complete(bridge, dvsec))
+> +		pci_warn(bridge,
+> +			 "restoring ACS Source Validation before PM Init complete; Port may reject the Component's bus 0 traffic\n");
+> +
+> +	cxl_sbr_restore_subordinate(bridge);
+> +
+> +	/* CXL r4.0 sec 8.1.5.1: Re-enable ACS SV bit after SBR if it was enabled before */
+> +	if (bridge->acs_cap && (ctx->acs_ctrl & PCI_ACS_SV)) {
+> +		pci_read_config_word(bridge, bridge->acs_cap + PCI_ACS_CTRL, &val);
+> +		pci_write_config_word(bridge, bridge->acs_cap + PCI_ACS_CTRL,
+> +				      val | PCI_ACS_SV);
+> +		pci_dbg(bridge, "%s: ACS SV bit set\n", __func__);
+> +	} else {
+> +		pci_dbg(bridge, "%s: ACS SV bit not set (was not enabled before the SBR)\n",
+> +			__func__);
+> +	}
+> +
+> +	if (ctx->command & PCI_COMMAND_MASTER)
+> +		pci_set_master(bridge);
+> +
+> +	if (!(ctx->port_ctl & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
+> +		pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &val);
+> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+> +				      val & ~PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
+> +	}
+> +
+> +	if (cxl_sbr_region_ops)
+> +		cxl_sbr_region_ops->enable_regions(bridge);
+> +}
+> +
+>  /**
+>   * pci_bridge_secondary_bus_reset - Reset the secondary bus on a PCI bridge.
+>   * @dev: Bridge device
+>   *
+>   * Use the bridge control register to assert reset on the secondary bus.
+>   * Devices on the secondary bus are left in power-on state.
+> + *
+> + * When @dev is a CXL Downstream Port, clear ACS Source Validation and Bus
+> + * Master Enable across the reset, per the workaround in CXL r4.0 sec 8.1.5.1,
+> + * so that Port Power Management Initialization completes at link-up. The
+> + * bits stay cleared until the secondary bus is back, then are restored.
+>   */
+>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+>  {
+> +	struct cxl_sbr_ctx ctx = {};
+> +	u16 dvsec = 0;
+> +	int rc;
+> +
+>  	if (!dev->block_cfg_access)
+>  		pci_warn_once(dev, "unlocked secondary bus reset via: %pS\n",
+>  			      __builtin_return_address(0));
+> +
+> +	if (is_cxl_dport(dev))
+> +		dvsec = cxl_port_dvsec(dev);
+> +	if (dvsec) {
+> +		rc = cxl_sbr_prepare(dev, dvsec, &ctx);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+>  	pcibios_reset_secondary_bus(dev);
+>  
+> -	return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+> +	rc = pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+> +
+> +	if (dvsec)
+> +		cxl_sbr_complete(dev, dvsec, &ctx);
 
-Per CXL 4.0 specification Section 8.2.4.20.7, the decoder control
-UIO bit is validated against the advertised capability during
-HDM decoder commit operations.
+Hi Fabio,
 
-Also for DSP, enabled write mask to "UIO to HDM" bit in CXL DVSEC
-Port Control Extension register.
+I wonder what happens if pci_bridge_wait_for_secondary_bus() fails here?
 
-Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
-Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
----
- hw/cxl/cxl-component-utils.c              | 23 +++++++++++++++++------
- hw/mem/cxl_type3.c                        | 10 +++++++++-
- hw/pci-bridge/cxl_downstream.c            |  2 +-
- hw/pci-bridge/cxl_root_port.c             |  3 ++-
- hw/pci-bridge/cxl_upstream.c              |  3 ++-
- hw/pci-bridge/pci_expander_bridge.c       |  3 ++-
- include/hw/cxl/cxl_component.h            |  2 +-
- include/hw/cxl/cxl_device.h               |  2 ++
- include/hw/pci-bridge/cxl_upstream_port.h |  1 +
- 9 files changed, 37 insertions(+), 12 deletions(-)
+Maybe failures before/after SBR should be handled differenly ?
 
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index 31bbedb502..0c92c41266 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -305,7 +305,7 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
- }
- 
- static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
--                            enum reg_type type, bool bi)
-+                            enum reg_type type, bool bi, bool uio)
- {
-     int decoder_count = CXL_HDM_DECODER_COUNT;
-     int hdm_inc = R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE_LO;
-@@ -325,9 +325,13 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-         ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 3_6_12_WAY, 0);
-         ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 16_WAY, 0);
-     }
--    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, UIO, 0);
-+    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, UIO,
-+                     (type == CXL2_TYPE3_DEVICE || type == CXL2_UPSTREAM_PORT
-+                     || type == CXL2_ROOT_PORT) && uio);
-     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
--                     UIO_DECODER_COUNT, 0);
-+                     UIO_DECODER_COUNT,
-+                     (type == CXL2_TYPE3_DEVICE || type == CXL2_UPSTREAM_PORT
-+                     || type == CXL2_ROOT_PORT) && uio ? decoder_count : 0);
-     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, MEMDATA_NXM_CAP, 0);
-     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
-                      SUPPORTED_COHERENCY_MODEL,
-@@ -342,6 +346,12 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-         write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * hdm_inc] = 0xf0000000;
-         write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc] = 0xffffffff;
-         write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] = 0x13ff;
-+        if (uio) {
-+            write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] |=
-+                R_CXL_HDM_DECODER0_CTRL_UIO_MASK |
-+                R_CXL_HDM_DECODER0_CTRL_UIG_MASK |
-+                R_CXL_HDM_DECODER0_CTRL_UIW_MASK;
-+        }
-         if (type == CXL2_DEVICE ||
-             type == CXL2_TYPE3_DEVICE ||
-             type == CXL2_LOGICAL_DEVICE) {
-@@ -391,7 +401,7 @@ static void bi_decoder_init_common(uint32_t *reg_state, uint32_t *write_msk,
- void cxl_component_register_init_common(uint32_t *reg_state,
-                                         uint32_t *write_msk,
-                                         enum reg_type type,
--                                        bool bi)
-+                                        bool bi, bool uio)
- {
-     int caps = 0;
- 
-@@ -431,7 +441,7 @@ void cxl_component_register_init_common(uint32_t *reg_state,
-     case CXL2_LOGICAL_DEVICE:
-         /* + HDM */
-         init_cap_reg(HDM, 5, 1);
--        hdm_init_common(reg_state, write_msk, type, bi);
-+        hdm_init_common(reg_state, write_msk, type, bi, uio);
-         /* fallthrough */
-     case CXL2_DOWNSTREAM_PORT:
-     case CXL2_DEVICE:
-@@ -523,7 +533,8 @@ void cxl_component_create_dvsec(CXLComponentState *cxl,
-     case NON_CXL_FUNCTION_MAP_DVSEC:
-         break; /* Not yet implemented */
-     case EXTENSIONS_PORT_DVSEC:
--        wmask[offset + offsetof(CXLDVSECPortExt, control)] = 0x0F;
-+        wmask[offset + offsetof(CXLDVSECPortExt, control)] =
-+            cxl_dev_type == CXL2_DOWNSTREAM_PORT ? 0x1F : 0x0F;
-         wmask[offset + offsetof(CXLDVSECPortExt, control) + 1] = 0x40;
-         wmask[offset + offsetof(CXLDVSECPortExt, alt_bus_base)] = 0xFF;
-         wmask[offset + offsetof(CXLDVSECPortExt, alt_bus_limit)] = 0xFF;
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index b7ad437cbc..24bf4f8309 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -590,6 +590,11 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
-     /* TODO: Sanity checks that the decoder is possible */
-     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-+    if (ct3d->uio_comp_capable) {
-+        ct3d->uio_enabled = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, UIO);
-+    } else {
-+        ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, UIO, 0);
-+    }
- 
-     /* Get interleave details for chmu */
-     ig = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
-@@ -657,6 +662,7 @@ static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
-     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
- 
-     stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_inc, ctrl);
-+    ct3d->uio_enabled = false;
- }
- 
- static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
-@@ -1512,7 +1518,8 @@ void ct3d_reset(DeviceState *dev)
-     pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed,
-                               ct3d->flitmode);
-     cxl_component_register_init_common(reg_state, write_msk,
--                                       CXL2_TYPE3_DEVICE, ct3d->hdmdb);
-+                                       CXL2_TYPE3_DEVICE, ct3d->hdmdb,
-+                                       ct3d->uio_comp_capable);
-     cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
- 
-     /*
-@@ -1552,6 +1559,7 @@ static const Property ct3_props[] = {
-                                 width, PCIE_LINK_WIDTH_16),
-     DEFINE_PROP_BOOL("x-256b-flit", CXLType3Dev, flitmode, false),
-     DEFINE_PROP_BOOL("hdm-db", CXLType3Dev, hdmdb, false),
-+    DEFINE_PROP_BOOL("x-uio", CXLType3Dev, uio_comp_capable, false),
-     DEFINE_PROP_UINT16("chmu-port", CXLType3Dev, cxl_dstate.chmu[0].port, 0),
- };
- 
-diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-index 1c8c3b4636..8f034991d8 100644
---- a/hw/pci-bridge/cxl_downstream.c
-+++ b/hw/pci-bridge/cxl_downstream.c
-@@ -42,7 +42,7 @@ static void latch_registers(CXLDownstreamPort *dsp)
-     uint32_t *write_msk = dsp->cxl_cstate.crb.cache_mem_regs_write_mask;
- 
-     cxl_component_register_init_common(reg_state, write_msk,
--                                       CXL2_DOWNSTREAM_PORT, true);
-+                                       CXL2_DOWNSTREAM_PORT, true, false);
- }
- 
- /* TODO: Look at sharing this code across all CXL port types */
-diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-index e82685d1ab..4be2b400f9 100644
---- a/hw/pci-bridge/cxl_root_port.c
-+++ b/hw/pci-bridge/cxl_root_port.c
-@@ -53,6 +53,7 @@ typedef struct CXLRootPort {
-     CPMUState cpmu;
-     MemoryRegion cpmu_registers;
-     PCIResReserve res_reserve;
-+    bool uio_capable;
- } CXLRootPort;
- 
- #define TYPE_CXL_ROOT_PORT "cxl-rp"
-@@ -107,7 +108,7 @@ static void latch_registers(CXLRootPort *crp)
-     uint32_t *write_msk = crp->cxl_cstate.crb.cache_mem_regs_write_mask;
- 
-     cxl_component_register_init_common(reg_state, write_msk, CXL2_ROOT_PORT,
--                                       true);
-+                                       true, crp->uio_capable);
- }
- 
- static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index 999ee0b56b..e8f2e57819 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -136,7 +136,8 @@ static void latch_registers(CXLUpstreamPort *usp)
-     uint32_t *write_msk = usp->cxl_cstate.crb.cache_mem_regs_write_mask;
- 
-     cxl_component_register_init_common(reg_state, write_msk,
--                                       CXL2_UPSTREAM_PORT, usp->flitmode);
-+                                       CXL2_UPSTREAM_PORT, usp->flitmode,
-+                                       usp->uio_capable);
-     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 8);
- }
- 
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index 25dfee6a9b..18b61eca20 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -301,7 +301,8 @@ static void pxb_cxl_dev_reset(DeviceState *dev)
-     uint32_t *write_msk = cxl_cstate->crb.cache_mem_regs_write_mask;
-     int dsp_count = 0;
- 
--    cxl_component_register_init_common(reg_state, write_msk, CXL2_RC, false);
-+    cxl_component_register_init_common(reg_state, write_msk, CXL2_RC, false,
-+                                       false);
-     /*
-      * The CXL specification allows for host bridges with no HDM decoders
-      * if they only have a single root port.
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index d734f88d2c..662fdb0833 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -315,7 +315,7 @@ void cxl_component_register_block_init(Object *obj,
-                                        const char *type);
- void cxl_component_register_init_common(uint32_t *reg_state,
-                                         uint32_t *write_msk,
--                                        enum reg_type type, bool bi);
-+                                        enum reg_type type, bool bi, bool uio);
- 
- void cxl_component_create_dvsec(CXLComponentState *cxl_cstate,
-                                 enum reg_type cxl_dev_type, uint16_t length,
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 3b5dcb5aec..3d92d3f46c 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -883,6 +883,8 @@ struct CXLType3Dev {
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
-     bool flitmode;
-+    bool uio_comp_capable;
-+    bool uio_enabled;
- 
-     /* DOE */
-     DOECap doe_cdat;
-diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-index d4186234c8..d23541e23a 100644
---- a/include/hw/pci-bridge/cxl_upstream_port.h
-+++ b/include/hw/pci-bridge/cxl_upstream_port.h
-@@ -22,6 +22,7 @@ typedef struct CXLUpstreamPort {
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
-     bool flitmode;
-+    bool uio_capable;
- 
-     DOECap doe_cdat;
-     uint64_t sn;
--- 
-2.34.1
+Before SBR, it's safe to undo preparation. After SBR, the HW state may be unknown,
+in that case, enable_regions() must not reattach regions unless PCI state and all HDM
+decoders were restored successfully.
 
+Best regards,
+Richard Cheng
 
+> +
+> +	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+>  
+> @@ -4917,12 +5086,6 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
+>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+>  }
+>  
+> -static u16 cxl_port_dvsec(struct pci_dev *dev)
+> -{
+> -	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+> -					 PCI_DVSEC_CXL_PORT);
+> -}
+> -
+>  static bool cxl_sbr_masked(struct pci_dev *dev)
+>  {
+>  	u16 dvsec, reg;
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index facaa324bd86..0eaa34db93ce 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1371,6 +1371,8 @@
+>  
+>  /* CXL r4.0, 8.1.5: Extensions DVSEC for Ports */
+>  #define PCI_DVSEC_CXL_PORT				3
+> +#define  PCI_DVSEC_CXL_PORT_EXT_STATUS			0x0a
+> +#define   PCI_DVSEC_CXL_PORT_EXT_STATUS_PM_INIT_COMP	0x00000001
+>  #define  PCI_DVSEC_CXL_PORT_CTL				0x0c
+>  #define   PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+>  
+> -- 
+> 2.55.0
+> 
+> 
