@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA184479861
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666A1479861
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787773411; cv=none; b=FUWPIRpHRuyJGaXsapppc4O2YgVDFnxAWIViGwfaaK5vbm+tcSNTyRpiqeRyBdfUmEYf/c0XjPysZC0HSAX3g/xpWGOzvo0lJiyocpHZyT1xoniqv8cmPm0R4OUiwA7DsXDZ25+WedghhHj6KVDP0v/HDGiv2/c9jSfn2HHKPc8=
+	t=1787773421; cv=none; b=Hyn9n3jSFwFlr8jZmiube0juq/mvbcHjayOyp+JeYtfaX30jIXzOKS8WHxXZ+1J5bMEt0Q5QA0f3MT0iEUN0vdvZ1GrZ4+Mhyd179QudJT0N6LEJixBclmVR3UmPgcNJ6ESxDYSn63gupltvF/EkVHEpXTbX+v6ETGIF3LfZc78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787773411; c=relaxed/simple;
-	bh=p3FhXLnwe/1mCMulEEzmUxogYzaHLuBrFKx7bVWuCoA=;
+	s=arc-20240116; t=1787773421; c=relaxed/simple;
+	bh=fBXv1dyQNJI/ViWNJdv4VtldTlohpp1etotgzX5foxk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=KKuZwCnEL8deNN4NzcjaSbhpii3AirK+Upgou7gQhSpsvGXoEvIGoPdL4HWx75AuzBATXtuXk6mLPSLzMWYSXZdsu99vll9tELOmsFdO9MYxJvilIohOcVhntTKqalfOJSqKo7Mg2sy7psP4YX2IS1hnrJSJ7k9AWNvwsey8+AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEI+tleQ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=VaHvpxKQ1r99I53tr3ht9tyNT7r5zfItzcUKQhHiSdcwKcshJhBS0TO6QifOQmn43ZWNQqLvELhtiooL0LTKAMQg//2o5RTa5Js2QZVojEa256KnOlWGaCY/5dAyyLnx3eunt0BuFQI583VGxsIGMx+lL7eEe82qbPqvks7wy6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O7SFMKpX; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEI+tleQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7SFMKpX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787773397;
+	s=mimecast20190719; t=1787773408;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z3E4l/9ZBojjapKTPoc2rkBnvoRHsP4FarABuj8M8OA=;
-	b=TEI+tleQ8K340JMEQMMFQUIoz9x0MGD0dJMWyl3GpJYKddzevRQUs7ty9wx/krJ0CMolPh
-	FfCl5cGArqyfYahewdUS/ggtiqGbFTvXdL1dJY/Jg0I9Le7i/EprIrmMEnnkfIqXWfg2fY
-	2b1cT3EGY2Xm8rC7JJrU8DK7xarqQE4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=Y8pqXrIvr/yRTQ3rsO16r+lqlJjBRU1uvUFq6p7chi8=;
+	b=O7SFMKpXnZ+Z8VVshSvyOm3WmKP04iLSBwLPrGu86gVYrkIlbyYfIgR1OQ4G2y70T9y/l8
+	oqKIRDSdy9eV6IlbK0FzBMlY1cs2/lvlqmHc75iJn+gTWqeqoTKLzGHN51iO4W8Rt3vFQ8
+	83agcYlaNi81tQ+7Fa3/Yy8RDic8iRk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-645-JqlXIFKKNV-almMHhD17wQ-1; Wed,
- 26 Aug 2026 15:43:15 -0400
-X-MC-Unique: JqlXIFKKNV-almMHhD17wQ-1
-X-Mimecast-MFC-AGG-ID: JqlXIFKKNV-almMHhD17wQ_1787773390
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-zHix_RuNON6iTFVTgm7A-g-1; Wed,
+ 26 Aug 2026 15:43:24 -0400
+X-MC-Unique: zHix_RuNON6iTFVTgm7A-g-1
+X-Mimecast-MFC-AGG-ID: zHix_RuNON6iTFVTgm7A-g_1787773402
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A434184BAAB;
-	Wed, 26 Aug 2026 19:43:10 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E100819344C6;
+	Wed, 26 Aug 2026 19:43:21 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.99])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 14F1318005AC;
-	Wed, 26 Aug 2026 19:43:04 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 45DCA1800598;
+	Wed, 26 Aug 2026 19:43:16 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Alex Williamson <alex@shazbot.org>,
@@ -80,9 +80,9 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
 	Lukas Straub <lukasstraub2@web.de>,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v3 30/43] qapi: convert trivial intro sections for audio.json
-Date: Wed, 26 Aug 2026 15:38:27 -0400
-Message-ID: <20260826193840.2152000-31-jsnow@redhat.com>
+Subject: [PATCH v3 32/43] qapi: convert trivial intro sections for misc.json
+Date: Wed, 26 Aug 2026 15:38:29 -0400
+Message-ID: <20260826193840.2152000-33-jsnow@redhat.com>
 In-Reply-To: <20260826193840.2152000-1-jsnow@redhat.com>
 References: <20260826193840.2152000-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,276 +92,241 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: _PxtFwCt1lRDH0NMZQecBy7AiNK5P7j5zy7aiK-XbtY_1787773390
+X-Mimecast-MFC-PROC-ID: OKhh4HFayGmMJ5P14605rFs9v1G7Mdh1SmkZgGQ8Cxo_1787773402
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/audio.json | 88 ++++++++++++++++++-------------------------------
- 1 file changed, 32 insertions(+), 56 deletions(-)
+ qapi/misc.json | 74 ++++++++++++++++++--------------------------------
+ 1 file changed, 27 insertions(+), 47 deletions(-)
 
-diff --git a/qapi/audio.json b/qapi/audio.json
-index 2df87b97101..72190f20993 100644
---- a/qapi/audio.json
-+++ b/qapi/audio.json
-@@ -14,9 +14,8 @@
+diff --git a/qapi/misc.json b/qapi/misc.json
+index 22b7afed9f6..b3c2a1421f3 100644
+--- a/qapi/misc.json
++++ b/qapi/misc.json
+@@ -44,8 +44,7 @@
  
  ##
- # @AudiodevPerDirectionOptions:
+ # @NameInfo:
 -#
--# General audio backend options that are used for both playback and
--# recording.
-+#     General audio backend options that are used for both playback
-+#     and recording.
+-# Guest name information.
++#     Guest name information.
  #
- # @mixing-engine: use QEMU's mixing engine to mix all streams inside
- #     QEMU and convert audio formats when not supported by the
-@@ -53,8 +52,7 @@
+ # @name: The name of the guest
+ #
+@@ -55,8 +54,7 @@
  
  ##
- # @AudiodevGenericOptions:
+ # @query-name:
 -#
--# Generic driver-specific options.
-+#     Generic driver-specific options.
+-# Return the name information of a guest.
++#     Return the name information of a guest.
  #
- # @in: options of the capture stream
+ # Since: 0.14
  #
 @@ -69,8 +67,7 @@
  
  ##
- # @AudiodevDBusOptions:
+ # @IOThreadInfo:
 -#
--# Options of the D-Bus audio backend.
-+#     Options of the D-Bus audio backend.
+-# Information about an iothread
++#     Information about an iothread
  #
- # @in: options of the capture stream
+ # @id: the identifier of the iothread
  #
-@@ -89,9 +86,8 @@
+@@ -137,8 +134,7 @@
  
  ##
- # @AudiodevAlsaPerDirectionOptions:
+ # @stop:
 -#
--# Options of the ALSA backend that are used for both playback and
--# recording.
-+#     Options of the ALSA backend that are used for both playback and
-+#     recording.
+-# Stop guest VM execution.
++#     Stop guest VM execution.
  #
- # @dev: the name of the ALSA device to use (default 'default')
+ # Since: 0.14
  #
-@@ -111,8 +107,7 @@
+@@ -159,8 +155,7 @@
  
  ##
- # @AudiodevAlsaOptions:
+ # @cont:
 -#
--# Options of the ALSA audio backend.
-+#     Options of the ALSA audio backend.
+-# Resume guest VM execution.
++#     Resume guest VM execution.
  #
- # @in: options of the capture stream
+ # Since: 0.14
  #
-@@ -130,8 +125,7 @@
+@@ -208,8 +203,7 @@
  
  ##
- # @AudiodevSndioOptions:
+ # @human-monitor-command:
 -#
--# Options of the sndio audio backend.
-+#     Options of the sndio audio backend.
+-# Execute a command on the human monitor and return the output.
++#     Execute a command on the human monitor and return the output.
  #
- # @in: options of the capture stream
+ # @command-line: the command to execute in the human monitor
  #
-@@ -152,9 +146,8 @@
+@@ -251,8 +245,7 @@
  
  ##
- # @AudiodevCoreaudioPerDirectionOptions:
+ # @getfd:
 -#
--# Options of the Core Audio backend that are used for both playback
--# and recording.
-+#     Options of the Core Audio backend that are used for both
-+#     playback and recording.
+-# Receive a file descriptor via SCM rights and assign it a name
++#     Receive a file descriptor via SCM rights and assign it a name
  #
- # @buffer-count: number of buffers
+ # @fdname: file descriptor name
  #
-@@ -167,8 +160,7 @@
+@@ -273,11 +266,10 @@
  
  ##
- # @AudiodevCoreaudioOptions:
+ # @get-win32-socket:
 -#
--# Options of the coreaudio audio backend.
-+#     Options of the coreaudio audio backend.
+-# Add a socket that was duplicated to QEMU process with
+-# WSADuplicateSocketW() via WSASocket() & WSAPROTOCOL_INFOW structure
+-# and assign it a name (the SOCKET is associated with a CRT file
+-# descriptor)
++#     Add a socket that was duplicated to QEMU process with
++#     WSADuplicateSocketW() via WSASocket() & WSAPROTOCOL_INFOW
++#     structure and assign it a name (the SOCKET is associated with a
++#     CRT file descriptor)
  #
- # @in: options of the capture stream
+ # @info: the WSAPROTOCOL_INFOW structure (encoded in base64)
  #
-@@ -183,8 +175,7 @@
+@@ -301,8 +293,7 @@
  
  ##
- # @AudiodevDsoundOptions:
+ # @closefd:
 -#
--# Options of the DirectSound audio backend.
-+#     Options of the DirectSound audio backend.
+-# Close a file descriptor previously passed via SCM rights
++#     Close a file descriptor previously passed via SCM rights
  #
- # @in: options of the capture stream
+ # @fdname: file descriptor name
  #
-@@ -203,9 +194,8 @@
+@@ -317,8 +308,7 @@
  
  ##
- # @AudiodevJackPerDirectionOptions:
+ # @AddfdInfo:
 -#
--# Options of the JACK backend that are used for both playback and
--# recording.
-+#     Options of the JACK backend that are used for both playback and
-+#     recording.
+-# Information about a file descriptor that was added to an fd set.
++#     Information about a file descriptor that was added to an fd set.
  #
- # @server-name: select from among several possible concurrent server
- #     instances (default: environment variable $JACK_DEFAULT_SERVER if
-@@ -237,8 +227,7 @@
+ # @fdset-id: The ID of the fd set that @fd was added to.
+ #
+@@ -331,8 +321,8 @@
  
  ##
- # @AudiodevJackOptions:
+ # @add-fd:
 -#
--# Options of the JACK audio backend.
-+#     Options of the JACK audio backend.
+-# Add a file descriptor, that was passed via SCM rights, to an fd set.
++#     Add a file descriptor, that was passed via SCM rights, to an fd
++#     set.
  #
- # @in: options of the capture stream
+ # @fdset-id: The ID of the fd set to add the file descriptor to.
  #
-@@ -253,9 +242,8 @@
+@@ -361,8 +351,7 @@
  
  ##
- # @AudiodevOssPerDirectionOptions:
+ # @remove-fd:
 -#
--# Options of the OSS backend that are used for both playback and
--# recording.
-+#     Options of the OSS backend that are used for both playback and
-+#     recording.
+-# Remove a file descriptor from an fd set.
++#     Remove a file descriptor from an fd set.
  #
- # @dev: file name of the OSS device (default '/dev/dsp')
+ # @fdset-id: The ID of the fd set that the file descriptor belongs to.
  #
-@@ -275,8 +263,7 @@
+@@ -387,8 +376,7 @@
  
  ##
- # @AudiodevOssOptions:
+ # @FdsetFdInfo:
 -#
--# Options of the OSS audio backend.
-+#     Options of the OSS audio backend.
+-# Information about a file descriptor that belongs to an fd set.
++#     Information about a file descriptor that belongs to an fd set.
  #
- # @in: options of the capture stream
+ # @fd: The file descriptor value.
  #
-@@ -305,9 +292,8 @@
+@@ -401,8 +389,7 @@
  
  ##
- # @AudiodevPaPerDirectionOptions:
+ # @FdsetInfo:
 -#
--# Options of the Pulseaudio backend that are used for both playback
--# and recording.
-+#     Options of the Pulseaudio backend that are used for both
-+#     playback and recording.
+-# Information about an fd set.
++#     Information about an fd set.
  #
- # @name: name of the sink/source to use
+ # @fdset-id: The ID of the fd set.
  #
-@@ -330,8 +316,7 @@
+@@ -415,8 +402,7 @@
  
  ##
- # @AudiodevPaOptions:
+ # @query-fdsets:
 -#
--# Options of the PulseAudio audio backend.
-+#     Options of the PulseAudio audio backend.
+-# Return information describing all fd sets.
++#     Return information describing all fd sets.
  #
- # @in: options of the capture stream
+ # Since: 1.2
  #
-@@ -349,9 +334,8 @@
+@@ -457,8 +443,7 @@
  
  ##
- # @AudiodevPipewirePerDirectionOptions:
+ # @CommandLineParameterType:
 -#
--# Options of the PipeWire backend that are used for both playback and
--# recording.
-+#     Options of the PipeWire backend that are used for both playback
-+#     and recording.
+-# Possible types for an option parameter.
++#     Possible types for an option parameter.
  #
- # @name: name of the sink/source to use
+ # @string: accepts a character string
  #
-@@ -374,8 +358,7 @@
+@@ -476,8 +461,7 @@
  
  ##
- # @AudiodevPipewireOptions:
+ # @CommandLineParameterInfo:
 -#
--# Options of the PipeWire audio backend.
-+#     Options of the PipeWire audio backend.
+-# Details about a single parameter of a command line option.
++#     Details about a single parameter of a command line option.
  #
- # @in: options of the capture stream
+ # @name: parameter name
  #
-@@ -390,9 +373,8 @@
+@@ -497,9 +481,8 @@
  
  ##
- # @AudiodevSdlPerDirectionOptions:
+ # @CommandLineOptionInfo:
 -#
--# Options of the SDL audio backend that are used for both playback and
--# recording.
-+#     Options of the SDL audio backend that are used for both playback
-+#     and recording.
+-# Details about a command line option, including its list of parameter
+-# details
++#     Details about a command line option, including its list of
++#     parameter details
  #
- # @buffer-count: number of buffers (default 4)
+ # @option: option name
  #
-@@ -405,8 +387,7 @@
+@@ -512,8 +495,7 @@
  
  ##
- # @AudiodevSdlOptions:
+ # @query-command-line-options:
 -#
--# Options of the SDL audio backend.
-+#     Options of the SDL audio backend.
+-# Query command line option schema.
++#     Query command line option schema.
  #
- # @in: options of the recording stream
+ # @option: option name
  #
-@@ -421,8 +402,7 @@
+@@ -552,8 +534,7 @@
  
  ##
- # @AudiodevWavOptions:
+ # @RTC_CHANGE:
 -#
--# Options of the wav audio backend.
-+#     Options of the wav audio backend.
+-# Emitted when the guest changes the RTC time.
++#     Emitted when the guest changes the RTC time.
  #
- # @in: options of the capture stream
- #
-@@ -440,8 +420,7 @@
+ # @offset: offset in seconds between base RTC clock (as specified by
+ #     -rtc base), and new RTC clock value
+@@ -577,9 +558,8 @@
  
  ##
- # @AudioFormat:
+ # @VFU_CLIENT_HANGUP:
 -#
--# An enumeration of possible audio formats.
-+#     An enumeration of possible audio formats.
+-# Emitted when the client of a TYPE_VFIO_USER_SERVER closes the
+-# communication channel
++#     Emitted when the client of a TYPE_VFIO_USER_SERVER closes the
++#     communication channel
  #
- # @u8: unsigned 8 bit integer
- #
-@@ -464,8 +443,7 @@
- 
- ##
- # @AudiodevDriver:
--#
--# An enumeration of possible audio backend drivers.
-+#     An enumeration of possible audio backend drivers.
- #
- # @jack: JACK audio backend (since 5.1)
- #
-@@ -488,8 +466,7 @@
- 
- ##
- # @Audiodev:
--#
--# Options of an audio backend.
-+#     Options of an audio backend.
- #
- # @id: identifier of the backend
- #
-@@ -534,8 +511,7 @@
- 
- ##
- # @query-audiodevs:
--#
--# Return information about audiodev configuration
-+#     Return information about audiodev configuration
- #
- # Since: 8.0
- ##
+ # @vfu-id: ID of the TYPE_VFIO_USER_SERVER object.  It is the last
+ #     component of @vfu-qom-path referenced below
 -- 
 2.55.0
 
