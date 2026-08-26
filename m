@@ -1,45 +1,75 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F53346FB3
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 12:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090993C9EE0
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 13:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787748789; cv=none; b=jJPTQxfSAANysOn87nn4WHEFWWPCbSZSYdhzIDjgSMDNwd6m6BawQebyUkTXjIGWKw4U9G1E5mPYPAItTnvbdw4g/xTRz+sZorXZZB5h55hiX3VNt/albbkqLpsjXLDRRXArJLmSqpvlpxZZBj05TX+t1UXVcljg12NYsiBQCZE=
+	t=1787751464; cv=none; b=uIsmNtXcXsHL4uegST591/KbRQbbigVYLwoODDRBkZT8m8RgGaQAXs3edS/KhkfyGCZ+hIwdXvpyta5OUl0E6tQJcWZi+7qDbGuFcIVkcHtEyG+yC/LZCX+aTdwwJzj7JRDvYciTNiJBYLXhR18JrRds23qvo8v1RTxizfc76c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787748789; c=relaxed/simple;
-	bh=ePrm4cFh+7qer2CmPbY0/48kYGJ7kRay5LUoqlIEFM0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dpcti6Sy2Q08edluJQlBGHPOIcG6EtxPkE9uT4yLqWvrGxEKX3fylCpiAFw3ForaOxHEqLewRuf5O86ZmIcbTvAfeqOVZPnG78EMsLipqVcamwo2Cbkr4Pz4w6Xilhu/+l7r8ARvPFTU7thFnaIN0zSHoZ1SFDfxujGQIqp93rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=So2QjkRH; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1787751464; c=relaxed/simple;
+	bh=N/ewH1XUjCFXF1ttKhEJj8Pkw0zsvEYKLlERLNbB4Is=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uQyoqQ88DOh+nnD3wkuS3IoAcD0GmvxazTfF4lWwMcTvNqRPoFluQOS6/lv53IK2U+k9i1PM+21ny9OydV+pWmrswUQrSdbNUaJ88buSfjNxOMEO+J7djsppkFhnEcabj5uBCawF+qiy0NY0Ghf0YDthftr5pFQmpZO4gfN4aeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ANe9qPfK; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="So2QjkRH"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1787748773; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=6B9z53UUaTpxV/Fq1gwcjEGhfN4dSJoMkoj4f2W/y+E=;
-	b=So2QjkRH2fOTNqyZQTj0kCx8Yss4A5wll0PYJsAZvuXudxGceBVkTI0wCM+8ipQ09fFcH0wzI4Ppu1v2yY0dH5Z2y54Yt7DTu5yCbRvQ07kLZMT//GJZ3XOKSTc/NdlW2TPJN3Vh4t0WvR7sIYVGuvDBX6XPoDMImsqzehja8W8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X9gwmSJ_1787748772;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9gwmSJ_1787748772 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Aug 2026 20:52:53 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
-Cc: xlpang@linux.alibaba.com,
-	oliver.yang@linux.alibaba.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ANe9qPfK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787751462; x=1819287462;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=N/ewH1XUjCFXF1ttKhEJj8Pkw0zsvEYKLlERLNbB4Is=;
+  b=ANe9qPfKOwhdzLL4UJq2+yzI8QV8RWcLLuys2V9P2vk/M58QRFlxG15+
+   HhTs7son5Em1SW+yaTO+lC8q5rtRpNz5r4zomOCsdoWwaoIYnWNYt7H5f
+   VuAk+l9nRVAMcvSk547wvkPWd3iBu/MMbFdPkIdQXqUCLWr3nRTzPuyi7
+   FPWr2l+/47TbriLuQ+tq4H6OWWhLG6E2cG3GNvKTkRFEvA3f+vK1j+BSf
+   699D6js5Yi9QxTiyt+6uW39d7wTIJPUslb8NUtFWYy//75c+ky50Tli4l
+   d/E+h3UUlaAw1w59jK7DqZyDAv+0up4QSNXt6umIutLWeUWx/OXaHJToP
+   Q==;
+X-CSE-ConnectionGUID: rzIl/MoOTdeuoQJJlcCk4w==
+X-CSE-MsgGUID: 2BPMIio4RWC/VS8oduABMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88249824"
+X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
+   d="scan'208";a="88249824"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:37:41 -0700
+X-CSE-ConnectionGUID: 8Bi5SUYJTHWTAzEIU7h1wA==
+X-CSE-MsgGUID: KGVcK7WGQfy5sjzSoFgxnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
+   d="scan'208";a="269529694"
+Received: from junjie-desk-dev.bj.intel.com (HELO junjie-desk-dev.tail2c02c1.ts.net) ([10.238.152.71])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:37:37 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: palmer@dabbelt.com,
+	alistair.francis@wdc.com,
+	mst@redhat.com,
+	imammedo@redhat.com,
+	sunilvl@ventanamicro.com,
+	sunilvl@oss.qualcomm.com,
+	jic23@kernel.org,
+	pbonzini@redhat.com,
+	liwei1518@gmail.com,
+	daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com,
+	chao.liu@processmission.com,
+	anisinha@redhat.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	guoren@kernel.org,
+	qemu-riscv@nongnu.org,
+	qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
-Date: Wed, 26 Aug 2026 20:52:48 +0800
-Message-ID: <20260826125248.4003792-1-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
+Subject: Re: [PATCH 0/4] hw/riscv/virt: Add CXL support to the RISC-V virt machine
+Date: Wed, 26 Aug 2026 21:37:24 +0800
+Message-ID: <20260826133725.355433-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260821081954.1171-1-cp0613@linux.alibaba.com>
+References: <20260821081954.1171-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,104 +78,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Writing to the memdev poison debugfs files while cxl_mem is being unbound
-deadlocks. The unbind path takes the memdev device lock and then waits for
-the debugfs file to drain, while the writer holds the debugfs reference and
-waits for that same lock:
+Hi Chen Pei,
 
-  unbind_store()                     echo 0 > .../mem0/inject_poison
-    device_release_driver_internal()   full_proxy_write()
-      <takes cxlmd->dev lock>            <takes debugfs_file_get() ref>
-      device_unbind_cleanup()            debugfs_attr_write()
-        devres_release_all()               cxl_debugfs_poison_inject()
-          remove_debugfs()                   <waits for cxlmd->dev lock>
-            debugfs_remove_recursive()
-              __debugfs_file_removed()
-                <waits for the ref to drain>
+On Fri, 21 Aug 2026 16:19:50 +0800, Chen Pei wrote:
+>   - hw/riscv/virt: The MMIO-window patch no longer touches the common
+>     gpex code (Igor).  The gpex_cfg.cxl_mmio32 field and the is_cxl
+>     static _CRS branch are dropped; the ACPI0016 _CRS now comes from the
+>     generic build_crs() path.  Since EDK2 does not enumerate the pxb-cxl
+>     expander bridge, riscv simulates the firmware PCI initialization
+>     (reserved window + depth-first bridge bus numbers) and re-applies it
+>     via a reset handler.
 
-Neither side can make progress. A third task piles up behind the held
-device lock: detach_memdev() runs on cxl_bus_wq, and since that is an
-ordered workqueue the wedged work item stalls every other CXL bus work
-item, so unrelated devices stop being rescanned or detached.
+Ran this on master eea8fe61b8 (it still applies clean on bde2492aac).
+riscv64 bios-tables-test passes. In the generated DSDT the PC0C _CRS
+now comes out of build_crs() with the reserved window
+0x70000000-0x7FFFFFFF and a bus range [0x0C,0x0D] taken from the real
+subordinate, PCI0 shrunk to 0x40000000-0x6FFFFFFF, and the CEDT CHBS
+and CFMWS matching the machine memmap. The machine-global window
+synthesis and the +15 bus range from v2 are gone.
 
-The write side only needs the device lock so that cxl_dpa_to_region() sees
-a stable cxlmd->dev.driver. Nothing requires the caller to wait for the
-lock, so use device_trylock() and report -EBUSY instead. That keeps the
-debugfs reference from ever being held across a wait for the lock, which
-breaks the cycle. A concurrent unbind now either completes before the write
-starts, in which case the write fails with -ENOENT because the file is
-gone, or loses the race and the write reports -EBUSY.
+system_reset from the monitor leaves the root port with the same
+window and secondary/subordinate numbers, so the reset handler does
+what it says.
 
-The unbind task sits in uninterruptible sleep and cannot be killed. The
-writer can be signalled, which is the only reason the current code is
-recoverable at all.
+One larger question on 3/4 about where that enumeration should come
+from, and a note on 4/4.
 
-Reproducer, on a device that advertises poison inject support:
+Tested-by: Junjie Cao <junjie.cao@intel.com>
 
-  while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
-  while :; do
-      echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
-      echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
-  done
-
-This hits within milliseconds. Note that lockdep stays quiet: one end of
-the cycle is the debugfs active_users completion rather than a lock it
-tracks. The hung task detector does report both blocked tasks.
-
-Fixes: 574eda81d0a7 ("cxl/memdev: Hold memdev lock during memdev poison injection/clear")
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
----
- drivers/cxl/mem.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 798e5c369cfc..01d2d5855694 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -50,11 +50,20 @@ static int cxl_debugfs_poison_inject(void *data, u64 dpa)
- 	struct cxl_memdev *cxlmd = data;
- 	int rc;
- 
--	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
--	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
--		return rc;
-+	/*
-+	 * The debugfs proxy holds a debugfs_file_get() reference across this
-+	 * callback, and cxl_mem unbind removes this file from devres while
-+	 * holding the same device lock. Blocking here would let unbind wait
-+	 * in debugfs_remove() for a reference that cannot be dropped until
-+	 * unbind releases the lock, so never wait for the lock.
-+	 */
-+	if (!device_trylock(&cxlmd->dev))
-+		return -EBUSY;
- 
--	return cxl_inject_poison(cxlmd, dpa);
-+	rc = cxl_inject_poison(cxlmd, dpa);
-+	device_unlock(&cxlmd->dev);
-+
-+	return rc;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
-@@ -65,11 +74,14 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
- 	struct cxl_memdev *cxlmd = data;
- 	int rc;
- 
--	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
--	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
--		return rc;
-+	/* Avoid the unbind deadlock described in the inject path above. */
-+	if (!device_trylock(&cxlmd->dev))
-+		return -EBUSY;
-+
-+	rc = cxl_clear_poison(cxlmd, dpa);
-+	device_unlock(&cxlmd->dev);
- 
--	return cxl_clear_poison(cxlmd, dpa);
-+	return rc;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
--- 
-2.43.7
-
+Many thanks,
+Junjie
