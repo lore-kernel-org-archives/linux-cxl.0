@@ -1,270 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D794B39FCBC
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 18:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6304779B2
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787770690; cv=none; b=ry80aFYU4d/25UQfrcebQ0nrYITKyk3lc+zTCv6Fu3ytSh2XfG583j+3jcwLSvy5dVae4U7OtqFy2FTYW1MO2suT6c4wPqskMw4PeyfbH/KEBzAdbUm777AXBR52/oIdzHrNAlvEyiha2sEzUeogW+m8x4LWuGx6A+cgA8TWQj0=
+	t=1787773160; cv=none; b=vF3DwnShMgW806PchwHJD0i2A4tbB1sy159O2H1Q9qH8hMsXgSc85Wz4wWJzlaPMVYt1gFJ2x6ST3I7DG+nyz/L6j2yO3IUKRJOaOVKGJOXCNnssR6x31MRETXniR1kjYMLOfbmNtijNS7YHFev6yQueGewN7xU7mFMg6yHinP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787770690; c=relaxed/simple;
-	bh=M1d8MDRDI5/9PonCB4HgOuNgQS9ixKE8D+QbKtBHTH4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jMBtcvLf42o07IbFPT3j392jEf88tm1CcrUbUPFvWmU8IVDUovHZ4He4bz1BT3uT5QadfwHvtezhNTJjYAMJQvlamUSsNZmkpvl5RMdMH1nm8/rEg/A8YMpCT/iGgxKdmnql9tC8nuMvHC2X5cAAbDipaXBrSA7DuCTzKwn2t50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5i0fnhi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787773160; c=relaxed/simple;
+	bh=tL87ZccIz1sUZFUXU1IBQMWC/0mvRYi6oOJ9PRqxeFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cFH1mcwPUqvSx3yROE1/oIbPDeoEBeXywJZqsAJsIw/7XMRAZd9oUrjA4mMU011HmxcaMxvAslErJU+3ENCfw16zRh1I8xKS3rM0tNPXtdJvpW5LZJEnKCLUD+Qkyg93k9P3xT1QZhbVkzCMOA0pKzPwgZ7WuDHrE+IfQxtynyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=INJBPvf+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5i0fnhi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DA01F000E9;
-	Wed, 26 Aug 2026 18:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787770679;
-	bh=yxRZdSZ36uVElsViZFCsxNM7UY1ID8Jl14Bs/u9vsnM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=C5i0fnhiduSPaqD+ygs6gxKjx2zmjPKbYtw1lgT8yQqJfodD6yiAh4dJP6SP3XBSe
-	 N3gIgHBt08LtZyLhHjTIpFL0v13rsZrYLJjce63+5k6qklnpsNN3CBEBAn1hkfgTwx
-	 7CvSu24Bh0GsAkHcTPx9svsuCRugUry1YBFJEyO7f+4hjrC5GA+/Q4P6ju53v5z2x7
-	 6rF0i4Y+Pxs2IhyeU6qaVkx8nWrh9q+VMsVLgmdiQhokKrLyd0cnyWlMrvjUDOaBVU
-	 S47+hk2OhqvBfmZSVUsTvSOZ/Nt7/3rqSypo5ZUHM5CjV8/QCHU7bLgNqoGafxM276
-	 5UfpeXPp2LkRg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/1] cxl/events: Bound the event log drain loop
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anisa Su" <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260826184417.1042-1-anisa.su@samsung.com>
-References: <cover.1787768932.git.anisa.su@samsung.com>
- <20260826184417.1042-1-anisa.su@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 26 Aug 2026 18:57:58 +0000
-Message-Id: <20260826185759.24DA01F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INJBPvf+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787773143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s9bozq2A418taG1qUgS13udO0wiNcqkTCymptFTx+vw=;
+	b=INJBPvf+rhRFEkJqLQuRpTE1ZSZ98sVbsLdMaZYm861Ag8MVev0AkhfeC9fZQ/lHGnDGS9
+	SYsCM/j5NN1THHm4sKMGRnRILYxLIXYemckG7R1AyoxpQh2UWHyiU3uvuwt4JjKRSemRsv
+	FNGt2LGZBP500yWAzX/8bk9aGwnba00=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-146-9412ylJcNfqNWpF-vOfexA-1; Wed,
+ 26 Aug 2026 15:38:58 -0400
+X-MC-Unique: 9412ylJcNfqNWpF-vOfexA-1
+X-Mimecast-MFC-AGG-ID: 9412ylJcNfqNWpF-vOfexA_1787773135
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71265180134D;
+	Wed, 26 Aug 2026 19:38:54 +0000 (UTC)
+Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.99])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CE7BC1800577;
+	Wed, 26 Aug 2026 19:38:41 +0000 (UTC)
+From: John Snow <jsnow@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Alex Williamson <alex@shazbot.org>,
+	=?UTF-8?q?Daniel=20P=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+	John Snow <jsnow@redhat.com>,
+	linux-cxl@vger.kernel.org,
+	Markus Armbruster <armbru@redhat.com>,
+	Michael Tokarev <mjt@tls.msk.ru>,
+	Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>,
+	Peter Xu <peterx@redhat.com>,
+	Eric Blake <eblake@redhat.com>,
+	=?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
+	zhenwei pi <zhenwei.pi@linux.dev>,
+	qemu-trivial@nongnu.org,
+	Fabiano Rosas <farosas@suse.de>,
+	Kevin Wolf <kwolf@redhat.com>,
+	Laurent Vivier <laurent@vivier.eu>,
+	Jiri Pirko <jiri@resnulli.us>,
+	qemu-block@nongnu.org,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefan Berger <stefanb@linux.vnet.ibm.com>,
+	linux-edac@vger.kernel.org,
+	"Gonglei (Arei)" <arei.gonglei@huawei.com>,
+	Igor Mammedov <imammedo@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Hanna Reitz <hreitz@redhat.com>,
+	Jason Wang <jasowangio@gmail.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ani Sinha <anisinha@redhat.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+	Lukas Straub <lukasstraub2@web.de>,
+	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
+Subject: [PATCH v3 00/43] qapi: convert (very) trivial intro sections
+Date: Wed, 26 Aug 2026 15:37:57 -0400
+Message-ID: <20260826193840.2152000-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: _xJRJmEnt5ettHdY_7uHX3UGPcZDC40C3ypRMw-4w28_1787773135
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+v3:=0D
+   As per Markus' request, the intro section conversion has been split=0D
+   even further into the *very* trivial; leaving the semi-trivial and=0D
+   not-trivial conversions for later consideration.=0D
+=0D
+   If you are a non-qapi/non-docs maintainer being CC'd on this patch,=0D
+   there is **very likely** nothing for you to do here; we are only=0D
+   changing spacing and syntax, but not modifying content in any way=0D
+   in this series in particular. Please feel free to mark-as-read and=0D
+   move on with your day.=0D
+=0D
+-=0D
+=0D
+Hi, this patchset converts trivial "introductory" sections in the QAPI=0D
+documentation to use the new, explicit intro section syntax.=0D
+=0D
+This is being done primarily for the benefit of the forthcoming=0D
+"inliner", a feature for the rendered HTML QMP documentation that=0D
+seeks to "inline" QMP command argument documentation into the argument=0D
+list for each command.=0D
+=0D
+There are two main motives here:=0D
+=0D
+(1) We want the split between the "introduction" and "details"=0D
+    sections to be mechanically obvious, so that auto-generated or=0D
+    inlined documentation has a well-defined, obvious spot to go.=0D
+=0D
+(2) We do not want to inline irrelevant, introductory text describing=0D
+    structures to be copied into command documentation.=0D
+=0D
+This patchset tackles "very trivial" conversions: cases where the=0D
+existing leading plaintext is only a single sentence and is=0D
+immediately followed by a tagged section, the end of the documentation=0D
+block, or some other pre-existing syntactical delineation. (i.e.: not=0D
+more plaintext.)=0D
+=0D
+NOTE: This series *may* miss some conversions; future QAPI changes will=0D
+enforce the new syntax and any cases that have appeared since v1 will=0D
+be identified and corrected at that time; we are concerned with the=0D
+bulk and ease-of-review here, not completeness. This is precisely why=0D
+the new intro syntax and parser were carefully designed to allow=0D
+gradual conversion.=0D
+=0D
+NOTE2: Future patches that may require more scrutiny will handle the=0D
+remaining conversions - There are some very subtle concerns that are=0D
+not readily apparent in the very minor textual changes that will be=0D
+spelled out for reviewers in the cover letters for those series.=0D
+=0D
+This is enough for today, don't you think?=0D
+=0D
+John Snow (43):=0D
+  qapi: convert trivial intro sections for error.json=0D
+  qapi: convert trivial intro sections for acpi-hest.json=0D
+  qapi: convert trivial intro sections for ebpf.json=0D
+  qapi: convert trivial intro sections for compat.json=0D
+  qapi: convert trivial intro sections for vfio.json=0D
+  qapi: convert trivial intro sections for trace.json=0D
+  qapi: convert trivial intro sections for misc-arm.json=0D
+  qapi: convert trivial intro sections for cryptodev.json=0D
+  qapi: convert trivial intro sections for machine-common.json=0D
+  qapi: convert trivial intro sections for accelerator.json=0D
+  qapi: convert trivial intro sections for authz.json=0D
+  qapi: convert trivial intro sections for yank.json=0D
+  qapi: convert trivial intro sections for replay.json=0D
+  qapi: convert trivial intro sections for machine-s390x.json=0D
+  qapi: convert trivial intro sections for acpi.json=0D
+  qapi: convert trivial intro sections for tpm.json=0D
+  qapi: convert trivial intro sections for qdev.json=0D
+  qapi: convert trivial intro sections for control.json=0D
+  qapi: convert trivial intro sections for dump.json=0D
+  qapi: convert trivial intro sections for common.json=0D
+  qapi: convert trivial intro sections for sockets.json=0D
+  qapi: convert trivial intro sections for transaction.json=0D
+  qapi: convert trivial intro sections for stats.json=0D
+  qapi: convert trivial intro sections for job.json=0D
+  qapi: convert trivial intro sections for pci.json=0D
+  qapi: convert trivial intro sections for introspect.json=0D
+  qapi: convert trivial intro sections for rocker.json=0D
+  qapi: convert trivial intro sections for misc-i386.json=0D
+  qapi: convert trivial intro sections for block-export.json=0D
+  qapi: convert trivial intro sections for audio.json=0D
+  qapi: convert trivial intro sections for block.json=0D
+  qapi: convert trivial intro sections for misc.json=0D
+  qapi: convert trivial intro sections for crypto.json=0D
+  qapi: convert trivial intro sections for cxl.json=0D
+  qapi: convert trivial intro sections for run-state.json=0D
+  qapi: convert trivial intro sections for char.json=0D
+  qapi: convert trivial intro sections for virtio.json=0D
+  qapi: convert trivial intro sections for net.json=0D
+  qapi: convert trivial intro sections for qom.json=0D
+  qapi: convert trivial intro sections for ui.json=0D
+  qapi: convert trivial intro sections for migration.json=0D
+  qapi: convert trivial intro sections for machine.json=0D
+  qapi: convert trivial intro sections for block-core.json=0D
+=0D
+ qapi/accelerator.json    |  18 +-=0D
+ qapi/acpi-hest.json      |   4 +-=0D
+ qapi/acpi.json           |   8 +-=0D
+ qapi/audio.json          |  88 +++-----=0D
+ qapi/authz.json          |  21 +-=0D
+ qapi/block-core.json     | 448 ++++++++++++++-------------------------=0D
+ qapi/block-export.json   |  50 ++---=0D
+ qapi/block.json          |  41 ++--=0D
+ qapi/char.json           |  90 +++-----=0D
+ qapi/common.json         |  29 +--=0D
+ qapi/compat.json         |   6 +-=0D
+ qapi/control.json        |  30 +--=0D
+ qapi/crypto.json         | 100 ++++-----=0D
+ qapi/cryptodev.json      |  18 +-=0D
+ qapi/cxl.json            |   6 +-=0D
+ qapi/dump.json           |  19 +-=0D
+ qapi/ebpf.json           |   6 +-=0D
+ qapi/error.json          |   3 +-=0D
+ qapi/introspect.json     |  40 ++--=0D
+ qapi/job.json            |  18 +-=0D
+ qapi/machine-common.json |  14 +-=0D
+ qapi/machine-s390x.json  |  13 +-=0D
+ qapi/machine.json        | 208 +++++++-----------=0D
+ qapi/migration.json      | 131 +++++-------=0D
+ qapi/misc-arm.json       |   6 +-=0D
+ qapi/misc-i386.json      |  52 ++---=0D
+ qapi/misc.json           |  74 +++----=0D
+ qapi/net.json            |  92 +++-----=0D
+ qapi/pci.json            |  27 +--=0D
+ qapi/qdev.json           |  14 +-=0D
+ qapi/qom.json            | 150 +++++--------=0D
+ qapi/replay.json         |   6 +-=0D
+ qapi/rocker.json         |  39 ++--=0D
+ qapi/run-state.json      | 113 ++++------=0D
+ qapi/sockets.json        |  31 ++-=0D
+ qapi/stats.json          |  34 ++-=0D
+ qapi/tpm.json            |  29 +--=0D
+ qapi/trace.json          |  12 +-=0D
+ qapi/transaction.json    |  14 +-=0D
+ qapi/ui.json             | 199 ++++++-----------=0D
+ qapi/vfio.json           |   4 +-=0D
+ qapi/virtio.json         |  54 ++---=0D
+ qapi/yank.json           |   5 +-=0D
+ 43 files changed, 845 insertions(+), 1519 deletions(-)=0D
+=0D
+--=20=0D
+2.55.0=0D
+=0D
 
-New issues:
-- [Medium] TOCTOU race during IRQ setup causes spurious warnings and alters=
- thread polling logic
-
-Pre-existing issues:
-- [Critical] Out-of-bounds Read & Information Leak via unvalidated record_c=
-ount
-- [High] Unbounded inner loop allows CXL device to cause soft lockup
-- [High] Unconditional IRQ_HANDLED return defeats spurious interrupt detect=
-ion
---
-
-commit bfe23a43bdb497b440f694e603125e0a9dc270f5
-Author: Anisa Su <anisa.su887@gmail.com>
-
-cxl/events: Bound the event log drain loop
-
-This commit bounds the event log drain loop based on the work completed
-instead of waiting for the Event Status register to clear. It modifies
-cxl_event_thread() to stop on the first error and drop any log that returns
-no records while its status bit is set. The goal is to prevent infinite
-spinning when a misbehaving device fails to clear the status bits.
-
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 55828a836c01a..ca2114a17ff4f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-
-[ ... ]
-
-> @@ -1070,12 +1070,15 @@ static void cxl_mem_get_records_log(struct cxl_me=
-mdev_state *mds,
->  	struct cxl_get_event_payload *payload;
->  	u8 log_type =3D type;
->  	u16 nr_rec;
-> +	int rc =3D 0;
-> +
-> +	*drained =3D false;
-> =20
->  	mutex_lock(&mds->event.log_lock);
->  	payload =3D mds->event.buf;
-> =20
->  	do {
-> -		int rc, i;
-> +		int i;
->  		struct cxl_mbox_cmd mbox_cmd =3D (struct cxl_mbox_cmd) {
->  			.opcode =3D CXL_MBOX_OP_GET_EVENT_RECORD,
->  			.payload_in =3D &log_type,
-> @@ -1096,6 +1099,7 @@ static void cxl_mem_get_records_log(struct cxl_memd=
-ev_state *mds,
->  		nr_rec =3D le16_to_cpu(payload->record_count);
->  		if (!nr_rec)
->  			break;
-> +		*drained =3D true;
-
-[Severity: Critical]
-This is a pre-existing issue, but does this code properly validate the
-hardware-provided payload->record_count?
-
-In cxl_mem_get_records_log(), the nr_rec variable is read directly from
-payload->record_count without any bounds checking against the payload buffer
-capacity. The loop below then uses this untrusted count to read from the
-flexible array payload->records[i]:
-
-        for (i =3D 0; i < nr_rec; i++)
-                __cxl_event_trace_record(cxlmd, type,
-                                         &payload->records[i]);
-
-A maliciously or erroneously large record_count from the device would cause=
- an
-out-of-bounds read of kernel memory, leaking it to tracepoints.
-
-Additionally, this same unvalidated count is used later in
-cxl_clear_event_record():
-
-        u16 total =3D le16_to_cpu(get_pl->record_count);
-        ...
-        for (cnt =3D 0; cnt < total; cnt++) {
-                struct cxl_event_record_raw *raw =3D &get_pl->records[cnt];
-                struct cxl_event_generic *gen =3D &raw->event.generic;
-
-                payload->handles[i++] =3D gen->hdr.handle;
-
-This reads out-of-bounds kernel memory and sends it to the physical device =
-via
-the CLEAR_EVENT_RECORD command.
-
-> =20
->  		for (i =3D 0; i < nr_rec; i++)
->  			__cxl_event_trace_record(cxlmd, type,
-
-[ ... ]
-
-> @@ -1114,31 +1118,59 @@ static void cxl_mem_get_records_log(struct cxl_me=
-mdev_state *mds,
->  	} while (nr_rec);
-
-[Severity: High]
-This is a pre-existing issue, but while this patch bounds the outer event l=
-og
-drain loop in cxl_event_thread(), does it overlook this inner loop?
-
-The do/while loop in cxl_mem_get_records_log() executes unconditionally as =
-long
-as the device returns a non-zero record_count. A misbehaving or malicious
-device that continuously returns a payload with record_count > 0 will trap =
-the
-kernel thread in this loop indefinitely. This bypasses the new bounds checks
-introduced in the outer loop, potentially causing a CPU soft lockup.
-
-> =20
->  	mutex_unlock(&mds->event.log_lock);
-> +
-> +	return rc;
->  }
-
-[ ... ]
-
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index c7c91e8dc51dc..9339f37cd6620 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -515,21 +515,46 @@ static irqreturn_t cxl_event_thread(int irq, void *=
-id)
->  	struct cxl_dev_id *dev_id =3D id;
->  	struct cxl_dev_state *cxlds =3D dev_id->cxlds;
->  	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
-> -	u32 status;
-> +	u32 mask =3D CXLDEV_EVENT_STATUS_ALL;
-> +
-> +	while (mask) {
-> +		u32 status, drained, stuck;
-> +		int rc;
-> =20
-> -	do {
->  		/*
->  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
->  		 * ignore the reserved upper 32 bits
->  		 */
->  		status =3D readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> -		/* Ignore logs unknown to the driver */
-> -		status &=3D CXLDEV_EVENT_STATUS_ALL;
-> +		/* Ignore logs unknown to the driver, and logs given up on */
-> +		status &=3D mask;
->  		if (!status)
->  			break;
-> -		cxl_mem_get_event_records(mds, status);
-> +
-> +		/*
-> +		 * A failed drain leaves the log's status bit set, so another
-> +		 * pass would resend the same query forever.
-> +		 */
-> +		rc =3D cxl_mem_get_event_records(mds, status, &drained);
-> +		if (rc)
-> +			break;
-> +
-> +		/*
-> +		 * The Event Status register is device owned and read only, so
-> +		 * it cannot bound this loop; records read can.  A device that
-> +		 * leaves a bit set with an empty log makes no progress, and
-> +		 * only the device can clear that state, so stop polling that
-> +		 * log rather than spin on it.
-> +		 */
-> +		stuck =3D status & ~drained;
-> +		if (stuck) {
-> +			dev_warn_once(cxlds->dev,
-> +				      "Event status %#x set with no records to read\n",
-> +				      stuck);
-> +			mask &=3D ~stuck;
-> +		}
-
-[Severity: Medium]
-Can this new logic cause spurious warnings and incorrectly stop polling due=
- to
-a race with the IRQ setup?
-
-In cxl_event_config(), interrupts are enabled via cxl_event_irqsetup(), and
-then cxl_mem_get_event_records() is explicitly called to drain existing log=
-s:
-
-        rc =3D cxl_event_irqsetup(mds);
-        if (rc)
-                return rc;
-
-        cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
-
-If an interrupt fires immediately after IRQs are enabled but before the
-explicit drain, cxl_event_thread() will read the event status register and
-might get preempted. While preempted, the probe code completes the drain and
-clears the hardware status. When cxl_event_thread() resumes, it calls
-cxl_mem_get_event_records() with its now-stale status. The function will
-return no records (drained =3D=3D 0), causing this logic to incorrectly con=
-clude
-the device is stuck, emit the dev_warn_once() warning, and stop polling
-those logs.
-
->  		cond_resched();
-> -	} while (status);
-> +	}
-> =20
->  	return IRQ_HANDLED;
-
-[Severity: High]
-This is a pre-existing issue, but should this threaded IRQ handler return
-IRQ_NONE if it didn't process any events?
-
-If the handler is woken up but the status register reads 0 on the first
-iteration (e.g., due to a spurious interrupt), the loop breaks immediately =
-and
-unconditionally returns IRQ_HANDLED.
-
-Returning IRQ_HANDLED when no work was done prevents the kernel's core IRQ
-subsystem from detecting and disabling a spurious interrupt storm. If a
-failing CXL device floods the CPU with MSI interrupts, the kernel will never
-disable the vector, which could completely lock up the processing core.
-
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260826184417.1042=
--1-anisa.su@samsung.com?part=3D1
