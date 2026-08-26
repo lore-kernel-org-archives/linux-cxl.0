@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FD047D927
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3374147D952
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787773397; cv=none; b=gDm27wYvN0KqYuDKbGZ0wTvZNgAaAgfaq5Zaw2GQingGLszHHluyc8YE6ZlpBWrbenOxfhOLt+9qmpcWBx9BCNV7d0u5NRLmEzsj9qZEg6sZiVjG+A0BzsyC1fO1zQPuDsQh0gi2raSHTiGqPhlyugREZsU/yUwTe0UDf1yvCYg=
+	t=1787773400; cv=none; b=P47kfj7/fJAkHWTX0OZyZROysj1RrMkfSB2bu9h6UZCxlsvWh22OyMgGSF6PPE5WZC4mTIH8tkOGtb3OA0UgLypO040jaF+3wnog0/T8h7u87QOtNdAvAlzpekTHhek0pSp6+UVA/hWomN5FvtNu0CTsAJA9Mr0v08p1vAN1jsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787773397; c=relaxed/simple;
-	bh=iwQHT562HYJD5dgzDhWkBNTaVVgGFgmPFJ+3/wgIL3U=;
+	s=arc-20240116; t=1787773400; c=relaxed/simple;
+	bh=7GXJV9ItQtBWAgiWgOooTb0fgfb4niwoxPhBWZ4J3cE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=UoBTyq09ZL3qNVu8rORhSfXFpbDnOBq8Q9Zh8cus/DJ3hRBgsD4UrUj/Y+WBh9MbOqNkEAirsgrqNLklGVv95jMv2cZ70TY7Y8H0nF5iKSqKmvnOWjKbGaI5JURm9BK6DmdOLTQOveZlV5chAh906J7PYh76PhR6lKJKBy20vIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=We4hOYuB; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=CfFH+Dt57T43BgqGyYbVYYO07gVjRYVb9JWhWslnQWWcFOcSUPRieI89Xq6T0wWyWP5HzMMSpFIVf3lJqtVwrYTIsfUnN0lf04yZXxrJSLCBmC21nfjevJYMwKIv755KIFY4oFkdF5RZ7kZyC2iW4I3c3flTTzfLWMYJQDrntCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+v3Xf3Y; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="We4hOYuB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+v3Xf3Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787773376;
+	s=mimecast20190719; t=1787773385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=y8wW2V1gmq4U2oGifMr03OEbp6q8ZFZvEQ5q6kHXpZc=;
-	b=We4hOYuB5g+8RTjASFPhnEICc8+dy414hCeW6IgFd6wIUFKxMn6SvwNLE5uNFUrB0euIpK
-	ZJXRYwowjntyzWsrUy4wWFGaRKBA6iT5WyducSMlXUL24IMfP0RYsrg96ybOn1sGadJY0l
-	cI44+yCrzVfE4tnCWUXyfNtgK0MN7Ng=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=cMeGh8F13Z46uyER7y88/d0ISiPeR9CDwXqnRAPj7ik=;
+	b=D+v3Xf3Ytp92iMhPwtw/0gW/FjG+2N53HpV0i/EAZm7ZDp9hTdG0PrMA5KPoVmZ73CGt28
+	OCrU0xPBKLxzkjJhpmQR75K7t4euIzNYIVndNBIZ465Ig0t/xslqIQnMzcgQUcbiML/Mou
+	X6XFDUwwkDZWGPN7KkiBWQNMVzR06rk=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-574-DrxEYY6pOaGJXFAtcdIs2A-1; Wed,
- 26 Aug 2026 15:42:52 -0400
-X-MC-Unique: DrxEYY6pOaGJXFAtcdIs2A-1
-X-Mimecast-MFC-AGG-ID: DrxEYY6pOaGJXFAtcdIs2A_1787773369
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-472-RGEfCt-ZN6WwwuYaFA6nYg-1; Wed,
+ 26 Aug 2026 15:43:01 -0400
+X-MC-Unique: RGEfCt-ZN6WwwuYaFA6nYg-1
+X-Mimecast-MFC-AGG-ID: RGEfCt-ZN6WwwuYaFA6nYg_1787773377
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0974D1855127;
-	Wed, 26 Aug 2026 19:42:49 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06932195396C;
+	Wed, 26 Aug 2026 19:42:57 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.99])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 382B91800598;
-	Wed, 26 Aug 2026 19:42:41 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4EFA61800577;
+	Wed, 26 Aug 2026 19:42:49 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Alex Williamson <alex@shazbot.org>,
@@ -80,9 +80,9 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
 	Lukas Straub <lukasstraub2@web.de>,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v3 27/43] qapi: convert trivial intro sections for rocker.json
-Date: Wed, 26 Aug 2026 15:38:24 -0400
-Message-ID: <20260826193840.2152000-28-jsnow@redhat.com>
+Subject: [PATCH v3 28/43] qapi: convert trivial intro sections for misc-i386.json
+Date: Wed, 26 Aug 2026 15:38:25 -0400
+Message-ID: <20260826193840.2152000-29-jsnow@redhat.com>
 In-Reply-To: <20260826193840.2152000-1-jsnow@redhat.com>
 References: <20260826193840.2152000-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,149 +92,183 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: rabhOd5jbaD5AM2QGtldQxDp-xK6bYiFxc30MxPGTbM_1787773369
+X-Mimecast-MFC-PROC-ID: upaIS2UfltkvSsG6jAOqUpjLXLo1N_4iZkl8TkFZSF8_1787773377
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/rocker.json | 39 +++++++++++++--------------------------
- 1 file changed, 13 insertions(+), 26 deletions(-)
+ qapi/misc-i386.json | 52 ++++++++++++++++-----------------------------
+ 1 file changed, 18 insertions(+), 34 deletions(-)
 
-diff --git a/qapi/rocker.json b/qapi/rocker.json
-index 5d2dbd26034..7eb0a88dafd 100644
---- a/qapi/rocker.json
-+++ b/qapi/rocker.json
-@@ -9,8 +9,7 @@
+diff --git a/qapi/misc-i386.json b/qapi/misc-i386.json
+index 05a94d6c416..78ec9aec647 100644
+--- a/qapi/misc-i386.json
++++ b/qapi/misc-i386.json
+@@ -25,8 +25,7 @@
  
  ##
- # @RockerSwitch:
+ # @SevState:
 -#
--# Rocker switch information.
-+#     Rocker switch information.
+-# An enumeration of SEV state information used during `query-sev`.
++#     An enumeration of SEV state information used during `query-sev`.
  #
- # @name: switch name
+ # @uninit: The guest is uninitialized.
  #
-@@ -25,8 +24,7 @@
+@@ -52,8 +51,7 @@
  
  ##
- # @query-rocker:
+ # @SevGuestType:
 -#
--# Return rocker switch information.
-+#     Return rocker switch information.
+-# An enumeration indicating the type of SEV guest being run.
++#     An enumeration indicating the type of SEV guest being run.
  #
- # @name: switch name
+ # @sev: The guest is a legacy SEV or SEV-ES guest.
  #
-@@ -43,8 +41,7 @@
+@@ -66,8 +64,7 @@
  
  ##
- # @RockerPortDuplex:
+ # @SevGuestInfo:
 -#
--# An enumeration of port duplex states.
-+#     An enumeration of port duplex states.
+-# Information specific to legacy SEV/SEV-ES guests.
++#     Information specific to legacy SEV/SEV-ES guests.
  #
- # @half: half duplex
+ # @policy: SEV policy value
  #
-@@ -56,8 +53,7 @@
+@@ -81,8 +78,7 @@
  
  ##
- # @RockerPortAutoneg:
+ # @SevSnpGuestInfo:
 -#
--# An enumeration of port autoneg states.
-+#     An enumeration of port autoneg states.
+-# Information specific to SEV-SNP guests.
++#     Information specific to SEV-SNP guests.
  #
- # @off: autoneg is off
+ # @snp-policy: SEV-SNP policy value
  #
-@@ -69,8 +65,7 @@
+@@ -93,8 +89,7 @@
  
  ##
- # @RockerPort:
+ # @SevInfo:
 -#
--# Rocker switch port information.
-+#     Rocker switch port information.
+-# Information about Secure Encrypted Virtualization (SEV) support
++#     Information about Secure Encrypted Virtualization (SEV) support
  #
- # @name: port name
+ # @enabled: true if SEV is active
  #
-@@ -93,8 +88,7 @@
+@@ -144,8 +139,7 @@
  
  ##
- # @query-rocker-ports:
+ # @SevLaunchMeasureInfo:
 -#
--# Return rocker switch port information.
-+#     Return rocker switch port information.
+-# SEV Guest Launch measurement information
++#     SEV Guest Launch measurement information
  #
- # @name: port name
+ # @data: the measurement value encoded in base64
  #
-@@ -115,8 +109,7 @@
+@@ -180,9 +174,8 @@
  
  ##
- # @RockerOfDpaFlowKey:
+ # @SevCapability:
 -#
--# Rocker switch OF-DPA flow key
-+#     Rocker switch OF-DPA flow key
+-# The struct describes capability for a Secure Encrypted
+-# Virtualization feature.
++#     The struct describes capability for a Secure Encrypted
++#     Virtualization feature.
  #
- # @priority: key priority, 0 being lowest priority
+ # @pdh: Platform Diffie-Hellman key (base64 encoded)
  #
-@@ -153,8 +146,7 @@
+@@ -252,9 +245,8 @@
  
  ##
- # @RockerOfDpaFlowMask:
+ # @SevAttestationReport:
 -#
--# Rocker switch OF-DPA flow mask
-+#     Rocker switch OF-DPA flow mask
+-# The struct describes attestation report for a Secure Encrypted
+-# Virtualization feature.
++#     The struct describes attestation report for a Secure Encrypted
++#     Virtualization feature.
  #
- # @in-pport: physical input port
+ # @data: guest attestation report (base64 encoded)
  #
-@@ -182,8 +174,7 @@
+@@ -294,8 +286,7 @@
  
  ##
- # @RockerOfDpaFlowAction:
+ # @SgxEpcSection:
 -#
--# Rocker switch OF-DPA flow action
-+#     Rocker switch OF-DPA flow action
+-# Information about intel SGX EPC section
++#     Information about intel SGX EPC section
  #
- # @goto-tbl: next table ID
+ # @node: the numa node
  #
-@@ -209,8 +200,7 @@
+@@ -309,8 +300,7 @@
  
  ##
- # @RockerOfDpaFlow:
+ # @SgxInfo:
 -#
--# Rocker switch OF-DPA flow
-+#     Rocker switch OF-DPA flow
+-# Information about intel Safe Guard eXtension (SGX) support
++#     Information about intel Safe Guard eXtension (SGX) support
  #
- # @cookie: flow unique cookie ID
+ # @sgx: true if SGX is supported
  #
-@@ -230,8 +220,7 @@
+@@ -333,8 +323,7 @@
  
  ##
- # @query-rocker-of-dpa-flows:
+ # @query-sgx:
 -#
--# Return rocker OF-DPA flow information.
-+#     Return rocker OF-DPA flow information.
+-# Return information about configured SGX capabilities of guest
++#     Return information about configured SGX capabilities of guest
  #
- # @name: switch name
+ # Since: 6.2
  #
-@@ -261,8 +250,7 @@
+@@ -350,8 +339,7 @@
  
  ##
- # @RockerOfDpaGroup:
+ # @query-sgx-capabilities:
 -#
--# Rocker switch OF-DPA group
-+#     Rocker switch OF-DPA group
+-# Return information about SGX capabilities of host
++#     Return information about SGX capabilities of host
  #
- # @id: group unique ID
+ # Since: 6.2
  #
-@@ -305,8 +293,7 @@
+@@ -367,8 +355,7 @@
  
  ##
- # @query-rocker-of-dpa-groups:
+ # @EvtchnPortType:
 -#
--# Return rocker OF-DPA group information.
-+#     Return rocker OF-DPA group information.
+-# An enumeration of Xen event channel port types.
++#     An enumeration of Xen event channel port types.
  #
- # @name: switch name
+ # @closed: The port is unused.
+ #
+@@ -389,8 +376,7 @@
+ 
+ ##
+ # @EvtchnInfo:
+-#
+-# Information about a Xen event channel port
++#     Information about a Xen event channel port
+ #
+ # @port: the port number
+ #
+@@ -419,8 +405,7 @@
+ 
+ ##
+ # @xen-event-list:
+-#
+-# Query the Xen event channels opened by the guest.
++#     Query the Xen event channels opened by the guest.
+ #
+ # Returns: list of open event channel ports.
+ #
+@@ -456,8 +441,7 @@
+ 
+ ##
+ # @xen-event-inject:
+-#
+-# Inject a Xen event channel port (interrupt) to the guest.
++#     Inject a Xen event channel port (interrupt) to the guest.
+ #
+ # @port: The port number
  #
 -- 
 2.55.0
