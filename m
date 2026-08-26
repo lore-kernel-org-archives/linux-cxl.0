@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569E647D455
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F8547AF67
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787773331; cv=none; b=KbzQ4QVoElbblmhikdAea1/u8Q+xoB2+LWZJTUof3Nv8IQtEDe+8M01g0vcnCaTU7yOmxFkDWNa4x8agicJkDIed4OFgkfCBrYd0NrHAh+xmQJBbVP4mNpem6Vw4oY3gAhxkKdXmO3+D+aCez+Ce1CX1PbBrFBByzMk07x4VY2Q=
+	t=1787773344; cv=none; b=WTEpF6cwtQlBd/Ufwmj67nM8CAxaIm6xWCUpQYkc/bc0c+OXqzmvBHc+s78NFpB1OvhYeqfyUOWxidYWJpoVAMh+KJTDG2QgjN/4wQcjv0nqJny5fOVbdI2HPiVi4N28qL+AwK6XtBvLkpXEU1f+8YBeMeL0Q8wX2tMSphNq7BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787773331; c=relaxed/simple;
-	bh=jIoEXhfg3T5FbpS85BDVzA2NIGSIWpX9vSusWDNKkcU=;
+	s=arc-20240116; t=1787773344; c=relaxed/simple;
+	bh=MTRPFsmHHAhsCkllKSqynUavENQxajGYLMqAifandOA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=TLq9wiBsyysy99IqBnSTKcW+fDEVihkKrl2vIxmp36+Pi4pU/bXfEH1rW6QwoxstmpWy98MNKcekpFZjm+5PhLGAyvL47uYo6y0ykyWeP3uIRbaVqaGvxogvKp9GwDwoh1wbpswk6D+NlaTzLqPEHl99schbp1m6KFq4p9uPbjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fSyitxYA; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=rblOTh9O7q6r5CGxX4AdbwuFd89l4t4df5N9xTSoyVNridq5ZHIQAdYPd7Hx0HbcuHDAohLTQ8aHpRle/CjA70t29Fimub2oEReIp4NHCd3gbwFMOS17hP967BS9SoSYc0Fi4yuGjE0y5UKRO4a5MZB5LBg8Zkcv6+dzDvNRDao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NLTEL2FL; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSyitxYA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NLTEL2FL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787773317;
+	s=mimecast20190719; t=1787773326;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=paUL78gCdpaCrvbsmed4HTHvmj42cb8WXYX01ka0V0s=;
-	b=fSyitxYAgyax3bv2oZu4fFinzqdDdF3oyHbpO9g66QK/YV43pMqJigi4RkEnnUCMplTrXm
-	a1t/PpQvEdJuomFYRe5Fd22IF8dMBz8PiGIRHFIdKKQ4eCA2o6mlZncgzTaceP2k+WwST5
-	jWAdjpoO04lFaBdTv2lzg+knkxAHN10=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=QP7QUbGEfuohezFKRNTIokfJyo/v9qvglGiwlHcfMr4=;
+	b=NLTEL2FLB6rtk16d4/6XuQpmUUK4djElgoOZ2UhbPYyoItb6QkcrXg5MBBB0z320N7UhN0
+	XJb4vt12AeChJ+oFcSq5mZAsYR+XV2bR/tfzT2NOgyerqu8DQJP9SGPm4SPLLue/xSzeuY
+	8sYTMSveXx0aa8cU8QRAnlO9EeE+gbk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-39mPIoSKPS2Uc-paTFkwOw-1; Wed,
- 26 Aug 2026 15:41:53 -0400
-X-MC-Unique: 39mPIoSKPS2Uc-paTFkwOw-1
-X-Mimecast-MFC-AGG-ID: 39mPIoSKPS2Uc-paTFkwOw_1787773311
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-463-XG7GCazON9KfnsA_-NtzLQ-1; Wed,
+ 26 Aug 2026 15:42:02 -0400
+X-MC-Unique: XG7GCazON9KfnsA_-NtzLQ-1
+X-Mimecast-MFC-AGG-ID: XG7GCazON9KfnsA_-NtzLQ_1787773319
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F09311955DCC;
-	Wed, 26 Aug 2026 19:41:50 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FB03184BAAB;
+	Wed, 26 Aug 2026 19:41:59 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.99])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D79B91800577;
-	Wed, 26 Aug 2026 19:41:43 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 395DA1800577;
+	Wed, 26 Aug 2026 19:41:51 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Alex Williamson <alex@shazbot.org>,
@@ -80,9 +80,9 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
 	Lukas Straub <lukasstraub2@web.de>,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v3 20/43] qapi: convert trivial intro sections for common.json
-Date: Wed, 26 Aug 2026 15:38:17 -0400
-Message-ID: <20260826193840.2152000-21-jsnow@redhat.com>
+Subject: [PATCH v3 21/43] qapi: convert trivial intro sections for sockets.json
+Date: Wed, 26 Aug 2026 15:38:18 -0400
+Message-ID: <20260826193840.2152000-22-jsnow@redhat.com>
 In-Reply-To: <20260826193840.2152000-1-jsnow@redhat.com>
 References: <20260826193840.2152000-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,111 +92,106 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: oth4IDNNfgUCT_k6Z12U4p1pxgxZND2wDg7GxlgMFgY_1787773311
+X-Mimecast-MFC-PROC-ID: d2Jb_2QyK0xL1oE8uoe4JcqlyXDaBMjRMjk5Eqx2M-4_1787773319
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/common.json | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ qapi/sockets.json | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/qapi/common.json b/qapi/common.json
-index af7e3d618a7..c1bbed21e7f 100644
---- a/qapi/common.json
-+++ b/qapi/common.json
+diff --git a/qapi/sockets.json b/qapi/sockets.json
+index 473be2ac58a..210d07b5ef2 100644
+--- a/qapi/sockets.json
++++ b/qapi/sockets.json
 @@ -9,8 +9,7 @@
  
  ##
- # @IoOperationType:
+ # @NetworkAddressFamily:
 -#
--# An enumeration of the I/O operation types
-+#     An enumeration of the I/O operation types
+-# The network address family
++#     The network address family
  #
- # @read: read operation
+ # @ipv4: IPV4 family
  #
-@@ -23,8 +22,7 @@
+@@ -41,9 +40,8 @@
  
  ##
- # @OnOffAuto:
+ # @InetSocketAddress:
 -#
--# An enumeration of three options: on, off, and auto
-+#     An enumeration of three options: on, off, and auto
+-# Captures a socket address or address range in the Internet
+-# namespace.
++#     Captures a socket address or address range in the Internet
++#     namespace.
  #
- # @auto: QEMU selects the value between on and off
- #
-@@ -39,8 +37,7 @@
+ # @numeric: true if the host/port are guaranteed to be numeric, false
+ #     if name resolution should be attempted.  Defaults to false.
+@@ -98,8 +96,8 @@
  
  ##
- # @OnOffSplit:
+ # @UnixSocketAddress:
 -#
--# An enumeration of three values: on, off, and split
-+#     An enumeration of three values: on, off, and split
+-# Captures a socket address in the local ("Unix socket") namespace.
++#     Captures a socket address in the local ("Unix socket")
++#     namespace.
  #
- # @on: Enabled
+ # @path: filesystem path to use
  #
-@@ -72,8 +69,7 @@
+@@ -121,8 +119,7 @@
  
  ##
- # @OffAutoPCIBAR:
+ # @VsockSocketAddress:
 -#
--# An enumeration of options for specifying a PCI BAR
-+#     An enumeration of options for specifying a PCI BAR
+-# Captures a socket address in the vsock namespace.
++#     Captures a socket address in the vsock namespace.
  #
- # @off: The specified feature is disabled
+ # @cid: unique host identifier
  #
-@@ -98,8 +94,7 @@
+@@ -140,8 +137,7 @@
  
  ##
- # @PCIELinkSpeed:
+ # @FdSocketAddress:
 -#
--# An enumeration of PCIe link speeds in units of GT/s
-+#     An enumeration of PCIe link speeds in units of GT/s
+-# A file descriptor name or number.
++#     A file descriptor name or number.
  #
- # @2_5: 2.5GT/s
- #
-@@ -120,8 +115,7 @@
+ # @str: decimal is for file descriptor number, otherwise it's a file
+ #     descriptor name.  Named file descriptors are permitted in
+@@ -197,9 +193,8 @@
  
  ##
- # @PCIELinkWidth:
+ # @SocketAddressLegacy:
 -#
--# An enumeration of PCIe link width
-+#     An enumeration of PCIe link width
+-# Captures the address of a socket, which could also be a named file
+-# descriptor
++#     Captures the address of a socket, which could also be a named
++#     file descriptor
  #
- # @1: x1
+ # @type: Transport type
  #
-@@ -144,8 +138,7 @@
+@@ -219,8 +214,7 @@
  
  ##
- # @HostMemPolicy:
+ # @SocketAddressType:
 -#
--# Host memory policy types
-+#     Host memory policy types
+-# Available `SocketAddress` types
++#     Available `SocketAddress` types
  #
- # @default: restore default policy, remove any nondefault policy
+ # @inet: Internet address
  #
-@@ -164,9 +157,8 @@
+@@ -237,9 +231,8 @@
  
  ##
- # @NetFilterDirection:
+ # @SocketAddress:
 -#
--# Indicates whether a netfilter is attached to a netdev's transmit
--# queue or receive queue or both.
-+#     Indicates whether a netfilter is attached to a netdev's transmit
-+#     queue or receive queue or both.
+-# Captures the address of a socket, which could also be a socket file
+-# descriptor
++#     Captures the address of a socket, which could also be a socket
++#     file descriptor
  #
- # @all: the filter is attached both to the receive and the transmit
- #     queue of the netdev (default).
-@@ -184,8 +176,7 @@
- 
- ##
- # @GrabToggleKeys:
--#
--# Key combinations to toggle input-linux between host and guest.
-+#     Key combinations to toggle input-linux between host and guest.
- #
- # @ctrl-ctrl: left and right control key
+ # @type: Transport type
  #
 -- 
 2.55.0
