@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0712047DF99
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA78B238166
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Aug 2026 19:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787773483; cv=none; b=r1cUjiW6YMyLJSmPra67jvoQVea6Mw7RjxTodJKeDLBg9SXKIeYYDgU5zIdyA9sDhO5M0zFb4Rr1L9bKd+NBOvaUZ9EIbbMkwqsffEtDhR2Lw7a6IWOvnLJwMaGFtRNS4XK1HxdeSdap/bmS6LaiMTrT/rREYrnTfc77TqeXiNc=
+	t=1787773487; cv=none; b=FPwKpWou9NIB9lqbTF1KNKQV+TaVh7Sa4qgQuBu7w6XvCv7MWPhUuwHUojIVJ8amvnPo3yumXdhKd3iHkMfvWpL016c0Rt+uSTeEWpRrEWQqPHU2x9RLxS6gKArfZPCC86WQE//PoKfsZhd7dDZ9WMopUorkUULYSOzJM+Pi3ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787773483; c=relaxed/simple;
-	bh=Jm1B9WsjAn5YKZqRHJXPCfTnWZMojMn7VIHRhECEAC0=;
+	s=arc-20240116; t=1787773487; c=relaxed/simple;
+	bh=FrWoQQ3U5krJj8ZlEZXkxiXneqqfWRAb+ixQ1ITiipo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=umKzqrEi1ScVRQKZHXnnkGlKXh98XO28Ku3Dgo9HE+YC3uk722t/KDrKAWtBnUpZY9KUowxV/hMkQKJ8pb+J2eI0Cn6219k80uFlzDW9AvaONsZVJtp8Lnx29FWO24YoCx+x4tuaKvtNGnn1JKQ6Sj+Xh2GuENkSnqlX/rcy2e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UK9KnujL; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=YhZyH36M/lVTAc3oF0Xo84i33W+gEKea+ie0dbvZVVTmpwwm4k61Mj+7DOOI0m2KPqo5s4GlGAunMIuAjREWBjFWwhKRcajnqBQE+pzRiLWRtfDX9LAYJ79AH9vhAjN2VRTTCulH+WASf9yQomEOnRLSh61JYsUIokbp3wSZ+Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e4iSal9c; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UK9KnujL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4iSal9c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787773467;
+	s=mimecast20190719; t=1787773475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=whyI5oC0NF+JVwl/7FlcO+qvyiVZzFrkdTzPuV3wTHU=;
-	b=UK9KnujLDj/XhxkMhXKINdWPIDjz8Vqv3kb1ZRbfh+4Z/sO9j2nr5oxlM/jBNVFtaIvH14
-	MsIC0FkeeNj7TeZPpKis/Gd97jX1hOEBSh7xGxmQ4L1wwvvcicOqdzKWy3Y7SVEq5QyFM0
-	ZMVlfAYgdzLmX2UxXSKMZVWLUEGgj50=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=GT4vbniYPu2T0an15X/kc4fJpS4Ogad+KYFFAMad4RM=;
+	b=e4iSal9c7Rsg5mDDO/0CFnIg2J16EUvQGHq9l5mQ2GPkDvJERuUS/Rm7oKaPOtVQrVdhPg
+	Q+bFD/OSSOqG6MUJ6YQqnYM0wH6xezP+fmcuFE+SB+ZiYTMHxFRp9Q/wdfDVJOo/cYhrFE
+	u4NgmMG1ZnLAwVaqArnaqoEc3F9dye0=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-397-DQ6FDxxeNY6Anr5zLD0l5w-1; Wed,
- 26 Aug 2026 15:44:23 -0400
-X-MC-Unique: DQ6FDxxeNY6Anr5zLD0l5w-1
-X-Mimecast-MFC-AGG-ID: DQ6FDxxeNY6Anr5zLD0l5w_1787773458
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-AuyODw-rNaOByQ2n1VZbww-1; Wed,
+ 26 Aug 2026 15:44:31 -0400
+X-MC-Unique: AuyODw-rNaOByQ2n1VZbww-1
+X-Mimecast-MFC-AGG-ID: AuyODw-rNaOByQ2n1VZbww_1787773468
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B46EA1855134;
-	Wed, 26 Aug 2026 19:44:18 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 153A31862D51;
+	Wed, 26 Aug 2026 19:44:28 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.99])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 79C8D1800577;
-	Wed, 26 Aug 2026 19:44:09 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4FA7B1800598;
+	Wed, 26 Aug 2026 19:44:18 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Alex Williamson <alex@shazbot.org>,
@@ -80,9 +80,9 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
 	Lukas Straub <lukasstraub2@web.de>,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v3 39/43] qapi: convert trivial intro sections for qom.json
-Date: Wed, 26 Aug 2026 15:38:36 -0400
-Message-ID: <20260826193840.2152000-40-jsnow@redhat.com>
+Subject: [PATCH v3 40/43] qapi: convert trivial intro sections for ui.json
+Date: Wed, 26 Aug 2026 15:38:37 -0400
+Message-ID: <20260826193840.2152000-41-jsnow@redhat.com>
 In-Reply-To: <20260826193840.2152000-1-jsnow@redhat.com>
 References: <20260826193840.2152000-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,505 +92,666 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 72no-OSmzCdhBSZQlIqn5wJDyuKADRh3weTR3hXFT1c_1787773458
+X-Mimecast-MFC-PROC-ID: dmrQ4T77owGhmRmSy9YNu_2x2y-67Zdudc8BoSlmcXw_1787773468
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/qom.json | 150 +++++++++++++++++---------------------------------
- 1 file changed, 51 insertions(+), 99 deletions(-)
+ qapi/ui.json | 199 ++++++++++++++++++---------------------------------
+ 1 file changed, 68 insertions(+), 131 deletions(-)
 
-diff --git a/qapi/qom.json b/qapi/qom.json
-index 4a9b7f90884..51af9485e6d 100644
---- a/qapi/qom.json
-+++ b/qapi/qom.json
-@@ -77,8 +77,7 @@
+diff --git a/qapi/ui.json b/qapi/ui.json
+index b2c42a7f578..960d02d1429 100644
+--- a/qapi/ui.json
++++ b/qapi/ui.json
+@@ -13,8 +13,7 @@
  
  ##
- # @qom-list:
+ # @DisplayProtocol:
 -#
--# List properties of a object given a path in the object model.
-+#     List properties of a object given a path in the object model.
+-# Display protocols which support changing password options.
++#     Display protocols which support changing password options.
  #
- # @path: the path within the object model.  See `qom-get` for a
- #     description of this parameter.
-@@ -103,8 +102,7 @@
+ # Since: 7.0
+ ##
+@@ -23,9 +22,8 @@
  
  ##
- # @qom-get:
+ # @SetPasswordAction:
 -#
--# Get a property value.
-+#     Get a property value.
+-# An action to take on changing a password on a connection with active
+-# clients.
++#     An action to take on changing a password on a connection with
++#     active clients.
  #
- # @path: The path within the object model.  There are two forms of
- #     supported paths--absolute and partial paths.
-@@ -154,9 +152,8 @@
+ # @keep: maintain existing clients
+ #
+@@ -40,8 +38,7 @@
  
  ##
- # @qom-list-get:
+ # @SetPasswordOptions:
 -#
--# List properties and their values for each object path in the input
--# list.
-+#     List properties and their values for each object path in the
-+#     input list.
+-# Options for `set_password`.
++#     Options for `set_password`.
  #
- # @paths: The absolute or partial path for each object, as described
- #     in `qom-get`.
-@@ -176,8 +173,7 @@
+ # @protocol:
+ #     - 'vnc' to modify the VNC server password
+@@ -64,8 +61,7 @@
  
  ##
- # @qom-set:
+ # @SetPasswordOptionsVnc:
 -#
--# Set a property value.
-+#     Set a property value.
+-# Options for `set_password` specific to the VNC protocol.
++#     Options for `set_password` specific to the VNC protocol.
  #
- # @path: see `qom-get` for a description of this parameter
- #
-@@ -202,8 +198,7 @@
+ # @display: The id of the display where the password should be
+ #     changed.  Defaults to the first.
+@@ -77,8 +73,7 @@
  
  ##
- # @ObjectTypeInfo:
+ # @set_password:
 -#
--# This structure describes a search result from `qom-list-types`
-+#     This structure describes a search result from `qom-list-types`
+-# Set the password of a remote display server.
++#     Set the password of a remote display server.
  #
- # @name: the type name found in the search
- #
-@@ -219,8 +214,7 @@
+ # Errors:
+ #     - If Spice is not enabled, DeviceNotFound
+@@ -95,8 +90,7 @@
  
  ##
- # @qom-list-types:
+ # @ExpirePasswordOptions:
 -#
--# Return a list of types given search parameters.
-+#     Return a list of types given search parameters.
+-# General options for `expire_password`.
++#     General options for `expire_password`.
  #
- # @implements: if specified, only return types that implement this
- #     type name
-@@ -238,8 +232,7 @@
+ # @protocol:
+ #     - 'vnc' to modify the VNC server expiration
+@@ -125,8 +119,7 @@
  
  ##
- # @qom-list-properties:
+ # @ExpirePasswordOptionsVnc:
 -#
--# List properties associated with a QOM object.
-+#     List properties associated with a QOM object.
+-# Options for `expire_password` specific to the VNC protocol.
++#     Options for `expire_password` specific to the VNC protocol.
  #
- # @typename: the type name of an object
- #
-@@ -258,8 +251,7 @@
+ # @display: The id of the display where the expiration should be
+ #     changed.  Defaults to the first.
+@@ -138,8 +131,7 @@
  
  ##
- # @CanHostSocketcanProperties:
+ # @expire_password:
 -#
--# Properties for can-host-socketcan objects.
-+#     Properties for can-host-socketcan objects.
+-# Expire the password of a remote display server.
++#     Expire the password of a remote display server.
  #
- # @if: interface name of the host system CAN bus to connect to
- #
-@@ -275,8 +267,7 @@
+ # Errors:
+ #     - If @protocol is 'spice' and Spice is not active,
+@@ -157,8 +149,7 @@
  
  ##
- # @ColoCompareProperties:
+ # @ImageFormat:
 -#
--# Properties for colo-compare objects.
-+#     Properties for colo-compare objects.
+-# Supported image format types.
++#     Supported image format types.
  #
- # @primary_in: name of the character device backend to use for the
- #     primary input (incoming packets are redirected to @outdev)
-@@ -323,9 +314,8 @@
+ # @png: PNG format
+ #
+@@ -171,8 +162,7 @@
  
  ##
- # @CryptodevBackendProperties:
+ # @screendump:
 -#
--# Properties for cryptodev-backend and cryptodev-backend-builtin
--# objects.
-+#     Properties for cryptodev-backend and cryptodev-backend-builtin
-+#     objects.
+-# Capture the contents of a screen and write it to a file.
++#     Capture the contents of a screen and write it to a file.
  #
- # @queues: the number of queues for the cryptodev backend.  Ignored
- #     for cryptodev-backend and must be 1 for
-@@ -344,8 +334,7 @@
+ # @filename: the path of a new file to store the image
+ #
+@@ -208,8 +198,7 @@
  
  ##
- # @CryptodevVhostUserProperties:
+ # @SpiceBasicInfo:
 -#
--# Properties for cryptodev-vhost-user objects.
-+#     Properties for cryptodev-vhost-user objects.
+-# The basic information for SPICE network connection
++#     The basic information for SPICE network connection
  #
- # @chardev: the name of a Unix domain socket character device that
- #     connects to the vhost-user server
-@@ -359,8 +348,7 @@
+ # @host: IP address
+ #
+@@ -227,8 +216,7 @@
  
  ##
- # @DBusVMStateProperties:
+ # @SpiceServerInfo:
 -#
--# Properties for dbus-vmstate objects.
-+#     Properties for dbus-vmstate objects.
+-# Information about a SPICE server
++#     Information about a SPICE server
  #
- # @addr: the name of the DBus bus to connect to
+ # @auth: authentication method
  #
-@@ -375,9 +363,8 @@
+@@ -241,8 +229,7 @@
  
  ##
- # @NetfilterInsert:
+ # @SpiceChannel:
 -#
--# Indicates where to insert a netfilter relative to a given other
--# filter.
-+#     Indicates where to insert a netfilter relative to a given other
-+#     filter.
+-# Information about a SPICE client channel.
++#     Information about a SPICE client channel.
  #
- # @before: insert before the specified filter
- #
-@@ -390,8 +377,7 @@
+ # @connection-id: SPICE connection id number.  All channels with the
+ #     same id belong to the same SPICE session.
+@@ -267,8 +254,7 @@
  
  ##
- # @NetfilterProperties:
+ # @SpiceQueryMouseMode:
 -#
--# Properties for objects of classes derived from netfilter.
-+#     Properties for objects of classes derived from netfilter.
+-# An enumeration of Spice mouse states.
++#     An enumeration of Spice mouse states.
  #
- # @netdev: id of the network device backend to filter
+ # @client: Mouse cursor position is determined by the client.
  #
-@@ -423,8 +409,7 @@
+@@ -285,8 +271,7 @@
  
  ##
- # @FilterBufferProperties:
+ # @SpiceInfo:
 -#
--# Properties for filter-buffer objects.
-+#     Properties for filter-buffer objects.
+-# Information about the SPICE session.
++#     Information about the SPICE session.
  #
- # @interval: a non-zero interval in microseconds.  All packets
- #     arriving in the given interval are delayed until the end of the
-@@ -438,8 +423,7 @@
+ # @enabled: true if the SPICE server is enabled, false otherwise
+ #
+@@ -325,8 +310,7 @@
  
  ##
- # @FilterDumpProperties:
+ # @query-spice:
 -#
--# Properties for filter-dump objects.
-+#     Properties for filter-dump objects.
+-# Return information about the current SPICE server
++#     Return information about the current SPICE server
  #
- # @file: the filename where the dumped packets should be stored
+ # Since: 0.14
  #
-@@ -455,8 +439,7 @@
+@@ -370,8 +354,7 @@
  
  ##
- # @FilterMirrorProperties:
+ # @SPICE_CONNECTED:
 -#
--# Properties for filter-mirror objects.
-+#     Properties for filter-mirror objects.
+-# Emitted when a SPICE client establishes a connection
++#     Emitted when a SPICE client establishes a connection
  #
- # @outdev: the name of a character device backend to which all
- #     incoming packets are mirrored
-@@ -498,8 +481,7 @@
+ # @server: server information
+ #
+@@ -395,9 +378,8 @@
  
  ##
- # @FilterRewriterProperties:
+ # @SPICE_INITIALIZED:
 -#
--# Properties for filter-rewriter objects.
-+#     Properties for filter-rewriter objects.
+-# Emitted after initial handshake and authentication takes place (if
+-# any) and the SPICE channel is up and running
++#     Emitted after initial handshake and authentication takes place
++#     (if any) and the SPICE channel is up and running
  #
- # @vnet_hdr_support: if true, vnet header support is enabled
- #     (default: false)
-@@ -512,8 +494,7 @@
+ # @server: server information
+ #
+@@ -423,8 +405,7 @@
  
  ##
- # @InputBarrierProperties:
+ # @SPICE_DISCONNECTED:
 -#
--# Properties for input-barrier objects.
-+#     Properties for input-barrier objects.
+-# Emitted when the SPICE connection is closed
++#     Emitted when the SPICE connection is closed
  #
- # @name: the screen name as declared in the screens section of
- #     barrier.conf
-@@ -545,8 +526,7 @@
+ # @server: server information
+ #
+@@ -448,8 +429,7 @@
  
  ##
- # @InputLinuxProperties:
+ # @SPICE_MIGRATE_COMPLETED:
 -#
--# Properties for input-linux objects.
-+#     Properties for input-linux objects.
+-# Emitted when SPICE migration has completed
++#     Emitted when SPICE migration has completed
  #
- # @evdev: the path of the host evdev device to use
+ # Since: 1.3
  #
-@@ -569,8 +549,7 @@
+@@ -468,8 +448,7 @@
  
  ##
- # @EventLoopBaseProperties:
+ # @VncBasicInfo:
 -#
--# Common properties for event loops
-+#     Common properties for event loops
+-# The basic information for vnc network connection
++#     The basic information for vnc network connection
  #
- # @aio-max-batch: maximum number of requests in a batch for the AIO
- #     engine, 0 means that the engine will use its default.
-@@ -591,8 +570,7 @@
+ # @host: IP address
+ #
+@@ -492,8 +471,7 @@
  
  ##
- # @IothreadProperties:
+ # @VncServerInfo:
 -#
--# Properties for iothread objects.
-+#     Properties for iothread objects.
+-# The network connection information for server
++#     The network connection information for server
  #
- # @poll-max-ns: the maximum number of nanoseconds to busy wait for
- #     events.  0 means polling is disabled (default: 32768 on POSIX
-@@ -626,8 +604,7 @@
+ # @auth: authentication method used for the plain (non-websocket) VNC
+ #     server
+@@ -507,8 +485,7 @@
  
  ##
- # @MainLoopProperties:
+ # @VncClientInfo:
 -#
--# Properties for the main-loop object.
-+#     Properties for the main-loop object.
+-# Information about a connected VNC client.
++#     Information about a connected VNC client.
+ #
+ # @x509_dname: If x509 authentication is in use, the Distinguished
+ #     Name of the client.
+@@ -525,8 +502,7 @@
+ 
+ ##
+ # @VncInfo:
+-#
+-# Information about the VNC session.
++#     Information about the VNC session.
+ #
+ # @enabled: true if the VNC server is enabled, false otherwise
+ #
+@@ -576,8 +552,7 @@
+ 
+ ##
+ # @VncPrimaryAuth:
+-#
+-# vnc primary authentication method.
++#     vnc primary authentication method.
+ #
+ # Since: 2.3
+ ##
+@@ -588,8 +563,7 @@
+ 
+ ##
+ # @VncVencryptSubAuth:
+-#
+-# vnc sub authentication method with vencrypt.
++#     vnc sub authentication method with vencrypt.
+ #
+ # Since: 2.3
+ ##
+@@ -603,8 +577,7 @@
+ 
+ ##
+ # @VncServerInfo2:
+-#
+-# The network connection information for server
++#     The network connection information for server
+ #
+ # @auth: The current authentication type used by the servers
+ #
+@@ -621,8 +594,7 @@
+ 
+ ##
+ # @VncInfo2:
+-#
+-# Information about a vnc server
++#     Information about a vnc server
+ #
+ # @id: vnc server name.
+ #
+@@ -655,8 +627,7 @@
+ 
+ ##
+ # @query-vnc:
+-#
+-# Return information about the current VNC server
++#     Return information about the current VNC server
+ #
+ # Since: 0.14
+ #
+@@ -695,8 +666,7 @@
+ 
+ ##
+ # @change-vnc-password:
+-#
+-# Change the VNC server password.
++#     Change the VNC server password.
+ #
+ # @password: the new password to use with VNC authentication
+ #
+@@ -712,8 +682,7 @@
+ 
+ ##
+ # @VNC_CONNECTED:
+-#
+-# Emitted when a VNC client establishes a connection
++#     Emitted when a VNC client establishes a connection
+ #
+ # @server: server information
+ #
+@@ -741,9 +710,8 @@
+ 
+ ##
+ # @VNC_INITIALIZED:
+-#
+-# Emitted after authentication takes place (if any) and the VNC
+-# session is made active
++#     Emitted after authentication takes place (if any) and the VNC
++#     session is made active
+ #
+ # @server: server information
+ #
+@@ -768,8 +736,7 @@
+ 
+ ##
+ # @VNC_DISCONNECTED:
+-#
+-# Emitted when the connection is closed
++#     Emitted when the connection is closed
+ #
+ # @server: server information
+ #
+@@ -800,8 +767,7 @@
+ 
+ ##
+ # @MouseInfo:
+-#
+-# Information about a mouse device.
++#     Information about a mouse device.
+ #
+ # @name: the name of the mouse device
+ #
+@@ -820,8 +786,7 @@
+ 
+ ##
+ # @query-mice:
+-#
+-# Return information about each active mouse device
++#     Return information about each active mouse device
+ #
+ # Returns: a list of info for each device
+ #
+@@ -1005,8 +970,7 @@
+ 
+ ##
+ # @KeyValue:
+-#
+-# Represents a keyboard key.
++#     Represents a keyboard key.
+ #
+ # @type: key encoding
+ #
+@@ -1021,8 +985,7 @@
+ 
+ ##
+ # @send-key:
+-#
+-# Send keys to guest.
++#     Send keys to guest.
+ #
+ # @keys: An array of `KeyValue` elements.  All @KeyValues in this
+ #     array are simultaneously sent to the guest.  A `KeyValue`.number
+@@ -1050,8 +1013,7 @@
+ 
+ ##
+ # @InputButton:
+-#
+-# Button of a pointer input device (mouse, tablet).
++#     Button of a pointer input device (mouse, tablet).
+ #
+ # @side: front side button of a 5-button mouse (since 2.9)
+ #
+@@ -1067,8 +1029,7 @@
+ 
+ ##
+ # @InputAxis:
+-#
+-# Position axis of a pointer input device (mouse, tablet).
++#     Position axis of a pointer input device (mouse, tablet).
+ #
+ # Since: 2.0
+ ##
+@@ -1077,8 +1038,7 @@
+ 
+ ##
+ # @InputMultiTouchType:
+-#
+-# Type of a multi-touch event.
++#     Type of a multi-touch event.
+ #
+ # @begin: A new touch event sequence has just started.
+ #
+@@ -1097,8 +1057,7 @@
+ 
+ ##
+ # @InputKeyEvent:
+-#
+-# Keyboard input event.
++#     Keyboard input event.
+ #
+ # @key: Which key this event is for.
+ #
+@@ -1112,8 +1071,7 @@
+ 
+ ##
+ # @InputBtnEvent:
+-#
+-# Pointer button input event.
++#     Pointer button input event.
+ #
+ # @button: Which button this event is for.
+ #
+@@ -1127,8 +1085,7 @@
+ 
+ ##
+ # @InputMoveEvent:
+-#
+-# Pointer motion input event.
++#     Pointer motion input event.
+ #
+ # @axis: Which axis is referenced by @value.
+ #
+@@ -1143,8 +1100,7 @@
+ 
+ ##
+ # @InputMultiTouchEvent:
+-#
+-# MultiTouch input event.
++#     MultiTouch input event.
+ #
+ # @type: The type of multi-touch event.
+ #
+@@ -1226,8 +1182,7 @@
+ 
+ ##
+ # @InputEvent:
+-#
+-# Input event union.
++#     Input event union.
+ #
+ # @type: the type of input event
+ #
+@@ -1316,8 +1271,7 @@
+ 
+ ##
+ # @DisplayGTK:
+-#
+-# GTK display options.
++#     GTK display options.
+ #
+ # @clipboard: Enable host-guest clipboard sharing.  Defaults to "off".
+ #     (Since 11.1)
+@@ -1357,8 +1311,7 @@
+ 
+ ##
+ # @DisplayEGLHeadless:
+-#
+-# EGL headless display options.
++#     EGL headless display options.
+ #
+ # @rendernode: Which DRM render node should be used.  Default is the
+ #     first available node on the host.
+@@ -1370,8 +1323,7 @@
+ 
+ ##
+ # @DisplayDBus:
+-#
+-# DBus display options.
++#     DBus display options.
+ #
+ # @addr: The D-Bus bus address (default to the session bus).
+ #
+@@ -1393,8 +1345,7 @@
+ 
+ ##
+ # @DisplayGLMode:
+-#
+-# Display OpenGL mode.
++#     Display OpenGL mode.
+ #
+ # @off: Disable OpenGL (default).
+ #
+@@ -1413,8 +1364,7 @@
+ 
+ ##
+ # @DisplayCurses:
+-#
+-# Curses display options.
++#     Curses display options.
+ #
+ # @charset: Font charset used by guest (default: CP437).
+ #
+@@ -1425,8 +1375,7 @@
+ 
+ ##
+ # @DisplayCocoa:
+-#
+-# Cocoa display options.
++#     Cocoa display options.
+ #
+ # @left-command-key: Enable/disable forwarding of left command key to
+ #     guest.  Allows command-tab window switching on the host without
+@@ -1461,8 +1410,8 @@
+ 
+ ##
+ # @HotKeyMod:
+-#
+-# Set of modifier keys that need to be held for shortcut key actions.
++#    Set of modifier keys that need to be held for shortcut key
++#    actions.
  #
  # Since: 7.1
  ##
-@@ -637,8 +614,7 @@
+@@ -1471,8 +1420,7 @@
  
  ##
- # @MemoryBackendProperties:
+ # @DisplaySDL:
 -#
--# Properties for objects of classes derived from memory-backend.
-+#     Properties for objects of classes derived from memory-backend.
+-# SDL2 display options.
++#     SDL2 display options.
  #
- # @merge: if true, mark the memory as mergeable (default depends on
- #     the machine type)
-@@ -696,8 +672,7 @@
+ # @grab-mod: Modifier keys that should be pressed together with the
+ #     "G" key to release the mouse grab.
+@@ -1484,8 +1432,7 @@
  
  ##
- # @MemoryBackendFileProperties:
+ # @DisplayType:
 -#
--# Properties for memory-backend-file objects.
-+#     Properties for memory-backend-file objects.
+-# Display (user interface) type.
++#     Display (user interface) type.
  #
- # @align: the base address alignment when QEMU mmap(2)s @mem-path.
- #     Some backend stores specified by @mem-path require an alignment
-@@ -757,8 +732,7 @@
+ # @default: The default user interface, selecting from the first
+ #     available of gtk, sdl, cocoa, and vnc.
+@@ -1535,8 +1482,7 @@
  
  ##
- # @MemoryBackendMemfdProperties:
+ # @DisplayOptions:
 -#
--# Properties for memory-backend-memfd objects.
-+#     Properties for memory-backend-memfd objects.
+-# Display (user interface) options.
++#     Display (user interface) options.
  #
- # @hugetlb: if true, the file to be created resides in the hugetlbfs
- #     filesystem (default: false)
-@@ -813,8 +787,7 @@
+ # @type: Which `DisplayType` QEMU should use.
+ #
+@@ -1573,8 +1519,7 @@
  
  ##
- # @PrManagerHelperProperties:
+ # @query-display-options:
 -#
--# Properties for pr-manager-helper objects.
-+#     Properties for pr-manager-helper objects.
+-# Return information about display configuration
++#     Return information about display configuration
  #
- # @path: the path to a Unix domain socket for connecting to the
- #     external helper
-@@ -827,8 +800,7 @@
+ # Since: 3.1
+ ##
+@@ -1583,8 +1528,7 @@
  
  ##
- # @QtestProperties:
+ # @DisplayReloadType:
 -#
--# Properties for qtest objects.
-+#     Properties for qtest objects.
+-# Available DisplayReload types.
++#     Available DisplayReload types.
  #
- # @chardev: the chardev to be used to receive qtest commands on.
+ # @vnc: VNC display
  #
-@@ -842,8 +814,7 @@
+@@ -1595,8 +1539,7 @@
  
  ##
- # @RemoteObjectProperties:
+ # @DisplayReloadOptionsVNC:
 -#
--# Properties for x-remote-object objects.
-+#     Properties for x-remote-object objects.
+-# Specify the VNC reload options.
++#     Specify the VNC reload options.
  #
- # @fd: file descriptor name previously passed via `getfd` command
+ # @tls-certs: reload tls certs or not.
  #
-@@ -857,8 +828,7 @@
+@@ -1607,8 +1550,7 @@
  
  ##
- # @VfioUserServerProperties:
+ # @DisplayReloadOptions:
 -#
--# Properties for x-vfio-user-server objects.
-+#     Properties for x-vfio-user-server objects.
+-# Options of the display configuration reload.
++#     Options of the display configuration reload.
  #
- # @socket: socket to be used by the libvfio-user library
+ # @type: Specify the display type.
  #
-@@ -871,8 +841,7 @@
+@@ -1621,8 +1563,7 @@
  
  ##
- # @IOMMUFDProperties:
+ # @display-reload:
 -#
--# Properties for iommufd objects.
-+#     Properties for iommufd objects.
+-# Reload display configuration.
++#     Reload display configuration.
  #
- # @fd: file descriptor name previously passed via `getfd` command,
- #     which represents a pre-opened /dev/iommu.  This allows the
-@@ -887,8 +856,7 @@
+ # Since: 6.0
+ #
+@@ -1638,8 +1579,7 @@
  
  ##
- # @AcpiGenericInitiatorProperties:
+ # @DisplayUpdateType:
 -#
--# Properties for acpi-generic-initiator objects.
-+#     Properties for acpi-generic-initiator objects.
+-# Available DisplayUpdate types.
++#     Available DisplayUpdate types.
  #
- # @pci-dev: PCI device ID to be associated with the node
+ # @vnc: VNC display
  #
-@@ -902,8 +870,7 @@
+@@ -1650,8 +1590,7 @@
  
  ##
- # @AcpiGenericPortProperties:
+ # @DisplayUpdateOptionsVNC:
 -#
--# Properties for acpi-generic-port objects.
-+#     Properties for acpi-generic-port objects.
+-# Specify the VNC reload options.
++#     Specify the VNC reload options.
  #
- # @pci-bus: QOM path of the PCI bus of the hostbridge associated with
- #     this SRAT Generic Port Affinity Structure.  This is the same as
-@@ -941,8 +908,7 @@
+ # @addresses: If specified, change set of addresses to listen for
+ #     connections.  Addresses configured for websockets are not
+@@ -1664,8 +1603,7 @@
  
  ##
- # @RngProperties:
+ # @DisplayUpdateOptions:
 -#
--# Properties for objects of classes derived from rng.
-+#     Properties for objects of classes derived from rng.
+-# Options of the display configuration reload.
++#     Options of the display configuration reload.
  #
- # @opened: if true, the device is opened immediately when applying
- #     this option and will probably fail when processing the next
-@@ -961,8 +927,7 @@
+ # @type: Specify the display type.
+ #
+@@ -1678,8 +1616,7 @@
  
  ##
- # @RngEgdProperties:
+ # @display-update:
 -#
--# Properties for rng-egd objects.
-+#     Properties for rng-egd objects.
+-# Update display configuration.
++#     Update display configuration.
  #
- # @chardev: the name of a character device backend that provides the
- #     connection to the RNG daemon
-@@ -975,8 +940,7 @@
- 
- ##
- # @RngRandomProperties:
--#
--# Properties for rng-random objects.
-+#     Properties for rng-random objects.
- #
- # @filename: the filename of the device on the host to obtain entropy
- #     from (default: "/dev/urandom")
-@@ -990,8 +954,7 @@
- 
- ##
- # @IgvmCfgProperties:
--#
--# Properties common to objects that handle IGVM files.
-+#     Properties common to objects that handle IGVM files.
- #
- # @file: IGVM file to use to configure guest
- #
-@@ -1003,8 +966,7 @@
- 
- ##
- # @SevCommonProperties:
--#
--# Properties common to objects that are derivatives of sev-common.
-+#     Properties common to objects that are derivatives of sev-common.
- #
- # @sev-device: SEV device to use (default: "/dev/sev")
- #
-@@ -1038,8 +1000,7 @@
- 
- ##
- # @SevGuestProperties:
--#
--# Properties for sev-guest objects.
-+#     Properties for sev-guest objects.
- #
- # @dh-cert-file: guest owners DH certificate (encoded with base64)
- #
-@@ -1136,8 +1097,7 @@
- 
- ##
- # @TdxGuestProperties:
--#
--# Properties for tdx-guest objects.
-+#     Properties for tdx-guest objects.
- #
- # @attributes: The 'attributes' of a TD guest that is passed to
- #     KVM_TDX_INIT_VM
-@@ -1181,8 +1141,7 @@
- 
- ##
- # @ThreadContextProperties:
--#
--# Properties for thread context objects.
-+#     Properties for thread context objects.
- #
- # @cpu-affinity: the list of host CPU numbers used as CPU affinity for
- #     all threads created in the thread context (default: QEMU main
-@@ -1202,8 +1161,7 @@
- 
- ##
- # @MonitorProperties:
--#
--# Properties for all monitors
-+#     Properties for all monitors
- #
- # @chardev: ID of the character device providing the monitor transport
- #
-@@ -1214,8 +1172,7 @@
- 
- ##
- # @MonitorHMPProperties:
--#
--# Properties for the HMP monitor
-+#     Properties for the HMP monitor
- #
- # @readline: whether to enable readline for line editing
- #      (default: true)
-@@ -1229,8 +1186,7 @@
- 
- ##
- # @MonitorQMPCloseAction:
--#
--# Action to take when the character device backend is closed.
-+#     Action to take when the character device backend is closed.
- #
- # @none: take no action
- #
-@@ -1244,8 +1200,7 @@
- 
- ##
- # @MonitorQMPProperties:
--#
--# Properties for the QMP monitor
-+#     Properties for the QMP monitor
- #
- # @pretty: whether to pretty print JSON responses (default: false)
- #
-@@ -1338,8 +1293,7 @@
- 
- ##
- # @ObjectOptions:
--#
--# Describes the options of a user creatable QOM object.
-+#     Describes the options of a user creatable QOM object.
- #
- # @qom-type: the class name for the object to be created
- #
-@@ -1416,8 +1370,7 @@
- 
- ##
- # @object-add:
--#
--# Create a QOM object.
-+#     Create a QOM object.
- #
- # Errors:
- #     - If @qom-type is not a valid class name
-@@ -1436,8 +1389,7 @@
- 
- ##
- # @object-del:
--#
--# Remove a QOM object.
-+#     Remove a QOM object.
- #
- # @id: the name of the QOM object to remove
+ # Since: 7.1
  #
 -- 
 2.55.0
