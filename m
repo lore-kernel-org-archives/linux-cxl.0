@@ -1,147 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E953F105E
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A495370AE0
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787864318; cv=none; b=uYSrKjE6YawuA4chLavbV2UfzyFc9BWt+9Z09RroQ6G7glScl1lUm4SUnLoBHb8bODEZwrPNVfAVlLFZ/S2hUHsz7qDqU3HribGbqi0EGOcyQG59gkv8s8NzNuhtb9ejYgtRifPLmcJ7vugaVG+dy5ExD6G2MZIBOkgvCLGSIm0=
+	t=1787864399; cv=none; b=ZJzRm9GRzR5IKb1JydpUtY9fKDpsyaHoGNKRXUtX05diSKdNfL+MMXAwHAcuvH/q8okP8rOp+dCb/e8pIhMzD4ubFmKat636YGVdTr674CZ4aKizLkdJbn8p/sjTMHTKVLiewplPeSUI6ADIrEWp+bQyJlKfmRNrdmdyBkeXQIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787864318; c=relaxed/simple;
-	bh=lZdxgOCctt8F1KZVMEQPcw1eihjrH9THl/uBO60E2w4=;
+	s=arc-20240116; t=1787864399; c=relaxed/simple;
+	bh=4NK6E/lK8+TGe/k7L8gJEV+YNtelFqQULfrLo9v9HNY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DFTVm7eWlTh6RDMd0AH8yx6WRRY5nWNHddOI0/RePnchW2lZIm8H1YzqnHglvNC/p7rntVh2EEDSo0UtwGwae69zQJLkADMPUmlnQ/p44kWas/Px5jvIKcvMIIu2rUbDc4CFGN1jYZMwWn39omGGfc/SfWjTNm/S+ly8XlZpSRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAHxTkzQ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=pCzjHGVVVIkVkKBMoO9VXPAXSqEntqxXADrZRCfh6bhX717kBYusu3fqj/usxvWE26fsdLZ/iF7IR7u+PCmGmFYQj964ioVyWaBxg2IWB47k/NbxrZZDRsHNemi8adTz7EIpbTLnD7BjXbxyUCP/gCJxCw5jIR9brJmsGfWiMWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5kkqPfD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAHxTkzQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 468361F000E9;
-	Thu, 27 Aug 2026 20:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5kkqPfD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DD71F000E9;
+	Thu, 27 Aug 2026 20:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787864317;
-	bh=IXBvMjCJjYhB0e/FwEIZWM+P7omVpB+fHwikfqPsuhw=;
+	s=k20260515; t=1787864398;
+	bh=8XpyMpPwSq0JRyJ9TSMCFlb/bGAenfZhFizl3zlh8WI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oAHxTkzQ1ZAHGhLegKYsQFiq9WydS32bJOEUI+GhrMwqGS3W36332V8kljQ7fDYXE
-	 sur9hvWdLsqtsNGUGajhYg8d/PJpAuWJUmcL/Uv1sxPwaJHEutl/+LxhUoy42a1iVC
-	 V7JAplEGytdk2wwG0penFP7jWaj0XjoJMV6DuI0DO4SSUHF/JNkCEbbQp7shxuOMwk
-	 Es81bGbcDVVqfeOQqvCImY/jTsJZe4170gs3WVvs5CSTM8rdZ09rE3UZ3YOKYZCOzv
-	 7+F2yC4TSPifYRZ+CurqwfMiHUgCpyr3sxsRB0UH8VUnbyIhVaLmtlMlz5B4+1Ftce
-	 Ahtpt0DxWLKZw==
+	b=O5kkqPfD1bKIhGNnqMAyi/S+vp1ordfXG3QCXkLbuT6b0HVWi0vfT5nf1OLC2hj7v
+	 marTy4Qe5Sj1Yofr4SPXsCCwmgkkF1avAQKsV6J8rE1SVTrrvjkAMCejdUabZbIeuq
+	 LqfD0dppAgk6g9vxzvueb9UUEaQI9+ySSa/tV6oEvGlIxhrgj1nUERDjJ5/0NV8TgJ
+	 hv9MaZC3VxhP4zPN0xJ3AlE2616FUKt+WFcbQd8uvEAPpDGU1Sx5HtlihIHO4OLN/I
+	 P2ppqDyujulWSiqFHFCApbUQOfph3xK5fVPsWJX6ZXU+tFWe6h/DXDv4/a10WbJKR4
+	 fzrG1Ec9OpqcA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 05/13] ACPI: extlog: Avoid populating software AER
- metadata from raw hardware buffer
+Subject: Re: [PATCH v5 13/13] cxl/ras: Make cxl_cper_handle_prot_err()
+ static
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260827203726.3027541-6-dave.jiang@intel.com>
+In-Reply-To: <20260827203726.3027541-14-dave.jiang@intel.com>
 References: <20260827203726.3027541-1-dave.jiang@intel.com>
- <20260827203726.3027541-6-dave.jiang@intel.com>
+ <20260827203726.3027541-14-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 20:58:36 +0000
-Message-Id: <20260827205837.468361F000E9@smtp.kernel.org>
+Date: Thu, 27 Aug 2026 20:59:57 +0000
+Message-Id: <20260827205957.F3DD71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
-New issues:
-- [Medium] Data loss of TLP Prefix Log / Extended Flit Log due to arbitrary=
- payload truncation.
-
 Pre-existing issues:
-- [High] Out-of-bounds MMIO read and stack array bounds poisoning in `cxl_r=
-ch_get_aer_info()`.
+- [High] CXL protocol error handling for memdevs silently fails because `ma=
+tch_memdev_by_parent` incorrectly compares a `struct device *` to a `struct=
+ pci_dev *`.
 --
 
-commit 99282f77735a9b69f6cccf74ca39147b80930bf8
+commit 4ee43d8db9fe927d9aa6ae55ad362c92db62074c
 Author: Dave Jiang <dave.jiang@intel.com>
-ACPI: extlog: Avoid populating software AER metadata from raw hardware buff=
-er
 
-This commit addresses an issue in extlog_print_pcie() where casting the raw
-CPER aer_info buffer to a software struct populates software-only fields
-with raw hardware bytes. It copies only the leading registers and the
-Header Log DWORDs into a zeroed local struct to prevent out-of-bounds loop
-reads.
+cxl/ras: Make cxl_cper_handle_prot_err() static
 
-Link: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.ke=
-rnel.org/
+This commit drops the export and declaration of cxl_cper_handle_prot_err()
+and makes it static, since its only caller remains in the same file.
 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-[ ... ]
-> @@ -149,7 +149,17 @@ static void extlog_print_pcie(struct cper_sec_pcie *=
-pcie_err,
->  		return;
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 99fb00949c2fa..eceb33bc534b3 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -77,7 +77,7 @@ static int match_memdev_by_parent(struct device *dev, c=
+onst void *uport)
+>  	return 0;
+>  }
 > =20
->  	aer_severity =3D cper_severity_to_aer(severity);
-> -	aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
-> +
-> +	/*
-> +	 * struct pcie_tlp_log is larger than the hardware layout, so only the
-> +	 * leading registers and the four Header Log DWORDs of aer_info map onto
-> +	 * the struct. Copy that much and leave the rest zero, which covers the
-> +	 * software-only header_len and flit.
-> +	 */
-> +	memcpy(&aer_regs, pcie_err->aer_info,
-> +	       offsetof(struct aer_capability_regs, header_log) +
-> +	       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
+> -void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+> +static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data =
+*data)
+>  {
 
-[Severity: Medium]
-Will this truncated copy result in the permanent loss of the TLP Prefix Log?
+[Severity: High]
+This is a pre-existing issue, but does this function silently fail to handl=
+e=20
+memory device protocol errors due to a pointer mismatch?
 
-The CPER aer_info array contains a raw 96-byte snapshot of the hardware AER
-capability, with the TLP Prefix Log located at offset 0x38 (56 bytes). By
-truncating the memcpy to 44 bytes, the remainder of the CPER payload is
-ignored, which silently drops the hardware-provided TLP Prefix Logs or
-Extended Flit Logs during PCIe error handling.
+In cxl_cper_handle_prot_err(), bus_find_device() is called with pdev=20
+(a struct pci_dev *) as the match data:
 
-Would it be better to explicitly extract the prefix log from offset 56 in
-the CPER record into aer_regs.header_log.prefix to avoid data loss?
+	struct device *mem_dev __free(put_device) =3D bus_find_device(
+		&cxl_bus_type, NULL, pdev, match_memdev_by_parent);
+
+However, match_memdev_by_parent() expects uport to match dev->parent, which=
+=20
+is a struct device *:
+
+static int match_memdev_by_parent(struct device *dev, const void *uport)
+{
+	if (is_cxl_memdev(dev) && dev->parent =3D=3D uport)
+		return 1;
+	return 0;
+}
+
+Because the struct device is embedded inside struct pci_dev at a non-zero=20
+offset, dev->parent will never equal pdev. This causes bus_find_device() to=
+=20
+always return NULL, which silently ignores the protocol error instead of=20
+tracing it.=20
+
+Should bus_find_device() be passed &pdev->dev instead of pdev?
 
 [ ... ]
-
-This isn't a bug introduced by this patch, but I noticed a similar=20
-pre-existing AER software struct issue in drivers/cxl/core/ras_rch.c.
-
-drivers/cxl/core/ras_rch.c:cxl_rch_get_aer_info()
-> 	int read_cnt =3D sizeof(struct aer_capability_regs) / sizeof(u32);
-> 	u32 *aer_regs_buf =3D (u32 *)aer_regs;
-> 	int n;
-> ...
-> 	for (n =3D 0; n < read_cnt; n++)
-> 		aer_regs_buf[n] =3D readl(aer_base + n * sizeof(u32));
-
-[Severity: High]
-Does this loop perform an out-of-bounds MMIO read by using the size of the
-software structure?
-
-Using sizeof(struct aer_capability_regs) (104 bytes) instead of the actual
-hardware capability size directly maps MMIO data into software fields
-(header_len and flit at offset 84). Later, when pcie_print_tlp_log() runs,
-it uses the MMIO-poisoned header_len (which can be up to 255) as a loop
-bound over the 14-element stack array log->dw[]. This leads to a massive
-out-of-bounds stack read that can log arbitrary stack memory.
-
-Additionally, in the same file:
-
-drivers/cxl/core/ras_rch.c:cxl_rch_get_aer_severity()
-> 		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
-> 			*severity =3D AER_FATAL;
-
-[Severity: High]
-Does this code misinterpret the flow control protocol error bit?
-
-It tests the Root Error Status flag PCI_ERR_ROOT_FATAL_RCV (0x40) against
-the uncor_status register. In the uncor_status register context, 0x40
-actually represents PCI_ERR_UNC_FCP, meaning the severity is incorrectly
-computed.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827203726.3027=
-541-1-dave.jiang@intel.com?part=3D5
+541-1-dave.jiang@intel.com?part=3D13
