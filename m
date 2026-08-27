@@ -1,186 +1,358 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD511324B32;
-	Thu, 27 Aug 2026 22:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309273D1AA2
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 22:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787868685; cv=none; b=fipuUlwKQa2Bu2b41FIDD083edCxi3TZMsblDa5IAqYHR/+nqvhO8usiX8cC85dPfd6Rt1TP5+ZpbX2b4w8oVIsyJzN4zGD/viSmg9HQUZ+gDWHzeVqXvxvgvJaeS5ujBCszBHDqPN8t2jdh0Ui2X10/vXwWUHpeWj4m1RGgpvQ=
+	t=1787869497; cv=none; b=d4F2bcPCEkmNStqk/4+cICrnoJmhpfz+oT/4CfmZ8VYDnLvL5ufpOmuuyEo+YET1XLCsdI2zDEOyjc/Y0rANs7b4oH6ePZ06cMnrwPb1KcWluDn5DXUM28KPEDHbVkgrqkVELXI2EWDZd9XbOqZdjKG2sdgkrTY+Cl6bTw4xLw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787868685; c=relaxed/simple;
-	bh=uX0S2UmESjyGWq6tsSbYZrtDXW/+7jm4Gbs35u4jmcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRLTIvb33P5+QIFBz5yuJ/wfytbYOZjNTMkGOur1tqVu6dEL33E8lf2z5Jd7AurZfXx/HH30uVcdbJs2MAh2NMNvpJSWFmL/n5ay+qWhRTsp8dwTtog10DlOS9xfuLJ99muiun9vIM1tw37cnwbzU/UfOK0W0VnG64kwvC/x6bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=fail smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VUxZMVyI; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787869497; c=relaxed/simple;
+	bh=JoJzD6813vbi6Nad58gtt+h6HDPUZznYT2PSOqKo64g=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CH6ObPLRBMgKLNMESb9cam4ERtCcXq108q/1LnvrAokN0S4NO0IK1bzHBHiXqrWgrsdOfg2hvdJ5668Cp8q/4DfaIPhhs/N5Ubn7VVVaEbHeA9LHknfl91Oee9fE02DJ3ef26OsokM2zEL0Dt+csGpSrXoObnhl/Iui/Gc+404E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NbM/+YCE; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VUxZMVyI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787868673; x=1819404673;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uX0S2UmESjyGWq6tsSbYZrtDXW/+7jm4Gbs35u4jmcc=;
-  b=VUxZMVyIYqylGpdp5nT85ZQtLkEsLGGkzSAe9juAjcnwSUk5I8kC9l+7
-   Yqd7wVUAOxL08hAdYsn/P2qqfem8cybwnaq8opq8TjZJAxTN1dvx2FqTu
-   /RQKKpjLkgE8GZ3nJAzmWhaWybMktXmbMqxKXVCNhQ/aQNhJrf+5+XJgI
-   Whkmu/KIwYENefMTMLiQroJ1evucpoXKJ7WvFPsv1TBDDBAIH8sutM3po
-   06mJu0AhEkkOx/xsTxpuCyGbGO+tWGwruRLL7+in0mdDrhEuqHZQ8qtzY
-   ZaDnTUcMyciKsVmyLAKjtHJ86/ec8VhWTDlC2srAcuavseye10OCfb/EG
-   g==;
-X-CSE-ConnectionGUID: G/4ClQ6ARCaR2iBQW3Fsjw==
-X-CSE-MsgGUID: KcBiS/neRBuZMH3EsBAcng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="99539933"
-X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
-   d="scan'208";a="99539933"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 15:11:11 -0700
-X-CSE-ConnectionGUID: WAWowepoRY6Q4oJaVs4FgA==
-X-CSE-MsgGUID: 0t8qqCcnR1OA+QR8efY88A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
-   d="scan'208";a="268008018"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.124]) ([10.125.109.124])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 15:11:11 -0700
-Message-ID: <e3447007-4bc7-46f5-9bd5-f59b84d6113e@intel.com>
-Date: Thu, 27 Aug 2026 15:11:09 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbM/+YCE"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-38f620399a0so481582a91.2
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 15:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787869487; x=1788474287; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ybld9KoYS9z/qEgstKkgu7feMqUeGPX13VY+QPYd16Y=;
+        b=NbM/+YCEHTF1f6VOvJlS3CYc9y/kwwZc6kHRIucnTJU7GJy9fgsGQxdmJJjAh56T/8
+         snmvDky4FVKhxfj6wBWnoF766zujzxcagy2mSJeCEZfyqqOi7yWpuFp8ONLTJrKfZVOS
+         TKAM6deTMYS85TTkKyYoRTo89j6LBd3KL4Zs0a4Fr/ll3AeFV4dB22+V8YRjGTOw4Fqe
+         BcbzdLey2JUFtC03QBFmmUMLr8A1FscO7gZeWC85SBlgsAyhVq5PumlLUA1g5snLLhFS
+         m2gRLNm5TTAjmvMECSKBKLQMhhZEU5BjvmCU3gxx8tGIXoDXimyU9bE/pq0tcK8ug4go
+         jSlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787869487; x=1788474287;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ybld9KoYS9z/qEgstKkgu7feMqUeGPX13VY+QPYd16Y=;
+        b=WOIeODCeObptF/ltLgGkzmAzuwhMt1Ke2Ib/xZ6+Jq2iegxOFZmskq4QX5D8gL6Uc4
+         GU0HiJYzGWBkrXxTroT8TRVY3Ce6Rfn0Nn693Vy2oBDlFONR4g0qfpmZfcgUKlV90n5J
+         kEtHT9NQMzuLnYpBeYPdJXLttMG/IiOFO4whUXQ1J0REMKazOAxqRcrBpWl3j71FwEfG
+         QANRT8tYPk0g8YUYvwZpE2LBxjKXVHlqANpmrYsla6y/ntC6If5xcmZBazihP6UXptyC
+         x8OSz4MOGKdAzGlJw1k+UGKvHRqe+HAazgZNC/zduLp+XJQLaAOmUFUYlTlhFNuUE3v8
+         GspA==
+X-Forwarded-Encrypted: i=1; AHgh+RpqixOxpgT/dZ01wx7ZGDFI0BzaaMLYJ3CtCFqOIS6BBL0mk7zjW4byH/YYBzdWN/Ho77idv7hB1KY=@vger.kernel.org
+X-Gm-Message-State: AFuF++nKJ/NefguIYNWuXFxRa4vTE3UtZ7nCLV60dd2GnnfXc+bwumdl
+	wIZAh9p9teSD4GjYI/f2EOGvl9nS27ztRSUzJpQYfTHTvzaLOknAP1YBsF1EZg==
+X-Gm-Gg: AR+sD13hgk9OBLu0LO1XKoXZROcGKzLfjdgkYLhD1bMjn6vFGdDhTFEskB/c83erIkP
+	BEyjSOQiQFkKydoY+ZgrZEcq3Opn2YZbz0FE8jAQEFZ2fwL8TCSxB20BuDcvIewGNwRmsmA6Rr9
+	7N/Hn97s0+Qb7nanE19cIK6SxTkQ29Hkxkg+7fUzEaYmM0tlw1tzJQughFMZoV3rEXw5TcrLp4X
+	oiWk8sDmvsU/4azmyRwyucT+3y+DkHU3/xYkMbQZHPripZ8SC06HO/d0m3/U1HjXU6APCxfBA1T
+	IuAWVFDDYxXNQ98Ux9oYlDUPApWKWi/2NjVOWIgxLYcXiYoLXnkcMcsx5L3Ja+3+Gx7AkFFxh0g
+	PWhDvSJ8zeswVvfqnpTrNWzfedFAxmSgwgA8PpI7X72GU6r00Q5LyCalY5OdM1jcmnhqXpk+XJx
+	rBMI3BCDNh/YhKRk+dXtLSWQvtXYaucVRnNExiDPavgjglI8mL9t1WM4KDKM6uP9pwO92HmCQS7
+	l2qM3BMeL7LC7g=
+X-Received: by 2002:a17:90b:518f:b0:38e:9eb2:9d43 with SMTP id 98e67ed59e1d1-396d0ff2eccmr4755412a91.16.1787869486538;
+        Thu, 27 Aug 2026 15:24:46 -0700 (PDT)
+Received: from cxlqual ([220.120.90.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-396d22eacbfsm357857a91.0.2026.08.27.15.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 15:24:46 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 28 Aug 2026 07:25:49 +0900
+To: Richard Cheng <icheng@nvidia.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gregory Price <gourry@gourry.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, benjamin.cheatham@amd.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/events: Bound the event log drain loop
+Message-ID: <apC5bb5KoCcIM6Nn@cxlqual>
+References: <cover.1787768932.git.anisa.su@samsung.com>
+ <20260826184417.1042-1-anisa.su@samsung.com>
+ <ao-m-aFBvwCn4sus@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] cxl/fwctl: Propagate feature RPC delivery errors
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com
-Cc: iweiny@kernel.org, ming.li@zohomail.com, gourry@gourry.net,
- rrichter@amd.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
- kaihengf@nvidia.com, kobak@nvidia.com
-References: <20260826014508.9989-1-icheng@nvidia.com>
- <20260826014508.9989-8-icheng@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260826014508.9989-8-icheng@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ao-m-aFBvwCn4sus@MWDK4CY14F>
 
-
-
-On 8/25/26 6:45 PM, Richard Cheng wrote:
-> FWCTL_RPC requires delivery failures to be returned as ioctl errors,
-> while device errors are reported in the output. Get and Set Feature
-> instead converted all failures into normal responses, sometimes with a
-> SUCCESS device status.
+On Thu, Aug 27, 2026 at 11:01:15AM +0800, Richard Cheng wrote:
+> On Wed, Aug 26, 2026 at 11:43:08AM +0800, Anisa Su wrote:
+> > cxl_event_thread() drains every log named in the Event Status register and
+> > repeats until that register reads zero.  CXL 8.2.9.3.1 Table 8-203 marks
+> > the register RO and leaves clearing it to the device, so a misbehaving device
+> > that leaves a status bit set spins the thread forever, resending
+> > Get Event Records as fast as the mailbox completes.
+> > 
+> > Bound the loop on work completed instead.  cxl_mem_get_records_log() and
+> > cxl_mem_get_event_records() report failures and which logs returned
+> > records; the thread stops on the first error and drops any log whose status
+> > bit was set while it returned nothing.  Every pass either drains a record
+> > or clears a bit from the mask, so the loop terminates whatever the device
+> > reports.  Logs are drained best effort, so a broken one does not suppress
+> > reporting from the rest.
+> > 
+> > Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> > ---
+> >  drivers/cxl/core/mbox.c      | 58 ++++++++++++++++++++++++++++--------
+> >  drivers/cxl/cxlmem.h         |  3 +-
+> >  drivers/cxl/pci.c            | 39 +++++++++++++++++++-----
+> >  tools/testing/cxl/test/mem.c |  4 +--
+> >  4 files changed, 81 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 7c6c5b7450a5..5954ba20f0be 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -1059,8 +1059,8 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+> >  	return rc;
+> >  }
+> >  
+> > -static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> > -				    enum cxl_event_log_type type)
+> > +static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> > +				   enum cxl_event_log_type type, bool *drained)
+> >  {
+> >  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> >  	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> > @@ -1068,12 +1068,15 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  	struct cxl_get_event_payload *payload;
+> >  	u8 log_type = type;
+> >  	u16 nr_rec;
+> > +	int rc = 0;
+> > +
+> > +	*drained = false;
+> >  
+> >  	mutex_lock(&mds->event.log_lock);
+> >  	payload = mds->event.buf;
+> >  
+> >  	do {
+> > -		int rc, i;
+> > +		int i;
+> >  		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> >  			.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+> >  			.payload_in = &log_type,
+> > @@ -1094,6 +1097,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  		nr_rec = le16_to_cpu(payload->record_count);
+> >  		if (!nr_rec)
+> >  			break;
+> > +		*drained = true;
+> >  
+> >  		for (i = 0; i < nr_rec; i++)
+> >  			__cxl_event_trace_record(cxlmd, type,
+> > @@ -1112,31 +1116,59 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  	} while (nr_rec);
+> >  
+> >  	mutex_unlock(&mds->event.log_lock);
+> > +
+> > +	return rc;
+> >  }
+> >  
+> >  /**
+> >   * cxl_mem_get_event_records - Get Event Records from the device
+> >   * @mds: The driver data for the operation
+> >   * @status: Event Status register value identifying which events are available.
+> > + * @drained: Optional mask of the logs in @status that returned records.
+> >   *
+> >   * Retrieve all event records available on the device, report them as trace
+> > - * events, and clear them.
+> > + * events, and clear them.  Every log named in @status is drained even if
+> > + * another one fails, so that a broken log does not suppress reporting from
+> > + * the rest.
+> > + *
+> > + * Return: 0, or the first error encountered.
+> >   *
+> >   * See CXL rev 3.0 @8.2.9.2.2 Get Event Records
+> >   * See CXL rev 3.0 @8.2.9.2.3 Clear Event Records
+> >   */
+> > -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
+> > +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> > +			      u32 *drained)
+> >  {
+> > +	static const struct {
+> > +		u32 status;
+> > +		enum cxl_event_log_type type;
+> > +	} logs[] = {
+> > +		{ CXLDEV_EVENT_STATUS_FATAL, CXL_EVENT_TYPE_FATAL },
+> > +		{ CXLDEV_EVENT_STATUS_FAIL, CXL_EVENT_TYPE_FAIL },
+> > +		{ CXLDEV_EVENT_STATUS_WARN, CXL_EVENT_TYPE_WARN },
+> > +		{ CXLDEV_EVENT_STATUS_INFO, CXL_EVENT_TYPE_INFO },
+> > +	};
+> > +	int ret = 0;
+> > +
+> >  	dev_dbg(mds->cxlds.dev, "Reading event logs: %x\n", status);
+> >  
+> > -	if (status & CXLDEV_EVENT_STATUS_FATAL)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
+> > -	if (status & CXLDEV_EVENT_STATUS_FAIL)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FAIL);
+> > -	if (status & CXLDEV_EVENT_STATUS_WARN)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
+> > -	if (status & CXLDEV_EVENT_STATUS_INFO)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
+> > +	if (drained)
+> > +		*drained = 0;
+> > +
+> > +	for (int i = 0; i < ARRAY_SIZE(logs); i++) {
+> > +		bool got_records;
+> > +		int rc;
+> > +
+> > +		if (!(status & logs[i].status))
+> > +			continue;
+> > +
+> > +		rc = cxl_mem_get_records_log(mds, logs[i].type, &got_records);
+> > +		if (got_records && drained)
+> > +			*drained |= logs[i].status;
+> > +		ret = ret ?: rc;
+> > +	}
+> > +
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
+> >  
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index ed419d0c59f2..cb5372eb2d85 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -803,7 +803,8 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> >  				unsigned long *cmds);
+> >  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> >  				  unsigned long *cmds);
+> > -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
+> > +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> > +			      u32 *drained);
+> >  void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >  			    enum cxl_event_log_type type,
+> >  			    enum cxl_event_type event_type,
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 267c679b0b3c..3daf17835c06 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -514,21 +514,46 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+> >  	struct cxl_dev_id *dev_id = id;
+> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
+> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> > -	u32 status;
+> > +	u32 mask = CXLDEV_EVENT_STATUS_ALL;
+> > +
+> > +	while (mask) {
+> > +		u32 status, drained, stuck;
+> > +		int rc;
+> >  
+> > -	do {
+> >  		/*
+> >  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
+> >  		 * ignore the reserved upper 32 bits
+> >  		 */
+> >  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
+> > -		/* Ignore logs unknown to the driver */
+> > -		status &= CXLDEV_EVENT_STATUS_ALL;
+> > +		/* Ignore logs unknown to the driver, and logs given up on */
+> > +		status &= mask;
+> >  		if (!status)
+> >  			break;
+> > -		cxl_mem_get_event_records(mds, status);
+> > +
+> > +		/*
+> > +		 * A failed drain leaves the log's status bit set, so another
+> > +		 * pass would resend the same query forever.
+> > +		 */
+> > +		rc = cxl_mem_get_event_records(mds, status, &drained);
+> > +		if (rc)
+> > +			break;
+> > +
 > 
-> Initialize the return code to SUCCESS. When the helper fails without a
-> device error code, return its errno. Continue reporting actual device
-> errors through rpc_out->retval.
+> Hi Anisa,
 > 
-> Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
-> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
-> Changelog:
+> IMHO, this new error path might leave an event log permanently undrainted.
 > 
-> v1 -> v2:
-> 	- Remove redundant CXL_MBOX_CMD_RC_SUCCESS assignments. (Dave Jiang)
+> Now cxl_event_thread() breaks on any error returned by cxl_mem_get_event_records(), which incldues a temporary failure e.g. "Retry Required" from Get Event
+> Records or Clear Event Records. In that case the log ramain non-empty.
 > 
-> ---
->  drivers/cxl/core/features.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> CXL event interrupt are generated when a log transitions from empty to non-empty,
+> so after returning from the handler there may be no subsequent interrupt
+> to retry the drain.
 > 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 8d44ce829497..28b326df3398 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -232,7 +232,7 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  	int rc;
->  
->  	if (return_code)
-> -		*return_code = CXL_MBOX_CMD_RC_INPUT;
-> +		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  
->  	if (!feat_out || !feat_out_size)
->  		return -EINVAL;
-> @@ -267,9 +267,6 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		data_rcvd_size += mbox_cmd.size_out;
->  	} while (data_rcvd_size < feat_out_size);
->  
-> -	if (return_code)
-> -		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
-> -
->  	return data_rcvd_size;
->  }
->  
-> @@ -289,7 +286,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	size_t hdr_size;
->  
->  	if (return_code)
-> -		*return_code = CXL_MBOX_CMD_RC_INPUT;
-> +		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  
->  	if (feat_data_size > U16_MAX - offset)
->  		return -EINVAL;
-> @@ -341,8 +338,6 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  
->  		data_sent_size += data_in_size;
->  		if (data_sent_size >= feat_data_size) {
-> -			if (return_code)
-> -				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  			return 0;
->  		}
+> Maybe we can use a bounded retry for retryable failure ? or schedule deferred
+> retry work before returning ?
+> 
+> Best regards,
+> Richard Cheng.
+> 
+Hmmm you're right...
 
-Minor. the {} can now go.
+I think a bounded retry makes more sense since scheduling deferred work
+still needs a way to eventually give up if the error or status bit
+persists.
 
->  
-> @@ -492,6 +487,9 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->  	data_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
->  				    feat_in->selection, rpc_out->payload,
->  				    count, offset, &return_code);
-> +	if (data_size < 0 &&
+Thanks,
+Anisa
 
-Do we need to handle the 'data_size == 0' case here?
-
-> +	    return_code == CXL_MBOX_CMD_RC_SUCCESS)
-> +		return ERR_PTR(data_size);
->  	*out_len = sizeof(struct fwctl_rpc_cxl_out);
->  	if (data_size <= 0) {
->  		rpc_out->size = 0;
-> @@ -544,6 +542,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
->  			     feat_in->version, feat_in->feat_data,
->  			     data_size, flags, offset, &return_code);
-> +	if (rc && return_code == CXL_MBOX_CMD_RC_SUCCESS)
-> +		return ERR_PTR(rc);
->  	*out_len = sizeof(*rpc_out);
->  	if (rc) {
->  		rpc_out->retval = return_code;
-
-
-We may also need to add something like this because of the change of default return code. The code segment is similar to cxl_xfer_log().
-
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 28b326df3398..2e62f3720072 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -259,6 +259,17 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-                        .min_out = data_to_rd_size,
-                };
-                rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+               /*
-+                * Per CXL r4.0 8.2.10.6.2, when Offset + Count runs past the
-+                * end of the Feature the device returns only the bytes up to
-+                * the Feature size. cxl_internal_send_cmd() reports that as
-+                * -EIO with a short payload, so stop and return what arrived.
-+                */
-+               if (rc == -EIO && mbox_cmd.size_out &&
-+                   mbox_cmd.size_out < data_to_rd_size) {
-+                       data_rcvd_size += mbox_cmd.size_out;
-+                       break;
-+               }
-                if (rc < 0 || !mbox_cmd.size_out) {
-                        if (return_code)
-                                *return_code = mbox_cmd.return_code;
+> > +		/*
+> > +		 * The Event Status register is device owned and read only, so
+> > +		 * it cannot bound this loop; records read can.  A device that
+> > +		 * leaves a bit set with an empty log makes no progress, and
+> > +		 * only the device can clear that state, so stop polling that
+> > +		 * log rather than spin on it.
+> > +		 */
+> > +		stuck = status & ~drained;
+> > +		if (stuck) {
+> > +			dev_warn_once(cxlds->dev,
+> > +				      "Event status %#x set with no records to read\n",
+> > +				      stuck);
+> > +			mask &= ~stuck;
+> > +		}
+> >  		cond_resched();
+> > -	} while (status);
+> > +	}
+> >  
+> >  	return IRQ_HANDLED;
+> >  }
+> > @@ -682,7 +707,7 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> > +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+> >  
+> >  	return 0;
+> >  }
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index a7da279aa3ef..87e01612cea9 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -372,7 +372,7 @@ static void cxl_mock_event_trigger(struct device *dev)
+> >  			event_reset_log(log);
+> >  	}
+> >  
+> > -	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
+> > +	cxl_mem_get_event_records(mdata->mds, mes->ev_status, NULL);
+> >  }
+> >  
+> >  struct cxl_event_record_raw maint_needed = {
+> > @@ -1805,7 +1805,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+> >  	if (rc)
+> >  		dev_dbg(dev, "No CXL FWCTL setup\n");
+> >  
+> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> > +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+> >  	cxl_mock_test_feat_init(mdata);
+> >  
+> >  	return 0;
+> > -- 
+> > 2.43.0
+> > 
+> > 
