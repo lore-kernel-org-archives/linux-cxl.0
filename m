@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09D73644BC;
-	Thu, 27 Aug 2026 20:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A218371041;
+	Thu, 27 Aug 2026 20:37:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787863068; cv=none; b=fr3lgvmMCvHG4n1FMDRV1os/WnimxcLoXg2oJPkqSnoQtQM1RwMHqet/6IseOdOALc+ZlKifj4M+sdIB3WmBfaMBeiGOqxJQXf01U6wF8L6lei6uWcmlMgqKP/Gj/7XBQb/xJ7sm3zGfEl85ZaXXj9hI/RmnD6I4liDlueMgIYM=
+	t=1787863065; cv=none; b=n7tW+pNlwVaWLL8sgCHtwFsaEo5sBPhIvoaTFsRe49I9DXp9SCBWJSCcwI3scbCbtILIroENE09V6M05lbLaiWChY+CsEI9Rs0e2nIl3bBaSjgHZUmp+/9Yt/yjVfziEbkWr9/cd7S17lt2ppVJIJgEIhhvVgjUJMfVNYjAIC9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787863068; c=relaxed/simple;
-	bh=GiUwVgjGBpklw243Wl2JaJgllMug0pxvd4MSw2jcJM4=;
+	s=arc-20240116; t=1787863065; c=relaxed/simple;
+	bh=G2p6iWc4QokKg1eeqAvZn9kCfoir2M8txi1JXkLcUyg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pJUlR9VHBgV0k6rbnNJs5igRFH8ecvo9pLwBir65kECO4VdFEie4ysq9cAsdRJoXIlBoumpVrAh4oqXYQ4SB7ZVlsuJbB3KUnHHRfyscs7cjtEytozFa8Gir+V/uZj1of/c7olhxKuHJMX2/8J1+KWtuNnEYOtyIvuP4yS85F/o=
+	 MIME-Version; b=ZzFCyhZcuMPheWXzANsdI+05tW/l470A4WQH9jCHXKHmfZ3kx34wU+mz7/rCUUNVXwl7AETGBFUqRqsbt2h7QP63tWm7NnMuP9vatqfkPmA5IXFFN9tXrByDol3Gch0tyJKCQauJkWvYu/vmhIRHGoxdz8d2G7x9W0IVSpuQNWU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CBA51F00AC4;
-	Thu, 27 Aug 2026 20:37:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27441F00A3D;
+	Thu, 27 Aug 2026 20:37:31 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -26,10 +26,11 @@ Cc: rafael@kernel.org,
 	terry.bowman@amd.com,
 	benjamin.cheatham@amd.com,
 	alison.schofield@intel.com,
-	sashiko-bot@kernel.org
-Subject: [PATCH v5 05/13] ACPI: extlog: Avoid populating software AER metadata from raw hardware buffer
-Date: Thu, 27 Aug 2026 13:37:18 -0700
-Message-ID: <20260827203726.3027541-6-dave.jiang@intel.com>
+	sashiko-bot@kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [PATCH v5 02/13] efi/cper: Reject an error status block length that wraps a u32
+Date: Thu, 27 Aug 2026 13:37:15 -0700
+Message-ID: <20260827203726.3027541-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260827203726.3027541-1-dave.jiang@intel.com>
 References: <20260827203726.3027541-1-dave.jiang@intel.com>
@@ -41,76 +42,52 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-extlog_print_pcie() casts pcie_err->aer_info straight to struct
-aer_capability_regs *. That struct embeds struct pcie_tlp_log, whose
-software-only header_len and flit fields sit at offset 84 - inside the
-96-byte aer_info buffer - so the cast fills them with raw firmware bytes.
-pcie_print_tlp_log() uses both to bound a loop over dw[], and a large
-header_len walks past the end of the array.
+cper_estatus_len() sums the firmware-controlled data_length (or
+raw_data_offset plus raw_data_length) into a u32. A data_length of
+0xffffffec wraps that sum to 0, and a length that reads back short defeats
+every bound built on it: bert_print_all() passes its "remain <
+estatus_len" check, then advances "estatus += estatus_len" by zero and
+loops forever. GHES survives only because __ghes_check_estatus() rejects a
+length below sizeof(*estatus) first.
 
-Copy into a zeroed local struct, and only the part of aer_info that maps
-onto it: the leading registers and the four Header Log DWORDs. The rest
-stays zero, which covers header_len and flit and keeps the Root Error
-registers out of the TLP prefix log, where pcie_print_tlp_log() would print
-them as end-to-end prefixes.
+Reject a length that cannot be expressed in a u32 in
+cper_estatus_check_header(), which both of today's callers reach: GHES via
+__ghes_check_estatus() and BERT via cper_estatus_check(). extlog reaches
+neither yet; a later patch routes it through cper_estatus_check(), whose
+ELOG_ENTRY_LEN bound needs this to hold.
 
 Reported-by: sashiko-bot@kernel.org
-Closes: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.kernel.org/
-Fixes: e778ffefa34d ("ACPI: extlog: Trace CPER PCI Express Error Section")
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Assisted-by: Claude:claude-sonnet-4-6
+Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=1
+Fixes: 06d65deade9a ("ACPI, APEI, UEFI Common Platform Error Record (CPER) header")
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v5:
-- Copy only the registers that match the hardware layout instead of all 96
-  bytes plus explicit clears, so the rest falls out zero (Jonathan
-  Cameron).
----
- drivers/acpi/acpi_extlog.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/cper.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 2451362e696d..feb7c002a713 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -137,7 +137,7 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 			      int severity)
- {
- #ifdef ACPI_APEI_PCIEAER
--	struct aer_capability_regs *aer;
-+	struct aer_capability_regs aer_regs = {};
- 	struct pci_dev *pdev;
- 	unsigned int devfn;
- 	unsigned int bus;
-@@ -149,7 +149,17 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 		return;
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 332c78f2d561..3dcef618ad39 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -745,6 +745,17 @@ int cper_estatus_check_header(const struct acpi_hest_generic_status *estatus)
+ 	    estatus->raw_data_offset < sizeof(*estatus) + estatus->data_length)
+ 		return -EINVAL;
  
- 	aer_severity = cper_severity_to_aer(severity);
--	aer = (struct aer_capability_regs *)pcie_err->aer_info;
-+
 +	/*
-+	 * struct pcie_tlp_log is larger than the hardware layout, so only the
-+	 * leading registers and the four Header Log DWORDs of aer_info map onto
-+	 * the struct. Copy that much and leave the rest zero, which covers the
-+	 * software-only header_len and flit.
++	 * cper_estatus_len() sums these into a u32, and a wrapped sum reads
++	 * back smaller than the record. Reject a length that cannot be
++	 * expressed so no caller is handed the short value.
 +	 */
-+	memcpy(&aer_regs, pcie_err->aer_info,
-+	       offsetof(struct aer_capability_regs, header_log) +
-+	       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
++	if ((u64)sizeof(*estatus) + estatus->data_length > U32_MAX)
++		return -EINVAL;
++	if (estatus->raw_data_length &&
++	    (u64)estatus->raw_data_offset + estatus->raw_data_length > U32_MAX)
++		return -EINVAL;
 +
- 	domain = pcie_err->device_id.segment;
- 	bus = pcie_err->device_id.bus;
- 	devfn = PCI_DEVFN(pcie_err->device_id.device,
-@@ -158,7 +168,7 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 	if (!pdev)
- 		return;
- 
--	pci_print_aer(pdev, aer_severity, aer);
-+	pci_print_aer(pdev, aer_severity, &aer_regs);
- 	pci_dev_put(pdev);
- #endif
+ 	return 0;
  }
+ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
 -- 
 2.54.0
 
