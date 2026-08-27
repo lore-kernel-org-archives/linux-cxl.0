@@ -1,18 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3B134F49F;
-	Thu, 27 Aug 2026 20:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26C36D4E1;
+	Thu, 27 Aug 2026 20:37:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787863056; cv=none; b=YoqVQoaJ2AHescY/OzBPfS1m8+BQ0QmTe07mhHdxoH+3YiHJOnJ6c8ICqM3l56svJG7tTo8Gdbc/rapu3jbYyL38dncZ25+gFFr5wE4fNEHQVyxROPcCjO86IHG03A2g7RTta5c72H123oS6ck5fN7YWRf+midxzlS6YF7qhdVQ=
+	t=1787863057; cv=none; b=M69OfuwHxBDS9r8nM+YTOFEedHrfVFgHeilNr3SVdQRocT6yRp21Tzwr5u0A0sU9Nj1a5erlHydXFx244dEkjLqsRLLadjM5D7OWKxLxz4FN6iKoGGXL06ed/IQwdg7UL6gW9hNIXbV8fOhRyEBs624iZ0Sk52LKZTDg6Ydt/Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787863056; c=relaxed/simple;
-	bh=0rCmtkVUCQi6ZEU6kUtdvkSEPA0GT8PTBtZWOf2v9uo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T1uLniXwBjNfhhQvObbEyrEKZdfTZeNHsBtTWsj7ap8m/BPYUfFHHUNcaO64UIOivQDJ2ha/lBSoZpnJLFjLqnfX7mT0SnGhysD117Y0rq+OfMngNYgJmWTvGsqXujdrlT/mRDeNbrDumoffAbCimIJ/QlAL/MLt1/+qajUm/qo=
+	s=arc-20240116; t=1787863057; c=relaxed/simple;
+	bh=Cj0F2eVkw07A3li5Jqw2GJO5drIsDTHNt0MUBBggB+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cG/Gd23wClnOyrXW1ESsdf2WVtfss7ZOcY9PGTf/AOA5hkQmZc6QgKzDlSYt7dPDOxBkriESMo22DMn0UZNE0Nr1l+gPn9pdIMekdwZCJyWQF0LaTzU92OhrycS3ztY0BfIz2srpUBAQvTWhnxXLD28ilH9qW+FycJyq+zi1Iro=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D514E1F000E9;
-	Thu, 27 Aug 2026 20:37:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC821F00A3A;
+	Thu, 27 Aug 2026 20:37:30 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -25,11 +26,13 @@ Cc: rafael@kernel.org,
 	terry.bowman@amd.com,
 	benjamin.cheatham@amd.com,
 	alison.schofield@intel.com,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v5 00/13] ACPI: APEI: GHES: Collection of fixes for issues reported by sashiko
-Date: Thu, 27 Aug 2026 13:37:13 -0700
-Message-ID: <20260827203726.3027541-1-dave.jiang@intel.com>
+	sashiko-bot@kernel.org
+Subject: [PATCH v5 01/13] efi/cper: Reject CPER records with an out-of-range error_data_length
+Date: Thu, 27 Aug 2026 13:37:14 -0700
+Message-ID: <20260827203726.3027541-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260827203726.3027541-1-dave.jiang@intel.com>
+References: <20260827203726.3027541-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -38,120 +41,69 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes for pre-existing issues sashiko-bot found while reviewing patches in the
-CPER, extlog and GHES paths. v1 through v3 fixed successive batches as the
-review widened; see the links below.
+cper_estatus_check() sizes each section with acpi_hest_get_record_size(),
+which adds the firmware-controlled u32 error_data_length to the header size
+as a signed int (see <acpi/ghes.h>). A value in the top sizeof(*gdata)
+bytes of the u32 range wraps the sum small rather than large, so it slips
+past the "record_size > data_len" check: against the 72-byte v300 header,
+0xffffffb9 sizes the record at 1 and acpi_hest_get_next() walks it a byte
+at a time, off the end. 0xffffffb8 sizes it at 0 and loops forever.
 
-The series is grouped in three parts, plus a cleanup.
+Use check_add_overflow() to reject a sum that will not fit the int those
+helpers return, since the walk advances by that value. That subsumes the
+"acpi_hest_get_size(gdata) > data_len" test above it, because record_size
+is never smaller than the header.
 
-Bound the record before anything walks it:
+The later "len < sizeof(*foo)" guards rely on this per-section upper bound;
+they are lower bounds only.
 
-1/13:  Reject CPER records with an out-of-range error_data_length.
-2/13:  Reject an error status block length that wraps a u32.
-3/13:  Validate the extlog record length before walking sections.
+Reported-by: sashiko-bot@kernel.org
+Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=1
+Fixes: 45b14a4ffcc1 ("efi: cper: Fix possible out-of-bounds access")
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+v5:
+- Use check_add_overflow() rather than a u64 sum plus an INT_MAX test, and
+  drop the now-redundant acpi_hest_get_size() bound (Jonathan Cameron).
+---
+ drivers/firmware/efi/cper.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Fix the extlog error paths, then enable them:
-
-4/13:  Defer CXL protocol error handling to avoid a lock inversion.
-5/13:  Avoid populating software AER metadata from the raw hardware buffer.
-6/13:  Validate the PCIe error section length before payload access.
-7/13:  Fix the CONFIG_ACPI_APEI_PCIEAER guard typo in extlog.c.
-
-Bound each section payload before its consumers read it:
-
-8/13:  Bound the CXL event record copy to the firmware section length.
-9/13:  Validate the CXL protocol error section length before the RAS cap copy.
-10/13: Read only validated fields in cper_mem_err_pack().
-11/13: Validate the memory error section length before payload access.
-12/13: Bound the AER info copy and sanitize software metadata in ghes.c.
-
-Then drop an export patch 4 made redundant:
-
-13/13: Make cxl_cper_handle_prot_err() static.
-
-Patches 1, 2 and 10 touch drivers/firmware/efi/cper.c, closing the holes at
-the shared choke point the rest of the series relies on. Patch 2 also fixes an
-infinite loop in bert_print_all(), unrelated to this series but the same root
-cause.
-
-Known gaps, left for separate patches:
-
-  - cxl_cper_print_prot_err() in drivers/firmware/efi/cper_cxl.c uses
-    dvsec_len without bounding it against the section length.
-  - cxl_rch_get_aer_info() in drivers/cxl/core/ras_rch.c reads the RCH AER
-    capability from MMIO without clearing header_len/flit, the same class as
-    patches 5 and 12.
-  - struct pcie_tlp_log grew to 60 bytes for Flit mode, so the 96-byte CPER
-    AER info no longer maps 1:1 onto struct aer_capability_regs past the
-    Header Log. Patches 5 and 12 now copy only the 44 bytes that do map and
-    leave the rest zero, which keeps the Root Error registers out of
-    header_log.prefix[] - but nothing here decodes the Flit-mode header
-    DWORDs, which live at payload offset 56 while the struct expects them at
-    44. Doing that properly wants a field-by-field mapping shared with
-    cxl_rch_get_aer_info(), plus a clamp: pcie_print_tlp_log() trusts
-    header_len against a 14-entry dw[], and PCI_ERR_CAP_TLP_LOG_SIZE is five
-    bits wide.
-
-v1: https://lore.kernel.org/linux-cxl/20260709162807.1957783-1-dave.jiang@intel.com/
-v2: https://lore.kernel.org/linux-cxl/20260714231835.303081-1-dave.jiang@intel.com/
-v3: https://lore.kernel.org/linux-cxl/20260717161647.1493259-1-dave.jiang@intel.com/
-v4: https://lore.kernel.org/linux-cxl/20260824174936.939059-1-dave.jiang@intel.com/
-
-Review tags from the v3 and v4 threads are carried over, and Jonathan reviewed
-patches 2, 4, 6, 7, 8 and 9 on v4. Patches 1, 10, 11 and 13 carry none: 10 and
-13 are new since v3, and 1 and 11 were reworked far enough that Alison's and
-Shuai's v3 tags no longer applied. Patches 5 and 12 keep theirs, but the copy
-length changed in v5 - same intent, different bound - so please re-check if you
-disagree.
-
-Changes since v4
-----------------
-- Patch 1: use check_add_overflow() instead of a u64 sum plus an INT_MAX
-  test, and drop the now-redundant acpi_hest_get_size() bound, since
-  record_size is never smaller than the header (Jonathan Cameron).
-- Patches 5 and 12: copy only the 44 bytes of aer_info that map onto struct
-  aer_capability_regs - the leading registers and the four Header Log DWORDs
-  - and leave the rest zero, instead of copying all 96 bytes and then
-  clearing header_len and flit (Jonathan Cameron). This also keeps the Root
-  Error Command, Root Error Status and Error Source ID out of
-  header_log.prefix[], where pcie_print_tlp_log() was printing them as
-  end-to-end prefixes.
-- Patch 3: kept the length bound ahead of cper_estatus_check() and expanded
-  the comment to say why. Swapping them would let cper_estatus_check() walk
-  sections over an unbounded data_length, past the end of elog_buf
-  (Jonathan Cameron).
-
-Dave Jiang (13):
-  efi/cper: Reject CPER records with an out-of-range error_data_length
-  efi/cper: Reject an error status block length that wraps a u32
-  ACPI: extlog: Validate elog record length before walking sections
-  ACPI: extlog: Defer CXL protocol error handling to avoid lock
-    inversion
-  ACPI: extlog: Avoid populating software AER metadata from raw hardware
-    buffer
-  ACPI: extlog: Validate PCIe error section length before payload access
-  ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
-  ACPI: APEI: GHES: Bound CXL event record copy to the firmware section
-    length
-  ACPI: APEI: GHES: Validate CXL protocol error section length before
-    RAS cap copy
-  efi/cper: Read only validated fields in cper_mem_err_pack()
-  ACPI: APEI: GHES: Validate memory error section length before payload
-    access
-  ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
-  cxl/ras: Make cxl_cper_handle_prot_err() static
-
- drivers/acpi/acpi_extlog.c       | 60 +++++++++++++---------
- drivers/acpi/apei/ghes.c         | 88 +++++++++++++++++++++++++++-----
- drivers/acpi/apei/ghes_helpers.c | 18 ++++++-
- drivers/cxl/core/ras.c           |  3 +-
- drivers/firmware/efi/cper.c      | 51 +++++++++++++++---
- include/acpi/ghes.h              |  4 ++
- include/cxl/event.h              |  6 +--
- 7 files changed, 178 insertions(+), 52 deletions(-)
-
-
-base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 06b4fdb59917..332c78f2d561 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -752,7 +752,7 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
+ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+ {
+ 	struct acpi_hest_generic_data *gdata;
+-	unsigned int data_len, record_size;
++	unsigned int data_len;
+ 	int rc;
+ 
+ 	rc = cper_estatus_check_header(estatus);
+@@ -762,10 +762,18 @@ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+ 	data_len = estatus->data_length;
+ 
+ 	apei_estatus_for_each_section(estatus, gdata) {
+-		if (acpi_hest_get_size(gdata) > data_len)
++		int record_size;
++
++		/*
++		 * The <acpi/ghes.h> helpers sum these as a signed int, so a
++		 * huge error_data_length wraps small rather than large and the
++		 * walk then advances by that wrapped value. Reject a size an
++		 * int cannot carry.
++		 */
++		if (check_add_overflow(acpi_hest_get_size(gdata),
++				       gdata->error_data_length, &record_size))
+ 			return -EINVAL;
+ 
+-		record_size = acpi_hest_get_record_size(gdata);
+ 		if (record_size > data_len)
+ 			return -EINVAL;
+ 
 -- 
 2.54.0
 
