@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4FA3793BD
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F05134D3B2
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787863924; cv=none; b=sR3CB2lr2m91zXRz0xOpXsQkCo6Yy3sdInd2wI2mOXCG7fePev2VpmD9oZDP0C45yJrmsKkEqQ4JDEHx9EiR/QL0s4avHEcDoyexRNlL9VGNBPxbP7eAhKoDzXHnzN6GHgq9w0XKaw7/TUoZu515Rd27yRMyTlg8MN/1iprw9kY=
+	t=1787863935; cv=none; b=KKR/oVRUa8DXt/ErhQ5ylqC36NE4ZVlh3n7VbYuLwwQ/Qk1I5B5SbSjqWsFjC9ZpVM117HgqonBu8Zz1m0jNFnRTSik3y46QBKXGmfwGZiOzb6hMy8bXks7J2RfuFAJ4wtZjjkc16cFw6PMRvJoMei9qHbJo32UG4OOZ7bU4n4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787863924; c=relaxed/simple;
-	bh=LgTM1cvKqGyjvtLMvG6hvpSJC88vRIoLoVeCuNMfXF8=;
+	s=arc-20240116; t=1787863935; c=relaxed/simple;
+	bh=V37rrCAkjSGJKWOAGpqTn9MLKxoAuVluVAwwVD9R0bI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tEMJRsvsLT9jTMd0JcUrGxA2wHUBYrGwuSrmZgodrUbMnis6VaJBJ1g+7SwtqLxFi49J29wOaGacj9fYVqIo+tZ5infPU0cSlHCWPm0qYT5rn/3q/tFq5P54xHEVGLnEgwDyaQ8Z22RsjtWCzyYnbo9IQBCJwhNkxYJ32WcByAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVCe88g6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=GghwNtFfwEDKp20/Jgdjh5SMK/zlwK9/ODEDVqNDN9mhkluFXBmoTuNTMg/fHxebswI8IxUnFRK6oZLoCqv0PMnEWKJv2hkVUKthKit0g5b+XMQJbH7myMokdceR6bv9BWUbsfTop1f9jdhCC+TfpNz74VYT+lL5WPl7lYpR8wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfPwsTpZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVCe88g6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D96E91F000E9;
-	Thu, 27 Aug 2026 20:52:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfPwsTpZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56E11F000E9;
+	Thu, 27 Aug 2026 20:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787863923;
-	bh=95mFuw354uo+mYbffUwW4A8XuTQVyYg3gZJPl/69FPE=;
+	s=k20260515; t=1787863933;
+	bh=zW53Aa8lD4CB/JVriRBjqYu94kQCh3TSn6QPpTPVwJs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hVCe88g63ZTgG1Ha3xaRXRYTXlV3vtp9XEm+XrjNCNymOger+VitN/sBIARaMWVWF
-	 pJ6MjeW7yoz93q/+UY5Z1+cusXB+SEK4DFrxkoKuOVTlYwjo02CMLAy1G3WQaQBLw/
-	 Dv41Bcfmt/HIKmUL2innV7kQh3P+WGrkxpbBTZy5nhpV/mRe+NPaU/Cz/tnvaH8FuD
-	 IzFFYFRr0nZiW59pPdDsY4j9P3HSr80NiJ1Pb6MMdai1DeTAgnUVouG0hH6AzJfrvC
-	 e3cXknipaet3vJ/O/k27G7KDtjEJywW1yRfChVPZhWerhLCwd9NX80GdNS42BWIvF4
-	 R6SwGlgVHDpyw==
+	b=SfPwsTpZTHT/MsSmhINnLUmtNi3k5XSacTgk7xywW5PaTLMsdLrYDHAFQcpg0qd4x
+	 3vMIt9ptKbHJYPY3zGPenrVa6hBN03K0aUSdlg+COM7GY+t+iOnxLIFAFl356krbdg
+	 dyC0oP1j0SapVJaO59GyQsOeqWJQHcph3cxd71ZaEGLIpYTn8iihnin1lMsI2DKzKl
+	 SSL50xcPaIcsvqPsMGrTNOhlrlvRTzqw2xrvdqq5Acob7XQ2lUM4HuVnyhVMeufIq+
+	 YK0Z8cQvKFFOGmZr52GEGmqLtAjWxQhiJRM2eK8oyqsmc6rDbQykh8DbyewueHPoOY
+	 8P1dGoJZZ+8bQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 02/13] efi/cper: Reject an error status block length
- that wraps a u32
+Subject: Re: [PATCH v5 01/13] efi/cper: Reject CPER records with an
+ out-of-range error_data_length
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260827203726.3027541-3-dave.jiang@intel.com>
+In-Reply-To: <20260827203726.3027541-2-dave.jiang@intel.com>
 References: <20260827203726.3027541-1-dave.jiang@intel.com>
- <20260827203726.3027541-3-dave.jiang@intel.com>
+ <20260827203726.3027541-2-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 20:52:02 +0000
-Message-Id: <20260827205202.D96E91F000E9@smtp.kernel.org>
+Date: Thu, 27 Aug 2026 20:52:13 +0000
+Message-Id: <20260827205213.B56E11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,92 +49,66 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Double-fetch (TOCTOU) vulnerability in GHES error record parsing l=
-eading to out-of-bounds reads in the kernel heap.
+- [High] Missing lower bounds check for the section header in `cper_estatus=
+_check()` allows out-of-bounds reads when iterating truncated CPER records.
 --
 
-commit ddc6acba60cbd7b0aee24cf35b70654e2a951cb0
+commit 2032c31f790eb3dad96643cacd189ae773ea581e
 Author: Dave Jiang <dave.jiang@intel.com>
+efi/cper: Reject CPER records with an out-of-range error_data_length
 
-efi/cper: Reject an error status block length that wraps a u32
-
-This commit adds bounds checking to cper_estatus_check_header() to prevent
-a u32 wrap-around when calculating the total length of the error status
-block. It rejects lengths that cannot be expressed in a u32 to protect
-callers like GHES and BERT from processing short values and looping forever.
+This commit modifies the size validation in cper_estatus_check to use
+check_add_overflow. It addresses an issue where a large error_data_length
+could wrap around as a signed int, bypassing the original size checks and
+causing an infinite loop or out-of-bounds access.
 
 Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
 ntel.com?part=3D1
-Fixes: 06d65deade9a ("ACPI, APEI, UEFI Common Platform Error Record (CPER) =
-header")
+Fixes: 45b14a4ffcc1 ("efi: cper: Fix possible out-of-bounds access")
 
 > diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 332c78f2d5617..3dcef618ad39f 100644
+> index 06b4fdb59917a..332c78f2d5617 100644
 > --- a/drivers/firmware/efi/cper.c
 > +++ b/drivers/firmware/efi/cper.c
-> @@ -745,6 +745,17 @@ int cper_estatus_check_header(const struct acpi_hest=
-_generic_status *estatus)
->  	    estatus->raw_data_offset < sizeof(*estatus) + estatus->data_length)
->  		return -EINVAL;
+
+[ ... ]
+
+> @@ -762,10 +762,18 @@ int cper_estatus_check(const struct acpi_hest_gener=
+ic_status *estatus)
+>  	data_len =3D estatus->data_length;
 > =20
-> +	/*
-> +	 * cper_estatus_len() sums these into a u32, and a wrapped sum reads
-> +	 * back smaller than the record. Reject a length that cannot be
-> +	 * expressed so no caller is handed the short value.
-> +	 */
-> +	if ((u64)sizeof(*estatus) + estatus->data_length > U32_MAX)
-> +		return -EINVAL;
-> +	if (estatus->raw_data_length &&
-> +	    (u64)estatus->raw_data_offset + estatus->raw_data_length > U32_MAX)
-> +		return -EINVAL;
+>  	apei_estatus_for_each_section(estatus, gdata) {
+> -		if (acpi_hest_get_size(gdata) > data_len)
+> +		int record_size;
 > +
+> +		/*
+> +		 * The <acpi/ghes.h> helpers sum these as a signed int, so a
+> +		 * huge error_data_length wraps small rather than large and the
+> +		 * walk then advances by that wrapped value. Reject a size an
+> +		 * int cannot carry.
+> +		 */
+> +		if (check_add_overflow(acpi_hest_get_size(gdata),
+> +				       gdata->error_data_length, &record_size))
+>  			return -EINVAL;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but there is a pre-existing=20
-double-fetch (TOCTOU) vulnerability that these new checks do not mitigate.
+This is a pre-existing issue, but does this code risk an out-of-bounds read
+if the CPER record is truncated?
 
-The GHES driver fetches the error status header from shared physical memory
-twice. The first fetch in ghes_in_nmi_queue_one_entry() determines the
-buffer allocation size:
+The apei_estatus_for_each_section loop condition only checks if the start of
+the section is within estatus->data_length.
 
-drivers/acpi/apei/ghes.c:ghes_in_nmi_queue_one_entry() {
-        ...
-        rc =3D __ghes_peek_estatus(ghes, &tmp_header, &buf_paddr, fixmap_id=
-x);
-        ...
-        len =3D cper_estatus_len(&tmp_header);
+If a truncated record leaves fewer than sizeof(struct acpi_hest_generic_dat=
+a)
+bytes for the final section, the loop will still iterate.
 
-The second fetch copies exactly len bytes from shared memory, overwriting
-the previously validated header:
+Inside the loop, acpi_hest_get_size(gdata) reads gdata->revision, and
+check_add_overflow reads gdata->error_data_length before confirming if
+data_len actually has enough space for the struct header itself.
 
-        if (__ghes_read_estatus(estatus, buf_paddr, fixmap_idx, len)) {
-        ...
-}
-
-If the data_length field in physical memory is maliciously or erroneously
-increased between these two reads, the newly copied header will contain a
-data_length that exceeds the originally allocated buffer size (len).
-
-The new untrusted data_length is then passed to cper_estatus_check():
-
-drivers/firmware/efi/cper.c:cper_estatus_check() {
-        ...
-        data_len =3D estatus->data_length;
-        apei_estatus_for_each_section(estatus, gdata) {
-        ...
-}
-
-Because the checks here in cper_estatus_check_header() do not verify if
-the new data_length exceeds the actual copied buffer size (len), the loop
-in cper_estatus_check() will read out of bounds into the kernel heap.
-
-This can lead to an out-of-bounds memory disclosure to dmesg, or a kernel
-panic if it crosses into unmapped memory during NMI or IRQ context.
-
-Does it make sense to update the caller to pass the allocated buffer size
-into cper_estatus_check_header() so we can ensure the newly fetched length
-does not exceed the buffer?
+Could this result in page faults or memory corruption if malformed firmware
+leaves us with a truncated section header?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827203726.3027=
-541-1-dave.jiang@intel.com?part=3D2
+541-1-dave.jiang@intel.com?part=3D1
