@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26C36D4E1;
-	Thu, 27 Aug 2026 20:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6583E2D662F;
+	Thu, 27 Aug 2026 20:37:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787863057; cv=none; b=M69OfuwHxBDS9r8nM+YTOFEedHrfVFgHeilNr3SVdQRocT6yRp21Tzwr5u0A0sU9Nj1a5erlHydXFx244dEkjLqsRLLadjM5D7OWKxLxz4FN6iKoGGXL06ed/IQwdg7UL6gW9hNIXbV8fOhRyEBs624iZ0Sk52LKZTDg6Ydt/Qw=
+	t=1787863060; cv=none; b=lsLG9R7ZBl+cTmjVOECXh+Exx+Lvpsi2cLg2+nSGaH3scwZtq5t7OVin8h9+NGPLuG3qhecXIwfnr6FmXtmPJPi3QsPWiJSnyNdcM88wCjG/89zbL0oKR740NCcfs1liyeunteZ1USFHvLUfCAdr3ouAMKMT+9SCu2Kq7neZo3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787863057; c=relaxed/simple;
-	bh=Cj0F2eVkw07A3li5Jqw2GJO5drIsDTHNt0MUBBggB+w=;
+	s=arc-20240116; t=1787863060; c=relaxed/simple;
+	bh=y/tmW1hvUfO0381BJPP72AzywlW8py6JE6Pp1Jpt9nA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cG/Gd23wClnOyrXW1ESsdf2WVtfss7ZOcY9PGTf/AOA5hkQmZc6QgKzDlSYt7dPDOxBkriESMo22DMn0UZNE0Nr1l+gPn9pdIMekdwZCJyWQF0LaTzU92OhrycS3ztY0BfIz2srpUBAQvTWhnxXLD28ilH9qW+FycJyq+zi1Iro=
+	 MIME-Version; b=dSzAsjkdUfM5Fh98bQ/CIBEeVD2xh5lni6ULWMw6e/SbMpmMlcaPJowk250u7nyY3NnKQ34OJcUv0BMhN54c/KtuolOy//qHXNJN/8FjGJhdNr00zZ8f/OitXCWL/pLxtFrPE7ht6xORBon37xv7H+9b0ysruXPI/bDzgt2coTk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC821F00A3A;
-	Thu, 27 Aug 2026 20:37:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37EC31F00A3E;
+	Thu, 27 Aug 2026 20:37:33 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -27,9 +27,9 @@ Cc: rafael@kernel.org,
 	benjamin.cheatham@amd.com,
 	alison.schofield@intel.com,
 	sashiko-bot@kernel.org
-Subject: [PATCH v5 01/13] efi/cper: Reject CPER records with an out-of-range error_data_length
-Date: Thu, 27 Aug 2026 13:37:14 -0700
-Message-ID: <20260827203726.3027541-2-dave.jiang@intel.com>
+Subject: [PATCH v5 03/13] ACPI: extlog: Validate elog record length before walking sections
+Date: Thu, 27 Aug 2026 13:37:16 -0700
+Message-ID: <20260827203726.3027541-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260827203726.3027541-1-dave.jiang@intel.com>
 References: <20260827203726.3027541-1-dave.jiang@intel.com>
@@ -41,69 +41,54 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cper_estatus_check() sizes each section with acpi_hest_get_record_size(),
-which adds the firmware-controlled u32 error_data_length to the header size
-as a signed int (see <acpi/ghes.h>). A value in the top sizeof(*gdata)
-bytes of the u32 range wraps the sum small rather than large, so it slips
-past the "record_size > data_len" check: against the 72-byte v300 header,
-0xffffffb9 sizes the record at 1 and acpi_hest_get_next() walks it a byte
-at a time, off the end. 0xffffffb8 sizes it at 0 and loops forever.
+extlog_print() copies a fixed ELOG_ENTRY_LEN (4096) bytes from the elog
+record into elog_buf, then walks the sections using the firmware-controlled
+data_length. Nothing keeps data_length inside the buffer, so a malformed
+record walks the section pointer past elog_buf and reads adjacent memory.
+Unlike the GHES paths, extlog never calls cper_estatus_check().
 
-Use check_add_overflow() to reject a sum that will not fit the int those
-helpers return, since the walk advances by that value. That subsumes the
-"acpi_hest_get_size(gdata) > data_len" test above it, because record_size
-is never smaller than the header.
-
-The later "len < sizeof(*foo)" guards rely on this per-section upper bound;
-they are lower bounds only.
+Reject a record longer than ELOG_ENTRY_LEN and run cper_estatus_check()
+before walking the sections. The length test alone is not enough: a wrapped
+length reads back short and passes it, which cper_estatus_check() catches
+via the header check added earlier. Drop a malformed record with
+NOTIFY_DONE and without MCE_HANDLED_EXTLOG, since extlog did not consume
+it.
 
 Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=1
-Fixes: 45b14a4ffcc1 ("efi: cper: Fix possible out-of-bounds access")
+Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=6
+Fixes: f6ec01da40e4 ("ACPI: extlog: Handle multiple records")
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
 v5:
-- Use check_add_overflow() rather than a u64 sum plus an INT_MAX test, and
-  drop the now-redundant acpi_hest_get_size() bound (Jonathan Cameron).
+- Expanded the comment to say why the length bound runs before
+  cper_estatus_check() rather than after (Jonathan Cameron).
 ---
- drivers/firmware/efi/cper.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_extlog.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index 06b4fdb59917..332c78f2d561 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -752,7 +752,7 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
- int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
- {
- 	struct acpi_hest_generic_data *gdata;
--	unsigned int data_len, record_size;
-+	unsigned int data_len;
- 	int rc;
+diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+index 7ad3b36013cc..046e92ee195f 100644
+--- a/drivers/acpi/acpi_extlog.c
++++ b/drivers/acpi/acpi_extlog.c
+@@ -208,6 +208,15 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
  
- 	rc = cper_estatus_check_header(estatus);
-@@ -762,10 +762,18 @@ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
- 	data_len = estatus->data_length;
+ 	tmp = (struct acpi_hest_generic_status *)elog_buf;
  
- 	apei_estatus_for_each_section(estatus, gdata) {
--		if (acpi_hest_get_size(gdata) > data_len)
-+		int record_size;
++	/*
++	 * Bound the length before cper_estatus_check() walks the sections: it
++	 * iterates over data_length, which is not yet known to fit elog_buf.
++	 * cper_estatus_check_header() then rejects a length that wrapped, which
++	 * the bound cannot see.
++	 */
++	if (cper_estatus_len(tmp) > ELOG_ENTRY_LEN || cper_estatus_check(tmp))
++		return NOTIFY_DONE;
 +
-+		/*
-+		 * The <acpi/ghes.h> helpers sum these as a signed int, so a
-+		 * huge error_data_length wraps small rather than large and the
-+		 * walk then advances by that wrapped value. Reject a size an
-+		 * int cannot carry.
-+		 */
-+		if (check_add_overflow(acpi_hest_get_size(gdata),
-+				       gdata->error_data_length, &record_size))
- 			return -EINVAL;
- 
--		record_size = acpi_hest_get_record_size(gdata);
- 		if (record_size > data_len)
- 			return -EINVAL;
- 
+ 	if (!ras_userspace_consumers()) {
+ 		print_extlog_rcd(NULL, tmp, cpu);
+ 		goto out;
 -- 
 2.54.0
 
