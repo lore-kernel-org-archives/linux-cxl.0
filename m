@@ -1,257 +1,381 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010024.outbound.protection.outlook.com [40.93.198.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9110A48A2DF;
-	Wed, 26 Aug 2026 22:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787784644; cv=none; b=XoMs/knqhIE1yLnk0Dzi1kgpg3tfCjsSiV/VYcLocktknJawh63HGdoydfF/ix6sgu+w+iBQ04KPJWoJN99CRiB0WXf/Ca+6ot3hhyYmB2I/WQ8xYJaNdnBNwfCkub/owUm92qHjgQSa/0PTa3/wwmnk55QtUitYx+u8p+914LU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787784644; c=relaxed/simple;
-	bh=rwp9r1Nr8znphwZs8a+YFF6d7wcWidDSGZsxf1w3WVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hk0ZWCy4Kd93z/tEMa+pOTaejDQk6Iva91GaBmp6I3+b5Tm9XlZGK7VrgSKYLZ0KWD9/o983Mt7P6iUnBrA016b90WNP/z1iBqVZWwRMrrnlIxwjntxpCr68oonuR0YLueZmoF0JGMGJoX/Dno/0ZvuCv1RnXeFjdimBy8SFyrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=NZ+xGKK1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hPpBUpoy; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7722D1A3172;
+	Thu, 27 Aug 2026 03:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787799690; cv=fail; b=fSr7sHS8dcEWpmJvwpOA8nK+ww0MOXNzBaiVdf2EaZJy+zi8J7ko+hTukU1fnve/8qMrB5hllIR8Y+1c3RVhMbEQ3A6K7U8mcBGgSCcE2VT1OKT/699OESKqeQcYzzNonYm14K2VHcihE9NVGjcOVNxO9qLwcpu315bm/hkm3/M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787799690; c=relaxed/simple;
+	bh=i/nouQuNZfL/RW9cK8mv/B54hU/Vx+G2CqaLeSYRrrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bNNmjxBogO8v4Q0BvYWXIfdBiUeIiBDPR6RmwnzpI2g8/Z0s2k2NvVyjcSMK4vDUbqy64C4z6/GZkQgdlUt33xTCww/UfkMP+y0AS7VlKfng3k+7/1Tv/8+ktLtlGHr96twnGhTo5kafHLzDEpI8GeGBxVO9Uz6F/NsyVRlyH68=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f6GI9Q11; arc=fail smtp.client-ip=40.93.198.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="NZ+xGKK1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hPpBUpoy"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id A2302EC0277;
-	Wed, 26 Aug 2026 18:50:38 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 26 Aug 2026 18:50:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1787784638;
-	 x=1787871038; bh=QplW2KxtxglOqcewNzFZRR/OkHVXQZVIXwZYQhVxGak=; b=
-	NZ+xGKK1CDnkI/+Q+3dg9JXY2EpUUV0bwjH0u/z1UZS0DcCepuqqkDxnDyNOJgYr
-	JCDu2T9f6xZlXKfdzQOt7zJXSC3H5cSFAfkTs2TJVslPj0vq3htfWYboswkbaUje
-	kkG0IpLc44JIvs4mVnX9ChBwG/YPZRTPy6YabCQ79FjPCsnYu+USD8Np9k1J640Z
-	oupufBrAPH5bXYMWCFwEQjenEavI81Aw1Lbjw48YIq2UEsvKn0GRbjJhRCOtSSX3
-	Wc4fTFwd3byG4N5i+uqKDGEDkh026MRf9vqhgGQBwNaWyKuhHCsmg4VWTCqp/iqJ
-	vHTPbMwM3oJ2/YJE4+Rx0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787784638; x=
-	1787871038; bh=QplW2KxtxglOqcewNzFZRR/OkHVXQZVIXwZYQhVxGak=; b=h
-	PpBUpoy7rDfCyo3TpaPczzXGKEuenYj+LAGc4kWJWmdFNWdU5bG2h/D5DVvt68EQ
-	U8/sae8Pn/zNdEl1JOOVylLa1T7gSd9s01W6RLK4nhku5sac2BIXdooaJ7hGkyYx
-	V0o60RftXxj/bb1ftopm5tWn4Gvq46SeQeRdIFqFcICbeY9EVipsN7TGFeOro1ve
-	X4OA4dd2kBm1ddpsRoMUWM6Q+dtnCRfE+4QNSUVoj6h5lLUYByzSQIWbINZ/+WXm
-	LYL/4a9URfBkoyC8BqS0iwkd6tmlIjMIyRo6o64cZoVKF6iYQNiyZZdh07N47m/R
-	hn+JUEIeOPi50ZvUT5WAQ==
-X-ME-Sender: <xms:vW2Pasr7rQ_G5qB6GElMoVev1ckIfQR0Oz0IK7qUZ1FhMCx8WwF5HA>
-    <xme:vW2PagRsI5UzU6N-D9bD1DzNb6hQD0Sy59SMneHVLJ2RIEEAVolE6z9fTsNfii-MI
-    TOjtH8U1CWzueNu6bM-lzrk0Tt6XXK-XTCMnSZp3fe-6_1zJkvY>
-X-ME-Received: <xmr:vW2PaoknCS5K1m_SzqA12SKrf5lB_W97EGRm7woddUIu6LxzYxCH1nQCzdUrig>
-X-ME-Proxy-Cause: dmFkZTF6e4hR1iz/6dIAysFsGCQ71uWDQEuEPYPxGY/BNbu1t2yBp7A8qJ3IBKU8pAioAX
-    kQi2pcgAumZXLtvGdkDjDm8Zb0KsSPzz2VsqnYW42ydMMBwSPS6QnSoQAUAHv07aqMKnRl
-    xelSpx2DhqcMwig8qFnERd46xw36yZ179ft2tapX31kMdCO4EBCDZPMS+OxXASXA0mC8yJ
-    gaTocAtizYKP9ibLshPjnlDekBldB4LL8lduAolpQjZdkKTbOBm7kr4OXXecHyUwbsoYRB
-    yrtxtA8ZLexBsxbJYosZGQLm1U0QGL6Iw3Y3BNRJBkJrhYEGjH1CPTaRnzQ3Hofve2GspD
-    mdCje7Q/C99nzh28J31YfGJkClvIKkECVKoONx3ku5fGohpLpfpVf7hMU8D2ArWaBiu4XT
-    2D2ToyOUiTikWseEXh1BWf1kFEOT+F0em+n/FPKN/CwNo8k6wmSabVSYMfhwRtIuZbaZey
-    C2aaKWIjnz7V2Ica903rgVEmKwvZaAFQwDJWejuL54g0317LPKOKKOnHC6IfoXAi+elSRC
-    cJZiYjoSs/KtHZ69uy7MT8o5sEzJ3UnbXP/gMffJ8o8eVwV3rZKTr6DJjkZQTf1ci1iv5u
-    XkZBZIqLCqdmFI2Hs4FQvLmahoxpdu4sy9AqL05m+bC2lNETs3PiCgTjCxNA
-X-ME-Proxy: <xmx:vW2PasG33uUCS6HXNmERDuuODFOStFcfLQXtMbQKM99NjXMox0Mn2Q>
-    <xmx:vW2Pajlbv8YjV7iD74OwNaKzy_wiEqRehVqyqHNGe_xshYoBKRrbCw>
-    <xmx:vW2PajSOivWBuszMVd4W96Q0Mkf48PT0WgGGGlTBVkEEIt5YzKdPiw>
-    <xmx:vW2Pag6Pj0JHWPDrLEkQqOStYiF1w0zOdUuXYsh-Zfvc9rwYEa81LA>
-    <xmx:vm2PasFQS2R-HHl_00xv3lT8lZ6Xd5hamxoxnBz_Dl2aO4zKala3Jtao>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 26 Aug 2026 18:50:35 -0400 (EDT)
-Date: Wed, 26 Aug 2026 16:50:33 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v4 08/27] vfio/cxl: Add the vfio-cxl module skeleton
-Message-ID: <20260826165033.582735f4@shazbot.org>
-In-Reply-To: <20260813093631.2288172-9-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-9-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f6GI9Q11"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BEG1KcesolbqDPAh0g9OLujzqwYJWHQEfZyB9MM2clnp7dDOMdU5kOOVxJcR0tJCysa9n+Docv455t6tnhiNhjLJHMoiMFmZcmLA6eJyPL2G9vNGU6/2lRofAJ49Pv9O6Z7ui/ZQvDSyX2l6suM4Bqfq1om01/HeP9zDRD8Y+02lpAymi5fqv5P/n4lu0rdYfBoCSB2XVaPaExkwmCNsqOB7VsRKz5tYVzWA1WigbhkZYsi3cDOvHkQ6O7a1Z0zk/zzw4bZyZ5fvDgJHa+J68Mu5CInkwFRcoXDTpwYUF3OUiw+aMbsF1m+hUQEMdl+f4he6UeApp4l/0NxmLtQU6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z3ZZUkmK04DKjFoIgqEAIGSuSWtEY5RORdDek5yqRdA=;
+ b=yFsDAtPKrGQzBwdCqe4qSxPbzYFHcyQqGvUUPQ7zqCYcZ5PmDZ4hR6CkMVgXnBc6Oj1jvhiTrSQcbOMneBn5oWq5iV0p8NVaR3GmX5V6g/+l8cyPmNmuhj170P7n7TuU5yiGWKEHsGGg+4x3tWR1cEXqV6KUR9HQqYmBCzoPDmRjPTPmwSzQbRLggHe/M7RxCJFGgeZAWHtrqbgJbM7jyHggypTlcEnT5piq9ARQhI6HqSM3v5LBDs9K5oroF+x5VnLeELvnqrOTFozsLiaJhaOTch/Z5JRKMCo6QuCRCn2Oyvxx1n3woBCWPFowcVYfX5kh8nJE7te1SXCD4b0bGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z3ZZUkmK04DKjFoIgqEAIGSuSWtEY5RORdDek5yqRdA=;
+ b=f6GI9Q110G54BB1SV4rbQh0D5tPzWngLe+MDtf4x5kyzSe/kHxOz3ls1NOK2XVJHaUbmP6jXS93pf2CrAXInGxqKCfOQBzjzo1oC9XxKYgVTS7UXJgAneACxeuME8lrWAbtDxKHBg4El2KS6qbH7jofKfUHNPUE+Mor/faXd8UnmIAfpPIYseJokUuPgJPb3oAohYns/d1DgP9vc0DTrP8qGW5Jks5N2QGq2bXGC+59Ani1JAET41wXCoLMmdktICAO2iArlJmn5lgsvy7bds5omixjt30zUM/ZXHd5i9zPvhnHLlE1Od7/F9v5gX9EBKWHtgmmO24Q/GMKeGWO4Ww==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by CY8PR12MB7489.namprd12.prod.outlook.com (2603:10b6:930:90::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
+ 2026 03:01:23 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0360.005; Thu, 27 Aug 2026
+ 03:01:22 +0000
+Date: Thu, 27 Aug 2026 11:01:15 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Gregory Price <gourry@gourry.net>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Anisa Su <anisa.su@samsung.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/events: Bound the event log drain loop
+Message-ID: <ao-m-aFBvwCn4sus@MWDK4CY14F>
+References: <cover.1787768932.git.anisa.su@samsung.com>
+ <20260826184417.1042-1-anisa.su@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260826184417.1042-1-anisa.su@samsung.com>
+X-ClientProxiedBy: JH0PR01CA0108.apcprd01.prod.exchangelabs.com
+ (2603:1096:990:59::11) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CY8PR12MB7489:EE_
+X-MS-Office365-Filtering-Correlation-Id: 732940e5-bc1c-4bfe-35ab-08df03e77928
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|23010399003|1800799024|6133799003|3023799007|56012099006|10067099003|4143699003|5023799004|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	F3hs+cpoSMPQCywCetNxt24T7hWr8BridGOIhb3mXzQ7rmGxtE7tOqi62E2CYD9eA4rVkqYVGIcUt6LKDqdZacfR5hRFuk4hmkyF7IBNjk454jeqUumWzE0LYjsSzUamLLZHp4Hcsrtfzl8EdcPn2Qn/35Ezh776Z10sJM7pz5F3wQOwhOs/UHZjAM66zTzZ+72jvw2w/WIL6Hc5+GI0j2N7pl4ZOugJJIqcYxf4g2TH9rpVmSSteDp5pZzL1WSWdHbQ5FZEDh6RjPnn/AagfOlRcHeU0BmltaU1YATaE8Wz/vk3TRx2de/VCnm0B/dczQLu+0rVEw91u4OItLA9dOmbJtGe4zSf5rh6WqjSjrxekpNrYaMbqyOu3Ubw2fo73LPUKVZFCd7ertalLEYxrMyraSP9q27pZh9bmC4NyU+Idw6BMZnyJ8Nhj1nql5dv3gvxUmjYTkx4cBqkwCMk6vj5VEg3hxfhc6UhacPAd8wJEKM7RGAM/RTVqCMV9+yhawazf9VAr7WjMfDLLe1Vg1VVCUsPNhD0qM60Tf0AHJc3hMao/K9kaccB0lCCVaLtUfJT5IzQW2/KdpabyL82nNtAC0yMpFPD7jxrQ+nAd4TQFEKZDaUa1erS53nLi+B2c1LPGRR2X6515B3eshVtknI9n7wWba47CWGEHe/LIxI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(23010399003)(1800799024)(6133799003)(3023799007)(56012099006)(10067099003)(4143699003)(5023799004)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/ENhNs1U36xVYlFNmxSVCnsYM36eeOmXn9Jov7fu1FdkdLKwP1fDgPb9g0HS?=
+ =?us-ascii?Q?ebjymg5GcjhE9sq78BrZeW3x5OeH7sRX2VA0Ss4CdKAyJ/esupbvwtRo36cR?=
+ =?us-ascii?Q?CrsmLes+4TrWN58vZ7GYT/UCzxOpNPmrejTNJ4PUb8oXcXzpILJKo89hiB2F?=
+ =?us-ascii?Q?kjFCnU7bv4cucGCvQd0PX7G5h3ENdKQusVf+QdjJ1pkC/E5Be6+S9AKcyP+T?=
+ =?us-ascii?Q?teIVk7rvdi0xGdryWb3UacKrmqqrxWm+RTLojp8U/Egy03785gqYr17ENBZG?=
+ =?us-ascii?Q?7RV6tYNs/bmQTdVHvXPJjv/FBQN95sbsbyFv3nxjuST/8PKXlCHQWjyn5ivx?=
+ =?us-ascii?Q?Hdrj2/euUqaXQJMr/30qZMU3nIuNCOQJZvveaUSJffWkNkhjj83WMbcqEYYW?=
+ =?us-ascii?Q?oROb2aBwnTIOL5a1w5D3zumyYAJ9ZEwqrxT6bHihctXSI3CpO3wtbWJ3drm8?=
+ =?us-ascii?Q?SuKBDJIHbknGWcOHdSczOY6pv3cLKSIXGq9x/8N1Fp/7BzBV12B4y1mGoxQI?=
+ =?us-ascii?Q?cf8cJcga2zUVzYhLkEHJKcl0haoEHolZ52Kf6yTMux7vh42/0oKwPEgcURTv?=
+ =?us-ascii?Q?50x7qKZcvlKQawxjBX9igBpA7+xXp4KIdRcWZGVEFEqGB4tsG9qPlNJnMtmQ?=
+ =?us-ascii?Q?2mALRuauLyNQvUHaUU/gH3LslGu/ohEoTR++vXd7MGoewXwkgaBHlnQ2ToVn?=
+ =?us-ascii?Q?bIoFBmsrh332diRjzxQUBvZxnOZQ/Y7aMRrewYb+qdqOU74qC3qnQCCLiWeS?=
+ =?us-ascii?Q?NUxvqchdAJArfQ+jEHFUHKChwn+RrHBjlUiTE6hLWqc836j7hsY4i43Ypjuz?=
+ =?us-ascii?Q?ufitpMBtkT46/UAYnFCR/BfFC9uOYAOdSipbSGs/SP6bdmZhwekI8pps5PdP?=
+ =?us-ascii?Q?rxgHtA1PBOppa485W8K8iQJPe+36TlXZWQ1P4JeaB86SK6PxNIB5habh/yYT?=
+ =?us-ascii?Q?7RVssgz3CGs2eqiYaSxSuvMcEMpzkDZtqZVNKm6Gw/TKEtEpYuUImsdG44B0?=
+ =?us-ascii?Q?o+6w7FliB3onj6EVcCTc81XbEV5BpX51aAPV2GNj1Wd4/8e4OV98xG3EzJHf?=
+ =?us-ascii?Q?i0UEAuOgk4q6MpdzFZeH5cXdgT35v/iLt50YdM1vjIHqhusnHejL+Olowpg3?=
+ =?us-ascii?Q?CE2qhjYEXDKsgErJsqQevtDJz0ixw3Abb35Y0G8nxo/auSlgT3veVCr3n/xH?=
+ =?us-ascii?Q?GJ6tuzVQD1ojDN/5pjgCHPJ7bNk+ulbCyEmKArv//4zhVEU0Rma9fcYVAhgI?=
+ =?us-ascii?Q?F3rJ50vAxmHn0igdLIqZzMkFxGyjoDz7p8bb6fhQPHkK+xNd76m3T0wEmBdV?=
+ =?us-ascii?Q?hLIgtBJIf9nEKNSvRNm3ocoNLt+WhYeNW235U5aDKdRiU2ACljrRV06bGHAX?=
+ =?us-ascii?Q?LtKg+P0QN8p6e+q+cPGzUnSNdE/60IJg4x/ue7uNwDlFRfY2lbfXphIYnG04?=
+ =?us-ascii?Q?7SldDLWKbSlzFChymbIFfedD60iujGzfEreCpmfmoOFV8z9P4h3jrDSGaHXL?=
+ =?us-ascii?Q?PQDXAuQ8DQ2wfM1Av1FGwE/EmK1aNTVg+r8vqMrO/VelI10amZS3JW3j2jYC?=
+ =?us-ascii?Q?TRAULfGvhllgGLru2hAdQHzWfY3gpsQK72yJZqDGiEy18GB3+Yxq07v9JR8F?=
+ =?us-ascii?Q?uj213vWFhY0TsJecHWcaruFb8qPPZzv5loST86M+sW9r0SH9RgDKN1kg3AFf?=
+ =?us-ascii?Q?aFcVAVwpInwVdPl6Ctv3kKfc3WJlXYf8tZTSfR0snA++HdTUbnF0T9Go+Nb1?=
+ =?us-ascii?Q?p0y1+lXKPQ=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 732940e5-bc1c-4bfe-35ab-08df03e77928
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 03:01:22.7144
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nLYas26gW51mznBapbXni6S9OgtnaG3DFboBSmGBqJu8WSZHgg5ru+n3Sofof/FtOniCDO5WzVy2DZkvDqTOIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7489
 
-On Thu, 13 Aug 2026 15:06:12 +0530
-<mhonap@nvidia.com> wrote:
-
-> From: Manish Honap <mhonap@nvidia.com>
+On Wed, Aug 26, 2026 at 11:43:08AM +0800, Anisa Su wrote:
+> cxl_event_thread() drains every log named in the Event Status register and
+> repeats until that register reads zero.  CXL 8.2.9.3.1 Table 8-203 marks
+> the register RO and leaves clearing it to the device, so a misbehaving device
+> that leaves a status bit set spins the thread forever, resending
+> Get Event Records as fast as the mailbox completes.
 > 
-> Add the vfio-cxl module that vfio-pci loads on demand for CXL Type-2
-> devices. It registers a set of callbacks with vfio-pci-core at
-> module_init and drops them at exit; the callbacks are stubs here and
-> are filled in by later patches.
+> Bound the loop on work completed instead.  cxl_mem_get_records_log() and
+> cxl_mem_get_event_records() report failures and which logs returned
+> records; the thread stops on the first error and drops any log whose status
+> bit was set while it returned nothing.  Every pass either drains a record
+> or clears a bit from the mask, so the loop terminates whatever the device
+> reports.  Logs are drained best effort, so a broken one does not suppress
+> reporting from the rest.
 > 
-> VFIO_CXL depends on CXL_BUS and builds as vfio-cxl.ko, which
-> request_module("vfio-cxl") resolves through MODULE_ALIAS.
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
 > ---
->  MAINTAINERS                          |  7 +++++
->  drivers/vfio/pci/Kconfig             |  2 ++
->  drivers/vfio/pci/Makefile            |  2 ++
->  drivers/vfio/pci/cxl/Kconfig         | 11 ++++++++
->  drivers/vfio/pci/cxl/Makefile        |  3 ++
->  drivers/vfio/pci/cxl/vfio_cxl_core.c | 41 ++++++++++++++++++++++++++++
->  6 files changed, 66 insertions(+)
->  create mode 100644 drivers/vfio/pci/cxl/Kconfig
->  create mode 100644 drivers/vfio/pci/cxl/Makefile
->  create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_core.c
+>  drivers/cxl/core/mbox.c      | 58 ++++++++++++++++++++++++++++--------
+>  drivers/cxl/cxlmem.h         |  3 +-
+>  drivers/cxl/pci.c            | 39 +++++++++++++++++++-----
+>  tools/testing/cxl/test/mem.c |  4 +--
+>  4 files changed, 81 insertions(+), 23 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c665bf8f1a28..aa8cecbc4cf2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -28312,6 +28312,13 @@ L:	kvm@vger.kernel.org
->  S:	Maintained
->  F:	drivers/vfio/cdx/*
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 7c6c5b7450a5..5954ba20f0be 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1059,8 +1059,8 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+>  	return rc;
+>  }
 >  
-> +VFIO CXL DRIVER
-> +M:	Manish Honap <mhonap@nvidia.com>
-> +L:	kvm@vger.kernel.org
-> +L:	linux-cxl@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/vfio/pci/cxl/
+> -static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> -				    enum cxl_event_log_type type)
+> +static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> +				   enum cxl_event_log_type type, bool *drained)
+>  {
+>  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>  	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> @@ -1068,12 +1068,15 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  	struct cxl_get_event_payload *payload;
+>  	u8 log_type = type;
+>  	u16 nr_rec;
+> +	int rc = 0;
 > +
->  VFIO DRIVER
->  M:	Alex Williamson <alex@shazbot.org>
->  L:	kvm@vger.kernel.org
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index 296bf01e185e..c3f54fc8ccc0 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -70,6 +70,8 @@ source "drivers/vfio/pci/virtio/Kconfig"
+> +	*drained = false;
 >  
->  source "drivers/vfio/pci/nvgrace-gpu/Kconfig"
+>  	mutex_lock(&mds->event.log_lock);
+>  	payload = mds->event.buf;
 >  
-> +source "drivers/vfio/pci/cxl/Kconfig"
+>  	do {
+> -		int rc, i;
+> +		int i;
+>  		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+>  			.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+>  			.payload_in = &log_type,
+> @@ -1094,6 +1097,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  		nr_rec = le16_to_cpu(payload->record_count);
+>  		if (!nr_rec)
+>  			break;
+> +		*drained = true;
+>  
+>  		for (i = 0; i < nr_rec; i++)
+>  			__cxl_event_trace_record(cxlmd, type,
+> @@ -1112,31 +1116,59 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  	} while (nr_rec);
+>  
+>  	mutex_unlock(&mds->event.log_lock);
 > +
->  source "drivers/vfio/pci/qat/Kconfig"
+> +	return rc;
+>  }
 >  
->  source "drivers/vfio/pci/xe/Kconfig"
-
-It seems fair to put this above the variant driver Kconfigs rather than
-bury it among them.
-
-> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-> index 6138f1bf241d..c3031070a1f3 100644
-> --- a/drivers/vfio/pci/Makefile
-> +++ b/drivers/vfio/pci/Makefile
-> @@ -21,6 +21,8 @@ obj-$(CONFIG_VIRTIO_VFIO_PCI) += virtio/
->  
->  obj-$(CONFIG_NVGRACE_GPU_VFIO_PCI) += nvgrace-gpu/
->  
-> +obj-$(CONFIG_VFIO_CXL) += cxl/
-> +
->  obj-$(CONFIG_QAT_VFIO_PCI) += qat/
->  
->  obj-$(CONFIG_XE_VFIO_PCI) += xe/
-
-Here again, cxl is a feature of vfio-pci-core.  I'd promote it to
-between vfio-pci-core and vfio-pci.  The earlier linking also has the
-benefit that in the typical case it will be available before the
-builtin drivers (but keep the deferred loading behavior).  Thanks,
-
-Alex
-
-> diff --git a/drivers/vfio/pci/cxl/Kconfig b/drivers/vfio/pci/cxl/Kconfig
-> new file mode 100644
-> index 000000000000..1392fa4ed15d
-> --- /dev/null
-> +++ b/drivers/vfio/pci/cxl/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config VFIO_CXL
-> +	tristate "VFIO support for CXL Type-2 devices"
-> +	depends on CXL_BUS && CXL_MEM
-> +	select VFIO_PCI_CORE
-> +	help
-> +	  Add CXL HDM handling to vfio-pci so a CXL Type-2 device, such as a
-> +	  CXL-attached accelerator, can be assigned to a virtual machine.
-> +	  vfio-pci loads this module on demand when it binds a CXL device.
-> +
-> +	  If you don't know what to do here, say N.
-> diff --git a/drivers/vfio/pci/cxl/Makefile b/drivers/vfio/pci/cxl/Makefile
-> new file mode 100644
-> index 000000000000..8501bf626108
-> --- /dev/null
-> +++ b/drivers/vfio/pci/cxl/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +obj-$(CONFIG_VFIO_CXL) += vfio-cxl.o
-> +vfio-cxl-y := vfio_cxl_core.o
-> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> new file mode 100644
-> index 000000000000..cbec7319452c
-> --- /dev/null
-> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * VFIO support for CXL Type-2 devices.
+>  /**
+>   * cxl_mem_get_event_records - Get Event Records from the device
+>   * @mds: The driver data for the operation
+>   * @status: Event Status register value identifying which events are available.
+> + * @drained: Optional mask of the logs in @status that returned records.
+>   *
+>   * Retrieve all event records available on the device, report them as trace
+> - * events, and clear them.
+> + * events, and clear them.  Every log named in @status is drained even if
+> + * another one fails, so that a broken log does not suppress reporting from
+> + * the rest.
 > + *
-> + * Copyright (c) 2026 NVIDIA Corporation & Affiliates
-> + */
+> + * Return: 0, or the first error encountered.
+>   *
+>   * See CXL rev 3.0 @8.2.9.2.2 Get Event Records
+>   * See CXL rev 3.0 @8.2.9.2.3 Clear Event Records
+>   */
+> -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
+> +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> +			      u32 *drained)
+>  {
+> +	static const struct {
+> +		u32 status;
+> +		enum cxl_event_log_type type;
+> +	} logs[] = {
+> +		{ CXLDEV_EVENT_STATUS_FATAL, CXL_EVENT_TYPE_FATAL },
+> +		{ CXLDEV_EVENT_STATUS_FAIL, CXL_EVENT_TYPE_FAIL },
+> +		{ CXLDEV_EVENT_STATUS_WARN, CXL_EVENT_TYPE_WARN },
+> +		{ CXLDEV_EVENT_STATUS_INFO, CXL_EVENT_TYPE_INFO },
+> +	};
+> +	int ret = 0;
 > +
-> +#include <linux/module.h>
-> +#include <linux/vfio_pci_core.h>
+>  	dev_dbg(mds->cxlds.dev, "Reading event logs: %x\n", status);
+>  
+> -	if (status & CXLDEV_EVENT_STATUS_FATAL)
+> -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
+> -	if (status & CXLDEV_EVENT_STATUS_FAIL)
+> -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FAIL);
+> -	if (status & CXLDEV_EVENT_STATUS_WARN)
+> -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
+> -	if (status & CXLDEV_EVENT_STATUS_INFO)
+> -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
+> +	if (drained)
+> +		*drained = 0;
 > +
-> +static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
-> +{
-> +	return 0;
-> +}
+> +	for (int i = 0; i < ARRAY_SIZE(logs); i++) {
+> +		bool got_records;
+> +		int rc;
 > +
-> +static void vfio_cxl_release_device(struct vfio_pci_core_device *vdev)
-> +{
-> +}
+> +		if (!(status & logs[i].status))
+> +			continue;
 > +
-> +static const struct vfio_cxl_ops vfio_cxl_ops = {
-> +	.init_device	= vfio_cxl_init_device,
-> +	.release_device	= vfio_cxl_release_device,
-> +	.owner		= THIS_MODULE,
-> +};
+> +		rc = cxl_mem_get_records_log(mds, logs[i].type, &got_records);
+> +		if (got_records && drained)
+> +			*drained |= logs[i].status;
+> +		ret = ret ?: rc;
+> +	}
 > +
-> +static int __init vfio_cxl_init(void)
-> +{
-> +	return vfio_pci_core_register_cxl_ops(&vfio_cxl_ops);
-> +}
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
+>  
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ed419d0c59f2..cb5372eb2d85 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -803,7 +803,8 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>  				unsigned long *cmds);
+>  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>  				  unsigned long *cmds);
+> -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
+> +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> +			      u32 *drained);
+>  void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 267c679b0b3c..3daf17835c06 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -514,21 +514,46 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+>  	struct cxl_dev_id *dev_id = id;
+>  	struct cxl_dev_state *cxlds = dev_id->cxlds;
+>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> -	u32 status;
+> +	u32 mask = CXLDEV_EVENT_STATUS_ALL;
 > +
-> +static void __exit vfio_cxl_exit(void)
-> +{
-> +	vfio_pci_core_unregister_cxl_ops(&vfio_cxl_ops);
-> +}
+> +	while (mask) {
+> +		u32 status, drained, stuck;
+> +		int rc;
+>  
+> -	do {
+>  		/*
+>  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
+>  		 * ignore the reserved upper 32 bits
+>  		 */
+>  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
+> -		/* Ignore logs unknown to the driver */
+> -		status &= CXLDEV_EVENT_STATUS_ALL;
+> +		/* Ignore logs unknown to the driver, and logs given up on */
+> +		status &= mask;
+>  		if (!status)
+>  			break;
+> -		cxl_mem_get_event_records(mds, status);
 > +
-> +module_init(vfio_cxl_init);
-> +module_exit(vfio_cxl_exit);
+> +		/*
+> +		 * A failed drain leaves the log's status bit set, so another
+> +		 * pass would resend the same query forever.
+> +		 */
+> +		rc = cxl_mem_get_event_records(mds, status, &drained);
+> +		if (rc)
+> +			break;
 > +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("VFIO support for CXL Type-2 devices");
-> +MODULE_ALIAS("vfio-cxl");
 
+Hi Anisa,
+
+IMHO, this new error path might leave an event log permanently undrainted.
+
+Now cxl_event_thread() breaks on any error returned by cxl_mem_get_event_records(), which incldues a temporary failure e.g. "Retry Required" from Get Event
+Records or Clear Event Records. In that case the log ramain non-empty.
+
+CXL event interrupt are generated when a log transitions from empty to non-empty,
+so after returning from the handler there may be no subsequent interrupt
+to retry the drain.
+
+Maybe we can use a bounded retry for retryable failure ? or schedule deferred
+retry work before returning ?
+
+Best regards,
+Richard Cheng.
+
+> +		/*
+> +		 * The Event Status register is device owned and read only, so
+> +		 * it cannot bound this loop; records read can.  A device that
+> +		 * leaves a bit set with an empty log makes no progress, and
+> +		 * only the device can clear that state, so stop polling that
+> +		 * log rather than spin on it.
+> +		 */
+> +		stuck = status & ~drained;
+> +		if (stuck) {
+> +			dev_warn_once(cxlds->dev,
+> +				      "Event status %#x set with no records to read\n",
+> +				      stuck);
+> +			mask &= ~stuck;
+> +		}
+>  		cond_resched();
+> -	} while (status);
+> +	}
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -682,7 +707,7 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	if (rc)
+>  		return rc;
+>  
+> -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+>  
+>  	return 0;
+>  }
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index a7da279aa3ef..87e01612cea9 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -372,7 +372,7 @@ static void cxl_mock_event_trigger(struct device *dev)
+>  			event_reset_log(log);
+>  	}
+>  
+> -	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
+> +	cxl_mem_get_event_records(mdata->mds, mes->ev_status, NULL);
+>  }
+>  
+>  struct cxl_event_record_raw maint_needed = {
+> @@ -1805,7 +1805,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>  	if (rc)
+>  		dev_dbg(dev, "No CXL FWCTL setup\n");
+>  
+> -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+>  	cxl_mock_test_feat_init(mdata);
+>  
+>  	return 0;
+> -- 
+> 2.43.0
+> 
+> 
