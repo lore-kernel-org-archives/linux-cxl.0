@@ -1,109 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527C53F105E
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD5D366075;
+	Thu, 27 Aug 2026 20:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787864152; cv=none; b=qxcghsbdFgG1XeOksKrmyfhMBRpCdSaiY/6kekCJrrd9t3LZoKhNIvYrqhlkoGhuI8ibecOrXB98KyUFFHc2IIrPNOl1/8egwmK2LSnnh03XH74fr0s5jOZiNkXadjXtcGMdVZzgfY2nrPyWhbjNKGrvTN55RDQFbdQ49u+bSUU=
+	t=1787864298; cv=none; b=ImliQo9ngzeXlAnSmi3rbOtyLoR6K7O8j0RpZz5dPbET0PSXXEMqxx5Ou0aBD7xHttdWbRYcza0aH3/8+GHY3BIo0i50acpSNjOw/STQcRPH1og2wkD/7u/RPmlUaYnjjjx/nZNyE1wbV1TBbJkSsSVwCWBIm1wul09FHsRJT8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787864152; c=relaxed/simple;
-	bh=OS6ZcfxwS5XoxIe1Wll1loUx+TNcS1g9bT5ERGisVI0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IoW1eP2ltxKhMZWWPL5MdCVNeVpMmvHwEVEKa26oZsNHN1lKJTu5R5kmh3+p3nNNjyUvfEdY2Yim+E1Cm2oZ7qiqBA+8ldnowNbQlorFiLWVMa3++CjsR6N9sQcGKOWuKlQScTMdAyMc2e2ht+0Q0wI6dzKkOiztTzeFtKpv4JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMyQlfHm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787864298; c=relaxed/simple;
+	bh=/TlWKr4McZNs1ASGXrHzvfLJ/Uf1Hj2JbyuuDXtkYbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DNsDNc2LZDWt7kYtIMtdELkMIh9XnqriRHMNwb1jBuch5lkRJZDfxbMc4hXugzEOoUBM8cvrrxsOL4OYpZ5ByYEm7eHwAiHkBm/4Ay+skf5WnjWLQNBKuHAbKeTuRLd0+5eszX6Byib+Md3D1Gmmsg9S6zI8kA9j9MsL5kHnIW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=ZMlXfAyT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aESHjVrn; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMyQlfHm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35261F00A3A;
-	Thu, 27 Aug 2026 20:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787864151;
-	bh=zBYw8RzUa2pgJqOqovZTDCZj60yskZTCPn4ADet/cYs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MMyQlfHmBcf46X8W0qjUnOOxZQuv8rc4vQDJzXj1O05EqMUY5lzkomJo2nFgO6uNh
-	 g7gvCwhlM1LYAWJa/ulcoF2JoIt0W4/XoqxwXrd4A9Su0bOWPfLV5CsJCNBqg1s3ob
-	 PItenAizDcxe/Sw+2Cw0JkNbQrBLZVsogJIqp8na0p93GeQr5nK0EXKLrcUPNKT4I6
-	 aUuQmh0FFPe+e9s4r4u54eEiJKeVeodmAS4dGUXDzRUCYLI4oB6UIPd0kS8wxTaztb
-	 ei9hv4chFZ6WmVLrDG7FweFI3weUhoACRa2+4zlfDODbF3bRuBF7gO98pIB4HAI3p4
-	 F3rsUuN/lTs8A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 04/13] ACPI: extlog: Defer CXL protocol error
- handling to avoid lock inversion
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260827203726.3027541-5-dave.jiang@intel.com>
-References: <20260827203726.3027541-1-dave.jiang@intel.com>
- <20260827203726.3027541-5-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 20:55:50 +0000
-Message-Id: <20260827205550.D35261F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="ZMlXfAyT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aESHjVrn"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 90C221D00147;
+	Thu, 27 Aug 2026 16:58:14 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Thu, 27 Aug 2026 16:58:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1787864294;
+	 x=1787950694; bh=OA0cEuqmAckaSq+6h/IJOeNtvGP1snmO6+q9qzzYAgo=; b=
+	ZMlXfAyTgOldy3c8Xai4i5hvFONRufht8GlHX3oHZsLGzf1mJU5wwXPJV+hz2pRk
+	cFOuw5l6IpNQf4LvnyihmWyIYyq2QRD7fVexrdcjru6Grsfy1J0df6pZ3puVO7A3
+	adPkALX/nGHDeGXrUyt/HbsvAl3N2+WX+o1Fcv930saTl+Bv1BKEe5wX3RthQN2F
+	ySCdowzWzM7IcGd5fzWOdCqCio7tl3eQvOPcsAW4kUKEdT7khRemmZ9XjALwF/2h
+	BwqWyRjFFQObF1jWnGqwzP/+Rfqtevyrnsl5Yk/0XV+P3bd3QliUicvLVscnxD19
+	kNZiDyvtxF2WgPJiYZtmTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787864294; x=
+	1787950694; bh=OA0cEuqmAckaSq+6h/IJOeNtvGP1snmO6+q9qzzYAgo=; b=a
+	ESHjVrnCvk/1eHHB7bczM3QYOiXLPDe1rDvYbGVWidzlnyS2bJRCqd6DkLxR+Cc8
+	rkANGPM5xSmIBxxEPTluxzYJn2KcMPHQaIS/Gz5RCrSweBTKR6V47aUE6pzb8Nin
+	6YQqtJAFYDsEyh546KyufzI/0qKSBDbn6MLV5iRdI8pmuRZ6cTSbwkJw+n88KWSJ
+	6D7FfyO0KfS4j4rBVmBlGxTFSqgHfEssqor07NbWk52mnuLx+M2iZ8gDj4dPwwXF
+	LlFyMWL2ZVal2CMybKgYS2WKjWbp3+WSNamEkvAW/qQ6hZWIzO2OMmFFp/BB1/w7
+	nF5ixTFbrufi+VgEadvZw==
+X-ME-Sender: <xms:5aSQaojeUWmHxJWDpYOZ_PZaHXrOZHprkI8uMLFT5gna4SIwUZgzSg>
+    <xme:5aSQauqqyci5wrblJPatdNdyd9wZdS41rEpXAS5WInJoSVyNlUKOeOGdtyIU2jXCL
+    E0iK-FC_g6qlMLK0EBnSmd8VyqWLHJgeK-KmSM08Mqim9xOHB33DQ>
+X-ME-Received: <xmr:5aSQaneTXPi4mJtBfkt2Fdz-kCxwqkcp7jDutMjJbYfeqX3i-8ykDTvmebZpnA>
+X-ME-Proxy-Cause: dmFkZTGeDunkvp1BFFT1T4/3lfPMwi85rhuTfg+DHrBStwGaAV66WEnFYJCB8LFq0MsKI8
+    6BeCr3nuBhMVV7ksec53XgaRybwClucYOZ82e6dyTVCxaC3OmvvmnsjlNzI8KoXSOsAhC7
+    1qkH4Y1lYrPVWjqC89t9/IOeZY3XZbOpfz0pXJUc4ZlpD3H7KsieqmSuN/lmIfXDDnWaCs
+    r8Ajzm2XNNaJQ2nPl9RQcmUeBzfu0ZH70dk0erzjASgkbuJFjAuaqMGaZicdw3JYmECnN0
+    4K6wikgOp592ilQ8IYN6noOsqm/t5fkMwaFvVkFimm4GhptC1qwuUTNNCUOltUl2jwR5Ql
+    o68g5WbM+WZ0tnHiJmQAhB5dCctjb99+3WJIvalGLAp4b5jEArGXRabdGR4UJXgTBfQRgF
+    BvM6Y9JMItHGyyAov54AZ+B5BHsCdxEU9hacjZ1z8MFpaQQ94uUx/ecYXalpe0cKXpekx6
+    lE/R+Nd2bkXwP1Id/Guk9u66vAd/pz2evweFurFWAL/SawRAzvwetZSWyGkmDphxuHzeC/
+    I7skzzihYmlCYjBjS4odscVlBT/skFKvEvwPt01QZ0qi6BFRdrPWNgaCrBlkM70N4OXERP
+    YAZjwPFDjAYSZZgunJv0KCnxsCjE+0cvvL2bM+MpEoWo/VZzPF93eXuNB/Zg
+X-ME-Proxy: <xmx:5aSQaheAw-FLPQOz_ZMfdG4y7gDUFw6iMFWLc1PLIRtm9t6InMb4KQ>
+    <xmx:5aSQatfrbdbJ1DEQ5y9oeu7-P6hY2yzPZiHo_ZXlES8ulvTUo7peGQ>
+    <xmx:5aSQanoVdM4WnTQRDB2ihU3lw0t7hw9XxmFf6dvhmxBYbky596bJIg>
+    <xmx:5aSQatwLD9YCAromQMZ0M9dGWkjWHGHCY_oFgsGo4NxqvNmO55CqGw>
+    <xmx:5qSQagrrDpITEbhi_3ClZj9L6FyaJTWeT6WXxSKbdGb1O0nkqFx_pNey>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Aug 2026 16:58:11 -0400 (EDT)
+Date: Thu, 27 Aug 2026 14:58:09 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: <mhonap@nvidia.com>
+Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ alex@shazbot.org
+Subject: Re: [PATCH v4 10/27] vfio/cxl: Reject unsupported decoder
+ topologies at bind
+Message-ID: <20260827145809.71bcca71@shazbot.org>
+In-Reply-To: <20260813093631.2288172-11-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-11-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Thu, 13 Aug 2026 15:06:14 +0530
+<mhonap@nvidia.com> wrote:
 
-Pre-existing issues:
-- [High] Missing IRQ disable in work registration functions causes spinlock=
--in-IRQ deadlock with hardirq context.
---
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> The guest drives a single virtual decoder whose memory maps 1:1, so a
+> device with more than one HDM decoder, or an interleaved one, cannot be
+> represented. Turn that assumption into an explicit refusal at bind rather
+> than a silent misprogramming later.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/cxl/vfio_cxl_core.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> index 125e11354a46..7edc53b25576 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -36,10 +36,30 @@ static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
+>  	if (!pdev->hdm)
+>  		return -EPROBE_DEFER;
+>  
+> +	/* The guest drives one virtual decoder; multiple are unsupported. */
+> +	if (pdev->hdm->decoder_count != 1)
+> +		return -EOPNOTSUPP;
+> +
+>  	hdm_size = range_len(&pdev->hdm->settings[0].hpa_range);
+>  	if (!hdm_size)
+>  		return -ENXIO;
+>  
+> +	/* Interleaved decoders are unsupported. */
+> +	if (pdev->hdm->settings[0].interleave_ways != 1)
+> +		return -EOPNOTSUPP;
+> +
+> +	/*
+> +	 * The guest drives resets through the CXL Device DVSEC and polls the
+> +	 * shadow for completion. If the host cannot service a function-scoped
+> +	 * CXL reset (no reset DVSEC, a multifunction device, or no HDM reset
+> +	 * support), that guest request could never complete, so refuse the
+> +	 * device rather than advertise a reset the guest would poll on forever.
+> +	 */
+> +	if (!cxl_reset_capable(pdev)) {
+> +		pci_err(pdev, "vfio-cxl: Unsupported device: host cannot service a CXL reset request\n");
+> +		return -EOPNOTSUPP;
+> +	}
 
-commit 5baac18b0ad945081ea20f4dc8b72f0c31c675a3
-Author: Dave Jiang <dave.jiang@intel.com>
+Why does this particular error deserve such a high priority log while
+we silently fail the other two cases added here?
 
-ACPI: extlog: Defer CXL protocol error handling to avoid lock inversion
+These don't seem particularly noteworthy to split into a separate patch
+versus rolling them into the previous.  I'd probably also group the
+easily testable EOPNOTSUPP errors before we actually start evaluating
+things like the hdm_size.  Thanks,
 
-This commit fixes a lock inversion between the MCE notifier chain rwsem
-and the PCI device_lock by deferring CXL protocol error handling to a
-workqueue. It exports cxl_cper_post_prot_err() from the GHES driver to
-be used by the extlog driver.
+Alex
 
-Link: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.ke=
-rnel.org/
+> +
+>  	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+>  					  PCI_DVSEC_CXL_DEVICE);
+>  	serial = pci_get_dsn(pdev);
 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 3236a3ce79d6b..a382aabf9835e 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-
-[ ... ]
-
-> @@ -777,6 +777,7 @@ static void cxl_cper_post_prot_err(struct cxl_cper_se=
-c_prot_err *prot_err,
->  	schedule_work(cxl_cper_prot_err_work);
->  #endif
->  }
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_cper_post_prot_err, "acpi_extlog");
-> =20
->  int cxl_cper_register_prot_err_work(struct work_struct *work)
->  {
-
-[Severity: High]
-This is a pre-existing issue, but since this patch exports and expands the
-usage of cxl_cper_post_prot_err(), could this lock lead to a hardirq
-deadlock?
-
-In cxl_cper_register_prot_err_work() and
-cxl_cper_unregister_prot_err_work(), the lock is taken without disabling
-interrupts:
-
-    guard(spinlock)(&cxl_cper_prot_err_work_lock);
-
-If a GHES interrupt arrives on the same CPU while this lock is held,
-ghes_irq_func() will process the event and call cxl_cper_post_prot_err(),
-which attempts to acquire the same lock:
-
-    guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-
-Does this cause the IRQ handler to spin forever waiting for the lock held
-by the interrupted process? A similar pattern appears to exist for
-cxl_cper_work_lock in cxl_cper_register_work().
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827203726.3027=
-541-1-dave.jiang@intel.com?part=3D4
