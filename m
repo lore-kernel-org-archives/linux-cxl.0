@@ -1,227 +1,342 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010041.outbound.protection.outlook.com [52.101.193.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4744837F8D6;
-	Thu, 27 Aug 2026 17:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787852693; cv=fail; b=iTnL6zkkzKJvTRMTB5WmhxCza1ktZFjI1kL1h6I4lBDiEb/Ds2IGbRiexNfqt3yjY3kC5z2U0RtRcItQvx1+gSegYnUVbJzGoSVAyf/jWvSXcF//wX9pkZxTHitFi4sJF7/Agg2DVK5mZnXtFJTnBti4RRzGKwTbxUWkWGEm34Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787852693; c=relaxed/simple;
-	bh=gwRB5pt8QYLyYOAK1h++158ZOFcKb2SwSbDhdVK7fzM=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=utnG+gEG0bOaIEluQO4eImsYoo7veS6rv5VeyRV5/EwI4cxXAZm6tp8plfg4jZPjJrvNv1akNpWULoBKh+4A7rTG//i4XOIR6U6LY48AJi+0DNyMNEgDgGazNPwi6wAIlVS15tSyp9VO7ojCaGKEFPY46lHnrng5cBNZ+u15xFI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M4gMEpmp; arc=fail smtp.client-ip=52.101.193.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA02385D86
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 18:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787853859; cv=none; b=OD50xZFUR350SB+PECOv7TqIvUGHOcx2MFduoxf4C49AHQkbD1G+xfGDSIQ7d6V2m98ZmuhmXCGdOX/NYgnnL4b10tRsMJ9covwCibYrG71YozbV2S/z1Ppn8Zdws3QJpzKADEXCOctEYTrP67JzJru7wGorVd0wMvac8TRtcyg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787853859; c=relaxed/simple;
+	bh=o3Oc7rmM9lT7AfEl5LvYKTPYdGrqRUOy6fz+MXd2ZKc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AVfmfkps8pCP/yO9Z53Qg88Z0aB+I8K9fn0ExGx3MwtsaKN4ja/XW8BD5joBrSKb6oRNHJN7PBTHmlLGEiyZ3UhkuRf0RiwSbTcOkYTbH2ndj78RM8gflaKhp8Zn5mUTJjLaaG05COa74KgSPg8/dGZrAkpcBLMLqHaabGdUHV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9puEWvq; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M4gMEpmp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GOhUOvXgBwUjr/AOgbvdbhSy8FGjJ0eniCm2PmRf178zJXCNm+knZFum5beZAl+KGsgONTBaoRSRrl6FFd/FV4AfnwR7fop81UQhVdDtJuVBkxwdBHjrgjBkG4FM1BMj1Cd0P9//qXwhFvsQxOs3zlDFi1NtWY7OQzYBU+FdJfj1EXuhAJlzrnIl3UK4x6n6d/gcMMm4CNRx0oFwNUHnIT9R/yXfQW0YEIX0ZU3ZgVKMsyJuBWWc1u/R8lTQvbH+VIWRZNemGe7Unp/CaSLOy/BSi8xW8SV7Y6b2KpTSMnPKksPJ0JXRSG/3FD3GM9f1UCQelLSIzwRlBuqDKrwWYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bp1LUyaAD/cdHPOVhVgcm4/NybBZWA+QEmAPFRNi9mc=;
- b=EEVjORn+stc/K5G249hG0RR22sNLwiNhQ3aGaVK9tBboRHiiJIsagU0quHvuSWrxj7YCADp9EWw2sgWzUZwG0ssEdIb9v58ikXx68r8IdCMqrHfgkGRi1GJPDBbL3qjQ3TNNYZGjUeaoaLHLA4YqT8fzbbrM/JpXeC8PNGanyY/z/RNIEOBVDa/0wag2oHJzwF3KigFma2IQETefE7cVANVq2e3Uj5622zdTvQ4IIrM4qgFfMKf4uZEWSRlp+VAH5lcGVYUbZwXnXE6C4WJJY2pztTPxQiJFYk/GuCCnm6yUTCbeUmWn3N9gw4OqpfnQA9CJ7jO9hli4v707Ge/8LA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bp1LUyaAD/cdHPOVhVgcm4/NybBZWA+QEmAPFRNi9mc=;
- b=M4gMEpmp53qWRAwLgTFPm3Ps+0SeIBwz7CJWVk4ysXgmsI/huxzvILehqkwrfeG7ctxI9RfyD/kPBIb90tJBMJTmm1f0q2ME7faZByz4tb4T05cYIp+bf7gcKz4PcDl6z0pY2+/FELS+rYVYnKutvtZkS21FqPrgMTd4pFMyGIA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- LVUPR12MB999184.namprd12.prod.outlook.com (2603:10b6:408:3a3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
- 2026 17:44:48 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0360.008; Thu, 27 Aug 2026
- 17:44:48 +0000
-Message-ID: <2a7d2d8c-ff02-4f2f-94d8-21d64dd77f82@amd.com>
-Date: Thu, 27 Aug 2026 18:44:42 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] cxl/memdev: add support for mutipf device
-From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com,
- Alejandro Lucero <alucerop@amd.com>
-References: <20260821155134.260053-1-alejandro.lucero-palau@amd.com>
- <20260821155134.260053-2-alejandro.lucero-palau@amd.com>
- <aov-jfhJtNtZJxlN@MWDK4CY14F> <a313b340-9263-4204-b0b2-bc492cf746a4@amd.com>
-Content-Language: en-GB
-In-Reply-To: <a313b340-9263-4204-b0b2-bc492cf746a4@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0159.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c7::9) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9puEWvq"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38dc69c74b8so371334a91.0
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 11:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787853857; x=1788458657; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=/0XDbj7f6tQ755eLA7AnhMP9ORnA/7/dsePHPY0OVX0=;
+        b=V9puEWvq/rKhy4PCZXv+PN2J1gOHzKf47nXrOSoyaJd3lOfl7pHWv4JxjMjwJ2FEjl
+         9NW3FzOQb9P369470ri2L4jkZkNirRF4n/10KsaS5STohLgWUOm3OAzysjUWte4ov7J6
+         lI9MDoBK3eNHfzQtCex8AM+1VzE8bPvjuIWTwJ5Qd5E5ALTCJFA5uD9ln87HoroMdMdK
+         8dBlhP53GdrkwUUPbvgeYCVUrlnVtxfwqY4vYiSWRevwOIM9O4TcHkxOyz6XL3aLww97
+         TY5caNWpqxZadNcxg17gkH1kuS5TqpPFBOS6mogQf8BhlX0ehc0Ix0YvmPdv77HHqiWv
+         UGTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787853857; x=1788458657;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/0XDbj7f6tQ755eLA7AnhMP9ORnA/7/dsePHPY0OVX0=;
+        b=WHjifp0ZslgpblAbm4WczKOoa6B7PjRVNrHIAaEynGe5KSG/Rywl8+KnccxC8Mlc4S
+         AuxEZv3wp6T0gmgUGIJ2C44CgAl6d2Kw5B0bObpulVH93aTAWH1L5z51oAhXFZrdo/N1
+         AX9qfw71SpiofxrXhRLOW6/GMQYnf1eyz1ncJh6+Ts24CChpLwTRHGyEF9lUZC8q0uVW
+         YUuGahCZQ0ZdNXrbzGaA5bSzFu9r2FJ38CSycl9z9CqLLSle+k+w86lzyIHxUT44vuf3
+         eDt0cZUG1tW8/2COq7SrAyShaE/BVh8ml2uzv052V9YRvelSk0z4IW4vZG/rzeen8tBq
+         ASbg==
+X-Forwarded-Encrypted: i=1; AHgh+RqHMy6GE+BM70hJ1TuN12e0sfide5CGBuCRVzFO6KxFcWonTP0tDN+xEPGchpoBQmfdm120Bsu//2Y=@vger.kernel.org
+X-Gm-Message-State: AFuF++l5Arg1QzmV+VCE9F8LcAtvm9LW8aakpcTX80K/864EDXeGZ8Ya
+	Cx6Ibz2AeBnnq6Xy4Rta51CC7hTYjPGxbkvygYoo//TTjtkxrsSGIR62
+X-Gm-Gg: AR+sD12eN50555kCwyVyes3ebNDjlxa9/fWaQq+wP2FLc9Kg0c/PhIT41FsndNcaimC
+	szhqp25SPwfNmSAQkXvBnd+yyVDbW4ZXoAoT3UGVFizgnyJ2uzlHOuopWUFnmYveKDmHp1brJdf
+	FnuARWptZTViQ8azEDz7OxhegvMcHGWbv8zsHayAZJPTVH8bclxCBhg+kTPK4wCYr00eO3yC08e
+	a2gF2vYI/ZwBICrVIFWBxXrtX9HiUDVJiQ9oMfVbJqj+1gF8qYf8rzMsyxv5yIzhYE8M3dJzpSd
+	YldGm15zlgvHy9WF5rD1MkSbbqxy/sTpo+hGwVMNjEmlnHnZRrJalUSNPkLogccBiGbWNrehwUd
+	AVyjIOSSFu6qObGpJd+pI6+hHaVgnkfuH8vBHT/vYSljNiKldl/+kRQ1upWqYJdtTJxyGhXD/7i
+	GOozGpEgJ8ByfXcXRhC/34RT9TerlyurbnR45cv3Pm3fdzkfwVCB3rX9EOyEz0Uwzmgn4b0d89O
+	Xh6ZctPmoDbmPCy
+X-Received: by 2002:a17:90b:2f0f:b0:380:540:d499 with SMTP id 98e67ed59e1d1-396d0ed0023mr2113371a91.6.1787853857127;
+        Thu, 27 Aug 2026 11:04:17 -0700 (PDT)
+Received: from cxlqual ([220.120.90.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-396b0fd0079sm3787524a91.5.2026.08.27.11.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 11:04:16 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 28 Aug 2026 03:05:20 +0900
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gregory Price <gourry@gourry.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/events: Bound the event log drain loop
+Message-ID: <apB8YCnfiPlIXqkP@cxlqual>
+References: <cover.1787768932.git.anisa.su@samsung.com>
+ <20260826184417.1042-1-anisa.su@samsung.com>
+ <472850c6-0f05-4444-bc09-bd9f513c8838@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|LVUPR12MB999184:EE_
-X-MS-Office365-Filtering-Correlation-Id: f40c5689-3189-40c6-a280-08df0462e3a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|10067099003|6133799003|22082099003|18002099003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	JizKFK0I6z5wrOaFBDY20tPcxPQOLhmYB8k5fPtDjZYC88BLx6ax2QldrYVRIyMGIekULRaqofdTlzp3No9TysHys2xHUPCSt+ssXzPze+MqIxOUT8iqGk5p3Wqgsh7xAshtmofS6VvHZVrwRpby3WS6TQ3dKmcO3a+/ZqrVUCBdcKbYYa01g9hbOyU5uydw21JtRcySOk+vdvPzY6wyIYxw4ajNP+2FOnWfcCT/9ScBm3+83JEysLHshwF9C2sw7JdAQxcT7V7qveIBSgZ0YRTFkGhbOd9t3FEQVeF4GRazQrvgX8P0hQV8aBqCPif2NGNFPgvJkA9i2mLjnkJDXElKSBc1yJTAs443w2CIvisa4wvkKRpdjDOXCO8EofUpWh7oVnK5n7Rt1tGqjOktfbluGZ0lJnLT73sCv4/9K416R0ETgcTvCzBfQ18q51sBnQKIiCLzMU2Iss10a6QxbMXfthfCJZpJtABWdUwDBd2MDCNZZrELrnwom+u7atAHbsykI9uxf06BPcwgMxCpBX+Gsw1sLA4UEcG7vQ9PlQNZc3JWQy8QXQuNSIRfdJcWVOVWhs/kD/yu2EB1Vac/kP/W9woERS/lKiCiLkzOnwGRzhsQ4+efqlVkYgXbedvf1Ty0lE6Ryw/L0yOPSWNCpP6KfXmxer7HjyrWdzGf29w=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(10067099003)(6133799003)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZUNiTG1JOWkxd1lMUG1TQnIvaHhOLzBZUDZHOS9TNHRFaEhUbENwOG5wa0Nt?=
- =?utf-8?B?emsyUDArTlhROHBsL0lNdEsrYTNEbFNiVCtwRTlWTDlOcGo2UVZYT0VpNk5K?=
- =?utf-8?B?Wm9XdHpEcW1JZ2c3RFBRbVdDL0x3bU1TZ2JDS1lHd2p4enBwYlVPeHVkSG11?=
- =?utf-8?B?MDUySkErNGFiVFNRemN4ejdKazJMaTVQZHJRcVpsVWVmc2RiRmNQWmdSWEhH?=
- =?utf-8?B?MkNqWUl1SnZ2N0s5TnN3N1BmSkdYUnBUSE5tM3hVSm53MWNMRnI2TDYrSUJN?=
- =?utf-8?B?MFZEaXZKQVR5bW5HL2FLTWtiSGFzRlBSUlNkQ0Y2T05yU2JqVVQxWG1QVm1R?=
- =?utf-8?B?ZElFWXRzM0F2U3pHcnVqS1JmNnZwaEtwMmFLTWZiaytpS2F0YlBhRTE3QWJv?=
- =?utf-8?B?elFsZ2RCR0xPZHA4Q3NFL2RyVmVSd0QwLzFnK1gwdUNyQ2NPWHhxNDlhcHpE?=
- =?utf-8?B?Y3V1eUVkRkpKZXVTZ0R2SkxOL2ozbFNyYzlwMmhZWG9UQ0lVODdFempwTzda?=
- =?utf-8?B?UjN5N0JtaHlDV0tDQ1d1KzE5Q0ZiTExGY2FGRWtDaUpmN1k1RU11SGI2ZTF6?=
- =?utf-8?B?dlFvTkc3eVNmTGxJMmFsTGxUdXhHUGEveHFTS1NyTHJYUVZ4TlEvakxHVERo?=
- =?utf-8?B?TG9IWlBzbCtwbnVXb1BLbXBMNExMZWh4Um5XeHdYMjVpL1lrRjNYd1o1ekVi?=
- =?utf-8?B?T1U1Z2xOb2o2VzhsNVRDS0lrZjU1UXpIREEzQ3VxR3A3Vnkva2twZWRpNlNv?=
- =?utf-8?B?OUMzRGV1Z2szY3JlL0N2SjFFdS9tMldrUy82NkEySEVtcmRCRDcrRVBxcW1P?=
- =?utf-8?B?ZjQvdkR3Z3ZlcTFmRmFNUFhLV1NSUTVUVVVEWnZXMm1YU1ZKSTNQRUZCR2dW?=
- =?utf-8?B?b2xQSEw2VUhrUDRJWDlmakdZVndIRGpEMDBMUTZ4aHNnRmJnMmtYbzA1MU00?=
- =?utf-8?B?Wm9uS0xXNllyK2JxYXpMRmxpa052aTNGLzdsa1paUFFNQlF3RHNnclVqdjRT?=
- =?utf-8?B?aVJ4bFVwcXhCdWFwaFd2UkU2bmNTams0Y3pYbk91Ukk0cWFQSmR5b1FLc3U4?=
- =?utf-8?B?UnJqcXNDNE1UOUo2RVFWZmN1S3N2c3JXODFXNFkzQkVFaWY4cndsSnZSaXM2?=
- =?utf-8?B?ZzJHVlIrNjR3ZU1qYkkwbFd1L2YxZFhuS3dIZktlRVkxQVI1M3RJOG1IaFN3?=
- =?utf-8?B?Z0o1TkNKRDFQOWQ3RHlMVXh0eElWY0NZMmRlcTlGK3FSb29pWFRxb2pHMitM?=
- =?utf-8?B?K1JnSy9qcjJOdUJ1bzg5Tzd3dkVLakpEeUVnV0hONjJ3RHRVd1h3UjlCazgw?=
- =?utf-8?B?Tklsa1Q4b0ZEZjE5QzFTTUdoOHlCUnlmYTVFOUU2MzZ6MkpLUjJjdnF3STMr?=
- =?utf-8?B?aW02MFZWcDdVWkQzTVdpTnNJNldQaVVXTDVPS2QrZkJXVXgxTjMwd0U3d2lv?=
- =?utf-8?B?RVltRnFINnBtNGh1c0ZYb2NXMTZlQWFFeE9XUlZWYTQyNDBSNzFrMGwyMGd5?=
- =?utf-8?B?d1U1WHZIVWRhdjdHcWtTa2tjcFEwODNLMy9Ud3BRblBhUnRqWVJxemUvV3dm?=
- =?utf-8?B?UEhXLzl6VjVOaVVVcnc4UXJ1Z1c3MHVGOURTU0FRSkZ4Z21DcHdvdUVxM3pF?=
- =?utf-8?B?TUpodmhzS1hCL2srTVErRnJMdzlvc0s3M3FRSEIvQXEzRDdnK0oxdlpHTkNH?=
- =?utf-8?B?L0I4Y3IwR2FCZGJPUjNVQk9jUk5nV1daMkI2TzUvK2drSUovVCtMVFIzUkJE?=
- =?utf-8?B?T3dmTGszUFdPU1dJK2crcmNzYzArMDBzMm9HY0Nsek1SVGg4eDgwcy9DWHFG?=
- =?utf-8?B?cDFNUU9hZFNKalB0MlFkTXZYSWRUbHpQcTdIbnBMZ2ZablJRbVRpdlRsY1VU?=
- =?utf-8?B?YTNWZ2tOejR5RDZ3ZlZzTUE0cFAzcm9yNGllRVlJN0xpVmRhYzc5U2Zudzlr?=
- =?utf-8?B?eFFlcHRmMmdWYTV6dmxQZmZPMEQ2TWdsQS9GeTdWSEhIL1VsWUJIa21FUWJN?=
- =?utf-8?B?OWtnSFVaQytxUVMzUDdWbjV1VDJET0FxZjVRTmxYZGlXNDdRRXdQWmUzRm5a?=
- =?utf-8?B?RU0vVFpIM2JqZlIyYVVUbEVwS2FJdzVQbmMxamJmL3pIV2dwZnZRTE9ya3Br?=
- =?utf-8?B?VVgwdE81ZzZUWVp4ZXJYcWh4RXpJczN2TTdlT3luL3I1QTNrNW8zOEtkUGs1?=
- =?utf-8?B?RjZJS0s1eHZOZWJ6bzM4ZHdJakFSVlhybkoyRWN0bERiVG1KbTZSMkNkMlVD?=
- =?utf-8?B?cUJITnhqN1A5dU5CY3B6cm1mS3QzMWlDQXZHcHJaMUNuRlVISlVLN2ZvMk91?=
- =?utf-8?B?VXFKRWgyaU84ZSthaCszNG5FNEJlallRTk9hT1dwbkRtYm5zdEFadz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f40c5689-3189-40c6-a280-08df0462e3a2
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 17:44:48.4633
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IedUpsMirEUKgoMAojnHSYw0tmO4PWX7lVmimuFHPbzYTfMudK1UJAtfsm/RLBkqLWSGtg74zvaVhisCF49gdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVUPR12MB999184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <472850c6-0f05-4444-bc09-bd9f513c8838@amd.com>
 
+On Wed, Aug 26, 2026 at 04:28:49PM -0500, Cheatham, Benjamin wrote:
+> On 8/26/2026 1:43 PM, Anisa Su wrote:
+> > cxl_event_thread() drains every log named in the Event Status register and
+> > repeats until that register reads zero.  CXL 8.2.9.3.1 Table 8-203 marks
+> > the register RO and leaves clearing it to the device, so a misbehaving device
+> > that leaves a status bit set spins the thread forever, resending
+> > Get Event Records as fast as the mailbox completes.
+> > 
+> > Bound the loop on work completed instead.  cxl_mem_get_records_log() and
+> > cxl_mem_get_event_records() report failures and which logs returned
+> > records; the thread stops on the first error and drops any log whose status
+> > bit was set while it returned nothing.  Every pass either drains a record
+> > or clears a bit from the mask, so the loop terminates whatever the device
+> > reports.  Logs are drained best effort, so a broken one does not suppress
+> > reporting from the rest.
+> > 
+> > Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> > ---
+> 
+> One nit below, but looks good to me regardless so:
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> >  drivers/cxl/core/mbox.c      | 58 ++++++++++++++++++++++++++++--------
+> >  drivers/cxl/cxlmem.h         |  3 +-
+> >  drivers/cxl/pci.c            | 39 +++++++++++++++++++-----
+> >  tools/testing/cxl/test/mem.c |  4 +--
+> >  4 files changed, 81 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 7c6c5b7450a5..5954ba20f0be 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -1059,8 +1059,8 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+> >  	return rc;
+> >  }
+> >  
+> > -static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> > -				    enum cxl_event_log_type type)
+> > +static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> > +				   enum cxl_event_log_type type, bool *drained)
+> 
+> Nit: Could this get renamed from "drained" to "got_records"? You use that name below when calling
+> this function and there's a bit of overloading of the name drained in this call path that makes
+> it a tad confusing.
+> 
+Yeah sure! Sorry I'm terrible at naming vars...
 
-On 25/08/2026 08:37, Lucero Palau, Alejandro wrote:
->
-> On 24/08/2026 09:33, Richard Cheng wrote:
->> On Fri, Aug 21, 2026 at 04:51:33PM 
->> +0800,alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero<alucerop@amd.com>
->>>
->>> A PCI device can present multiple Physical Functions(PFs) but the CXL
->>> specs restrict to the first one, PF0, the discovery and management of
->>> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
->>> obtain the CXL.mem range to work with somehow.
->>>
->>> Although this could be handled internally by an accelerator/Type2
->>> driver, it requires to properly handle changes to the CXL mem device,
->>> mainly its release by the CXL core, but also potential CXL device
->>> resets. When this release happens, those other PFs need to be told 
->>> about
->>> it.
->>>
->>> Implement a way for non-PF0 PFs to register/unregister to the memdev
->>> linked to the PF0 device. At memdev release, trigger the release of
->>> those non-PF0 PFs devices registered to such memdev from the driver 
->>> they
->>> are bound to.
->>>
+> Thanks,
+> Ben
 
-<snip>
-
->> I suggest replacing cxl_get_pf0_memdev() and cxl_put_pf0_memdev() 
->> with another
->> helper, e.g.:
->>
->> int cxl_memdev_link_consumer(struct device *pf0, struct device 
->> *consumer, struct range *range);
->>   It should live in cxl/core/memdev.c , and the behavior is something 
->> like
->>
->> 1. Find PF0's memdev and take a temp ref.
->> 2. Lock the memdev
->> 3. Verify that the memdev is still registered, driver-bound, 
->> attached, and has a valid HPA range
->> 4. Create a managed devce link via device_link_add(consumer, 
->> &cxlmd->dev, DL_FLAG_AUTOREMOVE_CONSUMER);
->
->
-> Interesting approach.
->
->
-> Not sure this could do the proper thing though. 
-> DL_FLAG_AUTOREMOVE_CONSUMER seems to remove the link, cxlmd->dev in 
-> your case, when consume driver unbinds ... but it is the other way 
-> what we need. Maybe I do not understand well all the implications with 
-> this approach, so let me study it.
-
-
-I'm having problems just trying to implement the supposedly basic 
-functionality linking the cxlmd device with the non-PF0 device, I mean 
-without thinking about potential races with this approach (I think it 
-has less problems in this regard than my approach).
-
-
-I can use DL_FLAG_AUTOREMOVE_SUPPLIER with the supplier being 
-cxlmd->dev, so at device unbinding it can trigger the non-PF0 device 
-unbinding as well. But it seems all this link code is quite related to 
-PM, so some checks at link creation fail. I have tried using 
-DL_FLAGS_SYNC_STATE_ONLY along with the previous one, but another check 
-precludes the link creation if both are used (See 
-device_link_flag_is_sync_state_only() ).
-
-
-Do you have any advice here?
-
-
->
-> Thanks!
->
->> 5. Copy the HPA range
->> 6. Unlock the memdev and drop the temp ref
->>
->> This helper can return only an error code and the range. The sfc 
->> driver doesn't need the cxl_memdev pointer then, and
->> no put helper would be needed.
->>
->> And driver core would unbind the non-PF0 consumer before unbinding or 
->> removing the supplier ( memdev ).
->>
->> I think this can remove the sibling xarray , raw device pointers and 
->> mutex_trylock() context check.
->>
->> Would this modle work for your teardown requirements ?
->>
->> Best regards,
->> Richard Cheng.
+Thanks,
+Anisa
+> >  {
+> >  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> >  	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> > @@ -1068,12 +1068,15 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  	struct cxl_get_event_payload *payload;
+> >  	u8 log_type = type;
+> >  	u16 nr_rec;
+> > +	int rc = 0;
+> > +
+> > +	*drained = false;
+> >  
+> >  	mutex_lock(&mds->event.log_lock);
+> >  	payload = mds->event.buf;
+> >  
+> >  	do {
+> > -		int rc, i;
+> > +		int i;
+> >  		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> >  			.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+> >  			.payload_in = &log_type,
+> > @@ -1094,6 +1097,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  		nr_rec = le16_to_cpu(payload->record_count);
+> >  		if (!nr_rec)
+> >  			break;
+> > +		*drained = true;
+> >  
+> >  		for (i = 0; i < nr_rec; i++)
+> >  			__cxl_event_trace_record(cxlmd, type,
+> > @@ -1112,31 +1116,59 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  	} while (nr_rec);
+> >  
+> >  	mutex_unlock(&mds->event.log_lock);
+> > +
+> > +	return rc;
+> >  }
+> >  
+> >  /**
+> >   * cxl_mem_get_event_records - Get Event Records from the device
+> >   * @mds: The driver data for the operation
+> >   * @status: Event Status register value identifying which events are available.
+> > + * @drained: Optional mask of the logs in @status that returned records.
+> >   *
+> >   * Retrieve all event records available on the device, report them as trace
+> > - * events, and clear them.
+> > + * events, and clear them.  Every log named in @status is drained even if
+> > + * another one fails, so that a broken log does not suppress reporting from
+> > + * the rest.
+> > + *
+> > + * Return: 0, or the first error encountered.
+> >   *
+> >   * See CXL rev 3.0 @8.2.9.2.2 Get Event Records
+> >   * See CXL rev 3.0 @8.2.9.2.3 Clear Event Records
+> >   */
+> > -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
+> > +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> > +			      u32 *drained)
+> >  {
+> > +	static const struct {
+> > +		u32 status;
+> > +		enum cxl_event_log_type type;
+> > +	} logs[] = {
+> > +		{ CXLDEV_EVENT_STATUS_FATAL, CXL_EVENT_TYPE_FATAL },
+> > +		{ CXLDEV_EVENT_STATUS_FAIL, CXL_EVENT_TYPE_FAIL },
+> > +		{ CXLDEV_EVENT_STATUS_WARN, CXL_EVENT_TYPE_WARN },
+> > +		{ CXLDEV_EVENT_STATUS_INFO, CXL_EVENT_TYPE_INFO },
+> > +	};
+> > +	int ret = 0;
+> > +
+> >  	dev_dbg(mds->cxlds.dev, "Reading event logs: %x\n", status);
+> >  
+> > -	if (status & CXLDEV_EVENT_STATUS_FATAL)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
+> > -	if (status & CXLDEV_EVENT_STATUS_FAIL)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FAIL);
+> > -	if (status & CXLDEV_EVENT_STATUS_WARN)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
+> > -	if (status & CXLDEV_EVENT_STATUS_INFO)
+> > -		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
+> > +	if (drained)
+> > +		*drained = 0;
+> > +
+> > +	for (int i = 0; i < ARRAY_SIZE(logs); i++) {
+> > +		bool got_records;
+> > +		int rc;
+> > +
+> > +		if (!(status & logs[i].status))
+> > +			continue;
+> > +
+> > +		rc = cxl_mem_get_records_log(mds, logs[i].type, &got_records);
+> > +		if (got_records && drained)
+> > +			*drained |= logs[i].status;
+> > +		ret = ret ?: rc;
+> > +	}
+> > +
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
+> >  
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index ed419d0c59f2..cb5372eb2d85 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -803,7 +803,8 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> >  				unsigned long *cmds);
+> >  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> >  				  unsigned long *cmds);
+> > -void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
+> > +int cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status,
+> > +			      u32 *drained);
+> >  void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >  			    enum cxl_event_log_type type,
+> >  			    enum cxl_event_type event_type,
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 267c679b0b3c..3daf17835c06 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -514,21 +514,46 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+> >  	struct cxl_dev_id *dev_id = id;
+> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
+> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> > -	u32 status;
+> > +	u32 mask = CXLDEV_EVENT_STATUS_ALL;
+> > +
+> > +	while (mask) {
+> > +		u32 status, drained, stuck;
+> > +		int rc;
+> >  
+> > -	do {
+> >  		/*
+> >  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
+> >  		 * ignore the reserved upper 32 bits
+> >  		 */
+> >  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
+> > -		/* Ignore logs unknown to the driver */
+> > -		status &= CXLDEV_EVENT_STATUS_ALL;
+> > +		/* Ignore logs unknown to the driver, and logs given up on */
+> > +		status &= mask;
+> >  		if (!status)
+> >  			break;
+> > -		cxl_mem_get_event_records(mds, status);
+> > +
+> > +		/*
+> > +		 * A failed drain leaves the log's status bit set, so another
+> > +		 * pass would resend the same query forever.
+> > +		 */
+> > +		rc = cxl_mem_get_event_records(mds, status, &drained);
+> > +		if (rc)
+> > +			break;
+> > +
+> > +		/*
+> > +		 * The Event Status register is device owned and read only, so
+> > +		 * it cannot bound this loop; records read can.  A device that
+> > +		 * leaves a bit set with an empty log makes no progress, and
+> > +		 * only the device can clear that state, so stop polling that
+> > +		 * log rather than spin on it.
+> > +		 */
+> > +		stuck = status & ~drained;
+> > +		if (stuck) {
+> > +			dev_warn_once(cxlds->dev,
+> > +				      "Event status %#x set with no records to read\n",
+> > +				      stuck);
+> > +			mask &= ~stuck;
+> > +		}
+> >  		cond_resched();
+> > -	} while (status);
+> > +	}
+> >  
+> >  	return IRQ_HANDLED;
+> >  }
+> > @@ -682,7 +707,7 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> > +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+> >  
+> >  	return 0;
+> >  }
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index a7da279aa3ef..87e01612cea9 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -372,7 +372,7 @@ static void cxl_mock_event_trigger(struct device *dev)
+> >  			event_reset_log(log);
+> >  	}
+> >  
+> > -	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
+> > +	cxl_mem_get_event_records(mdata->mds, mes->ev_status, NULL);
+> >  }
+> >  
+> >  struct cxl_event_record_raw maint_needed = {
+> > @@ -1805,7 +1805,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+> >  	if (rc)
+> >  		dev_dbg(dev, "No CXL FWCTL setup\n");
+> >  
+> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> > +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL, NULL);
+> >  	cxl_mock_test_feat_init(mdata);
+> >  
+> >  	return 0;
+> 
