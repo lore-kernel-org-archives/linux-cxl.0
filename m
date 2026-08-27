@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CBC36A03A
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2348631E832
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 20:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787864002; cv=none; b=o6XA4FxllwEsjM5RhjxuCn6Bgo64APdQC9qFn6Tw91UwQE3n/bXwxEmnuhukafL30PqczNfmUUTLqcudyhQ3qK/BlOkw/oVfnVr7g7U2NYqQKSvLahDBsatx8PIU2afOIJdjtfyNiY0EGaWWogsLLM506UNHnN4yifVUqiOMysg=
+	t=1787864130; cv=none; b=MPzVN1IX8JINAp0D27bMyN8eEXZqGsD0YaIXP3uyG46Ul4R/EH6UWXEfJXP67gDQvq6E3QoJg6TYAiRlqgmuQP/EOFro9ejAHWrFSqEmbmblSYFZ6Zpe+y5uifbgXd0patfaupfyM+OJZ76CVAi9Mmfl/3qK/0H3Btfs/cCGOK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787864002; c=relaxed/simple;
-	bh=OyauVABQshqHgqHMeet0hUoXCtuuZOb/w8zgR9gRY8Y=;
+	s=arc-20240116; t=1787864130; c=relaxed/simple;
+	bh=kbsXIljuJtWPKpagRtZjubz796+iG82GELXFUMTVIEg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cGITWGI6/saT8m4zHm+sJPy+e18rJUw3uNEJHFO4rc6wwueQbh5Ngamb4NqfdjUjHpv2gwQZ3CTpLYU2kkcyZ0y7c0D4Gl4jrmxi+xV+Qwq669wJv0zGWilEbqKuiS5RGnRJmALpKLdDzSQiKeqN3Wx4KEclB2aAb0RXKhD2KMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYsOlIic; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=G8c2rJ8UKoqVsBzEX6zrTSHLyxtV2ossZLZI503RFKj7Cn7PWvSpW3DNVEdRXI7jJD49OIDLJMRddprzOd2O4q8xe2A5tccujF4NFE7lq0tRc+qmSBcAJE0rfGxKcmTCNdYy2IYeztXRQzrwfKWG2xUzuwBPjwj6U8zcfUslXkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtM/ItkL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYsOlIic"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5974D1F000E9;
-	Thu, 27 Aug 2026 20:53:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtM/ItkL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4ADA1F000E9;
+	Thu, 27 Aug 2026 20:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787864000;
-	bh=nl4ovJ7RDoVmBE+bLGzJ/15eFpkuCIVR4Uj+pQRqLW4=;
+	s=k20260515; t=1787864129;
+	bh=QJx59hXbSLPW895+u9akbXhhEF2wzqhuhrSefN5hkwI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UYsOlIicqUawVZzavuStWiogBQ/WmrhX9KfG+q1nVsRL4//PkaKlIAIrp7V3QHiym
-	 zDL3m2AYcwqNSi4xIXGWykTANZaw2XytHi8/SeBJ5nhYq46nRyjH5E25WoVLjy6cxi
-	 ztdd6bLgDyqn8/OWby38HAoouUMvuBWeL3ZE1i7pbcAFtV5F/pGKY2Bn08lPe4H7La
-	 QwWmG90I3JudkUxg7wZplXpEAKSN+SD14IiL6s9j/0QsyzhlTB5HcmmdMIux1qEFac
-	 WCeHrcjzxdJpJivU5fVqPDJwz2EsrlmqYMg2Uk4uiG9y7LzonXoCTkO+lahLLVhDF0
-	 MdeBWdraU7UBw==
+	b=EtM/ItkLJc79Xu4X9UKn+i4nroKSqhM+3ArWX1qhROTCDAWiUQT6uA2JScqmiasaw
+	 YbNn/bUT+hK0Y6vjf5oFp/beQlZgEQYZX5NtezYHWsXf1F4p5wK+WpMW22KqurWcWS
+	 UADPQPBmUBYRvlmMizJr4L8py89cQADsN5FBHU169MUHk16/yQ3K5uqMkctQDhGpz8
+	 M+GFDu5V2WlxoZM4UZIxh9QDhDTnmW4yD6ZArPm0mjQeRXl7SbCaY+dohNtmfr6M/J
+	 vkTh0aP/Y2RpzKADm6ZeptrK0l0ZpkJ9DvyJZ+Go8gGj6GyYYHeXw4aF7Z/lIzG0NQ
+	 /sFfnQWQS6Dfg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 09/13] ACPI: APEI: GHES: Validate CXL protocol error
- section length before RAS cap copy
+Subject: Re: [PATCH v5 08/13] ACPI: APEI: GHES: Bound CXL event record copy
+ to the firmware section length
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260827203726.3027541-10-dave.jiang@intel.com>
+In-Reply-To: <20260827203726.3027541-9-dave.jiang@intel.com>
 References: <20260827203726.3027541-1-dave.jiang@intel.com>
- <20260827203726.3027541-10-dave.jiang@intel.com>
+ <20260827203726.3027541-9-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 20:53:19 +0000
-Message-Id: <20260827205320.5974D1F000E9@smtp.kernel.org>
+Date: Thu, 27 Aug 2026 20:55:28 +0000
+Message-Id: <20260827205528.C4ADA1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,73 +49,68 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Potential deadlock because `cxl_cper_prot_err_work_lock` is acquir=
-ed in process context without disabling hardware interrupts.
+- [High] Potential AB-BA deadlock due to missing IRQ disablement when acqui=
+ring spinlocks shared with hardirq context.
 --
 
-commit 1416c4f9e4b0f4dc84b6e812f70c5f34a5255acc
+commit 5c5cd12a22557cc71932382234f47a7a0364bb43
 Author: Dave Jiang <dave.jiang@intel.com>
 
-ACPI: APEI: GHES: Validate CXL protocol error section length before RAS cap=
- copy
+ACPI: APEI: GHES: Bound CXL event record copy to the firmware section length
 
-cxl_cper_setup_prot_err_work_data() locates the RAS Capability block using =
-an
-unvalidated firmware-controlled length, which can point the copy outside the
-section. This commit extends cxl_cper_sec_prot_err_valid() to check that the
-section can hold the header, DVSEC, and RAS Capability block within the rep=
-orted
-section length.
+cxl_cper_post_event() copies a fixed sizeof(struct cxl_cper_event_rec)
+out of the firmware CPER section without checking how long the section
+actually is. This patch passes the section length in and rejects sections
+too small to hold the record before the copy.
 
 Link: https://sashiko.dev/#/patchset/20260617-topics-ahmtib01-ras_ffh_arm_i=
 nternal_review-v6-0-91f725174aa0@arm.com?part=3D6
-Link: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.ke=
-rnel.org/
-
-[ ... ]
 
 > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index e5f8dbd17017e..b8dbd99da47ef 100644
+> index a382aabf9835e..e5f8dbd17017e 100644
 > --- a/drivers/acpi/apei/ghes.c
 > +++ b/drivers/acpi/apei/ghes.c
-> @@ -753,12 +753,12 @@ static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
->  struct work_struct *cxl_cper_prot_err_work;
+> @@ -816,10 +816,15 @@ static DEFINE_SPINLOCK(cxl_cper_work_lock);
+>  struct work_struct *cxl_cper_work;
 > =20
->  void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> -			    int severity)
-> +			    int severity, u32 len)
+>  static void cxl_cper_post_event(enum cxl_event_type event_type,
+> -				struct cxl_cper_event_rec *rec)
+> +				struct cxl_cper_event_rec *rec, u32 len)
 >  {
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
->  	struct cxl_cper_prot_err_work_data wd;
-> =20
-> -	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +	if (cxl_cper_sec_prot_err_valid(prot_err, len))
->  		return;
-> =20
->  	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does acquiring this lock in
-hardirq context cause a potential deadlock?
+This is a pre-existing issue, but does the locking strategy here expose the
+kernel to a potential deadlock?
 
-If the module initialization thread executes cxl_cper_register_prot_err_wor=
-k()
-(or unregister) in process context, it acquires cxl_cper_prot_err_work_lock
-with interrupts enabled:
+cxl_cper_post_event() and cxl_cper_post_prot_err() execute in hardirq conte=
+xt
+(e.g., via ghes_proc_in_irq() or ghes_irq_func()) and acquire
+cxl_cper_work_lock or cxl_cper_prot_err_work_lock.
 
-drivers/acpi/apei/ghes.c:cxl_cper_register_prot_err_work() {
-    ...
-	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-    ...
-}
+However, the registration functions in drivers/acpi/apei/ghes.c such as
+cxl_cper_register_work(), cxl_cper_unregister_work(),
+cxl_cper_register_prot_err_work(), and cxl_cper_unregister_prot_err_work()
+execute in process context and acquire these same spinlocks using
+guard(spinlock), which expands to spin_lock() and does not disable local
+interrupts.
 
-If a GHES hardware error interrupt fires on the same CPU, executing
-ghes_do_proc() -> cxl_cper_post_prot_err(), it will attempt to acquire the
-same lock here using guard(spinlock_irqsave).
+If a CPU executing one of these registration functions is interrupted by a
+hardware error IRQ while holding the lock, the interrupt handler will attem=
+pt
+to acquire the exact same lock in cxl_cper_post_event() or
+cxl_cper_post_prot_err(), resulting in an immediate deadlock.
 
-Would it spin forever waiting for the interrupted process context to release
-the lock?
+Should the registration functions use guard(spinlock_irqsave) instead of
+guard(spinlock) to prevent this?
+
+>  	struct cxl_cper_work_data wd;
+> =20
+> +	if (len < sizeof(*rec)) {
+> +		pr_err(FW_WARN "CXL CPER section too small (%u)\n", len);
+> +		return;
+> +	}
+> +
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827203726.3027=
-541-1-dave.jiang@intel.com?part=3D9
+541-1-dave.jiang@intel.com?part=3D8
