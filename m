@@ -1,137 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08470385D6A
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Aug 2026 21:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DED4346AFB;
+	Thu, 27 Aug 2026 21:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787864706; cv=none; b=LoCFdQloSA/jy+Vb9BLJu9QEvJbMIzX/IS5ysxhewCuwyGwySl2OD988CCN13Ze0TcZSxnjo9zGE/3XZld0vEZwasPdmPF8ztg4hVGkFGGSaKR/w4qP80SnjzIHmbxZKAoURSRCuVad/H0BNX7/08J6HKDR2e1kmLgB2UN3HpXw=
+	t=1787865191; cv=none; b=ODDr2lVyMllf8wtKQxS1N87wJRHk7YtDEvtSPMAjIOCzZPOeQM1kh4UGQQ73fFekMwyhWuOZ7ql+zkNa9u0uzQ+sGXEVZ2ujTheuer9mPpHSd0pGy5cIzcGRgpFlT1AlwobZ8tIgZl3xIUBQblisQglxtoaA13EuoMBWKQ/dNEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787864706; c=relaxed/simple;
-	bh=PcIjtj2yzgb6Pz/qNupM3bkI6ZE5R3ksnbO/18hbYic=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=opoqYsmj2zIUjgwBIcPOhbzVRJY9svm/xCIJpwuZoejvplPP8xMYk/sxijTPNauC08SGtgyODL9d+gsvfW4wqbFgN+f96pfZ2qI0DcgSg1SmwfozQJPy1/q5Uc9Jaaka/oAS3mb5SGLDupCjnYh5389YKGMGRjB/RdaYfNoo9S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3JnNqgx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787865191; c=relaxed/simple;
+	bh=S+fgmtzinaMT6PC/6Y/Opgh/LZ0E7mbntIY/+N5AQ+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fIOv195+M5OZerXTsMgVGvKQqYYE0NzHkz9YSxg/KIUMMwjI6TJgJVeZKAdhvwBN9t5q79V6LzM6EYgndVx/276v1bbO4fL1+bOtSacYW/iBmhCOMzhzUZO8wZ4XGgsWeqR/Qp/UJu5OHAavqx060KB3lQY5CnWZk1Xb+JbU5Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=u+3DkoIe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YYIpjhlR; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3JnNqgx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673A81F000E9;
-	Thu, 27 Aug 2026 21:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787864704;
-	bh=OmrYEHzMNqLbU+hMzcxl8F0ktJba5xn12Po28f0xZoc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=J3JnNqgx3wpa2vXogQR3g1F+2n7A7hSDJLsdJ+UiPnDNAkSfgRujx7IvCpsNxDmPa
-	 PbITvvjSL6IH4blztiIPec4q6opmw6B+ArGnj4LLhkiERGqFV2TajDZ2sgiI2tsamw
-	 fGOOuOyef699uexDC7tDUd3BhGthT6cjeZvRwGuRyMsT/+RTRVO60K0Ptsfa+ur2qC
-	 xCZtHfJ9tDlAofgjfHmmCymgInK+26yldkPghhtxOwqT6es3D807P8Gq40rsnJsEWD
-	 /phbsAUM2T/iSkeBi3/fSOJkkj3LSrBhUfxV3ujCjCcVqMeU1Jz70blE8Ozw4SMPs/
-	 moVaRfSfRXgZg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 11/13] ACPI: APEI: GHES: Validate memory error
- section length before payload access
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260827203726.3027541-12-dave.jiang@intel.com>
-References: <20260827203726.3027541-1-dave.jiang@intel.com>
- <20260827203726.3027541-12-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 21:05:03 +0000
-Message-Id: <20260827210504.673A81F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="u+3DkoIe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YYIpjhlR"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D0C877A016D;
+	Thu, 27 Aug 2026 17:13:07 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 27 Aug 2026 17:13:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1787865187;
+	 x=1787951587; bh=LptqgxJzL5yMM8ZmtUBx2wOHsHw6ZM/5+3kHAKDP8/k=; b=
+	u+3DkoIeRgC5MaDtAVLw1+8rAclL1XUYyhj6gqLmeQOVQV1KcliwG0/nQYTBYQRZ
+	iOpLzi31qFbNevL2+rYwq5ynz1bHvP1yswmNNiIlc3ng4BuBN6B7wGnZJ2RV1cQg
+	+/pu9Kn0rwwg13yRl7bAiB0cZ7Je87vvaDIR9KAw3bz2HdYt1zWi2gCIB3Iu7wiC
+	o+EN590kIFZ3FoGfy8I0peYvV4NoNK97mKmpW3AXR3YuZ9XITeaoBVn7TTxYYdzN
+	3Fn2AQTTJpz0owdxBlQWn37DWTWXvIhT12XAwcVLweylivhDDNoC8lFk5NpP9BRJ
+	3C++ptD1ZT8y+2giMJFnBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787865187; x=
+	1787951587; bh=LptqgxJzL5yMM8ZmtUBx2wOHsHw6ZM/5+3kHAKDP8/k=; b=Y
+	YIpjhlRIf3LWT6a4+s9fu4MABtO1lKEbO3EKcCz2GDthH5PPtiYLGga3xPGI4mib
+	lYH2KK5LrdMmSAeYYXzvrQX5NZR7qlHdkWpdUCku4GqKlby1aFKk327iEkxcoZMO
+	2u+o9/Hzq7eZB9yie1w0I+Q3uEwQJRV+PB2ebgT3ZI1WqfO5N48H/0eoYS6HvA4z
+	flDW4tJbmQW9EDW+L9ymgWGeCTs2sL6m19coT923pI/bv6UQiheWr70d2bb56Z8s
+	vc1EjNnE/5OVEm+m9iBV0h4XsW1/mrEnPNwc9MGcyrXbi+2dKPmg4zEGyTMZiLKx
+	X0wZPCrkZ+a9mpmkS9lkA==
+X-ME-Sender: <xms:Y6iQaps6FCeqHQfwG4KeqhrZ2yrwhaWALVDEKCx5vUA-tkc7hCyDqA>
+    <xme:Y6iQagHxx44NZn4Nw_E9fndcI7becgmARf0Vcp_fQ4BUQ_fcWg2SseWbzklKcwa5q
+    14ofCl2Kky9TqnX4aM6bRjKtStWLN2-Y3hwDrUKOuHBnJenpY198Q>
+X-ME-Received: <xmr:Y6iQakIVzUcHkd-ccRCo8BRi6Lw3G9U-EMCIobgjJolZWacuCoMknearj2zMkQ>
+X-ME-Proxy-Cause: dmFkZTFD7fpP5X+zSXO8wgY+6E+tPLtVbuxfzuaraYC70hiVdeQTS49GSMwpZxKEt3Jxdi
+    MG3tqiD+p58SyXN3LKDuWSHN3lirClEsO8vmSYt5rOqUvdtWCvyFveYmFGn1lrFS8CbeHO
+    0Uuq0cif66UGUwt853Q7AXXNjBN7dHr+3FH63ViK/VogHAWZBiA4oHxPim/bVJITaMSvqz
+    Alyhucf5+06WR+ebrdkwzR96Bvcc/xOz5DeOAUsOOdogDAh7vrHlvoTtwbsR2Ks1Js51sZ
+    J2ab9Zb7x5jIPy8uPMGQ29o+nwJodyUg87mfxK0JDYhbHXB8p3xkFAANyRSJrGtTfqqZEx
+    zDgosAnq0XE2QvLA5INdGP/kJjsAb44yFW3XG0eQtHgM0DVm9Mi5P5zS/sT9/l3Hcb5K/o
+    I0kkepkWmdYAnhgWTvLjZJnggkR2TaSVVbFv6KdMLnQxpDANguFoKh0/bC2yp1X5Je9U+g
+    5KWYX/e9NQmmlosfS3jQ0JmHhmRzTd2U1kvTmI+H5ZI6+Jhm04LvNSGF9kt62EwBMK0X9o
+    0ZYtA03US6m3MMMHYQ07aYVFRD7mI3LyTGZDV0DtQwdIex6b5sW8x9ta+eu4nAzwk/zwmw
+    qwFg8BGBXwjE3TCSuEqFzibT9KUNusKj3hcdoMP8FnlEHWFuJW5pxl+aH8ZA
+X-ME-Proxy: <xmx:Y6iQaoYla3rDBva7p-4FtMiswCRAsmbjz1NePWWD2TZUNl9MWRrYNA>
+    <xmx:Y6iQahoWxTgAysoGz-yyDBjjdwoVrFvvmdR-hl2tlmw1qPiOQh813w>
+    <xmx:Y6iQagFGTQ0lCrf0MM57JC5sC3X1yuqCaKGMr5NpqDPSa3ZHhSe8Wg>
+    <xmx:Y6iQalf_lYhoJpXa8SxturcUDr5aZ_unApHJvyHH3_p_bzMMPrV3NA>
+    <xmx:Y6iQataMyPJWFdAROFggImjPu2BN-NM0fT5oLC1hZCRZn3eUlQP-F7Ll>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Aug 2026 17:13:04 -0400 (EDT)
+Date: Thu, 27 Aug 2026 15:13:03 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: <mhonap@nvidia.com>
+Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ alex@shazbot.org
+Subject: Re: [PATCH v4 11/27] vfio/cxl: Own the whole component register BAR
+Message-ID: <20260827151303.5b34ef3b@shazbot.org>
+In-Reply-To: <20260813093631.2288172-12-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-12-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Thu, 13 Aug 2026 15:06:15 +0530
+<mhonap@nvidia.com> wrote:
 
-Pre-existing issues:
-- [High] The patch identifies but fails to fix an out-of-bounds read vulner=
-ability in `cper_print_mem()` and `cper_mem_err_pack()` when handling malfo=
-rmed memory error sections.
---
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> devm_cxl_probe_mem() maps the component registers through the CXL core.
+> By default the core claims each HDM/RAS sub-block, which then collides
+> with the full-BAR request that vfio-pci makes when the guest opens the
+> device.
+> 
+> Discover the component registers into the device reg_map and pass
+> bar_owned to cxl_pci_setup_regs(), so the core maps the sub-blocks
+> without claiming them and vfio-pci owns the whole BAR.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/cxl/vfio_cxl_core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> index 7edc53b25576..966b7c22a6ac 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/range.h>
+>  #include <linux/vfio_pci_core.h>
+>  #include <cxl/cxl.h>
+> +#include <cxl/pci.h>
+>  
+>  /**
+>   * struct vfio_cxl_state - per-device state for a vfio-cxl device
+> @@ -70,6 +71,16 @@ static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
+>  	if (!cxl)
+>  		return -ENOMEM;
+>  
+> +	/*
+> +	 * vfio-pci requests the whole component BAR when the guest opens the
+> +	 * device. Declare the BAR owned so the CXL core maps the HDM/RAS
+> +	 * sub-blocks without claiming them and that request does not collide.
+> +	 */
+> +	ret = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> +				 &cxl->cxlds.reg_map, true);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = cxl_set_capacity(&cxl->cxlds, hdm_size);
+>  	if (ret)
+>  		return ret;
 
-commit af698921ff589a7f79e6f852052dbc3da7191b73
-Author: Dave Jiang <dave.jiang@intel.com>
+Previous comments on patch 2 suggest a different interface here, but do
+note that cxl_pci_set_regs() can return -EPROBE_DEFER and if we do
+actually want to defer the probe (until when?) we'd need to split this
+errno out as a legitimate probe error case versus the fallback mechanism
+for other errnos.  Thanks,
 
-ACPI: APEI: GHES: Validate memory error section length before payload access
-
-ghes_do_proc() hands the CPER_SEC_PLATFORM_MEM payload to the report chain,
-arch_apei_report_mem_error() and ghes_handle_memory_failure() without
-checking gdata->error_data_length. All three read validation_bits and
-physical_addr, at offsets 0 and 16, so a shorter section reads past the
-record.
-
-Check the length once in ghes_do_proc(), before any consumer runs. Take the
-73-byte struct cper_sec_mem_err_old as the floor: older firmware
-legitimately emits that UEFI 2.1/2.2 layout, and it makes validation_bits
-safe to read.
-
-Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
-ntel.com?part=3D7
-
-> The fields from "extended" on are absent from that layout, so also require
-> whatever length the validation bits claim. Derive it per field rather than
-> demanding the full 80 bytes: rank needs only 76, and the BANK_GROUP and
-> BANK_ADDRESS bits describe "bank" at offset 38, which every record carrie=
-s.
-> Testing the whole mask against one size, as cper_print_mem() does, gets it
-> wrong both ways.
-
-[Severity: High]
-This is a pre-existing issue, but since the commit message notes the flaw in
-cper_print_mem(), should this patch also fix the out-of-bounds read there?
-
-A CPER memory error record containing a CPER_SEC_PLATFORM_MEM section with a
-length between 74 and 79 bytes and CPER_MEM_VALID_MODULE_HANDLE set can tri=
-gger
-an out-of-bounds read of up to 6 bytes.
-
-When cper_estatus_print_section() in drivers/firmware/efi/cper.c processes =
-such
-a record:
-
-drivers/firmware/efi/cper.c:cper_estatus_print_section() {
-...
-		if (gdata->error_data_length >=3D
-		    sizeof(struct cper_sec_mem_err_old))
-			cper_print_mem(newpfx, mem_err,
-				       gdata->error_data_length);
-...
-}
-
-It calls cper_print_mem(), which bypasses its invalid bits check because
-len !=3D 73:
-
-drivers/firmware/efi/cper.c:cper_print_mem() {
-...
-	if (len =3D=3D sizeof(struct cper_sec_mem_err_old) &&
-	    (mem->validation_bits & ~(CPER_MEM_VALID_RANK_NUMBER - 1))) {
-		pr_err(FW_WARN "valid bits set for fields beyond structure\n");
-		return;
-	}
-...
-	cper_mem_err_pack(mem, &cmem);
-...
-}
-
-It then unconditionally calls cper_mem_err_pack(), which reads
-mem->mem_dev_handle at offset 78 regardless of the record length:
-
-drivers/firmware/efi/cper.c:cper_mem_err_pack() {
-...
-	if (mem->validation_bits & CPER_MEM_VALID_MODULE_HANDLE)
-		cmem->mem_dev_handle =3D mem->mem_dev_handle;
-...
-}
-
-Can this lead to a kernel oops if the struct is located exactly at the end =
-of a
-mapped page, or leak kernel heap memory into dmesg via DMI handle lookups?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827203726.3027=
-541-1-dave.jiang@intel.com?part=3D11
+Alex
