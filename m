@@ -1,234 +1,181 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317F379C32;
-	Fri, 28 Aug 2026 15:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B106146A603
+	for <linux-cxl@vger.kernel.org>; Fri, 28 Aug 2026 15:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787929788; cv=none; b=Fr/QdNXOQgJW27jA2hFjaev+AQukhnCmCDEmny4q68GiDI2YURY1PV1oDMIvqxGF7V+OugFF8U/U3oCQcQh6oBRfia3ZEreA2iNgxMXLVeQYduywHBE2w6hWVJZltE95ellaLmMgpDRyKP6ppEDgraz1XQjMLTLtO3238vVFXwM=
+	t=1787930017; cv=none; b=MZNM66aYj5LORIjHGP5R4UwaHERbPVsihg46UC61EUmgTQNV4VjImmGplGlK1j1aDKMwUJbcQo+47pQbDogub7BIkmboinu6zKqB8rkVr5UVRs3h7aOTFhY3eILera9mFw52C1/ur/Z1gjymaTTeubO0ZPT/JqSTNgZMW10Q30U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787929788; c=relaxed/simple;
-	bh=zhO8zGISVXD7PRGwsHN1rjefun2PO+OkTMdVdz031Ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nYU55/WjMDEfBAzlcOEtJUekDU132OxqIF2C8HdNaoTF8b0KegEOoKQDUtuglMQcOCJFvkEF9Wlx3Bfs5mWj0Qu0nIc0d4WrZfmbjDYfw/FyLpjJRBxD0OIAMGXqfLj+IBIE+6RTkRwFrjwB1G0KzuTBk0USdPEYZ/E3hXvVQ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=C3pVW/YB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S9xZdhGL; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1787930017; c=relaxed/simple;
+	bh=b/JzxGHOaDm0eXD4kl/mslZxgtjYsFN2Eh8SK8OM27I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gD4/P1sJ7B9wYC4omHbFFH7fCnKLESnBLcdUHLNkCg/W051sJYLTiSwVK0VnWfjRdYp4J2JcOYPu+ohyXUjN5DOZiGGTay3xTi4Eg2ZFsdPMBOhB2OSlE9kQl5hmIBOC0w0GCGr7t8r5bA68w2yBsIeaonbql64eiXaBtalcbbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=va2L7i/i; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="C3pVW/YB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S9xZdhGL"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 423071D00163;
-	Fri, 28 Aug 2026 11:09:43 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Fri, 28 Aug 2026 11:09:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1787929783;
-	 x=1788016183; bh=J7fhSdF2wHuM0Q5K5Nel4RxIzjNwRWdYNSgjeXswKtM=; b=
-	C3pVW/YBEvdrjEZxFYZhYPbAfnisE6n3PmOSuvMDOHNvfhG73B5h9faYONpglCIN
-	Ai+09V+M3qCS36b5bd9ho89Lk3rUxeWP5KspVb3zpqfw/EkZTDpry5si//Z2Dk8P
-	Q0H0WoAG1Mjhr5Jo5hBXjBqbI3NkzKosuQD5SfQ256ZbmGlugmCxK+YjwK2O3BxT
-	YqIwfuFjKWR/nZ5bwxGUDySbn1aqhaghpXHbcPY1+ho8Uf2ttOP0R9LLO48GVB4D
-	t+4Ya2CLnmPuDtUOW3qtSDwfyD1x5PNc66dcSalOefZPkNWzdkvByVW/cb6aFUb6
-	EVNv1h6wARjpj0q+2OicEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787929783; x=
-	1788016183; bh=J7fhSdF2wHuM0Q5K5Nel4RxIzjNwRWdYNSgjeXswKtM=; b=S
-	9xZdhGLk1dU7W5KQQdONSbGbZoyRDPN+HwZnfdmCe91JIbUfPq92LBvNFyUJw75F
-	JilbigLGdiMudLIzqcPLTOBoVx1D8h4CQgxlYyWh9Ibv7o1jOSqF5zMjckRbT8mu
-	lSmaL/59VwQxD/SS25dNJs9MaIjVxLL7/wsg6xYL9sHsWFIX4XFPX9Hqc20BM7Se
-	dzztXHh1/Z6Yk90zWQq5wksTv5zmttXozoT9HIXEA8yuCh9/jamOKqGRgdPU4IR1
-	trjfSGJCVV0Vab4vQgA9M7tq1MT4+RPPq/ti08tgSL5VLqKujD5fMaKAiL5TiCR9
-	nGZsok6I59v8kg1znxOBg==
-X-ME-Sender: <xms:tqSRamWNvAZzpR7mqxKJyFdZFMrxs89CJq_RdAuQDnebZkv0fkk0-g>
-    <xme:tqSRagOtDILmHdgnfLdpX7jXISHGpGYy_p9rU_BS3MLyvAUtgJNSEJOA2an4AsBf8
-    HvHefd7bmhQlUJJFTF1bJ1kjN7IzJn-5NRWIoNU6P4sHrjJnlM2etA>
-X-ME-Received: <xmr:tqSRahzu0qqR-IyQx5DWe5i7B047PEdkpWZyOIp5cgyFmfJEO80vCjHMWMN1tQ>
-X-ME-Proxy-Cause: dmFkZTFXGrMYbLY+LdvceoYAUK59SwxkuxWrEEfFhx7Oo48w4szBreo/JFGuyK/kX2r3RZ
-    /9jkoKemr0M8aGtfrx58I9eCa4dAMjXoq/KnvMhaWsIJGn4WWBhEgzjtix1UQfFFio7Ogn
-    ninILXq7bDTI8F5C3HjV2yW4/M9BUl68Q01TrOE9TW43F3UAA74s3vgQCbhOsN4KTtxJ/6
-    koHNG+EBMttzofnzdmAatjTjU48/zTIzddY5KliI1v7dB5ThFS6BU5h7eEN5GR3NzPLMo4
-    lAWi9RFZtF1qcQuiHRqOsp+RZhVirWm+EUKRelRTpmCIzzsmfFx7UuaG+QVwddEmBlwpLi
-    at47XqWYb6BaM5vwNBdViJnf96MKz7EBPSIUxevSwjjZPUgEwAznsKLVBRCa/nRGtr85+v
-    84WXvqkZ6TwjNsyX6jljdEYV1FilS1m+96jJABro0J2rWpMC8puM0OHAwjySpN2lqJY4+1
-    NPGh4QXyq3qbuUqS1dy0Zn1phIaKtCryLVrVCHericq3VxPTYsMEDEjd3cZyaQR1dwtTce
-    Lfbi05iYWjTMWtKtUKBFAykU/++xZd8z4OF5d4yiAs7arVzT128C7F/lT16wVLDTHY0wa6
-    8dTtAb3ti+qd107i48JAP12fEicDribtpTNCmp35Ja4IwAPIjVl8PgIhv28Q
-X-ME-Proxy: <xmx:tqSRalhWtNmmYwp-fxJve5-KD69bN43VQNIwZBu4FV5XdPnhmdbcMA>
-    <xmx:tqSRaoSLY6p4E9mSeWE0jCujTHADWERJbvmBG8Cs9zQaLT8BE_bfYA>
-    <xmx:tqSRaiOA-vTGXjpnREAug-QGLremyWun4BJxBjbMQXfeYaMbCCN3bQ>
-    <xmx:tqSRatFL6uKuaLcW4gNFAqDxTfgdgDPsxBCOzWxahjCbpYGpiIyljg>
-    <xmx:t6SRash-d7Zdysx5_8yVdmM22mQP1aKtTcKAx1b6yDXM9tGVpeDGQhVa>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Aug 2026 11:09:38 -0400 (EDT)
-Date: Fri, 28 Aug 2026 09:09:35 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v4 16/27] vfio/cxl: Shadow the CXL DVSEC body at open
-Message-ID: <20260828090935.719115e9@shazbot.org>
-In-Reply-To: <20260813093631.2288172-17-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-17-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="va2L7i/i"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1787930010; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=VczuAjAG7lF2KeyCwVeFZP+t9HaL5xy/FEvZ6Ejt61g=;
+	b=va2L7i/iuud0I0InTaFbPVDLv6lfTk4jq0HrRhKLbM4tiIyZpj1IqrhKN57kM2EQIPox4sZ5iSdicLcEw2TP3JKmPXnQPURHLW3VHOTJMTVHaMhD/YRfphBQ+l3fkMbga9C8pqcW9apy5Ed2CRlBufnzLiNiW58BeFGq1ka7/yc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9md4vf_1787929998;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9md4vf_1787929998 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Aug 2026 23:13:28 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: palmer@dabbelt.com,
+	alistair.francis@wdc.com,
+	mst@redhat.com,
+	imammedo@redhat.com,
+	sunilvl@ventanamicro.com,
+	jic23@kernel.org
+Cc: pbonzini@redhat.com,
+	liwei1518@gmail.com,
+	daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com,
+	chao.liu@processmission.com,
+	anisinha@redhat.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	junjie.cao@intel.com,
+	guoren@kernel.org,
+	qemu-riscv@nongnu.org,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v4 0/6] hw/riscv/virt: Add CXL support to the RISC-V virt machine
+Date: Fri, 28 Aug 2026 23:12:59 +0800
+Message-ID: <20260828151317.815-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Aug 2026 15:06:20 +0530
-<mhonap@nvidia.com> wrote:
+This series adds CXL support to the RISC-V virt machine, following the
+approach used by the ARM virt machine: CXL host bridges (pxb-cxl) are
+described as ACPI0016 devices, an ACPI0017 (CXLM) device is added to the
+DSDT with a _DEP on the CXL host bridges, and a CEDT table is built. A
+bios-tables test is added to pin down the generated ACPI tables.
 
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> Sample the CXL DVSEC body into a per-open shadow when the guest opens the
-> device, and free it at close. Reading it here rather than at bind picks
-> up any change from a low-power transition, and gives the DVSEC access
-> handler added next a per-tenant copy to serve from.
-> 
-> Annotate the shadow with __counted_by_ptr(dvsec_dwords) so its accesses
-> are bounds-checked against the recorded dword count.
+Changes since v3
+----------------
+  - The CXL host bridge resource handling is reworked, following Junjie
+    Cao's suggestion (and Igor Mammedov's earlier "fix UEFI" direction):
+    instead of reserving a fixed 256 MiB carve-out and simulating the
+    firmware PCI initialization in QEMU, the machine now advertises the
+    pxb-cxl expander root buses to firmware via the etc/extra-pci-roots
+    fw_cfg file (pci_bus_add_fw_cfg_extra_pci_roots(), as arm/virt and
+    x86 do).  EDK2's PciBusDxe then enumerates behind the CXL host
+    bridge and assigns the root-port window and bus numbers, and
+    build_crs() emits a correct _CRS for the ACPI0016 host bridge.
+    This keeps the machine code minimal (a single call, no carve-out),
+    scales to multiple pxb-cxl host bridges, and lets firmware size the
+    window to what is actually behind the bridge.
+  - The bios-tables test is split into the staged flow documented in
+    bios-tables-test.c, and ordered the same way the riscv64 goldens were
+    originally added upstream (Sunil V L's commit cc3ba2422554 et al.):
+    the feature code comes first, then three consecutive commits -- empty
+    golden files + allowed-diff.h, the test code, and the populated golden
+    master binaries with an emptied allowed-diff.h.
 
-It would be useful to describe why we want to shadow the DVSEC
-capability here.  Also, it's the whole DVSEC capability, not just the
-body.  We're again mentioning that low power transition that the
-earlier path prevented (but shouldn't have).
+Changes since v2
+----------------
+  - hw/riscv/virt: The MMIO-window patch no longer touches the common
+    gpex code (Igor).  The gpex_cfg.cxl_mmio32 field and the is_cxl
+    static _CRS branch are dropped; the ACPI0016 _CRS now comes from the
+    generic build_crs() path.  Since EDK2 does not enumerate the pxb-cxl
+    expander bridge, riscv simulates the firmware PCI initialization
+    (reserved window + depth-first bridge bus numbers) and re-applies it
+    via a reset handler.
+  - hw/riscv/virt: Drops the machine-global window/bus-range synthesis
+    that did not scale past one pxb-cxl (Junjie).  The series targets a
+    single CXL host bridge for now, documented in the commit message and
+    a TODO.
+  - hw/riscv/virt: CXL host register region and FMW setup folded into a
+    single cxl_host_state_init() helper; redundant braces removed in
+    create_fdt_pcie() (Daniel).
+  - hw/riscv/virt-acpi-build: the _DEP commit message documents the
+    kernel-compatibility behaviour (Alistair).
+  - Carried review tags: Sunil V L's Reviewed-by on the _DEP patch and
+    Alistair Francis's Acked-by on the test.
 
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/cxl/vfio_cxl_core.c | 39 ++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> index d19fd638f538..2e516a0929c6 100644
-> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> @@ -8,6 +8,7 @@
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/range.h>
-> +#include <linux/slab.h>
->  #include <linux/vfio_pci_core.h>
->  #include <cxl/cxl.h>
->  #include <cxl/pci.h>
-> @@ -17,11 +18,19 @@
->   * @cxlds: CXL device state; kept first for devm_cxl_dev_state_create()
->   * @cxlmd: memory device joined to the CXL topology at bind
->   * @hpa_range: host physical range of the HDM region
-> + * @dvsec: CXL device DVSEC config-space offset
-> + * @dvsec_len: length of the DVSEC body
+Changes since v1
+----------------
+  - hw/riscv/virt: PCIBus *bus renamed to PCIBus *pci_bus (Jonathan).
+  - hw/riscv/virt: Dropped outer if (s->pci_bus) guard around
+    cxl_hook_up_pxb_registers(); the function already handles a NULL
+    bus internally (Jonathan).
+  - hw/riscv/virt-acpi-build: All s->bus references updated to
+    s->pci_bus; iasl -d decompiled DSDT fragment added to commit
+    message.
+  - hw/riscv/virt,gpex: Commit message expanded with PCI-to-PCI Bridge
+    Spec §3.2.5.8/9/10 citations (Jonathan).
+  - Original patch 4 ("Map committed HDM decoder ranges as RAM for
+    direct DMA") dropped; superseded by Alireza Sanaee's v8 series [1],
+    which is now merged upstream and thus no longer a prerequisite.
+  - New patch 4: RISC-V ACPI bios-tables test for CXL, with golden AML
+    files generated and included.
 
-Nit, not just the DVSEC body.
+[1] https://lore.kernel.org/qemu-devel/20260318171918.146-1-alireza.sanaee@huawei.com/
 
-> + * @dvsec_dwords: dword count of @dvsec_shadow
-> + * @dvsec_shadow: guest view of the CXL DVSEC body, sampled at open
->   */
->  struct vfio_cxl_state {
->  	struct cxl_dev_state cxlds;
->  	struct cxl_memdev *cxlmd;
->  	struct range hpa_range;
-> +	u16 dvsec;
-> +	u32 dvsec_len;
-> +	u32 dvsec_dwords;
-> +	u32 *dvsec_shadow __counted_by_ptr(dvsec_dwords);
+Test
+----
+Built riscv64-softmmu and ran the new bios-tables test together with the
+existing riscv64 ACPI tests; all pass.
 
-dvsec_len is bound by PCI_DVSEC_HEADER1_LEN, which is 12-bits, so it
-fits comfortably in a u16.  dvsec_dwords is therefore bound at 10-bits.
-Both of these fit comfortably in u16.  I'd argue that length is easily
-derived from dwords, but we end up with a hole in the data structure
-regardless, so it's arguably useful to keep both.  We can drop 4-bytes
-from the structure though, which actually turns into an 8-byte savings
-with the two holes above (2 + 4) vs one hole below (2):
+Also booted an RVA22 guest with EDK2 firmware, using pxb-cxl + cxl-rp +
+cxl-type3 + a CFMW: EDK2's PciBusDxe enumerates behind the CXL host
+bridge (advertised via etc/extra-pci-roots), the root port and Type3
+device show up (0000:0c:00.0 / 0000:0d:00.0), and 'cxl list' reports
+the memdev (4 GiB) and the CFMWS root decoder.
 
-	u16 dvsec;
-	u16 dvsec_len;
-	u16 dvsec_dwords;
-	u32 *dvsec_shadow __counted_by_ptr(dvsec_dwords);
+QEMU invocation (CXL-relevant options shown):
 
->  };
->  
->  static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
-> @@ -71,6 +80,8 @@ static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
->  	if (!cxl)
->  		return -ENOMEM;
->  
-> +	cxl->dvsec = dvsec;
-> +
->  	/*
->  	 * vfio-pci requests the whole component BAR when the guest opens the
->  	 * device. Declare the BAR owned so the CXL core maps the HDM/RAS
-> @@ -102,11 +113,39 @@ static void vfio_cxl_release_device(struct vfio_pci_core_device *vdev)
->  
->  static int vfio_cxl_open_device(struct vfio_pci_core_device *vdev)
->  {
-> +	struct vfio_cxl_state *cxl = vdev->cxl;
-> +	struct pci_dev *pdev = vdev->pdev;
-> +	u32 hdr, *shadow;
-> +	int i, dwords;
-> +
-> +	/*
-> +	 * Sample the DVSEC body now rather than at bind: a low-power
-> +	 * transition could have changed it since the device was bound.
-> +	 */
-> +	pci_read_config_dword(pdev, cxl->dvsec + PCI_DVSEC_HEADER1, &hdr);
-> +	cxl->dvsec_len = PCI_DVSEC_HEADER1_LEN(hdr);
-> +	dwords = cxl->dvsec_len / sizeof(u32);
-> +
-> +	shadow = kcalloc(dwords, sizeof(u32), GFP_KERNEL);
-> +	if (!shadow)
-> +		return -ENOMEM;
+    qemu-system-riscv64 \
+        -M virt,aia=aplic-imsic,acpi=on,cxl=on \
+        -cpu rva22s64 -smp 2 -m 4G \
+        -object memory-backend-ram,id=vmem0,share=on,size=4G \
+        -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+        -device cxl-rp,port=0,bus=cxl.1,id=rp0,chassis=0,slot=2 \
+        -device cxl-type3,bus=rp0,volatile-memdev=vmem0 \
+        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
+        ...
 
-dvsec_len becomes inconsistent with the other fields if we take this
-return.
+Verification (total system memory grows by 4 GiB after onlining):
 
-> +
-> +	for (i = 0; i < dwords; i++)
-> +		pci_read_config_dword(pdev, cxl->dvsec + i * sizeof(u32),
-> +				      &shadow[i]);
-> +
-> +	cxl->dvsec_dwords = dwords;
-> +	cxl->dvsec_shadow = shadow;
-> +
->  	return 0;
->  }
->  
->  static void vfio_cxl_close_device(struct vfio_pci_core_device *vdev)
->  {
-> +	struct vfio_cxl_state *cxl = vdev->cxl;
-> +
-> +	kfree(cxl->dvsec_shadow);
-> +	cxl->dvsec_shadow = NULL;
+    # cxl list
+    # cxl enable-memdev mem0
+    # cxl create-region -m -t ram -d decoder0.0 -w 1 mem0 -s 4G
+    # daxctl online-memory dax0.0
+    # free -h
 
-This makes the counted-by field inconsistent.  All fields should be
-cleared.  Thanks,
+Chen Pei (6):
+  hw/riscv/virt: Add CXL support to the RISC-V virt machine
+  hw/riscv/virt-acpi-build: Add _DEP to ACPI0017 for CXL host bridge
+    dependency
+  hw/riscv/virt: Advertise the CXL host bridge to firmware via
+    extra-pci-roots
+  tests/qtest: Prepare golden files for the RISC-V CXL ACPI test
+  tests/qtest: Add RISC-V ACPI bios tables test for CXL
+  tests/qtest: Update RISC-V CXL ACPI golden master binaries
 
-Alex
+ hw/riscv/Kconfig                      |   2 +
+ hw/riscv/virt-acpi-build.c            |  52 +++++++++++++++++++++++++
+ hw/riscv/virt.c                       |  45 +++++++++++++++++++++
+ include/hw/riscv/virt.h               |   3 ++
+ tests/data/acpi/riscv64/virt/CEDT.cxl | Bin 0 -> 108 bytes
+ tests/data/acpi/riscv64/virt/DSDT.cxl | Bin 0 -> 6331 bytes
+ tests/qtest/bios-tables-test.c        |  54 ++++++++++++++++++++++++++
+ 7 files changed, 156 insertions(+)
+ create mode 100644 tests/data/acpi/riscv64/virt/CEDT.cxl
+ create mode 100644 tests/data/acpi/riscv64/virt/DSDT.cxl
 
->  }
->  
->  static const struct vfio_cxl_ops vfio_cxl_ops = {
+-- 
+2.50.1
 
