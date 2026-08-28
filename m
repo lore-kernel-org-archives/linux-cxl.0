@@ -1,172 +1,165 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A403AA1BF
-	for <linux-cxl@vger.kernel.org>; Fri, 28 Aug 2026 07:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702B7353A8A
+	for <linux-cxl@vger.kernel.org>; Fri, 28 Aug 2026 07:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787903243; cv=none; b=szjrY51AXE4dfvJOKxhFMjgCxlxMENL0sG/XAxwekmsCm5ySnnHhUsCr9uWJGRjBj/WehE/EVIiYai2Oe6gEn7IGXIBwcr/6Dn11GvXCENPik/CYJZj4qGRXq4b6foD3lCTT1AGmfGtWKhqyA18NF0iUc7OldYi7aWPOH5ClMbM=
+	t=1787903288; cv=none; b=jWMFQFeWaOOcvTanVN0g6gv8D0gDV/1OIYOV72+XJC7cqCT78s5WWZVXZca60X7bmwbcOgsbAmNvOaNaEzEH+1hSDEL0X4nVHuL8w0zEvNqwZpcMxena+1q7UgJmRl0S9YhgAdG3+GzbC0aOvzi9g6FBQe6wzxbjPgl8YdOX4Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787903243; c=relaxed/simple;
-	bh=NwgI/KoS6AzBC3nZAyJidBZ+GshtzAOWB4PSQKXI9a0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ERo9kJGdpeLoLEpL89eea9QvcG25np2TaEslzvH33LrQIhbjw1Yb+pw7AY6E85jKMBFyudNKkKMq+J2IasmIhateSCAiF6nD2nPwDJjjznozPRNYtghc+xcOMDVVHAouCJPuPkt8kMuBrJ0NyJjTnPt6d1Gl202U99oz3Fqhexo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=v/O0+9g+; arc=none smtp.client-ip=115.124.30.112
+	s=arc-20240116; t=1787903288; c=relaxed/simple;
+	bh=8l78m1Np1VEONbO7dy/+fu1e3hNGTp5xy6XV4xXcC/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jNTFIT4S1WkkNMJeGYGBxHtGuqbpRy93pWmybXqEH2H2vlMTjPcEPkviLURtOXWYZmyp74GMHYbUVCJocvKMyv8mVwLOVtTjW5qbnMZHZTeBqRJxcH5dXzBlnRLhf9rPM3H8AX+e/SQvzc8X+h2WyV52/VmThajBZ5yAr5qp6jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WZ1wI2JK; arc=none smtp.client-ip=115.124.30.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="v/O0+9g+"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WZ1wI2JK"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1787903236; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=ymbPZnid4UeGBYzB1gimulWUJ7Ta+0+obpFtB/Tbm2A=;
-	b=v/O0+9g+nJhyfVyAToUYjgFGsfRrsYc5SteZON0P4rjLOxrAaW2x38DaZU/+/agpnvv6DQzFA7iiD8A7qDkfYmyfIY7eWrejUkrs4YunMLCe4AAXVRzlOSeSmMh0TWG26LHTejk6eU+ez/CZYmT55iEn3vaooFtOzJUpnvCBt2M=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X9lrKN3_1787903234;
-Received: from 30.178.68.240(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9lrKN3_1787903234 cluster:ay36)
+	t=1787903277; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=/xC4/IadbyQqUo7+Nl3Pg1WvCdBVa4hgZ4fruO1iXVQ=;
+	b=WZ1wI2JKVQTOqZ4DLHoqJ5SXY8/HlLIodm9VEIYYrovoTxSek++/XjBv0LoF8EmcIzz5jedj3v6O7aV0t8tradw+jHJMEIwNb9xM/6oGUmgxLc3tevoRETS3CnEMvjSFhJVzgnZDr9RKfze9Y2sj7u84tfSOq36Ogak0AD1eneI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X9lrKe._1787903276;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9lrKe._1787903276 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 28 Aug 2026 15:47:15 +0800
-Message-ID: <77fd095e-ca67-4459-b5e6-319b6226c75d@linux.alibaba.com>
-Date: Fri, 28 Aug 2026 15:47:14 +0800
+          Fri, 28 Aug 2026 15:47:56 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v3] cxl/core: Fix dport use-after-free via the einj_inject debugfs file
+Date: Fri, 28 Aug 2026 15:47:52 +0800
+Message-ID: <20260828074752.3336779-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/core: Fix dport use-after-free via the einj_inject
- debugfs file
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-References: <20260812060943.56246-1-kanie@linux.alibaba.com>
- <apDXSzSZVcjQ027J@aschofie-mobl2.lan>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <apDXSzSZVcjQ027J@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The per-dport einj_inject debugfs file retains a pointer to the
+'struct cxl_dport', but its lifetime is not tied to the dport. Unbinding
+the dport host frees the dport and leaves einj_inject behind, so writing
+the file dereferences freed memory:
 
+  BUG: KASAN: slab-use-after-free in cxl_einj_inject+0xa1/0xf0 [cxl_core]
+  Read of size 1 at addr ffff88810880ac90 by task bash/1690
+   cxl_einj_inject+0xa1/0xf0 [cxl_core]
+   debugfs_attr_write+0x61/0xb0
+   full_proxy_write+0xfc/0x1c0
+   vfs_write+0x1d4/0xe60
+  Allocated by task 213:
+   __devm_cxl_add_dport+0x1e1/0x14d0 [cxl_core]
+   cxl_port_add_dport+0xd6/0x200 [cxl_port]
+  Freed by task 1622:
+   release_nodes+0xfa/0x2c0
+   devres_release_all+0x113/0x1a0
+   device_unbind_cleanup+0x76/0x260
+   unbind_store+0xde/0x100
 
-在 2026/8/28 08:33, Alison Schofield 写道:
-> On Wed, Aug 12, 2026 at 02:09:43PM +0800, Guixin Liu wrote:
->
->
-> Hi Guixin Liu,
->
-> Skipping ahead to the changelog, you write
->> - rewrite the commit message to describe the behaviour rather than narrate
->>    the code change (Alison Schofield)
-> I went back and looked at v1, and somehow the commit message got
-> substantially longer and harder to understand in response to my request
-> to make it clearer. V1 was actually closer. It needed to be simplified,
-> not expanded.
->
-> This reads more like a forensic report of everything learned while
-> investigating the bug than a commit message explaining why this change
-> is needed. It is dense material, far too detailed to the point of
-> clarifying nothing.
->
->
->
->> cxl_debugfs_create_dport_dir() publishes a debugfs directory containing an
->> "einj_inject" file whose i_private is the 'struct cxl_dport', then discards
->> the returned dentry and registers nothing to remove it. The other per-dport
->> facility set up next to it in __devm_cxl_add_dport(),
->> devm_cxl_dport_ras_setup(), binds its resources to dport_to_host(dport) so
->> that they go away with the dport. The debugfs directory has no such owner:
->> it lives until cxl_core is unloaded and cxl_core_exit() tears down the
->> whole cxl/ tree.
-> Most of the above is unnecessary. The comparison with devm_cxl_dport_ras_setup()
-> adds nothing to the description of the bug. Neither does walking through the
-> eventual module cleanup.
->
-> The important background is simply that einj_inject retains a pointer
-> to the cxl_dport, but its lifetime is not tied to the dport.
->
->> The dport itself is freed much earlier. free_dport() is registered in the
->> dport's devres group, so the dport is freed when the host device is
->> unbound, which is an ordinary sysfs operation on the host bridge port or
->> the ACPI0017 root, not a module-teardown-only path. After that unbind the
->> einj_inject file is still there, and a write to it calls cxl_einj_inject()
->> on freed memory, reading dport->rch and dport->dport_dev and passing them
->> to the EINJ code.
->
-> Above, the important point is buried at the end. Unbinding the host frees
-> the dport but leaves einj_inject behind, so writing the file can
-> dereference the freed dport.
->
-> That is the issue and impact. The devres mechanics, specific devices that
-> can be unbound, and individual fields subsequently accessed do not make
-> that clearer.
->
->
->> Re-binding the topology does not recover either. The stale directory keeps
->> the dport device's name, so the second creation finds the name in use,
->> debugfs setup fails, and error injection is silently unavailable for that
->> dport for the remaining lifetime of the module.
->
-> Above is useful as a secondary impact, but can be one sentence: the stale
-> directory also prevents the debugfs directory from being recreated on
-> rebind.
->
->
->> Keep the dentry and remove the directory from a devm action on the dport's
->> host device. The action is registered after free_dport() within the same
->> devres group, so release ordering runs it before the dport is freed. Its
->> registration failure is deliberately not propagated, following
->> devm_cxl_dport_ras_setup(): a missing debugfs directory is not a
->> functional failure of the dport, and on that path
->> devm_add_action_or_reset() has already removed the directory itself, so
->> there is no dangling node left and nothing to gain from failing the dport
->> addition.
-> This is implementation narration. The resolution is simply to remove
-> the per-dport debugfs directory when the dport host is released. If
-> there is a subtle implementation choice that needs explanation, put a
-> short comment where that choice is made.
->
-> If you want to give your LLM some direction, ask it to first reduce the
-> commit message to something like:
->
-> Background:
-> einj_inject retains a pointer to the cxl_dport.
->
-> Issue:
-> The debugfs file can outlive the dport.
->
-> Impact:
-> After unbind, writing einj_inject can dereference the freed dport.
-> The stale directory also prevents recreation on rebind.
->
-> Resolution:
-> Remove the per-dport debugfs directory when the dport host is
-> released.
->
-> Then turn that into a short, flowing commit message. Do not expand each
-> item with everything learned while investigating the bug.
->
-> Being able to summarize a change this way is important beyond making the
-> commit message easier to review. It also gives reviewers confidence that
-> the submitter understands the problem, its impact, and why the proposed
-> change fixes it, rather than simply forwarding an AI-generated analysis
-> and patch.
->
-> On that point, please also say how this issue was found. Was it found by
-> you, by an AI analysis tool, or by reproducing an actual failure?
->
-> Also, how was this tested? Did you actually unbind the host, access
-> einj_inject after the unbind, and reproduce the UAF? Did you then verify
-> that the patched kernel removes the debugfs entry and that it is
-> recreated after rebind? Please describe the actual test performed.
->
-> That information gives me considerably more confidence in the patch than
-> several paragraphs of forensic implementation detail.
->
-> -- Alison
-Sure, I will cut the commit body,  and explain how I test it.
+The stale directory also prevents recreation on rebind.
 
-Best Regards,
-Guixin Liu
+Remove the per-dport debugfs directory when the dport host is released.
+
+Found by code inspection, then reproduced on a QEMU CXL topology with
+KASAN (the einj_cxl_is_initialized() guard had to be forced open, as
+QEMU emits no EINJ table). Unpatched, writing the leftover file after
+unbind gives the splat above, and rebind hits "already exists in
+'cxl'". Patched, the directory goes away with the dport and rebind
+recreates a working einj_inject.
+
+Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+---
+This was patch 3/8 of the "cxl: Assorted fixes" series [1]. Per review
+feedback that series is not being reworked as a whole; the fixes are resent
+individually instead.
+
+Exact steps behind the testing paragraph above, on a QEMU topology with two
+root ports under a host bridge port plus a switch, KASAN enabled:
+
+  # find the per-dport dir and the cxl_port that hosts the dport
+  find /sys/kernel/debug/cxl -name einj_inject
+  ls -d /sys/bus/cxl/devices/port1/dport*
+
+  echo port1 > /sys/bus/cxl/drivers/cxl_port/unbind
+  # unpatched: /sys/bus/cxl/devices/port1/dport0 is gone but
+  #            /sys/kernel/debug/cxl/0000:34:00.0/einj_inject remains
+  # patched:   /sys/kernel/debug/cxl/0000:34:00.0 is gone too
+
+  echo 0x1 > /sys/kernel/debug/cxl/0000:34:00.0/einj_inject
+  # unpatched: the KASAN splat quoted in the commit message
+  # patched:   no such file; no KASAN report for the whole boot
+  # 0x1 is deliberately not a CXL error type, so both inject paths return
+  # -EINVAL from einj_is_cxl_error_type() after the dport read
+
+  echo port1 > /sys/bus/cxl/drivers/cxl_port/bind
+  for m in mem0 mem1 mem2; do echo $m > /sys/bus/cxl/drivers/cxl_mem/bind; done
+  # unpatched: debugfs: '0000:34:00.0' already exists in 'cxl'
+  #            and a write to the surviving file still faults, at a different
+  #            address than the new dport, i.e. still the old freed one
+  # patched:   both einj_inject files recreated, write returns -EINVAL
+
+v2 -> v3:
+- no code change; drivers/cxl/core/port.c is byte-identical to v2, so
+  Richard's and Li Ming's Reviewed-by from v2 are carried forward. Only the
+  commit message differs, please shout if you would rather re-review.
+- cut the commit message down to the problem, its impact and the fix, and
+  quote the KASAN splat rather than narrating the code (Alison Schofield)
+- say how the issue was found and what was actually tested
+  (Alison Schofield)
+
+v1 -> v2:
+- do not propagate the devm_add_action_or_reset() failure out of
+  cxl_debugfs_create_dport_dir(); a missing debugfs directory must not fail
+  the dport addition (Li Ming)
+- rebase onto cxl/next
+- rewrite the commit message to describe the behaviour rather than narrate
+  the code change (Alison Schofield)
+
+[1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+
+ drivers/cxl/core/port.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 625e4aa427db..62a9c2038d1f 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -814,6 +814,11 @@ static int cxl_einj_inject(void *data, u64 type)
+ DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
+ 			 "0x%llx\n");
+ 
++static void remove_debugfs(void *dentry)
++{
++	debugfs_remove_recursive(dentry);
++}
++
+ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ {
+ 	struct cxl_port *parent = parent_port_of(dport->port);
+@@ -834,6 +839,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 
+ 	debugfs_create_file("einj_inject", 0200, dir, dport,
+ 			    &cxl_einj_inject_fops);
++
++	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
+ }
+ 
+ static int cxl_port_add(struct cxl_port *port,
+
+base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+-- 
+2.43.7
 
