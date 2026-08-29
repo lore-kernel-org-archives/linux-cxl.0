@@ -1,340 +1,220 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012030.outbound.protection.outlook.com [52.101.53.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a48-180.smtp-out.amazonses.com (a48-180.smtp-out.amazonses.com [54.240.48.180])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D740233F8AA;
-	Sat, 29 Aug 2026 07:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787987217; cv=fail; b=jsngHx60yw3nMXsG8KUSplcx5l6CsWM4uLBCVNHhe3V5kUGUd8Ou8KVzcX3luTIiSycZUclzq5Z3qxWuq3eNbs+43U5bOakUzyK9gBtXL8vfyFHQMEgMDoM0el4tSrbDIzTPUo/JZIugAlVPnIZPFFfOtPgcmq6z2GjAg2SkRgE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787987217; c=relaxed/simple;
-	bh=/Y0aGarGc+MTrg5dIko7eA3SXnxKwobwh2huKZpzhWQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=K6qnUT+Dxy9hVO842t3La6L+C5R2up9FJVKZrxiFgxH0WTBMk+IJWrlp1uE3NNPUNyM3AQC71aIdkEvvgwRTk5DysltRSBTfh7nHmDe5gecZZH2SruU+VqE6OMUoRI86KpKApVDVupRqL4svkxygFe3Fvt/tkWCnaXbx0WOytEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xfR4DXTe; arc=fail smtp.client-ip=52.101.53.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B3F21A434;
+	Sat, 29 Aug 2026 17:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.48.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788023419; cv=none; b=Xi6XMyZKhPRLRxP61+A+NlqzgdZkXgIzzbYOnQ4InhdyIWHDjoHcrhRFSsJvvcM6ggCshvz9EK2QvKcid3ZZPuV+JHc3VQMoYXqF4wWEPKQ/zmbz3FeCoWgyzMWIJ+6/h2EVEuqk/f6wFaIfZWBjSj13s4l6b+fdFK+a8lY+X1A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788023419; c=relaxed/simple;
+	bh=r+kKJW69qahJa08hdkRWeNNyZP+g5cFaTLPFN+XPiMM=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=iFe38V/eHg1Ph0WI8VV6tnCnx34hhJasXCgxAblhqYlXCJl1OsVTM7x4lDsfrHyl1Z5lbnD5HCmVSLEXk8gM0PXpAIbCkNIWSaHyAodNvuP2vmxnqxRxK5FEgJ/tHRkNKxxJ7tns6NXDdT1uZzc/Jm+713NQ0mLSiBNqXNl/41M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=YdmoCMd+; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=q7egb1mF; arc=none smtp.client-ip=54.240.48.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xfR4DXTe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F0QSXZ5xt1demVbO8PdWc1XN/I6Sai0t+jyFMgVfpr2ztu1iTdBTWM+v3+i0N0FCWNVjH+LASgDoCw3WrXlaRbPMxZ5xk0+1RGPbjJANfwR5Zea/eNkgx8WjoBbQHKhzcTB5t85xpounzgWpfsIDpb4uokOvBs3AeLmYKhEexR4iZ/Gc4BcxrRmQ1hJ2U0G3A0m61kXOTeQgZUX0obX9gCoT6O2QOc6x4NCl7JEJdO7CpSL6CE01l6uFhz8lREbXF07ALAeygK59trpOMbEJYlrcS3rBN+pTChzyDrbUasU9RJbWTSTxRwW2RpO230KOGAQULNVQ174lgiLNCiO3yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wCJF2tfyKaUt42f+98vi1rdrcnz+JhTrdf2NI4Ka55k=;
- b=GfBfs4jWqW98XEhuBewKfQ3SaV/2FHKKdsQVWuuAR6HQ5F0LwGHQFd7uw+y2heZ9pttIr/RK9LXUKOIQzborYizuBAVmQdlpVzP2ybbSbJ2S/BBtYl5oEp3RZQnhXpaM1FgSPx97RGjM14n8p/D7QmTETK0wzLbvd48PtFy+kM9CstOoLNnyIteepsXSmoxOYjrgij2H/rtZxrhLKYDhYW0SN8rgLBNZS1SUOoPnrFjqiT5JTLHJTixTy/huR1ZPuSQGpUcJqnsTdflT+bySPc5YMMZlHAWAsDl2vK9WfwFL+tAP5bLAl1lhgrlVOgQVS3FrNximS0AMWbxMpKURCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wCJF2tfyKaUt42f+98vi1rdrcnz+JhTrdf2NI4Ka55k=;
- b=xfR4DXTeNzUvJejmYfAqcNsgiAPWewCuBAyIJROf/XfGn+HwmkuOUfNCbWYuhaCXRFoguzQJ3lSj270J0W3OLyCAhbQ15XyR1e6gSfMFMHp3+FrselD6fgL7V9yWRDDDYphafaHd7Kej/Lhg5fLWXdt2qLYwHVU1f7GdU/+JHTI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- LV3PR12MB9353.namprd12.prod.outlook.com (2603:10b6:408:21b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.11; Sat, 29 Aug
- 2026 07:06:51 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0360.008; Sat, 29 Aug 2026
- 07:06:51 +0000
-Message-ID: <173a8a29-2ea9-4231-815c-c6b0cca3ed80@amd.com>
-Date: Sat, 29 Aug 2026 08:06:46 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] cxl/memdev: add support for mutipf device
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com,
- Alejandro Lucero <alucerop@amd.com>
-References: <20260821155134.260053-1-alejandro.lucero-palau@amd.com>
- <20260821155134.260053-2-alejandro.lucero-palau@amd.com>
- <aov-jfhJtNtZJxlN@MWDK4CY14F> <a313b340-9263-4204-b0b2-bc492cf746a4@amd.com>
- <2a7d2d8c-ff02-4f2f-94d8-21d64dd77f82@amd.com> <apErJUX77f4x02LH@MWDK4CY14F>
-Content-Language: en-GB
-From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-In-Reply-To: <apErJUX77f4x02LH@MWDK4CY14F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0060.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2af::6) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="YdmoCMd+";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="q7egb1mF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=rjayupzefgi7e6fmzxcxe4cv4arrjs35; d=jagalactic.com; t=1788023413;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=r+kKJW69qahJa08hdkRWeNNyZP+g5cFaTLPFN+XPiMM=;
+	b=YdmoCMd+j1MaS8d+qu0RLNTj/AFxv0tibwHzvSBEdsaN3Neh7Q07F7N+txQvgd2u
+	U4EMesHk4/FuouEKUcjT7gRf3LaVPteVf15jZb5ZrPNoRfSw1/PNzPAJE6mQLYDdYha
+	LUtBTLY8c6ebM6eWivC6nLpp8Z92GgTCpr0wO9u8=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1788023413;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=r+kKJW69qahJa08hdkRWeNNyZP+g5cFaTLPFN+XPiMM=;
+	b=q7egb1mFDPxY7+y7uuQiS+fk6PWIZW9BC6+pqUdglpS7yBO47XtxdrMZLPyR/iqW
+	rbl7YYYZ3wMLq78Rbh8mPgjb+X4SpYNJR/mEHh4kwL8rkuCcoJ8M5zS8TgcFD5NyImQ
+	mcPwa8sGoXIiiHD79pjC7Kbx81DZsSpJ98cZE4CA=
+Subject: [PATCH V14 00/12] Subject: [PATCH v14 00/12] famfs: the
+ Fabric-Attached Memory File System (standalone)
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
+	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Jonathan_Corbe?= =?UTF-8?Q?t?= <corbet@lwn.net>, 
+	=?UTF-8?Q?Jake_Edge?= <jake@lwn.net>, 
+	=?UTF-8?Q?Shuah_Khan?= <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
+	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
+	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
+	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
+	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
+	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
+	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
+	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
+	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
+	=?UTF-8?Q?Chen_Linxuan?= <chenlinxuan@uniontech.com>, 
+	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
+	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
+	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
+	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
+	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
+	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
+	=?UTF-8?Q?Andrew_Morton?= <akpm@linux-foundation.org>, 
+	=?UTF-8?Q?Namjae_Jeon?= <linkinjeon@kernel.org>, 
+	=?UTF-8?Q?Lorenzo_Stoakes?= <ljs@kernel.org>, 
+	=?UTF-8?Q?Greg_Kroah-Hartman?= <gregkh@linuxfoundation.org>, 
+	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
+	=?UTF-8?Q?Pasha_Tatashin?= <pasha.tatashin@soleen.com>, 
+	=?UTF-8?Q?Haren_Myneni?= <haren@linux.ibm.com>, 
+	=?UTF-8?Q?Pratyush_Yadav?= <pratyush@kernel.org>, 
+	=?UTF-8?Q?Giovanni_Cabiddu?= <giovanni.cabiddu@intel.com>, 
+	=?UTF-8?Q?Jiri_Slaby?= <jirislaby@kernel.org>, 
+	=?UTF-8?Q?Ethan_Nelson-Moo?= =?UTF-8?Q?re?= <enelsonmoore@gmail.com>, 
+	=?UTF-8?Q?Gabriel_Whigham?= <gabewhigham@gmail.com>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40m?= =?UTF-8?Q?icron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?linux-doc=40?= =?UTF-8?Q?vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
+	=?UTF-8?Q?fuse-devel=40lists=2Elinux=2E?= =?UTF-8?Q?dev?= <fuse-devel@lists.linux.dev>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Sat, 29 Aug 2026 17:10:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|LV3PR12MB9353:EE_
-X-MS-Office365-Filtering-Correlation-Id: d574bc3b-1cf6-4a60-bc90-08df059c19b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|23010399003|366016|6133799003|10067099003|56012099006|4143699003|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	scxoAwXBHJ/FTJwBP0CYNr/d1Ki1bFHQEjpU8dRFQvXdvVDAkcG37mQlcz+Ze+8O7EzliuVfthS3mZWC9LvLfDnSVl4w9BmWmBfTXN1ph077O01SjShaQu6CpXXg3wL2HbaHyN5v3eVDh9vcLf96aCojU3OqGAYFFDpPNzXFYLOAxzPJNJfV9C/Rz8H1QzTofXge8BJFogn7Th5O6j9sfrXO3qnXqAYHKRE1ABXRSpHcXzIWCOkLUTfHYxj8ADjSH9Rs9wyQVRYCAqZhf+MWe6A5vR6ru4xttTf1J3uIvbAGYtrb3y4UPVPEyU7iDMiwkJuPeUoBVvEW6nmDINhIbT8MIDdA0aL+oYjBLOmYk/Lg9zhSVdlGKrPZkItOhz0nbNmWAfsOS+uJpLUUj6/vF7ik/y3dh30ogV+N7+tuSF06L4+2boxopZ4JS+C1OICujISQz4dm3/w21lFeKS0FNIpc2wt1B8Mgdjd2PePK8JH1aHRqlbuIQSkkwzKf2fp07lj/vpGayqyzdk2jpkg6VWg4WEwa1G6nenqvewlymWk9/Cv/5UlE+oK4QcHYQjLyveZM+LisdPldsbFFsL2IpCb0S6ntQ2gL4bUwX2NxpGjsQ6KxSHmV5KadR3JVUecCMgPxBLjxp84gS1WHuFsKjnqCsAZrvWVbY751kdG2YAY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(366016)(6133799003)(10067099003)(56012099006)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UDIyeG5zRWtqd1pKV01pOFNTc0p0WjFhdTlWZW1DbktMZVJZRVFzNUpsblVC?=
- =?utf-8?B?eGRuam9WOG94NTMzYmtiaU5UMEVFZ2Z3Si95cG9USkJGbG93ZWFkSjN1YjJr?=
- =?utf-8?B?d1dyMHVabjRFUHkrRzlEMnVCdTJiMG90UUxhcC9Mclh3ZFVWMThrZWVqTHJY?=
- =?utf-8?B?K3FDR0JVR2QvVDdoTm1QRGhJQjBjSTlJbUtrS1B1amFlK2puRmR3QkFNc0dY?=
- =?utf-8?B?bU1JRHlhb1BhSStqSkZOMU5wdS9IOWlXUWFHNUVITnRHSmJ4ZWs0dEVoQ0Rh?=
- =?utf-8?B?VzdHY0VmOHFZVXNmK0J2Skpuc3B5OENnUmV3MWJJRnlSWG5TbS9vaHNuREd3?=
- =?utf-8?B?RTRzR0s4a25CdSsrQmV2Q3E2RDV4ODluRGV6V1Y5VHJ2OGNpZnFCWWpsZUt4?=
- =?utf-8?B?Q2xpVDh3ai9qVlFWSTgza2ZRV1Q0NmdkR2Q4cUxwVnhVM2ZWaFVERk0wQzBC?=
- =?utf-8?B?d3pJQ1B2em1vMmhGRDRNUTQxdWg1Tlk2bFhuYXBQQ3BhTVpMaXJJQm95eThU?=
- =?utf-8?B?NlIxL2hNSEMvd21xZERBM2NQTFJDdjNaSnZuaUVZYVJlUVVNVW9zV0lzSlpV?=
- =?utf-8?B?TXNuTDJrdnk2YitJVjJiL05aUVAzdVFiOS9TV0JScU1OMmpUVGoranNrNDY0?=
- =?utf-8?B?cnllZ3AxMDZBcFhoTGtJbVg5Rks5YnlqQ1Q3eFNZYjZLSXBzQlEwenVDT1hq?=
- =?utf-8?B?TklFNnB5YVA3UDQxcTc2bmZBR2lodmF5cFB2ZyttbVZNdDFyc0djYTFHa0VK?=
- =?utf-8?B?azYveW5JVmFCVzU5WEJUWjQ1YkhKS2hVQXR1VUZVcVYvU3BkQndQZHpZekV5?=
- =?utf-8?B?QUphWHdYMDZwZ2dRMHF3c0lnUUZ1OFdibU1HNnpCUnkzRkpiNFVkRHpseUhR?=
- =?utf-8?B?WWtlZE9JYk1BUUVGT0pqUlhiOGdRQXQ3N2tLY2ZyS1FMSHFmQ1BTdmtxbFFU?=
- =?utf-8?B?ZWxvbGtSc2dMTTZDVE5mdXNlWHpoTU9tQkhPZTNxd1BpQk9WOHVPSGNaejI5?=
- =?utf-8?B?cFBtdzZUMUpaOU16VE5ncUpOdGhUZ3ZQVkVFR0xENUFSVjVyVGhIa0FRMHFi?=
- =?utf-8?B?MGJhUkUxSmZ1dCtYaDhGUzdzRC8wZit6Z1c5UEhGNFFYME41SklGV1ByY0hz?=
- =?utf-8?B?U3JkM1daaGZPaGJ1alg3eFJEdC9aOTJCSmdjYlludnFFYlhSRDhLTEduamg5?=
- =?utf-8?B?RUJLTjFWb0wwSU1xM2c3cXZBVXZ4WW9JMS9lNWY3dVdCSnRTUlFKZWlHNU9u?=
- =?utf-8?B?Z0dDNVpzVS9qNjNKT1BDZ09iUzY2VFJkNjJ5c2V3N2NDY1FNd05Oanpha3ZQ?=
- =?utf-8?B?R1cxekt3OUFoMk9NVFRlSGQvaTlJSDZ0RWVTMjYwZXZabE5rOERLZHA0eEow?=
- =?utf-8?B?V0lGV3FCRFZqdERxbEI3eUk0VDFCNldZcGwrVjBVeG1wWkhyaXNwYUFZbjc2?=
- =?utf-8?B?QVdncXZYVE43OG5La29Iek1NVGJQRjJPTGsrNGQwdFQ0ZFJVampTWjk2OFhO?=
- =?utf-8?B?bUhLSXV2a0ZscjJ0UDdiMW54VHdYRFhUcnhPeXBrdzg5bm1pZVpWYitSTHpy?=
- =?utf-8?B?amtjSUNJZU5DZVhBcG83cGNrbXUwcUF2SkFNMlpOdytiRnhBL25MZll1UVlx?=
- =?utf-8?B?aEdHOXpIaXNNRHh4dFc0NmNvcFk2bUFyWEVvV1JBeU5DTEY1VEdkMmRhdzFy?=
- =?utf-8?B?cjlvN0NpaXNDSXc0c0ErNHhBTG15S29OTEdpeUluSEtpeFd2WjZzc1hBZHI4?=
- =?utf-8?B?eXNYV0FiT0FrZ3YyVTZJUEZhWVdjUnRweHlmTjBvYy9iTDhoTUdVZWl4dGJt?=
- =?utf-8?B?QnBRR1N3Y1FUTjRvTnJvTWxQTXFQbER2Mng3R2tvdFh4N05WTHFCRW9IQmsr?=
- =?utf-8?B?S3FySmJ1QXdkbWx0YlR4Mk5ON0kwZTBHUUtNVDh0V1ZKL0tyTWNwRE4zYjBO?=
- =?utf-8?B?V2xRM2VlbjJ3OHJIMklqcG1Sc2lNb2FGbXNKcUwrRXFBaTI1SDhoaXpMWXBF?=
- =?utf-8?B?c0M1R3pWYWpIM3RtZ2dCc090SXIzWnIxYWtYelZVTU9LUTdqNStKNFNDSFJK?=
- =?utf-8?B?bDN3REJyYmpKcDlQVmU3dFVpM245UnZlanZXRU1ITCthQ2dQNDIxakpLWW9E?=
- =?utf-8?B?MzZlNWNkWkxoeHMyNjZyMXpGNENzdUd1L0Vldk9Samc2MUdoOS9NRmp4VWpI?=
- =?utf-8?B?OVZpNnJWUEJ2TFhFSXRpM0NHTUh4dXlUQ2QvRWg5S0JvUEs0ZkRwVDFVLzhS?=
- =?utf-8?B?TVN6Nk9VdEpETEl1bUZaWGk4K0lpRlFZcGlXS2hPVU1CcTNPU29WcmhpME5P?=
- =?utf-8?B?UlptbUhaRTExeFVuWDRIalZRLzgvK3lOaVlSMHRhV1JTMjFaSnMxUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d574bc3b-1cf6-4a60-bc90-08df059c19b1
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 07:06:51.5700
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zpnKiGnnxcKzy2Q41jdSzgs/MreD3YQCLm5baa2I2cbaOlB3WEOmFUMjtsCIeEerb1/O1AgSo40/ROdnOQS+rA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9353
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <20260829171004.7336-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHdN9lAfqnLmnnsQyaIwPphM+3eHA==
+Thread-Topic: [PATCH V14 00/12] Subject: [PATCH v14 00/12] famfs: the
+ Fabric-Attached Memory File System (standalone)
+X-Wm-Sent-Timestamp: 1788023412
+X-Original-Mailer: git-send-email 2.55.0
+Message-ID: <010001a04e801a4e-8eb212cd-b263-4043-ab65-33e480d2d7d4-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.08.29-54.240.48.180
 
-
-On 28/08/2026 09:15, Richard Cheng wrote:
-> On Thu, Aug 27, 2026 at 06:44:42PM +0800, Lucero Palau, Alejandro wrote:
->> On 25/08/2026 08:37, Lucero Palau, Alejandro wrote:
->>> On 24/08/2026 09:33, Richard Cheng wrote:
->>>> On Fri, Aug 21, 2026 at 04:51:33PM
->>>> +0800,alejandro.lucero-palau@amd.com wrote:
->>>>> From: Alejandro Lucero<alucerop@amd.com>
->>>>>
->>>>> A PCI device can present multiple Physical Functions(PFs) but the CXL
->>>>> specs restrict to the first one, PF0, the discovery and management of
->>>>> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
->>>>> obtain the CXL.mem range to work with somehow.
->>>>>
->>>>> Although this could be handled internally by an accelerator/Type2
->>>>> driver, it requires to properly handle changes to the CXL mem device,
->>>>> mainly its release by the CXL core, but also potential CXL device
->>>>> resets. When this release happens, those other PFs need to be
->>>>> told about
->>>>> it.
->>>>>
->>>>> Implement a way for non-PF0 PFs to register/unregister to the memdev
->>>>> linked to the PF0 device. At memdev release, trigger the release of
->>>>> those non-PF0 PFs devices registered to such memdev from the
->>>>> driver they
->>>>> are bound to.
->>>>>
->> <snip>
->>
->>>> I suggest replacing cxl_get_pf0_memdev() and cxl_put_pf0_memdev()
->>>> with another
->>>> helper, e.g.:
->>>>
->>>> int cxl_memdev_link_consumer(struct device *pf0, struct device
->>>> *consumer, struct range *range);
->>>>    It should live in cxl/core/memdev.c , and the behavior is
->>>> something like
->>>>
->>>> 1. Find PF0's memdev and take a temp ref.
->>>> 2. Lock the memdev
->>>> 3. Verify that the memdev is still registered, driver-bound,
->>>> attached, and has a valid HPA range
->>>> 4. Create a managed devce link via device_link_add(consumer,
->>>> &cxlmd->dev, DL_FLAG_AUTOREMOVE_CONSUMER);
->>>
->>> Interesting approach.
->>>
->>>
->>> Not sure this could do the proper thing though.
->>> DL_FLAG_AUTOREMOVE_CONSUMER seems to remove the link, cxlmd->dev in your
->>> case, when consume driver unbinds ... but it is the other way what we
->>> need. Maybe I do not understand well all the implications with this
->>> approach, so let me study it.
->>
->> I'm having problems just trying to implement the supposedly basic
->> functionality linking the cxlmd device with the non-PF0 device, I mean
->> without thinking about potential races with this approach (I think it has
->> less problems in this regard than my approach).
->>
->>
->> I can use DL_FLAG_AUTOREMOVE_SUPPLIER with the supplier being cxlmd->dev, so
->> at device unbinding it can trigger the non-PF0 device unbinding as well. But
->> it seems all this link code is quite related to PM, so some checks at link
->> creation fail. I have tried using DL_FLAGS_SYNC_STATE_ONLY along with the
->> previous one, but another check precludes the link creation if both are used
->> (See device_link_flag_is_sync_state_only() ).
->>
->>
->> Do you have any advice here?
->>
->>
-> Hi Alejandro,
->
-> Thanks for trying the device-link approach. I wonder what deivce-link eperiment you actually execute ?
-> Though I don't have your HW, maybe we can discuss on the experiment method ?
->
->  From what I can know from the current driver-core behavior is
-> - DL_FALG_SYNC_STATE_ONLY | DL_FLAG_AUTOREMOVE_SUPPLIER is rejected by design
-> - a sync-state-only link won't enforce consumer unbind
-> - DL_FLAG_AUTOREMOVE_SUPPLIER alone is a valid flag combination, so a NULL there depends on runtime state or
->    the specific device relationship
->
-> You're right that DL_FLAG_AUTOREMOVE_CONSUMER means the link is removed when the consumer driver unbinds.
-> Now we get it more clear that, the autoremove flag control the liftetime of the link, they don't control supplier-to-consumer unbind direction.
->
-> For normal managed device link, driver core unbinds active consumers before unbinding the supplier.
-> For this case I think DL_FLAG_AUTOREMOVE_CONSUMER is appropriate since the non-PF0 driver creates the dependency during probe and no longer
-> needs it after that driver unbinds.
-
-
-I was confused with the flags. A non-PF0 function should be able to 
-delete the link without triggering the unbinding of the supplier, and 
-the supplier unbinding should trigger the non-PF0 unbinding. The flag 
-seems to do the first one, and the implicit functionality when unbinding 
-the supplier does the second thing. So, I think this could do what we need.
-
-However,  I can not (properly) test it, because the supplier is checked 
-with device_pm_initialized() and it fails for the memdev device and I 
-guess it will with the region device as well. If I remove the check, it 
-all works, so maybe adding some support for this case and conditionally 
-do such PM check could be the way to go, as it simplifies a lot the 
-design. I will study this further and see the implications.
-
-
-Thanks!
-
-
-> But I rethink about linking consumer to cxlmd->dev, memdev is not the object whose lifetime defines whether the returned HPA range is valid.
-> An open /dev/cxl/memX can keep the memdev object alive even after the EP and region have been torn down.
->
-> I am not sure but cxl_region seems like a more accurate supplier, it provides vaid HPA to consumers.
->
-> I let GPT sketched the implementation of the API I was thinking about, maybe something like the following.
->
-> """
->    int cxl_memdev_link_region_consumer(struct cxl_memdev *cxlmd,
->    				    struct device *consumer,
->    				    struct range *range)
->    {
->    	struct device *decoder_dev __free(put_device) = NULL;
->    	struct device *region_dev __free(put_device) = NULL;
->    	struct cxl_endpoint_decoder *cxled;
->    	struct cxl_region_params *p;
->    	struct cxl_region *cxlr = NULL;
->    	struct cxl_port *endpoint;
->    	struct device_link *link;
->
->    	endpoint = cxlmd->endpoint;
->    	if (!endpoint)
->    		return -EPROBE_DEFER;
->
->    	/*
->    	 * Endpoint removal owns region teardown, so this prevents the
->    	 * endpoint and its decoder children from disappearing while the
->    	 * supplier is being resolved.
->    	 */
->    	guard(device)(&endpoint->dev);
->
->    	if (!endpoint->dev.driver)
->    		return -EPROBE_DEFER;
->
->    	decoder_dev = device_find_child(&endpoint->dev, NULL,
->    					first_mapped_decoder);
->    	if (!decoder_dev)
->    		return -EPROBE_DEFER;
->
->    	cxled = to_cxl_endpoint_decoder(decoder_dev);
->
->    	/*
->    	 * Take an independent region-device reference while the decoder to
->    	 * region association is protected. The association is revalidated
->    	 * below after taking the region device lock.
->    	 */
->    	scoped_guard(rwsem_read, &cxl_rwsem.region) {
->    		cxlr = cxled->cxld.region;
->    		if (!cxlr)
->    			return -EPROBE_DEFER;
->
->    		region_dev = get_device(&cxlr->dev);
->    	}
->
->    	/*
->    	 * Serialize link creation against region driver unbind. Without this,
->    	 * a link could be added after device_links_busy() has already marked
->    	 * the supplier as unbinding and walked its existing consumers.
->    	 */
->    	guard(device)(region_dev);
->    	guard(rwsem_read)(&cxl_rwsem.region);
->    	guard(rwsem_read)(&cxl_rwsem.dpa);
->
->    	p = &cxlr->params;
->
->    	if (!region_dev->driver ||
->    	    cxled->cxld.region != cxlr ||
->    	    p->state != CXL_CONFIG_COMMIT ||
->    	    !p->res ||
->    	    p->nr_targets != 1)
->    		return -EPROBE_DEFER;
->
->    	link = device_link_add(consumer, region_dev,
->    			       DL_FLAG_AUTOREMOVE_CONSUMER);
->    	if (!link)
->    		return -ENXIO;
->
->    	*range = (struct range) {
->    		.start = p->res->start,
->    		.end = p->res->end,
->    	};
->
->    	return 0;
->    }
-> """
->
-> I think it needs more tweaks, but hope it can give you some idea.
->
-> The intended ordering is then,
->
-> non-PF0 probe -> validate comitted region -> create (consumer, region) managed link -> copy HPA range -> map the PF slice
-> region teardown -> driver core sees an active/probing consumer -> wait -> unbind the non-PF0 driver -> consumer unmaps its HPA slice -> AUTOREMOVE_CONSUMER removes the link -> region teardown removes the decoder
->
-> driver core can manage the device references and drops the supplier lock before forcing consumer unbind.
->
-> Does it match the behavior you need ?
->
-> Best regards,
-> Richard Cheng.
+From: John Groves <john@groves.net>=0D=0A=0D=0AThis is v14 of famfs, as a=
+ standalone file system. v13 is at [7]; v12 is=0D=0Aat [9].=0D=0A=0D=0ATh=
+e intent is that v15 will be fuse again; Miklos and I have come to=0D=0Aa=
+greement on a a path forward with fuse that I think is likely to work.=0D=
+=0ABut this branch has r-b tags, and has some important fixes (which I've=
+=0D=0Aalready cross-ported to fuse).=0D=0A=0D=0A- This series can be had =
+via git as tag famfs-v15 at [10]=0D=0A- The current draft v15 (fuse) seri=
+es can be had at tag famfs-v15-rc1 at [11]=0D=0A- A merge of both can be =
+had as tag famfs-v14-v15-rc1 at [12]=0D=0A=0D=0A###=0D=0A=0D=0AMost of th=
+is cover letter repeats v12/v13. If you have read it, skip to=0D=0A"Chang=
+es since v13" below and to the per-patch changelogs under the "---"=0D=0A=
+line of each patch (which carry the v14 notes). The history goes back to=20=
+=0D=0A2023, and is briefly covered in the v12 cover.=0D=0A=0D=0AThe most =
+important thing to know about famfs is that it CANNOT be used as a=0D=0Ag=
+eneral purpose file system. It is for enabling file-based byte-level acce=
+ss=0D=0A(including direct mmap) to very large (e.g. 100TB) shared/disaggr=
+egated=0D=0Amemory appliances - which have become available during this l=
+ong process,=0D=0Aand which are in need of Linux support.=0D=0A=0D=0ASo f=
+amfs cannot be used by anybody who doesn't know why they need it. Making=0D=
+=0Afamfs standalone means it can't affect users who don't use it. Micron,=
+ as=0D=0Awell as other memory companies, need it, and do not intend to ab=
+andon it -=0D=0Abut imagine if we did: fs/famfs/ should be removed if the=
+ memory companies=0D=0Acan't be bothered to maintain it.=0D=0A=0D=0AThis =
+code base has been in active CI and used globally by early adopters and=0D=
+=0Atesters of disaggregated memory since 2024. I believe it is solid.=0D=0A=
+=0D=0AWhy standalone (short version)=0D=0A=0D=0Afamfs was introduced at L=
+PC 2023 and LSFMM 2024 [1] as a standalone file=0D=0Asystem, then spent c=
+lose to a year being ported to fuse/libfuse. After=0D=0Amaintaining famfs=
+ in both forms, I have concluded it makes more sense as a=0D=0Astandalone=
+ file system: fuse adds complexity to famfs (more complex, less=0D=0Aadap=
+table, less performant - and famfs files are memory, so access must run=0D=
+=0Aat memory speed), while famfs adds complexity to fuse that is unlikely=
+ to see=0D=0Aconstructive re-use. The full history and argument are in th=
+e v12 cover=0D=0Aletter [9].=0D=0A=0D=0AChanges since v13=0D=0A----------=
+-------=0D=0A=0D=0A- Reviewed-by tags from Darrick J. Wong and Jeff Layto=
+n have been added to=0D=0A  the patches they reviewed.=0D=0A=0D=0A- The M=
+AP_CREATE ioctl (patch 07) is hardened, addressing Richard Cheng's=0D=0A =
+ review of v13:=0D=0A    * it now requires CAP_SYS_RAWIO, since MAP_CREAT=
+E installs caller-supplied=0D=0A      device-memory mappings into a file;=
+=0D=0A    * fmap validation rejects integer overflow (check_add_overflow(=
+) on the=0D=0A      extent arithmetic; file_size and each interleaved ext=
+ent's ie_nbytes are=0D=0A      bounded by MAX_LFS_FILESIZE);=0D=0A    * i=
+nterleaved (striped) fmap coverage is validated at ingest -- the sum of=0D=
+=0A      the interleaved extents' ie_nbytes must reach file_size, and eac=
+h strip=0D=0A      must physically hold the chunks striped onto it -- so =
+a malformed striped=0D=0A      file is rejected with -EINVAL rather than =
+faulting (SIGBUS) on access.=0D=0A=0D=0A- Rebased onto v7.2.=0D=0A=0D=0AT=
+he full v12 -> v13 change list is in the v13 cover [7] and in the per-pat=
+ch=0D=0A"---" changelogs.=0D=0A=0D=0AFamfs Overview=0D=0A=0D=0AFamfs expo=
+ses sharable disaggregated memory as a file system. Famfs consumes=0D=0As=
+hared memory from [usually shared memory] dax devices, and provides=0D=0A=
+memory-mappable files that map directly to the memory - no page cache=0D=0A=
+involvement. Famfs differs from conventional file systems in fs-dax mode,=
+=0D=0Ain that it handles in-memory metadata in a sharable way (which begi=
+ns with=0D=0Anever caching dirty shared metadata). So a famfs file system=
+ can be mounted=0D=0Afrom multiple nodes, provided they have access to th=
+e memory.=0D=0A=0D=0AThe key performance requirement is that famfs must r=
+esolve mapping faults=0D=0Awith minimal overhead. This is achieved by ful=
+ly caching the file-to-devdax=0D=0Ametadata for all active files.=0D=0A=0D=
+=0AFamfs remains the first fs-dax file system that is backed by devdax ra=
+ther=0D=0Athan pmem in fs-dax mode (hence the need for the new dax mode).=
+=0D=0A=0D=0AFamfs depends on the 'fsdev' dax mode which landed in 7.1 - i=
+t will only run=0D=0Awith an fsdev-mode (aka famfs-mode) daxdev as its ba=
+cking device(s).=0D=0A=0D=0AThe famfs user space can be found at [6].=0D=0A=
+=0D=0A[1] https://lwn.net/Articles/983105/ (Famfs at LSFMM 2024)=0D=0A[2]=
+ https://lwn.net/Articles/1020170/ (Famfs at LSFMM 2025, with patch link)=
+=0D=0A[3] https://lwn.net/Articles/1068686/ (LWN coverage of the patch th=
+read)=0D=0A[4] https://lwn.net/Articles/1082687/ (Famfs at LSFMM 2026)=0D=
+=0A[5] https://lore.kernel.org/linux-fsdevel/0100019f7d9fbe81-6cb16662-25=
+22-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com/#b=0D=0A[6] https://=
+famfs.org=0D=0A[7] FIXME: v13 lore link=0D=0A[8] https://lore.kernel.org/=
+linux-cxl/0100019fd478eb93-a6bd48e4-b5f1-4871-93d4-582802956e6c-000000@em=
+ail.amazonses.com/T/#u (Partial dax patch)=0D=0A[9] https://lore.kernel.o=
+rg/linux-fsdevel/20260806053409.GL3560084@frogsfrogsfrogs/T/#t (v12)=0D=0A=
+[10] https://github.com/jagalactic/linux/tree/famfs-v14=0D=0A[11] https:/=
+/github.com/jagalactic/linux/tree/famfs-v15-rc1=0D=0A[12] https://github.=
+com/jagalactic/linux/tree/famfs-v14-v15-rc1=0D=0A=0D=0A=0D=0AJohn Groves =
+(12):=0D=0A  dax: replace exported dax_dev_get() with non-allocating dax_=
+dev_find()=0D=0A  famfs: Module operations, fs_context, and mount=0D=0A  =
+famfs: Add daxdev table and dax notify_failure support=0D=0A  famfs: Intr=
+oduce inode_operations and super_operations=0D=0A  famfs: Introduce file_=
+operations read/write=0D=0A  famfs: Introduce mmap and VM fault handling=0D=
+=0A  famfs: MAP_CREATE ioctl and fmap ingest (ABI 44)=0D=0A  famfs: iomap=
+_begin and file-to-dax offset resolution=0D=0A  famfs: Register secondary=
+ daxdevs by path (FAMFSIOC_DAXDEV_OPEN)=0D=0A  famfs: Add runtime operati=
+on-permission (opts) framework=0D=0A  famfs: Report device capacity via s=
+tatfs so df works=0D=0A  famfs: Add documentation=0D=0A=0D=0A Documentati=
+on/filesystems/famfs.rst           |  142 +++=0D=0A Documentation/filesys=
+tems/index.rst           |    1 +=0D=0A .../userspace-api/ioctl/ioctl-num=
+ber.rst      |    1 +=0D=0A MAINTAINERS                                  =
+ |    8 +=0D=0A drivers/dax/fsdev.c                           |   19 +=0D=
+=0A drivers/dax/super.c                           |   38 +-=0D=0A fs/Kcon=
+fig                                    |    2 +=0D=0A fs/Makefile        =
+                           |    1 +=0D=0A fs/famfs/Kconfig               =
+               |   12 +=0D=0A fs/famfs/Makefile                          =
+   |    5 +=0D=0A fs/famfs/famfs_file.c                         | 1070 ++=
++++++++++++++++=0D=0A fs/famfs/famfs_inode.c                        |  86=
+9 +++++++++++++=0D=0A fs/famfs/famfs_internal.h                     |  16=
+2 +++=0D=0A fs/namei.c                                    |    1 +=0D=0A =
+fs/super.c                                    |    7 +=0D=0A include/linu=
+x/dax.h                           |    7 +-=0D=0A include/linux/fs.h     =
+                       |    1 +=0D=0A include/uapi/linux/famfs_ioctl.h   =
+           |  160 +++=0D=0A include/uapi/linux/magic.h                   =
+ |    1 +=0D=0A 19 files changed, 2504 insertions(+), 3 deletions(-)=0D=0A=
+ create mode 100644 Documentation/filesystems/famfs.rst=0D=0A create mode=
+ 100644 fs/famfs/Kconfig=0D=0A create mode 100644 fs/famfs/Makefile=0D=0A=
+ create mode 100644 fs/famfs/famfs_file.c=0D=0A create mode 100644 fs/fam=
+fs/famfs_inode.c=0D=0A create mode 100644 fs/famfs/famfs_internal.h=0D=0A=
+ create mode 100644 include/uapi/linux/famfs_ioctl.h=0D=0A=0D=0A--=20=0D=0A=
+2.53.0=0D=0A=0D=0A
