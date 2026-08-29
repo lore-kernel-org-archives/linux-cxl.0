@@ -1,101 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012030.outbound.protection.outlook.com [52.101.53.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7B3515DA
-	for <linux-cxl@vger.kernel.org>; Sat, 29 Aug 2026 01:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D740233F8AA;
+	Sat, 29 Aug 2026 07:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.30
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787966751; cv=fail; b=dcwLRelFkka4ZtPuhRJ0qAieApwTEMnJOq7Snb5kZK+5NbeV1sqDY7kzL+dMz2tI4rWHGnLlouqu2ix4ZuYxq+9AWUe9Bie97TW8FxaYmr/jjHnOruvZiq97kOMyzLDHxhJgngldm+FuSrQXHO48FdM/DbiNWkjb6BehauSqpes=
+	t=1787987217; cv=fail; b=jsngHx60yw3nMXsG8KUSplcx5l6CsWM4uLBCVNHhe3V5kUGUd8Ou8KVzcX3luTIiSycZUclzq5Z3qxWuq3eNbs+43U5bOakUzyK9gBtXL8vfyFHQMEgMDoM0el4tSrbDIzTPUo/JZIugAlVPnIZPFFfOtPgcmq6z2GjAg2SkRgE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787966751; c=relaxed/simple;
-	bh=wtPQQg0onKeSbIWEywUN4Ix2uo0oWREkt4dZjS6ZR6k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KgwuWXC5AzePgz2/TF6npiTTjlyOroH7U2tOHiCgEnwMuvw4g/JnyaCUOKSGhKqJS4CegIBmt6FJ+l1Y/9IZaPVMvAN8frI9o2mj5gAWToCxjsLKNPEPCzlA79cw4xSUKzrEP/dvXXjQDCfxKnWShjzef9gXOBcGbN2Hi+VeYOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WICHAoD4; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787987217; c=relaxed/simple;
+	bh=/Y0aGarGc+MTrg5dIko7eA3SXnxKwobwh2huKZpzhWQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=K6qnUT+Dxy9hVO842t3La6L+C5R2up9FJVKZrxiFgxH0WTBMk+IJWrlp1uE3NNPUNyM3AQC71aIdkEvvgwRTk5DysltRSBTfh7nHmDe5gecZZH2SruU+VqE6OMUoRI86KpKApVDVupRqL4svkxygFe3Fvt/tkWCnaXbx0WOytEw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xfR4DXTe; arc=fail smtp.client-ip=52.101.53.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WICHAoD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787966748; x=1819502748;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=wtPQQg0onKeSbIWEywUN4Ix2uo0oWREkt4dZjS6ZR6k=;
-  b=WICHAoD40mFzMpA/h4Qcv0M/meQ6lnmJOiUl4U6xqyADixgs+N9YJujo
-   L7v6FuOQzmYE3UVvQTkAva/ItyZb6uPX4kk/dRrDf4DDiCA6JnY8rYeIs
-   qq+8l4Kdoe/3lAdTph7LfiiLuprA4aSWZsGy60suEzHdRF/wePh2emb0U
-   pVoHiCF6k8FyjGsJS9EQL+Vsu7V7zAENXCMPD1QED3GE3k709Dl2QJAun
-   ptAnjStBKraPnXrHvKgIQVefkDUxNBDGaYbcak1eL1tnMfL0tuxzOmyvG
-   63KTvQEZvPds8Vrbw+0fgC3WzeSOGVMXgwcpQvfGf1exNoq5FKSw+2KYF
-   g==;
-X-CSE-ConnectionGUID: qjdVqDR1Qaq6meJF2fz9kw==
-X-CSE-MsgGUID: Tc/21Yz3TG+hxVsdoII5wA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11889"; a="88499321"
-X-IronPort-AV: E=Sophos;i="6.25,249,1779174000"; 
-   d="scan'208";a="88499321"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2026 18:25:47 -0700
-X-CSE-ConnectionGUID: ks/iKMatRVy4IBVR2pyHRQ==
-X-CSE-MsgGUID: PeXNAz0NSjq0YTDzZHgWBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,249,1779174000"; 
-   d="scan'208";a="267758285"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2026 18:25:48 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Fri, 28 Aug 2026 18:25:47 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Fri, 28 Aug 2026 18:25:47 -0700
-Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.16) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Fri, 28 Aug 2026 18:25:43 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xfR4DXTe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mif3kQl3Uq4CjEDP+jZUgETDB7OaOhiuXy/5KyYPhu0IYyFoEshZ3ELqhTLJBdu9/PGIiaS6CYLlsFAz7xBic+1ZWvSvtnnrzmtFf4e21KAUU0m0jd2WPJndUOM6JyuisOd+sdVULr7RR2NVuR9BddWnYIUfF3dJk5T7snrquI4mOf1Mo31/1TJlMdPACyrI5ZyWV5GBN4pCakwE3reAbzLF4CcLtKuTeCdNgqho1dJBdAua261OMuPIG10c+uuiVD5ZeiWmSLS2S8UOJ6cH5tNF9xJmPe27RK9p9Ej7fTPlvCO9sExHg8IqNGVhZeBAG25lkuUpKRyHyQsnhjxj6Q==
+ b=F0QSXZ5xt1demVbO8PdWc1XN/I6Sai0t+jyFMgVfpr2ztu1iTdBTWM+v3+i0N0FCWNVjH+LASgDoCw3WrXlaRbPMxZ5xk0+1RGPbjJANfwR5Zea/eNkgx8WjoBbQHKhzcTB5t85xpounzgWpfsIDpb4uokOvBs3AeLmYKhEexR4iZ/Gc4BcxrRmQ1hJ2U0G3A0m61kXOTeQgZUX0obX9gCoT6O2QOc6x4NCl7JEJdO7CpSL6CE01l6uFhz8lREbXF07ALAeygK59trpOMbEJYlrcS3rBN+pTChzyDrbUasU9RJbWTSTxRwW2RpO230KOGAQULNVQ174lgiLNCiO3yw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RQmyGgLG+SEyTOr+czkOsT/rIdWmeIDPIAR0576SKMM=;
- b=SC8Jb6DVIDd3SVLdf7s4IzUqGqzmCq5Pm7FOYGhkIQaI/X/rWmE31y4snzzZv3VVN2klX6IGwdf26vT511m99rR/JsWyszjHbyfR1ot89cTif9tWOU2XJiW1PNVxEPP58cwH16rYSQHjX04VNVgqA5ySM/DE4+N4yU54Xbvpl1eRLBSWIyfUceykzZXkoHNmeKInaKaZkWcuJxHLH5bIXKiCGphohGhbyVdM9+0L7wO9qXh0SmXQda5Sd+Wsc/xwWOVEsZOzn9JNTdBfuhIMBhv07mjOjAeArDplSjc33KWz7r0WPtUOBkKT3yonk5nlT4LhHd+tIJxAJR7iwEigOg==
+ bh=wCJF2tfyKaUt42f+98vi1rdrcnz+JhTrdf2NI4Ka55k=;
+ b=GfBfs4jWqW98XEhuBewKfQ3SaV/2FHKKdsQVWuuAR6HQ5F0LwGHQFd7uw+y2heZ9pttIr/RK9LXUKOIQzborYizuBAVmQdlpVzP2ybbSbJ2S/BBtYl5oEp3RZQnhXpaM1FgSPx97RGjM14n8p/D7QmTETK0wzLbvd48PtFy+kM9CstOoLNnyIteepsXSmoxOYjrgij2H/rtZxrhLKYDhYW0SN8rgLBNZS1SUOoPnrFjqiT5JTLHJTixTy/huR1ZPuSQGpUcJqnsTdflT+bySPc5YMMZlHAWAsDl2vK9WfwFL+tAP5bLAl1lhgrlVOgQVS3FrNximS0AMWbxMpKURCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wCJF2tfyKaUt42f+98vi1rdrcnz+JhTrdf2NI4Ka55k=;
+ b=xfR4DXTeNzUvJejmYfAqcNsgiAPWewCuBAyIJROf/XfGn+HwmkuOUfNCbWYuhaCXRFoguzQJ3lSj270J0W3OLyCAhbQ15XyR1e6gSfMFMHp3+FrselD6fgL7V9yWRDDDYphafaHd7Kej/Lhg5fLWXdt2qLYwHVU1f7GdU/+JHTI=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by MN2PR11MB4661.namprd11.prod.outlook.com (2603:10b6:208:26b::16) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ LV3PR12MB9353.namprd12.prod.outlook.com (2603:10b6:408:21b::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.23; Sat, 29 Aug
- 2026 01:25:41 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0360.008; Sat, 29 Aug 2026
- 01:25:41 +0000
-Date: Fri, 28 Aug 2026 18:25:37 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Guixin Liu <kanie@linux.alibaba.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>, Li Ming
-	<ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/region: Unregister the pmem region bridge on
- setup failure
-Message-ID: <apI1Ebyv8U6ZJWYR@aschofie-mobl2.lan>
-References: <20260812061043.57319-1-kanie@linux.alibaba.com>
- <anzo3j2nWsGlZIw_@aschofie-mobl2.lan>
- <6487b454-ac7a-41c8-af9d-e2f17743f30e@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.11; Sat, 29 Aug
+ 2026 07:06:51 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0360.008; Sat, 29 Aug 2026
+ 07:06:51 +0000
+Message-ID: <173a8a29-2ea9-4231-815c-c6b0cca3ed80@amd.com>
+Date: Sat, 29 Aug 2026 08:06:46 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] cxl/memdev: add support for mutipf device
+To: Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com,
+ Alejandro Lucero <alucerop@amd.com>
+References: <20260821155134.260053-1-alejandro.lucero-palau@amd.com>
+ <20260821155134.260053-2-alejandro.lucero-palau@amd.com>
+ <aov-jfhJtNtZJxlN@MWDK4CY14F> <a313b340-9263-4204-b0b2-bc492cf746a4@amd.com>
+ <2a7d2d8c-ff02-4f2f-94d8-21d64dd77f82@amd.com> <apErJUX77f4x02LH@MWDK4CY14F>
+Content-Language: en-GB
+From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
+In-Reply-To: <apErJUX77f4x02LH@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6487b454-ac7a-41c8-af9d-e2f17743f30e@linux.alibaba.com>
-X-ClientProxiedBy: SJ0PR03CA0370.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::15) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+X-ClientProxiedBy: LO4P265CA0060.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2af::6) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -103,126 +69,272 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|MN2PR11MB4661:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59bb4758-e03a-464c-b5b8-08df056c7049
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|LV3PR12MB9353:EE_
+X-MS-Office365-Filtering-Correlation-Id: d574bc3b-1cf6-4a60-bc90-08df059c19b1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|18002099003|4143699003|22082099003|10067099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info: Nkbi90HjkUy0ro3/IaMLVP7JAOSsuvPtzwRe4XuRrEz3p3SGuLLIx+umpYDFv69GnSZQEkN+s2PRzBZT7kPqYPpAc1scpBzvGCg3wsO0aVbbXXGV7qG/B66If3A6IMfOI2DnXTJKZv5pKCxtCSi2KRqPOMBkjQKnnR9z4sxt9GXBMk+BJ7pesxUSPM4G2wJim5SKHkx+Rvv0x63KhKoP200L0mwiyGhXDHeWjSPgFeZYe4WeY8SYjNdTFWLYo/OL8g5o/ONBjTW7LqGdpVVGq8zkI6nU0bC5ktaN41a6Y2oG2netPIJaOsbFcw0cTBSYsieifhfKCqsplH1nDcLNPtlaHKNp41jq5vUWY+KE7HxnObXuL2eEasrp4mIep7WWHe5AagCY72iR0Tubi/WfaumIbR/H8PVvgkNGuKFKv1TGL0zuyl4BJ4fC7jS8T+DFFTdViBcShc9aJ0ih9jH/g4H5/JcB9cB5Mc1sNTlJXrYj+F2l65YPHRb75qkhm7Tz2ZoHWepwM7QzzqOWmRPGg/5go2bHg5S5Vay5q+9FxzPW086aFshEQkpKbp2NBMD4zCJLxKIoQY3sQWl0bnL1PsT9pGDKg/xl0M9AQtLvXNJwjOIzky4EnQElylcMzZH76SM+a78NB/FoxLSfU/2N8OkKk4hHa3GL853jDmvIMWk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(18002099003)(4143699003)(22082099003)(10067099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|23010399003|366016|6133799003|10067099003|56012099006|4143699003|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	scxoAwXBHJ/FTJwBP0CYNr/d1Ki1bFHQEjpU8dRFQvXdvVDAkcG37mQlcz+Ze+8O7EzliuVfthS3mZWC9LvLfDnSVl4w9BmWmBfTXN1ph077O01SjShaQu6CpXXg3wL2HbaHyN5v3eVDh9vcLf96aCojU3OqGAYFFDpPNzXFYLOAxzPJNJfV9C/Rz8H1QzTofXge8BJFogn7Th5O6j9sfrXO3qnXqAYHKRE1ABXRSpHcXzIWCOkLUTfHYxj8ADjSH9Rs9wyQVRYCAqZhf+MWe6A5vR6ru4xttTf1J3uIvbAGYtrb3y4UPVPEyU7iDMiwkJuPeUoBVvEW6nmDINhIbT8MIDdA0aL+oYjBLOmYk/Lg9zhSVdlGKrPZkItOhz0nbNmWAfsOS+uJpLUUj6/vF7ik/y3dh30ogV+N7+tuSF06L4+2boxopZ4JS+C1OICujISQz4dm3/w21lFeKS0FNIpc2wt1B8Mgdjd2PePK8JH1aHRqlbuIQSkkwzKf2fp07lj/vpGayqyzdk2jpkg6VWg4WEwa1G6nenqvewlymWk9/Cv/5UlE+oK4QcHYQjLyveZM+LisdPldsbFFsL2IpCb0S6ntQ2gL4bUwX2NxpGjsQ6KxSHmV5KadR3JVUecCMgPxBLjxp84gS1WHuFsKjnqCsAZrvWVbY751kdG2YAY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(366016)(6133799003)(10067099003)(56012099006)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RU1JWTVlSmYxMUluVnB2Y3ZQcXY2L1NxTUh5RUUyREUwS2MxdzdEa1ZkYkZD?=
- =?utf-8?B?a0tVQUNRdDFlNkFVdmEwVmxMMUNPQWl3VFlBWlpEQkM2dC9PTmZMQmFNOTE2?=
- =?utf-8?B?U0VjWHBwQW1WTHhMZHEzdFozVzdkTzRLU3FHVm9JYlNWaUhJOHlzYTRMUU9Z?=
- =?utf-8?B?NTF1N0owaHAxdU9ZSFlQWnFhaUN5UUdNSXNOTjBOQW5ZRmxkZ2d0N0xqUmZ3?=
- =?utf-8?B?WXB5ZXQzM01GM0E1WGVjdEQrNGhYek9RY3VGM2tQb0ZrZ3B0aGVxRFZ0cUlL?=
- =?utf-8?B?QUNuZ0xJM0dwV29NYTF3TENZc1VyN1JHLzNkMFhpcU8zN3dPYThyUE51dExV?=
- =?utf-8?B?QTlGaGNnYU85UDEyVkhRaWxVWFdKZjM2a2hOR1RpYVovNXZmeWNNbkdKTURo?=
- =?utf-8?B?TEd5YndLcHFhWDQ5dGxiNk92b3R6Y00yVCtlYzJVMGxCaGYrUXZTSkN2Rzd6?=
- =?utf-8?B?bnY5dDZSSCtrUHpXWWQwTnlpTVc0N1c3MEdGaWM4ZDRtVERhNkdtd0x0V1ha?=
- =?utf-8?B?Tzg0S004L2I1UVI0Y1dmbENHbVd1cVE0WldyRVhSUWZyM0Y5L1d5NDhoNXZD?=
- =?utf-8?B?MFBSRDl1RVZ4aVJxQllDajQ0d0FWcno5cjQ3YmN1SHJndDhVY0oyVDU3QURY?=
- =?utf-8?B?YjdqNXJGWVNvUG13SDlSNUN3RytGQ0h0RmpKOEpLcmRoV2libDgzYXBpckkw?=
- =?utf-8?B?RHkwVjhwRnRCVWRlZGlmRDI4VFRqL2tKOEZmRElRZ25BV3hFcHk3R0lET3RX?=
- =?utf-8?B?UUpCeWp5ZmpKRlFrYmF6VEdOaER1S0FqbW44Q0JKQTd4RnEzdTZnc3RLN1lx?=
- =?utf-8?B?UjNxYWFhQ3A3a09SUmZINjljUWt4UDFDbkt6TUlobjU4K3U4WGt4QXNMSjAv?=
- =?utf-8?B?cnZKT05NQVJmMHhVT0lpdUtiNnhqQ20vK1Y4aGw0dlNYOWZBTWJQakhLWFA1?=
- =?utf-8?B?WHpaa2FvdXdjOEJmMmR0QTJTVHFjM08vVzdRNnRnZHdWZkdNQm85V3lIYTE2?=
- =?utf-8?B?UDY4TERQN1JSRHNXOTkzM25xbkk5QThqV21KbGxkZkFDWWxRSHc2bExaa2Vk?=
- =?utf-8?B?TVJZS09wakJtdzJZYXE5dHhHY0NEY3FmY2liTGtKc1JiNTlUZGx5ZXdJeVZZ?=
- =?utf-8?B?TFhyWk5kWDg1NkVsTnlsVEliVXRjYytSR0pTTFNheFpXUkxmdUN6Zk9KVG9B?=
- =?utf-8?B?NFdQNFAyRnhlbkwwMEpvKzQrR25IZnJraWNtTlhNdXRBdjlIeDJ2NzZ5NXRW?=
- =?utf-8?B?YVN2V3ZkaE1oWkxDT0hPZlJtRlpYWlcwVXlxZ3doM290WkRLcEMyU21sOVpQ?=
- =?utf-8?B?YVlKcHBLdCtIaTB2RkhaeXhYYWJoNVgwL0lzWVp0TjZKUTFsY0lIQ3BoMEdQ?=
- =?utf-8?B?VE9xRXNvRGk0bnZkNjY3SzUwclBuRngzWTNkdytmT2NIQ210UUNkclAwaE9S?=
- =?utf-8?B?MTlLM21GUFc5UGgrVFlKY1FqZGRiWUlOTndqb3BEZVJYbGRGR3pqYTd4Qkkv?=
- =?utf-8?B?aTRlcHRoR3gyTjhCNWZzY3ZjK2wzbDNaRGptL3FUMVl3ZzRxa00rZTBiZnVL?=
- =?utf-8?B?d0w1TjFhMkJqdC8wRHdGRlE1KytBWHpzTVZNSXMwV3FGd3piSG9iTElzZmVq?=
- =?utf-8?B?MXlIc3JMM0ppWXlBMzNOQ0FnZ1dOcW96TkFBcXcyaEpCUG9zNEhtT2pXZzUz?=
- =?utf-8?B?SEZCd1dRK281cFliaFFhaDErUjBCdDkvN0Ivd0J2djgwSTNyWE9LVk4vaVZH?=
- =?utf-8?B?bGlOVlNuNER5OUxVWVpSZmlpVUR0WGVvZzd4T29xTndpZXBFVkF4MjRERlZ0?=
- =?utf-8?B?SzhOVVBManNpK0xYUWxhQzhyQVFBQXNGemhVVFBLZUx5Mllzb0Y1M29KM09H?=
- =?utf-8?B?Yyt5QWFxSWdBRnA2YjF2elJZdDh0NWdmVXBzSW0rS2trQnpqTVJYbHFRNC9E?=
- =?utf-8?B?Nml4bVBoL1B2YlY0ZkNXdk5tR3A4S1dOSGVYT0oyUmthSGxKMWV0cVRMekFB?=
- =?utf-8?B?MlNaODZFOWtQUkxZUHFlWlZDeHJsbDlkWUNFYWxrMlR1bXZSZFNIR3Y5NEd6?=
- =?utf-8?B?Vzk1K20waXZ0aGlMMHJ4bFVhaHQ0R0FQb05QQVpJV0FsSitrYlBIUytuWEV3?=
- =?utf-8?B?MHlpOFordmtaOWh6SjFtVVpGSjN1Y1ovOEpLTWc0TWRkMFRuUHhuTGZYdzBX?=
- =?utf-8?B?aEJHWGVvS3QvaVpBUVNQZkFYNjVXZEczYlo5VXNzMmR2Y3lXczZrRkZRcHU4?=
- =?utf-8?B?cmlIQW5NTVFnZ0tOQ2pwY3pWRlNLV3JadWNXYnNnWDdDT0FTTU9paGYrQTEr?=
- =?utf-8?B?NzVXTnpmbXU0U2x1SzlhV0dvcDltaVM3UnhXeWR5RFlzcWdrNzhQVStOYytl?=
- =?utf-8?Q?5YOSftOmhzCJwsl4=3D?=
-X-Exchange-RoutingPolicyChecked: bM16UUNXgWD+MOejQYoxzvkTreakVaWoEYElZ2I6mzFki+1JJyKvNPByuARr7twzXXY854Lk/Dg7HhRelnt0Me/QxLTsARsoJQMmDiDlTYwCnuV5ojUlUnCk5+s9bOAAy7KHgxe7ahMDNOn1hp7l7+TgF+XW5PUXRvRWmOCklzfsuUFxlsOL11xWPkE93Do9+3gGSXBaxFZ4WCJnYnMkZEXsUQ/ySQoFCqn/3x/8Ldx+HcopdL69eqzc2TTtrtqB2WSUOUdjknodgUh6rHMCS18nyV2KLr6kEp05pLR1UZiN8q6Bn0E4Ask53YM9wez3MLmez7eIWQGmMFElAiW5SA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59bb4758-e03a-464c-b5b8-08df056c7049
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UDIyeG5zRWtqd1pKV01pOFNTc0p0WjFhdTlWZW1DbktMZVJZRVFzNUpsblVC?=
+ =?utf-8?B?eGRuam9WOG94NTMzYmtiaU5UMEVFZ2Z3Si95cG9USkJGbG93ZWFkSjN1YjJr?=
+ =?utf-8?B?d1dyMHVabjRFUHkrRzlEMnVCdTJiMG90UUxhcC9Mclh3ZFVWMThrZWVqTHJY?=
+ =?utf-8?B?K3FDR0JVR2QvVDdoTm1QRGhJQjBjSTlJbUtrS1B1amFlK2puRmR3QkFNc0dY?=
+ =?utf-8?B?bU1JRHlhb1BhSStqSkZOMU5wdS9IOWlXUWFHNUVITnRHSmJ4ZWs0dEVoQ0Rh?=
+ =?utf-8?B?VzdHY0VmOHFZVXNmK0J2Skpuc3B5OENnUmV3MWJJRnlSWG5TbS9vaHNuREd3?=
+ =?utf-8?B?RTRzR0s4a25CdSsrQmV2Q3E2RDV4ODluRGV6V1Y5VHJ2OGNpZnFCWWpsZUt4?=
+ =?utf-8?B?Q2xpVDh3ai9qVlFWSTgza2ZRV1Q0NmdkR2Q4cUxwVnhVM2ZWaFVERk0wQzBC?=
+ =?utf-8?B?d3pJQ1B2em1vMmhGRDRNUTQxdWg1Tlk2bFhuYXBQQ3BhTVpMaXJJQm95eThU?=
+ =?utf-8?B?NlIxL2hNSEMvd21xZERBM2NQTFJDdjNaSnZuaUVZYVJlUVVNVW9zV0lzSlpV?=
+ =?utf-8?B?TXNuTDJrdnk2YitJVjJiL05aUVAzdVFiOS9TV0JScU1OMmpUVGoranNrNDY0?=
+ =?utf-8?B?cnllZ3AxMDZBcFhoTGtJbVg5Rks5YnlqQ1Q3eFNZYjZLSXBzQlEwenVDT1hq?=
+ =?utf-8?B?TklFNnB5YVA3UDQxcTc2bmZBR2lodmF5cFB2ZyttbVZNdDFyc0djYTFHa0VK?=
+ =?utf-8?B?azYveW5JVmFCVzU5WEJUWjQ1YkhKS2hVQXR1VUZVcVYvU3BkQndQZHpZekV5?=
+ =?utf-8?B?QUphWHdYMDZwZ2dRMHF3c0lnUUZ1OFdibU1HNnpCUnkzRkpiNFVkRHpseUhR?=
+ =?utf-8?B?WWtlZE9JYk1BUUVGT0pqUlhiOGdRQXQ3N2tLY2ZyS1FMSHFmQ1BTdmtxbFFU?=
+ =?utf-8?B?ZWxvbGtSc2dMTTZDVE5mdXNlWHpoTU9tQkhPZTNxd1BpQk9WOHVPSGNaejI5?=
+ =?utf-8?B?cFBtdzZUMUpaOU16VE5ncUpOdGhUZ3ZQVkVFR0xENUFSVjVyVGhIa0FRMHFi?=
+ =?utf-8?B?MGJhUkUxSmZ1dCtYaDhGUzdzRC8wZit6Z1c5UEhGNFFYME41SklGV1ByY0hz?=
+ =?utf-8?B?U3JkM1daaGZPaGJ1alg3eFJEdC9aOTJCSmdjYlludnFFYlhSRDhLTEduamg5?=
+ =?utf-8?B?RUJLTjFWb0wwSU1xM2c3cXZBVXZ4WW9JMS9lNWY3dVdCSnRTUlFKZWlHNU9u?=
+ =?utf-8?B?Z0dDNVpzVS9qNjNKT1BDZ09iUzY2VFJkNjJ5c2V3N2NDY1FNd05Oanpha3ZQ?=
+ =?utf-8?B?R1cxekt3OUFoMk9NVFRlSGQvaTlJSDZ0RWVTMjYwZXZabE5rOERLZHA0eEow?=
+ =?utf-8?B?V0lGV3FCRFZqdERxbEI3eUk0VDFCNldZcGwrVjBVeG1wWkhyaXNwYUFZbjc2?=
+ =?utf-8?B?QVdncXZYVE43OG5La29Iek1NVGJQRjJPTGsrNGQwdFQ0ZFJVampTWjk2OFhO?=
+ =?utf-8?B?bUhLSXV2a0ZscjJ0UDdiMW54VHdYRFhUcnhPeXBrdzg5bm1pZVpWYitSTHpy?=
+ =?utf-8?B?amtjSUNJZU5DZVhBcG83cGNrbXUwcUF2SkFNMlpOdytiRnhBL25MZll1UVlx?=
+ =?utf-8?B?aEdHOXpIaXNNRHh4dFc0NmNvcFk2bUFyWEVvV1JBeU5DTEY1VEdkMmRhdzFy?=
+ =?utf-8?B?cjlvN0NpaXNDSXc0c0ErNHhBTG15S29OTEdpeUluSEtpeFd2WjZzc1hBZHI4?=
+ =?utf-8?B?eXNYV0FiT0FrZ3YyVTZJUEZhWVdjUnRweHlmTjBvYy9iTDhoTUdVZWl4dGJt?=
+ =?utf-8?B?QnBRR1N3Y1FUTjRvTnJvTWxQTXFQbER2Mng3R2tvdFh4N05WTHFCRW9IQmsr?=
+ =?utf-8?B?S3FySmJ1QXdkbWx0YlR4Mk5ON0kwZTBHUUtNVDh0V1ZKL0tyTWNwRE4zYjBO?=
+ =?utf-8?B?V2xRM2VlbjJ3OHJIMklqcG1Sc2lNb2FGbXNKcUwrRXFBaTI1SDhoaXpMWXBF?=
+ =?utf-8?B?c0M1R3pWYWpIM3RtZ2dCc090SXIzWnIxYWtYelZVTU9LUTdqNStKNFNDSFJK?=
+ =?utf-8?B?bDN3REJyYmpKcDlQVmU3dFVpM245UnZlanZXRU1ITCthQ2dQNDIxakpLWW9E?=
+ =?utf-8?B?MzZlNWNkWkxoeHMyNjZyMXpGNENzdUd1L0Vldk9Samc2MUdoOS9NRmp4VWpI?=
+ =?utf-8?B?OVZpNnJWUEJ2TFhFSXRpM0NHTUh4dXlUQ2QvRWg5S0JvUEs0ZkRwVDFVLzhS?=
+ =?utf-8?B?TVN6Nk9VdEpETEl1bUZaWGk4K0lpRlFZcGlXS2hPVU1CcTNPU29WcmhpME5P?=
+ =?utf-8?B?UlptbUhaRTExeFVuWDRIalZRLzgvK3lOaVlSMHRhV1JTMjFaSnMxUT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d574bc3b-1cf6-4a60-bc90-08df059c19b1
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 01:25:41.1792
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 07:06:51.5700
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 40golSeApkHIetIo+6OdRfKt3sWEH1y8vMwOhhM2MX5LmKLsNiJXBXqiOtHHBaD3+fXtxmgXRqGzxrAMAmrlU802UtvVYxWgEWmkBJINnm0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4661
-X-OriginatorOrg: intel.com
-
-On Fri, Aug 28, 2026 at 05:06:55PM +0800, Guixin Liu wrote:
-> 
-> 
-> 在 2026/8/13 05:42, Alison Schofield 写道:
-> > On Wed, Aug 12, 2026 at 02:10:43PM +0800, Guixin Liu wrote:
-> > 
-> > About the subject line:
-> > 
-> > Do we unregister the bridge or do we unregister the pmem
-> > region when the bridge is unboound?
-> > 
-> Unregister the pmem region, sorry for the confusing description.
-> > > devm_cxl_add_pmem_region() publishes the cxl_pmem_region with device_add()
-> > > and only afterwards, under the nvdimm bridge's device lock, arranges for
-> > > its removal - and only if the bridge has a driver bound. If it does not,
-> > > the function sets -ENXIO and leaves through err_bridge, which drops the
-> > > reference this function took on the bridge and returns. The device that
-> > > was just added has no owner at that point: no device_del(), no
-> > > put_device(), and no devm action to do either later. The sibling failure,
-> > > a devm_add_action_or_reset() that cannot allocate, is already covered,
-> > > because devm_add_action_or_reset() runs cxlr_pmem_unregister() itself on
-> > > that path.
-> > > 
-> > > An unbound bridge is a normal state, not an error state. The bridge is
-> > > unbound whenever cxl_pmem is unloaded or its device is detached through
-> > > sysfs, and a region can be probed in that window.
-> > > 
-> > > The added device then stays in sysfs, along with the reference it holds on
-> > > the region, until the module is unloaded. cxlr->cxlr_pmem still points at
-> > > it, and worse, the name is still taken: a later probe of the same region
-> > > allocates a second cxl_pmem_region and fails in device_add() on the
-> > > duplicate "pmem_region%d", so once this has happened the region can no
-> > > longer be brought up at all.
-> > Is above an observed behavior?  ie can you reproduce this, apply
-> > the fix, see it go away?  That would be far more valuable than this
-> > excessive narration as proof of repair.
-> > 
-> > More below...
-> I'm so sorry, I thought that we should add cleanup in
-> failure branch, but now I realize that this branch is never actually
-> reached.
-> 
-
-I think the patch may still apply as-is, so before dropping it, please take a
-look at this from the teardown side rather than the "cxl_pmem is not loaded" side.
-
-cxl_acpi removal unbinds and deletes the bridge before the regions it serves. So,
-a region probe that already found the bridge can reach that check after the bridge
-is gone, set -ENXIO, and return leaving the just-added device with no owner.
-
-If that is true (I'm not sure it is) then the fix stands and the changelog needs to
-tell that story.
+X-MS-Exchange-CrossTenant-UserPrincipalName: zpnKiGnnxcKzy2Q41jdSzgs/MreD3YQCLm5baa2I2cbaOlB3WEOmFUMjtsCIeEerb1/O1AgSo40/ROdnOQS+rA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9353
 
 
--- Alison
+On 28/08/2026 09:15, Richard Cheng wrote:
+> On Thu, Aug 27, 2026 at 06:44:42PM +0800, Lucero Palau, Alejandro wrote:
+>> On 25/08/2026 08:37, Lucero Palau, Alejandro wrote:
+>>> On 24/08/2026 09:33, Richard Cheng wrote:
+>>>> On Fri, Aug 21, 2026 at 04:51:33PM
+>>>> +0800,alejandro.lucero-palau@amd.com wrote:
+>>>>> From: Alejandro Lucero<alucerop@amd.com>
+>>>>>
+>>>>> A PCI device can present multiple Physical Functions(PFs) but the CXL
+>>>>> specs restrict to the first one, PF0, the discovery and management of
+>>>>> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
+>>>>> obtain the CXL.mem range to work with somehow.
+>>>>>
+>>>>> Although this could be handled internally by an accelerator/Type2
+>>>>> driver, it requires to properly handle changes to the CXL mem device,
+>>>>> mainly its release by the CXL core, but also potential CXL device
+>>>>> resets. When this release happens, those other PFs need to be
+>>>>> told about
+>>>>> it.
+>>>>>
+>>>>> Implement a way for non-PF0 PFs to register/unregister to the memdev
+>>>>> linked to the PF0 device. At memdev release, trigger the release of
+>>>>> those non-PF0 PFs devices registered to such memdev from the
+>>>>> driver they
+>>>>> are bound to.
+>>>>>
+>> <snip>
+>>
+>>>> I suggest replacing cxl_get_pf0_memdev() and cxl_put_pf0_memdev()
+>>>> with another
+>>>> helper, e.g.:
+>>>>
+>>>> int cxl_memdev_link_consumer(struct device *pf0, struct device
+>>>> *consumer, struct range *range);
+>>>>    It should live in cxl/core/memdev.c , and the behavior is
+>>>> something like
+>>>>
+>>>> 1. Find PF0's memdev and take a temp ref.
+>>>> 2. Lock the memdev
+>>>> 3. Verify that the memdev is still registered, driver-bound,
+>>>> attached, and has a valid HPA range
+>>>> 4. Create a managed devce link via device_link_add(consumer,
+>>>> &cxlmd->dev, DL_FLAG_AUTOREMOVE_CONSUMER);
+>>>
+>>> Interesting approach.
+>>>
+>>>
+>>> Not sure this could do the proper thing though.
+>>> DL_FLAG_AUTOREMOVE_CONSUMER seems to remove the link, cxlmd->dev in your
+>>> case, when consume driver unbinds ... but it is the other way what we
+>>> need. Maybe I do not understand well all the implications with this
+>>> approach, so let me study it.
+>>
+>> I'm having problems just trying to implement the supposedly basic
+>> functionality linking the cxlmd device with the non-PF0 device, I mean
+>> without thinking about potential races with this approach (I think it has
+>> less problems in this regard than my approach).
+>>
+>>
+>> I can use DL_FLAG_AUTOREMOVE_SUPPLIER with the supplier being cxlmd->dev, so
+>> at device unbinding it can trigger the non-PF0 device unbinding as well. But
+>> it seems all this link code is quite related to PM, so some checks at link
+>> creation fail. I have tried using DL_FLAGS_SYNC_STATE_ONLY along with the
+>> previous one, but another check precludes the link creation if both are used
+>> (See device_link_flag_is_sync_state_only() ).
+>>
+>>
+>> Do you have any advice here?
+>>
+>>
+> Hi Alejandro,
+>
+> Thanks for trying the device-link approach. I wonder what deivce-link eperiment you actually execute ?
+> Though I don't have your HW, maybe we can discuss on the experiment method ?
+>
+>  From what I can know from the current driver-core behavior is
+> - DL_FALG_SYNC_STATE_ONLY | DL_FLAG_AUTOREMOVE_SUPPLIER is rejected by design
+> - a sync-state-only link won't enforce consumer unbind
+> - DL_FLAG_AUTOREMOVE_SUPPLIER alone is a valid flag combination, so a NULL there depends on runtime state or
+>    the specific device relationship
+>
+> You're right that DL_FLAG_AUTOREMOVE_CONSUMER means the link is removed when the consumer driver unbinds.
+> Now we get it more clear that, the autoremove flag control the liftetime of the link, they don't control supplier-to-consumer unbind direction.
+>
+> For normal managed device link, driver core unbinds active consumers before unbinding the supplier.
+> For this case I think DL_FLAG_AUTOREMOVE_CONSUMER is appropriate since the non-PF0 driver creates the dependency during probe and no longer
+> needs it after that driver unbinds.
 
 
-> Please ignore this patch, sorry again.
-> 
-> Best Regards,
-> Guixin Liu
-> 
+I was confused with the flags. A non-PF0 function should be able to 
+delete the link without triggering the unbinding of the supplier, and 
+the supplier unbinding should trigger the non-PF0 unbinding. The flag 
+seems to do the first one, and the implicit functionality when unbinding 
+the supplier does the second thing. So, I think this could do what we need.
+
+However,  I can not (properly) test it, because the supplier is checked 
+with device_pm_initialized() and it fails for the memdev device and I 
+guess it will with the region device as well. If I remove the check, it 
+all works, so maybe adding some support for this case and conditionally 
+do such PM check could be the way to go, as it simplifies a lot the 
+design. I will study this further and see the implications.
+
+
+Thanks!
+
+
+> But I rethink about linking consumer to cxlmd->dev, memdev is not the object whose lifetime defines whether the returned HPA range is valid.
+> An open /dev/cxl/memX can keep the memdev object alive even after the EP and region have been torn down.
+>
+> I am not sure but cxl_region seems like a more accurate supplier, it provides vaid HPA to consumers.
+>
+> I let GPT sketched the implementation of the API I was thinking about, maybe something like the following.
+>
+> """
+>    int cxl_memdev_link_region_consumer(struct cxl_memdev *cxlmd,
+>    				    struct device *consumer,
+>    				    struct range *range)
+>    {
+>    	struct device *decoder_dev __free(put_device) = NULL;
+>    	struct device *region_dev __free(put_device) = NULL;
+>    	struct cxl_endpoint_decoder *cxled;
+>    	struct cxl_region_params *p;
+>    	struct cxl_region *cxlr = NULL;
+>    	struct cxl_port *endpoint;
+>    	struct device_link *link;
+>
+>    	endpoint = cxlmd->endpoint;
+>    	if (!endpoint)
+>    		return -EPROBE_DEFER;
+>
+>    	/*
+>    	 * Endpoint removal owns region teardown, so this prevents the
+>    	 * endpoint and its decoder children from disappearing while the
+>    	 * supplier is being resolved.
+>    	 */
+>    	guard(device)(&endpoint->dev);
+>
+>    	if (!endpoint->dev.driver)
+>    		return -EPROBE_DEFER;
+>
+>    	decoder_dev = device_find_child(&endpoint->dev, NULL,
+>    					first_mapped_decoder);
+>    	if (!decoder_dev)
+>    		return -EPROBE_DEFER;
+>
+>    	cxled = to_cxl_endpoint_decoder(decoder_dev);
+>
+>    	/*
+>    	 * Take an independent region-device reference while the decoder to
+>    	 * region association is protected. The association is revalidated
+>    	 * below after taking the region device lock.
+>    	 */
+>    	scoped_guard(rwsem_read, &cxl_rwsem.region) {
+>    		cxlr = cxled->cxld.region;
+>    		if (!cxlr)
+>    			return -EPROBE_DEFER;
+>
+>    		region_dev = get_device(&cxlr->dev);
+>    	}
+>
+>    	/*
+>    	 * Serialize link creation against region driver unbind. Without this,
+>    	 * a link could be added after device_links_busy() has already marked
+>    	 * the supplier as unbinding and walked its existing consumers.
+>    	 */
+>    	guard(device)(region_dev);
+>    	guard(rwsem_read)(&cxl_rwsem.region);
+>    	guard(rwsem_read)(&cxl_rwsem.dpa);
+>
+>    	p = &cxlr->params;
+>
+>    	if (!region_dev->driver ||
+>    	    cxled->cxld.region != cxlr ||
+>    	    p->state != CXL_CONFIG_COMMIT ||
+>    	    !p->res ||
+>    	    p->nr_targets != 1)
+>    		return -EPROBE_DEFER;
+>
+>    	link = device_link_add(consumer, region_dev,
+>    			       DL_FLAG_AUTOREMOVE_CONSUMER);
+>    	if (!link)
+>    		return -ENXIO;
+>
+>    	*range = (struct range) {
+>    		.start = p->res->start,
+>    		.end = p->res->end,
+>    	};
+>
+>    	return 0;
+>    }
+> """
+>
+> I think it needs more tweaks, but hope it can give you some idea.
+>
+> The intended ordering is then,
+>
+> non-PF0 probe -> validate comitted region -> create (consumer, region) managed link -> copy HPA range -> map the PF slice
+> region teardown -> driver core sees an active/probing consumer -> wait -> unbind the non-PF0 driver -> consumer unmaps its HPA slice -> AUTOREMOVE_CONSUMER removes the link -> region teardown removes the decoder
+>
+> driver core can manage the device references and drops the supplier lock before forcing consumer unbind.
+>
+> Does it match the behavior you need ?
+>
+> Best regards,
+> Richard Cheng.
