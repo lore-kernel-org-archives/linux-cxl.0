@@ -1,162 +1,160 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93F54279F9
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 13:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEC341B8F7
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 13:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788182645; cv=none; b=eB1JX/zwDrqP9uaJq44ldIjzBGWwU+C6/2vNeG8KKt/d/r3aXU83UrfTGaqm65edYJ1kiZsjkPpR03S28NA7YCNsYs282aX0qlP76a/tiHExjJOFV8Z2DuLEkCqyfaGX+Ayr+Q7nTrcpEHWGeYVTilUI3swTwJY5bzZ0mMbTQRw=
+	t=1788183157; cv=none; b=PC3HPoU3i78tzxMTj2G7uM3R/A5Z94cv31+3byoYNICLsYJCmf/7sSf2Fr4QZZstQtqq/Qo5sJuP2Y3PoJZeREP2Vzh96wbGr+nuse9ziN33S+Hue0/fmGycTHsJo7lU/OT6IDCtH9VqEceIVpVGkWEvDlbBm1u8Pys13of9SZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788182645; c=relaxed/simple;
-	bh=eSo0gAhCvn4f+9cQ9ZhQlJiyKryRpQftPUdCKzSHfWk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MohesbrEENwzskA7Wvgi3Udh2BUhMPGfwvRYUfyRBaIP1kSdVSxFRGgEM9zkMuIBeX7tFPP2SJArD5nKw0jm6IaJpGYD+l4HZh5+VgDJEjDG1O4zessdJOt9883iLBBVFR1LQ8pupr7JklGAq+Cm18VDZX6RQDtbimn4PQVUngo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GzDMwrm5; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1788183157; c=relaxed/simple;
+	bh=G2jE7SmXjf1MePd2tXrXYLyEh02Uf42XS9dfx73nZug=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eFlsMTIJoEcndVRQPDTS+ia8HGYscftcGbSQdoiFZ5wcMiVyfbI1nhZl+PYPDP3xk1FlRtAe7DD3YmPXCu9wJgqM+Fh/C41Tr62UbeVGLnWu1W99NK/ickqct3hEZipxaJVZqwhhugstgFGaSXJTVQxE7V/eQs/ibDDv7rzeQtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FFITdy/E; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GzDMwrm5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1788182639; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=pgiT/hQFiGb8Z/BKq58nZtBYUay8m5suI2xbvvisSTg=;
-	b=GzDMwrm5h3zE7bgyDXch8B4PXKqxyFPyjU+PWFuN+WNW/+FSdIrECYeEh0K0KKBDoixrEwKRCR9AfTxpd7jN3Bpt/GHqHWzzcjIeBxDFK+3b5hTZMmJDTsWj0bD+j0pDcJKduanLfXzB1cZzqerrNrQ0d+724wF9LJLSj51VxFs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9znfrJ_1788182637;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9znfrJ_1788182637 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 31 Aug 2026 21:23:57 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: palmer@dabbelt.com,
-	alistair.francis@wdc.com,
-	mst@redhat.com,
-	imammedo@redhat.com,
-	sunilvl@ventanamicro.com,
-	jic23@kernel.org
-Cc: pbonzini@redhat.com,
-	liwei1518@gmail.com,
-	daniel.barboza@oss.qualcomm.com,
-	zhiwei_liu@linux.alibaba.com,
-	chao.liu@processmission.com,
-	anisinha@redhat.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	junjie.cao@intel.com,
-	guoren@kernel.org,
-	qemu-riscv@nongnu.org,
-	qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v5 6/6] tests/qtest: Update RISC-V CXL ACPI golden master binaries
-Date: Mon, 31 Aug 2026 21:23:37 +0800
-Message-ID: <20260831132340.5345-7-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260831132340.5345-1-cp0613@linux.alibaba.com>
-References: <20260831132340.5345-1-cp0613@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFITdy/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788183154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xGQZE89u+mmoSryvOFDpEKXotLmex/GnUzcEVHRI6xc=;
+	b=FFITdy/EHvFQJI2LGZCoUOug0dSNLsWVlXLGKfwUb5dGuvLOQljNnhITB69uOqlnLVZskc
+	3GskMKmqbrSeiQLxGosBzuJkQ7sw0y885vZENekd+qepE47VjHijPysmkYqyOf/AuISHDs
+	b4ULeDd+0d81OkVhl+chOHU0v6Ko/lc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-32-PzpVHGEgMgGFF9oPr1lNXA-1; Mon,
+ 31 Aug 2026 09:32:29 -0400
+X-MC-Unique: PzpVHGEgMgGFF9oPr1lNXA-1
+X-Mimecast-MFC-AGG-ID: PzpVHGEgMgGFF9oPr1lNXA_1788183145
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1130119344BC;
+	Mon, 31 Aug 2026 13:32:23 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F171E1955F05;
+	Mon, 31 Aug 2026 13:32:19 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 6E69B21E682E; Mon, 31 Aug 2026 15:32:17 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: John Snow <jsnow@redhat.com>
+Cc: qemu-devel@nongnu.org,  Alex Williamson <alex@shazbot.org>,  Daniel P.
+ =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,
+  linux-cxl@vger.kernel.org,  Michael
+ Tokarev <mjt@tls.msk.ru>,  Vladimir Sementsov-Ogievskiy
+ <vsementsov@yandex-team.ru>,  Peter Xu <peterx@redhat.com>,  Eric Blake
+ <eblake@redhat.com>,  =?utf-8?Q?Marc-Andr=C3=A9?= Lureau
+ <marcandre.lureau@redhat.com>,
+  zhenwei pi <zhenwei.pi@linux.dev>,  qemu-trivial@nongnu.org,  Fabiano
+ Rosas <farosas@suse.de>,  Kevin Wolf <kwolf@redhat.com>,  Laurent Vivier
+ <laurent@vivier.eu>,  Jiri Pirko <jiri@resnulli.us>,
+  qemu-block@nongnu.org,  Stefan Hajnoczi <stefanha@redhat.com>,  Stefan
+ Berger <stefanb@linux.vnet.ibm.com>,  linux-edac@vger.kernel.org,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  Igor Mammedov
+ <imammedo@redhat.com>,  Gerd Hoffmann <kraxel@redhat.com>,  Jonathan
+ Cameron <jic23@kernel.org>,  Alex =?utf-8?Q?Benn=C3=A9e?=
+ <alex.bennee@linaro.org>,  Zhao
+ Liu <zhao1.liu@intel.com>,  Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>,  "Michael S. Tsirkin" <mst@redhat.com>,
+  Hanna Reitz <hreitz@redhat.com>,  Jason Wang <jasowangio@gmail.com>,
+  Richard Henderson <richard.henderson@linaro.org>,  Paolo Bonzini
+ <pbonzini@redhat.com>,  Ani Sinha <anisinha@redhat.com>,  Philippe
+ =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@mailo.com>,  Lukas Straub
+ <lukasstraub2@web.de>,
+  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@redhat.com>
+Subject: Re: [PATCH v3 43/43] qapi: convert trivial intro sections for
+ block-core.json
+In-Reply-To: <20260826193840.2152000-44-jsnow@redhat.com> (John Snow's message
+	of "Wed, 26 Aug 2026 15:38:40 -0400")
+References: <20260826193840.2152000-1-jsnow@redhat.com>
+	<20260826193840.2152000-44-jsnow@redhat.com>
+Date: Mon, 31 Aug 2026 15:32:17 +0200
+Message-ID: <87tsoae7q6.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: RRoo5-1tagwvP8rU2z-04gSh6PiEBZtP78Gd1T2Qaq4_1788183145
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Populate the DSDT.cxl and CEDT.cxl golden master binaries for the
-RISC-V CXL bios-tables test and empty
-bios-tables-test-allowed-diff.h, following the bios-tables-test update
-process.
+John Snow <jsnow@redhat.com> writes:
 
-The expected AML added by this series is:
+> Signed-off-by: John Snow <jsnow@redhat.com>
+> ---
+>  qapi/block-core.json | 448 ++++++++++++++++---------------------------
+>  1 file changed, 164 insertions(+), 284 deletions(-)
+>
+> diff --git a/qapi/block-core.json b/qapi/block-core.json
+> index 199efc1e008..bed736d86f9 100644
+> --- a/qapi/block-core.json
+> +++ b/qapi/block-core.json
 
-DSDT.cxl:
-  Device (PC0C)        // ACPI0016 CXL host bridge (pxb-cxl, bus 0x0C)
-    Name (_CRS, ResourceTemplate () {
-        DWordMemory (... 0x40400000 .. 0x405FFFFF ...)   // 32-bit MMIO
-        QWordMemory (... 0x400100000 .. 0x40010FFFF ...) // 64-bit MMIO
-        WordBusNumber (... 0x000C .. 0x000D ...)
-    })
-    Method (_OSC, ...)   // PCI host bridge + CXL UUIDs
-  Device (CXLM)        // ACPI0017 CXL memory controller
-    Name (_HID, "ACPI0017")
-    Name (_DEP, Package () { \_SB.PC0C })
-    Method (_STA, ...) / Method (_DSM, ...)
+[...]
 
-CEDT.cxl:
-  CHBS : CXL Host Bridge Structure, Register base 0x800000000
-  CFMWS: CXL Fixed Memory Window, base 0x810000000, size 4G
+> @@ -1378,10 +1357,9 @@
+>  
+>  ##
+>  # @BlockdevOnError:
+> -#
+> -# An enumeration of possible behaviors for errors on I/O operations.
+> -# The exact meaning depends on whether the I/O was initiated by a
+> -# guest or by a block job
+> +#     An enumeration of possible behaviors for errors on I/O
+> +#     operations.  The exact meaning depends on whether the I/O was
+> +#     initiated by a guest or by a block job
+>  #
+>  # @report: for guest operations, report the error to the guest; for
+>  #     jobs, cancel the job
 
-Reviewed-by: Junjie Cao <junjie.cao@intel.com>
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
----
+Two sentences, i.e. not "very trivial".
 
-v5:
-- Regenerate DSDT.cxl against the in-tree edk2-riscv-code.fd blob the
-  test boots: the 64-bit window becomes 0x400100000..0x40010FFFF with
-  the matching PCI0 range shift.
+[...]
 
- tests/data/acpi/riscv64/virt/CEDT.cxl       | Bin 0 -> 108 bytes
- tests/data/acpi/riscv64/virt/DSDT.cxl       | Bin 0 -> 6331 bytes
- tests/qtest/bios-tables-test-allowed-diff.h |   2 --
- 3 files changed, 2 deletions(-)
+> @@ -4780,9 +4692,8 @@
+>  
+>  ##
+>  # @BlockdevOptions:
+> -#
+> -# Options for creating a block device.  Many options are available for
+> -# all block devices, independent of the block driver:
+> +#     Options for creating a block device.  Many options are available
+> +#     for all block devices, independent of the block driver:
 
-diff --git a/tests/data/acpi/riscv64/virt/CEDT.cxl b/tests/data/acpi/riscv64/virt/CEDT.cxl
-index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..81d746dfb09ccb147e26bb64060404ca3191d097 100644
-GIT binary patch
-literal 108
-zc-nJzbqUE~U|?VjaPoKd2v%^42yj*a0!E-1hz+6{7!(+IKx!BefCEf2LP-snumA^?
-O0aMEg#QH!C(hmS*@&^F`
+Likewise.
 
-literal 0
-Hc-jL100001
+>  #
+>  # @driver: block driver name
+>  #
 
-diff --git a/tests/data/acpi/riscv64/virt/DSDT.cxl b/tests/data/acpi/riscv64/virt/DSDT.cxl
-index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..c3d68cf3a080ab66160f6847267fe4b9f8a8c6fc 100644
-GIT binary patch
-literal 6331
-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
+[...]
 
-literal 0
-Hc-jL100001
+> @@ -5589,9 +5479,8 @@
+>  
+>  ##
+>  # @BlockdevAmendOptionsQcow2:
+> -#
+> -# Driver specific image amend options for qcow2.  For now, only
+> -# encryption options can be amended
+> +#     Driver specific image amend options for qcow2.  For now, only
+> +#     encryption options can be amended
 
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index c05fb697a5..dfb8523c8b 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1,3 +1 @@
- /* List of comma-separated changed AML files to ignore */
--"riscv64/virt/DSDT.cxl",
--"riscv64/virt/CEDT.cxl",
--- 
-2.50.1
+Likewise.
+
+>  #
+>  # @encrypt: Encryption options to be amended
+>  #
+
+[...]
 
