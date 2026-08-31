@@ -1,30 +1,30 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1311416849
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 13:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8AD424646
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 13:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788182642; cv=none; b=LNGbBfB70RcNOZfayaRbfurCnlEiKZyqHqynSE6ZcUjojrcis/8jre/pP7cZZrSq6VzD5KYu7WEmnKv6iDr9p/oXS8AkaBo9Hi+hCbJbfgaUmPIjj1hdy++uMzF1TO0ZEv2V+mR8uAu8puzjMLUky8iT8S/yK6NERPa1xgXtIv8=
+	t=1788182644; cv=none; b=gTR9EnGwdP2+OBqA3Ve3ktCr62FEx+GurJPjnkWHJAMZyARC8EReinW0jFoyFlQSGc1hWX9/fwyQVDaQE7iTaKkl9T2hiMzKzeYCV7yJpvCK4hwTyqQo6Tu1Epvowo4raapKAoBJ/lNPr6Z1z+F733WgkloajGFtzxhc4o9R9+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788182642; c=relaxed/simple;
-	bh=OFURnFTE+gQ13q4dRfeWIG5TxiPHuXtpUbA5qewxOfc=;
+	s=arc-20240116; t=1788182644; c=relaxed/simple;
+	bh=rYKb3gQUKfeblVbgtW+RO16aKbVkiMZd5wxXt/t56j4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fl1h7phD/u+IwwBbwteWajk0S2xq2wUYYtrn0/MLRZGrwzUpuXnMi4ULgZOzl2AvGMx60k7TrYUBdCQWgja0i/gsmqbiTF0XbmTsL74AzJ2SirKgZlMpUQ8fJ/EfncCbe/9l3O8ks303zU4kwp7IPvcf8R4LycQGUXQn+HfUbpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kJntb+y8; arc=none smtp.client-ip=115.124.30.130
+	 MIME-Version; b=l7kU/JasCXGFZPRyWNgSD/hS9E4146O8mz6YimbDBpjVu6J8Yb82NG0WHXgZ4rEKXWZOByFZiGm/nOt/qtkRObe3bRkRpygQCCKbN1LmxXgXjjfi4KEzrrY64xbxTMunFSRzyUb5SGwkpSGcx0CbNINC7Nb/S7A3s880oltnemI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jrlybt3I; arc=none smtp.client-ip=115.124.30.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kJntb+y8"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jrlybt3I"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1788182637; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=qUoiwS+nVtbX4Kx79t0Lc82rPB+U+QOyOnVoT6G/J5I=;
-	b=kJntb+y8cwRjcIEgJirLLUXIM5a+hZE2/y2QnLboe05wH9/cyx1GUa0FYOYq8KLKigiVjUGMJcu5hmcW+14DVsZIevgLPV6kHe1U0Slnk/O+iPKQkDvHSgfoOoA6GjKyKEoYTw9oLJPMzTv3y1cJke16B7h8ul2p50a8pI6Knzc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9znfql_1788182635;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9znfql_1788182635 cluster:ay36)
+	t=1788182634; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=v6XMDCYt94mF76Zx8dVfb9niwUZxkL4xtAl2xsI0yz8=;
+	b=jrlybt3I+JssfTV0FZ2nd2DfpGPSRwF0XejVy47+YjnDo/jFtnV5x4N7El3ELWixxc3KQXOe3sZX5SvROxqeEhtto7loWPy8azc3NtXXOLUy9lqT4lb4Vkz3ipvOC7w1FEt7APWgatzchZPA5L4NTWIkLO7Wll+ddbBe9TXb+J8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9znfpq_1788182632;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9znfpq_1788182632 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 31 Aug 2026 21:23:56 +0800
+          Mon, 31 Aug 2026 21:23:53 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
 To: palmer@dabbelt.com,
 	alistair.francis@wdc.com,
@@ -45,9 +45,9 @@ Cc: pbonzini@redhat.com,
 	qemu-riscv@nongnu.org,
 	qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v5 4/6] tests/qtest: Prepare golden files for the RISC-V CXL ACPI test
-Date: Mon, 31 Aug 2026 21:23:35 +0800
-Message-ID: <20260831132340.5345-5-cp0613@linux.alibaba.com>
+Subject: [PATCH v5 1/6] hw/riscv/virt: Add CXL support to the RISC-V virt machine
+Date: Mon, 31 Aug 2026 21:23:32 +0800
+Message-ID: <20260831132340.5345-2-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260831132340.5345-1-cp0613@linux.alibaba.com>
 References: <20260831132340.5345-1-cp0613@linux.alibaba.com>
@@ -59,44 +59,191 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add empty DSDT.cxl and CEDT.cxl golden files and list them in
-bios-tables-test-allowed-diff.h, in preparation for the RISC-V CXL
-bios-tables test added in the following patch.  The populated golden
-master binaries are committed separately in a final patch, following
-the bios-tables-test update process.
+Enable CXL support on the RISC-V virt machine following the same
+approach used by the ARM virt machine:
+- Add PXB and ACPI_CXL Kconfig selections
+- Add CXLState and PCIBus pointer to RISCVVirtState
+- Register CXL machine properties via cxl_machine_init()
+- Create CXL host register region above the PCIe high MMIO region
+- Call cxl_hook_up_pxb_registers() and cxl_fmws_link_targets() at
+  machine_done time
+- Map Fixed Memory Windows above the CXL host register region
+- Add ACPI0017 device in DSDT and build CEDT table in virt-acpi-build.c
 
-Reviewed-by: Junjie Cao <junjie.cao@intel.com>
 Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 ---
+ hw/riscv/Kconfig           |  2 ++
+ hw/riscv/virt-acpi-build.c | 20 ++++++++++++++++++++
+ hw/riscv/virt.c            | 37 +++++++++++++++++++++++++++++++++++++
+ include/hw/riscv/virt.h    |  3 +++
+ 4 files changed, 62 insertions(+)
 
-v4:
-- Split the CXL bios-tables test into the staged flow documented in
-  bios-tables-test.c: empty golden files + allowed-diff.h, then the test
-  code, then the populated golden master binaries with an emptied
-  allowed-diff.h in a final patch (matching how the riscv64 goldens were
-  originally added upstream).
-
- tests/data/acpi/riscv64/virt/CEDT.cxl       | 0
- tests/data/acpi/riscv64/virt/DSDT.cxl       | 0
- tests/qtest/bios-tables-test-allowed-diff.h | 2 ++
- 3 files changed, 2 insertions(+)
- create mode 100644 tests/data/acpi/riscv64/virt/CEDT.cxl
- create mode 100644 tests/data/acpi/riscv64/virt/DSDT.cxl
-
-diff --git a/tests/data/acpi/riscv64/virt/CEDT.cxl b/tests/data/acpi/riscv64/virt/CEDT.cxl
-new file mode 100644
-index 0000000000..e69de29bb2
-diff --git a/tests/data/acpi/riscv64/virt/DSDT.cxl b/tests/data/acpi/riscv64/virt/DSDT.cxl
-new file mode 100644
-index 0000000000..e69de29bb2
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index dfb8523c8b..c05fb697a5 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1 +1,3 @@
- /* List of comma-separated changed AML files to ignore */
-+"riscv64/virt/DSDT.cxl",
-+"riscv64/virt/CEDT.cxl",
+diff --git a/hw/riscv/Kconfig b/hw/riscv/Kconfig
+index de37c08cae..0ba3cd9e15 100644
+--- a/hw/riscv/Kconfig
++++ b/hw/riscv/Kconfig
+@@ -66,8 +66,10 @@ config RISCV_VIRT
+     select VIRTIO_MMIO
+     select FW_CFG_DMA
+     select PLATFORM_BUS
++    select PXB
+     select ACPI
+     select ACPI_PCI
++    select ACPI_CXL
+ 
+ config SHAKTI_C
+     bool
+diff --git a/hw/riscv/virt-acpi-build.c b/hw/riscv/virt-acpi-build.c
+index 59c454f4f9..3188cdc5bf 100644
+--- a/hw/riscv/virt-acpi-build.c
++++ b/hw/riscv/virt-acpi-build.c
+@@ -29,12 +29,16 @@
+ #include "hw/acpi/aml-build.h"
+ #include "hw/acpi/pci.h"
+ #include "hw/acpi/utils.h"
++#include "hw/acpi/cxl.h"
+ #include "hw/intc/riscv_aclint.h"
+ #include "hw/nvram/fw_cfg_acpi.h"
+ #include "hw/pci-host/gpex.h"
++#include "hw/pci/pci_bus.h"
+ #include "hw/riscv/virt.h"
+ #include "hw/riscv/numa.h"
+ #include "hw/virtio/virtio-acpi.h"
++#include "hw/cxl/cxl.h"
++#include "hw/cxl/cxl_host.h"
+ #include "kvm/kvm_riscv.h"
+ #include "migration/vmstate.h"
+ #include "qapi/error.h"
+@@ -514,6 +518,17 @@ static void build_dsdt(GArray *table_data,
+         acpi_dsdt_add_gpex_host(scope, PCIE_IRQ + s->num_sources * 2);
+     }
+ 
++    if (s->cxl_devices_state.is_enabled) {
++        Aml *cxl_dev = aml_device("CXLM");
++        aml_append(cxl_dev, aml_name_decl("_HID", aml_string("ACPI0017")));
++        Aml *method = aml_method("_STA", 0, AML_NOTSERIALIZED);
++        aml_append(method, aml_return(aml_int(0x0B)));
++        aml_append(cxl_dev, method);
++        build_cxl_dsm_method(cxl_dev);
++
++        aml_append(scope, cxl_dev);
++    }
++
+     aml_append(dsdt, scope);
+ 
+     /* copy AML table into ACPI tables blob and patch header there */
+@@ -921,6 +936,11 @@ static void virt_acpi_build(RISCVVirtState *s, AcpiBuildTables *tables)
+                    s->oem_table_id);
+     }
+ 
++    if (s->cxl_devices_state.is_enabled) {
++        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
++                       s->oem_id, s->oem_table_id, &s->cxl_devices_state);
++    }
++
+     if (ms->numa_state->num_nodes > 0) {
+         acpi_add_table(table_offsets, tables_blob);
+         build_srat(tables_blob, tables->linker, s);
+diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+index 51bac47a91..e903551263 100644
+--- a/hw/riscv/virt.c
++++ b/hw/riscv/virt.c
+@@ -55,6 +55,8 @@
+ #include "hw/pci/pci.h"
+ #include "hw/pci-host/gpex.h"
+ #include "hw/display/ramfb.h"
++#include "hw/cxl/cxl.h"
++#include "hw/cxl/cxl_host.h"
+ #include "hw/acpi/aml-build.h"
+ #include "qapi/qapi-visit-common.h"
+ #include "hw/virtio/virtio-iommu.h"
+@@ -1101,9 +1103,33 @@ static inline DeviceState *gpex_pcie_init(MemoryRegion *sys_mem,
+     }
+ 
+     GPEX_HOST(dev)->gpex_cfg.bus = PCI_HOST_BRIDGE(dev)->bus;
++    s->pci_bus = PCI_HOST_BRIDGE(dev)->bus;
+     return dev;
+ }
+ 
++static void cxl_host_state_init(RISCVVirtState *s)
++{
++    MemoryRegion *sysmem = get_system_memory();
++    MemoryRegion *mr = &s->cxl_devices_state.host_mr;
++    hwaddr base;
++
++    if (!s->cxl_devices_state.is_enabled) {
++        return;
++    }
++
++    base = virt_high_pcie_memmap.base + virt_high_pcie_memmap.size;
++    base = ROUND_UP(base, 64 * KiB);
++
++    memory_region_init(mr, OBJECT(s), "cxl_host_reg", 64 * KiB * 16);
++    memory_region_add_subregion(sysmem, base, mr);
++
++    /* Map the Fixed Memory Windows above the CXL host register region. */
++    base += memory_region_size(mr);
++    base = ROUND_UP(base, 256 * MiB);
++    cxl_fmws_set_memmap(base, UINT64_MAX);
++    cxl_fmws_update_mmio();
++}
++
+ static FWCfgState *create_fw_cfg(const MachineState *ms, hwaddr base)
+ {
+     FWCfgState *fw_cfg;
+@@ -1213,6 +1239,13 @@ static void virt_machine_done(Notifier *notifier, void *data)
+     BlockBackend *pflash_blk0;
+     RISCVBootInfo boot_info;
+ 
++    cxl_hook_up_pxb_registers(s->pci_bus, &s->cxl_devices_state,
++                              &error_fatal);
++
++    if (s->cxl_devices_state.is_enabled) {
++        cxl_fmws_link_targets(&error_fatal);
++    }
++
+     /*
+      * An user provided dtb must include everything, including
+      * dynamic sysbus devices. Our FDT needs to be finalized.
+@@ -1451,6 +1484,8 @@ static void virt_machine_init(MachineState *machine)
+             ROUND_UP(virt_high_pcie_memmap.base, virt_high_pcie_memmap.size);
+     }
+ 
++    cxl_host_state_init(s);
++
+     /* register system main memory (actual RAM) */
+     memory_region_add_subregion(system_memory, s->memmap[VIRT_DRAM].base,
+                                 machine->ram);
+@@ -1558,6 +1593,8 @@ static void virt_machine_instance_init(Object *obj)
+     s->acpi = ON_OFF_AUTO_AUTO;
+     s->iommu_sys = ON_OFF_AUTO_AUTO;
+     s->num_sources = VIRT_IRQCHIP_NUM_SOURCES;
++
++    cxl_machine_init(obj, &s->cxl_devices_state);
+ }
+ 
+ static char *virt_get_aia_guests(Object *obj, Error **errp)
+diff --git a/include/hw/riscv/virt.h b/include/hw/riscv/virt.h
+index 36a2def410..4cf930ab9f 100644
+--- a/include/hw/riscv/virt.h
++++ b/include/hw/riscv/virt.h
+@@ -24,6 +24,7 @@
+ #include "hw/core/sysbus.h"
+ #include "hw/block/flash.h"
+ #include "hw/intc/riscv_imsic.h"
++#include "hw/cxl/cxl.h"
+ 
+ #define VIRT_CPUS_MAX_BITS             9
+ #define VIRT_CPUS_MAX                  (1 << VIRT_CPUS_MAX_BITS)
+@@ -65,6 +66,8 @@ struct RISCVVirtState {
+     OnOffAuto iommu_sys;
+     uint16_t pci_iommu_bdf;
+     uint16_t num_sources;
++    CXLState cxl_devices_state;
++    PCIBus *pci_bus;
+ };
+ 
+ enum {
 -- 
 2.50.1
 
