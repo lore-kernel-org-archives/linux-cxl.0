@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD02F39D3FD
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBFD38D3ED
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:24:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788207864; cv=none; b=I0RiO3lcPG+y+Pl1+XaEU377+I5ZotRBisSU6pzN8us98xD5rLzUBDllpE6SnPf0o+iYghCWUPub9Q9a02/4rN3vYmcZE6MsrhY45ga0rbhKZ4mmDMxttiabCvcfw+EMMtBSN+nRxW3JD+phNg3a9JeyIDV/Po4Cdd5DBK46XEk=
+	t=1788207873; cv=none; b=TQ/s+GwW1ckGByxkjn6GQ+JKXdq4fmgymzqZCtX1Ah85vUEw/kpmSSLIt5IgdqS5o93GksJFhhU9iPKtXdVWog9bbClgY+W0G+EZa48dYeza4OwYNLELBA9MWidHXl5GXyOrDmGSVv67wn/g6mHaY6VVwGTHrhBWstaiSDOGX+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788207864; c=relaxed/simple;
-	bh=7GXJV9ItQtBWAgiWgOooTb0fgfb4niwoxPhBWZ4J3cE=;
+	s=arc-20240116; t=1788207873; c=relaxed/simple;
+	bh=/f7tjLGZB7pBFAqeESel5wuzRKk9VBsWm5R9P0YkErM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Xv0C936ZU1o9YPbYTNZPhaw/B8l/2Hiq+b+Du0pwH2ksuZ3xZYqpqitkL8kJJULnDkHa++GEooqv50uqDO75n3odP9P1O1t48DdGJA6vs70KYJzpQASLTTWWQndjT2yiPL+BBuaHetnl0AngMEaLd7DPrbsUAltOZgl2N6ECuUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NIBird6l; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=Jpx12VMNIml1jQa6ylg94mgVITLnQkC9EgmNhq+excaeNbXkj/n32HzT3wJgRMAj57qg1dElhL/vILqNBW4zep1QgCpfio1zOzkc0tkWaJaImMGjFSXqvH2t5SIDKzqyD6/GCcxltlUQJNunkhn7FvAH4HGAakw+ogvDhguRcd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cGiv8Ant; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIBird6l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGiv8Ant"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788207861;
+	s=mimecast20190719; t=1788207869;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cMeGh8F13Z46uyER7y88/d0ISiPeR9CDwXqnRAPj7ik=;
-	b=NIBird6lZijEC9dJvpdCznzS5iU1mXkWzELq1rKv5TlG/g2BUGCowpss2/u3+HCgls1saY
-	MHDJZnG5ejssC4A9GqDBczbhbdSGnKbUtFGYcJbEG2iMczD2il6EhVPHZOOW403e+CEPrO
-	oQL5g9PPslfDCnob4mb9x8NwWzrfkL8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=BCn/Ycwrut66144uUrLT80zpCgg+RoqrOgG6fdXeCGY=;
+	b=cGiv8Antlj7IPtHmOzm8Fn3dWgANpL/M1I3ulAlEXO5EckvMrb6avge4NW+NmjaYSupRaI
+	Trhd+UysV/dkSP9S9xRQ7xvzBzyviPgDz+09sIH6hlhjNf412jF1rHwVHb/vNSXm1yIrAX
+	PzAb8rH/7KsIGuljlaFmSdjeySkI8yE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-GwxeO3OwOjOJ7UZHycldOg-1; Mon,
- 31 Aug 2026 16:24:17 -0400
-X-MC-Unique: GwxeO3OwOjOJ7UZHycldOg-1
-X-Mimecast-MFC-AGG-ID: GwxeO3OwOjOJ7UZHycldOg_1788207855
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-440-w_h5KMCUOy67bYeZnNAPSA-1; Mon,
+ 31 Aug 2026 16:24:25 -0400
+X-MC-Unique: w_h5KMCUOy67bYeZnNAPSA-1
+X-Mimecast-MFC-AGG-ID: w_h5KMCUOy67bYeZnNAPSA_1788207862
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20EE4180131D;
-	Mon, 31 Aug 2026 20:24:15 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6427A18E678F;
+	Mon, 31 Aug 2026 20:24:22 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.63])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EC09B1800347;
-	Mon, 31 Aug 2026 20:24:08 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 597B21800347;
+	Mon, 31 Aug 2026 20:24:15 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	qemu-trivial@nongnu.org,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v4 28/43] qapi: convert trivial intro sections for misc-i386.json
-Date: Mon, 31 Aug 2026 16:19:30 -0400
-Message-ID: <20260831201945.287730-29-jsnow@redhat.com>
+Subject: [PATCH v4 29/43] qapi: convert trivial intro sections for block-export.json
+Date: Mon, 31 Aug 2026 16:19:31 -0400
+Message-ID: <20260831201945.287730-30-jsnow@redhat.com>
 In-Reply-To: <20260831201945.287730-1-jsnow@redhat.com>
 References: <20260831201945.287730-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,183 +92,167 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: FNUEeRaVfm0QbXmFRzRMiEAeN-zpLVkzkJ7fhTO6-ms_1788207855
+X-Mimecast-MFC-PROC-ID: Cbns7zVo9Vquge0jD7NQ7N4Byez7YQbkGj37aTcTCYU_1788207862
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/misc-i386.json | 52 ++++++++++++++++-----------------------------
- 1 file changed, 18 insertions(+), 34 deletions(-)
+ qapi/block-export.json | 50 +++++++++++++++---------------------------
+ 1 file changed, 18 insertions(+), 32 deletions(-)
 
-diff --git a/qapi/misc-i386.json b/qapi/misc-i386.json
-index 05a94d6c416..78ec9aec647 100644
---- a/qapi/misc-i386.json
-+++ b/qapi/misc-i386.json
-@@ -25,8 +25,7 @@
+diff --git a/qapi/block-export.json b/qapi/block-export.json
+index dd724acf1cb..154f07b0b95 100644
+--- a/qapi/block-export.json
++++ b/qapi/block-export.json
+@@ -80,9 +80,8 @@
  
  ##
- # @SevState:
+ # @BlockExportOptionsNbdBase:
 -#
--# An enumeration of SEV state information used during `query-sev`.
-+#     An enumeration of SEV state information used during `query-sev`.
+-# An NBD block export (common options shared between `nbd-server-add`
+-# and the NBD branch of `block-export-add`).
++#     An NBD block export (common options shared between
++#     `nbd-server-add` and the NBD branch of `block-export-add`).
  #
- # @uninit: The guest is uninitialized.
- #
-@@ -52,8 +51,7 @@
+ # @name: Export name.  If unspecified, the @device parameter is used
+ #     as the export name.  (Since 2.12)
+@@ -97,9 +96,8 @@
  
  ##
- # @SevGuestType:
+ # @BlockExportOptionsNbd:
 -#
--# An enumeration indicating the type of SEV guest being run.
-+#     An enumeration indicating the type of SEV guest being run.
+-# An NBD block export (distinct options used in the NBD branch of
+-# `block-export-add`).
++#     An NBD block export (distinct options used in the NBD branch of
++#     `block-export-add`).
  #
- # @sev: The guest is a legacy SEV or SEV-ES guest.
- #
-@@ -66,8 +64,7 @@
+ # @bitmaps: Also export each of the named dirty bitmaps reachable from
+ #     @device, so the NBD client can use NBD_OPT_SET_META_CONTEXT with
+@@ -121,8 +119,7 @@
  
  ##
- # @SevGuestInfo:
+ # @BlockExportOptionsVhostUserBlk:
 -#
--# Information specific to legacy SEV/SEV-ES guests.
-+#     Information specific to legacy SEV/SEV-ES guests.
+-# A vhost-user-blk block export.
++#     A vhost-user-blk block export.
  #
- # @policy: SEV policy value
- #
-@@ -81,8 +78,7 @@
+ # @addr: The vhost-user socket on which to listen.  Both 'unix' and
+ #     'fd' `SocketAddress` types are supported.  Passed fds must be
+@@ -143,8 +140,7 @@
  
  ##
- # @SevSnpGuestInfo:
+ # @FuseExportAllowOther:
 -#
--# Information specific to SEV-SNP guests.
-+#     Information specific to SEV-SNP guests.
+-# Possible allow_other modes for FUSE exports.
++#     Possible allow_other modes for FUSE exports.
  #
- # @snp-policy: SEV-SNP policy value
+ # @off: Do not pass allow_other as a mount option.
  #
-@@ -93,8 +89,7 @@
+@@ -195,8 +191,7 @@
  
  ##
- # @SevInfo:
+ # @BlockExportOptionsVduseBlk:
 -#
--# Information about Secure Encrypted Virtualization (SEV) support
-+#     Information about Secure Encrypted Virtualization (SEV) support
+-# A vduse-blk block export.
++#     A vduse-blk block export.
  #
- # @enabled: true if SEV is active
+ # @name: the name of VDUSE device (must be unique across the host).
  #
-@@ -144,8 +139,7 @@
+@@ -221,8 +216,7 @@
  
  ##
- # @SevLaunchMeasureInfo:
+ # @NbdServerAddOptions:
 -#
--# SEV Guest Launch measurement information
-+#     SEV Guest Launch measurement information
+-# An NBD block export, per legacy `nbd-server-add` command.
++#     An NBD block export, per legacy `nbd-server-add` command.
  #
- # @data: the measurement value encoded in base64
+ # @device: The device name or node name of the node to be exported
  #
-@@ -180,9 +174,8 @@
+@@ -266,8 +260,7 @@
  
  ##
- # @SevCapability:
+ # @BlockExportRemoveMode:
 -#
--# The struct describes capability for a Secure Encrypted
--# Virtualization feature.
-+#     The struct describes capability for a Secure Encrypted
-+#     Virtualization feature.
+-# Mode for removing a block export.
++#     Mode for removing a block export.
  #
- # @pdh: Platform Diffie-Hellman key (base64 encoded)
- #
-@@ -252,9 +245,8 @@
+ # @safe: Remove export if there are no existing connections, fail
+ #     otherwise.
+@@ -289,8 +282,7 @@
  
  ##
- # @SevAttestationReport:
+ # @nbd-server-remove:
 -#
--# The struct describes attestation report for a Secure Encrypted
--# Virtualization feature.
-+#     The struct describes attestation report for a Secure Encrypted
-+#     Virtualization feature.
+-# Remove NBD export by name.
++#     Remove NBD export by name.
  #
- # @data: guest attestation report (base64 encoded)
+ # @name: Block export id.
  #
-@@ -294,8 +286,7 @@
+@@ -316,9 +308,8 @@
  
  ##
- # @SgxEpcSection:
+ # @nbd-server-stop:
 -#
--# Information about intel SGX EPC section
-+#     Information about intel SGX EPC section
+-# Stop QEMU's embedded NBD server, and unregister all devices
+-# previously added via `nbd-server-add`.
++#     Stop QEMU's embedded NBD server, and unregister all devices
++#     previously added via `nbd-server-add`.
  #
- # @node: the numa node
- #
-@@ -309,8 +300,7 @@
+ # Since: 1.3
+ ##
+@@ -327,8 +318,7 @@
  
  ##
- # @SgxInfo:
+ # @BlockExportType:
 -#
--# Information about intel Safe Guard eXtension (SGX) support
-+#     Information about intel Safe Guard eXtension (SGX) support
+-# An enumeration of block export types
++#     An enumeration of block export types
  #
- # @sgx: true if SGX is supported
+ # @nbd: NBD export
  #
-@@ -333,8 +323,7 @@
+@@ -412,9 +402,8 @@
  
  ##
- # @query-sgx:
+ # @BlockExportIothreads:
 -#
--# Return information about configured SGX capabilities of guest
-+#     Return information about configured SGX capabilities of guest
+-# Specify a single or multiple I/O threads in which to run a block
+-# export's I/O.
++#     Specify a single or multiple I/O threads in which to run a block
++#     export's I/O.
  #
- # Since: 6.2
+ # @single: Run the export's I/O in the given single I/O thread.
  #
-@@ -350,8 +339,7 @@
+@@ -436,8 +425,7 @@
  
  ##
- # @query-sgx-capabilities:
+ # @block-export-add:
 -#
--# Return information about SGX capabilities of host
-+#     Return information about SGX capabilities of host
+-# Creates a new block export.
++#     Creates a new block export.
  #
- # Since: 6.2
- #
-@@ -367,8 +355,7 @@
+ # Since: 5.2
+ ##
+@@ -470,8 +458,7 @@
  
  ##
- # @EvtchnPortType:
+ # @BLOCK_EXPORT_DELETED:
 -#
--# An enumeration of Xen event channel port types.
-+#     An enumeration of Xen event channel port types.
+-# Emitted when a block export is removed and its id can be reused.
++#     Emitted when a block export is removed and its id can be reused.
  #
- # @closed: The port is unused.
+ # @id: Block export id.
  #
-@@ -389,8 +376,7 @@
+@@ -482,8 +469,7 @@
  
  ##
- # @EvtchnInfo:
+ # @BlockExportInfo:
 -#
--# Information about a Xen event channel port
-+#     Information about a Xen event channel port
+-# Information about a single block export.
++#     Information about a single block export.
  #
- # @port: the port number
- #
-@@ -419,8 +405,7 @@
- 
- ##
- # @xen-event-list:
--#
--# Query the Xen event channels opened by the guest.
-+#     Query the Xen event channels opened by the guest.
- #
- # Returns: list of open event channel ports.
- #
-@@ -456,8 +441,7 @@
- 
- ##
- # @xen-event-inject:
--#
--# Inject a Xen event channel port (interrupt) to the guest.
-+#     Inject a Xen event channel port (interrupt) to the guest.
- #
- # @port: The port number
+ # @id: The unique identifier for the block export
  #
 -- 
 2.55.0
