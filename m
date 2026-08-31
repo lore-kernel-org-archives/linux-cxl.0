@@ -1,129 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474051419A4
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 06:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D754B37646E
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 06:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788157594; cv=none; b=LNw4nXLQVstFpI8MLkzx1uC1zmuB3O/AMUSnkF/Eca7xDtfkGlHgSyVc8evWF+w5bTs4O8tsh30uMAopqNhwnYfNenxaA89G/CJ5Yj8seeJXD10gwIYuIVELpjIEpMyncRG/AixskLHWgavzIhuL5C52mLKblmEDFKpOXN6tHuw=
+	t=1788158258; cv=none; b=bHoXB1rBLT3/yv4fd7QBY594aXn/1Hd5E7eNPdhKUpHQFneg7n0oN7u6sXvphMM//xqNUuiFl20DYwJhjNKyx5CnSL+OlDWFF23tMkpBQQwAyVDgEsErWpK4rVKbnfmdaxEreIC5vQ5QZigKnCALlfwdZILVedykIkZweFGGvDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788157594; c=relaxed/simple;
-	bh=b0GVPFn1jo7pFGGemKg+vQ4Wd/deErfoC9y93zdOyT0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hMSfh11IoSwcMRKnzBYfGh2pjn3lFq0NwHieM/OK5cASy/Bz21Ezj0WdLnSUav16h2GkgHpetOG+UZ2pw15rBnkTa9+RYu1/0kYolAlbwLXsK361rUEWmHpI7ZQceTen0gswodizz+iirAh9jAtScsIBddYwF8w4x+GMa+Ht0hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2i9Jhsc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788158258; c=relaxed/simple;
+	bh=iSuHeRUKaoDL/U57MojllZSXRQszx6z8M4lOxElppBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Rx+X2Bue9ANHkKeZ7Ak3KCblftCnwtbn3KB6m7wmw8OrP/puMuqPBk9qNziDXhOjAknMpUyIdYXc8rB/GLeXT5uhdMA29It1SV3DdNd9rHw562MeiPPkOeuen4KipprbSEwosQoCWi2t/PBQ9UrffVmfHh9jTWdIcELeZolDr3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myoz9KXs; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2i9Jhsc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEECD1F000E9;
-	Mon, 31 Aug 2026 06:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788157592;
-	bh=R2Bg3ZR6rfyo4yzEIKohsK+dqxzsI9VOG3PiXqGis8I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=X2i9Jhsc5XlRqo0LmQfuD7R1M14Rwpob62Yz80d8dB+deM48Ew5Bcax/3KbT6FOJv
-	 /wgQ9yAa7iB36DrHZCesUlWIDgmo4IJ3mlweaprWhM2vCjM0nOTQaydAwZsiZmgwBu
-	 /sw8A6JSZE9FrL2UxsarquK9vtDG8Fokx30ta7YyFHbQC20me+kJX7GjwFpMaH+bOk
-	 lZ83XzeUzpTlNyUJ5j/Hx14AyXddkln0jD+IFfSG8X1Oy50PoghE7/d1w/Rh+fKt5H
-	 M+jAddm7C6xzhO5v9pY7Kj64wy0Ndg9kVyOfzdCCYNQhZkxdZKI8FkYAEsfm2Eyygh
-	 dyardWVo23+bA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] cxl/region: Unregister the pmem region when the
- bridge is unbound
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Guixin Liu" <kanie@linux.alibaba.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260831061120.200790-1-kanie@linux.alibaba.com>
-References: <20260831061120.200790-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 06:26:32 +0000
-Message-Id: <20260831062632.AEECD1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myoz9KXs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788158257; x=1819694257;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iSuHeRUKaoDL/U57MojllZSXRQszx6z8M4lOxElppBE=;
+  b=myoz9KXsP5ZWFzzY9aVi5/8MLPYXBCIjP8dYvKfK1ZUjCYKIMGyLxLMW
+   CVuxdskeJDlHlCm5Np1xoL33vyRtWzV0xBD/UAv/JzMM0HmCuaxW6MnN0
+   xYxVZxCT6cxjxube/WfZpGpePStfRwJBfOscvBLBomorOceWiboPRuyBs
+   igGavWopl1NI0v3KJhgXl7ZwlNlyThsBnHSzanEKQXsR/3fEm8kaZ+jD9
+   PrvfzJvi9Jumnv6DjzTTqB40K2P5etpWFA7IiBcCJRdGCS1s5b6gsO3pI
+   p+DES7qr/Q1zYGMDSHlkwxwaBgKvk/xIH/O6oog3FM8qcNlDYbn2B33ES
+   A==;
+X-CSE-ConnectionGUID: JMFt1y2BQ4yI0hGOeouW9g==
+X-CSE-MsgGUID: gzVBkORmThSUm/pG8qhpLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88759398"
+X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
+   d="scan'208";a="88759398"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 23:37:36 -0700
+X-CSE-ConnectionGUID: 2AxHrilYR7+95DI6YHkiGg==
+X-CSE-MsgGUID: WkrBKzV6RYCliPPLO2a4bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
+   d="scan'208";a="298617335"
+Received: from junjie-desk-dev.bj.intel.com (HELO junjie-desk-dev.tail2c02c1.ts.net) ([10.238.152.71])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 23:37:32 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: palmer@dabbelt.com,
+	alistair.francis@wdc.com,
+	mst@redhat.com,
+	imammedo@redhat.com,
+	sunilvl@ventanamicro.com,
+	sunilvl@oss.qualcomm.com,
+	jic23@kernel.org,
+	pbonzini@redhat.com,
+	liwei1518@gmail.com,
+	daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com,
+	chao.liu@processmission.com,
+	anisinha@redhat.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	guoren@kernel.org,
+	qemu-riscv@nongnu.org,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] hw/riscv/virt: Advertise the CXL host bridge to firmware via extra-pci-roots
+Date: Mon, 31 Aug 2026 14:37:22 +0800
+Message-ID: <20260831063723.409036-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260828151317.815-4-cp0613@linux.alibaba.com>
+References: <20260828151317.815-4-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Hi Chen Pei,
 
-Pre-existing issues:
-- [High] Race condition leading to NULL pointer dereference in cxl_pmem_reg=
-ion_probe().
---
+On Fri, 28 Aug 2026 23:13:02 +0800, Chen Pei wrote:
+> +        pci_bus_add_fw_cfg_extra_pci_roots(s->fw_cfg, s->pci_bus,
+> +                                           &error_abort);
+>      }
 
-commit 46b44f91e80687bcb216394e5b204e067ed40c6d
-Author: Guixin Liu <kanie@linux.alibaba.com>
+On the in-tree edk2 the qtest topology gets PC0C 0x40400000-0x405FFFFF
+and bus [0x0C,0x0D] out of build_crs(), and two pxb-cxl (bus_nr 12 and
+200) get 0x40000000 and 0x40200000 for their root ports' windows, so
+the v3 TODO goes with it and the riscv side is down to this one call.
+Your RVA22 run covers the guest side, the memory actually coming
+online.
 
-cxl/region: Unregister the pmem region when the bridge is unbound
+Reviewed-by: Junjie Cao <junjie.cao@intel.com>
+Tested-by: Junjie Cao <junjie.cao@intel.com>
 
-This commit addresses an issue where removing cxl_acpi unbinds the nvdimm
-bridge before the regions it serves, leaving an orphan pmem region. It
-updates devm_cxl_add_pmem_region() to unregister the cxl_pmem_region
-synchronously when the bridge is unbound.
+One optional thing about placement: select PXB in 1/6 also brings
+plain pxb-pcie to riscv virt, and that one needs the same fw_cfg file
+with cxl=off -- as posted, a pxb-pcie with cxl=off is never populated
+by the firmware. arm/virt, pc and hppa make the call unconditionally,
+and the generator returns nothing without an expander root bus, so it
+can sit outside the cxl block. Moved here: the pxb-pcie case
+enumerates with cxl=off and the four riscv64 ACPI cases still pass.
+Here or as a follow-up, your call.
 
-> diff --git a/drivers/cxl/core/region_pmem.c b/drivers/cxl/core/region_pme=
-m.c
-> index 23d97e3d78b6a..7ab1373a95e01 100644
-> --- a/drivers/cxl/core/region_pmem.c
-> +++ b/drivers/cxl/core/region_pmem.c
-> @@ -168,12 +168,14 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxl=
-r)
->  		dev_name(dev));
-> =20
->  	scoped_guard(device, &cxl_nvb->dev) {
-> -		if (cxl_nvb->dev.driver)
-> +		if (cxl_nvb->dev.driver) {
->  			rc =3D devm_add_action_or_reset(&cxl_nvb->dev,
->  						      cxlr_pmem_unregister,
->  						      cxlr_pmem);
-> -		else
-> +		} else {
->  			rc =3D -ENXIO;
-> +			cxlr_pmem_unregister(cxlr_pmem);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but this patch extends the
-usage of cxlr_pmem_unregister() in the synchronous error path, keeping a
-vulnerability active.
-
-Can a race condition lead to a NULL pointer dereference in
-cxl_pmem_region_probe()?
-
-If the cxl_pmem driver is loaded (e.g., via modprobe) concurrently with the
-unbinding of the cxl_acpi bridge (or if devm_cxl_add_pmem_region() fails on
-the bridge unbound check), cxlr_pmem_unregister() is called on another CPU.
-
-cxlr_pmem_unregister() sets the pointer to NULL without holding the region
-device's lock:
-
-drivers/cxl/core/region_pmem.c:cxlr_pmem_unregister() {
-    ...
-    cxlr_pmem->cxlr =3D NULL;
-    device_unregister(&cxlr_pmem->dev);
-    ...
-}
-
-Simultaneously, the driver core calls cxl_pmem_region_probe() which holds t=
-he
-device lock, but reads the concurrently nullified pointer and dereferences =
-it:
-
-drivers/cxl/pmem.c:cxl_pmem_region_probe() {
-    ...
-    struct cxl_region *cxlr =3D cxlr_pmem->cxlr;
-    struct cxl_nvdimm_bridge *cxl_nvb =3D cxlr->cxl_nvb;
-    ...
-}
-
-Does this code open a race window against the probe function, resulting
-in a crash?
-
-> +		}
->  	}
-> =20
->  	if (rc)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831061120.2007=
-90-1-kanie@linux.alibaba.com?part=3D1
+Many thanks,
+Junjie
