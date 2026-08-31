@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88AC3911A9
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E30238BF75
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788207799; cv=none; b=MNaR4uI7b19SNrnauQI8DceJh81NWk1nwO2lay67Qsc5lqHYd+JzLqgi4FH4ze4vB19+ajVOgJ5souhaKYf3dXeg1rU8BJVDrXM22R0DKFV7YHtsIKz6KEHpkLyabsmM45poIME/F4tHl1oL3qHg8uzVOXssp05o3E3nqH4BPFo=
+	t=1788207801; cv=none; b=FS+RgCdSz8E3n1A+/y/iofUKo/iKKttdBhkhBudBeI0Q2f6A7tWe6mGOGArZBtclxiHEAh1BqdSta+ehFx2PRjuhRhfO1na0RwNrJo5r/24DJ5q6crBVK3Y4/Li6HyvBCxiylkCUr3dh5EYiQJsdwb43Xehz7MVDjckIXeRPAzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788207799; c=relaxed/simple;
-	bh=+AXY0uUWwhZG12AN/TOSad7BAkxJwQDpnPD5ZysC1ow=;
+	s=arc-20240116; t=1788207801; c=relaxed/simple;
+	bh=fwrEJxcUVE9i/Y+euGFdsLytYmKAgGLJYm5HDxMhRz8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ZxC21qIBQbG7mm1+v4yHKlNyYyqjT294Xn13e7uQSYJb/wKn60rq3wJdPbagPQTRwDs6xLMvfRbv/5yrOtGcqLRU2tliSMD7ySg9Gqe58WcVTlGrp40geleJylR1RlnSHi41GptxtjXfz8JjlmFm7DhAmKooqrpovhZcA9CG3/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RWqlymxu; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=nkvtwRUn0jolV9K3SPLBk+Jv7yXOpCo4bej2Vbjrf9CEZ/l7GZ+U+x9FYOnbLH8NSV7kVLzatlno2bKJBlfBnbzQH+RPl1O0g2UFGPFRlpdf3HYQBDlMJMq1BT0v+gLn/2+YqvZdGV2me0HTa/Y2yVR2WcdryWQR8Pf20NN7Okc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gsIYXtft; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWqlymxu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsIYXtft"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788207796;
+	s=mimecast20190719; t=1788207798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=53kJeaXAGXWbWgaUWrPPbMnvvgjeb4ogml1Llx3Dmyw=;
-	b=RWqlymxuEyQyuIN0s8+eQkC5dAFeCmecY2OL0VSkfEstKmVnDNT4/bnoTnNUeWyesqUnSF
-	At8wts2Su5IgOnkPaiQNxQnkitCVK0nQJFTQ7N5zJmV7ZW3YvRRKB+n7eVGPHyx7HUTesM
-	cMqNrxQb5eFV+qRe+ZZcblrod/RjNvI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Rrr0aq5qW3Bpm6ENGOJu7B6TQXjJHrQBrFBPuknWGuk=;
+	b=gsIYXtft4TpHlfINylr4ybwSnUTkMdp0yWr6Nf7KLU5+JhPpDwV1kLg7G3KyuR5kkxV4Da
+	nOEYPLZWu+dwSnpYJrolaIBbXCT1nzenRJAg0EcX2aZ262X9M/d7/L+9HBQwRT9Pffp5oB
+	I7V8LbAl9GSLjpo/GyOBU+SddqG6LzQ=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-DTlpBjCDMkiOuYikMIMyJg-1; Mon,
- 31 Aug 2026 16:23:09 -0400
-X-MC-Unique: DTlpBjCDMkiOuYikMIMyJg-1
-X-Mimecast-MFC-AGG-ID: DTlpBjCDMkiOuYikMIMyJg_1788207787
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-6TbzN62tNNmcROpOQ73Krw-1; Mon,
+ 31 Aug 2026 16:23:16 -0400
+X-MC-Unique: 6TbzN62tNNmcROpOQ73Krw-1
+X-Mimecast-MFC-AGG-ID: 6TbzN62tNNmcROpOQ73Krw_1788207793
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AE9218D7268;
-	Mon, 31 Aug 2026 20:22:43 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2413C189D617;
+	Mon, 31 Aug 2026 20:23:02 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.63])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BB1E61800577;
-	Mon, 31 Aug 2026 20:22:34 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BE3251800347;
+	Mon, 31 Aug 2026 20:22:52 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	qemu-trivial@nongnu.org,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v4 16/43] qapi: convert trivial intro sections for tpm.json
-Date: Mon, 31 Aug 2026 16:19:18 -0400
-Message-ID: <20260831201945.287730-17-jsnow@redhat.com>
+Subject: [PATCH v4 18/43] qapi: convert trivial intro sections for control.json
+Date: Mon, 31 Aug 2026 16:19:20 -0400
+Message-ID: <20260831201945.287730-19-jsnow@redhat.com>
 In-Reply-To: <20260831201945.287730-1-jsnow@redhat.com>
 References: <20260831201945.287730-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,111 +92,112 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: MMq8W6iyjMgn5Nyw2DfNWuZAWt731EXNNTbnirZEv-k_1788207787
+X-Mimecast-MFC-PROC-ID: BzrbqhxHW8bYOFHI9zQS52ZCSSi566EJSBxlE9weWRo_1788207793
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/tpm.json | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ qapi/control.json | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-diff --git a/qapi/tpm.json b/qapi/tpm.json
-index 3f2850a5733..6d94be656ae 100644
---- a/qapi/tpm.json
-+++ b/qapi/tpm.json
+diff --git a/qapi/control.json b/qapi/control.json
+index 9a5302193d6..0fc465936d8 100644
+--- a/qapi/control.json
++++ b/qapi/control.json
 @@ -10,8 +10,7 @@
  
  ##
- # @TpmModel:
+ # @qmp_capabilities:
 -#
--# An enumeration of TPM models
-+#     An enumeration of TPM models
+-# Enable QMP capabilities.
++#     Enable QMP capabilities.
  #
- # @tpm-tis: TPM TIS model
- #
-@@ -26,8 +25,7 @@
+ # @enable: An optional list of `QMPCapability` values to enable.  The
+ #     client must not enable any capability that is not mentioned in
+@@ -41,9 +40,9 @@
  
  ##
- # @query-tpm-models:
+ # @QMPCapability:
 -#
--# Return a list of supported TPM models
-+#     Return a list of supported TPM models
+-# Enumeration of capabilities to be advertised during initial client
+-# connection, used for agreeing on particular QMP extension behaviors.
++#     Enumeration of capabilities to be advertised during initial
++#     client connection, used for agreeing on particular QMP extension
++#     behaviors.
  #
- # Since: 1.5
- #
-@@ -41,8 +39,7 @@
+ # @oob: QMP ability to support out-of-band requests.  (Please refer to
+ #     qmp-spec.rst for more information on OOB)
+@@ -55,8 +54,7 @@
  
  ##
- # @TpmType:
+ # @VersionTriple:
 -#
--# An enumeration of TPM types
-+#     An enumeration of TPM types
+-# A three-part version number.
++#     A three-part version number.
  #
- # @passthrough: TPM passthrough type
+ # @major: The major version number.
  #
-@@ -55,8 +52,7 @@
+@@ -71,8 +69,7 @@
  
  ##
- # @query-tpm-types:
+ # @VersionInfo:
 -#
--# Return a list of supported TPM types
-+#     Return a list of supported TPM types
+-# A description of QEMU's version.
++#     A description of QEMU's version.
  #
- # Since: 1.5
- #
-@@ -70,8 +66,7 @@
+ # @qemu: The version of QEMU.  By current convention, a micro version
+ #     of 50 signifies a development branch.  A micro version greater
+@@ -92,8 +89,7 @@
  
  ##
- # @TPMPassthroughOptions:
+ # @query-version:
 -#
--# Information about the TPM passthrough type
-+#     Information about the TPM passthrough type
+-# Return the current version of QEMU.
++#     Return the current version of QEMU.
  #
- # @path: string describing the path used for accessing the TPM device
+ # Returns: An object describing the current version of QEMU.
  #
-@@ -87,8 +82,7 @@
+@@ -118,8 +114,7 @@
  
  ##
- # @TPMEmulatorOptions:
+ # @CommandInfo:
 -#
--# Information about the TPM emulator type
-+#     Information about the TPM emulator type
+-# Information about a QMP command
++#     Information about a QMP command
  #
- # @chardev: Name of a unix socket chardev
+ # @name: The command name
  #
-@@ -121,9 +115,8 @@
+@@ -129,8 +124,7 @@
  
  ##
- # @TpmTypeOptions:
+ # @query-commands:
 -#
--# A union referencing different TPM backend types' configuration
--# options
-+#     A union referencing different TPM backend types' configuration
-+#     options
+-# Return a list of supported QMP commands by this server
++#     Return a list of supported QMP commands by this server
  #
- # @type:
- #     - 'passthrough' The configuration options for the TPM
-@@ -142,8 +135,7 @@
+ # Returns: A list of all supported commands
+ #
+@@ -177,8 +171,7 @@
  
  ##
- # @TPMInfo:
+ # @MonitorMode:
 -#
--# Information about the TPM
-+#     Information about the TPM
+-# An enumeration of monitor modes.
++#     An enumeration of monitor modes.
  #
- # @id: The Id of the TPM
+ # @readline: HMP monitor (human-oriented command line interface)
  #
-@@ -161,8 +153,7 @@
+@@ -190,8 +183,7 @@
  
  ##
- # @query-tpm:
+ # @MonitorOptions:
 -#
--# Return information about the TPM device
-+#     Return information about the TPM device
+-# Options to be used for adding a new monitor.
++#     Options to be used for adding a new monitor.
  #
- # Since: 1.5
+ # @id: Name of the monitor
  #
 -- 
 2.55.0
