@@ -1,120 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3B5469850
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 15:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EAD427F8D
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788190694; cv=none; b=lmref1Px1r179R4lbZXW/+Aknn7XBkpRXoRStnsDWIjQxR5egHCMvjezBE0vj+6Rrqbmfv4NG3/xwSx5ODXkv/+E4+Ma5AO7etFfOdQN1HXVgD5sQ+rtOXYCEhzgVz74/yroVg/3kOYaIaBoYUbRLnvPayrA2cMu5O4bQ7DBXPc=
+	t=1788191394; cv=none; b=jaduwDQxoo3wCtSfVwcASf09C/tGM6sgbm9AOUdyFzW7q4d3lKV3BLpTiWO4G+N9Ka38BxDQ/BBIEic8KaUo180vX4giKf78XP+hBgqvP9tQZXCa98YcXJEU1XNEWxMGVQ6o1RkA9jb7sle+VcS88xSKIb++X3YJsGzXn8TxloE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788190694; c=relaxed/simple;
-	bh=aVGTmCsuYzXj/eqGoDYR12c96RR5Z+uUwyqDKM4V23E=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XCFj5ZLnBnDcmXvW20xLWWVWTci5Zl/R7Z9ffYU9b+lz30dh2AuX23Fdu3UYrpExk7FNGZxi049GjZKbfHA6ktfPIdrj0WYX60QxBEQsRLYNSReIsg7RTAPivrP5ep6huQlsxw3kSXOy2UP0FB+tq2C98UaVvedlZv0UkjxLMLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O52gR6Zk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788191394; c=relaxed/simple;
+	bh=EKK3IiqKXly4ho9V8DJmFZT8vdGU3+bAYq4WI118PZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sEMSt0+k+7pQRxP/4NEyfaaguKdOsLtzYEVSYAlcK7bIjU0R8Qb4XED40r/zniPqTRWy6qPsG4oGExPCNIdUc9S6A103uB4mq9NHQwa4/IaXCRn+Dsifu3ej7K3Kc8qvvHII3J9Z8qLcz9rfF2BqXV3fBELFXpv5MtpGEU/HWZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HDK4IOuN; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O52gR6Zk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A830D1F00A3D;
-	Mon, 31 Aug 2026 15:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788190692;
-	bh=RILhKJIGOD59NSE9T9d5sU2veiQtQjOMjEeiyAIrQ6k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O52gR6ZkMagaAcY0GRFkEWjXOHnhDXYmb1cYU4ckCgQa889GHYA8Z3Y2IieFQkEXn
-	 9LAyyEp8rERt5FHOyp64IZbvIiTHiG+381taCrHOf5Cj8wqvPvpNf/l4XjU/e0dRAW
-	 I4RVmjBfohIGLUp9jSFsBuwPtBU44S2lKRnVIOYERWv2V2XSulJu8/0T7IkmnUvpqQ
-	 2/Etp62TywCl8EBYoCDwx9btJSRWQFhFEBelboya8MB4ma9H3xARHNSc+AZMbmXt2o
-	 iduQ+IKFJYCzX/piTcPwokiUZQ8PiHgHEqhqRWVtf4obWnD95m00s3DF0HZg0CHKtR
-	 8YfH3VfvvG18A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH AUTOSEL 6.18] cxl/region: Validate partition index
- before array access
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sasha Levin" <sashal@kernel.org>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260831133314.4125787-312-sashal@kernel.org>
-References: <20260831133314.4125787-1-sashal@kernel.org>
- <20260831133314.4125787-312-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 15:38:12 +0000
-Message-Id: <20260831153812.A830D1F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HDK4IOuN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788191392; x=1819727392;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EKK3IiqKXly4ho9V8DJmFZT8vdGU3+bAYq4WI118PZM=;
+  b=HDK4IOuNHivUP0IGFa/k13Mk3pboWM527reSsosrUIs5SKeN6IlO4MRf
+   lWiFVtPNfjGGKQAHT0cm2bunYWbwEu6GBrkcFncXDRZCJ41pQ7GTtM08Y
+   cmba3VUmGwVKZdhizi29t0GEu98GMQrzaBTvm8RRLIEQVRUI0BkOv0q0M
+   E/UUyiO/5IW46Bih7obFfFIv2s3g5p0TEFt2P2eWtk5iI+Jp3DD0TV/12
+   eQKjXfv16a8Acnhw2+8pr8FSBEWAA1Of/xRRxQhXH25OYgmwgNDtFrEiS
+   m2/Xr82RSN7E6dwvcAV+A0UCeEeQrnw+68jQg7nYLVyEHWqLFcE0cQgT7
+   w==;
+X-CSE-ConnectionGUID: DzCzcPhXTaiTwKX00VSX5w==
+X-CSE-MsgGUID: tQ0yu/IIRUG4V4J+oGGguA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11892"; a="92289069"
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="92289069"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 08:49:51 -0700
+X-CSE-ConnectionGUID: a9cb5jH/RJKnbWrjOqYI2Q==
+X-CSE-MsgGUID: 5ibc3qilTNSp9LMfP0Qunw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="268272535"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.14]) ([10.125.110.14])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 08:49:50 -0700
+Message-ID: <ec5caa6b-02e4-4e01-9ac0-48e62272fc70@intel.com>
+Date: Mon, 31 Aug 2026 08:49:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl/region: Unregister the pmem region when the bridge
+ is unbound
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260831061120.200790-1-kanie@linux.alibaba.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260831061120.200790-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Malformed loop condition in `__cxl_dpa_reserve()` causes an infini=
-te loop and out-of-bounds read if a resource does not match any partition.
-- [High] `poison_by_decoder()` misses partition index validation, causing a=
-n out-of-bounds read if `cxled->part` is -1.
---
 
-commit 31fe17e0b5eabcb1df81ee069bc89ecabb1a8d36
-Author: Koba Ko <kobak@nvidia.com>
+On 8/30/26 11:11 PM, Guixin Liu wrote:
+> Removing cxl_acpi unbinds the nvdimm bridge before the regions it
+> serves. A region probe can therefore register its cxl_pmem_region and
+> only then find the bridge unbound, which leaves the new device with
+> nothing to remove it.
+> 
+> The orphan outlives the teardown and pins its region and its memdevs, so
+> a later cxl_acpi bind renumbers the root port, ports, endpoints,
+> decoders and the memdev.
+> 
+> Unregister the cxl_pmem_region when the bridge is unbound.
+> 
+> Found by code inspection. Racing a cxl_region bind against a cxl_acpi
+> unbind leaked a pmem_region device on 12 of 12 attempts, and none with
+> this patch.
+> 
+> Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> Reviewed-by: Richard Cheng <icheng@nvidia.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
 
-cxl/region: Validate partition index before array access
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-construct_region() reads cxled->part and uses it to index
-cxlds->part[] without checking for a negative value. If the
-partition was never resolved, part remains at its initial value
-of -1, causing an out-of-bounds array access.
+> ---
+> Found by inspecting the CXL error paths, then confirmed on a QEMU CXL
+> topology (4 memdevs behind a CXL switch, one of them with 2G of
+> persistent capacity).
+> 
+> Test procedure, with a dev_err() temporarily added on the unbound-bridge
+> branch so that taking it could be observed:
+> 
+>   cxl create-region -d decoderX.Y -m memN -t pmem -s 2G -w 1 -g 256
+>   echo regionN > /sys/bus/cxl/drivers/cxl_region/unbind
+>   echo regionN > /sys/bus/cxl/drivers/cxl_region/bind &
+>   echo ACPI0017:00 > /sys/bus/platform/drivers/cxl_acpi/unbind &
+>   wait
+> 
+> Without the patch all 12 attempts took the unbound-bridge branch. The
+> region bind failed with -ENXIO and pmem_regionN stayed registered on the
+> cxl bus after the teardown had removed everything else, including the
+> bridge and the region it hangs off, leaving its /sys/bus/cxl/devices/
+> link dangling into the deleted path. Because the orphan keeps references
+> on its region and on the mapped memdev, the ancestor chain up to the CXL
+> root port stayed pinned, so rebinding cxl_acpi renumbered the topology:
+> root0 became root1, port1 became port2 and mem3 became mem4.
+> 
+> With the patch the same 12 attempts still reach that branch and the bind
+> still fails with -ENXIO, but nothing is left registered and the numbering
+> is stable across repeated bind and unbind cycles.
+> 
+> No artificial delay was needed to land in the window. The teardown
+> releases the bridge first, so it gets there while the probe is still
+> inside device_add().
+> 
+> v2 -> v3:
+> - Reframe the changelog around cxl_acpi teardown, which is the reachable
+>   path, rather than cxl_pmem being unloaded or unbound. The bridge driver
+>   sets suppress_bind_attrs and cxl_acpi now depends on cxl_pmem, so that
+>   framing could not happen (Alison Schofield)
+> - Drop the -EEXIST claim. The leaked device pins the region id, so the id
+>   is never reused and no duplicate name occurs; the observable
+>   consequence is the leak and the renumbering after a rebind
+> - Cut the implementation narration and state what was tested
+>   (Alison Schofield)
+> - The code is unchanged from v2, so Richard Cheng's and Li Ming's
+>   Reviewed-by tags are carried over. Note that the changelog has been
+>   rewritten since they gave them, in particular the -EEXIST claim above
+> 
+> v1 -> v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>   the code change (Alison Schofield)
+> 
+> v1 was patch 8/8 of the "cxl: Assorted fixes" series [1]. Per review
+> feedback that series is not being reworked as a whole; the fixes are
+> resent individually instead. Patches 1, 2 and 7 of the series are
+> dropped, as those issues are already fixed in cxl/next.
+> 
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+> v2: https://lore.kernel.org/linux-cxl/20260812061043.57319-1-kanie@linux.alibaba.com/
+> 
+>  drivers/cxl/core/region_pmem.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region_pmem.c b/drivers/cxl/core/region_pmem.c
+> index 23d97e3d78b6..7ab1373a95e0 100644
+> --- a/drivers/cxl/core/region_pmem.c
+> +++ b/drivers/cxl/core/region_pmem.c
+> @@ -168,12 +168,14 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+>  		dev_name(dev));
+>  
+>  	scoped_guard(device, &cxl_nvb->dev) {
+> -		if (cxl_nvb->dev.driver)
+> +		if (cxl_nvb->dev.driver) {
+>  			rc = devm_add_action_or_reset(&cxl_nvb->dev,
+>  						      cxlr_pmem_unregister,
+>  						      cxlr_pmem);
+> -		else
+> +		} else {
+>  			rc = -ENXIO;
+> +			cxlr_pmem_unregister(cxlr_pmem);
+> +		}
+>  	}
+>  
+>  	if (rc)
+> 
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
-Link: https://patch.msgid.link/20260414024527.3399590-1-kobak@nvidia.com
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 41b64d871c5a1..e09ba89889397 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3521,6 +3521,9 @@ static struct cxl_region *construct_region(struct c=
-xl_root_decoder *cxlrd,
->  	int rc, part =3D READ_ONCE(cxled->part);
->  	struct cxl_region *cxlr;
-> =20
-> +	if (part < 0)
-> +		return ERR_PTR(-EBUSY);
-> +
->  	do {
->  		cxlr =3D __create_region(cxlrd, cxlds->part[part].mode,
->  				       atomic_read(&cxlrd->region_id));
-
-[Severity: High]
-This is a pre-existing issue, but does poison_by_decoder() in this same file
-also miss this partition index validation?=20
-
-If cxled->part is -1, it appears we skip index validation and jump directly
-to reading cxlds->part[-1].mode:
-
-drivers/cxl/core/region.c:poison_by_decoder() {
-    ...
-    mode =3D cxlds->part[cxled->part].mode;
-    ...
-}
-
-Could this cause a similar out-of-bounds read during CXL endpoint poison
-iteration?
-
-[Severity: High]
-This is a pre-existing issue, but does the loop condition in
-__cxl_dpa_reserve() evaluate as constantly true?
-
-drivers/cxl/core/hdm.c:__cxl_dpa_reserve() {
-    ...
-    for (int i =3D 0; cxlds->nr_partitions; i++)
-    ...
-}
-
-If a resource does not match any partition, i increments infinitely because
-cxlds->nr_partitions is evaluated as a constant boolean rather than an index
-bound. Could this cause an infinite loop and out-of-bounds read on cxlds->p=
-art
-until a page fault halts execution?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831133314.4125=
-787-312-sashal@kernel.org?part=3D1
