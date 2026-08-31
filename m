@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C333D38BF72
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5336738C2C3
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788207955; cv=none; b=QM0i7JJ7miG456kgalvcRC3xJTDIRJu1ZQy7rFY9Ov+EYZnlUZ0BAX+XfvPUZFgthU4cOEznHIGQUd80OBC+0iwDU29AZ5ZBZdW/JdxyQKVpi6+NIEKbkQS78F6cuJQNTqJlzkke3d46B1VDLKv9Bdllk2U3L8xuv1UXSHaxLo0=
+	t=1788207967; cv=none; b=dAKK8vMUiLCKJ1VPEpGcYsi16DiTr1YAdNI4QKpWLtPL2DgmqyYkjxTF2N0bkCWvRmizhzH6GyGqZgclnGIY87jjdL8sUxgrtjmmVMLiXTK9XCCw4n4EUqoE+Xd1CVqG6TTgpxcZyhnPQt+s2Iyc3Nep8FB2T+StPDOA2eX3j7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788207955; c=relaxed/simple;
-	bh=zGieCxkS4Rp88ezupjMov5v0sSKdiHspVKK05AzBDBc=;
+	s=arc-20240116; t=1788207967; c=relaxed/simple;
+	bh=y81SMNtCcKY0Ee89IuWux6b/dp/AUHZ7QOsOBrRR5TA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=UNKukw/U25ezO16Nh/A7Kir+OHyO2CKVEii1+zR/dtM+DsQS/Efpr3eAQ5ksw3e4mvLvSiELtR53wzE31jTR5ytzlUUnwEv8ou666JEu6LOmw4LtiDBb/5OtDssSeqv2qtRdKiPO5UCW2VOvfrSYXdNcNu0ALG27DJkNQikgT2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FPMHay2y; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=J2yLilEhQqKTBQL7TEHTYHVA+DxqLYyaKV2R4WMwoE7LLO6CY411Sw1cMPvabmU4r8KdOVovMiHgByVhycPGdojZDGRXGWvZ1Mr9xOp9swiHzL5v0N6I/xbfAuJ4nxVCh7BcRXOEaG6QSE7KsYB1OnCbsZseE7NLEAxNY5rO3wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1wWsd0H; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FPMHay2y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1wWsd0H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788207952;
+	s=mimecast20190719; t=1788207963;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=guCLIzVmZrZpBJXqrS2tsFbY+MWTzN+mPMblZhwoDNA=;
-	b=FPMHay2ytpp7bZLmK/z85r/HgyEXm1judV3OKuMJvnAr8CLndTWfzt4iJF7HFdI30t3xcs
-	7flujnJ567NgEbm1PnrVDU7Oy5P4xy71sAtBaOuGk+cN4ZX9BVbrmSBGv7HGgVCUlt9n9Y
-	qD67HkIFLpwd5jPWsZiNPTs+8rXoJmc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=2Qki3202jzB0uNmrJ8G0JeNCMEhWZDtvlbuFVuOEQck=;
+	b=N1wWsd0HBnlYPzETRWs0Qr7mU4V7w1SmkeLnTbEgnSQaKB3oGnNfDhV0GNuegXXMWOvvYn
+	SldYAy9UuSwq8/oMO2bnXaOCOo9LmKiG9crFVzadz+ebJfRauqxFmzEo2tcbf8rDqs52Ku
+	TS1r6nwLLGopSjXa2iIBkSTAuy0dL6E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-pdRSia-wNCWdmBDW_X-1mw-1; Mon,
- 31 Aug 2026 16:25:48 -0400
-X-MC-Unique: pdRSia-wNCWdmBDW_X-1mw-1
-X-Mimecast-MFC-AGG-ID: pdRSia-wNCWdmBDW_X-1mw_1788207946
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-MuUPaqfNOUOTxF0dYeKCsQ-1; Mon,
+ 31 Aug 2026 16:25:56 -0400
+X-MC-Unique: MuUPaqfNOUOTxF0dYeKCsQ-1
+X-Mimecast-MFC-AGG-ID: MuUPaqfNOUOTxF0dYeKCsQ_1788207953
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E08C19792FE;
-	Mon, 31 Aug 2026 20:25:46 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B299184A09B;
+	Mon, 31 Aug 2026 20:25:53 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.63])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CAD251800577;
-	Mon, 31 Aug 2026 20:25:38 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6340018005AC;
+	Mon, 31 Aug 2026 20:25:46 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	qemu-trivial@nongnu.org,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v4 41/43] qapi: convert trivial intro sections for migration.json
-Date: Mon, 31 Aug 2026 16:19:43 -0400
-Message-ID: <20260831201945.287730-42-jsnow@redhat.com>
+Subject: [PATCH v4 42/43] qapi: convert trivial intro sections for machine.json
+Date: Mon, 31 Aug 2026 16:19:44 -0400
+Message-ID: <20260831201945.287730-43-jsnow@redhat.com>
 In-Reply-To: <20260831201945.287730-1-jsnow@redhat.com>
 References: <20260831201945.287730-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,431 +92,642 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: BWYnW_gfePYjvJ5D1yhdW51CiYst_3u0ofc8Z1Rcu4g_1788207946
+X-Mimecast-MFC-PROC-ID: ZHoQlSLjhsckJXkEdN_RygkWFvYJIEXsX4KzEHWrsog_1788207953
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/migration.json | 131 ++++++++++++++++----------------------------
- 1 file changed, 48 insertions(+), 83 deletions(-)
+ qapi/machine.json | 195 ++++++++++++++++------------------------------
+ 1 file changed, 68 insertions(+), 127 deletions(-)
 
-diff --git a/qapi/migration.json b/qapi/migration.json
-index b1eaf7b0545..8b6abcee2ca 100644
---- a/qapi/migration.json
-+++ b/qapi/migration.json
-@@ -13,8 +13,7 @@
+diff --git a/qapi/machine.json b/qapi/machine.json
+index 2d63c1bac3b..8ef12504d65 100644
+--- a/qapi/machine.json
++++ b/qapi/machine.json
+@@ -46,9 +46,8 @@
  
  ##
- # @MigrationRAMStats:
+ # @S390CpuState:
 -#
--# Detailed migration status.
-+#     Detailed migration status.
+-# An enumeration of cpu states that can be assumed by a virtual S390
+-# CPU
++#     An enumeration of cpu states that can be assumed by a virtual
++#     S390 CPU
  #
- # @transferred: amount of bytes already transferred to the target VM
- #
-@@ -78,8 +77,7 @@
+ # Since: 2.12
+ ##
+@@ -57,8 +56,7 @@
  
  ##
- # @XBZRLECacheStats:
+ # @CpuInfoS390:
 -#
--# Detailed XBZRLE migration cache statistics
-+#     Detailed XBZRLE migration cache statistics
+-# Additional information about a virtual S390 CPU
++#     Additional information about a virtual S390 CPU
  #
- # @cache-size: XBZRLE cache size
+ # @cpu-state: the virtual CPU's state
  #
-@@ -104,8 +102,7 @@
+@@ -75,8 +73,7 @@
  
  ##
- # @CompressionStats:
+ # @CpuInfoFast:
 -#
--# Detailed migration compression statistics
-+#     Detailed migration compression statistics
+-# Information about a virtual CPU
++#     Information about a virtual CPU
  #
- # @pages: amount of pages compressed and transferred to the target VM
+ # @cpu-index: index of the virtual CPU
  #
-@@ -126,8 +123,7 @@
+@@ -105,8 +102,7 @@
  
  ##
- # @MigrationStatus:
+ # @query-cpus-fast:
 -#
--# An enumeration of migration status.
-+#     An enumeration of migration status.
+-# Return information about all virtual CPUs.
++#     Return information about all virtual CPUs.
  #
- # @none: no migration has ever happened.
+ # Since: 2.12
  #
-@@ -189,8 +185,7 @@
+@@ -143,9 +139,8 @@
  
  ##
- # @VfioStats:
+ # @CompatProperty:
 -#
--# Detailed VFIO devices migration statistics
-+#     Detailed VFIO devices migration statistics
+-# Property default values specific to a machine type, for use by
+-# scripts/compare-machine-types.
++#     Property default values specific to a machine type, for use by
++#     scripts/compare-machine-types.
  #
- # @transferred: amount of bytes transferred to the target VM by VFIO
- #     devices
-@@ -202,8 +197,7 @@
+ # @qom-type: name of the QOM type to which the default applies
+ #
+@@ -163,8 +158,7 @@
  
  ##
- # @MigrationInfo:
+ # @MachineInfo:
 -#
--# Information about current migration process.
-+#     Information about current migration process.
+-# Information describing a machine.
++#     Information describing a machine.
  #
- # @status: `MigrationStatus` describing the current migration status.
- #     If this field is not returned, no migration process has been
-@@ -435,8 +429,7 @@
+ # @name: the name of the machine
+ #
+@@ -213,8 +207,7 @@
  
  ##
- # @MigrationCapability:
+ # @query-machines:
 -#
--# Migration capabilities enumeration
-+#     Migration capabilities enumeration
+-# Return a list of supported machines
++#     Return a list of supported machines
  #
- # @xbzrle: Migration supports xbzrle (Xor Based Zero Run Length
- #     Encoding).  This feature allows us to minimize migration traffic
-@@ -545,8 +538,7 @@
+ # @compat-props: if true, also return compatibility properties.
+ #     (default: false) (since 9.1)
+@@ -255,8 +248,7 @@
  
  ##
- # @MigrationCapabilityStatus:
+ # @CurrentMachineParams:
 -#
--# Migration capability information
-+#     Migration capability information
+-# Information describing the running machine parameters.
++#     Information describing the running machine parameters.
  #
- # @capability: capability enum
- #
-@@ -559,8 +551,8 @@
+ # @wakeup-suspend-support: true if the machine supports wake up from
+ #     suspend
+@@ -268,8 +260,7 @@
  
  ##
- # @migrate-set-capabilities:
+ # @query-current-machine:
 -#
--# Enable/Disable the following migration capabilities (like xbzrle)
-+#     Enable/Disable the following migration capabilities (like
-+#     xbzrle)
+-# Return information on the current virtual machine.
++#     Return information on the current virtual machine.
  #
- # @capabilities: json array of capability modifications to make
- #
-@@ -577,8 +569,8 @@
+ # Since: 4.0
+ ##
+@@ -277,8 +268,8 @@
  
  ##
- # @query-migrate-capabilities:
+ # @QemuTargetInfo:
 -#
--# Return information about the current migration capabilities status
-+#     Return information about the current migration capabilities
-+#     status
+-# Information on the target configuration built into the QEMU binary.
++#     Information on the target configuration built into the QEMU
++#     binary.
+ #
+ # @arch: the target architecture
+ #
+@@ -289,8 +280,7 @@
+ 
+ ##
+ # @query-target:
+-#
+-# Return information about the target for this QEMU
++#     Return information about the target for this QEMU
  #
  # Since: 1.2
- #
-@@ -598,8 +590,7 @@
+ ##
+@@ -298,8 +288,7 @@
  
  ##
- # @MultiFDCompression:
+ # @UuidInfo:
 -#
--# An enumeration of multifd compression methods.
-+#     An enumeration of multifd compression methods.
+-# Guest UUID information (Universally Unique Identifier).
++#     Guest UUID information (Universally Unique Identifier).
  #
- # @none: no compression.
+ # @UUID: the UUID of the guest
  #
-@@ -776,9 +767,8 @@
+@@ -312,8 +301,7 @@
  
  ##
- # @BitmapMigrationNodeAlias:
+ # @query-uuid:
 -#
--# Maps a block node name and the bitmaps it has to aliases for dirty
--# bitmap migration.
-+#     Maps a block node name and the bitmaps it has to aliases for
-+#     dirty bitmap migration.
+-# Query the guest UUID information.
++#     Query the guest UUID information.
  #
- # @node-name: A block node name.
+ # Since: 0.14
  #
-@@ -1098,8 +1088,7 @@
+@@ -326,8 +314,7 @@
  
  ##
- # @MIGRATION:
+ # @GuidInfo:
 -#
--# Emitted when a migration event happens
-+#     Emitted when a migration event happens
+-# GUID information.
++#     GUID information.
  #
- # @status: `MigrationStatus` describing the current migration status.
+ # @guid: the globally unique identifier
  #
-@@ -1116,9 +1105,8 @@
+@@ -337,8 +324,7 @@
  
  ##
- # @MIGRATION_PASS:
+ # @query-vm-generation-id:
 -#
--# Emitted from the source side of a migration at the start of each
--# pass (when it syncs the dirty bitmap)
-+#     Emitted from the source side of a migration at the start of each
-+#     pass (when it syncs the dirty bitmap)
+-# Show Virtual Machine Generation ID
++#     Show Virtual Machine Generation ID
  #
- # @pass: An incrementing count (starting at 1 on the first pass)
- #
-@@ -1134,8 +1122,8 @@
+ # Since: 2.9
+ ##
+@@ -346,8 +332,7 @@
  
  ##
- # @COLOMessage:
+ # @system_reset:
 -#
--# The message transmission between Primary side and Secondary side.
-+#     The message transmission between Primary side and Secondary
-+#     side.
+-# Performs a hard reset of a guest.
++#     Performs a hard reset of a guest.
  #
- # @checkpoint-ready: Secondary VM (SVM) is ready for checkpointing
+ # Since: 0.14
  #
-@@ -1161,8 +1149,7 @@
+@@ -360,8 +345,7 @@
  
  ##
- # @COLOMode:
+ # @system_powerdown:
 -#
--# The COLO current mode.
-+#     The COLO current mode.
+-# Requests that a guest perform a powerdown operation.
++#     Requests that a guest perform a powerdown operation.
  #
- # @none: COLO is disabled.
+ # Since: 0.14
  #
-@@ -1177,8 +1164,7 @@
+@@ -521,8 +505,7 @@
  
  ##
- # @FailoverStatus:
+ # @NumaDistOptions:
 -#
--# An enumeration of COLO failover status
-+#     An enumeration of COLO failover status
+-# Set the distance between 2 NUMA nodes.
++#     Set the distance between 2 NUMA nodes.
  #
- # @none: no failover has ever happened
+ # @src: source NUMA node.
  #
-@@ -1198,9 +1184,8 @@
+@@ -542,8 +525,7 @@
  
  ##
- # @COLO_EXIT:
+ # @CXLFixedMemoryWindowOptions:
 -#
--# Emitted when VM finishes COLO mode due to some errors happening or
--# at the request of users.
-+#     Emitted when VM finishes COLO mode due to some errors happening
-+#     or at the request of users.
+-# Create a CXL Fixed Memory Window
++#     Create a CXL Fixed Memory Window
  #
- # @mode: report COLO mode when COLO exited.
- #
-@@ -1218,8 +1203,7 @@
+ # @size: Size of the Fixed Memory Window in bytes.  Must be a multiple
+ #     of 256MiB.
+@@ -565,8 +547,7 @@
  
  ##
- # @COLOExitReason:
+ # @CXLFMWProperties:
 -#
--# The reason for a COLO exit.
-+#     The reason for a COLO exit.
+-# List of CXL Fixed Memory Windows.
++#     List of CXL Fixed Memory Windows.
  #
- # @none: failover has never happened.  This state does not occur in
- #     the `COLO_EXIT` event, and is only visible in the result of
-@@ -1281,8 +1265,7 @@
+ # @cxl-fmw: List of `CXLFixedMemoryWindowOptions`
+ #
+@@ -578,8 +559,7 @@
  
  ##
- # @migrate-continue:
+ # @X86CPURegister32:
 -#
--# Continue migration when it's in a paused state.
-+#     Continue migration when it's in a paused state.
+-# A X86 32-bit register
++#     A X86 32-bit register
  #
- # @state: The state the migration is currently expected to be in
- #
-@@ -1298,8 +1281,7 @@
+ # Since: 1.5
+ ##
+@@ -588,8 +568,7 @@
  
  ##
- # @MigrationAddressType:
+ # @X86CPUFeatureWordInfo:
 -#
--# The migration stream transport mechanisms.
-+#     The migration stream transport mechanisms.
+-# Information about a X86 CPU feature word
++#     Information about a X86 CPU feature word
  #
- # @socket: Migrate via socket.
- #
-@@ -1339,8 +1321,7 @@
+ # @cpuid-input-eax: Input EAX value for CPUID instruction for that
+ #     feature word
+@@ -611,9 +590,8 @@
  
  ##
- # @MigrationAddress:
+ # @DummyForceArrays:
 -#
--# Migration endpoint configuration.
-+#     Migration endpoint configuration.
+-# Not used by QMP; hack to let us use X86CPUFeatureWordInfoList
+-# internally
++#     Not used by QMP; hack to let us use X86CPUFeatureWordInfoList
++#     internally
  #
- # @transport: The migration stream transport mechanism
- #
-@@ -1357,8 +1338,7 @@
+ # Since: 2.5
+ ##
+@@ -795,8 +773,7 @@
  
  ##
- # @MigrationChannelType:
+ # @memsave:
 -#
--# The migration channel-type request options.
-+#     The migration channel-type request options.
+-# Save a portion of guest memory to a file.
++#     Save a portion of guest memory to a file.
  #
- # @main: Main outbound migration channel.
+ # @val: the virtual address of the guest to start from
  #
-@@ -1371,8 +1351,7 @@
+@@ -828,8 +805,7 @@
  
  ##
- # @MigrationChannel:
+ # @pmemsave:
 -#
--# Migration stream channel parameters.
-+#     Migration stream channel parameters.
+-# Save a portion of guest physical memory to a file.
++#     Save a portion of guest physical memory to a file.
  #
- # @channel-type: Channel type for transferring packet information.
+ # @val: the physical address of the guest to start from
  #
-@@ -1387,8 +1366,7 @@
+@@ -857,8 +833,7 @@
  
  ##
- # @migrate:
+ # @Memdev:
 -#
--# Migrates the current running guest to another Virtual Machine.
-+#     Migrates the current running guest to another Virtual Machine.
+-# Information about memory backend
++#     Information about memory backend
  #
- # @uri: the Uniform Resource Identifier of the destination VM
+ # @id: backend's ID if backend has 'id' property (since 2.9)
  #
-@@ -1560,8 +1538,7 @@
+@@ -898,8 +873,7 @@
  
  ##
- # @xen-set-global-dirty-log:
+ # @query-memdev:
 -#
--# Enable or disable the global dirty log mode.
-+#     Enable or disable the global dirty log mode.
+-# Return information for all memory backends.
++#     Return information for all memory backends.
  #
- # @enable: true to enable, false to disable.
+ # Since: 2.1
  #
-@@ -1597,8 +1574,7 @@
+@@ -1074,9 +1048,9 @@
  
  ##
- # @xen-set-replication:
+ # @set-numa-node:
 -#
--# Enable or disable replication.
-+#     Enable or disable replication.
+-# Runtime equivalent of '-numa' CLI option, available at preconfigure
+-# stage to configure numa mapping before initializing machine.
++#     Runtime equivalent of '-numa' CLI option, available at
++#     preconfigure stage to configure numa mapping before initializing
++#     machine.
  #
- # @enable: true to enable, false to disable.
- #
-@@ -1621,8 +1597,7 @@
+ # Since: 3.0
+ ##
+@@ -1087,8 +1061,7 @@
  
  ##
- # @ReplicationStatus:
+ # @balloon:
 -#
--# The result format for `query-xen-replication-status`.
-+#     The result format for `query-xen-replication-status`.
+-# Request the balloon driver to change its balloon size.
++#     Request the balloon driver to change its balloon size.
  #
- # @error: true if an error happened, false if replication is normal.
- #
-@@ -1670,8 +1645,7 @@
+ # @value: the target logical size of the VM in bytes.  We can deduce
+ #     the size of the balloon using this formula:
+@@ -1122,8 +1095,7 @@
  
  ##
- # @COLOStatus:
+ # @BalloonInfo:
 -#
--# The result format for `query-colo-status`.
-+#     The result format for `query-colo-status`.
+-# Information about the guest balloon device.
++#     Information about the guest balloon device.
  #
- # @mode: COLO running mode.  If COLO is running, this field will
- #     return 'primary' or 'secondary'.
-@@ -1709,8 +1683,7 @@
+ # @actual: the logical size of the VM in bytes.  Formula used:
+ #     logical_vm_size = vm_ram_size - balloon_size
+@@ -1134,8 +1106,7 @@
  
  ##
- # @migrate-recover:
+ # @query-balloon:
 -#
--# Provide a recovery migration stream URI.
-+#     Provide a recovery migration stream URI.
+-# Return information about the balloon device.
++#     Return information about the balloon device.
  #
- # @uri: the URI to be used for the recovery of migration stream.
- #
-@@ -1763,8 +1736,7 @@
+ # Errors:
+ #     - If the balloon driver is enabled but not functional because
+@@ -1179,8 +1150,7 @@
  
  ##
- # @DirtyRateVcpu:
+ # @HvBalloonInfo:
 -#
--# Dirty rate of vcpu.
-+#     Dirty rate of vcpu.
+-# hv-balloon guest-provided memory status information.
++#     hv-balloon guest-provided memory status information.
  #
- # @id: vcpu index.
- #
-@@ -1777,8 +1749,7 @@
+ # @committed: the amount of memory in use inside the guest plus the
+ #     amount of the memory unusable inside the guest (ballooned out,
+@@ -1196,9 +1166,8 @@
  
  ##
- # @DirtyRateStatus:
+ # @query-hv-balloon-status-report:
 -#
--# Dirty page rate measurement status.
-+#     Dirty page rate measurement status.
+-# Return the hv-balloon driver data contained in the last received
+-# "STATUS" message from the guest.
++#     Return the hv-balloon driver data contained in the last received
++#     "STATUS" message from the guest.
  #
- # @unstarted: measuring thread has not been started yet
- #
-@@ -1810,8 +1781,7 @@
+ # Errors:
+ #     - If no hv-balloon device is present, guest memory status
+@@ -1239,8 +1208,7 @@
  
  ##
- # @TimeUnit:
+ # @MemoryInfo:
 -#
--# Specifies unit in which time-related value is specified.
-+#     Specifies unit in which time-related value is specified.
+-# Actual memory information in bytes.
++#     Actual memory information in bytes.
  #
- # @second: value is in seconds
- #
-@@ -1824,8 +1794,7 @@
+ # @base-memory: size of "base" memory specified with command line
+ #     option -m.
+@@ -1273,8 +1241,7 @@
  
  ##
- # @DirtyRateInfo:
+ # @PCDIMMDeviceInfo:
 -#
--# Information about measured dirty page rate.
-+#     Information about measured dirty page rate.
+-# PCDIMMDevice state information
++#     PCDIMMDevice state information
  #
- # @dirty-rate: an estimate of the dirty page rate of the VM in units
- #     of MiB/s.  Value is present only when @status is 'measured'.
-@@ -1935,8 +1904,8 @@
+ # @id: device's ID
+ #
+@@ -1309,8 +1276,7 @@
  
  ##
- # @query-dirty-rate:
+ # @VirtioPMEMDeviceInfo:
 -#
--# Query results of the most recent invocation of `calc-dirty-rate`.
-+#     Query results of the most recent invocation of
-+#     `calc-dirty-rate`.
+-# VirtioPMEM state information
++#     VirtioPMEM state information
  #
- # @calc-time-unit: time unit in which to report calculation time.
- #     By default it is reported in seconds.  (Since 8.2)
-@@ -1962,8 +1931,7 @@
+ # @id: device's ID
+ #
+@@ -1332,8 +1298,7 @@
  
  ##
- # @DirtyLimitInfo:
+ # @VirtioMEMDeviceInfo:
 -#
--# Dirty page rate limit information of a virtual CPU.
-+#     Dirty page rate limit information of a virtual CPU.
+-# VirtioMEMDevice state information
++#     VirtioMEMDevice state information
  #
- # @cpu-index: index of a virtual CPU.
+ # @id: device's ID
  #
-@@ -2029,8 +1997,8 @@
+@@ -1367,8 +1332,7 @@
  
  ##
- # @query-vcpu-dirty-limit:
+ # @SgxEPCDeviceInfo:
 -#
--# Return information about virtual CPU dirty page rate limits, if any.
-+#     Return information about virtual CPU dirty page rate limits, if
-+#     any.
+-# Sgx EPC state information
++#     Sgx EPC state information
  #
- # Since: 7.1
+ # @id: device's ID
  #
-@@ -2046,8 +2014,7 @@
+@@ -1393,8 +1357,7 @@
  
  ##
- # @snapshot-save:
+ # @HvBalloonDeviceInfo:
 -#
--# Save a VM snapshot
-+#     Save a VM snapshot
+-# hv-balloon provided memory state information
++#     hv-balloon provided memory state information
  #
- # @job-id: identifier for the newly created job
+ # @id: device's ID
  #
-@@ -2118,8 +2085,7 @@
+@@ -1523,8 +1486,7 @@
  
  ##
- # @snapshot-load:
+ # @MemoryDeviceInfo:
 -#
--# Load a VM snapshot
-+#     Load a VM snapshot
+-# Union containing information about a memory device
++#     Union containing information about a memory device
  #
- # @job-id: identifier for the newly created job
+ # @type: memory device type
  #
-@@ -2188,8 +2154,7 @@
+@@ -1545,8 +1507,7 @@
  
  ##
- # @snapshot-delete:
+ # @SgxEPC:
 -#
--# Delete a VM snapshot
-+#     Delete a VM snapshot
+-# Sgx EPC cmdline information
++#     Sgx EPC cmdline information
  #
- # @job-id: identifier for the newly created job
+ # @memdev: memory backend linked with device
  #
+@@ -1562,8 +1523,7 @@
+ 
+ ##
+ # @SgxEPCProperties:
+-#
+-# SGX properties of machine types.
++#     SGX properties of machine types.
+ #
+ # @sgx-epc: list of ids of memory-backend-epc objects.
+ #
+@@ -1575,8 +1535,7 @@
+ 
+ ##
+ # @query-memory-devices:
+-#
+-# Lists available memory devices and their state
++#     Lists available memory devices and their state
+ #
+ # Since: 2.1
+ #
+@@ -1626,8 +1585,7 @@
+ 
+ ##
+ # @BootConfiguration:
+-#
+-# Schema for virtual machine boot configuration.
++#     Schema for virtual machine boot configuration.
+ #
+ # @order: Boot order (a=floppy, c=hard disk, d=CD-ROM, n=network)
+ #
+@@ -1711,8 +1669,7 @@
+ 
+ ##
+ # @x-query-irq:
+-#
+-# Query interrupt statistics
++#     Query interrupt statistics
+ #
+ # Features:
+ #
+@@ -1728,8 +1685,7 @@
+ 
+ ##
+ # @x-query-jit:
+-#
+-# Query TCG compiler statistics
++#     Query TCG compiler statistics
+ #
+ # Features:
+ #
+@@ -1746,8 +1702,7 @@
+ 
+ ##
+ # @x-query-numa:
+-#
+-# Query NUMA topology information
++#     Query NUMA topology information
+ #
+ # Features:
+ #
+@@ -1763,8 +1718,7 @@
+ 
+ ##
+ # @x-query-ramblock:
+-#
+-# Query system ramblock information
++#     Query system ramblock information
+ #
+ # Features:
+ #
+@@ -1780,8 +1734,7 @@
+ 
+ ##
+ # @x-query-roms:
+-#
+-# Query information on the registered ROMS
++#     Query information on the registered ROMS
+ #
+ # Features:
+ #
+@@ -1797,8 +1750,7 @@
+ 
+ ##
+ # @x-query-usb:
+-#
+-# Query information on the USB devices
++#     Query information on the USB devices
+ #
+ # Features:
+ #
+@@ -1829,8 +1781,7 @@
+ 
+ ##
+ # @MemorySizeConfiguration:
+-#
+-# Schema for memory size configuration.
++#     Schema for memory size configuration.
+ #
+ # @size: memory size in bytes
+ #
+@@ -1847,8 +1798,7 @@
+ 
+ ##
+ # @dumpdtb:
+-#
+-# Save the FDT in dtb format.
++#     Save the FDT in dtb format.
+ #
+ # @filename: name of the dtb file to be created
+ #
+@@ -1866,8 +1816,7 @@
+ 
+ ##
+ # @x-query-interrupt-controllers:
+-#
+-# Query information on interrupt controller devices
++#     Query information on interrupt controller devices
+ #
+ # Features:
+ #
+@@ -1897,8 +1846,7 @@
+ 
+ ##
+ # @query-firmware-log:
+-#
+-# Find firmware memory log buffer in guest memory, return content.
++#     Find firmware memory log buffer in guest memory, return content.
+ #
+ # @max-size: limit the amount of log data returned.  Up to 1 MiB of
+ #     log data is allowed.  In case the amount of log data is larger
+@@ -1912,8 +1860,7 @@
+ 
+ ##
+ # @dump-skeys:
+-#
+-# Dump the storage keys for an s390x guest
++#     Dump the storage keys for an s390x guest
+ #
+ # @filename: the path to the file to dump to
+ #
+@@ -1951,8 +1898,7 @@
+ 
+ ##
+ # @CpuModelExpansionType:
+-#
+-# An enumeration of CPU model expansion types.
++#     An enumeration of CPU model expansion types.
+ #
+ # @static: Expand to a static CPU model, a combination of a static
+ #     base model name and property delta changes.  As the static base
+@@ -2009,8 +1955,7 @@
+ 
+ ##
+ # @CpuModelBaselineInfo:
+-#
+-# The result of a CPU model baseline.
++#     The result of a CPU model baseline.
+ #
+ # @model: the baselined `CpuModelInfo`.
+ #
+@@ -2021,8 +1966,7 @@
+ 
+ ##
+ # @CpuModelCompareInfo:
+-#
+-# The result of a CPU model comparison.
++#     The result of a CPU model comparison.
+ #
+ # @result: The result of the compare operation.
+ #
+@@ -2153,8 +2097,7 @@
+ 
+ ##
+ # @CpuModelExpansionInfo:
+-#
+-# The result of a cpu model expansion.
++#     The result of a cpu model expansion.
+ #
+ # @model: the expanded `CpuModelInfo`.
+ #
+@@ -2223,8 +2166,7 @@
+ 
+ ##
+ # @CpuDefinitionInfo:
+-#
+-# Virtual CPU definition.
++#     Virtual CPU definition.
+ #
+ # @name: the name of the CPU definition
+ #
+@@ -2285,8 +2227,7 @@
+ 
+ ##
+ # @query-cpu-definitions:
+-#
+-# Return a list of supported virtual CPU definitions
++#     Return a list of supported virtual CPU definitions
+ #
+ # Since: 1.2
+ ##
 -- 
 2.55.0
 
