@@ -1,28 +1,28 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7991426EB7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93F54279F9
 	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 13:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788182644; cv=none; b=Rj5curmej2NRI1tLGhx+oBf2H7Bf4SdEaqGSgmYSWJImQz8KkpPFsbl3OY/ouxz8caI78Ol56VDVZBJvHR4sMNOHj4c1bVHzY2Gh79SoJBSQqYpQRtXnxzwqb3Bfi3gbdb67egwUI93UHE68bZ9jC21jWRs8E4dSwuVIvZgxOt4=
+	t=1788182645; cv=none; b=eB1JX/zwDrqP9uaJq44ldIjzBGWwU+C6/2vNeG8KKt/d/r3aXU83UrfTGaqm65edYJ1kiZsjkPpR03S28NA7YCNsYs282aX0qlP76a/tiHExjJOFV8Z2DuLEkCqyfaGX+Ayr+Q7nTrcpEHWGeYVTilUI3swTwJY5bzZ0mMbTQRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788182644; c=relaxed/simple;
-	bh=s99HRIT9f0elyjKaMrCyTlVHeJ10QvgbTbvFwl4j4Q8=;
+	s=arc-20240116; t=1788182645; c=relaxed/simple;
+	bh=eSo0gAhCvn4f+9cQ9ZhQlJiyKryRpQftPUdCKzSHfWk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fi0zLSYsCExFrH39qnaVM2ewU5NyGykWam/Qe2NUuNQrM4Maz1ZG4X52i2v453zJyd5ERPDIVvlIuUrPvUuhZDY07Fa4mAQh6Kl5IpeYSgZ2L/Gf+607j2PNPqbnyQCLeqDgDWftIpvwv2QtudDUe/cDLfi8Y68cpXYScz7aGeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JK7bgHpk; arc=none smtp.client-ip=115.124.30.97
+	 MIME-Version; b=MohesbrEENwzskA7Wvgi3Udh2BUhMPGfwvRYUfyRBaIP1kSdVSxFRGgEM9zkMuIBeX7tFPP2SJArD5nKw0jm6IaJpGYD+l4HZh5+VgDJEjDG1O4zessdJOt9883iLBBVFR1LQ8pupr7JklGAq+Cm18VDZX6RQDtbimn4PQVUngo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GzDMwrm5; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JK7bgHpk"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GzDMwrm5"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1788182638; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wO62s2Pr7FdPaT1mifIp2d4AflcsLpR3tVxK/tc9v+M=;
-	b=JK7bgHpkTHxN7Ih50l4qQwYFgvKXQSaUOw7MgIeqC5yqXUXxp7z43ezlr0HwE+9yYCfuYqnw+i2bsR4MBzupLOFpoTUNGoPzWDhnv78cruJqaagiIlfWcSpBdMIN7CE3XZ/hL/OmbTHQrOrMKZmrElnCAJ+Itxxi1+9kXwMGTnY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9znfr5_1788182636;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9znfr5_1788182636 cluster:ay36)
+	t=1788182639; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=pgiT/hQFiGb8Z/BKq58nZtBYUay8m5suI2xbvvisSTg=;
+	b=GzDMwrm5h3zE7bgyDXch8B4PXKqxyFPyjU+PWFuN+WNW/+FSdIrECYeEh0K0KKBDoixrEwKRCR9AfTxpd7jN3Bpt/GHqHWzzcjIeBxDFK+3b5hTZMmJDTsWj0bD+j0pDcJKduanLfXzB1cZzqerrNrQ0d+724wF9LJLSj51VxFs=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9znfrJ_1788182637;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9znfrJ_1788182637 cluster:ay36)
           by smtp.aliyun-inc.com;
           Mon, 31 Aug 2026 21:23:57 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
@@ -45,9 +45,9 @@ Cc: pbonzini@redhat.com,
 	qemu-riscv@nongnu.org,
 	qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v5 5/6] tests/qtest: Add RISC-V ACPI bios tables test for CXL
-Date: Mon, 31 Aug 2026 21:23:36 +0800
-Message-ID: <20260831132340.5345-6-cp0613@linux.alibaba.com>
+Subject: [PATCH v5 6/6] tests/qtest: Update RISC-V CXL ACPI golden master binaries
+Date: Mon, 31 Aug 2026 21:23:37 +0800
+Message-ID: <20260831132340.5345-7-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260831132340.5345-1-cp0613@linux.alibaba.com>
 References: <20260831132340.5345-1-cp0613@linux.alibaba.com>
@@ -59,100 +59,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add test_acpi_riscv64_virt_tcg_cxl() to verify that enabling CXL on
-the RISC-V virt machine produces correct ACPI tables, including the
-ACPI0017 CXLM device with _DEP in the DSDT and the CEDT table.
+Populate the DSDT.cxl and CEDT.cxl golden master binaries for the
+RISC-V CXL bios-tables test and empty
+bios-tables-test-allowed-diff.h, following the bios-tables-test update
+process.
 
-The test boots with cxl=on, one pxb-cxl bus (bus_nr=12), a CXL root
-port, a cxl-type3 device and a fixed memory window, mirroring the
-existing x86 q35 CXL test pattern.
+The expected AML added by this series is:
 
-Since pxb-cxl is a root bus, using -cdrom causes QEMU to auto-plug the
-cdrom drive into pxb-cxl, triggering "Only PCI/PCIe bridges can be
-plugged into pxb-cxl".  The ISO is instead attached explicitly via a
-virtio-scsi-pci controller on pcie.0, following the same approach as
-test_acpi_aarch64_virt_tcg_pxb().
+DSDT.cxl:
+  Device (PC0C)        // ACPI0016 CXL host bridge (pxb-cxl, bus 0x0C)
+    Name (_CRS, ResourceTemplate () {
+        DWordMemory (... 0x40400000 .. 0x405FFFFF ...)   // 32-bit MMIO
+        QWordMemory (... 0x400100000 .. 0x40010FFFF ...) // 64-bit MMIO
+        WordBusNumber (... 0x000C .. 0x000D ...)
+    })
+    Method (_OSC, ...)   // PCI host bridge + CXL UUIDs
+  Device (CXLM)        // ACPI0017 CXL memory controller
+    Name (_HID, "ACPI0017")
+    Name (_DEP, Package () { \_SB.PC0C })
+    Method (_STA, ...) / Method (_DSM, ...)
 
-Acked-by: Alistair Francis <alistair.francis@wdc.com>
+CEDT.cxl:
+  CHBS : CXL Host Bridge Structure, Register base 0x800000000
+  CFMWS: CXL Fixed Memory Window, base 0x810000000, size 4G
+
 Reviewed-by: Junjie Cao <junjie.cao@intel.com>
-Tested-by: Junjie Cao <junjie.cao@intel.com>
 Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 ---
- tests/qtest/bios-tables-test.c | 54 ++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
 
-diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
-index 5cc526510a..d2b18d8ecb 100644
---- a/tests/qtest/bios-tables-test.c
-+++ b/tests/qtest/bios-tables-test.c
-@@ -2214,6 +2214,56 @@ static void test_acpi_riscv64_virt_tcg(void)
-     free_test_data(&data);
- }
- 
-+#ifdef CONFIG_POSIX
-+static void test_acpi_riscv64_virt_tcg_cxl(void)
-+{
-+    gchar *tmp_path = g_dir_make_tmp("qemu-test-cxl.XXXXXX", NULL);
-+    gchar *params;
-+
-+    test_data data = {
-+        .machine = "virt",
-+        .arch = "riscv64",
-+        .tcg_only = true,
-+        .uefi_fl1 = "pc-bios/edk2-riscv-code.fd",
-+        .uefi_fl2 = "pc-bios/edk2-riscv-vars.fd",
-+        .ram_start = 0x80000000ULL,
-+        .scan_len = 128ULL * MiB,
-+        .variant = ".cxl",
-+    };
-+
-+    /*
-+     * While using -cdrom, the cdrom would auto-plug into pxb-cxl because
-+     * its bus is also a root bus, triggering "Only PCI/PCIe bridges can be
-+     * plugged into pxb-cxl".  Attach the ISO explicitly to a scsi controller
-+     * on pcie.0 instead, following the same pattern as
-+     * test_acpi_aarch64_virt_tcg_pxb().
-+     */
-+    params = g_strdup_printf("-cpu rva22s64"
-+                             " -machine cxl=on"
-+                             " -device pcie-root-port,chassis=1,id=pci.1,bus=pcie.0"
-+                             " -device virtio-scsi-pci,id=scsi0,bus=pci.1"
-+                             " -drive file=tests/data/uefi-boot-images/"
-+                             "bios-tables-test.riscv64.iso.qcow2,"
-+                             "if=none,media=cdrom,id=drive-scsi0-0-0-1,readonly=on"
-+                             " -device scsi-cd,bus=scsi0.0,scsi-id=0,"
-+                             "drive=drive-scsi0-0-0-1,id=scsi0-0-0-1,bootindex=1"
-+                             " -object memory-backend-file,id=cxl-mem1,mem-path=%s,size=256M"
-+                             " -object memory-backend-file,id=lsa1,mem-path=%s,size=256M"
-+                             " -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1"
-+                             " -device cxl-rp,port=0,bus=cxl.1,id=rp1,chassis=0,slot=2"
-+                             " -device cxl-type3,bus=rp1,persistent-memdev=cxl-mem1,lsa=lsa1"
-+                             " -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,"
-+                             "cxl-fmw.0.interleave-granularity=8k",
-+                             tmp_path, tmp_path);
-+    test_acpi_one(params, &data);
-+
-+    g_free(params);
-+    g_assert(g_rmdir(tmp_path) == 0);
-+    g_free(tmp_path);
-+    free_test_data(&data);
-+}
-+#endif /* CONFIG_POSIX */
-+
- static void test_acpi_aarch64_virt_tcg(void)
- {
-     test_data data = {
-@@ -2963,6 +3013,10 @@ int main(int argc, char *argv[])
-                            test_acpi_riscv64_virt_tcg_numamem);
-             qtest_add_func("acpi/virt/acpispcr",
-                            test_acpi_riscv64_virt_tcg_acpi_spcr);
-+#ifdef CONFIG_POSIX
-+            qtest_add_func("acpi/virt/cxl",
-+                           test_acpi_riscv64_virt_tcg_cxl);
-+#endif
-         }
-     } else if (strcmp(arch, "loongarch64") == 0) {
-         if (has_tcg && qtest_has_machine("virt")) {
+v5:
+- Regenerate DSDT.cxl against the in-tree edk2-riscv-code.fd blob the
+  test boots: the 64-bit window becomes 0x400100000..0x40010FFFF with
+  the matching PCI0 range shift.
+
+ tests/data/acpi/riscv64/virt/CEDT.cxl       | Bin 0 -> 108 bytes
+ tests/data/acpi/riscv64/virt/DSDT.cxl       | Bin 0 -> 6331 bytes
+ tests/qtest/bios-tables-test-allowed-diff.h |   2 --
+ 3 files changed, 2 deletions(-)
+
+diff --git a/tests/data/acpi/riscv64/virt/CEDT.cxl b/tests/data/acpi/riscv64/virt/CEDT.cxl
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..81d746dfb09ccb147e26bb64060404ca3191d097 100644
+GIT binary patch
+literal 108
+zc-nJzbqUE~U|?VjaPoKd2v%^42yj*a0!E-1hz+6{7!(+IKx!BefCEf2LP-snumA^?
+O0aMEg#QH!C(hmS*@&^F`
+
+literal 0
+Hc-jL100001
+
+diff --git a/tests/data/acpi/riscv64/virt/DSDT.cxl b/tests/data/acpi/riscv64/virt/DSDT.cxl
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..c3d68cf3a080ab66160f6847267fe4b9f8a8c6fc 100644
+GIT binary patch
+literal 6331
+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
+
+literal 0
+Hc-jL100001
+
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index c05fb697a5..dfb8523c8b 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1,3 +1 @@
+ /* List of comma-separated changed AML files to ignore */
+-"riscv64/virt/DSDT.cxl",
+-"riscv64/virt/CEDT.cxl",
 -- 
 2.50.1
 
