@@ -1,166 +1,145 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31213DB620
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 11:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1F135975
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 11:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788174302; cv=none; b=QNc/zkeID+ivrBBp77Ofk4de5AMZa+7aJSOqDwIzk77ikVRfSw9fkqTw2SUUu1DLwWUWrfn1hNDiDfUctAu0UrKbdO5AFz/J1jBAlqXP3ZtZDmyC6bk+sBy7gcflnFqTPtaa/MxN2UwrAiq2LC/xg61qGXIEehcS+9dtq44vpO4=
+	t=1788175047; cv=none; b=HbzRMUy1qMYbJuoI62FTWB5SAYcD9PK2DvXPAp7z6N1+RQlmRjJjQBQwKvc1xkzoPuWMnvSkaDbxKtgsJt50bCQbJA9EzAUlsc18yzushn/Z6B09XtKHkCbbiShBhUgFPLdKDhXT0RvFu4t8JSHE8DNWTjyxKRk74kmK/Ud3l70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788174302; c=relaxed/simple;
-	bh=PD64jYOqlAOLNc3jhiCoi0gLvyorTZiudihs/R8MCPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XYZQWTwU9+08G6h248zA+R4bxcyyL0+npM+1INXpvrt/G0l6tXY+OVKnTcqBSNNr6FpIdY7gtKjvxdDewF/ebL87xGCvHormiVX7eLYYzrhcZ70DjLvj6PXMtDQ98/82iW5fJGaMkHKIyZ+6ZQEB0oRUdoXBZ5JnPTGou+5zUlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Bn9Lgq5W; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1788175047; c=relaxed/simple;
+	bh=T2q+zbV9732e/6e0wYWRVjJN771U/5q0XfmBHV4hV6E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gligcHdQu8ULDmG6KdYYNXankb4FaCxWQnFb9g9KktwC4hug06Zasgep26zo+AgliKLV/VYVvaq6VggANAAMxMx3goehXiulYsaFiC6GxuTE5+21C+P1ShkKxrDwPViOKGYiAciNe8mL4R9/5zBZBNZMc1bjle2ynvm2ZhjrGIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJtdHT0g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Bn9Lgq5W"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1788174296; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=WDzlz30MNtQ7EXiHW/0v47Vl5JtR0v8gWIUtheasN3I=;
-	b=Bn9Lgq5WWFchqZVX4KrnZebL3/zEwyE4ptwxtxJ+8g8IxJqxk/Ds4yrk4aKRfzr939I6Hu6ah2BVpEHIZwCtpbq94UD4+XqMAyqPYjm8SFSe6Alt7LkKb1Yz2ijpud9UACJGxJ9MT0K/YxzBvuEVdD80pMqIUcYazJ+0DPEr4UQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X9xxjSM_1788174295;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9xxjSM_1788174295 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 31 Aug 2026 19:04:55 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJtdHT0g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A741F000E9;
+	Mon, 31 Aug 2026 11:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788175046;
+	bh=pnVGCBbiRbsbM4QVY64/WTZncrAOW6LwEW9Y4GoMESA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WJtdHT0g5BZC/nmT3aub1tVjvHil3x3xIE/EaUjAZiPO+aDapLvMGVs6m88u+2v2s
+	 +ZzBuR6NMdUuXFG9Fsqz4mkfTi05l+kvLVBFGa5iZwWYfexMBh6Ucn59ORUYBNt7+B
+	 dwRB3pZWkEZHkWefPTfIrPBwfCBP08pTxPRQJPfep5zOtXPxGLD3a/lcokO6PlUzFW
+	 ExJ8khHFgzyl+N5KNeRikOnf3zvcZR4AnvZ6urh0hc4gMpCFshu8e7DKZPhkiRknFG
+	 P01XLMaxDDSeacU4f5QT4SjUSTAzWi029jCXhNCoVGNMhUed8IwextxxC6sQlel6kS
+	 8nCShmbMgoxvA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guixin Liu" <kanie@linux.alibaba.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v5] cxl/pci: Skip reset detection for DVSEC emulated decoders
-Date: Mon, 31 Aug 2026 19:04:49 +0800
-Message-ID: <20260831110449.719086-1-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260831110449.719086-1-kanie@linux.alibaba.com>
+References: <20260831110449.719086-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Aug 2026 11:17:25 +0000
+Message-Id: <20260831111726.19A741F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-HDM decoders are emulated from the DVSEC range registers in two cases:
-(a) the component registers expose no HDM decoder capability, or (b) the
-capability is present but the DVSEC ranges were the ones in use at driver
-load.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() reads the HDM
-decoder Committed bit for every decoder marked enabled, emulated ones
-included. In case (a) regs.hdm_decoder is NULL and the read oopses. In case
-(b) the Committed bit was never set, so a reset gets reported that never
-happened.
+New issues:
+- [High] Bypassing reset detection for DVSEC-emulated decoders masks hardwa=
+re configuration loss on Secondary Bus Reset (SBR).
 
-Use the absence of cxld->commit to elide the check for emulated decoders.
+Pre-existing issues:
+- [High] Concurrent read-modify-write data race on cxld->flags in cxl_endpo=
+int_decoder_clear_reset_flags.
+- [High] Missing exclusion against cxl_port unbind causes a potential use-a=
+fter-free of devm-allocated cxlhdm.
+--
 
-Case (b) tested under QEMU: a reset on an endpoint driven down the DVSEC
-emulation path no longer reports a reset or strips the decoder flags.
+commit 5cb99f1a9d781a36990dc77bd01012f502a6380b
+Author: Guixin Liu <kanie@linux.alibaba.com>
 
-Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
----
-This was patch 4/8 of the "cxl: Assorted fixes" series [1], resent
-individually per review feedback.
+cxl/pci: Skip reset detection for DVSEC emulated decoders
 
-The two synchronisation concerns the review bot raised on v2 - the missing
-exclusion against a cxl_port unbind freeing the devm allocated cxl_hdm, and
-the plain read-modify-write of cxld->flags in
-cxl_endpoint_decoder_clear_reset_flags() while the region paths update the
-same word under cxl_rwsem.region - are still untouched here. Both are
-about the reset handler's locking rather than about which registers it
-reads, and neither fix is local; happy to follow up with separate patches.
+This commit changes the CXL PCIe reset detection to skip checking the
+hardware reset state for HDM decoders that are emulated from DVSEC range
+registers. It does this by returning early from
+__cxl_endpoint_decoder_reset_detected() if cxld->commit is NULL.
 
-Testing
+Link: https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linu=
+x.alibaba.com/
 
-Reaching case (b) needs an endpoint whose DVSEC ranges are live while the
-global HDM decoder enable is clear. Unbinding cxl_pci runs the
-disable_hdm() and clear_mem_enable() devm actions, so both bits start
-clean. setpci then programs DVSEC Range 1 Base to 0x890000000, which sits
-inside a RAM capable CFMWS, and sets Mem_Enable. Rebinding takes the
-emulation path:
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002ca..d8b07f86bab09 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(str=
+uct device *dev, void *data)
+>  	if ((cxld->flags & CXL_DECODER_F_ENABLE) =3D=3D 0)
+>  		return 0;
+> =20
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult.
+> +	 */
+> +	if (!cxld->commit)
+> +		return 0;
+> +
 
-  cxl_port endpoint3: Fallback map 1 range register
-  cxl_pci 0000:35:00.0: DVSEC Range0 allowed by platform
+[Severity: High]
+Does bypassing reset detection for DVSEC-emulated decoders in
+__cxl_endpoint_decoder_reset_detected() mask hardware configuration loss
+on Secondary Bus Reset (SBR)?
 
-The endpoint ends up with a single decoder, enabled and locked, with no
-Committed bit behind it:
+When a bus reset occurs on a CXL endpoint with DVSEC-emulated HDM
+decoders, this early return unconditionally skips hardware reset
+verification. On physical hardware, SBR wipes non-sticky PCI configuration
+registers, disabling the DVSEC memory mapping. By skipping verification,
+the OS will attempt to use disconnected memory, which could lead to a
+system crash (Machine Check Exception) or data corruption.
 
-  decoder3.0: locked=1 start=0x890000000 size=0x100000000 mode=ram
+>  	cxlhdm =3D dev_get_drvdata(&port->dev);
+>  	hdm =3D cxlhdm->regs.hdm_decoder;
 
-The device's only available reset method is cxl_bus, which unmasks SBR
-through the port DVSEC. Before this change:
+[Severity: High]
+This is a pre-existing issue, but does the missing exclusion against
+cxl_port unbind cause a potential use-after-free of the devm-allocated
+cxlhdm?
 
-  cxl_pci 0000:35:00.0: resetting
-  cxl_pci 0000:35:00.0: SBR happened without memory regions removal.
-  cxl_pci 0000:35:00.0: System may be unstable if regions hosted system memory.
+In __cxl_endpoint_decoder_reset_detected(), a concurrent unbind of the
+cxl_port driver while cxl_reset_done() iterates endpoints could allow the
+driver core devres to free cxlhdm mid-execution, since the reset handler
+fails to lock the port device. This use-after-free could lead to a kernel
+panic, undefined behavior, or memory corruption.
 
-/proc/sys/kernel/tainted picked up TAINT_USER (8192 -> 8256) and locked
-dropped from 1 to 0. After this change the same reset logs only
-"resetting", locked stays 1, and no taint is added. The decoder is
-decoder6.0 in the second run because reloading cxl_core renumbered the
-memdevs.
+>  	ctrl =3D readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
 
-QEMU does not clear the DVSEC range registers on SBR, so the emulated
-decode is still fully programmed by the time the reset completes. The old
-report was spurious here too.
+[ ... ]
 
-Not covered: case (a) needs an endpoint with no component register block,
-which QEMU's type3 always provides, and the FLR variant needs FLR support
-that QEMU's type3 does not advertise (FLReset-). I also did not run a
-positive control confirming that a normally committed HDM decoder is still
-detected after this change.
+Additionally, there is another pre-existing issue in the reset handling
+path in drivers/cxl/pci.c:
 
-v1->v2:
-- rebase onto cxl/next
-- rewrite the commit message to describe the behaviour rather than narrate
-  the code change (Alison Schofield)
+drivers/cxl/pci.c:cxl_endpoint_decoder_clear_reset_flags() {
+...
+	cxled =3D to_cxl_endpoint_decoder(dev);
+	cxled->cxld.flags &=3D ~CXL_DECODER_F_RESET_MASK;
+...
+}
 
-v2->v3:
-- test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
-  emulated from the DVSEC ranges are also skipped when the HDM decoder
-  registers exist but are globally disabled (Richard Cheng)
-- update the subject and the commit message for the widened scope
+[Severity: High]
+This isn't a bug introduced by this patch, but does this non-atomic
+read-modify-write operation access shared state concurrently modified
+by region paths?
 
-v3->v4:
-- shorten the commit message (Dave Jiang)
+When concurrent device reset handling (calling
+cxl_endpoint_decoder_clear_reset_flags) and region management paths
+(like commit/teardown) modify the same cxld->flags word without holding
+a shared lock (e.g., cxl_rwsem.region), concurrent flag changes can be
+overwritten. This can cause state bits like CXL_DECODER_F_ENABLE or
+CXL_DECODER_F_LOCK to be lost, leading to mapping issues or crashes.
 
-v4->v5:
-- condense the commit message further, wording taken from Jonathan
-  Cameron's suggestion on v4
-- note the case (b) test in the commit message
-
-[1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
-
- drivers/cxl/core/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9d807c1a002c..d8b07f86bab0 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
- 	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
- 		return 0;
- 
-+	/*
-+	 * Decoders emulated from the DVSEC range registers have no commit
-+	 * callback and no HDM decoder registers to consult.
-+	 */
-+	if (!cxld->commit)
-+		return 0;
-+
- 	cxlhdm = dev_get_drvdata(&port->dev);
- 	hdm = cxlhdm->regs.hdm_decoder;
- 	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-
-base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
--- 
-2.43.7
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831110449.7190=
+86-1-kanie@linux.alibaba.com?part=3D1
