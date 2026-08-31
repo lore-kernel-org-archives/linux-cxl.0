@@ -1,122 +1,129 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F992D2381
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 06:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474051419A4
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 06:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788157097; cv=none; b=RDE4vQYdh2ciAGGTiBRr7tS3wWF3a235eSu5S6kkj6hYGPMUuI4Bnqgd4wxj/D2oBTdoVKcVcODuJItnVqUECw4XRF7kRjaBZxaQwM2ju2TFmw/ClgC/uImMlA7DXvX6lHQyG7Ry27pKFqvEP8/c+7smrfMRICVpBmxt6Ifaz+A=
+	t=1788157594; cv=none; b=LNw4nXLQVstFpI8MLkzx1uC1zmuB3O/AMUSnkF/Eca7xDtfkGlHgSyVc8evWF+w5bTs4O8tsh30uMAopqNhwnYfNenxaA89G/CJ5Yj8seeJXD10gwIYuIVELpjIEpMyncRG/AixskLHWgavzIhuL5C52mLKblmEDFKpOXN6tHuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788157097; c=relaxed/simple;
-	bh=8/X+ZiAhCM0wO44o/aH/9s27PgYmBrDeae7pRna+LD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ibpI6uFOW07p8+OXrekDiRXkvRdwex3MdUnDm8qjkz5cKV6Sd3haW7ov1aCpiw0PbU70UlWyVpZq6CYViU4vX49gAXtbYF/ldSCEdABPCpAGGuYE5MydPoPBXBUX5FtdUJZe/X0sVc1uA79cJn9btUO+y/IBUNBLXGe+Sh5evbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vOY37D5T; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1788157594; c=relaxed/simple;
+	bh=b0GVPFn1jo7pFGGemKg+vQ4Wd/deErfoC9y93zdOyT0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hMSfh11IoSwcMRKnzBYfGh2pjn3lFq0NwHieM/OK5cASy/Bz21Ezj0WdLnSUav16h2GkgHpetOG+UZ2pw15rBnkTa9+RYu1/0kYolAlbwLXsK361rUEWmHpI7ZQceTen0gswodizz+iirAh9jAtScsIBddYwF8w4x+GMa+Ht0hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2i9Jhsc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vOY37D5T"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1788157086; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=O2QSOxyllTggiJNb3J6sBKRJE2Uq7Nyfio0GG130yOo=;
-	b=vOY37D5TT9jsOtfoksis1sCdFo2iGegzaF03Tp+Hk+ghFisxVrmNdfLRAzR8EESU9x34wy8ztEHKROrttNy/KHRoN5Yi/kpKjVigmdJWZAKaZ8LNZEzcFg6WLBYYv+gtOgoPhNDWPvCsk15/F8JsSTrQwt5f9zVUqU3snB/d5XY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X9tHAh2_1788157084;
-Received: from 30.178.67.152(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9tHAh2_1788157084 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 31 Aug 2026 14:18:05 +0800
-Message-ID: <a6da695a-36a2-4b1a-a5ed-94cc42218ab2@linux.alibaba.com>
-Date: Mon, 31 Aug 2026 14:18:04 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2i9Jhsc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEECD1F000E9;
+	Mon, 31 Aug 2026 06:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788157592;
+	bh=R2Bg3ZR6rfyo4yzEIKohsK+dqxzsI9VOG3PiXqGis8I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=X2i9Jhsc5XlRqo0LmQfuD7R1M14Rwpob62Yz80d8dB+deM48Ew5Bcax/3KbT6FOJv
+	 /wgQ9yAa7iB36DrHZCesUlWIDgmo4IJ3mlweaprWhM2vCjM0nOTQaydAwZsiZmgwBu
+	 /sw8A6JSZE9FrL2UxsarquK9vtDG8Fokx30ta7YyFHbQC20me+kJX7GjwFpMaH+bOk
+	 lZ83XzeUzpTlNyUJ5j/Hx14AyXddkln0jD+IFfSG8X1Oy50PoghE7/d1w/Rh+fKt5H
+	 M+jAddm7C6xzhO5v9pY7Kj64wy0Ndg9kVyOfzdCCYNQhZkxdZKI8FkYAEsfm2Eyygh
+	 dyardWVo23+bA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3] cxl/region: Unregister the pmem region when the
+ bridge is unbound
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guixin Liu" <kanie@linux.alibaba.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260831061120.200790-1-kanie@linux.alibaba.com>
+References: <20260831061120.200790-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Aug 2026 06:26:32 +0000
+Message-Id: <20260831062632.AEECD1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/region: Unregister the pmem region bridge on setup
- failure
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-References: <20260812061043.57319-1-kanie@linux.alibaba.com>
- <anzo3j2nWsGlZIw_@aschofie-mobl2.lan>
- <6487b454-ac7a-41c8-af9d-e2f17743f30e@linux.alibaba.com>
- <apI1Ebyv8U6ZJWYR@aschofie-mobl2.lan>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <apI1Ebyv8U6ZJWYR@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
+Pre-existing issues:
+- [High] Race condition leading to NULL pointer dereference in cxl_pmem_reg=
+ion_probe().
+--
 
-在 2026/8/29 09:25, Alison Schofield 写道:
-> On Fri, Aug 28, 2026 at 05:06:55PM +0800, Guixin Liu wrote:
->>
->> 在 2026/8/13 05:42, Alison Schofield 写道:
->>> On Wed, Aug 12, 2026 at 02:10:43PM +0800, Guixin Liu wrote:
->>>
->>> About the subject line:
->>>
->>> Do we unregister the bridge or do we unregister the pmem
->>> region when the bridge is unboound?
->>>
->> Unregister the pmem region, sorry for the confusing description.
->>>> devm_cxl_add_pmem_region() publishes the cxl_pmem_region with device_add()
->>>> and only afterwards, under the nvdimm bridge's device lock, arranges for
->>>> its removal - and only if the bridge has a driver bound. If it does not,
->>>> the function sets -ENXIO and leaves through err_bridge, which drops the
->>>> reference this function took on the bridge and returns. The device that
->>>> was just added has no owner at that point: no device_del(), no
->>>> put_device(), and no devm action to do either later. The sibling failure,
->>>> a devm_add_action_or_reset() that cannot allocate, is already covered,
->>>> because devm_add_action_or_reset() runs cxlr_pmem_unregister() itself on
->>>> that path.
->>>>
->>>> An unbound bridge is a normal state, not an error state. The bridge is
->>>> unbound whenever cxl_pmem is unloaded or its device is detached through
->>>> sysfs, and a region can be probed in that window.
->>>>
->>>> The added device then stays in sysfs, along with the reference it holds on
->>>> the region, until the module is unloaded. cxlr->cxlr_pmem still points at
->>>> it, and worse, the name is still taken: a later probe of the same region
->>>> allocates a second cxl_pmem_region and fails in device_add() on the
->>>> duplicate "pmem_region%d", so once this has happened the region can no
->>>> longer be brought up at all.
->>> Is above an observed behavior?  ie can you reproduce this, apply
->>> the fix, see it go away?  That would be far more valuable than this
->>> excessive narration as proof of repair.
->>>
->>> More below...
->> I'm so sorry, I thought that we should add cleanup in
->> failure branch, but now I realize that this branch is never actually
->> reached.
->>
-> I think the patch may still apply as-is, so before dropping it, please take a
-> look at this from the teardown side rather than the "cxl_pmem is not loaded" side.
->
-> cxl_acpi removal unbinds and deletes the bridge before the regions it serves. So,
-> a region probe that already found the bridge can reach that check after the bridge
-> is gone, set -ENXIO, and return leaving the just-added device with no owner.
-Well, you are right, I test this on vm, it reached the failure branch.
+commit 46b44f91e80687bcb216394e5b204e067ed40c6d
+Author: Guixin Liu <kanie@linux.alibaba.com>
 
-I sent the v3 patch for shorter commit body and testing description.
+cxl/region: Unregister the pmem region when the bridge is unbound
 
-Best Regards,
-Guixin Liu
->
-> If that is true (I'm not sure it is) then the fix stands and the changelog needs to
-> tell that story.
->
->
-> -- Alison
->
->
->> Please ignore this patch, sorry again.
->>
->> Best Regards,
->> Guixin Liu
->>
+This commit addresses an issue where removing cxl_acpi unbinds the nvdimm
+bridge before the regions it serves, leaving an orphan pmem region. It
+updates devm_cxl_add_pmem_region() to unregister the cxl_pmem_region
+synchronously when the bridge is unbound.
 
+> diff --git a/drivers/cxl/core/region_pmem.c b/drivers/cxl/core/region_pme=
+m.c
+> index 23d97e3d78b6a..7ab1373a95e01 100644
+> --- a/drivers/cxl/core/region_pmem.c
+> +++ b/drivers/cxl/core/region_pmem.c
+> @@ -168,12 +168,14 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxl=
+r)
+>  		dev_name(dev));
+> =20
+>  	scoped_guard(device, &cxl_nvb->dev) {
+> -		if (cxl_nvb->dev.driver)
+> +		if (cxl_nvb->dev.driver) {
+>  			rc =3D devm_add_action_or_reset(&cxl_nvb->dev,
+>  						      cxlr_pmem_unregister,
+>  						      cxlr_pmem);
+> -		else
+> +		} else {
+>  			rc =3D -ENXIO;
+> +			cxlr_pmem_unregister(cxlr_pmem);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but this patch extends the
+usage of cxlr_pmem_unregister() in the synchronous error path, keeping a
+vulnerability active.
+
+Can a race condition lead to a NULL pointer dereference in
+cxl_pmem_region_probe()?
+
+If the cxl_pmem driver is loaded (e.g., via modprobe) concurrently with the
+unbinding of the cxl_acpi bridge (or if devm_cxl_add_pmem_region() fails on
+the bridge unbound check), cxlr_pmem_unregister() is called on another CPU.
+
+cxlr_pmem_unregister() sets the pointer to NULL without holding the region
+device's lock:
+
+drivers/cxl/core/region_pmem.c:cxlr_pmem_unregister() {
+    ...
+    cxlr_pmem->cxlr =3D NULL;
+    device_unregister(&cxlr_pmem->dev);
+    ...
+}
+
+Simultaneously, the driver core calls cxl_pmem_region_probe() which holds t=
+he
+device lock, but reads the concurrently nullified pointer and dereferences =
+it:
+
+drivers/cxl/pmem.c:cxl_pmem_region_probe() {
+    ...
+    struct cxl_region *cxlr =3D cxlr_pmem->cxlr;
+    struct cxl_nvdimm_bridge *cxl_nvb =3D cxlr->cxl_nvb;
+    ...
+}
+
+Does this code open a race window against the probe function, resulting
+in a crash?
+
+> +		}
+>  	}
+> =20
+>  	if (rc)
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831061120.2007=
+90-1-kanie@linux.alibaba.com?part=3D1
