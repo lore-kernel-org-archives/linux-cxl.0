@@ -1,57 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13A637AA64
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 02:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0523F2BCF46
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 06:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788143021; cv=none; b=bklrlVZgkwbbSQ55ozs41zbBu8tyxgsQiGOxJZ7XaAWwSOxKD4lUxjG4cR30kGprEb+SXv7d3lot0IkZ28+UIJY1Zs2KhyzKuey+U1O0y9E0Ns/37UP35WsG63VhEE8vaWhZ1akkQI5BH1mC/Q1KfpqZsAYbZTIKZRClUAv8K0w=
+	t=1788156693; cv=none; b=FO9J1FkCeK0P5TK147Aboiw+AsZW8TaUaixWiLEyJpCxEF9kNlJuGDYaszKMlcnFB8AsAS8JvC5usa77KwG1873vtIPOJUnJsvuiR0rAMtcHIkPX0NpGRnu6u00zz8bBs0e1GzDrV5FyogzndHkFFGFsMVyfGUqoW3GVXqbE5OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788143021; c=relaxed/simple;
-	bh=JfFtoKN/qdgOj3A9lANKsbktFZUUewgu65dOxEHAdww=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TGuIClFpTqCNggq7THg6T0E3cOPj2uzVnmgJV1EUJhVct4r0troY3WTJvmypsLbtf+6J2zkqq7P8JXW4Bax5pCEGY6xr+TpmEaxPKbaBnIeJ4/SQ2NqFm5QPJgCZxbPVlimICFZQnniDTNWRrEyl+qGU7vpufYtYcbl6gQcE75I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=errHxEyR; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1788156693; c=relaxed/simple;
+	bh=aRoFCzTe2ulb3Kbp24rEmRosHi6WJaEuiV5EJtCpIks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EUsQvktDRbBFj+U95WqagnOt4Dg4XwmDri5pGQ5Iyco/PFVT7knpS972R2byzi/IypOG2gcjmdRXeXOntMETRXeKntzUgSiXQJd277nebugc3oDJ0XKnehSJe1/1c3OyTeLtYnpZqm3k05T/CViD9RsWquhipEj4GDTY/VzU6b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=MIGqfjB6; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="errHxEyR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788143003; x=1819679003;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JfFtoKN/qdgOj3A9lANKsbktFZUUewgu65dOxEHAdww=;
-  b=errHxEyROYQEppGHkEuyXYmpflzWpLYzkHfJapgFPxXbB2EQPyTzSbbB
-   fDLNJppTGGh1/Tjr5P+rbrSyLNS4FTmbEq6RFKqC1olFX4p6gycnQDaWw
-   OVX5kSjhI+TcBnLkaxfiYrmpb7LdNCwOaMGMFDoIc2bKkGOMO+SlPOCIG
-   eyAGg9iSPFS28JXIwnJBBrL0vJlNMCD8SatSr9qERxciyOVf8TH5a6tlz
-   ULLOnIxC4KzWtKOcaGCn/ngE1s8mSzCN3woFVzpplISG5ZVC7/yK1TiXI
-   SywAW8Mmq4Y2fN9EoeXjBjVPZFVOtmr9VyVmaWaJtqnvgOj0oM+EmpHMw
-   w==;
-X-CSE-ConnectionGUID: Ovb/wXlNSwKPlc2d5n581Q==
-X-CSE-MsgGUID: 7VLj94DUQFOuNgaSTrtLZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="99703149"
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="99703149"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 19:23:11 -0700
-X-CSE-ConnectionGUID: 6zp4s1G1SPylKnjVDBXrng==
-X-CSE-MsgGUID: wHFmjOCJQ3m8BYGsjX6F6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="272859624"
-Received: from junjie-desk-dev.bj.intel.com (HELO junjie-desk-dev.tail2c02c1.ts.net) ([10.238.152.71])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 19:23:09 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mst@redhat.com,
-	Shrihari E S <shrihari.s@samsung.com>,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH] hw/cxl: fix the CDAT DOE overlapping the Flex Bus DVSEC when sn= is set
-Date: Mon, 31 Aug 2026 10:23:02 +0800
-Message-ID: <20260831022302.406740-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="MIGqfjB6"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1788156687; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=mE+NzOt+NjDFqX9gVani3KxMAKBxBXKGmxVnK5uhzW4=;
+	b=MIGqfjB67Kxgwo2tef0QC4SVzGljluPp8DKVG73+izTHZNOgvI6W1vpyuAQdXDmk6eELRuytX3XfPR3BYyE+oKFshtSdT+aH+WwetUxpMZLR5O02SSqagdreio9B4aI0lh12bROtEVlDTYk8okR/NKPQ0JghvMDCor6TjP+BlZM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X9tH81Y_1788156686;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9tH81Y_1788156686 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Aug 2026 14:11:26 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v3] cxl/region: Unregister the pmem region when the bridge is unbound
+Date: Mon, 31 Aug 2026 14:11:20 +0800
+Message-ID: <20260831061120.200790-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,59 +46,109 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ct3_realize() adds the CDAT DOE at a fixed 0x190.  Since 8700ee15de the
-four DVSECs take 0x90 bytes, which from 0x100 ends exactly at 0x190.
-With sn= the Device Serial Number capability pushes the block to
-0x10c..0x19c, and the DOE, added later, overwrites the last 12 bytes of
-the Flex Bus Port DVSEC: Capability2, Control2 and Status2.  Nothing
-catches this -- pcie_add_capability() checks bounds, not overlap, and
-the chain still walks because the DVSEC's next pointer becomes 0x190,
-inside its own body.  Most cxl-type3 examples in
-docs/system/devices/cxl.rst set sn=.
+Removing cxl_acpi unbinds the nvdimm bridge before the regions it
+serves. A region probe can therefore register its cxl_pmem_region and
+only then find the bridge unbound, which leaves the new device with
+nothing to remove it.
 
-Derive the offset from the DVSEC block instead, as cxl_upstream.c
-already does.  Without sn= the layout is unchanged byte for byte; with
-sn= the DOE moves to 0x19c, below the AER capability at 0x200.  The
-type 3 device has no VMStateDescription, so its config space never
-reaches the migration stream.
+The orphan outlives the teardown and pins its region and its memdevs, so
+a later cxl_acpi bind renumbers the root port, ports, endpoints,
+decoders and the memdev.
 
-Fixes: 8700ee15de ("hw/cxl: Standardize all references on CXL r3.1 and minor updates")
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+Unregister the cxl_pmem_region when the bridge is unbound.
+
+Found by code inspection. Racing a cxl_region bind against a cxl_acpi
+unbind leaked a pmem_region device on 12 of 12 attempts, and none with
+this patch.
+
+Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
+Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 ---
-Found while walking the extended capability chains for the UIO/SVC RFC
-V2 review; independent of that series.
+Found by inspecting the CXL error paths, then confirmed on a QEMU CXL
+topology (4 memdevs behind a CXL switch, one of them with 2G of
+persistent capacity).
 
-Tested at bde2492aac on q35 (pxb-cxl / cxl-rp / cxl-type3), dumping the
-capability chain and raw config bytes from the guest with and without
-sn=: the Flex Bus DVSEC keeps its full 0x20 bytes and the DOE sits at
-0x19c; without sn= the bytes are identical before and after.  cxl-test
-12/12.
+Test procedure, with a dev_err() temporarily added on the unbound-bridge
+branch so that taking it could be observed:
 
-On cxl-2026-03-25-draft REG_LOC_DVSEC_LENGTH is 0x34, so the overlap is
-there without sn= too; with this change the DOE lands at 0x1a0/0x1ac.
-cxl-2026-01-09-draft also fixes doe_comp at 0x1b0, which would then
-collide -- the two want chaining.
+  cxl create-region -d decoderX.Y -m memN -t pmem -s 2G -w 1 -g 256
+  echo regionN > /sys/bus/cxl/drivers/cxl_region/unbind
+  echo regionN > /sys/bus/cxl/drivers/cxl_region/bind &
+  echo ACPI0017:00 > /sys/bus/platform/drivers/cxl_acpi/unbind &
+  wait
 
- hw/mem/cxl_type3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Without the patch all 12 attempts took the unbound-bridge branch. The
+region bind failed with -ENXIO and pmem_regionN stayed registered on the
+cxl bus after the teardown had removed everything else, including the
+bridge and the region it hangs off, leaving its /sys/bus/cxl/devices/
+link dangling into the deleted path. Because the orphan keeps references
+on its region and on the mapped memdev, the ancestor chain up to the CXL
+root port stayed pinned, so rebinding cxl_acpi renumbered the topology:
+root0 became root1, port1 became port2 and mem3 became mem4.
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 28f41fa623..e6eb2e0cba 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -936,8 +936,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     }
+With the patch the same 12 attempts still reach that branch and the bind
+still fails with -ENXIO, but nothing is left registered and the numbering
+is stable across repeated bind and unbind cycles.
+
+No artificial delay was needed to land in the window. The teardown
+releases the bridge first, so it gets there while the probe is still
+inside device_add().
+
+v2 -> v3:
+- Reframe the changelog around cxl_acpi teardown, which is the reachable
+  path, rather than cxl_pmem being unloaded or unbound. The bridge driver
+  sets suppress_bind_attrs and cxl_acpi now depends on cxl_pmem, so that
+  framing could not happen (Alison Schofield)
+- Drop the -EEXIST claim. The leaked device pins the region id, so the id
+  is never reused and no duplicate name occurs; the observable
+  consequence is the leak and the renumbering after a rebind
+- Cut the implementation narration and state what was tested
+  (Alison Schofield)
+- The code is unchanged from v2, so Richard Cheng's and Li Ming's
+  Reviewed-by tags are carried over. Note that the changelog has been
+  rewritten since they gave them, in particular the -EEXIST claim above
+
+v1 -> v2:
+- rebase onto cxl/next
+- rewrite the commit message to describe the behaviour rather than narrate
+  the code change (Alison Schofield)
+
+v1 was patch 8/8 of the "cxl: Assorted fixes" series [1]. Per review
+feedback that series is not being reworked as a whole; the fixes are
+resent individually instead. Patches 1, 2 and 7 of the series are
+dropped, as those issues are already fixed in cxl/next.
+
+[1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+v2: https://lore.kernel.org/linux-cxl/20260812061043.57319-1-kanie@linux.alibaba.com/
+
+ drivers/cxl/core/region_pmem.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/region_pmem.c b/drivers/cxl/core/region_pmem.c
+index 23d97e3d78b6..7ab1373a95e0 100644
+--- a/drivers/cxl/core/region_pmem.c
++++ b/drivers/cxl/core/region_pmem.c
+@@ -168,12 +168,14 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+ 		dev_name(dev));
  
-     /* DOE Initialization */
--    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true,
--                  CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
-+    pcie_doe_init(pci_dev, &ct3d->doe_cdat, cxl_cstate->dvsec_offset,
-+                  doe_cdat_prot, true, CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
+ 	scoped_guard(device, &cxl_nvb->dev) {
+-		if (cxl_nvb->dev.driver)
++		if (cxl_nvb->dev.driver) {
+ 			rc = devm_add_action_or_reset(&cxl_nvb->dev,
+ 						      cxlr_pmem_unregister,
+ 						      cxlr_pmem);
+-		else
++		} else {
+ 			rc = -ENXIO;
++			cxlr_pmem_unregister(cxlr_pmem);
++		}
+ 	}
  
-     cxl_cstate->cdat.build_cdat_table = ct3_build_cdat_table;
-     cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
+ 	if (rc)
 
-base-commit: d2e570cc0f97b936902a5b1b86b73c0f5998b475
+base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 -- 
-2.43.0
+2.43.7
 
