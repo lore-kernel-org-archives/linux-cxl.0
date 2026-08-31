@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85B3101A2
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25C38DC6A
+	for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 20:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788207927; cv=none; b=e4cZu7rCse0dnco8fM/FX5Z+aHKI5N6hhuCWfvoAfubaGnjMr9F9yqI/sj4o+50ZBpaTYlEkJPT/sMFHpnNKrGkryqZzlKdEhsDCkVh+2whE3vr08e9Fn3Tlwe7lS/FB84EkTVrNNIMNacHS7ba0YuQsSDV/Wj2RCo3aIBeWjLo=
+	t=1788207934; cv=none; b=kIKfmo/Q/1Q5OfQkwaxsfA8599CDoVW2gsAWbWclFhCIfe6mWWC8f3wY6sS61IJGgZYG6ZPJ//EjQPgX+Trfytr4+vZd8ixwqTHe0VQ1YM8zkzAFUKV6mB0AkQa0JdxGu1no3PhOz1Yjn8zzL8sHBLRD64LcD7wMtFP3Qf8zxgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788207927; c=relaxed/simple;
-	bh=esSfvE3+7/P7ya51PfBNKPTUbnV/xG/9pEJC8GXz/Ks=;
+	s=arc-20240116; t=1788207934; c=relaxed/simple;
+	bh=s2TsiM0W9dsOuJK6fIQDzIX8Tj6MlDjmFwC1VN69hfA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=VIVpmSGZ2gHYIWNf70rykcNBF/b6gNU5QLhXX+to6vHJZTMVppuNJQZjrGwLdmlwMjMavY2CZKo4F8lWF6a94xpiB3zgIqgePhlfP6IDiLPfQGke7rXLibsaj1p831lYI2ISkl/McgJXFVrAYNiH+FpPb7V4fDxh+pr4Xcex3x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N94inROP; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=bNajmsQIeMPxZBb+0T4ZHscxrH078E/XGRqlRJnHSQ6js8MoJZUIZCXuhztnuBO7CyMZEyzJD2KEP20+lyjvnGSSOrR9TJOVx2DLxVSEs3fSW6aFIdJu5mXsxlKdgjZSaHjNNsgChU/0QcZ9wkkLBwG44dHNSD1aak/8xazrqac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e+n8MgtQ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N94inROP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+n8MgtQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788207924;
+	s=mimecast20190719; t=1788207931;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pS3gWzM2OpSimpBSFZGIbBPCkdQIT5l3gW1iVRp02q8=;
-	b=N94inROP/27sDWLaH0j40XkcBJv7DwSglZuz9ZaThk/zHh/nDWoDpvIC9CqPlgDQRZq+Az
-	xIjDjVvaiM6DYJ/nQnFtdgo4ShH6vbgc5eY4NTyk35b+/5HRwh1qizy5Uy3yYFrVNVB0Nm
-	Jo0J3KtwGXx0vE+DScurwCrw7mTTklQ=
+	bh=U/qXQ7y8j8vRIuhHXNBGEntkR65K80MZ6kjFW8kUyKM=;
+	b=e+n8MgtQB6TRekhMNUfxWDUx6czJxSeMkJMorP+xQj6a3NYUkfZFZM3FBNwxjXBrYCY1IJ
+	mXOXxF0Mjotf/+E13dkXCLjuinShOvuIo0eBZeP+Y4msuWGfuebRmJXutfv7tsRlXXn77u
+	6EbPs1FmO8fwcQvTRVjV3hz8xf7h60g=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-136-uMc_VPINMpqQiIXR6qSURQ-1; Mon,
- 31 Aug 2026 16:25:21 -0400
-X-MC-Unique: uMc_VPINMpqQiIXR6qSURQ-1
-X-Mimecast-MFC-AGG-ID: uMc_VPINMpqQiIXR6qSURQ_1788207918
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-642-XNahUdQTN_etkX5G4gySqQ-1; Mon,
+ 31 Aug 2026 16:25:28 -0400
+X-MC-Unique: XNahUdQTN_etkX5G4gySqQ-1
+X-Mimecast-MFC-AGG-ID: XNahUdQTN_etkX5G4gySqQ_1788207925
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0335D18E6780;
-	Mon, 31 Aug 2026 20:25:18 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AAB018E6789;
+	Mon, 31 Aug 2026 20:25:25 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.63])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7D9EB1800347;
-	Mon, 31 Aug 2026 20:25:11 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6064018005AC;
+	Mon, 31 Aug 2026 20:25:18 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	qemu-trivial@nongnu.org,
 	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>
-Subject: [PATCH v4 37/43] qapi: convert trivial intro sections for virtio.json
-Date: Mon, 31 Aug 2026 16:19:39 -0400
-Message-ID: <20260831201945.287730-38-jsnow@redhat.com>
+Subject: [PATCH v4 38/43] qapi: convert trivial intro sections for net.json
+Date: Mon, 31 Aug 2026 16:19:40 -0400
+Message-ID: <20260831201945.287730-39-jsnow@redhat.com>
 In-Reply-To: <20260831201945.287730-1-jsnow@redhat.com>
 References: <20260831201945.287730-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,172 +92,308 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: W8ZAAS2G96j1CjAiAwYs7Laxt0bhBabliIejybk38yM_1788207918
+X-Mimecast-MFC-PROC-ID: 7LL-7-X_47hJvT3eS2ErHnZDQq8gMJyolTce9g2IEKo_1788207925
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/virtio.json | 54 ++++++++++++++++++------------------------------
- 1 file changed, 20 insertions(+), 34 deletions(-)
+ qapi/net.json | 92 ++++++++++++++++++---------------------------------
+ 1 file changed, 33 insertions(+), 59 deletions(-)
 
-diff --git a/qapi/virtio.json b/qapi/virtio.json
-index 1fc4e38a44d..9aafc3a212f 100644
---- a/qapi/virtio.json
-+++ b/qapi/virtio.json
-@@ -10,8 +10,7 @@
+diff --git a/qapi/net.json b/qapi/net.json
+index 1a6382825c5..4ea4bd1bc72 100644
+--- a/qapi/net.json
++++ b/qapi/net.json
+@@ -12,8 +12,7 @@
  
  ##
- # @VirtioInfo:
+ # @set_link:
 -#
--# Basic information about a given VirtIODevice
-+#     Basic information about a given VirtIODevice
+-# Sets the link status of a virtual network adapter.
++#     Sets the link status of a virtual network adapter.
  #
- # @path: The VirtIODevice's canonical QOM path
+ # @name: the device name of the virtual network adapter
  #
-@@ -25,8 +24,7 @@
+@@ -60,8 +59,7 @@
  
  ##
- # @x-query-virtio:
+ # @netdev_del:
 -#
--# Return a list of all realized VirtIODevices
-+#     Return a list of all realized VirtIODevices
+-# Remove a network backend.
++#     Remove a network backend.
  #
- # Features:
+ # @id: the name of the network backend to remove
  #
-@@ -189,8 +187,7 @@
+@@ -80,8 +78,7 @@
  
  ##
- # @x-query-virtio-status:
+ # @NetLegacyNicOptions:
 -#
--# Poll for a comprehensive status of a given virtio device
-+#     Poll for a comprehensive status of a given virtio device
+-# Create a new Network Interface Card.
++#     Create a new Network Interface Card.
  #
- # @path: Canonical QOM path of the VirtIODevice
+ # @netdev: id of -netdev to connect to
  #
-@@ -442,9 +439,8 @@
+@@ -140,8 +137,7 @@
  
  ##
- # @VirtioDeviceStatus:
+ # @NetdevPasstOptions:
 -#
--# A structure defined to list the configuration statuses of a virtio
--# device
-+#     A structure defined to list the configuration statuses of a
-+#     virtio device
+-# Unprivileged user-mode network connectivity using passt
++#     Unprivileged user-mode network connectivity using passt
  #
- # @statuses: List of decoded configuration statuses of the virtio
- #     device
-@@ -460,9 +456,8 @@
+ # @path: Filename of the passt program to run (by default 'passt', and
+ #     use PATH)
+@@ -301,9 +297,8 @@
  
  ##
- # @VhostDeviceProtocols:
+ # @NetdevUserOptions:
 -#
--# A structure defined to list the vhost user protocol features of a
--# Vhost User device
-+#     A structure defined to list the vhost user protocol features of
-+#     a Vhost User device
+-# Use the user mode network stack which requires no administrator
+-# privilege to run.
++#     Use the user mode network stack which requires no administrator
++#     privilege to run.
  #
- # @protocols: List of decoded vhost user protocol features of a vhost
- #     user device
-@@ -503,9 +498,8 @@
+ # @hostname: client hostname reported by the builtin DHCP server
+ #
+@@ -389,8 +384,7 @@
  
  ##
- # @VirtQueueStatus:
+ # @NetdevTapOptions:
 -#
--# Information of a VirtIODevice VirtQueue, including most members of
--# the VirtQueue data structure.
-+#     Information of a VirtIODevice VirtQueue, including most members
-+#     of the VirtQueue data structure.
+-# Used to configure a host TAP network interface backend.
++#     Used to configure a host TAP network interface backend.
  #
- # @name: Name of the VirtIODevice that uses this VirtQueue
+ # @ifname: interface name
  #
-@@ -556,8 +550,7 @@
+@@ -447,9 +441,8 @@
  
  ##
- # @x-query-virtio-queue-status:
+ # @NetdevSocketOptions:
 -#
--# Return the status of a given VirtIODevice's VirtQueue
-+#     Return the status of a given VirtIODevice's VirtQueue
+-# Socket netdevs are used to establish a network connection to another
+-# QEMU virtual machine via a TCP socket.
++#     Socket netdevs are used to establish a network connection to
++#     another QEMU virtual machine via a TCP socket.
  #
- # @path: VirtIODevice canonical QOM path
+ # @fd: file descriptor of an already opened socket
  #
-@@ -640,9 +633,8 @@
+@@ -476,8 +469,7 @@
  
  ##
- # @VirtVhostQueueStatus:
+ # @NetdevL2TPv3Options:
 -#
--# Information of a vhost device's vhost_virtqueue, including most
--# members of the vhost_dev vhost_virtqueue data structure.
-+#     Information of a vhost device's vhost_virtqueue, including most
-+#     members of the vhost_dev vhost_virtqueue data structure.
+-# Configure an Ethernet over L2TPv3 tunnel.
++#     Configure an Ethernet over L2TPv3 tunnel.
  #
- # @name: Name of the VirtIODevice that uses this vhost_virtqueue
+ # @src: source address
  #
-@@ -682,8 +674,7 @@
+@@ -531,8 +523,7 @@
  
  ##
- # @x-query-virtio-vhost-queue-status:
+ # @NetdevVdeOptions:
 -#
--# Return information of a given vhost device's vhost_virtqueue
-+#     Return information of a given vhost device's vhost_virtqueue
+-# Connect to a vde switch running on the host.
++#     Connect to a vde switch running on the host.
  #
- # @path: VirtIODevice canonical QOM path
+ # @sock: socket path
  #
-@@ -746,8 +737,7 @@
+@@ -553,8 +544,7 @@
  
  ##
- # @VirtioRingDesc:
+ # @NetdevBridgeOptions:
 -#
--# Information regarding the vring descriptor area
-+#     Information regarding the vring descriptor area
+-# Connect a host TAP network interface to a host bridge device.
++#     Connect a host TAP network interface to a host bridge device.
  #
- # @addr: Guest physical address of the descriptor area
+ # @br: bridge name
  #
-@@ -797,9 +787,8 @@
+@@ -569,8 +559,7 @@
  
  ##
- # @VirtioQueueElement:
+ # @NetdevHubPortOptions:
 -#
--# Information regarding a VirtQueue's VirtQueueElement including
--# descriptor, driver, and device areas
-+#     Information regarding a VirtQueue's VirtQueueElement including
-+#     descriptor, driver, and device areas
+-# Connect two or more net clients through a software hub.
++#     Connect two or more net clients through a software hub.
  #
- # @name: Name of the VirtIODevice that uses this VirtQueue
+ # @hubid: hub identifier number
  #
-@@ -822,8 +811,7 @@
+@@ -586,8 +575,8 @@
  
  ##
- # @x-query-virtio-queue-element:
+ # @NetdevNetmapOptions:
 -#
--# Return the information about a VirtQueue's VirtQueueElement
-+#     Return the information about a VirtQueue's VirtQueueElement
+-# Connect a client to a netmap-enabled NIC or to a VALE switch port
++#     Connect a client to a netmap-enabled NIC or to a VALE switch
++#     port
  #
- # @path: VirtIODevice canonical QOM path
- #
-@@ -933,8 +921,7 @@
+ # @ifname: Either the name of an existing network interface supported
+ #     by netmap, or the name of a VALE port (created on the fly).  A
+@@ -607,8 +596,7 @@
  
  ##
- # @IOThreadVirtQueueMapping:
+ # @AFXDPMode:
 -#
--# Describes the subset of virtqueues assigned to an IOThread.
-+#     Describes the subset of virtqueues assigned to an IOThread.
+-# Attach mode for a default XDP program
++#     Attach mode for a default XDP program
  #
- # @iothread: the id of IOThread object
+ # @skb: generic mode, no driver support necessary
  #
-@@ -973,9 +960,8 @@
+@@ -623,8 +611,7 @@
  
  ##
- # @DummyVirtioForceArrays:
+ # @NetdevAFXDPOptions:
 -#
--# Not used by QMP; hack to let us use IOThreadVirtQueueMappingList and
--# VirtIOGPUOutputList internally
-+#     Not used by QMP; hack to let us use IOThreadVirtQueueMappingList
-+#     and VirtIOGPUOutputList internally
+-# AF_XDP network backend
++#     AF_XDP network backend
  #
- # Since: 9.0
+ # @ifname: The name of an existing network interface.
+ #
+@@ -675,8 +662,7 @@
+ 
  ##
+ # @NetdevVhostUserOptions:
+-#
+-# Vhost-user network backend
++#     Vhost-user network backend
+ #
+ # @chardev: name of a unix socket chardev
+ #
+@@ -836,8 +822,7 @@
+ 
+ ##
+ # @NetdevStreamOptions:
+-#
+-# Configuration info for stream socket netdev
++#     Configuration info for stream socket netdev
+ #
+ # @addr: socket address to listen on (server=true) or connect to
+ #     (server=false)
+@@ -861,8 +846,7 @@
+ 
+ ##
+ # @NetdevDgramOptions:
+-#
+-# Configuration info for datagram socket netdev.
++#     Configuration info for datagram socket netdev.
+ #
+ # @remote: remote address
+ #
+@@ -898,8 +882,7 @@
+ 
+ ##
+ # @NetClientDriver:
+-#
+-# Available netdev drivers.
++#     Available netdev drivers.
+ #
+ # @l2tpv3: since 2.1
+ #
+@@ -933,8 +916,7 @@
+ 
+ ##
+ # @Netdev:
+-#
+-# Captures the configuration of a network device.
++#     Captures the configuration of a network device.
+ #
+ # @id: identifier for monitor commands.
+ #
+@@ -972,8 +954,7 @@
+ 
+ ##
+ # @RxState:
+-#
+-# Packets receiving state
++#     Packets receiving state
+ #
+ # @normal: filter assigned packets according to the mac-table
+ #
+@@ -987,8 +968,7 @@
+ 
+ ##
+ # @RxFilterInfo:
+-#
+-# Rx-filter information for a NIC.
++#     Rx-filter information for a NIC.
+ #
+ # @name: net client name
+ #
+@@ -1033,8 +1013,8 @@
+ 
+ ##
+ # @query-rx-filter:
+-#
+-# Return rx-filter information for all NICs (or for the given NIC).
++#     Return rx-filter information for all NICs (or for the given
++#     NIC).
+ #
+ # @name: net client name
+ #
+@@ -1082,9 +1062,8 @@
+ 
+ ##
+ # @NIC_RX_FILTER_CHANGED:
+-#
+-# Emitted once until the `query-rx-filter` command is executed, the
+-# first event will always be emitted
++#     Emitted once until the `query-rx-filter` command is executed,
++#     the first event will always be emitted
+ #
+ # @name: net client name
+ #
+@@ -1104,8 +1083,7 @@
+ 
+ ##
+ # @AnnounceParameters:
+-#
+-# Parameters for self-announce timers
++#     Parameters for self-announce timers
+ #
+ # @initial: Initial delay (in ms) before sending the first GARP/RARP
+ #     announcement
+@@ -1178,8 +1156,7 @@
+ 
+ ##
+ # @NETDEV_STREAM_CONNECTED:
+-#
+-# Emitted when the netdev stream backend is connected
++#     Emitted when the netdev stream backend is connected
+ #
+ # @netdev-id: QEMU netdev id that is connected
+ #
+@@ -1208,8 +1185,7 @@
+ 
+ ##
+ # @NETDEV_STREAM_DISCONNECTED:
+-#
+-# Emitted when the netdev stream backend is disconnected
++#     Emitted when the netdev stream backend is disconnected
+ #
+ # @netdev-id: QEMU netdev id that is disconnected
+ #
+@@ -1226,8 +1202,7 @@
+ 
+ ##
+ # @NETDEV_VHOST_USER_CONNECTED:
+-#
+-# Emitted when the vhost-user chardev is connected
++#     Emitted when the vhost-user chardev is connected
+ #
+ # @netdev-id: QEMU netdev id that is connected
+ #
+@@ -1246,8 +1221,7 @@
+ 
+ ##
+ # @NETDEV_VHOST_USER_DISCONNECTED:
+-#
+-# Emitted when the vhost-user chardev is disconnected
++#     Emitted when the vhost-user chardev is disconnected
+ #
+ # @netdev-id: QEMU netdev id that is disconnected
+ #
 -- 
 2.55.0
 
