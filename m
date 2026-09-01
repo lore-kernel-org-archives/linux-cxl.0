@@ -1,63 +1,63 @@
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771AD346774
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 00:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FCB346A07
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 00:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788222587; cv=none; b=mZJqHgDkl3iZHR7saaI5/NkA0wlXnJSBaV4wnH41LQztGFSpOZGjQbmmloWSdvxN8oRxgvg8HsUdxFHUB27vLRRSSmBdftttsnpH3LDKMKjRFTc3pl17oyeC6T1EMZpP7X3HqgD4n6agP7nY/+Cc5vKzmaBgfCtF0m8Xx1JPuWs=
+	t=1788222590; cv=none; b=XjHZgduX2bX3sA1rhblyZC0ajgopxTIgsmbJw4qesEzcKEk/+onugv8LTR4FpYS1BAkF4t482n822FCSBOVQGxdHFFyQstKqiOIga0HPtX3meApS+O85TGqGOjnbsqRPGhQEKn2ooFz2TUQW94WOyYDKPwSc78KYIv2QWLlhF7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788222587; c=relaxed/simple;
-	bh=QpAlGwUUQwN9PmRY2pagbCFmOWXR7/8V1k/VQFIPngc=;
+	s=arc-20240116; t=1788222590; c=relaxed/simple;
+	bh=A+mxQOf+BvSx4wGarIQzA6Sq+EhnVpHfIBhMsKimd9w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oKpmGckT0NX4D32H689VGreI6zrgm2LDdbFvShGxL6JDzhJzSZumMvWjDtB4gykCTgJNZlghD2Pb5j6zRE1mOikfmKpnyJ0UmjNFoTtNBHdhYa6bo25hHltYRPSDwGaFt/X8VU6jplgUHzWmQbsPgarOziK4fp2J6hgJ5GYFoIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoAY3akO; arc=none smtp.client-ip=74.125.224.50
+	 MIME-Version; b=F0xranoPTuD+VendDa8/GE3Cp7XqD9dI6gh7Z9YHC2ipcU2VeXl03iIg5aiPcbV+S5cxfWEYB3pm08hceL8xmnLNDFiZ9Gfy9Tnsq70TTL2CufSqNsSJsLCWknKLXCFjtmCvYk/O0pnw60ExlCOvC4T2v6GsNm/Csobz7DBkPyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwErkXK8; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoAY3akO"
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-66e55430869so2552932d50.0
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 17:29:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwErkXK8"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-865bdc6ed72so26339427b3.2
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 17:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788222584; x=1788827384; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788222586; x=1788827386; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ZY/qeOHwo20yfXDG0KXJjSnOELpiuFvVKjI8uslmL+s=;
-        b=JoAY3akOnydPz/kgVkSQz/SlNMjUKtgyuuiaeIP7DzCwbwQ0wNomuIJ1CbPZOfNXqf
-         CS94lGMfjxrvHCQuEagQEuUtnhe4P5hrgd2juwu7wcviLxz9wntPVlqZNSA3lz/OLcDM
-         4ILYPHtj/GQNCit7lEpKUFZLhRBiy/cmG766vc2VVd08s7dxIkAFwu0KB37wxa8Ozwv8
-         X/weQjl1k4i1OteclhpdUNGmB+0KiFamcnoR7GkD9Y7ee9mN6GjjgdT+QUgh8u13B7c/
-         bZYMvEA6cwjYVUfZOF70cK8pmMKh0fpv+1grwrFJo/FJo9G7gnJA0dGkv44+VAGzk3gB
-         Y9rw==
+        bh=Pup05/JP8Wr9ADhiiVIjKn3tG7KZ68Z0VZEv26PjtVM=;
+        b=RwErkXK8MZFwDq9XJXF3etoOOvQBA8KiwHKUx3x+n6bzu+5Hg1ZSF97PNN/wBZzSMy
+         75b1WBuncC877iSbbpQh6UWQNkymj0NSClP5l0YfwfRRU6Q3GeMI4YN8SHJd0q/XF+3K
+         c1Zgicx+FhkrC0HVeK5KlAMwdMWcG62AhKyOab5u79nOmrWK/k4Mc15XRvMyywvs7IDJ
+         uKFYVKdA0B7xFW4a1JsS1MIH89MUFih3JL9LwnAq8myLruffjLxZCs3BpQRuBn1B8dAC
+         k7B5q5Hf3Fc3SkAUsp8+GsAWlyciTBxKJCsEEivZuiYJQ5l/fqq9ZoP7zJBvaN9SUDXA
+         i2WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788222584; x=1788827384;
+        d=1e100.net; s=20251104; t=1788222586; x=1788827386;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ZY/qeOHwo20yfXDG0KXJjSnOELpiuFvVKjI8uslmL+s=;
-        b=dWqJfTGQtMXi8AmDJYAcPz0Ss8QejAI6h0oteGYYGlEddvvaiJ/Gmg1ych8B650L4K
-         L3qhdSJxMn7ZRiAtiO6yS/SC+m6/dV6XOgHgdLrZtEItvJQe5fg+2HqXirRj0CMl6KTF
-         p5z0aJXpe3/De+lkO8BWXUWJGXAKdoVRCq5Sfg7TD7fkey4BleKU3Mm9/xKFwR/E1BqW
-         S/h7S9xH9ASGzdxZD2kBBDnYE3UoKH1C2adLXv+tLoZTi9BW+u3Z3jpmnW5Dyq9MaMZ6
-         rn857Z8XOjv0ZL0NRA7S/VcepHydzrufxniOYWZxLFtwx23RiBeTCHkwN4IUztWD8Pv/
-         hqqg==
-X-Gm-Message-State: AFuF++kp93NbO5LZuhOsWDwcJ8foys6JsLVyD3ghEz/fVgr8YlfWKW6q
-	TJ4GtfCKTNCVPcZzMalJkQqbnRuptNoDr8b6+5ePjhL9rwHP34xkdi3QNYKfXA==
-X-Gm-Gg: AYBFou0btkrAQmKaG/e3ZueyMlXHaG9jw1murcZ3415bpxrQWaRjmUS9so6dA1QgJCD
-	sGtGIlnKMhKrVEVmg9sIVHJwTXwgRSmuMpYhVY2F52Uk8IfsKnQBheLR602781jmmK0wG8ymFgL
-	UuLlXAoS2q4REJ5aFASc5qhoRZ4DY8MqhcPvBZ0F2CnD/98zzaAflL0c8aCTOD95i844V/Ib92I
-	CzjexMzP1KMkp4rCc2N+qmGfoCPOXhtfvBuV5twYbcd/lDplvbUI8qfjxgZ6mOOh00ZoksvC6/T
-	5tEyv+pjW99kAC2UGQXxDWanlxqwKRHgelfIJMZZIs1moyC+54L0EADR8n007ppZnFOrhtdKDxZ
-	aAdqG5ajDxD/DYwyoxyYaX6CA8vlb2DQL0woD5LFNUC58kqjHQtwXc7vUjbwsQwrHSX/+eYq2nf
-	mdvPWaN3sPQbFuOeqJfxCrtAlz+hX9QK5/DaxtB2yhdc3hy4cXnPGKr22qWb4gl2HcoiTI8qHAO
-	FKmMSXLk+xarnILryuZquC8b+a3rKcwBQp3SFXl
-X-Received: by 2002:a05:690e:1189:b0:668:db:8c35 with SMTP id 956f58d0204a3-66f874d3934mr1569217d50.20.1788222584014;
-        Mon, 31 Aug 2026 17:29:44 -0700 (PDT)
+        bh=Pup05/JP8Wr9ADhiiVIjKn3tG7KZ68Z0VZEv26PjtVM=;
+        b=gS96Sv90DlmD0sjn9q9Dhl0jLLH4Np++G5WYhlzQy3d/Tju5CwUzcBGW6bNggOpibX
+         XW+rnPsVaTSMXErveUSlpfht9pifMnAyLMxXV5T8KvBpV0SVMiaVLf0dUkkuTizncLnQ
+         oGhISXHFjD5KQlubIJTdaRjZkSoWcDujW19gn8vGEZrfc8v1EV9vWrCWGa83XrTGQhX2
+         afPHXNBJctMN0WAVqgZ19OhjnfMRKlWP0Z8/b893p2dzYaIFIw2IaZLowGUl3eqlalI/
+         L9wRJIg0XS7UpeX6vreqmVC5wxUDZG+QxxP8NC5HRpi6iXyPkS033VsHvWxBWNMxRZ9V
+         8J5Q==
+X-Gm-Message-State: AFuF++kiCd+n8qx2kq4I8DYgi5DD83PWCToOba5cRZIGdQ9GhbMdF5k1
+	6OAo9vwfMn4HJZZ8wndGkIonu2ptDiUZGQz+g7EmJqTFQ4Vrn8SZEWEbKeJZ6g==
+X-Gm-Gg: AYBFou1+XH0KmuI34+0ZSTbqCrCujyjQpcaGW3yRCZCAM+UI8hjn+UHru2HNANEqvYq
+	kz+x6BX7cg52DIGJ+T7gE+kVPKNoOL/oKRyCaHkjUEBKN8vMXFRbLkT7vg1DQMUXKioqlV0rg7G
+	x7Gd+k2Du8OC5a7SYW4GjSm3aAqwUh0LAcdkNMnx1PvuPOI95XH179JACpimqB9wC8qQoNN9mW8
+	oosgx+DuylktUeyb2TpzbCFNQTQXFc6pfjiy10ROCJzNS/yqcAxW6JkOJH1zZ3sMOAhmQ3aopGo
+	ZttYdEdgSHga81Ec3htKxjCYz81YLvHPeVENohYf4WHKZ2B1U4QUW4jjt4ZRdjqDEN9lx1C6M1n
+	arrR29+kB1AaoIe4DgwBeIvF8bcVq6UuMVfVLa4IAzwRNHHgdwPg0w9fYPbVFWwG84eHkc5PSMH
+	kQv1qrOL+WhfeSKj4lpjYLduFBJDD62LMfuzCk34gnbffweCgTogU1KZ/IiJo9DAt3HIf5es5MY
+	aZiBs/nAedLzWSA9PjO/BZHnlq1vTcpffdEUrk=
+X-Received: by 2002:a05:690c:e142:20b0:81d:a225:ecc0 with SMTP id 00721157ae682-86873b610ebmr18069507b3.27.1788222586063;
+        Mon, 31 Aug 2026 17:29:46 -0700 (PDT)
 Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-85e668ce7ecsm63349177b3.34.2026.08.31.17.29.42
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-85e668ce7ecsm63349177b3.34.2026.08.31.17.29.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 17:29:43 -0700 (PDT)
+        Mon, 31 Aug 2026 17:29:45 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: benjamin.cheatham@amd.com,
 	alison.schofield@intel.com,
 	jic23@kernel.org,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v2 3/4] cxl/events: Bound the per-log Get Event Records loop
-Date: Mon, 31 Aug 2026 17:26:56 -0700
-Message-ID: <20260901002912.958-4-anisa.su@samsung.com>
+Subject: [PATCH v2 4/4] cxl/events: Return IRQ_NONE when no events were processed
+Date: Mon, 31 Aug 2026 17:26:57 -0700
+Message-ID: <20260901002912.958-5-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260901002912.958-1-anisa.su@samsung.com>
 References: <20260901002912.958-1-anisa.su@samsung.com>
@@ -82,59 +82,47 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_mem_get_records_log() re-queries a log until the device reports it
-empty. A misbehaving device that never stops reporting records keeps the
-event thread stuck in this loop, and there is no cond_resched() to let anything
-else on the CPU run.
+cxl_event_thread() returns IRQ_HANDLED whether or not it found
+anything to do. Claiming every interrupt as handled means a device
+flooding its MSI vector is never detected.
 
-Cap the passes at 128 and reschedule between them. Each pass gets up to
-a full mailbox payload of records from the log, so the cap is a generous
-upper bound. Report hitting the cap as an error and let the caller give
-up on the log.
+Return IRQ_NONE unless the Event Status register names a log to drain.
 
-Fixes: 6ebe28f9ec72 ("cxl/mem: Read, trace, and clear events on driver load")
+Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
 ---
- drivers/cxl/core/mbox.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cxl/pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 02b8c33a74b6..5e49589727d5 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1071,6 +1071,8 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 	return cxl_event_retry_rc(&mbox_cmd, rc);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 239df18c9c87..94ff2b7d1f09 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -528,6 +528,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+ 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+ 	u32 mask = CXLDEV_EVENT_STATUS_ALL;
+ 	int attempts = CXL_EVENT_DRAIN_ATTEMPTS;
++	bool handled = false;
+ 
+ 	while (mask) {
+ 		u32 status, drained, stuck;
+@@ -542,6 +543,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+ 		status &= mask;
+ 		if (!status)
+ 			break;
++		handled = true;
+ 
+ 		rc = cxl_mem_get_event_records(mds, status, &drained);
+ 		if (rc) {
+@@ -579,7 +581,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+ 		cond_resched();
+ 	}
+ 
+-	return IRQ_HANDLED;
++	return handled ? IRQ_HANDLED : IRQ_NONE;
  }
  
-+#define CXL_EVENT_LOG_MAX_PASSES 128
-+
- static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 				   enum cxl_event_log_type type, bool *got_records)
- {
-@@ -1079,6 +1081,7 @@ static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 	struct device *dev = mds->cxlds.dev;
- 	struct cxl_get_event_payload *payload;
- 	u8 log_type = type;
-+	int passes = 0;
- 	u16 nr_rec;
- 	int rc = 0;
- 
-@@ -1134,6 +1137,15 @@ static int cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 				type, rc);
- 			break;
- 		}
-+
-+		if (++passes == CXL_EVENT_LOG_MAX_PASSES) {
-+			dev_warn_ratelimited(dev,
-+				"Event log '%d': Still reporting records after %d passes, giving up",
-+				type, passes);
-+			rc = -EIO;
-+			break;
-+		}
-+		cond_resched();
- 	} while (nr_rec);
- 
- 	mutex_unlock(&mds->event.log_lock);
+ static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
 -- 
 2.43.0
 
