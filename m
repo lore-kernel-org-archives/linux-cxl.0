@@ -1,159 +1,362 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3573A3B059D;
-	Tue,  1 Sep 2026 01:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A69E3AB294
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 10:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788226266; cv=none; b=p8+LvrpJOfzVUhZ6i6WWrvLszEe97v5CrqqNW6Sgz9D9Kvo9UNhD5h47S6Pdy37Vq/A1jKAnAYLsDDWCzOKnDCBEOYD34nCFinBZD5d0fXeRYUkqYk4PB9x6K5k36mSlr5vnQxSIRt9Syjw2TjrMS2XwfKSjk/vLQqvXnlv13Uo=
+	t=1788257417; cv=none; b=UJ8Jhr9OBTOkssswPm8iOqavMY+BzD/ttYHhy/8c7KrHK1gMsSmhAp3YwJZBkAP2LbDW0kTbsNgqacLvpwrvwMzMU//3mDkcoW8AfXbmYwhN9rQvTQBMEC9MirljE9iwVK79HKcQrCR0UsfvuOxqZsOiQlYewbmkQQaJwex3w/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788226266; c=relaxed/simple;
-	bh=exMKPWQDxrtufl4OkcHin0IcqxyzgXesqm/VLqvjhSc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SH4w1jOIvI9iOUhr/+ZP+LuOR5zPfJbOaD01lPJ3x5y4BSxplydHIoo3/ScPRjwWysrctx4e3KuJ/wHCH9+ZB85UFg+Us8btiwMxfEPnSKn545PDoEXGgnGkmbtHPqrHQuxhg29y4zbr9v4mY49BqFM3IKOS41xzfUowag9xfKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnEdqF7n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788257417; c=relaxed/simple;
+	bh=CwDwVq3w0/m/8eg7WqkDGxHgvN6b0hQiKdHYxQ8pKB8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uDxVFq5cD7NsUShETNw/MIbm6oDlHWcCLy1NbyluyTD31chPRmXYTFIEjTE/r3BUxo7JJpCoqewxtazFcPFOaJ5UcYrLanz/ZLTue79yuEJxOzQONebaF1WY7R/dApgd1BdNtsdq1gjYfe7iUmpclpewnnDck1GRN9xNy1EDR58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDTP3RUQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnEdqF7n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA321F000E9;
-	Tue,  1 Sep 2026 01:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788226263;
-	bh=P92xtBI7I/T+YVL+Ij1W6iHmZMejZNd9LTcDCtmG+7A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZnEdqF7ne5WaVFhC8BDGpgKTVqTfCo0RnVBHujQz0nffDXc8+wx05OFuhsgQaqzbH
-	 gmJPkVrmeG8ele5EmuvzQC7BH5mggn3uyFOiYvnhqOQq8N6lELt4DLa9osbCm/Zq2V
-	 oSiuDhVn0grmjTC698MKH1YKiNUFfG8rzYqGqHFuBZNEJ3V5hmE9hHO91Qjg6ZGRdP
-	 +/ZRacKQWOvi9uKwFMwYIVNDj+QMZEW9iB4N35lXvUS+iHr8vliglxkP+fyh8FoI5c
-	 qc1h6jKPdwz3ypCmkVlEzQqWwM6Su43L60z/3SAIvJ8mS2giUtqyhggpMLlktjk7zH
-	 SyQQZXkb60Jjw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 21/21] lib: rspdm: Support SPDM challenge
-Reply-To: sashiko-reviews@lists.linux.dev
-To: alistair23@gmail.com
-Cc: linux-cxl@vger.kernel.org, ojeda@kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260901010347.2614656-22-alistair.francis@wdc.com>
-References: <20260901010347.2614656-1-alistair.francis@wdc.com>
- <20260901010347.2614656-22-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 01:31:03 +0000
-Message-Id: <20260901013103.7EA321F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDTP3RUQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788257414;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+YA3bf0Xqyq5RboFUYGW78ZpCMr7c/BXnEsTq1ErGWE=;
+	b=CDTP3RUQ0j7P/YFc6Dnqej9dR4I3bHOAvx4/YKuutGLlaxbHNlCL+2T38/FwmxQDiP9gEn
+	TJ3i6peiRJOc6IvDsn/KfV5ECAb9wBbigUSwvRfaWiLJaNT3yTyvkMQ4M14a30RE6lF/rx
+	+eIgZ4IFpsktrxyKRTFMJnzLPeX4NM8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-385-BYg3Qom6PmK40zQ_sfArqw-1; Tue,
+ 01 Sept 2026 06:10:11 -0400
+X-MC-Unique: BYg3Qom6PmK40zQ_sfArqw-1
+X-Mimecast-MFC-AGG-ID: BYg3Qom6PmK40zQ_sfArqw_1788257408
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5EAFA1831343;
+	Tue,  1 Sep 2026 10:10:06 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B489F30002F5;
+	Tue,  1 Sep 2026 10:10:02 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id B0E8221E682B; Tue, 01 Sep 2026 12:09:59 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: John Snow <jsnow@redhat.com>
+Cc: Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,
+  qemu-devel@nongnu.org,  Alex
+ Williamson <alex@shazbot.org>,  linux-cxl@vger.kernel.org,  Michael
+ Tokarev <mjt@tls.msk.ru>,  Vladimir Sementsov-Ogievskiy
+ <vsementsov@yandex-team.ru>,  Peter Xu <peterx@redhat.com>,  Eric Blake
+ <eblake@redhat.com>,  =?utf-8?Q?Marc-Andr=C3=A9?= Lureau
+ <marcandre.lureau@redhat.com>,
+  zhenwei pi <zhenwei.pi@linux.dev>,  qemu-trivial@nongnu.org,  Fabiano
+ Rosas <farosas@suse.de>,  Kevin Wolf <kwolf@redhat.com>,  Laurent Vivier
+ <laurent@vivier.eu>,  Jiri Pirko <jiri@resnulli.us>,
+  qemu-block@nongnu.org,  Stefan Hajnoczi <stefanha@redhat.com>,  Stefan
+ Berger <stefanb@linux.vnet.ibm.com>,  linux-edac@vger.kernel.org,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  Igor Mammedov
+ <imammedo@redhat.com>,  Gerd Hoffmann <kraxel@redhat.com>,  Jonathan
+ Cameron <jic23@kernel.org>,  Alex =?utf-8?Q?Benn=C3=A9e?=
+ <alex.bennee@linaro.org>,  Zhao
+ Liu <zhao1.liu@intel.com>,  Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>,  "Michael S. Tsirkin" <mst@redhat.com>,
+  Hanna Reitz <hreitz@redhat.com>,  Jason Wang <jasowangio@gmail.com>,
+  Richard Henderson <richard.henderson@linaro.org>,  Paolo Bonzini
+ <pbonzini@redhat.com>,  Ani Sinha <anisinha@redhat.com>,  Philippe
+ =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@mailo.com>,  Lukas Straub
+ <lukasstraub2@web.de>,
+  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@redhat.com>
+Subject: Re: [PATCH v3 01/43] qapi: convert trivial intro sections for
+ error.json
+In-Reply-To: <CAFn=p-bUTApw73Ddz-tH1FzY97Ct5rfFZ=domFhm-OO3G8COug@mail.gmail.com>
+	(John Snow's message of "Mon, 31 Aug 2026 14:43:50 -0400")
+References: <20260826193840.2152000-1-jsnow@redhat.com>
+	<20260826193840.2152000-2-jsnow@redhat.com>
+	<ao_-_38raHK0rWkX@redhat.com> <87jypb90c0.fsf@pond.sub.org>
+	<apA-CzGqrlFNfjp5@redhat.com>
+	<CAFn=p-bUTApw73Ddz-tH1FzY97Ct5rfFZ=domFhm-OO3G8COug@mail.gmail.com>
+Date: Tue, 01 Sep 2026 12:09:59 +0200
+Message-ID: <87a4q19tag.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: WlMR7QVnWhTM9GChoIkw8LrKF4sMf7qNzjhg1-AKwu4_1788257408
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+John Snow <jsnow@redhat.com> writes:
 
-New issues:
-- [Medium] `ChallengeRsp` struct definition misrepresents the SPDM packet f=
-ormat by declaring variable-sized fields in the middle of a `repr(C, packed=
-)` struct.
-- [Medium] Missing upper bound check on transport response length (`rc`) in=
- `challenge` function.
+> On Thu, Aug 27, 2026 at 9:39=E2=80=AFAM Daniel P. Berrang=C3=A9 <berrange=
+@redhat.com> wrote:
+>>
+>> On Thu, Aug 27, 2026 at 03:09:35PM +0200, Markus Armbruster wrote:
+>> > Daniel P. Berrang=C3=A9 <berrange@redhat.com> writes:
+>> >
+>> > > On Wed, Aug 26, 2026 at 03:37:58PM -0400, John Snow wrote:
+>> > >> Signed-off-by: John Snow <jsnow@redhat.com>
+>> > >> ---
+>> > >>  qapi/error.json | 3 +--
+>> > >>  1 file changed, 1 insertion(+), 2 deletions(-)
+>> > >>
+>> > >> diff --git a/qapi/error.json b/qapi/error.json
+>> > >> index 54cb02fb880..a53b13e55c9 100644
+>> > >> --- a/qapi/error.json
+>> > >> +++ b/qapi/error.json
+>> > >> @@ -9,8 +9,7 @@
+>> > >>
+>> > >>  ##
+>> > >>  # @QapiErrorClass:
+>> > >> -#
+>> > >> -# QEMU error classes
+>> > >> +#     QEMU error classes
+>> > >
+>> > > Where is this need for indent coming from ?  From the POV of someone
+>> > > writing comments, the need to indent the introductory text like this
+>> > > feels very counter-intuitive, an exception from any other inline
+>> > > docs syntax I've typically used. Is there any way we can avoid this =
+?
+>> >
+>> > The cover letter explains the need:
+>>
+>> Yes, I just didn't see the connection from that, to the use
+>> of indent.
 
-Pre-existing issues:
-- [High] Stale `leaf_key` retention across multiple SPDM authentications ca=
-uses persistent authentication failures.
---
+Writing good cover letters is hard.
 
-commit fe7e9708b9e2dfbb56d50564eed90c6c3454e54e
-Author: Alistair Francis <alistair@alistair23.me>
+>> >
+>> >     This is being done primarily for the benefit of the forthcoming
+>> >     "inliner", a feature for the rendered HTML QMP documentation that
+>> >     seeks to "inline" QMP command argument documentation into the argu=
+ment
+>> >     list for each command.
+>> >
+>> >     There are two main motives here:
+>> >
+>> >     (1) We want the split between the "introduction" and "details"
+>> >         sections to be mechanically obvious, so that auto-generated or
+>> >         inlined documentation has a well-defined, obvious spot to go.
+>> >
+>> >     (2) We do not want to inline irrelevant, introductory text describ=
+ing
+>> >         structures to be copied into command documentation.
+>>
+>> So IIUC, you're saying that we are going to rely on indentation
+>> to distinguish introduction from details ?
 
-lib: rspdm: Support SPDM challenge
-   =20
-This commit adds support for the CHALLENGE SPDM command in the SPDM respond=
-er
-implementation.
+Yes.
 
-> diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> index fc7df9dd7b973..1fd691037fa57 100644
-> --- a/lib/rspdm/state.rs
-> +++ b/lib/rspdm/state.rs
-[ ... ]
-> +    fn verify_signature(&mut self, signature: &mut [u8]) -> Result<(), E=
-rror> {
-[ ... ]
-> +        if let Some(leaf_key) =3D self.leaf_key {
-> +            unsafe { to_result(bindings::public_key_verify_signature(lea=
-f_key, &sig)) }
-> +        } else {
-> +            return Err(EPROTO);
-> +        }
-> +    }
+We are already relying on indentation elsewhere.  For instance:
 
-[Severity: High]
-This is a pre-existing issue, but this code in verify_signature() relies on
-the cached leaf_key which can lead to persistent authentication failures.
+    # @fatal: if set, the image is marked corrupt and therefore unusable
+    #     after this event and must be repaired (Since 2.2; before, every
+    #     `BLOCK_IMAGE_CORRUPTED` event was fatal)
+    #
+    # .. note:: If action is "stop", a `STOP` event will eventually follow
+    #    the `BLOCK_IO_ERROR` event.
 
-If a device is re-authenticated and its certificates have changed,
-spdm_authenticate() will fetch the new certificates, but the existing code =
-in
-validate_cert_chain() only sets leaf_key if it is missing.
+The description of @fatal is indented.  A non-indented line ends it.
+The non-indented line happens to be a Sphinx directive here, but that's
+immaterial (the QAPI doc comment parser does not attempt to parse ReST).
 
-Will verify_signature() then attempt to verify the new signature using the
-stale, previously cached leaf_key, resulting in an inevitable verification
-failure during the challenge sequence?
+>> > Note that the inliner elided Netdev's Intro "Captures the configuratio=
+n
+>> > of a network device."
+>> >
+>> > However, when Intro and Details bleed together, the inliner elides mor=
+e
+>> > than it should.  I consider that a fairly serious issue.
+>> >
+>> > I'm afraid forgetting to mark the end of Intro with "Details:" would b=
+e
+>> > a common mistake, easy to miss in review.  So I explored possible
+>> > alternatives:
+>> >
+>> >     Subject: Re: [PATCH v2 00/10] qapi: enforce section ordering
+>> >     Date: Wed, 15 Apr 2026 11:43:45 +0200
+>> >     Message-ID: <87zf341ru6.fsf@pond.sub.org>
+>> >     https://lore.kernel.org/qemu-devel/87zf341ru6.fsf@pond.sub.org/
+>> >
+>> > John is working towards "3. Make the end of intro syntactically obviou=
+s"
+>> > always, specifically "3c. Indent intro like descriptions and tagged
+>> > sections" with the ultimate goal to reject unindented Intro.  That way=
+,
+>> > we cannot write an Intro with an unclear end.  John, correct me if I'm
+>> > accidentally misrepresenting your work.
+>> >
+>> > Questions?  Better ideas?
+>>
+>> As an author, how substantive is "Intro" expected to be? I guess on
+>> QAPI docs I've written I've not ever been aware of there even being
+>> a distinct concept of Intro vs Details to think about. It is all just
+>> some lines of prose to me.
 
-[ ... ]
-> +    pub(crate) fn challenge(&mut self, slot: u8) -> Result<(), Error> {
-[ ... ]
-> +        let rc =3D self.spdm_exchange(request_buf, response_vec.as_mut_s=
-lice())? as usize;
-> +
-> +        // The transport must report a length within the buffer we provi=
-ded.
-> +        if rc < core::mem::size_of::<ChallengeRsp>() {
-> +            pr_err!("Truncated challenge response\n");
-> +            return Err(EIO);
-> +        }
-> +        response_vec.truncate(rc);
+That's deceptive :)
 
-[Severity: Medium]
-Does SpdmState::challenge() miss the upper bound check on the transport
-response length?
+Consider
 
-The comment notes that the transport must report a length within the buffer
-provided. If a buggy transport driver returns an rc greater than
-response_vec.len(), this check will pass and response_vec.truncate(rc) will
-not bound the vector correctly, allowing the function to process potentially
-uninitialized or out-of-bounds data later in the parsing process.
+    ##
+    # @HV_BALLOON_STATUS_REPORT:
+    #
+    # Emitted when the hv-balloon driver receives a "STATUS" message from
+    # the guest.
+    #
+    # .. note:: This event is rate-limited.
+    #
+    # Since: 8.2
+    #
+    # .. qmp-example::
+    #
+    #     <- { "event": "HV_BALLOON_STATUS_REPORT",
+    #          "data": { "committed": 816640000, "available": 3333054464 },
+    #          "timestamp": { "seconds": 1600295492, "microseconds": 661044=
+ } }
+    ##
+    { 'event': 'HV_BALLOON_STATUS_REPORT',
+      'data': 'HvBalloonInfo' }
 
-Should this also ensure that rc is less than or equal to response_vec.len()?
+Rendered documentation looks like
 
-> diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
-> index 2584bed739792..f623ac1d28606 100644
-> --- a/lib/rspdm/validator.rs
-> +++ b/lib/rspdm/validator.rs
-[ ... ]
-> +#[repr(C, packed)]
-> +pub(crate) struct ChallengeRsp {
-> +    pub(crate) version: u8,
-> +    pub(crate) code: u8,
-> +    pub(crate) param1: u8,
-> +    pub(crate) param2: u8,
-> +
-> +    pub(crate) cert_chain_hash: __IncompleteArrayField<u8>,
-> +    pub(crate) nonce: [u8; 32],
+    Event HV_BALLOON_STATUS_REPORT (Since: 8.2)
 
-[Severity: Medium]
-Does the ChallengeRsp struct definition in lib/rspdm/validator.rs misrepres=
-ent
-the actual wire format of the SPDM protocol by placing a variable-sized fie=
-ld
-before a fixed-size field?
+       Emitted when the hv-balloon driver receives a "STATUS" message from
+       the guest.
 
-Because __IncompleteArrayField<u8> acts as a zero-sized type, nonce and all
-subsequent fields will be assigned static offsets that do not account for t=
-he
-actual length of cert_chain_hash. Any future code attempting to access these
-fields directly from the struct would read from the wrong offsets.
+       Note:
 
-Does the struct layout need to be restructured to accurately reflect the
-variable length nature of the SPDM challenge response?
+         This event is rate-limited.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260901010347.2614=
-656-1-alistair.francis@wdc.com?part=3D21
+       Members:
+          * The members of "HvBalloonInfo".
+
+       Example::
+
+          <- { "event": "HV_BALLOON_STATUS_REPORT",
+               "data": { "committed": 816640000, "available": 3333054464 },
+               "timestamp": { "seconds": 1600295492, "microseconds": 661044=
+ } }
+
+Where does "Members:" come from?  Its generated.
+
+If we move "Since:" to the end of the doc comment, we instead get
+
+    Event HV_BALLOON_STATUS_REPORT (Since: 8.2)
+
+       Emitted when the hv-balloon driver receives a "STATUS" message from
+       the guest.
+
+       Note:
+
+         This event is rate-limited.
+
+       Example::
+
+          <- { "event": "HV_BALLOON_STATUS_REPORT",
+               "data": { "committed": 816640000, "available": 3333054464 },
+               "timestamp": { "seconds": 1600295492, "microseconds": 661044=
+ } }
+
+       Members:
+          * The members of "HvBalloonInfo".
+
+This one is clearly bad.  The fact that an innocent move of "Since:" can
+make the rendered docs worse is a defect in the QAPI doc system.
+
+But even the first version isn't quite what we want.  We want Members:
+further up, like this:
+
+    Event HV_BALLOON_STATUS_REPORT (Since: 8.2)
+
+       Emitted when the hv-balloon driver receives a "STATUS" message from
+       the guest.
+
+       Members:
+          * The members of "HvBalloonInfo".
+
+       Note:
+
+         This event is rate-limited.
+
+       Example::
+
+          <- { "event": "HV_BALLOON_STATUS_REPORT",
+               "data": { "committed": 816640000, "available": 3333054464 },
+               "timestamp": { "seconds": 1600295492, "microseconds": 661044=
+ } }
+
+Now we're ready to discuss "intro" vs. "details.  Their separation
+matters in this example, because the generated "Members:" go right after
+"intro".
+
+The root of the problem is a syntactic ambiguity.  "Intro" is commonly
+followed by some "@argument: ...", "Return:", "Error:", or similar.  But
+these are all optional.  When they're absent, the what's "intro" and
+what's "details" is syntactically ambiguous.
+
+The doc comment I used as example abuses "Since:" to separate them.
+
+> In most cases, not very substantial. For commands and events, it *can*
+> be quite a bit more substantial. For structs, enums, etc it is almost
+> always laughably trivial.
+>
+> When the syntactical delineation of intro is complete, further QAPI
+> parser changes will make it even more obvious: any free text that
+> exists between the intro and the other sections will be flagged as an
+> error, where you will be urged to move any detail text to below the
+> metadata fields. This physical relocation will help suggest to the
+> documentation author what goes "above the fold" and what goes "below
+> the fold", so to speak.
+
+This is part of our slow move towards a standard doc comment structure,
+ultimately enforced by the generator.  Standard structure helps readers.
+
+>> My only alternative idea to indentation would be to declare that the
+>> "Intro" is always the 1st paragraph of text and anything beyond that
+>> is the "Details". That might match up with the way that contributors
+>> naturally write text where the 1st paragraph conveys the key idea,
+>> such that they dno't need to think about Intro vs Details as a
+>> concept.
+>
+> Yeah, that's roughly the idea; and some prototypes used this idea in
+> the past - but Markus wanted an explicit, obvious delineation
+> precisely to *force* documentation authors to think about the split.
+> It has implications for what gets generated into the documentation and
+> in which scenarios.
+
+"First paragraph is intro" is workable syntax.  It restricts "intro" to
+a single paragraph", which is unlikely to be a serious problem.
+However, the restriction is easy to forget.  If you write two paragraphs
+(because "it is all just some lines of prose"), the rendering can
+surprise you, in a bad way.
+
+Having to indent "intro" forces you to be explicit, and avoids
+surprises.
+
+> I do usually try to make my upgrades "invisible" to the user, but in
+> this case I believe we are erring on the side of "explicit is better
+> than implicit" because of the implications of the text not always
+> being copied in a precisely straightforward manner to the HTML docs.
+
+Blame it on me: I pushed John towards explicit.
+
+> I will address the subtleties of this issue when the inliner is being
+> merged by updating a documentation writer's guide that covers what
+> goes where and why. For now, we are just trying to do the bulk
+> conversion.
+>
+>>
+>> With regards,
+>> Daniel
+>
+> --js
+
