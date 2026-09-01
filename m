@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82A0399899
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 19:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E94B3C2788
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 19:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788291848; cv=none; b=Qc/tVnOdm2rgB2BF9Sl1hDhxYAzGc3qo57VekRFn2bRVq8x28KsvJL5RJLaPn6sN9Lue1Hm2HrbChN3Sy+4zBrXgt4e3+CZ7m252TlOZqICyzsnwXRfkSQGV4dIhE9Htvjd3To//Qc7R/j9HytW9vwGr+PpfrL+E1ihbPqxZYfQ=
+	t=1788291850; cv=none; b=T4Vm9KGqfxKwL3KeePUhKrV15tdWsPtySyd/hd2McitkQeYY2woZiIZj9U/H2TraDEL/nWwydgtxlpogD6Snp9xCCKGMWzOfQdRmqtjesNVqkTuoR6O14+eBlXF/muEHLFwym00G0SJqzlTibt/rLQUG7jju5Oe/dWkC7bWBtsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788291848; c=relaxed/simple;
-	bh=iyqrM+w11tmm6lbhJQxDuSNU3jpIIP9gr95duWj/3FM=;
+	s=arc-20240116; t=1788291850; c=relaxed/simple;
+	bh=UH0u0qgx8pWbTNNH2nL0xI2QtdkF0x6LWNQ4mhOUjD0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=S8iW0MRIEbCIr0a2fJy1kvIX2ChQB1oe7dhue1F353w1JFI5VWWaprXqHx9k15Bi7jRhw2zS3AJRxbKT4KIgxcp46bAnZ98YflQn+deZaPRObeEx/+VjX+UMAS966/MXQRnkeh7Gv/HsI+UbNySw3YKrh9E4C8r6wu6qWdwfK8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SGERhPyr; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=Bj6oy6ryMdy3YaNmxGYWKyKoJLCfvSTLmJLjEB4fLNwhTpj37A7C7SAs+h/H7eToA7OArRARxUwlYoYgla9NP6rd5+6VUAP+gsUHGDm27s4fx3AztpoVkVI0yp94Fha8a6wDrPJlyriCIUvfxNR3efH9dl0JzSRpmn+W+tTaDxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hoCarAPe; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGERhPyr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hoCarAPe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788291845;
+	s=mimecast20190719; t=1788291848;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CwbTdgzzUcSwy+hrITS+w+5qh1jOhaXlKQFQTMXAMTU=;
-	b=SGERhPyrnI9s+tATr63BzArR4WXQG+nqmn1kLQ/Myt5IW+XVNhHutv60cEBNNkK7uEcZnR
-	5+6famPyZbHSqTqRBzfHjzB6t34wi608qWYi/WVyZ1xk1VVtHpNtuKloP+3qJwks4VPewA
-	UhDR3t8BPwS/MEjO72gpqZ0P64pTFDM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=EhEPoJOfAPJl4Q3bWi/DoXMalBBiohSqVhqdrnGXTGk=;
+	b=hoCarAPeCAUt+iiB8Cu4wYwHLsxfDlru+KRvGoRU+fmhp68VkXXDPogbLKV7s7KJpZGqeo
+	iuY1rDcCbXeCva7tTJWYNFCeTJ1X4JDrNBLDus5sGCa1sbGh+p6CwzseQzUiv/2Zco9nMa
+	Krz1uVLyTvrvJf0jHIuFD4KDeadZ/1A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-gVkqrcZfMzmZFn-HpUeEpw-1; Tue,
- 01 Sept 2026 15:44:02 -0400
-X-MC-Unique: gVkqrcZfMzmZFn-HpUeEpw-1
-X-Mimecast-MFC-AGG-ID: gVkqrcZfMzmZFn-HpUeEpw_1788291841
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-227-005aYDdtPKyfxZWVS1Ysrg-1; Tue,
+ 01 Sept 2026 15:44:06 -0400
+X-MC-Unique: 005aYDdtPKyfxZWVS1Ysrg-1
+X-Mimecast-MFC-AGG-ID: 005aYDdtPKyfxZWVS1Ysrg_1788291845
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CBC041955BE0;
-	Tue,  1 Sep 2026 19:44:00 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4514B1844069;
+	Tue,  1 Sep 2026 19:44:05 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.192])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8C00118005BD;
-	Tue,  1 Sep 2026 19:43:56 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1C92B18005B8;
+	Tue,  1 Sep 2026 19:44:00 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Hanna Reitz <hreitz@redhat.com>,
@@ -61,9 +61,9 @@ Cc: Hanna Reitz <hreitz@redhat.com>,
 	Zhao Liu <zhao1.liu@intel.com>,
 	Peter Xu <peterx@redhat.com>,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH 06/12] qapi: convert simple command intros for block-export.json
-Date: Tue,  1 Sep 2026 15:43:18 -0400
-Message-ID: <20260901194324.458482-7-jsnow@redhat.com>
+Subject: [PATCH 07/12] qapi: convert simple command intros for block.json
+Date: Tue,  1 Sep 2026 15:43:19 -0400
+Message-ID: <20260901194324.458482-8-jsnow@redhat.com>
 In-Reply-To: <20260901194324.458482-1-jsnow@redhat.com>
 References: <20260901194324.458482-1-jsnow@redhat.com>
 Precedence: bulk
@@ -73,51 +73,34 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: OGwZ4WFIbVw9OIoskE6uiPB94P48NTHJWLrlUM_2A9Q_1788291841
+X-Mimecast-MFC-PROC-ID: xQL5oKLvtrUMiIMJAgQvUhPgyedGwTMiXCmdnO3NprU_1788291845
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/block-export.json | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ qapi/block.json | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/qapi/block-export.json b/qapi/block-export.json
-index 154f07b0b95..2893c6456d5 100644
---- a/qapi/block-export.json
-+++ b/qapi/block-export.json
-@@ -63,11 +63,11 @@
+diff --git a/qapi/block.json b/qapi/block.json
+index 189f2e28204..9569afc6e0f 100644
+--- a/qapi/block.json
++++ b/qapi/block.json
+@@ -261,10 +261,10 @@
  
  ##
- # @nbd-server-start:
+ # @blockdev-insert-medium:
 -#
--# Start an NBD server listening on the given host and port.  Block
--# devices can then be exported using `nbd-server-add`.  The NBD server
--# will present them as named exports; for example, another QEMU
--# instance could refer to them as "nbd:HOST:PORT:exportname=NAME".
-+#     Start an NBD server listening on the given host and port.  Block
-+#     devices can then be exported using `nbd-server-add`.  The NBD
-+#     server will present them as named exports; for example, another
-+#     QEMU instance could refer to them as
-+#     "nbd:HOST:PORT:exportname=NAME".
+-# Inserts a medium (a block driver state tree) into a block device.
+-# That block device's tray must currently be open (unless there is no
+-# attached guest device) and there must be no medium inserted already.
++#     Inserts a medium (a block driver state tree) into a block
++#     device.  That block device's tray must currently be open (unless
++#     there is no attached guest device) and there must be no medium
++#     inserted already.
  #
- # Errors:
- #     - if the server is already running
-@@ -435,10 +435,10 @@
- 
- ##
- # @block-export-del:
--#
--# Request to remove a block export.  This drops the user's reference
--# to the export, but the export may still stay around after this
--# command returns until the shutdown of the export has completed.
-+#     Request to remove a block export.  This drops the user's
-+#     reference to the export, but the export may still stay around
-+#     after this command returns until the shutdown of the export has
-+#     completed.
- #
- # @id: Block export id.
+ # @id: The name or QOM path of the guest device
  #
 -- 
 2.55.0
