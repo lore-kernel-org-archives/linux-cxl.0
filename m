@@ -1,63 +1,64 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FD538A717
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 01:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B91E1A5B8C
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 01:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788224643; cv=none; b=lGZ+JBA8aGQ/arIg+Pd5vJvTE/LDEQ5IgkPrHkWBpjc3aFYzJsZRabcCRGU5zBgL83XAsnGAczvNmYmkp1z6gf6iIYnV7/CTOsyvaKVrbpTgS+nBNdTdD8fY7Gk6R4tGgcIx7RTVEt2v5Xj0PL+dx13ED1XXKKrX2Uo7HwjsTI0=
+	t=1788224651; cv=none; b=WvEJqo7WZ/zina/WNOFgkwI5ADwtAwADb4COJ3dOEl68irKNFrIswnelrrHZWFisK010Sz3C6xCWjZCXtuRK+/m9YT5W0pgg3UUmS0IQRFHj/n2aML4KonViuz2eQ1h1n6ZllOpZCFijIR151M7ethXFYLQ/NWsgqUGgjno/mrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788224643; c=relaxed/simple;
-	bh=0N7PZFteYPmAdCXOV/1Ri00KQjA0+w/H1rYBhz7BBzg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VQT8cE326vQdU1Geo5JLzFnv4f2LBDIYKT33feZuxdVLB8biS5CmAmTeiRFM8Z7ltvY5C0RXB0SsX0z+kiFe16B5MVf4iFRbYIdj1uV8MC8PJSq5qe9wV7q9YTLisULqL0ojNiamYUmNuLLZyqeBjnQiSvgKNe/K1aVGDasrQDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZsNlE05; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1788224651; c=relaxed/simple;
+	bh=CoPPRCtaESHUG9OwZb9CyMVn08i9IGh5mH8Q+LlV8pU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pj6iBRvxlapCYiJ6QUO9gb7YceRgPpwAUYvHd52So/hNp4KAdgag3l1jVlDP+3vYN9zzF594wEzD9r+uGwJIBMmsQielmw7kRFt/DmMJBCvIVVswvSXU+K/1pd/ISf3CHc6Np3YIB9dYbg5C0HSoyzE6tSTzS8ZsofWPbD4pCQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gok1GWMs; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZsNlE05"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2d560775ca2so30005025ad.1
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 18:04:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gok1GWMs"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-38759bcd877so4099351a91.2
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 18:04:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788224641; x=1788829441; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jWR/AgMdqB4Pk8bTidltEk6Rcw76/YkJaVkIRSZ9AmY=;
-        b=dZsNlE05r7kiAEuSerS7zkQaeQ6ZI66/+jNaO05wgRJS5cIB61LkTcD91nYT6KQeGy
-         IfooLJj1APQtKdyQntzmCwdI31zmzPBu2ki+H/3izpmmJ/aBGL7Jied2G/mBITgCdSpE
-         2t85yQWtB+ImUErSQyi0VQp6gORooPEOpW2dDxz99PLHHRveDamOTSdKYjJCaktESoC3
-         PPTaHHD0OLUamnJPX3qDpmD3hUeRHTX08VSgv4R0l7cCWNDl5yXZvIVOMdNyT9lQsbjn
-         AJkxGtK+oSyDsQcs7NV0UuMtJ4j3SauujtB+U9AsIlQKBRaBOwb+md9NhovwPtHpKOnM
-         HQKg==
+        d=gmail.com; s=20251104; t=1788224649; x=1788829449; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=AYXVDMNHLbdJmU4DKZR7fcyBrcg7wKS5d7QhF+qczOE=;
+        b=Gok1GWMsICvbvt7A9OQY99NKTu1NKdA11Iggvri7Wp12kyZsKtrRG/YU67JygJvdnM
+         6SzGpPLzAqA+Qt+9z7NYIzLIY/gb/vVdpVaJoUObtHEWD066WaD0j/IaF4c305ZYcZ0H
+         MypzaSHpNbgE6s1xrU709N1/zgv1d1KxXT3heawYNmL2Mw2KLw6LJwv3yLFaL+cYHtzl
+         y2VWmN2ogcOFoDIoUajqnI0VFS0k48Y7V99CG74fY8GdCMqtaMvGothbkd8UesQ0/vmV
+         C9VtyQri6Pc1zg3CoV9ft8Rdw2pxcKZdhN9Yjr9qIhxQVrmXYzvQihsisRC9TppkHWZ/
+         tMEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788224641; x=1788829441;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jWR/AgMdqB4Pk8bTidltEk6Rcw76/YkJaVkIRSZ9AmY=;
-        b=VvZhdi3CYoJ2eFTMrC7DM+dkm3bbGyzwV0F6ge8lrCwdBWLEJDl7NRG6C2yghc4NZ8
-         B/Q5CFu0autDByHEGUkx3QsWCFVL0TLsIpbPReNjeA5KaZhhlAx8cqd2jXjhAHjMueww
-         3ozuhCRKMUsZ949YOntWP+lTBHiEmMVVJDJzlAoNWabOaTy3/03gNfbKb3a0C3jUvDmP
-         10Q0r5+WYbbqsxfuF2zeezYqAY0f3XsWqHo18T3UMqRzYMuFUosFYHDaja/7CdaDp2+L
-         V+wZFHJjGuseGe6GxqhS6leeNzC+8r0BeIxh1aW3AhcCJ5tj36wEvJonzWzWuSZgfOOa
-         YUNQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxUwVS4gAvtjnToLHl1RUpEzveUhZ5LQFYGuS7GRn7wlGdAZ5aptIWdPTsQudc7OjSMCTJcAjK48vw=@vger.kernel.org
-X-Gm-Message-State: AFuF++mmPbFawOM5jhy6Bh3ppz3iaACTbrKzZc5KGCAFtT++B1v9oAsR
-	pt7IlS0WF7hHZywOXLxt1NAAashh/ugNseo764e1cmmxaBxqIH69C6ar
-X-Gm-Gg: AYBFou1ygekjI+fPWRTRNJH1WY+M5h+IHvMWLPFYkU7t54BpOe6mOsuUypCCpl9ZzeC
-	wfNZgXLZgeihbrdEgtTvPy58dgw908U9him5H0ekdrx8ZqhP+Tts9ZlByo1hy3SGjjgBPb960+G
-	OsP2uPMUgwYNxjIrbku6RjVdLLoO3YsL4tsy1vUgit3/kpUHOhesp7kUzdEMWylAZnWvq0+eIy5
-	NODK8p2esPnEXaD6CV3nAw5X/8JVn9b3eyuS43y7ocB/VC6LuKKM01VsmV5fbLlVVZmThVzwF3W
-	29AEq74ftrE2Selotg2OTYf5exYxBiVdDAg+0lsCOQvgfiBdpA7uESx+FGhqF4zVxAMG8BiIITd
-	KB18DX8kFOU9rzvjziQIdTqYxx6P4FHW/7rT+4GiIhgVr+4BSDHafE9DtZyqcU5PlJEJMbmy7aK
-	kEYCROdGD3YeOaPgaehnv79Qn7ZzSQEaW1kSHWiIDyUNS35ldTX7b+4zPJlvMRWQaItwmzalrv2
-	FEmzg==
-X-Received: by 2002:a17:90b:2783:b0:398:9beb:5c19 with SMTP id 98e67ed59e1d1-3989beb6352mr31989254a91.20.1788224640516;
-        Mon, 31 Aug 2026 18:04:00 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788224649; x=1788829449;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=AYXVDMNHLbdJmU4DKZR7fcyBrcg7wKS5d7QhF+qczOE=;
+        b=GMNJ2qS3CflLzgubp0jH3XHRf4PW0xKr839/0Md4CaY0HcVwqZa8NT7X5rSDprwjAl
+         G5YPjbja0KjxG51lY/8SpRE2FKnrJ+s7wMq5J6vuVbbxGNRi/KDWTOA03uv4n6988G7k
+         gLa6gWw7C3pcYxKce/GS86EzVkS6IVDl1nOYsngdTuloYoYYZaQlyWjtrNrHYZFwxQpb
+         CsiSXNJhAOHug5orHCD64F2PSAC/Em5gNurcYZX2UiEcDG4kiuvEaB2YoT1e9gaf4cED
+         jEPj4AvY/1e6Tr9zupJGy6eX+dQgnAzzvR/D90Ckj01nIOGbG5WMS3T+BkXYGYNMCcPD
+         pUeQ==
+X-Forwarded-Encrypted: i=1; AKwUvByYLDIakD+4XpSLlEsSn/KYU/uznXU1Ouk7CmV+iY5aJZlMVbgC2KNBSUPtkKZDXik/mrluAaCNdms=@vger.kernel.org
+X-Gm-Message-State: AFuF++lRgqGmUbzZqCGNBzR+MAqIlK6FsaFKNI6RKPehe3/lQTKfS9uE
+	f4iyqKXyi21R3Y3iRCfXMRQsoAR3QCQp7fvK8fYGmVZhbvGosnmuqPW1
+X-Gm-Gg: AYBFou129qITS+DXzs731wmg9vzIPdishMfIqSzrzaOzQj3p0/+KQlM4Jn1jCFvVcAN
+	s/lVtZCEQEnRlPzaenqk0vpC6va4kkWQTxWbNq0vWHToIqt6oK/bVpXrDtXdDQ6+b/T3eNxhuM6
+	2xlrdbkehjsZG3/375SPYb1y0xcowr9UatmI3XG4XFYN+ZHS4LsIcTZgncILYBMEF7JzZ5qnDwi
+	Polu2tSz1LJneU+37jCjhDXGMusS9C9dtbApsa2eTX0j30y3v4heQ99Q05dbQVae2Hn8yOmSSFm
+	PzGbgnDSqG740Ioc5WJsRIS3Wpd8PAIHQrbtTJfrC6fxRIUplWhl5UTUCmB9cSuT8O1vNd45nda
+	2VrdPQleVASGwxQSNoXtzzoVlPQso/K+A3UrcXsoN5VXYdRw+2bmqtHeZt3X1DYGbNaC66xiWht
+	csv+UNYo2eqxKF2lPPDj57XcOptYzjxY/8jI94bLdEZESdFwn1ZbOzR8MbxHZd6HDlAp6Y/3qJV
+	JawKw==
+X-Received: by 2002:a17:90b:1a8e:b0:396:4c63:7193 with SMTP id 98e67ed59e1d1-396d0fe45damr45825286a91.11.1788224648978;
+        Mon, 31 Aug 2026 18:04:08 -0700 (PDT)
 Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3990d49e9e0sm2372024a91.11.2026.08.31.18.03.51
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3990d49e9e0sm2372024a91.11.2026.08.31.18.04.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 18:03:59 -0700 (PDT)
+        Mon, 31 Aug 2026 18:04:08 -0700 (PDT)
 From: alistair23@gmail.com
 X-Google-Original-From: alistair.francis@wdc.com
 To: linux-pci@vger.kernel.org,
@@ -81,209 +82,105 @@ Cc: gary@garyguo.net,
 	boqun.feng@gmail.com,
 	bjorn3_gh@protonmail.com,
 	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v3 00/21] lib: Rust implementation of SPDM
-Date: Tue,  1 Sep 2026 11:03:26 +1000
-Message-ID: <20260901010347.2614656-1-alistair.francis@wdc.com>
+	aliceryhl@google.com
+Subject: [PATCH v3 01/21] rust: transmute: add `cast_slice[_mut]` functions
+Date: Tue,  1 Sep 2026 11:03:27 +1000
+Message-ID: <20260901010347.2614656-2-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260901010347.2614656-1-alistair.francis@wdc.com>
+References: <20260901010347.2614656-1-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Alistair Francis <alistair.francis@wdc.com>
+From: Benno Lossin <benno.lossin@proton.me>
 
-Security Protocols and Data Models (SPDM) [1] is used for authentication,
-attestation and key exchange. SPDM is generally used over a range of
-transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
+Add functions to make casting slices only one `unsafe` block.
 
-From the kernels perspective SPDM is used to authenticate and attest devices.
-In this threat model a device is considered untrusted until it can be verified
-by the kernel and userspace using SPDM. As such SPDM data is untrusted data
-that can be mallicious.
+Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+Message-ID: <20250814124424.516191-2-lossin@kernel.org>
+---
+ rust/kernel/transmute.rs | 59 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-The SPDM specification is also complex, with the 1.2.1 spec being almost 200
-pages and the 1.3.0 spec being almost 250 pages long.
-
-As such we have the kernel parsing untrusted responses from a complex
-specification, which sounds like a possible exploit vector. This is the type
-of place where Rust excels!
-
-This series implements a SPDM requester in Rust.
-
-This is based on Lukas' C implementation [2], but has been refacted during the
-first few RFCs. I have included some of the relevent patchesfrom Lukas' C
-SPDM implementation in this series where they are required.
-
-This is a standalone series and doesn't depend on Lukas' implementation.
-
-The goal of this series is to get the smallest possible SPDM implementation
-upstream. That will provide building blocks for us to continue working on.
-
-As such we don't yet provide evidence or certificates to userspace, allow
-userspace to provide a nonce, support PQC or more advanced SPDM features.
-This is enough to communicate with a device and return "authenticated" to
-userspace.
-
-Note that RFC v3 did provide evidence and certificates to userspace and
-allowed a custom nonce. Showing that it's possible. I also have patches
-that build apon [4] to do this via a TSM driver, again showing it's
-possible with the current approach.
-We just don't support it yet and for TSM I need [4] upstream first.
-
-This series is different to Lukas' original approach and the approach taken
-in the previous RFCs and instead adds the PCI-CMA support as a TSM driver.
-This was described by Dan in [3] and [5]. The advantage here is that for PCIe
-we can leverage the TSM work for a lot of the features and provide userspace
-a consistient interface between PCI TSM and CMA.
-
-This series also doesn't check the certificate chain against the kernel
-keyring and will instead leave that to userspace once [4] is merged.
-
-Other transport mode (such as ATA, SCSI, NVMe and MCTP) will
-therefore need slightly different approaches, as TSM doesn't apply.
-The library can support this though, it will just need some netlink
-and sysfs wrappers added as applicable. This way each transport can support
-SPDM in the way it sees fit.
-
-The entire tree can be seen here:
-https://github.com/alistair23/linux/tree/alistair/spdm-rust-tsm
-
-I'm testing this by running the following
-
-```shell
-cargo run -- --qemu-server response
-
-qemu-system-x86_64 \
-  -nic none \
-  -object rng-random,filename=/dev/urandom,id=rng0 \
-  -device virtio-rng-pci,rng=rng0 \
-  -drive file=deploy/images/qemux86-64/core-image-pcie-qemux86-64.rootfs.ext4,if=virtio,format=raw \
-  -usb -device usb-tablet -usb -device usb-kbd \
-  -cpu Skylake-Client \
-  -machine q35,i8042=off \
-  -smp 4 -m 2G \
-  -drive file=blknvme,if=none,id=mynvme,format=raw \
-  -device nvme,drive=mynvme,serial=deadbeef,spdm_port=2323,spdm_trans=doe \
-  -snapshot \
-  -serial mon:stdio -serial null -nographic \
-  -kernel deploy/images/qemux86-64/bzImage \
-  -append 'root=/dev/vda rw  console=ttyS0 console=ttyS1 oprofile.timer=1 tsc=reliable no_timer_check rcupdate.rcu_expedited=1 swiotlb=0 '
-
-ls /sys/devices/pci0000:00/0000:00:03.0/
-ls /sys/devices/pci0000:00/0000:00:03.0/tsm/
-cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
-echo tsm0 > /sys/devices/pci0000:00/0000:00:03.0/tsm/connect
-cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
-```
-
-1: https://www.dmtf.org/standards/spdm
-2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
-3: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
-4: https://lore.kernel.org/all/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch/
-5: https://lore.kernel.org/lkml/69e19c80b892b_fe0831000@djbw-dev.notmuch/
-
-v3:
- - Rebase on 7.3-rc1
-v2:
- - Tidy up the PCI/TSM function naming and is_pci_tsm_host()
- - A large number of changes (mostly to the Rust code) based on Sashiko reviews
-     - This includes a few local runs of Sashiko
-     - This has fixed a few undefined behviour bugs in the Rust code
- - Rebase on v4 of Benno's validate patches (patch 1, 2, 3)
-v1:
- - Add CMA as a TSM driver
- - Initial support for SPDM 1.4
- - Cleanup a range of comments and concerns from RFC
- - Remove kernel keyring checks
-RFC v3:
- - Use netlink to send information to userspace
- - Don't autogenerate Rust helpers
-RFC v2:
- - Drop support for Rust and C implementations
- - Include patches from Lukas to reduce series deps
- - Large code cleanups based on more testing
- - Support for authentication
-
-Alistair Francis (14):
-  rust: add bindings for hash.h
-  rust: error: impl From<FromBytesWithNulError> for Kernel Error
-  lib: rspdm: Initial commit of Rust SPDM
-  PCI/TSM: Rename pf0 to host
-  PCI/TSM: Support connecting to PCIe CMA devices
-  PCI/CMA: Add a PCI TSM CMA driver using SPDM
-  lib: rspdm: Support SPDM get_version
-  lib: rspdm: Support SPDM get_capabilities
-  lib: rspdm: Support SPDM negotiate_algorithms
-  lib: rspdm: Support SPDM get_digests
-  lib: rspdm: Support SPDM get_certificate
-  lib: rspdm: Support SPDM certificate validation
-  rust: allow extracting the buffer from a CString
-  lib: rspdm: Support SPDM challenge
-
-Benno Lossin (3):
-  rust: transmute: add `cast_slice[_mut]` functions
-  rust: create basic untrusted data API
-  rust: validate: add `Validate` trait
-
-Lukas Wunner (4):
-  X.509: Make certificate parser public
-  X.509: Parse Subject Alternative Name in certificates
-  X.509: Move certificate length retrieval into new helper
-  PCI/CMA: Validate Subject Alternative Name in certificates
-
- MAINTAINERS                               |   13 +
- crypto/asymmetric_keys/x509_cert_parser.c |    9 +
- crypto/asymmetric_keys/x509_loader.c      |   38 +-
- crypto/asymmetric_keys/x509_parser.h      |   42 +-
- drivers/crypto/ccp/sev-dev-tio.h          |    4 +-
- drivers/crypto/ccp/sev-dev-tsm.c          |   12 +-
- drivers/pci/Kconfig                       |   14 +
- drivers/pci/Makefile                      |    5 +
- drivers/pci/cma.asn1                      |   41 +
- drivers/pci/cma.c                         |  275 +++++
- drivers/pci/doe.c                         |    6 +-
- drivers/pci/tsm.c                         |  115 +-
- include/keys/asymmetric-type.h            |    2 +
- include/keys/x509-parser.h                |   57 +
- include/linux/oid_registry.h              |    3 +
- include/linux/pci-doe.h                   |    4 +
- include/linux/pci-tsm.h                   |   30 +-
- include/linux/pci.h                       |    1 +
- include/linux/spdm.h                      |   37 +
- lib/Kconfig                               |   15 +
- lib/Makefile                              |    2 +
- lib/rspdm/Makefile                        |   10 +
- lib/rspdm/consts.rs                       |  184 +++
- lib/rspdm/lib.rs                          |  167 +++
- lib/rspdm/state.rs                        | 1230 +++++++++++++++++++++
- lib/rspdm/validator.rs                    |  554 ++++++++++
- rust/bindings/bindings_helper.h           |    5 +
- rust/helpers/hash.c                       |   18 +
- rust/helpers/helpers.c                    |    1 +
- rust/kernel/error.rs                      |   18 +-
- rust/kernel/lib.rs                        |    1 +
- rust/kernel/str.rs                        |   13 +-
- rust/kernel/transmute.rs                  |   59 +
- rust/kernel/validate.rs                   |  216 ++++
- 34 files changed, 3071 insertions(+), 130 deletions(-)
- create mode 100644 drivers/pci/cma.asn1
- create mode 100644 drivers/pci/cma.c
- create mode 100644 include/keys/x509-parser.h
- create mode 100644 include/linux/spdm.h
- create mode 100644 lib/rspdm/Makefile
- create mode 100644 lib/rspdm/consts.rs
- create mode 100644 lib/rspdm/lib.rs
- create mode 100644 lib/rspdm/state.rs
- create mode 100644 lib/rspdm/validator.rs
- create mode 100644 rust/helpers/hash.c
- create mode 100644 rust/kernel/validate.rs
-
+diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
+index 654b5ede2fe2..c1282fcc9e65 100644
+--- a/rust/kernel/transmute.rs
++++ b/rust/kernel/transmute.rs
+@@ -3,6 +3,7 @@
+ //! Traits for transmuting types.
+ 
+ use core::mem::size_of;
++use core::slice;
+ 
+ /// Types for which any bit pattern is valid.
+ ///
+@@ -227,3 +228,61 @@ macro_rules! impl_asbytes {
+     {<T: AsBytes>} [T],
+     {<T: AsBytes, const N: usize>} [T; N],
+ }
++
++/// Casts the type of a slice to another.
++///
++/// Also see [`cast_slice_mut`].
++///
++/// # Examples
++///
++/// ```rust
++/// # use kernel::transmute::cast_slice;
++/// #[repr(transparent)]
++/// #[derive(Debug)]
++/// struct Container<T>(T);
++///
++/// let array = [0u32; 42];
++/// let slice = &array;
++/// // SAFETY: `Container<u32>` transparently wraps a `u32`.
++/// let container_slice = unsafe { cast_slice::<u32, Container<u32>>(slice) };
++/// pr_info!("{container_slice:?}");
++/// ```
++///
++/// # Safety
++///
++/// - `T` and `U` must have the same layout.
++pub unsafe fn cast_slice<T, U>(slice: &[T]) -> &[U] {
++    // CAST: by the safety requirements, `T` and `U` have the same layout.
++    let ptr = slice.as_ptr().cast::<U>();
++    // SAFETY: `ptr` and `len` come from the same slice reference.
++    unsafe { slice::from_raw_parts(ptr, slice.len()) }
++}
++
++/// Casts the type of a slice to another.
++///
++/// Also see [`cast_slice`].
++///
++/// # Examples
++///
++/// ```rust
++/// # use kernel::transmute::cast_slice_mut;
++/// #[repr(transparent)]
++/// #[derive(Debug)]
++/// struct Container<T>(T);
++///
++/// let mut array = [0u32; 42];
++/// let slice = &mut array;
++/// // SAFETY: `Container<u32>` transparently wraps a `u32`.
++/// let container_slice = unsafe { cast_slice_mut::<u32, Container<u32>>(slice) };
++/// pr_info!("{container_slice:?}");
++/// ```
++///
++/// # Safety
++///
++/// - `T` and `U` must have the same layout.
++pub unsafe fn cast_slice_mut<T, U>(slice: &mut [T]) -> &mut [U] {
++    // CAST: by the safety requirements, `T` and `U` have the same layout.
++    let ptr = slice.as_mut_ptr().cast::<U>();
++    // SAFETY: `ptr` and `len` come from the same slice reference.
++    unsafe { slice::from_raw_parts_mut(ptr, slice.len()) }
++}
 -- 
 2.55.0
 
