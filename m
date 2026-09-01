@@ -1,112 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2130733BBD9
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 00:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1731E0E14
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 00:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788223134; cv=none; b=uYYZbIGkkqsqQ/doXe4DtBevCAhB5Ng7fKzvriMoyOhYZp5Dpzm1N1bJ9EZ9DN/tD7MY/+PtUUSBpnaw0YlzaYs1darZlmrKTR9pPKj0bM+IgUKZfTSzNYywn2/TpmIjjFpwm16Pq1u2HvA81lpQ4x6zOYd6tMSxCGBI7NQ4vLQ=
+	t=1788223287; cv=none; b=CuM4lGxGio2oGu3zFYlzt012nL9f0VVqaFOSiV9nGb7k21K2nikID0FleKHep3ErB0HPtx4fFZwil8YI3KQsfgrKpjLlJNmolb5QflL55d9/7v/ZZ5MMhgWF+JniALBnshQ2qFcMIIIO7EAPjrRX+ef+5rhA4pofLpD4YvgOR+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788223134; c=relaxed/simple;
-	bh=BZT1TQdxQT18TZCsoBPkUJLhrGbgwkZLVtgSjkcw1k8=;
+	s=arc-20240116; t=1788223287; c=relaxed/simple;
+	bh=JHSppJbPaqRtiX+fYOeIg001EEzVEaPSnprDD8bIBhI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UPWPbefGgowQve81kTE3pn5GvgcQMpn+dvMDOXSKtk0ITEOfegkUMgO34486b8UVHNZKtzafSH/JQtHLXF8DhOIPJwFVqQ/zOp/JbwLwswoScPSsyeeaqo06zraveFPmAnSk38Ov17OwDuhkJ6ao0VnqC3jaNf/ysi5LPPZQEwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFK54/6C; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YZYsYKW/UE0N75W/mPsXgbtH7X0iMZp1EXApIDcthy9iipefTqpbnwJF9u0KKC7EsmWTaH8yMK2s1X9unHwqk7mXH+REX2YN7Hch2Hvo4EVVtOKIj0PpYBcUwDxgjiuAcTFamI+41vkwYnJOA12Rma70nY/WRCBBCoi8x2fvWGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcSPer0O; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFK54/6C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2DD1F00A3D;
-	Tue,  1 Sep 2026 00:38:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcSPer0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B641F000E9;
+	Tue,  1 Sep 2026 00:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788223132;
-	bh=A0jJPCbucx2KvVYGUNaTOxLmy4/LuWLajsYjWrtB0qw=;
+	s=k20260515; t=1788223279;
+	bh=DF96gJEVnXgjo2ZUdSCMS7qHJ14DYeUUuJp06XBSbRE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CFK54/6CzzCZZoq/kNntBoUEu2NkRfmkfktZygH1xtizNhzhvqPw5dKt4nbvbg48f
-	 2PAXPUMfLz5uhDN7vTM3Zf2dqERTfNObSab/0l48ETbSa1EdedpQWI5eY/qCrZik3N
-	 NMV6m7VL8xed/b2vOIpYsUzkgSLNbirhUfXyxSQhdon2FIDZDDVsq/P8btgMOTksSZ
-	 3TMmf8OaiXq9cnB7eaDfm0hHLfaeWKpnQu6zRG6p3hDvYiRLF9pjZZzoCy8oCvyitn
-	 AuUIYxCmtfflan3WytFPGEs/kC1ZvCQIEBFw/qbQE+Ir48rwa4rhlwqbHDsSEnXk1A
-	 PR97qpczm5clA==
+	b=PcSPer0OGvV2Mp750iirLzX9Mo8Sf6YxkCzxUt+motqSqcZewaiTqS6FAlweo9yKN
+	 VId50o2LC9Nc2kSZWrnBDO+iTEBZqxgFg4zzRaoC6HffEPV1gnI8TnrTyOXkR56CmU
+	 sgP6Yv6eOim2/V40gJIoxNt55iO/scAALp4lbUTcigDq4+Z3PiyUHb3mDv4xKbpHQ/
+	 c/6A9j8dMCwAL5hyh0J+Q9NEmMy8s5wRY49hcU8/N82+nUqZTODV8uVDuPM7b1pGrj
+	 smQAna3hCFNqVz27W5HauYdkI8hCdFoiTiysQ7X7skLZ8EE8zDfFZrQldw1OUoninU
+	 6U4kl4TFCI2tQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/4] cxl/events: Return IRQ_NONE when no events were
- processed
+Subject: Re: [PATCH v2 1/4] cxl/events: Bound get records loop in
+ cxl_event_thread()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Anisa Su" <anisa.su887@gmail.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260901002912.958-5-anisa.su@samsung.com>
+In-Reply-To: <20260901002912.958-2-anisa.su@samsung.com>
 References: <20260901002912.958-1-anisa.su@samsung.com>
- <20260901002912.958-5-anisa.su@samsung.com>
+ <20260901002912.958-2-anisa.su@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 00:38:52 +0000
-Message-Id: <20260901003852.6D2DD1F00A3D@smtp.kernel.org>
+Date: Tue, 01 Sep 2026 00:41:18 +0000
+Message-Id: <20260901004118.E1B641F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Concurrent execution of the shared IRQ thread for different CXL ev=
-ent vectors will incorrectly return IRQ_NONE, causing the kernel to permane=
-ntly disable the IRQ.
+- [High] Error aggregation masks retryable errors, causing transient failur=
+es to be permanently abandoned without retry.
+- [Medium] False positive hardware warning due to race condition between co=
+ncurrent IRQ threads.
 --
 
-commit e4fb9fa2ad67f892cc6a1e121480e607bbf7ed82
+commit 16c815c8618408dc3d242d5fe42bbf41248f7c71
 Author: Anisa Su <anisa.su887@gmail.com>
 
-cxl/events: Return IRQ_NONE when no events were processed
+cxl/events: Bound get records loop in cxl_event_thread()
 
-This commit changes cxl_event_thread() to return IRQ_NONE when no events
-are processed, rather than always returning IRQ_HANDLED. The stated intent
-is to allow the kernel to detect devices flooding their MSI vectors.
+This commit limits the cxl_event_thread loop by checking completed work
+rather than only relying on the hardware Event Status register. It bounds
+the retry attempts for retryable errors (-EBUSY, -ETIMEDOUT, -EAGAIN) and
+gives up on permanent errors.
 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 239df18c9c87b..94ff2b7d1f09a 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -528,6 +528,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
->  	u32 mask =3D CXLDEV_EVENT_STATUS_ALL;
->  	int attempts =3D CXL_EVENT_DRAIN_ATTEMPTS;
-> +	bool handled =3D false;
-> =20
->  	while (mask) {
->  		u32 status, drained, stuck;
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 7c6c5b7450a54..2b71a8e1f35f7 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
 [ ... ]
-> @@ -542,6 +543,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  		status &=3D mask;
->  		if (!status)
->  			break;
-> +		handled =3D true;
-> =20
->  		rc =3D cxl_mem_get_event_records(mds, status, &drained);
->  		if (rc) {
+> @@ -1112,31 +1129,60 @@ static void cxl_mem_get_records_log(struct cxl_me=
+mdev_state *mds,
 [ ... ]
-> @@ -579,7 +581,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  		cond_resched();
->  	}
-> =20
-> -	return IRQ_HANDLED;
-> +	return handled ? IRQ_HANDLED : IRQ_NONE;
->  }
+> +	for (int i =3D 0; i < ARRAY_SIZE(logs); i++) {
+> +		bool got_records;
+> +		int rc;
+> +
+> +		if (!(status & logs[i].status))
+> +			continue;
+> +
+> +		rc =3D cxl_mem_get_records_log(mds, logs[i].type, &got_records);
+> +		if (got_records && drained)
+> +			*drained |=3D logs[i].status;
+> +		ret =3D ret ?: rc;
 
 [Severity: High]
-Will this cause concurrent event interrupts on multi-vector devices to be
-permanently disabled?
+Does this error aggregation mask retryable errors?=20
 
-If a CXL device maps different event logs to different MSI vectors (for
-example, Info to vector 1 and Warn to vector 2), and both events occur in
-quick succession, the first handler thread will drain both logs because
-mask is initialized to CXLDEV_EVENT_STATUS_ALL.
+If an earlier log encounters a non-retryable error (like -EIO), it is stored
+in ret. If a subsequent log encounters a retryable error (like -EAGAIN), the
+earlier error takes precedence due to the ret =3D ret ?: rc logic.
 
-When the second handler thread wakes up, it will read a status of 0, break
-the loop without setting handled to true, and return IRQ_NONE.
+Back in the caller cxl_event_thread(), the loop checks the return code:
 
-Could this trigger the kernel's spurious interrupt detector during normal
-operation under load, causing it to permanently disable the IRQ and break
-hardware event reporting?
+    rc =3D cxl_mem_get_event_records(mds, status, &drained);
+    if (rc) {
+        if (!cxl_event_drain_retryable(rc)) {
+            dev_warn(cxlds->dev, "Event log drain failed: %d\n", rc);
+            break;
+        }
+        ...
+    }
+
+Will this cause the thread to abort the entire batch and abandon the transi=
+ent
+error without retrying, permanently losing those hardware events?
+
+> +	}
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
+> =20
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 267c679b0b3c2..239df18c9c87b 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+[ ... ]
+> @@ -509,26 +509,75 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *p=
+dev)
+[ ... ]
+>  static irqreturn_t cxl_event_thread(int irq, void *id)
+>  {
+[ ... ]
+> +	while (mask) {
+> +		u32 status, drained, stuck;
+> +		int rc;
+> =20
+> -	do {
+>  		/*
+>  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
+>  		 * ignore the reserved upper 32 bits
+>  		 */
+>  		status =3D readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
+[ ... ]
+> -		cxl_mem_get_event_records(mds, status);
+> +		rc =3D cxl_mem_get_event_records(mds, status, &drained);
+[ ... ]
+> +		/*
+> +		 * The Event Status register is device owned and read only, so
+> +		 * it cannot bound this loop; records read can.  A device that
+> +		 * leaves a bit set with an empty log makes no progress, and
+> +		 * only the device can clear that state, so stop polling that
+> +		 * log rather than spin on it.
+> +		 */
+> +		stuck =3D status & ~drained;
+> +		if (stuck) {
+> +			dev_warn_once(cxlds->dev,
+> +				      "Event status %#x set with no records to read\n",
+> +				      stuck);
+> +			mask &=3D ~stuck;
+> +		}
+
+[Severity: Medium]
+Is there a risk of a false positive hardware warning here due to a race
+condition?=20
+
+If multiple event logs share an IRQ vector, two concurrent cxl_event_thread
+instances could race. If Thread A drains the events, Thread B would receive=
+ no
+records, and its call to cxl_mem_get_event_records() would return with
+drained =3D=3D 0.
+
+Thread B would then evaluate stuck =3D status & ~drained using the stale st=
+atus
+value read at the beginning of the loop.=20
+
+Could this lead to Thread B incorrectly concluding the device is stuck and
+prematurely masking the log for its iteration?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260901002912.958-=
-1-anisa.su@samsung.com?part=3D4
+1-anisa.su@samsung.com?part=3D1
