@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01884486BA2
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 17:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4425348A8C7;
+	Tue,  1 Sep 2026 17:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788284795; cv=none; b=syEsh6nazNpd7Qi9wenoBkU5PpaI3dRdHO5QjtSa0ydrWUjAwC4+e5yW0O1D8QWOcG2oEuhvjcsLVyDvv7NNganZuER4jYUvk0VYom5eI1G5IKdcb1eQmscGzZvKuacZcfPbbY8BaQdfHQvQnldg2CAmbCBA7HEjn3wuaN85prc=
+	t=1788284844; cv=none; b=lVEl4n5QSIoYFh8rV/E6vnr7Hy9KQfLUm98QbnyJ96lXG6ntYbTKug6rWvOs4hWH7TGphfpDFPYmenrrLsfjXb9Kj2pJmm5oh3gTUtd+D2hm+8aKzA7rpPhuOAipFM5zAhrGBsxSd9N3IFCaI8ArYAqfYr0BBxd5R37cctfm3ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788284795; c=relaxed/simple;
-	bh=RMuPpjBBPYCUBv+I2AhH9ucEwXwnWX8mocRcLt8iQaU=;
+	s=arc-20240116; t=1788284844; c=relaxed/simple;
+	bh=2656E0RmlVbRzn5xZ0Ho+djh6YbWPtwm0sPiiaIFvJg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sGzBOwJals5HUFCSnVxH1MyDKyz4kka71ygfAbw2ek8qHUAZJFurBHWmOz/H52HEQmHr66JV1HUY1ssgEKjMPm6Mz/+3i8EirUzXeupy3UR4G3WJP0Jz8BQlrp7q9jTq97YZ+mYhHQr5YBzPqADQlsU7TUFsln2cPgvdRlWpybM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7i73Rgf; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=lUXjg1MVhV/vY5b7wF36BB7Xmwe5UGD4rmNGYE5lhUDrTnZY2Ef2PG90nK6jz0bxLNwOeaeI7icLUbWCynXrJZTAcx9rGdSU6aNJCJhlGfQWCg2a154A+ZHFo94PCSbE/ILefv0z0ZM4tISXKoBtALkBm4i0xnKq3SRhXMZdlhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8nBvWJL; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7i73Rgf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8nBvWJL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788284794; x=1819820794;
+  t=1788284843; x=1819820843;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=RMuPpjBBPYCUBv+I2AhH9ucEwXwnWX8mocRcLt8iQaU=;
-  b=J7i73Rgf5CtJGqMSOYNHnmL7Bg6/JWWRk86TI2C7lLelehaw5JD//IhX
-   BVwuNLwD77kOs4rIwmAx/GAeHHX0mBgLiEsGagcxcoFNppjdnSvUS2471
-   nOM5PF0b7Pk+3T9hJ4R+ggHbSgSoFQMQBaIaoPhPR0M0N2aN4SAQ2/5hg
-   Jpr9R7W2rFqZUrtGyaNJEOtzrBEvTXLa1dbonSTlklbd1fJdjJvSBdbLg
-   KHlZQD3lMqA/h9dgHo0p9IG0mwZkJI601uN/3y2yRxm7Uq83cbzFISA86
-   cZn8YgvbsQ4oASEtXpADJIe8AanwjYGFGJkzB1xGIcMoDyTssNFMX65yE
-   Q==;
-X-CSE-ConnectionGUID: aaOP0YsuTlaoNOK3nqGxPQ==
-X-CSE-MsgGUID: EAtRElxcSEeWvjDTze7j+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="100235271"
+  bh=2656E0RmlVbRzn5xZ0Ho+djh6YbWPtwm0sPiiaIFvJg=;
+  b=K8nBvWJLz0Inje/p4Xd+tf3ei7BM2c/HeThzm402+Qz6gSKxGPOQWVjy
+   CBLQoTGmK8+gK06/aMt7mlTUHU9K8ilnorZiiwPpPHNMI6G1gdC+RGRQl
+   V16YVL33N+0TjpnabPGbG3MfMIrzNgMZKxBCoye3/l8Bq0B8GTlssKGBJ
+   bmxrcV/5lbu56cLUkFnHvjY1l6FwlFsk/SzxVIH2HqHczBrVZ4l3hZB1p
+   WRp6pbtZ9mq5IvZrd7ll3qFxrcre2WuFnXde0fpGACyhByvRYihbYw1tC
+   5PecY1jSElM7c2YIPB9k1Klyc6Bpu5eO9fMHl1NJxTNHtcAcqpaZn7QaZ
+   w==;
+X-CSE-ConnectionGUID: 6Womi0XRSL6sxiD/w6qZ3Q==
+X-CSE-MsgGUID: lMmbZlhoRh6HwW/jOd2DCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="100235327"
 X-IronPort-AV: E=Sophos;i="6.25,256,1779174000"; 
-   d="scan'208";a="100235271"
+   d="scan'208";a="100235327"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 10:46:34 -0700
-X-CSE-ConnectionGUID: BEWU7UKxTZaSli7HHs05jg==
-X-CSE-MsgGUID: ucm2IdKNTsmgKtZBVQcgyw==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 10:47:22 -0700
+X-CSE-ConnectionGUID: SI3Bqgj9ScmiLxx/9r8pfA==
+X-CSE-MsgGUID: fpmQqBVuT3WUNdP2HNf9MA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,256,1779174000"; 
-   d="scan'208";a="274436990"
+   d="scan'208";a="274437175"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.72]) ([10.125.110.72])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 10:46:32 -0700
-Message-ID: <78b03d7a-f2a9-4056-bbdc-c621cae2101e@intel.com>
-Date: Tue, 1 Sep 2026 10:46:31 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 10:47:20 -0700
+Message-ID: <a0d7da35-d119-4627-9e2a-9594611a8a24@intel.com>
+Date: Tue, 1 Sep 2026 10:47:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,66 +52,77 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Guard against a missing peer mapping
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org, sashiko-bot@kernel.org
-References: <20260821222515.2675707-1-alison.schofield@intel.com>
+Subject: Re: [PATCH] tools/testing/cxl: Don't wrap cxl_core's own exported
+ symbols
+To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
+ danwilliams@nvidia.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
+ kaihengf@nvidia.com, kobak@nvidia.com
+References: <20260721084009.38100-1-icheng@nvidia.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20260821222515.2675707-1-alison.schofield@intel.com>
+In-Reply-To: <20260721084009.38100-1-icheng@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/21/26 3:25 PM, Alison Schofield wrote:
-> When two endpoints share a dport, both must be mapped by the port.
+On 7/21/26 1:40 AM, Richard Cheng wrote:
+> Building cxl_test with LLVM=1 (ld.lld) fails in modpost:
 > 
-> sashiko-bot reports that a missing peer mapping could result in a NULL
-> pointer dereference during region creation.
+> """
+>   cxl_core: .export_symbol section references '__wrap_...', but it
+>   does not seem to be an export symbol
+> """
 > 
-> No caller can reach this today. Guard it anyway so a future violation
-> of the mapping requirement fails region creation rather than causing
-> an oops.
+> cxl_test --wraps 6 symbols that cxl_core both defines and exports.
+> GNU ld only wraps undefined references, but ld.lld also redirects
+> references to defined symbols, so cxl_core's own EXPORT_SYMBOL entries
+> get rewritten to __wrap_* and modpost rejects them.
 > 
-> Reported-by: sashiko-bot@kernel.org
-> Link: https://sashiko.dev/#/patchset/cover.1787255388.git.alison.schofield%40intel.com?part=3
-> Assisted-by: Claude:claude-opus-5
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> cxl_core never calls these symbols, so wrap them only in the caller
+> modules via LDFLAGS_<module>.o instead of the global ldflags-y.
+> 
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
 
 Applied to cxl/next
-b212e37113f8
+2c73cda8908f
 
 > ---
->  drivers/cxl/core/region.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/testing/cxl/Kbuild | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 27e63e6dab7c..75b8092e6dc2 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1367,7 +1367,8 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  	/*
->  	 * If this position wants to share a dport with the last endpoint mapped
->  	 * then that endpoint, at index 'position - distance', must also be
-> -	 * mapped by this dport.
-> +	 * mapped by this dport. An endpoint that this port does not map at all
-> +	 * fails that requirement.
->  	 */
->  	if (pos < distance) {
->  		dev_dbg(&cxlr->dev, "%s:%s: cannot host %s:%s at %d\n",
-> @@ -1378,7 +1379,7 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  	cxled_peer = p->targets[pos - distance];
->  	cxlmd_peer = cxled_to_memdev(cxled_peer);
->  	ep_peer = cxl_ep_load(port, cxlmd_peer);
-> -	if (ep->dport != ep_peer->dport) {
-> +	if (!ep_peer || ep->dport != ep_peer->dport) {
->  		dev_dbg(&cxlr->dev,
->  			"%s:%s: %s:%s pos %d mismatched peer %s:%s\n",
->  			dev_name(port->uport_dev), dev_name(&port->dev),
-> 
-> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 2be1df80fcc9..e49ce644b4b1 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -4,16 +4,20 @@ ldflags-y += --wrap=is_acpi_device_node
+>  ldflags-y += --wrap=acpi_evaluate_integer
+>  ldflags-y += --wrap=acpi_pci_find_root
+>  ldflags-y += --wrap=nvdimm_bus_register
+> -ldflags-y += --wrap=cxl_await_media_ready
+> -ldflags-y += --wrap=devm_cxl_add_rch_dport
+> -ldflags-y += --wrap=cxl_endpoint_parse_cdat
+> -ldflags-y += --wrap=devm_cxl_endpoint_decoders_setup
+>  ldflags-y += --wrap=hmat_get_extended_linear_cache_size
+> -ldflags-y += --wrap=devm_cxl_add_dport_by_dev
+> -ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
+>  ldflags-y += --wrap=walk_hmem_resources
+>  ldflags-y += --wrap=region_intersects
+>  ldflags-y += --wrap=region_intersects_soft_reserve
+> +wrap_cxl_core := --wrap=cxl_await_media_ready
+> +wrap_cxl_core += --wrap=devm_cxl_add_rch_dport
+> +wrap_cxl_core += --wrap=devm_cxl_add_dport_by_dev
+> +wrap_cxl_core += --wrap=devm_cxl_switch_port_decoders_setup
+> +wrap_cxl_core += --wrap=devm_cxl_endpoint_decoders_setup
+> +wrap_cxl_core += --wrap=cxl_endpoint_parse_cdat
+> +LDFLAGS_cxl_acpi.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_pmem.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_port.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_mem.o  += $(wrap_cxl_core)
+>  
+>  DRIVERS := ../../../drivers
+>  DAX_HMEM_SRC := $(DRIVERS)/dax/hmem
 
