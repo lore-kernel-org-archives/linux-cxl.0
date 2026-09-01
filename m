@@ -1,64 +1,64 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AB2395ACE
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 01:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974C838E8A0
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Sep 2026 01:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788224704; cv=none; b=B80pAf6s/YW334fXCvQC5LuDjIY8hkCkA5je/A/dY3ATPnLqPWGrk3iBPe2eNDt0rSf/Q3m6pxeJ7r1YaU4u7v/P3Y+1unq3CYIQHILCWnnH6o6vHt3q2lm9FTexhJTtBo2/MbECUVJEtuDdVbv7cpnkl35DK4Fkmi5tWxF0IEM=
+	t=1788224718; cv=none; b=GJPjA4Kcy09G2WhF6wczhfWtsDQH9uvt9aYcn+G4dLeTfzj/cJd85LUrV546+ODSV/TQXRAUuLng37Kmi31ukB2i/QJZOB2SRcfDULE4Rwp6+0BFhNK2oDVi96t2gQarw6A1NSsJz2asm7GbTwm6s5hQ506ugrmZLvkWk792XZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788224704; c=relaxed/simple;
-	bh=7H9GI30AsWmAlTdg30uohie4gLRcANCA6UmHmEupp3o=;
+	s=arc-20240116; t=1788224718; c=relaxed/simple;
+	bh=S/AOyWuaiA3NHvzmTE2CNReBuvvkbVK6T+Yewj+2g5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZuKOD50K3h0RPXxCuOURQmwb48w4lNo/ffGQj8xnryETEaRSB4JwIY0pKxtmPaHa7U4Lkyk16FsRrCNmU9DPYNcEcBdgCPFxdlnntyMsktAbZFm5p8alCGqFNLLP7J8cu6rHUuav57PejxX9+dSVr+UB8dkKYmLSM9v7v8QXhsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d+YQ2TYC; arc=none smtp.client-ip=209.85.215.175
+	 MIME-Version; b=KBu8Oq4razdqHk4rOM+cBr2IhGYWJeYoznQL+tiwAsDXVIeBqh5kyxfo6MtOboM2zaqki1+GId47L19x9KINIZTT89K7Sk1E24lHNnYHtbYJK6YuBJ1AEH/HeX4Anw2GxRLdhEoabKvQ71ZnGcpf0z3dVYCLsE67SGRVHiH4SGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fd+bz32y; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+YQ2TYC"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-c96c92c0980so257588a12.3
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 18:05:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fd+bz32y"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-38511175ad3so4282168a91.2
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Aug 2026 18:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788224702; x=1788829502; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788224711; x=1788829511; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=jWbFM6ywa1yjj692OE0MrLQnEnm7JyCgqunSYul2orw=;
-        b=d+YQ2TYCuKChwoPQfL5IsXw8KZDWudgQ5nl55KRLhDWcU/gJC7uZKUR3Rsa/hvrFIu
-         1zjw7xN2aiWcDdflQlzlDhDMg77O2eY3YssOVRaf2XiZtm5rediRfOrjYTmzSJdEpWTP
-         Etuy2TgNIKbTKKGOWNpne0L+sq8ENRQYtdnHtwvhCBmxZg6KB9F4g4A7X1n4M+PJpz9Y
-         ILDCryRfLkRlNnRi8i7BYNjxR/d4/TkjfRKcXgwPLCXMbRaU/8yJHZzS4/uOnjuup5va
-         Ww4MNUHPwhYNpt1U3+/xZ5Ou4r0FnLhO2m7lDhhLye1J9nQ4GWB69Gk2gc+HtyXqHFD8
-         uxhQ==
+        bh=ZxuwZq03lYI2TGgQtjkc9QJfZ6xOq7ziiudQrg9Xx9o=;
+        b=fd+bz32yCWvfXhKEUaxlixgV3kiy6TsUmNr5WbxryVjQpBcFI46cP5ABP7pCz5XlBU
+         3s0W9Rv+ct6iQSD08ircYVhfzpDJmh6EwZwD/GHWzMGQ8h7D8KgjvTR29luloQFpgtNt
+         mt5c8n7k9kDfShQU06bWnRXsxv/KOVQwoZGRslhvCjYo4lf9h2Qav4vK0Gm5B1e4SnhF
+         St+MQG0l1tM5umdMm4zGBSlgnYTA7RZuS8/TM7yp2GR1qy/6G3m5q2Cl9B+6LhnVuHRO
+         Lq0WTaNI9lk5BNmNIujFUeTBROi8DFqEneJIhS+RM/icgq+oCc5txVxH1AJ6PGSH0FXA
+         muAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788224702; x=1788829502;
+        d=1e100.net; s=20251104; t=1788224711; x=1788829511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jWbFM6ywa1yjj692OE0MrLQnEnm7JyCgqunSYul2orw=;
-        b=luwX021tpuzOOdq/xMxXesAw++i3x4+bsYIvDlXLDWuHF4jop1TrLBK8FfBkodafbd
-         9otHTEPJKase0+BdVh5iYKwX4fscoG1sEZ55ZBFPjU0llc7IXBuhjKXY3OS3ERgAbaEu
-         B7v8t+d0L/bhuCh4824JvVc6RbMSPoOljzCA1F+GdKFMaQSJ7YGE3iIVu/vhlw/afKWX
-         k1ePruZ+Zp39w/yWeN3KQH6k2NtarF6g6TkQ0aL8Y3HCVZZg2aUtJFZ4KXXysZ//520S
-         eONQlEvA14LLJC/xizHGGafwOKdniSAtA3AGMjMhDTFWOps6znuAz9xANPSpcGiAJcqs
-         xRhg==
-X-Forwarded-Encrypted: i=1; AKwUvBxrRO4aab9qxfixAtcHI4wpJvGW1En1+eaUr7sHOW6dE2xsVcYJLcVodB0p/dhVoXWVpjjZu0RNgo4=@vger.kernel.org
-X-Gm-Message-State: AFuF++kq9+PxwCJs5OBc120Sftb/qb7C7FgEyqB0LTXz6G/vYN94sIDo
-	sg4JRERoabcgAnohDhHG2TMbu1Qogz4n8Lg2NxbEFuGuwds9LhMnPFY+
-X-Gm-Gg: AYBFou08J20AaA+EripwALX4v+devSCsowgRBWKm4DWQeSyV5JphHuDAh2EemJ9vgRi
-	tgXvxQ3hTrkewCx4woNu6xZJggW+tnYiEUkgRYaZisokQYGJc16MSP8UD8z6yloQojU8FHZ+rlN
-	OSMVztPcxSm5+nmF0kOqzZKikFLuaKk27a0uD/2N2NUNcoBFkCWQGTeCxqgutpdYBQJoDjB5XYU
-	dVIJSnSPK+eHlKI2eNsrZW5Cs3eRtw0LN0p6KCSUn49uOJhY5dPREo17unC4TicSpxoYAPsu4es
-	j7fDrZPj9fJE4toLiIaV6AyT5mThO6BScYV3VVekD1LrlDVsZL0TNtV4dlPbeeXbld2J7LuZZL1
-	lBzWe7Kohk1ajPxQmSvzJP8l+kh5Gidx6oCuf4HVi3FdbAYgyWydZqTM1Ksrmq7L1R0cjtt2+eD
-	IU9QiV5TYn1vlhaEEklkhDXJTKDu7wKQeCXm2yoavTSP0jDeRPNpP5ZtwAO1Ts0gRwQ+m1bf/8J
-	ugMUg==
-X-Received: by 2002:a17:90b:164b:b0:38e:6a44:671b with SMTP id 98e67ed59e1d1-396d0c79e8amr44052502a91.0.1788224702403;
-        Mon, 31 Aug 2026 18:05:02 -0700 (PDT)
+        bh=ZxuwZq03lYI2TGgQtjkc9QJfZ6xOq7ziiudQrg9Xx9o=;
+        b=NpoJfMWV7UIa5y1R1obvrZXmK1MClBVCsBvVC0S7bWzVQ0Cq6pxPNCXwwPD6/MW90I
+         Vdib/UGAZVXRu+XXB+Y0V0bcL0/ob1VxMQQFNF+WWckoS/kHOn2cfLUMYqDMuke6ndgf
+         t1HuOaqD/7W1tp8dWhiEzYqYbaXqQiS8YeTIdVg1TSi3e70j579hFzzjr8ptAJ2u3qxM
+         0UYILoV3XJANeE9V17vBowsirri6KRaV5Ps1Z7wh0Wx9rbHE2hw1QqyQoUjbEVp8IGm3
+         MVWsi7cFb6vInoXkMc9zTdk/R7X8rP0Y4HGmCAN6NN7o95FNBIvnX/4Ibh/zAw8yzpgg
+         XZ+Q==
+X-Forwarded-Encrypted: i=1; AKwUvBy90tjAjV6g4L2a+rxR1eJqkcUW6kHG+GDV4fmX6Oms7Pcfxk7J7+yuejz03hQ4wKgNz4qG/IcMQxE=@vger.kernel.org
+X-Gm-Message-State: AFuF++mx7a7KFdxH8v5n9POHf4cr6x80DWoqP7H4aPPl+qSyLRetaZll
+	/VX2wv5IY/7h+5BuYGj1+6iIlEAZ8oIHXywEm0edE6aREsIvMuwNe9CH
+X-Gm-Gg: AYBFou3QecLtClCPEBywze4ZGWHtIplo/+Hn+lFhBUYA6A4gENneSL1f1ew2l1FMZGI
+	QQ/qDwgndiZejGcCYAgv+Mclma44gcqBawZGGUC1giyVOIq5aTvfqBb9P8hUFtIPS2bl4PRpeUn
+	HqmLC1ewtaU5KWR+dpTLLOe5QNPBz9KfDXDpjWhwg2ApQ+msQbbKUkOhyn1fkz7HH1toWrC6QRA
+	TpNmFyK/nWpuAhZpHGGFN12tz2Opck8kXIU64VKqtJnavl5fzRcdyIk+Q7VsxYpOctMEA4PTKfu
+	eqmom1C/ILt3d6H+iClwVAMBsCQE+f0nftoWwQXSDLL3XgCaMzGwqqPKR0Rcl9/phRhvMYLwsXi
+	7EYOyPcmsLbKNwAEwR7WzZv5zUXgkvYL8ZxuUtufWfnLQDyyeuuI+STRV5REsJn8igKCJh4bBMp
+	M1NZ+MHtKvXij2Ly7T5PZrn57r2PuRRzi+PgRb8D1Qj2lWwaz/fZsZm4BV7r2a8vI9fEH6n9V53
+	zxw5z31zrgqTTWk
+X-Received: by 2002:a17:90b:5281:b0:38e:6aa7:68ad with SMTP id 98e67ed59e1d1-39907aff83dmr6183862a91.5.1788224711002;
+        Mon, 31 Aug 2026 18:05:11 -0700 (PDT)
 Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3990d49e9e0sm2372024a91.11.2026.08.31.18.04.54
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3990d49e9e0sm2372024a91.11.2026.08.31.18.05.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 18:05:01 -0700 (PDT)
+        Mon, 31 Aug 2026 18:05:10 -0700 (PDT)
 From: alistair23@gmail.com
 X-Google-Original-From: alistair.francis@wdc.com
 To: linux-pci@vger.kernel.org,
@@ -84,9 +84,9 @@ Cc: gary@garyguo.net,
 	alex.gaynor@gmail.com,
 	aliceryhl@google.com,
 	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v3 07/21] rust: add bindings for hash.h
-Date: Tue,  1 Sep 2026 11:03:33 +1000
-Message-ID: <20260901010347.2614656-8-alistair.francis@wdc.com>
+Subject: [PATCH v3 08/21] rust: error: impl From<FromBytesWithNulError> for Kernel Error
+Date: Tue,  1 Sep 2026 11:03:34 +1000
+Message-ID: <20260901010347.2614656-9-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260901010347.2614656-1-alistair.francis@wdc.com>
 References: <20260901010347.2614656-1-alistair.francis@wdc.com>
@@ -100,65 +100,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Alistair Francis <alistair.francis@wdc.com>
 
-Make the functions crypto_shash_descsize(), crypto_shash_digestsize()
-and crypto_free_shash() available to Rust.
+Implement From<FromBytesWithNulError> for the Kernel Error type as we
+will use it in a future patch.
+
+As this is now generally available we can remove it from the test case
+as well.
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 ---
- rust/bindings/bindings_helper.h |  1 +
- rust/helpers/hash.c             | 18 ++++++++++++++++++
- rust/helpers/helpers.c          |  1 +
- 3 files changed, 20 insertions(+)
- create mode 100644 rust/helpers/hash.c
+ rust/kernel/error.rs | 18 +++++++++++++++---
+ rust/kernel/str.rs   |  7 -------
+ 2 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 4b31aa7f432f..fd223b6c5aaf 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -30,6 +30,7 @@
+diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
+index e52793f77196..84e6466f54c2 100644
+--- a/rust/kernel/error.rs
++++ b/rust/kernel/error.rs
+@@ -12,9 +12,14 @@
+     str::CStr,
+ };
  
- #include <linux/acpi.h>
- #include <linux/gpu_buddy.h>
-+#include <crypto/hash.h>
- #include <drm/drm_device.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_file.h>
-diff --git a/rust/helpers/hash.c b/rust/helpers/hash.c
-new file mode 100644
-index 000000000000..23a63618a370
---- /dev/null
-+++ b/rust/helpers/hash.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <crypto/hash.h>
-+
-+__rust_helper unsigned int rust_helper_crypto_shash_descsize(struct crypto_shash *tfm)
-+{
-+	return crypto_shash_descsize(tfm);
+-use core::num::NonZeroI32;
+-use core::num::TryFromIntError;
+-use core::str::Utf8Error;
++use core::{
++    ffi::FromBytesWithNulError,
++    num::{
++        NonZeroI32,
++        TryFromIntError, //
++    },
++    str::Utf8Error, //
++};
+ 
+ /// Contains the C-compatible error codes.
+ #[rustfmt::skip]
+@@ -358,6 +363,13 @@ fn from(e: core::convert::Infallible) -> Error {
+     }
+ }
+ 
++impl From<FromBytesWithNulError> for Error {
++    #[inline]
++    fn from(_: FromBytesWithNulError) -> Error {
++        code::EINVAL
++    }
 +}
 +
-+__rust_helper unsigned int rust_helper_crypto_shash_digestsize(struct crypto_shash *tfm)
-+{
-+	return crypto_shash_digestsize(tfm);
-+}
-+
-+__rust_helper void rust_helper_crypto_free_shash(struct crypto_shash *tfm)
-+{
-+	crypto_free_shash(tfm);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 440fb7638e3c..09ec69f736b1 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -66,6 +66,7 @@
- #include "fs.c"
- #include "fwctl.c"
- #include "gpu.c"
-+#include "hash.c"
- #include "interrupt.c"
- #include "io.c"
- #include "irq.c"
+ /// A [`Result`] with an [`Error`] error type.
+ ///
+ /// To be used as the return type for functions that may fail.
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index b3caa9a1c898..a556788bcc5e 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -433,13 +433,6 @@ macro_rules! c_str {
+ mod tests {
+     use super::*;
+ 
+-    impl From<core::ffi::FromBytesWithNulError> for Error {
+-        #[inline]
+-        fn from(_: core::ffi::FromBytesWithNulError) -> Error {
+-            EINVAL
+-        }
+-    }
+-
+     macro_rules! format {
+         ($($f:tt)*) => ({
+             CString::try_from_fmt(fmt!($($f)*))?.to_str()?
 -- 
 2.55.0
 
