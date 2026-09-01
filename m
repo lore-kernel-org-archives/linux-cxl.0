@@ -1,147 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073E238AC78;
-	Tue,  1 Sep 2026 01:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7CF3909BF;
+	Tue,  1 Sep 2026 01:20:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788225642; cv=none; b=C+VGyZSv90EldHoxqLbqlrZLEpzOn1LA6jAUVoP+ffFasAmZCyewTsMMu+5ftSMxYLKJODLCxMzfKFtIBSlylVlG3oUXdDlMxhqIC6ME2XvjRfSTECmQrD12oUkSTlfNUTpuuFnjTLeIrLltqyOrNkISsTnZ0FJfLKWzk/G6LV4=
+	t=1788225654; cv=none; b=Zrd7vFEtc2R6VaD1hZ/2CaxQgkOpKuvkvyY86sWvqBlSMh8ZxQWuQfsY3eZqAnAMOmNWshEPqBcoTD6rOqBXpZ2bLjABLBm5IOPTMPQ+5Yrkg92ylti4J2QJ61E6BvuM9IvJDxRGBdWSN4gt9Nwysm8LSzo7T1mX5eK9Jgd7YMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788225642; c=relaxed/simple;
-	bh=9XKfRgOG18hiGENj7i8eB2BlcAHGDh/yh3ugpXv9glU=;
+	s=arc-20240116; t=1788225654; c=relaxed/simple;
+	bh=6aqydAtSJYybWERIfmfkxWBzrYyUcD72Mm9caDpwlUA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Qe9Yo6ej38VBOYKbFQqPiWKClVxxR/mkI/S/+TcK+He3Kz9uW1M41DGqHRerhRD5RLYIYbve99rs/SidN1FPh0MRxqhjQIZgi++AQkrvh26s+K+HVGtn7W+qGH1fw/dARMeQBagaWQZXqzmrf7rTyxsNMcyvqFFigcvKWB8WU1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iq+kHPgN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jkl3+U1hLhl24C55UMDxEoyNuwStLh3sX9nQzeHgYSysdHpcH7mIU2KG38zxuqD/a/k+wXkghxWmwImUJV1kGJ+z1nBc4F/OrEyWQstepwi66ya5h9qiX+D5A3Ebnor0nJjaedeab+ZWhFkJ1M1ghl6+jDgqG2kAL9XuTiNHjmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDYxpzk2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iq+kHPgN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554EE1F000E9;
-	Tue,  1 Sep 2026 01:20:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDYxpzk2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 691FA1F000E9;
+	Tue,  1 Sep 2026 01:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788225640;
-	bh=nXwgWzrrBV8rLasr2WxWAOltWN2x0P3UwMqkzcWYSe4=;
+	s=k20260515; t=1788225652;
+	bh=/3e4CIJ4iOkKr1VTV177SEW1Q8rLxBB7KOCiJo5KrTg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iq+kHPgNLUf+i6R9UNNLVlUPdKIO/GFOvAEoqhRhjgS513WsDIXYMhnCgM22kQGnI
-	 /g1Zs1RpbqXP+FIzGMPTx8zVWcezMo95XB0kgPCS8yQspVhPcJYkU1Bkms15mJAoR6
-	 XxjxniDZhzb/DKmPZyxsN/VaSun8E3sXi4bjprMOsv3LUBz2g2v2LYUiJ/5K+zgVTP
-	 teCjylAw843uk9cXbvh+UG4WSs9yEFZBlKU/DRWY6rt3UBZQ5fSXlmBy4l+esAP9dA
-	 Ti0DhRi0kNj4bRZnJHW0qVS4jNVeUQGzgNgGUoItQS/08mrX37mRBY9NGh3NP5lFvz
-	 j3pf6r7edSFJA==
+	b=IDYxpzk23QNJ1hVIiQfHr57dGg3VfBcfLmg6Y+Fg9xH06E2ihi57hudWDQESjmsbF
+	 pbW5lBZ4k1JtDTi+cwMXqd35ZjR+U/2BcTKRLWwg4fkFaxxb2IcIXiKnwQUrqlQnqs
+	 rmm5Wehc/TBOlbRSdWdGL8khp72tIYgK4xWefazjR3sXUzmMmpT2E8sYAXhNnT5Jni
+	 3EgkYSIuGx/Spw1/uBFCu9EMc/AoDim/UCHSQfENPm66spV+eFtmNnYzWaxsAnlhv0
+	 gOQJJmQSZaVhDAgJ7llr6YFNkd+YboKy7KyT3qDG2PFSzWCqn/DRAQ45koFHFtAq/k
+	 cn3wI85bVelYw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 17/21] lib: rspdm: Support SPDM get_digests
+Subject: Re: [PATCH v3 12/21] PCI/CMA: Add a PCI TSM CMA driver using SPDM
 Reply-To: sashiko-reviews@lists.linux.dev
 To: alistair23@gmail.com
 Cc: linux-pci@vger.kernel.org, ojeda@kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260901010347.2614656-18-alistair.francis@wdc.com>
+In-Reply-To: <20260901010347.2614656-13-alistair.francis@wdc.com>
 References: <20260901010347.2614656-1-alistair.francis@wdc.com>
- <20260901010347.2614656-18-alistair.francis@wdc.com>
+ <20260901010347.2614656-13-alistair.francis@wdc.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 01:20:39 +0000
-Message-Id: <20260901012040.554EE1F000E9@smtp.kernel.org>
+Date: Tue, 01 Sep 2026 01:20:51 +0000
+Message-Id: <20260901012052.691FA1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Buffer under-allocation for SPDM 1.3+ GET_DIGESTS responses leadin=
-g to transport failure, transcript truncation, and EIO crashes.
-- [Medium] The GET_DIGESTS implementation validates the payload length but =
-completely discards the returned certificate digests.
-- [Low] An undersized/truncated GET_DIGESTS response incorrectly logs an 'O=
-verflow' error.
+- [Medium] The CMA driver's probe callback unconditionally treats every pro=
+bed device as a TSM host, which triggers spurious kernel warnings for sub-f=
+unctions like VFs.
 --
 
-commit 7b16689f564246befd0f0c43fa0d4515876746e6
-Author: Alistair Francis <alistair@alistair23.me>
+commit e6e460ef636dca826aac1d314b1cb072ffd45217
+Author: Alistair Francis <alistair.francis@wdc.com>
 
-lib: rspdm: Support SPDM get_digests
+PCI/CMA: Add a PCI TSM CMA driver using SPDM
 
-This commit adds support for the GET_DIGESTS SPDM command.
+This commit adds a Component Measurement and Authentication (CMA) driver
+using SPDM. It utilizes a PCI DOE mailbox as a transport to authenticate
+devices during enumeration and integrates with the TSM subsystem.
 
-> diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> index b78086c753702..131c22319b262 100644
-> --- a/lib/rspdm/state.rs
-> +++ b/lib/rspdm/state.rs
+Link: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
+
+> diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
+> new file mode 100644
+> index 0000000000000..9f2cc0b2ec8a7
+> --- /dev/null
+> +++ b/drivers/pci/cma.c
+
 [ ... ]
-> @@ -612,4 +630,64 @@ pub(crate) fn negotiate_algs(&mut self) -> Result<()=
-, Error> {
-> =20
->          Ok(())
->      }
-> +
-> +    pub(crate) fn get_digests(&mut self) -> Result<(), Error> {
-> +        let mut request =3D GetDigestsReq::default();
-> +        request.version =3D self.version;
-> +
-> +        let req_sz =3D core::mem::size_of::<GetDigestsReq>();
-> +        let rsp_sz =3D core::mem::size_of::<GetDigestsRsp>() + SPDM_SLOT=
-S * self.hash_len;
 
-[Severity: High]
-Does this calculation fail to account for SPDM 1.3+ fields like KeyPairID,
-CertificateInfo, and KeyUsageMask?
-
-For SPDM 1.3+ compliant responders, up to 32 bytes of additional fields
-can be returned. Because param2 is a bitmask of provisioned slots rather
-than a count, any device using slots >=3D 4 will produce a response size far
-larger than the allocated buffer, which could trigger an EIO crash.
-
-Even for lower slots, this calculation omits the 1.3 fields from the
-transcript, which could cause a permanent signature verification failure
-in challenge authentication due to transcript desynchronization.
-
+> +static struct pci_tsm *pci_cma_tsm_probe(struct tsm_dev *tsm_dev,
+> +					 struct pci_dev *pdev)
+> +{
+> +	struct pci_cma_tsm *cma;
+> +	int rc;
 > +
-> +        // SAFETY: `request` is repr(C) and packed, so we can convert it=
- to a slice
-> +        let request_buf =3D unsafe { from_raw_parts_mut(&mut request as =
-*mut _ as *mut u8, req_sz) };
+> +	cma =3D kzalloc(sizeof(*cma), GFP_KERNEL);
+> +	if (!cma)
+> +		return NULL;
 > +
-> +        let mut response_vec: KVec<u8> =3D KVec::from_elem(0u8, rsp_sz, =
-GFP_KERNEL)?;
-> +
-> +        let len =3D self.spdm_exchange(request_buf, response_vec.as_mut_=
-slice())? as usize;
-> +
-> +        // The transport must report a length within the buffer we provi=
-ded.
-> +        if len > response_vec.len() {
-> +            pr_err!("Overflowed digests response\n");
-> +            return Err(EIO);
-> +        }
-> +        response_vec.truncate(len);
-> +
-> +        let response: &GetDigestsRsp =3D Untrusted::new(response_vec.as_=
-slice()).validate()?;
+> +	rc =3D pci_tsm_host_constructor(pdev, &cma->host, tsm_dev);
 
 [Severity: Medium]
-Does this completely discard the returned certificate digests?
+Will this unconditional call trigger spurious warnings for sub-functions
+like VFs?
 
-The SPDM specification mandates that requesters compare the hash of the
-certificate chain with the digest returned in get_digests. There doesn't
-seem to be any storage for these digests in SpdmState, meaning this
-cryptographic binding between the get_digests response and the certificate
-chain downloaded in get_certificate might never be verified.
+When VFs are instantiated on an already-connected TSM host, pci_tsm_init()
+finds the host DSM and calls the probe function for the VF. Here in
+pci_cma_tsm_probe() from drivers/pci/cma.c, we unconditionally call
+pci_tsm_host_constructor() on every probed device.
 
-> +
-> +        if len
-> +            < core::mem::size_of::<GetDigestsRsp>()
-> +                + response.param2.count_ones() as usize * self.hash_len
-> +        {
-> +            pr_err!("Overflowed digests response\n");
+Because VFs lack CMA mailboxes, this triggers spurious "TSM init failure, no
+CMA mailbox" warnings in the kernel log for every VF probed.
 
-[Severity: Low]
-Should this error message indicate an underflow or truncation instead?
+Would it make sense to add an is_pci_tsm_host(pdev) check here before
+calling pci_tsm_host_constructor(), to ensure we only attempt to initialize
+it when appropriate?
 
-This condition triggers when the transport returns fewer bytes than expected
-for the number of provisioned slots. Logging "Overflowed" might be
-misleading when debugging transport truncation or packet loss.
-
-> +            return Err(EIO);
-> +        }
+> +	if (rc) {
+> +		kfree(cma);
+> +		return NULL;
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260901010347.2614=
-656-1-alistair.francis@wdc.com?part=3D17
+656-1-alistair.francis@wdc.com?part=3D12
