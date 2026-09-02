@@ -1,146 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from cheetah.ash.relay.mailchannels.net (cheetah.ash.relay.mailchannels.net [23.83.222.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C593E44E7
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Sep 2026 20:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CCD396561
+	for <linux-cxl@vger.kernel.org>; Wed,  2 Sep 2026 20:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788379708; cv=none; b=Te41mm6mkHOl8ZNiGiMvUajAHpATyD08uD+pZMk6v7uIsXfJ3hFR90soIYr2f9ml8uI0GmXkzBEo70P7OI1IdRntLuPigQNR+WwX1AcnmLDWdI13XGKQBTCOY27TnjBSmnagyocLQ8IxuN1YwjPnspzuz3FNbaPcmiefGCIcZqc=
+	t=1788380611; cv=none; b=AAGhvmjtlm8/TCxYWUD99SqiHzEXJTNCFT3KkbLEARMdWe7jF+23LhelSyy0NgCg8bFnMOMLE+QiBbofSUQaRyphZUUmS0SKlnErupRXQvGK7quI+b0Fnrl4ibIVqWlpgDII3NPsYz3S3tgMyOPDi3A4ioAZdhTZ5rNopsy08m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788379708; c=relaxed/simple;
-	bh=uAa0TyTktUBCErtp5U1xu+1/pBnZ6mwmkSpGp8elFWg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NB/VE6lVniafi4ZI9XOQ2u412vHkcuCt91bNKLdJ/p81oUPtQQRjDUO0b4HbiDKqlMuWNBV8QpO41pHrK69gn44k7ur4H/iFix+Xx8hwRPoRSUjNeRchrYtLG7Cnc/UsbpgK0qg4PqS9V2fN5pY4kw1B0lqfpYr8Anl35X379p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmQtNuPI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788380611; c=relaxed/simple;
+	bh=VGkOczxnD190OWI0SfQV3j+fry1Xv2HvB2b+Kim0mSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mz0mm9XouK+0V8UqLwUtnltHfca5SbAcJ+tMLS5yjIHRyRP+k1T6ZMn8orqeqJeCAB58qG8q1xC7xE0nH5qhqN3VQ2GzDysZrdto7CiSVju0MgzW1taiGODFMw3Cl+WKwQBm1v6xtpc2ggnX4LE/ty0FgtUEfh/zH8TZ6JdM8cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=CxC9mbQB; arc=none smtp.client-ip=23.83.222.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmQtNuPI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308571F00A3A;
-	Wed,  2 Sep 2026 20:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788379706;
-	bh=ZHRDvVJJhbtQyBNBX3i2D7FGUbLbTIg2kepPNfBdFdg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZmQtNuPI05Ver2/AKa2lAucOJcjVu/p5AVU3rWiW7655GgxqqhZilGJIF2zwWXwy0
-	 If+zLxzBjN9UV08YOdF2keAVXx7Jdzt8TIhosee5+2i41TIXGthBJSk4AyrDnsMqdu
-	 jfWwJUeYky51fe7R4IbGHVZWA8D4GJbjnIJ5zpjlTtv1ucGqkfIBGm69uTpRWJas8n
-	 LCkonL1YWyCA1wzIGYIzC6+Go46fdlZHkqfyWPIKj+CqrZSE+E1GAHpLD2gRp0bETj
-	 H0KSb3JNBA2RkDX92DTEG1WPfp0X83OMFp3HgZ3N8MFwh1/5nBgTdNJBNOShokmi1t
-	 e16kOajdwd/6g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] mm/memory_hotplug: factor out node_is_memoryless()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gregory Price" <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260902195507.88655-1-gourry@gourry.net>
-References: <20260902195507.88655-1-gourry@gourry.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 20:08:25 +0000
-Message-Id: <20260902200826.308571F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="CxC9mbQB"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 17FA141AA3;
+	Wed, 02 Sep 2026 19:06:37 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (100-97-3-9.trex-nlb.outbound.svc.cluster.local [100.97.3.9])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id AB44E42048;
+	Wed, 02 Sep 2026 19:06:26 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Wipe-Supply: 62ae80ba6efa643d_1788375986944_3233175004
+X-MC-Loop-Signature: 1788375986944:964268934
+X-MC-Ingress-Time: 1788375986944
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.3.9 (trex/8.0.2);
+	Wed, 02 Sep 2026 19:06:26 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4hZsdt0JZlz1gF;
+	Wed,  2 Sep 2026 12:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1788375986;
+	bh=AdHoLzkU7FcEGVU9MlAP8avLi/6cPxejYoGuM/V4mGA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=CxC9mbQBNu5EfSyKGP/foU0bNaWB0nsZdL7//YIpdxsC5BDIbcctu0QPAdTN9Jpbl
+	 CSJOmByxJGV6XCyK2dq1kt+yOW+bdXOCg7JmLsMuS+A3TqMEmpMQfVEYUDnCjndfpN
+	 fCtQv1DcZ1pgkoYqsKn3k7epUj4J+9jrqq+UyMYvI42/D247/Jako3+5Vlu3lUV4Fi
+	 TCkrfZdk3ihBKqAAPJUds3yps3EPqibkWTtsTmVoL3BartkHy5aasxy7e1LSn1ICq+
+	 CwqwSJuTd0aFbekz+diVManfuUi6p3goPZBJCIIgjc3JEhu4wamZPfKw12X+eN+5sa
+	 sY5TbQAA0u3vg==
+Date: Wed, 2 Sep 2026 12:06:22 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, benjamin.cheatham@amd.com, icheng@nvidia.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, jic23@kernel.org
+Subject: Re: [PATCH v2 0/4] cxl/events: Robustify event interrupt handling
+Message-ID: <20260902190622.aymrxkyfiiu7yuco@offworld>
+References: <20260901002912.958-1-anisa.su@samsung.com>
+ <apfd9eH0cVxMJJ5F@4470NRD-ASU.ssi.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <apfd9eH0cVxMJJ5F@4470NRD-ASU.ssi.samsung.com>
+User-Agent: NeoMutt/20220429
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On Wed, 02 Sep 2026, Anisa Su wrote:
 
-New issues:
-- [Low] Unused function warnings when CONFIG_MEMORY_HOTREMOVE is disabled.
+>On Mon, Aug 31, 2026 at 05:26:53PM -0700, Anisa Su wrote:
+>> Based on the 7.2 tag.
+>>
+>> This patchset bundles various fixes along the event interrupt path.
+>> The previous revision was a single patch, but Sashiko reported several
+>> related pre-existing errors so I thought I may as well pick them all up into
+>> one series.
+>>
+>> Link to v1:
+>> https://lore.kernel.org/linux-cxl/cover.1787768932.git.anisa.su@samsung.com/T/#m393e57d7f7f3916e8f2826a006ef0bc4dfd3606a
+>>
+>Had a chat with Dave and he mentioned we only need to deal with device quirks
+>when they show up. So I plan to drop patches 2-4, since they are just Sashiko
+>reports and not observed on hardware.
+>
+>For patch 1, there are a few considerations, so if any maintainers could have a quick
+>glance at the thread?
+>
+>1. I did observe the bug on hardware, but it's a sample device and the
+>firmware is being patched, so nobody should see it happen IRL? The consequences
+>of the issue were:
 
-Pre-existing issues:
-- [High] Data race on `node_spanned_pages` between ACPI CPU hot-remove and =
-ZONE_DEVICE memory hotplug due to missing memory hotplug lock.
---
+I think this says it all, and therefore is not a quirk imo. We should not cater
+to flat out spec violations (for non-public hw/fw) - there are plenty of things
+that could easily break all over the place if bits are not set/unset by hardware
+when it is supposed to.
 
-commit 239875f97a26527846083c3d6ab82ee6b800ce0a
-Author: Gregory Price <gourry@gourry.net>
+So I would pretend this never occurred, and if someone ever complains (it was seen
+IRL) we have your solution at hand.
 
-mm/memory_hotplug: factor out node_is_memoryless()
+>	- 1 CPU taken up
+>	- driver can't be unbound since free_irq() waits for threads_active = 0
+>
+>2. Li Ming mentioned checking the return value of cxl_mem_get_event_records()
+>is still valuable (currently a void function). So we could drop the other
+>changes from the patch and just keep that part.
 
-A memoryless node neither spans present pages (populated or ZONE_DEVICE)
-nor has an offline-but-added memory block still linked to it in sysfs.
+Yes, I agree.
 
-try_offline_node() presently open-codes this memoryless check.
-
-Pull that into a node_is_memoryless() helper and pull the existing
-check_no_memblock_for_node_cb() helper ahead of the add/online path
-so it's clearer what is happening here.
-
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 226ab9cb078ad..d0e94057682af 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1491,6 +1491,36 @@ static int create_altmaps_and_memory_blocks(int ni=
-d, struct memory_group *group,
->  	return ret;
->  }
-> =20
-> +static int check_no_memblock_for_node_cb(struct memory_block *mem, void =
-*arg)
-> +{
-> +	int nid =3D *(int *)arg;
-> +
-> +	/*
-> +	 * If a memory block belongs to multiple nodes, the stored nid is not
-> +	 * reliable. However, such blocks are always online (e.g., cannot get
-> +	 * offlined) and, therefore, are still spanned by the node.
-> +	 */
-> +	return mem->nid =3D=3D nid ? -EEXIST : 0;
-> +}
-> +
-> +/* Caller must hold the memory hotplug lock for this check. */
-> +static bool node_is_memoryless(int nid)
-> +{
-> +	/*
-> +	 * A node still spanning pages (especially ZONE_DEVICE) is not
-> +	 * memoryless.  A node spans memory after move_pfn_range_to_zone(),
-> +	 * e.g. once a memory block has been onlined.
-> +	 */
-> +	if (node_spanned_pages(nid))
-
-[Severity: High]
-This is a pre-existing issue and was not introduced by this patch, but can
-this lockless read of node_spanned_pages() race with ZONE_DEVICE memory
-hotplug?
-
-The comment explicitly requires the memory hotplug lock, but the ACPI CPU
-hot-remove path in drivers/acpi/acpi_processor.c:acpi_processor_post_eject()
-calls try_offline_node() while holding only device_hotplug_lock():
-
-drivers/acpi/acpi_processor.c:acpi_processor_post_eject() {
-    ...
-    cpus_write_unlock();
-    cpu_maps_update_done();
-
-    try_offline_node(cpu_to_node(pr->id));
-}
-
-Since ZONE_DEVICE memory hotplug (via memremap_pages()) modifies
-node_spanned_pages under mem_hotplug_lock() without holding
-device_hotplug_lock(), could this race result in a NUMA node with active
-ZONE_DEVICE memory being erroneously offlined and unregistered from sysfs?
-
-> +		return false;
-> +	/*
-> +	 * Offline memory blocks may not be spanned by the node yet, but they
-> +	 * link to it in sysfs and can be onlined later, so the node is not
-> +	 * memoryless while any remain.
-> +	 */
-> +	return !for_each_memory_block(&nid, check_no_memblock_for_node_cb);
-> +}
-
-[Severity: Low]
-Does moving check_no_memblock_for_node_cb() and node_is_memoryless() outside
-of the #ifdef CONFIG_MEMORY_HOTREMOVE block cause -Wunused-function warnings
-when CONFIG_MEMORY_HOTREMOVE is disabled?
-
-Their only caller, try_offline_node(), is conditionally compiled inside that
-block, so these helpers would be unused in builds without it.
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902195507.8865=
-5-1-gourry@gourry.net?part=3D1
+Thanks,
+Davidlohr
