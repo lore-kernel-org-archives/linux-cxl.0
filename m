@@ -1,80 +1,63 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025CB399365
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Sep 2026 19:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C593E44E7
+	for <linux-cxl@vger.kernel.org>; Wed,  2 Sep 2026 20:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788378924; cv=none; b=G3+xcf20qLLzzCPish+BWpXU9QS4QNl0poEkwoumMyJfz/sY4hcrwlvTy7o/XbiZRfumA8RZOrJzetVwr471mLtRLrkpVXs4RCvgUcJXHp8YILP0mH9WWmfRv+L29dtMdq68Uo2SUfcxZhy5M7qFYsLQwoLosxNmeJbzReqXeNw=
+	t=1788379708; cv=none; b=Te41mm6mkHOl8ZNiGiMvUajAHpATyD08uD+pZMk6v7uIsXfJ3hFR90soIYr2f9ml8uI0GmXkzBEo70P7OI1IdRntLuPigQNR+WwX1AcnmLDWdI13XGKQBTCOY27TnjBSmnagyocLQ8IxuN1YwjPnspzuz3FNbaPcmiefGCIcZqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788378924; c=relaxed/simple;
-	bh=K2Hj2XbaQYT6iNLE9zXZRM5ALp4XluEZmAssGObTg50=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDc8mvYYea18sXuxTXWMx6RixGarmkQFHuWYHGtVQg7Z+QFXW5Et5YBNhhNBYPcvUWd9JQ/GeQBmHyoD8FuV1QjAaOTohogidc9ZOWbO7xDL4tf52w5aq6bXnajV5NRsPdbP7KgDx80jKdPIB2B8t08ks5uWxZNdkuHOtrdruRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=d83RCn6c; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1788379708; c=relaxed/simple;
+	bh=uAa0TyTktUBCErtp5U1xu+1/pBnZ6mwmkSpGp8elFWg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NB/VE6lVniafi4ZI9XOQ2u412vHkcuCt91bNKLdJ/p81oUPtQQRjDUO0b4HbiDKqlMuWNBV8QpO41pHrK69gn44k7ur4H/iFix+Xx8hwRPoRSUjNeRchrYtLG7Cnc/UsbpgK0qg4PqS9V2fN5pY4kw1B0lqfpYr8Anl35X379p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmQtNuPI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="d83RCn6c"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-90cd43bd740so16055356d6.1
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Sep 2026 12:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1788378918; x=1788983718; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=I1NZ9ZHcDjrngsqR4bYoxHCsiDBrtNaJ+UNE7jVFBRE=;
-        b=d83RCn6c2PDL5qFN+rhrhrOtBL28xfd7bN+kpMiHlIFVRqotSS0GLfW/lU8H2VF9+V
-         5eZlZqRnyH6iDr6gBSk9zanjlQm0CT0QMExuPl/WQJWg1k3cTtHHiPFYmqkvYi6rW8h9
-         VMM47xDimO2Kjw2pAdVIji6LCLWSQbJ+W31lz8kbeg4WEtEFQpK4BtNJ7JEBJcCgj75j
-         HC4z0MgQG9mw8XdddZ/kTmybjsB7d57JowBuCDNjF8VmW/uzwWKvNq/N6t5J/5mOCEe9
-         iNBUh5Mt3deKGIsG43UXqoAXgLVvEni4TD2Q2iJJK6w7CFh9cVwCTIBWJGr+V+5QEK09
-         j7lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788378918; x=1788983718;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=I1NZ9ZHcDjrngsqR4bYoxHCsiDBrtNaJ+UNE7jVFBRE=;
-        b=qXg4G/i8/IZDS/hjT4bsgbjgqcydYQXrEuL36m0sm8DCaS7ej6uXAZnl+gEX+A7QW2
-         hqFR0xWyqbEKmAFtN2CgAyKImESBDd79mFp8zh/dkuR0PQUqddtUB7U+UEk/n1vXjkDo
-         p0kqROolp0rhnO77wI98tHfQDi23/BOCiJ2yMDtp39PrduXujFka9K7w4q/1tfWYbzYL
-         gTxhIBoaC8qEUeHU5Z53tvp8v46GIb7SA8NdPwv++w4GsOQNAFSFvpQh5vHKNwNlcMl0
-         hj+BGe1culXgKSCBS8smwqrwLIg27IOpQoqjq1ubmbV/waVMHkWbqPm8zs5vi1OZaQo/
-         iaVg==
-X-Gm-Message-State: AFuF++kU+mBrAGh42k14DbCOeG7y7TThHUMyQN0zkDajQxEc2/NtORGo
-	og+lJLLWtYy/DTQ69f0yi61fkqLvHhIWfHQIA1Obe8yB56r5cqh7iBDbPX/TyFDqHAg=
-X-Gm-Gg: AYBFou0sBb3ynqCsOU50dosws9s9GTmQBnVielQu3zuDsyBfpe5H0rjykJgQBV5S+Je
-	S3QXIiTmSTmiGRh6T5x8HGGXFHumqo0VgL3hW0Xw+AhBogJ1pTgT1UD+MsRbr6oEFi3g6yHZ1ew
-	Gk9YGtnxV6BYhA4BpkfLaL0L31Ckyn9Vyn44StZXsTpJNt7nWrbKTxC5PYrelHOYuagsT1Pha9h
-	1V8pVvIvVpy+FauCccy+94YXRlr2vPu4WP5IsvKlNIjeoVvI1IFJrgIOFY5IOjrCCoUt7CS7WgY
-	f1zmLgC6BF6jXTsljGArVEQoKsT6IzqN81TAjJhjpAQJT1yBiAgGSAYNiKLQs1uauet1BR/P5LZ
-	2pbLssaBMvlRfrXeio7NofSuYzpA43avKCDvpiNq7ybEEi11EeW8KPyrIpCfUaVxmW71Q2Ewf/i
-	+IT7U8sEdPtrUcxf9Dm9OU6HWzcW+ubp7Uz61NtdjCQqOHdqlbcTj2lL3wSyjLRhA0rQ3Stsj3S
-	Reer9JoHQZAd1CrEjpGIPE/iLy+bwbQUOAQu/4rusFOmc7ilq+QNbOh8yV6
-X-Received: by 2002:a05:620a:148b:b0:939:6de8:43e2 with SMTP id af79cd13be357-9396de845d1mr170355585a.47.1788378917712;
-        Wed, 02 Sep 2026 12:55:17 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9395f187083sm295334485a.15.2026.09.02.12.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2026 12:55:17 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	david@kernel.org,
-	osalvador@suse.de,
-	akpm@linux-foundation.org
-Subject: [PATCH] mm/memory_hotplug: factor out node_is_memoryless()
-Date: Wed,  2 Sep 2026 15:55:07 -0400
-Message-ID: <20260902195507.88655-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmQtNuPI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308571F00A3A;
+	Wed,  2 Sep 2026 20:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788379706;
+	bh=ZHRDvVJJhbtQyBNBX3i2D7FGUbLbTIg2kepPNfBdFdg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZmQtNuPI05Ver2/AKa2lAucOJcjVu/p5AVU3rWiW7655GgxqqhZilGJIF2zwWXwy0
+	 If+zLxzBjN9UV08YOdF2keAVXx7Jdzt8TIhosee5+2i41TIXGthBJSk4AyrDnsMqdu
+	 jfWwJUeYky51fe7R4IbGHVZWA8D4GJbjnIJ5zpjlTtv1ucGqkfIBGm69uTpRWJas8n
+	 LCkonL1YWyCA1wzIGYIzC6+Go46fdlZHkqfyWPIKj+CqrZSE+E1GAHpLD2gRp0bETj
+	 H0KSb3JNBA2RkDX92DTEG1WPfp0X83OMFp3HgZ3N8MFwh1/5nBgTdNJBNOShokmi1t
+	 e16kOajdwd/6g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] mm/memory_hotplug: factor out node_is_memoryless()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gregory Price" <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260902195507.88655-1-gourry@gourry.net>
+References: <20260902195507.88655-1-gourry@gourry.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Sep 2026 20:08:25 +0000
+Message-Id: <20260902200826.308571F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+
+New issues:
+- [Low] Unused function warnings when CONFIG_MEMORY_HOTREMOVE is disabled.
+
+Pre-existing issues:
+- [High] Data race on `node_spanned_pages` between ACPI CPU hot-remove and =
+ZONE_DEVICE memory hotplug due to missing memory hotplug lock.
+--
+
+commit 239875f97a26527846083c3d6ab82ee6b800ce0a
+Author: Gregory Price <gourry@gourry.net>
+
+mm/memory_hotplug: factor out node_is_memoryless()
 
 A memoryless node neither spans present pages (populated or ZONE_DEVICE)
 nor has an offline-but-added memory block still linked to it in sysfs.
@@ -85,98 +68,79 @@ Pull that into a node_is_memoryless() helper and pull the existing
 check_no_memblock_for_node_cb() helper ahead of the add/online path
 so it's clearer what is happening here.
 
-No functional change.
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 226ab9cb078ad..d0e94057682af 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1491,6 +1491,36 @@ static int create_altmaps_and_memory_blocks(int ni=
+d, struct memory_group *group,
+>  	return ret;
+>  }
+> =20
+> +static int check_no_memblock_for_node_cb(struct memory_block *mem, void =
+*arg)
+> +{
+> +	int nid =3D *(int *)arg;
+> +
+> +	/*
+> +	 * If a memory block belongs to multiple nodes, the stored nid is not
+> +	 * reliable. However, such blocks are always online (e.g., cannot get
+> +	 * offlined) and, therefore, are still spanned by the node.
+> +	 */
+> +	return mem->nid =3D=3D nid ? -EEXIST : 0;
+> +}
+> +
+> +/* Caller must hold the memory hotplug lock for this check. */
+> +static bool node_is_memoryless(int nid)
+> +{
+> +	/*
+> +	 * A node still spanning pages (especially ZONE_DEVICE) is not
+> +	 * memoryless.  A node spans memory after move_pfn_range_to_zone(),
+> +	 * e.g. once a memory block has been onlined.
+> +	 */
+> +	if (node_spanned_pages(nid))
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- mm/memory_hotplug.c | 60 +++++++++++++++++++++++----------------------
- 1 file changed, 31 insertions(+), 29 deletions(-)
+[Severity: High]
+This is a pre-existing issue and was not introduced by this patch, but can
+this lockless read of node_spanned_pages() race with ZONE_DEVICE memory
+hotplug?
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 226ab9cb078ad..d0e94057682af 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1491,6 +1491,36 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
- 	return ret;
- }
- 
-+static int check_no_memblock_for_node_cb(struct memory_block *mem, void *arg)
-+{
-+	int nid = *(int *)arg;
-+
-+	/*
-+	 * If a memory block belongs to multiple nodes, the stored nid is not
-+	 * reliable. However, such blocks are always online (e.g., cannot get
-+	 * offlined) and, therefore, are still spanned by the node.
-+	 */
-+	return mem->nid == nid ? -EEXIST : 0;
-+}
-+
-+/* Caller must hold the memory hotplug lock for this check. */
-+static bool node_is_memoryless(int nid)
-+{
-+	/*
-+	 * A node still spanning pages (especially ZONE_DEVICE) is not
-+	 * memoryless.  A node spans memory after move_pfn_range_to_zone(),
-+	 * e.g. once a memory block has been onlined.
-+	 */
-+	if (node_spanned_pages(nid))
-+		return false;
-+	/*
-+	 * Offline memory blocks may not be spanned by the node yet, but they
-+	 * link to it in sysfs and can be onlined later, so the node is not
-+	 * memoryless while any remain.
-+	 */
-+	return !for_each_memory_block(&nid, check_no_memblock_for_node_cb);
-+}
-+
- /*
-  * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-  * and online/offline operations (triggered e.g. by sysfs).
-@@ -2214,18 +2244,6 @@ static int check_cpu_on_node(int nid)
- 	return 0;
- }
- 
--static int check_no_memblock_for_node_cb(struct memory_block *mem, void *arg)
--{
--	int nid = *(int *)arg;
--
--	/*
--	 * If a memory block belongs to multiple nodes, the stored nid is not
--	 * reliable. However, such blocks are always online (e.g., cannot get
--	 * offlined) and, therefore, are still spanned by the node.
--	 */
--	return mem->nid == nid ? -EEXIST : 0;
--}
--
- /**
-  * try_offline_node
-  * @nid: the node ID
-@@ -2237,23 +2255,7 @@ static int check_no_memblock_for_node_cb(struct memory_block *mem, void *arg)
-  */
- void try_offline_node(int nid)
- {
--	int rc;
--
--	/*
--	 * If the node still spans pages (especially ZONE_DEVICE), don't
--	 * offline it. A node spans memory after move_pfn_range_to_zone(),
--	 * e.g., after the memory block was onlined.
--	 */
--	if (node_spanned_pages(nid))
--		return;
--
--	/*
--	 * Especially offline memory blocks might not be spanned by the
--	 * node. They will get spanned by the node once they get onlined.
--	 * However, they link to the node in sysfs and can get onlined later.
--	 */
--	rc = for_each_memory_block(&nid, check_no_memblock_for_node_cb);
--	if (rc)
-+	if (!node_is_memoryless(nid))
- 		return;
- 
- 	if (check_cpu_on_node(nid))
--- 
-2.53.0-Meta
+The comment explicitly requires the memory hotplug lock, but the ACPI CPU
+hot-remove path in drivers/acpi/acpi_processor.c:acpi_processor_post_eject()
+calls try_offline_node() while holding only device_hotplug_lock():
 
+drivers/acpi/acpi_processor.c:acpi_processor_post_eject() {
+    ...
+    cpus_write_unlock();
+    cpu_maps_update_done();
+
+    try_offline_node(cpu_to_node(pr->id));
+}
+
+Since ZONE_DEVICE memory hotplug (via memremap_pages()) modifies
+node_spanned_pages under mem_hotplug_lock() without holding
+device_hotplug_lock(), could this race result in a NUMA node with active
+ZONE_DEVICE memory being erroneously offlined and unregistered from sysfs?
+
+> +		return false;
+> +	/*
+> +	 * Offline memory blocks may not be spanned by the node yet, but they
+> +	 * link to it in sysfs and can be onlined later, so the node is not
+> +	 * memoryless while any remain.
+> +	 */
+> +	return !for_each_memory_block(&nid, check_no_memblock_for_node_cb);
+> +}
+
+[Severity: Low]
+Does moving check_no_memblock_for_node_cb() and node_is_memoryless() outside
+of the #ifdef CONFIG_MEMORY_HOTREMOVE block cause -Wunused-function warnings
+when CONFIG_MEMORY_HOTREMOVE is disabled?
+
+Their only caller, try_offline_node(), is conditionally compiled inside that
+block, so these helpers would be unused in builds without it.
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902195507.8865=
+5-1-gourry@gourry.net?part=3D1
