@@ -1,47 +1,47 @@
 Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010068.outbound.protection.outlook.com [52.101.56.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC400388382;
-	Wed,  2 Sep 2026 05:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BBF388E64;
+	Wed,  2 Sep 2026 05:39:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788327586; cv=fail; b=f993NYiafiB9NKcva89vbuCLP1N7h0y5h1+ubcd/umVO3wYSZM8DNUpIOBK5VktRdoZvUdsl10pzQUPQozQmuzIssGAB7mDyAfQ2hpE7PCthc+xG4YaEKqVn031hgoAkUfreSddSZ4x4boHweBvnQNSUjrFN3Cjb8al05TylBCM=
+	t=1788327588; cv=fail; b=Qurk9l4rrE1gQm0WZb+vt6V6YdyB/I37D+/FrIrbdlJGX1SqBWh9QUyH+CluJHwPDkmZ9wJ05WxzFzZaTcwPOrdeKIp/uUqMDcP4ZjzjYzcrzSKoysg1b/fj243AbaJZyaNaip7iDfVsPWYOY64yIrS579rYCEWxFiPkrafleHI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788327586; c=relaxed/simple;
-	bh=QFn0C9ecIygFtCskeh8GPRleJ/gXkBsR3NqjGNtHhMI=;
+	s=arc-20240116; t=1788327588; c=relaxed/simple;
+	bh=3M5VehCKhJufdxSoI8My/oXlUB+GUKmWdEA/qHI8akA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Twro8w9zR17KyoSapxzHdhLCjL7Vzw9mCN2idQlyxBnDzpkWvonmkb26idjZkNdpkxeH40fhv56asAJXaDjTtDjej45vJJtU5vGuI0OUDeK7jTFcbnDJkcGVoOt5UY0gJldDT3aYDCO+L2N7uyB/XpLXsy/hS6YPBzzQSDqDcUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=naoBPMBh; arc=fail smtp.client-ip=52.101.56.68
+	 Content-Type:MIME-Version; b=XupisgKxExWFdFjOVWy0FCvw1EFouMIyy/TeCVL0hEBEsmOg41UDFOo2QZqb24RiUphIV2cm+wfYJQsyzGV+IwAuvlzBaHZgRxkYizWlJiVRINAIvenjRbK9Ud/dfw9bzB/llGtUeiVotYIGC3vhcpzbe3Er3eAhep4OlTiHBd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iuR1az0Y; arc=fail smtp.client-ip=52.101.56.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="naoBPMBh"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iuR1az0Y"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=riSg+D5hmhBV172Ht1/MgzGP7GUdtsWXZNp4yEEqiH2dP+F9BKtBtZRHxV7vMEw1kYUXan4TG6OqRNyz1yYzFa0reHP8n5og728x2qsTClRmkgBhYJ2DU+3tVeOuStYXtZLViEzs0ni1ZvOlmBD6iOqPq9ill9xNfZM67B37HP8QT3rti/VLL4fFp5/sEN0EG1TDoWAGUbUtkuGCUhf2w0n9O0DIWipCBFKjpvV9U9A9qFR6flxFyTfjfnzhMcN8+x3MU51QgjH/OABf2/c9nNRtDBSW3b4OGCE+fpxHPieOdWKFfOc928lLiIJfVjdi+m9ChK6Bl1AC97MpJVduxg==
+ b=lFL/9C/jt0S02aXMYhXeY7joeIkkxBFpFxJphRfOOdP/z0UuvwW1hMfpNgkYuAAoBRAdnaIxyK5UZeRT/7OHXcL3ofAZyJsKoAHgGGxRIo5u4D+vST3kl5WwMdJMUg5lO64samUtoWrmyEbtkobS8/pBw9KJq0/s82q5kn1NJ0J7QPg0kG718PoQK/P6EWg4Wq+hghHklt3b7Lx8ff91BWfD1XQwczhseWid5jE3hfVZwzP5fXQ7lWyh+0cC7sZmH/O7Ii92VH3tn11QhSzo7E5x0wVrkhDubb9cyCDMArUJLuLP+LZkPYSGlqhkDobhJttQ0MFZ+Rq6ihyMmKKv4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aff9KhG4BIxhV8dm4JC5lFltV769GZGyGALlPzgW7xk=;
- b=LAmPQ97DNUkj4Qv94KHKsDAQ65bCPNxAucgQiVU45eM05nWO6ZpfHrkn7bYMSSk5adP0dgMo7/wYUBQL1aN4G9i55kDFQWvJ7FIBGOhFn78mpqJT/r40ZFmckBMixQZWWZrCSWX34RFc38AES60X91IMYau21Uo8HOUz12jHc1/9MP1IygCuFXMO6IaQYoIoa9UueMm9qqqt0mRo1Qpkc6ir6+uo04lSp+fPRvEOAz1BGv+K9tqyycw4I5XmnaSlhUeVIm67Vm6j5FvyLKs9k5lwYQvo5vh3PHwdZX82hjBgIH8/yTnlEU1jXJxvW77Kk4lEjr46bU85+lO/CXlV9g==
+ bh=XWayRs9RCIQet9hDEJ593YX+0uEu85lDQTQjeC2wJws=;
+ b=AXS5kXt2g992UL1/KQxlU8D0TlpQypguflEOoh3YgeLTJEn0VOZqi/1hzLCTFje4ppaJfpyz0+kJTg2EbchR0d070SjAZ74N76ff+AtN2K7alOM3bfZoReqhJyvIhvzfSZI8aHX5LNhXn2iK/JYZdoe8/Akbolf9VVgIH00JtfXTB4/QwuELDW4oKst5ArZIWOiI7o94Z6enUTlcIPqqaYiqnOf7TBNHw4X6O8mPEv+IIeyaexK/kPjWQg6vgmq9aGsdWj89jAPwbbTCxdDnTRxm1CY9MbE3zWLK4tyij2e6XWpPc0y9oZxf5q8eVT8wAge+7ZPHyOYVgMA8J8vcJA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aff9KhG4BIxhV8dm4JC5lFltV769GZGyGALlPzgW7xk=;
- b=naoBPMBhB/AEjg9K8SOLvvHdbZifdiJb4+w62bdSaAX+Of4O9L5E8lTjQSZq6VGTe1ZVP6Y1fAXLDoSANFktf6l8ZQ3SWsaSJeu9ML2EdiAHXjfFQfTiNFq6gmwUGCQac9zkJ99NyPKtTJdaWMJsdmweyieT9KAaq9XBm7bYO0JU/2Fg88tEX5XWfedLKy2hMmkzonQN0w2dntmDu0F3psfRYdR/0661PWPlJ36xet4woRFnqtxuMzsKIpJLYS4szJTi7TkkDSihelMt6PF2rWoY/p+0aGhye6gqVc1e2YZbzMI53Z+AfHkKGE2KrjOm5figI8kUOkSItKnBdKcVtg==
+ bh=XWayRs9RCIQet9hDEJ593YX+0uEu85lDQTQjeC2wJws=;
+ b=iuR1az0Y/ifO1v0ph3Dv8JRtmDdu2aijBHP3HpaLHKgerI279rFMRLHtWdqY9bovyjxVa6SHrGg5Zldp6oQ0qK2n3wI1MmaVFAomF4cL7lgvUxGW21tRYUyhfi7HofAF9toRCuaxXxdoc7fN/CnErHNL6iWZ8WV5TKvhLjyCdWXphoF33yW21dBvW7vvZ61xCpg/jyNv4M7NSV9bQmJz90tF/+LexN3PNIGpjXXoX9rVl9wGUfr2XbSUQdjTCbYAR46w09ghV4lIOeRAhNUR03aEaucyN/vSJTFp0yElUVUIFV2nuwbyb9366LgDnc+Av++QwTz+G4j0lUJNJGhmMA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
  by CH3PR12MB8712.namprd12.prod.outlook.com (2603:10b6:610:171::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Wed, 2 Sep
- 2026 05:39:33 +0000
+ 2026 05:39:39 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0360.008; Wed, 2 Sep 2026
- 05:39:33 +0000
+ 05:39:39 +0000
 From: Richard Cheng <icheng@nvidia.com>
 To: dave@stgolabs.net,
 	jic23@kernel.org,
@@ -60,16 +60,16 @@ Cc: iweiny@kernel.org,
 	kaihengf@nvidia.com,
 	kobak@nvidia.com,
 	Richard Cheng <icheng@nvidia.com>
-Subject: [PATCH v7 6/7] cxl/region: Reject poison scan for decoder without a partition
-Date: Wed,  2 Sep 2026 13:38:38 +0800
-Message-ID: <20260902053839.25595-7-icheng@nvidia.com>
+Subject: [PATCH v7 7/7] cxl/fwctl: Propagate feature RPC delivery errors
+Date: Wed,  2 Sep 2026 13:38:39 +0800
+Message-ID: <20260902053839.25595-8-icheng@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260902053839.25595-1-icheng@nvidia.com>
 References: <20260902053839.25595-1-icheng@nvidia.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0012.apcprd02.prod.outlook.com
- (2603:1096:4:194::7) To BL0PR12MB2370.namprd12.prod.outlook.com
+X-ClientProxiedBy: SI3PR03CA0009.apcprd03.prod.outlook.com
+ (2603:1096:4:297::17) To BL0PR12MB2370.namprd12.prod.outlook.com
  (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -79,85 +79,215 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CH3PR12MB8712:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84974e61-32c5-4d27-e65b-08df08b490dc
+X-MS-Office365-Filtering-Correlation-Id: afca5250-15f4-48e7-cbd5-08df08b494a4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|23010399003|376014|1800799024|366016|6133799003|56012099006|11063799006|10067099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|7416014|23010399003|376014|1800799024|366016|56012099006|11063799006|10067099003|3023799007|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	L+FdAvTbxcY0Mhf4Lxv/0vIjv7eud78rlXy9PL0ojDSPP/5V1hwSzyNhWf2Gtmwu2va2fTSnxz6qoNjK0zsJNpI4U7273LHA5AtWvzXAqrNwVC8YoEaknkFWwaxf2E2GMa1rHaFkBsIy4669H6SQ5DShflFEftY2pG+TlLVqyPqZAxNO2h/Xt5CPCPkzRCKw3qOTR5YCK5niq6D5W94dXdYO32Y3xLohMpfipoeiX0cxMLEs1VYvTUezBptvUk3U5YZeMxfHbTMLYUL5hHydHMKbSGN1U31vkStRpgrJ55zGQsvLSwHuELstr2EnMYCZvwWZnkRlWRDeGDRVzs2X1MeLNQxYHD1++g2rwKs10LVr/gSfqd1hJl+c3qWZDW6HjmvHRBXaNEDJIyUv/IM7vCNi+vAKbAkwWqRkQXK3VYsS2T17NcomNwXJ3gZrAr0MhL+VBl2qH6IWRZCG3LUGcWU5mydqi8tQGxbdr/pybIoUeVFQN2foXVRulfYSTxoIrwQGOvlM1+lFvhPSwe5Evhsz3Ta0CgDJVuqoc1lvPvs34SDZ1caLu4X/9yjQNcksucOdpHJi+cvNiEMJgf9ZsfcLqWVXwIscUJs2e2LdB5rAZyV6zubr1wS7gmf9TN+B5uTmQKx36IK+KlZSOgG5ZvRhxwvA5vUAIZrTqLxDyMw=
+	5yAbjUWG/zn8+t0bEGuw6wSS6EbzOS8BP6RW2swLye3DyvWXTd9saPvE80TkvArC6KLZeWSSV0Yyl8xAgsUimTm9krOpAmukxLWgZOVIbNu60o/2hg8Y2wXRoVH3gOtrmskxaxsgi462a97L8vrWCpnCzLYRtczVILN2VmRRo5IouuTUDGD21yBKAo1x/uAX75UTXbBGYy4nFNCcpbJAWFFzP8kml8IzM1mvcxUEbvimfckWYE7iiE7D52vDNYW7tPpOtal3VNGnjANJ0RD3WrtywRexqiJOlwMnjOK0afnYxbmcQhvSCnT7QZrB8hPz8yzx6TSyACaIIZWOzVTrgvu0h9q4mTkuEfOgFJFY83lkm+9P6XQs0HCEGH/2QDWYqzMAu9ZwjA/Hu2zXOhOe8qPxFG18hVlPrwZDo98NUHZC4WL7Ih5dMtWbjotPdxylf4iVnIiXqvBvt+PgcjfnIuhm3LDegoJD+W51Fd5fEbMzgfHxIv8LE8cD2ZNCJNwjp60y60+4SgtvZw/Xurd1+8qzLRmULL8+2bRgqckO4M2cuaukc96/E5Lr45+Sh6IjSH+UAmNstAGqYmNllfqtKHE/G6Egomc6re1EX90SwbcX42QprYOdwERnMXNt+HFbnxECi9Qo8cDQWn5HYBe/5FM8QZPBW3hbR5iR570KIKQ=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(1800799024)(366016)(6133799003)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(1800799024)(366016)(56012099006)(11063799006)(10067099003)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6Lm/+xkf8VOS29Nu5qZSNVcO0PLyw49A96nk1Qkk6FfA7YzPL+0bs971k66l?=
- =?us-ascii?Q?ABRvwTrngGERw56PnVmzuYwKkkbftnv5oExxU8BSPB+U6u9TFf7s6EzmHOAm?=
- =?us-ascii?Q?dpwHgnFavHN+qqJ3ZGU2IBR9pUfgbC0okvcuo1IOtcUUWiEhbHElFLHnnGG9?=
- =?us-ascii?Q?kJTpmwsMEvUv4B7kNbvrhX2raD7pwH+ynz90IkJeRRi5W38f34ap5h1UUQPA?=
- =?us-ascii?Q?l8ywpjZ8M1upgRr0uJ20EDaLfLWsr9Y+4LoMT4oNaMQcjJCTpmHntOjuRb4L?=
- =?us-ascii?Q?cZCNmtqnmb6m0V1e6ILir5IG0lH5QyYQLdmPCgwtYl+X083njhGN185YZRV3?=
- =?us-ascii?Q?jW4p/Z8P0q9zpcn+vnvOrlksVqu0jOuzGi+SvANozc1mmsNNBsgUffVPRLyr?=
- =?us-ascii?Q?0Wm5eL80MPgMoruERNZAhN9SnF7B9strtbHEZe85ECEG9iUApH+Y2ZeP/KNh?=
- =?us-ascii?Q?tYKOudTs9IGz29bBzyjYd4ETzmkIHeHTwvut9azbhj3At7uKhAV8Y9GoKgGo?=
- =?us-ascii?Q?E1ka8U8e+ucBtgbzvzmktVAu/t9zcX5ea0bUJyQsyr+sxCu6pHYD8jy6+Rdz?=
- =?us-ascii?Q?nbKlk60Q+fEM7Rp7ckj22iIBA4Gq9BNlfqKssnLgnGHwtMvv8dfdZ9+uXuXf?=
- =?us-ascii?Q?ElbzIofKgKY4nOWljoxeVJ4uFqtxqXmhLJjpgfj8bcpHgZi9T+2b8YMIxFCP?=
- =?us-ascii?Q?rb1ITG1mIeLRg3ZLvA2S4x5eazN3kis6H6S081vYq1b8ZmXMy7VEZ7gG4ruK?=
- =?us-ascii?Q?QDw3r6WMhVBQ9d6Td8w1Ljfvg0fh3yjtQmpmkyyslEKTNzW1CLisbQpscz/t?=
- =?us-ascii?Q?1jff5ETWwQy3jVK4rTehrwKffcn8HjCmiwjP6AWnsllr+qjbdn7YdsuP9qAk?=
- =?us-ascii?Q?vl9/9uquLhScPSXsRdCOBAoONzpwwn4vsAVE7kxRNSQZZ193A86+Es21ipm2?=
- =?us-ascii?Q?SMB0r0PVFCb1bE+Nkijt66uCUXWY/9nS1dq3F7fn3s/lmf7FkYlWHD/kvNK5?=
- =?us-ascii?Q?avKTbdLeP7t426LAT6EcRlTr+RYfHa8/B9LTxRk3Uh9NaK4ivbbC6WlkAint?=
- =?us-ascii?Q?mGtOkiqPHg8xM1Q5iQL80ZID3xC7Xdoz4qCBnmyGZ3otGRewYbdfU8zMNGgv?=
- =?us-ascii?Q?f+dRFs+lg4HJQphrc+3/f9LNwRxlHdtMLKpOeSR0JgdB03I48lCP2OsXhSUP?=
- =?us-ascii?Q?XbGQkQV8kYXW/vLRzQnWLBLHJFlOkQ8in7Wppx27p6Ic6HOoPm7EiFJxJtO/?=
- =?us-ascii?Q?1/5fLhIaFAEg4t0xkF66JQFC+G89mLhTpb1Fe1vBSPdNsAA0saaKAaaGdoUC?=
- =?us-ascii?Q?Ur96S8ExyNxDBrjAcKJJfuI6i4vG0Yw0zsW22466kCQkiExF90WCLjl+JPgr?=
- =?us-ascii?Q?I0ZJU/GSoZD6RdX2PYB3kKi5bJHmSLKA687X30r3HU8910n0j8+02SSMRPC7?=
- =?us-ascii?Q?sfXKSb3G42t5ySFxlcT9fDaHSPf9qtpMeOw0QOZUyIsK6O8aJFhGrgRUEY/5?=
- =?us-ascii?Q?RORgQhi1iQsoC148BKZ34SJ2Gb+XellOIG3n8PybBESZ2/spadP32SsnOuIY?=
- =?us-ascii?Q?wk5ITOg963GRorVs6EiLu6eQQD2/R69q735NlmCwsCXZo3dxto7gY6cjQhx5?=
- =?us-ascii?Q?3otlxrAU6ooYdJp9CGByWrazrlWinPCe+mGqHy+6+D8KSmf+0tf4CY8JxYtX?=
- =?us-ascii?Q?lfiQu0A7swBRz1a5MJXgy8Pq1vH+cDUQPBcSsBJf87tSNbtk?=
+	=?us-ascii?Q?j6Ax7CufXbp64fQYAIek8B4dnPD6d2qOc0MC4BEA78biNuT15ZL2KbW9LXMW?=
+ =?us-ascii?Q?Y5fOgv0/dsaHFuG9/TXDMdVm5fKjYse8wVp3oI+VX+xuuDmVZ8N55CsNJupF?=
+ =?us-ascii?Q?MEGT5ofnRzFjXsFccZ/6j9DsrNMwDvyTUmGMmmSAr/7UEYUihBc5r7V/v+Zz?=
+ =?us-ascii?Q?DyAhkJ10ZZljlspF89bwQ5XPiH93Nr3NcNGDYeTVi7IrARsZVUGCtP70nsqC?=
+ =?us-ascii?Q?GpMBP0RsPDsp/HDr0TgnEjLO/rZ5CGY4LZRQlXKF/3+e5yNi5zqPx5lQXUog?=
+ =?us-ascii?Q?tjAdayaL25sLq0p/h1p7DTvWgP98Iu9iQP1AC7BywbtxrZoA6d82fUOGt0xm?=
+ =?us-ascii?Q?WkN+bSG9sg5PkYWsnKowPR7TA4QcNt9FqgeeYQMq+b4hsTwShlRtadwqtURj?=
+ =?us-ascii?Q?flD+2nbxfRkXh8qeBhOxjDgLGVCEzpDaD/RFirLS6xfJYTGAZopgnoUTh9/5?=
+ =?us-ascii?Q?iy+e8dXsuJi5wFrTJ7Slgkd/i1ttnd0hXrfPyMyn0iJyihNMwmVT/KTFIfQq?=
+ =?us-ascii?Q?vIf7PdWx9WTgBZJjCMK4zafF/lh8fd911+6N5AcLTlirgkAhSXDdzhQjzXHv?=
+ =?us-ascii?Q?wXsC3/0Drx42jKvSWcYVA5WNwmgn0wlKnGX1x9MuhFlL4ArDnAxsEChLy4x0?=
+ =?us-ascii?Q?cptS2h7tSyMEMxtbvWr8dBuT1EEQ4pc1P0dN2a5WxXIjqLzSnm+Ozi0/4b4S?=
+ =?us-ascii?Q?LkfpeiBqnCmB1q8v6NPLFp5T1BoAeAs+/KRYstjHqQ3wYGcbBUBb0z6Wc3Ex?=
+ =?us-ascii?Q?ykkAWKnXhoSO2+P0a+SEjmdq2fxPM3eXbpMw5XmmeErZ12JXLaDvHBAfWAWf?=
+ =?us-ascii?Q?5SQsszF0tZzWSjaBwdzlL6CN1fSx8k+6ohlIjglwmPUr8IJmXWtBawJctJr4?=
+ =?us-ascii?Q?tYL4eiI8HWN6nNYa/clx15IBmDiEa2XWy7XK9Et0VFpo2PLHIm2E6hDVfmek?=
+ =?us-ascii?Q?RGFCXE7eM61vTVpW03GdU1D43/QP1M5aDNinA4x+tUfmm8GQoa8Fln9tkmk/?=
+ =?us-ascii?Q?7HXv465rT2vC4eHykO2ns9fji7npu5GxOP2Bt9NiedyxAhI4vzDWNYWd9Oly?=
+ =?us-ascii?Q?rsfXmZaUuCupOjpBYBN1l0GXJ9V02CeUGYNcG9+OdLf6KOWN0ydXBZPJ6sQy?=
+ =?us-ascii?Q?fTNqLOsrkGFfmHGLBvYDnlwS1+rUs1q9rIxgIqRrKe0+d82ngR6TNZUCUZwN?=
+ =?us-ascii?Q?DHAkLHN3WeR1PzD2nCX/rDLlbKfDn4pz2XyGtAcETIGCoNwaNNzd2vpxEMpu?=
+ =?us-ascii?Q?QMV6h/SYudzyGcZ+4HAc3jxj62P48O9GwlCgxXDtlJTHQVu5o7bm0Q3k/0YJ?=
+ =?us-ascii?Q?nx1Ic0ELinPpRHBzmtghynWF6Q7uE6GF1PGmT4M7Jwnb17pn8y5yT2vwsI9q?=
+ =?us-ascii?Q?B9xp4f7jxoQYtkLM7cS6RU4EXGk/BNiUA7MFP+6hbCh6WVk58t9LLMH5VYXe?=
+ =?us-ascii?Q?QOceJfMFw7qjiBfN55tNwdA8YlOKhBYV4XoWmullaWMIC/JtmW3gUiqxjOmk?=
+ =?us-ascii?Q?CfKZoJs+424gcswEPjDQQ8AyyXLPZHABUlhwxdv99W+FXTjEVofddogg5ZVl?=
+ =?us-ascii?Q?VXUuvgrJVTWQZ6VbWY/lYqEYYNEKQD82UZMUjRb2NeOPDclb54cZt9kwVw3Z?=
+ =?us-ascii?Q?ZF+7yB2UlbyX0NHAaojidE79LXqXTW193WsfSBKJba4DW4xfxjEAvtD9vLQf?=
+ =?us-ascii?Q?BJjukgvxTFKVq+Jfd6EZvpy/aR2uTdtfoZDKJ/jvuXzGtCys?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84974e61-32c5-4d27-e65b-08df08b490dc
+X-MS-Exchange-CrossTenant-Network-Message-Id: afca5250-15f4-48e7-cbd5-08df08b494a4
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2026 05:39:33.1710
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2026 05:39:39.6981
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SsaJ3SperrqwPNDBseatqYKFKZYPJh/5kYMzkNF4DPT6ifwn4HQuUtEk4MBlNoqQL8zME5RSMO4oz9rirmQ56w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4yJU+5Osqz7yulRvKreCs8dZogHkK72zkamt0Xhi9rSG5wr2xVpGgNz2wp6Bv14dAPVeK6YoYzFyEPqwGRwHFA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8712
 
-__cxl_dpa_reserve() may leave cxled->part at -1 when a decoder's DPA
-range doesn't map to any reported partition, while still keeping
-dpa_res. poison_by_decoder() then indexes cxlds->part[-1], causing an
-out-of-bounds read when poison collection is triggered.
+FWCTL_RPC requires delivery failures to be returned as ioctl errors,
+while device errors are reported in the output. Get and Set Feature
+instead converted all failures into normal responses, sometimes with a
+SUCCESS device status.
 
-Return -ENODEV before accessing the partition array when no partition was
-assigned.
+Initialize the return code to SUCCESS. When the helper fails without a
+device error code, return its errno. Continue reporting actual device
+errors through rpc_out->retval.
 
-Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
+CXL permits Get Feature to return a nonzero short payload when Offset +
+Count runs past the end of the Feature. cxl_internal_send_cmd() reports
+that response as -EIO, so preserve the returned bytes as a successful
+partial transfer. Fixed-format EDAC callers still require complete
+attribute structures, so reject partial payloads before consuming them.
+
+Map an unexpected zero-length result with a SUCCESS device status to
+-EIO.
+
+Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
+Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
 Signed-off-by: Richard Cheng <icheng@nvidia.com>
 ---
- drivers/cxl/core/region.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cxl/core/edac.c     | 10 +++++-----
+ drivers/cxl/core/features.c | 28 +++++++++++++++++++---------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index b7dc5d4988da..afe3fb57b7fe 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2954,6 +2954,8 @@ static int poison_by_decoder(struct device *dev, void *arg)
- 	cxled = to_cxl_endpoint_decoder(dev);
- 	if (!cxled->dpa_res)
- 		return rc;
-+	if (cxled->part < 0)
-+		return -ENODEV;
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index f1df4b5cfe5b..34b81e8dfbbb 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -89,7 +89,7 @@ static int cxl_mem_scrub_get_attrbs(struct cxl_mailbox *cxl_mbox, u8 *cap,
+ 				    rd_data_size, 0, NULL);
+ 	if (data_size < 0)
+ 		return data_size;
+-	if (!data_size)
++	if ((size_t)data_size != rd_data_size)
+ 		return -EIO;
  
- 	cxlmd = cxled_to_memdev(cxled);
- 	cxlds = cxlmd->cxlds;
+ 	*cap = rd_attrbs->scrub_cycle_cap;
+@@ -567,7 +567,7 @@ static int cxl_mem_ecs_get_attrbs(struct device *dev,
+ 				    rd_data_size, 0, NULL);
+ 	if (data_size < 0)
+ 		return data_size;
+-	if (!data_size)
++	if ((size_t)data_size != rd_data_size)
+ 		return -EIO;
+ 
+ 	fru_rd_attrbs = rd_attrbs->fru_attrbs;
+@@ -602,7 +602,7 @@ static int cxl_mem_ecs_set_attrbs(struct device *dev,
+ 				    rd_data_size, 0, NULL);
+ 	if (data_size < 0)
+ 		return data_size;
+-	if (!data_size)
++	if ((size_t)data_size != rd_data_size)
+ 		return -EIO;
+ 
+ 	struct cxl_ecs_wr_attrbs *wr_attrbs __free(kvfree) =
+@@ -1282,7 +1282,7 @@ cxl_mem_sparing_get_attrbs(struct cxl_mem_sparing_context *cxl_sparing_ctx)
+ 				    rd_data_size, 0, &return_code);
+ 	if (data_size < 0)
+ 		return data_size;
+-	if (!data_size)
++	if ((size_t)data_size != rd_data_size)
+ 		return -EIO;
+ 
+ 	cxl_sparing_ctx->op_class = rd_attrbs->hdr.op_class;
+@@ -1771,7 +1771,7 @@ static int cxl_mem_ppr_get_attrbs(struct cxl_ppr_context *cxl_ppr_ctx)
+ 				    rd_data_size, 0, &return_code);
+ 	if (data_size < 0)
+ 		return data_size;
+-	if (!data_size)
++	if ((size_t)data_size != rd_data_size)
+ 		return -EIO;
+ 
+ 	cxl_ppr_ctx->op_class = rd_attrbs->hdr.op_class;
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index 8d44ce829497..95f47193fb61 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -232,7 +232,7 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 	int rc;
+ 
+ 	if (return_code)
+-		*return_code = CXL_MBOX_CMD_RC_INPUT;
++		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
+ 
+ 	if (!feat_out || !feat_out_size)
+ 		return -EINVAL;
+@@ -259,6 +259,17 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 			.min_out = data_to_rd_size,
+ 		};
+ 		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++		/*
++		 * Per CXL r4.0 8.2.10.6.2, when Offset + Count runs past the
++		 * end of the Feature the device returns only the bytes up to
++		 * the Feature size. cxl_internal_send_cmd() reports that as
++		 * -EIO with a short payload, so stop and return what arrived.
++		 */
++		if (rc == -EIO && mbox_cmd.size_out &&
++		    mbox_cmd.size_out < data_to_rd_size) {
++			data_rcvd_size += mbox_cmd.size_out;
++			break;
++		}
+ 		if (rc < 0 || !mbox_cmd.size_out) {
+ 			if (return_code)
+ 				*return_code = mbox_cmd.return_code;
+@@ -267,9 +278,6 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 		data_rcvd_size += mbox_cmd.size_out;
+ 	} while (data_rcvd_size < feat_out_size);
+ 
+-	if (return_code)
+-		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
+-
+ 	return data_rcvd_size;
+ }
+ 
+@@ -289,7 +297,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+ 	size_t hdr_size;
+ 
+ 	if (return_code)
+-		*return_code = CXL_MBOX_CMD_RC_INPUT;
++		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
+ 
+ 	if (feat_data_size > U16_MAX - offset)
+ 		return -EINVAL;
+@@ -340,11 +348,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+ 		}
+ 
+ 		data_sent_size += data_in_size;
+-		if (data_sent_size >= feat_data_size) {
+-			if (return_code)
+-				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
++		if (data_sent_size >= feat_data_size)
+ 			return 0;
+-		}
+ 
+ 		if ((feat_data_size - data_sent_size) <= (cxl_mbox->payload_size - hdr_size)) {
+ 			data_in_size = feat_data_size - data_sent_size;
+@@ -492,6 +497,9 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+ 	data_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
+ 				    feat_in->selection, rpc_out->payload,
+ 				    count, offset, &return_code);
++	if (data_size <= 0 &&
++	    return_code == CXL_MBOX_CMD_RC_SUCCESS)
++		return ERR_PTR(data_size ?: -EIO);
+ 	*out_len = sizeof(struct fwctl_rpc_cxl_out);
+ 	if (data_size <= 0) {
+ 		rpc_out->size = 0;
+@@ -544,6 +552,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+ 	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+ 			     feat_in->version, feat_in->feat_data,
+ 			     data_size, flags, offset, &return_code);
++	if (rc && return_code == CXL_MBOX_CMD_RC_SUCCESS)
++		return ERR_PTR(rc);
+ 	*out_len = sizeof(*rpc_out);
+ 	if (rc) {
+ 		rpc_out->retval = return_code;
 -- 
 2.53.0
 
