@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7FF4A6CF7;
-	Wed,  2 Sep 2026 15:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91BB4A5C3B
+	for <linux-cxl@vger.kernel.org>; Wed,  2 Sep 2026 15:38:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788363462; cv=none; b=SlSRI0vJduamo6oonFETt6mKrxMIiWthH3IR5Jdrp2oYuaspd79oj0e4KM29Bvnki0+RvKt1T9xo3IJJl3qwXvMrG7v2k1vxcvtioMdWkEQpDuHx5NAtfTNlvmJxoSTaCrmGtLKUP7nvcXTG9AmBZyl92wtWjkFZhmBcVokwss0=
+	t=1788363537; cv=none; b=rpmXlxkfi1pI4DES6O9rW/K/RRHfXuj0CNF30rQQHzSCNbkQTtvce6y0m3Iva3nFY/uvkXGU90c4My+rlWvc0K1TW7jIFc30ZNR126Fzx00ixS/Ug/V7q2ShsP8cSY/x1Ghf8VXkQeg7RlwBUUgRod4jDrrjnyhU/6g+2objrmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788363462; c=relaxed/simple;
-	bh=+HmhVsA9O4QqWJ4nFtIsTdMAlBYBl/2H21MqPcG/NZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3iBPK8e0TajW2zTCEorfWoHmv2UGLu/TlIa13BFLsEpBEQ67sW+XKfgWWTjJoE/UYEqa25eIdbSW40KUJqw26YPSN17JqXEFadFRty72RqtQgzjcyT6OhJhEstNAx+NgD2WItPfCFMgFF9iVbCQfYhtU3xf9IzrA4126Mb/T2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPXC/Zk1; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1788363537; c=relaxed/simple;
+	bh=RAdaQMC02UZ8M9q3kLMms+I0Fi+k/Q4jqE+pb90qMjA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TFofF+/lY9I60CF068l5tLXNa5zDv7tA7s/p6io+vCe5Akq52xme1MxAKRet3ZJ6kVAEcRhH9vQvlztleHFbENH1ckpXF3Johw+YJxMOqnljCNq0JoCVmMNtZffWpY9Gx4t2NzKw/RPBKuLlMPoHD8FQCyPLFcNyg6wN/pbuo5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmyPWKzb; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPXC/Zk1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmyPWKzb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788363453; x=1819899453;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+HmhVsA9O4QqWJ4nFtIsTdMAlBYBl/2H21MqPcG/NZM=;
-  b=lPXC/Zk1sOHxmRcAEKr6IgjDZ5z1ZHNxNWNkIiG8vkvTVbgsxoBoCfRC
-   81jJ8GXNbslBMF3X/8omhSXfb1Q/yw4M/QZRCRHphjy7x1Vqib++Xdi74
-   SKWqWQc99AkXw0BgXprpEqULV56GbT80NR8ZziXveMAegw2LdXRpdQLY1
-   wk5DDYAXudaYhPM2FQq1m4YqVO6mcHLFvgXs4UiQfw3OY6IDkB6M2YfQq
-   insDyS+xj0feAO6dBH//UW7AP7ZtQ0hpsLAx+/zHbPEuypfL31enOIHJJ
-   Kem6yLdEY3dbYDro6lMz4ReksUzGaQW3LT0uBQ/XMhCg6hIthUBdUEZiJ
-   A==;
-X-CSE-ConnectionGUID: X3Iz5hrkQXuhbTFRkGM04w==
-X-CSE-MsgGUID: e6O2CKCqT2m13Z4MSJ6YRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="99425806"
+  t=1788363535; x=1819899535;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=RAdaQMC02UZ8M9q3kLMms+I0Fi+k/Q4jqE+pb90qMjA=;
+  b=RmyPWKzb5k7sXucxv3jxa8yFVbpcke/FF3b6yn17kS19s+C066aGSSrA
+   H6YgRzwKhNJDSPHw29We7PgbbMXhGFmRApDstUS5hCutVtkfFLSP/OKHy
+   U3f2+clA3En8WRFKSrAS8mdRw4BUE5FaEJqh0etVxvtiOvN10e6qwxlag
+   pQwRvzPjNgqEVUKOz5pl7HpIjQzc3RcsFvRmKpk08lTagsNdOhM2gIiLo
+   Hb6MxIo6/3OE1N064P0XHnHVAuYjxZMk34kQMNZy2SlsaHyqk8GJ29Z4T
+   6GO7T6X28DiBIpuImCMm2B7pifTb9Jigth1udScxFDBraZtopPVOAbeOS
+   g==;
+X-CSE-ConnectionGUID: BQwOn7ZXQ8Surm0tfWIMeg==
+X-CSE-MsgGUID: 1GFU29x5T3C5p1doZ2Rljw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="99425956"
 X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="99425806"
+   d="scan'208";a="99425956"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 08:37:28 -0700
-X-CSE-ConnectionGUID: PF+FBMmrTb2+dJxcLQSHMQ==
-X-CSE-MsgGUID: FzkFJL0XRte1K2ZpFfyHRQ==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 08:38:53 -0700
+X-CSE-ConnectionGUID: SGFhgqXYQfaowAJOtEJ/7A==
+X-CSE-MsgGUID: 2Y8U0ZGqR4uF4bYZ+DS2UA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="274718906"
+   d="scan'208";a="274719203"
 Received: from sxiong-mobl3.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 08:37:27 -0700
-Message-ID: <2b60d222-d5a2-4d9e-bd85-8b1ba0f0367a@intel.com>
-Date: Wed, 2 Sep 2026 08:37:25 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 08:38:53 -0700
+Message-ID: <da5d796f-ae5e-454f-8a40-4ef50a9a8436@intel.com>
+Date: Wed, 2 Sep 2026 08:38:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,45 +52,64 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/12] PCI/CXL: Add CXL reset support for Type 2
- devices
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260804192958.1823952-1-smadhavan@nvidia.com>
- <8eedb254-c942-4ee8-ab96-eb7c1ae577ad@intel.com>
- <093e50be-5a43-40c1-817f-bbcaadb3af76@nvidia.com>
+Subject: Re: [PATCH] cxl/ras: Pass the PCI device's struct device to
+ match_memdev_by_parent()
 From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com,
+ ming.li@zohomail.com, terry.bowman@amd.com
+References: <20260828215726.1077498-1-dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <093e50be-5a43-40c1-817f-bbcaadb3af76@nvidia.com>
+In-Reply-To: <20260828215726.1077498-1-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/1/26 10:11 PM, Srirangan Madhavan wrote:
-> On 8/25/26 2:13 PM, Dave Jiang wrote:
->>> Userspace can select "cxl_reset" in reset_method and then trigger reset
->>> through the existing reset attribute.
->> Srirangan,
->> Do we need to consider concurrent mailbox commands while reset is ongoing? Although rather than blocking them, maybe we just need to harden the mailbox path in CXL core so that when ~0s are read we return error and give up? and maybe a reset_prepare() to quiesce things. Just some random thoughts.
->>
->> DJ
+On 8/28/26 2:57 PM, Dave Jiang wrote:
+> cxl_cper_handle_prot_err() hands bus_find_device() the 'struct pci_dev'
+> where match_memdev_by_parent() expects the embedded 'struct device'. The
+> comparison never matches. The lookup always fails and CXL endpoint
+> protocol errors reported via CPER are dropped without a trace event,
+> leaving only the root port, downstream and upstream cases reporting.
 > 
-> I agree that the PCI device lock does not serialize against the mailbox mutex, so a mailbox command could still be in progress during reset.
+> Pass &pdev->dev, and rename the callback parameter to match what it is.
 > 
-> Since cxl_reset also needs to work without cxl_pci bound, reset_prepare() and reset_done() seem like a good place to add this.
-> 
-> I would prefer to do this as a follow-up along with hardening for ~0s read, if that is okay. I can send out a follow up RFC to discuss the specifics.
-> 
+> Fixes: 3c70ec71abda ("cxl/ras: Fix CPER handler device confusion")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-That is fine with me. 
+Applied to cxl/next
+977eaad352ba
+
+> ---
+>  drivers/cxl/core/ras.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index c91db125a971..a2c7c9479f2b 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -70,9 +70,9 @@ cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
+>  	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe, hl);
+>  }
+>  
+> -static int match_memdev_by_parent(struct device *dev, const void *uport)
+> +static int match_memdev_by_parent(struct device *dev, const void *parent)
+>  {
+> -	if (is_cxl_memdev(dev) && dev->parent == uport)
+> +	if (is_cxl_memdev(dev) && dev->parent == parent)
+>  		return 1;
+>  	return 0;
+>  }
+> @@ -108,7 +108,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>  		return;
+>  
+>  	struct device *mem_dev __free(put_device) = bus_find_device(
+> -		&cxl_bus_type, NULL, pdev, match_memdev_by_parent);
+> +		&cxl_bus_type, NULL, &pdev->dev, match_memdev_by_parent);
+>  	if (!mem_dev)
+>  		return;
+>  
+> 
+> base-commit: 751627a8c5cde68e0b396126449749e8bfbe592d
+
