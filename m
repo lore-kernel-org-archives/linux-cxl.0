@@ -1,155 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011044.outbound.protection.outlook.com [40.107.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA9E471D10
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 10:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788429853; cv=none; b=nuUKygngH1vKP5icBCyPUSyxvs5wQmUuo0oQwYKzw1Y95rtKEhG1F/c12TYLKmRRhLPkjimwKdjJZDkl5OOAvj9uyJ8348FfRhYmz2JyKLKN2riEaxIOabm5khh58cdWb3YMlObwvsZQGpvqJ+dkTHdFim+ZIT6H0xMOcpbSqoY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788429853; c=relaxed/simple;
-	bh=gdB4aDPcHnrT8svi12znDnIpqbHHU9JkNo6yjP6CSc4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k3MsqtN6t3STAMN45LeXi7Db6Ovl+aaxihyTbNaNQCH/BTdD/gD4x1CYKXnYyV1DePchbSO6YqGHidzwvQA55IVt/OwW8LkFi/Efm+eB/8aMGwnoCXwZaaXGdvi9R0YhVJbg+Faiq6WyLqmZZpMWFZTxNIQv9Qx0ZGBIkBPJs1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QM1oOp6l; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0639A47126A;
+	Thu,  3 Sep 2026 10:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788430059; cv=fail; b=uAJz+wgtEsi/9js2DSiULP83NDMDi+2yGnvuisGQoOXLyGFYLCUBH/0Wpt9R3M02tUoaLyB+RbNKeZFhYc/EzUv9Nw+JbcvsK9IULuOXulYJoNZ32IQaCxqfiJsy+WWVtewpKarRxq5CO4PhRgCseRNOFyWi9yJ0i1UQT7kyKzQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788430059; c=relaxed/simple;
+	bh=DJQzuJB/TZu/pazQgBz4EMV5+bzEAKfeRYK+Ze4MDWA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rg0vAnm+06yP0Cu2y2+oftVSQKyk9Gss1rqUOMS9JaXFpH/oHHlZkltzjEALzcYcKwShy2fpg6OxoCe1PJcq0hSMa6ZLKxcDEOKM9f9KsEwZK3BFsvv4cyZQGtsPJmvIAegL9eVWg6BG++hCNpF1o/E7Ey1kLq8js8Wjzha8J8c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Df9VzQYT; arc=fail smtp.client-ip=40.107.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QM1oOp6l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788429846;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BOx5UsBcpJ107C2izhbZpmNC0abVl9+Uxw26Tqjp5i8=;
-	b=QM1oOp6lPingm83nv316qdZzQu+2VdeDKrSKZkiqWEVpjE3pKvdSh0IebwXMQp1enh1Rf4
-	/tcdDU9azsKOPRqEZhMA8KLBbYk2c44xQ/U7ZTn6TFVomPems7iwaGNS4wcYKbCezPJxMz
-	k4AJ+0uD+5Hluri+GDhAUuD1RENO3Fw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-d3WSQXZSPseAsWF0hiW_Hw-1; Thu,
- 03 Sep 2026 06:04:02 -0400
-X-MC-Unique: d3WSQXZSPseAsWF0hiW_Hw-1
-X-Mimecast-MFC-AGG-ID: d3WSQXZSPseAsWF0hiW_Hw_1788429839
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88B941964CEE;
-	Thu,  3 Sep 2026 10:03:57 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E4D543000223;
-	Thu,  3 Sep 2026 10:03:54 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 6713821E682E; Thu, 03 Sep 2026 12:03:52 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org,  =?utf-8?Q?Marc-Andr=C3=A9?= Lureau
- <marcandre.lureau@redhat.com>,
-  Lukas Straub <lukasstraub2@web.de>,  Alex =?utf-8?Q?Benn=C3=A9e?=
- <alex.bennee@linaro.org>,  Richard Henderson
- <richard.henderson@linaro.org>,  zhenwei pi <zhenwei.pi@linux.dev>,
-  Jonathan Cameron <jic23@kernel.org>,  Paolo Bonzini
- <pbonzini@redhat.com>,  Stefan Hajnoczi <stefanha@redhat.com>,  Vladimir
- Sementsov-Ogievskiy <vsementsov@yandex-team.ru>,  Jiri Pirko
- <jiri@resnulli.us>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@mailo.com>,
-  qemu-block@nongnu.org,  Ani Sinha <anisinha@redhat.com>,  Jason Wang
- <jasowangio@gmail.com>,  linux-cxl@vger.kernel.org,  Daniel P.
- =?utf-8?Q?Berrang=C3=A9?=
- <berrange@redhat.com>,  Igor Mammedov <imammedo@redhat.com>,  Hanna Reitz
- <hreitz@redhat.com>,  Alex Williamson <alex@shazbot.org>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  "Michael S. Tsirkin" <mst@redhat.com>,
-  Laurent Vivier <laurent@vivier.eu>,  linux-edac@vger.kernel.org,  Michael
- Tokarev <mjt@tls.msk.ru>,  Fabiano Rosas <farosas@suse.de>,  Zhao Liu
- <zhao1.liu@intel.com>,  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  Eric
- Blake <eblake@redhat.com>,  Peter Xu <peterx@redhat.com>,  Gerd Hoffmann
- <kraxel@redhat.com>,  Kevin Wolf <kwolf@redhat.com>,  Mauro Carvalho
- Chehab <mchehab+huawei@kernel.org>,  qemu-trivial@nongnu.org,
-  =?utf-8?Q?C=C3=A9dric?= Le
- Goater <clg@redhat.com>
-Subject: Re: [PATCH v4 00/43] qapi: convert (very) trivial intro sections
-In-Reply-To: <CAFn=p-ZMj03qA0tvLU34FHLcwBJjU0c2q2Ex1p06FJfZpwyuJA@mail.gmail.com>
-	(John Snow's message of "Wed, 2 Sep 2026 13:24:36 -0400")
-References: <20260831201945.287730-1-jsnow@redhat.com>
-	<871pbd9qpy.fsf@pond.sub.org>
-	<CAFn=p-YBpsxy-3tr0SZ0CBfXUYnb6eg6AxNWpwUQmsuY5ZuykA@mail.gmail.com>
-	<874ig7539j.fsf@pond.sub.org>
-	<CAFn=p-ZMj03qA0tvLU34FHLcwBJjU0c2q2Ex1p06FJfZpwyuJA@mail.gmail.com>
-Date: Thu, 03 Sep 2026 12:03:52 +0200
-Message-ID: <874ig6y7lj.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Df9VzQYT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GHJjpBOwJ3GwxkZPeIvcZ6wP6fbn8nq2Af6oCXSgRZoVLUXfow9hFfRslIFL5NkJgtqblSxFw0B2YI7PS43IMkypZ7IKACOBP0+YtF1rBneT13KTT/N6vGx7kndWilDzpCgKvPPO9WNSF/NA3sNAzq+VvK8oTQOqSTN6i/R/seBxHN81QMDfD7J6k2kvkju/cOPAqRXTsvcWkCig15YGdI5IYGK+nUqq0Hl2HYy9AvtisEgci072xXbd8sA0ECzX2gYzdwFNsqkMX8i63uYGyzig6/XuQFQc46CIvdiI0Gzov6Bdewg5nAma9M6Sz3E9xqyesHXhtkEEBzYPBSK0iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pmT+vZjECHY0di8/36lzFbY8rEPIRqofC+O/x9H9wzI=;
+ b=uPKsR/RGKgAsw5IUbEqeIqAiuM7Ryb19xzyLEL85s2uBysKKfnq0q7/+CjOvZbJ1W/gTzwS+n30sBKjvRCvRs5ZI/a/pNgZ0e9gj6JHxooNz4REoXj6Md0p5ZAHaEcq8oEowE+mjdeGFSlD5Mz0Ft5iRIpMCQ5OxLjEx4E+KqlHoZK066pVshwPuMuQWDDHDpehYEvT82RWyNGWe3cPRL9WeRMF2v0WdSF1I76Y/oUYEVCTed7xdTXOx/iXxwPNc2e2XM7n80nE94I9NjjwDa2LJdAke542Eg5RHIdz3i+rZU0oMCSXAkHKG1WH0pz0enKnaXnJ0jNBSBln0HvrFzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pmT+vZjECHY0di8/36lzFbY8rEPIRqofC+O/x9H9wzI=;
+ b=Df9VzQYTwNoGBadjd3HPujI0JWYjmIbZ4VpxwA3BAE/4Mwaf+IRSEOwhQK+9oQqgrnAeGA4KXXSxGdkSxoy2qMWPn+bsSTxBXev8R5QF8H59er7yCMtTGI2yHNH8YU1YFazFetLcSKadr6tjfpgCThERfdBS76+lMLoFu/pmiOYzFtHaSVt/qprH6FXiNY+QJaQWGQGIiK0qNcrHXXg6chFu+LtiDPvrFMiCUZhdj6PayEogBv2LE7J23V4Zx+fTPDqm/m7UFXBC1trC4TzGHuELYeRI03fVjMoP5C/AlawzlqbBq2q1RIep94eIH7Xum2RlhCXHY4jsBvA7yECIYw==
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
+ by CH2PR12MB4326.namprd12.prod.outlook.com (2603:10b6:610:af::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Thu, 3 Sep
+ 2026 10:07:23 +0000
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2%7]) with mapi id 15.21.0360.008; Thu, 3 Sep 2026
+ 10:07:23 +0000
+From: Manish Honap <mhonap@nvidia.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: "alex@shazbot.org" <alex@shazbot.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	Ankit Agrawal <ankita@nvidia.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alejandro.lucero-palau@amd.com"
+	<alejandro.lucero-palau@amd.com>, Srirangan Madhavan <smadhavan@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "skhan@linuxfoundation.org"
+	<skhan@linuxfoundation.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "iweiny@kernel.org"
+	<iweiny@kernel.org>, "ming.li@zohomail.com" <ming.li@zohomail.com>, Yishai
+ Hadas <yishaih@nvidia.com>, Shameer Kolothum Thodi <skolothumtho@nvidia.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "dmatlack@google.com" <dmatlack@google.com>,
+	"kees@kernel.org" <kees@kernel.org>, "gustavoars@kernel.org"
+	<gustavoars@kernel.org>, Neo Jia <cjia@nvidia.com>, Krishnakant Jaju
+	<kjaju@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Zhi Wang
+	<zhiw@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, Manish Honap <mhonap@nvidia.com>
+Subject: RE: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+ cxl_restore_hdm_after_pci_reset
+Thread-Topic: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+ cxl_restore_hdm_after_pci_reset
+Thread-Index: AQHdKwdkZtSAYgnzrkys1MolqR67xrapKXoAgBNT2IA=
+Date: Thu, 3 Sep 2026 10:07:23 +0000
+Message-ID:
+ <IA1PR12MB9030D9E7A6FF2279708F7B4DBDB62@IA1PR12MB9030.namprd12.prod.outlook.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-2-mhonap@nvidia.com>
+ <20260821235240.7926351d@jic23-huawei>
+In-Reply-To: <20260821235240.7926351d@jic23-huawei>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|CH2PR12MB4326:EE_
+x-ms-office365-filtering-correlation-id: 48180932-c0bb-4b17-a25c-08df09a3264f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|7416014|4143699003|10067099003|56012099006|5023799004|11063799006|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info:
+ SitQop/lZTDSO2TWE4arexFCAYisoDIm0IfAoxSo+oVrH+3I9J2+Ttkw1b1q2JcLZMDnjKegrmCcekdiCQBAxOsI9U6/fgT1qivafWe+yRmY+VkVDdv2r+iqoSzEWKjPcHtR9CA95RegSgbzjbhq1ZXHsD2DernhEi7fZv2sXsw8igdIwMSy0EpND52sUZMSmV2MxSGEqhzQOiGpuDQQJcpkxp0/lp6LbO4N6JSZc/haDVqQeE9Nh5ZYjcpvj4JVGOv/zLhxBbnCvuDxixlDQ7gmqEryLUhsrYwZhZnlqYJqA8l0ig2N3mIXa8/mobxVgLy+1PjSdI3M3HNGA0HE3Gxew3iLYHzUgD2VdqFptdO6kjbyjiR5gK7+8hHZgveN3GVl2Xwsgby2B5EhesvQd9B4txigRTmKJ9X3Qln4bQ3VE65Gxd9SOsEOWobVRAXJi/sLqFJpaIKmfqga7wI1Sr3Fc9QbOeeER4WZNn4Qywj0AnREEVhksguX1ogCejuigvXVWxoZDn55kIoFQgvUAL87UFAdmv7zhrgAWN17WgPs3BjO1Cb17iibRBUFRGCK5kCrKKF+b9FtGlz75T9sctZUL/8ANiKqz78koDq09msB3DsK24GuXSpeeeXjfgElfCmSBmwLSfmwcMaCu497J3bysY5ftaylZ4fbdoKF+9CEICT5XXqNUw2pl+3+mLTuy/FnG+zr85TVtlE1CIByxd0HBUYUlNG2cfuKEWpSn0k=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(7416014)(4143699003)(10067099003)(56012099006)(5023799004)(11063799006)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?IsECCzEwaT8HEhN1c442SRW9levEcOB30zDLVSSnun+6GNcKdt7z2LXj9GEk?=
+ =?us-ascii?Q?maVN5axFLWtuIavUTvySafWDwexgxt1ZhEFAPoqshZku8HPTFN2CY3EjjzGs?=
+ =?us-ascii?Q?sL8SIFvc9rV1BaagIw+6z8YN3h03CLFEl0KSs767ZxlBxoGIyERlT5YDSbEH?=
+ =?us-ascii?Q?3F/+b+xECs50aVTvpCT77hWG3opA6MGdEKOWloA8dUlYOjnfLJoKX2UOHxid?=
+ =?us-ascii?Q?c+iBnRbvr/PWMrqJK2t6siWOZ9Af7L9kwmc0R4SUDk0CJQUu0bDvy2cXufJt?=
+ =?us-ascii?Q?Qc0mptkqFoueKb0chIafup3kiuCYn18t8zzxJXKkMao2gpzFRZCR5nJKmHQN?=
+ =?us-ascii?Q?uSDNImW4QMGqF4bKS3uvF3xjhTF6YyW/WrkkvAG3laNyqtuEzukEGELC4/Km?=
+ =?us-ascii?Q?uH1504LzweAGAIWtcKGMsQBx4d+B640AscnERex4zm9a46SBYzwIvr2voFsZ?=
+ =?us-ascii?Q?d9q54qxRgezy1ohxmWOrgQcJc0zNrAPdSn4FC6iCRet9JbFDnJTKQg7DANXh?=
+ =?us-ascii?Q?nVDGGUxzVx+S+RuwbczpixNsM4mqH+3C9NXRxWXd/dKl0zCmdt6gSQ8Ddbg6?=
+ =?us-ascii?Q?VmaRsxBmfr2UhWJHvVjLWl3AklgOMmMN1YwLceHii0Z75u/kqZHZmgDvu9qH?=
+ =?us-ascii?Q?vxD2wMT/+kcf6yxCl87yTH6NlEOd41fhn3Fh2aefIZj8OfSs10WU8SQBJUH2?=
+ =?us-ascii?Q?l85T6SdaGRykoEIU/hvfx8JaN9UVASKXzaMeSknjUWfbMOws/7QYCQoKCqI7?=
+ =?us-ascii?Q?67CNi3QhmzmZTyCz90GyhaOHguupYZXgWoUtEx8CT1eECPylFRbUJ29KrXFz?=
+ =?us-ascii?Q?VB0qAdPBOn0/gmH4CPGPBrPfyb+kav6HSUOMlkNc5jWJrmiQNYT1uu9REn4j?=
+ =?us-ascii?Q?X48Zm58n+tYsQwO6EN5MeU85dp+7L29OQPhDBmFymo6OC4fLJx2RtNjpZYgh?=
+ =?us-ascii?Q?cZGatePCiBT2+z0i7okKA8a9uIV9ZWOjUL1AXwk0qh1oSZqHQ8soz4moGikY?=
+ =?us-ascii?Q?dc7P/ObYDHTjWhUW1L6ImqdDkPHnErMOc2K2TZP5kC31yAV6YYBblTfClfbp?=
+ =?us-ascii?Q?9Sd/cvIpSLTUdkGeUTBZOdWw9SqOPRzBrcdSpdf/L1qy+g8WfaRMCE+lUSpH?=
+ =?us-ascii?Q?H0pWpPKiWP1mvDOJnZU/SH8Zd+Cs6QKjAAHvAf5QSOCjydmWQlumhKir90O4?=
+ =?us-ascii?Q?/ywLNE5MLFVWgO7iJyfMIDqo5kB50HRx7YRstrx2+D+ql/zIShuGKteti//Z?=
+ =?us-ascii?Q?ZmQvmxgoaA4VrXuasqvfZOtG39qLeXrXZU8Yp7bl986M8MsHVZ1YzCtt10pD?=
+ =?us-ascii?Q?L0DMqnJbgbIsIW47TWlkpYHcOixSqJ45UyXYzvwaXJuf8wxgZaxilcsa1NL/?=
+ =?us-ascii?Q?gu7ecGmS1VvphBKUKqMMu81r1uf/osSkvIlJGZdfsUmQam3p4QINuu12dNvm?=
+ =?us-ascii?Q?Uc52/hZ/TIt4mENFxI+pOyh3mkm249OsB8bYUalrY/f0QU2/QThY2Av2DCaY?=
+ =?us-ascii?Q?x7s0IAwtM9LGs5jb9OzPskPwRiZpam6dc2PsX9c30qcToXxXY+hjfdAnQlV0?=
+ =?us-ascii?Q?P7H2g34vUMMhqkABgfSbi/SAPM96OIJQybhjvgON4gz+v7djTTSNI0dFMr35?=
+ =?us-ascii?Q?C8xZcTWv3hVm4lRY2t2/1fWcnAZSqRmL7LJfbPqSAEqWs7WQFY9OvUEma8r1?=
+ =?us-ascii?Q?FFlAauRbqtvhT3c67T16Q/ME+wIMNgmlvds7Rcw3+HOFFQ+/?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: Yhb5daN4Iq6Ef94zboGrkxwQ-QMVF7Hjc8yRC-scLyE_1788429839
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48180932-c0bb-4b17-a25c-08df09a3264f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2026 10:07:23.6858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dGK9A23L6TL2k89Zqo/Y8M6UmQwRKBreNEt6UZjbuTNL1Ap3yaqXKfetfcsCt68/HO5zK9e1YgxOHgVmjHMgGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4326
 
-John Snow <jsnow@redhat.com> writes:
 
-> On Wed, Sep 2, 2026 at 6:58=E2=80=AFAM Markus Armbruster <armbru@redhat.c=
-om> wrote:
->>
->> John Snow <jsnow@redhat.com> writes:
->>
->> > On Tue, Sep 1, 2026 at 7:05=E2=80=AFAM Markus Armbruster <armbru@redha=
-t.com> wrote:
->> >>
->> >> Series
->> >> Reviewed-by: Markus Armbruster <armbru@redhat.com>
->> >>
->> >
->> > Thank you for your suffering :)
->>
->> You're welcome; it's my job[*]!
->>
->> > So, I think there's actually no real problem in checking in a partial
->> > conversion as the infrastructure was coded specifically to allow it,
->> > however you're the maintainer so I will follow your lead. I'm more
->> > interested in moving forward than telling you how to do your job ;)
->> >
->> > The series will eventually enforce strict ordering, so there is no
->> > chance we will miss anything. If we send a PR now, we also don't have
->> > to keep rebasing the partial series against master. If you don't want
->> > to submit a PR, please create a branch I can track and submit patches
->> > against, and please periodically rebase it against origin/master.
->>
->> I worry a bit that having intros split about half between two styles
->> would cause confusion and friction.  I'd much prefer to get to >90%
->> fairly quickly.  If we think that's possible, I'm happy to queue up
->> things in my tree, and take care of the rebasing.
->
-> Everything up until the "convert multi-paragraph intros" patch (#44 in
-> my pending work) is approximately 87% of the total volume of
-> conversions. In the most recent off-list mail I sent you, that's
-> Sections 1-7 -- which is essentially all of the stuff that was
-> factored out as "semi-trivial"/"simple", plus the "TODO" conversions.
-> I believe these are pretty trivial to burn through, but would require
-> a bit of dedicated time. We could probably do it in a week if we
-> really pushed ...
 
-Let's try!
+> -----Original Message-----
+> From: Jonathan Cameron <jic23@kernel.org>
+> Sent: Saturday, August 22, 2026 4:23 AM
+> To: Manish Honap <mhonap@nvidia.com>
+> Cc: alex@shazbot.org; jgg@ziepe.ca; Ankit Agrawal <ankita@nvidia.com>;
+> dave.jiang@intel.com; alejandro.lucero-palau@amd.com; Srirangan Madhavan
+> <smadhavan@nvidia.com>; corbet@lwn.net; skhan@linuxfoundation.org;
+> dave@stgolabs.net; alison.schofield@intel.com; vishal.l.verma@intel.com;
+> iweiny@kernel.org; ming.li@zohomail.com; Yishai Hadas
+> <yishaih@nvidia.com>; Shameer Kolothum Thodi
+> <skolothumtho@nvidia.com>; kevin.tian@intel.com; bhelgaas@google.com;
+> dmatlack@google.com; kees@kernel.org; gustavoars@kernel.org; Neo Jia
+> <cjia@nvidia.com>; Krishnakant Jaju <kjaju@nvidia.com>; Vikram Sethi
+> <vsethi@nvidia.com>; Zhi Wang <zhiw@nvidia.com>; linux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; kvm@vger.kernel.org;
+> linux-cxl@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kselftest@vger.kernel.org; linux-hardening@vger.kernel.org
+> Subject: Re: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+> cxl_restore_hdm_after_pci_reset
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> On Thu, 13 Aug 2026 15:06:05 +0530
+> <mhonap@nvidia.com> wrote:
+>=20
+> > From: Manish Honap <mhonap@nvidia.com>
+> >
+> > The vfio-cxl Type-2 driver restores the endpoint HDM decoder after a
+> > D3hot->D0 soft reset by calling cxl_restore_hdm_after_pci_reset(), so
+> > export it to the CXL namespace. While here, correct the resource.c
+> > include of the CXL PCI definitions from <cxlpci.h> to <cxl/pci.h>.
+>=20
+> Why?  + if this makes sense (I haven't checked) please make that a separa=
+te
+> patch (for now) + make sure to call it out in review of Srirangan Madhava=
+n
+> series where this file comes from and which hasn't merged yet. I think it=
+ is in
+> patch 5.
+>=20
+> Jonathan
+>=20
 
-> Existing volume of what you have reviewed and accepted is 55%.
->
-> Well, either way, I just don't want to have to juggle so many patches
-> in the interim, so I am pushing a bit to just merge it to make
-> subsequent series easier to rebase and juggle so that e.g. I don't
-> have to have increasingly long "based-on" tags.
->
-> (Makes sad, pouting noises.)
+Dropping this patch in v5 series. On v7.3-rc1 + Srirangan's v11 series, res=
+ource.c
+already includes <cxl/pci.h> and cxl_restore_hdm_after_pci_reset() is decla=
+red in the
+public include/cxl/cxl.h, so there is nothing left for us to add here.
 
-I'm queuing up this series.
-
-If the Based-on become too unwieldy for anyone involved, let me know.
-
->> [*] Some days my compensation is compensation for suffering ;)
+Manish
+> >
+> > Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> > ---
+> >  drivers/cxl/core/resource.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
+> > index daa5e7fa2509..492ffe8e3576 100644
+> > --- a/drivers/cxl/core/resource.c
+> > +++ b/drivers/cxl/core/resource.c
+> > @@ -16,7 +16,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
+> >
+> > -#include <cxlpci.h>
+> > +#include <cxl/pci.h>
+> >
+> >  #include "cxl.h"
+> >  #include "core.h"
+> > @@ -850,6 +850,7 @@ int cxl_restore_hdm_after_pci_reset(struct pci_dev
+> > *pdev)
+> >
+> >       return cxl_reset_save_restored_state(pdev, command);  }
+> > +EXPORT_SYMBOL_NS_GPL(cxl_restore_hdm_after_pci_reset, "CXL");
+> >
+> >  static void cxl_hdm_range_context_init(struct cxl_hdm_range_context *c=
+tx)
+> >  {
+>=20
 
