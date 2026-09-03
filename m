@@ -1,62 +1,64 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6AE4A384F
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 12:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D074A3D32
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 12:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788438112; cv=none; b=eIcghf/5YtdDBetDsD3+2n9jT7NjHzJrWy3Pw+nNARhs/lv56vQt5rZimM1cFTyB5sQuSd22pbcxzcIGsdUlQJiBd+qmBOSPhH3KFYvn4oByWVTx0O1JA2Vg+F0VdWgeOnGmAjL9mdQ1iX3KqVQxkdyBETk5HXoNROhqIuM5Hik=
+	t=1788438117; cv=none; b=gI04N9IurwOC7nx+c9gRbl61EZexq70W/LVFCoVCp8emDiQx0xROwZR2XXHQgPVX3IlP9hO7n4DKmHRwMPsUEisbS/r7+xt8wHd9Fm6IW894sxvqguS+LuJOoGcwJX2R/E4mWixQaiYvIUQIEHDfgkgV/2EI7Y3B8KISsCaTKXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788438112; c=relaxed/simple;
-	bh=1xK9WvOdopCQR3xT8/KKn1WUP9dISFUQ63DhqRI1yGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=af3L/IOkbbF7RF5ctLNhhbd5GqWfCVnJGADsDzN3qeFzifLIMAnIt2vDCfR1Up4n9NjFS+jXA1riiOfCy8FHl4ZCom1pPJkOfgjNa4oldQapcFlhkr34/OhSJ5LldGCqkiy1+Wsst5MlgeQArocluNkCM4JaPOw6oPp27TSDsxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZOZMgHT8; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1788438117; c=relaxed/simple;
+	bh=gSp03gDMBE517M+sfYMxfrdEqp8BxtiQyag0D0cdDZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E3LPFbANuDT+BDZ31XQCFW1jDRQ4k5Ntz9yTnlvT/GXPEy+VScC9PuXM/7vZXSQ9TKo0kTdLCz5NnbanWrA+/nkiTIE1K6SbK3JAkekKSZ249lSbGDyCmKO1deomKiUuo4uglB0rm/usz1cRF5On0ccRlWSAFlEGpICEHj5ZdvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=K/FkTuR+; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZOZMgHT8"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-851cbd64814so996609b3a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 05:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="K/FkTuR+"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-8568e3ed034so1921882b3a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 05:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1788438103; x=1789042903; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=eoj/Cdya14SPLIE+VKDTIKpgRBY75qMbCQGmPe9FWn8=;
-        b=ZOZMgHT8PXtoPkqvhqJR/vendSycyAVYQezQK1nYzDtHrz5L6u2GuOe/qImfnNvSdy
-         W1Q8pXZ3iMn4h8T106eim1zOo+gFtjorISeaynxTc3xL4l5S+svlBgEeINunnD9MLL5K
-         7GGjKc6oQQkUs7f/IXIifOBSGHS6SE4RuUl4ziJkxmTAt8+QhCK+656bvg+tzfC0pb0D
-         C51xbQOUGx/g8eosXJXS2kYyu4Q0Ve4B+r6yo1yafdctL2Zg58E3Zr02p6pcCFL8mJlE
-         yaGRSI4ymls4+TN3LF+5+cRE6yMV48xHYhMAP2bzXTW5maKqzkdA5mfFZ4k+SonWMoeg
-         QTJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788438103; x=1789042903;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1788438108; x=1789042908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eoj/Cdya14SPLIE+VKDTIKpgRBY75qMbCQGmPe9FWn8=;
-        b=TTGqm/OGDHFba1VfwPze6QogN3IhgiMoRrWZusc+IJniatwBd3r69tl+1AJYt3uMw5
-         /NlAXDLwJWeAZgUO5n8LxZDCWk3Ce/TEmBv9cQ2b+XJK5VO1QOF6TZ7CtNpCmkWQOOKF
-         465bEj86xX/jj4KlbDGXjeDPXk0AKcJiBhixx44reMrhnvgKbB5PZ0nIZVRUOdTmocOm
-         AGlp3H5FP3Oaq4vbS0HzTdeF2zpZMEzPANkB2USAflsBCSAgxJilXn4bIYplrE+ZJmpP
-         BFlZkPqy18QIFgb/M7uuIj+0hRXUenvnvdhcmTC2537dhLFb4ea4ERGbILIVqzULAe1W
-         FL7A==
-X-Forwarded-Encrypted: i=1; AKwUvBxmtmrGNxnH4fZ479Yb3GNa/rMY0FnedH+Njn5TwIaCcnstDhUk9cK4B//oDcbbBM3D19XUvTNAZ1w=@vger.kernel.org
-X-Gm-Message-State: AFuF++my+BA+BS023d5dMqsJ3eZwpoNAjM7vxlSTCKwMD+IfwKhQoPdh
-	HmDZzLrUqa2ZXy36czJVMtlBZtwYf+ltqfcp1CprLTV/MGCFWJxavqYP7yQbGAyXd9Y=
-X-Gm-Gg: AYBFou1eOKUpN5wjsvrtlLMnh33ayLVkHVajH8KWBxw2LZVLbLnj4AGzsfvlSX+fc4u
-	Vg86Tl4+7hkg+hj9OxIYzn813hN+I5fYkHScz3SEGH3mZqxJBk5DtU4oLEM1DKfHea1RPYFNlcm
-	CeiWw/UiTGJqpkR4Bu3iC2G1OW0r5X1d4tnM5BHqjUV9HMxP6wQILtlxQQ8nY6U9/jUv96f13su
-	Kd9Fo2SQR7RLk+ylbUljCIvdtwb2igF26W+QbS2Ig0iwNoRreCwu26W3Gqwk9lYo5zJ0eDQ4/Yt
-	nK0PNmSPGdq3yKP1W02u3bFxUn4lw6v9f0XLgPkwB9BMzgL4+wqzb6uNENXvDDY5vNRY0X9aN5s
-	NO3SSVCH3TC9cQ1S9cTp/MUdEzM64c4dMd05k0K4k4ZE69KeCGiQ5nYSLI/qLDyVvw10m+Yo1tY
-	x6+UbcaTGzXz5weN2v5g2I8X7YEzF+S6TdHVik9mZPCRC+7elfF5aTeMu68gqLfTm6kWRpfgyJR
-	JQwwbkypKD4hHYefbN3Z1yKkg==
-X-Received: by 2002:a05:6a00:c4c6:b0:85f:b00b:8760 with SMTP id d2e1a72fcca58-85fb00b8844mr9445221b3a.5.1788438103076;
-        Thu, 03 Sep 2026 05:21:43 -0700 (PDT)
+        bh=pJ73qBOQiTpXKwSrjAZqmWemxXwNOfQBE65lRVHowjY=;
+        b=K/FkTuR+tFUmn6R5hMiyhpSkfSjGDW8McKFqlDSYtKc6Yfi9iN3NmwHs8C1hFilCCB
+         jwMPQB353w2D7zxkOqxaeyRW1dBnkaeFxu+bXaR21KNmor0K6gdukCjxwJwJCeL+sV41
+         FMKYaLW8bku3mfCDX7TA3QLEBEiqGNTx/Xoerxgvz2zlL/0I8GiZv9Ju1BukErzsqki+
+         1fHLheoSghIJAAbX/YCGgqTKlHbeZ9CVlEiSnrADDoLG4nsO62lOZg/rYYzBNLHj+9lz
+         TI8NivZWb8wTxSOYFnot29LvmNN2ZkWFb5/eHWq/Ium48lccpaafhMv3Aw2hRN35XhwI
+         iE+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788438108; x=1789042908;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=pJ73qBOQiTpXKwSrjAZqmWemxXwNOfQBE65lRVHowjY=;
+        b=ONQKaKpbS82XbgKRi8CwvU/qzA7OXZ38vAtbvRBt6Ipr4glNWSoHtUUjazQSn0Vzmt
+         M3npNu3AfCN3HVE95aVe409/ErL9K1S7MOP9SH6hyyjOXfQuA27DtB70ZoJPJvn7ztja
+         qD+cQUcjy+ru1Gh/16WWu87QZrauyD4DkkvtkAgLhGlZ3uXr1mDD7jfPxHY16Ms7+8vG
+         ptdD/FGWV4+uqNsy4yMQDjISoJQiHvt8zlXA9Cu6EqNVYkKoAv4hNMAcMe64abyz/D0x
+         mejAq7T4ZoMNU5Bh3cyZhV005uyGa+rL/IeGC9FYI71KK8pI/ttoLcIW79yIGQ77Bsyg
+         hjUQ==
+X-Forwarded-Encrypted: i=1; AKwUvByvYU/p9su66pYf5Y9fX5Nb4r+krN7/GzaqAsl/5Epg5R0nXtbz3yd20VlRyI6Quik3Yh2rVojCkJ8=@vger.kernel.org
+X-Gm-Message-State: AFuF++m++Z+g0fjUVUtXeEnCfeL3TPMIbiN8H4cmZ4GmIMnWrtCmTMUk
+	k8LgZnLJ1xKlDcEU5OnmS7a6ZAQlsQPWO6n39UdJUmOyRh0oA0R9ke921xnWh5g8xbM=
+X-Gm-Gg: AYBFou0AJsK7m0o2bN5G+d4tgjPHsMTxOhUBHKcRkOafTHHadeZiDnq4H2mF7D0PC/X
+	BA+o7JtIPrZ4R64TSZ83gCrbHr7J432CHedjkyTYBWG2i/hIL9aAEOO4rvV+x3seK9XcxQkqyxn
+	O6koChyMU4JkZFlpRiqMMmH84sUlYt1X27M8MmPKJ5Iszr4Fv50oagoEDfe9d17yfmcIYDdIn42
+	n922FfQv+5NreUmDp6jBcGaoZiQcXcQIFARFIEH/5Ifc9cJEOzU9bBrYnLf+qnZ75y8fHJDn258
+	YexuI6eX7DhzqLhLre2wj0Y9vFGFttWa/ZNysE9t41s3+kvUHMF7o/Qzcc6Xc8bPyXRQjmiOhPS
+	VXzTGorNdVIkMrISwfBei7ajYxpRo036BJwMaMM0T9labAABNLZi/daB94Bin8Qug1EL4DztrOe
+	qkrn03Dy50vWOu6ra+/F6gnlLTcbgExg31KXB6PJx6AoVaYCiZCl+mqbMiJtSTIHCEiqwoxMppQ
+	swHLi6fV9HwRCcineWWRU5jtg==
+X-Received: by 2002:a05:6a00:3021:b0:848:30c3:45dd with SMTP id d2e1a72fcca58-85ed2cbc58amr18768996b3a.11.1788438108017;
+        Thu, 03 Sep 2026 05:21:48 -0700 (PDT)
 Received: from G6L4RL2QG9.bytedance.net ([61.213.176.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85db24f2076sm2868126b3a.4.2026.09.03.05.21.37
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85db24f2076sm2868126b3a.4.2026.09.03.05.21.43
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Sep 2026 05:21:42 -0700 (PDT)
+        Thu, 03 Sep 2026 05:21:47 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Dan Williams <djbw@kernel.org>,
@@ -80,10 +82,12 @@ Cc: linux-mm@kvack.org,
 	Qi Zheng <qi.zheng@linux.dev>,
 	Muchun Song <songmuchun@bytedance.com>,
 	muchun.song@linux.dev
-Subject: [PATCH 0/4] mm: Reduce struct page overhead for FS-DAX pmem
-Date: Thu,  3 Sep 2026 20:21:23 +0800
-Message-ID: <20260903122128.12264-1-songmuchun@bytedance.com>
+Subject: [PATCH 1/4] mm: generalize vmemmap remap architecture support
+Date: Thu,  3 Sep 2026 20:21:24 +0800
+Message-ID: <20260903122128.12264-2-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260903122128.12264-1-songmuchun@bytedance.com>
+References: <20260903122128.12264-1-songmuchun@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -92,105 +96,119 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-AI and code-execution services increasingly run user workloads in
-short-lived sandbox VMs. These VMs are usually small, densely packed, and
-backed by sparse disk images, so both memory footprint and VM startup time
-matter directly for consolidation density.
+ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP is named after its first user, but
+the underlying requirement is not HugeTLB-specific. Generic MM only needs
+to know whether an architecture can safely remap populated vmemmap PTEs at
+run time.
 
-Using virtio-pmem with FS-DAX for the guest filesystem is one way to
-reduce that footprint. It avoids keeping a second copy of file data in the
-guest page cache, and turns that cache into host-side file cache that can
-be accounted and reclaimed with the host's global memory view. Host-side
-page-cache reclaim is also more direct than asking the guest to drop its
-page cache, waiting for the freed pages to be reported back, and then
-reclaiming the memory from the host side. This makes higher overcommit
-more practical for dense sandbox deployments.
+Rename the architecture opt-in to ARCH_SUPPORTS_VMEMMAP_REMAP and make
+HugeTLB vmemmap optimization depend on that generic capability. This also
+prepares for FS-DAX vmemmap optimization, which relies on the same runtime
+remap support.
 
-The remaining problem is that virtio-pmem with FS-DAX still pays the
-guest-side ZONE_DEVICE metadata cost up front. The guest registers the
-whole pmem aperture and allocates and initializes struct page metadata for
-every advertised PFN. The vmemmap overhead is about 1.56% of the pmem
-device size, and initializing all of those struct pages can noticeably
-slow down startup for lightweight VMs.
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ arch/loongarch/Kconfig | 2 +-
+ arch/riscv/Kconfig     | 2 +-
+ arch/x86/Kconfig       | 2 +-
+ fs/Kconfig             | 2 +-
+ mm/Kconfig             | 6 ++++--
+ 5 files changed, 8 insertions(+), 6 deletions(-)
 
-Much of that private metadata is unnecessary in common sandbox setups.
-Holes in a sparse rootfs image have no host storage allocated, but the
-guest still allocates struct page metadata for the corresponding pmem PFNs.
-Also, many filesystem workloads access files through read(2) and write(2)
-rather than mmap(2); those DAX blocks are copied through the kernel and do
-not need to be inserted into userspace page tables, so they do not need
-private per-PFN struct page state either.
-
-The key observation is that when sizeof(struct page) is a power of two,
-each PAGE_SIZE vmemmap page contains a naturally aligned, repeatable group
-of struct page slots. For an FS-DAX pmem range at device registration time,
-those slots only need the same ZONE_DEVICE and dev_pagemap state before a
-PFN is exposed to userspace. The kernel mainly needs the vmemmap to resolve
-the PFN back to a valid device page and its dev_pagemap. It does not need
-independent writable per-PFN state for ranges that are only accessed
-through the DAX direct-access path, or for ranges that are never accessed
-at all.
-
-This series takes advantage of that split by separating vmemmap population
-from private metadata allocation. Device registration still gives every
-advertised PFN a valid struct page representation, but the vmemmap mappings
-initially point at a shared read-only vmemmap page containing the common
-ZONE_DEVICE state. This avoids allocating and initializing private metadata
-for PFNs that may never need it.
-
-Private writable metadata is materialized only when it becomes necessary:
-before a DAX fault inserts the PFN into a userspace mapping. At that point
-the PFN can participate in the normal page-based MM paths, so the shared
-vmemmap page is replaced with a private writable copy. PTE faults
-materialize the corresponding vmemmap page, and PMD faults materialize the
-whole PMD-sized metadata range. PFNs that are never faulted continue to use
-the shared vmemmap page, avoiding both the memory cost and the struct page
-initialization work.
-
-A natural follow-up is to make this optimization reversible. Once a DAX
-entry is removed from the address_space, and after all mappings, references
-and pins that require private metadata are gone, the corresponding vmemmap
-page could be remapped back to the shared read-only vmemmap page and the
-private metadata page could be freed. With that, the guest-side struct page
-overhead would track the live DAX working set rather than the full advertised
-pmem device size.
-
-Patch 1 renames the architecture opt-in for runtime vmemmap remapping so
-it describes the generic capability instead of the HugeTLB user.
-
-Patch 2 avoids touching PG_hwpoison state for clean pmem pages. This keeps
-the normal clean-I/O path compatible with read-only shared metadata.
-
-Patch 3 adds the shared read-only FS-DAX vmemmap infrastructure and the
-helper that materializes a private metadata page on demand.
-
-Patch 4 opts pmem FS-DAX mappings into the new mode and materializes the
-metadata before DAX inserts a PFN into a userspace mapping.
-
-This does not change FS-DAX data path semantics. It only changes when
-private struct page metadata is allocated for pmem FS-DAX PFNs.
-
-Muchun Song (4):
-  mm: generalize vmemmap remap architecture support
-  nvdimm/pmem: avoid HWPoison flag updates for clean pages
-  mm: add shared read-only vmemmap support for FS-DAX
-  fsdax: materialize pmem vmemmap metadata on faults
-
- arch/loongarch/Kconfig   |  2 +-
- arch/riscv/Kconfig       |  2 +-
- arch/x86/Kconfig         |  2 +-
- drivers/nvdimm/pmem.c    |  3 +-
- fs/Kconfig               |  2 +-
- fs/dax.c                 |  5 ++++
- include/linux/memremap.h | 11 ++++++-
- mm/Kconfig               |  6 ++--
- mm/memremap.c            | 38 ++++++++++++++++++++++--
- mm/mm_init.c             | 11 +++++++
- mm/sparse-vmemmap.c      | 64 +++++++++++++++++++++++++++++++++++++---
- 11 files changed, 131 insertions(+), 15 deletions(-)
-
-
-base-commit: 32b6ef9a5d0eca44f9cd91f52f4faa89f145a0de
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 9c5def706222..e9bf19172e86 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -72,6 +72,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_SUPPORTS_SCHED_SMT if SMP
+ 	select ARCH_SUPPORTS_SCHED_MC  if SMP
++	select ARCH_SUPPORTS_VMEMMAP_REMAP if 64BIT
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_MEMTEST
+@@ -80,7 +81,6 @@ config LOONGARCH
+ 	select ARCH_WANT_DEFAULT_BPF_JIT if HAVE_EBPF_JIT
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+-	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP if 64BIT
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select BUILDTIME_TABLE_SORT
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 5965666194b0..3614001cafdb 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -76,6 +76,7 @@ config RISCV
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if HAVE_SHADOW_CALL_STACK
+ 	select ARCH_SUPPORTS_SCHED_MC if SMP
++	select ARCH_SUPPORTS_VMEMMAP_REMAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+@@ -88,7 +89,6 @@ config RISCV
+ 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
+-	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select ARCH_WEAK_RELEASE_ACQUIRE if ARCH_USE_QUEUED_SPINLOCKS
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index a8c3b3d31a27..53f72d1500c5 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -133,6 +133,7 @@ config X86
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_RT
++	select ARCH_SUPPORTS_VMEMMAP_REMAP	if X86_64
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_MEMTEST
+@@ -148,7 +149,6 @@ config X86
+ 	select ARCH_WANT_HUGE_PMD_SHARE		if X86_64
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP	if X86_64
+-	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
+ 	select ARCH_WANTS_THP_SWAP		if X86_64
+ 	select ARCH_HAS_PARANOID_L1D_FLUSH
+ 	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
+diff --git a/fs/Kconfig b/fs/Kconfig
+index d1c210c6508f..655795fbbd1b 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -276,7 +276,7 @@ config HUGETLB_PAGE
+ 
+ config HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+ 	def_bool HUGETLB_PAGE
+-	depends on ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
++	depends on ARCH_SUPPORTS_VMEMMAP_REMAP
+ 	depends on SPARSEMEM_VMEMMAP
+ 
+ config HUGETLB_PMD_PAGE_TABLE_SHARING
+diff --git a/mm/Kconfig b/mm/Kconfig
+index c1ddf59c0d71..7ec734d89beb 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -463,12 +463,14 @@ config SPARSEMEM_VMEMMAP
+ 
+ #
+ # Select this config option from the architecture Kconfig, if it is preferred
+-# to enable the feature of HugeTLB/dev_dax vmemmap optimization.
++# to enable the feature of dev_dax vmemmap optimization.
+ #
+ config ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
+ 	bool
+ 
+-config ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
++# Select this from architectures where generic MM can safely remap populated
++# vmemmap PTEs at run time.
++config ARCH_SUPPORTS_VMEMMAP_REMAP
+ 	bool
+ 
+ config HAVE_MEMBLOCK_PHYS_MAP
 -- 
 2.54.0
 
