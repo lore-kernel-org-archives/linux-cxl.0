@@ -1,87 +1,154 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C404A013E;
-	Thu,  3 Sep 2026 16:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27F63C5833
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 18:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788452829; cv=none; b=orhgky7RAFqjyPqTH0czL0XNezHnE1/n1HzATed3wHWr/orLJIzXO07vXJTGudYmpa/4uG2PsrKFVTGtF9ArSMaUnA7ayutcdPEY9mbc9rNbjfT9xfirlxLk3gYOYaud5fjXy6EWD6Koca37VTDd3k4Xc0jrMeA8+d1OWu6rCMA=
+	t=1788461909; cv=none; b=i/i1Nq0PC3msP1FtF9NcKyrD08GPPw36uqjUNKtUp8p5hccsQIclweBlieGMN5j9b31dvWXJEeb4nzUMZ7AGUXDV4Uw6/j6d8f/wXBgjxYOOq1vqNHBIUd+WcjgoJrt52dZD3iYldYk879jT0jw4u1vczP43fVkXfRrG7lycQkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788452829; c=relaxed/simple;
-	bh=Xmn1/z6estkZAjXAzQEq8DfXvomwyrMO9NoNGGW8ugg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nMbXb4EJkgnAZ/Mj1cscAI/iDcTbgTTazZKlOI1iC+7FYvXQolNeMQfbRqudAYL18XHO1HXjljkogba6zxUrn7/1HruhB7KOK2F5swWNTfnRMVQlLhCPNEgjs0wK+pR+TojWsO7oqgUmw/TQ5GxAr9mmeO0Csw3QkABYTW7qBkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bWCxmN4M; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1788461909; c=relaxed/simple;
+	bh=LD+/5q4UoQhnQPiSzrpDEzXQid24U7rlGEhJMjuTLHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKfQneok0PGp1ycX9tgzmGAw+BfGbnFzyCp/WzX0G1+gztKz7gqEKQOQlOIbH3YcYGDUyjULsyei/ILwZx0XEjutJzJTWPXPk1AvDVEVMSphIrWkd9gC83Xuld1g0oEoKpxjZ1/qnpFwctwrw9wVYlVEfu6owZMoJEm6FMPniIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=hS2TQbuw; arc=none smtp.client-ip=23.83.218.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bWCxmN4M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=Dws1cx8yCjIvHLxZf50wsdIqDs/2Cdbb8dzyT+t4Vmo=; b=bWCxmN4MvuHoq9Cmwdp3sJp3h3
-	H9hia10uxU7rDvXhRMJfLRllZfAuotArBOp9Ot/kZoW/GvX/0cRqOX782f3QKLBKkXus+4jHzfq6x
-	lYdoI6xqDEZ2X/D6PJs9E3kpmkPF/ZL0gGdzbKr8n2gdn8Nc2GXHfNsLlpLyuZEP5c/9mJc70UZk5
-	QVWN/f540M0AN4+B7WrpixO7W+gEcr/FeSG72jkFVljmc7hZvRjEoK8vEjebxfXuMQluwMHtT3R54
-	J8kgxHpo+vfhbG/Lnd547H5KR+12qp7mZrvVEtpyNuYE4k89Ph5XxTsRgpYcrqCRb8qHm2QDAWZDu
-	wRZDORiQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x2AHE-00000000AFX-0xk3;
-	Thu, 03 Sep 2026 16:27:00 +0000
-Message-ID: <249b535e-e1d7-4735-9bac-d302bc773cab@infradead.org>
-Date: Thu, 3 Sep 2026 09:26:59 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="hS2TQbuw"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id F01B74C1655;
+	Thu, 03 Sep 2026 18:58:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a220.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.97.105.60])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 797064C13E6;
+	Thu, 03 Sep 2026 18:58:14 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Attack-Arithmetic: 6fee436e51ae9562_1788461898713_4207495950
+X-MC-Loop-Signature: 1788461898713:2836627364
+X-MC-Ingress-Time: 1788461898713
+Received: from pdx1-sub0-mail-a220.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.105.60 (trex/8.0.2);
+	Thu, 03 Sep 2026 18:58:18 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4hbTPx624KzRr;
+	Thu,  3 Sep 2026 11:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1788461894;
+	bh=MsRAe3yd5mS8IGv00KvmSVcNXdvDxMf/ORiw49ODbMw=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=hS2TQbuwCR8GvqJyHnQ8KpAB38oIDAlY2iTUz1NuwZDkQxqXsvyKFiYxoQ/TFB4Ys
+	 v6Dy2KM93+YW6WhtyOP1ip7XNZ9HN/0mqLLPFWPu1mM3EwqT8onvckClw8A5eLd4IH
+	 7vueH23+RnLx1kgs8O/Rkc33E2LJPcNEDtuRNMkzq7UKNqbaWJdzrTlDl92xse7Zan
+	 TwBGgNo3Ylhg+U3lKy87TXORvcsPbHb7uRuzLyLiMYCzpwkKVmu8PkeYU9BeIqclQL
+	 eXgAYA0j5es4UR52EwwqHQnd8NJOa0Oc3/rQ0NmI8DFddFoVRHHdbbNd6NRxkndExP
+	 5J6x7YCOQnvyQ==
+Date: Thu, 3 Sep 2026 11:58:10 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: dave.jiang@intel.com, jic23@kernel.org, alison.schofield@intel.com,
+	benjamin.cheatham@amd.com, alucerop@amd.com,
+	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v7 8/8] cxl: Allow auto-committed BI hdm decoders
+Message-ID: <20260903185810.qph364d4rlpcjazy@offworld>
+References: <20260728144136.709882-1-dave@stgolabs.net>
+ <20260728144136.709882-9-dave@stgolabs.net>
+ <anXH5vC_w-iu6_iB@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: docs/platform/acpi: Fix brackets
-To: Manuel Ebner <manuelebnerli@mailbox.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260903095445.729419-2-manuelebnerli@mailbox.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260903095445.729419-2-manuelebnerli@mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <anXH5vC_w-iu6_iB@MWDK4CY14F>
+User-Agent: NeoMutt/20220429
 
+On Fri, 07 Aug 2026, Richard Cheng wrote:
 
+>On Tue, Jul 28, 2026 at 07:41:36AM +0800, Davidlohr Bueso wrote:
+>>  /* Enable or dealloc BI-ID changes in the given level of the topology. */
+>>  static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
+>>  {
+>> @@ -1127,6 +1139,16 @@ static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
+>>  		return 0;
+>>  	case PCI_EXP_TYPE_DOWNSTREAM:
+>>  		if (enable) {
+>> +			/*
+>> +			 * Adopt a dport that was already programmed and
+>> +			 * committed by firmware: nothing new is enabled
+>> +			 * below it, so no commit is due.
+>> +			 */
+>> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl) &&
+>> +			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
+>> +			    cxl_bi_decoder_committed(bi))
+>> +				return 0;
+>> +
+>
+>Small question, when DSP's BI related registers are committed by FW, does it guaranteed
+>that all the intermediate switch on the path are also committed with BI enabled ?
 
-On 9/3/26 2:54 AM, Manuel Ebner wrote:
-> Add '}' and fix indentation.
-> 
-> Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
+No, there are no guarantees at all for any of this. Please see below for details on the
+most flexible way I could come up with.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Thanks.
+...
 
-> ---
->  Documentation/driver-api/cxl/platform/acpi/dsdt.rst | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/driver-api/cxl/platform/acpi/dsdt.rst b/Documentation/driver-api/cxl/platform/acpi/dsdt.rst
-> index b4583b01d..73b23d82a 100644
-> --- a/Documentation/driver-api/cxl/platform/acpi/dsdt.rst
-> +++ b/Documentation/driver-api/cxl/platform/acpi/dsdt.rst
-> @@ -25,4 +25,5 @@ Example Compute Express Link Host Bridge ::
->              ...
->              Name (_UID, 0x05)  // _UID: Unique ID
->              ...
-> -      }
-> +        }
-> +    }
+>> @@ -3806,6 +3831,14 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>>  	if (part < 0)
+>>  		return ERR_PTR(-EBUSY);
+>>
+>> +	/* avoid UB */
+>> +	if (cxled_committed_bi(cxled) && !cxl_root_decoder_is_bi(cxlrd)) {
+>> +		dev_err(cxlmd->dev.parent,
+>> +			"%s:%s BI decoder in a non-BI window\n",
+>> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+>> +		return ERR_PTR(-ENXIO);
+>> +	}
+>> +
+>
+>Should we also check the inverse mismatch case here ?
+>
+>if (!cxled_committed_bi() && cxl_root_decoder_is_bi()) {}
+>
+>thoughts ?
 
--- 
-~Randy
+Yep, and the whole thing can be turned into:
+
+if (cxled_committed_bi(cxled) != cxl_root_decoder_is_bi(cxlrd)) { }
+
+...
+
+>
+>Hmmm just curious are intermediate switch are guaranteed to be valid in AUTO discovery
+>scenario , seems that the implementation only checks DSP.
+
+So overall I had been ignoring nested switches because all this
+is quite unsupported in Linux.
+
+But for v8 I went ahead and added support for this. Basically
+for patch 2 I redid the dport ctrl to handle nr_bi with nested
+switches (as opposed to just for root port).
+
+Now, for this auto discovery, when an endpoint device detects
+the BI Enable already there it will "adopt" already configured
+switch(es) and rp as it goes up the hierarchy. If at any level
+things are not already configured, this adoption is broken and
+it will do the respective BI decoder programming/committing as
+it always does. For all level(s) above, every DSP that requires
+explicit commits gets one, even with the decoder already configured
+and previously committed because the new device's BI-ID may or
+may not be accounted for.
+
+Thanks,
+Davidlohr
