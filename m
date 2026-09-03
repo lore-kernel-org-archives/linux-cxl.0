@@ -1,55 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6632B447819
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 21:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF8D4E13F8
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 21:34:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788471276; cv=none; b=cmsITn+3kZpW8QCu4GvTOSOhhVL0LyueY4XISBW27ifI+e8yEyUX8FMc2/2eiTSS4cetQMgDDWoItvGAehidr3feoJpznFnZ0YG59wMXqjbqCULJcjJDxH9ip9mRPKlLnQYAKSYfbH1Bz18428nj8aEZH8ShcnnTS/I8k5vtX0c=
+	t=1788471279; cv=none; b=VkR9oS7wrQH0rziInqLJwGcamLtYqi9OFbYzI4ISpt2zZ8w0TgtnQtjW3Wd1POVOgH/gpFYc7pXI+R9lvy2bFynTb8JKyfVWubJiU/mqPLinRSnCR9AuDDek6BLmUGlaXsUEO7vd51bpb+sBsJZ7c42obR+YoNzyxz3HzeeC6Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788471276; c=relaxed/simple;
-	bh=pXg6tDzs/yIYtlmSo7jSZci613flJoW63eNAIK4mf4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GBYRopy3Xqco0rBVgjwoTqoAkZLmvBJmOWd56/cFqxNwq3g/iGnEyGl9X0JEDm4FPfTjXPJX335qILO4nvL/fFdN0/ICc9niHPMX/joMAN2SAKI2mr6XYv+Oy1PWUKVf1P+Z6bNuTpzmNlQbxoFBRUaxWw2OwLif0QOHsvNYdJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqeodVrO; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1788471279; c=relaxed/simple;
+	bh=HzZSseehhvTcxKcIIXhrWBF1VYJIZphOiOExHWKaPpw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D1FESZpVPVVNFTV/w+zK3Z2v5BpkvG1uu8HYpmaScBVYGfpAq1skVfNGfdM6V2BniRAn/JBbQbg0OHmt8/EIiFwyiIwGyJRhbMUWi9wChiJmFDGoEzboqVc+8nEbd3iapxb8uozMkF+tgbg0t4hWk2CwdDSCfb7f1JH3ZTnDacQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fa+I83db; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqeodVrO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fa+I83db"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788471274; x=1820007274;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pXg6tDzs/yIYtlmSo7jSZci613flJoW63eNAIK4mf4k=;
-  b=CqeodVrOZdC7+/p5TlLiB0uFPMSK63FUITHHLnj8Oo98qGyUIIGmiyeH
-   nlMB9v4TkvONaENwoMDX5fkLjHGd9jhXnWG0lsvgnfKTG+1KKwUuz1yMu
-   3sMAVpfrm3IB9M7mIVx4yMdrMFmrPeqqs/fkiU9YKR7GwsQWThL4PiVTB
-   iz8ekneybTWGoBWFjwBeESCPuLnelbb2ecIg52UgyK/y0hw6PWiWjhmGv
-   SvOtgCZaCZ/GH5L1pDnBX3MqfvRozRKQrTNO+ZkhNS7HM4tfmj7Zk/5sd
-   DdFeYWlTWr6r+0LAlzFQI73S9O9i7wNWEiurgMIM+lLORNLdIEEpX82nP
-   A==;
-X-CSE-ConnectionGUID: 8QXegL0mQnW6rymuBAlRmg==
-X-CSE-MsgGUID: JSFp+1sBSA2pDBW779v5bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="76523231"
+  t=1788471276; x=1820007276;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HzZSseehhvTcxKcIIXhrWBF1VYJIZphOiOExHWKaPpw=;
+  b=Fa+I83dbiYs/cfASQ8X/ItVI4w4zOGo7+LHazhXUjHn5BpCEBr8tQMl9
+   qc14TCRCSPt9AmYmvet01kI3kcP2lY8CjLsZZXpKQW9223W13HWHapuWs
+   1Z54Xuxo1UVbagjK7zBqYnxblJMz6D89Pz3R6zV8yrtI3Aq+YiDHxUlW3
+   cfhQJLjt1n38lhmvuRDJKHyHuLiQpIryZ/TSybmwGY87F1gnxy4Atq1oQ
+   V4ED18FtUgRgAXscpQESw8vH2eBXtnx3bgnqvYtL25EudBppzzw9fA86Z
+   qtREh5VY919R7SwTsoQ1nZnHkxOv9/m4nsW8nWqxgVSG3vqQd/CCwM7Y5
+   w==;
+X-CSE-ConnectionGUID: IfsrW1liT52Kl3vho3VeNA==
+X-CSE-MsgGUID: buLu3x3rRfuygKsY2h5lfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="76523234"
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="76523231"
+   d="scan'208";a="76523234"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:34 -0700
-X-CSE-ConnectionGUID: LtHF4WYyTU+92vJDBETfmg==
-X-CSE-MsgGUID: 3Y4JIcD4RnGCi1z8apTFhA==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:35 -0700
+X-CSE-ConnectionGUID: TcJpliWrR4WBW2vFIqBYZA==
+X-CSE-MsgGUID: 1JwpkV7nQkysprpG3Y8a+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="263657940"
+   d="scan'208";a="263657946"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.10])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:33 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:34 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
 Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH v2 0/3] cxl: support mixed-granularity regions
-Date: Thu,  3 Sep 2026 14:34:15 -0700
-Message-ID: <cover.1788469004.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v2 1/3] cxl/region: round default region size within root decoder extent
+Date: Thu,  3 Sep 2026 14:34:16 -0700
+Message-ID: <ac53ec453608b6cc2c42648c9441c50ac94cd4b8.1788469004.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <cover.1788469004.git.alison.schofield@intel.com>
+References: <cover.1788469004.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -58,44 +61,58 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is an update to a series[1] that was previously sent out without a
-cover letter. In v2 a fixup prerequisite patch is added and the tests
-are expanded based on the kernel series review feedback [2].
+The kernel requires a region size to be a multiple of SZ_256M * ways. The
+cxl-cli command, cxl create-region, accepts an explicit size with -s, or
+derives the size using ALIGN_DOWN(). The derived size is not always valid.
 
-[1] https://lore.kernel.org/all/fa5c109f08824180f58341ebd9055545a2ff3142.1780099216.git.alison.schofield@intel.com/
-[2] https://lore.kernel.org/all/cover.1787255388.git.alison.schofield@intel.com/
+The calculation can fail in two ways:
 
-Changes in v2:
-Patch 1: cxl/region: round default region size within root decoder extent
-- New patch to fixup the ALIGN_DOWN usage that doesn't always work
-Patch 2: cxl/region: allow mixed-granularity regions
-- Reject a granularity that is not power of 2
-- Update man page -g section
-Patch 3: test/cxl-region-mixed.sh: test mixed-granularity region creation
-- Cover the third pmem window, a 3-way at 1KB across 3 HBs
-- Add two test cases, a 6-way and 12-way, for more spec defined coverage
-- Select endpoints by walking hierarchy instead of handbuilding lists per case
-- Assert 2 switches below each HB and 2 EP below each switch
-- Require negative test cases to fail at first target write
-- Skip rather than fail when kernel has no registry
-- Drop selector walk language to align with kernel language
+1) When the region interleave ways has a factor of three, SZ_256M * ways is
+not a power of two, so ALIGN_DOWN() is not valid for the calculation. The
+result depends on the root decoder extent and can appear correct by chance.
+For example, a 6-way region with a 3G extent produces the expected 3G size,
+while a 12-way region with the same extent is trimmed to 1G.
 
-The base commit is the current ndctl pending branch.
+2) At 16 ways, SZ_256M * ways overflows the int used for the multiplication
+and evaluates to zero, so the trim returns zero.
 
-Alison Schofield (3):
-  cxl/region: round default region size within root decoder extent
-  cxl/region: allow mixed-granularity regions
-  test/cxl-region-mixed.sh: test mixed-granularity region creation
+Compute the product in u64 to avoid the overflow and round down by division
+so that the derived size is a multiple of SZ_256M * ways. Return -ENOSPC
+when the root decoder window is smaller than SZ_256M * ways.
 
- Documentation/cxl/cxl-create-region.txt |  21 +-
- cxl/region.c                            |  39 ++-
- test/cxl-region-mixed.sh                | 413 ++++++++++++++++++++++++
- test/meson.build                        |   2 +
- 4 files changed, 462 insertions(+), 13 deletions(-)
- create mode 100644 test/cxl-region-mixed.sh
+This was found while adding 12-way region test coverage.
 
+Fixes: 2904504721a6 ("cxl/region: Trim region size by max available extent")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ cxl/region.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-base-commit: ca9a1d69dc8894836999042ae6793fd7698b78fd
+diff --git a/cxl/region.c b/cxl/region.c
+index 85d4d9bb54f2..9d727216b9b8 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -682,8 +682,18 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 		return -ENOSPC;
+ 	}
+ 
+-	if (size > max_extent)
+-		size = ALIGN_DOWN(max_extent, SZ_256M * p->ways);
++	if (size > max_extent) {
++		u64 min_size = (u64)SZ_256M * p->ways;
++
++		size = (max_extent / min_size) * min_size;
++		if (!size) {
++			log_err(&rl,
++				"%s: max available space (%#lx) is less than the minimum %d-way region size (%#lx)\n",
++				cxl_decoder_get_devname(p->root_decoder),
++				max_extent, p->ways, min_size);
++			return -ENOSPC;
++		}
++	}
+ 
+ 	if (p->mode == CXL_DECODER_MODE_PMEM) {
+ 		region = cxl_decoder_create_pmem_region(p->root_decoder);
 -- 
 2.37.3
 
