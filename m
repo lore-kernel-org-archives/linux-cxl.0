@@ -1,147 +1,175 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from caracal.ash.relay.mailchannels.net (caracal.ash.relay.mailchannels.net [23.83.222.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179EE26AC5
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 00:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE022F8EA3
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 01:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788396764; cv=none; b=HnuUwYk3X3RBarSWu2TdLDEhT1JuicPmonP8rJ1JuqU3NdQeWibN8DkT3uLNpW86kVUGAXEunRGSyChPImJIZvdY9/dsIek2zV4FK7xbbBrvMRz/UpEMMCqYufUaIrPcHDjqRCrDwsDp+Iv5ddjU2yfbAvLINvJacbmn5eFidnI=
+	t=1788398661; cv=none; b=BetKasI0cfyxIW/Oe6QsfSS6SVzf3NvxDD8vtD1cRtLcJetQqnUli3Lcw2frQUdirgSKwqVs/PGJcSwzfeAu6gm6b3K9sAsoXBckk3ENOFX0YieT0yQ/fhnpUq0O0kCsyuUW8ZYusgRpJDl31TiU0/NdIA62BvsMKZilIP5VXUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788396764; c=relaxed/simple;
-	bh=E1KnhYl1vseAGA2a1YjLHXlwpoHA5xlkvU5SzwMaMvs=;
+	s=arc-20240116; t=1788398661; c=relaxed/simple;
+	bh=YMbtV9nunqkj9jxTpPZ/p/VxlTrsHjM4uInYjxy7Fjg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pG2YD8zZoMU9hqq/uIiTnrQyKDtCoaRaQrDbMB892/IDjJh+vTn3uGtEjezJShjhFVyAtL4ldpfz91Pw1AoSS6hMLbOzY8euJm4HwO4oCo8+KOi0vQXXaZi7ob8mAQybNGEUqVs9EPPExgLlVTXastLq8kpUooCUYIB0s2SQ4iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OUIsMSIX; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=rLEteDeDR5O6HOS4PirU8CNPFVi7zuSowNdK877AlLhM4RRJnLs+gvlXS8UZUhniGpt2rBWkfndD15J/jQAIWRBBTvthbZcmaSIlVwENvPoPUPZ6TgWRhm3VhVJy8Tg+2R7bepCrOdh5//ceSW09LNAH/96Jl+VoZJjdNZQ3l1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=qpp7Q6Yk; arc=none smtp.client-ip=23.83.222.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OUIsMSIX"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5218927884fso26883371cf.3
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Sep 2026 17:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1788396762; x=1789001562; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PJgfeG9OkO77dXNQBRcYGcD7KsQqp8aI0V+XoArsabk=;
-        b=OUIsMSIXVuuC309iA4fD0vBwKIsj/CLLvvAA37ujZn0CCLBJxXkHTJ+D15MMOdZJKQ
-         cu7yBOCvIiFWEmRrWD6gLNlybuF4YwSowxSRKAvP8uDoeUGN8KFYK8VKfWT/KjUch0qD
-         meSj2/03F4pWrodJoWu9K39+wdRMtOXKI1bjCV/5bw6iGjpxmQdhglmGIbWjd2cQUPti
-         pZhDBLaoxAy7y0ZtDgMV0CRMMrkMAZ0Hr1KQa8C56LJEIV35GCiP3u2stKJnKh0gDVpZ
-         rDxVRU/1A3PWz+IKPLYoj4SOPWCi3hfCwFlJOILSyl05kflgp0HatzUtOLD70duHRv3c
-         4HWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788396762; x=1789001562;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PJgfeG9OkO77dXNQBRcYGcD7KsQqp8aI0V+XoArsabk=;
-        b=HPXALNLVtSmAlSxa3jTtddZ3OkEC784KrlUaA/xAV+pgyG0TTzaFouUMCG4MMHn4lI
-         Lm4XGy/t1VgP8svoSv71xnXu3JVjVu38VbfUso9uhkRpNJVj3ahzr2TzhhgDQXRpWMDa
-         +JPNszEgUILuQGI6NdqDV9Y0G5P/q2QJwYu9cIP1KCOknNmPG0hJu2nIX/PFc/ZkYVGX
-         a63Bfj9Age/24Qz19YCc7gNmU60xdMnuizqwwPh7GqQMWm+1TOkBXUXQqtsC0tDC3xO4
-         ugWo/6RXM8c4z8KWgzyOX0aYo23a8XxMYoaQ9hMsI+IHd6DJi3XTHjo7/WAOjCQ/IdBY
-         1RHg==
-X-Gm-Message-State: AFuF++n/CI+J9RQdcnzKJGTCRjYGJ4G7E2eFOMwIZmC/9MfFs5vFNwY9
-	z++DD92+ccw2hHo3X4TbOGt9P7UXqmDFr1W0Y1PyIJMuv19FGJPyTlsIPaouxsim2oU=
-X-Gm-Gg: AYBFou1Is8uy+kmMwGbtTbHkUk5X1FYUuRKi/hw8qfuR8LX3liUysDI8dEynqF8mOUJ
-	46L9zwXFsYX7tyYmwsZEQXs/7GcD1JI8Lp93DkaPXRxzULS1KknmZrGWqT4KiAZuDVHUGQ6AcVU
-	fU4Ut4aJctvek3tlEKXL2WyzRwsEcOUp/AgqQ8GLOwYX9h33SQlVoD47rAMDB9y4LpiRuNHoSf8
-	yhtJEAHOSQulUcm4m+i70FfTMyUtaGl1GhtnY7ODAVUO8VQK3WawB7F55MzJLVrOPLs2R5JCNp4
-	BVHNJEYM74fKiXNiu76L16cB6h6JXQoDO+5LcgQGQRUunpF2VgdHib8MZdD+uJOeSFM+Ei8RLms
-	P32OGje0/vxO+DGs7OV2wIxZD0hNaSQT/zIuFzrOwycxwKy+lAQBvVQKFSSBbhXZ+ziui1wZLMM
-	d0v+4b6lh79rJGoB+7qY9KYpJvs8Gu8etgBrx2KFw1RLbpJ4q4Tj4F1Qkroyc3Qp5Oxs2jNP7qk
-	NKcrqCW8v7LEADcoE/Ee2v4l40bbabDIiIvwJ9MCULVLa0iFLx6f1Y=
-X-Received: by 2002:a05:622a:1906:b0:52d:918b:92e1 with SMTP id d75a77b69052e-53036b93351mr100930171cf.5.1788396761900;
-        Wed, 02 Sep 2026 17:52:41 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530331dc460sm31323441cf.18.2026.09.02.17.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2026 17:52:41 -0700 (PDT)
-Date: Wed, 2 Sep 2026 20:52:39 -0400
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, david@kernel.org, osalvador@suse.de, akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/memory_hotplug: factor out node_is_memoryless()
-Message-ID: <apjESMmhP61ovLuu@gourry-fedora-PF4VCD3F>
-References: <20260902195507.88655-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="qpp7Q6Yk"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D3FA6641C32;
+	Thu, 03 Sep 2026 01:16:40 +0000 (UTC)
+Received: from pdx1-sub0-mail-a217.dreamhost.com (trex-green-8.trex.outbound.svc.cluster.local [100.96.14.225])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 71279640ABE;
+	Thu, 03 Sep 2026 01:16:40 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Whimsical-Broad: 61675689169ed73f_1788398200688_2889051032
+X-MC-Loop-Signature: 1788398200687:4181958208
+X-MC-Ingress-Time: 1788398200687
+Received: from pdx1-sub0-mail-a217.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.14.225 (trex/8.0.2);
+	Thu, 03 Sep 2026 01:16:40 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a217.dreamhost.com (Postfix) with ESMTPSA id 4hb1s35Qnfz2h;
+	Wed,  2 Sep 2026 18:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1788398200;
+	bh=cOBjALLauKPcEMGzt7Wlxo+1oAT6j3oO8c1tAyjUNk8=;
+	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
+	b=qpp7Q6YkcEdeSslovPGZ1KBdErvBGvPSfWjANKJ9yUpwNyh6tBsM/o1VLEtbH66su
+	 8fLDc90x0CpZWbR2fHCxEHdBlGcDmx1KcCwiJlBu91WXz/u5chuvv4rPl3aNwCTC7s
+	 3l8tUlTDQvVlMqGGN3p4uBBnQ9yPtvqkN7vuGBCGpPLuhGJawV7+wwIX2coP2ROVYW
+	 zcMZsn07XOxeeTUejrulsDhmsfwXKC8RKm0A3Cs9Tk9BuJjE1NmCfsFLrx1cBCn7tw
+	 yjdtljzkHOamhFImewFyetSncvWFG2EVzhUCHpHQJYwuA0knEbg+KLlfSdCkmPlKfh
+	 JjgqAFQZCWmqg==
+Date: Wed, 2 Sep 2026 18:16:36 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
+	benjamin.cheatham@amd.com, alucerop@amd.com,
+	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org,
+	dave.jiang@intel.com
+Subject: Re: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable
+Message-ID: <20260903011636.zflv2y7tmdfc6f3h@offworld>
+References: <20260728144136.709882-1-dave@stgolabs.net>
+ <20260728144136.709882-3-dave@stgolabs.net>
+ <a417b52b-41a7-4f90-9231-6abf82ee22a6@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20260902195507.88655-1-gourry@gourry.net>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a417b52b-41a7-4f90-9231-6abf82ee22a6@zohomail.com>
+User-Agent: NeoMutt/20220429
 
-On Wed, Sep 02, 2026 at 03:55:07PM -0400, Gregory Price wrote:
-> A memoryless node neither spans present pages (populated or ZONE_DEVICE)
-> nor has an offline-but-added memory block still linked to it in sysfs.
-> 
-> try_offline_node() presently open-codes this memoryless check.
-> 
-> Pull that into a node_is_memoryless() helper and pull the existing
-> check_no_memblock_for_node_cb() helper ahead of the add/online path
-> so it's clearer what is happening here.
-> 
-> No functional change.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  mm/memory_hotplug.c | 60 +++++++++++++++++++++++----------------------
->  1 file changed, 31 insertions(+), 29 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 226ab9cb078ad..d0e94057682af 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1491,6 +1491,36 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
->  	return ret;
->  }
->  
-> +static int check_no_memblock_for_node_cb(struct memory_block *mem, void *arg)
-> +{
-> +	int nid = *(int *)arg;
-> +
-> +	/*
-> +	 * If a memory block belongs to multiple nodes, the stored nid is not
-> +	 * reliable. However, such blocks are always online (e.g., cannot get
-> +	 * offlined) and, therefore, are still spanned by the node.
-> +	 */
-> +	return mem->nid == nid ? -EEXIST : 0;
-> +}
-> +
-> +/* Caller must hold the memory hotplug lock for this check. */
-> +static bool node_is_memoryless(int nid)
-> +{
-> +	/*
-> +	 * A node still spanning pages (especially ZONE_DEVICE) is not
-> +	 * memoryless.  A node spans memory after move_pfn_range_to_zone(),
-> +	 * e.g. once a memory block has been onlined.
-> +	 */
-> +	if (node_spanned_pages(nid))
-> +		return false;
+On Wed, 05 Aug 2026, Li Ming wrote:
 
-browsing sashiko feedback:
+>On 7/28/2026 10:41 PM, Davidlohr Bueso wrote:
+>> +/* Enable or dealloc BI-ID changes in the given level of the topology. =
+*/
+>> +static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
+>> +{
+>> +	struct pci_dev *pdev =3D to_pci_dev(dport->dport_dev);
+>> +	void __iomem *bi =3D dport->regs.bi_decoder;
+>> +	struct cxl_port *port =3D dport->port;
+>> +	u32 ctrl, value;
+>> +	int rc;
+>> +
+>> +	guard(mutex)(&port->bi_lock);
+>> +	if (!bi)
+>> +		return -EINVAL;
+>> +
+>> +	ctrl =3D readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +
+>> +	switch (pci_pcie_type(pdev)) {
+>> +	case PCI_EXP_TYPE_ROOT_PORT:
+>> +		if (enable) {
+>> +			/*
+>> +			 * There is no point of failure from here on,
+>> +			 * BI will be enabled on the endpoint device.
+>> +			 */
+>> +			dport->nr_bi++;
+>> +
+>> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
+>> +			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
+>> +				return 0;
+>> +
+>> +			value =3D ctrl | CXL_BI_DECODER_CTRL_BI_FW;
+>> +			value &=3D ~CXL_BI_DECODER_CTRL_BI_ENABLE;
+>> +		} else {
+>> +			if (WARN_ON_ONCE(dport->nr_bi =3D=3D 0))
+>> +				return -EINVAL;
+>> +			if (--dport->nr_bi > 0)
+>> +				return 0;
+>> +
+>> +			value =3D ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
+>> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
+>> +		}
+>> +
+>> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +		return 0;
+>> +	case PCI_EXP_TYPE_DOWNSTREAM:
+>> +		if (enable) {
+>> +			value =3D ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
+>> +			value |=3D CXL_BI_DECODER_CTRL_BI_ENABLE;
+>> +		} else {
+>> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
+>> +				return 0;
+>> +			value =3D ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
+>> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
+>> +		}
+>> +
+>> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +
+>> +		rc =3D __cxl_bi_commit_decoder(dport->dport_dev, bi);
+>> +		if (rc)
+>> +			return rc;
+>> +
+>> +		if (port->regs.bi_rt)
+>> +			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
+>> +		return 0;
+>
+>I think another issue here is:
+>
+>Per CXL r4.0 8.2.4.27.2 Table 8-157. the description of BI=A0 Enable and B=
+I Forward fields.
+>
+>My understanding is that if a DSP or RP connects to a BI-Capable device di=
+rectly, the BI Enable field should be set.
+>
+>Which means if a BI-Capable device is connected to a root port directly, t=
+he BI Enable filed of the root port should be set.
+>
+>In multiple switch levels case, only the last level DSP should set BI Enab=
+le filed, other DSPs and root port should set BI Forward.
+>
+>But current implementation will set BI Enable on all DSPs, and set BI Forw=
+ard on root port whatever the root port connects to BI-Capable device direc=
+tly.
+>
+>If my understanding is incorrect, please let me know. thanks
 
-[Severity: High]
-This is a pre-existing issue and was not introduced by this patch, but can
-this lockless read of node_spanned_pages() race with ZONE_DEVICE memory
-hotplug?
+Thanks for reviewing, I am just now circling back to this.
 
----
+Yes, I think you are right. For v8 I have consolidated this for root ports =
+and dsp,
+the component directly attached to the device now always gets the Enable, t=
+he rest get FW.
 
-This seems legit and worth addressing (other notes are addressible as
-well, but this is maybe noteworthy).
-
-I actually have some old patches sandbagged that tried to marry the
-ZONE_DEVICE hotplug pattern through mm/memory_hotplug.c rather than its
-separare entry-point.  Might be worth a revisit.
-
-I don't know that I want to predicate this particular fix on this patch
-but it's worth a think.
-
-~Gregory
+Thanks,
+Davidlohr
