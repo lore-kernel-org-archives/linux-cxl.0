@@ -1,533 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FDB4E8DE0
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 21:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170411DED42;
+	Thu,  3 Sep 2026 21:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788471279; cv=none; b=kep2ZKDW3y3aWop9hiaD5zgfWsFcrmcSXdv1GNct92i/vzzVguPAtdNdj5sTviXs+iBFDVFtxjWC108fDL45/SA1KBATwR+105r5iyFIC//OnZQFYkPrGuVDOjziUmykoPm8jS5esPPGVc67/jZY3cMXfjAbMvSyDDIzoeu5yvk=
+	t=1788472277; cv=none; b=CanJ/SdT9NJ1HEBPsHiKzt0hb0QF1V9lCWl93OWo2eSsukXYlRKuxMXqpI11XJJiWQvIimPXjkBKyjpguURHS5UcEsqu5aBQW7pcNCO1R4X9MUsGbwyIKqoLR2q80+XgKrWXm0j3o2lUu3zoHyZC/gKOCXwSBqWpn83BXU2b6Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788471279; c=relaxed/simple;
-	bh=dzrfLzZJfIrojEC8HScMibM/5gR463sx37BsKzLEuZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZHZOWTgRo3KBuqAP6sXWI74IBLu+Jl1+WrQhciZFNKa8uURzNswm/2pwHeF2NnaStlFZ4yF7/XWOSF/FNa4f1G/FsqDigvmBdaHUIn22Xfw0BcfjLm1CvKsaSGNZzXbiomXNGqmJ3NJOODEZOUgi4IyH8n09YwolCDrtJeiwVwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dq6aRXNr; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1788472277; c=relaxed/simple;
+	bh=D6vckDvfwy3J0p9rCU09Cjwkb5n2j2oveTTRhvXxRDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fcFURrDuNUkGgFDLnXNGjLiy/twRtdmiuRRPo2RyWiE1B1AD4gDFxTk8dkWwHqhRcWjgtVoceFcoktMSpHJrE/PhygSr8UawgnSBxwWn4Lk3uhfApPAWSVWGN8RuG+KBH+FY0nIfBmRCwxxWPQIzRboRPcxPLfbCicf0ZdEpb+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JJmlVUyi; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dq6aRXNr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JJmlVUyi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788471277; x=1820007277;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dzrfLzZJfIrojEC8HScMibM/5gR463sx37BsKzLEuZA=;
-  b=dq6aRXNrr4qg+b0oEdNBdk+Hx/XMCEOZd8oAisapXbhN1XxQsdUH0BJI
-   9uu9faHA5+fgvkjG9dPja+ojRpLT58MIThbOlx9OZ7Sj8GHrXfiyql6cT
-   OEC3NMGaKw1f3oxMayRUO/7XXe1BvO98+i1VhDFex/Vf4o9ExJy2BgBNl
-   o6BzWiu49Zj2fkMscQS9+7uttp9Uo1oWXR3piipMekLTLu+iIr7w7fII3
-   aWTYg5PnEZ+jiDlOPeRKH/wEsvfQuIOy5KN8teVeOszDD23EFdcoCq7Tg
-   DlH+3dsPMI0J+LNbvM2uwWSb54tdl+UyJxz2kLXCGNDyzfMfbF3ZFt8SJ
-   w==;
-X-CSE-ConnectionGUID: l9egiLBnT++o3c4hnparEg==
-X-CSE-MsgGUID: LekZQv7CRNakefvGreO93Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="76523239"
+  t=1788472276; x=1820008276;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=D6vckDvfwy3J0p9rCU09Cjwkb5n2j2oveTTRhvXxRDs=;
+  b=JJmlVUyiVafSg43l16RNqxNjoMkj24NB/VEbq2vKEzfYfxGiU5k4s81k
+   3ZU9UkWGNby7PA7eEaOt/xUrv36yvzeJlAgrhwDzy48LA1p/AjGaG1qRX
+   nDjbaCsExODjHMNjSiF7gAVbpRIt5WYFxssMx3sTYXXU0QOnmnqnx6c64
+   zHHba76N9IWv6SGiaR7xVu5Kvi4DIknRy2ULib+WvTT1U1wXeSVo52KIq
+   KrOcBWWpBa3b0wi+TfC8YA3VVIqqB8INyYdkWQpLnS+0oXcqLYLsKwm2L
+   7qaan83TLreL+4YmFGcf04spB/ziufG6ZZB8ru6eqFuwQClR4ci5MHf+G
+   A==;
+X-CSE-ConnectionGUID: 3TEMIIAuRWi2Ifn4aQ1skQ==
+X-CSE-MsgGUID: jV2v3lJZREuaazdH2j/SSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="92668705"
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="76523239"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:36 -0700
-X-CSE-ConnectionGUID: cXY/FeDcQbuqobKNshQjrQ==
-X-CSE-MsgGUID: e8bbHuLCSPKsifhO7JXkRg==
+   d="scan'208";a="92668705"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:51:14 -0700
+X-CSE-ConnectionGUID: ALN53Xb0R7GovQd7Z6uwgw==
+X-CSE-MsgGUID: jYSTnWNiQrSlFqAU/OsX7w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="263657958"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.10])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:36 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH v2 3/3] test/cxl-region-mixed.sh: test mixed-granularity region creation
-Date: Thu,  3 Sep 2026 14:34:18 -0700
-Message-ID: <38953b1cd1fd7a2df3978f489e59ab29469ef417.1788469004.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1788469004.git.alison.schofield@intel.com>
-References: <cover.1788469004.git.alison.schofield@intel.com>
+   d="scan'208";a="267272459"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.110.190]) ([10.125.110.190])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:51:11 -0700
+Message-ID: <e8cfd5f8-7704-4dcd-ae1a-01f3f42e3b46@intel.com>
+Date: Thu, 3 Sep 2026 14:51:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/27] cxl/regs: Skip sub-block region request for
+ BAR-owning drivers
+To: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
+ jic23@kernel.org, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
+ corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org,
+ ming.li@zohomail.com, yishaih@nvidia.com, skolothumtho@nvidia.com,
+ kevin.tian@intel.com, bhelgaas@google.com, dmatlack@google.com,
+ kees@kernel.org, gustavoars@kernel.org
+Cc: cjia@nvidia.com, kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+ <20260813093631.2288172-3-mhonap@nvidia.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260813093631.2288172-3-mhonap@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Exercise mixed-granularity region configurations against the
-mixed_gran_regions=1 cxl_test topology.
-
-The mixed_gran_regions topology presents three root decoders over a
-12-endpoint pool:
-  - 2-way @ 4KB across 2 host bridges
-  - 3-way @ 512B across 3 host bridges
-  - 3-way @ 1KB across 3 host bridges
-
-Positive cases run replay_regions to round-trip through the auto
-create path. The auto path reads decoder values back from the
-topology and runs them through the same position arithmetic the
-user-create path uses. A region that creates successfully but
-fails replay usually indicates a position arithmetic bug, so replay
-coverage is the strongest correctness check we have at this layer.
-
-The test cases are listed near the top of the script.
+Content-Transfer-Encoding: 7bit
 
 
-Assisted-by: Claude Opus 4.7
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/cxl-region-mixed.sh | 413 +++++++++++++++++++++++++++++++++++++++
- test/meson.build         |   2 +
- 2 files changed, 415 insertions(+)
- create mode 100644 test/cxl-region-mixed.sh
 
-diff --git a/test/cxl-region-mixed.sh b/test/cxl-region-mixed.sh
-new file mode 100644
-index 000000000000..ea208b7e048e
---- /dev/null
-+++ b/test/cxl-region-mixed.sh
-@@ -0,0 +1,413 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026 Intel Corporation. All rights reserved.
-+
-+# shellcheck disable=SC1091,SC2034
-+. "$(dirname "$0")"/common
-+rc=77
-+set -ex
-+trap 'err $LINENO' ERR
-+check_prereq "jq"
-+
-+modinfo cxl_test | grep -q '^parm:.*mixed_gran_regions' ||
-+	do_skip "cxl_test mixed_gran_regions module param not available"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test mixed_gran_regions=1
-+
-+# Replay support is exposed by cxl_acpi after cxl_test loads. Without it
-+# replay_regions() would unbind and rebind cxl_acpi anyway and the test
-+# would fail rather than skip.
-+if [ ! -e /sys/bus/platform/devices/cxl_acpi.0/decoder_reset_preserve_registry ]; then
-+	do_skip "test requires decoder registry replay support"
-+fi
-+
-+rc=1
-+
-+expect_fail() {
-+	"$@" || true
-+}
-+
-+# Test mixed-granularity region configurations
-+#
-+# Topology: modprobe cxl_test mixed_gran_regions=1
-+#   Three host bridges, two root ports each, one switch per root port,
-+#   and two endpoints per switch, for twelve endpoints total. A region
-+#   interleaves at the host bridge, at the switch, or at both, depending
-+#   on which endpoints it is built from.
-+#
-+#   Three pmem windows:
-+#     - 2-way @ 4096 across 2 host bridges
-+#     - 3-way @ 512 across 3 host bridges
-+#     - 3-way @ 1024 across 3 host bridges
-+#
-+# Cases (in execution order). Positive cases assert the interleave
-+# programmed into the host bridge and switch decoders below the region,
-+# then replay through the auto-create path to round-trip the
-+# configuration; a region that creates but fails replay indicates a
-+# position bug. Negative cases verify rejection at the first target
-+# write, which is where the kernel applies the span identity.
-+#
-+# Positive:
-+#   1. 3-way same-gran @512, 3-way root, every level below passthrough
-+#   2. 4-way mixed-gran @2048, 2-way root, switch interleaves
-+#   3. 4-way mixed-gran @2048, 2-way root, host bridge interleaves
-+#   4. 6-way mixed-gran @256, 3-way root, CXL 4.0 Table 9-7 row 3
-+#   5. 6-way mixed-gran @256, 3-way root, CXL 4.0 Table 9-7 row 2
-+#   6. 8-way mixed-gran @1024, 2-way root, both levels interleave
-+#   7. 12-way mixed-gran @256, 3-way root, CXL 4.0 Table 9-6 row 7
-+# Negative:
-+#   8. 6-way same-gran on 3-way root
-+#   9. 8-way @512 on 2-way root @4096
-+#  10. region_gran > root_gran rejected at sysfs write
-+#
-+# Table 9-6 row 6 has no case here. It is the one legal composition Linux
-+# does not support, and a user cannot ask for it: each level below the
-+# root takes its parent granularity divided by its own ways, so row 7 is
-+# what gets programmed for a 12-way region on a 3-way root at 4*IGB.
-+
-+create_region() {
-+	[[ $decoder && $ways && $region_ig && $memdevs ]] || err "$LINENO"
-+	region=$($CXL create-region -d "$decoder" -w "$ways" -g "$region_ig" \
-+		-m "$memdevs" | jq -r ".region")
-+	[[ $region ]] || err "$LINENO"
-+}
-+
-+# Locate a pmem root decoder by its ways and granularity.
-+# Usage: find_root <ways> <granularity>
-+find_root() {
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == $1) |
-+		select(.interleave_granularity == $2) |
-+		.decoder")
-+	[[ $decoder ]] || err "$LINENO"
-+}
-+
-+# Return the port device that backs the given target position of a root
-+# decoder. Usage: target_port <decoder> <position>
-+target_port() {
-+	"$CXL" list -T -d "$1" |
-+		jq -r ".[] | .targets | .[] | select(.position == $2) | .target"
-+}
-+
-+# Return the switch ports below a host bridge port. Host bridge ports are
-+# depth 1 and the switches below them are depth 2.
-+# Usage: switch_ports <host_bridge_port>
-+switch_ports() {
-+	"$CXL" list -P -p "$1" |
-+		jq -r '.. | objects | select(.depth == 2) | .host' | sort -V
-+}
-+
-+# Return the memdevs below a port. Usage: port_memdevs <port>
-+port_memdevs() {
-+	"$CXL" list -M -p "$1" | jq -r '.[].memdev' | sort -V
-+}
-+
-+# Build a position-ordered memdev list and set $ways to match.
-+# Usage: select_memdevs <nr_host_bridges> <switches_per_hb> <endpoints_per_switch>
-+#
-+# Walk the root decoder targets in position order, then the switches below
-+# each host bridge, then the endpoints below each switch, taking the
-+# requested count at every level. That walk visits endpoints in region
-+# position order, coarsest level first, which is the order create-region
-+# assigns positions in. Taking fewer than the available count at a level
-+# leaves that level passthrough, which is how a case selects whether the
-+# host bridge or the switch does the interleaving.
-+#
-+# Endpoint selection has to go through the hierarchy: memdev names are
-+# assigned in probe order and say nothing about topology.
-+select_memdevs() {
-+	local nr_hb=$1 nr_sw=$2 nr_ep=$3
-+	local -a mems=()
-+	local hb sw mem
-+	local i nsw nep
-+
-+	# Force each case to restate what it expects below the root
-+	hb_iw='' hb_ig='' sw_iw='' sw_ig=''
-+
-+	for ((i = 0; i < nr_hb; i++)); do
-+		hb=$(target_port "$decoder" "$i")
-+		[[ $hb ]] || err "$LINENO"
-+
-+		nsw=0
-+		while read -r sw; do
-+			[[ $nsw -lt $nr_sw ]] || break
-+
-+			nep=0
-+			while read -r mem; do
-+				[[ $nep -lt $nr_ep ]] || break
-+				mems+=("$mem")
-+				nep=$((nep + 1))
-+			done < <(port_memdevs "$sw")
-+			[[ $nep -eq $nr_ep ]] || err "$LINENO"
-+
-+			nsw=$((nsw + 1))
-+		done < <(switch_ports "$hb")
-+		[[ $nsw -eq $nr_sw ]] || err "$LINENO"
-+	done
-+
-+	memdevs="${mems[*]}"
-+	ways=$((nr_hb * nr_sw * nr_ep))
-+	sel_hb=$nr_hb
-+	sel_sw=$nr_sw
-+}
-+
-+# Return the decoders at @1 that are attached to $region, one per line.
-+# Host bridge ports are depth 1 and the switches below them are depth 2.
-+#
-+# "-d switch" is required, not just tidy: an endpoint's decoders are
-+# reported inside the array of the port above it, so without the filter
-+# a depth 2 switch port hands back its own decoder plus the endpoint
-+# decoders below it.
-+# Usage: region_decoders <depth>
-+region_decoders() {
-+	"$CXL" list -b cxl_test -P -D -d switch | jq -r --argjson depth "$1" \
-+		--arg region "$region" '.. | objects | select(.depth? == $depth) |
-+		to_entries[] | select(.key | startswith("decoders:")) |
-+		.value[] | select(.region? == $region) | .decoder'
-+}
-+
-+# Assert the interleave programmed at one level below the root.
-+# Usage: check_level <depth> <nr_decoders> <ways> <granularity>
-+check_level() {
-+	local depth=$1 nr=$2 exp_iw=$3 exp_ig=$4
-+	local -a decoders=()
-+	local dec iw ig
-+
-+	mapfile -t decoders < <(region_decoders "$depth" | sort -V)
-+	[[ ${#decoders[@]} -eq $nr ]] || {
-+		echo "depth $depth: expected $nr decoders, got ${#decoders[@]}" >&2
-+		err "$LINENO"
-+	}
-+
-+	for dec in "${decoders[@]}"; do
-+		iw=$(cat "/sys/bus/cxl/devices/$dec/interleave_ways")
-+		ig=$(cat "/sys/bus/cxl/devices/$dec/interleave_granularity")
-+		[[ $iw -eq $exp_iw && $ig -eq $exp_ig ]] || {
-+			echo "$dec: expected iw $exp_iw ig $exp_ig, got iw $iw ig $ig" >&2
-+			err "$LINENO"
-+		}
-+	done
-+}
-+
-+# Assert the interleave the region programmed into the host bridge and
-+# switch decoders beneath it.
-+#
-+# The region attributes and the replay signature both describe the region
-+# as a whole, so neither says anything about how the interleave was
-+# divided up on the way down to the endpoints. A divisor that is wrong
-+# the same way everywhere satisfies both. These are the numbers CXL 4.0
-+# Section 9.13.1.1 tabulates, taken from the case comments rather than
-+# recomputed here.
-+check_region_decoders() {
-+	[[ $hb_iw && $hb_ig && $sw_iw && $sw_ig ]] || err "$LINENO"
-+
-+	check_level 1 "$sel_hb" "$hb_iw" "$hb_ig"
-+	check_level 2 "$((sel_hb * sel_sw))" "$sw_iw" "$sw_ig"
-+}
-+
-+# Sanity check on the mixed_gran_regions topology.
-+test_mix_gran_topology_sanity() {
-+	local nr_mem hb nr_sw nr_ep
-+
-+	nr_mem=$($CXL list -b cxl_test -M | jq length)
-+	[[ $nr_mem -eq 12 ]] || {
-+		echo "expected 12 memdevs, got $nr_mem" >&2
-+		err "$LINENO"
-+	}
-+
-+	# One root decoder per window
-+	find_root 2 4096
-+	find_root 3 512
-+	find_root 3 1024
-+
-+	# Two switches below each host bridge, two endpoints below each
-+	# switch. Without two switches the host bridge could never
-+	# interleave and cases 3, 5, and 7 would silently test something
-+	# else.
-+	hb=$(target_port "$decoder" 0)
-+	nr_sw=$(switch_ports "$hb" | wc -l)
-+	[[ $nr_sw -eq 2 ]] || {
-+		echo "expected 2 switches below $hb, got $nr_sw" >&2
-+		err "$LINENO"
-+	}
-+	nr_ep=$(port_memdevs "$(switch_ports "$hb" | head -1)" | wc -l)
-+	[[ $nr_ep -eq 2 ]] || {
-+		echo "expected 2 endpoints below the switch, got $nr_ep" >&2
-+		err "$LINENO"
-+	}
-+}
-+
-+# Positive: 3-way same-gran on the 3-way root, every level below
-+# passthrough. One endpoint per host bridge.
-+setup_x3_same_gran_passthrough() {
-+	find_root 3 512
-+	select_memdevs 3 1 1
-+	region_ig=512
-+	hb_iw=1 hb_ig=512
-+	sw_iw=1 sw_ig=512
-+}
-+
-+# Positive: 4-way mixed-gran on the 2-way root @4096, switch interleaves.
-+# Both endpoints below one switch per host bridge, so the host bridge
-+# passes through at 4096 and the switch interleaves 2-way at 2048.
-+setup_x4_switch_interleave() {
-+	find_root 2 4096
-+	select_memdevs 2 1 2
-+	region_ig=2048
-+	hb_iw=1 hb_ig=4096
-+	sw_iw=2 sw_ig=2048
-+}
-+
-+# Positive: 4-way mixed-gran on the 2-way root @4096, host bridge
-+# interleaves. One endpoint below each of the two switches per host
-+# bridge, so the host bridge interleaves 2-way at 2048 and the switch
-+# passes through.
-+setup_x4_hb_interleave() {
-+	find_root 2 4096
-+	select_memdevs 2 2 1
-+	region_ig=2048
-+	hb_iw=2 hb_ig=2048
-+	sw_iw=1 sw_ig=2048
-+}
-+
-+# Positive: 6-way mixed-gran on the 3-way root @512.
-+# CXL 4.0 Section 9.13.1.1 Table 9-7 row 3: host bridge passthrough,
-+# switch 2-way at the region granularity.
-+setup_x6_switch_interleave() {
-+	find_root 3 512
-+	select_memdevs 3 1 2
-+	region_ig=256
-+	hb_iw=1 hb_ig=512
-+	sw_iw=2 sw_ig=256
-+}
-+
-+# Positive: 6-way mixed-gran on the 3-way root @512.
-+# CXL 4.0 Section 9.13.1.1 Table 9-7 row 2: host bridge 2-way at the
-+# region granularity, switch passthrough.
-+setup_x6_hb_interleave() {
-+	find_root 3 512
-+	select_memdevs 3 2 1
-+	region_ig=256
-+	hb_iw=2 hb_ig=256
-+	sw_iw=1 sw_ig=256
-+}
-+
-+# Positive: 8-way mixed-gran on the 2-way root @4096, interleaving at
-+# every level. Root @4096, host bridge 2-way @2048, switch 2-way @1024.
-+setup_x8_all_levels() {
-+	find_root 2 4096
-+	select_memdevs 2 2 2
-+	region_ig=1024
-+	hb_iw=2 hb_ig=2048
-+	sw_iw=2 sw_ig=1024
-+}
-+
-+# Positive: 12-way mixed-gran on the 3-way root @1024, interleaving at
-+# every level. CXL 4.0 Section 9.13.1.1 Table 9-6 row 7: root 3-way
-+# @4*IGB, host bridge 2-way @2*IGB, switch 2-way @IGB. This is the
-+# composition Linux supports in place of the unsupported row 6.
-+setup_x12_row7() {
-+	find_root 3 1024
-+	select_memdevs 3 2 2
-+	region_ig=256
-+	hb_iw=2 hb_ig=512
-+	sw_iw=2 sw_ig=256
-+}
-+
-+# Negative: 6-way same-gran on the 3-way root.
-+# 6*512 != 3*512 — span identity violated
-+setup_x6_same_gran_span_violation() {
-+	find_root 3 512
-+	select_memdevs 3 1 2
-+	region_ig=512
-+}
-+
-+# Negative: 8-way @512 on the 2-way root @4096.
-+# 8*512 != 2*4096 — span identity violated
-+setup_gran_too_small() {
-+	find_root 2 4096
-+	select_memdevs 2 2 2
-+	region_ig=512
-+}
-+
-+# Negative: region_gran > root_gran rejected at sysfs write.
-+# Bypasses CLI to confirm the kernel gate, not the CLI, is the rejector.
-+test_ig_gt_root_rejected() {
-+	find_root 2 4096
-+
-+	root_ig=$(cat "/sys/bus/cxl/devices/$decoder/interleave_granularity")
-+	bad_ig=$((root_ig * 2))
-+
-+	region=$(cat "/sys/bus/cxl/devices/$decoder/create_pmem_region")
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/create_pmem_region"
-+
-+	if echo "$bad_ig" >"/sys/bus/cxl/devices/$region/interleave_granularity" \
-+		2>/dev/null; then
-+		err "$LINENO"
-+	fi
-+
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/delete_region"
-+}
-+
-+# Create, replay, and destroy a region. Usage: run_positive <setup_func>
-+run_positive() {
-+	"$1"
-+	create_region
-+	check_region_decoders
-+	replay_regions || err "$LINENO"
-+	$CXL destroy-region -f -b cxl_test "$region"
-+}
-+
-+# Confirm a configuration is rejected, and that the kernel is what
-+# rejected it. Usage: run_negative <setup_func>
-+#
-+# Exit status alone cannot tell a real rejection from a case that never
-+# reached the kernel. create-region reserves DPA on each endpoint as it
-+# goes and only deletes the region when a target write fails, so the
-+# reservation made for target 0 outlives the case; enough negative cases
-+# sharing an endpoint and create-region starts failing on the size it
-+# cannot determine instead, which looks the same from here. Require the
-+# failure to come from the first target write, and require no region to
-+# be left behind.
-+run_negative() {
-+	local out nr_regions
-+
-+	"$1"
-+	out=$(expect_fail "$CXL" create-region -d "$decoder" -w "$ways" \
-+		-g "$region_ig" -m "$memdevs" 2>&1)
-+	grep -q "failed to set target0" <<<"$out" || {
-+		echo "expected rejection at the first target write, got:" >&2
-+		echo "$out" >&2
-+		err "$LINENO"
-+	}
-+
-+	nr_regions=$($CXL list -b cxl_test -R | jq -r '.[].region' | wc -l)
-+	[[ $nr_regions -eq 0 ]] || {
-+		echo "rejected create left $nr_regions region(s) behind" >&2
-+		err "$LINENO"
-+	}
-+	region=''
-+}
-+
-+# Execution
-+
-+test_mix_gran_topology_sanity
-+
-+run_positive setup_x3_same_gran_passthrough
-+run_positive setup_x4_switch_interleave
-+run_positive setup_x4_hb_interleave
-+run_positive setup_x6_switch_interleave
-+run_positive setup_x6_hb_interleave
-+run_positive setup_x8_all_levels
-+run_positive setup_x12_row7
-+
-+run_negative setup_x6_same_gran_span_violation
-+run_negative setup_gran_too_small
-+
-+test_ig_gt_root_rejected
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl_test
-diff --git a/test/meson.build b/test/meson.build
-index 07c8618cbc6e..492e5b062eb5 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -173,6 +173,7 @@ cxl_elc = find_program('cxl-elc.sh')
- cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
- cxl_region_replay = find_program('cxl-region-replay.sh')
- cxl_type2 = find_program('cxl-type2.sh')
-+cxl_region_mixed = find_program('cxl-region-mixed.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -211,6 +212,7 @@ tests = [
-   [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
-   [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
-   [ 'cxl-type2.sh',           cxl_type2,          'cxl'   ],
-+  [ 'cxl-region-mixed.sh',    cxl_region_mixed,   'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
--- 
-2.37.3
+On 8/13/26 2:36 AM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> cxl_map_component_regs() claims each mapped sub-block with
+> devm_request_mem_region(). A driver that owns the whole component
+> register BAR, such as vfio-cxl, has already claimed the full BAR, so
+> the per-sub-block claim collides and the mapping fails.
+> 
+> Add a bar_owned parameter to cxl_pci_setup_regs() and record it in
+> skip_sub_bar_request on the register map. When set, cxl-core maps the
+> sub-block without requesting the region and leaves ownership with the
+> upper driver. cxl_pci passes false and keeps its existing claim,
+> preserving /dev/mem tooling access to the rest of the component space.
+
+So currently it's either cxl_pci driver that binds to the PCI device or vfio_cxl driver right? Why does cxl_pci needs to pass in false? When vfio_cxl driver is being attached, cxl_pci is not involved and all the bar ranges should be free? Or is there a contention between vfio_cxl and cxl_core that it calls on? 
+
+DJ
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c  |  9 ++++++++-
+>  drivers/cxl/core/regs.c | 32 ++++++++++++++++++++++----------
+>  drivers/cxl/pci.c       |  4 ++--
+>  include/cxl/cxl.h       |  3 +++
+>  include/cxl/pci.h       |  2 +-
+>  5 files changed, 36 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..08d4c955137d 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -720,7 +720,7 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+>  }
+>  
+>  int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> -		       struct cxl_register_map *map)
+> +		       struct cxl_register_map *map, bool bar_owned)
+>  {
+>  	int rc;
+>  
+> @@ -750,6 +750,13 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  		return rc;
+>  	}
+>  
+> +	/*
+> +	 * A caller that owns the whole register BAR (for example vfio-cxl)
+> +	 * maps the sub-blocks without claiming them, so the later
+> +	 * cxl_map_component_regs() does not collide with the full-BAR request.
+> +	 */
+> +	map->skip_sub_bar_request = bar_owned;
+> +
+>  	return cxl_setup_regs(map);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, "CXL");
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 989e79383b99..90dd85f322f5 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -177,35 +177,47 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, "CXL");
+>  
+> -void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> -				   resource_size_t length)
+> +static void __iomem *__cxl_iomap_block(struct device *dev, resource_size_t addr,
+> +				       resource_size_t length, bool request)
+>  {
+> +	resource_size_t end = addr + length - 1;
+>  	void __iomem *ret_val;
+>  	struct resource *res;
+>  
+>  	if (WARN_ON_ONCE(addr == CXL_RESOURCE_NONE))
+>  		return NULL;
+>  
+> -	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
+> -	if (!res) {
+> -		resource_size_t end = addr + length - 1;
+> -
+> -		dev_err(dev, "Failed to request region %pa-%pa\n", &addr, &end);
+> -		return NULL;
+> +	/*
+> +	 * An owning driver (e.g. vfio-cxl) may already hold the whole BAR; a
+> +	 * sub-block request would then collide with that claim.
+> +	 */
+> +	if (request) {
+> +		res = devm_request_mem_region(dev, addr, length, dev_name(dev));
+> +		if (!res) {
+> +			dev_err(dev, "Failed to request region %pa-%pa\n", &addr, &end);
+> +			return NULL;
+> +		}
+>  	}
+>  
+>  	ret_val = devm_ioremap(dev, addr, length);
+>  	if (!ret_val)
+> -		dev_err(dev, "Failed to map region %pr\n", res);
+> +		dev_err(dev, "Failed to map region %pa-%pa\n", &addr, &end);
+>  
+>  	return ret_val;
+>  }
+> +
+> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> +				   resource_size_t length)
+> +{
+> +	return __cxl_iomap_block(dev, addr, length, true);
+> +}
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
+>  
+>  int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			   struct cxl_component_regs *regs,
+>  			   unsigned long map_mask)
+>  {
+> +	bool request = !map->skip_sub_bar_request;
+>  	struct device *host = map->host;
+>  	struct mapinfo {
+>  		const struct cxl_reg_map *rmap;
+> @@ -227,7 +239,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			continue;
+>  		addr = map->resource + mi->rmap->offset;
+>  		length = mi->rmap->size;
+> -		*(mi->addr) = devm_cxl_iomap_block(host, addr, length);
+> +		*(mi->addr) = __cxl_iomap_block(host, addr, length, request);
+>  		if (!*(mi->addr))
+>  			return -ENOMEM;
+>  	}
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index bb892dbfdd6d..ec1693c21f61 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -816,7 +816,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	cxlds->rcd = is_cxl_restricted(pdev);
+>  
+> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map, false);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -829,7 +829,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	 * still be useful for management functions so don't return an error.
+>  	 */
+>  	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> -				&cxlds->reg_map);
+> +				&cxlds->reg_map, false);
+>  	if (rc)
+>  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+>  	else if (!cxlds->reg_map.component_map.ras.valid)
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index efb8ac97bd92..f8e8fddba152 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -213,6 +213,8 @@ struct cxl_pmu_reg_map {
+>   * @resource: physical resource base of the register block
+>   * @max_size: maximum mapping size to perform register search
+>   * @reg_type: see enum cxl_regloc_type
+> + * @skip_sub_bar_request: set via cxl_pci_setup_regs(); the owning driver holds
+> + *			  the BAR, so skip the sub-block claim
+>   * @component_map: cxl_reg_map for component registers
+>   * @device_map: cxl_reg_maps for device registers
+>   * @pmu_map: cxl_reg_maps for CXL Performance Monitoring Units
+> @@ -223,6 +225,7 @@ struct cxl_register_map {
+>  	resource_size_t resource;
+>  	resource_size_t max_size;
+>  	u8 reg_type;
+> +	bool skip_sub_bar_request;
+>  	union {
+>  		struct cxl_component_reg_map component_map;
+>  		struct cxl_device_reg_map device_map;
+> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+> index 3e0000015871..81a32004a604 100644
+> --- a/include/cxl/pci.h
+> +++ b/include/cxl/pci.h
+> @@ -18,5 +18,5 @@ struct cxl_register_map;
+>  struct pci_dev;
+>  
+>  int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> -		       struct cxl_register_map *map);
+> +		       struct cxl_register_map *map, bool bar_owned);
+>  #endif
 
