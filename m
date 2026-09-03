@@ -1,132 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7344FECD8;
-	Thu,  3 Sep 2026 21:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6632B447819
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 21:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788470512; cv=none; b=fPp7cA4ZHwZuqoRVEUZi1LTE+/mywpDGd4tyF0hJzCjjlpLpdflU+3eDOGXYJsxXGUPWDmqDljOuRGsIKnQYu0RWLrfbjNmi95GlCbXIPSaPwYjuNZR22lAA868DwmYbNjjoqVJ2IrxQg2l9ucXRe/AxqMKehV3KVLZag9O1hJ0=
+	t=1788471276; cv=none; b=cmsITn+3kZpW8QCu4GvTOSOhhVL0LyueY4XISBW27ifI+e8yEyUX8FMc2/2eiTSS4cetQMgDDWoItvGAehidr3feoJpznFnZ0YG59wMXqjbqCULJcjJDxH9ip9mRPKlLnQYAKSYfbH1Bz18428nj8aEZH8ShcnnTS/I8k5vtX0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788470512; c=relaxed/simple;
-	bh=YJqXVLIYRtuK1/RaNrfAZeRD2nONfYM2Ix9YmxubWZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qzVLvEb2nrNyMVZmScKXD2mPP0wWzV5fkVA6q/tV7eHpvN5SsNuakxfyMLelGYXfhKjjns+3s5etkp7jIqzuF60piTzuTZaCK4CwwIlHRFELFaW9CPqwuCtuUYlwwiNup84aQKIhF+DhYNM+0XJU0sThdeyxLXfoVZFCWIa+MvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F4Ys67wZ; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1788471276; c=relaxed/simple;
+	bh=pXg6tDzs/yIYtlmSo7jSZci613flJoW63eNAIK4mf4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GBYRopy3Xqco0rBVgjwoTqoAkZLmvBJmOWd56/cFqxNwq3g/iGnEyGl9X0JEDm4FPfTjXPJX335qILO4nvL/fFdN0/ICc9niHPMX/joMAN2SAKI2mr6XYv+Oy1PWUKVf1P+Z6bNuTpzmNlQbxoFBRUaxWw2OwLif0QOHsvNYdJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqeodVrO; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F4Ys67wZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqeodVrO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788470499; x=1820006499;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YJqXVLIYRtuK1/RaNrfAZeRD2nONfYM2Ix9YmxubWZc=;
-  b=F4Ys67wZBmGd2QQBjbBR5anthklxVP8mhCIQIiw3Do1SVbuIh0PuQggW
-   Dg2zXazB37lpPVNnLikVwjaHgPsW+HokrBQCnTEScPPrEvGDH94amrb3V
-   +54b+zjF8/4dPOt/UJcWFRY3larjcsIefGkw4ZEkD7i+ypwypukmhsXpd
-   RO5WDWAqS8oxQFHx6YZja1CVOQIRV8KyfpIQHpmTjYmj95XeOTTzlc5Zs
-   U0ooWPRCW5eJC/X/R2JUaETgArTltkVbVzHacnL4Z3/eeCD1O2Jq4tKek
-   QpqJjwvVvfQKke+L6Nqx/0JIsgC2s8qH23l9/wczVuw7N3rn+Edy1R8bD
-   g==;
-X-CSE-ConnectionGUID: VwZfF7elQquFsu6iAl/jnQ==
-X-CSE-MsgGUID: UR6dbVM3Q1GkzaN2X6wMQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="92787516"
+  t=1788471274; x=1820007274;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pXg6tDzs/yIYtlmSo7jSZci613flJoW63eNAIK4mf4k=;
+  b=CqeodVrOZdC7+/p5TlLiB0uFPMSK63FUITHHLnj8Oo98qGyUIIGmiyeH
+   nlMB9v4TkvONaENwoMDX5fkLjHGd9jhXnWG0lsvgnfKTG+1KKwUuz1yMu
+   3sMAVpfrm3IB9M7mIVx4yMdrMFmrPeqqs/fkiU9YKR7GwsQWThL4PiVTB
+   iz8ekneybTWGoBWFjwBeESCPuLnelbb2ecIg52UgyK/y0hw6PWiWjhmGv
+   SvOtgCZaCZ/GH5L1pDnBX3MqfvRozRKQrTNO+ZkhNS7HM4tfmj7Zk/5sd
+   DdFeYWlTWr6r+0LAlzFQI73S9O9i7wNWEiurgMIM+lLORNLdIEEpX82nP
+   A==;
+X-CSE-ConnectionGUID: 8QXegL0mQnW6rymuBAlRmg==
+X-CSE-MsgGUID: JSFp+1sBSA2pDBW779v5bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="76523231"
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="92787516"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:21:32 -0700
-X-CSE-ConnectionGUID: VmKnbi7VSkagMq8lM2A2xQ==
-X-CSE-MsgGUID: ehBiLw4lRIaUJXiZRlIETw==
+   d="scan'208";a="76523231"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:34 -0700
+X-CSE-ConnectionGUID: LtHF4WYyTU+92vJDBETfmg==
+X-CSE-MsgGUID: 3Y4JIcD4RnGCi1z8apTFhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="270366955"
-Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.110.190]) ([10.125.110.190])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:21:31 -0700
-Message-ID: <01d2856a-b852-40b0-b144-e0f0ad018c7c@intel.com>
-Date: Thu, 3 Sep 2026 14:21:29 -0700
+   d="scan'208";a="263657940"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.10])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:34:33 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>
+Subject: [ndctl PATCH v2 0/3] cxl: support mixed-granularity regions
+Date: Thu,  3 Sep 2026 14:34:15 -0700
+Message-ID: <cover.1788469004.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/27] vfio/cxl: Reject unsupported decoder topologies
- at bind
-To: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
- jic23@kernel.org, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
- corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net,
- alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org,
- ming.li@zohomail.com, yishaih@nvidia.com, skolothumtho@nvidia.com,
- kevin.tian@intel.com, bhelgaas@google.com, dmatlack@google.com,
- kees@kernel.org, gustavoars@kernel.org
-Cc: cjia@nvidia.com, kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
- <20260813093631.2288172-11-mhonap@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260813093631.2288172-11-mhonap@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+This is an update to a series[1] that was previously sent out without a
+cover letter. In v2 a fixup prerequisite patch is added and the tests
+are expanded based on the kernel series review feedback [2].
+
+[1] https://lore.kernel.org/all/fa5c109f08824180f58341ebd9055545a2ff3142.1780099216.git.alison.schofield@intel.com/
+[2] https://lore.kernel.org/all/cover.1787255388.git.alison.schofield@intel.com/
+
+Changes in v2:
+Patch 1: cxl/region: round default region size within root decoder extent
+- New patch to fixup the ALIGN_DOWN usage that doesn't always work
+Patch 2: cxl/region: allow mixed-granularity regions
+- Reject a granularity that is not power of 2
+- Update man page -g section
+Patch 3: test/cxl-region-mixed.sh: test mixed-granularity region creation
+- Cover the third pmem window, a 3-way at 1KB across 3 HBs
+- Add two test cases, a 6-way and 12-way, for more spec defined coverage
+- Select endpoints by walking hierarchy instead of handbuilding lists per case
+- Assert 2 switches below each HB and 2 EP below each switch
+- Require negative test cases to fail at first target write
+- Skip rather than fail when kernel has no registry
+- Drop selector walk language to align with kernel language
+
+The base commit is the current ndctl pending branch.
+
+Alison Schofield (3):
+  cxl/region: round default region size within root decoder extent
+  cxl/region: allow mixed-granularity regions
+  test/cxl-region-mixed.sh: test mixed-granularity region creation
+
+ Documentation/cxl/cxl-create-region.txt |  21 +-
+ cxl/region.c                            |  39 ++-
+ test/cxl-region-mixed.sh                | 413 ++++++++++++++++++++++++
+ test/meson.build                        |   2 +
+ 4 files changed, 462 insertions(+), 13 deletions(-)
+ create mode 100644 test/cxl-region-mixed.sh
 
 
-
-On 8/13/26 2:36 AM, mhonap@nvidia.com wrote:
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> The guest drives a single virtual decoder whose memory maps 1:1, so a
-> device with more than one HDM decoder, or an interleaved one, cannot be
-> represented. Turn that assumption into an explicit refusal at bind rather
-> than a silent misprogramming later.
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/cxl/vfio_cxl_core.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> index 125e11354a46..7edc53b25576 100644
-> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> @@ -36,10 +36,30 @@ static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
->  	if (!pdev->hdm)
->  		return -EPROBE_DEFER;
->  
-> +	/* The guest drives one virtual decoder; multiple are unsupported. */
-> +	if (pdev->hdm->decoder_count != 1)
-> +		return -EOPNOTSUPP;
-> +
->  	hdm_size = range_len(&pdev->hdm->settings[0].hpa_range);
->  	if (!hdm_size)
->  		return -ENXIO;
->  
-> +	/* Interleaved decoders are unsupported. */
-> +	if (pdev->hdm->settings[0].interleave_ways != 1)
-
-Just a nit, but why not check the interleave before retrieve the range_len()? Get the simpler checks out of the way.
-
-DJ
-
-
-> +		return -EOPNOTSUPP;
-> +
-> +	/*
-> +	 * The guest drives resets through the CXL Device DVSEC and polls the
-> +	 * shadow for completion. If the host cannot service a function-scoped
-> +	 * CXL reset (no reset DVSEC, a multifunction device, or no HDM reset
-> +	 * support), that guest request could never complete, so refuse the
-> +	 * device rather than advertise a reset the guest would poll on forever.
-> +	 */
-> +	if (!cxl_reset_capable(pdev)) {
-> +		pci_err(pdev, "vfio-cxl: Unsupported device: host cannot service a CXL reset request\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
->  	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
->  					  PCI_DVSEC_CXL_DEVICE);
->  	serial = pci_get_dsn(pdev);
+base-commit: ca9a1d69dc8894836999042ae6793fd7698b78fd
+-- 
+2.37.3
 
