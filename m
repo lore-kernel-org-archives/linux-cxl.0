@@ -1,158 +1,161 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87334A3D4E
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 12:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF44485CCA;
+	Thu,  3 Sep 2026 12:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788438131; cv=none; b=s1JdcZN44m0+2/Ph1ib89CY1mGoWwEHg4M9EwXGYfDRg7sE984Tri80XvLgChChvQVTKs+/A1bl5ChE1bohv3accIDafxhI82+ZX4sDRb38N32VqSA3tdrRimJVo6Tbbz1CyqE647Lf9GX3wC6cNqIcplBkLqRIM48GOvoE5s3A=
+	t=1788438480; cv=none; b=kg3itz8RI1gMz440vKbzneSBn343BglzTD/FEDDWTlYPcSTblSfZD3H1IsZnXrbWNdxsDV4q4V5XK/qIoo8MHJF/iF+pfL0XS0EJoekOyJw2icWnI8xFntpcAw9PCiRS0Cn/05IimhrXqp+YjjvqZyB6nBBuaJuGEgVXFVKSwPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788438131; c=relaxed/simple;
-	bh=Hr4ffWVPhBSeZxC4Gy1Y+eU1zBxu0o3ECl+FjVnr0+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BTJtsYANKFYPPDlFmnfqYJZP+tYwXbYsPkT/wMeXO6Nd4A0pzwFWkdYF4sqiP28Amzzz1HrGBtNNTEICXUJtVPTjjD7Yw5Dbs2La8g7RqLurIaI3lg0aR5mfvbpLddqVb9/w1JViqHKi7bPHAFeG48qgkVvUr9jftzXFlcHiZrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fFO7tnnD; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1788438480; c=relaxed/simple;
+	bh=tPgQPqeQ8tivFoOi8T92/LAwDafbjGB3DMZys3D1d8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0ZDxHSP8T8QhpDGbO5RVyX4j54Yc8DUjvKaBVpqqvrulx0lgh9PpNraE4Thd4JPPlFfROHXcpfu542Nn3VRTc3rAbXoajOFj2Xo6FTVTn7rSB9JXkc5Fv5obDYMJl3nUqrNJlPMUJiWPxe4UIMsxdzsrHN90UTWRc21MZkjBaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ewng8sCF; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fFO7tnnD"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-84e84a6c4bfso961073b3a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 05:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1788438124; x=1789042924; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=M9z1xem6qEcuUVJMDQZaw5sCruZ2xCngKTtcTUgfBOA=;
-        b=fFO7tnnDxTTCUkjZOG4JvdCV0i/1Zz3lsZuFqgBFxgNldaUN6MLzVcl5zIDpiA3xnN
-         VxWl2cMTtWWoD+dHP8V79AJuchoWxjsked/qWQNHoLg8K9MWjoFlBPX3TO3W9fjikA7h
-         4DxC02UULyhhor4jil23ePTAXAuMCndbYkatmY9H1vPhlnC3Ctx6z6vLTnaunZZGiRmA
-         3mNBeK7JnT8lpyVw/WzRViXqVuZHFimCMZ/56HEDEDfcYASDG1ihOAtcgC1q19t9QotA
-         GeZJjWrkbo8UIZqynnfzjYAcgzVDVGTVWNyIFcSDrTo10FE2kHHWfTwaoZNnI7dFI0lr
-         iwQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788438124; x=1789042924;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=M9z1xem6qEcuUVJMDQZaw5sCruZ2xCngKTtcTUgfBOA=;
-        b=ML1Jv3a/VI9U+S5d7ZxXfnaWbMcW3hNrpeEilOpGice8O7yzdweFMBlYNRFD75FgjY
-         ehViAuuOiPeszTxKYTB/DddlkIAIXtQUwD1hCIUacCTjjc0NqufvBM/R6TYfSdaWPgSp
-         lVY+18Rl3n8+UDEjOeUInNWtHk6SSOkm/0bHmJ5NOy+Ik4jTpj2ekGrwRzQ8Vc/jNsZC
-         WaE3P4dqkvCCC8D0NK711xxB6ljMfZqvrCxjDV+0/uQspak2/iKfQAhUzeaWJ1A7CDH0
-         19AJI6v+dEM6hs0kiLORuFeWKJPa0z3X4fsQUrRVO/VeLKSiPBiwZn0wPvtXezP53hZp
-         Wt8g==
-X-Forwarded-Encrypted: i=1; AKwUvBw1Ifxkjo0ri7yU4YrQQE7Ae59uuPn31xp9xTVV/8nQGYspzW9VLQ8H9sAu6un+rsYdRVXDN2KS5RY=@vger.kernel.org
-X-Gm-Message-State: AFuF++kT8vxefXdeYCOi06qAmWJ1RrZi5BJDzBzZ5lFPfNLL9g8SAgzS
-	7bkrs9WEqx5Ki97ziDQ0CKzGsG7QNfB3fgjbQjYN1uU4E6rTxL+eEi2Hzpj4wgnczlE=
-X-Gm-Gg: AYBFou2OjnfwXEwZPhkX9uoNUCTyZPKGkxz4Bemr7L2kaXxuY702A6Bp7yrayVU7h0t
-	b9/LFXubHrFWZ+mdVv87rQXMQLxWhlzhWAi8ASqyUmL7m1P87YBzDc3TMvA5z0xUkqtZE62OR4b
-	+no4NpV6Espn6moc8kL3Zvf0IUMIbvCCmsqCSePqiTQ4Cj9z+sUy2wJvOV5dWfRM3CddatBee0H
-	1A46RctHv2UxHXsV76YtDEDKzbxUin1nh5omhzJgz6w7AyeyAEhyAkbE7SR1sVNlx/TuudNXVP5
-	Mz96YtE5Is/+YKB3zav3nfJJZVXe2kjieMqF4BECUXvyR8iJ9gnQON4yd6eQjluo5ARIKfiRBCQ
-	+l3zfa/sRPZsBt/ZPwPylTJWt8fWp8ges9bXoaBZo8AtaehfhsSkXvsV9zKluQ6T6wnnwJ0zQIi
-	biNeoRZDh1ayvPEMGVjuOgnRhQqnHVpT47XnmXKOQBU0X0mX8SM74W1Rx7ONoUdLfvn7GH+WNEw
-	6RL5TaorndGaTceTKgWgDMiyw==
-X-Received: by 2002:a05:6a00:17aa:b0:84e:c851:a058 with SMTP id d2e1a72fcca58-85ffcb616aamr4808528b3a.10.1788438123307;
-        Thu, 03 Sep 2026 05:22:03 -0700 (PDT)
-Received: from G6L4RL2QG9.bytedance.net ([61.213.176.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85db24f2076sm2868126b3a.4.2026.09.03.05.21.58
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Sep 2026 05:22:02 -0700 (PDT)
-From: Muchun Song <songmuchun@bytedance.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <djbw@kernel.org>,
-	David Hildenbrand <david@kernel.org>
-Cc: linux-mm@kvack.org,
-	nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ira Weiny <iweiny@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Muchun Song <songmuchun@bytedance.com>,
-	muchun.song@linux.dev
-Subject: [PATCH 4/4] fsdax: materialize pmem vmemmap metadata on faults
-Date: Thu,  3 Sep 2026 20:21:27 +0800
-Message-ID: <20260903122128.12264-5-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260903122128.12264-1-songmuchun@bytedance.com>
-References: <20260903122128.12264-1-songmuchun@bytedance.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ewng8sCF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1788438470; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=iSSfdL1I/sWuhejsZXnDXVfRiUf2pDJbtuLEZmLDvb8=;
+	b=ewng8sCFzw4k/iSZrIWhvFJJeaOlW/jA0VOnK5InyKGKdLoPHOX2+s6MFh0kOm+v9/InuIs64r7/+JAsKaFhgUsUmOY5V01k986TGBiXZ/lm81CYqcYzwTwQ5OUIJbjIesewXaYdilDLYWOU6ZRVydVxsOrkdqhfLzBhqeeJ2QU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0XAFvA3u_1788438466;
+Received: from 30.246.160.252(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XAFvA3u_1788438466 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 03 Sep 2026 20:27:48 +0800
+Message-ID: <3dc96249-5103-4b00-8981-5d309ad9e941@linux.alibaba.com>
+Date: Thu, 3 Sep 2026 20:27:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 17/27] vfio/cxl: Virtualize the CXL DVSEC
+To: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
+ jic23@kernel.org, dave.jiang@intel.com, alejandro.lucero-palau@amd.com,
+ smadhavan@nvidia.com, corbet@lwn.net, skhan@linuxfoundation.org,
+ dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ iweiny@kernel.org, ming.li@zohomail.com, yishaih@nvidia.com,
+ skolothumtho@nvidia.com, kevin.tian@intel.com, bhelgaas@google.com,
+ dmatlack@google.com, kees@kernel.org, gustavoars@kernel.org
+Cc: cjia@nvidia.com, kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+ <20260813093631.2288172-18-mhonap@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260813093631.2288172-18-mhonap@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Pmem FS-DAX registers the device range as ZONE_DEVICE memory, and the
-kernel normally allocates and initializes vmemmap storage for every
-advertised PFN up front. Sparse backing storage and workloads that only use
-the DAX direct-access path may never need writable per-PFN state for most
-of that range, but still pay the memory and initialization cost.
 
-Opt pmem FS-DAX into the shared read-only vmemmap mode and materialize
-private metadata before inserting a PFN into a userspace mapping. PMD
-faults materialize the whole PMD-sized metadata range. PFNs that are never
-faulted continue to use the shared metadata.
 
-This shifts private vmemmap allocation from device registration to the
-first DAX fault for each metadata page, so the struct page overhead tracks
-the faulted DAX working set instead of the full advertised pmem device
-size.
+On 8/13/26 5:36 PM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> Serve reads of the CXL DVSEC body from the per-open shadow and keep guest
+> writes in the shadow rather than letting them reach the hardware, so a
+> guest cannot reprogram the device through the DVSEC. Accesses outside the
+> CXL DVSEC return -ENODEV and take the default DVSEC handling, so a device
+> that also exposes a vendor DVSEC is unaffected.
+> 
+> Route each shadow write through the CXL r4.0 field class rather than
+> storing it verbatim: Control stays programmable, Status is
+> write-1-to-clear, and Capability, Lock and the Range registers keep their
+> firmware snapshot. The guest can no longer set Config Lock or scribble the
+> capability and range fields.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>   drivers/vfio/pci/cxl/vfio_cxl_core.c | 88 ++++++++++++++++++++++++++++
+>   drivers/vfio/pci/vfio_pci_config.c   | 36 +++++++++++-
+>   include/linux/vfio_pci_core.h        |  5 ++
+>   include/uapi/linux/pci_regs.h        |  1 +
+>   4 files changed, 129 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> index 2e516a0929c6..9fed909cb9d3 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -148,11 +148,99 @@ static void vfio_cxl_close_device(struct vfio_pci_core_device *vdev)
+>   	cxl->dvsec_shadow = NULL;
+>   }
+>   
+> +/* Read a 16-bit DVSEC field from the shadow; @off is DVSEC-relative. */
+> +static u16 vfio_cxl_dvsec16(struct vfio_cxl_state *cxl, u32 off)
+> +{
+> +	u32 dw = cxl->dvsec_shadow[off / sizeof(u32)];
+> +
+> +	return (dw >> (8 * (off % sizeof(u32)))) & 0xffff;
+> +}
+> +
+> +/*
+> + * Apply the CXL r4.0 8.1.3 write class for the 16-bit DVSEC register at @off.
+> + * Control is programmable, Status is write-1-to-clear, and Capability, Lock and
+> + * the Range registers stay fixed at their firmware snapshot.
+> + */
+> +static u16 vfio_cxl_dvsec_field(u32 off, u16 old, u16 wval, u16 wmask)
+> +{
+> +	switch (off) {
+> +	case PCI_DVSEC_CXL_CTRL:
+> +		/*
+> +		 * CXL.mem stays enabled for as long as the guest owns the device.
+> +		 * The HDM decoder maps the guest window to device memory, so a
+> +		 * store to it while CXL.mem is disabled completes on the device as
+> +		 * an error that the host fabric reports as an SError, which is
+> +		 * fatal. The spec does not pin down accesses to a decoder whose
+> +		 * CXL.mem is off and many hosts SError, so ignore a guest request
+> +		 * to clear the enable and keep the bit set.
+> +		 */
+> +		return ((old & ~wmask) | (wval & wmask)) | PCI_DVSEC_CXL_MEM_ENABLE;
+> +	case PCI_DVSEC_CXL_CTRL2:
+> +		return (old & ~wmask) | (wval & wmask);
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- drivers/nvdimm/pmem.c | 1 +
- fs/dax.c              | 5 +++++
- 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index b14f75daeda7..5530b32163d3 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -543,6 +543,7 @@ static int pmem_attach_disk(struct device *dev,
- 		pmem->pgmap.nr_range = 1;
- 		pmem->pgmap.type = MEMORY_DEVICE_FS_DAX;
- 		pmem->pgmap.ops = &fsdax_pagemap_ops;
-+		pmem->pgmap.flags |= PGMAP_VMEMMAP_OPTIMIZATION;
- 		addr = devm_memremap_pages(dev, &pmem->pgmap);
- 		bb_range = pmem->pgmap.range;
- 	} else {
-diff --git a/fs/dax.c b/fs/dax.c
-index 1fbba0d21c13..89377301d51b 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -13,6 +13,7 @@
- #include <linux/fs.h>
- #include <linux/highmem.h>
- #include <linux/memcontrol.h>
-+#include <linux/memremap.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
- #include <linux/sched.h>
-@@ -1877,6 +1878,10 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
- 	if (err)
- 		return pmd ? VM_FAULT_FALLBACK : dax_fault_return(err);
- 
-+	err = vmemmap_materialize_page(pfn_to_page(pfn), pmd ? PMD_ORDER : 0);
-+	if (err)
-+		return dax_fault_return(err);
-+
- 	*entry = dax_insert_entry(xas, vmf, iter, *entry, pfn, entry_flags);
- 
- 	if (write && iomap->flags & IOMAP_F_SHARED) {
--- 
-2.54.0
+Control2 is routed through the r4.0 write class as plain RW,
+but both INITIATE bits are self-clearing doorbells per spec: the guest
+sets the bit, the device performs the operation and clears it, and
+completion is observed in STATUS2 (Cache_Invalid for the WBI). With the
+plain-RW class the shadow latches the bit at 1 forever, and because
+reads are served from the open-time snapshot, Cache_Invalid
+(CXL_DVSEC_STATUS2_CACHE_INVALID) never changes either.
+Both polling paths are dead ends.
 
+The interesting part is that the series already models this correctly
+for the sibling command bit -- the vfio_cxl_reset() epilogue does:
+
+	/*
+	 * The guest-facing DVSEC bookkeeping only applies while the device
+	 * is open. Initiate_CXL_Reset self-clears in hardware; mirror that
+	 * and stamp the outcome onto a fresh hardware STATUS2 read for the
+	 * polling guest.
+	 */
+
+INIT_CXL_RST is self-cleared in the shadow and the outcome is
+stamped into STATUS2 for the polling guest. Initiate_Cache_WBI just
+never gets the same treatment.
+
+The polling contract is one this series itself implements on the host
+side: cxl_reset_wait_cache_wbi() sets WBI, then polls STATUS2
+Cache_Invalid with a 100ms budget. A guest kernel running the same
+sequence would set WBI, poll the frozen snapshot, and time out before
+ever reaching INIT_CXL_RST, so whether a guest-initiated CXL reset
+succeeds depends on the open-time STATUS2 value rather than on device
+state. The stuck command bit is also directly visible to any guest
+reading CTRL2 back.
+
+Would the minimal fix be to mirror the epilogue's INIT_CXL_RST handling
+for WBI: self-clear the bit on the 0->1 write and set Cache_Invalid in
+the shadow (the host already runs the real WBI at VM power on/off via
+cxl_reset_dvsec_sequence(), and the existing W1C class on STATUS2 lets
+the guest clear Cache_Invalid before the next round)? Or is forwarding
+the WBI to hardware and keeping Cache_Invalid live the intended
+long-term model?
+
+Thanks.
+Shuai
