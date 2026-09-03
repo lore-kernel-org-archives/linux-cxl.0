@@ -1,64 +1,64 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D074A3D32
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 12:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFC4A3D45
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Sep 2026 12:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788438117; cv=none; b=gI04N9IurwOC7nx+c9gRbl61EZexq70W/LVFCoVCp8emDiQx0xROwZR2XXHQgPVX3IlP9hO7n4DKmHRwMPsUEisbS/r7+xt8wHd9Fm6IW894sxvqguS+LuJOoGcwJX2R/E4mWixQaiYvIUQIEHDfgkgV/2EI7Y3B8KISsCaTKXY=
+	t=1788438120; cv=none; b=tpHDCX0qUhvp7S/AQOewTciPW7rB0zP9SQODnb3RjMis0E2UBuWxZ89RkEA5dl1IvMhnDQ3vixJqtS9cIgiM39d1XYdJK8SL2hqyiRVfwD6Z+BKl3ztcEG12i0WUcGbdyz+1QTgsyvvQ08bkVUZDPJ68sHpvW7y16aMNy2iGyPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788438117; c=relaxed/simple;
-	bh=gSp03gDMBE517M+sfYMxfrdEqp8BxtiQyag0D0cdDZY=;
+	s=arc-20240116; t=1788438120; c=relaxed/simple;
+	bh=iUjs+EiXrSNpfuKC5pykyao7Ehz6dcFc1lBNJ06asU4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E3LPFbANuDT+BDZ31XQCFW1jDRQ4k5Ntz9yTnlvT/GXPEy+VScC9PuXM/7vZXSQ9TKo0kTdLCz5NnbanWrA+/nkiTIE1K6SbK3JAkekKSZ249lSbGDyCmKO1deomKiUuo4uglB0rm/usz1cRF5On0ccRlWSAFlEGpICEHj5ZdvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=K/FkTuR+; arc=none smtp.client-ip=209.85.210.169
+	 MIME-Version; b=KuWU/pCEB4eiNQw5UJlyJx3jj0y3NBqJ6bMIhozOCQ8JQkQheO7vzD7dTs7qxU9ORWJNSwoZo57W0om8UONco/iqlmj2R7So90Y6YHr5bXNlTP4o6Yyr0fMRnBT7uTrPJbYrPBV2wcKH9ZzeNlJU4VLxStizC66SIncQHgwRLLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HM8P+JNe; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="K/FkTuR+"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-8568e3ed034so1921882b3a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 05:21:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HM8P+JNe"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-85377c8bc96so2596028b3a.3
+        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 05:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1788438108; x=1789042908; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1788438113; x=1789042913; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=pJ73qBOQiTpXKwSrjAZqmWemxXwNOfQBE65lRVHowjY=;
-        b=K/FkTuR+tFUmn6R5hMiyhpSkfSjGDW8McKFqlDSYtKc6Yfi9iN3NmwHs8C1hFilCCB
-         jwMPQB353w2D7zxkOqxaeyRW1dBnkaeFxu+bXaR21KNmor0K6gdukCjxwJwJCeL+sV41
-         FMKYaLW8bku3mfCDX7TA3QLEBEiqGNTx/Xoerxgvz2zlL/0I8GiZv9Ju1BukErzsqki+
-         1fHLheoSghIJAAbX/YCGgqTKlHbeZ9CVlEiSnrADDoLG4nsO62lOZg/rYYzBNLHj+9lz
-         TI8NivZWb8wTxSOYFnot29LvmNN2ZkWFb5/eHWq/Ium48lccpaafhMv3Aw2hRN35XhwI
-         iE+g==
+        bh=8wCVi0RPQ/1w5scAtdtuQVBMayOKGUht0GU0fLrik4o=;
+        b=HM8P+JNeXozKprIxH883rNenR/o9M2W+wBj9fdZuwElwFzOkyitwEx5Mt0YhG5NWRK
+         inKZgpUnbZGWPn1WoBGBmEwxh2wIyIRHgsoO1ZOCrl/vitP/SJfYocCbzZaxW+53kM4k
+         UEbwW093laLXhGKAuHqmeVPFSqBG1YiqIcrvezNM/yp/xH4euQaRNyixTz1xB84LArZ2
+         BpywZzOOmqgKcDYishQLzhNw7qZX62830zj7cETarR3To3nmLmMA/Yo4ZdLbnm6XNFrR
+         S2qXTOW0U1pKmPVhapjTTxhNOmNMVHsK1OJAPhMLWlwUrogk5QJYCLwYd92aB41O3gRY
+         SJ4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788438108; x=1789042908;
+        d=1e100.net; s=20251104; t=1788438113; x=1789042913;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=pJ73qBOQiTpXKwSrjAZqmWemxXwNOfQBE65lRVHowjY=;
-        b=ONQKaKpbS82XbgKRi8CwvU/qzA7OXZ38vAtbvRBt6Ipr4glNWSoHtUUjazQSn0Vzmt
-         M3npNu3AfCN3HVE95aVe409/ErL9K1S7MOP9SH6hyyjOXfQuA27DtB70ZoJPJvn7ztja
-         qD+cQUcjy+ru1Gh/16WWu87QZrauyD4DkkvtkAgLhGlZ3uXr1mDD7jfPxHY16Ms7+8vG
-         ptdD/FGWV4+uqNsy4yMQDjISoJQiHvt8zlXA9Cu6EqNVYkKoAv4hNMAcMe64abyz/D0x
-         mejAq7T4ZoMNU5Bh3cyZhV005uyGa+rL/IeGC9FYI71KK8pI/ttoLcIW79yIGQ77Bsyg
-         hjUQ==
-X-Forwarded-Encrypted: i=1; AKwUvByvYU/p9su66pYf5Y9fX5Nb4r+krN7/GzaqAsl/5Epg5R0nXtbz3yd20VlRyI6Quik3Yh2rVojCkJ8=@vger.kernel.org
-X-Gm-Message-State: AFuF++m++Z+g0fjUVUtXeEnCfeL3TPMIbiN8H4cmZ4GmIMnWrtCmTMUk
-	k8LgZnLJ1xKlDcEU5OnmS7a6ZAQlsQPWO6n39UdJUmOyRh0oA0R9ke921xnWh5g8xbM=
-X-Gm-Gg: AYBFou0AJsK7m0o2bN5G+d4tgjPHsMTxOhUBHKcRkOafTHHadeZiDnq4H2mF7D0PC/X
-	BA+o7JtIPrZ4R64TSZ83gCrbHr7J432CHedjkyTYBWG2i/hIL9aAEOO4rvV+x3seK9XcxQkqyxn
-	O6koChyMU4JkZFlpRiqMMmH84sUlYt1X27M8MmPKJ5Iszr4Fv50oagoEDfe9d17yfmcIYDdIn42
-	n922FfQv+5NreUmDp6jBcGaoZiQcXcQIFARFIEH/5Ifc9cJEOzU9bBrYnLf+qnZ75y8fHJDn258
-	YexuI6eX7DhzqLhLre2wj0Y9vFGFttWa/ZNysE9t41s3+kvUHMF7o/Qzcc6Xc8bPyXRQjmiOhPS
-	VXzTGorNdVIkMrISwfBei7ajYxpRo036BJwMaMM0T9labAABNLZi/daB94Bin8Qug1EL4DztrOe
-	qkrn03Dy50vWOu6ra+/F6gnlLTcbgExg31KXB6PJx6AoVaYCiZCl+mqbMiJtSTIHCEiqwoxMppQ
-	swHLi6fV9HwRCcineWWRU5jtg==
-X-Received: by 2002:a05:6a00:3021:b0:848:30c3:45dd with SMTP id d2e1a72fcca58-85ed2cbc58amr18768996b3a.11.1788438108017;
-        Thu, 03 Sep 2026 05:21:48 -0700 (PDT)
+        bh=8wCVi0RPQ/1w5scAtdtuQVBMayOKGUht0GU0fLrik4o=;
+        b=akBxUNUURlSUQRtO2nWvFEhVXSzzleQpsIdOoocOUW3xrnxOps11jkzxHwMwyIgHjI
+         W1EDZ/qhkZeY9VA+VIRmFX0w4g0nhFw3GzcDBdkIz20+3HGVHw8RekQEbO/n6ZerDFeZ
+         5wJ5mFXiPn14SB8rx86n6NcL+6c5GtCVhiPJN5j9xfjTQZkbqWXqJepVIec/L0ZyJiPe
+         AExP4jBHf3F/ASRR7ronIVwPlUQnfAZanU40YAWYNqVBtxh/Hmq1tXNanlH418fSMT9Y
+         wb1PReJ/o1NxANT1yLb/y+14LN/Tgd1hbdxWlAHq6zI1zYYDXL1jQ/Kzh5VnvCJZw5vg
+         I6+Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwEB7XRS0v5BAUd0D4tJG4zIeuvwkPYZjU9+XmiplTQuk/F9qIisNIpYCUdLke9pT4KIIFnsuH41FY=@vger.kernel.org
+X-Gm-Message-State: AFuF++kuUFf80BnlP/DLTX5n4QPiyQeZpAiK+vpZRYwa/pSMllmdJmxf
+	NSx5f6g/G8Plg99eP0Ru1UrrDABrUnypUuGMd2KLMQEc+GDG/oKI9rtzt55whkxaLo8=
+X-Gm-Gg: AYBFou03koy1mKm6qbbksDx8g72yijWxtq0Pi5tdqnKFRzjRwJKV37hM0Fsnn/9R6Ni
+	2d5o1QIEz/gZPwHjOptth4yfLIRQVz1sA7Bo9SMpQE3h+x8vDGxG7LI0c72tftjfnwnK4nvY7yg
+	+vYvGVvA9l8VlgsYYQvSZwlvjg4cg8JJwcAl19aaXvx7WCRmhEGlVyvp/0ozKMiix//C+F1SpE9
+	ZLtsnIW2Zau2wPHAGR9CYb6tejuvkYwX2O+2lYdnZBJX3NJCUazmXq+Ld0m8spfygHztxCRKpl4
+	7/FAXBXr5w8Q2SM1P5vOUI+kIKS584T+XdIC4jhjBdaF7YOl9pzH3Rg/vJCWKYiF3Uk7VbSOJqc
+	6PHxVCSisAdRzoU1E7jQ8BASUOB8QOUPjPuXttBl11y1ecCZoHEVseGUCvOu59vMhOcyna5G4kU
+	14Dp9YX5Kfg2oWlayJ62UYD9CdxRZeKPQZ+cawuiInuKv1gkaD+CE9IBrAefg8urR54EhyetLPb
+	PesIv4Tm1phnnYCknyvky2Otw==
+X-Received: by 2002:a05:6a00:e8f:b0:857:72f8:dc91 with SMTP id d2e1a72fcca58-85ed850a6d7mr17640794b3a.18.1788438112769;
+        Thu, 03 Sep 2026 05:21:52 -0700 (PDT)
 Received: from G6L4RL2QG9.bytedance.net ([61.213.176.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85db24f2076sm2868126b3a.4.2026.09.03.05.21.43
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85db24f2076sm2868126b3a.4.2026.09.03.05.21.48
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Sep 2026 05:21:47 -0700 (PDT)
+        Thu, 03 Sep 2026 05:21:52 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Dan Williams <djbw@kernel.org>,
@@ -82,9 +82,9 @@ Cc: linux-mm@kvack.org,
 	Qi Zheng <qi.zheng@linux.dev>,
 	Muchun Song <songmuchun@bytedance.com>,
 	muchun.song@linux.dev
-Subject: [PATCH 1/4] mm: generalize vmemmap remap architecture support
-Date: Thu,  3 Sep 2026 20:21:24 +0800
-Message-ID: <20260903122128.12264-2-songmuchun@bytedance.com>
+Subject: [PATCH 2/4] nvdimm/pmem: avoid HWPoison flag updates for clean pages
+Date: Thu,  3 Sep 2026 20:21:25 +0800
+Message-ID: <20260903122128.12264-3-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260903122128.12264-1-songmuchun@bytedance.com>
 References: <20260903122128.12264-1-songmuchun@bytedance.com>
@@ -96,119 +96,38 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP is named after its first user, but
-the underlying requirement is not HugeTLB-specific. Generic MM only needs
-to know whether an architecture can safely remap populated vmemmap PTEs at
-run time.
+pmem_mkpage_present() is called after persistent-memory poison has been
+cleared. It only needs to clear PG_hwpoison and undo the MCE nospec state
+for PFNs that are still marked poisoned.
 
-Rename the architecture opt-in to ARCH_SUPPORTS_VMEMMAP_REMAP and make
-HugeTLB vmemmap optimization depend on that generic capability. This also
-prepares for FS-DAX vmemmap optimization, which relies on the same runtime
-remap support.
+For clean PFNs, test_and_clear_pmem_poison() has no semantic effect, but it
+still performs an atomic clear operation against struct page flags. That is
+unnecessary today and conflicts with the FS-DAX vmemmap optimization added
+later in the series, where clean PFNs may be backed by shared read-only
+metadata.
+
+Check PageHWPoison() first so only poisoned PFNs update the page state.
+Poison recovery keeps the same behavior, while clean PFNs no longer require
+writable per-PFN metadata.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- arch/loongarch/Kconfig | 2 +-
- arch/riscv/Kconfig     | 2 +-
- arch/x86/Kconfig       | 2 +-
- fs/Kconfig             | 2 +-
- mm/Kconfig             | 6 ++++--
- 5 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/nvdimm/pmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 9c5def706222..e9bf19172e86 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -72,6 +72,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_RT
- 	select ARCH_SUPPORTS_SCHED_SMT if SMP
- 	select ARCH_SUPPORTS_SCHED_MC  if SMP
-+	select ARCH_SUPPORTS_VMEMMAP_REMAP if 64BIT
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_MEMTEST
-@@ -80,7 +81,6 @@ config LOONGARCH
- 	select ARCH_WANT_DEFAULT_BPF_JIT if HAVE_EBPF_JIT
- 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
- 	select ARCH_WANT_LD_ORPHAN_WARN
--	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP if 64BIT
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select BUILDTIME_TABLE_SORT
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 5965666194b0..3614001cafdb 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -76,6 +76,7 @@ config RISCV
- 	select ARCH_SUPPORTS_RT
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_SCHED_MC if SMP
-+	select ARCH_SUPPORTS_VMEMMAP_REMAP
- 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
- 	select ARCH_USE_MEMTEST
- 	select ARCH_USE_QUEUED_RWLOCKS
-@@ -88,7 +89,6 @@ config RISCV
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
--	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select ARCH_WEAK_RELEASE_ACQUIRE if ARCH_USE_QUEUED_SPINLOCKS
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a8c3b3d31a27..53f72d1500c5 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -133,6 +133,7 @@ config X86
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_SUPPORTS_RT
-+	select ARCH_SUPPORTS_VMEMMAP_REMAP	if X86_64
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_MEMTEST
-@@ -148,7 +149,6 @@ config X86
- 	select ARCH_WANT_HUGE_PMD_SHARE		if X86_64
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP	if X86_64
--	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
- 	select ARCH_WANTS_THP_SWAP		if X86_64
- 	select ARCH_HAS_PARANOID_L1D_FLUSH
- 	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
-diff --git a/fs/Kconfig b/fs/Kconfig
-index d1c210c6508f..655795fbbd1b 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -276,7 +276,7 @@ config HUGETLB_PAGE
- 
- config HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- 	def_bool HUGETLB_PAGE
--	depends on ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
-+	depends on ARCH_SUPPORTS_VMEMMAP_REMAP
- 	depends on SPARSEMEM_VMEMMAP
- 
- config HUGETLB_PMD_PAGE_TABLE_SHARING
-diff --git a/mm/Kconfig b/mm/Kconfig
-index c1ddf59c0d71..7ec734d89beb 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -463,12 +463,14 @@ config SPARSEMEM_VMEMMAP
- 
- #
- # Select this config option from the architecture Kconfig, if it is preferred
--# to enable the feature of HugeTLB/dev_dax vmemmap optimization.
-+# to enable the feature of dev_dax vmemmap optimization.
- #
- config ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
- 	bool
- 
--config ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
-+# Select this from architectures where generic MM can safely remap populated
-+# vmemmap PTEs at run time.
-+config ARCH_SUPPORTS_VMEMMAP_REMAP
- 	bool
- 
- config HAVE_MEMBLOCK_PHYS_MAP
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 30a51c365ce8..b14f75daeda7 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -80,7 +80,7 @@ static void pmem_mkpage_present(struct pmem_device *pmem, phys_addr_t offset,
+ 		 * here since we're in the driver I/O path and
+ 		 * outstanding I/O requests pin the dev_pagemap.
+ 		 */
+-		if (test_and_clear_pmem_poison(page))
++		if (PageHWPoison(page) && test_and_clear_pmem_poison(page))
+ 			clear_mce_nospec(pfn);
+ 	}
+ }
 -- 
 2.54.0
 
