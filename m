@@ -1,165 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DABA481FDF
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 18:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E1A3DDB01
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 18:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788545323; cv=none; b=sWcHt80TRKZcO9Kd7IqDp4XnXTX8cGbMVFtWvOwf0ZIqQAff3pOCMPqESzo0eDC89y1KE/olPC+AVaDjQvW1KYRMrTFkgpK6EGB09DMskokcpt5PYcWtl5rk0U3DaYg8xj+MaMTrpzRSXQxrXIRfBtA3DxS9PbeMhTdMvfOHo0I=
+	t=1788545375; cv=none; b=H+RLYV+M4/9WVr5eYMCMi2xoXyajmZ2oI0yyB8H8iA4B3+Kfv0F5/+H5xTTWcjnmgCH71mtsIlTZ5Mxt3jaDwpR0+TH3MM637607fqjOuT6BJycCX9gUCn7q64xiRw3nW884YDObtb9p5O9n9v7zP9fNhQB+DyucFCmbKF7gGnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788545323; c=relaxed/simple;
-	bh=Zbt3Hdm1efnmHmAcsG6jcyC9ryW92AEildP0QJmmWqw=;
+	s=arc-20240116; t=1788545375; c=relaxed/simple;
+	bh=jcANQlXYCWZmUGCfIyQlYly27bXxPUu15EkCqYFyKEc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ekqtpF5hms3fvdJZdu3kzkQtNB8DbziVv3/Y1MCoC4+4ZW+vvILZY9qlfVxbrvE1yRYSO9Md3AMhT//Wkw6GHKu4VjAL9tulVD4r+yfs5b1/dbATLbbXil9Rj4PUZHj9Tih0yDhhzDOSIiAXKmcpiinYyOC0vRA0hucauUGc7Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiEqieHs; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=EtW7wnhkFwiN5vPf/7Ysj8T1KC1i2xHn3VqHeDEehJIxqY2iQ3bZ/ttwijY1G/M5H4vnmhP26VUr4XWlRx7nCYH0oPn8LOSeMLzaKTZK+1n0F5rCpoU01fAVniB1dm+7fo5p7JjNMeDJQrgwCbRZFMvOpFc+wGgQp6Dcp3CtB7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMGoNzwZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiEqieHs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A9C1F00A3D;
-	Fri,  4 Sep 2026 18:08:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMGoNzwZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5491F00A3D;
+	Fri,  4 Sep 2026 18:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788545322;
-	bh=xbVcZoPL/861MPKpSAsb6EsbPoQEXJ5C3WYv1IhRhNY=;
+	s=k20260515; t=1788545373;
+	bh=YOYF9W9YRVDAqajm1cP0L16ekGRUXGqKrauRAvVD2D8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IiEqieHsLAjvldCXXEdjEsf2fxnTYUB1OE+RG6aVh8tlj0wdbItiBleWRK2Mbd7EO
-	 KtXhKCCvxAGLvz1w6lhDC6jLfS9qzhJRqrPQTgknXilufkrhVYOJpjQj6XRcfLrp2y
-	 2vubvILJRRxzcREY1PLsMrWnMfA5SBJt9YPY5ZylJ0IrXZtET5emkGbabBLeEsqxuY
-	 d8G0J3k1lQGsrtDhatV+nubw2rnr0YRUg9Et39iXrb18ZUBT33RY6EEh4hJroMjLMP
-	 q/oivzhnyNKFR7dwEpZdk4W4mat7fHnQ4qL/2a6meL75yJa93/KJVfoXmSlGy09UvO
-	 xlz8/Kqu/BGIg==
+	b=EMGoNzwZ21gUW3tFD04akDOKkfgJSamVgFjeFavAP/e5HpaT0unIhlGfUgh/CnLNR
+	 HMOk+oaniFIthwYAyCWLkVI4MusJV8mtIWWztYO/E/6ljLvioYkqyZXS2bfUUWu1jx
+	 +8SGcc6opnr9MAOcgGa9La5lvoRYtgULnmNMwrSoq9pntj2ktvZZXKv9mrgbkcq8Zo
+	 Z+PQ4FBMEPQ00/ztOmC/x8uAMW5JW5JxYsuC50Dvx3mLLJxNE5xunDHesupXCaVxlb
+	 TvmNrsxE/1z4Z6lI75cQkOgkNoGsZpE1Qxhp6FGjVCXvvINnL390MD/ROXCEpd4YOK
+	 PKv8stjU+7w8Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 12/13] ACPI: APEI: GHES: Bound AER info copy and
- sanitize software metadata
+Subject: Re: [PATCH v6 10/13] efi/cper: Read only validated fields in
+ cper_mem_err_pack()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260904172337.1409775-13-dave.jiang@intel.com>
+In-Reply-To: <20260904172337.1409775-11-dave.jiang@intel.com>
 References: <20260904172337.1409775-1-dave.jiang@intel.com>
- <20260904172337.1409775-13-dave.jiang@intel.com>
+ <20260904172337.1409775-11-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 18:08:41 +0000
-Message-Id: <20260904180842.15A9C1F00A3D@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 18:09:32 +0000
+Message-Id: <20260904180933.1C5491F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Memory leak of `aer_capability_regs` allocated from `ghes_estatus_=
-pool` in error paths of `aer_recover_queue` and `aer_recover_work_func`.
+- [High] Missing minimum length validation for error section payloads in `c=
+per_print_mem()` leading to out-of-bounds memory reads if firmware provides=
+ a heavily truncated record.
+- [High] acpi_extlog silently drops valid UEFI 2.1/2.2 73-byte records.
 --
 
-commit 639b51ace1216953e300ae9efcce13516dadf849
+commit de79ea2e5b5e1256b6281744b6c0756366762e76
 Author: Dave Jiang <dave.jiang@intel.com>
 
-ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
+efi/cper: Read only validated fields in cper_mem_err_pack()
 
-This commit validates the error_data_length in ghes_handle_aer() and ensures
-that copying firmware error information into the larger aer_capability_regs
-struct does not read out of bounds. It also zeroes out the destination and
-properly maps the header log and prefix log to prevent firmware from
-manipulating software-only fields.
+This patch modifies cper_mem_err_pack() to conditionally copy extended, ran=
+k,
+mem_array_handle, and mem_dev_handle fields based on their validation bits,
+preventing out-of-bounds reads when processing 73-byte UEFI 2.1/2.2 records.
 
 Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
-ntel.com?part=3D3
-Fixes: 7e077e6707b3 ("PCI/ERR: Handle TLP Log in Flit mode")
+ntel.com?part=3D7
 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 2077cc90569a0..08c985e729d6c 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 3dcef618ad39f..13b3e72c3b62f 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+
 [ ... ]
-> @@ -664,13 +667,25 @@ static void ghes_handle_aer(struct acpi_hest_generi=
-c_data *gdata)
->  						  sizeof(struct aer_capability_regs));
->  		if (!aer_info)
->  			return;
-> -		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs=
-));
+
+> @@ -389,10 +389,28 @@ void cper_mem_err_pack(const struct cper_sec_mem_er=
+r *mem,
+>  	cmem->requestor_id =3D mem->requestor_id;
+>  	cmem->responder_id =3D mem->responder_id;
+>  	cmem->target_id =3D mem->target_id;
+> -	cmem->extended =3D mem->extended;
+> -	cmem->rank =3D mem->rank;
+> -	cmem->mem_array_handle =3D mem->mem_array_handle;
+> -	cmem->mem_dev_handle =3D mem->mem_dev_handle;
 > +
-> +		/*
-> +		 * Map aer_info onto the struct as extlog_print_pcie() does:
-> +		 * copy up to the four Header Log DWORDs, then place the TLP
-> +		 * Prefix Log from where the hardware keeps it. The rest stays
-> +		 * zero, so firmware cannot drive the pcie_print_tlp_log() loop
-> +		 * over dw[] out of bounds.
-> +		 */
-> +		memset(aer_info, 0, sizeof(struct aer_capability_regs));
-> +		memcpy(aer_info, pcie_err->aer_info,
-> +		       offsetof(struct aer_capability_regs, header_log) +
-> +		       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
-> +		memcpy(aer_info->header_log.prefix,
-> +		       pcie_err->aer_info + PCI_ERR_PREFIX_LOG,
-> +		       sizeof(aer_info->header_log.prefix));
-> =20
->  		aer_recover_queue(pcie_err->device_id.segment,
->  				  pcie_err->device_id.bus,
-> -				  devfn, aer_severity,
-> -				  (struct aer_capability_regs *)
-> -				  aer_info);
-> +				  devfn, aer_severity, aer_info);
+> +	/*
+> +	 * These four sit past the end of the UEFI 2.1/2.2 layout, which older
+> +	 * firmware still emits, so reading them unconditionally runs off a
+> +	 * short record. Every consumer of the compact record gates them on the
+> +	 * same validation bits, so leave them zero when firmware does not
+> +	 * claim them.
+> +	 */
+> +	cmem->extended =3D 0;
+> +	cmem->rank =3D 0;
+> +	cmem->mem_array_handle =3D 0;
+> +	cmem->mem_dev_handle =3D 0;
+> +
+> +	if (mem->validation_bits &
+> +	    (CPER_MEM_VALID_ROW_EXT | CPER_MEM_VALID_CHIP_ID))
+> +		cmem->extended =3D mem->extended;
+> +	if (mem->validation_bits & CPER_MEM_VALID_RANK_NUMBER)
+> +		cmem->rank =3D mem->rank;
+> +	if (mem->validation_bits & CPER_MEM_VALID_CARD_HANDLE)
+> +		cmem->mem_array_handle =3D mem->mem_array_handle;
+> +	if (mem->validation_bits & CPER_MEM_VALID_MODULE_HANDLE)
+> +		cmem->mem_dev_handle =3D mem->mem_dev_handle;
 
 [Severity: High]
-This is a pre-existing issue, but does this code leak the newly allocated
-aer_info pointer from ghes_estatus_pool if the recovery queue is full or if
-the device is not found during workqueue execution?
+This isn't a bug introduced by this patch, but does this code still perform
+out-of-bounds reads if the firmware provides a heavily truncated record?
 
-The memory is allocated from the fixed-size pool earlier in ghes_handle_aer=
-():
+In cper_print_mem(), if the error data length is between 74 and 79 bytes,
+the exact-match length check is bypassed:
 
-drivers/acpi/apei/ghes.c:ghes_handle_aer() {
-    ...
-		aer_info =3D (void *)gen_pool_alloc(ghes_estatus_pool,
-						  sizeof(struct aer_capability_regs));
-    ...
-}
+    if (len =3D=3D sizeof(struct cper_sec_mem_err_old) &&
+        (mem->validation_bits & ~(CPER_MEM_VALID_RANK_NUMBER - 1))) {
+            pr_err(FW_WARN "valid bits set for fields beyond structure\n");
+            return;
+    }
 
-However, in drivers/pci/pcie/aer.c:aer_recover_queue(), if the internal kfi=
-fo
-is full, the pointer is dropped without being freed:
+Then, cper_print_mem() calls cper_mem_err_pack() which evaluates the
+validation bits without verifying if the length is large enough to cover the
+claimed fields. If firmware provides a short record (e.g., 74 bytes) and se=
+ts
+CPER_MEM_VALID_MODULE_HANDLE, wouldn't we still read out-of-bounds from the
+estatus buffer here?
 
-drivers/pci/pcie/aer.c:aer_recover_queue() {
-    ...
-	if (kfifo_in_spinlocked(&aer_recover_ring, &entry, 1,
-				 &aer_recover_ring_lock))
-		schedule_work(&aer_recover_work);
-	else
-		pr_err("buffer overflow in recovery for %04x:%02x:%02x.%x\n",
-		       domain, bus, PCI_SLOT(devfn), PCI_FUNC(devfn));
-    ...
-}
+Note that a later patch in this series (commit "ACPI: APEI: GHES: Validate
+memory error section length before payload access") fixes this issue in
+ghes_do_proc(), but the caller path through cper_estatus_print_section() to
+cper_print_mem() appears to miss this length validation.
 
-Additionally, in drivers/pci/pcie/aer.c:aer_recover_work_func(), if the tar=
-get
-PCI device cannot be found (for instance, due to hot-removal), the function
-bypasses the pool region free:
-
-drivers/pci/pcie/aer.c:aer_recover_work_func() {
-    ...
-		if (!pdev) {
-			pr_err_ratelimited("%04x:%02x:%02x.%x: no pci_dev found\n",
-					   entry.domain, entry.bus,
-					   PCI_SLOT(entry.devfn),
-					   PCI_FUNC(entry.devfn));
-			continue;
-		}
-    ...
-}
-
-The continue statement bypasses the subsequent call to
-ghes_estatus_pool_region_free(), which leaks the entry.regs pointer. Can th=
-is
-eventually exhaust the fixed-size ghes_estatus_pool during error storms and
-cause subsequent hardware error reports to be silently dropped?
-
->  	}
->  #endif
 >  }
+>  EXPORT_SYMBOL_GPL(cper_mem_err_pack);
+
+[Severity: High]
+This is a pre-existing issue, but since this patch series addresses legacy
+73-byte records, does the size check in extlog_print() silently drop valid
+UEFI 2.1/2.2 records?
+
+drivers/acpi/acpi_extlog.c:extlog_print() {
+    ...
+    if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
+        struct cper_sec_mem_err *mem =3D acpi_hest_get_payload(gdata);
+
+        if (gdata->error_data_length >=3D sizeof(*mem))
+            trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+                                   (u8)gdata->error_severity);
+    ...
+}
+
+Since sizeof(*mem) evaluates to 80 bytes (the size of the newer struct),
+wouldn't this check silently reject 73-byte records and prevent them from
+being traced?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904172337.1409=
-775-1-dave.jiang@intel.com?part=3D12
+775-1-dave.jiang@intel.com?part=3D10
