@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8694E80AD
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 17:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92B0394493
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 17:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788543574; cv=none; b=pQ+uvN+j5CUnTzPTnTuENzDZYKWdTqoeeFhnv3OG7fFaaU2HlbX+aysyKFRvsZD14VxQOrbQ5SHCHcbcg/TJXrsDs+BvHzMqHkqMlsaCgbeUPgiyYVw2bDO20yhlxEy/neUKg/OgmnxiYZxWfHuXpnoNcWK7GCsWMUC8N9QP3YY=
+	t=1788543626; cv=none; b=loi2hEHlNj5FPTJR7xlvNX5pBNIXNvtmg4MLUckIwZMKLHV/jVuaU6EJkR/tVcJNMIyhrVDrmebKHk6x9685sRX7fBwaFcs0ZIgLfva9USHMbsfxLZb7qF7r7PUeBQewUbTKb0yV5QQ9YFMuk1icZQJvzyoVbd03FzIs7/VCc9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788543574; c=relaxed/simple;
-	bh=36fE6zbtsUDDX6xqeMNRTP9/hntMV0jEJftj9BxNoYk=;
+	s=arc-20240116; t=1788543626; c=relaxed/simple;
+	bh=Bim1A8WUWqE+JSFpsZnEj7AawBpxyrZJ23hAUpWUaks=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lHlgVY8dJoOkwrcbqH+kkSnAqEx6TXZuVDgKxAhqgTqWhy/HAldXq+x/CNnN9aXBK897qmof1lIsbR2r7z+N2PKjHWenAvoVzCrTzKJoH3uw4pWU7GtrBWu7vMhGsxBz/g6wPeUnfxfewxKi8TiVBQNFLuyZYjSWzWu6kbyP0QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvl/qh/2; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=NaIaGxH+0fQXFgY2pJMTVzhH/Ju0obTVgwyqVMmYfYqZndpcZk1Kl2Fqgnk30EhQ2sCDZmRSCsAo42+mzytSKcpesp7L4Im5lJeW7+xlGoFDbjfWUE9Cm2yi/ZVARAl/+3Io527cVGLRSvV1XIOV0uFbw1L4yAiwy5kWsy/SlL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8jdOTz9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvl/qh/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A9E1F00A3D;
-	Fri,  4 Sep 2026 17:39:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8jdOTz9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 316C11F00A3D;
+	Fri,  4 Sep 2026 17:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788543572;
-	bh=nDSlZ+rwGTdyPdco8kk1x8ymG7dMpDQZZCGO6MENsm0=;
+	s=k20260515; t=1788543624;
+	bh=URGJxX9XrWw8SJ+UkY18JZaMOt+tY3Pytcg9nNx4qw0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dvl/qh/2e+rMTprQFpCz1aQASwvVzvlB69HtnL58/s9MvSLkIAheCZ2tw+33gioLZ
-	 OWaerL1YCRhT0ncfPDXN1PMVuJYtHBQ017pLiDPg08m3FLTZFdv/V260Qr5vo8zhW/
-	 YXCeBlQDR+x2tdliZlepDeEaqyzUVTcJ7qoDgBITiMrl10buJxoI0lu80eN1bC3O/b
-	 McIqS5RbR6fLykTCrbPBLmwSVic9NbncdQLF6ACiEqTCZH3Ufk6+YO6RKWQX6A//o/
-	 xEDazcwbxiAi6Magi8TXtewlYTp7NR8UJTZDvWV13zktDp788zwf3xP0OmBHXSO9n7
-	 ffixjIGGxRprg==
+	b=Z8jdOTz9SSmSud2HPnCTlRpsfwERQxZoycQuAEKpEP11NvQmj2T5ycQFQlutCL9iG
+	 KTdUktVt5tqKyRXOqa+DqZ+EO08Ty9qztwK2Q63UYJWP1ZUBAbtkmU9YLPWyH72Mdc
+	 hGlZPMOjRClERe5VgdUboxYU06LYKU79NpVdxLz2Dr0oqLbRzwnjnnH3PtXpZM4s+X
+	 L2fJPlCYdGBo7jleeF/Axl0eAvu20hmqwfbdbn7WF8lZINErCaPShsrME11cZwnA3J
+	 /9RtuEe3a9gkyNmdoiFTVSIUA8x8Nk+1e7IHP7YIoZADza8axpi3gy+uXgZ32JsVFD
+	 oe8njidDafEsA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 01/13] efi/cper: Reject CPER records with an
- out-of-range error_data_length
+Subject: Re: [PATCH v6 03/13] ACPI: extlog: Validate elog record length
+ before walking sections
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260904172337.1409775-2-dave.jiang@intel.com>
+In-Reply-To: <20260904172337.1409775-4-dave.jiang@intel.com>
 References: <20260904172337.1409775-1-dave.jiang@intel.com>
- <20260904172337.1409775-2-dave.jiang@intel.com>
+ <20260904172337.1409775-4-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 17:39:32 +0000
-Message-Id: <20260904173932.84A9E1F00A3D@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 17:40:23 +0000
+Message-Id: <20260904174024.316C11F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,80 +49,75 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The section iterator allows out-of-bounds memory reads when evalua=
-ting the generic data header on truncated CPER records.
+- [High] Missing bounds check on firmware-supplied physical address allows =
+out-of-bounds memory read (and potential kernel panic) when mapped to a vir=
+tual address.
 --
 
-commit 11208300cad76f5a8ea35d8ac53a2941f6447499
+commit 7d4af53bdefb9af34e8feff4c7e1e31654f51d71
 Author: Dave Jiang <dave.jiang@intel.com>
+Subject: ACPI: extlog: Validate elog record length before walking sections
 
-efi/cper: Reject CPER records with an out-of-range error_data_length
-
-This commit uses check_add_overflow() to reject CPER records with a huge
-error_data_length that wraps around when summed with the header size. It
-prevents infinite loops or out-of-bounds walks caused by integer overflow
-during section iteration.
+This patch adds validation to extlog_print() to bound the length of elog
+records and check them via cper_estatus_check() before walking the sections.
+It drops malformed records to prevent out-of-bounds reads if data_length
+extends past elog_buf.
 
 Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
-ntel.com?part=3D1
+ntel.com?part=3D6
 
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 06b4fdb59917a..332c78f2d5617 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-
-[ ... ]
-
-> @@ -762,10 +762,18 @@ int cper_estatus_check(const struct acpi_hest_gener=
-ic_status *estatus)
->  	data_len =3D estatus->data_length;
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index 7ad3b36013cc6..046e92ee195f9 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -208,6 +208,15 @@ static int extlog_print(struct notifier_block *nb, u=
+nsigned long val,
 > =20
->  	apei_estatus_for_each_section(estatus, gdata) {
-> -		if (acpi_hest_get_size(gdata) > data_len)
-> +		int record_size;
+>  	tmp =3D (struct acpi_hest_generic_status *)elog_buf;
+> =20
+> +	/*
+> +	 * Bound the length before cper_estatus_check() walks the sections: it
+> +	 * iterates over data_length, which is not yet known to fit elog_buf.
+> +	 * cper_estatus_check_header() then rejects a length that wrapped, which
+> +	 * the bound cannot see.
+> +	 */
+> +	if (cper_estatus_len(tmp) > ELOG_ENTRY_LEN || cper_estatus_check(tmp))
+> +		return NOTIFY_DONE;
 > +
-> +		/*
-> +		 * The <acpi/ghes.h> helpers sum these as a signed int, so a
-> +		 * huge error_data_length wraps small rather than large and the
-> +		 * walk then advances by that wrapped value. Reject a size an
-> +		 * int cannot carry.
-> +		 */
-> +		if (check_add_overflow(acpi_hest_get_size(gdata),
-> +				       gdata->error_data_length, &record_size))
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the section iterator
-allow out-of-bounds memory reads when evaluating the generic data header on
-truncated CPER records?
+This is a pre-existing issue, but since the goal of this code is to protect
+against malformed firmware records, there appears to be a missing bounds
+check earlier in this path.
 
-If the firmware provides a CPER record where the total data length covers
-the first section plus a small positive remainder (for example, 1 byte), the
-apei_estatus_for_each_section() loop will advance to the second section
-because there is still remaining data length.
+In drivers/acpi/acpi_extlog.c:extlog_elog_entry_check():
 
-Inside the loop, the updated code evaluates check_add_overflow():
+    data =3D ELOG_ENTRY_DATA(idx);
+    if ((data & ELOG_ENTRY_VALID) =3D=3D 0)
+        return NULL;
 
-    if (check_add_overflow(acpi_hest_get_size(gdata),
-                           gdata->error_data_length, &record_size))
+    data &=3D EXT_ELOG_ENTRY_MASK;
+    estatus =3D (struct acpi_hest_generic_status *)ELOG_ENTRY_ADDR(data);
 
-This evaluates acpi_hest_get_size(gdata) (which accesses gdata->revision)
-and reads gdata->error_data_length before verifying that the remaining data
-length is large enough to contain the generic data header.
+    /* if no valid data in elog entry, just return */
+    if (estatus->block_status =3D=3D 0)
+        return NULL;
 
-Could this trigger a page fault and kernel panic in NMI or IRQ context if
-the firmware error logs are malformed? While this problem was pre-existing,
-this patch replaces the acpi_hest_get_size() check with check_add_overflow(=
-),
-adding an unconditional read of gdata->error_data_length to the existing
-out-of-bounds read of gdata->revision.
+The physical address read from the firmware-controlled L1 directory into
+data is converted to a virtual pointer via the ELOG_ENTRY_ADDR() macro. It
+is then immediately dereferenced by estatus->block_status.
 
->  			return -EINVAL;
-> =20
-> -		record_size =3D acpi_hest_get_record_size(gdata);
->  		if (record_size > data_len)
->  			return -EINVAL;
->
+Is there anything verifying that this physical address falls within the
+mapped elog_base to elog_base + elog_size boundaries?
+
+If the resulting virtual address points to an unmapped page in the vmalloc
+or ioremap region, could this dereference cause a kernel page fault and
+panic?
+
+>  	if (!ras_userspace_consumers()) {
+>  		print_extlog_rcd(NULL, tmp, cpu);
+>  		goto out;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904172337.1409=
-775-1-dave.jiang@intel.com?part=3D1
+775-1-dave.jiang@intel.com?part=3D3
