@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF5B51A75B
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 18:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7CB5013BD
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 18:16:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788545533; cv=none; b=CctAiw1ZyL7Xd25LqSuJuxeRYtWlZwiQ7Uq3RIw9qk3hwDZ5bQyRQ3A3BCpI47+hS2aHX2eyKJox3VaY/soTn0W8ZC1Ry1I4Dh7RteIMGfSvV7AnBh8bKksaQn3X0dV9ZIr/UnRiRSy1BHX+tU9nlnZqWip/PRV0RlAYDwoMxQY=
+	t=1788545815; cv=none; b=uTU+DmMbpnNeWKw0Sjti21TlX4JOpH3HuYYdcVEDorbnnS9Nl+F1WkQ4YMaDmRfFeVBiRxYt5Us8QHSiR6UEdNaUorNsjNw5+uDuhU4lnBAI9PaHLzFIkJf2fdY0Qi+nAh80NjQLdap3Q3ZzgQSTY9LoNZWxQWBwQJujFDhxYqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788545533; c=relaxed/simple;
-	bh=qS5+Rt3MDD06WMHp/81sd+8Y7RRCDME5TmQDLROSh4s=;
+	s=arc-20240116; t=1788545815; c=relaxed/simple;
+	bh=1PVa5um7WfIB/xadIrHIDg6T40sapTrTmLpvJz3q58Y=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=O95PpkH+e17Cfq7VJfQUZeXpKg3qitVr+ou0HeZvuZElo2V3yhqMSlHqyJjH8MM7SjBWicpAhBsqWEFpu9+fNuEbIdYfM+nrprO7HLMKJVzVO/Vy/RYFMkR6kTq8Sek8jimIvBT5DJUuDo9Apx0pC0YPBHLvs65D6Pq22w5jLo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VEBK5LQH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=awlT/3VYkzfPdCskNOG5vCHCBJ+wiWcEiGoNm8zUmxRBcY80lVlOANAePHHRqUYyMK1xTcBhCAqHPjAYI3VBpzyxBw3Okdll7/SOqyejmJyVF7xhkW3krLMXQX/luw6w1vk8LPzNtUoMZpLm6atzXZg9/cfJjjr6avnpH0o3nsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8qDisJt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VEBK5LQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E154F1F00A3D;
-	Fri,  4 Sep 2026 18:12:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8qDisJt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EEF21F00A3D;
+	Fri,  4 Sep 2026 18:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788545531;
-	bh=acEcccBw8kAaYRAWdVkvBo++xnj44XuForawEb3YFwM=;
+	s=k20260515; t=1788545813;
+	bh=AxOrFdq0S8/uKSt1QxNpDC0Ixdk+SopZvgFK3w9R1zk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VEBK5LQHFYxAmS/jqoBtY5/k8+tZpC5tNBR7jwQ6KY23aN/Lh4lvqwWxA2/xoox5W
-	 J/ZLrqCxarktpqIZ4WbtJPTV+OSf1GEPidY0QCkr2Mi7sLLjqqdxfNrwV0tWOwz9g7
-	 sIcU5fFaCvCsfRmeZNtkUZDaFbSePDZBuo0OlIsbObZd96OEkFHwxb4VEZNLoW339n
-	 12j5rNRYFszY7S7FA3SryEmAsVxGj3Mur+UHtg+KtimOxgYgutRTzbXpBsX7+vlqr6
-	 r8xWExdRYHqUyAHy9i0L2slGrtRM35wsZLHrfahMSraNPjKC2EFUetNxOubZaai21K
-	 ZSHjH/u9AgEEQ==
+	b=K8qDisJtdTNx4EMIFL9JQ6zuwrn9Kz2O7ZeW9+XjIWrMmbAgesgdLhPVMpcHkvzGJ
+	 /PXsVOgigC3FPpYn3X2chyJu0ojFlgLE/aV2CLOtl3YGL2zvNhmvriUV6hE+Br1Zgz
+	 HPiLRMc+N+HSydgweYLXSWxf4RBkiIXUJBpmCBD6X89Pxpe10d/K+EHdh6QFaKYsQ6
+	 8Bpfjjzt3Sxsd3OFdfFiPm4HTi6IxZxB4XbIP5I2DIjxJlEULJMXWzKn4LZtTab0ro
+	 1HzTLxP3YCZQvtR5xXpNQVMh9/ylnexmgSCwNBxzSKeZHKmVvcbkCDlryvFB7G2RKM
+	 5pCoux7MfEBJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 11/13] ACPI: APEI: GHES: Validate memory error
- section length before payload access
+Subject: Re: [PATCH v6 13/13] cxl/ras: Make cxl_cper_handle_prot_err()
+ static
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260904172337.1409775-12-dave.jiang@intel.com>
+In-Reply-To: <20260904172337.1409775-14-dave.jiang@intel.com>
 References: <20260904172337.1409775-1-dave.jiang@intel.com>
- <20260904172337.1409775-12-dave.jiang@intel.com>
+ <20260904172337.1409775-14-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 18:12:10 +0000
-Message-Id: <20260904181210.E154F1F00A3D@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 18:16:52 +0000
+Message-Id: <20260904181653.3EEF21F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,95 +49,69 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The patch fixes length validation in ghes_do_proc() but leaves an =
-identical logic flaw and buffer over-read unfixed in cper_print_mem().
+- [High] bus_find_device() is passed a struct pci_dev pointer instead of a =
+struct device pointer, causing the match function to always fail and skippi=
+ng CXL CPER endpoint error tracing.
 --
 
-commit 8bbaca1beceadb4f3349da69c4f0bedd1d913c54
+commit 8c6686bf6f4e6de777942d8a16f6142155da2ee3
 Author: Dave Jiang <dave.jiang@intel.com>
-Subject: ACPI: APEI: GHES: Validate memory error section length before payl=
-oad access
 
-This patch adds length validation in ghes_do_proc() before accessing the
-CPER_SEC_PLATFORM_MEM payload to prevent reading past the record. It ensures
-records are at least 73 bytes and validates the remaining length based on t=
-he
-claimed fields.
+cxl/ras: Make cxl_cper_handle_prot_err() static
 
-Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
-ntel.com?part=3D7
+The extlog caller went away when extlog switched to
+cxl_cper_post_prot_err(), leaving cxl_cper_prot_err_work_fn() in the same
+file as the only caller. Drop the export and the declaration in
+<cxl/event.h>, and make it static.
 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 111895c57c2f9..2077cc90569a0 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-[ ... ]
-> @@ -954,6 +976,25 @@ static void ghes_do_proc(struct ghes *ghes,
->  		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
->  			struct cper_sec_mem_err *mem_err =3D acpi_hest_get_payload(gdata);
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index e307361bb39e4..c91db125a9714 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -77,7 +77,7 @@ static int match_memdev_by_parent(struct device *dev, c=
+onst void *uport)
+>  	return 0;
+>  }
 > =20
-> +			/*
-> +			 * Check once for all three consumers below. The 73-byte
-> +			 * UEFI 2.1/2.2 layout is the floor, matching
-> +			 * cper_estatus_print_section() and making
-> +			 * validation_bits safe to read.
-> +			 */
-> +			if (gdata->error_data_length <
-> +			    sizeof(struct cper_sec_mem_err_old))
-> +				continue;
-> +
+> -void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+> +static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data =
+*data)
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does leaving cper_print_mem()
-unfixed bypass these newly added safety checks?
+This is a pre-existing issue, but I noticed a bug in how this function
+searches for the memdev using bus_find_device().
 
-As noted in the commit message, cper_print_mem() gets the mask checking
-wrong. When firmware provides a CPER memory error record with a length
-between 74 and 79 bytes, the exact match check in cper_print_mem() fails to
-catch the invalid length:
+Does this code always fail to match the memdev, skipping the CXL CPER
+endpoint error tracing entirely?
 
-drivers/firmware/efi/cper.c:cper_print_mem() {
+Inside cxl_cper_handle_prot_err(), bus_find_device() is called with pdev
+(a struct pci_dev pointer) as the search context:
+
+drivers/cxl/core/ras.c:cxl_cper_handle_prot_err() {
     ...
-	/* Don't trust UEFI 2.1/2.2 structure with bad validation bits */
-	if (len =3D=3D sizeof(struct cper_sec_mem_err_old) &&
-	    (mem->validation_bits & ~(CPER_MEM_VALID_RANK_NUMBER - 1))) {
-		pr_err(FW_WARN "valid bits set for fields beyond structure\n");
-		return;
-	}
+	struct device *mem_dev __free(put_device) =3D bus_find_device(
+		&cxl_bus_type, NULL, pdev, match_memdev_by_parent);
     ...
 }
 
-Because ghes_proc() calls ghes_print_estatus() before ghes_do_proc(), this
-code executes before the new checks in this patch are reached.
+However, match_memdev_by_parent() expects uport to be a pointer to a
+struct device in order for the comparison to work:
 
-When cper_print_mem() then calls cper_mem_err_pack(), it blindly reads
-out-of-bounds fields if the payload is smaller than 80 bytes:
-
-drivers/firmware/efi/cper.c:cper_mem_err_pack() {
-    ...
-	if (mem->validation_bits & CPER_MEM_VALID_MODULE_HANDLE)
-		cmem->mem_dev_handle =3D mem->mem_dev_handle;
-    ...
+drivers/cxl/core/ras.c:match_memdev_by_parent() {
+	if (is_cxl_memdev(dev) && dev->parent =3D=3D uport)
+		return 1;
+	return 0;
 }
 
-Could this result in an out-of-bounds memory read (such as mem_dev_handle
-at offset 78) and an information leak to dmesg before ghes_do_proc() has a
-chance to reject the malformed record?
+Because struct device is embedded inside struct pci_dev at a non-zero
+offset, dev->parent will never equal the pdev pointer. This guarantees
+bus_find_device() will return NULL, causing hardware protocol errors on
+CXL memory devices to be silently dropped instead of being traced.
 
-> +			/* Then require what the claimed fields actually need. */
-> +			if (gdata->error_data_length <
-> +			    ghes_mem_err_min_len(mem_err->validation_bits)) {
-> +				pr_warn_ratelimited(FW_WARN GHES_PFX
-> +						    "memory error section too small (%u) for the fields it claims\=
-n",
-> +						    gdata->error_data_length);
-> +				continue;
-> +			}
-> +
->  			atomic_notifier_call_chain(&ghes_report_chain, sev, mem_err);
-> =20
->  			arch_apei_report_mem_error(sev, mem_err);
+Should bus_find_device() be called with &pdev->dev instead of pdev?
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904172337.1409=
-775-1-dave.jiang@intel.com?part=3D11
+775-1-dave.jiang@intel.com?part=3D13
