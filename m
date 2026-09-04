@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276F5513554;
-	Fri,  4 Sep 2026 17:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA8150AC08;
+	Fri,  4 Sep 2026 17:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788542637; cv=none; b=uaDPhEiLZ+fNT/4d+TWFs7PvTLymlIr8XS/jwEjLyPiIBQNQy9tUrs+m14ImTMLmHcTquElR/w/Tvj9rDl7zN0vh7aX97v8lIp1NRQqLDA//dgswGL0PI3JqmQMQMMPi6LLLz37PhRoDl273LBzkYXjdmhYssXgCH2svceap+cI=
+	t=1788542639; cv=none; b=XTcl/mRasZ3ud2w3VsoBC8hHzpPyHTgBs/YROpirTcylSztHU44DdSA4P8Hfijj635wyfu7NcN9kqNuL9SXov50LOCWjYIpPCMGNq1eUEMH/man/ytwieb8oCeiUqFikDioJCkNm5Oq3joctb3GgbTir/sdQNUE93H5MSuaB7kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788542637; c=relaxed/simple;
-	bh=VW9sTRnhyfIlTzyDrozF1PYGlKBc6JhOG5Hn+70LE+I=;
+	s=arc-20240116; t=1788542639; c=relaxed/simple;
+	bh=HPmrTnPC49gmkHCuFGmgVVU1s2d/Sm2+1uTt25pioIA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U0fCO7BT/mu9fpH3tsXIemY3jLOg6N9TlA57uGVkCI8+wB6I0ns/S5XZnk8krFCP3vg2CyapV/ASz9vlzq/aNPBgdZJuX+AjtpfIZB77vETh2fppCzO2aazugnDkH0hTsqQmnbABb9M6Qreo2YL674YT3XfS8c8vYgcAsLsPSPs=
+	 MIME-Version; b=H/TtPzqhBWkaP2SlNvp4OFdGmzDrlNr+8hUWbsOj8qGQdJyMCYz7RyxNRODgu26ttXyIWEi/lAKjum6QQSnCqx8aGcH19Ao5mChjly4uFZ3vXSjir6tKxGunyBSShm//o/e4H43/BhuixdK5vxcVOJHwrmfLdp/X2uq+p745nCg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A111F00AC4;
-	Fri,  4 Sep 2026 17:23:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2924C1F00A3F;
+	Fri,  4 Sep 2026 17:23:51 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -28,9 +28,9 @@ Cc: rafael@kernel.org,
 	alison.schofield@intel.com,
 	sashiko-bot@kernel.org,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v6 06/13] ACPI: extlog: Validate PCIe error section length before payload access
-Date: Fri,  4 Sep 2026 10:23:30 -0700
-Message-ID: <20260904172337.1409775-7-dave.jiang@intel.com>
+Subject: [PATCH v6 08/13] ACPI: APEI: GHES: Bound CXL event record copy to the firmware section length
+Date: Fri,  4 Sep 2026 10:23:32 -0700
+Message-ID: <20260904172337.1409775-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260904172337.1409775-1-dave.jiang@intel.com>
 References: <20260904172337.1409775-1-dave.jiang@intel.com>
@@ -42,19 +42,16 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-extlog_print_pcie() reads pcie_err->validation_bits and device_id and
-copies the 96-byte aer_info buffer without checking that
-gdata->error_data_length is big enough for a struct cper_sec_pcie. The
-cper_estatus_check() call added earlier keeps the read inside the estatus
-block, but a short section still gets stale adjacent bytes treated as PCIe
-error data.
+cxl_cper_post_event() copies a fixed sizeof(struct cxl_cper_event_rec)
+out of the firmware CPER section without checking how long the section
+actually is, so a short one reads past the record.
 
-Reject a section too small to hold the record before touching any field,
-and warn: a truncated section means firmware is emitting malformed records.
+Pass gdata->error_data_length in and reject a section too small to hold
+the record before the copy.
 
 Reported-by: sashiko-bot@kernel.org
-Closes: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.kernel.org/
-Fixes: e778ffefa34d ("ACPI: extlog: Trace CPER PCI Express Error Section")
+Link: https://sashiko.dev/#/patchset/20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=6
+Fixes: 5e4a264bf8b5 ("acpi/ghes: Process CXL Component Events")
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
@@ -62,42 +59,49 @@ Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/acpi/acpi_extlog.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/acpi/apei/ghes.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 1b61788abd5a..0ab7885e5471 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -134,7 +134,7 @@ static int print_extlog_rcd(const char *pfx,
- }
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 83558bb10be1..8f66dfb8edba 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -824,10 +824,15 @@ static DEFINE_RAW_SPINLOCK(cxl_cper_work_lock);
+ struct work_struct *cxl_cper_work;
  
- static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
--			      int severity)
-+			      int severity, u32 len)
+ static void cxl_cper_post_event(enum cxl_event_type event_type,
+-				struct cxl_cper_event_rec *rec)
++				struct cxl_cper_event_rec *rec, u32 len)
  {
- #ifdef ACPI_APEI_PCIEAER
- 	struct aer_capability_regs aer_regs = {};
-@@ -144,6 +144,12 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 	int aer_severity;
- 	int domain;
+ 	struct cxl_cper_work_data wd;
  
-+	if (len < sizeof(*pcie_err)) {
-+		pr_warn_ratelimited(FW_WARN
-+				    "PCIe error section too small (%u)\n", len);
++	if (len < sizeof(*rec)) {
++		pr_err(FW_WARN "CXL CPER section too small (%u)\n", len);
 +		return;
 +	}
 +
- 	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
- 	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
- 		return;
-@@ -246,7 +252,8 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+ 	if (rec->hdr.length <= sizeof(rec->hdr) ||
+ 	    rec->hdr.length > sizeof(*rec)) {
+ 		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
+@@ -964,15 +969,18 @@ static void ghes_do_proc(struct ghes *ghes,
+ 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
+ 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
  
--			extlog_print_pcie(pcie_err, gdata->error_severity);
-+			extlog_print_pcie(pcie_err, gdata->error_severity,
-+					  gdata->error_data_length);
+-			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
++			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec,
++					    gdata->error_data_length);
+ 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
+ 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+ 
+-			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
++			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec,
++					    gdata->error_data_length);
+ 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
+ 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+ 
+-			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
++			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec,
++					    gdata->error_data_length);
  		} else {
  			void *err = acpi_hest_get_payload(gdata);
  
