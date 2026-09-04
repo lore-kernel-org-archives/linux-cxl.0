@@ -1,243 +1,285 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-0002e601.pphosted.com (mx0a-0002e601.pphosted.com [148.163.150.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB47C3C3F40
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 03:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3540F742;
+	Fri,  4 Sep 2026 05:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.150.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788494024; cv=fail; b=QBPntAjKVjkFd6MPex8F1bWUoG9NoK8ouWba/8Y10uXwIjETPRwlSA2zQ2wrrihPBdHWOsNvPGu5BNZfQ1H67Gv3A3sG7XC5XqosYpFzIgCWuzI65oUKX13200sugSVfU+AiquwX9hl6LpcHACViGDZgFJK99Ww+RAoRKqG8h0Q=
+	t=1788498174; cv=fail; b=jrlBGm+Htq/Yd7xJqC2dCqsboMlRNQUyv4FloZ1vV8sntrDLSHY9L38MfxcfOaU/5gmHRXFDj22ChxSePjElkgC/SCUnjvALTzgvUeGAf7LayBj5T1RTav4XR0BUvCpRZHgSDctA2OgRjrBOCSE3881Y8S4ePBNs7UxOqVLnpLw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788494024; c=relaxed/simple;
-	bh=MnCdHbKg40qbwnAE08pGeXi9wLDRqzcrgQanZnUsmCo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CyuBNxG2PSuDZ9Sym9hD37rNGVzeptR9PSfqKpSLelhtQXRPLLXdHR6N4APHio4lZ/9JVEHQzLV5n1UU23ArtgzuxnxsVAIqOlIwD7q1LM/WFcWeOrABTzJT5nrqh59yEvZNLjPBixTvcbZk3nGDo5/cWL/fnkDaQaf6JiIsZ5s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JzZf413I; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1788498174; c=relaxed/simple;
+	bh=vWX0rUOPmbeShUrrKPZXV3rlQuAiWnirb8mo8afZxO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rbFHtzE2uiyN2pJqXiwEonetULu5f14H5d4Wg5ZYSX1jR5cUYRYa8qo/XodhskFC2JQxMraSoUlhHPMJeIOT+IpfSJAEQFwSehkb6c5QNoqvbA493yvUHCkiOl4Ba/8RvU/SYF6otE0EqktacBG+WSLax6BhrPEM50MbbpIjhXE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b=SWjr1Uhx; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dGeMJFXq; arc=fail smtp.client-ip=148.163.150.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JzZf413I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788494022; x=1820030022;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=MnCdHbKg40qbwnAE08pGeXi9wLDRqzcrgQanZnUsmCo=;
-  b=JzZf413IKgq8IZbTJaJsWJTjpdNqctdgqIsgSrdQO3UVh2kxxz+dCLWq
-   xw2sfZL5sE06BYH48hTU0xtKeVnhMZbx7Ql990JcgCIbRTyZGW022TRHh
-   OKJW7BvCqLoe/5omD7mZBUjxp0ofXSSHv3fcLHT5pAE+GxKZbQhST3Hj6
-   tiAW/UZfLKL8DXtx6Q9+AiXOpAYCNdVHE9ofJhKalYzfZ6ye7zebwrqYF
-   JyvJ/XhZhxtzlDeCp58AYB2fgCybpQzcEZgdgIu2eAjAhQMGFPVfmZFUM
-   r/67cNiq2cbMjWUE8ybunZfN3ruoJXUMh6FaN/wtoiXDLKm6nio03dpXJ
-   A==;
-X-CSE-ConnectionGUID: X6qjSytTTe6eY8K+h0K7Mw==
-X-CSE-MsgGUID: g8uuje/SSSidHy9PXYNakg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="88837422"
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="88837422"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 20:53:42 -0700
-X-CSE-ConnectionGUID: rraj/1EARbmabkXZgrZ/yA==
-X-CSE-MsgGUID: 4oGPNlQLSaaC7u9cZz5fpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="266238698"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 20:53:41 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 3 Sep 2026 20:53:41 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Thu, 3 Sep 2026 20:53:41 -0700
-Received: from PH0PR06CU001.outbound.protection.outlook.com (40.107.208.44) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 3 Sep 2026 20:53:40 -0700
+	dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b="SWjr1Uhx";
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dGeMJFXq"
+Received: from pps.filterd (m0380145.ppops.net [127.0.0.1])
+	by m0380145.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 6842sPQ52586766;
+	Fri, 4 Sep 2026 00:02:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	proofpoint-05-2026; bh=dOyv+KC3xWrq0w8WGkkvbKEhj5WIJPN2fjEbQUyW3
+	H8=; b=SWjr1Uhxxg8+oiY8UPeQWT/LEXiPUs5tCKhBaRP3Jc4Bwi4DcQK3FWYSK
+	0pQduS4vCmgf/VY6I7ggdpI0glSIAPVCtFL11+Nh8QR+vmLYwYZBq535pnBdhVUR
+	Ggy8efPyREjhr1OJzKgeJOkf0nzjFFGYEuAloCRCxNsl3MJDqOvSnuA5gaFplYxd
+	jeQWaCPv0LK2qS7h4OdNMdD5Cbgd6FdwfCXgdc3LpU3qe/2g0U/g3xAFZ/XoW2vf
+	6M5nTzQOu/TB7hs+hKVQUyuvIOvWsv1m1jua7y2rPKuCLI3O++FI8Yu0BVesDzKb
+	z08x2Mvk0AM0vLfuU2Xq4Ut+IVd8g==
+Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012058.outbound.protection.outlook.com [52.101.43.58])
+	by m0380145.ppops.net (PPS) with ESMTPS id 4gfk4xsc85-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 04 Sep 2026 00:02:24 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VZPZDLhtkaSafm7nDq5dZuvfWWu96ui9Y/Qiprn/NZuy36+XkSSJpoud0YjG/MieGriQoESHZXfbhidHh+Yh08MB5OyQnUamqEbq/gESrx+c2B9qg6FzGVMyydZutuVcBSqtNVKTXCsGYntjIVt8YcnVmsM4xtl4aZclMd/M2E6qJky8yf6Iv7xD+AVN/03x5BUbp9ImH++KFF0W8XJe30RD9Q3qSJa/AsyFQiFVJ2kn1lI8nZDV/1Xkr14CWdtkqO1P+Zjvb61IypkI25VKFN52kVHr+h7g2l0+3KfwRw6fLubdlkNZKnZRpT38g9P3uIA1vM5JorJIx+VjFNLSmA==
+ b=Xx6LUwwrlenUxYtXeeg7jXjeNvC8WVsO+h+M0MvJLmzfXjPfWP3lWSfv13Yte2r4e1i9Jmvj9yHkOEZEx0yxnohqnyxIdNPQFPru2+SDXJw6QJCwBUA7WXtYb9UmrCHvI+GFXsWKr6Yvs2WbMDUusgiRC6HRYiuHdMSBHx5Gca/bHahljgDxAKjhID31139pbZnaZK1W5W9pdMzhu3vBqGRUgyvjT5+PQcjDf9I47UZqJvBfnLTPbnQfqScdtk2w+xJRUxBvHXXACceCXAUnwEcT0E4YV4FH7faQRcrb4gFv93XmYSRGBKhgwndGWBNG/Lh5ozVJYuTultsSBnONWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=66+9bl+qBuiCeQO/5HpX+dV88IWOFp+lNFpeUE+6dxc=;
- b=d5uvc/R5fa+AfaevK8Xc7g2UKIufMYojmRTHKSUoAyoM2vvBlEhGaA3o4M2VE77EYj+EfaVm31dIrk8Y7k3Wy4S1aJh17B+7yTCwTAYJUa9WiOWXNPsOp3ut5mVfWsUmeG+TISAnEGd0CB3OQNUmesoJygQ6v/xZEFkwj32vzvKnXph6Gk/j27B86Rz3+H3AR5LZvPlutO8uFpgQ09gIaK8hVzWLDiSyq6V/Ftmr8UusdyH4I0NxPsPsDV4481sFisW74YBIUbuN4dmNPqoO1D+z3egG5KcOdCc6CfRpKohAghOtkDLu2lTbfejCICcoNQBfbjLmoVzWAzUIiPBlIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH3PPF310D5CFFC.namprd11.prod.outlook.com (2603:10b6:518:1::d14) with
+ bh=dOyv+KC3xWrq0w8WGkkvbKEhj5WIJPN2fjEbQUyW3H8=;
+ b=THmCCBf25067DWE/vZwhWC7kIq47WVenlH0QjAZl2tbJrA20dc5J+1EJ46wy33Cdt2sEwtgftxh2oqz0l9CCZO8tB2C9QC402z4dtktgeOict8QKW9KYq1pFecHbbVnTfnVg4gEQghla2rXBu7MOknqwf4e0FHumEOeZx9JEVJPqtRUP1N16O7XBPMm8VxfbRVBH4LYejgYhEl09UCwns4EbusyLmMG7r7dIs2aTRRTHZy28TQashwQiDqSDU+QiEnipiAEozai+7WduqC4/kq7R4rmJQcTPaSvQlw9vowqf2au5jJPlHg8hziXuwISJ/KQOzEqyu0HDuUuMAKG9bQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.23.194) smtp.rcpttodomain=google.com smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dOyv+KC3xWrq0w8WGkkvbKEhj5WIJPN2fjEbQUyW3H8=;
+ b=dGeMJFXqwYxldc0ujiyrXrGP9lLv/4I6QGqafEHXKahO9GUKNkEFpbuEU7/QIDe0eW5r1kEhPcucnx+Y7xVl3+FCsxkslxtC36nW4WaLAGWyzrocicbBfkm5UlkKgzSa30QHskkH8eYSTY9N4vjl0DrYn/j4rEBOrbiBF74XnKw=
+Received: from BN1PR12CA0014.namprd12.prod.outlook.com (2603:10b6:408:e1::19)
+ by IA0PR10MB7604.namprd10.prod.outlook.com (2603:10b6:208:48f::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Fri, 4 Sep
- 2026 03:53:37 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0360.008; Fri, 4 Sep 2026
- 03:53:37 +0000
-Date: Thu, 3 Sep 2026 20:53:34 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: <sashiko-reviews@lists.linux.dev>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] cxl/region: Allow regions with an unencodable
- passthrough granularity
-Message-ID: <appAvulhn7-X13HD@aschofie-mobl2.lan>
-References: <cover.1788487020.git.alison.schofield@intel.com>
- <35566fc6397183a8be89055d1de9979eab9a24a5.1788487020.git.alison.schofield@intel.com>
- <20260904033624.D58651F00A3D@smtp.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260904033624.D58651F00A3D@smtp.kernel.org>
-X-ClientProxiedBy: SJ0PR03CA0250.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::15) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Fri, 4 Sep
+ 2026 05:02:17 +0000
+Received: from BN3PEPF0000B372.namprd21.prod.outlook.com
+ (2603:10b6:408:e1:cafe::16) by BN1PR12CA0014.outlook.office365.com
+ (2603:10b6:408:e1::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.12 via Frontend Transport; Fri, 4
+ Sep 2026 05:02:17 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 198.47.23.194) smtp.mailfrom=ti.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
+Received: from lewvzet200.ext.ti.com (198.47.23.194) by
+ BN3PEPF0000B372.mail.protection.outlook.com (10.167.243.169) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.406.1 via Frontend Transport; Fri, 4 Sep 2026 05:02:17 +0000
+Received: from DLEE211.ent.ti.com (157.170.170.113) by lewvzet200.ext.ti.com
+ (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 4 Sep
+ 2026 00:02:02 -0500
+Received: from DLEE210.ent.ti.com (157.170.170.112) by DLEE211.ent.ti.com
+ (157.170.170.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 4 Sep
+ 2026 00:02:02 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE210.ent.ti.com
+ (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45 via Frontend
+ Transport; Fri, 4 Sep 2026 00:02:02 -0500
+Received: from [10.24.68.129] (a0507033-hp.dhcp.ti.com [10.24.68.129])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 68451uYI3871532;
+	Fri, 4 Sep 2026 00:01:57 -0500
+Message-ID: <6930c5ad-c2de-4cf2-b96e-61079f07e455@ti.com>
+Date: Fri, 4 Sep 2026 10:31:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 16/21] lib: rspdm: Support SPDM negotiate_algorithms
+To: <alistair23@gmail.com>, <linux-pci@vger.kernel.org>,
+        <Jonathan.Cameron@huawei.com>, <djbw@kernel.org>,
+        <rust-for-linux@vger.kernel.org>, <lukas@wunner.de>,
+        <alistair@alistair23.me>, <jic23@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <bhelgaas@google.com>,
+        <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>
+CC: <gary@garyguo.net>, <ojeda@kernel.org>, <benno.lossin@proton.me>,
+        <a.hindborg@kernel.org>, <wilfred.mallawa@wdc.com>,
+        <tmgross@umich.edu>, <boqun.feng@gmail.com>,
+        <bjorn3_gh@protonmail.com>, <alex.gaynor@gmail.com>,
+        <aliceryhl@google.com>
+References: <20260901010347.2614656-1-alistair.francis@wdc.com>
+ <20260901010347.2614656-17-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Aksh Garg <a-garg7@ti.com>
+In-Reply-To: <20260901010347.2614656-17-alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH3PPF310D5CFFC:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8aecda8-8993-4d18-97c4-08df0a3819ae
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B372:EE_|IA0PR10MB7604:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec2a35b7-8621-4cc3-75f2-08df0a41b158
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|10067099003|22082099003|18002099003|4143699003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info: 4dMnZyqVhpNhWVwm14ubci9u33cWKgtSRc2Ezhyd07ZfG+UInKOKonlgQUiwUMq72caKl38mscll1gs6dn0j9/fnZlcomkGfAs2Y64ke07WH5e71RkxD4Q6VsoP+D8/6LLwuuT41ZQyTOEVIJ8AR+DfyqJwiJ7napGkwwsBSPXRqaOCrK5rW1I/1YtXLwKW4AbGvcOT7r2UpEoNMz6lDBIB2e7RULMVkz6eK+9BdZMop5yyJTX59WVbehNiqaTrgY5EV7KiowCBKhXeJIRV01KoZCkMPkL5PzBPxVS505nvYqqJhNBKExR9SpgslGQRR7PnKj4QvSSVVem/K3f+890z/fDpBKgMWeZTOmgxRJ7O7QRYcSoQ63GPMs/nSH5qR3xjx48LEVJ8akcMQgP67kRRe04+7YMO5I65GT5WmAyaQa06Z37/3xvF2gpVRq/Fsj56YpGbXQE3+75xrug4aKYgV2LdM3m55hwWDXyqtlcx1R0UsaUmPHZcBEUu7OTQaRhbWfos4wuXJFBzezDA08l+6kw8SzPo4/woA2R8jA7nc8rwxo3acrqzZhXIFys5GUgOWE6jh9C7TQVe8g5U+Sv2yqui7lnvyVPjKmeriGkw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(10067099003)(22082099003)(18002099003)(4143699003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|23010399003|82310400026|36860700016|18002099003|10067099003|56012099006|4143699003|6133799003|22082099003|921020;
+X-Microsoft-Antispam-Message-Info:
+	A1WffLDWpANrbSjLnjWj97YguJV4ecyOEaq326rm+kta4avUjbQV33EZsE0MLyKKAbGQJwRTBELKASht1HsuDKqxj/zfviuWaRffFLyc17EGHnm7WfEqHsjZpC0Q8cpZyMo6a53gpU/CgulzppzyTSb+JYbrLMqivTEWd4vamzv+Cb5M0exfPmeC2TKlfJMVirJlpbifJ5aWlRVTOS9f4ehDOboGhfbys4kqAPWqOrgGIvYDhMa7BvnOYNBQ6cqGS98SrqI0veEkjx6ztPSnwi7dYIYo/Cx50J6m1APRuLa1IktWQUvouMEQ9slJ9z2QM6RCkLic+pFqG56q+1O2dBsC/vkJgixXLe5r4TSAjHIB5v83PBuWl6IJpkoZw9Y4Tow1XQN33iFZ8B1QgqrzQJMQNMsP83TgM7CCNgpJ4Iqq3g4EEfC4WriJRy8KHGhFhWczsi8CtcM3+9hHuzV9u2tCiT8KOLZd6bpVS8Aq2eeH2ly4ANzRZzP8y4dIqLzdUh9HWdfUqb8VpPzHowCdlRGeB+r88oXrH43WV5HgJq9LkZF1VBaPDW1wsFKkFfIprrErwrYbDRhmX//kqjeZvAbS4+6AnnB6n9L5Njsc4cji++k2EgADdMkYM3RXAwkyGQSMp7rzu1JrvKIgITHm8FId4kZswti3xoqR6cuWRzQmHENnjB8ZbQRDODbk9vxLQ9/qMf3iGPe6YYgnaItW5+8yY7f+2vYhwMBlSMLcdUF6PBXrBtP85gSnXNsmoHlb
+X-Forefront-Antispam-Report:
+	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(23010399003)(82310400026)(36860700016)(18002099003)(10067099003)(56012099006)(4143699003)(6133799003)(22082099003)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?FJB5WIOWZ/e2nOvi0qi01yV9rIy35Wp8xDPEdvKbaZJkJQUQv9N2cZz6Qr?=
- =?iso-8859-1?Q?k+CQOA99tztziZzWcTR0RI+oyeMB9qWcE8yNLviAgRbZ0f+9jboh61kvAI?=
- =?iso-8859-1?Q?t/54lVeBt0532GNlDfUOnz6N1d5wVu1xVMyVXclqeXzsnyCKgI1x9Rz+Hk?=
- =?iso-8859-1?Q?VoStU2mnRZTzi6xihtPBaBqEKq2WZctNIoVKFq74g3teuDFsyfwcXb26VS?=
- =?iso-8859-1?Q?jRkmWnQn3RKcxEMV692QMLf8pfqljFPeCHyqfY+M2qFXyLjwCongiZNQ69?=
- =?iso-8859-1?Q?ksTJqruwF63pMt4IeiL+XUYfkzTS/t3kJw3usypcQfXTbqNWH0X6IRv4Rd?=
- =?iso-8859-1?Q?767cIvle4u3ohdgFq+kkU6RQLzBRz07UVMJOfaW2kBtxk+EHpH2QH+N9Uv?=
- =?iso-8859-1?Q?m3WUKAeqhhX6w9xVDoe5AjsTJfXDeCUV8k6n/x6174OlmvAzWEqGdn2nkm?=
- =?iso-8859-1?Q?grk1YSe/DcO+6RLAfGECUUr0w5PGSP/IWLiRzSuOwQ0qRVvJghqCp0sq8D?=
- =?iso-8859-1?Q?59R6vQhDITmPR/GYE0u5Jr3wdboCTn99VLwAiD9N8cQAwS9Gp5XvitHNhN?=
- =?iso-8859-1?Q?5V0s8kXBx9Yeq7qdVNs0LFmZ/K88wcaal0Ctq2LUoDkIaauc8maIY9u9uf?=
- =?iso-8859-1?Q?2gyVbtHXcB2zLwxnIDaA2NWdVIfXCvbqoqoGULjFy/RcxphchKe70MB3kN?=
- =?iso-8859-1?Q?vdE6hYeIZcos3huNulIT96dGXP4xF0GBzlii6JrN+x2G3KFEsp5C07N/5p?=
- =?iso-8859-1?Q?CGyFm2FXtXNspmAxFO2CcJvmofPMkbT6Nky5OaU7sQFcglxvoUisLyHQo2?=
- =?iso-8859-1?Q?j5VrAeQ1t81z9zKFBh9XPtioN3BPq1r2YjktGFsARsIoljXY7BqyN2X+O8?=
- =?iso-8859-1?Q?2xQKeKGwPrBm1BsNHZv96tI6WoHcd38jwYdV6BlrLaVkAPLbAhNqXBZaMY?=
- =?iso-8859-1?Q?lslCdAi3Ij8ursE8Zk/JC+MvYG/wY3m7MHg2vvP7vVejPdaGYysoUKZQ8z?=
- =?iso-8859-1?Q?R28rBZ49mzdgW3Heb5K2Y9LxCtoVNxjft2JyYgCImJz8CT5GXa90eyUuv/?=
- =?iso-8859-1?Q?7RXfDRa4ZXvDn12Kq1Az5SQ7owJoin4af6+7E2vE8/ylRy2dwKj9Kx4jK+?=
- =?iso-8859-1?Q?qgxvI2FeF0VIHXKlQNbaKki7fuCFewk1I0RrBLYgG8XYerq5BTQlDldj6w?=
- =?iso-8859-1?Q?HAH+HyM4hNxjW40IEsYHwZcUl8JTm0xznGv1LKxeB6ZsUZIQ562qWR/ih6?=
- =?iso-8859-1?Q?5ggjq2qQtMoxW4piFJPlpf0MgalkbbHO9fjOgnA6b0T6cTYbXMeEqj3zfV?=
- =?iso-8859-1?Q?2x2KY1jslIDIBo14BwwZDUZBVVWsYVJu+DZfECnnpoFIOI3nemcS6yUtXx?=
- =?iso-8859-1?Q?edg3EDihkF4d4JqSW6/AA69IbOJM0ZMOA37L6Id/jj2OQTQTcPnuJcvIyc?=
- =?iso-8859-1?Q?F98zDkV79ERDW/0OAQnNvuUI5ItPj+30fziR5uXeqIGHdhO9ppgK11gabP?=
- =?iso-8859-1?Q?ab9pmWsphYD1+VW23DIhkfPfXdfWMdnOy32kmSvRGMwIFlLtpoteIvGRZK?=
- =?iso-8859-1?Q?j4LHlFvBcKQ+nls3R7LegUFROHP/lWiy6XQXJsI47o4a226hVkvc9I/ICh?=
- =?iso-8859-1?Q?QiFJJM5M9gKWMM6B3u7+3eRAaAbnLjlWxTyK/L2iwG2OoA3EiqDkdXHKet?=
- =?iso-8859-1?Q?SNA5cPW8FrleKnhOZjmMvvsH02rQ9tAQ1IwBG4JKbFH37rrufYY0+oBhDi?=
- =?iso-8859-1?Q?5gL/hOgFd93yar0mE7r1ZjyxMtE3vviZ5xteoDX5JnAZRluZZpbd7JoWWw?=
- =?iso-8859-1?Q?j0tYF9bbeLxRpEpdSROI7qR7JUwwUEo=3D?=
-X-Exchange-RoutingPolicyChecked: jcGVYIU4aJ+AQ9P/lflUq4CHvkB1Sv17jSJZUsh8x4drFs1E1X8q2Fb/B131T+BYSulTCdUajQTCR5nbi0eDDSuLmb0C4w45pkMHD7sm3BKUyqdIZ4XRJxlMS1Th9K0tQi2wbcN5cSoJpvCPRR+L8NmhTUc0yzvtXd/z/jknTNoJM2FZ+xiYpkwJD4ZTjK8T/vAeYF7FrzM1u2WnBTv3TLlEF+dOk2Fq/nYqQzoGW52bca7DVBMWyDyl9UJingKPeE00+4igquhpq0kWbzvKWvZwURq0uMsjWcD8M7+2JdzpmR2GFJYAiDcScmAQmOXKUccYe+FCFsnVYAeook4V/g==
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8aecda8-8993-4d18-97c4-08df0a3819ae
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 03:53:37.6904
+X-MS-Exchange-AntiSpam-MessageData-0:
+	uKKMYpNG0sB7RGYPvDSqDDtyJzPmx4LR9/mmwmXpCRJWr1X8uER4LB5kK06o7jQCHoFdy2S88EGSUTHTXhkE+v32BGAMFilUnJhxjVykH7wjskjmGNpiD6sJI3qBSAIuis0PdKaXjk1izh7cxCRLszYkDOoVmHEIqtQo7Kk1Dc4PEQH+PacN5DZSty1rYSplxo9Y5nfsWzw1IJwObMXlrSN+xVfU/2EzacSCcOwgzLEWHXbSeHlF687RMovQSUi7zjFf17QlTwdm0TFbpRr+3WCMaSZnG7WK18n2ovmsu19IQ1tu1WJ84epNMlI+fiorpCbpx7dwFX/c3+efsr8vMzclV7k2HSiCftdeIF8Qfv5AUzwqU6jrQH3W0c5qfZIrK9pk8X/vRQbr7m8tMwA7UO3dbM8/nhXrHwoh9iT0GB8rlIEBXReh3qRhHwk0uOGZ
+X-Exchange-RoutingPolicyChecked:
+	M3HuarPLyj1/qwJv/C0DTn67C513TvBIznpkF4oNPFjakcc0RwHNwYuVho8rJ9veua1AtMu7ZdADC99thkflDR+H/izmT/lU1wvdUDKueqv+gxNsfEtv35vy/ftu8JWPDEq+VSPj9r0B6XbcJUR8VAoA9cTdRDoeDUGcsp4/GjjQa6VFh4Muye2oJHkF0gk97Rv3QY2ifD0+3gzbdb6Dya8ZbEK1S20MTfbl32C8XVAkqD7i7a3Pye+jcg9SQbn5qb6+/eTkughVT3QesSJoLRPKbqa4aR6VZPU3ZxC7+h+X/ucV9gr3T3eBs48GW/xKSM9sHCfHAxNFPgj2t4DV2Q==
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 05:02:17.3202
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AJtuHFDGzqth5lyh8PcNODmimGvAI6/kWLrPjAnHpi/uD3yReIy9Spmopglh9qBDditOiTpd3Tvcvtw6YsN48hIoj1jX9jXTP4xlOzZ7ogI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF310D5CFFC
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec2a35b7-8621-4cc3-75f2-08df0a41b158
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B372.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7604
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA0MDA0MyBTYWx0ZWRfX17UxH6P4ZCJk
+ bOf0Z3K957Ta/r+y1Qjvdh81Ft4fosmrKJXevTO8lCJ+FaUi+L24XOzFCVo2Um+xD7JmbPbOWzY
+ KHDnQI88EkWfcZ9vKH2pllq5ouqlUbQ=
+X-Authority-Analysis: v=2.4 cv=TKd1jVla c=1 sm=1 tr=0 ts=6a9a50e0 cx=c_pps
+ a=8P36fUQdMjs6HQlwNDQNwg==:117 a=WotqVVQAdb04rnGuttW3Kw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
+ a=s63m1ICgrNkA:10 a=V5UXEbMT0ywA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Z8NIEmU8O1QQgoT56wFK:22 a=gO1vWkAQAl3rybz1DQOp:22 a=pGLkceISAAAA:8
+ a=06fhUilGo_L1Qh5vMrgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: KTcx-3WqzsMlukKl6CpLqYGJ4Gm0XvFN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA0MDA0MyBTYWx0ZWRfX1xWJ8BsNFy9L
+ lCdNeW86ptAJ4qh2Kd7W+SzLHu1OX8LarR7tT735S1ZprEXbQd4kVnz6c+5bm/b+Rdotz891MMP
+ V7vYeN42HCeISmd8V+XEl9v3mDHpoX5r0AVx6Nfluf8Lp4uZI1XceUBirvUk3Kz3Ps3SBjpXhZv
+ xrnPko/6LO59skrNuHQBpqxS6OQwLGAkNfJ+fp1Iv539/yDIKWchup7rikPE6ywfKL4gPTvuOEh
+ pAR1jq08tnSJfQaN8Jk034+TjRWY6x0jIrlrKFxjYwNfSHU0M1HYThpPKL5VksYz/cF/poQFNlW
+ ddhu0Nixu83IBw1RNzUjXl30tqrH0nbULCJfjTKcyUd2JfJnI4FvnumS9qDnnRneaFFG87Su0eE
+ RCAlOaIHYbpG7Ibh+/lcktvG3J6Y9jtCv9XvZhnCVcU5lXwY9tWIsx8Sc3FH/tZDdRBPomG0pA7
+ scxuyCW8b580CMcqJVg==
+X-Proofpoint-ORIG-GUID: KTcx-3WqzsMlukKl6CpLqYGJ4Gm0XvFN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-04_01,2026-09-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 impostorscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 clxscore=1011 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2609040043
 
-On Fri, Sep 04, 2026 at 03:36:24AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] During region auto-discovery, the driver relaxes the interleave granularity validation for non-interleaving passthrough decoders, but fails to update the decoder's software struct (`cxld->interleave_granularity`) with the computed logical value. As a result, descendant decoders inherit a stale hardware don't-care value.
-
-Same NO as in v1[1] (and in v2, v3)
-Gratuitously updating the field is not the right thing to do.
 
 
-[1] https://lore.kernel.org/linux-cxl/alKP8OP4DNT2nJnu@aschofie-mobl2.lan/#r
-No. A downstream decoder can't inherit an unecodable value into a failing
-check. A >16K granularity only appears below a wide interleave, and
-everything below that inherits an equal-or-larger value that an interleaving
-decoder couldn't encode. So every descendant is necessarily passthrough and
-never validates granularity. There is no path where updating the F_AUTO
-value would prevent a failure because the failure cannot happen.
+On 01/09/26 06:33, alistair23@gmail.com wrote:
+> From: Alistair Francis <alistair@alistair23.me>
+> 
+> Support the NEGOTIATE_ALGORITHMS SPDM command.
+> 
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> ---
+>   lib/rspdm/consts.rs    |  56 +++++++++-
+>   lib/rspdm/lib.rs       |   9 +-
+>   lib/rspdm/state.rs     | 243 ++++++++++++++++++++++++++++++++++++++++-
+>   lib/rspdm/validator.rs | 110 ++++++++++++++++++-
+>   4 files changed, 412 insertions(+), 6 deletions(-)
+
+[...]
+
+> +
+> +    pub(crate) fn negotiate_algs(&mut self) -> Result<(), Error> {
+> +        let mut request = NegotiateAlgsReq::default();
+> +        request.version = self.version;
+> +
+> +        if self.version >= SPDM_VER_12 && (self.rsp_caps & SPDM_KEY_EX_CAP) == SPDM_KEY_EX_CAP {
+> +            request.other_params_support = SPDM_OPAQUE_DATA_FMT_GENERAL;
+> +        }
+> +
+> +        let req_sz = core::mem::size_of::<NegotiateAlgsReq>();
+> +        let rsp_sz = core::mem::size_of::<NegotiateAlgsRsp>();
+> +
+> +        request.length = (req_sz as u16).to_le();
+> +
+> +        // SAFETY: `request` is repr(C) and packed, so we can convert it to a slice
+> +        let request_buf = unsafe { from_raw_parts_mut(&mut request as *mut _ as *mut u8, req_sz) };
+> +
+> +        let mut response_vec: KVec<u8> = KVec::from_elem(0u8, rsp_sz, GFP_KERNEL)?;
+> +
+> +        let rc = self.spdm_exchange(request_buf, response_vec.as_mut_slice())? as usize;
+> +
+> +        // The transport must report a length within the buffer we provided.
+> +        if rc > response_vec.len() {
+> +            pr_err!("Overflowed capabilities response\n");
+> +            return Err(EIO);
+> +        }
+> +        response_vec.truncate(rc);
+> +
+> +        let response: &NegotiateAlgsRsp = Untrusted::new(response_vec.as_slice()).validate()?;
+> +
+> +        self.base_asym_alg = u32::from_le(response.base_asym_sel);
+> +        self.base_hash_alg = u32::from_le(response.base_hash_sel);
+> +        self.meas_hash_alg = u32::from_le(response.measurement_hash_algo);
+> +
+> +        if self.base_asym_alg & SPDM_ASYM_ALGOS == 0 || self.base_hash_alg & SPDM_HASH_ALGOS == 0 {
+> +            pr_err!("No common supported algorithms\n");
+> +            return Err(EPROTO);
+> +        }
+> +
+> +        // /* Responder shall select exactly 1 alg (SPDM 1.0.0 table 14) */
+> +        if self.base_asym_alg.count_ones() != 1
+> +            || self.base_hash_alg.count_ones() != 1
+> +            || self.meas_hash_alg.count_ones() != 1
+
+Hi Alistair,
+
+As per the SPDM spec v1.4.0 Table 25 (ALGORITHMS response message
+format), description of the field 'MeasurementHashAlgo' states "If the
+Responder supports measurements (MEAS_CAP=01b or MEAS_CAP=10b in its
+CAPABILITIES response) and if MeasurementSpecificationSel is non-zero,
+then exactly one bit in this bit field shall be set. Otherwise, the
+Responder shall set this field to 0".
+
+Currently, the code unconditionally checks for exactly one bit. If a
+responder does not support measurements, it will legitimately set this
+field to 0, which causes the current check to incorrectly fail.
+
+A change somewhat similar to the diff shown below might help here:
 
 
-> --
-> 
-> commit 581b6f11f4646ac877c9eaf9fb81a155a40889d5
-> Author: Alison Schofield <alison.schofield@intel.com>
-> 
-> cxl/region: Allow regions with an unencodable passthrough granularity
-> 
-> Region creation fails when the interleave granularity accumulated below the
-> root decoder exceeds 16K, the maximum encodable in the HDM Decoder Control
-> IG field, even when the decoder that computes it does not interleave.
-> 
-> This patch keeps the computed value for passthrough decoders so it can
-> seed descendant decoder setup.
-> 
-> Closes: https://lore.kernel.org/all/20260530002613.682E71F00893@smtp.kernel.org/
-> 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 27e63e6dab7c8..89693f0181ddb 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> 
-> [ ... ]
-> 
-> > @@ -1550,20 +1562,12 @@ static int cxl_port_setup_targets(struct cxl_port *port,
-> >  	 * Interleave granularity is a multiple of @parent_port granularity.
-> >  	 * Multiplier is the parent port interleave ways.
-> >  	 */
-> > -	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
-> > -	if (rc) {
-> > +	ig = parent_ig * parent_iw;
-> > +	if (!granularity_is_valid(iw, ig)) {
-> >  		dev_dbg(&cxlr->dev,
-> >  			"%s: invalid granularity calculation (%d * %d)\n",
-> >  			dev_name(&parent_port->dev), parent_ig, parent_iw);
-> > -		return rc;
-> > -	}
-> > -
-> > -	rc = eig_to_granularity(eig, &ig);
-> > -	if (rc) {
-> > -		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
-> > -			dev_name(port->uport_dev), dev_name(&port->dev),
-> > -			256 << eig);
-> > -		return rc;
-> > +		return -EINVAL;
-> >  	}
-> >  
-> >  	if (iw > 8 || iw > cxlsd->nr_targets) {
-> 
-> [Severity: High]
-> During region auto-discovery, the driver relaxes the interleave granularity
-> validation for non-interleaving passthrough decoders. However, looking at the
-> CXL_REGION_F_AUTO block immediately following this diff in
-> drivers/cxl/core/region.c:cxl_port_setup_targets():
-> 
-> 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> 		if (cxld->interleave_ways != iw ||
-> 		    (iw > 1 && cxld->interleave_granularity != ig) ||
-> 		    !spa_maps_hpa(p, &cxld->hpa_range) ||
-> 		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
-> 			dev_err(&cxlr->dev,
-> 
-> When iw == 1, does this code fail to update cxld->interleave_granularity
-> with the computed logical ig?
-> 
-> If cxld->interleave_granularity is not updated, it seems descendant decoders
-> will inherit a stale hardware don't-care value instead of the true accumulated
-> granularity. Could this cause the kernel to accept physically broken topologies
-> during auto-discovery, potentially leading to silent memory corruption or
-> Machine Check Exceptions (MCEs) when the region is accessed?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/cover.1788487020.git.alison.schofield@intel.com?part=1
+              return Err(EPROTO);
+          }
+
++        let meas_hash_valid = if self.rsp_caps & SPDM_MEAS_CAP != 0
++            && response.measurement_specification_sel != 0
++        {
++            self.meas_hash_alg.count_ones() == 1
++        } else {
++            self.meas_hash_alg == 0
++        };
++
+          // /* Responder shall select exactly 1 alg (SPDM 1.0.0 table 
+14) */
+          if self.base_asym_alg.count_ones() != 1
+              || self.base_hash_alg.count_ones() != 1
+-            || self.meas_hash_alg.count_ones() != 1
++            || !meas_hash_valid
+              || response.ext_asym_sel_count != 0
+              || response.ext_hash_sel_count != 0
+              || response.param1 > request.param1
+
+Regards,
+Aksh Garg
+
+> +            || response.ext_asym_sel_count != 0
+> +            || response.ext_hash_sel_count != 0
+> +            || response.param1 > request.param1
+> +            || response.other_params_sel != request.other_params_support
+> +        {
+> +            pr_err!("Malformed algorithms response\n");
+> +            return Err(EPROTO);
+> +        }
+> +
+> +        self.update_response_algs()?;
+> +
+> +        Ok(())
+> +    }
