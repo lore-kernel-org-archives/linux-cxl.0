@@ -1,152 +1,128 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4D13B27E2
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 03:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E7D37BE75
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 03:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788491891; cv=none; b=iRKNxK1kDH7Mr8rtV+DEJBG0e55E1d6aG3HIOKc7p+SIjLKhDODQM+D9+vGAlVTkUhV25qkZtJi6zN6xf8aJJQxymIdhNnwqFxQdsKViXS65+kDDBXxunOrOI0t6jgTEccCxt0S3wdICO5XKLp2RjJM3k0u4wIZ5p8lt2NiKy9s=
+	t=1788492101; cv=none; b=tXgeTSuBx+Vkx8p/HhpX4UEGCPikvGAVNHQ2tHvVtSmkAx88h1yH1qFDS+2EUTY5s4xA+1G2fzzRmH+PPPzf/ulHl4UeQ0rjJ3EaGTlf54grvoOeRDarJGhGsbOzZLuNcfB/YOWmqULTgfwoBBBeLEtdC4uaxSdTRsDviRhOOAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788491891; c=relaxed/simple;
-	bh=AIU6NGTW/RpZfTt6y2cuypcAmkoFDaCDqNNZTCJi0Bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxSNw9dx7k+NrW5r/p8EYarm+82yUx2hEhZMX/ZMBuFICVnY/FCIb50XO6qg3uOtWAx0Z3/xhiP5bR21hv+Y52PiSGgzSI5+JSB24SQjkfTHrVJtAOZoK3oIlpde4nRDBqqAgVHhcFWYAFUMFuUDEL1eQYnEGseFpKrBwD2KYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XXnf1qrk; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1788492101; c=relaxed/simple;
+	bh=gt0BCbnOoZowYWJ3ZL5LfqStZ49YQy8ASCtkgQtT4Sw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RYQN8AdDMcKdrfgkVPZRBQVtQpRmE6ADtOURfh6VhZktUF3RevgUrvGsOMaf1M3Y0SGVc6XEtmGGdbXtnJNVbn+8Cbglhx/0GK0Vi/X/dd+EU8fKadETASKFVKxdaNxYUXveF4HAVO6oBM5urvJnXpLeiXYJMRAoA5DQTvM8kH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoeKuoQ8; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XXnf1qrk"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c08df8513so4492581cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Sep 2026 20:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1788491887; x=1789096687; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=I82bST350eZ9tF0sXAbqbqSO4hf+URoRFBA/uGedV7I=;
-        b=XXnf1qrkElo3aCzA7QExaOWSdNxP/unmoxpQ7Nl14LSqP+OXLeyp+7TwEx+/0vPFXS
-         mbXWBII3WXz82rpc/mRXs5oQAafMXv/lR9i6NSNTO7vI6fbUQ9Lm/H+/70dUKyPYID/D
-         rINud0bXIB6JWQRfob5+wo6/7GzlrBSpoLZZyO4V6Mq1y4oT1jQb28+99bKN5jmlVfq7
-         XLGDbXv6L3DciY+gWrXNu3RIZDTtpgb+GehzhnXRXGRkpYwMGg9GSc7zeFG53wLU+gCx
-         flGxyi214iKlFdnetOf0+RVR7gjNDakGPu1348MlAGrbuEUQ+hjaFC/oLLirlUZ3Lv2L
-         lQ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788491887; x=1789096687;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I82bST350eZ9tF0sXAbqbqSO4hf+URoRFBA/uGedV7I=;
-        b=fGkQhybLR4cjfapG75jTni6oscs1oNDa8AS9sgNlwcFEcvMPcZWLyi9Krboqi/GXIg
-         3awTYqXyVymv68VIpkqbr2B9TnY1c7ONmOcfk3eaRKwa2EuDw8IQI8LLinCJ49gpKP2P
-         uvxnO5LbmNq2EWT1kPcJIZmOBQms8MS3jyspfNxaW+1epLTM8M7vAqXsNI1TQ5lq8lUg
-         xUf+9akhRpmIhALFh/iGrfMifzPqBFzOGDYnbCyhrbcSj1DSLKpOLIqvvZEvwnUYP3kB
-         5wCwnOBxVOFuPwXCW6V/RkYAEHQ6CoPfgY2zRRo1kt2PasW4NTT8OLTClwFtHznZdGx/
-         j1Pg==
-X-Forwarded-Encrypted: i=1; AKwUvBwBmNFJjx1eg5n7IboCG0piEMif3idYhSscTB+1n4lzVRjCYgpVkqt0usRrfin6x5T0QQ0UcQHpLz0=@vger.kernel.org
-X-Gm-Message-State: AFuF++nji/72OrSgGSlxu01CeAhqHvQRLKF1Jr/9VJ8ccIl/RIg94Jiw
-	Oy9PaSHbDBybk85GQYE1xl+HBrYz8QJdI4JSZTRGWw0CIfPtlEExL023ZaI9VM2O5zc=
-X-Gm-Gg: AYBFou2FkMVHSMnPpQuK2YAJNIQ5TFA+PKvcmn7d7MRjD9cxNq82G6nsry8HupbwnCX
-	/gN3k7aR4onAG5PoWGNbGnO5XcJT4BL8b5aCYuxJLmxaTfsauoSQxKt8mll2AgkyreERNBXzEck
-	hLpRhL0jUTfW1dcyVBgQB9uomA0svH84w0hmJHsL9GUt5jlUoMLwRIbj2G0WHNIJNkOSDQd8KRV
-	II93QdYscJGetPJUHPEAV+fUr06TDee96ZDxriXwB6MUc7cZHNKvX0sAF+Drha+0HXqJYsTdVs1
-	N3XY5Ub2H8blrdE9LQfQqOrqd7G+12smzMCqGbvRGlH1NEr3a0E5ybah3msSTr71hhpgL5Ghf8C
-	m3/r5/GLMNKbafLDwQQCbNz7KugMbRJQRL6rn2akiIUHfbgIy2bzYAHQ8fpb++0dUCDiONcTcEv
-	4trfhhciIVJgyqgm00NoBvTTg/dFPHkSLP41f7UuRd+TGkjevjguxjAgUhjzsD/qB1qt/ugaDXb
-	7m8A1H15x+MHm1OhmGfvi9Jwbmjlm3qYAbN7rlBDT9x7Qg/7g0Ywfk=
-X-Received: by 2002:a05:622a:1c18:b0:52d:4f43:d5b0 with SMTP id d75a77b69052e-530548bc5e0mr43078621cf.22.1788491887027;
-        Thu, 03 Sep 2026 20:18:07 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5305402a7b7sm11260161cf.3.2026.09.03.20.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 20:18:06 -0700 (PDT)
-Date: Thu, 3 Sep 2026 23:18:03 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Qiqi Li <liqiqi23@huawei.com>
-Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, arun.george@samsung.com, 
-	balbirs@nvidia.com, brendan.jackman@linux.dev, yuzenghui@huawei.com, 
-	apopple@nvidia.com, alucerop@amd.com, matthew.brost@intel.com, 
-	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	corbet@lwn.net, skhan@linuxfoundation.org, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, osandov@osandov.com, 
-	jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org, 
-	ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 25/36] mm/memory_hotplug: support N_MEMORY_PRIVATE
- node hotplug
-Message-ID: <apo3bZab6qtCosQM@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-1-gourry@gourry.net>
- <20260720193431.3841992-26-gourry@gourry.net>
- <6840c720-8cb7-46bb-a652-040c130a4427@huawei.com>
- <aoJaaYp30LnKLj1w@gourry-fedora-PF4VCD3F>
- <0334fe7d-d949-45f7-8914-3012cb11b740@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoeKuoQ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788492099; x=1820028099;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gt0BCbnOoZowYWJ3ZL5LfqStZ49YQy8ASCtkgQtT4Sw=;
+  b=UoeKuoQ8TLvD4OQAe8Zxl/70g9ip6qfiM2Pn3RNK+cWCVFWAiJRtEG7e
+   7rH7aGSzrUxpTOcGZcJxB/BlhS78gzG/Fikk20c1QUYsdQekJShYUJUa+
+   oQB5a7TKqG/T9+fIKCNdZtxDCKowJjTZu+fah6saq/oNL0YmuXeqxM6VZ
+   awj3zF41Tw4JGp22ydqY/+oLx6d3sgVpqugm4SZJ6wgleZ6ivVJpkPKhF
+   /lIKIQiiB46qVmCE91zx/OB4lLcABjlkRb9RN+XhJLP7uxmIWKLPLQCXX
+   Y8p4f5eIL2s9beK9yRubwXqAQoUI61gPtFt0ONz1GYZFhAM/oskG9dXeZ
+   Q==;
+X-CSE-ConnectionGUID: 67C8OOYyTaONvvau+m6xUg==
+X-CSE-MsgGUID: h+kuGyMuSii2j+XPg3bC5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="92859848"
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="92859848"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 20:21:39 -0700
+X-CSE-ConnectionGUID: Lzz4tBxKRsahD9alqBDvEA==
+X-CSE-MsgGUID: iywJOWZ0Rba9FavXy+3C0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="275194910"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.10])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 20:21:38 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v4 0/2] cxl: Allow passthrough decoders with >16K granularity
+Date: Thu,  3 Sep 2026 20:21:31 -0700
+Message-ID: <cover.1788487020.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0334fe7d-d949-45f7-8914-3012cb11b740@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 04, 2026 at 09:05:39AM +0800, Qiqi Li wrote:
-> On 8/17/2026 8:49 AM, Gregory Price wrote:
-> > It would need to be reserved, and you could use numa emulation but
-> > that's clunky.  I have an RFC for exactly this issue - though i haven't
-> > pushed it further yet.
-> > 
-> > https://lore.kernel.org/all/20260610014517.253609-1-gourry@gourry.net/
-> 
-> Hi Gregory,
-> 
-> Sorry for the late reply.
-> 
-> I took a look at the exclusive-node RFC. The approach looks useful for
-> device-backed private memory without a firmware-described NUMA node.
-> Thanks for the pointer.
-> 
-> We are currently looking into the private-node and CRAM design as a
-> whole. I noticed that CRAM was not included with the v5 series, and saw
-> that others were also interested in a v5 version.
-> 
-> If you already have a CRAM branch or patches based on v5, even if they
-> are still work in progress, would you mind sharing them? It would be
-> very helpful for us to continue testing the overall design.
->
 
-I dropped it off because it was starting to become unwieldly, but i am
-continuing to maintain a branch on my github:
+I kept RichardC and DaveJ tags as the helper is a mechanical refactor,
+not a behavior change. More/re-review is welcome.
 
-https://github.com/gourryinverse/linux/commits/scratch/gourry/cramtest/cram_72/
+Changes in v4:
+- Rebase on Linux 7.3-rc1
+- Rename Patch 1 to focus on the region config failure that user sees
+- Use Reported-by and Closes tags instead of Suggested-by in Patch 1
+- Add and use a new granularity_is_valid() helper (RichardC)
+- Update the Patch2 commit log to say computes 8K, not 16K (RichardC)
+Link to v3:
+https://lore.kernel.org/linux-cxl/cover.1784940306.git.alison.schofield@intel.com/
 
-I have not posted a new version in some time and it has been reworked
-significantly in the past few months - but I plan to talk about this
-particular branch and the tests I've run with it at the device memory
-LPC micro-conference.
+Changes in v3:
+- Program the real IG encoding for an encodable non-interleaving granularity
+  instead of always writing EIG=0 (RichardC, Sashiko)
+- Update Patch 1 commit msg text and this cover letter text per above change
+Link to v2:
+https://lore.kernel.org/linux-cxl/cover.1783795720.git.alison.schofield@intel.com/
 
-I validated this branch against most in-tree (relevant) filesystems for
-the page-cache extension, but I imagine the anon-only version subset is
-the more immediately interesting for upstream development.
+Changes in v2:
+- Rebased on Linux 7.2-rc1
+- Only v1 feedback was from Sashiko and that was not an issue
+Link to v1:
+https://lore.kernel.org/linux-cxl/cover.1781136281.git.alison.schofield@intel.com/
 
-I may include the anon-only version in v6, but I've been a bit busy
-shoring up the base private memory node core and implementing kernel
-selftests and LTP tests to ensure there's no userland api regressions.
+Begin Cover Letter:
+Sashiko reported [1] that region creation fails when the interleave
+granularity accumulated below the root decoder exceeds the 16K maximum
+encodable in the interleave granularity (IG) field. The decoder that
+computes that granularity is a passthrough decoder, which does not consume
+the IG field, so no decoder in the path interleaves at the granularity
+being rejected.
 
-I hope to get something out later this month.
+The first patch avoids validating the interleave granularity of
+non-interleaving decoders, encodes the IG field as a don't-care only when
+the computed granularity is not encodable, and updates the sysfs ABI
+documentation accordingly.
 
-~Gregory
+The second patch extends cxl-test with a topology that allows a CXL unit
+test to cover this case.
+
+A unit test update for this case is posted for review [2].
+
+[1] https://lore.kernel.org/all/20260530002613.682E71F00893@smtp.kernel.org/
+[2] https://lore.kernel.org/nvdimm/cover.1788489571.git.alison.schofield@intel.com/
+
+
+Alison Schofield (2):
+  cxl/region: Allow regions with an unencodable passthrough granularity
+  cxl/test: Add a 2-way 16K root decoder for passthrough testing
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  5 ++-
+ drivers/cxl/core/hdm.c                  |  8 ++++-
+ drivers/cxl/core/region.c               | 34 ++++++++++--------
+ tools/testing/cxl/test/cxl.c            | 48 +++++++++++++++++++++++--
+ 4 files changed, 76 insertions(+), 19 deletions(-)
+
+
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+-- 
+2.37.3
+
