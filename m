@@ -1,172 +1,108 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013027.outbound.protection.outlook.com [40.93.196.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECAD3B2FFB;
-	Fri,  4 Sep 2026 09:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788513999; cv=fail; b=kq91VD3lCzvUp7JiGeTGg+41YsrHIZCTCyR29xSS3SUTr1gGI5Er8M4KJfyFJtJRXwz195ocW38U0LZDJ7J4uM+l1jKy33mGojAGtzRNzQI3Kdzkxxfyi6jFyTmpDx9UQDfrSXc+LIKLBgQV+lO4DPGTTWoWdsK+YuJPMXX9kbA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788513999; c=relaxed/simple;
-	bh=K9zFBCxx7P4WaokaXAWsNawlBd9mdn/qpMPR2N20k+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uFVaX5dfTLqwyU/cSpZYXxsMrz+sb4ILdJv6MUsys91h499G8hOoMKpZHkyfQ6JaY4mHsMRCezIb5Gq2B1TJrOfmRKPb5tIwzEBo4VJqf2zqUArol8J6/bBhjRcMTcQoP5DlOfSjlwc0REbFGv+o9dnXQ3d3FLZ6iQSXF1lTzZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OvCneWZm; arc=fail smtp.client-ip=40.93.196.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F87037A848
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 10:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788518421; cv=none; b=qLkuWbke4g5bLK4i1N4tN3kJ8bOMLoyzWFg7pjiNaZ+JgG9bvxGP1LnI7kZOSEHdxdnR9AYMgTAfP0u+79y4+3/EoRsVaeOP3dRteVIl4nMKt1HBtf7eniR5L+wxxv+risKqEhn8b5gXFQBblPY4gFHrPefmBton4XcW9lApe7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788518421; c=relaxed/simple;
+	bh=80EQ+j08nxlitM2qb+nj2AYVXhhWaOPF3lwiA9bPMhE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vs4XQ6g4p7QHTHYpEkl12KZ76h7yboS3U3qj2sjvMWUdrEWvQTHksZV6kFtWOaY0XiavTQ95/cqZqnMlWMKuomJfV+NwwshDhQ8je3zqXhj8Cf319NImNKeXDSE/KNTQ10URm0IsEch8nifRiIJLoAmZ/3TFJhQDcKzvqcYYJ/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWJtqXGg; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OvCneWZm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XhOEf4oeqRIkERi3wsA7g3Cbpxv1XEOvx75xxOF/AP38qw5A8JVfS1pAxNwj0zAYMxiUMMtORWu/IApTmm+woJxJYONrxACdXRTHJxKoqKN7le15t923YCJoV4wXFJRjB3FOV5cSOPyXf6m0OwOW7IhzDg+BIE4e43x804Nu7TMqQfTWvjHCxQFy0+CnVS/L47qZlADMV7YoQWZOPbWd8N0ek2OSOK/VPh5oTKm7P2g9W1fiFFQaagvqr+Q7gVHFZJGNFq5z9nWzNPErPWOBuog70BlY+i1CNsn/IE8yY9m4JN4OjUskrkSeNC6NqZqaDL1P5ma3+r5iVt7ggwsVAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0sbpKOh3joH09996b+rn9O3ZbyEjXn4A06Ndn6wRjtA=;
- b=lzsoPLqExou2r4pvUZWGwd+NkUBna5J/OK+8NTNZcIZHprQpxnaCtaPpE60nlWQSSvR1qf9SADa/lVpUUP1R10W/QIDtFQ+7tREVpIHOoe9kyIAvTBiaySwFPTAdV2q3VSVgLImG3r8sPUilOh+yYD2JkTQEelZz0f9FwoxsvEVNwoLZTMHhW+cxjL/ZByx/03LzlATIOrfvGBy06l31dgAmE9pKWYrNQ7RKJMiZ6hXCtDIKSPJyb9t2HgUjqKASNBQiVCnIHE8gbsqv83IbjmVj48oabr5iTWG9odr/glTsPZuklyOw2zx4rfANqaDp/3G2oZzjLcgxCoeLi9bSGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0sbpKOh3joH09996b+rn9O3ZbyEjXn4A06Ndn6wRjtA=;
- b=OvCneWZm1yYGwezjO8SO1OlOvYrEwhiFij4/2eQSuOJMsc+00ek+xLxsAkOGrp2AOUsB7ZNZi7zAJqV8rIjniEkJiiVfOlja0IEXceaUak4LWQF0zBwQBL+3BPRsV3XWkrgaW1B7oyr9yYl02UtNx+rmF/1gYMHcEhla4A7vue9GbMyo1YvSTUw2d4iVoYMmMb4NQCRrTGOtlInupcLCZ8Po2+GB0lMFBzo+yWdpMdIVgBj+s9/xQ7hV/DMS0xHBeCxfwVJ/u90otqIJsnozW9j1gE1PMctXFFLXpnpvKW8I2x4N8lnvuc6c0c6okqRvp4xO6jWX1DBQJlLF2b9m7A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by IA1PR12MB7757.namprd12.prod.outlook.com (2603:10b6:208:422::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Fri, 4 Sep
- 2026 09:26:34 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0360.008; Fri, 4 Sep 2026
- 09:26:34 +0000
-Date: Fri, 4 Sep 2026 17:26:29 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Srirangan Madhavan <smadhavan@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>, 
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com, 
-	alwilliamson@nvidia.com, Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>, 
-	Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, 
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v11 08/12] PCI/CXL: Reject CXL Reset on multifunction
- devices
-Message-ID: <apqONsm7xxFqtC5U@MWDK4CY14F>
-References: <20260902072804.665639-1-smadhavan@nvidia.com>
- <20260902072804.665639-9-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260902072804.665639-9-smadhavan@nvidia.com>
-X-ClientProxiedBy: SI3PR02CA0014.apcprd02.prod.outlook.com
- (2603:1096:4:295::6) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWJtqXGg"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-395cf2535acso938890a91.1
+        for <linux-cxl@vger.kernel.org>; Fri, 04 Sep 2026 03:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788518420; x=1789123220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0VsgyU3plemw9VdUhVnU63XatTfyzeFs9qQpNpEGdpU=;
+        b=iWJtqXGgYgtabsarZf5IxwGyMOrNVlUbrC+OVrQIzUMx0KJmanyrrZwZ7n1P24jIVM
+         lDW5pimSpCkrf9odpdVtsZ/E+y/yWjmAKNmmQgZUnX3pJwaR1imeJsugDx6zVVhbWp8r
+         vIsYFXaSSYoy5W5EcoO9oawDyGsjEgoRyJOeRvaaqXWQorVe8clQ6byBetSYDoY5HLvj
+         swknlYzUY5srfAP6IQlV899LXCXEAzQknGusMCznCKGM6N5hRUr43VBQRC8cUle4O2JV
+         WrZi0ZQeHDChcrlfHut8Nys6ZrPatgXQzTJTM2tqFUdPOmvsJlkjRZSSwBsAlTUBysie
+         2X2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788518420; x=1789123220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0VsgyU3plemw9VdUhVnU63XatTfyzeFs9qQpNpEGdpU=;
+        b=EVUS4LD9RmWiwA2gQycqg7h1qQCb18v69vcrFeC6bD3xu+APnDjI47BGxDE4B2mBlg
+         ASpAUefBkoDMOcn4FC7kNcR6OGcIXyjWG0ZdRte70kvVzRYM+1j94VFtJCFkWbmEXzAG
+         EbNipJMNq1IBUTerEO8+OlV8mTprHmSOTczJRK4mXD93NeZHAfkJCzgmidioQeA38PyQ
+         DpNisd88wbE1xzEqpLhb0Z2ZZMtck+v1tsdvzEThJWA/8v5IXsVo+3hJTsY5neU1Urbr
+         jbSYm6QwI2LpJdflixmuH318xwKAi/N2A6uCKn3poHNfLyIGKtZE+F/MTucLPBBC9tR2
+         umNA==
+X-Forwarded-Encrypted: i=1; AKwUvBwFaeaC6VDaSHBjNI5sPcysb1Xy01s0x2DcnH43BWtlUaZse7Yd+149f3oqgHSy3Asupiua+YaVxrc=@vger.kernel.org
+X-Gm-Message-State: AFuF++kn5Lsq6UatA52VBB+yJ9fpsyYeDbwRQSlTwrnBjXaQVcIdptTs
+	2I7KnLvQCN99qJJTAueAoHgpzt6uhKBlOl5hpZkpBr3h8UNXutEBX6L3
+X-Gm-Gg: AYBFou1Su/O/r78ur3bjVe4KiXHlR3SGKEB/kxCN34g1A7vje3gtV+/mX/gAkCUGKEr
+	oNJ1yvOjJ6xepKqBH+tv6gnBqpvwbTosq9zysfec5robln6r5D9DzKSKgYNRKm/vuEF6+trBHvM
+	25u4fxMY6a80B79KNppJ1d9QOEjDtYXnytH9x1hIspaIFudwgVux2t5W5wqkhccJlV7UnTzM/5v
+	JbPq7tI15C9qw/FMIVxEhV/qRqormySg22V/iSyJjQ7Dto9b3Fz+GKDPLHJx2yhEQGChVUh75F0
+	aZwReZZ4GztEWXREnd80DhpJpAt6pzQGKzwiwzSEiQJMBMKLvJGYIo6fcHLkZF/iq5s/ejZ4Erj
+	keA2H5BdRV7bVK7uQLQOQlbz1zauBWDB7nCCuQAY8QxOsdAhehrtEChFTzz5N2BwKj+g9cdrnL8
+	rmawOxpmIgWdMAfYLdGI00yp6gh7MQVdXbl3l7ctOkUFVrM6mzzZIhNmEKFqKq9jLLkUF0WYkYK
+	fpkg6LZ9C895PI=
+X-Received: by 2002:a17:90b:3fd0:b0:36b:de66:92c3 with SMTP id 98e67ed59e1d1-39b07fed101mr13892803a91.10.1788518419735;
+        Fri, 04 Sep 2026 03:40:19 -0700 (PDT)
+Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339b6036fcsm6112649eec.20.2026.09.04.03.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 03:40:19 -0700 (PDT)
+From: Hemanth Selam <hemanth.selam@gmail.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH] tools/testing: fix typo "occuring" in comment
+Date: Fri,  4 Sep 2026 16:10:12 +0530
+Message-ID: <20260904104013.11549-1-hemanth.selam@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|IA1PR12MB7757:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab826513-eb05-446e-0925-08df0a669cc7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|7416014|366016|6133799003|22082099003|18002099003|56012099006|11063799006|4143699003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	3Tq3HAv0oQV/eSNOX3Q4FapAi9J+/lqGdt917tID5yeaVeaoPhlhDlipLtInhMdcrGtyzqiocJH20vOn98jCqP3NnU/iLqlZkTxtWNkJm74VO6FCBeRIcCYrCPYmzFFX03qUCESn6vElLnBD4cMHWC/8ho15Lhf2NKcVEQ9Nechbpn9RbkGnIB6wzTj2RKgUoMR1v5lBQZ1jyE4NdOqbgIrB9Blb8HDZ/Fc2Pkj/dazk+NfS659ImLSMs5Q1YFd4jjch4cpCBzx01vWNd4jLik57E8tO3ML/Im938zyGJXddyorXpizMlbiXFNEEGO00tpp0Mtod2fzcm+B+tp5oBs/rvVh3x3s9fI9b7naPDNODRVrNCbgXrFWUkAchx7oFxsCYALMxrvPNIityGcie1ZwdJdvCc1k0CSIhCnHB/78vJnJts3IPEAlIxUITw2YbZ+yLiXSc1bvqTxeNAcsO+iW9SnVQgYFZddY8SSIT30GhlrL6YCOpVA1XCOP/O1wlU17ZWDk9ZdxqYpDmZgbzMoDCQBbywhc5aZZyqKGE/NW2WyWnF3lvZhaE4hLq6p+nDNjfzbr4A24WmmRmtq4oPjyjlfE/JgYtAji0XE4e81WQniSgJjj1WiaWyLX0vFCDOwZ7eH/fUtv+mXQl0t2Su8KG6G9a7nV9me5CAkGFXMg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(7416014)(366016)(6133799003)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xAZdyxgR80CiENBoLStzsKchh6ZHrpvvu6CdjTNuwiY4csASiGdx1Ql73Rj8?=
- =?us-ascii?Q?cdnE7qA9bzb7AYQAAUltA2tNtMqM0ROZ+P18sFnz3VxkrMu7m/LvbIXzp9Wl?=
- =?us-ascii?Q?/avfXKcDJ9TCAGpmZXXWEg89Jp+hFc75B1ygVMt0zfs/fCmkbp43S9gcSNP/?=
- =?us-ascii?Q?Q9mvCDkuMYXNfvv/6ny2oYtDWKR+zZ9l50UuIom+ZQUUUl0da2M9lSEMhCP2?=
- =?us-ascii?Q?9SkB8uUYi9ivvNugu3uk6ebLwaFqebqux9/w6gacknZ1wGLhzipODMZvKycC?=
- =?us-ascii?Q?BDM8UDkLHXI5WQnArzOKdg9fgRwAzp5pwXunkjrM3O61kwKqfZy6sr04v8Fp?=
- =?us-ascii?Q?hijXnpwDzvE34E6L1ujVX3xruXxoXv59ud1RzJApyrIBTDW0WxoCqTgyIEiX?=
- =?us-ascii?Q?FZpt1eyLmpMx8ezwu/XR9cnPL/RpsE/nWgbCAqvPYH8a8DlRgJbz5dlBe353?=
- =?us-ascii?Q?wz6n4EZo35UGYqbyPlWmIzUTlvmbo0P5oOjsy1IWqR/OJ5KfvcxZy28jRrig?=
- =?us-ascii?Q?FDsOfYBHsDjFCBkxX3PfivXOlleXWMYeuJLXVc/3dGJ3buWhCGuV9Zcfw6Hm?=
- =?us-ascii?Q?OKCFnicSGsj9nW23aJ9x9xDvOceK4wn6t4qhPHCxdHQyXgHjZ0jYGxFxBRFX?=
- =?us-ascii?Q?de6+DC8dkCsmJzK+hAmbckd7TMW5RVXNT/MES31v/N2atNLXg9WWWtT00+fx?=
- =?us-ascii?Q?I+nTiRaarH2S4kDCbjVwF2OHp/DSNC2Vpz592CTr0+tOUica/ONxwivQlUue?=
- =?us-ascii?Q?QuGUgI0FI+R3A5tApDwEBDqKLDHPk+dI93NTGsTLUfTeAhYdtbiUQwPQwLkw?=
- =?us-ascii?Q?SX/33VHVWtlVsOljcg6X71ekaRD6MzR5nnxU49ytyopLdkReoFRYMjDWNbqj?=
- =?us-ascii?Q?kp6pU7LD1aP/Li9Y71qYfRF/jy+GbnqYMsP8r+ChrziWO2/bADQrG8XGdhe+?=
- =?us-ascii?Q?muEnIhCTZUlhcsvnYntKSbO5ap4lstB5jnx/eJcQKM9GFcCqnUXYCmZ5pWCP?=
- =?us-ascii?Q?iTn8XxiCWYapMQEvpL0FdOYzl7gbCsOicjcqjkrXi/Ai6cklcR4gGhlFXFsA?=
- =?us-ascii?Q?WTsA61mOYDA6atbKiyoTEftxtDov4frnCpJEDD/36CeSK5lLO5ChDb6/bjBb?=
- =?us-ascii?Q?B775Pemb3SX9weqKhhmm/v0pwU4/GJ9NYB1I04FHZIpkCwwAKdV6x7iI5AAx?=
- =?us-ascii?Q?BBaI5eWRExnP5wWfG3L9z1zi0qH4UHKlPjOY8O5NqknipwlPAYa0dGuFuYvb?=
- =?us-ascii?Q?N+S0DEMwK/1f8h0OAgX9LlW+ZocRvR0Un723DfuB2Kv+Qq5t3OFdXsxLSF3B?=
- =?us-ascii?Q?CjCCdbh2wMGj1D0WjyrePu+U33JHnIhBkQUoB5cjgG84ZGC5D4BYcNyQB/9D?=
- =?us-ascii?Q?IXpSdk5YUzKrkZEz9QtA6VzmpY2EJhLtdYEypu9UZ+03odd/lGrSiMBIj5Pq?=
- =?us-ascii?Q?5v9L2QfH1RkmTrXqgYLWy6xzJTlWt6vsfNO5xn47nlXQz6VNtWR5bVDbF12G?=
- =?us-ascii?Q?q5pZFuQE7DjnhESiN4gEgLJzm+tzqgPWNRTuiZxnYMgZ6tkx61+uuArvBuCw?=
- =?us-ascii?Q?3RkAoGrE5ZModVyduUvnft0JudcryKXQe9U9QrYf5MgoqdExaqitsUDVD4dH?=
- =?us-ascii?Q?N5arQHmkHwU5DbQIJoQObV2UpOPXy7Saauw8+GYdRJ3JNEPCVv0k6YnhWTyg?=
- =?us-ascii?Q?WAi1m3KdpR6mo6+YjBK/HoSJqTxgxQbFI6HcGLh7t66wJp57RfPNynbOcgtv?=
- =?us-ascii?Q?OeAcx5JR1A=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab826513-eb05-446e-0925-08df0a669cc7
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 09:26:34.6540
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pHdiX0WSkjWCUDuJD5Jh7ewPSKO9+VrYdM8bb6415DsImydOp5McAYzhrvZfOnSktPjKBFdkP3yJfO65OZSAlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7757
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 02, 2026 at 07:28:00AM +0800, Srirangan Madhavan wrote:
-> CXL Reset can be exposed as a PCI function reset method only when the
-> reset is function-scoped. PCI reset-method probing runs during
-> enumeration, so walking sibling functions there can race with functions
-> that have not been added to the bus yet.
-> 
-> Reject multifunction devices for now instead of trying to infer reset
-> scope from sibling state. Systems that can prove a multifunction device
-> has function-scoped CXL Reset can be enabled later.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/resource.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index 13bd0c3faf7e..79227ce70169 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
-> @@ -979,6 +979,9 @@ int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  	if (dvsec < 0)
->  		return dvsec;
->  
-> +	if (pdev->multifunction)
-> +		return -ENOTTY;
-> +
->  	if (probe)
->  		return 0;
-> 
+Correct "occuring" to "occurring", reported by scripts/checkpatch.pl using
+the misspelling list in scripts/spelling.txt.  Only touches comments, no
+code changes.
 
-Hmm a PF can have a single-function PCI header while having many enabled VFs,
-and VFs enablement can change after reset-method probing.
+Assisted-by: Cursor:claude-opus-5
+Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
+---
+ tools/testing/cxl/test/mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Since CXL Reset can affect VFs, do we have the mechanism to quiescie all VF?
-
-Best regards,
-Richard Cheng.
-
-
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 7b756000a1a6..3d8a6d2b69d7 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -246,7 +246,7 @@ static void mes_add_event(struct mock_event_store *mes,
+ }
  
-> -- 
-> 2.43.0
-> 
+ /*
+- * Vary the number of events returned to simulate events occuring while the
++ * Vary the number of events returned to simulate events occurring while the
+  * logs are being read.
+  */
+ static atomic_t event_counter = ATOMIC_INIT(0);
+-- 
+2.48.1
+
