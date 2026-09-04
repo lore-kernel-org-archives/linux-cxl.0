@@ -1,126 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC31314B63;
-	Fri,  4 Sep 2026 17:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B1850C29E
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Sep 2026 17:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788542644; cv=none; b=cZlO0BsRr7key03a2OUOmARijsvfmJeIxJZfC0hibLDLQTWi3g6BNFQJ4XcKVrObMpNQvRuILdxYDiJKbSc1/TabyH2R+Kk8efvcACNR76qEDmucVGCXfSBy7TdQXvDwYfD3wYGsO+PiMCSr63mK4cRwtqMAYQVZuzHjIeCUW44=
+	t=1788543503; cv=none; b=ElSttT2oLLvbTCptdvXMU7UMYjuJE4rFfeCaT1laxDCnPMR4B1zGd1hHUjdJiS0HXYoXjtsWoA+MIGRX+uuqzUvGM8J1qbKCx4vW1qa+aomyAYpwKiMswijdxcSgGBNt+IV4bv3Qbz3I/hX6kkrxRi2xNpidP5WRN/mxQ59tmqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788542644; c=relaxed/simple;
-	bh=otqhtQ8FICngfUzldLBvqebkvzdHHchTadWhqnOwix4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O7P5g/ttOh+XENQfs6v8KSXy71SnPc5Pz8e9RuJ07NVOdLag6whtL01FxwZPnhbLSGHbITEDluk95XPq0O7Qd8CQbJcp/X7kYYc6f+Yvz4Nbyvq7rRe7AffwfpKcijPzxZ0C9cYsCcjQZldLPMLjmVm/D3nBLGtpnzMjWfo5FgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFEE1F00A3E;
-	Fri,  4 Sep 2026 17:23:56 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Cc: rafael@kernel.org,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	guohanjun@huawei.com,
-	mchehab@kernel.org,
-	xueshuai@linux.alibaba.com,
-	terry.bowman@amd.com,
-	benjamin.cheatham@amd.com,
-	alison.schofield@intel.com,
-	sashiko-bot@kernel.org
-Subject: [PATCH v6 12/13] ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
-Date: Fri,  4 Sep 2026 10:23:36 -0700
-Message-ID: <20260904172337.1409775-13-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260904172337.1409775-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1788543503; c=relaxed/simple;
+	bh=vCyDTCeZ+U+rA6ofQr0rnRHRcq4BVR2XcwLsBr1VlzQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oPxO+Y579ZA4cR4bC21rj1zs50QqhrUF4S23yvxH4cZ3yzSTMtBgYBAUwn9Ktqdj3HGDixDVwG1L8euRWeJYdFae2kVSJsyO+HLpUW6PhnLugPua4T6zPgrvyD5pYODXABdPgHgqK5I+tOxPnSU2aSGKXpnnLLCVQvAMMZ8wnpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGMb1EiF; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGMb1EiF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823D61F00A3D;
+	Fri,  4 Sep 2026 17:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788543501;
+	bh=DhmIPqJGaJh7HuR1WrJRXeDsniaLgYCTL/zYif5140w=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=IGMb1EiFcsXVb3Y2pMVZ3QmyIYJUnpUah19JwqqI6o4g4bLrm3Nm5PC+qoSep9Nem
+	 qHI8gpv+ZNm4FrRHwdn3BOF3L2PsVbMySYVaQQFkFmsa+G0vxyb+C54/baksJSS+Oh
+	 GBbehAXxWwfdjObS+Qm9VrD5vpOoB+JAahQfCzgGcpgUzg6aK6/JbgQoknHCruDAlE
+	 I2UAbglFZUZpC7C9sA2KIy/GRQX8dodJwX/yY255HpLxvOBPCz2cWIxsyPT6ghpcfw
+	 TZ4R22uG5Q5zFqmSGyRzD+ViZXfwmLHFqwJLTh7BicPmEi0DiK8eC3iSZyamqBWD7C
+	 j5nxYC3w2Krtw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 02/13] efi/cper: Reject an error status block length
+ that wraps a u32
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260904172337.1409775-3-dave.jiang@intel.com>
 References: <20260904172337.1409775-1-dave.jiang@intel.com>
+ <20260904172337.1409775-3-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 17:38:21 +0000
+Message-Id: <20260904173821.823D61F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-ghes_handle_aer() copies sizeof(struct aer_capability_regs) out of the
-fixed 96-byte pcie_err->aer_info. The struct is larger, so the copy reads
-past the section, and it fills the software-only header_len and flit fields
-of the embedded struct pcie_tlp_log from firmware bytes.
-pcie_print_tlp_log() uses both to bound a loop over dw[], so a large value
-walks past the array. Nothing checks the section can hold a struct
-cper_sec_pcie either.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Validate error_data_length, zero the destination, and map aer_info onto the
-struct as extlog_print_pcie() does: copy up to the four Header Log DWORDs,
-then place the TLP Prefix Log from its own offset. The rest stays zero,
-covering header_len and flit.
+Pre-existing issues:
+- [High] Out-of-bounds read in CPER error status validation due to insuffic=
+ient remaining length check
+--
 
-Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=3
-Fixes: 7e077e6707b3 ("PCI/ERR: Handle TLP Log in Flit mode")
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v6:
-- Also place the TLP Prefix Log from its own hardware offset rather than
-  leaving it zero. It is the one field the print path reads that the
-  shortened copy missed (sashiko).
----
- drivers/acpi/apei/ghes.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+commit 397f02447210fe6eca20cec521b708fca415a921
+Author: Dave Jiang <dave.jiang@intel.com>
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 2077cc90569a..08c985e729d6 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -642,11 +642,14 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #ifdef CONFIG_ACPI_APEI_PCIEAER
- 	struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-+	if (gdata->error_data_length < sizeof(*pcie_err))
-+		return;
-+
- 	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
- 	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-+		struct aer_capability_regs *aer_info;
- 		unsigned int devfn;
- 		int aer_severity;
--		u8 *aer_info;
- 
- 		devfn = PCI_DEVFN(pcie_err->device_id.device,
- 				  pcie_err->device_id.function);
-@@ -664,13 +667,25 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 						  sizeof(struct aer_capability_regs));
- 		if (!aer_info)
- 			return;
--		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
-+
-+		/*
-+		 * Map aer_info onto the struct as extlog_print_pcie() does:
-+		 * copy up to the four Header Log DWORDs, then place the TLP
-+		 * Prefix Log from where the hardware keeps it. The rest stays
-+		 * zero, so firmware cannot drive the pcie_print_tlp_log() loop
-+		 * over dw[] out of bounds.
-+		 */
-+		memset(aer_info, 0, sizeof(struct aer_capability_regs));
-+		memcpy(aer_info, pcie_err->aer_info,
-+		       offsetof(struct aer_capability_regs, header_log) +
-+		       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
-+		memcpy(aer_info->header_log.prefix,
-+		       pcie_err->aer_info + PCI_ERR_PREFIX_LOG,
-+		       sizeof(aer_info->header_log.prefix));
- 
- 		aer_recover_queue(pcie_err->device_id.segment,
- 				  pcie_err->device_id.bus,
--				  devfn, aer_severity,
--				  (struct aer_capability_regs *)
--				  aer_info);
-+				  devfn, aer_severity, aer_info);
- 	}
- #endif
- }
--- 
-2.54.0
+efi/cper: Reject an error status block length that wraps a u32
 
+cper_estatus_len() sums the firmware-controlled data_length into a u32,
+which can wrap to 0. This patch rejects a length that cannot be expressed in
+a u32 in cper_estatus_check_header() to prevent callers from receiving a
+short value.
+
+Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@i=
+ntel.com?part=3D1
+
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 332c78f2d5617..3dcef618ad39f 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -745,6 +745,17 @@ int cper_estatus_check_header(const struct acpi_hest=
+_generic_status *estatus)
+>  	    estatus->raw_data_offset < sizeof(*estatus) + estatus->data_length)
+>  		return -EINVAL;
+> =20
+> +	/*
+> +	 * cper_estatus_len() sums these into a u32, and a wrapped sum reads
+> +	 * back smaller than the record. Reject a length that cannot be
+> +	 * expressed so no caller is handed the short value.
+> +	 */
+> +	if ((u64)sizeof(*estatus) + estatus->data_length > U32_MAX)
+> +		return -EINVAL;
+> +	if (estatus->raw_data_length &&
+> +	    (u64)estatus->raw_data_offset + estatus->raw_data_length > U32_MAX)
+> +		return -EINVAL;
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(cper_estatus_check_header);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but while looking at validation
+for estatus->data_length here, I noticed an out-of-bounds read issue in how
+the sections are parsed by cper_estatus_check().
+
+If firmware provides an estatus block where the data_length leaves between 1
+and 63 bytes (smaller than sizeof(struct acpi_hest_generic_data)) after a
+valid section, the apei_estatus_for_each_section() loop will erroneously
+enter another iteration due to its boundary condition:
+
+include/acpi/ghes.h:apei_estatus_for_each_section()
+	for (section =3D (struct acpi_hest_generic_data *)(estatus + 1);	\
+	     (void *)section - (void *)(estatus + 1) < estatus->data_length; \
+	     section =3D acpi_hest_get_next(section))
+
+The subsequent access to acpi_hest_get_size(gdata) and
+gdata->error_data_length in cper_estatus_check() will then read past the
+valid data_length.
+
+drivers/firmware/efi/cper.c:cper_estatus_check()
+	apei_estatus_for_each_section(estatus, gdata) {
+		int record_size;
+
+		if (check_add_overflow(acpi_hest_get_size(gdata),
+				       gdata->error_data_length, &record_size))
+			return -EINVAL;
+
+A heap out-of-bounds read here can cause a page fault in MCE or NMI context,
+leading to a fatal machine check (kernel panic).
+
+Could we tighten the apei_estatus_for_each_section loop boundary or add a
+check in cper_estatus_check() to ensure the remaining data_length is at
+least the size of a section header before allowing the next iteration?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904172337.1409=
+775-1-dave.jiang@intel.com?part=3D2
