@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3CA5221D7;
-	Mon,  7 Sep 2026 18:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B04C29BD91;
+	Mon,  7 Sep 2026 18:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788806670; cv=none; b=MiDAVZB5YomuAp2N4DdCUGB9XjYDg4Wuq3ygbMf7gHaBLMbq6yFJcqZmf4bf420h4KiDIybriinkTffebOMZC69wSTvg7tiw5o6oLzyufP4LSYuHpCm7Ge4xozegUL1msTRggv8TjZ9KOovc8h2WrdrEnAP8y9uqPxFEfOfkt0s=
+	t=1788806918; cv=none; b=dyKojTLOAXqnPxQ4TyCG4HIn13LqMegY5B4jc26Cn0xDygKonDsAAA18X08EZYlfHz6OgOg6yB8UMvnn0jYKif9/ay+kr/G3eaLLNtXb7swD6rBBlVUEEOL4oWFx/I/McUXAQq2bUUt7AwMVYQ+cLNaT0uc7Fs/0KXwtImuu8Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788806670; c=relaxed/simple;
-	bh=nciSz/gyZE9auiEeJThY/O759Gt4ZdANMcDP6aU42Ng=;
+	s=arc-20240116; t=1788806918; c=relaxed/simple;
+	bh=htrCXtnZ0GWiFORxvT949iCj6jaJ/Y5cRXIq52cexSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=odi4ICb/T69ELZGzD0JYUFkBr+Dh/Y2kI4XEJ0VE4suc7l1HWly5CGuGVNi0C0lEgpwAc2IPCUWT7iw30L9K+xGxcNm9BtVyec92iBaw1nKG557nhf6UMBoMlE/T8MlM1RJvwKr4f0Qr/syJ5tqFpw9+Kdnx6/IcyC9YoiGsK+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNEHA4nU; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=kZoZUx6Lq4z+bkp2pZIaNYgdr3n2MBYVtvwmMUNnp+wZuy/ZzXRAAodaLjPflMu56ko4IGVuCXfB+Yi+kkMOfk/c32KErXuJcHtGpayVUhqy/Fe5u8ch+k15vOkd6FbsHZerkQeewQ62azCIwt0fAQpOJ1HrymxH3DWeOTWPW+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPJfKAC5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNEHA4nU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2271F00A3A;
-	Mon,  7 Sep 2026 18:44:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPJfKAC5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04361F00A3D;
+	Mon,  7 Sep 2026 18:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788806644;
-	bh=2rkPgBM6fBKhvU4RrZDedh0bDJiTTnXLzO61eKlI9Pc=;
+	s=k20260515; t=1788806908;
+	bh=WUGlg6nOt6cJk2JXuG7+Y1oHcwtL6rVa38JzQRjXjb4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oNEHA4nUdnqBThvyFSP4NEXm81QbHW5ENnfZ9MAW+B2mniAG+G2Hh78Hq6XvMvgrd
-	 CxSvG2BnbbFJbMGhGxOzrqtxMi+/76B0aa+3FWYHi0kMkXSVOugnB5mNIsxScuznTg
-	 ne5bHkmZZAd9y/pvhUzS2/HtmbUB8oLjr0VpmyZ1g4w+dSqULY0WKq2L/7wmC8nRoS
-	 oI+acl4w1ES8Gy3rUg+IdNzlS9A9WYMrapugJ6ohtoyTKSFYwtqnU6IAM3bpvCv+GU
-	 8p7vM3CcUmWP1vG3cIOvyhGoZ71b58KgPy4xi41esbTazrzg8UM3VqxK+Nt8RCEXhM
-	 6F7DBMsNgbdKQ==
-Date: Mon, 7 Sep 2026 19:44:00 +0100
+	b=DPJfKAC54z+2fIAyhpi+B0+4tKrar9hzLyzCNC5W3JRSnKLB/TGOnAuXu6UsMju9D
+	 scw9614mOdVO18NHpD1JfNfDcmAzTsA4nMsqzuh3w4SBpmCnGyiE1gAxUuuqVra7Bp
+	 CMN5jj3eNI0tTq7iragP6tGT/ErozLCh6v/z6P/AkfdGWHjB5b2oV1NvepG0Hl4EhS
+	 XVPsSnXknmzVBejQcH+iNMmmxWJNB4xb9E6P7jMmEhFe9cd8uazUy272Rxrvh3jpKr
+	 9siHWm3tTl/+8gsvgGN3O9M0Ta/9e2ga4VZLvCuWs7FjjLL+1uTjEr0eAWh94Fia1V
+	 bP1zhuBa+Xk6Q==
+Date: Mon, 7 Sep 2026 19:48:24 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Shaikh Kamaluddin"
- <shaikhkamal2012@gmail.com>, linux-cxl@vger.kernel.org
+To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] cxl/events: Return IRQ_NONE when no event is pending
-Message-ID: <20260907194400.17bb5f5c@jic23-huawei>
-In-Reply-To: <20260906160901.49F851F00A3A@smtp.kernel.org>
+Message-ID: <20260907194824.615e47ff@jic23-huawei>
+In-Reply-To: <20260906155705.13252-1-shaikhkamal2012@gmail.com>
 References: <20260906155705.13252-1-shaikhkamal2012@gmail.com>
-	<20260906160901.49F851F00A3A@smtp.kernel.org>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,77 +48,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 06 Sep 2026 16:09:00 +0000
-sashiko-bot@kernel.org wrote:
+On Sun,  6 Sep 2026 21:27:05 +0530
+Shaikh Kamaluddin <shaikhkamal2012@gmail.com> wrote:
 
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> CXL event interrupts may share an MSI/MSI-X vector with other event
+> logs or device features. Consequently, cxl_event_thread() is registered
+> with IRQF_SHARED and must determine whether an interrupt belongs to the
+> event-log facility.
 > 
-> Pre-existing issues:
-> - [High] The `cxl_event_thread` can enter an infinite loop on device surprise removal or mailbox hardware failure, hanging the CPU and permanently masking a shared IRQ line.
+> The handler masks the Device Event Status register to the event logs
+> supported by the driver. However, when no supported status bit is set,
+> it exits the processing loop and still returns IRQ_HANDLED.
+> 
+> Track whether at least one supported event status bit was observed.
+> Return IRQ_NONE when there was no event to service, while continuing to
+> return IRQ_HANDLED after processing one or more event logs.
 
-FWIW I'd be doubtful about fixing this unless we have some evidence
-it is actually useful in practice.  Today we do not support surprise
-removal and I'm not sure that will change any time soon.
+What is the practical result of this change?  
+I think it will only affect the spurious interrupt detection so
+to me it looks like a cleanup rather than a fix.  Is there
+any path by which we actually lose interrupts as a result of this?
 
-Jonathan
+> 
+> Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
+> 
 
-> --
+No blank lines in tag blocks.  There are a number of tools that rely
+on there not being any and as such there are also scripts that run
+on various upstream trees that will send us annoying emails if this
+blank line is still here!  I'm not sure why this mistake in patch
+formatting is so common as there are plenty of docs without the
+blank lines!
+
+> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+
+A suggestion for an alternative implementation below.
+
+> ---
+>  drivers/cxl/pci.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> commit f6cda8d59c7a077a8328222a63290241e9b118c0
-> Author: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> cxl/events: Return IRQ_NONE when no event is pending
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index c7c91e8dc51d..8b560cae91f2 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+>  	struct cxl_dev_id *dev_id = id;
+>  	struct cxl_dev_state *cxlds = dev_id->cxlds;
+>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> +	bool handled = false;
+>  	u32 status;
+>  
+>  	do {
+> @@ -527,11 +528,13 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
+>  		status &= CXLDEV_EVENT_STATUS_ALL;
+>  		if (!status)
+
+			return IRQ_NONE;
+
+And don't need the other changes.
+
+>  			break;
+> +
+> +		handled = true;
+>  		cxl_mem_get_event_records(mds, status);
+>  		cond_resched();
+>  	} while (status);
+>  
+> -	return IRQ_HANDLED;
+> +	return handled ? IRQ_HANDLED : IRQ_NONE;
+>  }
+>  
+>  static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
 > 
-> This commit tracks whether at least one supported event status bit was observed
-> during interrupt handling. It returns IRQ_NONE when there was no event to
-> service, allowing the shared interrupt handler to behave correctly.
-> 
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index c7c91e8dc51dc..8b560cae91f2e 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)  
-> 
-> [ ... ]
-> 
-> >  		status &= CXLDEV_EVENT_STATUS_ALL;
-> >  		if (!status)
-> >  			break;
-> > +
-> > +		handled = true;
-> >  		cxl_mem_get_event_records(mds, status);
-> >  		cond_resched();
-> >  	} while (status);  
-> 
-> [Severity: High]
-> This is a pre-existing issue, but can cxl_event_thread() get stuck in an
-> infinite loop here?
-> 
-> If a CXL device undergoes a surprise removal or a mailbox failure,
-> cxl_mem_get_records_log() can abort early without clearing the hardware
-> event status:
-> 
-> drivers/cxl/core/mbox.c:cxl_mem_get_records_log() {
->     ...
-> 		if (rc) {
-> 			dev_err_ratelimited(dev,
-> 				"Event log '%d': Failed to query event records : %d",
-> 				type, rc);
-> 			break;
-> 		}
->     ...
-> }
-> 
-> Because the local status variable evaluated in the while condition remains
-> non-zero, the loop will restart. If the memory-mapped read at the top of the
-> loop then returns 0xFFFFFFFF or the stuck status, the loop will spin endlessly,
-> permanently masking the shared interrupt line.
-> 
-> Should we add a mechanism to break out of this loop or track whether the
-> hardware status is actively being cleared?
-> 
-> >  
-> > -	return IRQ_HANDLED;
-> > +	return handled ? IRQ_HANDLED : IRQ_NONE;
-> >  }  
-> 
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+> prerequisite-patch-id: 92e40cd60a697020faac475dcc77ba63b33434ea
+> prerequisite-patch-id: 10027ad5d9aed85806047f807b3a76273b6c4a77
 
