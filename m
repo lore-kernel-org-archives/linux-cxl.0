@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA5F3ACA77
-	for <linux-cxl@vger.kernel.org>; Mon,  7 Sep 2026 23:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C07723F40D
+	for <linux-cxl@vger.kernel.org>; Mon,  7 Sep 2026 23:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788824534; cv=none; b=oy1ukt5AL0bWtc62u3oRXUigHHTCLPgJFTWr2EbeC+HSy9Yti7Uygvemv7T18C+o+Wsb0Tnf+y/eBzl6M2Jj+vtTE0fTtXgepBoW0MykMfDcQ+Z8q5MdfBhzfVOdU1LkKh21SGcrlbrjKRH0FiR6kqEWrdrFc7rwP/NSVvRWAoE=
+	t=1788825056; cv=none; b=Tum8bN5kxdm7OyWkrFkyCT99/ZAVfZpx/vxkbGFqJgk3FtMO+O23XWb1ttkCMFxypU6F4dgnL4dyKamfKYsCjnsoFpd/BlzG11QJ20MC6vgn9Kd4M5yC8HMfclWuuZT9+uiAcm1hhOaUM6J7efjkQvBZYTtr4b/wKdWrf3uMCT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788824534; c=relaxed/simple;
-	bh=7/ahrJJWTjEL8tLNoSZE+U9rWW4voU46DQMu7DpI/EY=;
+	s=arc-20240116; t=1788825056; c=relaxed/simple;
+	bh=Z4/Hz+3pOH8Nn+96aF9/ARq4sB9Ybd+yeC/klssY9ak=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IDJMDCXW8Db6k+NDVuv4Z8PkJOB7Kg2rUQhZG0WFvyiroQ1dpcKI4sWs0B3iJ4Kck0vAWEdjbliCpbV5/ZeExIyxGMbm+eJ2Q10b3mbJ4yG79i7Kt7iqYX7y0o5XWOYfLqZsQje9WYwYKUqTMFt3s8YB0impUSelvvC/yp6Yo8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3sX1eYf; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=DXTf09DDDNhImof/N/q1BjBZWwnxF2MwbhD6gA72Aw1UrD+TpsS/JYsisQMZVSM/wUNvR6sQFpBzoodHsZ+F+pLtXtFcmjwPhUUwYJ1FsTrN5P0p9uS0OQLF4xwlAbUIhc1Z8iDL2iFuB3IjPAWVnFwhhkECsz5B1pTFQbP+jb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yw/5Wotb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3sX1eYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BC11F00A3A;
-	Mon,  7 Sep 2026 23:42:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yw/5Wotb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4E81F00A3D;
+	Mon,  7 Sep 2026 23:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788824532;
-	bh=wJdnE0AxT9jzDJtYvcNFvcynKyuIuG2bbrvkwiYjGxU=;
+	s=k20260515; t=1788825055;
+	bh=A6VXYGze+t7TBB9TQO7Kr93RJhbJi0Z2NUAcXldgy18=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=C3sX1eYfQYzQnwy4kmLYGogf4CYpBPV4uAuhQ4SDnXTvzmFl3OIRy3hE0VvZ/EjVS
-	 OMSRm+WKdp4b94x9aB2beHkCshh9MZF1t2W6+ZrA4gBQfT4ad3M3pM7l3mCh8JZJhy
-	 fDt9jXktGcgv/rDP+WNQaeRC8x+BoWf3SMlsNMkPbkwFc1oN1uxQJxRK5g0xp/c1tM
-	 KALiYRAW8GEb+ybgXcm1qI+Wmi+Cx0RhOh75jR0BzVSZ4xnkRMPW7CHq8XHITAeM+O
-	 VbgkVktym/+q0Ui7DRpqmPYDQQVZCzj537+RJsdh3HOl22aQfqA/hmm170ntFZzpvL
-	 Z4a9LbxclABDg==
-Date: Tue, 8 Sep 2026 00:42:07 +0100
+	b=Yw/5Wotbz7KkK1KCvBleNr3p9coRHDtCmMGYU3s7HacMGkAB3vLOZDcO42FLhFZJf
+	 rCTelrZ2XBnAVwFyYZ2Q3rJYQPeGOYxmobUVgz6j3/byuk2G8BYlwWuygKZ33jI8rJ
+	 B3TW0qhLGpPBVD3F4NFAoMqBN2iGSCDXBXnvnhsTZ+VkclJPTfoxhMqq2IVl8yD0PK
+	 Dsm2PyLQkwSQpJjtZ5hLiXa1zS8ms3aeMrWvOIMY41p3WaR7aSz0OgQJIsobyI56K6
+	 V2WtoctReAJIlXqDNjyVCsG2+IV19FqmE7fguOPJcplGbWwzyDZnI3gQztPYx3uIMq
+	 JTWTng6PPqxUw==
+Date: Tue, 8 Sep 2026 00:50:49 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li
  Ming <ming.li@zohomail.com>, Robert Richter <rrichter@amd.com>,
- linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5 3/7] cxl/region: Generalize endpoint position mapping
-Message-ID: <20260908004207.5875e800@jic23-huawei>
-In-Reply-To: <16d749d4eef2f6f142bbf6c48e4210e0587e466c.1788475206.git.alison.schofield@intel.com>
+ linux-cxl@vger.kernel.org, Jonathan Cameron
+ <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/7] cxo_ol/region: Name the interleave locals in
+ cxl_port_setup_targets()
+Message-ID: <20260908005049.32763a31@jic23-huawei>
+In-Reply-To: <b3ceb52dfb0da2f164b941adff60d2db6aaac9f1.1788475206.git.alison.schofield@intel.com>
 References: <cover.1788475206.git.alison.schofield@intel.com>
-	<16d749d4eef2f6f142bbf6c48e4210e0587e466c.1788475206.git.alison.schofield@intel.com>
+	<b3ceb52dfb0da2f164b941adff60d2db6aaac9f1.1788475206.git.alison.schofield@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,96 +50,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  3 Sep 2026 16:23:45 -0700
+On Thu,  3 Sep 2026 16:23:46 -0700
 Alison Schofield <alison.schofield@intel.com> wrote:
 
-> Endpoint position calculation currently relies on the requirement that an
-> interleaving root have the same granularity as the region. Auto region
-> creation builds the position by multiplying by the parent decoders' ways,
-> while user region creation selects the root target with 'pos % ways'. Those
-> calculations are sufficient under the current granularity restriction.
+> cxl_port_setup_targets() derives the interleave granularity of one decoder
+> from the granularity and ways of the decoder above it, and takes that
+> decoder's own ways from the topology below it. The values from the level
+> above are named parent_iw and parent_ig, but the values being derived are
+> the bare iw and ig, so the reader has to work out which level each one
+> describes.
 > 
-> In order to support mixed-granularity regions, that granularity restriction
-> will need to be removed so decoder granularity can change between levels of
-> the interleave hierarchy. The position calculation needs to account for
-> those changes to produce the correct endpoint ordering.
+> Rename iw and ig to child_iw and child_ig to match the parent_ prefix used
+> for the level above.
 > 
-> Change the position calculation so each decoder's contribution is weighted
-> by its granularity relative to the region granularity:
+> No functional change.
 > 
->     position += target_pos *
->                 (decoder_granularity / region_granularity)
-
-In the code target_pos becomes parent_pos. The parent_pos naming
-seems more logical to me but maybe I'm missing something! (more
-that likely given it is interleave maths!)
-
-> 
-> Use the same relationship to select the root target during user region
-> creation.
-> 
-> Weight each level by the region granularity, passed in by the caller,
-> rather than by the granularity programmed in the endpoint decoder. The two
-> are equal for most configurations, but not when Normalized Addressing
-> leaves the endpoint decoder programmed passthrough while the region
-> interleaves.
-> 
-> For currently supported regions, the new weighted calculation reduces to
-> the existing position calculation and produces identical endpoint
-> positions. The exception is a region wider than a same-granularity Mod3
-> root, where address bit routing programs the level below the root at the
-> region granularity, so the ratio derives a weight of one rather than three.
-> A later patch in this series rejects that layout.
-> 
+> Suggested-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-I'll assume you'll clarify the naming thing.  Otherwise this LGTM
+
+I was wondering a bit about having ceig and ceiw but those would be
+very local so I guess not worth it.
+
+Given how often we use ways_to_eiw() not to make the conversion
+but just to check if it is possible, I wonder if a ways_valid()
+helper is useful?
+
+static inline int ways_valid(unsigned int ways)
+{
+	u8 eiw;
+
+	return ways_to_eiw(ways, &eiw);
+}
+
+Maybe similar for granularity.  Would remove some confusion over whether
+we actually want the encoded values or not, making this function more
+readable. I didn't look for whether it was helpful elsewhere.
+
+Anyhow this change is good
+
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-> ---
->  drivers/cxl/core/region.c | 69 ++++++++++++++++++++++++---------------
->  1 file changed, 42 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 6a698f36aa6d..506b1cba1a92 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-
-> @@ -1951,24 +1959,29 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->   * cxl_calc_interleave_pos() - calculate an endpoint position in a region
->   * @cxled: endpoint decoder member of given region
->   * @hpa_range: translated HPA range of the endpoint
-> + * @region_gran: interleave granularity of the region
->   *
-> - * The endpoint position is calculated by traversing the topology from
-> - * the endpoint to the root decoder and iteratively applying this
-> - * calculation:
-> + * A region position is the index of a region-granularity chunk within one full
-> + * pass of the region interleave. The position is calculated by traversing the
-> + * topology from the endpoint to the root decoder and accumulating the
-> + * contribution of each decoder level:
->   *
-> - *    position = position * parent_ways + parent_pos;
-> + *    position += parent_pos * (parent_granularity / region_gran);
-
-Here is the naming difference from the patch description.
-
->   *
-> - * ...where @position is inferred from switch and root decoder target lists.
-> + * ...where @parent_pos is inferred from switch and root decoder target lists.
-> + * The multiplier is the weight of that level: how many region positions pass
-> + * between successive advances of the level's target index. A level that selects
-> + * a single target contributes nothing.
->   *
->   * Return: position >= 0 on success
->   *	   -ENXIO on failure
->   */
->  static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
-> -				   struct range *hpa_range)
-> +				   struct range *hpa_range, int region_gran)
->  {
->  	struct cxl_port *iter, *port = cxled_to_port(cxled);
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	int parent_ways = 0, parent_pos = 0, pos = 0;
-> +	int parent_gran = 0, parent_pos = 0, pos = 0;
->  	int rc;
->  
