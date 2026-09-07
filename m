@@ -1,30 +1,30 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092813A7D81
-	for <linux-cxl@vger.kernel.org>; Mon,  7 Sep 2026 09:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DA1448B84
+	for <linux-cxl@vger.kernel.org>; Mon,  7 Sep 2026 09:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788773879; cv=none; b=ewNQ1G+R54a4giN1VPEuSbmoaslAH3GC5bNLnVUFb77ZuHJu5sSjTsc0a0DQiZx6zb3JPwX4sao4JJ5RLFMKtcqLBTUZi+D9xJscDrhNVZZYKv3bHz1FLmsgqxWpEmPNzsu4QwgaVyPPgks1lQXWKfAvORZn6p9bUrx4mhzs7fI=
+	t=1788773882; cv=none; b=E1+lE9DlWVSadt88DwlODzq2Vg2x36D4BpUSK5FuPaFngPj6zvU9PJRC+16S0ZYPYb3aukO5h8VvI+vYu1JlcpnlH8t5GQsVjn9c4TebiMnKcSgJt4Th4jCAgpaehSZeMWc5xNJMrmuvx2Y9egyiU8PXSTt7XwRvHgR8hEwaFbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788773879; c=relaxed/simple;
-	bh=QHSp4WuCJryWZUK5ndvzNV9y+GinboqEPn/IRrdhVLo=;
+	s=arc-20240116; t=1788773882; c=relaxed/simple;
+	bh=zK6ccBANrWWJ8kZaVPavfkN8MQVcozqwIe2uNoVGYHQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OKU6offneP8NLIIac4z/KFsHHwX+Jtb/FkLSMMtTSMGbOi8Bvw9ckx4nQsMQeshB3cUjnMSXubL7ENwOWMPOR93UFdTJljbNtrNoevXJJlZa4YAAVyCYRF2QR8VSKykTtWoVl8DeDNQSLuLv6/oQCuGecc6LaX/ChRtc25UoV4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XnLFMiYS; arc=none smtp.client-ip=115.124.30.133
+	 MIME-Version; b=W0ZFPkN2WjUlqvINe3ftldJ1XnfoaeTrwfj9jbwj6srDxEmvzqjzBBAGC40nWm3d3RTKjYtLMoiVB5kW9EUcglzud2vGYSiyjoxDJidZNK/54E4LihjHVkIlV3goc3cPLW32GUGofS2W08R5ELJWfkaE0NbHtSsied9RjnecbP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Ti1TLxFa; arc=none smtp.client-ip=115.124.30.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XnLFMiYS"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Ti1TLxFa"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1788773869; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=yc5KhGVgl+0DuLZrt8gjwOQ2YjB/WdP3UupIKvk84hk=;
-	b=XnLFMiYS0ql8Iu/oLjA7E8lhKLRY7K04o6iEpozolVffNNkH1FLG/F3tRaeJRC8DQdfV1aaS1N4Dq7ybLhtwXdBbyz9MI8J67hCFsY+CZZ/qMVKSaJGfoMKiXCmN3kL0PjHVMsRkE/LMt+Nl+TwvI6XEunHHqQFztIlSvgeJRLU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0XATXGyL_1788773867;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XATXGyL_1788773867 cluster:ay36)
+	t=1788773872; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=KFEpwNB6zq3eqoXcvIEI8iCerspIOre1CKLoNdmlSoU=;
+	b=Ti1TLxFaqJFU+WNiTowQEHyJmUZ+az+hib95XhQHXrB+kMC1t7Ee7ZR/X5GPVl/lyHmUuxHuSwl4qNzyGMoetY0QiaAL4dZfwVoxDKGTGTOG/2BBNJtEvdTnuA/IE7qhP5M6X5hFBQkQGEmFViWiRtlazR5+NJqCbbKhW/SQmxY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0XATXGz._1788773869;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XATXGz._1788773869 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 07 Sep 2026 17:37:47 +0800
+          Mon, 07 Sep 2026 17:37:50 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
 To: palmer@dabbelt.com,
 	alistair.francis@wdc.com,
@@ -45,9 +45,9 @@ Cc: pbonzini@redhat.com,
 	qemu-riscv@nongnu.org,
 	qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v6 3/6] hw/riscv/virt: Advertise the CXL host bridge to firmware via extra-pci-roots
-Date: Mon,  7 Sep 2026 17:37:30 +0800
-Message-ID: <20260907093735.2753-4-cp0613@linux.alibaba.com>
+Subject: [PATCH v6 5/6] tests/qtest: Add RISC-V ACPI bios tables test for CXL
+Date: Mon,  7 Sep 2026 17:37:32 +0800
+Message-ID: <20260907093735.2753-6-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260907093735.2753-1-cp0613@linux.alibaba.com>
 References: <20260907093735.2753-1-cp0613@linux.alibaba.com>
@@ -59,61 +59,100 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pxb-cxl expander bridge presents as a class 0x0600 host bridge with
-a type-0 header, so EDK2's PciBusDxe never recurses into it and never
-assigns the CXL root port a memory window or bus numbers.  As a result
-build_crs() produces an empty _CRS for the ACPI0016 host bridge and the
-CXL devices behind it are not enumerated by the OS.
+Add test_acpi_riscv64_virt_tcg_cxl() to verify that enabling CXL on
+the RISC-V virt machine produces correct ACPI tables, including the
+ACPI0017 CXLM device with _DEP in the DSDT and the CEDT table.
 
-Advertise the pxb-cxl expander root buses to firmware via the
-etc/extra-pci-roots fw_cfg file, the same way arm/virt and x86 do, by
-calling pci_bus_add_fw_cfg_extra_pci_roots() from virt_machine_done().
-EDK2's PciBusDxe then enumerates behind the CXL host bridge and assigns
-the root-port window and bus numbers.  The ACPI tables are rebuilt when
-the guest reads them (after that firmware enumeration), so build_crs()
-then emits a correct _CRS for the ACPI0016 host bridge.
+The test boots with cxl=on, one pxb-cxl bus (bus_nr=12), a CXL root
+port, a cxl-type3 device and a fixed memory window, mirroring the
+existing x86 q35 CXL test pattern.
 
-The call is made unconditionally, in line with arm/virt, pc and hppa,
-so plain pxb-pcie expander bridges, which likewise depend on
-etc/extra-pci-roots, are advertised as well; the generator simply
-returns nothing when there is no expander root bus.
+Since pxb-cxl is a root bus, using -cdrom causes QEMU to auto-plug the
+cdrom drive into pxb-cxl, triggering "Only PCI/PCIe bridges can be
+plugged into pxb-cxl".  The ISO is instead attached explicitly via a
+virtio-scsi-pci controller on pcie.0, following the same approach as
+test_acpi_aarch64_virt_tcg_pxb().
 
-This approach also scales to multiple pxb-cxl host bridges (each gets
-its own window from the shared aperture) and lets firmware size the
-window to what is actually behind the bridge, rather than reserving a
-fixed carve-out.
-
-Verified by booting an RVA22 guest: the CXL root port and Type3 device
-enumerate, and 'cxl enable-memdev' / 'cxl create-region' /
-'daxctl online-memory' bring the CXL memory online as system RAM.
-
+Acked-by: Alistair Francis <alistair.francis@wdc.com>
 Reviewed-by: Junjie Cao <junjie.cao@intel.com>
 Tested-by: Junjie Cao <junjie.cao@intel.com>
 Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 ---
- hw/riscv/virt.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tests/qtest/bios-tables-test.c | 54 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
-index 70090ca70a..885020af83 100644
---- a/hw/riscv/virt.c
-+++ b/hw/riscv/virt.c
-@@ -657,6 +657,15 @@ static void virt_machine_done(Notifier *notifier, void *data)
-         cxl_fmws_link_targets(&error_fatal);
-     }
+diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
+index f6dfa4131b..41c0d6a295 100644
+--- a/tests/qtest/bios-tables-test.c
++++ b/tests/qtest/bios-tables-test.c
+@@ -2214,6 +2214,56 @@ static void test_acpi_riscv64_virt_tcg(void)
+     free_test_data(&data);
+ }
  
-+    /*
-+     * Advertise the pxb/pxb-cxl expander root buses to firmware so that
-+     * it enumerates behind them and assigns bus numbers and windows.  For
-+     * the CXL host bridges, build_crs() then builds the ACPI0016 _CRS
-+     * from the resulting state when the guest reads the ACPI tables.
-+     * This is a no-op without any expander root bus.
-+     */
-+    pci_bus_add_fw_cfg_extra_pci_roots(s->fw_cfg, s->pci_bus, &error_abort);
++#ifdef CONFIG_POSIX
++static void test_acpi_riscv64_virt_tcg_cxl(void)
++{
++    gchar *tmp_path = g_dir_make_tmp("qemu-test-cxl.XXXXXX", NULL);
++    gchar *params;
 +
-     /*
-      * An user provided dtb must include everything, including
-      * dynamic sysbus devices. Our FDT needs to be finalized.
++    test_data data = {
++        .machine = "virt",
++        .arch = "riscv64",
++        .tcg_only = true,
++        .uefi_fl1 = "pc-bios/edk2-riscv64-code.fd",
++        .uefi_fl2 = "pc-bios/edk2-riscv64-vars.fd",
++        .ram_start = 0x80000000ULL,
++        .scan_len = 128ULL * MiB,
++        .variant = ".cxl",
++    };
++
++    /*
++     * While using -cdrom, the cdrom would auto-plug into pxb-cxl because
++     * its bus is also a root bus, triggering "Only PCI/PCIe bridges can be
++     * plugged into pxb-cxl".  Attach the ISO explicitly to a scsi controller
++     * on pcie.0 instead, following the same pattern as
++     * test_acpi_aarch64_virt_tcg_pxb().
++     */
++    params = g_strdup_printf("-cpu rva22s64"
++                             " -machine cxl=on"
++                             " -device pcie-root-port,chassis=1,id=pci.1,bus=pcie.0"
++                             " -device virtio-scsi-pci,id=scsi0,bus=pci.1"
++                             " -drive file=tests/data/uefi-boot-images/"
++                             "bios-tables-test.riscv64.iso.qcow2,"
++                             "if=none,media=cdrom,id=drive-scsi0-0-0-1,readonly=on"
++                             " -device scsi-cd,bus=scsi0.0,scsi-id=0,"
++                             "drive=drive-scsi0-0-0-1,id=scsi0-0-0-1,bootindex=1"
++                             " -object memory-backend-file,id=cxl-mem1,mem-path=%s,size=256M"
++                             " -object memory-backend-file,id=lsa1,mem-path=%s,size=256M"
++                             " -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1"
++                             " -device cxl-rp,port=0,bus=cxl.1,id=rp1,chassis=0,slot=2"
++                             " -device cxl-type3,bus=rp1,persistent-memdev=cxl-mem1,lsa=lsa1"
++                             " -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,"
++                             "cxl-fmw.0.interleave-granularity=8k",
++                             tmp_path, tmp_path);
++    test_acpi_one(params, &data);
++
++    g_free(params);
++    g_assert(g_rmdir(tmp_path) == 0);
++    g_free(tmp_path);
++    free_test_data(&data);
++}
++#endif /* CONFIG_POSIX */
++
+ static void test_acpi_aarch64_virt_tcg(void)
+ {
+     test_data data = {
+@@ -2971,6 +3021,10 @@ int main(int argc, char *argv[])
+                            test_acpi_riscv64_virt_tcg_numamem);
+             qtest_add_func("acpi/virt/acpispcr",
+                            test_acpi_riscv64_virt_tcg_acpi_spcr);
++#ifdef CONFIG_POSIX
++            qtest_add_func("acpi/virt/cxl",
++                           test_acpi_riscv64_virt_tcg_cxl);
++#endif
+         }
+     } else if (strcmp(arch, "loongarch64") == 0) {
+         if (has_tcg && qtest_has_machine("virt")) {
 -- 
 2.50.1
 
