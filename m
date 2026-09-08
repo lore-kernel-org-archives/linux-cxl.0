@@ -1,62 +1,61 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3929B503BC9
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 09:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E39950AC14
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 10:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788859461; cv=none; b=kUrvGWGQMibhG7cft5UL/SFScd9nHYRyGNF6EzvDxTRugqpqx1Sz+UAFrkGqlG1uf9HrwBuf4yG2s1pl/QAfvuH/nhWKeIRSoSCRV116kkspLilwSR8nfHuwZycMUQlXTMioKLGuw9NkKwFXwr7UCYtnllMz+An8BplMOkrX500=
+	t=1788862927; cv=none; b=uQXQewnmSCRlb6GpSkU7Xsd22CPVRD1WV9s+4lFgisatx9U6pczujgxY0AbqzVG3jQh136C2Ld1OYzGwocp1uvceN7zoyHZlllKT6HbAseKvbbWf+DFJkagp5rtPrpJ6hK/R1kqTAVQM7IVaz1SqNv2zD31d9x9v7xp3nyiIQU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788859461; c=relaxed/simple;
-	bh=HiJkVEpomco7j1jH4alXYaPsDt8YTgRSQ8SHI+SDl2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nmL9HMF3HZoV5rk4OGZ3seSnwhIPF3NNiyEcVLm7v5jeVUbaYACgJbihJclsw0tE6dXpsCRP+03jfGDHboFg/ejEMFZDYfGtQCtHDdn/NfsclaF2gpRPDEH8HMlxqVu4sW7OP/TLV39bsWSLYIRIF/YTrikxtYptSkR1RrwmYMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jD0C5WYq; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1788862927; c=relaxed/simple;
+	bh=QGabIKARS0Ot2NyBx1l+pS2bwXrbt5gxUGD8uJdonuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fcNBLTk0RMakXpil0Dq6e5T7hYpdONcWk3phugzPTBu6/hQU5X84HTUylHMmRkcSHTmBuBW2XV0Gkmq7m/kdzAvOMkSCxSdWT8kfoz9T/Q1GRa+aOxjFdT/JVaECdwA2pT1Btj88yzRB3/Y7JS7/SaODVNyp6KvYv4iY7h6RcYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tB5Vc1SA; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jD0C5WYq"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-38ec1402b05so4137538a91.2
-        for <linux-cxl@vger.kernel.org>; Tue, 08 Sep 2026 02:24:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tB5Vc1SA"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3964dfb5b9aso5441544a91.1
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Sep 2026 03:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788859459; x=1789464259; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788862925; x=1789467725; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KhVoRR2as2l1Y1vZ/wmp10+yhTCcphYNfyS7YrMEo1E=;
-        b=jD0C5WYqtlq+huBIcq70ArquXZttn0SWU+J04fevDa3yROx6+KFl9AqOlMhWpMJ0GF
-         U8bNgk/zEY1wpuhvVmwypH/HP0jRKO1ROwVlxrwNffh70RHqeG+3TWYG24o0asPp95zv
-         sexDVaf/PJHo3tX3yn+l0bKH6geayT0gguOjPPIyHzc8pIm5wjJDwJc6chNZHwp5/ZZ+
-         8u2bDhL3sAGZKnqyGwVAt6Qh3gG+QJDCr68x49Fn5AAO9qD5MjwGdEWZWfXjXIfKlpD9
-         L/bNSwe/AEtsVxHH3nloJvRvaymMtBYJ65ws7zkX7E80M4s6L0O73ZdMgtPthtUmLpsi
-         +DZg==
+        bh=ieAyrn9dOUbi/uQHpx4XPNGdMoW3ipgyyKgN9345CbI=;
+        b=tB5Vc1SAQb+gJ8eVUGmV6dqmD1+4DY3Yq5Z2eGwMc/Hssxne7dKwDH4at4mIbwjk6Y
+         Vlo0n9eN/28hl8Dqm0KNiNRDWJ/Ler8LrjXMtmoJWwOcsw39Xu9n4e/SnrK1as+eyUhc
+         m/7pK4F0+Ng/g6Sv8621NgzHajIAT/wrafBnl7f5Pg4p+0Gt+E07Q0BB4WpN3DvCXxQV
+         mpkXhdHRXG5Ex58Ct7VXhQtl0HOotoKTd1Z6XsCmitW8Dr+173CHcnx9zdUCSm+wd0wi
+         1LL5MSe23lhDqED56L0DT3JOH8uoFjQVPtgb+2NuuksudAze95v2Bj2m1DyFueaNilka
+         n6SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788859459; x=1789464259;
+        d=1e100.net; s=20251104; t=1788862925; x=1789467725;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=KhVoRR2as2l1Y1vZ/wmp10+yhTCcphYNfyS7YrMEo1E=;
-        b=UhWzhTGAx1R4UpYuPmkUIFoD3yl0/AiW4kQIOsIS0/tHafcHjQE1JV7Rnyb+egSgYk
-         QzrfOQyPNh39CqDaOMbXEuvCL3W1q0CX/3Cr3oaZKkJB0b7fpWTNWHdgkIV4PsIaSblz
-         +w98OyL9a0vdnBzrV8RVkmksJrdjI/30RvTSCF3Z1uCor5h/bihkfeGdEm2Ficgg1RBd
-         uA5tG/dfTXgaRWK4HLejFK29NGbTwU+Tby7XjCt7KTk3Tz81eEEHhrJzJykDPz2CjTta
-         bvE0oGz6gzRGcG7AxspIeK0RBkGturaniyql3aUrlM4QEpzqRPdFR52nCa+N6phgAjhS
-         r97Q==
-X-Gm-Message-State: AFuF++ls/44EAst6rQ2Ls5/dyy6Wxa2zU/pK06vGwCC7hI/ROz6I4KNk
-	DX4jz8brccpjH80jLE44b6eNkSjciQIKGqYw+7KmZZ2+oMAHNMxhRbLl367RKg==
-X-Gm-Gg: AYBFou3YwxderGKXAch3bl7GkNnA8DEbQWxWCyBTIo235bEx5lsx1hhQ2ARQoj7sggy
-	ZfUzAEGwEB9RjAiznOqFvy6ioGNJC5fW5c3u8pCsQslY6s9G6rgZpYtcVHGla6E/nc/8miE1ekq
-	TmoVN7mc49+R3YGyJZd8bUTltpMbctAJKbRqaGAqtRwkY1tXLHNLF+9y5/IfbrqYva3xmv8LiTb
-	jd5TgkUWWlAHTCYLQ6OayJ0JkUBFIsKq4/F803b2JmvL6iPp2xd+0j4AkuNa9CalvOJCmI+spu4
-	W2cW3EvUbGXtvkfOvfvGTuxcpAEb6lcQO2ET1y4IFqsGIlt8MBidPI6+bCh/e7eGgON//CB34e/
-	fp1W55wQHzL3S27Hg/LHykX0M5zgrK8J4Aj0ZR8UKZEqOtCV2uhRVV83hd/x/H63Pij2QO8przb
-	PNuc1EHuuyGOxrAQK33xsWstRBRD+XMpjL4ih0TnptFVfirbVz9iy8B9Co2r942+e42M7Z9YfA4
-	oKsM6n7H3VS69MH/uX74cS+tJ25fEWbugh1UETuCYNTAWiMO/FfmjWv/CfvCRgr/LOQpioBIGNS
-	RxIKE+052wo=
-X-Received: by 2002:a17:90b:4984:b0:381:25ce:bcc2 with SMTP id 98e67ed59e1d1-39b26104798mr38402793a91.6.1788859459368;
-        Tue, 08 Sep 2026 02:24:19 -0700 (PDT)
+        bh=ieAyrn9dOUbi/uQHpx4XPNGdMoW3ipgyyKgN9345CbI=;
+        b=I81Z7cma6TEQ0vsk/b2Ew2IJb6iKeUBghxGsVXEjdGzfnU9OzMmwH02yihcPcgPd7/
+         GYlPoEn3J1IRytguclDkvU1jo4UjWI9S712QK2o9Srp8ABuW7Z4k65UPCko/7L7Pu4Lb
+         +8YL7KZssBVBAIFMpiTcYJ71nmtU0O3RSIXPFm0rO8Wt6YVgRnUf0D7xh4JSQwSHNbfP
+         ZMi8JSBxRrDBv/0vcNCVUUAoCVqSHS6mKRxAbr7fFONzAyZxPjsbS/pz7jQ3hGakgvNW
+         4Xkfbv/GZ9lgoxrN+zkK2qSmMdO3uodUozEM3I+BVNRvLaNSKsEjjvQxuEW+N0g9CN4W
+         lrWg==
+X-Gm-Message-State: AFuF++kRpVJfGEarSniv6VbDlLGIU9ZTydStqwNM0s0rswGuuP1nUpKo
+	9pFpQLBojePUjnnxa8uEIaAkP42Kh8i2nORDDTCmyWlDtxm3puzCJfA/sKNmPA==
+X-Gm-Gg: AYBFou0pRfVQ2HT2QxKvfk9GN2kFBB9O+tFr1+FRyETKGn56U/eZpp+nrCSHbP8RVwB
+	n7TG8snuLYjOBwV1uw6eAOANIwwBSs9iqLGVfAudbAeVJbC+yr73JsJtqNpRQzcdxaD1z+NRv7f
+	VXZt5WNvxMn00/CV3awlwPB5gdrdLI/2vri4ipBtnrN7GFkAX4U0C4NNYG+dGYip7SDs2lJO801
+	2ByZYo3Vq67Gd4lgcYv2OK6DfkEaWZT8P0HnNKLHpZwsGgQmTbsDhHGnlZD2CR1n6wCtnEgxmvb
+	ZASIL4RASn38c1YnvVfQ6R8pF7MqvEt4+psSmVf294C/f4D4Sl/FYzaut7Yfh+08tP5i5s2LFiv
+	GpDNAZiW/4rEegZGJHkyguv8IgvITHZNy1QmzK23cLag3vdnmjaBxI/8lWfn1K/tgGjs47npRby
+	cV3FkW3bvktKwSDMVKE75U3OixPbuULeTR204c/ruzHOaLrL5wEFbANab/baG4TEJCt2H+pdMWk
+	66OrBNpQ1jl9qqnwJJ8exuakAmKFbqmmGt1yGjZuMKq4lF5rBEBYA2Uk+ai6h6Bu6lmohqna45N
+X-Received: by 2002:a17:90b:5343:b0:398:e46e:ade3 with SMTP id 98e67ed59e1d1-39b2628fc1amr44985992a91.23.1788862924327;
+        Tue, 08 Sep 2026 03:22:04 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339885ca07sm39164584eec.1.2026.09.08.02.24.18
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3396e7e477csm3435658eec.29.2026.09.08.03.22.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 02:24:18 -0700 (PDT)
+        Tue, 08 Sep 2026 03:22:02 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -68,10 +67,11 @@ Cc: alison.schofield@intel.com,
 	ming.li@zohomail.com,
 	vishal.l.verma@intel.com,
 	dave@stgolabs.net,
-	benjamin.cheatham@amd.com
-Subject: [PATCH v13 0/8] DCD Prep Series
-Date: Tue,  8 Sep 2026 02:22:34 -0700
-Message-ID: <20260908092417.2203965-1-anisa.su@samsung.com>
+	benjamin.cheatham@amd.com,
+	Anisa Su <anisa.su@samsung.com>
+Subject: [RESEND PATCH v13 0/8] DCD Prep Series
+Date: Tue,  8 Sep 2026 03:15:04 -0700
+Message-ID: <20260908102124.2231730-2-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -80,6 +80,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+
+First send only sent cover letter :( Resend with patches.
 
 These are the first eight patches of the Dynamic Capacity Device (DCD)
 series. They set up: DCD enumeration, CDAT handling for DC partitions,
@@ -222,9 +224,9 @@ cxl_verify_dcd_cmds() helper so cxl_walk_cel() now tests
 bitmap_full() directly. That is a no-op cleanup -- the helper was a
 one-line wrapper around the same bitmap_full() call and had no other
 caller -- so carried both tags over rather than dropping them.
-Dave, Gregory, please say if you would rather re-review.
+Dave, Gregory, please lmk if you would rather re-review.
 
-Patch 2 carries no Reviewed-by and is the patch that most needs eyes.
+Patch 2 had the most changes from v12, is the patch that most needs eyes.
 
 Patch 3:
 Minor changes. Dropped Dave's tag.
@@ -237,7 +239,7 @@ cxl_event_fw_owns_mem_logs(). Patch 7 picks up a
 loop-local index, a reworded error message and a comment on enum
 cxl_partition_mode.
 
-Patch 8 is new in v13 and carries no tags.
+Patch 8 (partition layout Documentation) is new in v13: no tags.
 
 Patch organization
 ==================
@@ -337,3 +339,31 @@ gap:
   cxl_pci 0000:0d:00.0: DC partition 0 base 0xb0000000 leaves a gap from static capacity ending at 0xa0000000
 
 Also used ndctl-test-runner to run cxl_test for regressions.
+
+Anisa Su (1):
+  Documentation/cxl: Document DPA partition layout and ordering rules
+
+Ira Weiny (7):
+  cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+  cxl/mem: Read dynamic capacity configuration from the device
+  cxl/cdat: Gather DSMAS data for DCD partitions
+  cxl/events: Split event msgnum configuration from irq setup
+  cxl/pci: Factor out interrupt policy check
+  cxl/mem: Configure dynamic capacity interrupts
+  cxl/core: Enforce partition order/simplify partition calls
+
+ .../driver-api/cxl/linux/cxl-driver.rst       |  38 +++
+ drivers/cxl/core/cdat.c                       |  32 +-
+ drivers/cxl/core/hdm.c                        |  13 +
+ drivers/cxl/core/mbox.c                       | 283 ++++++++++++++++++
+ drivers/cxl/core/memdev.c                     |  84 ++++--
+ drivers/cxl/cxl.h                             |   4 +-
+ drivers/cxl/cxlmem.h                          |  88 +++++-
+ drivers/cxl/mem.c                             |   2 +-
+ drivers/cxl/pci.c                             | 159 ++++++++--
+ include/cxl/cxl.h                             |  27 +-
+ 10 files changed, 653 insertions(+), 77 deletions(-)
+
+-- 
+2.43.0
+
