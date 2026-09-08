@@ -1,61 +1,63 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E39950AC14
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 10:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0111050AC14
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 10:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788862927; cv=none; b=uQXQewnmSCRlb6GpSkU7Xsd22CPVRD1WV9s+4lFgisatx9U6pczujgxY0AbqzVG3jQh136C2Ld1OYzGwocp1uvceN7zoyHZlllKT6HbAseKvbbWf+DFJkagp5rtPrpJ6hK/R1kqTAVQM7IVaz1SqNv2zD31d9x9v7xp3nyiIQU0=
+	t=1788862932; cv=none; b=UykEgtLf4eH4i1oOXV7M0snvqVTY2rv6KTp8Dlk4NFw0KuGeeaYTv1ktEKZ+ogdosfqKD0ChL87aeADIh4nL0ypk6sJR0tBqQgT9I3vlp/pIf0KUPuHlubnwUf+JQo0WWoUtWgDgYLZFqmWNj0VdWRIf9zh1rFmplgpkQF4ZdNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788862927; c=relaxed/simple;
-	bh=QGabIKARS0Ot2NyBx1l+pS2bwXrbt5gxUGD8uJdonuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fcNBLTk0RMakXpil0Dq6e5T7hYpdONcWk3phugzPTBu6/hQU5X84HTUylHMmRkcSHTmBuBW2XV0Gkmq7m/kdzAvOMkSCxSdWT8kfoz9T/Q1GRa+aOxjFdT/JVaECdwA2pT1Btj88yzRB3/Y7JS7/SaODVNyp6KvYv4iY7h6RcYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tB5Vc1SA; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1788862932; c=relaxed/simple;
+	bh=lswWLwG/JPooiNhdBGjHvDyqMkw8XwG0OWaKRYb7VI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lxIBpnLSfE/qdrdNPldxol0/LnqE0QY9v77/v//HfVSG26sXtMOWMjyekkdzo32PwZv9u2RhjKE3ZjfDFG56b8kOwCPdCg4dmUhK/H3DcX9LWOHLmD6GO8R24K9p1qXLA3moXwKECQNVb9Var/wqb3HimIMED9vaHM7ZJOv4aXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gT5d9GAW; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tB5Vc1SA"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3964dfb5b9aso5441544a91.1
-        for <linux-cxl@vger.kernel.org>; Tue, 08 Sep 2026 03:22:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gT5d9GAW"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2db858d60e0so1887175ad.0
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Sep 2026 03:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788862925; x=1789467725; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ieAyrn9dOUbi/uQHpx4XPNGdMoW3ipgyyKgN9345CbI=;
-        b=tB5Vc1SAQb+gJ8eVUGmV6dqmD1+4DY3Yq5Z2eGwMc/Hssxne7dKwDH4at4mIbwjk6Y
-         Vlo0n9eN/28hl8Dqm0KNiNRDWJ/Ler8LrjXMtmoJWwOcsw39Xu9n4e/SnrK1as+eyUhc
-         m/7pK4F0+Ng/g6Sv8621NgzHajIAT/wrafBnl7f5Pg4p+0Gt+E07Q0BB4WpN3DvCXxQV
-         mpkXhdHRXG5Ex58Ct7VXhQtl0HOotoKTd1Z6XsCmitW8Dr+173CHcnx9zdUCSm+wd0wi
-         1LL5MSe23lhDqED56L0DT3JOH8uoFjQVPtgb+2NuuksudAze95v2Bj2m1DyFueaNilka
-         n6SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788862925; x=1789467725;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1788862930; x=1789467730; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ieAyrn9dOUbi/uQHpx4XPNGdMoW3ipgyyKgN9345CbI=;
-        b=I81Z7cma6TEQ0vsk/b2Ew2IJb6iKeUBghxGsVXEjdGzfnU9OzMmwH02yihcPcgPd7/
-         GYlPoEn3J1IRytguclDkvU1jo4UjWI9S712QK2o9Srp8ABuW7Z4k65UPCko/7L7Pu4Lb
-         +8YL7KZssBVBAIFMpiTcYJ71nmtU0O3RSIXPFm0rO8Wt6YVgRnUf0D7xh4JSQwSHNbfP
-         ZMi8JSBxRrDBv/0vcNCVUUAoCVqSHS6mKRxAbr7fFONzAyZxPjsbS/pz7jQ3hGakgvNW
-         4Xkfbv/GZ9lgoxrN+zkK2qSmMdO3uodUozEM3I+BVNRvLaNSKsEjjvQxuEW+N0g9CN4W
-         lrWg==
-X-Gm-Message-State: AFuF++kRpVJfGEarSniv6VbDlLGIU9ZTydStqwNM0s0rswGuuP1nUpKo
-	9pFpQLBojePUjnnxa8uEIaAkP42Kh8i2nORDDTCmyWlDtxm3puzCJfA/sKNmPA==
-X-Gm-Gg: AYBFou0pRfVQ2HT2QxKvfk9GN2kFBB9O+tFr1+FRyETKGn56U/eZpp+nrCSHbP8RVwB
-	n7TG8snuLYjOBwV1uw6eAOANIwwBSs9iqLGVfAudbAeVJbC+yr73JsJtqNpRQzcdxaD1z+NRv7f
-	VXZt5WNvxMn00/CV3awlwPB5gdrdLI/2vri4ipBtnrN7GFkAX4U0C4NNYG+dGYip7SDs2lJO801
-	2ByZYo3Vq67Gd4lgcYv2OK6DfkEaWZT8P0HnNKLHpZwsGgQmTbsDhHGnlZD2CR1n6wCtnEgxmvb
-	ZASIL4RASn38c1YnvVfQ6R8pF7MqvEt4+psSmVf294C/f4D4Sl/FYzaut7Yfh+08tP5i5s2LFiv
-	GpDNAZiW/4rEegZGJHkyguv8IgvITHZNy1QmzK23cLag3vdnmjaBxI/8lWfn1K/tgGjs47npRby
-	cV3FkW3bvktKwSDMVKE75U3OixPbuULeTR204c/ruzHOaLrL5wEFbANab/baG4TEJCt2H+pdMWk
-	66OrBNpQ1jl9qqnwJJ8exuakAmKFbqmmGt1yGjZuMKq4lF5rBEBYA2Uk+ai6h6Bu6lmohqna45N
-X-Received: by 2002:a17:90b:5343:b0:398:e46e:ade3 with SMTP id 98e67ed59e1d1-39b2628fc1amr44985992a91.23.1788862924327;
-        Tue, 08 Sep 2026 03:22:04 -0700 (PDT)
+        bh=Rk13g7zQor0BPEJRwOiqh3a+NZ3g5zyp+DqP2CQRO54=;
+        b=gT5d9GAWuourAPH9fQxXvNdy/c949bvm6Z7/u2hSELPfTUrZKMqNvU+lV4zFRuaznA
+         F83gYYseQllKamfNADuajdgUMDpN4UYIkf0+myWDtyWrff3ArLhzPQR9KOyIf75UFEkx
+         0JxVHxjNnd6QjOp2+kUEoX7pz4NJfhMpaYou0LGvN6k/JQe/FE61KWlyflr4woJ0aMwo
+         KU6isMRdXA1/Ak4qItYgO6IFdEVwIyBu9MvzV6VRz+dVTBb1bK4dVg8jmR+J4TTY7vf3
+         GptWVjkh5PoqtvrBUFtixmdZgdnoNZi6lqFhxKie+zqbs1Enw+uH/EHvnrx5wkXvdZqe
+         tUwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788862930; x=1789467730;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Rk13g7zQor0BPEJRwOiqh3a+NZ3g5zyp+DqP2CQRO54=;
+        b=NQAhr9uvfoOj5HQ8qzpJ3EjSoAHB5h2+UBViAsTFgrwwb/Rut9SwPy8O8vvVJSGOPl
+         acMtypoRR4cxkjuZoeYZayG1gsRxnHA19TnqEj6V213zwoDW/9w06FvzkY8+X/q0gULA
+         noqv1Oeqz39u4LcY53x+wPajbfPoWSBMZTDWmT4n7RF244yTEuPHbEmMsWidlVeNpXPz
+         bqIckm6/rtF65RtCNTeTonoUtEgDVZzffOo0z+ni7Nm/VYr13IYFFh1B/Y8Qnta5r1Q6
+         gFjqLJpXKqXbeHZQS/xAaDZ9AEJ1Ges8J6CKyx791NqRYfuo2ph6tIXXuPGWZ6HtN/Lh
+         Wbtg==
+X-Gm-Message-State: AFuF++nhyA6GWLiyG94N/clkNxEdrDMKBFy9sii7S0CN6k8ntXm5Fxn9
+	7TxJzqhjRYNZzLsJ0Rn2YUduo5gkGfGW+fJo+fpAiuHwmX1M/vOGTjvKodc++Q==
+X-Gm-Gg: AYBFou1c9/nlpHtKS3jBiUTQwESqxDFZAtSpWBelUuGxPw+dvolL2f+lrYjGZPXx4eJ
+	nfexe/ulqJvo45lTVffQ7gIG3lnMHiUCeQn4CVjWmhxtHcsGeTEGGnPRsx5izv6SdaAXHOke2WH
+	xPf1liBgEbchVwRMgErqc3kzUBhC7brfXTPNtxBlSdABGXQoqtG4cFQXtmXmj3Bl1TgTsc0HhKK
+	a5IxnpFHl6qe7dgS1dgopwWUtxyP+//uem5vahjZY2Kxl9w2MNO9G/T5ePEl5a4JwdmIraiJRy9
+	6KTA4h7a2BeqkXhTZDViLjHlomhUjHAe7ugv1+atR+JcIcVSjtc3YDtisJ6gUcBkO7+FtaeIKup
+	A+Dyb+4/DRgTBbI1BAIkbScctmbhx+wRQYbbgLdA4BVsGBL5FSLjaP7yxGYQQDtIK5NCGyd4bEf
+	uK9OecNYWmkdBToYPlfmZ6jSHDcC//SLESGj1iHsQHSzEj/5Ns39Ky+bGOXAGXWsVGtTVydy+N+
+	sKlQh/f3h/8rYrCUtO+MHRy/0ix6pQ/yt3iuF5U4JgIkYur1bF1K5BiMgtxuRwJhkHUofr4+t3Z
+X-Received: by 2002:a17:90b:2d0b:b0:398:c794:ca26 with SMTP id 98e67ed59e1d1-39b263167f7mr41655017a91.25.1788862930102;
+        Tue, 08 Sep 2026 03:22:10 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3396e7e477csm3435658eec.29.2026.09.08.03.22.01
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3396e7e477csm3435658eec.29.2026.09.08.03.22.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 03:22:02 -0700 (PDT)
+        Tue, 08 Sep 2026 03:22:09 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -68,11 +70,17 @@ Cc: alison.schofield@intel.com,
 	vishal.l.verma@intel.com,
 	dave@stgolabs.net,
 	benjamin.cheatham@amd.com,
-	Anisa Su <anisa.su@samsung.com>
-Subject: [RESEND PATCH v13 0/8] DCD Prep Series
-Date: Tue,  8 Sep 2026 03:15:04 -0700
-Message-ID: <20260908102124.2231730-2-anisa.su@samsung.com>
+	Ira Weiny <iweiny@kernel.org>,
+	Anisa Su <anisa.su@samsung.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Junhee Park <jh9934.park@samsung.com>,
+	Heesoo Kim <habil.kim@samsung.com>
+Subject: [RESEND PATCH v13 1/8] cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+Date: Tue,  8 Sep 2026 03:15:05 -0700
+Message-ID: <20260908102124.2231730-3-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260908102124.2231730-2-anisa.su@samsung.com>
+References: <20260908102124.2231730-2-anisa.su@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,289 +89,167 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-First send only sent cover letter :( Resend with patches.
+From: Ira Weiny <iweiny@kernel.org>
 
-These are the first eight patches of the Dynamic Capacity Device (DCD)
-series. They set up: DCD enumeration, CDAT handling for DC partitions,
-the event interrupt plumbing, a preparatory refactor, and
-documentation of the DPA partition layout. They stand alone and keep DCD
-disabled. They are not dependent on the rest of the series.
+Per the CXL 4.0 specification software must check the Command Effects
+Log (CEL) for dynamic capacity command support.
 
-Patch 1 detects the 48h command set and then leaves mds->dcd_supported
-false. The flag is only turned on by the series that adds DCD event
-handling, so every DCD specific path added here is shut off at runtime:
-cxl_configure_dcd() never runs, no DC partition is created, no DCD
-interrupt is armed, and the CXL_PARTMODE_DYNAMIC_RAM_1 paths are
-unreachable. The intent is to land the enumeration and plumbing while
-the extent to DAX pipeline is still under review.
+Detect support for the DCD commands while reading the CEL, including:
 
-Based on v7.3-rc2
+	Get DC Config
+	Get DC Extent List
+	Add DC Response
+	Release DC
 
-GitHub Branch:
-https://github.com/anisa-su993/anisa-linux-kernel/tree/dcd-prep-v13
+Leave mds->dcd_supported false. Dynamic capacity is only usable once
+the driver can handle Add and Release Capacity events. Detect and log
+the capability here and let the commit which adds DCD event handling set
+the flag.
 
-v12: https://lore.kernel.org/linux-cxl/20260731084901.1512819-1-anisa.su@samsung.com/
+Based on an original patch by Navneet Singh.
 
-v12 -> v13 Changes:
-===================
- - Dropped: cxl/core: Return endpoint decoder information from region
-        search (v12 patch 7). The new interface is not paired with its
-        first caller in this series -- all three call sites pass NULL --
-        so its contract cannot be reviewed here. It will be posted with
-        its first user instead (Alison). v12 patch 8 is now patch 7.
+Signed-off-by: Ira Weiny <iweiny@kernel.org>
+Signed-off-by: Anisa Su <anisa.su@samsung.com>
+Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+Tested-by: Junhee Park <jh9934.park@samsung.com>
+Tested-by: Heesoo Kim <habil.kim@samsung.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 
- - Added: Documentation/cxl: Document DPA partition layout and ordering
-        rules (patch 8) in-tree in addition to the commit messages in order
-        to be explicit about places Linux is stricter than the specification.
-        Add a section to cxl-driver.rst separating what the spec mandates
-        for ram and pmem from what Linux chooses for dynamic capacity.
-        It is documentation only.
+---
+Changes:
+1. Commit message: explain why mds->dcd_supported is left
+   false and when it's re-enabled in the commit message.
 
-   The series is eight patches, one dropped and one added.
+2. mbox.c: drop the single use cxl_verify_dcd_cmds() helper and test
+   bitmap_full(dcd_cmds, CXL_DCD_ENABLED_MAX) directly. Reported by
+   Alison Schofield.
+---
+ drivers/cxl/core/mbox.c | 39 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 20 ++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
- - Patch 1: cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
-        - Commit message explains why mds->dcd_supported is left false
-          and what turns it back on (Dave).
-        - Drop the single use cxl_verify_dcd_cmds() helper and test
-          bitmap_full(dcd_cmds, CXL_DCD_ENABLED_MAX) directly (Alison).
-
- - Patch 2: cxl/mem: Read dynamic capacity configuration from the device
-        - Validate only DC partition 0. Every partition the device
-          reports is still read, so the framework stays the same if we
-          decide to add support for additional partitions.
-          But no validation is done for the other partitions,
-          so a defect in other partitions that we don't use no
-          longer prevents the driver from configuring dynamic capacity
-          (Richard / Alison).
-        - Rework the cxl_dc_check() validation: checks now run in
-          dependency order, block size first, and each failure names the
-          field that is wrong instead of four conditions sharing one
-          "invalid length" message (Alison).
-        - Drop the block size alignment requirement on the region base.
-          Table 8-347 requires 256M for the base and states the block
-          size alignment for extent start DPAs, not for the base, so
-          Linux was enforcing a constraint the spec does not state
-          (Alison).
-        - Range check the device's available partition count against the
-          1 to 8 of Table 8-346, before it is used as the read loop
-          bound (Alison).
-        - Split cxl_configure_dcd()'s base check: an error for a DC
-          partition overlapping static capacity, a warning for a gap
-          above it, both printing the addresses. The old message said
-          "pmem" when the comparison is against total static capacity
-          (Alison).
-        - cxl_configure_dcd() returns an error instead of void;
-          cxl_pci_probe() disables DCD and carries on rather than failing
-          the memdev (Jonathan).
-        - Check the block size is a power of 2 in 64 bits.
-          is_power_of_2() takes an unsigned long, so a 32 bit build
-          truncated blk_size and accepted values such as 0x100000040
-          (Sashiko).
-
- - Patch 3: cxl/cdat: Gather DSMAS data for DCD partitions
-        - Only assign shareable for the dynamic ram 1 partition. It was
-          set for every partition the DSMAS range fell into, while the
-          handle check beside it is DC only (Alison).
-        - Reduce nesting in cxl_memdev_set_qos_class(): invert
-          range_contains() to continue early, and use a 'part' local
-          instead of repeating cxlds->part[i] (Alison). Doing this first
-          is what made the reworded warning fit in 100 columns.
-
- - Patch 4: cxl/events: Split event msgnum configuration from irq setup
-        - No change from v12.
-
- - Patch 5: cxl/pci: Factor out interrupt policy check
-        - Rename cxl_event_validate_mem_policy() to
-          cxl_event_fw_owns_mem_logs() and invert it. It never validated
-          the policy, it reported whether firmware still owns the
-          standard memory event logs despite _OSC granting the OS
-          control, so the name now states that condition and true means
-          firmware owns them (Alison).
-        - Commit message: "validation" was the wrong word for what the
-          helper does; it checks for firmware ownership of the memory
-          event logs (Alison).
-
- - Patch 6: cxl/mem: Configure dynamic capacity interrupts
-        - Disable DCD when the device supports the DCD commands but its
-          interrupt policy is too short to carry dcd_settings. The Set is
-          sized by the device's own policy length, so on a short policy
-          dcd_settings is never sent, and the re-read afterwards leaves
-          the driver's own value in the struct because the device does
-          not return that byte. cxl_irqsetup() would then arm the DCD
-          interrupt from a setting the device never accepted. A
-          conforming device cannot be in that state -- DCD is CXL 3.x and
-          a 3.x policy carries the field -- but nothing tied the two
-          facts together (Alison).
-        - Move the DCD bit out of cxl_event_drain_mask(), dropping the
-          mds argument it no longer needs, so the bit lands in the patch
-          that adds the code draining that log. This patch still defines
-          CXLDEV_EVENT_STATUS_DCD, adds it to CXLDEV_EVENT_STATUS_ALL and
-          arms the DCD interrupt; only the drain bit moved (Alison).
-
- - Patch 7: cxl/core: Enforce partition order/simplify partition calls
-        - Document the DPA partition layout above enum
-          cxl_partition_mode in cxl.h with ascii art, and cite where the
-          order comes from: ram before pmem is mandated by CXL r4.0
-          Table 8-310, while Table 8-347 only requires the DC Region Base
-          to be 256MB aligned, so a dynamic partition following pmem is a
-          Linux choice that cxl_configure_dcd() enforces (Alison).
-        - Commit message: say what the partition order is, where it comes
-          from, and that this patch starts enforcing it. The previous
-          text named an "implied partition order" without ever saying
-          what it implied (Alison).
-        - Name the partitions in the failure: "Partition order mismatch:
-          %d (%s) follows %d (%s)" via cxl_mode_name(), rather than the
-          bare "Partition order mismatch" (Alison).
-
-Review status
-=============
-Patch 1
-+ Reviewed-by from Dave Jiang and Gregory Price from v12.
-Patch 1 did change in v13: dropped the single use
-cxl_verify_dcd_cmds() helper so cxl_walk_cel() now tests
-bitmap_full() directly. That is a no-op cleanup -- the helper was a
-one-line wrapper around the same bitmap_full() call and had no other
-caller -- so carried both tags over rather than dropping them.
-Dave, Gregory, please lmk if you would rather re-review.
-
-Patch 2 had the most changes from v12, is the patch that most needs eyes.
-
-Patch 3:
-Minor changes. Dropped Dave's tag.
-
-Patch 4 is unchanged from v12 and carries its existing tag.
-
-Patches 5 and 7 did change, but quite trivially, so kept
-the tags. Patch 5 renames cxl_event_validate_mem_policy() to
-cxl_event_fw_owns_mem_logs(). Patch 7 picks up a
-loop-local index, a reworded error message and a comment on enum
-cxl_partition_mode.
-
-Patch 8 (partition layout Documentation) is new in v13: no tags.
-
-Patch organization
-==================
- 1-3: enumerate DCD command support, read the DC configuration, and pick
-      up DSMAS data for DC partitions.
- 4-6: split event msgnum configuration from irq setup, factor out the
-      interrupt policy check, then configure the DCD event interrupt.
-   7: preparatory refactor -- enforce partition order while collapsing
-      the ram/pmem specific partition helpers into one.
-   8: document the DPA partition layout the previous patches enforce,
-      and where Linux is stricter than the specification.
-
-Testing
-=======
-This series leaves mds->dcd_supported false on purpose, so cxl_configure_dcd(),
-cxl_dev_dc_identify() and cxl_dc_check() are unreachable at
-runtime as posted. The tests below are done with the rest of the series on top,
-otherwise testing would not yield any meaningful results.
-
-HW:
-Tested add/release of a single extent to ensure interrupts are configured
-and working and DSMAS attributes are read correctly.
-
-Additional testing is done on QEMU to catch cases that would not occur
-on the hardware because of configuration differences. Four topologies
-are used, one guest boot each, with a DCD partition after static capacity.
-
-1. Eight DC partitions, only the first validated
-------------------------------------------------
-2G ram + 512M pmem static, so static capacity ends at 0xa0000000, and
-eight 512M DC partitions above it.  Five partition records fit in one
-reply on the 256 byte mailbox, so the read continues from partition 5
-in a second command.
-
-  cxl_pci 0000:0d:00.0: Read 5/8 DC partitions
-  cxl_pci 0000:0d:00.0: DC partition 0 start 0xa0000000 size 0x20000000 blk_size: 0x200000
-  cxl_pci 0000:0d:00.0: Read 3/8 DC partitions
-  cxl_pci 0000:0d:00.0: Adding dynamic ram partition 1; 0xa0000000 size 0x20000000
-  cxl_pci 0000:0d:00.0: DPA(ram): [mem 0x00000000-0x7fffffff flags 0x200]
-  cxl_pci 0000:0d:00.0: DPA(pmem): [mem 0x80000000-0x9fffffff flags 0x200]
-  cxl_pci 0000:0d:00.0: DPA(dynamic_ram_1): [mem 0xa0000000-0xbfffffff flags 0x200]
-
-All eight partitions are read, but only one "DC partition" line appears:
-partition 0 is the only one validated.
-
-2. Volatile-only static capacity
----------------------------------
-2G ram, no pmem, one 512M DC partition. cxl_configure_dcd() compares
-the DC base against the end of total static capacity, not the end of
-pmem; a device with no persistent capacity is what tells those two
-apart.
-
-  cxl_pci 0000:0d:00.0: Read 1/1 DC partitions
-  cxl_pci 0000:0d:00.0: DC partition 0 start 0x80000000 size 0x20000000 blk_size: 0x200000
-  cxl_pci 0000:0d:00.0: Adding dynamic ram partition 1; 0x80000000 size 0x20000000
-  cxl_pci 0000:0d:00.0: DPA(ram): [mem 0x00000000-0x7fffffff flags 0x200]
-  cxl_pci 0000:0d:00.0: DPA(dynamic_ram_1): [mem 0x80000000-0x9fffffff flags 0x200]
-
-The DC partition lands at 0x80000000, directly after ram, and no
-static-capacity complaint is logged.
-
-3. No static capacity at all
------------------------------
-No ram, no pmem, one 512M DC partition based at DPA 0.  This is the
-boundary of the contiguity rule: with no static capacity the end of
-static capacity is DPA 0, so a DC base of 0 meets it exactly and
-neither the overlap error nor the gap warning may fire.
-
-  cxl_pci 0000:0d:00.0: Read 1/1 DC partitions
-  cxl_pci 0000:0d:00.0: DC partition 0 start 0x0 size 0x20000000 blk_size: 0x200000
-  cxl_pci 0000:0d:00.0: Adding dynamic ram partition 1; 0x0 size 0x20000000
-  cxl_pci 0000:0d:00.0: DPA(dynamic_ram_1): [mem 0x00000000-0x1fffffff flags 0x200]
-
-4. Per-field validation
------------------------
-Each row is one malformed field on partition 0, everything else left
-valid.  The message names the field that is wrong.
-
-  block size 0x100000040   DC partition 0 invalid block size 0x100000040
-  block size 0x30          DC partition 0 invalid block size 0x30
-  decode length 0          DC partition 0 zero decode length
-  base 0xa0001000          DC partition 0 base 0xa0001000 not aligned to 256M
-  DSMAD handle 0x100       DSMAD handle 0x100 exceeds the 8 bit CDAT DSMAD handle
-  0 partitions available   Device reported 0 available DC partitions, expected 1 to 8
-  9 partitions available   Device reported 9 available DC partitions, expected 1 to 8
-
-The first row is the 32 bit truncation Sashiko reported: 0x100000040 is
-not a power of 2, but its low 32 bits are, so is_power_of_2() accepted
-it on a 32 bit build.  All seven cases disable DCD and leave the memdev
-attached with its static capacity.
-
-DC partition 0 placed against static capacity, which cxl_configure_dcd()
-checks separately, gives one message for the overlap and one for the
-gap:
-
-  cxl_pci 0000:0d:00.0: DC partition 0 base 0x90000000 overlaps static capacity ending at 0xa0000000
-  cxl_pci 0000:0d:00.0: DC partition 0 base 0xb0000000 leaves a gap from static capacity ending at 0xa0000000
-
-Also used ndctl-test-runner to run cxl_test for regressions.
-
-Anisa Su (1):
-  Documentation/cxl: Document DPA partition layout and ordering rules
-
-Ira Weiny (7):
-  cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
-  cxl/mem: Read dynamic capacity configuration from the device
-  cxl/cdat: Gather DSMAS data for DCD partitions
-  cxl/events: Split event msgnum configuration from irq setup
-  cxl/pci: Factor out interrupt policy check
-  cxl/mem: Configure dynamic capacity interrupts
-  cxl/core: Enforce partition order/simplify partition calls
-
- .../driver-api/cxl/linux/cxl-driver.rst       |  38 +++
- drivers/cxl/core/cdat.c                       |  32 +-
- drivers/cxl/core/hdm.c                        |  13 +
- drivers/cxl/core/mbox.c                       | 283 ++++++++++++++++++
- drivers/cxl/core/memdev.c                     |  84 ++++--
- drivers/cxl/cxl.h                             |   4 +-
- drivers/cxl/cxlmem.h                          |  88 +++++-
- drivers/cxl/mem.c                             |   2 +-
- drivers/cxl/pci.c                             | 159 ++++++++--
- include/cxl/cxl.h                             |  27 +-
- 10 files changed, 653 insertions(+), 77 deletions(-)
-
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 55828a836c01..199bb986d674 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -171,6 +171,33 @@ static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
+ 	}
+ }
+ 
++static bool cxl_is_dcd_command(u16 opcode)
++{
++#define CXL_MBOX_OP_DCD_CMDS 0x48
++
++	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
++}
++
++static void cxl_set_dcd_cmd_enabled(u16 opcode, unsigned long *cmd_mask)
++{
++	switch (opcode) {
++	case CXL_MBOX_OP_GET_DC_CONFIG:
++		set_bit(CXL_DCD_ENABLED_GET_CONFIG, cmd_mask);
++		break;
++	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
++		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, cmd_mask);
++		break;
++	case CXL_MBOX_OP_ADD_DC_RESPONSE:
++		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, cmd_mask);
++		break;
++	case CXL_MBOX_OP_RELEASE_DC:
++		set_bit(CXL_DCD_ENABLED_RELEASE, cmd_mask);
++		break;
++	default:
++		break;
++	}
++}
++
+ static bool cxl_is_poison_command(u16 opcode)
+ {
+ #define CXL_MBOX_OP_POISON_CMDS 0x43
+@@ -759,6 +786,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+ 	struct cxl_cel_entry *cel_entry;
+ 	const int cel_entries = size / sizeof(*cel_entry);
++	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX) = {};
+ 	struct device *dev = mds->cxlds.dev;
+ 	int i, ro_cmds = 0, wr_cmds = 0;
+ 
+@@ -787,11 +815,22 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 			enabled++;
+ 		}
+ 
++		if (cxl_is_dcd_command(opcode)) {
++			cxl_set_dcd_cmd_enabled(opcode, dcd_cmds);
++			enabled++;
++		}
++
+ 		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
+ 			enabled ? "enabled" : "unsupported by driver");
+ 	}
+ 
+ 	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
++	/*
++	 * Disabled until event handling implemented.
++	 */
++	if (bitmap_full(dcd_cmds, CXL_DCD_ENABLED_MAX))
++		dev_dbg(dev, "Device supports DCD; capability disabled\n");
++	mds->dcd_supported = false;
+ }
+ 
+ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index c401e3a1af06..0c8e23276dc6 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -252,6 +252,20 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
+ };
+ 
++/*
++ * CXL r4.0 Section 8.2.10.9 - Memory Device Command Sets. See Table 8-308.
++ *
++ * The 48h Command Set (Opcodes 4800h - 4803h) defines the device-enabled DCD
++ * commands.
++ */
++enum dcd_cmd_enabled_bits {
++	CXL_DCD_ENABLED_GET_CONFIG,
++	CXL_DCD_ENABLED_GET_EXTENT_LIST,
++	CXL_DCD_ENABLED_ADD_RESPONSE,
++	CXL_DCD_ENABLED_RELEASE,
++	CXL_DCD_ENABLED_MAX
++};
++
+ /* Device enabled poison commands */
+ enum poison_cmd_enabled_bits {
+ 	CXL_POISON_ENABLED_LIST,
+@@ -427,6 +441,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+  * @partition_align_bytes: alignment size for partition-able capacity
+  * @active_volatile_bytes: sum of hard + soft volatile
+  * @active_persistent_bytes: sum of hard + soft persistent
++ * @dcd_supported: all DCD commands are supported
+  * @event: event log driver state
+  * @poison: poison driver state info
+  * @security: security driver state info
+@@ -445,6 +460,7 @@ struct cxl_memdev_state {
+ 	u64 partition_align_bytes;
+ 	u64 active_volatile_bytes;
+ 	u64 active_persistent_bytes;
++	bool dcd_supported;
+ 
+ 	struct cxl_event_state event;
+ 	struct cxl_poison_state poison;
+@@ -505,6 +521,10 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+ 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
++	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
++	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
++	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
++	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+ 
 -- 
 2.43.0
 
