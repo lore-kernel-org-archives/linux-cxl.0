@@ -1,106 +1,100 @@
-Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D5F580391
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 17:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10617599A46;
+	Tue,  8 Sep 2026 17:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788887865; cv=none; b=HmAG3gP343BDN+CP8GWqYT2z+CSY6aCI5DEJlpjNndNZWQ2B0JzDXufboq8Z7KHNjW7eaNxr4f/Re/iaXodhnPZN/xc5lsj056p7GSpvpERIVxCLOdYg1jdJ5q6na5MFqcHjAly5KYtiUbd2x8LzKadsxjIeCvdOqDiptWSx2Ms=
+	t=1788889647; cv=none; b=QvKMgnSk1GBubPfvhAlmc5zlkbm3xlLr9Y7JcI1z+MaXt0YKQXiMqWQOlVB/Qan0nIAKWbzKJjpZHFolowa7z1+/s0h6GmJYGRGZFndhBj0obWyIx5TzXFYxsK+yK1ffAtsTvlYcR0wpKhNIx/6/Rvm++iEgjMa7syk2EzZWWQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788887865; c=relaxed/simple;
-	bh=d2x9QM9TI/Ky+7psvnJ5D+rVYdh95UfKOn2mvAMUIHQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ZOCdoRG7/nd47mzx03z0RjxhCDxVoMdg4WwZ7GHY3EheuhgzxH5qkg1hUqtQUjVqneiFlYgjyqclkgAY3osQGIP3ku3nMG2Gi0V3H5aYaHZ+P32ecLv3nnXdHpHKmtqBA/kGq4fszpLMxOFYv91pquf0bfbYbU9FVq8Cnbtql+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WVPQh6DU; arc=none smtp.client-ip=23.83.223.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1788889647; c=relaxed/simple;
+	bh=nygTdh8fjI6CsKh6M1+ORwA70aR0m6XMje96txRY9JE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O7vSPSYKj5E66Ul+ECFCxIEksihRFkdKXxtZqEygkRFRpNUMn8Tw+BF7uL2/V3gHar+ccmbi57LwPV8rcoF3X2VhnvgYKh3ui3yxZ8qrUwQdefdqubHqrDF4TiQNAqZEvQKVdbLa5V1ncnr3s3D4rF36C5pu9GoPz0qPPhUtazw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3f4f3xx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WVPQh6DU"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4A9817A32EB;
-	Tue, 08 Sep 2026 17:17:37 +0000 (UTC)
-Received: from pdx1-sub0-mail-a217.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.99.41.105])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E70747A2E19;
-	Tue, 08 Sep 2026 17:17:36 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Callous-Abortive: 2956a41a10d7bf7c_1788887857139_870462238
-X-MC-Loop-Signature: 1788887857139:1718954542
-X-MC-Ingress-Time: 1788887857139
-Received: from pdx1-sub0-mail-a217.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.41.105 (trex/8.0.2);
-	Tue, 08 Sep 2026 17:17:37 +0000
-Received: from pdx1-roundcube52 (ip-66-33-200-4.dreamhost.com [66.33.200.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a217.dreamhost.com (Postfix) with ESMTPSA id 4hfVxX4VsWzPH;
-	Tue,  8 Sep 2026 10:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1788887856;
-	bh=5RmV9MmTuMHN/EVbE0LPaHM7dj+IFXvZTWQy0kyrqoc=;
-	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-	b=WVPQh6DUkhf70stD8ie5NP7/Mz5rKJj6d7dv6+A3X4vyxGTEa9nf3RTUeAckURHSU
-	 lFeFf9E72ryziSY7cpzngn50HSg+3MNvvEW4gVi1Dc8lCzgV7ST1RUpC8zQ1STCvJm
-	 yGjMVbOBQnGcfI8+GkjJGNglRP0HdKQ5POf3x904HrPVAaLyF5m+xBH655Cfgo1XS0
-	 p59sQNj2W/cOwyP5c/+wz0q/T6IFUInZxW84AumQ7zYXjrrS4Bjvcfo+y5I+5U9k/5
-	 aXVI63W4nVmRQ1R5MjC2Fx3y3hZ2NegbB95TSvnoACp0XKTH2VBtzLdRmAibi2Ni/g
-	 k0HmLysYQJM7w==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3f4f3xx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4648E1F00A3A;
+	Tue,  8 Sep 2026 17:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788889645;
+	bh=qE44r8Wpvb2pGMbm3TYiV2/ToCaVSkA0bQ2RFs6wnI0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Z3f4f3xxYCQMcl1Hdk7nUEctePMOcq9JS++N3Nt/Ryh86AQqAlYIKGvzqGObYje0R
+	 IL+Muz7ldanJo4IY/Es6GAhVOTbO6x33Nmh5MyN9ofQ50hc9IIt24+ih4Q0j6hkRUv
+	 DC854zV53VOv0nuw0deVaZWSypIoEHWuy9SB7Zu5fxmTHnoEeSqtdjRepoqZnYFCyQ
+	 3xRs/8rSFn5R2g6Q5u1HZ9kNrFgrpATLxpEtWlGHxheezJNJaFnoHTogrM0z6L+Hwb
+	 ygKS/k/aNDttzRBZPky29GFafkQqEsqLA251WqEfQpP8rX4hpgyRyPMUZltLEtwIN+
+	 Ej8ssbEwQ/ucA==
+Date: Tue, 8 Sep 2026 18:47:20 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ Dan Williams <djbw@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, <linux-cxl@vger.kernel.org>, Tony Luck
+ <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, "Hanjun Guo"
+ <guohanjun@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "Shuai
+ Xue" <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Shuah Khan
+ <skhan@linuxfoundation.org>, Ben Cheatham <Benjamin.Cheatham@amd.com>,
+ Richard Cheng <icheng@nvidia.com>, Robert Richter <rrichter@amd.com>,
+ "Lukas Wunner" <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
+ <linux-acpi@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v20 4/9] cxl/pci: Thread port and dport through RAS
+ handling helpers
+Message-ID: <20260908184720.1d2e99cb@jic23-huawei>
+In-Reply-To: <20260902133933.2992457-5-terry.bowman@amd.com>
+References: <20260902133933.2992457-1-terry.bowman@amd.com>
+	<20260902133933.2992457-5-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 08 Sep 2026 10:17:36 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com, jic23@kernel.org,
- dave.jiang@intel.com, gourry@gourry.net, icheng@nvidia.com,
- ming.li@zohomail.com, vishal.l.verma@intel.com, benjamin.cheatham@amd.com,
- Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>, Anisa Su
- <anisa.su@samsung.com>, Wonjae Lee <wj28.lee@samsung.com>, Junhee Park
- <jh9934.park@samsung.com>, Heesoo Kim <habil.kim@samsung.com>, Fan Ni
- <nifan.cxl@gmail.com>
-Subject: Re: [RESEND PATCH v13 5/8] cxl/pci: Factor out interrupt policy check
-In-Reply-To: <20260908102124.2231730-7-anisa.su@samsung.com>
-References: <20260908102124.2231730-2-anisa.su@samsung.com>
- <20260908102124.2231730-7-anisa.su@samsung.com>
-Message-ID: <65fb25e13a910f93cce392b2f5dfdbe8@stgolabs.net>
-X-Sender: dave@stgolabs.net
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2026-09-08 03:15, Anisa Su wrote:
-> From: Ira Weiny <iweiny@kernel.org>
-> 
-> Dynamic Capacity Devices (DCD) require event interrupts to process
-> memory addition or removal.  BIOS may have control over non-DCD event
-> processing.  DCD interrupt configuration needs to be separate from
-> memory event interrupt configuration.
-> 
-> Factor out check for firmware ownership of memory event logs.
-> 
-> Link:
-> https://lore.kernel.org/all/663922b475e50_d54d72945b@dwillia2-xfh.jf.intel.com.notmuch/
-> [1]
-> Suggested-by: Dan Williams <djbw@kernel.org>
-> Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> Tested-by: Junhee Park <jh9934.park@samsung.com>
-> Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-> Reviewed-by: Fan Ni <nifan.cxl@gmail.com>
-> Reviewed-by: Li Ming <ming.li@zohomail.com>
+On Wed, 2 Sep 2026 08:39:28 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> From: Dan Williams <djbw@kernel.org>
+> 
+> The callers of cxl_handle_ras() and cxl_handle_cor_ras() already hold
+> a struct cxl_port * and optionally a struct cxl_dport * for the device
+> being handled. Passing a generic struct device * requires is_cxl_memdev()
+> to distinguish Endpoints from Ports at trace emission time. Threading
+> Port and Downstream Port directly enables is_cxl_endpoint() and explicit
+> dport/port branching for cleaner trace dispatch.
+> 
+> Refactor cxl_handle_ras() and cxl_handle_cor_ras() to accept struct
+> cxl_port * and struct cxl_dport * directly. The CXL RAS trace event
+> emission logic is split into three branches: Endpoint events are
+> identified via is_cxl_endpoint() and emit with the memdev, dport events
+> emit with dport->dport_dev, and Upstream Port events fall back to
+> port->uport_dev. This branching is transitional: the follow-on patch
+> ("cxl: Add port and dport identifiers to CXL AER trace events") unifies
+> the trace events on port/dport and removes it.
+> 
+> Update cxl_handle_rdport_errors() and cxl_handle_proto_error() to pass
+> Port and Downstream Port to the refactored functions.
+> 
+> RCH Downstream Port correctable trace events now report the dport device
+> (dport->dport_dev) as a consequence of threading Port and Downstream
+> Port through the RAS helpers. The following trace event rework ("cxl: Add
+> port and dport identifiers to CXL AER trace events") adds explicit memdev,
+> Port, Downstream Port, and host fields that provide full context for all
+> device types.
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Dan Williams <djbw@kernel.org>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Subject to Ben's question getting a reasonable answer,
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+
