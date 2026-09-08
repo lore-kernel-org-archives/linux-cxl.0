@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041353C1D6A
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Sep 2026 22:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D95519AD;
+	Tue,  8 Sep 2026 22:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788906392; cv=none; b=kJyag0q+9RTtFG1UkpQ/Ccg8ViXnxctfwxgou9ksvm2YjEkJRGY3KPDI4ZQNJ93cFKjdeu1z0kM81VV7ax2HmIOIf6JQLWOYcHL5LEaPnCZmJmG+h9H+g1NmBkUhC1+GJxsCvarXFUOPILeQ8i2Jz2VsHljm9nMiWeYWvs1wVvA=
+	t=1788908232; cv=none; b=elJj07oqUJOxPKK/qzgdEBEdD+WpclMDjtlZBtvLAfnFA43YrHkbvZBy7u1p2Bc1HN0ypV5EdJDa2Q44WaqM8VscUgGUjMKwd34heVOimsxrnzZHgOmJzRxgs/15zfLH8b+wuHh8S7NQi6rPz8vZZk9hiMXndMdFCtPbPcz+aMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788906392; c=relaxed/simple;
-	bh=Vh2+HuugUHtPBvLPlvc8p85K6hVUWhvV9mB2OaIyOBE=;
+	s=arc-20240116; t=1788908232; c=relaxed/simple;
+	bh=kFMz61bsSeVxZPVzvMmlybzCV4rtrABCn9D1StHNpXE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rK5KDBbdxu1q6v8ykgFU+q07dWZ+895/fgM0YHsAe/i6ClNM4RRFIakhV/e5JcRekw3Br5IvIaHGg4Fgtp5egZXJwoBur/RA3VEPMb4Mldor+d2fXeIJ8Go1GYWNu2pVcq78i2chUd9y25OWeJNaJvlNh0lDjhW/ygz8gKLj+HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBrrszMs; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=JnOXTtkqH2pwA9osfUouuATXPHhB6/h9ijaERh4AzNR3PMwo5DqDHR0UvOyKIpHxNiiRErbcA0YrTQwMDcfVsvOdKi6QBWUvmWcTkEIPCPnKVzrE2TK/BK97gdr8rk5wcMvCeVemMl4+x0ltXtmECDXH96FuC7j6S+CZD+ZTdcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDQLFF1W; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBrrszMs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70251F00A3A;
-	Tue,  8 Sep 2026 22:26:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDQLFF1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFD31F00A3A;
+	Tue,  8 Sep 2026 22:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788906390;
-	bh=82c9jY0T6uC6259gkaelHOkQyAWovD4jlOl2NM6WgTM=;
+	s=k20260515; t=1788908230;
+	bh=JmSpKmNIGuwtBGwWNlLCzEn+j2a/Pzi41loRI1R69tE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mBrrszMsUutmWdKW+MVfp+s1lGIKIg1i+IcH3ZckC17360aWxy9vWtZGjRma2/7V/
-	 EfM1iFbAws36HMYVi/VKOAVMgDQLvOzF3xKaQIOifD34D7kkhWLfhKltAGWKXIrWY7
-	 8qXB1i4PeRrPz9Mcc5xzTiy6H37EILiG4Z8kJfe7nBk137GCBxswlPWmEAqusZOAsc
-	 pWBaTR7OpzL0CWnMHruBtpNzAPP1JVbfxZxmaxGQS3RFtdO7jxBXGzDYcMKjLy4HeI
-	 wkIHOgIW0Wx09kpJNuW1eHdneCv/4qu3EfFUXhSClwQrFVlzgcjrKiatL73bMF3fAo
-	 hbQT7GtjbmiGQ==
-Date: Tue, 8 Sep 2026 23:26:26 +0100
+	b=gDQLFF1WU/6zDJOhTFeQh0hNYRCezlbSR7yubbGbesGlWOJw0hnA3+P13642yhq6U
+	 WvPdwcdIjVtXMM5Vdgu83pXfM8F9uCGWFnVYQ0P9mY0eLzktuKQvQOA82cASNB0gbj
+	 LW4Qr8wiHZihD98r0ODyIgIkcFr3v0qoQffiLoIzfYbKxf+P4UceaW+EM0R4Mxi4BR
+	 2WNr1fxNCgknKTyxvLMm/971seMUznKe53hcMPPywFssDj2gTgnxppAgcPWZ7pijm1
+	 LlVW3Lnv05htUn2/rbSz+q7mJkNLqaNFG3vfVs9UU/AniVF0R0CHLATDmFijkfw0+S
+	 KbLAy7IX6pOKQ==
+Date: Tue, 8 Sep 2026 23:57:04 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] cxl/events: Return IRQ_NONE when no events were
- processed
-Message-ID: <20260908232626.064abcf2@jic23-huawei>
-In-Reply-To: <8e22c1c2-8098-492a-8162-3dd27507c853@amd.com>
-References: <20260901002912.958-1-anisa.su@samsung.com>
-	<20260901002912.958-5-anisa.su@samsung.com>
-	<8e22c1c2-8098-492a-8162-3dd27507c853@amd.com>
+To: alistair23@gmail.com
+Cc: linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com, djbw@kernel.org,
+ rust-for-linux@vger.kernel.org, lukas@wunner.de, alistair@alistair23.me,
+ linux-cxl@vger.kernel.org, bhelgaas@google.com, akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org, gary@garyguo.net, ojeda@kernel.org,
+ benno.lossin@proton.me, a.hindborg@kernel.org, wilfred.mallawa@wdc.com,
+ tmgross@umich.edu, boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
+ alex.gaynor@gmail.com, aliceryhl@google.com
+Subject: Re: [PATCH v3 09/21] lib: rspdm: Initial commit of Rust SPDM
+Message-ID: <20260908235704.7b5992c3@jic23-huawei>
+In-Reply-To: <20260901010347.2614656-10-alistair.francis@wdc.com>
+References: <20260901010347.2614656-1-alistair.francis@wdc.com>
+	<20260901010347.2614656-10-alistair.francis@wdc.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,40 +51,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 1 Sep 2026 14:19:05 -0500
-"Cheatham, Benjamin" <benjamin.cheatham@amd.com> wrote:
+On Tue,  1 Sep 2026 11:03:35 +1000
+alistair23@gmail.com wrote:
 
-> On 8/31/2026 7:26 PM, Anisa Su wrote:
-> > cxl_event_thread() returns IRQ_HANDLED whether or not it found
-> > anything to do. Claiming every interrupt as handled means a device
-> > flooding its MSI vector is never detected.
-> > 
-> > Return IRQ_NONE unless the Event Status register names a log to drain.
-> > 
-> > Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > ---  
+> From: Alistair Francis <alistair@alistair23.me>
 > 
-> I'd mention that the MSI will eventually be disabled, but otherwise looks good
-> to me:
+> This is the initial commit of the Rust SPDM library.
 > 
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> 
-There is also the aspect of sharing.  So I'd assume we'll hit this path
-a lot because it was a different interrupt source.  If they all reply
-IRQ_NONE then as you say MSI will eventually be disabled.
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+Maybe want to consider updating the copyright given you changed some stuff
+since 2024 :)
 
-I saw Anisa just replied to another similar change.   For me these are hardening
-to enable the spurious interrupt detection stuff to work and we should be
-return IRQ_NONE for the case of we checked if this was the source of interrupts
-and it wasn't.  Note this different from us getting an error on something after
-we know we had an interrupt.
 
-So I think this patch should go forwards
+Subject to tags from rust folk, this looks fine to me.  Note I still haven't
+found the time to actually learn rust properly so this is me as a c coder
+reading and mostly figuring out what is going on.
 
-Jonathan
-
-> Thanks,
-> Ben
-> 
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
