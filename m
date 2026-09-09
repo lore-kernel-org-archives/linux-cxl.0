@@ -1,286 +1,257 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011057.outbound.protection.outlook.com [40.93.194.57])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACF8582B81;
-	Wed,  9 Sep 2026 20:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788985936; cv=fail; b=aYF4BfbRpqcnfxPYGZ2xqDbAkZNAJV6IK5yv5ao9KDGLn4Ad0OH5jXAjdaOAxE4n9W3IaybvxxmUYBTaoEUgi4uVWQHmNW67YPjV7wyjyShBS5DZxVBQKqs6U+NoXz8F5iShlKI0e3Hu5cRf5QaiiqXa3zSwAdRPrIiKg9ddn7g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788985936; c=relaxed/simple;
-	bh=eMrAiRsXpIF+vf98KwEEkdYAAINQFpNPXvL9c3bNyQQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jtf0Ljkw/sVqcUK9TRTMt/SKVUiqpz2nYrnamNMwIdmF0Nlc7CFMF30LNClnTHDm4BILKef/hnb063s/ZRHD8KsrHmjpEbmcwUZOX8l4WMYCkYyBcX2LQTQ/QZuiXlps2Ky/H0CHRce8hdRFYnU0MI9EB2ZJ6l//5TNj9LSbgRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2VwL9AZK; arc=fail smtp.client-ip=40.93.194.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AE03CCFB0
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 20:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788986991; cv=none; b=ptJDocq0p+ISPPO9CP4nuFuVmbYvlZwtCLlzvS/qTlp7cyZ/oyV7/cmEprNm1OmKPbKl63CU5xP/1tzTJJz76yR7QYxqlSgIYGp5U6eVAIu01NmMQ19DxLXgZYFFQElRurt/FZ0yPfczPqKp4BOu12nOXnvnVH207bKIPoAwlqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788986991; c=relaxed/simple;
+	bh=NaX/c7IbVCfsM2NFCEOEcrqHTe56YEsUvrWKbNjg3Ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=f/dndkQOauTtsrnzP1Y3Hvg47NGO/78LG+La+2YQ8tbqEc5V7mOX1fl2EI3hQ9D84GL6WRD9Ir6OYRNCPrjApBS6ov6rdze6HtRW0CGGEV7H2AUv5cjGMwlUQxvB4iouJkXuiCgHGuyX64vq6d6K3m4Q/N617O4D+Aile95+E0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OiyWhGyV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2VwL9AZK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sKqt3Z3QFwpRnGWkx3JaIKZVpVMYfrbcQpBvXnA7AnAGJ4muNobpzfs1n4LJSMojNfArRklRYTiAQruELXlcJRj3JMdZFrBtzj+zGrp5Em4r1hE5EwC/Wd4LkcdsAM0KDX28e7/oR+2W7jLxZ9HtKQ3FQrlZGx+St/PPRfuat+r6yyuiMQue4LsgV/u6rSudlWlEZbOxcNCOr7lsCK1gZv+/vK+fqe2MidN36YuUbkHZWKy/4hm+GcBTZEDgdeIlqzFwRofoUh6ll7udyelPmTlABr+1zNMUoPLqfKCSjeJoimDcIxK8BhzxW0nZazhi8B9fsfGMZRcx/3E+4IDE/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q13vHLtIHjvLKM4hfnSoeTQJlSiI5db/IruNRrHI1s0=;
- b=ZLEWeDQL7m9VgRu34xr0+aRYazgWWh6rhgfQygOyy4kkMGDAO3Xy7sYkX+cLNmQK+wN0m1nKr9zdCktwCQ5JFgQsXrC5jXOCrmmBJ6MBvd/d3HOn1iUnECWgPdKfn/YLyaiptK6kVls32Ln3BuwlJtz/57VRX4deIaCLR/MX9zXr3nDpZVuaqsE+xkEOPugMkdmxjLMnByyj/WHFtPocQ13GXTT5pZWo0rK+lNNFmtTYi6XXZTjyOsSQjgA6tKq+lmQo91PjwslAJ+C/LpyDxRu0i/VfpWHls9Hk5wMyCNv09v1BTOFk4oZV06/q4/VriKbLp2i0cVQ9dZ7cs03NGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q13vHLtIHjvLKM4hfnSoeTQJlSiI5db/IruNRrHI1s0=;
- b=2VwL9AZKP+CrW725RBfiXVAj5/mO8Nsn/Hungk+mZFQdmHwCve0QEJ/lEVP4OgYLcoED5ds2CmJp6rQzGiqyf85qVauH4Ii3pFdMEsCH6yNW5eb6/4P9P0OQ5ZAnWHBAHvoiNizcW+vLVmx7ubwxGXH0MSWfjHrpjbDIpKoHD6o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
- by SN7PR12MB8772.namprd12.prod.outlook.com (2603:10b6:806:341::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Wed, 9 Sep
- 2026 20:31:59 +0000
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9%5]) with mapi id 15.21.0406.007; Wed, 9 Sep 2026
- 20:31:59 +0000
-Message-ID: <c6b62614-fcc8-48aa-b65e-b3c26c8579a7@amd.com>
-Date: Wed, 9 Sep 2026 15:31:54 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 0/9] Enable CXL PCIe Port Protocol Error handling and
- logging
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Bjorn Helgaas <bhelgaas@google.com>,
- Dan Williams <djbw@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Len Brown <lenb@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Shuah Khan <skhan@linuxfoundation.org>,
- Ben Cheatham <Benjamin.Cheatham@amd.com>, Richard Cheng <icheng@nvidia.com>,
- Robert Richter <rrichter@amd.com>, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260902133933.2992457-1-terry.bowman@amd.com>
- <aqGDV2GQEqxg_1gE@wunner.de>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <aqGDV2GQEqxg_1gE@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PH0PR07CA0029.namprd07.prod.outlook.com
- (2603:10b6:510:5::34) To CH8PR12MB9766.namprd12.prod.outlook.com
- (2603:10b6:610:2b6::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OiyWhGyV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788986973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iHiSepGinwiII0mvyeXa4Lpu4fO4fTRZi4IFC+jBTrQ=;
+	b=OiyWhGyVylt6p0UsyZwwWu+s1ev6w2BQ5Zpw5gCxa9W+opDw+L5Q8GkPDkd0KijES6sNq1
+	GGeZ7ddPWr5EkrD+2aCDyHTUxrch1I3COaHJDUiDkziUh1WBu1JkzdfBc1Erp0zF9ZHHUP
+	H909SChdaLkTAy8OnhfgVN2Ex2MzpJQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-517-fdQKeD5OMYi3TKw6m_GFmw-1; Wed, 09 Sep 2026 16:49:32 -0400
+X-MC-Unique: fdQKeD5OMYi3TKw6m_GFmw-1
+X-Mimecast-MFC-AGG-ID: fdQKeD5OMYi3TKw6m_GFmw_1788986971
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49991beee7aso58211195e9.2
+        for <linux-cxl@vger.kernel.org>; Wed, 09 Sep 2026 13:49:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788986971; x=1789591771;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=iHiSepGinwiII0mvyeXa4Lpu4fO4fTRZi4IFC+jBTrQ=;
+        b=F77WigJ+NgVZ659k/fZbg7FA8pj5ioRB93j/N+8HQKiQyEyrNE/dTwLKPHNMOTYut7
+         BeWV7qh3CpPJndPfBCmLg1B3HSulftCAUdqg5S9wADICyk25PrLnRlQKam+FATI7JCoF
+         +I39eAINoItlqSUwQEmKrW6MKQ2QnY9vmdSIXFVpjpK9ytkCxiYJoNf21mg1xAacAVis
+         Mun7XBw/Y/D9fSY5L2Zs6EUvpPFhuJWlA4lrDw28SAd9D5iCcfJAc63mBfNygPg3RjS9
+         wnlzmovbywzFPwObBCx6UqV+BujujXwsH7vhyweh8s/jMPpbLhxWOfkIYCoJl39poGp3
+         v03A==
+X-Forwarded-Encrypted: i=1; AKwUvBwUva9Fi1uhj149Vgwaxb51bR+yxY9jRNELlLjJvBS1Pva7Xyg9IjW+ymKH1aQPNHk7LoaRAPeU20k=@vger.kernel.org
+X-Gm-Message-State: AFuF++lnggLNiq2kiRzGxdRRhob6AQ+KhcumqzkR+KpkJrgzs5wQyKcr
+	e+FdALWb13ubignAxpfsbEwg9vGoh/WGjPO97QyCd+VpAISEp0T/wk5b3BEIcgyDQ57KH41bV1G
+	tyOvLqRQZktvG7dqMPKqJgU9IWcGSyJpCWFXP9Zlscdb+auEnSjiN6GnNuoy4Ew==
+X-Gm-Gg: AYBFou2gxr95F3WKwuI7jXG0mbQgu5ehL43JUJXLblbN+exaTa6GXc8L/TPwimHZaaq
+	kFZoHUq2bXkj3AkwRo0wzANlfh8P8YVSiAwxgyIEcXAsk0AHCPsUSyPAJ5LEwFMUg3MPDjIQ7Hq
+	GR++4wRk2ifRa3zwPnwwDKVHUGp9QfAesVd93/BnwrZ/ANBqr/NlXyBAo4uiKuZnR9jXJmUNvAM
+	gorUE0PHqonyGlN3UcHwi3aEYd5jbGE9pz44zXW/H7cBC+YmFcDC4mfO+TeJqlKe6mPt/EmkmNM
+	ARjv3seCS09E1OGoEhOQ1nnzdvCWgGwe2uzhpQZ7vuLr2yfLvmhD/XTOlj7F0M7u+upTMOBoJI8
+	dybXoYBSAWsZXOVB0uYNbj00=
+X-Received: by 2002:a05:600c:630a:b0:49c:f89b:f82 with SMTP id 5b1f17b1804b1-49d2592c540mr64631925e9.12.1788986970644;
+        Wed, 09 Sep 2026 13:49:30 -0700 (PDT)
+X-Received: by 2002:a05:600c:630a:b0:49c:f89b:f82 with SMTP id 5b1f17b1804b1-49d2592c540mr64631285e9.12.1788986970075;
+        Wed, 09 Sep 2026 13:49:30 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d26c1bc5fsm16859975e9.3.2026.09.09.13.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2026 13:49:29 -0700 (PDT)
+Date: Wed, 9 Sep 2026 16:49:25 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: palmer@dabbelt.com, alistair.francis@wdc.com, imammedo@redhat.com,
+	sunilvl@ventanamicro.com, jic23@kernel.org, pbonzini@redhat.com,
+	liwei1518@gmail.com, daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com, chao.liu@processmission.com,
+	anisinha@redhat.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, junjie.cao@intel.com, guoren@kernel.org,
+	qemu-riscv@nongnu.org, qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v6 0/6] hw/riscv/virt: Add CXL support to the RISC-V virt
+ machine
+Message-ID: <20260909164855-mutt-send-email-mst@kernel.org>
+References: <20260907093735.2753-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|SN7PR12MB8772:EE_
-X-MS-Office365-Filtering-Correlation-Id: b4448ab4-38c3-40f6-a6cc-08df0eb165df
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|56012099006|10067099003|5023799004|11063799006|4143699003|3023799007|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	ySj8dm9M79vjtralVTqG1jb73hNHPPJlS0C3Cjk9g1Fr+rVXEa5Qmydrw1t2gcz99AlkpOMVoXJzQ1IX2OugScLBdAm5S/bV7dzL7A7dIMvLZHpE2F4sabpwevqxt5gbgqjJX/xCig6jjkEsXzPc7mHc8J2tDWpPKGVqvAR3kgzqLXzLWEQ/Rt9pLk/NlICX0thBCBDkMXo5UfoJY5cJZ6+N09w1mE3co5hLggdgPew5nX7Ya4nbQj7qYrUAO2JyA3kfwHj5S+ludcla16nZ4sdrCD66x61wWINVjFO+it/Pff5PSTBloXpb4/0cSbu5hd3x+DSR96KnKQwWJBSmrNOwaugUW3PBFsCAKkKMm3wIYyciCP4F4RIcPu8UaTFBCNzDrU4JVKiO/eQJRw9/f2xVzz0W5B4QVMBg5QTnfGBAm2GDc+HRQP/bZ3hJESKtzkwQKAyR3g9EaHdeW+vzkgcRgXJZEn4jO++oezPaA2UxyXQls7AhSF3aMADjLbQTMW9awKRwljQMlrfL7oadMzN4rsjXcZllslM/Nzp1BoxmVuHcyQsgq6d/dgAzhzm5k65NycIDHMW+IEmVwxSBubAH/jibTNolUpltn4ng6j6hfS1865+xW5PB/eb8C9gADxIkl41/xb5Rd7FzWfYlgF0YoEi6qozIWn3qdF9kSwo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(56012099006)(10067099003)(5023799004)(11063799006)(4143699003)(3023799007)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eVFaR0QvNmMyM2ZQcFp2QmpMRkYxcTUwemNaMVRHL0ttdGkzRU1od3BsY1dC?=
- =?utf-8?B?Z0pRQ0RWMUt6Q0pIREp5VW1SdmVvNVJZUllWL3lJT1NrNEtlUS8yS0I5MmZU?=
- =?utf-8?B?cmlpUVRFSyswK2VUMDNXbVNFbW1LRFd2ZVJhWnB2cjJMRDcvUVlMaUZvd2Vu?=
- =?utf-8?B?SXBRWG0rZ01HN05YdG1GeXpVdTRyaTl2ZS9RaDdxSHVaNk1iKzdpTlJVSzJ6?=
- =?utf-8?B?N1J5UkZ3RDU0SlVpbjZEN2Y0NTU3QnhXRExPQ3JrVlBWM2xQYlVOdjBSVFFx?=
- =?utf-8?B?bzJPN2VmcUw2RHh0TnJhNEdnK1ZxOHVlMmtUU25nQVVoWjI3cmpMa0xGajFw?=
- =?utf-8?B?R3dUdnRqR2N1NnJOcEdUWFdMMFNUVlZRSlVxZzlUOWdoQTd4YmkxalBlN1oy?=
- =?utf-8?B?L2hoVmFHcXdnRUZsK2kxS24rLzh0VFRYaVZjVUpROHFKQmVLakdOcktsekVo?=
- =?utf-8?B?bVU0Z2FKaWNOZkY5bFF3STFhdmtYWTkrcGdxdDJpamdpNEI2ejdvcXk2MERO?=
- =?utf-8?B?dXhCemhYVFdCVW1HYlh5b0h1UWtXbXB3eVJRY0JOa0ErN3gzbGE4c210WWg2?=
- =?utf-8?B?dlNnR3FpdzB5ZndKc25MdEljSzExYW5TTVlJY2g2dXRoUWxxQkQvOUhjdDBS?=
- =?utf-8?B?UTRkWEZ1eGNZNCtYc3lQcUlyM0U3bHR4MlpDWWFNMUVBZjd2cUk5MnJ5ZXRQ?=
- =?utf-8?B?eG5yR1ZPTW1rOE1LZGV6MkVkVncyKzRidVF6ZCtZRldaY3BjcjdkNmFEL2Zi?=
- =?utf-8?B?YmZ6UFZVS1VaREJhbkNETDgwMncwZ3hrTjk2bzc4aGpuQTMxci9ITW16WWRj?=
- =?utf-8?B?MEYzVCtiOW9FV1pueTlZSTlLamc0NkUyaVU0VmJ6L0VlKzFROXBLRkhwUzd3?=
- =?utf-8?B?NE9WcXhHSlVBTWh6b2tpc1VaRHNjZ0M5REd2SExnUjIxeFRIUGlFbmFGTXRm?=
- =?utf-8?B?ZkthZ2gzNkJBc2REcFpoTm9Nak5hVWdiMGUxOGRBQlNVNFJvRzFuN0lacDhY?=
- =?utf-8?B?bDZXenlDcjlFeGVDaHc3RmlSTTZjcy83bzZXWmMxcytkRXF5Vjh5NEZiRFZ3?=
- =?utf-8?B?eENuTkQ0OHg4Q05XY3E0TkNFNmRqY04rY0duSC9RWWVhcG5kSGVDMXJPZGVk?=
- =?utf-8?B?U2VkNituaFRZaDNUdmNVTThPWXhxUFhYWkxVRUNHZmQ2V2ZpVy9WTTFhdkJa?=
- =?utf-8?B?ZmZTWTZEUDBrclVsRmJ5ekkzV2drWkkrbzhvbDJlTTEwbWRVbTViQUZtUHBX?=
- =?utf-8?B?UmE3MitYRzRVaVJVODJGVVh4ekt0bFZ3MzdZS1hnTmZFdlkvd2FzNm0vZUdE?=
- =?utf-8?B?Q2pLa1gxai91S0x1NWlnMlNyVysrQ0NJend3NFdUcmpFUFRJNEFyYnIrbW5t?=
- =?utf-8?B?c1JUS1k0Ny9BdjVRM1lzTU0yMFM0c2RxY2lSTXp1bXVwRjF2V0NRWXBSTlF1?=
- =?utf-8?B?VXlkcS9PaFBLTHIyRDFENTRldzdnZU13REwyeDFqWllLcTFzMklRS1d5NVND?=
- =?utf-8?B?dFRnakFVRWtMVDBXaml0MTNCcWFLY2FYN0ZUM2xyYXl0cU9saERsS0h1STAr?=
- =?utf-8?B?N1BJVHFQOS93TFpTclFVSmJqNitTdldkaVNNWnk3ZU5OYWU3YXBhR1FicEtH?=
- =?utf-8?B?cU45UFJocDgveW5yUkhBS2YzdmI1cC8xeDNjVFg2NFBOWDlCT0R6bzJCMWpN?=
- =?utf-8?B?ejhUbVovN2cyRXMrNHRhUmgxR1UvQXZ4dUxYWXBHaDQ3dUM0VFdBNnBib25z?=
- =?utf-8?B?QmZrZnBYS1JrVTV0S3FPRStOa1N0YTBQZDJCSENqaDJJU1gzZVJHbnV4VWFn?=
- =?utf-8?B?bDRPOFdFWFpyYVI3SUtpU2lDQW1QbGR4WjBRclBwVXVCU0p6R2Ywam15SURt?=
- =?utf-8?B?VGFzVzZjVzVsS2plb0l0WVpxSm54L3ZVaDlmZjhaMGJPWk8vWDRlOXl0Z3Vw?=
- =?utf-8?B?aHJRUzY3UmdZVnNrbWtxK3hMR1dnQkpJUDhDZU1RdUlXZUN3WnZmMDRsa2dz?=
- =?utf-8?B?UzQ4YTF3VGdXTDliM0g4aHpqZGVHNHE0dGQvenk5OWJINkl4THpTVU5xQjhB?=
- =?utf-8?B?QUVDSElWNzdKVXBTV1A2ZFNXcW9yQTlNS1A0dUJHUkt6cDk2aXdXU0dKUGxu?=
- =?utf-8?B?YzMvZjhLM0hTWURUbWcvVm11UFZsczZGRUxkT2ZCemV1TWdjSFJhd3ZJcS9a?=
- =?utf-8?B?MmJqNjBBTmErWkFmK1k2QnZOekJXcUhPYVNBdnl1bk52MXJmTjY5aVFLR1Qw?=
- =?utf-8?B?Z0tzdWVOKzI5RUt0UEI1Vjgwd0QzSERqTjdZNFRGYUFtVlhSN01wd0VIczZD?=
- =?utf-8?Q?4oPMZBcgIz6QDDWFbj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4448ab4-38c3-40f6-a6cc-08df0eb165df
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2026 20:31:59.2435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nrwpu9VZfQHwfPFxykp72HYwd4IzKVx6vygAIBrT8JC++xJL+C16tdJ9nA2za6k/QG1zNLZqkqCVWwH8rzNPTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8772
+In-Reply-To: <20260907093735.2753-1-cp0613@linux.alibaba.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: EBg5gG9B0Dae_jWkEwJI-Zi7vcNtRPU5vpnY8o4he-s_1788986971
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 9/9/2026 11:03 AM, Lukas Wunner wrote:
-> On Wed, Sep 02, 2026 at 08:39:24AM -0500, Terry Bowman wrote:
->> Today the kernel handles native CXL.cachemem RAS only for Endpoints and
->> Restricted CXL Host (RCH) Downstream Ports. Root Ports, Upstream Switch
->> Ports, and Downstream Switch Ports are uncovered. This series introduces
->> a unified CXL protocol error path for all CXL device types, in both VH
->> and RCH topologies.
+On Mon, Sep 07, 2026 at 05:37:27PM +0800, Chen Pei wrote:
+> This series adds CXL support to the RISC-V virt machine, following the
+> approach used by the ARM virt machine: CXL host bridges (pxb-cxl) are
+> described as ACPI0016 devices, an ACPI0017 (CXLM) device is added to the
+> DSDT with a _DEP on the CXL host bridges, and a CEDT table is built. A
+> bios-tables test is added to pin down the generated ACPI tables.
+
+ACPI things:
+
+Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
+
+pls merge in riscv tree.
+
+> Changes since v5
+> ----------------
+>   - Rebased onto current master, over the gpex_pcie_init() move to
+>     device-common.c: s->pci_bus is now assigned at the
+>     riscv_gpex_pcie_init() call site in virt_machine_init().
+>   - tests/qtest: switched to the renamed in-tree firmware blobs
+>     pc-bios/edk2-riscv64-{code,vars}.fd (Junjie).  The goldens are
+>     unchanged and still match with the updated edk2-stable202608 blob;
+>     all riscv64 ACPI cases pass.
+>   - hw/riscv/virt-acpi-build: the _DEP commit message now cites the
+>     companion kernel commit bf5418a5fe63 ("ACPI: scan: Honor _DEP for
+>     ACPI0016 PCI/CXL host bridge") alongside 3a59c3b772e5, both in
+>     v7.2 (Junjie).
+>   - Collected review tags: Junjie Cao's Reviewed-by/Tested-by on
+>     patches 1, 2 and 6.  Michael S. Tsirkin acked the ACPI parts on
+>     the v5 cover letter thread.
 > 
-> I'm trying to make sense of the existing code.  I know this wasn't
-> introduced by you (but by Robert in 0a867568bb0d), but you've moved
-> this code around recently and are extending it in this series.
+> Changes since v4
+> ----------------
+>   - tests/qtest: DSDT.cxl regenerated against the in-tree
+>     edk2-riscv-code.fd blob that the test boots (Junjie): the v4 golden
+>     carried the window allocation of my local edk2-stable202602 build.
+>     The 64-bit window is now 0x400100000..0x40010FFFF with the matching
+>     PCI0 range shift; the AML fragment in the commit message is updated
+>     accordingly.  CEDT.cxl is unchanged.
+>   - hw/riscv/virt: pci_bus_add_fw_cfg_extra_pci_roots() moved out of
+>     the cxl block (Junjie), so plain pxb-pcie expander bridges are also
+>     advertised to firmware with cxl=off, in line with arm/virt, pc and
+>     hppa.
+>   - Collected review tags.
 > 
-> Errors of the RCH downstream port are signaled as internal errors
-> of an RCEC on the root bus.  Their handling was plumbed into:
+> Changes since v3
+> ----------------
+>   - The CXL host bridge resource handling is reworked, following Junjie
+>     Cao's suggestion (and Igor Mammedov's earlier "fix UEFI" direction):
+>     instead of reserving a fixed 256 MiB carve-out and simulating the
+>     firmware PCI initialization in QEMU, the machine now advertises the
+>     pxb-cxl expander root buses to firmware via the etc/extra-pci-roots
+>     fw_cfg file (pci_bus_add_fw_cfg_extra_pci_roots(), as arm/virt and
+>     x86 do).  EDK2's PciBusDxe then enumerates behind the CXL host
+>     bridge and assigns the root-port window and bus numbers, and
+>     build_crs() emits a correct _CRS for the ACPI0016 host bridge.
+>     This keeps the machine code minimal (a single call, no carve-out),
+>     scales to multiple pxb-cxl host bridges, and lets firmware size the
+>     window to what is actually behind the bridge.
+>   - The bios-tables test is split into the staged flow documented in
+>     bios-tables-test.c, and ordered the same way the riscv64 goldens were
+>     originally added upstream (Sunil V L's commit cc3ba2422554 et al.):
+>     the feature code comes first, then three consecutive commits -- empty
+>     golden files + allowed-diff.h, the test code, and the populated golden
+>     master binaries with an emptied allowed-diff.h.
 > 
-> aer_process_err_devices()
->   handle_error_source()
->     cxl_rch_handle_error()
+> Changes since v2
+> ----------------
+>   - hw/riscv/virt: The MMIO-window patch no longer touches the common
+>     gpex code (Igor).  The gpex_cfg.cxl_mmio32 field and the is_cxl
+>     static _CRS branch are dropped; the ACPI0016 _CRS now comes from the
+>     generic build_crs() path.  Since EDK2 does not enumerate the pxb-cxl
+>     expander bridge, riscv simulates the firmware PCI initialization
+>     (reserved window + depth-first bridge bus numbers) and re-applies it
+>     via a reset handler.
+>   - hw/riscv/virt: Drops the machine-global window/bus-range synthesis
+>     that did not scale past one pxb-cxl (Junjie).  The series targets a
+>     single CXL host bridge for now, documented in the commit message and
+>     a TODO.
+>   - hw/riscv/virt: CXL host register region and FMW setup folded into a
+>     single cxl_host_state_init() helper; redundant braces removed in
+>     create_fdt_pcie() (Daniel).
+>   - hw/riscv/virt-acpi-build: the _DEP commit message documents the
+>     kernel-compatibility behaviour (Alistair).
+>   - Carried review tags: Sunil V L's Reviewed-by on the _DEP patch and
+>     Alistair Francis's Acked-by on the test.
 > 
-
-cxl_rch_handle_error() is used in the RCH and RCD error handling path. VH errors 
-are handled through the call to cxl_forward_errors(). Both, RCH/RCD and VH errors
-use the kfifo for handling in cxl_core.
-
-> First of all, handle_error_source() calls pci_aer_handle_error(),
-> which (for Fatal Errors) will issue an FLR of the RCEC.  Note that
-> Uncorrectable Internal Errors have Fatal severity by default
-> (PCIe r7.0 sec 7.8.4.4).
+> Changes since v1
+> ----------------
+>   - hw/riscv/virt: PCIBus *bus renamed to PCIBus *pci_bus (Jonathan).
+>   - hw/riscv/virt: Dropped outer if (s->pci_bus) guard around
+>     cxl_hook_up_pxb_registers(); the function already handles a NULL
+>     bus internally (Jonathan).
+>   - hw/riscv/virt-acpi-build: All s->bus references updated to
+>     s->pci_bus; iasl -d decompiled DSDT fragment added to commit
+>     message.
+>   - hw/riscv/virt,gpex: Commit message expanded with PCI-to-PCI Bridge
+>     Spec �3.2.5.8/9/10 citations (Jonathan).
+>   - Original patch 4 ("Map committed HDM decoder ranges as RAM for
+>     direct DMA") dropped; superseded by Alireza Sanaee's v8 series [1],
+>     which is now merged upstream and thus no longer a prerequisite.
+>   - New patch 4: RISC-V ACPI bios-tables test for CXL, with golden AML
+>     files generated and included.
 > 
-> If the Uncorrectable Internal Error was the only error, then why is the
-> RCEC being reset?  It's just serving as a conduit to inform that there
-> are CXL errors at the downstream port.  There's no reason at all to
-> issue an FLR to the RCEC in that case.
+> [1] https://lore.kernel.org/qemu-devel/20260318171918.146-1-alireza.sanaee@huawei.com/
 > 
-
-RCEC FLR doesn't serve a purpose here. This likely needs a check to skip the FLR
-if the device is a CXL RCEC and the error is internal, indicating a CXL RAS error
-at the downstream CXL device.
-
-> Second, cxl_rch_handle_error() then walks all the RCiEPs reporting to
-> the RCEC.  This also looks weird to me.  Can there ever be more than
-> one RCiEP?  I think not, but maybe I'm missing something.  If there's
-> only ever a single RCiEP reporting to the RCEC, why perform a walk?
+> Test
+> ----
+> Built riscv64-softmmu and ran the new bios-tables test together with the
+> existing riscv64 ACPI tests; all pass.
 > 
-
-The RCEC can have more than one associated RCiEP. The associated set is carried 
-in the RCEC Endpoint Association DVSEC, which is what pcie_walk_rcec() iterates. 
-
-> What we actually want to do is retrieve the CXL errors from the
-> downstream port's RCRB, but this is done in a fairly roundabout way:
-> cxl_rch_handle_error() walks the RCiEPs (aka RCDs), invokes the
-> ->error_detected() callback for each, which is cxl_error_detected().
-> That will then call cxl_handle_rdport_errors() to find the RCH
-> downstream port to which the RCD is attached.
+> Also booted an RVA22 guest with EDK2 firmware, using pxb-cxl + cxl-rp +
+> cxl-type3 + a CFMW: EDK2's PciBusDxe enumerates behind the CXL host
+> bridge (advertised via etc/extra-pci-roots), the root port and Type3
+> device show up (0000:0c:00.0 / 0000:0d:00.0), and 'cxl list' reports
+> the memdev (4 GiB) and the CFMWS root decoder.
 > 
-> Isn't there a simpler way to find the RCH downstream port from which
-> the error originated?  Why do we have to go through the RCDs?
+> QEMU invocation (CXL-relevant options shown):
 > 
-
-Unfortunately there isn't a better approach. The CXL spec (Chapter 12) outlines 
-2 procedures for RCH/RCD protocol error reporting. The standard approach is 
-implemented and follows the logic of searching all CXL RCiEP's (RCDs) 
-associated with the reporting RCEC.
-
-A second approach defined by the CXL spec named the RCEC Downstream Port 
-Association Structure (RDPAS) was submitted for review by Dave Jiang but did 
-not offer obvious improvement as it didn't eliminate the search iterations.
-Also, its an optionally supported platform device hardware making it "not 
-required". 
-https://lore.kernel.org/linux-cxl/20260618170723.2010490-1-dave.jiang@intel.com/
-
-> Also, putting this in cxl_error_detected() has a weird side effect:
-> The function is also invoked when the RCD upstream port experienced
-> an error.  But because the retrieval, reporting and handling of
-> RCH downstream port errors was put into this function, those errors
-> are reported and handled as a side effect of RCD upstream port errors.
-> What sense does this make?
+>     qemu-system-riscv64 \
+>         -M virt,aia=aplic-imsic,acpi=on,cxl=on \
+>         -cpu rva22s64 -smp 2 -m 4G \
+>         -object memory-backend-ram,id=vmem0,share=on,size=4G \
+>         -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+>         -device cxl-rp,port=0,bus=cxl.1,id=rp0,chassis=0,slot=2 \
+>         -device cxl-type3,bus=rp0,volatile-memdev=vmem0 \
+>         -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
+>         ...
 > 
-
-The side effect stems from the RCH Downstream Port being implemented as 
-an RCRB with no BDF or PCI visibility. Because the DP cannot be addressed 
-directly, software discovers it via the downstream RCD.
-
-Per CXL r4.0 §12.2.1.1, an RCH Downstream Port has no BDF of its own.
-The RCEC Error Source Identification register logs the RCEC's own BDF 
-"because the RCH Downstream Port is not associated with one," and the 
-spec states outright that "the RCEC Error Source Identification register 
-is insufficient for identifying the error source." Software must therefore 
-either follow PCIe rules to inspect the RCEC-associated RCiEPs, or use 
-the optional RDPAS structure (§9.18.1.5) "if present." Because RDPAS is 
-optional, the RCiEP walk is the baseline discovery path, and it is why 
-the DP is reached via its associated RCD rather than addressed directly.
-
-
-> The commit message of 0a867568bb0d provides the following hint as
-> to why this approach was chosen:
+> Verification (total system memory grows by 4 GiB after onlining):
 > 
->     The reason for choosing this implementation is that the AER service
->     driver claims the RCEC device, but does not allow it to register a
->     custom specific handler to support CXL. Connecting the RCEC hard-wired
->     with a CXL handler does not work, as the CXL subsystem might not be
->     present all the time.
+>     # cxl list
+>     # cxl enable-memdev mem0
+>     # cxl create-region -m -t ram -d decoder0.0 -w 1 mem0 -s 4G
+>     # daxctl online-memory dax0.0
+>     # free -h
 > 
-> So I think the point may have been to make this work even if the cxl
-> module is not loaded?  Is that all?  Is that the only reason?
-> We have try_module_get() and symbol_get() helpers.  You could just
-> call those prior to invoking functions implemented by the cxl module
-> from the AER driver.  There's plenty of precedent for that in the kernel.
+> Chen Pei (6):
+>   hw/riscv/virt: Add CXL support to the RISC-V virt machine
+>   hw/riscv/virt-acpi-build: Add _DEP to ACPI0017 for CXL host bridge
+>     dependency
+>   hw/riscv/virt: Advertise the CXL host bridge to firmware via
+>     extra-pci-roots
+>   tests/qtest: Prepare golden files for the RISC-V CXL ACPI test
+>   tests/qtest: Add RISC-V ACPI bios tables test for CXL
+>   tests/qtest: Update RISC-V CXL ACPI golden master binaries
 > 
-
-We we were looking for a callback that fit the current PCI error handling
-but also supported handling errors detected in the RCH RCRB. The move
-to use the kfifo removes the module dependency and timing constraint.
-I'd prefer that over symbol_get()/try_module_get() here: it avoids a 
-per-error symbol lookup in the error path and gives explicit ordering against 
-AER recovery via cxl_proto_err_wait_for_empty(). But, I'm open to it if you 
-see a concrete advantage.
-
-> The problem is that the present approach is fairly complex and has
-> side effects which make it difficult to understand and reason about
-> the error handling.  In my view, this should be cleaned up first
-> before bolting more functionality on top of it.
+>  hw/riscv/Kconfig                      |   2 +
+>  hw/riscv/virt-acpi-build.c            |  52 +++++++++++++++++++++++++
+>  hw/riscv/virt.c                       |  56 +++++++++++++++++++++++++++++++---
+>  include/hw/riscv/virt.h               |   3 ++
+>  tests/data/acpi/riscv64/virt/CEDT.cxl | Bin 0 -> 108 bytes
+>  tests/data/acpi/riscv64/virt/DSDT.cxl | Bin 0 -> 6331 bytes
+>  tests/qtest/bios-tables-test.c        |  54 ++++++++++++++++++++++++++
+>  7 files changed, 163 insertions(+), 4 deletions(-)
+>  create mode 100644 tests/data/acpi/riscv64/virt/CEDT.cxl
+>  create mode 100644 tests/data/acpi/riscv64/virt/DSDT.cxl
 > 
-> Thanks,
+> -- 
+> 2.50.1
 > 
-> Lukas
-
-
-I understand the concern. The RCEC-reset-on-conduit-error issue is
-self-contained and worth fixing. I'll post it as a standalone patch.
-                                                                                                                                                        
-For the broader restructuring, this is already on the serie's coversheet TODO 
-list ("Move RCH traversing for handling from AER driver into CXL driver"): the 
-plan is to move the RCH/RCD searching into cxl_core, after the error is forwarded 
-via the kfifo, so discovery lives in the CXL subsystem rather than the AER driver. 
-I'd like to keep this series focused on landing the unified CXL protocol-error 
-path and take that up as follow-up work. Is that acceptable, or is there a 
-specific change you'd want to see land first?
-
-Thanks,
-Terry
 
