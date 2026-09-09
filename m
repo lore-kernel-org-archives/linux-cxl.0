@@ -1,38 +1,38 @@
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85CB484236;
-	Wed,  9 Sep 2026 08:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A3C46D096;
+	Wed,  9 Sep 2026 08:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788940960; cv=none; b=CeI4rHfUbRBYbFYGRNpHFh8RcKeMBZrLomMMTZOgP8K7m83Vyl1UpGSXgMAMWSat1DW2fwq/s7rNvLmVFpQVBKJnJVpgbNAXFSHARSsg75Rexwj5fJdvayO4JsUrbCwNLkU0JLVsCWVBU8qEKfJXBwYY72b0c/VUaT+FNqQEUzo=
+	t=1788940975; cv=none; b=Lu+vHhjco97EJRb7pNpyhXUyTbMhMMRaVC2SGufmkOWI5izSAGtV2qtoO6uBqDvBL2+Y8YxMioobYvZaSE4rAKVUTIiMnZBTWtL1MDpJzWLUKIfvt5mPMjEidN9sD/zxA5+IvIieTxCntIjc+M8sp6D1C5rOAwzvlSICrfVryZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788940960; c=relaxed/simple;
-	bh=4RVhPavqbFdZB9dLlUgTUNkwX9QrrcgqvBFuvF2ryQw=;
+	s=arc-20240116; t=1788940975; c=relaxed/simple;
+	bh=AZf0hTGanZoBX9juw8A4Hkcbr/03el49J34+Wj833zM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OCV1IKpFYKf4Sk0Mg2k3trBlOkWLBzn7bW0j316BkpYCNLeTFRF5LVETqAEjrsdBVbtLQA2eGl9OaulJ0gFXW/U435wza4TROw109jYp9bGJTqBeNJYqCCY8WnbZMSmEsnFr/RoWzCaaBHbwTRR2nrc6azPnZifbwvfY87A7XjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pjnC7K5p; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=FifWWQNUZkWtT8pCgYUuPWvzO8xArNDqRuhlYTI122H9PHQJJlYKS2oiQHeEbckxo/T5jxN0qvRRioYPgambN9Tiyou1x9V3grJkD9tMcBd6IEAlju7zwoivICM8CrAAG+IdvFNFy4URdzWEhsfeZaQ0irFuIgfTuGC437AU6bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RIraTNUr; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pjnC7K5p"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RIraTNUr"
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5EC961A1A77;
-	Wed,  9 Sep 2026 08:02:37 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 36D9D1A1A70;
+	Wed,  9 Sep 2026 08:02:51 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2CE0460448;
-	Wed,  9 Sep 2026 08:02:37 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D710111C7AF5E;
-	Wed,  9 Sep 2026 10:02:28 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 0732F60448;
+	Wed,  9 Sep 2026 08:02:51 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0BF711C7AF61;
+	Wed,  9 Sep 2026 10:02:41 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1788940954; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1788940966; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=S9hVX9w2762K2NqjWVW1JueaSmRHavaw67h+zQmQF34=;
-	b=pjnC7K5pQ5BzeWmR3L2BvvYdnOoypY2LEsKre4EEi2Sql8RS1V6pfkZo5M4BK38ayRDMqL
-	YidsM4LucG7w+0HJFFSNNuS9yOYEZ851mUrOH/tjaf4r5Zv4p/TRvI6sI628mI4A5DoLxM
-	cpnNG87ZNq/51EMwI0A1/cbKQnogIUOo7f8YANkqi72Aq32awMp10K4OvklFZ2WUD5jjvm
-	j27UNSD0tzb3NWT0CTGcdMSVxs9yOVPvEGcjitXFOpnFKEX5rY64LVOAbTcI0zsQqC0EC/
-	yJCWwDN5RsRcabMmiKlic/6o2skkgz+WjytJGxvrnmIx2ILl1F2UGn+Jh1Fjog==
+	bh=eCEDZNLNxkg3C8C9bAECCcFaN+XP6VaQ0+RYJcLH1V4=;
+	b=RIraTNUrkx8rCgnGMdZIZgTAmId6aTvpFsKskmRr8sg58vyK+nsLZw+IEBJ/WApunHb/X8
+	kXXLsF/GCIY7yWlgLuQ1dLYx4qDXo5z3PainBnBqpGjZC9r4sZaUYSm9alaRpm+2RmlaRu
+	lKFOoY5Th4hY02UleIwruKfgCzgUmV1nVSlZKkfIl9QtoePCzkCWZm7RUh9AmyxjdQiCA8
+	zNiQeW4LbncfeogkF85WKGhEA/Nmw/TYjgjiPeocqbZ2x3VGbN+6v/R1FLYbIfVXdS3vC/
+	buGYg/XJLb2IJBYAkx0Xzv0C1QpqFxMk5hvR/nMdJ4e0Ab6CGDzrnrHm8i3Kmg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Richard Cheng <icheng@nvidia.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -76,11 +76,10 @@ Cc: driver-core@lists.linux.dev,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Subject: [PATCH v11 08/10] PCI: of: Set fwnode device of newly created PCI device nodes
-Date: Wed,  9 Sep 2026 10:01:07 +0200
-Message-ID: <20260909080114.591938-9-herve.codina@bootlin.com>
+	stable+noautosel@kernel.org
+Subject: [PATCH v11 10/10] PCI: of: Avoid np->data usage for the node changeset
+Date: Wed,  9 Sep 2026 10:01:09 +0200
+Message-ID: <20260909080114.591938-11-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260909080114.591938-1-herve.codina@bootlin.com>
 References: <20260909080114.591938-1-herve.codina@bootlin.com>
@@ -93,71 +92,172 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
-nodes are created and filled based on PCI core information but the
-fwnode device field is not set.
+of_pci_remove_node() and of_pci_remove_host_bridge_node() check
+whether the node is dynamic but not whether it has valid private data.
 
-When later an overlay is applied, this confuses fw_devlink. Indeed,
-without any device attached to the node, fw_devlink considers that this
-node will never become a device. When this node is pointed as a
-supplier, devlink looks at its ancestors in order to find a node with a
-device that could be used as the supplier.
+During the node creation, an OF changeset is used and this changeset is
+stored in np->data to be available for removal functions.
 
-In the PCI use case, this leads to links that wrongly use the PCI root
-bridge device as the supplier instead of the expected PCI device.
+If, for instance, a PCI host bridge is created using a device-tree
+overlay, the related node will have the dynamic flag set but np->data
+will be NULL. This leads to NULL pointer dereferences.
 
-Setting the fwnode device to the device of the PCI device allows devlink
-to use this device as a supplier and so, correct links are created.
+Checking for a non-NULL np->data pointer to determine if the node has
+been created by the PCI node creation process is not enough. Indeed,
+on some platforms like PowerPC, the OF_RECONFIG_ATTACH_NODE notifier
+(e.g., in the pci_dn_reconfig_notifier() function) intercepts node
+additions and populates np->data with its own structure, such as a
+struct pci_dn. In that case, np->data is not NULL but it is not related
+to our changeset stored during the PCI node process creation.
+
+Avoid the usage of np->data to store the changeset used during the PCI
+node creation. Store our changeset in a more relevant structure: either
+struct pci_dev when the node is created for a PCI device or struct
+pci_host_bridge when the node is created for the PCI host bridge.
+
+With that done, no ambiguity remains on removal. Indeed, this changeset,
+if non-NULL, is the one used during PCI node creation. Check and use
+this changeset on the removal process.
 
 Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-Cc: stable@vger.kernel.org
+Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
+Cc: <stable+noautosel@kernel.org> # Issue not triggered but could be a problem
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/of.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/pci/of.c    | 28 ++++++++++++++--------------
+ include/linux/pci.h | 11 +++++++++++
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 29b63a9090ae..8914bfa25dc1 100644
+index 0a5797652e18..cd87128c71dd 100644
 --- a/drivers/pci/of.c
 +++ b/drivers/pci/of.c
-@@ -736,6 +736,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
- 	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+@@ -732,15 +732,16 @@ void of_pci_remove_node(struct pci_dev *pdev)
+ {
+ 	struct device_node *np;
+ 
+-	np = pci_device_to_OF_node(pdev);
+-	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
++	if (!pdev->cset)
  		return;
  
-+	fw_devlink_set_device(&np->fwnode, NULL);
++	np = pci_device_to_OF_node(pdev);
+ 	fw_devlink_set_device(&np->fwnode, NULL);
  	device_remove_of_node(&pdev->dev);
- 	of_changeset_revert(np->data);
- 	of_changeset_destroy(np->data);
-@@ -788,9 +789,16 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- 	if (ret)
- 		goto out_free_node;
- 
-+	/*
-+	 * Set the fwnode device in order to have fw_devlink creating links
-+	 * pointing to this PCI device instead of walking up to the PCI host
-+	 * bridge.
-+	 */
-+	fw_devlink_set_device(&np->fwnode, &pdev->dev);
-+
- 	ret = of_changeset_apply(cset);
- 	if (ret)
--		goto out_free_node;
-+		goto out_clear_devlink_dev;
- 
- 	np->data = cset;
- 
-@@ -805,6 +813,8 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- out_revert_cset:
- 	np->data = NULL;
- 	of_changeset_revert(cset);
-+out_clear_devlink_dev:
-+	fw_devlink_set_device(&np->fwnode, NULL);
- out_free_node:
+-	of_changeset_revert(np->data);
+-	of_changeset_destroy(np->data);
++	of_changeset_revert(pdev->cset);
++	of_changeset_destroy(pdev->cset);
  	of_node_put(np);
- out_destroy_cset:
++	kfree(pdev->cset);
+ }
+ 
+ void of_pci_make_dev_node(struct pci_dev *pdev)
+@@ -800,18 +801,17 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+ 	if (ret)
+ 		goto out_clear_devlink_dev;
+ 
+-	np->data = cset;
+-
+ 	ret = device_add_of_node(&pdev->dev, np);
+ 	if (ret)
+ 		goto out_revert_cset;
+ 
++	pdev->cset = cset;
++
+ 	kfree(name);
+ 
+ 	return;
+ 
+ out_revert_cset:
+-	np->data = NULL;
+ 	of_changeset_revert(cset);
+ out_clear_devlink_dev:
+ 	fw_devlink_set_device(&np->fwnode, NULL);
+@@ -828,16 +828,17 @@ void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
+ {
+ 	struct device_node *np;
+ 
+-	np = pci_bus_to_OF_node(bridge->bus);
+-	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
++	if (!bridge->cset)
+ 		return;
+ 
++	np = pci_bus_to_OF_node(bridge->bus);
+ 	fw_devlink_set_device(&np->fwnode, NULL);
+ 	device_remove_of_node(&bridge->bus->dev);
+ 	device_remove_of_node(&bridge->dev);
+-	of_changeset_revert(np->data);
+-	of_changeset_destroy(np->data);
++	of_changeset_revert(bridge->cset);
++	of_changeset_destroy(bridge->cset);
+ 	of_node_put(np);
++	kfree(bridge->cset);
+ }
+ 
+ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+@@ -899,8 +900,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+ 	if (ret)
+ 		goto out_clear_devlink_dev;
+ 
+-	np->data = cset;
+-
+ 	/* Add the of_node to host bridge and the root bus */
+ 	ret = device_add_of_node(&bridge->dev, np);
+ 	if (ret)
+@@ -910,6 +909,8 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+ 	if (ret)
+ 		goto out_remove_bridge_dev_of_node;
+ 
++	bridge->cset = cset;
++
+ 	kfree(name);
+ 
+ 	return;
+@@ -917,7 +918,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+ out_remove_bridge_dev_of_node:
+ 	device_remove_of_node(&bridge->dev);
+ out_revert_cset:
+-	np->data = NULL;
+ 	of_changeset_revert(cset);
+ out_clear_devlink_dev:
+ 	fw_devlink_set_device(&np->fwnode, NULL);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d31a8d107b1e..7b0ba9ec7b5c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -339,6 +339,9 @@ struct pcie_link_state;
+ struct pci_sriov;
+ struct pci_p2pdma;
+ struct rcec_ea;
++#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
++struct of_changeset;
++#endif
+ 
+ /* struct pci_dev - describes a PCI device
+  *
+@@ -598,6 +601,10 @@ struct pci_dev {
+ 	u8		tph_mode;	/* TPH mode */
+ 	u8		tph_req_type;	/* TPH requester type */
+ #endif
++
++#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
++	struct of_changeset *cset; /* Changeset used for OF node creation */
++#endif
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+@@ -670,6 +677,10 @@ struct pci_host_bridge {
+ 	unsigned int	broken_l1ss_resume:1;	/* Resuming from L1SS during
+ 						   system suspend is broken */
+ 
++#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
++	struct of_changeset *cset; /* Changeset used for OF node creation */
++#endif
++
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
+ 			const struct resource *res,
 -- 
 2.55.0
 
