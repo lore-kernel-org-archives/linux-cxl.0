@@ -1,32 +1,32 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465423D0C07
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 09:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9F13CEBB1
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 09:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788945720; cv=none; b=HTdrAW7jLykpzSzpkgUCSEoqBw9kQzQh9cQS5V19DhoLeCPUWjd4t4HE0/eINLhCBMfaj+itVH8sirpfW4HSaizARHLK/hOSgVwEMRrDgzfa4sHNZT3DNrW839FidxeE0ibViW8lS9MfyGPMYbKbzvM0OHVrC0WexUSG2rkhY04=
+	t=1788945775; cv=none; b=mnFVA4ZqQeGdpQtbzjfsMprdh0g5P4jF3WPmsto8a76Xfcpj07yQYOw0NJu4nMNzUQYvVPAMtbVjsY5ri+BAV/X4XkVNEhuyX57IYMQkA/RnvkVlnARNi/4wOSOV7hEo8p33rhWi4ldAFmtqqNUjGDHIY5lTgTZnQipxQMVswWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788945720; c=relaxed/simple;
-	bh=gNUT8TLwO5DgBH0uO3QMIS5xz0NKOg4F8TJJa8dx/kM=;
+	s=arc-20240116; t=1788945775; c=relaxed/simple;
+	bh=i0/WKycaG9HSpOn9oRuJpFAIa9d+AWJNfR9gdzLM154=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SxnFNt0RvkNbGOcQLyzcSAPObeDJtFmO2QvwstLrUcZ/MhdUAjfRHdjEXZCPFASf/Aihn/IGI6i9AdGSwJJyZiducioCV2yLB/qmYmbzLHgQjC+v7vbmFFtPejHrf3O6CGz7FAdRGTh1t1oTmk4TUKt+hE8eVrJtFpQphX1nE/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tpJ65pER; arc=none smtp.client-ip=115.124.30.97
+	 In-Reply-To:Content-Type; b=LcUVu8Pleb4dYJ0TX9zPJffy2O4uQsbjggXEs+2jTcqNR4rluFvdVhYx8JXrBo3UXOO6ZybCrUKfXZCCIp9DqdTz9fWTtDlAX8fg0WqVAW7gtC4jLXyNKtUW7V3bd59W5+2xr4rVPPNiD7m1wzP633fNEN3dp5T64G0FuHqAndk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aqueN7Oc; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tpJ65pER"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aqueN7Oc"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1788945713; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=5z9gyjJYLD5MOc6TEyKbb4OVWgXZum9SGaVXKpjKU2A=;
-	b=tpJ65pER0xlLtC9qyH+nPriY9KBFW4vkFzkkQhjYng9cOuvbNMPk91oPt2G0k8UtnxUT+7pKr/yil6Fj9qd5NYn7BzVhKA00ruPhSfVsaOu9qLkoJx7NeYhY5TKCIaTAU7k7W3Jekm2ksmUggLZUcC/CbBfa4DPJNsRDMECq0BY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XAePP5E_1788945710;
-Received: from 30.178.68.218(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAePP5E_1788945710 cluster:ay36)
+	t=1788945770; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=Xpuxu9v+M+U3EVPLB4MIjbtLCINO5kVa9rmGoxL+8W8=;
+	b=aqueN7OcgnDQDrFyjZkiYuQ2KUXRuhEi2Z84YLxyVP2tzUQ61QWzO0w6JN8qqW2e1YtsudVSyEbxqrWxnkiEwMUgXYzKjqN8jyhkRtnOySNIpJc5fS7Pm867keU/cZ10QSnFcw6e8ki0iAUaK6Nyq5Voh+nWIyS3usLbWGwaPjM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XAeT4fc_1788945769;
+Received: from 30.178.68.218(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAeT4fc_1788945769 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 09 Sep 2026 17:21:51 +0800
-Message-ID: <60ecd01c-92ef-4d36-b03f-c13e0455f51c@linux.alibaba.com>
-Date: Wed, 9 Sep 2026 17:21:50 +0800
+          Wed, 09 Sep 2026 17:22:50 +0800
+Message-ID: <8a016242-35fe-48af-a305-c4ec03b79537@linux.alibaba.com>
+Date: Wed, 9 Sep 2026 17:22:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -34,99 +34,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] cxl/memdev: Fix poison debugfs vs unbind deadlock
+Subject: Re: [PATCH v5] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Dave Jiang <dave.jiang@intel.com>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>, Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: linux-cxl@vger.kernel.org, driver-core@lists.linux.dev
-References: <20260831124809.889829-1-kanie@linux.alibaba.com>
-In-Reply-To: <20260831124809.889829-1-kanie@linux.alibaba.com>
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260831110449.719086-1-kanie@linux.alibaba.com>
+In-Reply-To: <20260831110449.719086-1-kanie@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi, gently ping on this patchset, Any feedback would be appreciated. thanks.
+Hi,gentle ping on this patch.
+Any feedback would be appreciated. thanks.
 
 Best Regards,
 Guixin Liu
 
-在 2026/8/31 20:48, Guixin Liu 写道:
-> Writing a memdev poison debugfs file while cxl_mem is being unbound
-> deadlocks. Patch 2 fixes it by not waiting for the device lock in those
-> handlers. Patch 1 adds the trylock guard it uses.
+在 2026/8/31 19:04, Guixin Liu 写道:
+> HDM decoders are emulated from the DVSEC range registers in two cases:
+> (a) the component registers expose no HDM decoder capability, or (b) the
+> capability is present but the DVSEC ranges were the ones in use at driver
+> load.
 >
-> Patch 2 does not build without patch 1, so the two need to travel
-> together.
+> After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() reads the HDM
+> decoder Committed bit for every decoder marked enabled, emulated ones
+> included. In case (a) regs.hdm_decoder is NULL and the read oopses. In case
+> (b) the Committed bit was never set, so a reset gets reported that never
+> happened.
 >
-> Testing:
+> Use the absence of cxld->commit to elide the check for emulated decoders.
 >
-> Reproduced on a QEMU CXL topology whose type3 devices advertise poison
-> inject support:
+> Case (b) tested under QEMU: a reset on an endpoint driven down the DVSEC
+> emulation path no longer reports a reset or strips the decoder flags.
 >
->    while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
->    while :; do
->        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
->        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
->    done
+> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> ---
+> This was patch 4/8 of the "cxl: Assorted fixes" series [1], resent
+> individually per review feedback.
 >
-> Without the fix the unbind wedges within seconds. The three tasks
-> involved, from /proc/<pid>/stack:
+> The two synchronisation concerns the review bot raised on v2 - the missing
+> exclusion against a cxl_port unbind freeing the devm allocated cxl_hdm, and
+> the plain read-modify-write of cxld->flags in
+> cxl_endpoint_decoder_clear_reset_flags() while the region paths update the
+> same word under cxl_rwsem.region - are still untouched here. Both are
+> about the reset handler's locking rather than about which registers it
+> reads, and neither fix is local; happy to follow up with separate patches.
 >
->    writer, state S, holds the debugfs reference and waits for the lock
->      cxl_debugfs_poison_inject+0x25/0xa0 [cxl_mem]
->      debugfs_attr_write+0x61/0xb0
->      full_proxy_write+0xfc/0x1c0
->      vfs_write+0x1d4/0xe60
+> Testing
 >
->    unbind, state D, holds the lock and waits for the reference to drain
->      remove_one+0x27f/0x3d0
->      debugfs_remove+0x44/0x60
->      release_nodes+0xfa/0x2c0
->      devres_release_all+0x113/0x1a0
->      device_unbind_cleanup+0x76/0x260
->      device_release_driver_internal+0x3eb/0x540
->      unbind_store+0xde/0x100
+> Reaching case (b) needs an endpoint whose DVSEC ranges are live while the
+> global HDM decoder enable is clear. Unbinding cxl_pci runs the
+> disable_hdm() and clear_mem_enable() devm actions, so both bits start
+> clean. setpci then programs DVSEC Range 1 Base to 0x890000000, which sits
+> inside a RAM capable CFMWS, and sets Mem_Enable. Rebinding takes the
+> emulation path:
 >
->    cxl_port workqueue, state D, blocked on the same lock
->      device_release_driver_internal+0x96/0x540
->      detach_memdev+0x79/0xb0 [cxl_core]
->      process_one_work+0x6b0/0xfb0
+>    cxl_port endpoint3: Fallback map 1 range register
+>    cxl_pci 0000:35:00.0: DVSEC Range0 allowed by platform
 >
-> The writer is in interruptible sleep and can be killed; the unbind
-> cannot, and because cxl_bus_wq is an ordered workqueue the wedged
-> detach_memdev() blocks every other CXL bus work item behind it.
+> The endpoint ends up with a single decoder, enabled and locked, with no
+> Committed bit behind it:
 >
-> With both patches applied, 46 unbind/bind cycles against the same writer
-> loop all completed, no task was left in D state, and the writer collected
-> 10920 EBUSY returns from the contended trylock. Note that lockdep stays
-> quiet either way: one leg of the cycle is the debugfs active_users
-> completion rather than a lock it tracks.
+>    decoder3.0: locked=1 start=0x890000000 size=0x100000000 mode=ram
 >
-> v1 -> v2:
-> - add the device_trylock() guard and use ACQUIRE(device_try, ...) instead
->    of open-coding device_trylock()/device_unlock(), keeping the style the
->    Fixes: commit established (Shaikh Kamaluddin)
-> - cut the changelog down to the failing condition, the consequence and
->    the fix; the call graph and the reproducer live here instead
-> - say how the issue was found and how it was tested
+> The device's only available reset method is cxl_bus, which unmasks SBR
+> through the port DVSEC. Before this change:
 >
-> v1:
-> https://lore.kernel.org/linux-cxl/\
-> 20260826125248.4003792-1-kanie@linux.alibaba.com/
+>    cxl_pci 0000:35:00.0: resetting
+>    cxl_pci 0000:35:00.0: SBR happened without memory regions removal.
+>    cxl_pci 0000:35:00.0: System may be unstable if regions hosted system memory.
 >
-> Guixin Liu (2):
->    driver core: Add conditional guard support for device_trylock()
->    cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
+> /proc/sys/kernel/tainted picked up TAINT_USER (8192 -> 8256) and locked
+> dropped from 1 to 0. After this change the same reset logs only
+> "resetting", locked stays 1, and no taint is added. The decoder is
+> decoder6.0 in the second run because reloading cxl_core renumbered the
+> memdevs.
 >
->   drivers/cxl/mem.c      | 14 ++++++++++----
->   include/linux/device.h |  1 +
->   2 files changed, 11 insertions(+), 4 deletions(-)
+> QEMU does not clear the DVSEC range registers on SBR, so the emulated
+> decode is still fully programmed by the time the reset completes. The old
+> report was spurious here too.
 >
+> Not covered: case (a) needs an endpoint with no component register block,
+> which QEMU's type3 always provides, and the FLR variant needs FLR support
+> that QEMU's type3 does not advertise (FLReset-). I also did not run a
+> positive control confirming that a normally committed HDM decoder is still
+> detected after this change.
+>
+> v1->v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>    the code change (Alison Schofield)
+>
+> v2->v3:
+> - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
+>    emulated from the DVSEC ranges are also skipped when the HDM decoder
+>    registers exist but are globally disabled (Richard Cheng)
+> - update the subject and the commit message for the widened scope
+>
+> v3->v4:
+> - shorten the commit message (Dave Jiang)
+>
+> v4->v5:
+> - condense the commit message further, wording taken from Jonathan
+>    Cameron's suggestion on v4
+> - note the case (b) test in the commit message
+>
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+>
+>   drivers/cxl/core/pci.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..d8b07f86bab0 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>   	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>   		return 0;
+>   
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult.
+> +	 */
+> +	if (!cxld->commit)
+> +		return 0;
+> +
+>   	cxlhdm = dev_get_drvdata(&port->dev);
+>   	hdm = cxlhdm->regs.hdm_decoder;
+>   	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
 >
 > base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
