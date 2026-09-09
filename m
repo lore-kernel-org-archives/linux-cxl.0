@@ -1,150 +1,131 @@
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34C113D53C;
-	Wed,  9 Sep 2026 02:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788919709; cv=pass; b=AaNnjqptK/zBBxTeFaBqgl962XmNd5ShAVomDEST0+5IX/f9yDSjdsyw5v9siwhyr74nxtvqtEKIh9R7oaC70qiCJrcG7KV5OMyWBeXuFqF/4wGZul0YDfR36ztpmdyrIQCp3zlJx4Jmx1XqqqyKQpAojH5x5c1IbMsBeRLp/W0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788919709; c=relaxed/simple;
-	bh=fzZsDrYGy+IbNu7Tci5r7HZUQrMRfylbcqJ7UQXJ0qs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TafWUytjxl9sLU1XUO/JGaklvLjBhq/8iZFGTkDqMmLKiotp7Z2M834aDYJGX/XGd5kJrohdW/V1Bdm/tc6okWXfs4ZrLVcdcD7JqYknpE1SObynMbsn5LI9YkHoaCQFWhtu4gDVWkl8S4av7MFeAy69BWwLyAP1RnNNMGVsm/o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Atmq24h0; arc=pass smtp.client-ip=165.173.180.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA9F218EBA
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 04:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788927415; cv=none; b=RTRZ2TmbUVke7B+cZPs35bviw2E/oV1+jWGI+8Gx9DBp2gv5BQ42U6+4Stti+Fe8fiLS64KnKYI0a/xPshvk1pn0tj6VdPVOqM+6/21r/ca8MbAaDMXB0on9b8vPGtYUer7Gm3JB0VmzTCNgl4Od4wYvSdWTHA4apgxXwATydiM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788927415; c=relaxed/simple;
+	bh=3ghuu4JTj4cEtHfiutxdTu4zzetejJy9Mp7CTQDum68=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SG3FtpG95/0GGvQOy+9AT2Y4gfNZycYFIQrpRtFQpeyMrkly3Io2V5xp9yLptV3wtImfyLWWU1NDfIRTGy1GiquIyjbepRLIGK/nXCMuEcOX4ZVpVFWNsEmNXIV1ZvY8lDNITLVJLfx5xR1IJNQE6J8NCek1BKCY/tgaN0qp7PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F+NA+JxI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Atmq24h0"
-ARC-Seal: i=1; a=rsa-sha256; t=1788919700; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UDluB+eFyFv/9WBjZnbnn7+nZSt0PNNC4AbDv6+fnSvYOf/Ppw+4QhT8ZtiiJinP4PgYkm/1zJ6NGMxOIta9k3R9piGHZpe5WOsy6hofJObobCQefirbyk7+qwLNPz6N/sQpNjTqfDaPLuZWTSHzqk6QG7XJhWlqlTvFtrjDVDw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1788919700; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xRyGtyZmjhzl8CYleaEojSFYXlW6kLaxI53pyn/v0Sc=; 
-	b=MGJJH80a3kY3tNTgdHpW9/Tv+6qAiBydUrje69HVJ5k3avkJh7YW394+/pw8fjtJi76m+Y3HWngMKTHEivyBMGjgmrv9gxHvs3FQsyCwBZXz3Vom8y46ntzSJMJUKxyeI6YN5jHyoy468+1q0cRr0G8P3x/sHIg8tdIBCHog5Vs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788919700;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=xRyGtyZmjhzl8CYleaEojSFYXlW6kLaxI53pyn/v0Sc=;
-	b=Atmq24h0yV5W2T9EqFTkgXSF9IxGPUuG2wdGKXCe7LjYkVmDitSI33izB7geFHyC
-	x/Gb0pGbcK6Tnpq4ExlyIbXczK7KJF9uuYaX0TAHBCfv83TvO5eYnx1pP79EMA2t28S
-	r5yp778ef3JvmaoU9EtgxwxUeK4LrDZ7ZgOpXKok=
-Received: by smtp.zohomail.com with SMTPS id 1788919699020409.6821399782324;
-	Tue, 8 Sep 2026 19:08:19 -0700 (PDT)
-Message-ID: <fc844c0b-e429-4c0d-9113-35a1635c03a3@zohomail.com>
-Date: Wed, 9 Sep 2026 10:08:14 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F+NA+JxI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788927413;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PPKhrq06LendwTuis9XWwggoXxfHHEH2WbmQKVE++2s=;
+	b=F+NA+JxIWJZxLPYWM+aOmAC8TeywUSJq4DiVVd8FYKj00HazrdNVSO7SDs1tg12DH7Ab36
+	T9Q4Dov/7Zwbo4xIaKnTuZZVFBbojIckPSJCtBWe4PCdPNn8dnyegYhQZJB2GK6ka1r1T8
+	428w9nE/CgcxDLFaqhVyLPXREDEFPaM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-IypAGub0OSK6NioBu28OHA-1; Wed,
+ 09 Sep 2026 00:16:49 -0400
+X-MC-Unique: IypAGub0OSK6NioBu28OHA-1
+X-Mimecast-MFC-AGG-ID: IypAGub0OSK6NioBu28OHA_1788927407
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 32DFC180065F;
+	Wed,  9 Sep 2026 04:16:47 +0000 (UTC)
+Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.38])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCEA21800473;
+	Wed,  9 Sep 2026 04:16:41 +0000 (UTC)
+From: John Snow <jsnow@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Markus Armbruster <armbru@redhat.com>,
+	Peter Xu <peterx@redhat.com>,
+	Fabiano Rosas <farosas@suse.de>,
+	qemu-block@nongnu.org,
+	Eric Blake <eblake@redhat.com>,
+	=?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@redhat.com>,
+	Alex Williamson <alex@shazbot.org>,
+	=?UTF-8?q?Daniel=20P=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lukas Straub <lukasstraub2@web.de>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Hanna Reitz <hreitz@redhat.com>,
+	linux-cxl@vger.kernel.org,
+	Kevin Wolf <kwolf@redhat.com>,
+	John Snow <jsnow@redhat.com>
+Subject: [PATCH 00/10] qapi: convert simple enum intro sections
+Date: Wed,  9 Sep 2026 00:16:30 -0400
+Message-ID: <20260909041640.69080-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/events: Return IRQ_NONE when no event is pending
-To: Jonathan Cameron <jic23@kernel.org>,
- Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260906155705.13252-1-shaikhkamal2012@gmail.com>
- <20260907194824.615e47ff@jic23-huawei>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260907194824.615e47ff@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227da0bf2ef153f92606495703a0000d3d03e4108f7dc55e74078963443d5780ca88952a1e5deaa3e:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: qr2gqTT_q5rJQLJFqDjqkLLWj5FgGDlDdcIhFGsA5TM_1788927407
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello, this work converts "simple" intro sections for enum=0D
+definitions in the QAPI schema to use the new syntax. This is part of=0D
+our ongoing effort to add the mythical "inliner" to our generated QMP=0D
+documentation.=0D
+=0D
+"simple" here is a non-technical distinction that means a single=0D
+paragraph of text followed by an existing section boundary that=0D
+naturally already delineates what comprises the intro.=0D
+(This is about 25% of the remaining conversions.)=0D
+=0D
+If you are a non-QAPI maintainer who has been CC'd on this series,=0D
+there is likely very little for you to look at in this series. What=0D
+you need to know is that indented paragraphs become part of a=0D
+command's "intro" and will appear "above the fold" - above additional=0D
+detail in our generated QMP documentation (i.e. features, arguments,=0D
+return value, errors, etc) and anything else will eventually appear=0D
+"below the fold" - below the detail table, alongside examples, notes,=0D
+and more verbose prose.=0D
+=0D
+As enum definitions cannot be inlined by any other definition, the=0D
+documentation text for enums will never be re-written or reproduced in=0D
+any other context. As such, the distinction between "intro" and=0D
+"details" are less important here, but the distinction does still=0D
+determine where auto-generated documentation will be inserted, if any:=0D
+features will always be inserted "after the intro". (Note that at=0D
+present, features do not have any stub text that is automatically=0D
+generated.)=0D
+=0D
+John Snow (10):=0D
+  qapi: convert simple enum intros for vfio.json=0D
+  qapi: convert simple enum intros for machine-common.json=0D
+  qapi: convert simple enum intros for introspect.json=0D
+  qapi: convert simple enum intros for block.json=0D
+  qapi: convert simple enum intros for cypto.json=0D
+  qapi: convert simple enum intros for cxl.json=0D
+  qapi: convert simple enum intros for yank.json=0D
+  qapi: convert simple enum intros for migration.json=0D
+  qapi: convert simple enum intros for machine.json=0D
+  qapi: convert simple enum intros for block-core.json=0D
+=0D
+ qapi/block-core.json     |  7 +++----=0D
+ qapi/block.json          |  9 ++++-----=0D
+ qapi/crypto.json         | 18 +++++++++---------=0D
+ qapi/cxl.json            | 27 ++++++++++++---------------=0D
+ qapi/introspect.json     |  5 ++---=0D
+ qapi/machine-common.json |  5 ++---=0D
+ qapi/machine.json        | 21 +++++++++------------=0D
+ qapi/migration.json      | 10 ++++------=0D
+ qapi/vfio.json           | 15 +++++++--------=0D
+ qapi/yank.json           |  5 ++---=0D
+ 10 files changed, 54 insertions(+), 68 deletions(-)=0D
+=0D
+--=20=0D
+2.55.0=0D
+=0D
 
-在 2026/9/8 02:48, Jonathan Cameron 写道:
-> On Sun,  6 Sep 2026 21:27:05 +0530
-> Shaikh Kamaluddin <shaikhkamal2012@gmail.com> wrote:
->
->> CXL event interrupts may share an MSI/MSI-X vector with other event
->> logs or device features. Consequently, cxl_event_thread() is registered
->> with IRQF_SHARED and must determine whether an interrupt belongs to the
->> event-log facility.
->>
->> The handler masks the Device Event Status register to the event logs
->> supported by the driver. However, when no supported status bit is set,
->> it exits the processing loop and still returns IRQ_HANDLED.
->>
->> Track whether at least one supported event status bit was observed.
->> Return IRQ_NONE when there was no event to service, while continuing to
->> return IRQ_HANDLED after processing one or more event logs.
-> What is the practical result of this change?
-> I think it will only affect the spurious interrupt detection so
-> to me it looks like a cleanup rather than a fix.  Is there
-> any path by which we actually lose interrupts as a result of this?
->
->> Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
->>
-> No blank lines in tag blocks.  There are a number of tools that rely
-> on there not being any and as such there are also scripts that run
-> on various upstream trees that will send us annoying emails if this
-> blank line is still here!  I'm not sure why this mistake in patch
-> formatting is so common as there are plenty of docs without the
-> blank lines!
->
->> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> A suggestion for an alternative implementation below.
->
->> ---
->>   drivers/cxl/pci.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index c7c91e8dc51d..8b560cae91f2 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->>   	struct cxl_dev_id *dev_id = id;
->>   	struct cxl_dev_state *cxlds = dev_id->cxlds;
->>   	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
->> +	bool handled = false;
->>   	u32 status;
->>   
->>   	do {
->> @@ -527,11 +528,13 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->>   		status &= CXLDEV_EVENT_STATUS_ALL;
->>   		if (!status)
-> 			return IRQ_NONE;
->
-> And don't need the other changes.
-
-Hi Jonathan,
-
-
-I think we should not return IRQ_NONE here, because the loop could run 
-multiple times untill no event record, so we always get a status with 
-0x0 value in the last loop. In that case, we still need to return 
-IRQ_HANDLED.
-
-
-Ming
-
->
->>   			break;
->> +
->> +		handled = true;
->>   		cxl_mem_get_event_records(mds, status);
->>   		cond_resched();
->>   	} while (status);
->>   
->> -	return IRQ_HANDLED;
->> +	return handled ? IRQ_HANDLED : IRQ_NONE;
->>   }
->>   
->>   static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
->>
->> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
->> prerequisite-patch-id: 92e40cd60a697020faac475dcc77ba63b33434ea
->> prerequisite-patch-id: 10027ad5d9aed85806047f807b3a76273b6c4a77
