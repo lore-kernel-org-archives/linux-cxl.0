@@ -1,738 +1,87 @@
-Received: from iguana.tulip.relay.mailchannels.net (iguana.tulip.relay.mailchannels.net [23.83.218.253])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2981736A37B
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 17:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440D136894B;
+	Wed,  9 Sep 2026 17:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788974521; cv=none; b=XqzZZq9CEGPoSf+qlm8QuJgPuJAzCXeLe4s0noU7c8IHjD8/+A/hhCQ3UC6WLTR0Hp6SW2IOBrNYmhjvJlSmGySWktvNGaHWjVseu9cLPaAg9tlPWlnFQNQhO+Ak8YLlvI1Bk5j+eNgE5lJa1NxlR2G/hDCjepic3pfq/7J863A=
+	t=1788974578; cv=none; b=PprNJnaPh4NFiqqfQM1wFCOA4lyXKdWTqjBK4TO+x5g2XRe4Wrnxljn8Sm0brdHD943EjG6/j1ArMjGOLDRmZjJ57TGz40dbTqSD6kCnFTqSMHWY8NbOue9aGKo9omWEWBFeDWXnJZ7gOGNDhNXIi2hsIKLv4yZ3c/8xr+GdKzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788974521; c=relaxed/simple;
-	bh=3VhyKlWqmXXER+X/O8IprPl1OpoGt9jTyBcvbMbRlC4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WJIN8ZPnN9gyIb4/N3gsV/YpHIJc/HbuMLz2iUcEIFBmZ1MOtPtPbf4Z+HbzEuWKp4urK0m08K0os7il3ebA54XQJMrPZcLNjz0J+Fr7gaxzSk/TdwUnllHqSTPv/dRfXyJxSqZJfz2hZLGv2oR7oBWYXiMIdkQvQJlVfriQrC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=L3l0ryzV; arc=none smtp.client-ip=23.83.218.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1788974578; c=relaxed/simple;
+	bh=HF7hBvGHI2djh0Q/VjvpofpkXfH6mLt1xAFhu6eQkVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPDa+06Q7LdvZHxmCft+CMfweU+tWBIZ2h2lnVnqgS/0sWesXTTU+shM/0AJMBAnvk7kWrHQsZfb79Wkztob+am6gHvLciORQL3A0MzjiulNZ+NKURAxGsWQ6M0ubntnth8swpouag1VhbDW4xTMxuEXO+JKFNe1J+oV92cTezI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WR7t8OlH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="L3l0ryzV"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 156194C2B7E;
-	Wed, 09 Sep 2026 17:03:30 +0000 (UTC)
-Received: from pdx1-sub0-mail-a213.dreamhost.com (100-96-117-16.trex-nlb.outbound.svc.cluster.local [100.96.117.16])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id D429E4C317F;
-	Wed, 09 Sep 2026 17:03:29 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Arithmetic-Eight: 703705e13570dd0f_1788973409993_3757792814
-X-MC-Loop-Signature: 1788973409993:3713197922
-X-MC-Ingress-Time: 1788973409993
-Received: from pdx1-sub0-mail-a213.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.117.16 (trex/8.0.2);
-	Wed, 09 Sep 2026 17:03:29 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a213.dreamhost.com (Postfix) with ESMTPSA id 4hg6Zn1Ht1z1Z;
-	Wed,  9 Sep 2026 10:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1788973409;
-	bh=C5Naih1MvJVQSKcE505KU3W1Nq3CXiJFh0mVFWdgBTQ=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=L3l0ryzVniR7P3bmpch6i0558yLl5AVh7Y4rCXyNlVIQiRUGd1RPngz3V116PyX3N
-	 PaR4BM2UF+nIFkp+xiaXwYbgDCI4mYlYg03ZXfGv3pKurPUBiCrYn6fNhfK8FcoqdP
-	 OpnYH1GkAvPEkDx/9CPqE79v39ENmNv4MTjf/Yp7dCoagZoxUTOQR70W4pv04y3syF
-	 y03R4Nn9G2lsZXesV/U+kvDRkbm3dI6B1jwRjLRgbJile1XB6F/vA9MWKd3g3qmu5X
-	 shr1/KcjlnxgasQeMEnjseMEJC4q9J8tWqBuaXYHbwnkIRfzN2qGEwcoB4n44QFdbZ
-	 DpAbeJ4Mq0B2A==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org,
-	alison.schofield@intel.com,
-	icheng@nvidia.com,
-	ming.li@zohomail.com,
-	benjamin.cheatham@amd.com,
-	alucerop@amd.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v8 02/10] cxl/pci: Add BI topology enable/disable
-Date: Wed,  9 Sep 2026 10:02:54 -0700
-Message-Id: <20260909170302.1550680-3-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260909170302.1550680-1-dave@stgolabs.net>
-References: <20260909170302.1550680-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WR7t8OlH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963121F000FF;
+	Wed,  9 Sep 2026 17:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788974577;
+	bh=APFjnB8AM36hLAYS9rCRFu3o1ig09AcvIwPP4JmZhlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WR7t8OlHQCRXlT5je2S1lLwbE8AzuJZBKD/8FK3wkq5Fir3ksRyBj2zMBwpsqYgrO
+	 U1fmgjXiWynIo4WdB1D8oXxw6jHkuOqLmp3ftm/vO2NIg2PmXKxcaIdiJta/knURAY
+	 lAceIrP6EZKyszeO0snH+/ydcGLLMI9epoQ78DAygI+dviHOmBB7ucRFFQdtOlnRMf
+	 6v9+ScTBkVopWm+GwwJmvyReMTjK/TBNXcEhOranbgn8mtYnWckfC5hQWiY5q5ptFO
+	 kZ8O1UE988pLxsCSvlNeDmGAWmfWmiYEJiV/vylICesLReEZxQZK/9HQ63+FWFP6Z3
+	 0g5BfbncEglHA==
+Date: Wed, 9 Sep 2026 19:22:48 +0200
+From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 03/12] mm/sparse: move initialization of section metadata
+ to sparse_metadata_init()
+Message-ID: <aqGV6JDZwfWa-UD7@localhost.localdomain>
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-3-008fc8d579fe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-3-008fc8d579fe@kernel.org>
 
-Implement cxl_bi_setup() to enable BI flows on the device and every
-component in the path, and its teardown counterpart cxl_bi_dealloc().
-Setup runs from devm_cxl_endpoint_decoders_setup(), between the
-port's HDM state and its decoders: registered there, its devres
-teardown brings BI down after the decoders quiesce and before the
-HDM state is freed, and BI is settled before the decoders, and later
-the regions, are looked at. The BI-ID and path enablement belong to
-the endpoint port's lifetime.
+On Wed, Sep 09, 2026 at 03:32:56PM +0200, David Hildenbrand (Arm) wrote:
+> Let's move the code responsible for initializing sparse metadata (usemap,
+> memmap) into a helper. Cleanup the variable while at it (e.g.,
+> "map_count").
+> 
+> Drop the rather obvious code comments.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Setup is safe in endpoint port probe context: the port probes
-synchronously from cxl_mem_probe(), pinning the memdev state the
-walk consumes, and the whole ancestor path already exists with BI
-registers mapped (dports at dport-add time, the switch USP RT at
-first-dport setup) because devm_cxl_enumerate_ports() completes
-before the endpoint is created.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-Dealloc is safe in endpoint devres context: both setup and dealloc
-walk the endpoint's parent_dport topology rather than getting the
-port by bus lookup - an ancestor teardown delists the parent port
-before the endpoint's devres runs.
 
-The topology walk is stable as parent_dport pointers are fixed at
-port creation; ancestors cannot be reaped while holding this
-memdev's cxl_ep; and their own teardown frees dports only after
-the endpoint is gone.
-
-Likewise, the device state outlives the walk: cxlmd->cxlds is
-nulled only after cxl_memdev_unregister() has torn the endpoint
-down, and delete_endpoint() clears cxlmd->endpoint only after the
-endpoint devres has run.
-
-Each dport is programmed by its position: the one immediately above
-the device assigns the BI-ID and takes BI Enable, every dport above
-it takes BI Forward (Table 8-157, Table 9-13), at any switch depth
-(Table 7-97). Any level can be shared, so nr_bi refcounts endpoints
-at every dport: registers are written on the first and cleared on
-the last, but only downstream ports commit (Table 8-156), once per
-endpoint (Table 8-152), and a failed commit undoes its write and
-commits the undo. A USP advertising a BI Route Table that failed to
-map is refused rather than treated as absent. nr_bi counts only the
-endpoints this driver enabled, so a level can be cleared while
-firmware still has an unbound device on it.
-
-A reset may wipe the device's BI Enable, whose reset default is 0
-(Table 8-157). .reset_done reads the hardware rather than assume
-which reset ran, and invalidates cxlds->bi, failing closed with
-recovery by rebind as for decoder loss; dealloc unwinds the dport
-refcounts regardless. It also clears cxlds->bi unconditionally: the
-endpoint disable fails when the hardware already shows BI Enable
-clear, from a reset .reset_done never saw, and the flag must not
-outlive the BI Decoder mapping it describes, which the endpoint port
-releases moments later.
-
-With dealloc in the endpoint's devres, delete_endpoint() already
-holds the parent port's device lock, so to avoid deadlocking, add a
-per-port bi_lock, serializing the dports that share state (nr_bi and
-the control register at any shared level, the switch USP's BI RT).
-
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/cxl/core/hdm.c  |  10 +
- drivers/cxl/core/pci.c  | 417 ++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/port.c |   1 +
- drivers/cxl/cxl.h       |  31 +++
- drivers/cxl/pci.c       |   8 +-
- include/cxl/cxl.h       |   2 +
- 6 files changed, 467 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..0e9d652b568e 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1274,6 +1274,16 @@ int devm_cxl_endpoint_decoders_setup(struct cxl_port *port)
- 	if (rc)
- 		return rc;
- 
-+	/*
-+	 * Between the port's HDM state and its decoders: devres,
-+	 * unwinding in reverse, brings BI down only after the decoders
-+	 * quiesce, while its slow walk still precedes the HDM state
-+	 * free.
-+	 */
-+	rc = cxl_bi_setup(port);
-+	if (rc)
-+		dev_dbg(&port->dev, "BI setup failed rc=%d\n", rc);
-+
- 	return devm_cxl_enumerate_decoders(cxlhdm, &info);
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_endpoint_decoders_setup, "CXL");
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index b8676a3d6ec9..8c3c00137849 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -2,12 +2,14 @@
- /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
- #include <linux/units.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/iopoll.h>
- #include <linux/device.h>
- #include <linux/delay.h>
- #include <linux/pci.h>
- #include <linux/pci-doe.h>
- #include <cxl/pci.h>
- #include <linux/aer.h>
-+#include <linux/string_choices.h>
- #include <cxlpci.h>
- #include <cxlmem.h>
- #include <cxl.h>
-@@ -965,3 +967,418 @@ void devm_cxl_dport_bi_setup(struct cxl_dport *dport)
- 		break;
- 	}
- }
-+
-+/*
-+ * BI requires 256B Flit operation on the link. RP/DSP/endpoint must
-+ * also have the BI Decoder cap mapped (@bi); for USPs the BI RT cap
-+ * is optional per CXL 4.0 8.2.4.26, so absent @bi is allowed.
-+ */
-+static bool cxl_is_bi_capable(struct pci_dev *pdev, void __iomem *bi)
-+{
-+	if (!cxl_pci_flit_256(pdev))
-+		return false;
-+	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM && !bi) {
-+		dev_dbg(&pdev->dev, "No BI Decoder registers.\n");
-+		return false;
-+	}
-+	return true;
-+}
-+
-+/* limit any insane timeouts from hw */
-+#define CXL_BI_COMMIT_MAXTMO_US (5 * USEC_PER_SEC)
-+
-+static unsigned long __cxl_bi_get_timeout_us(struct device *dev,
-+					     unsigned int scale,
-+					     unsigned int base)
-+{
-+	static const unsigned long scale_tbl[] = {
-+		1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
-+	};
-+
-+	if (scale >= ARRAY_SIZE(scale_tbl) || !base) {
-+		dev_dbg(dev, "Invalid BI commit timeout: scale=%u base=%u\n",
-+			scale, base);
-+		return CXL_BI_COMMIT_MAXTMO_US;
-+	}
-+
-+	return scale_tbl[scale] * base;
-+}
-+
-+static int __cxl_bi_wait_commit(struct device *dev, void __iomem *status_reg,
-+				u32 committed_bit, u32 err_bit,
-+				unsigned int scale, unsigned int base)
-+{
-+	unsigned long tmo_us, poll_us;
-+	ktime_t start;
-+	u32 status;
-+	int rc;
-+
-+	tmo_us = min_t(unsigned long, CXL_BI_COMMIT_MAXTMO_US,
-+		       __cxl_bi_get_timeout_us(dev, scale, base));
-+	poll_us = max_t(unsigned long, tmo_us / 10, 1); /* ~10% */
-+	start = ktime_get();
-+
-+	rc = readx_poll_timeout(readl, status_reg, status,
-+				status & (committed_bit | err_bit),
-+				poll_us, tmo_us);
-+	if (rc) {
-+		dev_err(dev, "BI-ID commit timed out (%luus)\n", tmo_us);
-+		return rc; /* -ETIMEDOUT */
-+	}
-+
-+	if (status & err_bit) {
-+		dev_err(dev, "BI-ID commit rejected by hardware\n");
-+		return -EIO;
-+	}
-+
-+	dev_dbg(dev, "BI-ID commit wait took %lluus\n",
-+		ktime_to_us(ktime_sub(ktime_get(), start)));
-+	return 0;
-+}
-+
-+/* BI RT only exists on switch upstream ports. */
-+static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
-+{
-+	u32 status, ctrl;
-+	unsigned int scale, base;
-+
-+	if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
-+		       readl(bi + CXL_BI_RT_CAPS_OFFSET)))
-+		return 0;
-+
-+	ctrl = readl(bi + CXL_BI_RT_CTRL_OFFSET);
-+	writel(ctrl & ~CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
-+	writel(ctrl | CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
-+
-+	status = readl(bi + CXL_BI_RT_STATUS_OFFSET);
-+	scale = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE, status);
-+	base = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE, status);
-+
-+	return __cxl_bi_wait_commit(dev, bi + CXL_BI_RT_STATUS_OFFSET,
-+				    CXL_BI_RT_STATUS_BI_COMMITTED,
-+				    CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED,
-+				    scale, base);
-+}
-+
-+static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
-+{
-+	u32 status, ctrl;
-+	unsigned int scale, base;
-+
-+	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
-+		       readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
-+		return 0;
-+
-+	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-+	writel(ctrl & ~CXL_BI_DECODER_CTRL_BI_COMMIT,
-+	       bi + CXL_BI_DECODER_CTRL_OFFSET);
-+	writel(ctrl | CXL_BI_DECODER_CTRL_BI_COMMIT,
-+	       bi + CXL_BI_DECODER_CTRL_OFFSET);
-+
-+	status = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
-+	scale = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE, status);
-+	base = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE, status);
-+
-+	return __cxl_bi_wait_commit(dev, bi + CXL_BI_DECODER_STATUS_OFFSET,
-+				    CXL_BI_DECODER_STATUS_BI_COMMITTED,
-+				    CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED,
-+				    scale, base);
-+}
-+
-+static int cxl_bi_commit_dport(struct cxl_dport *dport)
-+{
-+	struct cxl_port *port = dport->port;
-+	int rc;
-+
-+	if (pci_pcie_type(to_pci_dev(dport->dport_dev)) !=
-+	    PCI_EXP_TYPE_DOWNSTREAM)
-+		return 0;
-+
-+	rc = __cxl_bi_commit_decoder(dport->dport_dev, dport->regs.bi_decoder);
-+	if (!rc && port->regs.bi_rt)
-+		rc = __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
-+
-+	return rc;
-+}
-+
-+/*
-+ * Enable or dealloc BI-ID changes in the given level of the topology.
-+ * @direct says this dport sits immediately above the device, which is
-+ * what decides whether it assigns the BI-ID or forwards one assigned
-+ * below it.
-+ */
-+static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable,
-+			       bool direct)
-+{
-+	void __iomem *bi = dport->regs.bi_decoder;
-+	struct cxl_port *port = dport->port;
-+	u32 ctrl, value, set, clr;
-+	int rc;
-+
-+	guard(mutex)(&port->bi_lock);
-+	if (!bi)
-+		return -EINVAL;
-+
-+	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-+
-+	if (!enable) {
-+		if (WARN_ON_ONCE(dport->nr_bi == 0))
-+			return -EINVAL;
-+		/* others below still need this level */
-+		if (--dport->nr_bi > 0)
-+			return 0;
-+
-+		writel(ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
-+				CXL_BI_DECODER_CTRL_BI_ENABLE),
-+		       bi + CXL_BI_DECODER_CTRL_OFFSET);
-+		return cxl_bi_commit_dport(dport);
-+	}
-+
-+	set = direct ? CXL_BI_DECODER_CTRL_BI_ENABLE :
-+		       CXL_BI_DECODER_CTRL_BI_FW;
-+	clr = direct ? CXL_BI_DECODER_CTRL_BI_FW :
-+		       CXL_BI_DECODER_CTRL_BI_ENABLE;
-+
-+	value = (ctrl | set) & ~clr;
-+	if (value != ctrl)
-+		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
-+
-+	/* owed per new device below, not per register change */
-+	rc = cxl_bi_commit_dport(dport);
-+	if (rc) {
-+		if (value != ctrl) {
-+			/* the undo is a BI-ID change owing its own commit */
-+			writel(ctrl, bi + CXL_BI_DECODER_CTRL_OFFSET);
-+			cxl_bi_commit_dport(dport);
-+		}
-+		return rc;
-+	}
-+	dport->nr_bi++;
-+
-+	return 0;
-+}
-+
-+static int cxl_bi_ctrl_dport_enable(struct cxl_dport *dport, bool direct)
-+{
-+	return __cxl_bi_ctrl_dport(dport, true, direct);
-+}
-+
-+static int cxl_bi_ctrl_dport_disable(struct cxl_dport *dport)
-+{
-+	return __cxl_bi_ctrl_dport(dport, false, false);
-+}
-+
-+static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
-+{
-+	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
-+	void __iomem *bi = endpoint->regs.bi_decoder;
-+	u32 ctrl, val;
-+
-+	if (!bi)
-+		return -EINVAL;
-+
-+	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-+
-+	if (enable) {
-+		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
-+			if (cxlds->bi)
-+				return 0;
-+			dev_err(cxlds->dev,
-+				"BI already enabled in hardware\n");
-+			return -EBUSY;
-+		}
-+		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
-+	} else {
-+		if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
-+			if (!cxlds->bi)
-+				return 0;
-+			dev_err(cxlds->dev,
-+				"BI already disabled in hardware\n");
-+			return -EBUSY;
-+		}
-+		val = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-+	}
-+
-+	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
-+	cxlds->bi = enable;
-+
-+	dev_dbg(cxlds->dev, "BI requests %s\n",
-+		str_enabled_disabled(enable));
-+
-+	return 0;
-+}
-+
-+static int cxl_bi_ctrl_endpoint_enable(struct cxl_dev_state *cxlds)
-+{
-+	return __cxl_bi_ctrl_endpoint(cxlds, true);
-+}
-+
-+static int cxl_bi_ctrl_endpoint_disable(struct cxl_dev_state *cxlds)
-+{
-+	return __cxl_bi_ctrl_endpoint(cxlds, false);
-+}
-+
-+/*
-+ * devm teardown on endpoint port destruction. Registered before the
-+ * decoders, so devres runs it after them: regions are detached and
-+ * decoders unregistered by the time BI comes down.
-+ */
-+static void cxl_bi_dealloc(void *data)
-+{
-+	struct cxl_port *endpoint = data;
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_dport *dport_iter;
-+	struct cxl_port *port_iter;
-+
-+	scoped_guard(rwsem_read, &cxl_rwsem.region)
-+		cxl_bi_ctrl_endpoint_disable(cxlds);
-+	cxlds->bi = false;
-+
-+	/*
-+	 * Walk the same parent_dport chain that enabled the path. A bus
-+	 * lookup cannot stand in for it: an ancestor-driven teardown
-+	 * delists the parent port before this devres action runs.
-+	 */
-+	dport_iter = endpoint->parent_dport;
-+	port_iter = dport_iter->port;
-+	while (!is_cxl_root(port_iter)) {
-+		int rc = cxl_bi_ctrl_dport_disable(dport_iter);
-+
-+		/* best effort */
-+		if (rc)
-+			dev_dbg(&port_iter->dev,
-+				"BI dport disable failed: %d\n", rc);
-+
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+}
-+
-+/*
-+ * Enable BI on every dport in the path, then on the device itself.
-+ * On failure, unwind only the dports that fully enabled.
-+ */
-+static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
-+			      struct cxl_port *port, struct cxl_dport *dport)
-+{
-+	struct cxl_dport *dport_iter, *failed;
-+	struct cxl_port *port_iter;
-+	int rc;
-+
-+	port_iter = port;
-+	dport_iter = dport;
-+	while (!is_cxl_root(port_iter)) {
-+		rc = cxl_bi_ctrl_dport_enable(dport_iter, dport_iter == dport);
-+		if (rc)
-+			goto err_rollback;
-+
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+
-+	/* finally, enable BI on the device */
-+	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
-+	if (rc)
-+		goto err_rollback;
-+
-+	return 0;
-+
-+err_rollback:
-+	failed = dport_iter;
-+	dport_iter = dport;
-+	port_iter = port;
-+	while (!is_cxl_root(port_iter) && dport_iter != failed) {
-+		cxl_bi_ctrl_dport_disable(dport_iter);
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+	return rc;
-+}
-+
-+/*
-+ * An SBR wipes the device's BI Enable; an FLR leaves it alone.
-+ * The check is against the hardware, not decoder state: BI is
-+ * enabled at probe, so it can be wiped with no decoder ever
-+ * committed. A wipe invalidates the software state; BI is never
-+ * re-enabled here.
-+ */
-+void cxl_bi_reset_detected(struct cxl_port *endpoint)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	void __iomem *bi = endpoint->regs.bi_decoder;
-+
-+	if (!cxlds->bi)
-+		return;
-+
-+	if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE,
-+		      readl(bi + CXL_BI_DECODER_CTRL_OFFSET)))
-+		return;
-+
-+	dev_dbg(cxlds->dev, "BI disabled by reset\n");
-+	cxlds->bi = false;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_bi_reset_detected, "CXL");
-+
-+int cxl_bi_setup(struct cxl_port *endpoint)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_dport *dport = endpoint->parent_dport;
-+	struct cxl_dport *dport_iter;
-+	struct cxl_port *port_iter;
-+	int rc;
-+
-+	if (!dev_is_pci(cxlds->dev))
-+		return 0;
-+
-+	/* BI is VH-only */
-+	if (cxlds->rcd)
-+		return 0;
-+
-+	if (!cxl_is_bi_capable(to_pci_dev(cxlds->dev),
-+			       endpoint->regs.bi_decoder))
-+		return 0;
-+
-+	/* walkup the topology twice, first to check, then to enable */
-+	port_iter = dport->port;
-+	dport_iter = dport;
-+	while (!is_cxl_root(port_iter)) {
-+		/* check rp, dsp */
-+		if (!cxl_is_bi_capable(to_pci_dev(dport_iter->dport_dev),
-+				       dport_iter->regs.bi_decoder)) {
-+			dev_dbg(cxlds->dev, "BI not supported by topology\n");
-+			return 0;
-+		}
-+
-+		/* check usp */
-+		if (dev_is_pci(port_iter->uport_dev) &&
-+		    pci_pcie_type(to_pci_dev(port_iter->uport_dev)) ==
-+			    PCI_EXP_TYPE_UPSTREAM) {
-+			if (!cxl_is_bi_capable(to_pci_dev(port_iter->uport_dev),
-+					       port_iter->regs.bi_rt)) {
-+				dev_dbg(cxlds->dev,
-+					"BI not supported by USP\n");
-+				return 0;
-+			}
-+			if (port_iter->reg_map.component_map.bi_rt.valid &&
-+			    !port_iter->regs.bi_rt) {
-+				dev_dbg(cxlds->dev,
-+					"BI RT advertised but unmapped\n");
-+				return 0;
-+			}
-+		}
-+
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+
-+	rc = cxl_bi_enable_path(cxlds, dport->port, dport);
-+	if (rc)
-+		return rc;
-+
-+	return devm_add_action_or_reset(&endpoint->dev, cxl_bi_dealloc,
-+					endpoint);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 131ed62e8db3..b81fd680d18a 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -742,6 +742,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
- 	xa_init(&port->dports);
- 	xa_init(&port->endpoints);
- 	xa_init(&port->regions);
-+	mutex_init(&port->bi_lock);
- 	port->component_reg_phys = CXL_RESOURCE_NONE;
- 
- 	device_initialize(dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 65be3b91259a..ad7c991f0f9b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -180,6 +180,31 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- #define CXL_HEADERLOG_TRACE_SIZE SZ_512
- #define CXL_HEADERLOG_TRACE_SIZE_U32 (CXL_HEADERLOG_TRACE_SIZE / sizeof(u32))
- 
-+/* CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure */
-+#define CXL_BI_RT_CAPS_OFFSET 0x0
-+#define   CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ BIT(0)
-+#define CXL_BI_RT_CTRL_OFFSET 0x4
-+#define   CXL_BI_RT_CTRL_BI_COMMIT BIT(0)
-+#define CXL_BI_RT_STATUS_OFFSET 0x8
-+#define   CXL_BI_RT_STATUS_BI_COMMITTED BIT(0)
-+#define   CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
-+#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
-+#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
-+
-+/* CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure */
-+#define CXL_BI_DECODER_CAPS_OFFSET 0x0
-+#define   CXL_BI_DECODER_CAPS_HDMD_CAP BIT(0)
-+#define   CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ BIT(1)
-+#define CXL_BI_DECODER_CTRL_OFFSET 0x4
-+#define   CXL_BI_DECODER_CTRL_BI_FW BIT(0)
-+#define   CXL_BI_DECODER_CTRL_BI_ENABLE BIT(1)
-+#define   CXL_BI_DECODER_CTRL_BI_COMMIT BIT(2)
-+#define CXL_BI_DECODER_STATUS_OFFSET 0x8
-+#define   CXL_BI_DECODER_STATUS_BI_COMMITTED BIT(0)
-+#define   CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
-+#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
-+#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
-+
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
- #define CXLDEV_CAP_ARRAY_OFFSET 0x0
- #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-@@ -565,6 +590,7 @@ struct cxl_dax_region {
-  * @decoder_ida: allocator for decoder ids
-  * @reg_map: component and ras register mapping parameters
-  * @regs: mapped component registers
-+ * @bi_lock: serializes BI Decoder/RT state of this port's dports
-  * @nr_dports: number of entries in @dports
-  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
-  * @commit_end: cursor to track highest committed decoder for commit ordering
-@@ -587,6 +613,7 @@ struct cxl_port {
- 	struct ida decoder_ida;
- 	struct cxl_register_map reg_map;
- 	struct cxl_component_regs regs;
-+	struct mutex bi_lock; /* dport BI state shared below this port */
- 	int nr_dports;
- 	int hdm_end;
- 	int commit_end;
-@@ -650,6 +677,7 @@ struct cxl_rcrb_info {
-  * @coord: access coordinates (bandwidth and latency performance attributes)
-  * @link_latency: calculated PCIe downstream latency
-  * @gpf_dvsec: Cached GPF port DVSEC
-+ * @nr_bi: number of BI-enabled endpoints below this dport
-  */
- struct cxl_dport {
- 	struct device *dport_dev;
-@@ -662,6 +690,7 @@ struct cxl_dport {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	long link_latency;
- 	int gpf_dvsec;
-+	int nr_bi;
- };
- 
- /**
-@@ -920,6 +949,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 			     struct access_coordinate *c2);
- 
- bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+int cxl_bi_setup(struct cxl_port *endpoint);
-+void cxl_bi_reset_detected(struct cxl_port *endpoint);
- struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
- 					    struct device *dport_dev);
- 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c7c91e8dc51d..cdab4804dba7 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -987,8 +987,12 @@ static void cxl_reset_done(struct pci_dev *pdev)
- 	if (!cxlmd->dev.driver)
- 		return;
- 
--	if (cxlmd->endpoint &&
--	    cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
-+	if (!cxlmd->endpoint)
-+		return;
-+
-+	cxl_bi_reset_detected(cxlmd->endpoint);
-+
-+	if (cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
- 		device_for_each_child(&cxlmd->endpoint->dev, NULL,
- 				      cxl_endpoint_decoder_clear_reset_flags);
- 
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 278b84b08c83..718eb4353887 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -168,6 +168,7 @@ struct cxl_dpa_partition {
-  * @regs: Parsed register blocks
-  * @cxl_dvsec: Offset to the PCIe device DVSEC
-  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-+ * @bi: device is BI (Back-Invalidate) enabled
-  * @media_ready: Indicate whether the device media is usable
-  * @dpa_res: Overall DPA resource tree for the device
-  * @part: DPA partition array
-@@ -187,6 +188,7 @@ struct cxl_dev_state {
- 	struct cxl_device_regs regs;
- 	int cxl_dvsec;
- 	bool rcd;
-+	bool bi;
- 	bool media_ready;
- 	struct resource dpa_res;
- 	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
 -- 
-2.39.5
-
+Oscar Salvador
+SUSE Labs
