@@ -1,190 +1,149 @@
-Received: from frog.ash.relay.mailchannels.net (frog.ash.relay.mailchannels.net [23.83.222.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC485632A9
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 18:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2643ACF0B;
+	Wed,  9 Sep 2026 19:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788979661; cv=none; b=GppvdRzLhYnASvzpkg0yDxCMy0b3JqXvudiBMZYLrzfaHeNP91tRWFpJJx+zzpMPFawsswmzwaL+MJ21wt7dpXgBTggKc6ZWGY2EsVKCOcosnJWfGFWQ9nZhh6W6R+hu1CoJTNZd+AUFdZsMQtFu16E3/tgj7tC5AfBbzI7+QsU=
+	t=1788981095; cv=none; b=RXudwOKK8Huvm4xviTvv92blQOvV49ti4HbK36GJ8yojF2yuqhSH/Wv8fpkhsJtZs9v4V2sb0FLbqRCKGARn6yTE67+Sq0pDXYRNPdkTw1c1HE8GAC/hG1FqCnuxNnHJnPNrcmgMDwGsE7WsuC1iwdFcYlHFDq4wF/fVsWMmPQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788979661; c=relaxed/simple;
-	bh=zMg76Jq2teOkGQU87CNwWrkBYsmFbOBY8TOCg4IPYLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXtQRKEPxRX5zoaEDVRXOaBxr+lOJbA0fWHO6W1xpF0MCDIfISFY4AQG21Jc21ykchJ9+7Lu0Jf+Nu1SMapx3XO6ZfvG0wzUukVtcMynXMItmkxd4J2zGklmxIF5kAGcq82uIByt1UaYuKTsVmTBm1rn4CBRgd2UX/EH0ebBXLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=RLIQ43zF; arc=none smtp.client-ip=23.83.222.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1788981095; c=relaxed/simple;
+	bh=ibMGoZNFVcERL68F6QE3UT1XnEua4MeDZrrFkasR/M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n7+lczvpphPf21GdyozBaNwyymI9XmJMFuBdElJZp6OXLu2a17b8OfIXmyAFX8wBBl3Lj0/IsceTw2mevyrp5ZsgxZX1Fl1uZd4uw0a+UYs1NItEg8Mu07BWGiJ5+f7mVo/FxGz5bVGF0hvcP898cB8nIiy1ffnD5qFoBK4SjH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+hkhVly; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="RLIQ43zF"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 28831462C3E;
-	Wed, 09 Sep 2026 18:47:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a261.dreamhost.com (100-96-173-63.trex-nlb.outbound.svc.cluster.local [100.96.173.63])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E5C87462D42;
-	Wed, 09 Sep 2026 18:47:31 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Harbor-Wide-Eyed: 6a610e96144d8e99_1788979652033_873849719
-X-MC-Loop-Signature: 1788979652033:3526234840
-X-MC-Ingress-Time: 1788979652032
-Received: from pdx1-sub0-mail-a261.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.173.63 (trex/8.0.2);
-	Wed, 09 Sep 2026 18:47:32 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a261.dreamhost.com (Postfix) with ESMTPSA id 4hg8tq1kq2z103q;
-	Wed,  9 Sep 2026 11:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1788979651;
-	bh=+/ZXZ2otNHYvqQgbIUv5YqEJ+829Y5kmVZrPpHYi9Hk=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=RLIQ43zFRvKzmZelqvkZ05kDhyWOD6qPbcLmybchVZawAGVAI4Qe2aHv+/yC8z6S3
-	 LltcWOaP+33tZFisu8l/e1eb0pa+mRJWI7zRR8wcbhvzqnmpUND29j8Zunmu6XKVOc
-	 iiyJVYZGswdPn74y1UCtIyI5bzrCNOnBR83IVeC5OPiQPrSmT07fJRntlb2H6uy35z
-	 wZhcaE78p9f9ZEm2v0dQknd5B5aUidXXk5jakGaPL+7FZ8/GssAP+t7Kof4FlzNhLk
-	 AT2XuAjdrkVi1aQRD4AKaxVZnseyisRgxvgIlRtvBPj+6fQpbBEpvYcwVD4SwOROzS
-	 +MdLXOotIzsBw==
-Date: Wed, 9 Sep 2026 11:47:28 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
-	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v8 0/10] cxl: Support Back-Invalidate
-Message-ID: <20260909184728.mznbg6ox6nqnvv5p@offworld>
-References: <20260909170302.1550680-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+hkhVly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B731F000FF;
+	Wed,  9 Sep 2026 19:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788981092;
+	bh=YrVzVZFAj9c+kcR8ihQIElO4jyvfEdwPLoLRmPTnBUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=O+hkhVlyjoV8DOkR2ZAwgJx0L7Peef5U/bwWbqjnDRVO3wbBKQeLxgeOU5BzdUgFq
+	 j6zHQkqUxn+v1Ra4FTCz7REcg9+HxGqWj/9o2kT8+PiKl4mp6HmpS1bKDcm3yKfIK+
+	 EusHsD6RaK0zQeRvq2cEsBYXd8tfF/GbcZQSlA7RqVT9TA3tY9q5ZdHlH5CQ54FArD
+	 lC+upPE1mdfV0mzcs4UzBI/ixJjc0Uu2DggmKuaqdOAPZg/tgh4LFufwh6e5Dm51nT
+	 BrZeqa8HRREen3UBlGVg/mVprCS17n3ffqoxiTe0Mk2H3RX1/EpqsMPuMIe1nlnq9o
+	 f2R3CPYXwSvOA==
+Date: Wed, 9 Sep 2026 20:11:26 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Li Ming <ming.li@zohomail.com>
+Cc: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dan
+ Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/events: Return IRQ_NONE when no event is pending
+Message-ID: <20260909201126.091cc7f0@jic23-hlaptop>
+In-Reply-To: <fc844c0b-e429-4c0d-9113-35a1635c03a3@zohomail.com>
+References: <20260906155705.13252-1-shaikhkamal2012@gmail.com>
+	<20260907194824.615e47ff@jic23-huawei>
+	<fc844c0b-e429-4c0d-9113-35a1635c03a3@zohomail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260909170302.1550680-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 09 Sep 2026, Davidlohr Bueso wrote:
+On Wed, 9 Sep 2026 10:08:14 +0800
+Li Ming <ming.li@zohomail.com> wrote:
 
->An auto-committed BI decoder found during enumeration is adopted when
->the device and its path are BI capable, and only broken combinations
->are refused (patches 7-8). See the auto-discovery tests section below.
+> =E5=9C=A8 2026/9/8 02:48, Jonathan Cameron =E5=86=99=E9=81=93:
+> > On Sun,  6 Sep 2026 21:27:05 +0530
+> > Shaikh Kamaluddin <shaikhkamal2012@gmail.com> wrote:
+> > =20
+> >> CXL event interrupts may share an MSI/MSI-X vector with other event
+> >> logs or device features. Consequently, cxl_event_thread() is registered
+> >> with IRQF_SHARED and must determine whether an interrupt belongs to the
+> >> event-log facility.
+> >>
+> >> The handler masks the Device Event Status register to the event logs
+> >> supported by the driver. However, when no supported status bit is set,
+> >> it exits the processing loop and still returns IRQ_HANDLED.
+> >>
+> >> Track whether at least one supported event status bit was observed.
+> >> Return IRQ_NONE when there was no event to service, while continuing to
+> >> return IRQ_HANDLED after processing one or more event logs. =20
+> > What is the practical result of this change?
+> > I think it will only affect the spurious interrupt detection so
+> > to me it looks like a cleanup rather than a fix.  Is there
+> > any path by which we actually lose interrupts as a result of this?
+> > =20
+> >> Fixes: a49aa8141b65 ("cxl/mem: Wire up event interrupts")
+> >> =20
+> > No blank lines in tag blocks.  There are a number of tools that rely
+> > on there not being any and as such there are also scripts that run
+> > on various upstream trees that will send us annoying emails if this
+> > blank line is still here!  I'm not sure why this mistake in patch
+> > formatting is so common as there are plenty of docs without the
+> > blank lines!
+> > =20
+> >> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com> =20
+> > A suggestion for an alternative implementation below.
+> > =20
+> >> ---
+> >>   drivers/cxl/pci.c | 5 ++++-
+> >>   1 file changed, 4 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> >> index c7c91e8dc51d..8b560cae91f2 100644
+> >> --- a/drivers/cxl/pci.c
+> >> +++ b/drivers/cxl/pci.c
+> >> @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void =
+*id)
+> >>   	struct cxl_dev_id *dev_id =3D id;
+> >>   	struct cxl_dev_state *cxlds =3D dev_id->cxlds;
+> >>   	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
+> >> +	bool handled =3D false;
+> >>   	u32 status;
+> >>  =20
+> >>   	do {
+> >> @@ -527,11 +528,13 @@ static irqreturn_t cxl_event_thread(int irq, voi=
+d *id)
+> >>   		status &=3D CXLDEV_EVENT_STATUS_ALL;
+> >>   		if (!status) =20
+> > 			return IRQ_NONE;
+> >
+> > And don't need the other changes. =20
+>=20
+> Hi Jonathan,
+>=20
+>=20
+> I think we should not return IRQ_NONE here, because the loop could run=20
+> multiple times untill no event record, so we always get a status with=20
+> 0x0 value in the last loop. In that case, we still need to return=20
+> IRQ_HANDLED.
 
-And for anyone curious, this is being tested in qemu with the below.
+Ah excellent point.  Ignore me.  Any dance to return here needs
+a handled variable to be checked so ends up just being moving the
+return.  Maybe that's worth doing but not important.
 
--------8<--------------------------
-[PATCH] cxl/region: Assemble committed regions through passthrough decoders
+Jonathan
 
-Auto-assembly of committed decoders (BIOS-committed state, or a
-kexec inheriting the previous kernel's regions) fails whenever the
-path crosses a port with a passthrough decoder. Such ports publish
-no HDM decoder capability (single dport host-bridges per 8.2.5.12),
-so their decoder's range, interleave settings and target list only
-ever existed as software state in the kernel that created the
-region; nothing survives to re-enumerate, and every auto-assembly
-step that validates committed state rejects the hop:
-
-   pcieport 0000:0d:00.0: failed to find decoder mapping 0x190000000-0x19fffffff
-   cxl region0: region sort failed
-   cxl_port endpoint3: failed to attach decoder3.0 to region0: -6
-
-A passthrough hop is decode-transparent, so treat it in the auto
-flows the way the manual flow already does - program the software
-state rather than validate it:
-
-  - find_pos_and_ways(): position through a passthrough hop is
-    unambiguously pos 0 of 1 ways.
-  - match_auto_decoder(): the passthrough decoder is a valid pick
-    despite carrying no committed range.
-  - cxl_port_setup_targets(): fall through to programming the decoder
-    (iw/ig/hpa_range, and the target entry) instead of comparing
-    against state that cannot exist.
-
-Not-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-  drivers/cxl/core/region.c | 32 ++++++++++++++++++++++++++++++--
-  1 file changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a9dcaff47a72..da83700f81ca 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -946,6 +946,18 @@ static bool spa_maps_hpa(const struct cxl_region_params *p,
-  		p->res->end == range->end;
-  }
-  
-+/*
-+ * No HDM decoder capability published (single dport host-bridges per
-+ * 8.2.5.12): decode is passthrough via the sole dport and the port's
-+ * decoder carries no hardware state to re-enumerate or validate.
-+ */
-+static bool is_passthrough_port(struct cxl_port *port)
-+{
-+	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-+
-+	return port->nr_dports == 1 && cxlhdm && !cxlhdm->regs.hdm_decoder;
-+}
-+
-  static int match_auto_decoder(struct device *dev, const void *data)
-  {
-  	const struct cxl_region_params *p = data;
-@@ -961,6 +973,10 @@ static int match_auto_decoder(struct device *dev, const void *data)
-  	if (spa_maps_hpa(p, r))
-  		return 1;
-  
-+	/* a passthrough decoder has no committed range to match */
-+	if (is_passthrough_port(to_cxl_port(dev->parent)))
-+		return 1;
-+
-  	return 0;
-  }
-  
-@@ -1583,7 +1599,8 @@ static int cxl_port_setup_targets(struct cxl_port *port,
-  		return -ENXIO;
-  	}
-  
--	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
-+	    !is_passthrough_port(port)) {
-  		if (cxld->interleave_ways != iw ||
-  		    (iw > 1 && cxld->interleave_granularity != ig) ||
-  		    !spa_maps_hpa(p, &cxld->hpa_range) ||
-@@ -1628,7 +1645,8 @@ static int cxl_port_setup_targets(struct cxl_port *port,
-  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
-  		return -ENXIO;
-  	}
--	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
-+	    !is_passthrough_port(port)) {
-  		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
-  			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
-  				dev_name(port->uport_dev), dev_name(&port->dev),
-@@ -1956,6 +1974,16 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
-  	struct device *dev __free(put_device) =
-  		device_find_child(&parent->dev, range, match_switch_decoder_by_range);
-  	if (!dev) {
-+		/*
-+		 * A passthrough hop is decode-transparent: its decoder
-+		 * carries no committed range to re-enumerate, but the
-+		 * position through it is unambiguous.
-+		 */
-+		if (is_passthrough_port(parent)) {
-+			*pos = 0;
-+			*ways = 1;
-+			return 0;
-+		}
-  		dev_err(port->uport_dev,
-  			"failed to find decoder mapping %#llx-%#llx\n",
-  			range->start, range->end);
--- 
-2.39.5
+>=20
+>=20
+> Ming
+>=20
+> > =20
+> >>   			break;
+> >> +
+> >> +		handled =3D true;
+> >>   		cxl_mem_get_event_records(mds, status);
+> >>   		cond_resched();
+> >>   	} while (status);
+> >>  =20
+> >> -	return IRQ_HANDLED;
+> >> +	return handled ? IRQ_HANDLED : IRQ_NONE;
+> >>   }
+> >>  =20
+> >>   static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
+> >>
+> >> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+> >> prerequisite-patch-id: 92e40cd60a697020faac475dcc77ba63b33434ea
+> >> prerequisite-patch-id: 10027ad5d9aed85806047f807b3a76273b6c4a77 =20
 
