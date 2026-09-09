@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72FD534454;
-	Wed,  9 Sep 2026 13:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6C15427E6;
+	Wed,  9 Sep 2026 13:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788960872; cv=none; b=su6VH0Qi/8OcxIsiXawK6rQD1wMX4PFlR86LNYJavrg+OOP2oirZv/l1bm46pKb78qsrm4+/PDPv+4q2o3Uy3qq7p/TnUHACn9vFPCFU7FcDOFOboegweYJZHUnG2MlQOMGBGfIsFvJoSmfj+rliPR+Ct6JG2bHf+ywjQ0YcQ3s=
+	t=1788960881; cv=none; b=fTpnC1T1glnMcmEGQq+8WrfQ0iI3DvlQXdotP/iH2m/FmTVzLO3hKiPf78azSgbR2OfPq8t1bdq1NO9cZUe02E6+CiX8u/NEJagxRTFQIa2OYqXvNbeq7Z33cHBKXhCHdIlGN6CVl6fgJOPnn3KotWviOLwY37D7KPuE7nrejj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788960872; c=relaxed/simple;
-	bh=22aLutJEtYm1F1P07TqVwcTSIGuZ5EPTXkGcwZd1Z9w=;
+	s=arc-20240116; t=1788960881; c=relaxed/simple;
+	bh=Z7WiH4a0eM1yPjwlViyGW7AlVy9OebQyIjLQp6z8KDo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RC/AMl1CDZpYtjze0T+yI/I4a0dtH8/tU5+mwLNt8lQ6z/7gnPrlt6VskhUfnEapww9GqPDdLLJD05YjWePprDaxvJGHTkIVRYklWihpLl3Cw2QbQ6UxpEgjF/ZSUQf2vJcqfSfx7mhSQ+zh11CimJqgGwQdQxc+YD0mgQ3JVTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZelQ852V; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=Fr9Gkw6KOjDeWY/sItHx0HDIoLfOLOGRltbJQNpq++PM/RW2TJrzMSpEEJ0obBVV097lyXTPzc89UHdZw3Ty/gS/TTeVzxTbMRAp3Dfhawvxe3hIYudx1OzApamm7jfSHH4yN3UeX+imoveBc2ScKlqrGxS7LTyJs4RlvSlfLj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/t+Mmy8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZelQ852V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB38E1F00A3E;
-	Wed,  9 Sep 2026 13:34:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/t+Mmy8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195531F00A3F;
+	Wed,  9 Sep 2026 13:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788960870;
-	bh=EfFkM8TVdbGE2NG2Pg9PpUCdJifdmydrKyHEc/A5FNg=;
+	s=k20260515; t=1788960879;
+	bh=2s0CTmVngAhgAN93TX2cVOhQyycESM96yPxbLZkJZRo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ZelQ852VoOuFMeQYlpa1x3hPLSEBcmbHr/anV1cxsUAXZbU4Q5UyYHEPxH4ih1+0P
-	 izH9qgUZlMVymte2q3uRmLw9/JQiFCsNpX7U/MlzLkYBWu9shEbx5HPSH+KmfDlrTd
-	 arhjR1E7ccoi14BBCfMhxmd2F85EApCvid29inQNclly453UllgucI5jYUcge9USbI
-	 6dMDsN01ZpUKXTL3XtyFl6qdXKtzDo11qWD9yjrkuWpfLZPXCCD8pAZAMlzeqNbrph
-	 uGe4wsD1cPESHaN+3KOwYl45kJESPBhLIlf7dOzS4dMad9l5EP9icvfoPSmt+uLbOP
-	 Nf1AMeDO01jZA==
+	b=D/t+Mmy8CiNwGSg0cWFN3moAPhAPZ9DE8Ga8Htq8mAEHixxrpYy6ZOeKpVtXYEOax
+	 e9wfbI97DnTzPswN6LtpD2OvZ8VxEny1EOowANRDN5AMSj6mC3N41CTGuuBv1DZXJ1
+	 JVZc0UTkSwh+tW379Q+rDff8oeohBos5A2I1nVxy6ij+mKswZVHoCx781LFZXjgL+a
+	 UHxG3MCcZ2Z8UFWRl1xiTSiX+Vp085FS0BihF48mdBS97GEHOBaXk/u/QF3yylZRw9
+	 g3gzJF+e65Q4kTli/43aExcpWz+ZFC8ug6DvycHV4ScHn8b1Rw2a585t676cE3EEFA
+	 VfnKlPO7nTJtw==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Wed, 09 Sep 2026 15:32:57 +0200
-Subject: [PATCH 04/12] mm/sparse: rename and cleanup sparse_init_nid()
+Date: Wed, 09 Sep 2026 15:32:58 +0200
+Subject: [PATCH 05/12] mm/sparse: cleanup sparse_init_one_section()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260909-b4-sparsemem_cleanups-v1-4-008fc8d579fe@kernel.org>
+Message-Id: <20260909-b4-sparsemem_cleanups-v1-5-008fc8d579fe@kernel.org>
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
 In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -59,99 +59,44 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
  linux-fsdevel@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3010; i=david@kernel.org;
- h=from:subject:message-id; bh=22aLutJEtYm1F1P07TqVwcTSIGuZ5EPTXkGcwZd1Z9w=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIWJug/EP2qvX5Rr/5ab7Y3etta32/kz7uebGjWHKIga
- 7G7ofx3RykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABPh2cTIsPXCsU3TilYZ6avM
- f60osnipg1zpgRX+Pk9+n9hy7YrV04sM/12tUwMX/JfRUjlQwL7L68iE28+eWOyt/MxZH1qbwGz
- jww8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1155; i=david@kernel.org;
+ h=from:subject:message-id; bh=Z7WiH4a0eM1yPjwlViyGW7AlVy9OebQyIjLQp6z8KDo=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIWJhjsOtzKtPNH/67rxXoq8S2fL/FvXG3l3rXhBKN6m
+ Ldyy9RzHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAExESYfhr3h+9fyk4vchfZeC
+ L+cHLDA1V7zKqjU799hSl9Cy00FOygz/43kCvjQdN7VIkCjau+5EcV2Nec/396s3NsR6u9t+bjL
+ jAwA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
-Let's rename it to "sparse_metadata_init_nid", avoid the "pnum" terminology
-and drop the function comment. Further, rename the "map" variable to
-"mem_map" for consistency with other functions.
+Let's avoid the "pnum" terminology.
 
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/sparse.c | 41 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
+ mm/sparse.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index a85a9c3840f6c..f84bfceb53060 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -222,37 +222,34 @@ void __weak __meminit vmemmap_populate_print_last(void)
+diff --git a/mm/sparse.h b/mm/sparse.h
+index 049272aba84e5..744ae29002f5e 100644
+--- a/mm/sparse.h
++++ b/mm/sparse.h
+@@ -90,7 +90,7 @@ void sparse_sections_init(void);
+ int sparse_index_init(unsigned long section_nr, int nid);
+ 
+ static inline void sparse_init_one_section(struct mem_section *ms,
+-		unsigned long pnum, struct page *mem_map,
++		unsigned long section_nr, struct page *mem_map,
+ 		struct mem_section_usage *usage, unsigned long flags)
  {
- }
+ 	unsigned long coded_mem_map;
+@@ -102,7 +102,7 @@ static inline void sparse_init_one_section(struct mem_section *ms,
+ 	 * page_to_pfn() on !CONFIG_SPARSEMEM_VMEMMAP can simply subtract it
+ 	 * from the page pointer to obtain the PFN.
+ 	 */
+-	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(pnum));
++	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(section_nr));
+ 	VM_WARN_ON_ONCE(coded_mem_map & ~SECTION_MAP_MASK);
  
--/*
-- * Initialize sparse on a specific node. The node spans [pnum_begin, pnum_end)
-- * And number of present sections in this node is map_count.
-- */
--static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
--				   unsigned long pnum_end,
--				   unsigned long map_count)
-+static void __init sparse_metadata_init_nid(int nid,
-+		unsigned long start_section_nr, unsigned long end_section_nr,
-+		unsigned long nr_sections)
- {
--	unsigned long pnum;
- 	struct mem_section_usage *usage;
-+	unsigned long section_nr;
- 
--	usage = memblock_alloc_node(map_count * mem_section_usage_size(),
-+	usage = memblock_alloc_node(nr_sections * mem_section_usage_size(),
- 				    SMP_CACHE_BYTES, nid);
- 	if (!usage)
- 		panic("Failed to allocate usemap for node %d\n", nid);
- 
--	for_each_present_section_nr(pnum_begin, pnum) {
--		unsigned long pfn = section_nr_to_pfn(pnum);
--		struct page *map;
-+	for_each_present_section_nr(start_section_nr, section_nr) {
-+		unsigned long pfn = section_nr_to_pfn(section_nr);
-+		struct page *mem_map;
- 
--		if (pnum >= pnum_end)
-+		if (section_nr >= end_section_nr)
- 			break;
- 
--		map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
--						nid, NULL, NULL);
--		if (!map)
--			panic("Failed to allocate memmap for section %lu\n", pnum);
-+		mem_map = __populate_section_memmap(pfn, PAGES_PER_SECTION, nid,
-+						    NULL, NULL);
-+		if (!mem_map)
-+			panic("Failed to allocate memmap for section %lu\n",
-+			      section_nr);
- 		memmap_boot_pages_add(section_nr_vmemmap_pages(pfn, PAGES_PER_SECTION,
- 							       NULL, NULL));
--		sparse_init_one_section(__nr_to_section(pnum), pnum, map, usage,
--					SECTION_IS_EARLY);
-+		sparse_init_one_section(__nr_to_section(section_nr), section_nr,
-+					mem_map, usage, SECTION_IS_EARLY);
- 		usage = (void *)usage + mem_section_usage_size();
- 	}
- }
-@@ -270,12 +267,14 @@ static void __init sparse_metadata_init(void)
- 			nr_sections++;
- 			continue;
- 		}
--		sparse_init_nid(nid_begin, start_section_nr, section_nr, nr_sections);
-+		sparse_metadata_init_nid(nid_begin, start_section_nr,
-+					 section_nr, nr_sections);
- 		nid_begin = nid;
- 		start_section_nr = section_nr;
- 		nr_sections = 1;
- 	}
--	sparse_init_nid(nid_begin, start_section_nr, section_nr, nr_sections);
-+	sparse_metadata_init_nid(nid_begin, start_section_nr, section_nr,
-+				 nr_sections);
- }
- 
- /*
+ 	ms->section_mem_map &= ~SECTION_MAP_MASK;
 
 -- 
 2.43.0
