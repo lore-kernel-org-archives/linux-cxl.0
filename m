@@ -1,137 +1,132 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF7147C11B;
-	Wed,  9 Sep 2026 09:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465423D0C07
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 09:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788945193; cv=none; b=sXNzF90jcK8wtyNL3quH3o4JmgFFZveUvMoq36v9cl0suXsDIQy0bYdv3S50FJuOL3W8ZkLp1KEU01KarYgvemVdrJAvJEwqSeDDqw7e+8wzdg3bt61rHqXKbio2yEup2hEi4HwWQtA5xo1l25ZgFKDAcrql6fWMR6xQe5IHc50=
+	t=1788945720; cv=none; b=HTdrAW7jLykpzSzpkgUCSEoqBw9kQzQh9cQS5V19DhoLeCPUWjd4t4HE0/eINLhCBMfaj+itVH8sirpfW4HSaizARHLK/hOSgVwEMRrDgzfa4sHNZT3DNrW839FidxeE0ibViW8lS9MfyGPMYbKbzvM0OHVrC0WexUSG2rkhY04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788945193; c=relaxed/simple;
-	bh=9FW2UTOgqCav1VjSAAUtH3W+CbF5wggrb4OPxT9/SnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUACEWvguOUDgdehPOw3vQV3aOAy+3A/PYuEN6UIoWvwylHAzpU39YdphCsQJTKFeXT3QQOt8V8sH/nvkEbylAUTCMbBw8kUxLRmZhFe2RTRWsOVnbCK0E9T/48H/5N4pJpaEetXIq2Ri1FFnwqsdLq0CWqhJ+V2qpBr26wshrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G14bceSe; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1788945720; c=relaxed/simple;
+	bh=gNUT8TLwO5DgBH0uO3QMIS5xz0NKOg4F8TJJa8dx/kM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SxnFNt0RvkNbGOcQLyzcSAPObeDJtFmO2QvwstLrUcZ/MhdUAjfRHdjEXZCPFASf/Aihn/IGI6i9AdGSwJJyZiducioCV2yLB/qmYmbzLHgQjC+v7vbmFFtPejHrf3O6CGz7FAdRGTh1t1oTmk4TUKt+hE8eVrJtFpQphX1nE/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tpJ65pER; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G14bceSe"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 0CD411A1A7B;
-	Wed,  9 Sep 2026 09:13:09 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id CB06E60448;
-	Wed,  9 Sep 2026 09:13:08 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E49CF11C7AF50;
-	Wed,  9 Sep 2026 11:12:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1788945186; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=9X5Hg2F0uLuCJm6N2AouKct+zmRjRP/xwCe08E1h2Dc=;
-	b=G14bceSeMMscqNQfsMmZnO4qhbNFOzGXWjAY9otn4UPr+p2vnmRbPx8NCgh+97c0a8XvK0
-	Bt7VHMfcxro5bPWJ9cYVZt2xh6bA9yqB8pePmoWCpCsFrZYTE8UQ39XbqHX00R5uUkOgSf
-	T2SHnj47S7r4SfrB5thKh0NYRTIAG3F1dzI6wYA8AEk8aBwHpoj0c9CYEmfUVt6SnH2q1o
-	e+OhQ7Hd+w7YpZvTaqaSqTGQHgEI+us9G7dPUfrhjpsgwNFQZcIYD4bOKN0vfUGzLknDrb
-	O08QK4OgzsL0A74SZ49trK7KZ8CH5uIBvpcFFNdtVDjjbDGbZocRX+uo5wgw4g==
-Date: Wed, 9 Sep 2026 11:12:50 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Richard Cheng <icheng@nvidia.com>, Andrew Lunn <andrew@lunn.ch>, Rob
- Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes
- <david.rhodes@cirrus.com>, Linus Walleij <linusw@kernel.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski
- <brgl@kernel.org>, Len Brown <lenb@kernel.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, Dave Jiang
- <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Herve Codina
- <herve.codina@bootlin.com>, Lizhi Hou <lizhi.hou@amd.com>
-Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- stable+noautosel@kernel.org
-Subject: Re: [PATCH v11 10/10] PCI: of: Avoid np->data usage for the node
- changeset
-Message-ID: <20260909111250.6b36af7e@bootlin.com>
-In-Reply-To: <20260909080114.591938-11-herve.codina@bootlin.com>
-References: <20260909080114.591938-1-herve.codina@bootlin.com>
-	<20260909080114.591938-11-herve.codina@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tpJ65pER"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1788945713; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=5z9gyjJYLD5MOc6TEyKbb4OVWgXZum9SGaVXKpjKU2A=;
+	b=tpJ65pER0xlLtC9qyH+nPriY9KBFW4vkFzkkQhjYng9cOuvbNMPk91oPt2G0k8UtnxUT+7pKr/yil6Fj9qd5NYn7BzVhKA00ruPhSfVsaOu9qLkoJx7NeYhY5TKCIaTAU7k7W3Jekm2ksmUggLZUcC/CbBfa4DPJNsRDMECq0BY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XAePP5E_1788945710;
+Received: from 30.178.68.218(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAePP5E_1788945710 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 09 Sep 2026 17:21:51 +0800
+Message-ID: <60ecd01c-92ef-4d36-b03f-c13e0455f51c@linux.alibaba.com>
+Date: Wed, 9 Sep 2026 17:21:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] cxl/memdev: Fix poison debugfs vs unbind deadlock
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+Cc: linux-cxl@vger.kernel.org, driver-core@lists.linux.dev
+References: <20260831124809.889829-1-kanie@linux.alibaba.com>
+In-Reply-To: <20260831124809.889829-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi All,
+Hi, gently ping on this patchset, Any feedback would be appreciated. thanks.
 
-On Wed,  9 Sep 2026 10:01:09 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+Best Regards,
+Guixin Liu
 
-> of_pci_remove_node() and of_pci_remove_host_bridge_node() check
-> whether the node is dynamic but not whether it has valid private data.
-> 
-> During the node creation, an OF changeset is used and this changeset is
-> stored in np->data to be available for removal functions.
-> 
-> If, for instance, a PCI host bridge is created using a device-tree
-> overlay, the related node will have the dynamic flag set but np->data
-> will be NULL. This leads to NULL pointer dereferences.
-> 
-> Checking for a non-NULL np->data pointer to determine if the node has
-> been created by the PCI node creation process is not enough. Indeed,
-> on some platforms like PowerPC, the OF_RECONFIG_ATTACH_NODE notifier
-> (e.g., in the pci_dn_reconfig_notifier() function) intercepts node
-> additions and populates np->data with its own structure, such as a
-> struct pci_dn. In that case, np->data is not NULL but it is not related
-> to our changeset stored during the PCI node process creation.
-> 
-> Avoid the usage of np->data to store the changeset used during the PCI
-> node creation. Store our changeset in a more relevant structure: either
-> struct pci_dev when the node is created for a PCI device or struct
-> pci_host_bridge when the node is created for the PCI host bridge.
-> 
-> With that done, no ambiguity remains on removal. Indeed, this changeset,
-> if non-NULL, is the one used during PCI node creation. Check and use
-> this changeset on the removal process.
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
-> Cc: <stable+noautosel@kernel.org> # Issue not triggered but could be a problem
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/pci/of.c    | 28 ++++++++++++++--------------
->  include/linux/pci.h | 11 +++++++++++
->  2 files changed, 25 insertions(+), 14 deletions(-)
-> 
+在 2026/8/31 20:48, Guixin Liu 写道:
+> Writing a memdev poison debugfs file while cxl_mem is being unbound
+> deadlocks. Patch 2 fixes it by not waiting for the device lock in those
+> handlers. Patch 1 adds the trylock guard it uses.
+>
+> Patch 2 does not build without patch 1, so the two need to travel
+> together.
+>
+> Testing:
+>
+> Reproduced on a QEMU CXL topology whose type3 devices advertise poison
+> inject support:
+>
+>    while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
+>    while :; do
+>        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
+>        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
+>    done
+>
+> Without the fix the unbind wedges within seconds. The three tasks
+> involved, from /proc/<pid>/stack:
+>
+>    writer, state S, holds the debugfs reference and waits for the lock
+>      cxl_debugfs_poison_inject+0x25/0xa0 [cxl_mem]
+>      debugfs_attr_write+0x61/0xb0
+>      full_proxy_write+0xfc/0x1c0
+>      vfs_write+0x1d4/0xe60
+>
+>    unbind, state D, holds the lock and waits for the reference to drain
+>      remove_one+0x27f/0x3d0
+>      debugfs_remove+0x44/0x60
+>      release_nodes+0xfa/0x2c0
+>      devres_release_all+0x113/0x1a0
+>      device_unbind_cleanup+0x76/0x260
+>      device_release_driver_internal+0x3eb/0x540
+>      unbind_store+0xde/0x100
+>
+>    cxl_port workqueue, state D, blocked on the same lock
+>      device_release_driver_internal+0x96/0x540
+>      detach_memdev+0x79/0xb0 [cxl_core]
+>      process_one_work+0x6b0/0xfb0
+>
+> The writer is in interruptible sleep and can be killed; the unbind
+> cannot, and because cxl_bus_wq is an ordered workqueue the wedged
+> detach_memdev() blocks every other CXL bus work item behind it.
+>
+> With both patches applied, 46 unbind/bind cycles against the same writer
+> loop all completed, no task was left in D state, and the writer collected
+> 10920 EBUSY returns from the contended trylock. Note that lockdep stays
+> quiet either way: one leg of the cycle is the debugfs active_users
+> completion rather than a lock it tracks.
+>
+> v1 -> v2:
+> - add the device_trylock() guard and use ACQUIRE(device_try, ...) instead
+>    of open-coding device_trylock()/device_unlock(), keeping the style the
+>    Fixes: commit established (Shaikh Kamaluddin)
+> - cut the changelog down to the failing condition, the consequence and
+>    the fix; the call graph and the reproducer live here instead
+> - say how the issue was found and how it was tested
+>
+> v1:
+> https://lore.kernel.org/linux-cxl/\
+> 20260826125248.4003792-1-kanie@linux.alibaba.com/
+>
+> Guixin Liu (2):
+>    driver core: Add conditional guard support for device_trylock()
+>    cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
+>
+>   drivers/cxl/mem.c      | 14 ++++++++++----
+>   include/linux/device.h |  1 +
+>   2 files changed, 11 insertions(+), 4 deletions(-)
+>
+>
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
-Shashiko has reported issues [0].
-
-IMO, those issues cannot be triggered but I would like to know the opinion of
-other people and Maintainers.
-
-Of course, I can update the code to more defensive but is it really needed?
-
-Let me know if I need to send a new iteration with the update (check for a
-null np and set cset to NULL after the kfree() call in remove functions).
-
-[0] https://lore.kernel.org/all/20260909110623.2e6bbc89@bootlin.com/
-
-Best regards,
-Hervé
