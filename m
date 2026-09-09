@@ -1,104 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680FA545DAA
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 21:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55B3566C53
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 21:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788990341; cv=none; b=pvq7DNEe34cFaepYxDKru8+6Po0llO/7/Hh/VDI4cyX4CtmSX1L2TM+hmrpwEdtWm44+aRB9p2SWsXdHUt3D268ptAE4murXGYQyBCc16vstlrrIBG2G6eAmHtJjlqRxo3q7mj9eq3NTOBYynYqlZ9cUYpQzqw0MWJAle1C8rFs=
+	t=1788990349; cv=none; b=C8R5pkqj+dAu0qjg4M866NU/5gDBiFpxvBqR74Bs4+F9rrGMem34prLXQ6M7qKy61tqkmYwqHE6v2BzgzclUppoKr3OcBjVLBxU+tsMDGftxaQQc7JPuZbQ8WScAGzOuHrjlLFZoqxhhWSBrruYw201QqqDW8dkZb51ET3L9ebU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788990341; c=relaxed/simple;
-	bh=tU5e0uy4CBnUgfx0QXmd1613Qhs7zhQD23GoNBUA1Gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hysf/QPAAMDjDHNBzjoKe6FZnG3dLN3PZj2svXRMx5UanToZr8ZmeDOAkkalnXpgo3ZOedu0BVNe8kLm5QgwgsfVF1pVaTusOJLm10s7Xo9pbOld243DsQLs1XOZLbk9VENBJb7yrugW8Eskt3OIVApSCpVOFSzfmuYHgjKSAZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oELwyuvn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788990349; c=relaxed/simple;
+	bh=2H3Xg2AxDMC7D/VGJZ4w8FHBR7/qrZ5e96LKCZiSLqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JiC9a4KkbjbRli9I5kpz7Vkx0DkfctW4sRve7RQ3eY4RzUi8jvfnX/HCsFdSiHOpl4BMSeTlvGVXQ8nsLKn+7SvLe1e5Ftx9NHy7ZIJ22L3cpOdqmZ61Ze8l5rBgEKQ5Q7oMB2rvOR61UUE8sxEEBqRx68+OR5nHvbzDuKnSOA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bjJCdMg+; arc=none smtp.client-ip=23.83.218.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oELwyuvn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4776A1F000FF;
-	Wed,  9 Sep 2026 21:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788990336;
-	bh=p3JOqRNjEFRbAJJo0fUx8czrBAxh+zmthYlxriRAMdA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oELwyuvnBIQbd8YmfTDjwq+XBVQWx6OsRGeBLqgFswF7178EZp3QcGVrwa3xlWf5v
-	 Giu0tyNHGSC6rZ+MLzWFTb5u2g3nKvsXw+lzyLOCEd2w0Kd6Sfe8vJdG9jFMKJzKqP
-	 TjC/OyekKd5e7Zz17CkzUNERTQ3Yi1K+kxNESn+agqsPxJ+KFvsjfNJLFxTNZaO/4B
-	 mI0HvlaCu3I1VLT+acXrHnhxNnbh3Tgy6EOOrTqnH1u/aZeIZY8xVp7qVDsE/ebZ+j
-	 m5OkTcRlYTtCCpKqyJSY5NOZwWyqk0k/cO58Wb9h53icC+sEq16lDxGQe1GDBhAcJS
-	 u/r6V6r1AyRMQ==
-Date: Wed, 9 Sep 2026 22:45:31 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bjJCdMg+"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 507BE723072;
+	Wed, 09 Sep 2026 21:45:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a210.dreamhost.com (100-99-183-67.trex-nlb.outbound.svc.cluster.local [100.99.183.67])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 11835723066;
+	Wed, 09 Sep 2026 21:45:41 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Stop-Bored: 4992978855a5065a_1788990341163_1217299894
+X-MC-Loop-Signature: 1788990341163:123952504
+X-MC-Ingress-Time: 1788990341163
+Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.183.67 (trex/8.0.2);
+	Wed, 09 Sep 2026 21:45:41 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4hgDrN30W1zPK;
+	Wed,  9 Sep 2026 14:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1788990340;
+	bh=vLaYww7qARjgFi9XN7iJuSL6hBGDjkDh3ToyImU8gAU=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=bjJCdMg+en3Dn+bx8riWzQxovWFEt6jzmvPbwrj0vEQdqrQVPPNWfXeSEYFLadhKW
+	 RrL0fkinFhtrieUdwtIy3jfHAti8eVRJvlwchuB1G6sibweC8+ro0Grj6VQRWjupeA
+	 xl8lB/Lh7tBEVLlg3JoRD1Cv6gu7fPgH6VWHTaQ4V3CsgVSIGONwZiB1eKs5qNGs06
+	 J7ptjnJw5aHEa5BHflObeMm2mtRPeQ10zneYZXYyKWSMCBdi1Q9B4Kg2xMndQ5E7NW
+	 Yn0p+swP+oV0fQeQqurvCnBfinsTOidtfcQGIhoNan815SiYu+jlxWICctLVdI3ic4
+	 TmxWr2Y1mXrTQ==
+Date: Wed, 9 Sep 2026 14:45:37 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan Cameron <jic23@kernel.org>
 Cc: dave.jiang@intel.com, alison.schofield@intel.com, icheng@nvidia.com,
- ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
- linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v8 08/10] cxl: Allow auto-committed BI hdm decoders
-Message-ID: <20260909224531.2befc256@jic23-hlaptop>
-In-Reply-To: <20260909170302.1550680-9-dave@stgolabs.net>
+	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v8 07/10] cxl/pci: Split BI capability probe from setup
+Message-ID: <20260909214537.7xt6ixzztbes4wkn@offworld>
 References: <20260909170302.1550680-1-dave@stgolabs.net>
-	<20260909170302.1550680-9-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+ <20260909170302.1550680-8-dave@stgolabs.net>
+ <20260909224037.7bd984d5@jic23-hlaptop>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260909224037.7bd984d5@jic23-hlaptop>
+User-Agent: NeoMutt/20220429
 
-On Wed,  9 Sep 2026 10:03:00 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Wed, 09 Sep 2026, Jonathan Cameron wrote:
 
-> Allow auto-committed BI hdm decoders on sane platforms, rejecting
-> only broken paths (ie: one that cannot route BISnp, or BI paired
-> with a host-only target range type).
-> 
-> The respective region creation is done like any other committed
-> decoder - with cxlds->bi set by the time an decoder attaches.
-> 
-> Skipping the commit does not weaken the rule stated in "cxl/pci: Add
-> BI topology enable/disable". Table 8-152 and Table 8-156 key it on a
-> new BI device being enabled anywhere below the port, and a level
-> firmware already brought up for this device is not seeing one.
-> 
-> Whether it did is a property of the path, not of the dport: a level's
-> committed state only proves firmware committed for some device below
-> it, which need not be this one. So adoption starts from the
-> endpoint's own BI Enable - only a device firmware itself enabled can
-> have had its BI-ID accounted for above - and a level is then taken
-> as found when nothing this driver routed sits below it, the control
-> value this driver would write is the one already there, the decoder
-> is committed, and the switch's route table - which carries a commit
-> of its own that firmware may not have performed - is committed too.
-> The first level that falls short ends it: from there up the driver
-> is enabling something new, and programs and commits as for any
-> other device.
-> 
-> A committed decoder is refused when the window's restrictions do not
-> permit its coherency model, on either axis: a BI decoder under a
-> window without the BI restriction, or a host-only or device-coherent
-> decoder under a window exposing only the other model (undefined
-> behavior per the CFMWS Window Restrictions). Assembly so far never
-> consulted the type bits, so a platform that sets them wrongly loses
-> auto-assembly of the affected decoders, with the refusal naming the
-> window.
-> 
-> A committed decoder cannot inherit a region's coherency model the way
-> a decoder this driver programs does, so the type-mismatch refusal
-> that "cxl: Add HDM-DB region creation" removed from
-> cxl_region_attach() in favor of inheritance returns there for
-> committed decoders, on both axes: the committed Target Range Type,
-> kept as the decoder's target_type since enumeration, must match the
-> region's, and the committed BI bit, read back from the decoder since
-> the driver keeps no copy of it, must match the root's. The refusal
-> names both models.
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-I'm less confident about the flows where the firmware did stuff in
-advance in general as never used them in practice, but far as I can
-see this is fine.
+>> +void cxl_bi_reset_detected(struct cxl_port *endpoint)
+>> +{
+>> +	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
+>> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>> +	void __iomem *bi = endpoint->regs.bi_decoder;
+>> +
+>> +	if (!cxlds->bi)
+>> +		return;
+>> +
+>> +	if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE,
+>> +		      readl(bi + CXL_BI_DECODER_CTRL_OFFSET)))
+>> +		return;
+>> +
+>> +	dev_dbg(cxlds->dev, "BI disabled by reset\n");
+>> +	cxlds->bi = false;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_bi_reset_detected, "CXL");
+>
+>Why did this need to move?  Just to have a nicer code arrangement?
+>Maybe not worth it given it makes it look like this changed
+>and it didn't.  I'd leave it where diff thinks it was originally.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Oh silly me, yes I will be dropped for v9. Sorry for the noise.
 
+Thanks,
+Davidlohr
