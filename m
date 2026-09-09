@@ -1,526 +1,143 @@
-Received: from crab.ash.relay.mailchannels.net (crab.ash.relay.mailchannels.net [23.83.222.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF28330307
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 17:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80ED3342CB0;
+	Wed,  9 Sep 2026 17:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788973987; cv=none; b=Mx7muRO8t5uPpuP7MNIPBHc1S65VXa/VpdxirE2IogUMAk/rtXLbuvUZYZsKD5zyEb3CWcGL2lCye1yPeeK+cPzR/Ey+d+uCQBB8efda+EYMF0f/SAXJcnDr6q2yD0Vkyg4hDswu/lTXgclalGTxqiWxOfT+31/JMIiejb7KtV0=
+	t=1788974348; cv=none; b=U7te0ARfibdn9luVKqNsMWwPUg3eUXizuh8+CqHMjYWGdNOozHhjuIcOK5UCdlvknaFTDVqyl8J/l4PrflyAX4Z7cIKk/iLW0rrpU1LsyAvh3lqqr9/2nmhcZmhH2FapSPAgKyB10OIYrw49a0IpAdWb1hPGmhzOMq14K8zrJnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788973987; c=relaxed/simple;
-	bh=6075Clv4vM4hEGIxFwl7uN6D8YDvx+ZcY7oUGyqZzFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XCY/cGDygJsw0k+D4vzKEvUxRxhthbnE3c9M04MUf3Ier4KVhpH8DQbWbckTOWvBhuUgqy0TMYeNQ6lsiaDkS/RnY+EPLvesd+Il67WL+KZldZk8XVKLNRIb8CfNi01QSkoZKOA2IJQ1+ixTJng1mSeU4JMgrM2wdCW4iOQKyuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=CBOgiiQf; arc=none smtp.client-ip=23.83.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1788974348; c=relaxed/simple;
+	bh=f45NHBdqgQgRD+lkCVot4c4JJkepPy7huNDkyWBT+1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RSXYygM+xgDXAlZ5h+sTVjA0EDhulk085AmzMztR1PgFTzvdb2Qt/SZBI+ViTlLqHrM5V3sAXzDL/k1bXTDoR4TljQc16GWGfaBkYeahe+yZEDJdzkHDsC/t7Q5MmB7S+ZI9IwEBegJnu10xt4FOwQ95HUg0nFyKWVyVurok5XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQXXW/Yb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="CBOgiiQf"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 7CA99401EBF;
-	Wed, 09 Sep 2026 17:03:31 +0000 (UTC)
-Received: from pdx1-sub0-mail-a213.dreamhost.com (trex-green-5.trex.outbound.svc.cluster.local [100.96.117.16])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 1AD664016F0;
-	Wed, 09 Sep 2026 17:03:31 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Gusty-Battle: 0d4811c4391d6065_1788973411410_4189441853
-X-MC-Loop-Signature: 1788973411410:2221786286
-X-MC-Ingress-Time: 1788973411410
-Received: from pdx1-sub0-mail-a213.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.117.16 (trex/8.0.2);
-	Wed, 09 Sep 2026 17:03:31 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a213.dreamhost.com (Postfix) with ESMTPSA id 4hg6Zp3Q0sz1Z;
-	Wed,  9 Sep 2026 10:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1788973410;
-	bh=sRGbOHb/VWXx06q/bgbhFIAgu6DjqZ7EaeeuNfpUADo=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=CBOgiiQfVUA2m1DAfDe+n4Jp5aOVVwec1irEpwAwMJ8vxcDDsZJPjvWO+IFeOEEj1
-	 16DNRPPKkuVbDShafmJlxgb5fiEkPsG+yyC/2fKyaA8+O7pndSFQovb7bZ8Nex4Wut
-	 AE2xF2l9Bdf4Xb4diKNRdr7kZ8lRH4OF1BiDQDjQMbHEMAchMHW2VD5skBY5U0bekQ
-	 WsYZVgDpueimRxv/19Ylkm3Xq3TIKxbHJcjmqxXziV2aphzU3eXNnTpNKMHq6ZtvcP
-	 MKIx6ncWxAGShRSDL8wEjgM8h3xsrkJ6RmxlZxsDPKA3OBwB6bjkTmN7psMboJ4sCN
-	 6Mj5SoJ5Y/8TQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org,
-	alison.schofield@intel.com,
-	icheng@nvidia.com,
-	ming.li@zohomail.com,
-	benjamin.cheatham@amd.com,
-	alucerop@amd.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v8 04/10] cxl: Add HDM-DB region creation
-Date: Wed,  9 Sep 2026 10:02:56 -0700
-Message-Id: <20260909170302.1550680-5-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260909170302.1550680-1-dave@stgolabs.net>
-References: <20260909170302.1550680-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQXXW/Yb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 913BB1F000FF;
+	Wed,  9 Sep 2026 17:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788974346;
+	bh=uZltEzvklF0alHImzEAERiA+PVh7E3q1Jsm6Z/RtKTY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=MQXXW/YbQGdiAIOm/kF6qSQKC7Ng+EPy144HC7OYn6CjwTnO5XWjO7Fby43eLrzWL
+	 C4v7HlqfPUMh7aLVhgNgLCPxrwfK9rFCTOzP/AbhNM+v9awOcMSWRrwtyed7ujlmrc
+	 TBRixw4lcb2nR6NEu0ZEH8zY0RdDOdB+sdevCNXWSZ3DrnQqGNBuXEd4hT1E8WCqcL
+	 QbPAQK3LFUzPVD0mmWQ5kIAXPikUPIw+BA6lLDkeFrGP/Ak2spaars2paiPewdCRMl
+	 p6+rfJXjhu4UmR2WG5dbKPBzIOcRO14X4tVJiHvJtWVrT2jF6+ab/wKc7vcX1gcggT
+	 e6LVYwM1m6f6A==
+Message-ID: <84e667f0-f065-4679-b519-5151aff04e56@kernel.org>
+Date: Wed, 9 Sep 2026 19:18:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/12] mm/sparse: refactor sparse_sections_init()
+To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Brendan Jackman <brendan.jackman@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-2-008fc8d579fe@kernel.org>
+ <aqGSv_VPT1IKGgIs@localhost.localdomain>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aqGSv_VPT1IKGgIs@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-A region inherits its coherency from the chosen root decoder: HDM-DB
-if the root has CXL_DECODER_F_BI, otherwise HDM-H.
+On 9/9/26 19:09, Oscar Salvador (SUSE) wrote:
+> On Wed, Sep 09, 2026 at 03:32:55PM +0200, David Hildenbrand (Arm) wrote:
+>> memory_present() really identifies+prepares all early sections so the
+>> initialization in sparse_init() can properly iterating them to
+>> initialize metadata.
+>>
+>> Let's just inline memory_present() into sparse_sections_init() and
+>> cleaning up the code a bit while at it: make it clear that we are operating
+>> on pfns.
+>>
+>> Note that we call set_section_nid() now only if the section
+>> was not already created earlier. Now, there is no more inconsistency
+>> between what we (temporarily) store in ms->section_mem_map and what
+>> we store in our section->nid array.
+>>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> Acked-by: Oscar Salvador <osalvador@suse.de>
+> 
+> Not sure if it was intentional, but it seems we lost the "Initialize memory section ..."
+> comment.
+> Do we want to put it back? Maybe for the folks that are not really
+> familiar with all the memory section's inner stuff?
 
-cxl_acpi_cfmws_verify() rejects a Window that declares no coherency
-model at all (neither Device Coherent nor Host-only Coherent), one that
-sets BI together with Host-only Coherent, which the CFMWS definition
-calls undefined behavior, and one that sets BI without Device Coherent,
-since HDM-DB is defined only as bit[0] and bit[5] together. A BI Window
-therefore always exposes device-coherent memory and nothing else.
+Munchus patch added it, and I asked him to remove that comment (as it's
+imprecise). So I expect, once I rebase on top of his updated work, that that
+comment will be gone right away :)
 
-Surface the topology through read-only sysfs:
+Thanks!
 
-  - decoderX.Y/cap_back_invalidate (root): CFMWS BI restriction.
-  - decoderX.Y/back_invalidate (endpoint): '1' when configured for HDM-DB.
-
-cxl_region_attach() rejects endpoints whose device or HDM cannot
-serve the region's type; target_type is inherited from cxlr->type
-in cxl_rr_assign_decoder(), restored to the endpoint default on
-detach, and to whatever it was on a failed attach: a refusal may
-come before any inheritance, for a decoder another region owns or
-one firmware committed, and must not relabel it.
-
-An HDM that reports Unknown coherency support is not rejected.
-Supported Coherency Models is how a device declares whether Target
-Range Type is writable - Host-only+Device Coherent means RW, a single
-model means the bit may be hardwired to it, Unknown declares neither
-- so refusing Unknown would also exclude devices that support both
-models without saying so.
-
-A Type 3 decoder defaults to host-only and inherits device-coherent
-when it joins an HDM-DB region, which requires cxlds->bi. A Type 2
-decoder defaults to device-coherent and keeps it: an HDM-D region is
-only assembled from a committed decoder, taking that decoder's type,
-so no inheritance is involved.
-
-The HDM Decoder Control BI bit is set at commit time for a
-device-coherent decoder in a region under a BI root, endpoint and
-switch decoders alike. Whether the device has BI enabled (cxlds->bi)
-is checked when an endpoint attaches and again for every target
-before a commit programs anything, since a reset in between
-invalidates it; the refusal is the same in both places.
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- Documentation/ABI/testing/sysfs-bus-cxl | 17 +++++-
- drivers/cxl/acpi.c                      | 27 +++++++++
- drivers/cxl/core/hdm.c                  | 11 ++++
- drivers/cxl/core/port.c                 | 39 +++++++++++--
- drivers/cxl/core/region.c               | 73 ++++++++++++++++++++-----
- drivers/cxl/cxl.h                       |  6 ++
- include/cxl/cxl.h                       |  3 +-
- 7 files changed, 155 insertions(+), 21 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 7352dbd70bc7..4707329dad4d 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -303,6 +303,7 @@ What:		/sys/bus/cxl/devices/decoderX.Y/cap_pmem
- What:		/sys/bus/cxl/devices/decoderX.Y/cap_ram
- What:		/sys/bus/cxl/devices/decoderX.Y/cap_type2
- What:		/sys/bus/cxl/devices/decoderX.Y/cap_type3
-+What:		/sys/bus/cxl/devices/decoderX.Y/cap_back_invalidate
- Date:		June, 2021
- KernelVersion:	v5.14
- Contact:	linux-cxl@vger.kernel.org
-@@ -311,8 +312,9 @@ Description:
- 		represents a fixed memory window identified by platform
- 		firmware. A fixed window may only support a subset of memory
- 		types. The 'cap_*' attributes indicate whether persistent
--		memory, volatile memory, accelerator memory, and / or expander
--		memory may be mapped behind this decoder's memory window.
-+		memory, volatile memory, accelerator memory, expander memory,
-+		and / or back-invalidate (HDM-DB) memory may be mapped behind
-+		this decoder's memory window.
- 
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/target_type
-@@ -432,6 +434,17 @@ Description:
- 		current cached value.
- 
- 
-+What:		/sys/bus/cxl/devices/decoderX.Y/back_invalidate
-+Date:		September, 2026
-+KernelVersion:	v7.4
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Shows '1' if this endpoint decoder is currently configured
-+		for HDM-DB (device-managed coherency with back-invalidate).
-+		The HDM-DB state is inherited from the region the decoder is
-+		attached to, which is in turn set from the chosen root
-+		decoder's CFMWS BI restriction (see cap_back_invalidate).
-+
- What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
- Date:		May, 2022
- KernelVersion:	v6.0
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3b818adbd38b..2e8e31544a5f 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -152,6 +152,8 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
- 		flags |= CXL_DECODER_F_PMEM;
- 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED)
- 		flags |= CXL_DECODER_F_LOCK;
-+	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)
-+		flags |= CXL_DECODER_F_BI;
- 
- 	return flags;
- }
-@@ -198,6 +200,24 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
- 		dev_dbg(dev, "CFMWS length %d greater than expected %d\n",
- 			cfmws->header.length, expected_len);
- 
-+	if ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM) &&
-+	    (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)) {
-+		dev_err(dev, "CFMWS cannot have both HDM-H and HDM-DB\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!(cfmws->restrictions & (ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-+				     ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM))) {
-+		dev_err(dev, "CFMWS has no coherency model\n");
-+		return -EINVAL;
-+	}
-+
-+	if ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI) &&
-+	    !(cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)) {
-+		dev_err(dev, "CFMWS BI requires device-coherent\n");
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
-@@ -437,7 +457,14 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 
- 	cxld = &cxlrd->cxlsd.cxld;
- 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
-+	/* host-only wins if firmware sets both coherency restrictions */
- 	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-+	if (cxld->flags & CXL_DECODER_F_TYPE2) {
-+		if (cxld->flags & CXL_DECODER_F_TYPE3)
-+			dev_dbg(dev, "CFMWS has both HDM-H and HDM-D\n");
-+		else
-+			cxld->target_type = CXL_DECODER_DEVMEM;
-+	}
- 	cxld->hpa_range = (struct range) {
- 		.start = cfmws->base_hpa,
- 		.end = cfmws->base_hpa + cfmws->window_size - 1,
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 3ac16d3f873a..35bd308156af 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -705,9 +705,13 @@ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
- 
- static void cxld_set_type(struct cxl_decoder *cxld, u32 *ctrl)
- {
-+	bool bi = cxld->target_type == CXL_DECODER_DEVMEM &&
-+		  cxld->region && cxl_root_decoder_is_bi(cxld->region->cxlrd);
-+
- 	u32p_replace_bits(ctrl,
- 			  !!(cxld->target_type == CXL_DECODER_HOSTONLYMEM),
- 			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
-+	u32p_replace_bits(ctrl, bi, CXL_HDM_DECODER0_CTRL_BI);
- }
- 
- static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
-@@ -970,6 +974,13 @@ static int cxl_setup_hdm_decoder_from_dvsec(
- 	return 0;
- }
- 
-+/*
-+ * HDMs that advertise support for both coherency modes
-+ * (CXL_HDM_DECODER_COHERENCY_BOTH) default to host-only; the region
-+ * attach path switches target_type to device-coherent if the region's
-+ * root decoder has the CFMWS BI bit set. Only HDMs that strictly
-+ * support device-coherent mode default to HDM-DB.
-+ */
- enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index b81fd680d18a..1d26cd7c88a1 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -132,6 +132,7 @@ CXL_DECODER_FLAG_ATTR(cap_ram, CXL_DECODER_F_RAM);
- CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_TYPE2);
- CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_TYPE3);
- CXL_DECODER_FLAG_ATTR(locked, CXL_DECODER_F_LOCK);
-+CXL_DECODER_FLAG_ATTR(cap_back_invalidate, CXL_DECODER_F_BI);
- 
- static ssize_t target_type_show(struct device *dev,
- 				struct device_attribute *attr, char *buf)
-@@ -234,6 +235,26 @@ static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(mode);
- 
-+static ssize_t back_invalidate_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
-+	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-+	struct cxl_region *cxlr;
-+
-+	guard(rwsem_read)(&cxl_rwsem.region);
-+	/*
-+	 * An endpoint decoder is HDM-DB when the device has BI enabled
-+	 * (cxlds->bi) and it is attached to a device-coherent (DEVMEM)
-+	 * region whose root decoder advertises the CFMWS BI restriction.
-+	 */
-+	cxlr = cxled->cxld.region;
-+	return sysfs_emit(buf, "%d\n", cxlds->bi && cxlr &&
-+			  cxled->cxld.target_type == CXL_DECODER_DEVMEM &&
-+			  cxl_root_decoder_is_bi(cxlr->cxlrd));
-+}
-+static DEVICE_ATTR_RO(back_invalidate);
-+
- static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -330,6 +351,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	&dev_attr_cap_ram.attr,
- 	&dev_attr_cap_type2.attr,
- 	&dev_attr_cap_type3.attr,
-+	&dev_attr_cap_back_invalidate.attr,
- 	&dev_attr_target_list.attr,
- 	&dev_attr_qos_class.attr,
- 	SET_CXL_REGION_ATTR(create_pmem_region)
-@@ -340,16 +362,24 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 
- static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
- {
--	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
-+	unsigned long flags = cxlrd->cxlsd.cxld.flags;
-+	unsigned long hdm_h, hdm_db;
- 
--	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-+	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
-+	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
-+
-+	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
- }
- 
- static bool can_create_ram(struct cxl_root_decoder *cxlrd)
- {
--	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-+	unsigned long flags = cxlrd->cxlsd.cxld.flags;
-+	unsigned long hdm_h, hdm_db;
-+
-+	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-+	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
- 
--	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-+	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
- }
- 
- static umode_t cxl_root_decoder_visible(struct kobject *kobj, struct attribute *a, int n)
-@@ -403,6 +433,7 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
- static struct attribute *cxl_decoder_endpoint_attrs[] = {
- 	&dev_attr_target_type.attr,
- 	&dev_attr_mode.attr,
-+	&dev_attr_back_invalidate.attr,
- 	&dev_attr_dpa_size.attr,
- 	&dev_attr_dpa_resource.attr,
- 	SET_CXL_REGION_ATTR(region)
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 27e63e6dab7c..6ccb3b387619 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -314,6 +314,20 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 	int i, rc = 0;
- 
-+	/* a reset since attach may have invalidated cxlds->bi */
-+	for (i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+
-+		if (cxlr->type == CXL_DECODER_DEVMEM &&
-+		    cxl_root_decoder_is_bi(cxlr->cxlrd) && !cxlmd->cxlds->bi) {
-+			dev_err(&cxlr->dev, "%s:%s BI not enabled on device\n",
-+				dev_name(&cxlmd->dev),
-+				dev_name(&cxled->cxld.dev));
-+			return -ENXIO;
-+		}
-+	}
-+
- 	for (i = 0; i < p->nr_targets; i++) {
- 		struct cxl_endpoint_decoder *cxled = p->targets[i];
- 		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-@@ -1131,16 +1145,11 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
- 	}
- 
- 	/*
--	 * Endpoints should already match the region type, but backstop that
--	 * assumption with an assertion. Switch-decoders change mapping-type
--	 * based on what is mapped when they are assigned to a region.
-+	 * Endpoint decoders inherit their type from cxlr->type; broken
-+	 * pairings were already rejected by the coherency checks in
-+	 * cxl_region_attach(). Switch-decoders change mapping-type based
-+	 * on what is mapped when they are assigned to a region.
- 	 */
--	dev_WARN_ONCE(&cxlr->dev,
--		      port == cxled_to_port(cxled) &&
--			      cxld->target_type != cxlr->type,
--		      "%s:%s mismatch decoder type %d -> %d\n",
--		      dev_name(&cxled_to_memdev(cxled)->dev),
--		      dev_name(&cxld->dev), cxld->target_type, cxlr->type);
- 	cxld->target_type = cxlr->type;
- 	cxl_rr->decoder = cxld;
- 	return 0;
-@@ -1803,6 +1812,7 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
- 	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
-+	enum cxl_decoder_type type = cxled->cxld.target_type;
- 	struct cxl_decoder *cxld = &cxlsd->cxld;
- 	int iw = cxld->interleave_ways;
- 	struct cxl_port *iter;
-@@ -1828,6 +1838,8 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
- 	for (iter = cxled_to_port(cxled); !is_cxl_root(iter);
- 	     iter = to_cxl_port(iter->dev.parent))
- 		cxl_port_detach_region(iter, cxlr, cxled);
-+	/* undo cxl_rr_assign_decoder() type inheritance */
-+	cxled->cxld.target_type = type;
- 	return rc;
- }
- 
-@@ -2056,6 +2068,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_port *ep_port, *root_port;
- 	struct cxl_dport *dport;
-+	struct cxl_hdm *cxlhdm;
- 	int rc = -ENXIO;
- 
- 	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
-@@ -2105,10 +2118,31 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
- 
--	if (cxled->cxld.target_type != cxlr->type) {
--		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
--			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
--			cxled->cxld.target_type, cxlr->type);
-+	/*
-+	 * Verify the device and HDM are capable of the region's flavor before
-+	 * proceeding. The endpoint decoder's target_type is then inherited
-+	 * from cxlr->type later in cxl_rr_assign_decoder().
-+	 */
-+	if (cxlr->type == CXL_DECODER_DEVMEM &&
-+	    cxl_root_decoder_is_bi(cxlrd) && !cxlds->bi) {
-+		dev_err(&cxlr->dev, "%s:%s BI not enabled on device\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
-+		return -ENXIO;
-+	}
-+
-+	cxlhdm = dev_get_drvdata(&ep_port->dev);
-+	if (!cxlhdm)
-+		return -ENXIO;
-+	if (cxlr->type == CXL_DECODER_HOSTONLYMEM &&
-+	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_DEV) {
-+		dev_warn(&cxlr->dev, "%s:%s HDM is device-coherent only\n",
-+			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
-+		return -ENXIO;
-+	}
-+	if (cxlr->type == CXL_DECODER_DEVMEM &&
-+	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_HOST) {
-+		dev_warn(&cxlr->dev, "%s:%s HDM is host-only coherent\n",
-+			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
- 		return -ENXIO;
- 	}
- 
-@@ -2324,6 +2358,8 @@ __cxl_decoder_detach(struct cxl_region *cxlr,
- 		.start = 0,
- 		.end = -1,
- 	};
-+	/* undo cxl_rr_assign_decoder() type inheritance */
-+	cxled->cxld.target_type = cxled_default_type(cxled);
- 
- 	get_device(&cxlr->dev);
- 	return cxlr;
-@@ -2820,6 +2856,7 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
- 				   size_t len, enum cxl_partition_mode mode)
- {
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-+	enum cxl_decoder_type target_type;
- 	struct cxl_region *cxlr;
- 	int rc, id;
- 
-@@ -2831,7 +2868,15 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
- 	if ((rc = ACQUIRE_ERR(mutex_intr, &regions_lock)))
- 		return rc;
- 
--	cxlr = __create_region(cxlrd, mode, id, CXL_DECODER_HOSTONLYMEM);
-+	/*
-+	 * The CFMWS dictates endpoint coherency: a BI-restricted Window
-+	 * produces an HDM-DB region; otherwise HDM-H. HDM-D is not an
-+	 * option here, type2 regions are created by their driver.
-+	 */
-+	target_type = cxl_root_decoder_is_bi(cxlrd) ?
-+		CXL_DECODER_DEVMEM : CXL_DECODER_HOSTONLYMEM;
-+
-+	cxlr = __create_region(cxlrd, mode, id, target_type);
- 	if (IS_ERR(cxlr))
- 		return PTR_ERR(cxlr);
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index a990ed41edef..3a3fefaf5cfa 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -300,6 +300,7 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
- #define CXL_DECODER_F_LOCK  BIT(4)
- #define CXL_DECODER_F_ENABLE    BIT(5)
- #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
-+#define CXL_DECODER_F_BI    BIT(7)
- #define CXL_DECODER_F_RESET_MASK (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK)
- 
- enum cxl_decoder_type {
-@@ -829,6 +830,11 @@ static inline int cxl_root_decoder_autoremove(struct device *host,
- {
- 	return cxl_decoder_autoremove(host, &cxlrd->cxlsd.cxld);
- }
-+
-+static inline bool cxl_root_decoder_is_bi(struct cxl_root_decoder *cxlrd)
-+{
-+	return cxlrd->cxlsd.cxld.flags & CXL_DECODER_F_BI;
-+}
- int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
- 
- /**
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 718eb4353887..f9e9058a85da 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -16,7 +16,8 @@
-  *			 mailbox, or other memory-device-standard manageability
-  *			 flows.
-  * @CXL_DEVTYPE_CLASSMEM: Common class definition of a CXL Type-3 device with
-- *			   HDM-H and class-mandatory memory device registers
-+ *			   HDM-H or HDM-DB, and class-mandatory memory device
-+ *			   registers
-  */
- enum cxl_devtype {
- 	CXL_DEVTYPE_DEVMEM,
 -- 
-2.39.5
+Cheers,
 
+David
