@@ -1,357 +1,178 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012051.outbound.protection.outlook.com [40.107.209.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C1647DFBD;
-	Wed,  9 Sep 2026 14:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788964949; cv=fail; b=D5idwizVDPZHkYA6EM+DMQ11dr18/iSc/CSZN0moKZhOYc/qGpTLRYtd4kDCH4FMQCJHVtmvhWqfWzGURKePzwQyxYvNO8y7CqRx+FU0fLCENRX9k+OxpACiE1qj2TXSc3G70MBGAMRJdM9nQx+pDxA2Wogj8w5SiMOuPG50+Uo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788964949; c=relaxed/simple;
-	bh=6ANH0LmH2aVtNR+SgoEpaVxq4b/+heRH6FoWLUB56vc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YMUtiZJFVioYUlVo2yitTMLD5uLMTdrQ9i7t5VTcshJvCMjaK8VEuU4RSXp7wkhkEbhBnJeEaVdracOLci7AnX9HOkFGvxwFX8BbOxDJvQAL4gXaYJnFgcHseqpRAWw6apBc3bSIv/Lp22PvOU6/NrZaxhJ2plX3+OQ4F3odEW8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N61IyQ/2; arc=fail smtp.client-ip=40.107.209.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C693CB540;
+	Wed,  9 Sep 2026 14:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788965075; cv=none; b=a7G0gssj3vyIHBaiemz4UePfAYErWIwepk10R5DST3PFfXxPzXWrZfY8GvYjWAxj1igKpubknkkUir9Jvj/JQ+TxVR8cYmGOdQG+kJLd7YfosXSRpfEH2MaHL7vxnedJc+r5d4hE87XGg+bXWLrXkDatUBpRsvpLJrjhOIWlbfs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788965075; c=relaxed/simple;
+	bh=bcRwefqWL8yLZa9DFjrrXLH3J4fyyyLy/rbqxf2tVWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X6GntyzfHy1QXbLRvxmN5szwOsH0Gb5PikYe/7ek1PO7w2bRC8xuEwOXkUEclb7h4i+0yy0ODtPta0NCWOanHQKU5mL/ZFANUg09U7zc/+luQEwPNZwipllUshKTkTHcXzsg6EGlfe3dD3CPdvl+gwEBZqCIixRlYbRZqhe0Gqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPtBvy3I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N61IyQ/2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mXMja2OeoCe6yHxCKw80Mh8tjaefmYmb4eBJjH8o91aF48VA+wPenixLtmztuvIKmdp262+H2J/BgiS0u7nfHErNJrdwTe0yHUYOLPxf4mTZKGf++NaQq1K+PObxbsGItamgOzPd1TS509hnQgVHXZrzhr4uEjirnh8D6dY97xujUnDHWbJQ8p0hGJcZYT66qpkDFF6VuzKXfxMpKBqyfCFbtVF/MKk1Bi/SJrAhBp7IktG7JkywNlWVv6BJjbIyZLr+5KyIVLZKhRx93CMkjX93GuQ6t0W4id/JFkSbLedTjwHaPBXxBYDhBEcDs+vX938B9h2f5WaJiUkd1NS4gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hy0cmyQ3ef4fhwPNXH6mauaNsoU16xtVW7wQeIE2mXI=;
- b=b2TYFAGRj8H9ycvTLakQ0OIatazMHJ+g5GWXCHs9oeJIdG0gzkqSbqazGGtJ0hcm6VmSOrKJn9wWAKQjNXC9oc13iSr2YJT6qcfcscy9T/mw+KqKN4/Gx8LQFbhbYOAG4cbykVnHN7BmTQtJwNLFIbOCijk25a13YtrahXEIK6RISd1M6V6tNzexyKKDt07y2ASLTs6+WsKLZ48Lx6IY9Jurlm/VM0Wn4vjBnGKdPP+tKKtqRvYlxXFUYGRukqDDTg4YD+v4gEff101S0KlDjZqvhHNIboNml8xYJt2E3epLa+vr+P4UDm8IKDyLDPpj+nXYT0OuJGmkapxdZ12ggg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hy0cmyQ3ef4fhwPNXH6mauaNsoU16xtVW7wQeIE2mXI=;
- b=N61IyQ/2tJ4pRDgMO0Q2VquY3RdN0HHnauTSTdGpeMGdGx9NiIIcXahHCpW8vu/MjohI1sNXAOVS0eUOuOJ8f5VH4eFWK05vmgpxr3MfIBDhVXbPRhD59EJDWQggJFczfh035xIgt5beZdH6vB5vH8PtgxyViPU10ifmI3UL3z8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
- by BY5PR12MB4115.namprd12.prod.outlook.com (2603:10b6:a03:20f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.8; Wed, 9 Sep 2026
- 14:42:23 +0000
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9%5]) with mapi id 15.21.0406.007; Wed, 9 Sep 2026
- 14:42:23 +0000
-Message-ID: <51154495-cddd-4ab2-ae37-2f085fb058df@amd.com>
-Date: Wed, 9 Sep 2026 09:42:20 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 4/9] cxl/pci: Thread port and dport through RAS
- handling helpers
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Bjorn Helgaas <bhelgaas@google.com>,
- Dan Williams <djbw@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Len Brown <lenb@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Shuah Khan <skhan@linuxfoundation.org>,
- Richard Cheng <icheng@nvidia.com>, Robert Richter <rrichter@amd.com>,
- Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260902133933.2992457-1-terry.bowman@amd.com>
- <20260902133933.2992457-5-terry.bowman@amd.com>
- <2a1ddf3f-64fc-426c-9453-93b9e034dbf8@amd.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <2a1ddf3f-64fc-426c-9453-93b9e034dbf8@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR13CA0006.namprd13.prod.outlook.com
- (2603:10b6:806:130::11) To CH8PR12MB9766.namprd12.prod.outlook.com
- (2603:10b6:610:2b6::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPtBvy3I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D29C1F00A3A;
+	Wed,  9 Sep 2026 14:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788965074;
+	bh=DKryHpZeZQ6KARApTW1tXfW8/qhqsgo+z43g+o2hGEw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=hPtBvy3IN+9aQnyz4FjXUv2U35jR+DaFAk4MR+MsSrqQhLw/B1mnW4ZEPKZrpTdE+
+	 5Ogl8ftbNdUYWnFiaFYJWzmD8F4P3iY1EPetUNz1Wwal0BHGoCqh2+bUQ7B3jW6Ft+
+	 DBiXy07xw4822CYgZWg666kPfO+OZtSSSXG6+YMavsrtZVwj8xa6MdG2D3k8iN6zH9
+	 zPK16JXMPsihlHKcb+Oe5URKgUnWWRkpWPLTvreGXHRPgldujKKXElm7QEefThm5j5
+	 7Xh6Q+pq+YTVKa1gIiDi7gO3NOt6xZ4daMQ6uJgLDq1fpTeEQVbizUDUbF7xulthht
+	 k7g1XmTUjheLQ==
+Message-ID: <0a7c5147-c193-417d-b1e0-203d9de11247@kernel.org>
+Date: Wed, 9 Sep 2026 16:44:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|BY5PR12MB4115:EE_
-X-MS-Office365-Filtering-Correlation-Id: 421dc151-aedb-4d1d-8a43-08df0e808f0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|921020|6133799003|22082099003|18002099003|11063799006|56012099006|4143699003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	CLU07t+sYlebkGdO5EWesYVzPhKWrrrBzaHA0Zz66gfcFwqh9vSj3Bh4/9mmd8Pk0QLWkd0QB0z8bM1UTGx7Gj7vzWwuf8bhYVbKpioj1W2A9CvvVioD5D/yCYM9PIbOPpMgtfxfqgV4A3kptLAJgq72r7TUEPDxOb3V6g3w5zKrG5wSCRzwQdSZbdAdgiwKJlmnXi6nKg+jc0eeTKOH1afd5QdNOxNAfroBGtmIB8N6JzzBG6solkDZvaJ9N0wI+f14CEkdfKZGYzhejzF0zRkNJaioew+uDYI9p20aQGp17onvhNnu1+z2lb70/+daYJvVFnCbw1ZC8kH5CMGVBBb5e3tXCt1Ba7slbZOSkTDHDJ2CLx3P2mvv91YeyteZlZizj6zhhp4c/ytOhpVnVCxPvutaoadzAcjCvavkKz1EORE+5XHxhlNhxvnn6YRl5+UybOArJ5jYl+DRY4Al37n2PUAM0OHGi9g5Ll7FmeCz+RAWVYxGRix7hUG/p6Ct1FUYp6t+s8m1TLgQPhxybLzc5RSyuYCq3h8Z7P+zX27mEQQ4sHk5pN+homjbtXgghKDckmPdbAHOA0aR20NpdPiJJgOfHbiHl0BKzc6f3ei3+yT0dry+H9z2zUXodcSwuAUTYz9KFWMvXcIQrj3q0KCVrI8yyqfnqAqINBXIOiLVf7M///tLY8WuIPqfL2irnApK11RBKoTviQsT6RvpxQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(921020)(6133799003)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVJ2RTcxSHQ1L25QMXlsNGk2d2lqQmdJTmdvVHR4NWlab0RtQ2diNmEyaVh4?=
- =?utf-8?B?UHljdGtsQ2lQZ3RUVDFaU0I2WUluazdYbFphL1Q4ZHlURTlYZXZuQWxEU0oz?=
- =?utf-8?B?WHVsWVFUUGw3UDQ4bGJOeFNlTlFaRUZpdmV6a28zamZvVlI2WU1SNWtpNmM2?=
- =?utf-8?B?aThqelFuMkRYRnRWRktDejVkZjUyVzRVUGpiZ09RWWJ0YVRFU0poYUw4c21t?=
- =?utf-8?B?Q2IwT0w4YnhQNDhCMUJmbWt4VzREdlBieHc5MU1veldSdGFPbVNGNFpkeFpS?=
- =?utf-8?B?eGVnaUM5a0o0eGVkUnF0OVFiaE9KWDhyWTB5clJvUmV2OVYvUlNYdUtZQXZF?=
- =?utf-8?B?R2pyREI4djRmaXZ6YnM5cUp2QkF3amZoV2xJVTVqQy9adXpsVjl2aVNIY3J5?=
- =?utf-8?B?L3VQUzladDlOUmh3dnpiVlBxUFRGanpZUTlETkRiMjFUQkJ5NHJDZzNxMGo3?=
- =?utf-8?B?cmQ1d0xqdk5yWWxVTzlycE9Jbko5U0dLV2pjWXVQUW9ZeHNhUWZVVFNxNEpB?=
- =?utf-8?B?L3ROWHZSMmdNSElYRGt2NnNkYS8zMGRNdVg1U0t1c2dSTlQ5MG1BZHZYUklK?=
- =?utf-8?B?cGptdXU1QWxPWTk4Q0hxS3dIVVNhdm40Ujd2WDJiQmg4WTNCQ2cxSHZzbDgx?=
- =?utf-8?B?SWxoelQyZVFVYzZzNWhMU1d6WUFjNTh5amx2YmdpeVlYa1piejIxcSs4Mnl3?=
- =?utf-8?B?TlBGTzNpQ3VNaUorMG9BZ01jU1U3TzNGUzIxamF0VjIyUnd0SlJMMFZGWDB3?=
- =?utf-8?B?VWkvN3RLL0lJK1lHN3ZMVzgzenZORFN5S2QrMGJ5cUNFNS85VSt5bWVqWGhr?=
- =?utf-8?B?M0plL1k4Z2lZV1ZZbDNzcTlOb0prZ1AvU2hzeTB1RFJ3NVFTSCtuZ1Y4djYz?=
- =?utf-8?B?aWJndG5peWNKUHVScWRsbFRrYWgvbGsxKzRtRWtCWFZWRUVOUnhwTjBST3R4?=
- =?utf-8?B?cU4vYllLM3N6SGpHaDBoSVBmYXArblN1RzJsZ29uUE5wNTZHMVFTWnBEREVX?=
- =?utf-8?B?VzVDR2V0Nmp6MVp0Y3NmUFlaeW9RUUJaWmQ1ZFR4clZlWWZ3M1luMWVpVFRK?=
- =?utf-8?B?QW9yTXVXWVZyMEtNQUJGRTdQNUsyV0wzaVNwazY1V2YzR0xHaWNvTkxibWxv?=
- =?utf-8?B?OCtCRlZxY0oyWlI4UEhkU2VaM2ROMTNnMVNrOUc4ekxSSFJzTm1ENUZSMTFy?=
- =?utf-8?B?b2lpZkZTSzhIVk5qMThKeTZTT2JSaWNGRkVzYUx0c2s1dXJIY2RxY1hzUEVz?=
- =?utf-8?B?WjhkZ3FXV1ZDNFF1QWtHVnpIRWJFdlI2VkJaOXZhSytIclA0d1k5RTQ4KzVF?=
- =?utf-8?B?b2pXcitCRUFWSHgwM1dBMFVscUt1UzVsSjI1OUxzTGkrVXl5RHBpZ0U1bDcv?=
- =?utf-8?B?bUVCTy9kZjFmc0V1NEFMT0k3d29Dc1gwUm14NVQxditGV2E2ZUhXczByaVJC?=
- =?utf-8?B?c29pV25uOFlSeTRWNEJ5NlNVVmJoR1pzNXk1OGxlemFnR05tS3RBZTJodGNB?=
- =?utf-8?B?dW0yU01WR05HeTNyZXRiNkMyTG52UDdQcWtpZTNBOS8wUFpFelNNREh4SFBK?=
- =?utf-8?B?ZnZ3b0VSbFcxTVU1cU1IdkNpVU1Va1dQMzRSZzk2UmZkcDhwQXFXQjFIN2Rs?=
- =?utf-8?B?STlhV3p4SWNBd3lIMDNvVTNEUkFJOU9FM0tWajl3Rm1aeElZUWtxQ3k3QU1v?=
- =?utf-8?B?UTVIZ2E0ZnRJY1MwZnlvcjNGUDhFNENvNjlBd2pBQXZjaW9SZVhQN05IbW9u?=
- =?utf-8?B?amtjOXFNa1A2ZFNZblJyUWQxV2Eybm5ZZld5UkNQTTlYOTFHdG5zU0V6N2xH?=
- =?utf-8?B?UVQyZ2lXTUVOT29nYkQ2Z2N0Nkd0VnZUR3p6TG1vTlhRbnZZWmN4Unl3WkZ3?=
- =?utf-8?B?Q1V0VnZUVWNRODAwUjhsRkFHOXFEbWVoeFVhclNKOWIrWnhqM2RpRGtjZC83?=
- =?utf-8?B?UVBhcFV0TGxWOHpQWGRjSGY5TENKcnBhU0FNdTVDL1V4WnNxSDI3VStud3c4?=
- =?utf-8?B?RWVzSGgzaEFJaHlQUU5xbWVYbnlGWHJoWHlYcmxmM1VOVE1HVFBDQ1Yza0No?=
- =?utf-8?B?WU1tZmZIRU5ra0Z2emxCVGpoWVV6UHV1OE9YS3ZXWlRxdE9NUGovQ3F1L3Y5?=
- =?utf-8?B?dDdWUEpXeE9sQmVRK2JzRThabk0xY1ByT1VpZm45dkNyaEoweUU3anMwVFAr?=
- =?utf-8?B?MTFEOXpUU2phU3VFN0lMemRXTDl5Y1gxaEZDS3dKL21HQmE3MmRXZTdhbmpZ?=
- =?utf-8?B?akRuUFNPd1Zld3ZlYXE3SVhGQUpOME1LRlZaRGVYbHVSUjFuNlYvSkw1YnZS?=
- =?utf-8?Q?NhLtxjkVFse/mz5M2/?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 421dc151-aedb-4d1d-8a43-08df0e808f0e
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2026 14:42:23.0240
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f9SI7aAFRUMymA7E6BJ4feztMmIAZ3t6GGolYuFi+i/ohXpAFHZsDd5b9pj7K1+GrVF+heRRJXNDSKF1Y/4aqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4115
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr handling
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Brendan Jackman <brendan.jackman@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 9/2/2026 3:57 PM, Cheatham, Benjamin wrote:
-> On 9/2/2026 8:39 AM, Terry Bowman wrote:
->> From: Dan Williams <djbw@kernel.org>
->>
->> The callers of cxl_handle_ras() and cxl_handle_cor_ras() already hold
->> a struct cxl_port * and optionally a struct cxl_dport * for the device
->> being handled. Passing a generic struct device * requires is_cxl_memdev()
->> to distinguish Endpoints from Ports at trace emission time. Threading
->> Port and Downstream Port directly enables is_cxl_endpoint() and explicit
->> dport/port branching for cleaner trace dispatch.
->>
->> Refactor cxl_handle_ras() and cxl_handle_cor_ras() to accept struct
->> cxl_port * and struct cxl_dport * directly. The CXL RAS trace event
->> emission logic is split into three branches: Endpoint events are
->> identified via is_cxl_endpoint() and emit with the memdev, dport events
->> emit with dport->dport_dev, and Upstream Port events fall back to
->> port->uport_dev. This branching is transitional: the follow-on patch
->> ("cxl: Add port and dport identifiers to CXL AER trace events") unifies
->> the trace events on port/dport and removes it.
->>
->> Update cxl_handle_rdport_errors() and cxl_handle_proto_error() to pass
->> Port and Downstream Port to the refactored functions.
->>
->> RCH Downstream Port correctable trace events now report the dport device
->> (dport->dport_dev) as a consequence of threading Port and Downstream
->> Port through the RAS helpers. The following trace event rework ("cxl: Add
->> port and dport identifiers to CXL AER trace events") adds explicit memdev,
->> Port, Downstream Port, and host fields that provide full context for all
->> device types.
->>
->> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Dan Williams <djbw@kernel.org>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->>
->> ---
->>
->> Changes in v19 -> v20:
->> - None
->>
->> Changes in v18 -> v19:
->> - Added review-by for DaveJ
->> - Update commit message that three-way trace branching is transitional
->>   and removed by the following trace-event unification patch
->>
->> Changes in v17 -> v18:
->> - New patch.
->> ---
->>  drivers/cxl/core/core.h    | 12 ++++++++----
->>  drivers/cxl/core/ras.c     | 29 +++++++++++++++--------------
->>  drivers/cxl/core/ras_rch.c |  2 +-
->>  3 files changed, 24 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->> index 645824167f788..4f6b4702deb38 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -187,10 +187,12 @@ static inline struct device *dport_to_host(struct cxl_dport *dport)
->>  #ifdef CONFIG_CXL_RAS
->>  void cxl_ras_init(void);
->>  void cxl_ras_exit(void);
->> -bool cxl_handle_ras(struct device *dev, void __iomem *ras_base);
->> +bool cxl_handle_ras(struct cxl_port *port, struct cxl_dport *dport,
->> +		    void __iomem *ras_base);
->>  void cxl_do_recovery(struct pci_dev *pdev, struct cxl_port *port,
->>  		     struct cxl_dport *dport);
->> -void cxl_handle_cor_ras(struct device *dev, void __iomem *ras_base);
->> +void cxl_handle_cor_ras(struct cxl_port *port, struct cxl_dport *dport,
->> +			void __iomem *ras_base);
->>  void cxl_dport_map_rch_aer(struct cxl_dport *dport);
->>  void cxl_disable_rch_root_ints(struct cxl_dport *dport);
->>  void cxl_handle_rdport_errors(struct pci_dev *pdev);
->> @@ -199,13 +201,15 @@ void devm_cxl_dport_ras_setup(struct cxl_dport *dport);
->>  #else
->>  static inline void cxl_ras_init(void) { }
->>  static inline void cxl_ras_exit(void) { }
->> -static inline bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->> +static inline bool cxl_handle_ras(struct cxl_port *port, struct cxl_dport *dport,
->> +				  void __iomem *ras_base)
->>  {
->>  	return false;
->>  }
->>  static inline void cxl_do_recovery(struct pci_dev *pdev, struct cxl_port *port,
->>  				   struct cxl_dport *dport) { }
->> -static inline void cxl_handle_cor_ras(struct device *dev, void __iomem *ras_base) { }
->> +static inline void cxl_handle_cor_ras(struct cxl_port *port, struct cxl_dport *dport,
->> +				      void __iomem *ras_base) { }
->>  static inline void cxl_dport_map_rch_aer(struct cxl_dport *dport) { }
->>  static inline void cxl_disable_rch_root_ints(struct cxl_dport *dport) { }
->>  static inline void cxl_handle_rdport_errors(struct pci_dev *pdev) { }
->> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
->> index 02c791f149270..e99dcd028b738 100644
->> --- a/drivers/cxl/core/ras.c
->> +++ b/drivers/cxl/core/ras.c
->> @@ -227,20 +227,19 @@ void __iomem *to_ras_base(struct cxl_port *port, struct cxl_dport *dport)
->>  
->>  void cxl_do_recovery(struct pci_dev *pdev, struct cxl_port *port, struct cxl_dport *dport)
->>  {
->> -	struct device *dev = dport ? dport->dport_dev : port->uport_dev;
->>  	void __iomem *ras_base = to_ras_base(port, dport);
->>  
->>  	if (!ras_base)
->>  		panic("CXL: UCE with unmapped RAS registers");
->>  
->> -	if (cxl_handle_ras(dev, ras_base))
->> +	if (cxl_handle_ras(port, dport, ras_base))
+On 9/9/26 15:33, David Hildenbrand (Arm) wrote:
+> Let's move it to sparse_init_one_section(). However, to keep early
+> boot processing working, we also have to initialize it in
+> sparse_sections_init().
 > 
-> I haven't looked ahead, and maybe I'm missing something, but why not have cxl_handle_ras() just
-> take the port & dport and call to_ras_base() internally? It's not a big deal, but it would
-> make the call in cxl_error_detected() a lot prettier.
+> Should we use READ_ONCE/WRITE_ONCE with __highest_used_section_nr?
+> Probably, something for another day.
 > 
-
-This would break for the CPER case which uses GHES/CPER buffer instead of a MMIO RAS block.
-
-
-> Either way:
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-
-
-Thanks Ben.
-
--Terry
-
->>  		panic("CXL cachemem error");
->>  
->>  	dev_dbg(&pdev->dev,
->>  		"CXL UCE signaled but no CXL RAS status bits set\n");
->>  }
->>  
->> -void cxl_handle_cor_ras(struct device *dev, void __iomem *ras_base)
->> +void cxl_handle_cor_ras(struct cxl_port *port, struct cxl_dport *dport, void __iomem *ras_base)
->>  {
->>  	void __iomem *addr;
->>  	u32 status;
->> @@ -252,10 +251,12 @@ void cxl_handle_cor_ras(struct device *dev, void __iomem *ras_base)
->>  	status = readl(addr);
->>  	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
->>  		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
->> -		if (is_cxl_memdev(dev))
->> -			trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
->> +		if (is_cxl_endpoint(port))
->> +			trace_cxl_aer_correctable_error(to_cxl_memdev(port->uport_dev), status);
->> +		else if (dport)
->> +			trace_cxl_port_aer_correctable_error(dport->dport_dev, status);
->>  		else
->> -			trace_cxl_port_aer_correctable_error(dev, status);
->> +			trace_cxl_port_aer_correctable_error(port->uport_dev, status);
->>  	}
->>  }
->>  
->> @@ -280,7 +281,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->>   * Log the state of the RAS status registers and prepare them to log the
->>   * next error status. Return 1 if reset needed.
->>   */
->> -bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->> +bool cxl_handle_ras(struct cxl_port *port, struct cxl_dport *dport, void __iomem *ras_base)
->>  {
->>  	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
->>  	void __iomem *addr;
->> @@ -307,10 +308,12 @@ bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->>  	}
->>  
->>  	header_log_copy(ras_base, hl);
->> -	if (is_cxl_memdev(dev))
->> -		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
->> +	if (is_cxl_endpoint(port))
->> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(port->uport_dev), status, fe, hl);
->> +	else if (dport)
->> +		trace_cxl_port_aer_uncorrectable_error(dport->dport_dev, status, fe, hl);
->>  	else
->> -		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
->> +		trace_cxl_port_aer_uncorrectable_error(port->uport_dev, status, fe, hl);
->>  
->>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
->>  
->> @@ -344,7 +347,7 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->>  		 * cache coherency is already lost; continuing risks silent
->>  		 * data corruption.
->>  		 */
->> -		ue = cxl_handle_ras(port->uport_dev, to_ras_base(port, NULL));
->> +		ue = cxl_handle_ras(port, NULL, to_ras_base(port, NULL));
->>  	}
->>  
->>  	/*
->> @@ -375,10 +378,8 @@ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
->>  static void cxl_handle_proto_error(struct pci_dev *pdev, struct cxl_port *port,
->>  				   struct cxl_dport *dport, int severity)
->>  {
->> -	struct device *dev = dport ? dport->dport_dev : port->uport_dev;
->> -
->>  	if (severity == AER_CORRECTABLE)
->> -		cxl_handle_cor_ras(dev, to_ras_base(port, dport));
->> +		cxl_handle_cor_ras(port, dport, to_ras_base(port, dport));
->>  	else
->>  		cxl_do_recovery(pdev, port, dport);
->>  }
->> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
->> index 285eed5b828b9..bc6cf50fcc926 100644
->> --- a/drivers/cxl/core/ras_rch.c
->> +++ b/drivers/cxl/core/ras_rch.c
->> @@ -123,7 +123,7 @@ void cxl_handle_rdport_errors(struct pci_dev *pdev)
->>  	 */
->>  	if (aer_regs.cor_status & ~aer_regs.cor_mask) {
->>  		pci_print_aer(pdev, AER_CORRECTABLE, &aer_regs);
->> -		cxl_handle_cor_ras(dport->dport_dev, to_ras_base(port, dport));
->> +		cxl_handle_cor_ras(port, dport, to_ras_base(port, dport));
->>  	}
->>  
->>  	if (uncor_status) {
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/sparse.c | 5 +++--
+>  mm/sparse.h | 6 +++---
+>  2 files changed, 6 insertions(+), 5 deletions(-)
 > 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 2b41ae36f20b8..2d0f2db34f4cf 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -177,7 +177,7 @@ static inline unsigned long first_present_section_nr(void)
+>  
+>  void __init sparse_sections_init(void)
+>  {
+> -	unsigned long pfn, start_pfn, end_pfn;
+> +	unsigned long pfn, start_pfn, end_pfn, section_nr;
+>  	int i, nid;
+>  
+>  	sparse_extreme_init();
+> @@ -187,9 +187,9 @@ void __init sparse_sections_init(void)
+>  		mminit_validate_memmodel_limits(&start_pfn, &end_pfn);
+>  
+>  		for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+> -			unsigned long section_nr = pfn_to_section_nr(pfn);
+>  			struct mem_section *ms;
+>  
+> +			section_nr = pfn_to_section_nr(pfn);
+>  			sparse_index_init(section_nr, nid);
+>  			ms = __nr_to_section(section_nr);
+>  			if (ms->section_mem_map)
+> @@ -201,6 +201,7 @@ void __init sparse_sections_init(void)
+>  			__section_mark_present(ms, section_nr);
+>  		}
+>  	}
+> +	__highest_used_section_nr = section_nr;
+>  }
 
+Sashiko says that section_nr could be used uninitialized if the loop body
+doesn't run.
+
+Certainly a very high regression.
+
+In a universe where a machine can boot without any memory?
+
+"This could occur if mminit_validate_memmodel_limits() clamps
+start_pfn and end_pfn to the same value, or if for_each_mem_pfn_range()
+yields no memory ranges."
+
+I think this can be ignored.
+
+
+Sashiko also thinks it found a pre-existing issue when updating
+ms->section_mem_map in sparse_init_one_section() when subsections already exist.
+
+That would be the case during ZONE_DEVICE hotplug only. Likely we should skip
+the sparse_init_one_section() if already initialized. I'll add this to my todo,
+but it has low priority.
+
+-- 
+Cheers,
+
+David
