@@ -1,111 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B5B569F1A;
-	Wed,  9 Sep 2026 13:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B6A55C329
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 14:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788960949; cv=none; b=YPuWlaCw/d9U8LKbQ/LwGbkJrYlNkwtzFuBh7WnNCWGodY08sv64M4AWy7zaQKb2PzFDeu0pbFPtrD8hPhkP3b+nsQkaMW0pxBOv4Q+OiMzag8j9jF0GoioTEUAQwFAJvUZ7FhnhvfcJsrwMxXocqwbkd88cQrNVEfREjuaJldw=
+	t=1788962820; cv=none; b=KGgv/taVS1CscTZG7hFlnSuFM7SlOt7SPWDSxVUBoCrUHpZn0r2kFGRJ+G5pIO22+AujDATcb8fMuOOFBT8wnAL1Khj8L0dq9bGwLPhP2rHd6gNKDyWr87mtPEw+NAxuhElORxSIzct6nD+dl83N00bWIX+iOEbzQevzdWEjJSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788960949; c=relaxed/simple;
-	bh=I1xFmYSCNfoZRtg/iuz9b+jqWmT7TApM4OSDy8PLZHc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rNJD++V3z5HCIr4PV43moSANkPQGRRP5D/yJetylDPGhfCCikIEv/MDwikke2PJQyytONUKaHv72fcV00p0wpkXZN6t6BiQNtPku4lwcXBbp2v2zhTow5kTyVeHLVu/r1ltbd9XXAcsanzZQE+ajB9xCY2WQ3+XMiYTDGS0Du10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUP10OIi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788962820; c=relaxed/simple;
+	bh=kAIltJ0Zw0YO99uw4qCw4fkSIUYCRT9nUxErhrrhkkc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=CNxi6nVj+R4VnMHKlAQaHPWqVSlxDO1YqJlPqwiN0j5W8PiX0ZQ6U8dKb6JbHwMEd6wGZQkBPIM5rVv83QSRDDquwhepIfublu0QJTtJ/jThAK2Uus4A2macXFOR69JX3PCuw5nu3bR38Yd1iIcNOFYYvcIF69K1DKAmwgAjJyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZtyTD+8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUP10OIi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72CCA1F00A3E;
-	Wed,  9 Sep 2026 13:35:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZtyTD+8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CC31F00A3D;
+	Wed,  9 Sep 2026 14:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788960947;
-	bh=ppqQV4pamAYsPTCmhaUztf71g95EkhNaJEiPUVBmZoE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=lUP10OIiiOD0g1gKYxyCH57GeQCpOQLzLHyLszIH5wxx2hl1OGsyMlnlJy4o9hb9H
-	 vTrOvVYAthk4gvleTtWAJw71P7fv0FXFCCXGNP8cBs9MBdObgrQ6MjlpBPLC/UPW2S
-	 QX2T0FYx/bn46HOQjzuDWhc0YGbY/YL3k6D79wQHbNZbT7G+N1LGVnZ0OOvHnEvvGJ
-	 9uRqg2cqO1vXaitIqGjFXRGf4ybQTmrIYuUF7g3DZjX671eT1b/hS56i9xzP6RED0F
-	 u00fsWfWEkfTtbOja82QX9Qf+O/BwWhl6H6FvG+Jtl303l8DvzaWXdGCMUBbR5IwyX
-	 Hw6rkhYHu33YA==
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Wed, 09 Sep 2026 15:33:05 +0200
-Subject: [PATCH 12/12] mm/memory_hotplug: drop CONFIG_HAVE_ARCH_PFN_VALID
- handling from pfn_to_online_page()
+	s=k20260515; t=1788962818;
+	bh=5JLaXajg90xYmWo3hM1KaK0nfCsiZnag6hHeu8KVXMU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oZtyTD+8oGan9iUTSj/D/BtnCBJkHRqUkChjEm37p89K7xMTjhcbez5I+f4xGxEPh
+	 TwgKxxlXjuQqpnbaJ6MjoPkhRX7VV1rqWbnftRr5fXphY/lDCK2tAWl4dX7unTHSBm
+	 /VCiq0CCsaQAZsQn74YTuGgmk4zTR2ne7+yBULJ9mJWNPFt8de4oId9uIHNPBUVCbE
+	 wo5cDd/Nm/XTjRXGRvW+viA2u4Vc0C/wKwGT8UZf2huIZbgHcMI+SfKnHhZvFTIs2/
+	 u2ElGUoJq2Cpe5x1R1ZQMXxMG4/7BneYRYW05rnHYy16123FX4SPV5VjARvkOKRUI/
+	 FTEMGqu6/l2Ug==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr
+ handling
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Sep 2026 14:06:57 +0000
+Message-Id: <20260909140658.78CC31F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260909-b4-sparsemem_cleanups-v1-12-008fc8d579fe@kernel.org>
-References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
-In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Brendan Jackman <brendan.jackman@linux.dev>, 
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
- Oscar Salvador <osalvador@suse.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
- linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
- linux-fsdevel@vger.kernel.org, "David Hildenbrand (Arm)" <david@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1129; i=david@kernel.org;
- h=from:subject:message-id; bh=I1xFmYSCNfoZRtg/iuz9b+jqWmT7TApM4OSDy8PLZHc=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIWJpgJMyzyvB65vL27f85kbXdLt6gbDzY/Yp6Yf8VM0
- q7DdL5oRykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABP52MPIMCEkOfOdVfQq5xUS
- 2W+mcbQLni1POiPosUizLu1HR5/6BIafjB+i52zNM5h+yPuoQ0/ve5nj2ncf8i+0Xq1Tdfdeq8B
- DNgA=
-X-Developer-Key: i=david@kernel.org; a=openpgp;
- fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
-Drop CONFIG_HAVE_ARCH_PFN_VALID handling, as CONFIG_HAVE_ARCH_PFN_VALID
-is never used with CONFIG_MEMORY_HOTPLUG, as the latter depends on
-CONFIG_SPARSEMEM_VMEMMAP. Make sure it stays that way.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- mm/memory_hotplug.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+New issues:
+- [High] The local variable `section_nr` is declared without initialization=
+ and may be unconditionally assigned to the global `__highest_used_section_=
+nr` if the memory iteration loop does not execute.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index b428da66d279c..58ce35cb48f57 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -344,6 +344,8 @@ struct page *pfn_to_online_page(unsigned long pfn)
- 	struct dev_pagemap *pgmap;
- 	struct mem_section *ms;
- 
-+	BUILD_BUG_ON(IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID));
-+
- 	if (nr >= NR_MEM_SECTIONS)
- 		return NULL;
- 
-@@ -351,13 +353,6 @@ struct page *pfn_to_online_page(unsigned long pfn)
- 	if (!online_section(ms))
- 		return NULL;
- 
--	/*
--	 * Save some code text when online_section() +
--	 * pfn_section_valid() are sufficient.
--	 */
--	if (IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID) && !pfn_valid(pfn))
--		return NULL;
--
- 	if (!pfn_section_valid(ms, pfn))
- 		return NULL;
- 
+Pre-existing issues:
+- [High] Non-atomic read-modify-write of `ms->section_mem_map` in `sparse_i=
+nit_one_section()` can cause concurrent `pfn_to_page()` callers to derefere=
+nce a corrupted pointer during subsection hotplug.
+--
 
--- 
-2.43.0
+commit 1d1de8fdca5c2e1ad233b201e49c0d20c64c448b
+Author: David Hildenbrand (Arm) <david@kernel.org>
 
+mm/sparse: move __highest_used_section_nr handling
+
+Moves __highest_used_section_nr handling to sparse_init_one_section(), but
+also initializes it in sparse_sections_init() to keep early boot working.
+
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 2b41ae36f20b8..2d0f2db34f4cf 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -177,7 +177,7 @@ static inline unsigned long first_present_section_nr(=
+void)
+> =20
+>  void __init sparse_sections_init(void)
+>  {
+> -	unsigned long pfn, start_pfn, end_pfn;
+> +	unsigned long pfn, start_pfn, end_pfn, section_nr;
+>  	int i, nid;
+> =20
+>  	sparse_extreme_init();
+
+[ ... ]
+
+> @@ -201,6 +201,7 @@ void __init sparse_sections_init(void)
+>  			__section_mark_present(ms, section_nr);
+>  		}
+>  	}
+> +	__highest_used_section_nr =3D section_nr;
+
+[Severity: High]
+Could this assign an uninitialized value to __highest_used_section_nr?
+
+If the memory iteration loop does not execute, section_nr remains
+uninitialized. This could occur if mminit_validate_memmodel_limits() clamps
+start_pfn and end_pfn to the same value, or if for_each_mem_pfn_range()
+yields no memory ranges.
+
+Writing stack garbage to __highest_used_section_nr could lead to
+out-of-bounds array reads and undefined behavior in subsequent boot stages
+like sparse_metadata_init().
+
+> diff --git a/mm/sparse.h b/mm/sparse.h
+> index 7c5d82ceb7142..a3af4967fd5c5 100644
+> --- a/mm/sparse.h
+> +++ b/mm/sparse.h
+> @@ -97,6 +97,9 @@ static inline void sparse_init_one_section(struct mem_s=
+ection *ms,
+> =20
+>  	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
+> =20
+> +	if (section_nr > __highest_used_section_nr)
+> +		__highest_used_section_nr =3D section_nr;
+> +
+
+[Severity: High]
+This is a pre-existing issue, but can the non-atomic update of
+ms->section_mem_map in sparse_init_one_section() cause concurrent
+pfn_to_page() callers to dereference a corrupted pointer?
+
+During subsection hotplug for ZONE_DEVICE memory, sparse_add_section()
+calls sparse_init_one_section() on an already-active memory section. The
+shared state is mutated non-atomically in place:
+
+mm/sparse.h:sparse_init_one_section() {
+    ...
+    ms->section_mem_map &=3D ~SECTION_MAP_MASK;
+    ms->section_mem_map |=3D coded_mem_map;
+    ...
+}
+
+This transiently zeroes the pointer portion of the state. If a lockless
+reader on another CPU concurrently calls pfn_to_page() for a different
+already-online subsection within the same section, it will extract a zeroed
+base pointer in __section_mem_map_addr():
+
+include/linux/mmzone.h:__section_mem_map_addr() {
+    ...
+    map &=3D SECTION_MAP_MASK;
+    return (struct page *)map;
+}
+
+Could this produce an invalid struct page pointer and crash the system?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909-b4-sparsem=
+em_cleanups-v1-0-008fc8d579fe@kernel.org?part=3D8
