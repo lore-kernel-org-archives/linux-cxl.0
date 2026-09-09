@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659F01A262A
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 04:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3D01A262A
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 04:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788927426; cv=none; b=IH+slbqAPwNPTptRChlbH76rKpnUObBvK9u4bvjcUyA9L4JoP28wb3IH83pDzoS2yPaZHrcRWixuQ56csxnENjYe3NzR5RHzFl/GCAA1V8QdTEHNVJxm6yWpWhleypbLPxxjiiIjwn8+Dbd+LjoJpLu2AJmsrWYcu2+v3+QQ96I=
+	t=1788927429; cv=none; b=gO3FA0hxyJO3yTHzSD7CSVGFx9RoDC7N1FeaaPhZwcBolsjkmfWuWOouhxZJ1f5vmBEPINcNEhJqAzaCuJxoLxN+qqorSyJqFlh+ad3yDSnD1Ux1X+l25VT5Y9Y0u1zW/ycuqcouC8dL4Ake2nGY4EhEkkOuWWWPwjTX1XgG1dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788927426; c=relaxed/simple;
-	bh=sXgGScBvCwz87Cs7VhTkaO+rzVXbSSySsS3TOnEdIPI=;
+	s=arc-20240116; t=1788927429; c=relaxed/simple;
+	bh=q7ucN8Da0ONRSFSUiSGdf2NVlfdGfAomO+Jer3hzGQo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=rF1r9u+absv106hLBjEUf6HdPKsR0fDcTNr4nig3kgifSJCdYoa4XqFD1MN7ydo4c7aNfQWK59SlNCaGK5qIr77awLklKI4NHAJZ91mEbOT1lvoXPet3XBG5oJkXe+y1qmdwSFMxgkYiNMfm9dS+2IPP+J6fheLP5DtzM4HT0I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jEYHDHfA; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=PC1mzpDuMybNBDtkO4EEVFvgka/Nj4z5aa5G3Vve9Kvu0zZTyQZlzUiQlvd0gELOAhl+BgBoQO0lpClmkKl3/90x7HPIb7PNVhrscdaZeXqzcnAiFj9hO28rHJeQHJryjr/siAC73mql6BkejkDh2DjrFzeNdIJN6csOLX0Oogs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XqFmjyG7; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jEYHDHfA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XqFmjyG7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788927423;
+	s=mimecast20190719; t=1788927427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZQEfE5iZfkOn00N2sK76lX2cnib3m/GbdAsw9h0W70k=;
-	b=jEYHDHfAFHEje8OLrOFaVmKranNp7LZGaVCwZGuNhHPj3M7Lr/CF+z1ky9vKYIowsJk/nj
-	U3Sx2SsJbihuu2ieOFz3I0LQbC7sYH0AfZXKhLM+eSTOHkoUE4LdYPwQkqyfdHyjd8IaYn
-	ol9Q842IGT9fqKnGufSWmG/2trn4Jdg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=doB/hzjdp2X1hCumSaccX92yzBrODr0IkiwunZ8gXm0=;
+	b=XqFmjyG7/Ec2UgFQMIAnS5AzMTlWpQ0w86bOYy9KuAbMCUfV/vBnqPuxzsl16o5GwQUpJA
+	/qOv5KJUnUk0pPvdyerhBmp/s9jAX+uHcZndzast0Q7aDK3aUUeabziAKtAMxCCKt6KXr4
+	uX5uu11RdbQS21Tr1/I1QWkV9q7A9Qg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-262-fAd8-FnVNmC-Ei6srGyIjw-1; Wed,
- 09 Sep 2026 00:17:00 -0400
-X-MC-Unique: fAd8-FnVNmC-Ei6srGyIjw-1
-X-Mimecast-MFC-AGG-ID: fAd8-FnVNmC-Ei6srGyIjw_1788927418
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-nHBk06jhMzye75B7v1Y6nw-1; Wed,
+ 09 Sep 2026 00:17:04 -0400
+X-MC-Unique: nHBk06jhMzye75B7v1Y6nw-1
+X-Mimecast-MFC-AGG-ID: nHBk06jhMzye75B7v1Y6nw_1788927422
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B5611800473;
-	Wed,  9 Sep 2026 04:16:58 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 691FE1954B08;
+	Wed,  9 Sep 2026 04:17:02 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.38])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1C82D1800473;
-	Wed,  9 Sep 2026 04:16:54 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA00F1800473;
+	Wed,  9 Sep 2026 04:16:58 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Markus Armbruster <armbru@redhat.com>,
@@ -60,9 +60,9 @@ Cc: Markus Armbruster <armbru@redhat.com>,
 	linux-cxl@vger.kernel.org,
 	Kevin Wolf <kwolf@redhat.com>,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH 03/10] qapi: convert simple enum intros for introspect.json
-Date: Wed,  9 Sep 2026 00:16:33 -0400
-Message-ID: <20260909041640.69080-4-jsnow@redhat.com>
+Subject: [PATCH 04/10] qapi: convert simple enum intros for block.json
+Date: Wed,  9 Sep 2026 00:16:34 -0400
+Message-ID: <20260909041640.69080-5-jsnow@redhat.com>
 In-Reply-To: <20260909041640.69080-1-jsnow@redhat.com>
 References: <20260909041640.69080-1-jsnow@redhat.com>
 Precedence: bulk
@@ -72,32 +72,36 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: G2dkMUIRt1wACol-YW1X1pkpI2Smj9m6ty25XnMDOes_1788927418
+X-Mimecast-MFC-PROC-ID: 6zVTnFc2BX4bu5TeSRnUy4DOo5Z19ayHAyPpyXfz878_1788927422
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/introspect.json | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ qapi/block.json | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/qapi/introspect.json b/qapi/introspect.json
-index 172ed389997..bd42aac3358 100644
---- a/qapi/introspect.json
-+++ b/qapi/introspect.json
-@@ -55,9 +55,8 @@
+diff --git a/qapi/block.json b/qapi/block.json
+index 9569afc6e0f..e47592d5500 100644
+--- a/qapi/block.json
++++ b/qapi/block.json
+@@ -16,11 +16,10 @@
  
  ##
- # @SchemaMetaType:
+ # @BiosAtaTranslation:
 -#
--# This is a `SchemaInfo`'s meta type, i.e. the kind of entity it
--# describes.
-+#     This is a `SchemaInfo`'s meta type, i.e. the kind of entity it
-+#     describes.
+-# Policy that BIOS should use to interpret cylinder/head/sector
+-# addresses.  Note that Bochs BIOS and SeaBIOS will not actually
+-# translate logical CHS to physical; instead, they will use logical
+-# block addressing.
++#     Policy that BIOS should use to interpret cylinder/head/sector
++#     addresses.  Note that Bochs BIOS and SeaBIOS will not actually
++#     translate logical CHS to physical; instead, they will use
++#     logical block addressing.
  #
- # @builtin: a predefined type such as 'int' or 'bool'.
- #
+ # @auto: If cylinder/heads/sizes are passed, choose between none and
+ #     LBA depending on the size of the disk.  If they are not passed,
 -- 
 2.55.0
 
