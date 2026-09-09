@@ -1,58 +1,58 @@
-Received: from duck.ash.relay.mailchannels.net (duck.ash.relay.mailchannels.net [23.83.222.52])
+Received: from iguana.tulip.relay.mailchannels.net (iguana.tulip.relay.mailchannels.net [23.83.218.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C03D3438BE
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 17:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2497E2BDC1C
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Sep 2026 17:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788973424; cv=none; b=gI/TN8Tmwe7HhWFRChNvfnegF2DHi6wem8ss8u/w1Kx8ejuflwTfDBLtvVhiOZ2xFmOe2XGN3LB5eqI+ga7ZkUoBpDdWts41oW9YGZtTYF/rP8J0AO1axV7HOpRKGCxwR1TRof2P4mn+s9Pz7EuHgfu/4AZf8xoqQzotuHoLwF8=
+	t=1788973425; cv=none; b=fFWSLX2QQsARParOPWoPWAIDgeL9a5Ix6cYlOrnuZyigLsY6stkDazw9I6vEGgOl2d5ZvbDQpPANC+2FjLubJJltyZEDeg37f70fWQ4VashflrVNKuJelQFBzWK1xG6IR91VJCrzIGq5qlPExqZALdsgicnA4/r3g8Y5Hpf789o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788973424; c=relaxed/simple;
-	bh=snv7SCPiJUroeisN0BT9L3TtWVG1O/oKkmG7qnN/Td8=;
+	s=arc-20240116; t=1788973425; c=relaxed/simple;
+	bh=cbCHvIX2gWmrlut41+2xo9VbpBiO4/ZO+kJpjQIn8rE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UPa6uIh+5S2YawfAy4qKlaCBw9v4wbpHMCC1kU14dV+RXEEWL7bBhYguhPjIidta0Ui8txNK3io9jlirzhdCF6GvgDPUHRE60lnRkqlMyTYJm6TGuMtGIfIJc9jU5J1RFSPE+G1eH8dTz8st7QzOopPdbczSb/vlfR02EyxKIis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=YJFW7Sfl; arc=none smtp.client-ip=23.83.222.52
+	 MIME-Version; b=qFdMU0fJ2SAs6zFp3oLZ80cDcj1BlCix9FWZ1vScywjn5lxuIqdhbjKKdavV+Xj240WLWUlgFQ6e2aF05BiUjMmFg2SM85OahJewWTxfnKs8sZIpVvgTQOnrDTCfaw7LTrB2Z3Nrrbp6nfn44MVAl4JO7Gc+T7UjC0vuISyr9Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WuT4wrOs; arc=none smtp.client-ip=23.83.218.253
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="YJFW7Sfl"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WuT4wrOs"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id AACED4C30EF;
-	Wed, 09 Sep 2026 17:03:34 +0000 (UTC)
-Received: from pdx1-sub0-mail-a213.dreamhost.com (100-96-117-16.trex-nlb.outbound.svc.cluster.local [100.96.117.16])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4F3907E2622;
+	Wed, 09 Sep 2026 17:03:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a213.dreamhost.com (100-96-170-102.trex-nlb.outbound.svc.cluster.local [100.96.170.102])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 7D5EE4C2B0E;
-	Wed, 09 Sep 2026 17:03:34 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1D4497E0535;
+	Wed, 09 Sep 2026 17:03:35 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Hook-Gusty: 1648428d4705966a_1788973414634_3505445196
-X-MC-Loop-Signature: 1788973414634:485004640
-X-MC-Ingress-Time: 1788973414634
+X-Cooperative-Continue: 661a372779c28011_1788973415211_1431491025
+X-MC-Loop-Signature: 1788973415211:581800596
+X-MC-Ingress-Time: 1788973415211
 Received: from pdx1-sub0-mail-a213.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.117.16 (trex/8.0.2);
-	Wed, 09 Sep 2026 17:03:34 +0000
+	by 100.96.170.102 (trex/8.0.2);
+	Wed, 09 Sep 2026 17:03:35 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a213.dreamhost.com (Postfix) with ESMTPSA id 4hg6Zs5TBvz1dC;
-	Wed,  9 Sep 2026 10:03:33 -0700 (PDT)
+	by pdx1-sub0-mail-a213.dreamhost.com (Postfix) with ESMTPSA id 4hg6Zt3d58z1Z;
+	Wed,  9 Sep 2026 10:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
 	s=dreamhost; t=1788973414;
-	bh=nyDX7rRnsTXdIC8BRNko0PUnWebIAH+3CxFQbJXwZaA=;
+	bh=cadbRqPnF+sII9/gFs+xvmqDlNZ+McQEEYaOl/Gbpug=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=YJFW7Sfld+PO8zVJ5xdE+2psagSl9UZsG0his9fxv72UaaFHD5zWlMDRtIYLQL+X7
-	 /3m/SuULm2NhfDxF0am2R7zly3po4IpTlwDv1AYZCaD7XGDH44jVfCjm5hosbtccYM
-	 0JCycVLAkp9eiEJPEvmAxrdD1VNzswmSVtalrS7HVCkciLdBWmv3DWwjg+frTnKYxk
-	 y9wH3NIc7VnM3C2eaDSHwvUt+jOmAKRzsfAgh+70JyqZheBX+NWEiCJHGwU2Pwa7YU
-	 8UVkHe2o2mY7i+/MBQbeGd2l8RjRfoPDmD7a2IGXpGyV+thcdw3dp/Kzd2kPr0vdPO
-	 scdkjEMNRSbpg==
+	b=WuT4wrOst2VSPj64kc0YnpHjkXDKwyEjggATv4YL6k99MeUy+S8FbqIljrN1psYqH
+	 AGJRuWSa1HN6vDhm8RFLdGOz9sJXfucC9FLuA/tU3VbSEhw4NW4CNDK1m4RvDS9RoB
+	 VU8hmnzxsoQc9Q5hDD8yp0KHOHTI7N3cp85PPRcO4SwJjJj3ytWi/Z4AY9tE0cBy6t
+	 GhJjmyWjToaTqh7AcgjbeuvUoQ9TEb8Zh+ZQ6P9IKvKiUZJbK48cSZqAC1mmOClG45
+	 n6bD8b/S4lNZOX+guiq5ysqzMgSpyftTVE8UlV+d7FexsMdz1pyrmzrlUSYC+6gwE2
+	 lpelduYki3lIQ==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: dave.jiang@intel.com
 Cc: jic23@kernel.org,
@@ -63,9 +63,9 @@ Cc: jic23@kernel.org,
 	alucerop@amd.com,
 	dave@stgolabs.net,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v8 09/10] cxl/test: Add mock BI topology support
-Date: Wed,  9 Sep 2026 10:03:01 -0700
-Message-Id: <20260909170302.1550680-10-dave@stgolabs.net>
+Subject: [PATCH v8 10/10] cxl/doc: Update maturity map with BI support
+Date: Wed,  9 Sep 2026 10:03:02 -0700
+Message-Id: <20260909170302.1550680-11-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260909170302.1550680-1-dave@stgolabs.net>
 References: <20260909170302.1550680-1-dave@stgolabs.net>
@@ -77,358 +77,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the mock topology with an all-software Back-Invalidate path
-covering both the type3 memdevs and the type2 accelerator.
-
-Following the framework's convention of substituting software state
-for register programming, cxl_bi_probe_capable() gains a --wrap shim
-dispatching through cxl_mock_ops, and the mock decoder setup enables
-BI in software in place of cxl_bi_setup(). The mock setup mirrors
-cxl_bi_enable_path()'s walk - dport nr_bi accounting up to the root,
-unwound by a devm action - and the capability check keeps the
-VH-only rule.
-
-A single HDM-DB window (BI | DEVMEM | VOLATILE, targeting host
-bridge 0) is emitted in every topology mode and parses into a
-CXL_DECODER_F_BI root decoder; DEVMEM satisfies can_create_ram().
-In type2 mode it coexists with the accelerator's HDM-D window.
-
-cxled_committed_bi() reads the BI bit from the HDM decoder
-registers, so each mock port's cxl_hdm carries a page of plain
-memory as that register block, maintained on decoder commit/reset
-and restored on saved-decoder replay - letting a committed HDM-DB
-region survive a cxl_acpi rebind. The accelerator grows to 1G of
-capacity so the boot-time auto region leaves DPA for a BI region.
+Add the respective Back-Invalidate info to the maturity map document.
 
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- tools/testing/cxl/Kbuild       |   1 +
- tools/testing/cxl/test/accel.c |   2 +-
- tools/testing/cxl/test/cxl.c   | 159 ++++++++++++++++++++++++++++++++-
- tools/testing/cxl/test/mock.c  |  13 +++
- tools/testing/cxl/test/mock.h  |   1 +
- 5 files changed, 172 insertions(+), 4 deletions(-)
+ Documentation/driver-api/cxl/maturity-map.rst | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 2be1df80fcc9..811fb43225b8 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -14,6 +14,7 @@ ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
- ldflags-y += --wrap=walk_hmem_resources
- ldflags-y += --wrap=region_intersects
- ldflags-y += --wrap=region_intersects_soft_reserve
-+ldflags-y += --wrap=cxl_bi_probe_capable
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+index 282c1102dd81..878fd8723685 100644
+--- a/Documentation/driver-api/cxl/maturity-map.rst
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -63,6 +63,12 @@ in place, but there are several corner cases that are pending closure.
  
- DRIVERS := ../../../drivers
- DAX_HMEM_SRC := $(DRIVERS)/dax/hmem
-diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
-index 8e6f4687ca02..f3800083ea27 100644
---- a/tools/testing/cxl/test/accel.c
-+++ b/tools/testing/cxl/test/accel.c
-@@ -31,7 +31,7 @@ static int cxl_mock_accel_probe(struct platform_device *pdev)
+   * [0] Decoder target and granularity constraints
  
- 	cxlds = &cxl_accel->cxlds;
- 	cxlds->media_ready = true;
--	rc = cxl_set_capacity(cxlds, SZ_512M);
-+	rc = cxl_set_capacity(cxlds, SZ_1G);
- 	if (rc)
- 		return rc;
++* [1] :ref:`Back-Invalidate (HDM-DB) <back-invalidate>`
++
++  * [3] BI topology enable / disable (endpoint, DSP, USP route table, RP)
++  * [2] Firmware-enabled path adoption
++  * [0] MLD / PBR switches (BI-ID carrying an LD-ID)
++
+ * [2] Performance enumeration
  
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 62bd92b3be45..8833124b4ec8 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -190,6 +190,10 @@ static struct {
- 		struct acpi_cedt_cfmws cfmws;
- 		u32 target[3];
- 	} cfmws8;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[1];
-+	} cfmws_bi;
- 	struct {
- 		struct acpi_cedt_cxims cxims;
- 		u64 xormap_list[2];
-@@ -373,6 +377,22 @@ static struct {
- 		},
- 		.target = { 0, 1, 2, },
- 	},
-+	.cfmws_bi = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws_bi),
-+			},
-+			.interleave_ways = 0,
-+			.granularity = 4,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_BI |
-+					ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-+					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-+			.qtg_id = FAKE_QTG_ID,
-+			.window_size = SZ_256M * 4UL,
-+		},
-+		.target = { 0 },
-+	},
- 	.cxims0 = {
- 		.cxims = {
- 			.header = {
-@@ -534,6 +554,12 @@ static int populate_cedt(void)
- 		window->base_hpa = res->range.start;
- 	}
+   * [3] Endpoint CDAT
+@@ -166,7 +172,7 @@ Accelerator
+ -----------
  
-+	res = alloc_mock_res(mock_cedt.cfmws_bi.cfmws.window_size,
-+			     max_t(int, SZ_256M, PMD_SIZE));
-+	if (!res)
-+		return -ENOMEM;
-+	mock_cedt.cfmws_bi.cfmws.base_hpa = res->range.start;
-+
- 	return 0;
- }
+ * [0] Accelerator memory enumeration HDM-D (CXL 1.1/2.0 Type-2)
+-* [0] Accelerator memory enumeration HDM-DB (CXL 3.0 Type-2)
++* [1] Accelerator memory enumeration HDM-DB (CXL 3.0 Type-2)
+ * [0] CXL.cache 68b (CXL 2.0)
+ * [0] CXL.cache 256b Cache IDs (CXL 3.0)
  
-@@ -569,12 +595,17 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
- 			handler_arg(h, arg, end);
- 		}
+@@ -192,6 +198,15 @@ Details
+   hiding some standard registers like PCIe Link Status / Capabilities in
+   the CXL RCRB (Root Complex Register Block).
  
--	if (id == ACPI_CEDT_TYPE_CFMWS)
-+	if (id == ACPI_CEDT_TYPE_CFMWS) {
- 		for (i = cfmws_start; i <= cfmws_end; i++) {
- 			h = (union acpi_subtable_headers *) mock_cfmws[i];
- 			end = (unsigned long) h + mock_cfmws[i]->header.length;
- 			handler_arg(h, arg, end);
- 		}
-+		/* one HDM-DB window in every topology */
-+		h = (union acpi_subtable_headers *)&mock_cedt.cfmws_bi.cfmws;
-+		end = (unsigned long)h + mock_cedt.cfmws_bi.cfmws.header.length;
-+		handler_arg(h, arg, end);
-+	}
++.. _back-invalidate:
++
++* **Back-Invalidate**: HDM-DB lets a device snoop the host over the
++  CXL.mem BISnp channel instead of CXL.cache. The kernel enables BI on
++  every port between a device and its root port, requires 256B Flit
++  mode on the path, adopts paths firmware already enabled, and creates
++  HDM-DB regions under CFMWS windows carrying the Back-Invalidate
++  restriction for Type 3 and Type 2 devices alike.
++
+ .. _background-commands:
  
- 	if (id == ACPI_CEDT_TYPE_CXIMS)
- 		for (i = 0; i < ARRAY_SIZE(mock_cxims); i++) {
-@@ -736,10 +767,53 @@ static struct cxl_hdm *mock_cxl_setup_hdm(struct cxl_port *port,
- 	cxlhdm->port = port;
- 	cxlhdm->interleave_mask = ~0U;
- 	cxlhdm->iw_cap_mask = ~0UL;
-+
-+	/*
-+	 * A page of plain memory stands in for the HDM decoder register
-+	 * block: cxled_committed_bi() reads the per-decoder BI bit from
-+	 * it, which mock_decoder_commit()/reset() maintain below. All
-+	 * other consumers of these registers are bypassed by the mocked
-+	 * decoder setup and commit paths.
-+	 */
-+	cxlhdm->regs.hdm_decoder =
-+		(void __iomem *)devm_get_free_pages(dev,
-+						    GFP_KERNEL | __GFP_ZERO, 0);
-+	if (!cxlhdm->regs.hdm_decoder)
-+		return ERR_PTR(-ENOMEM);
-+
- 	dev_set_drvdata(dev, cxlhdm);
- 	return cxlhdm;
- }
- 
-+/* HPA-based, so replay after cxl_acpi rebind can re-derive it */
-+static bool mock_hpa_is_bi(u64 hpa)
-+{
-+	struct acpi_cedt_cfmws *bi = &mock_cedt.cfmws_bi.cfmws;
-+
-+	return hpa >= bi->base_hpa && hpa < bi->base_hpa + bi->window_size;
-+}
-+
-+static void mock_decoder_set_bi(struct cxl_decoder *cxld, bool bi)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-+	void __iomem *ctrl;
-+	u32 val;
-+
-+	if (!is_endpoint_decoder(&cxld->dev) || !cxlhdm ||
-+	    !cxlhdm->regs.hdm_decoder)
-+		return;
-+
-+	ctrl = cxlhdm->regs.hdm_decoder +
-+	       CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id);
-+	val = readl(ctrl);
-+	if (bi)
-+		val |= CXL_HDM_DECODER0_CTRL_BI;
-+	else
-+		val &= ~CXL_HDM_DECODER0_CTRL_BI;
-+	writel(val, ctrl);
-+}
-+
- struct target_map_ctx {
- 	u32 *target_map;
- 	int index;
-@@ -974,6 +1048,7 @@ static int mock_decoder_commit(struct cxl_decoder *cxld)
- 
- 		cxled->state = CXL_DECODER_STATE_AUTO;
- 	}
-+	mock_decoder_set_bi(cxld, mock_hpa_is_bi(cxld->hpa_range.start));
- 	cxld_registry_update(cxld);
- 
- 	return 0;
-@@ -1003,6 +1078,7 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
- 		cxled->state = CXL_DECODER_STATE_MANUAL;
- 		cxled->skip = 0;
- 	}
-+	mock_decoder_set_bi(cxld, false);
- 	if (decoder_reset_preserve_registry)
- 		dev_dbg(port->uport_dev, "decoder%d: skip registry update\n",
- 			cxld->id);
-@@ -1130,8 +1206,13 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
- 	else
- 		enabled = td->cxled.cxld.flags & CXL_DECODER_F_ENABLE;
- 
--	if (enabled)
--		return !cxld_registry_restore(cxld, td);
-+	if (enabled) {
-+		if (cxld_registry_restore(cxld, td))
-+			return false;
-+		mock_decoder_set_bi(cxld,
-+				    mock_hpa_is_bi(cxld->hpa_range.start));
-+		return true;
-+	}
- 
- 	init_disabled_mock_decoder(cxld);
- 	return false;
-@@ -1453,9 +1534,12 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 	return 0;
- }
- 
-+static int mock_cxl_bi_setup(struct cxl_port *endpoint);
-+
- static int __mock_cxl_decoders_setup(struct cxl_port *port)
- {
- 	struct cxl_hdm *cxlhdm;
-+	int rc;
- 
- 	cxlhdm = mock_cxl_setup_hdm(port, NULL);
- 	if (IS_ERR(cxlhdm)) {
-@@ -1464,6 +1548,13 @@ static int __mock_cxl_decoders_setup(struct cxl_port *port)
- 		return PTR_ERR(cxlhdm);
- 	}
- 
-+	/* as the real setup: BI between the HDM state and the decoders */
-+	if (is_cxl_endpoint(port)) {
-+		rc = mock_cxl_bi_setup(port);
-+		if (rc)
-+			dev_dbg(&port->dev, "BI setup failed rc=%d\n", rc);
-+	}
-+
- 	return mock_cxl_enumerate_decoders(cxlhdm, NULL);
- }
- 
-@@ -1652,6 +1743,67 @@ mock_region_intersects_soft_reserve(resource_size_t start, size_t size)
- 	return -1;
- }
- 
-+/*
-+ * All-software mirror of the BI enable path: no BI Decoder/RT
-+ * registers exist on mock devices, so capability and enablement are
-+ * asserted directly while the dport nr_bi accounting - the part with
-+ * driver-visible semantics (shared transit dports, teardown order) -
-+ * follows the same walk the real cxl_bi_enable_path() takes.
-+ */
-+static void mock_cxl_bi_probe_capable(struct cxl_port *endpoint)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+	/* BI is VH-only, mirroring cxl_bi_probe_capable() */
-+	cxlds->bi_capable = !cxlds->rcd;
-+}
-+
-+static void mock_cxl_bi_dealloc(void *data)
-+{
-+	struct cxl_port *endpoint = data;
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_dport *dport_iter;
-+	struct cxl_port *port_iter;
-+
-+	cxlds->bi = false;
-+	dport_iter = endpoint->parent_dport;
-+	port_iter = dport_iter->port;
-+	while (port_iter->parent_dport) {
-+		scoped_guard(mutex, &port_iter->bi_lock) {
-+			if (!WARN_ON_ONCE(dport_iter->nr_bi == 0))
-+				dport_iter->nr_bi--;
-+		}
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+}
-+
-+static int mock_cxl_bi_setup(struct cxl_port *endpoint)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_dport *dport_iter;
-+	struct cxl_port *port_iter;
-+
-+	if (!cxlds->bi_capable)
-+		return 0;
-+
-+	dport_iter = endpoint->parent_dport;
-+	port_iter = dport_iter->port;
-+	while (port_iter->parent_dport) {
-+		scoped_guard(mutex, &port_iter->bi_lock)
-+			dport_iter->nr_bi++;
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+	cxlds->bi = true;
-+
-+	return devm_add_action_or_reset(&endpoint->dev, mock_cxl_bi_dealloc,
-+					endpoint);
-+}
-+
- static struct cxl_mock_ops cxl_mock_ops = {
- 	.is_mock_adev = is_mock_adev,
- 	.is_mock_bridge = is_mock_bridge,
-@@ -1670,6 +1822,7 @@ static struct cxl_mock_ops cxl_mock_ops = {
- 	.walk_hmem_resources = mock_walk_hmem_resources,
- 	.region_intersects = mock_region_intersects,
- 	.region_intersects_soft_reserve = mock_region_intersects_soft_reserve,
-+	.cxl_bi_probe_capable = mock_cxl_bi_probe_capable,
- 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
- };
- 
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 6454b868b122..eabc9bba0fac 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -181,6 +181,19 @@ int __wrap_devm_cxl_endpoint_decoders_setup(struct cxl_port *port)
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_endpoint_decoders_setup, "CXL");
- 
-+void __wrap_cxl_bi_probe_capable(struct cxl_port *endpoint)
-+{
-+	int index;
-+	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-+
-+	if (ops && ops->is_mock_port(endpoint->uport_dev))
-+		ops->cxl_bi_probe_capable(endpoint);
-+	else
-+		cxl_bi_probe_capable(endpoint);
-+	put_cxl_mock_ops(index);
-+}
-+EXPORT_SYMBOL_NS_GPL(__wrap_cxl_bi_probe_capable, "CXL");
-+
- int __wrap_cxl_await_media_ready(struct cxl_dev_state *cxlds)
- {
- 	int rc, index;
-diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-index 846d7c5d6eaa..c7919c3eb875 100644
---- a/tools/testing/cxl/test/mock.h
-+++ b/tools/testing/cxl/test/mock.h
-@@ -35,6 +35,7 @@ struct cxl_mock_ops {
- 				 unsigned long flags, unsigned long desc);
- 	int (*region_intersects_soft_reserve)(resource_size_t start,
- 					      size_t size);
-+	void (*cxl_bi_probe_capable)(struct cxl_port *endpoint);
- };
- 
- int hmem_test_init(void);
+ * **Background commands**: The CXL background command mechanism is
 -- 
 2.39.5
 
