@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF52E3AFD08;
-	Thu, 10 Sep 2026 08:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CB73C13EE;
+	Thu, 10 Sep 2026 09:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789030707; cv=none; b=oi7ysXHcpwvT3GbqH+Idw7sIAnpwZoyqGn906wXJyPlz7mnU75RRjqmFRxPPjPfvo+eConxa2WesDWXR0kDmBg2EBtuDkX0JReGIHYPMv6gBVRAPMCrlrCxJlpngKGDNMFJgOJlWE6rh3EKnRT9Yhn2ZfZ2xZJ9t/zqaXzrrwNA=
+	t=1789031617; cv=none; b=DNuksMPWhLJORlW2OrHELVyMSDql1A6fsrjDhS2BW7rDKCgoPvpT6mSgmVuHDq+LPIkhXufvIwJIPXPl1xKMs1cBI5gO7NV7oKq8kVHYaiFUSUOdZRpSarvxIwIygPaYByyPjkNVFax3etKbb2/di51oMNi+/nxvQhxBYi6o5lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789030707; c=relaxed/simple;
-	bh=he5KiB6VLqYXxJgUJv16m3SCnnY9BNTeNN1ibGIWJqM=;
+	s=arc-20240116; t=1789031617; c=relaxed/simple;
+	bh=876bPQkmr+qSfmJnN/IbXQk6MFFq7aT9u81fC/kyu54=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XqerZ7GShUykS21BTRJUw3NFS3kyB4EONMCjwDtCMMyM4/3Mc+GdZ4z1mpQc8fDj6CEAm/w/xhqEORCJKLZARWHRKwOAtnjsAFl4lL7ONplk52/iWek2YZUBMP73xGpEh460s4w4n/jN0x554KhG1Yecwyy9qwXket6zjxfjRyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpUzMoWR; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=WNLcbh6trwjdSFeeaBnT9nrkjeI6Tyvx9s5/TRzOm1Z/XyBElKnqPqh+Tq//+dAwWSK9MYJxiMJslc1r+jFroYjTk6phWla6ozDDcyJWFWZd0v6K+btGyaEu+g/XQlg4ykU/dCHI/4boba3wDfvVeyMrHhGYq36HBxJ4Yd+cnvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XyPvGHc4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpUzMoWR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F9A1F000FF;
-	Thu, 10 Sep 2026 08:58:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XyPvGHc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2331F000FF;
+	Thu, 10 Sep 2026 09:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789030705;
-	bh=MG/9KXk2jvCpvz70MN0ACXgz/x6FHQZmZN1K2kd/4gQ=;
+	s=k20260515; t=1789031608;
+	bh=zEeFtMUHn3s+PI/cg5N17MVY4nHEBTOfJ4ioYjja5j0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=MpUzMoWRzc3w1dvHb0CKLDIJvfk81hBvJ+Ry3Z+tKkJ33lHiA4C3lJqJduoDoCZg9
-	 goTs7zPI+AZIcnyDN+JDE8LQnV+mGfKRV4T7DqsNyTS9GLLTKG3YL8q4VaukX5vyNr
-	 2Bdt5xG4J/Yp4QB3ushFrsyBjyEuFRxjMrzXErhETCfeTUi0Wst2Jtmc5CirLr/bar
-	 FVhUeA0camPh5dX7vV9lPfJ79mNvls4s+q0bUM8P+Q7GyqdIpCADxOmPdHsPoBgMKd
-	 0PPSkqz+JiLYrDRjsj0HyjbPQQE1nOrSub/adIftRor4yJB57BG447JjC0MsMN/ncm
-	 LvpeJNdugcQEA==
-Message-ID: <e2d2b01e-e6eb-4009-a07e-e615d576c0c3@kernel.org>
-Date: Thu, 10 Sep 2026 10:58:05 +0200
+	b=XyPvGHc4wMCN7XnUzQUlQv10dHqh7HO9TkjaWiDpqVTCqUZ4CKmIoiz+rzPcl393j
+	 rIr/J7DuGFP9ozSMcRGKBgArgVJ+vGtlpUubDEgaYE5Vzdq6UW9s1oKqS6erMBJjYF
+	 SPn4FVdbHQyZXkXx/ixOwaCHQW3+hbhiDYYkbisYcgnWLijvhtX8jhLnBH+PL4XmMl
+	 0X8GngpShNpiBLxjcnPi2mLIa/G/Kv5WyR4GlLBYjl4gpWQl0s7YVeY5awvfbIrCTf
+	 WbID137Cnw9Gz6smokOCSQR3sQF+L/7Wc84ygpecTcamLUtAKNJQ9w39t3KgLMKJle
+	 sFyI2xY8WPRwg==
+Message-ID: <c2239ef2-10f4-4c87-a23a-2753f1e18d27@kernel.org>
+Date: Thu, 10 Sep 2026 11:13:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,37 +35,28 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 14/36] mm/damon: skip private node memory in DAMON
- migration and pageout
-To: Gregory Price <gourry@gourry.net>, SJ Park <sj@kernel.org>
-Cc: arun.george@samsung.com, balbirs@nvidia.com, brendan.jackman@linux.dev,
- yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com,
- matthew.brost@intel.com, akpm@linux-foundation.org, ljs@kernel.org,
- liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, corbet@lwn.net, skhan@linuxfoundation.org,
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
- alison.schofield@intel.com, osandov@osandov.com, jannh@google.com,
- pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
- pbonzini@redhat.com, osalvador@suse.de, joshua.hahnjy@gmail.com,
- rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
- kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev,
- baohua@kernel.org, axelrasmussen@google.com, yuanchu@google.com,
- weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
- longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, mkoutny@suse.com,
- jgg@ziepe.ca, jhubbard@nvidia.com, peterx@redhat.com,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev,
- xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev,
- muchun.song@linux.dev, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, driver-core@lists.linux.dev,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- kvm@vger.kernel.org, cgroups@vger.kernel.org, damon@lists.linux.dev,
- linux-kselftest@vger.kernel.org, kernel-team@meta.com
-References: <amCzmkdOr6AFv_kQ@gourry-fedora-PF4VCD3F>
- <20260723001943.95854-1-sj@kernel.org>
- <amGHuputMNCFZ9CV@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr handling
+To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Brendan Jackman <brendan.jackman@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
+ <aqJrblWch-lajp3k@localhost.localdomain>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -112,32 +103,32 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <amGHuputMNCFZ9CV@gourry-fedora-PF4VCD3F>
+In-Reply-To: <aqJrblWch-lajp3k@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/23/26 05:25, Gregory Price wrote:
-> On Wed, Jul 22, 2026 at 05:19:42PM -0700, SJ Park wrote:
->> On Wed, 22 Jul 2026 08:16:56 -0400 Gregory Price <gourry@gourry.net> wrote:
+On 9/10/26 10:33, Oscar Salvador (SUSE) wrote:
+> On Wed, Sep 09, 2026 at 03:33:01PM +0200, David Hildenbrand (Arm) wrote:
+>> Let's move it to sparse_init_one_section(). However, to keep early
+>> boot processing working, we also have to initialize it in
+>> sparse_sections_init().
 >>
->>>
->>> See the damon changes in:
->>>
->>> https://lore.kernel.org/linux-mm/al-pkvmgIxGu3LzM@gourry-fedora-PF4VCD3F/T/#mfb99303c85dd9d4c3f58832dc28fc55583a7217a
->>
->> Summarizing what you want to say, quoting something from the patch, or at least
->> calling it "26th patch of this series" would have made reviewing much easier.
->> Cc-ing damon@ for only patches that toucing DAMON source files and the cover
->> letter of the series could also be helpful.  Please consider doing some of
->> these for future replies.
->>
+>> Should we use READ_ONCE/WRITE_ONCE with __highest_used_section_nr?
+>> Probably, something for another day.
 > 
-> I have been very much discouraged from this kind of trimming because it
-> removes the context of the series from the individual patches - making it
-> even more confusing.
+> What is the worry there?
+> 
+> sparse_init_one_section() calls should run sequentally due to the memhotplug
+> lock, so there should not be parallel updates there?
 
-Yes, 99% of upstream maintainers will scream at you if you CC them only on
-individual patches :)
+If you have something consuming __highest_used_section_nr while concurrently
+updating it, you might get torn reads/writes that mess up the value on the
+reader side.
+
+For example, mm/compaction.c consuming __highest_used_section_nr.
+
+I don't think this is critical, so I decided to spell it out instead of fixing
+it right away.
 
 -- 
 Cheers,
