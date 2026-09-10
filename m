@@ -1,64 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4362F397695;
-	Thu, 10 Sep 2026 09:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6F73AEF55
+	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 09:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789033153; cv=none; b=LQ/LuaoIMtMtWqt5cIoC2Pjz5NKs8uEsIDQL6DhdN7GkcDoV9gVILUwbtmedpfC7SAdJFlUjRYzlB/FwvfQl8FkgzqrGUalcn5ALbQ87lryarNrvleoCMqxjsq8Ouk1MpDJ8x8kJRnxYcvMEYJyD3v8nNnXSCAUGhPwaSwwCeKs=
+	t=1789033228; cv=none; b=CLMU1V6mvXLC5lKhBYqE/e8R6bHI526fk+E6wvLmlDc3K/rRgaNKPL9jHvHdiJWWm9Y/bhil/Ul25HgDYxYpe2MtuzHXB/U3n0bpPbjtjXCFLKuQQuCWhv1umxTJan9G8O0iZ1DGIbXaw14rwTCq7lK1gPGZf0QurTi9PiuzI1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789033153; c=relaxed/simple;
-	bh=4IjxNCMSkE9NrLUOlPIVyyeUMQF88Cbi2YiXdSDkGi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mghbnZT/XKPXN5Xqpa8CHeTQnzH85dKdIwh5w+I1Ip07G+K5JzHRzwhcsvrp+6EUTGKp5XoNK/8KWg/XeirzmZuw8uX0LkEhkQqGM/TsA0ctayDBMV7gFBHzO7QEj1tg0zZJjCDLvN5xloGV4zf8W3d9wvHjPKl5Vw1ZzbTd26E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hcdClrlg; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789033228; c=relaxed/simple;
+	bh=4QTLfwGwNjecRVk3BBwKgbeiIH/jv0joOsYcr3lWCLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pdBPAgZAHuaQl4T6qEp3Btauw/9cqZyg8Oxqg2FCSapK0hn9D9J9oiwfSK/oWp70aS5Z1mFKcCHYpFe71SNhJBgNhMPh5rU3cTnXkjLOSW2bBOGsZcmfiqKVeBH9hDqJsGxp2U81kfh1paKOyjvpDK+7sLCuA7+ClTcxrD15mmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ex1qw/IK; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hcdClrlg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789033151; x=1820569151;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4IjxNCMSkE9NrLUOlPIVyyeUMQF88Cbi2YiXdSDkGi4=;
-  b=hcdClrlgCE7/v9gRtA8kstWUvGBQonrMDg+w0s785rP0Bvg2cm7Oq3Go
-   6pldV8zNOObuzoFY6T3KkaPaZIY/n9WWFGwlvV4Ee/kT25GqnP92o2IVl
-   snWaFS8XaAXpyVd4nD3hQCbo7unQsETgyw0An289Db0IFJrI11BgrjAdO
-   5fvvmZaLb48RSjdWt5IF6SI7MErEWbljfSpVltXjF4ysnQ1T74AW/bUY+
-   D6Mj7TuAVBWDX4SJM9kBOlveFXAfY4u3e5lsefZoJEIpK17hXt3mOnEvO
-   iuT5aQnnlJMfs5or+bN5uItQVHhabC8xf5BNjb88nfwTgoDgM1IBP7JvP
-   w==;
-X-CSE-ConnectionGUID: P3b5Vt9WRWyaFa3YzK2dKw==
-X-CSE-MsgGUID: +4lUhvbCQIGFyWi5TYXphg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="100832787"
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="100832787"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 02:39:11 -0700
-X-CSE-ConnectionGUID: vMX4C2njQPGDAJTGF9mrDw==
-X-CSE-MsgGUID: v9HAY5zBSdKw9pCEDD/5aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="301478834"
-Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 02:39:08 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ex1qw/IK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1789033223; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Q0C3inrSVTvablxXX2W4cdPu+KZGPsK83zePojk69lw=;
+	b=ex1qw/IK9ftlkfMfoXCSGbmUG9Zizt4UoE9T9kbToW1MFJvagW/CxkCRoOA/1xqBF5gCn9FQ9FLVmBLrqFBczr/cuJnzTbXagl748RlMeFYWJi+rn3m0AvUJtiSDiLu5d8zmxMn3FgTdtN40tmFbuokS8OCwdRsCMUINth2/KA4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XAhK-5J_1789033222;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAhK-5J_1789033222 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 10 Sep 2026 17:40:23 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Dan Williams <djbw@kernel.org>,
-	linux-cxl@vger.kernel.org
-Cc: Ira Weiny <iweiny@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
 	Li Ming <ming.li@zohomail.com>,
-	Richard Cheng <icheng@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] cxl/regs: Reject register blocks in an unassigned BAR
-Date: Thu, 10 Sep 2026 17:38:58 +0800
-Message-ID: <20260910093858.535969-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+Cc: linux-cxl@vger.kernel.org,
+	driver-core@lists.linux.dev
+Subject: [PATCH v3 0/2] cxl/memdev: Fix poison debugfs vs unbind deadlock
+Date: Thu, 10 Sep 2026 17:40:15 +0800
+Message-ID: <20260910094017.4032170-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,65 +51,85 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_decode_regblock() only checks that the Register Locator offset fits
-pci_resource_len().  A BAR the PCI core could not place is reset to zero
-start, end and flags while config space keeps the firmware value, so a
-zero offset passes and the block is mapped at physical address 0.  On
-x86 ioremap() of the reserved low megabyte succeeds, the component
-register header does not match, and a switch port fails with "HDM
-decoder capability not found", pointing at the HDM decoders rather than
-at the BAR.
+Writing a memdev poison debugfs file while cxl_mem is being unbound
+deadlocks. Patch 2 fixes it by not waiting for the device lock in those
+handlers. Patch 1 adds the trylock guard it uses.
 
-Reject a BAR with no length or still unassigned, next to the existing size
-check.  Skip empty Register Locator entries first: they decode as BAR0
-offset 0 and would trip the check, and nothing looks them up.
+Patch 2 does not build without patch 1, so the two need to travel
+together.
 
-Seen with edk2-stable202602 (f6489621b8ae, reverted in stable202605),
-which places 64-bit non-prefetchable BARs behind a bridge in the
-prefetchable window.  Linux refuses to claim them and the switch
-upstream and downstream port BAR0s find no room in the 32-bit window.
-QEMU q35 with a CXL switch, Fedora 43 edk2-ovmf-20260213, before:
+Testing:
 
-pci 0000:0d:00.0: BAR 0 [mem size 0x00010000 64bit]: can't assign; no space
-cxl_port port2: HDM decoder capability not found
+Reproduced on a QEMU CXL topology whose type3 devices advertise poison
+inject support:
 
-after:
+  while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
+  while :; do
+      echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
+      echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
+  done
 
-pcieport 0000:0d:00.0: BAR0: not assigned (type: 1)
-cxl_port port2: No component registers mapped
-cxl_port port2: Failed to map HDM decoder capability
+Without the fix the unbind wedges within seconds. The three tasks
+involved, from /proc/<pid>/stack:
 
-Link: https://github.com/tianocore/edk2/issues/13104
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
----
- drivers/cxl/core/regs.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+  writer, state S, holds the debugfs reference and waits for the lock
+    cxl_debugfs_poison_inject+0x25/0xa0 [cxl_mem]
+    debugfs_attr_write+0x61/0xb0
+    full_proxy_write+0xfc/0x1c0
+    vfs_write+0x1d4/0xe60
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 20c2d9fbcfe7..41416fa2ce4a 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -277,6 +277,20 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
- 	u64 offset = ((u64)reg_hi << 32) |
- 		     (reg_lo & PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW);
- 
-+	if (reg_type == CXL_REGLOC_RBI_EMPTY)
-+		return false;
-+
-+	/*
-+	 * A BAR the PCI core could not place is reset to zero; decoding it
-+	 * would map the block at physical address 0.
-+	 */
-+	if (!pci_resource_len(pdev, bar) ||
-+	    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
-+		dev_warn(&pdev->dev, "BAR%d: not assigned (type: %d)\n", bar,
-+			 reg_type);
-+		return false;
-+	}
-+
- 	if (offset > pci_resource_len(pdev, bar)) {
- 		dev_warn(&pdev->dev,
- 			 "BAR%d: %pr: too small (offset: %pa, type: %d)\n", bar,
--- 
-2.43.0
+  unbind, state D, holds the lock and waits for the reference to drain
+    remove_one+0x27f/0x3d0
+    debugfs_remove+0x44/0x60
+    release_nodes+0xfa/0x2c0
+    devres_release_all+0x113/0x1a0
+    device_unbind_cleanup+0x76/0x260
+    device_release_driver_internal+0x3eb/0x540
+    unbind_store+0xde/0x100
+
+  cxl_port workqueue, state D, blocked on the same lock
+    device_release_driver_internal+0x96/0x540
+    detach_memdev+0x79/0xb0 [cxl_core]
+    process_one_work+0x6b0/0xfb0
+
+The writer is in interruptible sleep and can be killed; the unbind
+cannot, and because cxl_bus_wq is an ordered workqueue the wedged
+detach_memdev() blocks every other CXL bus work item behind it.
+
+With both patches applied, 46 unbind/bind cycles against the same writer
+loop all completed, no task was left in D state, and the writer collected
+10920 EBUSY returns from the contended trylock. Note that lockdep stays
+quiet either way: one leg of the cycle is the debugfs active_users
+completion rather than a lock it tracks.
+
+v1 -> v2:
+- add the device_trylock() guard and use ACQUIRE(device_try, ...) instead
+  of open-coding device_trylock()/device_unlock(), keeping the style the
+  Fixes: commit established (Shaikh Kamaluddin)
+- cut the changelog down to the failing condition, the consequence and
+  the fix; the call graph and the reproducer live here instead
+- say how the issue was found and how it was tested
+
+v2 -> v3:
+- rebase onto v7.3-rc2 (master), per Dave's request to send the series
+  against Linus's tags rather than cxl/next
+
+v1:
+https://lore.kernel.org/linux-cxl/20260826125248.4003792-1-kanie@linux.alibaba.com/
+
+v2:
+https://lore.kernel.org/linux-cxl/20260831124809.889829-1-kanie@linux.alibaba.com/
+
+Guixin Liu (2):
+  driver core: Add conditional guard support for device_trylock()
+  cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
+
+ drivers/cxl/mem.c      | 14 ++++++++++----
+ include/linux/device.h |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+
+base-commit: 50d05c7c76c96b90462f24debacca971d2e86713
+--
+2.43.7
 
