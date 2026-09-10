@@ -1,130 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0707E49DBA9;
-	Thu, 10 Sep 2026 13:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC2F328610;
+	Thu, 10 Sep 2026 13:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789047252; cv=none; b=TQx3x7W9/g/S6CFbrZM4OCR0SppMDI4bM3FQk2wnXdNhwDyc5+jfiFFxev7uPLk1Ylo6cszJnOzbst85K6f5Fl96d5ztulbHdIp3gx/QhfRocuj4ZaKpn/MPSPwIeP2Guviqmd+NIMxHBgEMCA7qr1op1C3bEudXzkubSDj2W2I=
+	t=1789047844; cv=none; b=qlcotDtEMX8f08Fp2hrkxCqMOO69fF/oP5xQV4oKnK9Uwh7xoIPNL2AKum/iJa5FG4UtBH5iZVyRCWl+6mvdzoDI3xD5J6NOZx6f6/CGV1ZWBbt4Df8+bGjk7PGnCXRY8GVyNYGnc1D2d0gEI6R7KUoRNb/58HwAucrRr0C+v9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789047252; c=relaxed/simple;
-	bh=Mh4hFiHKRZi+BUTgSgwXr5D4Llvffqg6FfsA7VagRto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y+rsfHlL55eN4tlYE7bZd8iaxrmW2xAPPaH4ghdaB1mYeytSwiiNf4W3EzLdxTo4UiM5OYdPZQyUlSOFq7NaawNbyohta/7gkJbilU/YFQLCEjkV9TmI2Q2sDzqAwIAHp/cwvdTLh/uztbiRdqEggowkes1nR3zBhiPBrw/90kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3QGBMx4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789047844; c=relaxed/simple;
+	bh=XnVqWCdpz/jLWaZXkxaUGPhBA5tNcEitcQucAS4b4WU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uJzB6oVu7TN7qfc8WtemFCmytGcd30MoLL+uOnbgXmoegbmBJxOGVpJEJkt1pvqTCXOR84GGG8ERfc4SEjS8bc330pPL2ym6N1mDhE848K42haD8HHe4uxRscVcyiaeEPidJJE8fsgrdX9U2Y3bpyg7dlI3rnuQEWNVAa98OLGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tvz9goRE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3QGBMx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 759441F00898;
-	Thu, 10 Sep 2026 13:34:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tvz9goRE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD331F000FF;
+	Thu, 10 Sep 2026 13:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789047250;
-	bh=R6tbpyuljfgfZdUpmG6m3DA4a87+jb+g/2HfQLUIr5Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=e3QGBMx40PqUN7AXNN5xvAZrRXc+smUA71DzaOAKCJ6G7uqdD/CedJcNXMpOGUtHV
-	 Oin5mrHtRH23KfztzB+zwG/7C1glqUgUwj6gLis2aKwn1hCcbYbcWE2YjEX8j2f0vz
-	 ITlhZYTr4l0g/wDFEPFTBYUwOyPh8Y0EXNK+44DCc11pTauxgCg3z7KF4079I7zGh4
-	 YzbRYSmBqz6tHCTqhhCe2BLIicwyugGqTygpIr7GqAKHWqjqfAxLl3y/wcvvqr/QKt
-	 pYGbrrHMx/QLyGr4h06b4NGOBWghPeB6yFdgwKWG1AZ0cow3YJLjnuA1Ny7jRfsZFo
-	 Avx7L5fZNelJg==
-Message-ID: <db6eb031-4eff-4eb2-bc66-df94e890dba0@kernel.org>
-Date: Thu, 10 Sep 2026 15:33:59 +0200
+	s=k20260515; t=1789047843;
+	bh=IF7M+11q+QECLEteqxbNDabGoO0k0KfVFRmy1+hacIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Tvz9goRETXsoBH88n/XwxRH7uEZwVgWZml8GL3eYS51YzdH9NIzgyZztJZIXqjTMa
+	 ncz6dlvqeXkE5IZweicBq0YTMz0+VVpbN6R++P/ntujkGJHqeXmJg1s5n7HkXeYTu0
+	 HGqwjwPVGk+MwNUyqShd7SzXBlY1da//0T1KyO+FgbmbL8BiTsN5XWOeruvei/PTLf
+	 pO5ajcD07dyduWDapbbuBL0Y9/PMoKRYlejIf9zEG5Y2ZwQr9OPL6ab6ryoC4okAIa
+	 9+Ra2A+1xP2kwFFofz43vWoooWziI0Kwe28C8wIuf6pM++hyKnCPp3OBSiDkkudQkA
+	 IR86yvw89VACg==
+Date: Thu, 10 Sep 2026 14:43:53 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 03/12] mm/sparse: move initialization of section metadata
+ to sparse_metadata_init()
+Message-ID: <aqKzPw763WQR9eCf@gremlin>
+References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-3-008fc8d579fe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr handling
-To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
- <aqJrblWch-lajp3k@localhost.localdomain>
- <c2239ef2-10f4-4c87-a23a-2753f1e18d27@kernel.org>
- <aqKd1MUgFVHozVWu@localhost.localdomain>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
- ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
- AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
- 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
- g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
- ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
- 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
- /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
- jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
- DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
- HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
- 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
- LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <aqKd1MUgFVHozVWu@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-3-008fc8d579fe@kernel.org>
 
-On 9/10/26 14:08, Oscar Salvador (SUSE) wrote:
-> On Thu, Sep 10, 2026 at 11:13:18AM +0200, David Hildenbrand (Arm) wrote:
->> If you have something consuming __highest_used_section_nr while concurrently
->> updating it, you might get torn reads/writes that mess up the value on the
->> reader side.
->>
->> For example, mm/compaction.c consuming __highest_used_section_nr.
-> 
-> Right, but I guess that if we get a 'wild' value, at least we are
-> guarded by online_section_nr() performing the right thing?
+On Wed, Sep 09, 2026 at 03:32:56PM +0200, David Hildenbrand (Arm) wrote:
+> Let's move the code responsible for initializing sparse metadata (usemap,
+> memmap) into a helper. Cleanup the variable while at it (e.g.,
+> "map_count").
+>
+> Drop the rather obvious code comments.
+>
+> No functional change intended.
+>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-I guess so, I was assuming the only real scenario would be us missing to process
-certain sections (which would usually not be the end of the world). Getting
-larger values is unlikely when tearing reads/writes I think.
+Similar comment to last, the move screws up the diff a bit, but staring at
+git-delta it looks ok and the renames are good so:
 
--- 
-Cheers,
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-David
+> ---
+>  mm/sparse.c | 43 ++++++++++++++++++++++---------------------
+>  1 file changed, 22 insertions(+), 21 deletions(-)
+>
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 36e3d854febc5..a85a9c3840f6c 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -257,38 +257,39 @@ static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
+>  	}
+>  }
+>
+> +static void __init sparse_metadata_init(void)
+> +{
+> +	unsigned long start_section_nr = first_present_section_nr();
+> +	int nid_begin = sparse_early_nid(__nr_to_section(start_section_nr));
+> +	unsigned long section_nr, nr_sections = 1;
+> +
+> +	for_each_present_section_nr(start_section_nr + 1, section_nr) {
+> +		const int nid = sparse_early_nid(__nr_to_section(section_nr));
+> +
+> +		if (nid == nid_begin) {
+> +			nr_sections++;
+> +			continue;
+> +		}
+> +		sparse_init_nid(nid_begin, start_section_nr, section_nr, nr_sections);
+> +		nid_begin = nid;
+> +		start_section_nr = section_nr;
+> +		nr_sections = 1;
+> +	}
+> +	sparse_init_nid(nid_begin, start_section_nr, section_nr, nr_sections);
+> +}
+> +
+>  /*
+>   * Allocate the accumulated non-linear sections, allocate a mem_map
+>   * for each and record the physical to section mapping.
+>   */
+>  void __init sparse_init(void)
+>  {
+> -	unsigned long pnum_end, pnum_begin, map_count = 1;
+> -	int nid_begin;
+> -
+>  	if (compound_info_has_mask()) {
+>  		VM_WARN_ON_ONCE(!IS_ALIGNED((unsigned long) pfn_to_page(0),
+>  				    MAX_FOLIO_VMEMMAP_ALIGN));
+>  	}
+>
+> -	pnum_begin = first_present_section_nr();
+> -	nid_begin = sparse_early_nid(__nr_to_section(pnum_begin));
+> -
+> -	for_each_present_section_nr(pnum_begin + 1, pnum_end) {
+> -		int nid = sparse_early_nid(__nr_to_section(pnum_end));
+> -
+> -		if (nid == nid_begin) {
+> -			map_count++;
+> -			continue;
+> -		}
+> -		/* Init node with sections in range [pnum_begin, pnum_end) */
+> -		sparse_init_nid(nid_begin, pnum_begin, pnum_end, map_count);
+> -		nid_begin = nid;
+> -		pnum_begin = pnum_end;
+> -		map_count = 1;
+> -	}
+> -	/* cover the last node */
+> -	sparse_init_nid(nid_begin, pnum_begin, pnum_end, map_count);
+> +	sparse_metadata_init();
+>  	sparse_init_subsection_map();
+>  	vmemmap_populate_print_last();
+>  }
+>
+> --
+> 2.43.0
+>
+
+--
+Cheers, Lorenzo
