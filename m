@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A3C4A012D;
-	Thu, 10 Sep 2026 15:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D464BE44C;
+	Thu, 10 Sep 2026 15:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789053281; cv=none; b=I4i2CnQn2K/NZpgNjq/c3k0Ik8QLZZR6vXXw0L87y3OUCIwtuftqqXZh8TkoNFSgJZr2QheGje/WumTQWt7jvpG3yPQ97WNoZ5GYpXOY1lNz9bUKJHiCjzsw0zaWnA+i9alOvGl77CbAGHNor7vFfnMN+QJGTnjr0rDNepnF3A4=
+	t=1789053327; cv=none; b=Aj784+1oz4ZvErNpI3uEZmJswbjhEggvqr3G0XThTvf8FBpRB+vb37Uzgd3d9m92amipHtXhxN7ZttziIf7SQZENteu9FvtKpZOoI6/yC8noOyZflG83hQkDsAmMxiViWNY9oImyx7/8x2ruXh8HDG0UbCxQgXR+NWgUBEIQ0so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789053281; c=relaxed/simple;
-	bh=Ynr/ckk26RhLLelorBcIu18tQiV+tpozmDiIXpmErFM=;
+	s=arc-20240116; t=1789053327; c=relaxed/simple;
+	bh=ffb815Sk7SvWr8R4++zCIiYhle6cC/UPA1DRcUOZMdY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dmFt10z3ktuOctfze2Z8iBoTFe0x3V8E96YqkUddneNkBmMeUCMXAXLoCZlWJMg7c3/NcFjIGkXtN9Sl3onPOk3lES8xyUecvTulfOCX4cP6ifLtyIgqGnbpg55UN0gvw4yC/T9oQbtUfhwNFg7lQp2VbOEydm4E6bD8Go9TMSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8/Hh26n; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=rUcAsfyAIrKh1LxBXXFei5l4AyWCfj9qaaEGPzZIJP/Zjx6K2v3F4VLw/a7j2gMflUjLrPjAWNKtHF8eRK/Ky5U5sEogH+lCziO5X6bb2kqFcID9eJS1C+nsVxzxLfQLg+5XQgxBvW5ztTBdwQho4quuLrnXKz/nSENnd/NAwDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChFiY7I3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8/Hh26n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AB31F000FF;
-	Thu, 10 Sep 2026 15:14:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChFiY7I3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86291F000FF;
+	Thu, 10 Sep 2026 15:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789053272;
-	bh=i71iPk/nmN9G4xlBgwAONHJyflCRetRnssw9AwqSJHM=;
+	s=k20260515; t=1789053318;
+	bh=sEjaO8gOjD9f0+2IPCgP2BKjHuk9oDJMBENGv6o5iiw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=f8/Hh26nq+vVlLOiS5KT2eaI74x8SSamCLxJp5B6lM9ghwH1iXmyQ5ZQzxvpEfzVy
-	 1SRAiuz7mwiqt3spBDTCSj41GoNnyifoWTweI0P/VHXIAsbLhEDaG9bHXsOOmFS5mi
-	 9JIVLu5oH9n1sr9qnTQvpZNiP55Ue57JLPbsBSChckpNhn8HFS0jYo6J2JzRCkso7y
-	 AxU2zVNMuNOv+sd0UEci6u4kV28SP+2o4gHy5VzDFGqdi/ysuN/JLyXyk97/8Tsa5b
-	 Z8OaFqrw2q+YooSjvOwkk1PqwFoA6KqQKest7wl5OdBcVVkx+zKaxwxvCM8H0wJv1F
-	 ZBsCF1NXVdODw==
-Message-ID: <a44c51dc-1bd2-4773-be48-3a640f48e767@kernel.org>
-Date: Thu, 10 Sep 2026 17:14:20 +0200
+	b=ChFiY7I337QtzPmO3e7pcxLcEiMW3c1lGj7lAr0LVceobI2YDbaaxxmH1dC6zorIl
+	 2CRvuMT7kg+rqXci4EFF4yJVGlkA9vNas9C0TInFKFDfqxKNb1rFMxCNo3/1UDihoW
+	 0haaIsYy1dqa2/uNbuReA4WEbIKSJUekxWb70+W2gE8zsXlrbQXX9zzoKrfBQfs+Xn
+	 AhtS0iR5gFi2a/NG5ov/TJGW8Jqkth5BTSjOvDdr8srlm7rb/N3mlos5XxV9Sf5lLX
+	 LTajdiF1XC6BWLtjJtFqM4hjql8Y6Q2miG/DHnk/ybv8hIF0IVrw5RJ/A5GY1rJrk0
+	 60aIeb92PeZwg==
+Message-ID: <73b9f7b5-1c4c-4b03-92a4-8b093a5c9a04@kernel.org>
+Date: Thu, 10 Sep 2026 17:15:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/12] fs/proc/page: clarify comment in get_max_dump_pfn()
+Subject: Re: [PATCH 12/12] mm/memory_hotplug: drop CONFIG_HAVE_ARCH_PFN_VALID
+ handling from pfn_to_online_page()
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
@@ -55,8 +56,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
  driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-11-008fc8d579fe@kernel.org>
- <aqLBc20gZyDfkhdH@gremlin>
+ <20260909-b4-sparsemem_cleanups-v1-12-008fc8d579fe@kernel.org>
+ <aqLB0Fe_bCRSph9E@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -103,45 +104,85 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <aqLBc20gZyDfkhdH@gremlin>
+In-Reply-To: <aqLB0Fe_bCRSph9E@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 9/10/26 16:41, Lorenzo Stoakes (ARM) wrote:
-> On Wed, Sep 09, 2026 at 03:33:04PM +0200, David Hildenbrand (Arm) wrote:
->> pfn_to_online_page() will only succeed on some PFNs within the same
->> section, not necessarily all. Let's make that clearer.
+On 9/10/26 16:47, Lorenzo Stoakes (ARM) wrote:
+> On Wed, Sep 09, 2026 at 03:33:05PM +0200, David Hildenbrand (Arm) wrote:
+>> Drop CONFIG_HAVE_ARCH_PFN_VALID handling, as CONFIG_HAVE_ARCH_PFN_VALID
+>> is never used with CONFIG_MEMORY_HOTPLUG, as the latter depends on
+>> CONFIG_SPARSEMEM_VMEMMAP. Make sure it stays that way.
+> 
+> So argument is:
+> 
+> mm/Makefile:
+> 
+> memory-hotplug-$(CONFIG_MEMORY_HOTPLUG) += memory_hotplug.o
+> 
+> Is memory_hotplug.c even compiled at all?
+> 
+> mm/Kconfig:
+> 
+> menuconfig MEMORY_HOTPLUG
+> 	bool "Memory hotplug"
+> 	select MEMORY_ISOLATION
+> 	depends on SPARSEMEM_VMEMMAP
+> 	depends on ARCH_ENABLE_MEMORY_HOTPLUG
+> 	depends on 64BIT
+> 	select NUMA_KEEP_MEMINFO if NUMA
+> 
+> $ cd arch
+> $ rg HAVE_ARCH_PFN_VALID
+> Kconfig
+> 1762:config HAVE_ARCH_PFN_VALID
+> 
+> arm/Kconfig
+> 94:	select HAVE_ARCH_PFN_VALID
+> 
+> arm/mm/init.c
+> 121:#ifdef CONFIG_HAVE_ARCH_PFN_VALID
+> 
+> arm/include/asm/page.h
+> 178:#ifdef CONFIG_HAVE_ARCH_PFN_VALID
+> 
+> m68k/Kconfig.cpu
+> 23:	select HAVE_ARCH_PFN_VALID
+> 40:	select HAVE_ARCH_PFN_VALID
+> 
+> arc/Kconfig
+> 463:	select HAVE_ARCH_PFN_VALID
+> 
+> All of arm, m68k and arc are 32-bit arches so by definition MEMORY_HOTPLUG
+> can't be selected.
+> 
 >>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> Nit on comment below, but LGTM so:
+> So LGTM and:
 > 
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > 
 >> ---
->>  fs/proc/page.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>  mm/memory_hotplug.c | 9 ++-------
+>>  1 file changed, 2 insertions(+), 7 deletions(-)
 >>
->> diff --git a/fs/proc/page.c b/fs/proc/page.c
->> index 260772b20bd99..6856ff3e3cf28 100644
->> --- a/fs/proc/page.c
->> +++ b/fs/proc/page.c
->> @@ -31,10 +31,9 @@ static inline unsigned long get_max_dump_pfn(void)
->>  {
->>  #ifdef CONFIG_SPARSEMEM
->>  	/*
->> -	 * The memmap of early sections is completely populated and marked
->> -	 * online even if max_pfn does not fall on a section boundary -
->> -	 * pfn_to_online_page() will succeed on all pages. Allow inspecting
->> -	 * these memmaps.
->> +	 * If max_pfn does not fall on a section boundary, pfn_to_online_page()
->> +	 * can succeed on PFNs beyond max_pfn within the same section. Allow
->> +	 * inspecting these memmaps.
+>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> index b428da66d279c..58ce35cb48f57 100644
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -344,6 +344,8 @@ struct page *pfn_to_online_page(unsigned long pfn)
+>>  	struct dev_pagemap *pgmap;
+>>  	struct mem_section *ms;
+>>
+>> +	BUILD_BUG_ON(IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID));
 > 
-> 'Allow inspection of' these memmaps is clearer I think. But this odd turn of
-> phrase existed before this change also :)
+> Haha nicest way of removing some later code I've seen. Just make it not compile
+> if such a thing happens :)
 
-Done, thanks!
+Better be safe than sorry :)
+
+Thanks!
 
 -- 
 Cheers,
