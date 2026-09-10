@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC124BFE90;
-	Thu, 10 Sep 2026 14:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9E37475B;
+	Thu, 10 Sep 2026 14:30:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789050580; cv=none; b=XgFd3S3cfRBIH6vJOLDcemJYy5DbLQYG+T18PkzMV7X+gVzODlTpbhya6ptnIdOZsmeE5Kb7NT7YCt0+BJkce/EKgC6vwDdLVgrg0x/SmLp3q0W6EHEBx+hDYG4jEBX3hMgHxjwHR0eb1foEAoPe9tWoQ0BDCQ5vATQXQNdCjTs=
+	t=1789050656; cv=none; b=c6j1P2zifJgfMN4H4cIe4Co/RWR3kv+N1xR9tCnDmG1xYNbHEeiAav8hf66St1XW1V/pL9M7CSSUsTuundqBZiXTPUl68Y/PCN/d/yJfGul1iBt+rVsejwl6+n1E9rmMlfRMf/2mx7xQQoubE4W3MIng4vfyLl8jQmOtwo7KooY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789050580; c=relaxed/simple;
-	bh=CDWWew5lN3hA3BAVbS3OJv7Sk6P9kQAID828SIvKQzo=;
+	s=arc-20240116; t=1789050656; c=relaxed/simple;
+	bh=3Rp1Gro0hOzX3FtSWUHW9R30sxNTX0x2CooV/G8FxVA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R5kgE5M1u5BuRowndKDTBTXoiy5XWtM/lMgRCfKoO5guaJl0c8jfMJ+5ToRLP+IwqHf7F3fECEtlY9BPaaBS5dCMutxuK52gplEdPpQ+rbT1oWmZjNyQo3qgVbX5RwleUMuRfdV1f59a9dPWyMwmnk08idFXEsJkg1rl9w7A8wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFrgqnzN; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Q7hDudy0Az4kb10DhVbw0MssB+imWu/9gm//BOuCgJfny+vHOknkMXfi83qSwRPzy4AWDQAvDvGRV1J5rNYKpx8N7ZFWjlYo0KQJ+JTkOuuwVTnZLaXW3OT4+K6fMPTe52dWCxXl5/bmgD8GmAIMLXjPsisbfjKhVQZ9XV1oS9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+NhKwxf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFrgqnzN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A84E1F000FF;
-	Thu, 10 Sep 2026 14:29:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+NhKwxf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F14821F000FF;
+	Thu, 10 Sep 2026 14:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789050578;
-	bh=KJRcwygGYVy4dG4Ps+nSG/itUpNyDb3m6x+mKKxOpsU=;
+	s=k20260515; t=1789050654;
+	bh=QYIjJzkgNcf/L8IdAlVc5CxNGSBjCKsHUzlpJK8zVLA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jFrgqnzNMfKfIqZq85rz4WdNfx04C3O3Dp4Bb69/hOroxT7QgNDyLykc3ghRiyvnQ
-	 xRXrrOv5ZKqLIutXp2SFgHlLTxEIj2TtRuAdk3UQr74vvNmqbsllhqSPF6n4iclkCu
-	 OuTPNZjlnd81hIL3R7K9Af0KytaiIbXfLf5Qb+G5ZD0rjXJe0xAbPSCLfsQDmjg1CJ
-	 e6YgqUNul6/tTbVIqy9W8sxPcbx98wgcaT3g16KMoKNG0+Oc1p6uF2zrnpoFW0r8X5
-	 UeLr9jrK4Jrb6qYy+TlPtk1IA1czEk1tfoIBfo+TeiiPTPFFYFNm7Uv05CVM0iQ6lb
-	 e7BGQ2lLXwFrA==
-Message-ID: <86fcc776-b919-4ad9-8abd-a61150dee3b9@kernel.org>
-Date: Thu, 10 Sep 2026 16:29:27 +0200
+	b=C+NhKwxftOndxbZynkT9flhdKmqwHy/1toG1XLj2OU1G58MCD12nAwLOIhGGZffUa
+	 AkRl65KSKyX9avFrOtHTOShpKJiVFO9OWw540xAJW2ldjVX8bahRSaXcbakvPiVE6X
+	 xQWEzmmDV5MP+RSKvhFEVX9A7FZ1YcY5WhB2lJtnnzuBMg2yd2/1mhk38AseGdM4h1
+	 BEJEdyGAeJlI/33+zLCOswq8O/T611SDkNYOyWXz0THnaju4i0LucLbGX650EmuqTs
+	 TGVNI7c+s3GZAxvObikqWisVQNc/Wtqeh8KoI54CTVf9iO1E55s1tLKKFsBF7Dfnhn
+	 u2oqY5ERBi/0w==
+Message-ID: <44f7ce5c-b75c-4c44-9202-1d2d3a1de965@kernel.org>
+Date: Thu, 10 Sep 2026 16:30:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/12] mm/sparse: rename and cleanup sparse_init_nid()
+Subject: Re: [PATCH 02/12] mm/sparse: refactor sparse_sections_init()
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
@@ -55,8 +55,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
  driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-4-008fc8d579fe@kernel.org>
- <aqK0S1OT5csJFIq1@gremlin>
+ <20260909-b4-sparsemem_cleanups-v1-2-008fc8d579fe@kernel.org>
+ <aqKo5vHZbDhzrUZL@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -103,64 +103,95 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <aqK0S1OT5csJFIq1@gremlin>
+In-Reply-To: <aqKo5vHZbDhzrUZL@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 9/10/26 15:46, Lorenzo Stoakes (ARM) wrote:
-> On Wed, Sep 09, 2026 at 03:32:57PM +0200, David Hildenbrand (Arm) wrote:
->> Let's rename it to "sparse_metadata_init_nid", avoid the "pnum" terminology
->> and drop the function comment. Further, rename the "map" variable to
->> "mem_map" for consistency with other functions.
+On 9/10/26 15:29, Lorenzo Stoakes (ARM) wrote:
+> On Wed, Sep 09, 2026 at 03:32:55PM +0200, David Hildenbrand (Arm) wrote:
+>> memory_present() really identifies+prepares all early sections so the
+>> initialization in sparse_init() can properly iterating them to
+>> initialize metadata.
+>>
+>> Let's just inline memory_present() into sparse_sections_init() and
+>> cleaning up the code a bit while at it: make it clear that we are operating
+>> on pfns.
+>>
+>> Note that we call set_section_nid() now only if the section
+>> was not already created earlier. Now, there is no more inconsistency
+>> between what we (temporarily) store in ms->section_mem_map and what
+>> we store in our section->nid array.
 >>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> LGTM, one nit below.
+> In general please keep move/refactor steps separate. It makes it harder to
+> review when two things are going on at one time.
 > 
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> But I guess in this case the diff wouldn't be that different.
+
+Yeah, I actually want back and forth here and decided to keep it simple.
+
+> 
+> Anyway seems reasonable so:
+> 
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+
+Thanks!
+
 > 
 >> ---
->>  mm/sparse.c | 41 ++++++++++++++++++++---------------------
->>  1 file changed, 20 insertions(+), 21 deletions(-)
+>>  mm/sparse.c | 41 +++++++++++++++++------------------------
+>>  1 file changed, 17 insertions(+), 24 deletions(-)
 >>
 >> diff --git a/mm/sparse.c b/mm/sparse.c
->> index a85a9c3840f6c..f84bfceb53060 100644
+>> index 6a6d258862904..36e3d854febc5 100644
 >> --- a/mm/sparse.c
 >> +++ b/mm/sparse.c
->> @@ -222,37 +222,34 @@ void __weak __meminit vmemmap_populate_print_last(void)
->>  {
+>> @@ -179,22 +179,27 @@ static inline unsigned long first_present_section_nr(void)
+>>  	return next_present_section_nr(-1);
 >>  }
 >>
->> -/*
->> - * Initialize sparse on a specific node. The node spans [pnum_begin, pnum_end)
->> - * And number of present sections in this node is map_count.
->> - */
->> -static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
->> -				   unsigned long pnum_end,
->> -				   unsigned long map_count)
->> +static void __init sparse_metadata_init_nid(int nid,
->> +		unsigned long start_section_nr, unsigned long end_section_nr,
->> +		unsigned long nr_sections)
+>> -/* Record a memory area against a node. */
+>> -static void __init memory_present(int nid, unsigned long start, unsigned long end)
+>> +void __init sparse_sections_init(void)
 >>  {
->> -	unsigned long pnum;
->>  	struct mem_section_usage *usage;
->> +	unsigned long section_nr;
+>> -	unsigned long pfn;
+>> +	unsigned long pfn, start_pfn, end_pfn;
+>> +	int i, nid;
+>> +
+>> +	sparse_extreme_init();
 >>
->> -	usage = memblock_alloc_node(map_count * mem_section_usage_size(),
->> +	usage = memblock_alloc_node(nr_sections * mem_section_usage_size(),
->>  				    SMP_CACHE_BYTES, nid);
->>  	if (!usage)
->>  		panic("Failed to allocate usemap for node %d\n", nid);
+>> -	start &= PAGE_SECTION_MASK;
+>> -	mminit_validate_memmodel_limits(&start, &end);
+>> -	for (pfn = start; pfn < end; pfn += PAGES_PER_SECTION) {
+>> -		unsigned long section_nr = pfn_to_section_nr(pfn);
+>> -		struct mem_section *ms;
+>> +	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+>> +		start_pfn &= PAGE_SECTION_MASK;
+>> +		mminit_validate_memmodel_limits(&start_pfn, &end_pfn);
 >>
->> -	for_each_present_section_nr(pnum_begin, pnum) {
->> -		unsigned long pfn = section_nr_to_pfn(pnum);
->> -		struct page *map;
->> +	for_each_present_section_nr(start_section_nr, section_nr) {
->> +		unsigned long pfn = section_nr_to_pfn(section_nr);
+>> -		sparse_index_init(section_nr, nid);
+>> -		set_section_nid(section_nr, nid);
+>> +		for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+>> +			unsigned long section_nr = pfn_to_section_nr(pfn);
+>> +			struct mem_section *ms;
+>>
+>> -		ms = __nr_to_section(section_nr);
+>> -		if (!ms->section_mem_map) {
+>> +			sparse_index_init(section_nr, nid);
+>> +			ms = __nr_to_section(section_nr);
+>> +			if (ms->section_mem_map)
+>> +				continue;
+>> +
+>> +			set_section_nid(section_nr, nid);
 > 
-> NIT: Could be const?
+> So the main change seems to be calling set_section_nid() only if
+> !ms->section_mem_map (and obv. calculating ms earlier), as described in the
+> commit msg.
 
-ack!
+Yes! I also played with having that in a standalone patch but judged that it's
+not really worth it. I can move it to a separate patch if you think it would be
+better!
 
 -- 
 Cheers,
