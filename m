@@ -1,57 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A523C5DB6;
-	Thu, 10 Sep 2026 07:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6743CB542;
+	Thu, 10 Sep 2026 07:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789024975; cv=none; b=poxYl197Vi4HSnudsJemxaSZSCajdh+ae5j/Wkbu6EDfPVE7e4NPBIJh9JPRSSD1fANxeluTqWyydMxYwN+Xkujv1siN0tWSbyWBu+pXMFgVXhu8NFcoS8l+G6d9dHGWJFuATNnUhBivGm+xQygPEnAh0/088pvuueLv8/rSMVM=
+	t=1789025107; cv=none; b=mxJYpwF2uO1lCbk7ci3bYQChYYkCrkLr7Q44+DzQegM67IP/hmaAndBJ2x3NaOegklvMac5wKGTNbN9SidbItJBHvf8LGaumpNxAxyrKuU4ckb9X1gQZyh1Is33dsJz27jo4TexHhc29foA38uEQ1H3HYxy8dufw08ezG01iLhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789024975; c=relaxed/simple;
-	bh=d3E5+Nugpn7JFsGIqYAnCkN+NB8mCGj38GT8XW4X00k=;
+	s=arc-20240116; t=1789025107; c=relaxed/simple;
+	bh=BuNh+9iki4bCHezswMDWFz8ALnXQlahPlLUZbhi7gk4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FFBZQPvYO818WerJr7iQUrXAKCr+rzohJFAmPwxEXGYIRp+u+DK71C4xYFfhVONrox70E4qGh1IodGZe9wVhuwGbNPokh5EBaWadpSFHHQiJxmkiNZ1QzOFw74OlQnmjgatRMKtED46wlmslkNHBMKIrZqIu2Ui2c3MAqPtVp5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xo6s3DWB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TzUNA2leZ68nfwDrIx0Xpi4OqrwZUMcL3jNsuZlAvLcOq92SnDiG4tSflSIYdDnXkaf8ECrzEvjCMes//xkJ2yfGEQQ+e7ifmnu8T0Z+muaa7R7uA09M6/aB0B8fL+V2/Rgw3I7cDzfBHLvtsWRshVlKubVKP9pRI9tY+p4woP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyo6Q4cQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xo6s3DWB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C941F000FF;
-	Thu, 10 Sep 2026 07:22:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyo6Q4cQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248381F000FF;
+	Thu, 10 Sep 2026 07:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789024965;
-	bh=d3E5+Nugpn7JFsGIqYAnCkN+NB8mCGj38GT8XW4X00k=;
+	s=k20260515; t=1789025102;
+	bh=BuNh+9iki4bCHezswMDWFz8ALnXQlahPlLUZbhi7gk4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Xo6s3DWB4qDdTonIWzUDebnpJwwTE3rqh83bK9XgKURqkAk6KkxykEwDpfIqr4IOA
-	 dn+7wjGFV8dTK7USkvf/c87usq8B0neQRd6tBgQ8NFsedcUJmNIypCkJ83LHmhmLRY
-	 x8IU4H5VC2r++pQCBRHQ17zbOlAKBn35a8MiThqxi8l4lSWEuDlSFSF779FDzXYQoR
-	 1VHVmDSQWQx6TpXupWK/VKG/hsZ8KZQ3Ia2WF4Q83dI+8mXPohJuoTtRmpsWWYW9Lk
-	 L2kkhyWFpoOtYfWDRquZKuai7jRbpoRhtnzGZs02UgOxOFzrix7l2z88f1QSqha40n
-	 JrG10spQOZEjA==
+	b=cyo6Q4cQpCx5wIUnrs6QrwqTBfMAj8jVwUQeZ5i2Ens/KQAq5C63JJLMpCLqr7z/D
+	 M3u5WLa4nu4MqUTKqCLdMysWPARSYOcVu4S5IM6z8Ka9iTrSPoiyTdbwqSTPC3Jdu9
+	 WdG7mnppTpMWL0cXfZnyKtO3pd59rO+EXaAXlCDwLNcnxbG2msrgF7/dPYsOU8EUKw
+	 nPHNmWxGPgR21k39D3soqgY8sr7wZKA5oXerr7CEzOLItqFvN8Mtt1cyTfLO30mnUB
+	 SAwO+UtMDzQAcOmLgzUWtCNVEWsGfuH9tnW0JDHRULco1KgDkSPrm9VT2+600OJ48M
+	 jjaEpvgOcynXQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 04/12] cxl: Cache decoder settings on PCI devices
+Subject: Re: [PATCH v12 09/12] cxl: Restore CXL state after PCI reset
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Srirangan Madhavan" <smadhavan@nvidia.com>
 Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260910070808.1444264-5-smadhavan@nvidia.com>
+In-Reply-To: <20260910070808.1444264-10-smadhavan@nvidia.com>
 References: <20260910070808.1444264-1-smadhavan@nvidia.com>
- <20260910070808.1444264-5-smadhavan@nvidia.com>
+ <20260910070808.1444264-10-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 10 Sep 2026 07:22:44 +0000
-Message-Id: <20260910072245.73C941F000FF@smtp.kernel.org>
+Date: Thu, 10 Sep 2026 07:25:01 +0000
+Message-Id: <20260910072502.248381F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-> Add CXL core plumbing to refresh a PCI device HDM decoder cache when
-> decoders are enumerated, committed, or reset. PCI reset paths can use
-> this snapshot to restore HDM programming without walking CXL topology
-> during reset recovery.
+> After CXL reset, restore PCI config state enough to reach HDM MMIO,
+> restore cached global and per-decoder HDM state, restore the cached
+> CXL.cache and CXL.mem enable bits, and then run the normal PCI restore
+> callbacks.
 >=20
-> The cache is populated by PCI-side discovery in a follow-on patch. Until
-> then, the CXL core update path is a no-op when no PCI HDM cache is
-> present.
+> If reset clears a previously locked decoder, restore and commit its
+> programming before reapplying the cached lock. Leave a locked committed
+> decoder unchanged when that state survives reset.
+>=20
+> Keep the target IOMMU reset block active until CXL state restore completes
+> so Bus Master Enable cannot reopen DMA before decoder state is valid.
 >=20
 > Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
 
@@ -59,5 +62,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910070808.1444=
-264-1-smadhavan@nvidia.com?part=3D4
+264-1-smadhavan@nvidia.com?part=3D9
 
