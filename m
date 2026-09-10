@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9C39A81B;
-	Thu, 10 Sep 2026 20:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ED03911BD;
+	Thu, 10 Sep 2026 20:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789073715; cv=none; b=uLnrXyqble9e8FyuSMfNlLESXm6UQsRgsLekG04exUIX0oi4yjXu/EFCeRpqiyucOMrdEfnfjhO2qG2xrzyYt2I8VuNG+Hp8y4CZGM6GuacFGIUVy9YpZvNJGzK77GOW8DNlQUYVrmNUHlbzoY+Evl/BYJWbjP9vzLPqji/CEH0=
+	t=1789073766; cv=none; b=hrsZSDW9Aqau1Bi3ehjO/OXfeG4RgePgvHaO5fp7COBWovAPr0wCge1NPwxmBceOgu6SPBwlUNh7PQ845ojRNTX1z/WIGzL2aZk3sLDTLQDwhb0DVEc7q4/aPx6abyc08rbRVJdcqZ2lcBTsSj1jQi6lppui5V/VhJU3fUB+YEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789073715; c=relaxed/simple;
-	bh=crOnlbHbyUPuGLh0JGVd37vqRbssmx4tna3eDDxQncM=;
+	s=arc-20240116; t=1789073766; c=relaxed/simple;
+	bh=h8rCaR4TFhDM8T589IyyHriDF3DobxfKqx5fLSskxtg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AYYxVkUrYyfKfewkZF6l47FusRaxr89cTJB3evhv9VlwA7u5ZQy95S/0OTlRXCEqOx7Qbt0SEuIf0FEkpP9bcSwillGW8hw8BLgFLvdzLrumAwRSqUvcGZxD5vIwIJIwS803Q7CbHP7cRBy4xBtM9hx4gBmHMkkqtzKNEQGAqOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xoh0feO1; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=R91HFokWTBPtPjBpD+G+kTs3yEq46Lg2JtizTt+98znfcE3tUPEzPmMqpqQDAq+/9Hxxl/VHjIb0Zln86dyHYqj1niofOt5btaOTaCkin5EqOeJNnKyWMvZhYAc4fmq2zNFq0RooY9jSONH7bhemz647jnDZDIHrIHVBME8ElvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTynoEnc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xoh0feO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46FC31F000FF;
-	Thu, 10 Sep 2026 20:55:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTynoEnc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33FFB1F000FF;
+	Thu, 10 Sep 2026 20:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789073714;
-	bh=D+msI9wYLgAPXjQbPqwb4BUHIoNDxsNY1NG+JACt0is=;
+	s=k20260515; t=1789073764;
+	bh=JZqyxO+0mZ5PkddrCrsh7wBL5SNaKqyzIqNlNs0WVhU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Xoh0feO1QBoUTvaFc9nj+FXL/MEaEmvlbGSfUeqPWb00hKvvJgPsh9nRIl0MzQhVd
-	 HuBezLD31zsfxmGSg9IuazudLg2IfqkNRg7Oui1pnp/TcqHqecQXcO0UhsrBkcIn3P
-	 nn7HIZX4J/Dml0TL2nd69TZG1NMX5EAwoea/fy99bkbLyUGO1eq8cOxx50leJvM8y/
-	 eOVeYgZaHriObwlQyMZC4p7/m38jZwvXaV2ObMO1IMO+aTr9nlNIFDDJpr66+LKhws
-	 tIJtZoi71NOeTDe2xM+nKQlgwV+3E5ToD9PK9kyMDi3PFG7wHaPTfvT32nm72bDL8D
-	 SzTt0cUwJn+Fg==
-Date: Thu, 10 Sep 2026 21:55:07 +0100
+	b=cTynoEncsSZadaZgn9MhAhOeYYU+2V2bQb1y/rji8feAnOgMJhLfpGDOyYTvT8B+B
+	 efSdWhcXzufQYa0XaJ2ls651lAABBROis38uKVTh56cZVIkgxqSSllb6wAJVl++7au
+	 GCHmHUm05yQG6i6FfvQTaB/iltUJ1pzVS012/RngrOfcCJ/foR1hqGV9wTMDB9cZ9w
+	 zOrYsxRNJVIXAZhDVR5aZiSUS7kJfERbvLvof2RalR+E38hti14vvkj+6B+klhm9fV
+	 xtO/DtE2cB7EiDU8hPm+Yx9jktPnh+Y56l9ZuYkBvDLuDuey6I2sKMw1TLPVgFIPwH
+	 n80CWHjp9g9zw==
+Date: Thu, 10 Sep 2026 21:55:59 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Junjie Cao <junjie.cao@intel.com>, Jonathan Cameron
- <jonathan.cameron@oss.qualcomm.com>, Davidlohr Bueso <dave@stgolabs.net>,
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
  Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- linux-cxl@vger.kernel.org, Ira Weiny <iweiny@kernel.org>, Li Ming
- <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/regs: Reject register blocks in an unassigned BAR
-Message-ID: <20260910215507.0b704da8@jic23-hlaptop>
-In-Reply-To: <6bb0b537-eaef-48a6-aadb-232e44522dee@intel.com>
-References: <20260910093858.535969-1-junjie.cao@intel.com>
-	<6bb0b537-eaef-48a6-aadb-232e44522dee@intel.com>
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shaikh Kamaluddin
+ <shaikhkamal2012@gmail.com>, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev
+Subject: Re: [PATCH v3 1/2] driver core: Add conditional guard support for
+ device_trylock()
+Message-ID: <20260910215559.38257fed@jic23-hlaptop>
+In-Reply-To: <20260910094017.4032170-2-kanie@linux.alibaba.com>
+References: <20260910094017.4032170-1-kanie@linux.alibaba.com>
+	<20260910094017.4032170-2-kanie@linux.alibaba.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,41 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Sep 2026 08:38:06 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu, 10 Sep 2026 17:40:16 +0800
+Guixin Liu <kanie@linux.alibaba.com> wrote:
 
-> On 9/10/26 2:38 AM, Junjie Cao wrote:
-> > cxl_decode_regblock() only checks that the Register Locator offset fits
-> > pci_resource_len().  A BAR the PCI core could not place is reset to zero
-> > start, end and flags while config space keeps the firmware value, so a
-> > zero offset passes and the block is mapped at physical address 0.  On
-> > x86 ioremap() of the reserved low megabyte succeeds, the component
-> > register header does not match, and a switch port fails with "HDM
-> > decoder capability not found", pointing at the HDM decoders rather than
-> > at the BAR.
-> > 
-> > Reject a BAR with no length or still unassigned, next to the existing size
-> > check.  Skip empty Register Locator entries first: they decode as BAR0
-> > offset 0 and would trip the check, and nothing looks them up.
-> > 
-> > Seen with edk2-stable202602 (f6489621b8ae, reverted in stable202605),
-> > which places 64-bit non-prefetchable BARs behind a bridge in the
-> > prefetchable window.  Linux refuses to claim them and the switch
-> > upstream and downstream port BAR0s find no room in the 32-bit window.
-> > QEMU q35 with a CXL switch, Fedora 43 edk2-ovmf-20260213, before:
-> > 
-> > pci 0000:0d:00.0: BAR 0 [mem size 0x00010000 64bit]: can't assign; no space
-> > cxl_port port2: HDM decoder capability not found
-> > 
-> > after:
-> > 
-> > pcieport 0000:0d:00.0: BAR0: not assigned (type: 1)
-> > cxl_port port2: No component registers mapped
-> > cxl_port port2: Failed to map HDM decoder capability
-> > 
-> > Link: https://github.com/tianocore/edk2/issues/13104
-> > Signed-off-by: Junjie Cao <junjie.cao@intel.com>  
+> Introduce a conditional guard version of device_trylock() for scenarios
+> that must not block on the device lock. device_trylock() returns 1 on
+> success like mutex_trylock(), so the default binary condition applies and
+> ACQUIRE_ERR() reports -EBUSY on contention.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+> Suggested-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
