@@ -1,50 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDA03C0A00;
-	Thu, 10 Sep 2026 20:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9C39A81B;
+	Thu, 10 Sep 2026 20:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789073528; cv=none; b=SKQCKwqNC5SAOi5eIQ7YKh2eymfDtlDP17s9odc89rZTtchR6lUVcHTrSUS7oeE9P1lB8+6xNDiPe0OasHnGcQQcxws08N9kt8uGZ/1Ouaqz6oFNyw/ovTASeI9xhoaOFrWDpmpY4wk45BZaCpnZ+XvwFGR7ujjLlXg0osLlLOU=
+	t=1789073715; cv=none; b=uLnrXyqble9e8FyuSMfNlLESXm6UQsRgsLekG04exUIX0oi4yjXu/EFCeRpqiyucOMrdEfnfjhO2qG2xrzyYt2I8VuNG+Hp8y4CZGM6GuacFGIUVy9YpZvNJGzK77GOW8DNlQUYVrmNUHlbzoY+Evl/BYJWbjP9vzLPqji/CEH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789073528; c=relaxed/simple;
-	bh=VvPJkxjXZqeEEGs6FachlDK8+7jtRGpBSMPG7YzAPUQ=;
+	s=arc-20240116; t=1789073715; c=relaxed/simple;
+	bh=crOnlbHbyUPuGLh0JGVd37vqRbssmx4tna3eDDxQncM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rlfoI9y3JuJq+WtmuHWLwM5VgFZGTC+eehKIyYwh5bg3X2vtFcrD7fH/dDe9tQmeEcm3un8s30wtAa54dGImATWnPZ1oQHzwenP7j/emkH9D0j99NBWZULsLinJv1AW3CnIuNhljkGmJrH+Z+kks8IUMVd/Z6IpQR4kxwJNxtAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9/Sdb0F; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=AYYxVkUrYyfKfewkZF6l47FusRaxr89cTJB3evhv9VlwA7u5ZQy95S/0OTlRXCEqOx7Qbt0SEuIf0FEkpP9bcSwillGW8hw8BLgFLvdzLrumAwRSqUvcGZxD5vIwIJIwS803Q7CbHP7cRBy4xBtM9hx4gBmHMkkqtzKNEQGAqOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xoh0feO1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9/Sdb0F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC101F000FF;
-	Thu, 10 Sep 2026 20:52:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xoh0feO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46FC31F000FF;
+	Thu, 10 Sep 2026 20:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789073524;
-	bh=ARy8RdgZuRLYXG020/f90w1jqch81coF+Ip26d3310A=;
+	s=k20260515; t=1789073714;
+	bh=D+msI9wYLgAPXjQbPqwb4BUHIoNDxsNY1NG+JACt0is=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=R9/Sdb0FC0YydKwEgopOaiyPLJ21VKcg/KWJIjFJefd2tF8JphqExULZ1L+PIuWFv
-	 NBLo/aDh0jzADhNAdSzz83L+lrL1WL1WreDmQDV4od6Mx+BROyuem/ZZERCBCIN9tU
-	 p/XnfRNY0c5hIvCzGTkf1oGnJ/ANmM3zYXwcNqZhnbzXCw6NvKg3iXqqfZTX60U8XD
-	 TbkiY7wuZK7ETc/cPq6Qoc2CFg25xVKFQ3o2dhVlCqDAhVfrE2Io8B97MvNDpfx2mG
-	 qT4V/oWJ2hiLIhoSNg/F1w5zO4rMsfkcGFntveaWQY7vrXf8d9tayA+EUuruspjqWu
-	 Xmf5taZdebO0Q==
-Date: Thu, 10 Sep 2026 21:52:01 +0100
+	b=Xoh0feO1QBoUTvaFc9nj+FXL/MEaEmvlbGSfUeqPWb00hKvvJgPsh9nRIl0MzQhVd
+	 HuBezLD31zsfxmGSg9IuazudLg2IfqkNRg7Oui1pnp/TcqHqecQXcO0UhsrBkcIn3P
+	 nn7HIZX4J/Dml0TL2nd69TZG1NMX5EAwoea/fy99bkbLyUGO1eq8cOxx50leJvM8y/
+	 eOVeYgZaHriObwlQyMZC4p7/m38jZwvXaV2ObMO1IMO+aTr9nlNIFDDJpr66+LKhws
+	 tIJtZoi71NOeTDe2xM+nKQlgwV+3E5ToD9PK9kyMDi3PFG7wHaPTfvT32nm72bDL8D
+	 SzTt0cUwJn+Fg==
+Date: Thu, 10 Sep 2026 21:55:07 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dan
- Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>, Li Ming
- <ming.li@zohomail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Danilo
- Krummrich <dakr@kernel.org>, Shaikh Kamaluddin <shaikhkamal2012@gmail.com>,
- linux-cxl@vger.kernel.org, driver-core@lists.linux.dev
-Subject: Re: [PATCH v3 2/2] cxl/memdev: Fix deadlock between poison debugfs
- and cxl_mem unbind
-Message-ID: <20260910215201.167040fe@jic23-hlaptop>
-In-Reply-To: <2026091021-could-rockiness-15db@gregkh>
-References: <20260910094017.4032170-1-kanie@linux.alibaba.com>
-	<20260910094017.4032170-3-kanie@linux.alibaba.com>
-	<2026091013-deepness-astronaut-471a@gregkh>
-	<ea74384f-714a-495a-8d78-d47a9657e05e@linux.alibaba.com>
-	<2026091021-could-rockiness-15db@gregkh>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Junjie Cao <junjie.cao@intel.com>, Jonathan Cameron
+ <jonathan.cameron@oss.qualcomm.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ linux-cxl@vger.kernel.org, Ira Weiny <iweiny@kernel.org>, Li Ming
+ <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/regs: Reject register blocks in an unassigned BAR
+Message-ID: <20260910215507.0b704da8@jic23-hlaptop>
+In-Reply-To: <6bb0b537-eaef-48a6-aadb-232e44522dee@intel.com>
+References: <20260910093858.535969-1-junjie.cao@intel.com>
+	<6bb0b537-eaef-48a6-aadb-232e44522dee@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -52,79 +48,44 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Sep 2026 13:58:28 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On Thu, 10 Sep 2026 08:38:06 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> On Thu, Sep 10, 2026 at 07:28:03PM +0800, Guixin Liu wrote:
-> >=20
-> >=20
-> > =E5=9C=A8 2026/9/10 17:52, Greg Kroah-Hartman =E5=86=99=E9=81=93: =20
-> > > On Thu, Sep 10, 2026 at 05:40:17PM +0800, Guixin Liu wrote: =20
-> > > > The poison debugfs handlers take the memdev device lock so that the
-> > > > region lookup sees a stable cxlmd->dev.driver. debugfs holds a refe=
-rence
-> > > > on the file across the handler, and cxl_mem unbind removes that file
-> > > > while holding the very same device lock, so a handler that waits fo=
-r the
-> > > > lock deadlocks against a concurrent unbind.
-> > > >=20
-> > > > Both tasks then hang. The unbind side is uninterruptible, and it al=
-so
-> > > > blocks the memdev detach work, which runs on an ordered workqueue a=
-nd so
-> > > > stalls every other CXL bus work item.
-> > > >=20
-> > > > Take the lock with the trylock guard and return -EBUSY instead of
-> > > > waiting. An unbind that wins the race removes the file first and the
-> > > > write fails with -ENOENT.
-> > > >=20
-> > > > Found by code inspection. Reproduced by writing inject_poison in a =
-loop
-> > > > while unbinding and rebinding cxl_mem, and confirmed fixed by the s=
-ame
-> > > > test. =20
-> > > Why would anyone normally "unbind" cxl_mem at all?  That will taint
-> > > kernels soon, so you don't normally want to do that, right?
-> > >=20
-> > > And debugfs is root-only, so this is a "root did something bad, and g=
-ets
-> > > to keep the mess", right?  This should not ever be a normal operation=
-. =20
-> > Agreed, nobody should unbind cxl_mem in production. The sysfs unbind is
-> > in the reproducer only because it's the cheapest trigger.
-> >=20
-> > The window itself is not sysfs-unbind specific.
-> > The debugfs directory is torn down from a devm action, so every path th=
-at
-> > ends
-> > in device_release_driver_internal() hits the same wait: rmmod cxl_mem, =
-and
-> > the
-> > memdev detach work that PCI hot-remove schedules. That detach path is t=
-he
-> > third
-> > task in the reproducer stack, the one wedged on cxl_bus_wq.
-> > A poison write racing an rmmod or a hot-remove is not root misbehaving,
-> > and no taint flags it either. =20
->=20
-> But how can cxl_mem ever be removed, it doesn't live on a bus that is
-> hot-removable, does it?
+> On 9/10/26 2:38 AM, Junjie Cao wrote:
+> > cxl_decode_regblock() only checks that the Register Locator offset fits
+> > pci_resource_len().  A BAR the PCI core could not place is reset to zero
+> > start, end and flags while config space keeps the firmware value, so a
+> > zero offset passes and the block is mapped at physical address 0.  On
+> > x86 ioremap() of the reserved low megabyte succeeds, the component
+> > register header does not match, and a switch port fails with "HDM
+> > decoder capability not found", pointing at the HDM decoders rather than
+> > at the BAR.
+> > 
+> > Reject a BAR with no length or still unassigned, next to the existing size
+> > check.  Skip empty Register Locator entries first: they decode as BAR0
+> > offset 0 and would trip the check, and nothing looks them up.
+> > 
+> > Seen with edk2-stable202602 (f6489621b8ae, reverted in stable202605),
+> > which places 64-bit non-prefetchable BARs behind a bridge in the
+> > prefetchable window.  Linux refuses to claim them and the switch
+> > upstream and downstream port BAR0s find no room in the 32-bit window.
+> > QEMU q35 with a CXL switch, Fedora 43 edk2-ovmf-20260213, before:
+> > 
+> > pci 0000:0d:00.0: BAR 0 [mem size 0x00010000 64bit]: can't assign; no space
+> > cxl_port port2: HDM decoder capability not found
+> > 
+> > after:
+> > 
+> > pcieport 0000:0d:00.0: BAR0: not assigned (type: 1)
+> > cxl_port port2: No component registers mapped
+> > cxl_port port2: Failed to map HDM decoder capability
+> > 
+> > Link: https://github.com/tianocore/edk2/issues/13104
+> > Signed-off-by: Junjie Cao <junjie.cao@intel.com>  
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-It is effectively a child of cxl_pci and that lives on the pci bus and
-definitely is hotpluggable.  Those flows should work fine so
-I see this as a real if somewhat obscure bug to fix.
-
-Jonathan
-
-
-
->=20
-> rmmod doesn't count either, that never happens except by developers.
->=20
-> thanks,
->=20
-> greg k-h
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
