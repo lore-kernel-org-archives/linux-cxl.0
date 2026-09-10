@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF2C399361
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 20:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3070339AD2A
+	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 20:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789072775; cv=none; b=T5yBF9KsYU6Qd9umpMmY+YrjO5yt602kpn+hDQO+l7KzKWgeJKEtjsQl/WMkwPR5uNXd91Fe3TeZ8acq3/BcMjjeOEMel4ii+4IqtpEGhL/SZlOpJmxbYNxHJzX3Oz/37wn6QUrU26joD3JMGgN98kjLsXA3AB2huOuNpleIDlc=
+	t=1789072782; cv=none; b=lmwE1mt5vBOBaoUkUGS3RJcz7d95y8I5Wbx0mdQaRC529ttFS2B9Ik/9C775GajMNxDBvEWjU3sd2OUgsuRQVHd18RfuTmV2+cict2I0uHGxD8WI1D2DnPdDUBCFzT4h9CsFxPBnhKed8ulUYTHfJch7rqc132QILCvHVTCv6lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789072775; c=relaxed/simple;
-	bh=2WSqgAK5Zq+AmsqYFBd7/K4USpL0gjGL8J9yySCoH1o=;
+	s=arc-20240116; t=1789072782; c=relaxed/simple;
+	bh=GM3HKFEUB3Qed1v98g6nrrNQhu1HVQAPp8LpGuYMIsA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=GXmQmkUqIlksuhp2Gt4nrCO9QYKp1ceBBSrvIZLANvdA48l6UU/iBrUq013c8h55DQo9DhuJq7sbGo9ElwWdZPjmTw0BJ2yUvgxiriM8aa0asoaT1dBpXTVGGXoF+PPX1q+iPBHBYKkCCjjreSASvBKB0FYIn7Pn1VIymLzrI8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cHZdM0T8; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=vDL68EqzKPM4BwBePzXqhlgFX+iIQlS46SIViX8plXdzYV0jWPPg7ypTjTsznC+kQfDdIcDOKU32WcVdqh+PdKdmtBZGyWoc6PBAYTSEeyX2u57fVaEUG63x0W6arb2YUudh/4l6SfL0lXN0sbLtELYaMZkTEJkArH1HkF6vqMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I0yWobAf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cHZdM0T8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0yWobAf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789072766;
+	s=mimecast20190719; t=1789072773;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fUABu7BlZs5TOGp+cN1u54H1gvnduOJJab7bG8qikK0=;
-	b=cHZdM0T8cw52hi8KKm4kMjKqb4w6xS79IkhzthIC1504f9/YRG9K56QiqN/qRca/M8SSsK
-	HQ0dBD5yIxkXYejAA/wBC6RU9p0uULhttLyW8xt2BjT0Jm/dRrAeDfGG2/65u4fVtrtKVs
-	K+9loLHf4m5po8jjS4Wr3oTrlfi1gtY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=dkspHl+60G3ymT/5cuF1ktqEwiLZnnAHHPw1Oy9ihXQ=;
+	b=I0yWobAf4so0Bqf+haGpfHJxfW3vPQmKHH53OdxmppE0EBK7icqcuJ+zTuoHfd5izXz3cI
+	CLFdQ3Bpw+3DEvfV5+gS5OGgcPewBKHgzp5ZGL2R2vQbnQfohh6JluH59U7GwMCCm5Bkds
+	DqGvfWA/cRj0qRp2KEDlQESJ1tA1pvk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-lO1aYYb9M-eGA6ApJdREQw-1; Thu,
- 10 Sep 2026 16:39:23 -0400
-X-MC-Unique: lO1aYYb9M-eGA6ApJdREQw-1
-X-Mimecast-MFC-AGG-ID: lO1aYYb9M-eGA6ApJdREQw_1789072760
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-507-QpK1D99PPZWAXT0tXPdFQQ-1; Thu,
+ 10 Sep 2026 16:39:32 -0400
+X-MC-Unique: QpK1D99PPZWAXT0tXPdFQQ-1
+X-Mimecast-MFC-AGG-ID: QpK1D99PPZWAXT0tXPdFQQ_1789072770
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A70821953999;
-	Thu, 10 Sep 2026 20:39:20 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C865C1800BCF;
+	Thu, 10 Sep 2026 20:39:30 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.67])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0D69346E;
-	Thu, 10 Sep 2026 20:39:15 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D852341B;
+	Thu, 10 Sep 2026 20:39:25 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: "Michael S. Tsirkin" <mst@redhat.com>,
@@ -59,9 +59,9 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
 	Ani Sinha <anisinha@redhat.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH 04/10] qapi: convert simple data struct intros for run-state.json
-Date: Thu, 10 Sep 2026 16:38:50 -0400
-Message-ID: <20260910203856.99003-5-jsnow@redhat.com>
+Subject: [PATCH 06/10] qapi: convert simple data struct intros for cxl.json
+Date: Thu, 10 Sep 2026 16:38:52 -0400
+Message-ID: <20260910203856.99003-7-jsnow@redhat.com>
 In-Reply-To: <20260910203856.99003-1-jsnow@redhat.com>
 References: <20260910203856.99003-1-jsnow@redhat.com>
 Precedence: bulk
@@ -71,34 +71,34 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: yT1DHAZSGiE5r4VYEaMn6jNiC9PZwGLPtciMFeYZQI8_1789072760
+X-Mimecast-MFC-PROC-ID: 6f0DcOZJsCPA8EJF3-Fm2YXBLR8ZHTyWf-8P_9XJjTc_1789072770
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/run-state.json | 7 +++----
+ qapi/cxl.json | 7 +++----
  1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/qapi/run-state.json b/qapi/run-state.json
-index 2a968a6bc0b..703ca1bb5b9 100644
---- a/qapi/run-state.json
-+++ b/qapi/run-state.json
-@@ -585,10 +585,9 @@
+diff --git a/qapi/cxl.json b/qapi/cxl.json
+index 82524f47cdf..631d4def2ac 100644
+--- a/qapi/cxl.json
++++ b/qapi/cxl.json
+@@ -441,10 +441,9 @@
  
  ##
- # @GuestPanicInformationTdx:
+ # @CxlDynamicCapacityExtent:
 -#
--# TDX Guest panic information specific to TDX, as specified in the
--# "Guest-Hypervisor Communication Interface (GHCI) Specification",
--# section TDG.VP.VMCALL<ReportFatalError>.
-+#     TDX Guest panic information specific to TDX, as specified in the
-+#     "Guest-Hypervisor Communication Interface (GHCI) Specification",
-+#     section TDG.VP.VMCALL<ReportFatalError>.
+-# A single dynamic capacity extent.  This is a contiguous allocation
+-# of memory by Device Physical Address within a single Dynamic
+-# Capacity Region on a CXL Type 3 Device.
++#     A single dynamic capacity extent.  This is a contiguous
++#     allocation of memory by Device Physical Address within a single
++#     Dynamic Capacity Region on a CXL Type 3 Device.
  #
- # @error-code: TD-specific error code
- #
+ # @offset: The offset (in bytes) to the start of the region where the
+ #     extent belongs to.
 -- 
 2.55.0
 
