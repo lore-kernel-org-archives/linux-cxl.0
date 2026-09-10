@@ -1,33 +1,32 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CB73C13EE;
-	Thu, 10 Sep 2026 09:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C823357D19
+	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 09:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789031617; cv=none; b=DNuksMPWhLJORlW2OrHELVyMSDql1A6fsrjDhS2BW7rDKCgoPvpT6mSgmVuHDq+LPIkhXufvIwJIPXPl1xKMs1cBI5gO7NV7oKq8kVHYaiFUSUOdZRpSarvxIwIygPaYByyPjkNVFax3etKbb2/di51oMNi+/nxvQhxBYi6o5lA=
+	t=1789032823; cv=none; b=D/VBEGmUVtCLG2wilnqe1+tFK3jOcVKhEG/Pb5LvsZ/j9xxyBhVR83LN+W/oaBdw+dgXXPYQmZ+Olh77QvAPMeKUZqiDUHhbbzJXIlpJiRaDi/uWEIVG5aAHfvXgjIVGdjR9zQBVUvWk8qTFSMGm+7kLKrKRLCm0x892t8zQc1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789031617; c=relaxed/simple;
-	bh=876bPQkmr+qSfmJnN/IbXQk6MFFq7aT9u81fC/kyu54=;
+	s=arc-20240116; t=1789032823; c=relaxed/simple;
+	bh=jTfl2GJnS+VeImDj9pcswDC5bJwwSf3rmwW2mr6F3Z8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WNLcbh6trwjdSFeeaBnT9nrkjeI6Tyvx9s5/TRzOm1Z/XyBElKnqPqh+Tq//+dAwWSK9MYJxiMJslc1r+jFroYjTk6phWla6ozDDcyJWFWZd0v6K+btGyaEu+g/XQlg4ykU/dCHI/4boba3wDfvVeyMrHhGYq36HBxJ4Yd+cnvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XyPvGHc4; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=f8YH90RaGjn6OERY2ipX3EZ9cGv+yG8pck9lny9KMcaxvQePbQ8Jf7Gy47xJHfgs6mUEXXcBoYCx0UZ92VW9M5dqB8r/AxRZyCg1mYN6ew84y0U85m8xf5Tb6hQQ326BVYlCh+FYdV05I8hVPaM7E0fdx2lHmrEdqgnLr+e2S0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rAq8vagd; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XyPvGHc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2331F000FF;
-	Thu, 10 Sep 2026 09:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789031608;
-	bh=zEeFtMUHn3s+PI/cg5N17MVY4nHEBTOfJ4ioYjja5j0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XyPvGHc4wMCN7XnUzQUlQv10dHqh7HO9TkjaWiDpqVTCqUZ4CKmIoiz+rzPcl393j
-	 rIr/J7DuGFP9ozSMcRGKBgArgVJ+vGtlpUubDEgaYE5Vzdq6UW9s1oKqS6erMBJjYF
-	 SPn4FVdbHQyZXkXx/ixOwaCHQW3+hbhiDYYkbisYcgnWLijvhtX8jhLnBH+PL4XmMl
-	 0X8GngpShNpiBLxjcnPi2mLIa/G/Kv5WyR4GlLBYjl4gpWQl0s7YVeY5awvfbIrCTf
-	 WbID137Cnw9Gz6smokOCSQR3sQF+L/7Wc84ygpecTcamLUtAKNJQ9w39t3KgLMKJle
-	 sFyI2xY8WPRwg==
-Message-ID: <c2239ef2-10f4-4c87-a23a-2753f1e18d27@kernel.org>
-Date: Thu, 10 Sep 2026 11:13:18 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rAq8vagd"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1789032816; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=G9UxlrWZR/vR6zm7wypTV2y1EmDWnzJG11tE37UaGXU=;
+	b=rAq8vagdOKyZEHnxGSGWtiWbuTRp2bHs/xUxr7hIPdxvqVaC4QBZuIhcAwEC0LtQ+U99X8aTGBQLmws6n3w/AtE2QTcTxT+iHSqS/xs+vh00EqROBDrYjrWH5pESiA1BFTAN7rILHRMKJFKag0gi8qQpNPOENA04seJqO8cztEY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0XAhFvQQ_1789032814;
+Received: from 30.178.66.249(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAhFvQQ_1789032814 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 10 Sep 2026 17:33:35 +0800
+Message-ID: <28266062-a909-464c-ab05-2dec9af428e7@linux.alibaba.com>
+Date: Thu, 10 Sep 2026 17:33:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,102 +34,104 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr handling
-To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Oscar Salvador <osalvador@suse.de>,
+Subject: Re: [PATCH v2 0/2] cxl/memdev: Fix poison debugfs vs unbind deadlock
+To: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
- <aqJrblWch-lajp3k@localhost.localdomain>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aqJrblWch-lajp3k@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+Cc: linux-cxl@vger.kernel.org, driver-core@lists.linux.dev
+References: <20260831124809.889829-1-kanie@linux.alibaba.com>
+ <124abd10-a6df-4256-b994-37c92218bac9@intel.com>
+From: Guixin Liu <kanie@linux.alibaba.com>
+In-Reply-To: <124abd10-a6df-4256-b994-37c92218bac9@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 9/10/26 10:33, Oscar Salvador (SUSE) wrote:
-> On Wed, Sep 09, 2026 at 03:33:01PM +0200, David Hildenbrand (Arm) wrote:
->> Let's move it to sparse_init_one_section(). However, to keep early
->> boot processing working, we also have to initialize it in
->> sparse_sections_init().
+
+
+在 2026/9/10 00:28, Dave Jiang 写道:
+>
+> On 8/31/26 5:48 AM, Guixin Liu wrote:
+>> Writing a memdev poison debugfs file while cxl_mem is being unbound
+>> deadlocks. Patch 2 fixes it by not waiting for the device lock in those
+>> handlers. Patch 1 adds the trylock guard it uses.
 >>
->> Should we use READ_ONCE/WRITE_ONCE with __highest_used_section_nr?
->> Probably, something for another day.
-> 
-> What is the worry there?
-> 
-> sparse_init_one_section() calls should run sequentally due to the memhotplug
-> lock, so there should not be parallel updates there?
+>> Patch 2 does not build without patch 1, so the two need to travel
+>> together.
+>>
+>> Testing:
+>>
+>> Reproduced on a QEMU CXL topology whose type3 devices advertise poison
+>> inject support:
+>>
+>>    while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
+>>    while :; do
+>>        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
+>>        echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
+>>    done
+>>
+>> Without the fix the unbind wedges within seconds. The three tasks
+>> involved, from /proc/<pid>/stack:
+>>
+>>    writer, state S, holds the debugfs reference and waits for the lock
+>>      cxl_debugfs_poison_inject+0x25/0xa0 [cxl_mem]
+>>      debugfs_attr_write+0x61/0xb0
+>>      full_proxy_write+0xfc/0x1c0
+>>      vfs_write+0x1d4/0xe60
+>>
+>>    unbind, state D, holds the lock and waits for the reference to drain
+>>      remove_one+0x27f/0x3d0
+>>      debugfs_remove+0x44/0x60
+>>      release_nodes+0xfa/0x2c0
+>>      devres_release_all+0x113/0x1a0
+>>      device_unbind_cleanup+0x76/0x260
+>>      device_release_driver_internal+0x3eb/0x540
+>>      unbind_store+0xde/0x100
+>>
+>>    cxl_port workqueue, state D, blocked on the same lock
+>>      device_release_driver_internal+0x96/0x540
+>>      detach_memdev+0x79/0xb0 [cxl_core]
+>>      process_one_work+0x6b0/0xfb0
+>>
+>> The writer is in interruptible sleep and can be killed; the unbind
+>> cannot, and because cxl_bus_wq is an ordered workqueue the wedged
+>> detach_memdev() blocks every other CXL bus work item behind it.
+>>
+>> With both patches applied, 46 unbind/bind cycles against the same writer
+>> loop all completed, no task was left in D state, and the writer collected
+>> 10920 EBUSY returns from the contended trylock. Note that lockdep stays
+>> quiet either way: one leg of the cycle is the debugfs active_users
+>> completion rather than a lock it tracks.
+>>
+>> v1 -> v2:
+>> - add the device_trylock() guard and use ACQUIRE(device_try, ...) instead
+>>    of open-coding device_trylock()/device_unlock(), keeping the style the
+>>    Fixes: commit established (Shaikh Kamaluddin)
+>> - cut the changelog down to the failing condition, the consequence and
+>>    the fix; the call graph and the reproducer live here instead
+>> - say how the issue was found and how it was tested
+>>
+>> v1:
+>> https://lore.kernel.org/linux-cxl/\
+>> 20260826125248.4003792-1-kanie@linux.alibaba.com/
+>>
+>> Guixin Liu (2):
+>>    driver core: Add conditional guard support for device_trylock()
+>>    cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
+>>
+>>   drivers/cxl/mem.c      | 14 ++++++++++----
+>>   include/linux/device.h |  1 +
+>>   2 files changed, 11 insertions(+), 4 deletions(-)
+>>
+>>
+>> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+> Please rebase the patch series on Linus tags rather than cxl/next. Currently v7.3-rc2. It would be nice to get sashiko coverage.
+OK, changed in v3.
 
-If you have something consuming __highest_used_section_nr while concurrently
-updating it, you might get torn reads/writes that mess up the value on the
-reader side.
+Best Regards,
+Guixin Liu
 
-For example, mm/compaction.c consuming __highest_used_section_nr.
-
-I don't think this is critical, so I decided to spell it out instead of fixing
-it right away.
-
--- 
-Cheers,
-
-David
