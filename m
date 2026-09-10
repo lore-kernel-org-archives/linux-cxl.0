@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4893489FB1;
-	Thu, 10 Sep 2026 14:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC124BFE90;
+	Thu, 10 Sep 2026 14:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789050559; cv=none; b=NMq43LY8+ZJhLla+RPIuz/k+tbQI8GcR1Lt3zipdEx//ItHPu5oOCLO4CGpVFgwVxUMbcbGZ0beLWpH3zy31klzfI2CyCszn4e2/gZLN+fhw/0jkQqRNiLP8QCuCt1goy8qaSqT91pafMFdNWpu/SaXqOpwuQNShzFxds5eJhXE=
+	t=1789050580; cv=none; b=XgFd3S3cfRBIH6vJOLDcemJYy5DbLQYG+T18PkzMV7X+gVzODlTpbhya6ptnIdOZsmeE5Kb7NT7YCt0+BJkce/EKgC6vwDdLVgrg0x/SmLp3q0W6EHEBx+hDYG4jEBX3hMgHxjwHR0eb1foEAoPe9tWoQ0BDCQ5vATQXQNdCjTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789050559; c=relaxed/simple;
-	bh=TAOYR8njee2iwqwI0d4esXJMuuALxt6G0+X5gSu7Jtk=;
+	s=arc-20240116; t=1789050580; c=relaxed/simple;
+	bh=CDWWew5lN3hA3BAVbS3OJv7Sk6P9kQAID828SIvKQzo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W3cxVaureMPw7BReKHIQjJBp6S4eebPIZY6hopcBl2oITmuI0wJXcWKGbJ5eT0JtzxsFY4lB4e77kE5Ml1N7ueB78z2wPqteUkJe93+fSSae+zlf1kLOKreJgSHDHQuxvQF7CsttS8bnNnDh0M5GlMnnN289UkIbP1/D/oFZ+3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/DKz63I; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=R5kgE5M1u5BuRowndKDTBTXoiy5XWtM/lMgRCfKoO5guaJl0c8jfMJ+5ToRLP+IwqHf7F3fECEtlY9BPaaBS5dCMutxuK52gplEdPpQ+rbT1oWmZjNyQo3qgVbX5RwleUMuRfdV1f59a9dPWyMwmnk08idFXEsJkg1rl9w7A8wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFrgqnzN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/DKz63I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B7D71F00893;
-	Thu, 10 Sep 2026 14:29:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFrgqnzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A84E1F000FF;
+	Thu, 10 Sep 2026 14:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789050557;
-	bh=u57NC1k6Bqf0mo7Kdt9/SiH0AeFRP72u3trAgFtt4Ns=;
+	s=k20260515; t=1789050578;
+	bh=KJRcwygGYVy4dG4Ps+nSG/itUpNyDb3m6x+mKKxOpsU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=I/DKz63Io0owfDmvuXF1ij9DmOob8NZ36qEzesmm68JMcrvrYC1f9gjBLiqyS1NNR
-	 AtCUF797lcT2SlhbFdyyfPMwXX7BVth8RKdT6q/+2i2gr+l5ZkVvEhyUoGhVzOTBBE
-	 TPZQ+UX9U1okNoy8vHDfi6hfrlJ3BUiXuQoEfNuvUWkkawQ8KJOY8pC0J/xMqPhq+j
-	 TbjK+5Q+Rj30wCkFfkJfcmIkdzpJrAKsK9oJPvJ5RVpQbDI3w2BX3trSlemnHEe/3p
-	 2JLdlKg1fVyDjQDOYsSmtD5VuIKY26NLB+G1PhOILay33McJMAqhXw32euDxhrsGEL
-	 +s4H7uJsegykQ==
-Message-ID: <c72f7358-cb6c-448d-9ce9-c17b425964bf@kernel.org>
-Date: Thu, 10 Sep 2026 16:29:06 +0200
+	b=jFrgqnzNMfKfIqZq85rz4WdNfx04C3O3Dp4Bb69/hOroxT7QgNDyLykc3ghRiyvnQ
+	 xRXrrOv5ZKqLIutXp2SFgHlLTxEIj2TtRuAdk3UQr74vvNmqbsllhqSPF6n4iclkCu
+	 OuTPNZjlnd81hIL3R7K9Af0KytaiIbXfLf5Qb+G5ZD0rjXJe0xAbPSCLfsQDmjg1CJ
+	 e6YgqUNul6/tTbVIqy9W8sxPcbx98wgcaT3g16KMoKNG0+Oc1p6uF2zrnpoFW0r8X5
+	 UeLr9jrK4Jrb6qYy+TlPtk1IA1czEk1tfoIBfo+TeiiPTPFFYFNm7Uv05CVM0iQ6lb
+	 e7BGQ2lLXwFrA==
+Message-ID: <86fcc776-b919-4ad9-8abd-a61150dee3b9@kernel.org>
+Date: Thu, 10 Sep 2026 16:29:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/12] mm/sparse: move __highest_used_section_nr handling
+Subject: Re: [PATCH 04/12] mm/sparse: rename and cleanup sparse_init_nid()
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
@@ -55,8 +55,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
  driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-8-008fc8d579fe@kernel.org>
- <aqK2_RpAlMbVYcuN@gremlin>
+ <20260909-b4-sparsemem_cleanups-v1-4-008fc8d579fe@kernel.org>
+ <aqK0S1OT5csJFIq1@gremlin>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -103,131 +103,64 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <aqK2_RpAlMbVYcuN@gremlin>
+In-Reply-To: <aqK0S1OT5csJFIq1@gremlin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 9/10/26 16:16, Lorenzo Stoakes (ARM) wrote:
-> On Wed, Sep 09, 2026 at 03:33:01PM +0200, David Hildenbrand (Arm) wrote:
->> Let's move it to sparse_init_one_section(). However, to keep early
->> boot processing working, we also have to initialize it in
->> sparse_sections_init().
-> 
-> A why might be nice :)
-
-Agreed, I'll mention that.
-
-> 
-> I guess preparing for removal of __section_mark_present()?
-> 
-
-Right intuition :)
-
-> Also good to have arguments as to why this is equivalent of previous
-> behaviour.
-> 
-> E.g. higher pfn = higher section nr so naturally the highest is the one you
-> end up wtih at the end of sparse_sections_init()?
-
-We go over all sections, just earlier.
-
-> 
->>
->> Should we use READ_ONCE/WRITE_ONCE with __highest_used_section_nr?
->> Probably, something for another day.
-> 
-> It might be worth expanding this a bit. Do multiple threads read/write this
-> concurrently?
-
-Hah, I'll probably just drop it. I was just stumbling over readers vs.
-concurrent updates and thought "that looks suspicious".
-
-> 
-> No functional change intended here or is one intended? :)
-> 
-
-Certainly no change intended ;)
-
-> Before it was:
-> 
-> mm_core_init_early() -> sparse_sections_init() -> __section_mark_present()
->                           sparse_add_section() -> __section_mark_present()
-> 
-> Now:
-> 
->                                                  mm_core_init_early() -> sparse_sections_init() [early]
->                                                  sparse_add_section() -> sparse_init_one_section()
-> 
-> But also called from mm_core_init_early():
-> 
-> sparse_init() -> sparse_metadata_init() -> sparse_metadata_init_nid() -> sparse_init_one_section()
-> 
-> Are both required?
-
-sparse_metadata_init() relies on __highest_used_section_nr in the
-for_each_early_section_nr / for_each_present_section_nr, so it is required.
-
-I could probable move the update on the hotplug side into sparse_add_section()
-instead!
-
-> 
-> 
+On 9/10/26 15:46, Lorenzo Stoakes (ARM) wrote:
+> On Wed, Sep 09, 2026 at 03:32:57PM +0200, David Hildenbrand (Arm) wrote:
+>> Let's rename it to "sparse_metadata_init_nid", avoid the "pnum" terminology
+>> and drop the function comment. Further, rename the "map" variable to
+>> "mem_map" for consistency with other functions.
 >>
 >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> LGTM, one nit below.
+> 
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> 
 >> ---
->>  mm/sparse.c | 5 +++--
->>  mm/sparse.h | 6 +++---
->>  2 files changed, 6 insertions(+), 5 deletions(-)
+>>  mm/sparse.c | 41 ++++++++++++++++++++---------------------
+>>  1 file changed, 20 insertions(+), 21 deletions(-)
 >>
 >> diff --git a/mm/sparse.c b/mm/sparse.c
->> index 2b41ae36f20b8..2d0f2db34f4cf 100644
+>> index a85a9c3840f6c..f84bfceb53060 100644
 >> --- a/mm/sparse.c
 >> +++ b/mm/sparse.c
->> @@ -177,7 +177,7 @@ static inline unsigned long first_present_section_nr(void)
->>
->>  void __init sparse_sections_init(void)
+>> @@ -222,37 +222,34 @@ void __weak __meminit vmemmap_populate_print_last(void)
 >>  {
->> -	unsigned long pfn, start_pfn, end_pfn;
->> +	unsigned long pfn, start_pfn, end_pfn, section_nr;
->>  	int i, nid;
->>
->>  	sparse_extreme_init();
->> @@ -187,9 +187,9 @@ void __init sparse_sections_init(void)
->>  		mminit_validate_memmodel_limits(&start_pfn, &end_pfn);
->>
->>  		for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
->> -			unsigned long section_nr = pfn_to_section_nr(pfn);
->>  			struct mem_section *ms;
->>
->> +			section_nr = pfn_to_section_nr(pfn);
->>  			sparse_index_init(section_nr, nid);
->>  			ms = __nr_to_section(section_nr);
->>  			if (ms->section_mem_map)
->> @@ -201,6 +201,7 @@ void __init sparse_sections_init(void)
->>  			__section_mark_present(ms, section_nr);
->>  		}
->>  	}
->> +	__highest_used_section_nr = section_nr;
 >>  }
 >>
->>  #ifndef CONFIG_SPARSEMEM_VMEMMAP
->> diff --git a/mm/sparse.h b/mm/sparse.h
->> index 7c5d82ceb7142..a3af4967fd5c5 100644
->> --- a/mm/sparse.h
->> +++ b/mm/sparse.h
->> @@ -97,6 +97,9 @@ static inline void sparse_init_one_section(struct mem_section *ms,
+>> -/*
+>> - * Initialize sparse on a specific node. The node spans [pnum_begin, pnum_end)
+>> - * And number of present sections in this node is map_count.
+>> - */
+>> -static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
+>> -				   unsigned long pnum_end,
+>> -				   unsigned long map_count)
+>> +static void __init sparse_metadata_init_nid(int nid,
+>> +		unsigned long start_section_nr, unsigned long end_section_nr,
+>> +		unsigned long nr_sections)
+>>  {
+>> -	unsigned long pnum;
+>>  	struct mem_section_usage *usage;
+>> +	unsigned long section_nr;
 >>
->>  	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
+>> -	usage = memblock_alloc_node(map_count * mem_section_usage_size(),
+>> +	usage = memblock_alloc_node(nr_sections * mem_section_usage_size(),
+>>  				    SMP_CACHE_BYTES, nid);
+>>  	if (!usage)
+>>  		panic("Failed to allocate usemap for node %d\n", nid);
 >>
->> +	if (section_nr > __highest_used_section_nr)
->> +		__highest_used_section_nr = section_nr;
->> +
+>> -	for_each_present_section_nr(pnum_begin, pnum) {
+>> -		unsigned long pfn = section_nr_to_pfn(pnum);
+>> -		struct page *map;
+>> +	for_each_present_section_nr(start_section_nr, section_nr) {
+>> +		unsigned long pfn = section_nr_to_pfn(section_nr);
 > 
-> Could also be:
-> 
-> 	section_nr = max(section_nr, __highest_used_section_nr);
+> NIT: Could be const?
 
-Ack!
+ack!
 
 -- 
 Cheers,
