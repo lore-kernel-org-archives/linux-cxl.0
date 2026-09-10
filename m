@@ -1,167 +1,117 @@
-Received: from purple.birch.relay.mailchannels.net (purple.birch.relay.mailchannels.net [23.83.209.150])
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5081C5D59
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 01:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.150
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789004509; cv=none; b=lzWK4KgxZ1LKRMvYZUkWxxnCBMVcfi1xW+0ksk71NRev5YcD3ubA7SsYBaQgB1fdn5bnbC/P0ZEiLBIR3Dl3u3DQzi/uds8DvRzNol1fr0XTbNVrH3tykV85q05lDWsCs64DtZbtohvCJ4WPf7asDrD+4WZ5uJ25jpR6UyBytvQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789004509; c=relaxed/simple;
-	bh=X9cJ5GpyRuZn8yvDFZg1Wx6ghzCLQ1VhNXIitKz/Sdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKBvYNNHOexz7RFYX7Zfd+X9eaN+ilULRqGW7VIiWZk/7LLWu6yDFGHlurWXCCeQmxQBzYeJX/5kJXtjqS6wZg8D0GIFk5O+OzyNR8sg5lwLmj0NcF+4vV7MfQXT80PO3Qww4wtnyPaHS9GvuqAsK5DKD5d51nWNbdtgMvvNoPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=mWBxOr2A; arc=none smtp.client-ip=23.83.209.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B7E36606A;
+	Thu, 10 Sep 2026 02:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789006937; cv=pass; b=lIFPz3d3XAnlke/g957Lltoy0dHM4hW5+WVm53kXh3+1f2JpqaNvXqeQ6nMECoBc3zz+CCDYTDPLHSC/mrej6c/UDFuWEAXV1p1xwIBq//b+2fR2TEQXrIwuwDqo+O8saAjAH4RTlYRW9ybazR+YgwdNmcg6d3LnjgvCttlbRXo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789006937; c=relaxed/simple;
+	bh=TOAeMV/K0apEl1/es5iV+qS7CfDx4/BorCu3NHK7IUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HYw0Tj3A/0kZk7JG5OSVgqxDBQUANgtduwIUY8qLm52jv1LeQk9IIEt5SK6noE1gxC+aGFA2Tq8KZTlpMsGxZSHc3o3DYB6u3Y6p9WCdKvUvASQv7IATMm2SVlcp3t082b7D9Z2BuP1ryEU7v85rliWB7HEXzvGMVBVuHFBBTeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=eVYmkaBi; arc=pass smtp.client-ip=165.173.180.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="mWBxOr2A"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9889A381805;
-	Thu, 10 Sep 2026 01:34:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a261.dreamhost.com (100-99-183-67.trex-nlb.outbound.svc.cluster.local [100.99.183.67])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 44BAA381A83;
-	Thu, 10 Sep 2026 01:34:01 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Skirt-Name: 337deb175d0c1a5e_1789004041400_2909956001
-X-MC-Loop-Signature: 1789004041400:305097137
-X-MC-Ingress-Time: 1789004041400
-Received: from pdx1-sub0-mail-a261.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.183.67 (trex/8.0.2);
-	Thu, 10 Sep 2026 01:34:01 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a261.dreamhost.com (Postfix) with ESMTPSA id 4hgKvr4N7Gzypk;
-	Wed,  9 Sep 2026 18:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1789004041;
-	bh=xe8IWzOi7lS7b3x6rBIaYSRrr7JNNCLr4YzDUZ18HVk=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=mWBxOr2AjvyiVrp+FH5jlRXk25Ex7LRnhQESam/jrAcizwUl2ATRp/aUdMxLRngiQ
-	 d7ey+TfIbnk3qZDSOpjeZMK/WeOg9VdKZlD/Oq0KQqlVcOz/H7NxOHUOQ4RWRQap07
-	 imEdhS8S04oF4OPGomuzI+fNOjoUPbk4MzfrOgsnLet5mhwn+2KP8+kDSOeTFI20GK
-	 w9HjHTUKTiiRjWRUwpKsPO63urJNkE0YNQaRL8Np6uUdhgnxZ5BdPBKe+1Q/0M69jk
-	 zIEr+xf6V9Dxbvg1SBIyQKtYeqhsOlKz9pGL7Sa6B0KvTg+FEWo+ne29V2TRj1xg3/
-	 AI4o3q6/QqAcg==
-Date: Wed, 9 Sep 2026 18:33:58 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dave.jiang@intel.com, alison.schofield@intel.com, icheng@nvidia.com,
-	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
-	linux-cxl@vger.kernel.org, John Groves <john@groves.net>
-Subject: Re: [PATCH v8 02/10] cxl/pci: Add BI topology enable/disable
-Message-ID: <20260910013358.zi6jr7a6sfowinou@offworld>
-References: <20260909170302.1550680-1-dave@stgolabs.net>
- <20260909170302.1550680-3-dave@stgolabs.net>
- <20260909222130.14387e8c@jic23-hlaptop>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="eVYmkaBi"
+ARC-Seal: i=1; a=rsa-sha256; t=1789006925; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bDdGVeMqu1HvXeCQViDHAa/sTcqPFCLc23ptguf2usLSE2o00eWB4jtkSTrpyQjxE56xwRI9U14FEl5j0O/D/Aj6dh5DS0ffoAgN36776CgwEPwllwvNRjVIkvsFYtfqfIed9ClVmTWZCARRah0mnDn0IPH5eR/c5gB6DUoy0Kc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1789006925; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6z88WyVcssYNLuvkcn1VUg59x7JxQUtLNeNAFMbyrkU=; 
+	b=AimbjRcVEoCfWwgkrlo1Dkz942bshSioqTmbvbNBcKQoD6dGciGpwvoCggCcW4tOUPDgX8dSAJN593JWYMqoI+jSFDsywP7b9kZt7Zrhv05AjFuJPLE4Dott73joXothEgXcFiCkXCodHJwPVzh8lAD4khyY/KtdJez6qVSlcXg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789006925;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=6z88WyVcssYNLuvkcn1VUg59x7JxQUtLNeNAFMbyrkU=;
+	b=eVYmkaBiKL2Mf1DU2g5UpTKN6ZjnpJp2RgjmfCy0rchUr2kwdiikdfCWyzJl2re5
+	Jkv/RAF4SyDDPfSVKS0YjpzbFWESrU42tqpDMXymtCc3JWGiGOvO8M7OF+SuZs52OmW
+	zXMsiuoQQ8JFbv6iKRwgVnB+UPsGKgscky/GUmGs=
+Received: by smtp.zohomail.com with SMTPS id 1789006923472367.054041669707;
+	Wed, 9 Sep 2026 19:22:03 -0700 (PDT)
+Message-ID: <d1eddf2d-43db-449b-976a-d70227210061@zohomail.com>
+Date: Thu, 10 Sep 2026 10:21:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260909222130.14387e8c@jic23-hlaptop>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 05/12] cxl: Cache endpoint decoder settings during PCI
+ enumeration
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20260902072804.665639-1-smadhavan@nvidia.com>
+ <20260902072804.665639-6-smadhavan@nvidia.com>
+ <08d97766-d62d-4901-a413-705df0020d22@zohomail.com>
+ <58a876a1-7569-49d9-94bb-d090c8acd439@nvidia.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <58a876a1-7569-49d9-94bb-d090c8acd439@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227989a26a49cc39b7891a055c70000cc564f4df5c61bf533b110af89b630673ff8ccb1716b986eb1:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Wed, 09 Sep 2026, Jonathan Cameron wrote:
 
->> +static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable,
->> +			       bool direct)
->> +{
->> +	void __iomem *bi = dport->regs.bi_decoder;
->> +	struct cxl_port *port = dport->port;
->> +	u32 ctrl, value, set, clr;
->> +	int rc;
->> +
->> +	guard(mutex)(&port->bi_lock);
->> +	if (!bi)
->> +		return -EINVAL;
->> +
->> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +
->> +	if (!enable) {
+在 2026/9/10 08:07, Srirangan Madhavan 写道:
+> On 9/2/26 7:03 AM, Li Ming wrote:
+>>> +             return true;
+>>> +
+>>> +     pci_cxl_hdm_init(pdev);
+>>
+>> I forgot to ask a question in v10, sorry about that.
+>>
+>> I am wondering why calling pci_cxl_hdm_init() in
+>> cxl_pci_hdm_decoder_count_match() is needed. pci_bus_add_device()
+>> already does pci_cxl_hdm_init(), so if my understanding is correct,
+>> pdev->hdm is not NULL here, so this pci_cxl_hdm_init() here will not do
+>> anything except checking if pdev->hdm is NULL. I am not sure if I miss
+>> some cases for that.
 >
->There isn't really that much shared code between enable and disable paths.
->Maybe just have separate functions / push the implementation down to
->the wrappers?
-
-I don't want to change much code around at this point, but I
-will look at doing this.
-
+> Hi Li Ming!
+> Your question is valid. pci_bus_add_device() is the normal 
+> initialization path. The later call is a retry for cases where that 
+> attempt did not publish pdev->hdm, for example because allocation or 
+> MMIO mapping failed at that point.
+> If initialization succeeded earlier, the existing cache is detected 
+> and the retry returns without rebuilding it. I clarified this behavior 
+> in the v12 commit message.
 >
->> +		if (WARN_ON_ONCE(dport->nr_bi == 0))
->> +			return -EINVAL;
->> +		/* others below still need this level */
->> +		if (--dport->nr_bi > 0)
->> +			return 0;
->> +
->> +		writel(ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
->> +				CXL_BI_DECODER_CTRL_BI_ENABLE),
->> +		       bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +		return cxl_bi_commit_dport(dport);
->So this sent me on a wild goose chase.  The actual definitions
->for committing rather imply that you don't need to commit when
->turning it off, but the Implementation note in 9.14.2
->does have a commit sequence like you have here.
+Hi Srirangan,
 
-This was a late addition to the series, from me being extra
-cautios and assuming some potential problem with recycled BI-IDs(?)
-throughout the topology.
 
->
->For reference we have: Table 8-156
->"Explicit BI Decoder Commit Required"
->If 1, indicates that the software must set the BI decoder commit
->bit whenever a new BI Device is enabled anywhere below this
->port or any component below this port undergoes bus number
->reassignment." which is the normative text and doesn't say anything
->about commit being used when turning things off...
+Thanks for your explaination.
 
-Agreed that it would be good to get clarity here. For now I will
-leave the commit upon disable unless there are strong thougths
-against it.
+I think removing this retry should be better if it is only used for the 
+case that allocation or MMIO mapping failure during 
+pci_bus_add_device(). Because these failures are not expected to happen 
+often, and removing it can make pci_cxl_hdm_init() implementation 
+simpler. If only pci_bus_add_device() calls pci_cxl_hdm_init(), you 
+won't have to hold cxl_rwsem.dpa and check whether pdev->hdm is NULL in 
+__pci_cxl_hdm_init(). Besides, hold cxl_rwsem.dpa lock in 
+pci_cxl_hdm_release() is not needed, because the function is called in 
+pci_release_dev() where is at the end of this pci device's lifecycle.
 
->
->John, can you note this one down for possible discussion / clarification
->in the spec?
->
-[...]
 
->> +
->> +/*
->> + * devm teardown on endpoint port destruction. Registered before the
->> + * decoders, so devres runs it after them: regions are detached and
->> + * decoders unregistered by the time BI comes down.
->> + */
->> +static void cxl_bi_dealloc(void *data)
->> +{
->> +	struct cxl_port *endpoint = data;
->> +	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_dport *dport_iter;
->> +	struct cxl_port *port_iter;
->> +
->> +	scoped_guard(rwsem_read, &cxl_rwsem.region)
->
->Maybe a comment on why the region lock is needed. I couldn't immediately
->spot the answer and this is doing stuff that doesn't seem to have
->much to do with regions.
+Ming
 
-Yes, I believe this can be dropped.
-
-(and pretty much ack to the rest of the comments, thanks for reviewing).
-
-Thanks,
-Davidlohr
