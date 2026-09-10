@@ -1,136 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B361539098E
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 20:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172782576E
+	for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 20:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789071273; cv=none; b=iPLojSipFU6f6a12oMpCztTBWaciqC32TINowJml2O7VoKfG3ms1PNLdFQIhzB+JlrVtZsrx18x+CcGphofL5W4As1vZItCcX6+igm7fWTQd4Fh73Oe0lgyP6EIGZQA7V5mkgwePp5FXp8ldoUmT0m0IUTODbqjV0bwcjhxFLj8=
+	t=1789072749; cv=none; b=dIdfGhi72G4kLKdHI0G3smi1hymZT0D4F91+l2PIQ8D1q4jM/FqX7tYI/H5hWPi0bYj1eM/OqPBf0PFoyY0QuWUlKCw/lRP8TZpvyEKaWaqUrBGFUyDgyXNO8pUNnvQfbl/hA1dmVTYfLhmAPVE1n+DsRqhSFr0p12381eOuxHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789071273; c=relaxed/simple;
-	bh=X7HnfhlJzA2LwzbDSd0atGna2BdJArR+wvOEkFwcIIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=AvRv+J2mZiewnYAV8e2UYMAOYzfgo/SqsHOKN1Xmy9DJewPpZfK7YzTjVD4WjdLzCzL+F3NmN3JpTxiGSGOA9Q0qZfyC91hd2enSfqn0RUk1rCjV2W2pEUt8bijg04AOB7FBJdUqexEWGA6/jQonhffUnWzI8C4/zqYZm9zlTt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ByEyjqnL; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1789072749; c=relaxed/simple;
+	bh=elybVScutjwqqlfL9sbH+0tjWkI3RUJFiEQ9NTHC4/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nF/aZuVuawpy/Bs+Fc+niNL2234gtDjSplroNd5aIXJN5gJWU2Gb28oCjoKIr0ZOgQsqMfszk0EOm0r9xqpyNZyOHiXM0vfK5AneFBOYwGc7YKf8qC8LPcWagaBHTGSOEcttd3iu5Y7jyxmBiJZWM6qWS638wy8mgofuD+5JbeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FFgGQz8X; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByEyjqnL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFgGQz8X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789071268;
+	s=mimecast20190719; t=1789072746;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=swaVK7hHvfhctLSwvjj1/ywE8ntA6Euz0DduNvrigAM=;
-	b=ByEyjqnLbpwqQz9pPUXhTa5CdFo7yHx6LYqdIgG015sx0srWbm8ITSEVkpt4wKH2CVmSao
-	KEOzLRELafwZR06dBzf94aSXHkVMuDiPC0iQPeoYHcKtUj9L1nQDkv26KZeeN4F5UKV+eI
-	a+nqEpKSwM6F04K2uOeukvJem5Qpvzg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-16-uO7JmflkNIijPyTBGtO3IA-1; Thu, 10 Sep 2026 16:14:27 -0400
-X-MC-Unique: uO7JmflkNIijPyTBGtO3IA-1
-X-Mimecast-MFC-AGG-ID: uO7JmflkNIijPyTBGtO3IA_1789071266
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49b7c1dcc82so1280935e9.0
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Sep 2026 13:14:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789071266; x=1789676066;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=swaVK7hHvfhctLSwvjj1/ywE8ntA6Euz0DduNvrigAM=;
-        b=dEUrqH9K/Bi5iip+chEdj50AbWLwvJltapFxCQ8CkU7sKaDrR/FPdznlF/3qMdOc4a
-         E1OZbRhmpw4k9lqgDt4cbKQmLBwcGMhBjay1PkjmenMzjqXVd/jzalBOCt9CtR9mttxM
-         0TPWB2Jgpawzr/7LTGo/gzLcSIhuFtWCxdetycqDcNyb47767G2/jFTN99auLSUZTW/E
-         7v1lHZOSC4Vah8cofK19wHxNO26w3RCHEks2P1kbea+pIdd3qVanD4PmZKTq6IoTh65E
-         qyXUzHAVgXtg7vVxq2FSghWitre5o7co6WUGM1FY6JpQHd1dWHQUUvTto63SM1ArpmGN
-         21fg==
-X-Forwarded-Encrypted: i=1; AKwUvBxn+vN8E3MXOTKugJogGRfrr6j9n7fDMNK07H51ufsjJSkJREn+poGEy/rqLz8FJisRvauOTeFSADQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++neDJyxxRZcIQfOWsvZyFl/NNF8xCtTpte8d23P/yJPsrx3MO05
-	amNQhmotaGPM5HZbYuHYtMdm3LO0v7Eg5ACRBLJvXcrykoe9aEQ4b8+3jxKoZULIVRXoJehLJkN
-	C6ExIqJW/yDUwPBApAOlWQmWB9zydCE1DPceeAowB2d54czbNGUKgbWO2S7mHrrE3HaseJg==
-X-Gm-Gg: AYBFou3wervSMrlFacjtDQVen+V0IQi/EhIbS6vyHHA9LdWm5KDgZGDzXs4ClDi5V/m
-	2thteHZTMtdgLANnhngGx0XJAviwWtkDwXtXyISF9SbNuw75UzG9EjHSdlNHGlI6ITrDTQmdhSX
-	qzgliB7KEM0huvappQiR+UTJm5byjUcRhZ7Az948h8j2nTdyYuBZVEMfR7wMJvK31GQvpJrxXt0
-	8AdjIR+PVUyVKvXLOTAjoG8pch7Ighz5Fqgr1m4/JfWVlLXhGHBW4+xkc9dnhPK6QBPI7kqwvJC
-	8zJjirQDLV/gKhcLrK7O3d4dMvjI659rqmwqNYSV0Hhd8O4iqUdu73xNpWHuS/jT/9Po2ekQ0R6
-	Er2zZqWRZ+2pB6UxFiC3kkH8=
-X-Received: by 2002:a05:600c:8a1a:10b0:49c:ee22:364c with SMTP id 5b1f17b1804b1-49e6198d0a6mr6071255e9.9.1789071265706;
-        Thu, 10 Sep 2026 13:14:25 -0700 (PDT)
-X-Received: by 2002:a05:600c:8a1a:10b0:49c:ee22:364c with SMTP id 5b1f17b1804b1-49e6198d0a6mr6070975e9.9.1789071265196;
-        Thu, 10 Sep 2026 13:14:25 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d26d4e3f3sm104182515e9.15.2026.09.10.13.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2026 13:14:24 -0700 (PDT)
-Date: Thu, 10 Sep 2026 16:14:23 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W89XY5ddO1xTrfK0PtXVl0trd8MW28EGY2w+oiM4Azk=;
+	b=FFgGQz8X/wrAJN6xiKH4f9Q6OWIyb4b7PJMhXhB3RDJSSWnMRXfVVHDRzL9JZPamJWWh36
+	cP1XMfoSKgbd/xVtgvkyVNLA/IRVQmJcHqUVu5iM+o0v8TiwYDTcguj+Yrofti+naqAT9Z
+	kF8MB61n+137c8SL6/tpHDgtwE4Kapo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-PfjfOswTMEiOq0qcOWd0WA-1; Thu,
+ 10 Sep 2026 16:39:03 -0400
+X-MC-Unique: PfjfOswTMEiOq0qcOWd0WA-1
+X-Mimecast-MFC-AGG-ID: PfjfOswTMEiOq0qcOWd0WA_1789072742
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4E5118002AB;
+	Thu, 10 Sep 2026 20:39:01 +0000 (UTC)
+Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.67])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C776B46E;
+	Thu, 10 Sep 2026 20:38:57 +0000 (UTC)
+From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
-Cc: Peter Maydell <peter.maydell@linaro.org>,
-	Junjie Cao <junjie.cao@intel.com>,
-	Jonathan Cameron <jic23@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [PULL 70/90] hw/cxl: fix the CDAT DOE overlapping the Flex Bus DVSEC
- when sn= is set
-Message-ID: <aec100794247860605cf259effc085eac43d0e8e.1789071043.git.mst@redhat.com>
-References: <cover.1789071042.git.mst@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Eric Blake <eblake@redhat.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+	Igor Mammedov <imammedo@redhat.com>,
+	linux-cxl@vger.kernel.org,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Kevin Wolf <kwolf@redhat.com>,
+	Hanna Reitz <hreitz@redhat.com>,
+	Lukas Straub <lukasstraub2@web.de>,
+	Markus Armbruster <armbru@redhat.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	qemu-block@nongnu.org,
+	Ani Sinha <anisinha@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	John Snow <jsnow@redhat.com>
+Subject: [PATCH 00/10] qapi: convert simple data struct/alternate intro sections
+Date: Thu, 10 Sep 2026 16:38:46 -0400
+Message-ID: <20260910203856.99003-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1789071042.git.mst@redhat.com>
-X-Mailer: git-send-email 2.51.2.2891.g4157995a80.dirty
-X-Mutt-Fcc: =sent
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zJ76Mwj01XZAN8CJBQqijuZcKxDpUaIWClZOCcuouxE_1789071266
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: uw9chQaCYELEIwo_-Dojg2o2-eXgeMJboWWW4znzH5I_1789072742
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Junjie Cao <junjie.cao@intel.com>
-
-ct3_realize() adds the CDAT DOE at a fixed 0x190.  Since 8700ee15de the
-four DVSECs take 0x90 bytes, which from 0x100 ends exactly at 0x190.
-With sn= the Device Serial Number capability pushes the block to
-0x10c..0x19c, and the DOE, added later, overwrites the last 12 bytes of
-the Flex Bus Port DVSEC: Capability2, Control2 and Status2.  Nothing
-catches this -- pcie_add_capability() checks bounds, not overlap, and
-the chain still walks because the DVSEC's next pointer becomes 0x190,
-inside its own body.  Most cxl-type3 examples in
-docs/system/devices/cxl.rst set sn=.
-
-Derive the offset from the DVSEC block instead, as cxl_upstream.c
-already does.  Without sn= the layout is unchanged byte for byte; with
-sn= the DOE moves to 0x19c, below the AER capability at 0x200.  The
-type 3 device has no VMStateDescription, so its config space never
-reaches the migration stream.
-
-Fixes: 8700ee15de ("hw/cxl: Standardize all references on CXL r3.1 and minor updates")
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
-Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Message-ID: <20260831022302.406740-1-junjie.cao@intel.com>
----
- hw/mem/cxl_type3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 6f44770db6..a04dc74ecc 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -936,8 +936,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     }
- 
-     /* DOE Initialization */
--    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true,
--                  CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
-+    pcie_doe_init(pci_dev, &ct3d->doe_cdat, cxl_cstate->dvsec_offset,
-+                  doe_cdat_prot, true, CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
- 
-     cxl_cstate->cdat.build_cdat_table = ct3_build_cdat_table;
-     cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
--- 
-MST
+Hello, this work converts "simple" intro sections for data struct=0D
+definitions (and one alternate) in the QAPI schema to use the new=0D
+syntax. This is part of our ongoing effort to add the mythical=0D
+"inliner" to our generated QMP documentation.=0D
+=0D
+"simple" here is a non-technical distinction that means a single=0D
+paragraph of text followed by an existing section boundary that=0D
+naturally already delineates what comprises the intro.=0D
+(This is about 25% of the remaining conversions.)=0D
+=0D
+"data struct" is another non-technical distinction that means a QAPI=0D
+struct that is not used as a branch, argument definition, or the basis=0D
+of another struct. In effect, it is only "data" and as a result, is=0D
+not *currently* a candidate to be inlined into any other definition.=0D
+=0D
+Documentation that is to be "inlined"-- to be written into another=0D
+definition's documentation-- needs to ensure that the documentation=0D
+written in the "intro" segment is not crucial to understanding the=0D
+behavior of the individual members. The "intro" does not get inlined,=0D
+but the rest of the documentation does. These "data structs" as=0D
+isolated in this series currently are not eligible to be inlined. As=0D
+such, the precise distinction between intro and details for these=0D
+definitions is not presently as crucial - however, these structs may=0D
+become inlined in the future, so a closer eye is still warranted.=0D
+=0D
+If you are a non-QAPI maintainer who has been CC'd on this series, you=0D
+may wish to review what information is being counted as the "intro"=0D
+(The indented paragraph) and keep in mind that in the future, this=0D
+text may not be visible to the end-user reading our QMP documentation=0D
+if this structure is utilized as the 'base' for another struct, used=0D
+as the arguments for a command or event, or used as branch of a=0D
+union. This series keeps it pretty simple, and every conversion herein=0D
+is being codified as "the intro", i.e. "not crucial to understanding=0D
+the behavior of the members of this struct".=0D
+=0D
+John Snow (10):=0D
+  qapi: convert simple data struct intros for uefi.json=0D
+  qapi: convert simple data struct intros for misc-arm.json=0D
+  qapi: convert simple data struct intros for acpi.json=0D
+  qapi: convert simple data struct intros for run-state.json=0D
+  qapi: convert simple data struct intros for yank.json=0D
+  qapi: convert simple data struct intros for cxl.json=0D
+  qapi: convert simple data struct intros for virtio.json=0D
+  qapi: convert simple data struct intros for machine.json=0D
+  qapi: convert simple data struct intros for block-core.json=0D
+  qapi: convert simple alternate intros for common.json=0D
+=0D
+ qapi/acpi.json       |  7 +++----=0D
+ qapi/block-core.json | 37 ++++++++++++++++---------------------=0D
+ qapi/common.json     |  7 +++----=0D
+ qapi/cxl.json        |  7 +++----=0D
+ qapi/machine.json    | 12 +++++-------=0D
+ qapi/misc-arm.json   |  9 ++++-----=0D
+ qapi/run-state.json  |  7 +++----=0D
+ qapi/uefi.json       |  5 ++---=0D
+ qapi/virtio.json     | 37 ++++++++++++++++---------------------=0D
+ qapi/yank.json       | 10 ++++------=0D
+ 10 files changed, 59 insertions(+), 79 deletions(-)=0D
+=0D
+--=20=0D
+2.55.0=0D
+=0D
 
