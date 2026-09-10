@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE5D1FDA61;
-	Thu, 10 Sep 2026 07:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A060F35AC01;
+	Thu, 10 Sep 2026 07:56:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789026353; cv=none; b=Kgc2OM9PeOrV40ahLYXegZAqjvZY+SXL1fEnKaevqxJLsEPiofOG9UgSgpEMRPvbmmWvcUocAPeJG/HpQhs9s1fuF/Ul4A/BPtKZbMLtgksYYVxHS4xWUfY3rgdVAcMRnaSWVE1tLw0BlHkfqAEn+/5E09c1Bp7Aoju1LW1M5VE=
+	t=1789026989; cv=none; b=qvnMhwGmTPBMRF2FRMhIDR660bflxOjxsySZxcVvqDlayCnbu3uZV7Llw8jUj9NjE8uEbNI5sNU73Ug/kluO78zpLjo/vcqxvpGhxI8ORkAheT9bqcIJ/uDzOYGGTzK6HrCnIgYyC0SaxwemgoX/juqr5H21+7JPaqIYuJfPE2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789026353; c=relaxed/simple;
-	bh=2OhSFsjT8L0xwzJyNwz0QJpH1fHjU+7MnPHHCsmMRYE=;
+	s=arc-20240116; t=1789026989; c=relaxed/simple;
+	bh=EMBp4Doo+oDMrJSXQ4mhY8YBlFdm4sKqNPqkYNZJ9rQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LquPFjntoFOy+VlgKWxYKcREvrbqPjSEEuuyYHrEJjdVaB3h9f/ZPC+tKFdla6+UPl4/MHszV0UI/EEv0dPiM+YB6HPJKDnjkQW6Er6zSit1bJ46J63lLVWeIdkC3hBrIXERKYqIgAs73mZnRlpFqBxo6pH3LR6TW5O2pWTDXnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZWX4zGf; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=KdIglDYhgWfLVNhD6ktdFmeJvHOZyX6CSsBU/VA8XZ60eCtacS7Q7gkaZICw4RDQmxw9Wl4K6MgZ1fXdrBMsPks9xbInGAfQADEza7J0ls6MEkh+0DcN9EaibEd4wkFCy97Z1muQNOqHbAohaEqbhjx+sTwi0N4UQuzW1XKgHZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDi8kUuo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZWX4zGf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653471F000FF;
-	Thu, 10 Sep 2026 07:45:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDi8kUuo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13BA1F000FF;
+	Thu, 10 Sep 2026 07:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789026351;
-	bh=FHie/OUYvzpMclT00g8vWkGuNljOmHgsxZgOpA1lmeE=;
+	s=k20260515; t=1789026988;
+	bh=BQQcusQ9LLT4yN0vtE2+JJfBAM0whRembcwi5uPMBmY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CZWX4zGfjD1vQw77WThWI3jUeBou+JcpJFL+9iYkw3XZn+IFlsjGzIce+4aEXXub2
-	 OwRyLOxFMBeqVW26fPDu1WpwPBc2xePTtmFcUl9OZoz6zV8Nm5dshkUw+IOdoJ/ofp
-	 T07qNSNkuVlGlgvmH6WnrqohagdnsrRBj1AyKWl9E6sjCJCRXshVTbIXWSgm+hGSAN
-	 01Dyvh6JrLsmHjTKJ0qlP0OGn/K6a4gX6xk/kJ35fwGQ0uRdQEfUkIqqLclCwEXQsv
-	 DCgVt+54VEcdy0ePOczJybx9+x8wCyNZEB46KI0YQuSkZ33a+IRvh4jBJtTq+iJEWJ
-	 hI8mR9r85yR8g==
-Date: Thu, 10 Sep 2026 09:45:42 +0200
+	b=UDi8kUuoLd3sQBFJGPIWCqcoyztj2LTiq9VJbAroJS0NmrWzlX881kEKj/grf85aD
+	 +iFSIOSNfcbhy3RVHR7B48/NMY+1sQNN8ceb8gy99B3IgdUR4q6rQoNiKgy/V/oR4y
+	 IcrtbvcrheHdS/YlR1R9Ro7LmulIoPjpSMZdb2rjWIBYgKwC7c915RPLwMJxcTsicl
+	 iulfu5rif6jCCo7NCp4ZGfR9WkDxd/Gq44sL7rA8DWe3cYda/Vq+rKC4j93AxOuJGf
+	 I70H/S0fguNXRnW8yk92n+a4QZgcvHR9wkwZ+V09rj+g/x/JqT/bPLYUa+vK1YkvwQ
+	 EZXJMANGawwbQ==
+Date: Thu, 10 Sep 2026 09:56:18 +0200
 From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -53,10 +53,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
 	driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 05/12] mm/sparse: cleanup sparse_init_one_section()
-Message-ID: <aqJgJrM2pJV9ubS9@localhost.localdomain>
+Subject: Re: [PATCH 06/12] mm/sparse: rename __highest_present_section_nr to
+ __highest_used_section_nr
+Message-ID: <aqJiouyfI716msmO@localhost.localdomain>
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-5-008fc8d579fe@kernel.org>
+ <20260909-b4-sparsemem_cleanups-v1-6-008fc8d579fe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,10 +66,11 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-5-008fc8d579fe@kernel.org>
+In-Reply-To: <20260909-b4-sparsemem_cleanups-v1-6-008fc8d579fe@kernel.org>
 
-On Wed, Sep 09, 2026 at 03:32:58PM +0200, David Hildenbrand (Arm) wrote:
-> Let's avoid the "pnum" terminology.
+On Wed, Sep 09, 2026 at 03:32:59PM +0200, David Hildenbrand (Arm) wrote:
+> In preparation for getting rid of SECTION_MARKED_PRESENT, rename
+> __highest_present_section_nr and clarify the comment.
 > 
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
