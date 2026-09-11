@@ -1,230 +1,346 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC3B48EC8B
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Sep 2026 16:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719404A4981;
+	Fri, 11 Sep 2026 16:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789144824; cv=none; b=Dc2fBer2MV5x+d6cKXcIJWXn+U+segPhfXiTORmUC/pi82+WAvbqmSoUM22ze6gQDsbQaDuD7/NXRalsH1q43OjQZjfjBf0yAtZHY2UoYSYa17ACdwcnedabgfDzPSutErU2z2zLbQsS+/XDJvB/zNJCMpQmaXvPwUSTyf49jgw=
+	t=1789145229; cv=none; b=jCK4AD1EJtkw7pyF2W8Km2GJrH4LfOl4/xK0ENplbEkKY+BoA0/8ENGtAb5461OeYy54+UQDeSHjuAMhcm/3JvR5N9YE0/dru/NzgeRVaRPXN8+mJbsJbWpIVagwbAxtTUeKZkk4LGq0MGJDeEqEVssQtBJ+zhfDitS3uleMD6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789144824; c=relaxed/simple;
-	bh=EAQeZe1XEuAWHJARuU6IDW2Xx2TnIuJB2OqRLsbMlaA=;
-	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
-	 To:Cc:Content-Type; b=Et0y2CRVgL7t9IYOWwk/RnuezoZgm7CGgok+mPiWdOjAlrLtKGiCk9TmU2BHPyjOykLkywB0PFLb4tJA0FSo2HLngi5dGVSyBc6gUxRXbcNs/RUKKfkTl3Q0uTVzZlUOWKHSfZIF9a47iinHFJB0uVHCNY+4Pi+0ROxKy5ZY/EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U+/cTwzW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+/cTwzW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789144822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oPypAJmHalIuZO8Qh6uXAHLk6oL+F+SAlk4t9kCAeHs=;
-	b=U+/cTwzWb0gh2oC6A9TXsqVcK097SB3/FlXbfp1V3j3XRO8hYSWfLgV904yHpx8UHMe8mM
-	fSpDXi+T0yr2gYPjugHFvtPkac301fhuNK32b3tcXcIThLFwgQM3ozzGlW7S+UuXKahkua
-	fdRv7wGY3OtGtXKsqZVvdWiLZKGsRTM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-F79_-1BnPfueYsb-lUAPEg-1; Fri,
- 11 Sep 2026 12:40:16 -0400
-X-MC-Unique: F79_-1BnPfueYsb-lUAPEg-1
-X-Mimecast-MFC-AGG-ID: F79_-1BnPfueYsb-lUAPEg_1789144815
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02EAE1954B1C;
-	Fri, 11 Sep 2026 16:40:15 +0000 (UTC)
-Received: from localhost (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 02533300022B;
-	Fri, 11 Sep 2026 16:40:13 +0000 (UTC)
-From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Fri, 11 Sep 2026 20:35:19 +0400
-Subject: [PATCH v5 45/62] include: add QEMU_REPEAT helper macro
+	s=arc-20240116; t=1789145229; c=relaxed/simple;
+	bh=stNQN1iagKy0D+Yf7E/xUuvqYzI0HlyU6C42zWujXlk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qRrTVtEEZuxxbqu6IGSQbwFACXBo7rPHuOqybAfZDc+9tFOegl4sJiyYYU1Q02E4dlegQhb858GFnCSECpW8nSKgNeQOuJhsnKx0PDc/QGLu8qjsDNazIgIXEb6c1bfQBfywh6KmqJXbOmRDPxY2dw/yVih+R5G79YcGjcGucEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0002E1F000FF;
+	Fri, 11 Sep 2026 16:47:06 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	bp@alien8.de,
+	guohanjun@huawei.com,
+	mchehab@kernel.org,
+	xueshuai@linux.alibaba.com,
+	jic23@kernel.org,
+	terry.bowman@amd.com,
+	sashiko-bot@kernel.org
+Subject: [PATCH v3] PCI/AER: Map a raw AER Capability image field by field
+Date: Fri, 11 Sep 2026 09:47:05 -0700
+Message-ID: <20260911164705.841407-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20260911-qom-qapi-v5-45-7732a55b7760@redhat.com>
-References: <20260911-qom-qapi-v5-0-7732a55b7760@redhat.com>
-In-Reply-To: <20260911-qom-qapi-v5-0-7732a55b7760@redhat.com>
-To: qemu-devel@nongnu.org
-Cc: Markus Armbruster <armbru@redhat.com>, 
- Paolo Bonzini <pbonzini@redhat.com>, 
- =?utf-8?q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
- =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>, 
- Michael Roth <michael.roth@amd.com>, 
- Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>, 
- =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>, 
- Peter Maydell <peter.maydell@linaro.org>, 
- Elena Ufimtseva <elena.ufimtseva@oracle.com>, 
- Jagannathan Raman <jag.raman@oracle.com>, 
- Jonathan Cameron <jic23@kernel.org>, qemu-arm@nongnu.org, 
- linux-cxl@vger.kernel.org
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5015;
- i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=EAQeZe1XEuAWHJARuU6IDW2Xx2TnIuJB2OqRLsbMlaA=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqpC27e1GZ9h+t8HjfLlru0PtcsL2oxGUkDdXLw
- sXsc1WkU92JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCaqQtuwAKCRDa6OEJdZac
- 5SL/D/9Di4Hwl5aWMkxJtvYwk2A0TNhNdL/qDxWUmTEaa0r0EM7lBKICiTEGybKGLZAKxRsGA3i
- DD5G+JKYC2mu2p8LIAuuPQlPiybwo92BxvpW0GfZbRsRiPzu+w1NU0yjSxtlbprBMPXSxor2bhZ
- IgDf0kPbeVZoSU+h3fZx5QOxViLVZylOsWv7hOnMmaqNb2QNdn1WAVA1fsKSScgpi8sZrd4jj0+
- P8fNnsW+vcNDfAbQsWRlH2EUlzLS1C6dRPJOEuv/y0+MwpFtfNiup+QXq91Puq7YkQS/4joRQOi
- 50ZY3pimp5+1hXQTBpS7oGNwUt1QEsTUgytvvEpetOVddrezRKwjr6v+QjnBMNeuuoZpkdOpsI/
- 2bfAf7VYui0b7oSnP6ELjlvREUn+GXwOTKml/qFOPVDSSbYr+uJPrHGBfDCf4dpG2Oy96n/Et1k
- BBaLK4rmzCPwe+IinPPE5LIRrbyF8sUstGoLJTlcI/Pt59Vho6wY/QuHM/zUGY8VMLS7M+UBxpz
- qTye+RKZ3I7YqSMBV9Wq8leb3KnhpKNpkagD067AZIh/u2aGB2Mk6ViVqIudqluvVPKh9kRxD+C
- 2ptqEv+8waQ9gIwUWAguD/z0eEAMjY66UTv7LFTjfHoYJpc9IQX7OfYkIUGAi3MJhCB9pwfGDbA
- aXtgKN7qt0b8N+g==
-X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
- fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: eUah-cjL2Yu3VjXlaFAccOkeXoOcD4YQks1tSiGvkUg_1789144815
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Introduce a macro used in following commit, and convert a few existing
-candidates. Inspired by a similar macro in Linux kernel/trace/bpf_trace.c
+struct aer_capability_regs is not the hardware layout: the embedded
+struct pcie_tlp_log spans 60 bytes where the Header Log it stands in for
+is 16, so a flat copy misplaces everything behind it.
 
-Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+extlog_print_pcie(), ghes_handle_aer() and cxl_rch_get_aer_info() work
+around that by stopping at the Header Log, dropping everything past
+offset 44. Flit mode is never decoded either: the Flit bit and Logged
+TLP Size sit at offset 0x18, unread, so the Flit DWORDs at 0x38 are lost
+and the log prints as non-Flit.
+
+Add aer_cap_regs_unpack() to map the registers individually, taking the
+TLP Log layout from the Flit bit as pcie_read_tlp_log() does. Clamp the
+logged length: Logged TLP Size is 5 bits wide, so an untrusted value
+reaches 31 where dw[] holds 14 and pcie_print_tlp_log() walks
+header_len unbounded.
+
+Take the image little-endian, as both sources are: CPER by definition,
+PCIe registers on the wire. Read it with get_unaligned_le32(), since a
+CPER section sits wherever firmware put it, and take the two source IDs
+out of the Error Source Identification register by bit position rather
+than byte offset. cxl_rch_get_aer_info() uses readl(), so it hands back
+__le32.
+
+Convert all three callers. cxl_rch_get_aer_info() now reads the whole
+MMIO block, so size its ioremap by the hardware registers (96 bytes)
+rather than by sizeof(struct aer_capability_regs) (100). Shrinking the
+mapping is safe: the read it replaces stopped at 44 bytes.
+
+Reported-by: sashiko-bot@kernel.org
+Closes: https://sashiko.dev/#/patchset/20260904172337.1409775-1-dave.jiang@intel.com?part=5
+Link: https://lore.kernel.org/linux-cxl/CAJZ5v0hDv11cPuztPZsaDd7uwD_49KznJy=tzuRO+dZc=CnAEQ@mail.gmail.com/
+Assisted-by: LLM
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
 ---
- hw/misc/tz-ppc.c               | 19 ++-----------------
- hw/remote/vfio-user-obj.c      | 17 +++--------------
- include/hw/cxl/cxl_component.h |  5 +----
- include/qemu/osdep.h           | 33 +++++++++++++++++++++++++++++++++
- 4 files changed, 39 insertions(+), 35 deletions(-)
+v3 (sashiko-bot):
+- Give the helper one endianness. v2 fed it a little-endian CPER stream
+  and a host-order readl() array, so on big-endian the 16-bit source IDs
+  came out of the wrong half of the register. No change on little-endian.
 
-diff --git a/hw/misc/tz-ppc.c b/hw/misc/tz-ppc.c
-index 6f820430eed8..5f09ce164c19 100644
---- a/hw/misc/tz-ppc.c
-+++ b/hw/misc/tz-ppc.c
-@@ -303,26 +303,11 @@ static const VMStateDescription tz_ppc_vmstate = {
+Depends on "[PATCH v6 00/13] ACPI: APEI: GHES: Collection of fixes for
+issues reported by sashiko", now picked up by Rafael; please apply after
+it. Patches 5 and 12 are build dependencies - this rewrites the aer_info
+copies they add - and patch 7 is functional: without its
+ACPI_APEI_PCIEAER guard fix, extlog_print_pcie() compiles out. The
+drivers/pci and drivers/cxl changes are independent.
+
+No Fixes: tag on purpose. Patches 5 and 12 closed the out-of-bounds
+reads; what is left is diagnostic completeness, and this adds an
+exported helper and rewrites three call sites.
+
+This is the follow-up Rafael asked for in the Link: above, and also
+covers the pre-existing ras_rch.c findings reported there.
+---
+ drivers/acpi/acpi_extlog.c | 14 +-----
+ drivers/acpi/apei/ghes.c   | 15 +------
+ drivers/cxl/core/ras_rch.c | 27 ++++--------
+ drivers/pci/pcie/tlp.c     | 88 ++++++++++++++++++++++++++++++++++++++
+ include/linux/aer.h        |  9 ++++
+ 5 files changed, 107 insertions(+), 46 deletions(-)
+
+diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+index 9e61354a807b..bf5f7b1a9aea 100644
+--- a/drivers/acpi/acpi_extlog.c
++++ b/drivers/acpi/acpi_extlog.c
+@@ -156,19 +156,7 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
  
- #define DEFINE_PORT(N)                                          \
-     DEFINE_PROP_LINK("port[" #N "]", TZPPC, port[N].downstream, \
--                     TYPE_MEMORY_REGION, MemoryRegion *)
-+                     TYPE_MEMORY_REGION, MemoryRegion *),
+ 	aer_severity = cper_severity_to_aer(severity);
  
- static const Property tz_ppc_properties[] = {
-     DEFINE_PROP_UINT32("NONSEC_MASK", TZPPC, nonsec_mask, 0),
--    DEFINE_PORT(0),
--    DEFINE_PORT(1),
--    DEFINE_PORT(2),
--    DEFINE_PORT(3),
--    DEFINE_PORT(4),
--    DEFINE_PORT(5),
--    DEFINE_PORT(6),
--    DEFINE_PORT(7),
--    DEFINE_PORT(8),
--    DEFINE_PORT(9),
--    DEFINE_PORT(10),
--    DEFINE_PORT(11),
--    DEFINE_PORT(12),
--    DEFINE_PORT(13),
--    DEFINE_PORT(14),
--    DEFINE_PORT(15),
-+    QEMU_REPEAT(TZ_NUM_PORTS, DEFINE_PORT)
- };
+-	/*
+-	 * struct pcie_tlp_log is larger than the hardware layout, so aer_info
+-	 * only maps onto the struct up to the four Header Log DWORDs. Copy that
+-	 * much, then place the TLP Prefix Log from where the hardware keeps it.
+-	 * Everything else stays zero: nothing reads root_command, root_status or
+-	 * the error source IDs, and header_len and flit are software-only.
+-	 */
+-	memcpy(&aer_regs, pcie_err->aer_info,
+-	       offsetof(struct aer_capability_regs, header_log) +
+-	       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
+-	memcpy(aer_regs.header_log.prefix,
+-	       pcie_err->aer_info + PCI_ERR_PREFIX_LOG,
+-	       sizeof(aer_regs.header_log.prefix));
++	aer_cap_regs_unpack(&aer_regs, pcie_err->aer_info, sizeof(pcie_err->aer_info));
  
- static void tz_ppc_class_init(ObjectClass *klass, const void *data)
-diff --git a/hw/remote/vfio-user-obj.c b/hw/remote/vfio-user-obj.c
-index 7e6819f670b5..84c3ff05cfb8 100644
---- a/hw/remote/vfio-user-obj.c
-+++ b/hw/remote/vfio-user-obj.c
-@@ -496,22 +496,11 @@ static size_t vfu_object_bar_rw(PCIDevice *pci_dev, int pci_bar,
-                                  buf, count, is_write);                        \
-     }                                                                          \
+ 	domain = pcie_err->device_id.segment;
+ 	bus = pcie_err->device_id.bus;
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 08c985e729d6..ade1cc8c9f8d 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -668,20 +668,7 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ 		if (!aer_info)
+ 			return;
  
--VFU_OBJECT_BAR_HANDLER(0)
--VFU_OBJECT_BAR_HANDLER(1)
--VFU_OBJECT_BAR_HANDLER(2)
--VFU_OBJECT_BAR_HANDLER(3)
--VFU_OBJECT_BAR_HANDLER(4)
--VFU_OBJECT_BAR_HANDLER(5)
--VFU_OBJECT_BAR_HANDLER(6)
-+QEMU_REPEAT(PCI_NUM_REGIONS, VFU_OBJECT_BAR_HANDLER)
+-		/*
+-		 * Map aer_info onto the struct as extlog_print_pcie() does:
+-		 * copy up to the four Header Log DWORDs, then place the TLP
+-		 * Prefix Log from where the hardware keeps it. The rest stays
+-		 * zero, so firmware cannot drive the pcie_print_tlp_log() loop
+-		 * over dw[] out of bounds.
+-		 */
+-		memset(aer_info, 0, sizeof(struct aer_capability_regs));
+-		memcpy(aer_info, pcie_err->aer_info,
+-		       offsetof(struct aer_capability_regs, header_log) +
+-		       PCIE_STD_NUM_TLP_HEADERLOG * sizeof(u32));
+-		memcpy(aer_info->header_log.prefix,
+-		       pcie_err->aer_info + PCI_ERR_PREFIX_LOG,
+-		       sizeof(aer_info->header_log.prefix));
++		aer_cap_regs_unpack(aer_info, pcie_err->aer_info, sizeof(pcie_err->aer_info));
  
-+#define VFU_OBJECT_BAR_HANDLER_PTR(BAR_NO) vfu_object_bar##BAR_NO##_handler,
- static vfu_region_access_cb_t *vfu_object_bar_handlers[PCI_NUM_REGIONS] = {
--    &vfu_object_bar0_handler,
--    &vfu_object_bar1_handler,
--    &vfu_object_bar2_handler,
--    &vfu_object_bar3_handler,
--    &vfu_object_bar4_handler,
--    &vfu_object_bar5_handler,
--    &vfu_object_bar6_handler,
-+    QEMU_REPEAT(PCI_NUM_REGIONS, VFU_OBJECT_BAR_HANDLER_PTR)
- };
+ 		aer_recover_queue(pcie_err->device_id.segment,
+ 				  pcie_err->device_id.bus,
+diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+index e0e01aa5eba6..50abbdc80722 100644
+--- a/drivers/cxl/core/ras_rch.c
++++ b/drivers/cxl/core/ras_rch.c
+@@ -19,7 +19,7 @@ void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+ 		aer_phys = aer_cap + dport->rcrb.base;
+ 		dport->regs.dport_aer =
+ 			devm_cxl_iomap_block(host, aer_phys,
+-					     sizeof(struct aer_capability_regs));
++					     PCIE_AER_CAP_HW_SIZE);
+ 	}
+ }
+ 
+@@ -58,31 +58,20 @@ void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+ static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+ 				 struct aer_capability_regs *aer_regs)
+ {
+-	/*
+-	 * Bound the copy to the physically-defined AER registers (header
+-	 * through the 16-byte Header Log). struct aer_capability_regs is a
+-	 * software layout whose embedded struct pcie_tlp_log is larger than
+-	 * the on-wire AER capability; copying sizeof(*aer_regs) would
+-	 * over-read the RCRB-mapped MMIO block.
+-	 */
+-	int read_cnt = (PCI_ERR_HEADER_LOG + 16) / sizeof(u32);
+-	u32 *aer_regs_buf = (u32 *)aer_regs;
+-	int n;
++	/* A flat copy cannot fill the struct; aer_cap_regs_unpack() places it. */
++	__le32 raw[PCIE_AER_CAP_HW_SIZE / sizeof(__le32)];
+ 
+ 	if (!aer_base)
+ 		return false;
+ 
+ 	/*
+-	 * Zero the destination so the software-only tail fields
+-	 * (e.g. header_log.header_len) are deterministic rather than
+-	 * left as uninitialized stack, which could drive a bogus loop
+-	 * length in pcie_print_tlp_log().
++	 * Use readl() to guarantee 32-bit accesses; it returns host order, so
++	 * put the registers back little-endian for aer_cap_regs_unpack().
+ 	 */
+-	memset(aer_regs, 0, sizeof(*aer_regs));
++	for (int n = 0; n < ARRAY_SIZE(raw); n++)
++		raw[n] = cpu_to_le32(readl(aer_base + n * sizeof(u32)));
+ 
+-	/* Use readl() to guarantee 32-bit accesses */
+-	for (n = 0; n < read_cnt; n++)
+-		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
++	aer_cap_regs_unpack(aer_regs, raw, sizeof(raw));
+ 
+ 	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+ 	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+index 71f8fc9ea2ed..7f94a09ac7c7 100644
+--- a/drivers/pci/pcie/tlp.c
++++ b/drivers/pci/pcie/tlp.c
+@@ -8,8 +8,11 @@
+ #include <linux/aer.h>
+ #include <linux/array_size.h>
+ #include <linux/bitfield.h>
++#include <linux/build_bug.h>
++#include <linux/minmax.h>
+ #include <linux/pci.h>
+ #include <linux/string.h>
++#include <linux/unaligned.h>
+ 
+ #include "../pci.h"
+ 
+@@ -92,6 +95,91 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+ 	return 0;
+ }
+ 
++/* The Prefix Log registers hold dw[4..13] in Flit mode. */
++static_assert((PCI_ERR_PREFIX_LOG +
++	       (PCIE_STD_MAX_TLP_HEADERLOG - PCIE_STD_NUM_TLP_HEADERLOG) *
++	       sizeof(u32)) == PCIE_AER_CAP_HW_SIZE);
++
++/**
++ * aer_cap_regs_unpack - Convert a raw AER Capability image to the kernel layout
++ * @regs: Destination, fully initialised
++ * @raw: AER Capability register block in hardware order, little-endian
++ * @raw_len: Bytes readable at @raw
++ *
++ * struct aer_capability_regs is not the hardware layout: struct pcie_tlp_log
++ * spans 60 bytes where the Header Log it stands in for is 16, so a flat copy
++ * misplaces everything behind it. Map the registers one by one instead,
++ * taking the TLP Log layout from the Flit bit as pcie_read_tlp_log() does.
++ *
++ * @raw is not necessarily aligned. Registers past @raw_len are left zero, so
++ * a short image cannot be read past.
++ */
++void aer_cap_regs_unpack(struct aer_capability_regs *regs, const void *raw,
++			 size_t raw_len)
++{
++	unsigned int i, tlp_len;
++	bool flit;
++
++	memset(regs, 0, sizeof(*regs));
++
++	if (raw_len < PCI_ERR_HEADER_LOG)
++		return;
++
++	/* The Extended Capability Header, at offset 0, has no define */
++	regs->header = get_unaligned_le32(raw);
++	regs->uncor_status = get_unaligned_le32(raw + PCI_ERR_UNCOR_STATUS);
++	regs->uncor_mask = get_unaligned_le32(raw + PCI_ERR_UNCOR_MASK);
++	regs->uncor_severity = get_unaligned_le32(raw + PCI_ERR_UNCOR_SEVER);
++	regs->cor_status = get_unaligned_le32(raw + PCI_ERR_COR_STATUS);
++	regs->cor_mask = get_unaligned_le32(raw + PCI_ERR_COR_MASK);
++	regs->cap_control = get_unaligned_le32(raw + PCI_ERR_CAP);
++
++	flit = FIELD_GET(PCI_ERR_CAP_TLP_LOG_FLIT, regs->cap_control);
++	if (flit) {
++		tlp_len = FIELD_GET(PCI_ERR_CAP_TLP_LOG_SIZE, regs->cap_control);
++	} else {
++		/*
++		 * dw[4..7] alias the Prefix Log. Take all four whatever
++		 * eetlp_prefix_max says; pcie_print_tlp_log() stops at the
++		 * first zero one.
++		 */
++		tlp_len = PCIE_STD_NUM_TLP_HEADERLOG + PCIE_STD_MAX_TLP_PREFIXLOG;
++	}
++
++	tlp_len = min(tlp_len, ARRAY_SIZE(regs->header_log.dw));
++
++	for (i = 0; i < tlp_len; i++) {
++		unsigned int off;
++
++		if (i < PCIE_STD_NUM_TLP_HEADERLOG)
++			off = PCI_ERR_HEADER_LOG + i * sizeof(u32);
++		else
++			off = PCI_ERR_PREFIX_LOG +
++			      (i - PCIE_STD_NUM_TLP_HEADERLOG) * sizeof(u32);
++
++		if (off + sizeof(u32) > raw_len)
++			break;
++		regs->header_log.dw[i] = get_unaligned_le32(raw + off);
++	}
++
++	/* @i may be short of tlp_len; non-Flit needs the TLP parsed, so cap at 4 */
++	regs->header_log.header_len = flit ? i : min(i, PCIE_STD_NUM_TLP_HEADERLOG);
++	regs->header_log.flit = flit;
++
++	if (raw_len >= PCI_ERR_ROOT_COMMAND + sizeof(u32))
++		regs->root_command = get_unaligned_le32(raw + PCI_ERR_ROOT_COMMAND);
++	if (raw_len >= PCI_ERR_ROOT_STATUS + sizeof(u32))
++		regs->root_status = get_unaligned_le32(raw + PCI_ERR_ROOT_STATUS);
++	if (raw_len >= PCI_ERR_ROOT_ERR_SRC + sizeof(u32)) {
++		u32 src = get_unaligned_le32(raw + PCI_ERR_ROOT_ERR_SRC);
++
++		/* One register: ERR_COR in 15:0, ERR_FATAL/NONFATAL in 31:16 */
++		regs->cor_err_source = src;
++		regs->uncor_err_source = src >> 16;
++	}
++}
++EXPORT_SYMBOL_GPL(aer_cap_regs_unpack);
++
+ #define EE_PREFIX_STR " E-E Prefixes:"
  
  /**
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index ffc82202206c..fca8b7055ccd 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -186,10 +186,7 @@ REG32(CXL_HDM_DECODER_GLOBAL_CONTROL, CXL_HDM_REGISTERS_OFFSET + 4)
- /* Support 4 decoders at all levels of topology */
- #define CXL_HDM_DECODER_COUNT 4
- 
--HDM_DECODER_INIT(0);
--HDM_DECODER_INIT(1);
--HDM_DECODER_INIT(2);
--HDM_DECODER_INIT(3);
-+QEMU_REPEAT(CXL_HDM_DECODER_COUNT, HDM_DECODER_INIT)
- 
- /*
-  * CXL r3.1 Section 8.2.4.21: CXL Extended Security Capability Structure
-diff --git a/include/qemu/osdep.h b/include/qemu/osdep.h
-index 1ec5b42230be..a5e7ff99cb89 100644
---- a/include/qemu/osdep.h
-+++ b/include/qemu/osdep.h
-@@ -191,6 +191,39 @@ extern "C" {
- 
- #include "qemu/typedefs.h"
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index df0f5c382286..043ee76b6f53 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -24,6 +24,13 @@
+ #define PCIE_STD_MAX_TLP_PREFIXLOG     4
+ #define PCIE_STD_MAX_TLP_HEADERLOG	(PCIE_STD_NUM_TLP_HEADERLOG + 10)
  
 +/*
-+ * QEMU_REPEAT(n, m) - invoke m(0) m(1) ... m(n-1)
-+ *
-+ * Expands to n invocations of m, each with a literal integer argument.
-+ * n must be a compile-time constant in 0..16.
-+ *
-+ * Example - generate 4 per-index function definitions:
-+ *
-+ *   #define DEFINE_GETTER(i) \
-+ *   static int get_##i(void) { return values[i]; }
-+ *
-+ *   QEMU_REPEAT(4, DEFINE_GETTER)
++ * Size of the AER Capability register block in hardware, long enough for the
++ * longest Flit mode TLP Log. struct aer_capability_regs below is larger and
++ * laid out differently; use aer_cap_regs_unpack() to convert.
 + */
-+#define QEMU_REPEAT_0(m)
-+#define QEMU_REPEAT_1(m)   QEMU_REPEAT_0(m)   m(0)
-+#define QEMU_REPEAT_2(m)   QEMU_REPEAT_1(m)   m(1)
-+#define QEMU_REPEAT_3(m)   QEMU_REPEAT_2(m)   m(2)
-+#define QEMU_REPEAT_4(m)   QEMU_REPEAT_3(m)   m(3)
-+#define QEMU_REPEAT_5(m)   QEMU_REPEAT_4(m)   m(4)
-+#define QEMU_REPEAT_6(m)   QEMU_REPEAT_5(m)   m(5)
-+#define QEMU_REPEAT_7(m)   QEMU_REPEAT_6(m)   m(6)
-+#define QEMU_REPEAT_8(m)   QEMU_REPEAT_7(m)   m(7)
-+#define QEMU_REPEAT_9(m)   QEMU_REPEAT_8(m)   m(8)
-+#define QEMU_REPEAT_10(m)  QEMU_REPEAT_9(m)   m(9)
-+#define QEMU_REPEAT_11(m)  QEMU_REPEAT_10(m)  m(10)
-+#define QEMU_REPEAT_12(m)  QEMU_REPEAT_11(m)  m(11)
-+#define QEMU_REPEAT_13(m)  QEMU_REPEAT_12(m)  m(12)
-+#define QEMU_REPEAT_14(m)  QEMU_REPEAT_13(m)  m(13)
-+#define QEMU_REPEAT_15(m)  QEMU_REPEAT_14(m)  m(14)
-+#define QEMU_REPEAT_16(m)  QEMU_REPEAT_15(m)  m(15)
-+#define QEMU_REPEAT_(n, m) QEMU_REPEAT_##n(m)
-+#define QEMU_REPEAT(n, m)  QEMU_REPEAT_(n, m)
++#define PCIE_AER_CAP_HW_SIZE		96
 +
- /**
-  * Mark a function that executes in coroutine context
-  *
+ struct pci_dev;
+ 
+ struct pcie_tlp_log {
+@@ -68,6 +75,8 @@ static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
+ 
+ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 		    struct aer_capability_regs *aer);
++void aer_cap_regs_unpack(struct aer_capability_regs *regs, const void *raw,
++			 size_t raw_len);
+ int cper_severity_to_aer(int cper_severity);
+ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+ 		       int severity, struct aer_capability_regs *aer_regs);
 
+base-commit: 86adf9d0f7b074e0a1310c1bc4db66cac5c83eec
 -- 
-2.55.0.543.g5ebe2ebe4ea8
+2.54.0
 
