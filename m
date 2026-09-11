@@ -1,136 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender5-pp-o94.zoho.com (sender5-pp-o94.zoho.com [165.173.182.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777D546AA64
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Sep 2026 09:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789117422; cv=none; b=EaE7bO50uFVpBdptM0wS51/nyT9Nona8E8CZPMa1z182tsE+DQrrRriSJw82nVBpRk4GrsxQ/1ya6/mikvgTIL1ThsvJBKX3WmcnxxuaTWu8nsRXTSIRcl+eAg9BW87hiszY7XlxmmcaRSU3IlPPZmEEa734djcCTyef264zaoA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789117422; c=relaxed/simple;
-	bh=X7HnfhlJzA2LwzbDSd0atGna2BdJArR+wvOEkFwcIIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=O5uPfyLZGnJzNqdf9eHv39Mdpy8GgZNisvN57UPhSdACtBlgvguXgLdwVJa/DctteJc4RPIxAlRjZpeEi9HFIjBdR0Kvo1vqeL74ypbAO0b7cjUhkElobMx3JWLCAGJQBm0NRT220vwupT1CszRCg8MNlCxuW1Z4pl8cv4I4Xu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fz/PLHf7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB44039AD2A;
+	Fri, 11 Sep 2026 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789120263; cv=pass; b=ITUXMLwQqTIhg0m5LaJ5sDdDIBsimTh6FqSFihPVeSJ9y0S/UqGS7jkPWD9hd74XhBjecynwxmHa9Iz0RcKRxSzA8+VNLNRKuWcGYMMTOeR/EeLryOngydDv2m/qOTsjim7e+FUZ5RsVCM+ap73D8gYEwfp1bsN/CL/hIbZgQR4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789120263; c=relaxed/simple;
+	bh=ToSVAIOQ9BC3QgFJPxIVZSwDrQK6srPp9Y+SoFGbvbI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UkTVIlxjLmy/3HsAwVGT0T7V6ykglMkZoLpRCtkJuqpYIeM+XJkchTdxJd7nwEyS2OA+pDtz+OS7BmxADHj8D5C5hCZT9uTGCywPU+XilxrMn4dKKu2RsbXLQa9UBi5VVbgX1WrEnxi72yVtIFsvs1AQzM2nZ57jeIYq3QCQmSo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bpH8OpiT; arc=pass smtp.client-ip=165.173.182.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fz/PLHf7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789117419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=swaVK7hHvfhctLSwvjj1/ywE8ntA6Euz0DduNvrigAM=;
-	b=Fz/PLHf7ZPESHBsy5CGyRNfP14EmyNrGdX80fv10Xb2TiRsKbQtqPDJks0cqky6Vyll7ME
-	VFtsW/vkSBCw5p7X8YHwwKeCSs4vrRGxlVultCHs5enmWTd4TesTmsoR0+dDOzuaod4CDO
-	nol1rmU0iS7AsK0l0IQtlwOrvNBk1ck=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-bRaOPviwO5W1fLXN-lQLeA-1; Fri, 11 Sep 2026 05:03:38 -0400
-X-MC-Unique: bRaOPviwO5W1fLXN-lQLeA-1
-X-Mimecast-MFC-AGG-ID: bRaOPviwO5W1fLXN-lQLeA_1789117417
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49d156c917cso11792745e9.1
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Sep 2026 02:03:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789117417; x=1789722217;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=swaVK7hHvfhctLSwvjj1/ywE8ntA6Euz0DduNvrigAM=;
-        b=PWehj9oupEw967/C5ABY5mUuhbTi9E1BTjSNUNU/4nIeThWYLdj4d1TlHeJ8Q5VqRQ
-         STuzjD6pUbRTvhsP9RH90mC5S2zBQVvIiLy8kPsfoPbQwm9J4spD1azoyZI62N+qZATq
-         4HQAUvM3rCJtFw/uAqaVhyw+2wUxAuWjIhxRx9N+YPHB/HymLe7ybSQhXKv1HbvuQbr7
-         439nBBgX+wdmFDhK+c0gx5cGImHDZ+O1J9bBBW8xmEZJ8PcCYI4Sj8jlCFnV3yS3Z7Dq
-         BgjDWvu0klKCeLhVTC8I2865+V3nFdJEVFYzbZ+/3wPSoHOBWpNcDTXPYaSXSnFAdR3G
-         O1nA==
-X-Forwarded-Encrypted: i=1; AKwUvBwYCUZTF3slAXlVBEmogM/Vq4Lefhmvp9CiSwVtPa0AEV1VpwzAJCABYToOb/7U+Au924SEVs3JzPc=@vger.kernel.org
-X-Gm-Message-State: AFuF++n4efrD7b80HiYa3FxjXntmNSN8yueaFqbl8ENaqkBzzUiN1M8C
-	kpSVUbvfJf1+TL9QFkdrW02CDbIi9e6H/OGnutBK/1en+1S3LcnZDAOzjskT901kpESplPBfe96
-	ctkH9XCzdUyIr5q+QPKSfGcWDBHie0PPNmBnTookFt7QOMnI3dhR2bi1w9m63TGOP1OOa/Q==
-X-Gm-Gg: AYBFou0Z958YzDZB72Rx7EQX+wX8QlluNB34GSXTUGBxm4d3ZcR3m2H1IjXZFYyaeV2
-	1mL7wcKGnmLulnP/FfwGrx20twoxG5nouRExVcNoicOMXkMM9D7yncQaoydYQ8MHtTwtD+xgNII
-	ukbWNdGkYs+TyYQlZ0QEEL4wVvqlFy822FlEAP9EiMMacfoHNhqg0ajgr5YNbfYkJ1wzCT5Yg9y
-	i0vQoEU0++zw/RyKAwhxc8D26A+E5SEmyCoQ492451zeIAuGH9D0QUoelZeiN2M4FXYV92QoB75
-	bb4coQRjn731D1T/fN4lwyc4SVLoRNdg+dmMkfR0FQEMzBmlZ+xaKbHmr2WJQyIeE7a40Nnhmim
-	b5RupPFV81tykxJ64hs4ZKNY=
-X-Received: by 2002:a05:600c:4ece:b0:49c:f13e:e4c with SMTP id 5b1f17b1804b1-49e610829b5mr37822385e9.9.1789117414252;
-        Fri, 11 Sep 2026 02:03:34 -0700 (PDT)
-X-Received: by 2002:a05:600c:4ece:b0:49c:f13e:e4c with SMTP id 5b1f17b1804b1-49e610829b5mr37818395e9.9.1789117410371;
-        Fri, 11 Sep 2026 02:03:30 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e60946249sm69520125e9.0.2026.09.11.02.03.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 02:03:29 -0700 (PDT)
-Date: Fri, 11 Sep 2026 05:03:28 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: qemu-devel@nongnu.org
-Cc: Peter Maydell <peter.maydell@linaro.org>,
-	Junjie Cao <junjie.cao@intel.com>,
-	Jonathan Cameron <jic23@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [PULL v2 55/75] hw/cxl: fix the CDAT DOE overlapping the Flex Bus
- DVSEC when sn= is set
-Message-ID: <c9a5fd358cccd4c1616967973aedf39973833f85.1789117222.git.mst@redhat.com>
-References: <cover.1789117222.git.mst@redhat.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bpH8OpiT"
+ARC-Seal: i=1; a=rsa-sha256; t=1789120253; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TE/+1xwb0UhDQVst8myEPTFr9Vo3XHK5MAO2u90+CrweI0kmgU1hgSUwwyOOh0czRl/styCleZrrGBslVEdOc/VK1CCy7eB8woLhVRnQLYPnXv/UZ6oxvKXVH5Hqd9oMfGkrJPSmVEzSp7y0kDgzZ9I0wIsv6pzhHJ3Y9AOyrj0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1789120253; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lciQTe9UDdV/aafHBwwSVe5o+VCuUmC035ZCR1bmSQ0=; 
+	b=JoCrJRFzqPuesnkHsDLxEQuDVa/7RpaG1bsoJtVr0IJI1ajJsZcodSHRWIGZhfvtYJr7DmdqUZck/RxYXRuH6A6J03iVQr/5CadwI23kizjXrp4uF40lCr6Of2nEoHwuH0hNy3T/rCHiFrXzifSeUWeGR+jTit5bzLNkKCAuaqY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789120253;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=lciQTe9UDdV/aafHBwwSVe5o+VCuUmC035ZCR1bmSQ0=;
+	b=bpH8OpiTsDbWCTI/RvHX4yfHe3rdtAeHp/NSbgvNbe+0bSeImjz1uNv9XaKB6QJf
+	CQ95ieFyK2rvALL22zCFeEwmdLgI/dMCuSsaMyjIa69KHdwErw9yMsCd65r5gcBUiX1
+	CnQMbvxEKJFkx7O9Oy/CejEUc3IfEl+H0jYADphk=
+Received: by smtp.zohomail.com with SMTPS id 1789120252323130.23435788505003;
+	Fri, 11 Sep 2026 02:50:52 -0700 (PDT)
+Message-ID: <21cef59d-89e7-4dcc-80b6-3bba7a366b38@zohomail.com>
+Date: Fri, 11 Sep 2026 17:50:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1789117222.git.mst@redhat.com>
-X-Mailer: git-send-email 2.51.2.2891.g4157995a80.dirty
-X-Mutt-Fcc: =sent
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: aBvf-SaGwTCzB5dzsTbURYFoxEDdfhnBiz9zygT83hU_1789117417
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/regs: Reject register blocks in an unassigned BAR
+To: Junjie Cao <junjie.cao@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ linux-cxl@vger.kernel.org
+Cc: Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>,
+ linux-kernel@vger.kernel.org
+References: <20260910093858.535969-1-junjie.cao@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260910093858.535969-1-junjie.cao@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: zu08011227e24a6a543f044932f81502300000faabd16482f197873deacd4e7b6abc1c6568c6dd901bf30ef7:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-From: Junjie Cao <junjie.cao@intel.com>
+On 9/10/2026 5:38 PM, Junjie Cao wrote:
+> cxl_decode_regblock() only checks that the Register Locator offset fits
+> pci_resource_len().  A BAR the PCI core could not place is reset to zero
+> start, end and flags while config space keeps the firmware value, so a
+> zero offset passes and the block is mapped at physical address 0.  On
+> x86 ioremap() of the reserved low megabyte succeeds, the component
+> register header does not match, and a switch port fails with "HDM
+> decoder capability not found", pointing at the HDM decoders rather than
+> at the BAR.
+>
+> Reject a BAR with no length or still unassigned, next to the existing size
+> check.  Skip empty Register Locator entries first: they decode as BAR0
+> offset 0 and would trip the check, and nothing looks them up.
+>
+> Seen with edk2-stable202602 (f6489621b8ae, reverted in stable202605),
+> which places 64-bit non-prefetchable BARs behind a bridge in the
+> prefetchable window.  Linux refuses to claim them and the switch
+> upstream and downstream port BAR0s find no room in the 32-bit window.
+> QEMU q35 with a CXL switch, Fedora 43 edk2-ovmf-20260213, before:
+>
+> pci 0000:0d:00.0: BAR 0 [mem size 0x00010000 64bit]: can't assign; no space
+> cxl_port port2: HDM decoder capability not found
+>
+> after:
+>
+> pcieport 0000:0d:00.0: BAR0: not assigned (type: 1)
+> cxl_port port2: No component registers mapped
+> cxl_port port2: Failed to map HDM decoder capability
+>
+> Link: https://github.com/tianocore/edk2/issues/13104
+> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+> ---
+>  drivers/cxl/core/regs.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 20c2d9fbcfe7..41416fa2ce4a 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -277,6 +277,20 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
+>  	u64 offset = ((u64)reg_hi << 32) |
+>  		     (reg_lo & PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW);
+>  
+> +	if (reg_type == CXL_REGLOC_RBI_EMPTY)
+> +		return false;
+> +
+> +	/*
+> +	 * A BAR the PCI core could not place is reset to zero; decoding it
+> +	 * would map the block at physical address 0.
+> +	 */
+> +	if (!pci_resource_len(pdev, bar) ||
+> +	    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+> +		dev_warn(&pdev->dev, "BAR%d: not assigned (type: %d)\n", bar,
+> +			 reg_type);
+> +		return false;
+> +	}
+> +
+>  	if (offset > pci_resource_len(pdev, bar)) {
+>  		dev_warn(&pdev->dev,
+>  			 "BAR%d: %pr: too small (offset: %pa, type: %d)\n", bar,
 
-ct3_realize() adds the CDAT DOE at a fixed 0x190.  Since 8700ee15de the
-four DVSECs take 0x90 bytes, which from 0x100 ends exactly at 0x190.
-With sn= the Device Serial Number capability pushes the block to
-0x10c..0x19c, and the DOE, added later, overwrites the last 12 bytes of
-the Flex Bus Port DVSEC: Capability2, Control2 and Status2.  Nothing
-catches this -- pcie_add_capability() checks bounds, not overlap, and
-the chain still walks because the DVSEC's next pointer becomes 0x190,
-inside its own body.  Most cxl-type3 examples in
-docs/system/devices/cxl.rst set sn=.
-
-Derive the offset from the DVSEC block instead, as cxl_upstream.c
-already does.  Without sn= the layout is unchanged byte for byte; with
-sn= the DOE moves to 0x19c, below the AER capability at 0x200.  The
-type 3 device has no VMStateDescription, so its config space never
-reaches the migration stream.
-
-Fixes: 8700ee15de ("hw/cxl: Standardize all references on CXL r3.1 and minor updates")
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
-Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Message-ID: <20260831022302.406740-1-junjie.cao@intel.com>
----
- hw/mem/cxl_type3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 6f44770db6..a04dc74ecc 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -936,8 +936,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     }
- 
-     /* DOE Initialization */
--    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true,
--                  CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
-+    pcie_doe_init(pci_dev, &ct3d->doe_cdat, cxl_cstate->dvsec_offset,
-+                  doe_cdat_prot, true, CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
- 
-     cxl_cstate->cdat.build_cdat_table = ct3_build_cdat_table;
-     cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
--- 
-MST
 
