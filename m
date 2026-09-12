@@ -1,103 +1,219 @@
-Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060B1E1DF0
-	for <linux-cxl@vger.kernel.org>; Sat, 12 Sep 2026 00:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606D64BEE5E;
+	Sat, 12 Sep 2026 00:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789172445; cv=none; b=o47tI5YP8OJHESyGR77jCsD7qHOTOWHv1t0cjZwDetQqmGqDoKNd2RgIObcMe3B3NVTERayX1BmEJgjtSvgQyQv+9eSOOh3CX4KTef0aTic0TfgVxN35PnRJlLXvrIHoRkrr1G72Qx1TK6eOy8TJrAOqq6ZAqliN3Kx/ye/kli8=
+	t=1789172565; cv=none; b=f87eYrJYdyMfyLBiHleTM4YAPDoNT0iCBdNf0BD9PVuPO73x36WMPZVoYWddrf9xMqlLWAIJ35n/oDdM7PeL4Y6yclx46v26tpeYnSZb5SxSYtmueFUXDI1uY+prwpVY0wU9FtnLNJbqZrls6pWK6w5IaL7qftsa0AJZNsj9Rpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789172445; c=relaxed/simple;
-	bh=q5i7AMrm8OnrRcezatjI+jxgblvlNuoyikRKV4MxWkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RdK85x67VqbRZxfMSnAuKaNpUFCMeAvMAZq+oMCLtPLLYtbd4KQOhqvTQYbaAa2EX1z7G7F/LBPZZYL8GUhayCxw4rkl/ZjXbvOAFKyv5WHLO0qYMbObtwDBNhbUC+DTfJe13QEDjA6knAlsg9zW488UQBWyv3BhXG5eLa2rciM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aKpD8avc; arc=none smtp.client-ip=74.125.230.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1789172565; c=relaxed/simple;
+	bh=btP9+w0qpebPWJPdz9AKP0lvnCoqmWzlrNeGOd7T1fk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SRanec2agy+v7dJPwBUiuOq4HlbcvKjobl9bo4c1VnJajzWmM5ti4H2mRCH+Y69SGnkKZrv80iz6IAI7yyM3txduSZiAKLxMwbNLQNsoClFSYvAoUAio2iF+0xp05QgkOG0Y/lgjHcVGAKkS5z+bfxDWFk4lMYpkbXMCxHb4QQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJ4lE6rJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aKpD8avc"
-Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-90cdfbd148cso6468636d6.1
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Sep 2026 17:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1789172442; x=1789777242; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=q5i7AMrm8OnrRcezatjI+jxgblvlNuoyikRKV4MxWkw=;
-        b=aKpD8avc8PyAVJztNiNq+KqEDJKLFavKK4OXQ1v0Af8Mj8UqVh0krhpQ9mFGQckb4o
-         wQRugnekjpHhC5yfCIgnuXwcsqViMsLmHjwl/Fo1Kyo7XePIpaiiW+b3HwmJEMewz5vP
-         dnP7s+S08297dca/J4eZeOUPgbmFQCIRuckWuJSFp+ljXQsgRkBFTGJ7+sNlFte99Kfw
-         sj1dam9daTr1XxSBVwdfackVevmjpycoGuxXGnWhcaDRN8mKTpbPWeFiT15Sjg8NlWj5
-         ECRhkzswhzmbBb3dePI+em5/nXicQQ1WZIdxXXx9FRgK3UZxykMxFpCXaMVHGcmwuyT7
-         skaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789172442; x=1789777242;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=q5i7AMrm8OnrRcezatjI+jxgblvlNuoyikRKV4MxWkw=;
-        b=pEO+EFdL0lLXHMf8PKXEiH/fKZXotsVOs6Rz7t/7z0Kv0uCGHxHfqVjg0csGUJQ1ti
-         j+z0E7bPDRwixgtl8k0RWa4nQNxkze7G9Z7odFBy6A4TjRdyU/3sB29rpxkSVglAO2Ae
-         uI2+Mq5ey9lwIUp6Z0yHaogmwYqs1bJ4k0sCooEYzqStoPCroQ9bGdUKqALrmSofjK2U
-         ynrwAjizLx+EgIPMT0vK8oYiBVCsZcyjN6RZ4c2zjvL2V9QVEBTlE+awT/CBKadFUNHr
-         VuJQmbNhGOzEEU73AQsXCYc0UshhhgmXELVLri0BdJc4M2GYJco8hs/P43EQ7dcoRf8h
-         ZfRQ==
-X-Gm-Message-State: AFuF++lDWOeudrZcefKN1CZ2in1YANfYZOiABQdNA5dhHR6yBBeVp8lN
-	DS79dPowDSFYnyn0dxfefDUrYr2eNYA/rNIzhb+R2oo16uK+JNsgQwwAP45++PyqwG0=
-X-Gm-Gg: AYBFou3bl50OQNb42vDfMhJvJCeq/tN/zzsuJRAwt4RGbrnr1oh9IeewgvyMK1kAI1i
-	mXy4dklSAJrJUdUrPgKfM1QMbqsrGl8xPwWAwP5PzED50Bid4FzWciE95rxDkSci+n2Hs0by8gI
-	s2UsVNu1txwGB0b76E86OMwVsjzOw+ErKzbCuHBgwsPWTdpl36ioQJUyulMaBLcYEzuN5eiz8L7
-	Y8GqY/itlVxoYIf1Wg2ALFYY7hGAUMzXgwJJP2thW+JC7aAfQRmAh88VoZrw9WSKgwDTNj8CwDC
-	6eqNCTbmyWe4BbGGpsPJee/vSG270BjNf5rNnVv8cQtGJiPqd16pwniLkI1AYTTCd7nWhJqizhL
-	oZ/aNQJzdZJa9RqzzHqLyut4+foJ+5QtlHU6b6y4oqJ1GBmeu5m/eoep8K54wv+3G+Pry1/eZoA
-	N+pGVfyRKxAW4mx5RAhYaTh5gRKb5rIqU5VfIwHYNF4sEvfCKUVNhe95hUE8OUPGRQQAryr6YgQ
-	IdCQvMHSX2gi4vRzp166OBRe08b8aad/jrc2pkmMEEQNCFxGeV3jZEOYeAWGpJjjQ==
-X-Received: by 2002:a05:622a:2586:b0:52f:c0f3:fff8 with SMTP id d75a77b69052e-530c85e34e3mr126561591cf.24.1789172442314;
-        Fri, 11 Sep 2026 17:20:42 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530ca4e6a9csm32451091cf.23.2026.09.11.17.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 17:20:41 -0700 (PDT)
-Date: Fri, 11 Sep 2026 20:20:40 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com, 
-	jic23@kernel.org, dave.jiang@intel.com, icheng@nvidia.com, ming.li@zohomail.com, 
-	vishal.l.verma@intel.com, dave@stgolabs.net, benjamin.cheatham@amd.com, 
-	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [RESEND PATCH v13 8/8] Documentation/cxl: Document DPA partition
- layout and ordering rules
-Message-ID: <aqSaZaaWaWUfKrC7@gourry-fedora-PF4VCD3F>
-References: <20260908102124.2231730-2-anisa.su@samsung.com>
- <20260908102124.2231730-10-anisa.su@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJ4lE6rJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038501F000FF;
+	Sat, 12 Sep 2026 00:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789172563;
+	bh=zZ0MkYEQGuqtS9XyXWjCDSbV6aS38Hy2FSrfJOsohMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=BJ4lE6rJA3K1kikR+JMfRh/jr6lkJNnjE/ipblc2q8jUIUEZSZOjnrIokkom0K7+i
+	 hVrfxstRPSueCxRYDlrCBY+0HmDqT4Cvm/+RHXHBO25pBGkHWMhuyVEA0rkSaTE3K0
+	 u2aqWZbib++QXZyRCJWqm1hahsj+rKfqN1xm9npZqr9C8SPReC4KZin68j4FlLO0Rm
+	 1EpeVHbQLw4jig6kUE/ht1EbgAHWdAC9em1kwXauSu10+hvBKneJdP09q6OtVsDuGY
+	 wFlc/+rf8QGFmDBgJersSMu1oVL8tFyaT2ny2RPK4LM9cf39VX5SNDe2Jmd4KqUoH3
+	 AglgqrV3X9gCQ==
+Date: Sat, 12 Sep 2026 01:22:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Srirangan Madhavan <smadhavan@nvidia.com>
+Cc: Alison Schofield <alison.schofield@intel.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Williamson
+ <alex.williamson@redhat.com>, vsethi@nvidia.com, alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>, Vishal Aslot
+ <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>, Jiandi An
+ <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v12 04/12] cxl: Cache decoder settings on PCI devices
+Message-ID: <20260912012239.7bc32c5a@jic23-hlaptop>
+In-Reply-To: <20260910070808.1444264-5-smadhavan@nvidia.com>
+References: <20260910070808.1444264-1-smadhavan@nvidia.com>
+	<20260910070808.1444264-5-smadhavan@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908102124.2231730-10-anisa.su@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 08, 2026 at 03:15:12AM -0700, Anisa Su wrote:
+On Thu, 10 Sep 2026 07:08:00 +0000
+Srirangan Madhavan <smadhavan@nvidia.com> wrote:
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+> Add CXL core plumbing to refresh a PCI device HDM decoder cache when
+> decoders are enumerated, committed, or reset. PCI reset paths can use
+> this snapshot to restore HDM programming without walking CXL topology
+> during reset recovery.
+> 
+> The cache is populated by PCI-side discovery in a follow-on patch. Until
+> then, the CXL core update path is a no-op when no PCI HDM cache is
+> present.
+> 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+Various comments inline
 
-one question here, but not overly necessary to document because it
-instantly becomes the moment the code changes (for reasons).
+Thanks,
+
+Jonathan
+> ---
+>  drivers/cxl/core/hdm.c | 68 +++++++++++++++++++++++++++++++++++++++++-
+>  include/cxl/cxl.h      | 12 ++++++++
+>  include/linux/pci.h    |  6 ++++
+>  3 files changed, 85 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index d621d827f59f..0927036aed27 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -16,6 +16,9 @@
+>   * for enumerating these registers and capabilities.
+>  
+>  
+> +static bool __cxl_pci_hdm_decoder_count_match(struct pci_dev *pdev,
+> +					      int decoder_count)
+> +{
+> +	struct cxl_hdm_info *info;
+> +	bool match = true;
+> +
+> +	down_read(&cxl_rwsem.dpa);
+
+guard() 
+> +	info = pdev->hdm;
+> +	if (info) {
+
+If !info fails the number of decoders definitely didn't match - so maybe
+print something in that path too.
+
+so far, the local info variable is less readable than pdev->hdm.
+Maybe it becomes more useful later in series.
+
+> +		if (info->decoder_count != decoder_count) {
+> +			pci_warn(pdev,
+> +				 "CXL HDM cache decoder count mismatch: cached=%d hdm=%d\n",
+> +				 info->decoder_count, decoder_count);
+> +			match = false;
+
+> +		}
+> +	}
+> +	up_read(&cxl_rwsem.dpa);
+> +
+> +	return match;
+> +}
+> +
+> +static bool cxl_pci_hdm_decoder_count_match(struct cxl_hdm *cxlhdm)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
+> +
+> +	if (!pdev)
+> +		return true;
+> +
+> +	return __cxl_pci_hdm_decoder_count_match(pdev, cxlhdm->decoder_count);
+
+I went looking and seems like this is the only call. Just bring the implementation
+inline here.
+
+> +}
+> +
+> +static void cxl_hdm_save_decoder_info(struct cxl_hdm *cxlhdm,
+> +				      struct cxl_decoder *cxld)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
+> +	struct cxl_decoder_settings *settings;
+> +	struct cxl_hdm_info *info;
+> +
+> +	if (!pdev)
+> +		return;
+> +
+> +	guard(rwsem_write)(&cxl_rwsem.dpa);
+> +	info = pdev->hdm;
+> +	if (!info || cxld->id >= info->decoder_count)
+> +		return;
+> +
+> +	settings = &info->settings[cxld->id];
+> +	*settings = (struct cxl_decoder_settings) {
+> +		.id = cxld->id,
+> +	};
+> +	if (cxld->flags & CXL_DECODER_F_ENABLE)
+
+Why is it bad to snapshot a non enabled decoder?  Is it pointless
+or harmful.  Add a comment.
+
+> +		cxl_decoder_snapshot(cxld, settings);
+> +}
+
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index c09492af8fbd..ed5237df510f 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -133,6 +133,18 @@ struct cxl_regs {
+>  	);
+>  };
+>  
+> +#define CXL_HDM_DECODER_MAX_COUNT 32
+> +
+> +/**
+> + * struct cxl_hdm_info - PCI device HDM decoder programming cache
+> + * @decoder_count: number of decoder settings entries
+> + * @settings: cached per-decoder programming state
+> + */
+> +struct cxl_hdm_info {
+> +	int decoder_count;
+> +	struct cxl_decoder_settings settings[CXL_HDM_DECODER_MAX_COUNT];
+> +};
+
+This is quite a big structure. Can't we do
+	int decoder_count;
+	struct cxl_decodet setting settings[] __counted_by(decoder_count);
+and allocate the necessary size using struct_size()?
+
+I doubt that many devices will do all 32 decoders - particularly as
+the spec used to allow a smaller number IIRC.
 
 > +
-> +Linux follows the static precedent anyway for the partition it maps: the
-> +first DC partition must begin at the DPA immediately following static
-> +capacity -- after pmem, after ram on a device with no pmem, or at DPA 0 on
-> +a device with no static capacity at all.
-> +
-
-What is the reason for this requirement? Just easier to code?
-
-is fine to leave as-is, the first device that comes along that needs
-it changed "for reasons" can fix it, but it seems an entirely reasonable
-restriction.
+>  struct cxl_reg_map {
+>  	bool valid;
+>  	int id;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d31a8d107b1e..84d058b1b492 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -339,6 +339,9 @@ struct pcie_link_state;
+>  struct pci_sriov;
+>  struct pci_p2pdma;
+>  struct rcec_ea;
+> +#ifdef CONFIG_CXL_RESET
+> +struct cxl_hdm_info;
+> +#endif
+>  
+>  /* struct pci_dev - describes a PCI device
+>   *
+> @@ -566,6 +569,9 @@ struct pci_dev {
+>  #ifdef CONFIG_PCI_DOE
+>  	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
+>  #endif
+> +#ifdef CONFIG_CXL_RESET
+> +	struct cxl_hdm_info *hdm;	/* CXL HDM decoder reset state */
+> +#endif
+>  #ifdef CONFIG_PCI_NPEM
+>  	struct npem	*npem;		/* Native PCIe Enclosure Management */
+>  #endif
 
