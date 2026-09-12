@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89F61D63F3;
-	Sat, 12 Sep 2026 01:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895BE30F55F;
+	Sat, 12 Sep 2026 01:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789174994; cv=none; b=b9VsTRaLUzNLYIk9QO4wdBj7YKaL9KuCb8FbvHwzOhD1W9PdPCcz2aci9ZaGT/Ry8hoSjiPZ6+MKtcpwcilGxZJXKP3dltfwCUKFWJ4DpUHby4cxXvpKZ9uITgFMGin0Shk0kjuTAmbrcUx7tAcyW0I7nKhwXy8au3Mn+1QrwyE=
+	t=1789176386; cv=none; b=KUBviEXEX/9UVP41+G753o8iGUkIwpmjc0LK6K7kKBca9cgGgAohJ92EafBDQ/gbwOq+MjkjzXaRqGiInjw+1ol5f8izJEqN3kvgSJKPyiRdaonXyuCPtYFWM8iuFT2E8eHa9nWpKBqf/zM+uy5naikg0CsFT17q+mei0b9hW+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789174994; c=relaxed/simple;
-	bh=8MkNwe5RstKs9Kd2HvvwPHFzjCuvRoRcQpOVrYM0pc8=;
+	s=arc-20240116; t=1789176386; c=relaxed/simple;
+	bh=y+SpoHHLdR5p4yjsBLHgFcaRHeUl4a0MzcN0EnaZwak=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fmUQGhQCKKiZCjDTOwGbSG9P4dxQHChKeftKhM+FDVIod5ep6mkGdmrxMgun5REmK8JP2Eyxk8pNHjkRjuPQBPDpI53NNS8misXPnON6FKwtF+RHitaqrl/uAyI8u0vbxBK6/KY7LlFBzHIZlsjh90EAU26kXln228bThGCD3h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XW39ZZUw; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=lCJTVBbOmJ42DIoMpcDoRqluQ7lPpwZbPPd7QiZQJ3s4+UXhvNWJC0ug14XxsqIJ8Vt+EvP2ZrgPnoBuNBaC1IOUy1Dl+cqXJ4CmwzZI1AZeSd/a8OFRSh7udmAL1FtMTDUNrWwmwIRsUhMBj9frMH+Zp+xIjehO/l86Tlsva+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzyGKX3P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XW39ZZUw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426931F000FF;
-	Sat, 12 Sep 2026 01:03:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzyGKX3P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7A11F000FF;
+	Sat, 12 Sep 2026 01:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789174992;
-	bh=AJ46AAeoNGVFUj9R6LYnyRog+WYh7ZcgP75I2J2b0og=;
+	s=k20260515; t=1789176385;
+	bh=nGIea3oN+xUA/wPW5fe0ETsqasO+YkYKbU/LxCwJUNY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=XW39ZZUwu0G4g0c03wd1172SHr91Hw8XvR0KwrVYBMkzLV/phBpWVTZwlaBHSJeGQ
-	 czRoGb1tU/0wqv6G0evwVQeWPEQ6BG3iLLGH1nFm9Xg6Zf3Juq5hIleDCdvZQJUYib
-	 1wZ4a49nsM4fPsX0fD9jJBz4lEP2xtbLUdQF7sLcPUCRJihvm4E3muYyEp/YAove74
-	 O1CiXepzFoO+2TQT/QLxaIxVSFDJsuZVtjsc4qIYU6y5rFy4JHi8talNGfOZ882ZfS
-	 AphwRPOAgPZG4YaoZ8NnGOYWheLfEm+nTeb5lpjKbbW5I933M+MPrB7JCCiTA6/ozJ
-	 yeYK3BlCKChOQ==
-Date: Sat, 12 Sep 2026 02:03:05 +0100
+	b=KzyGKX3PyS/Zz2pvVlVC9WK9lqXEx/l6iiWjamebfLM1rf3ebJyeTNE89aK9KdZzU
+	 LuMp9aEaIZpska95dPDwRdv4/Kk7dS9jlJg1O9JJZm7myXHgHZfc4JE01+315Fs205
+	 dG6qRcKFTihqrE6gFGJ33X8n/UuLvG2kn/+6cWD3lLM9UMMpPIUgpX8/ZcZHCnUFEH
+	 YMG03ZmghM57JSjB+cjFc8+Jl0FyRDUWUA9GH6dcRU7TDol1VNEJ+NhNzDjC/h007O
+	 aaWAkmLSLEnZ+wEmXnqgmEiYrPXxte9TBvEXcP+g+d7C4Dk0qFQNWJuvByE3nSugVx
+	 O85xXCJjhKJ6g==
+Date: Sat, 12 Sep 2026 02:26:17 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Srirangan Madhavan <smadhavan@nvidia.com>
 Cc: Alison Schofield <alison.schofield@intel.com>, Bjorn Helgaas
@@ -39,12 +39,11 @@ Cc: Alison Schofield <alison.schofield@intel.com>, Bjorn Helgaas
  <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>, Jiandi An
  <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
  linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v12 05/12] cxl: Cache endpoint decoder settings during
- PCI enumeration
-Message-ID: <20260912020305.64278c3e@jic23-hlaptop>
-In-Reply-To: <20260910070808.1444264-6-smadhavan@nvidia.com>
+Subject: Re: [PATCH v12 06/12] cxl: Add CXL Device Reset helper
+Message-ID: <20260912022617.47860862@jic23-hlaptop>
+In-Reply-To: <20260910070808.1444264-7-smadhavan@nvidia.com>
 References: <20260910070808.1444264-1-smadhavan@nvidia.com>
-	<20260910070808.1444264-6-smadhavan@nvidia.com>
+	<20260910070808.1444264-7-smadhavan@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -55,401 +54,260 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Sep 2026 07:08:01 +0000
+On Thu, 10 Sep 2026 07:08:02 +0000
 Srirangan Madhavan <smadhavan@nvidia.com> wrote:
 
-> Populate pci_dev->hdm for CXL.mem functions from pci_bus_add_device(),
-> after final PCI fixups and state save but before driver binding. This
-> gives driver-free reset paths an early HDM snapshot while avoiding the
-> pre-resource-assignment window in PCI capability initialization.
+> Add an internal CXL Device Reset helper for Type 2 functions that
+> advertise CXL Reset and CXL Reset Memory Clear in the CXL Device DVSEC.
+> The helper disables CXL.cache, performs cache writeback when supported,
+> initiates reset with Memory Clear enabled, waits for completion, and
+> re-enables CXL.cache on exit.
 > 
-> Use the CXL Register Locator BAR Indicator to find the component register
-> BAR, reject unassigned, disabled, or zero memory BAR resources before
-> temporarily enabling Memory Space, and restore the original PCI_COMMAND
-> value before returning. Cache the CXL Device DVSEC control register with
-> the HDM state for reset recovery before a driver can alter it.
-> 
-> CXL core refreshes the cache as decoders are committed or reset, and keeps
-> the cached DVSEC control synchronized when CXL.mem is enabled or disabled.
-> Move the register helpers into the built-in CONFIG_CXL_RESET set so the
-> early cache path is available without cxl_core, and keep the cxl-test mock
-> core from building a duplicate regs.o.
+> Leave the helper unregistered until range validation and reset-scope
+> validation are in place.
 > 
 > Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-Hi Srirangan,
-
-Unless I'm reading this wrong, this has evolved to the point that it
-needs a step back and a rethink.  There is complexity in here I
-don't think you need at all.  I may well be missing something
-though given it's Friday evening!
-
-Jonathan
-
-
+A few things inline.
+> ---
+>  drivers/cxl/core/resource.c   | 251 ++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h             |   7 +
+>  include/uapi/linux/pci_regs.h |  14 ++
+>  3 files changed, 272 insertions(+)
+> 
 > diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index e6aa55079c76..6d9f8fe14b16 100644
+> index 6d9f8fe14b16..9c1aa0800521 100644
 > --- a/drivers/cxl/core/resource.c
 > +++ b/drivers/cxl/core/resource.c
-> @@ -2,9 +2,17 @@
->  /* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
->  #include <linux/delay.h>
->  #include <linux/bug.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/cleanup.h>
->  #include <linux/errno.h>
+> @@ -8,6 +8,8 @@
 >  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> +#include <linux/iommu.h>
+> +#include <linux/jiffies.h>
 >  #include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +
-> +#include <cxl/pci.h>
->  
->  #include "cxl.h"
->  #include "core.h"
-> @@ -156,3 +164,331 @@ int cxl_hdm_decode_decoder(struct cxl_decoder_settings *settings, int id,
->  				  &settings->interleave_granularity);
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+> @@ -492,3 +494,252 @@ void pci_cxl_hdm_init(struct pci_dev *pdev)
+>  	if (rc && rc != -ENOTTY && rc != -ENODEV)
+>  		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
 >  }
->  EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_decode_decoder, "cxl_core");
-> +
-> +struct cxl_hdm_decoder_state {
-> +	u32 ctrl;
-> +	u32 base_low;
-> +	u32 base_high;
-> +	u32 size_low;
-> +	u32 size_high;
-> +	u32 target_low;
-> +	u32 target_high;
+> +/*
+> + * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
+> + * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms after
+> + * initiating CXL Reset, then limits software to CXL Status2 access until
+> + * reset completion, timeout, or error.
+> + */
+> +#define CXL_RESET_RRS_WAIT_MS 100
+> +#define CXL_RESET_STATUS_POLL_MS 20
+> +static const u32 cxl_reset_timeout_ms[] = {
+> +	10, 100, 1000, 10000, 100000,
 > +};
 > +
-> +static void cxl_pci_hdm_info_free(struct cxl_hdm_info *info)
-> +{
-> +	if (!info)
-> +		return;
+> +#define CXL_CACHE_WBI_TIMEOUT_US 100000
+> +#define CXL_CACHE_WBI_POLL_US 100
 > +
-> +	kfree(info->decoder_state);
-> +	kfree(info);
+> +static int cxl_reset_get_dvsec(struct pci_dev *pdev, u16 *cap_out)
+> +{
+> +	int dvsec, rc;
+> +	u16 cap, ctrl;
+> +
+> +	dvsec = cxl_pci_get_device_dvsec_cap(pdev, 0, &cap);
+
+That is an odd function given the control read is separate - why
+should we wrap up the cap read?
+
+I'd just drop this helper and open code the search for the extended
+cap at the few callsites.  A little more code, but less odd and all
+standard PCI stuff not needing an extra helper.
+
+Probably a bit of code evolution caused this given you are up at v12!
+
+> +	if (dvsec < 0)
+> +		return dvsec;
+> +
+> +	if (!(cap & PCI_DVSEC_CXL_CACHE_CAPABLE) ||
+> +	    !(cap & PCI_DVSEC_CXL_MEM_CAPABLE))
+
+Why do we need them both? Sure that's type 2, but a non
+class code matching type3 would I think need the same infrastructure
+you are building here. That would have cxl.mem but not cxl.cache
+- I think some of the CXL SSD prototypes fit in this category.
+
+> +		return -ENOTTY;
+> +
+> +	if (!(cap & PCI_DVSEC_CXL_RST_CAPABLE))
+> +		return -ENOTTY;
+> +	if (!(cap & PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE))
+> +		return -ENOTTY;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL, &ctrl);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +
+> +	if (!(ctrl & PCI_DVSEC_CXL_CACHE_ENABLE) ||
+> +	    !(ctrl & PCI_DVSEC_CXL_MEM_ENABLE))
+> +		return -ENOTTY;
+> +
+> +	*cap_out = cap;
+> +	return dvsec;
 > +}
 > +
-> +DEFINE_FREE(cxl_pci_hdm_info, struct cxl_hdm_info *,
-> +	    cxl_pci_hdm_info_free(_T))
+> +#define CXL_RESET_CTRL2_CMD_MASK \
+> +	(PCI_DVSEC_CXL_INIT_CACHE_WBI | PCI_DVSEC_CXL_INIT_CXL_RST)
 > +
-> +void pci_cxl_hdm_release(struct pci_dev *pdev)
+> +static int cxl_reset_read_ctrl2(struct pci_dev *pdev, int dvsec, u16 *ctrl2)
 > +{
-> +	struct cxl_hdm_info *info = pdev->hdm;
-> +
-> +	pdev->hdm = NULL;
-
-If the order here matters, you need a barrier or WRITE_ONCE() might
-do it.
-
-> +	cxl_pci_hdm_info_free(info);
-> +}
-> +
-> +static bool cxl_pci_bar_usable(struct pci_dev *pdev, int bar)
-
-This doesn't seem to have anything CXL specific about it.  Maybe
-give it a more generic name and move it to pci.c?
-However, see later - I'm not sure you need this.
-
-> +{
-> +	struct resource *res = &pdev->resource[bar];
-> +
-> +	if (!pci_resource_len(pdev, bar))
-> +		return false;
-> +	if (res->flags & (IORESOURCE_UNSET | IORESOURCE_DISABLED))
-> +		return false;
-> +	if (resource_type(res) != IORESOURCE_MEM)
-> +		return false;
-> +	if (!res->start || !res->end)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static int cxl_pci_hdm_find_bar(struct pci_dev *pdev, resource_size_t hdm_start,
-> +				resource_size_t hdm_size, int *bar,
-> +				resource_size_t *offset)
-> +{
-> +	resource_size_t hdm_end;
-> +
-> +	if (!hdm_size)
-> +		return -EINVAL;
-> +
-> +	hdm_end = hdm_start + hdm_size - 1;
-> +	if (hdm_end < hdm_start)
-> +		return -EINVAL;
-> +
-> +	for (int i = 0; i < PCI_STD_NUM_BARS; i++) {
-
-This feels unduly painful and overly specific to this case.
-It is just looking for a resource to bar and offset.
-
-It is not CXL specific so maybe ask Bjorn if such a helper might go
-in pci.c (assuming not discussed and dismissed in earlier rounds of
-review!)  I'd still like it to mention hdm or anything even if
-local to here.
-static int cxl_pci_find_resource_bar(struct pci_dev *pdev,
-				     resource_size_t start, resource_size_t size,
-				     int *bar, resource_size_t *offset)
-
-Noted later, you can skip this entirely as this is going in a circle.
-
-> +		struct resource *res = &pdev->resource[i];
-> +
-> +		if (!cxl_pci_bar_usable(pdev, i))
-> +			continue;
-> +		if (hdm_start < res->start || hdm_end > res->end)
-> +			continue;
-> +
-> +		if (bar)
-> +			*bar = i;
-> +		if (offset)
-> +			*offset = hdm_start - res->start;
-> +		return 0;
-> +	}
-> +
-> +	return -ENODEV;
-> +}
-
-> +
-> +static void cxl_pci_hdm_read_decoder_state(struct cxl_hdm_decoder_state *state,
-> +					   void __iomem *hdm, int id)
-> +{
-> +	state->ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	state->base_low = readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	state->base_high = readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> +	state->size_low = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +	state->size_high = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> +	state->target_low = readl(hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> +	state->target_high = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(id));
-> +}
-> +
-> +static int cxl_pci_hdm_read_decoder(struct pci_dev *pdev,
-> +				    struct cxl_hdm_decoder_state *state,
-> +				    struct cxl_decoder_settings *settings,
-> +				    void __iomem *hdm, int id)
-> +{
-> +	u64 target_or_skip, base, size;
 > +	int rc;
 > +
-> +	cxl_pci_hdm_read_decoder_state(state, hdm, id);
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
 > +
-> +	base = ((u64)state->base_high << 32) | state->base_low;
-> +	size = ((u64)state->size_high << 32) | state->size_low;
-> +	target_or_skip = ((u64)state->target_high << 32) | state->target_low;
+> +	*ctrl2 &= ~CXL_RESET_CTRL2_CMD_MASK;
+I'd rename this. It is doing more than reading crl2.  Or push the code
+inline and avoid need for any name bikeshedding.
 
-I'm not sure I get why we cache the registers and the stuff derived from them.
-Why isn't one source of info enough? Or do the have different lifetimes?
-If they do then add a comment to structure definition on that.
-
-> +
-> +	rc = cxl_hdm_decode_decoder(settings, id, state->ctrl, base, size,
-> +				    target_or_skip, NULL);
-> +	if (rc) {
-> +		pci_err(pdev, "CXL HDM decoder %d has invalid configuration: %d\n",
-> +			id, rc);
-> +		return rc;
-> +	}
 > +	return 0;
 > +}
-
 > +
-> +static int __cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +				   struct cxl_register_map *map,
-> +				   struct cxl_hdm_info *info)
+> +static int cxl_reset_write_ctrl2(struct pci_dev *pdev, int dvsec, u16 ctrl2)
 > +{
-> +	struct cxl_decoder_settings *settings;
-> +	int decoder_count;
 > +	int rc;
 > +
-> +	rc = cxl_setup_regs(map);
+> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+This helper is also providing little value
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_reset_modify_ctrl2(struct pci_dev *pdev, int dvsec, u16 set,
+> +				  u16 clear)
+
+This needs a rename because it has that subtle mask of previous
+state. What is it actually allowing you to modify?
+
+> +{
+> +	u16 ctrl2;
+> +	int rc;
+> +
+> +	rc = cxl_reset_read_ctrl2(pdev, dvsec, &ctrl2);
 > +	if (rc)
 > +		return rc;
 > +
-> +	if (!map->component_map.hdm_decoder.valid)
-> +		return -ENODEV;
-> +
-> +	void __iomem *hdm __free(cxl_hdm_iounmap) =
-> +		cxl_pci_hdm_map(pdev, map, info);
-> +	if (IS_ERR(hdm))
-> +		return PTR_ERR(no_free_ptr(hdm));
-> +
-> +	decoder_count = cxl_hdm_decoder_count(readl(hdm +
-> +						    CXL_HDM_DECODER_CAP_OFFSET));
+> +	ctrl2 &= ~clear;
+> +	ctrl2 |= set;
+> +	return cxl_reset_write_ctrl2(pdev, dvsec, ctrl2);
 
-Go long on lines like this.  As long as you stay only a bit over 80 no one will
-mind.
+So with them squashed inline this would just be
+{
+	u16 ctrl2;
+	int rc;
 
-> +	if (decoder_count < 0)
-> +		return decoder_count;
-> +
-> +	if (decoder_count > ARRAY_SIZE(info->settings))
-> +		return -ENXIO;
-> +
-> +	if (CXL_HDM_DECODER0_CTRL_OFFSET(decoder_count - 1) + 0x10 >
+	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+	if (rc)
+		return pcibios_err_to_errno(rc);
 
-That 0x10 needs to be a define or other useful code. I have no idea what
-it is...
+	/* Comment on why this is masked */ 
+	ctrl2 &= ~(PCI_DVSEC_CXL_INIT_CACHE_WBI | PCI_DVSEC_CXL_INIT_CXL_RST);
+	ctrl2 &= ~clear;
+	ctrl2 |= set;
 
-> +	    info->hdm_size) {
-> +		pci_err(pdev,
-> +			"CXL HDM decoder count exceeds mapped register block\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	info->decoder_count = decoder_count;
-> +	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	info->decoder_state = kcalloc(decoder_count,
-> +				      sizeof(*info->decoder_state),
-> +				      GFP_KERNEL);
+	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+	if (rc)
+		return pcibios_err_to_errno(rc);
 
-That's same size as settings, so put the two of them a struct at the end of
-cxl_hdm_info with a short name (e.g. decoder[].state, decoder[].settings) and
-use a struct_size() allocation for them both.
+	return 0;
+}
 
-> +	if (!info->decoder_state)
-> +		return -ENOMEM;
-> +
-> +	settings = info->settings;
-> +	for (int i = 0; i < info->decoder_count; i++) {
-> +		rc = cxl_pci_hdm_read_decoder(pdev, &info->decoder_state[i],
-> +					      &settings[i], hdm, i);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
+which is if anything easier to read.
+
 > +}
 > +
-> +static int cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +				 struct cxl_register_map *map,
-> +				 struct cxl_hdm_info *info)
+> +static int cxl_reset_enable_cache(struct pci_dev *pdev, int dvsec)
 > +{
-> +	bool restore_command;
-> +	u16 command;
+> +	return cxl_reset_modify_ctrl2(pdev, dvsec, 0,
+> +				      PCI_DVSEC_CXL_DISABLE_CACHING);
+> +}
+> +
+> +static int cxl_reset_initiate(struct pci_dev *pdev, int dvsec)
+> +{
+> +	return cxl_reset_modify_ctrl2(pdev, dvsec,
+> +				      PCI_DVSEC_CXL_INIT_CXL_RST |
+> +				      PCI_DVSEC_CXL_RST_MEM_CLR_EN, 0);
+> +}
+
+
+
+> +
+> +static int cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap)
+> +{
+> +	bool target_prepared = false;
 > +	int rc, rc2;
 > +
-> +	guard(pci_dev)(pdev);
-> +
-> +	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
+> +	rc = cxl_reset_disable_cache(pdev, dvsec, cap);
 > +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +
-> +	restore_command = !(command & PCI_COMMAND_MEMORY);
-> +	if (restore_command) {
-> +		rc = pci_write_config_word(pdev, PCI_COMMAND,
-> +					   command | PCI_COMMAND_MEMORY);
-> +		if (rc)
-> +			return pcibios_err_to_errno(rc);
-> +	}
-> +
-> +	rc = __cxl_pci_hdm_read_info(pdev, map, info);
-> +
-> +	if (!restore_command)
 > +		return rc;
 > +
-> +	rc2 = pci_write_config_word(pdev, PCI_COMMAND, command);
-> +	if (rc2) {
-> +		rc2 = pcibios_err_to_errno(rc2);
-> +		pci_err(pdev,
-> +			"failed to restore PCI_COMMAND after CXL HDM cache init: %d\n",
-> +			rc2);
+> +	if (!pci_wait_for_pending_transaction(pdev))
+> +		pci_err(pdev, "timed out waiting for pending transactions\n");
+> +
+> +	rc = pci_dev_reset_iommu_prepare(pdev);
+> +	if (rc)
+> +		pci_err(pdev, "failed to stop IOMMU for CXL reset: %d\n", rc);
 
-> +		if (!rc)
-> +			rc = rc2;
-> +	}
-Dance is more complex to read than just duplicating a little.
+Maybe a comment on whether this is even remotely safe to continue.
+My gut feeling is this sort of thing happens, just give up...
 
-	if (rc)
-		goto reset_command_reg
 
-	return pci_write_config_word(pdev, PCI_COMMAND, command);
+> +	else
+> +		target_prepared = true;
+> +
+> +	if (!rc)
+> +		rc = cxl_reset_initiate(pdev, dvsec);
+> +	if (!rc)
+> +		rc = cxl_reset_wait_done(pdev, dvsec, cap);
+> +
+> +	rc2 = cxl_reset_enable_cache(pdev, dvsec);
+Can't we delay this until after the iommu is told things are back?
+I'm not keen on the sequence not being a clean tear down then a clean setup
+in the other order. I may well be missing some subtleties. This maybe
+needs some documentation.
 
-reset_command_reg:
-	if (pci_write_config_word(pdev, PCI_COMMAND, command) !=
-	    PCIBIOS_SUCCESSFUL)
-		pci_err(pdev, ...);
+> +	if (rc2 && rc)
+> +		pci_warn(pdev, "failed to re-enable CXL caching: %d\n", rc2);
 
-I doubt we care about what return of that is given we are on fire.
+What is logic about not printing if we have another failure sat in rc?
+Is it not true anyway?
 
-	return rc;
+> +	else if (rc2)
+> +		rc = rc2;
+
+This code flow is less than ideal I'd use some gotos rather than that if (!rc)
+dance.
 
 > +
+> +	if (target_prepared)
+> +		pci_dev_reset_iommu_done(pdev);
 > +	return rc;
+
+	return rc ? rc : rc2; and some of the complexity above goes away.
+
 > +}
 > +
-> +static int __pci_cxl_hdm_init(struct pci_dev *pdev)
+> +int cxl_reset_function(struct pci_dev *pdev, bool probe)
 > +{
-> +	struct cxl_register_map map = { 0 };
-
-The 0 doesn't add anything = { };
-
 > +	int dvsec;
-> +	int rc;
+> +	u16 cap;
 > +
-> +	if (!cxl_pci_hdm_capable(pdev))
-> +		return -ENOTTY;
+> +	dvsec = cxl_reset_get_dvsec(pdev, &cap);
+> +	if (dvsec < 0)
+> +		return dvsec;
 > +
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		return rc;
-So this reads the regblock locator to get where the component regs are
-by decodeing the bar and offset then finding the resource form that...
+> +	if (probe)
+> +		return 0;
 > +
-> +	rc = cxl_pci_hdm_find_bar(pdev, map.resource, map.max_size, NULL, NULL);
-> +	if (rc)
-> +		return rc;
-This takes the resource and finds the bar and offset?
-
-Going in circles. Can't you pull a helper out of the start of
-cxl_decode_regblock() and get the bar and offset directly.
-Even if you need the sanity checks along the way, I think you can
-do them more directly and only go in one direction.
-
-> +
-> +	struct cxl_hdm_info *info __free(cxl_pci_hdm_info) =
-> +		kzalloc_obj(*info, GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-
-Why allocate here when so much can still fail?  We don't need
-it for a few more calls.
-
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return -ENOTTY;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL,
-> +				  &info->dvsec_ctrl);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +	info->dvsec_ctrl_valid = true;
-> +
-
-I'd make this read and allocate - having found the size so we don't
-allocate more than necessary.  If any crazy device changes number of
-decoders on reset then we can just clamp it and print a rude message.
-
-> +	rc = cxl_pci_hdm_read_info(pdev, &map, info);
-> +	if (rc)
-> +		return rc;
-> +
-> +	pdev->hdm = no_free_ptr(info);
-> +
-> +	return 0;
+> +	return cxl_reset_execute(pdev, dvsec, cap);
 > +}
-> +
-> +void pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +	int rc;
-> +
-> +	rc = __pci_cxl_hdm_init(pdev);
-> +	if (rc && rc != -ENOTTY && rc != -ENODEV)
-> +		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
-> +}
-
 
