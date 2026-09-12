@@ -1,76 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from isrv.corpit.ru (isrv.corpit.ru [212.248.84.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4DF2D0C94
-	for <linux-cxl@vger.kernel.org>; Sat, 12 Sep 2026 07:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBB2332610
+	for <linux-cxl@vger.kernel.org>; Sat, 12 Sep 2026 09:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.248.84.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789198630; cv=none; b=eNgKIDGmcc8mg7uQZtR/GnjWRWy18rlCe9Nd5SstGiVvnPQKo1KFdJQ7yf2fN1+2GoTaGDilyvbNrEEkBi4a0UGNZ9qUJKlEWjwrSl/lf+P4e4anzxo2DP1RVYBhRDPfQ81FlhUU3OOELi/vx4Yu1+yLHyT06pHyCJRNzjCy5HE=
+	t=1789205129; cv=none; b=J5tDjz/e4T0PITpRDASf4PHX1NF41ZzK4nDr62WVdpXYncP74B85EFomwHVOjP3mBEmxfnWrNA0KKD2aMqwoWAlyGpN4XR8RmGbeSx423TD9mZT9DyonOKE15j7cNI2RXxIUgn2u8lOZ3EfsJjlfYtzC6se4IkNMSqsVvx5IKvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789198630; c=relaxed/simple;
-	bh=Iw4/I/xqdIq948E0o4OIoqyNFS3SYg1krcIDm/GjiqY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TU8eeq6N5GLy5v9M6F8VBtmRBMK9DZCzkYQsAByy8GS34Qpp5w3nyYCJuAGbbWX29qbr2DMqGrMTixQP2RJK+thjrFtoJB1gD7sWEzz572l2aPkI5BcYg896GfkvnfpWfcaWBR3sEYDpYoyiMpJ0sR2+pfzNUnLEpGeUu/CTZ2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QrOXh2xp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789205129; c=relaxed/simple;
+	bh=yEf6zrh0FkpBp5VRN9w7S5TZ0QWnGIeRGwTsdvItsZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EnWMKlgVPaAN8qB0C1Gq8TUH9W46pNtCwdZMW/1LM1HqXrV9wuHMODWHtIpk2xhMugqX/PBDDDUh3NP4rTSTgx0hrF+PTYvI2PgajXe0llVlAYDeJLhaYiDSOiqulgjNTI5E3+ajB0acDTs67dRlp9DjYVMOGZZLH/Aj0AzPLrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru; spf=pass smtp.mailfrom=tls.msk.ru; dkim=pass (2048-bit key) header.d=tls.msk.ru header.i=@tls.msk.ru header.b=tzbzAsCp; arc=none smtp.client-ip=212.248.84.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tls.msk.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QrOXh2xp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789198627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Iw4/I/xqdIq948E0o4OIoqyNFS3SYg1krcIDm/GjiqY=;
-	b=QrOXh2xpSNwppFPDHli6w0jP49n0buKlrnBADsiNSqMZjQmeXJYMt1Pa1w6YEvQunRkwxT
-	OeVFX+JwkV5vV2toEnqVKviV845kgatWrGhc5pw2r8tER0FZ5Dlf84U1Mx2q3lxmdZqInN
-	W/qAe8WMHMwwjGpkXEwyix+BIXmah+E=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-vfnzptxMNgaWTM0pwgb7_A-1; Sat,
- 12 Sep 2026 03:37:04 -0400
-X-MC-Unique: vfnzptxMNgaWTM0pwgb7_A-1
-X-Mimecast-MFC-AGG-ID: vfnzptxMNgaWTM0pwgb7_A_1789198622
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3AA1195DE7E;
-	Sat, 12 Sep 2026 07:37:01 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 170861956095;
-	Sat, 12 Sep 2026 07:37:01 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 9B07021E6A04; Sat, 12 Sep 2026 09:36:58 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org,  qemu-block@nongnu.org,  Kevin Wolf
- <kwolf@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@mailo.com>,  Eric
- Blake <eblake@redhat.com>,  Jonathan Cameron <jic23@kernel.org>,  Lukas
- Straub <lukasstraub2@web.de>,  Paolo Bonzini <pbonzini@redhat.com>,  Zhao
- Liu <zhao1.liu@intel.com>,  linux-cxl@vger.kernel.org,  Jason Wang
- <jasowangio@gmail.com>,  Hanna Reitz <hreitz@redhat.com>,  Fabiano Rosas
- <farosas@suse.de>,  Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH 0/6] qapi: convert remaining "simple" intro sections
-In-Reply-To: <20260911172200.227914-1-jsnow@redhat.com> (John Snow's message
-	of "Fri, 11 Sep 2026 13:21:54 -0400")
-References: <20260911172200.227914-1-jsnow@redhat.com>
-Date: Sat, 12 Sep 2026 09:36:58 +0200
-Message-ID: <87bja23opx.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=tls.msk.ru header.i=@tls.msk.ru header.b="tzbzAsCp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tls.msk.ru; s=202602;
+	t=1789204607; bh=yEf6zrh0FkpBp5VRN9w7S5TZ0QWnGIeRGwTsdvItsZM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=tzbzAsCpqXF5DN9y/6GxVvoQjRjyWfhfCGc/QmVVNj7JNbZjbYgqTv1p/KZGEXivr
+	 LQnsOZzoqKTWjskTVTeF/uR40YNvyHQZMGME5sC5zR8WMfbqDxDXgu1xCrQ4dnHcM+
+	 nTHXBuUQF+JIebXlYcK+Ui9nN6y8CxuANsW1D4NimBh4+7HjNboOTenLa5Q4C6B8rf
+	 RaU/fYZqndG/v3DbYWf716+yWWUeMelcJl4iarQx0BD9NJl/IRWZRYUSAY1DIr5CEP
+	 Ejs+7e0JDIjHTdOoZgoeFBgmRbf62vG3j8TQMf6UiiBDenFAK7Xl55+uHK71TwMtp9
+	 S+s7lYYXfodtw==
+Received: from tsrv.corpit.ru (tsrv.tls.msk.ru [192.168.177.2])
+	by isrv.corpit.ru (Postfix) with ESMTP id A37631D3F8D;
+	Sat, 12 Sep 2026 12:16:47 +0300 (MSK)
+Received: from [192.168.177.130] (mjt.wg.tls.msk.ru [192.168.177.130])
+	by tsrv.corpit.ru (Postfix) with ESMTP id 399684264D8;
+	Sat, 12 Sep 2026 12:17:22 +0300 (MSK)
+Message-ID: <408b15ae-4a61-4082-9b19-800f2f934bcc@tls.msk.ru>
+Date: Sat, 12 Sep 2026 12:17:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: O_FpZ8txLC6nNR5lkYKEMqsfdjH2Xvn9EbbJEnkbHKA_1789198622
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH] hw/cxl: fix the CDAT DOE overlapping the Flex Bus DVSEC
+ when sn= is set
+To: Junjie Cao <junjie.cao@intel.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: mst@redhat.com, Shrihari E S <shrihari.s@samsung.com>,
+ linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+ QEMU Stable <qemu-stable@nongnu.org>
+References: <20260831022302.406740-1-junjie.cao@intel.com>
+Content-Language: en-US, ru-RU
+From: Michael Tokarev <mjt@tls.msk.ru>
+In-Reply-To: <20260831022302.406740-1-junjie.cao@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PATCH 1-4,6
-Reviewed-by: Markus Armbruster <armbru@redhat.com>
+On 8/31/26 05:23, Junjie Cao wrote:
+> ct3_realize() adds the CDAT DOE at a fixed 0x190.  Since 8700ee15de the
+> four DVSECs take 0x90 bytes, which from 0x100 ends exactly at 0x190.
+> With sn= the Device Serial Number capability pushes the block to
+> 0x10c..0x19c, and the DOE, added later, overwrites the last 12 bytes of
+> the Flex Bus Port DVSEC: Capability2, Control2 and Status2.  Nothing
+> catches this -- pcie_add_capability() checks bounds, not overlap, and
+> the chain still walks because the DVSEC's next pointer becomes 0x190,
+> inside its own body.  Most cxl-type3 examples in
+> docs/system/devices/cxl.rst set sn=.
+> 
+> Derive the offset from the DVSEC block instead, as cxl_upstream.c
+> already does.  Without sn= the layout is unchanged byte for byte; with
+> sn= the DOE moves to 0x19c, below the AER capability at 0x200.  The
+> type 3 device has no VMStateDescription, so its config space never
+> reaches the migration stream.
+> 
+> Fixes: 8700ee15de ("hw/cxl: Standardize all references on CXL r3.1 and minor updates")
+> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+
+This feels like a qemu-stable material.  I'm picking it up, but please
+have qemu-stable@ in mind when the change is worth picking up for the
+older stable releases.  And please let me know if I should not pick it up.
+
+Thanks,
+
+/mjt
+
+> ---
+> Found while walking the extended capability chains for the UIO/SVC RFC
+> V2 review; independent of that series.
+> 
+> Tested at bde2492aac on q35 (pxb-cxl / cxl-rp / cxl-type3), dumping the
+> capability chain and raw config bytes from the guest with and without
+> sn=: the Flex Bus DVSEC keeps its full 0x20 bytes and the DOE sits at
+> 0x19c; without sn= the bytes are identical before and after.  cxl-test
+> 12/12.
+> 
+> On cxl-2026-03-25-draft REG_LOC_DVSEC_LENGTH is 0x34, so the overlap is
+> there without sn= too; with this change the DOE lands at 0x1a0/0x1ac.
+> cxl-2026-01-09-draft also fixes doe_comp at 0x1b0, which would then
+> collide -- the two want chaining.
+> 
+>   hw/mem/cxl_type3.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 28f41fa623..e6eb2e0cba 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -936,8 +936,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>       }
+>   
+>       /* DOE Initialization */
+> -    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true,
+> -                  CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
+> +    pcie_doe_init(pci_dev, &ct3d->doe_cdat, cxl_cstate->dvsec_offset,
+> +                  doe_cdat_prot, true, CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
+>   
+>       cxl_cstate->cdat.build_cdat_table = ct3_build_cdat_table;
+>       cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
+> 
+> base-commit: d2e570cc0f97b936902a5b1b86b73c0f5998b475
 
