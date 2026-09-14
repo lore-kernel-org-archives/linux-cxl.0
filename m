@@ -1,227 +1,206 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B81442FBE
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 20:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB47B2E7379
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 21:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789417960; cv=none; b=k54Gv10vqiPr1hAkKiR2DNI4q4/LTb8+e6vMpHH2N2yAZiwti2UC620PCsBpT4j7n79+P4+3LtwGBY7Zoi8kxS0wq9ADeJNNZYjZvNU5MshweY/jJa9BVwNq9s6DeUR1RsMuRQBjlc5ZJKfJzS8BpqRtUTBOU3tVz5Fe588kIi0=
+	t=1789419848; cv=none; b=Y6uaFIJ8L/4Xog3BE0mGbRZghZSMVqgRR/8k6uie9lVFU7cghUn6+z58PPa9PYc0xOmOIZEN766eyBRHVMGWxY0crlc1/Qh13FmQfUxo2iFmCO/DIS4wFY/3Tnl53oiaxnqTDe7VfaYoNm2ZHcB/CYB8zt8osCST7NMWmWo/PzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789417960; c=relaxed/simple;
-	bh=lZOzNiOiDXh2OCpR9ZvnygTuLDPQ2LVPRWmDDrgObAE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pf1irp/rVxyLVMox/JacsEpdcKp0EmKFAoeJoyltvhlH5N/VJzoiL9AoVG9JVT4IHG/UMc/MhgNSmkfI3pth64ruggb2viSyhyEo3gvMw5jCim8eBF4n0HgIQgGQxCYK5z+RfMAna8nho37Ul1kx7L0fdhnXFfElhqw2sw0hCb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rzn9TKDo; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789419848; c=relaxed/simple;
+	bh=xnv86VhThlrQcvxWPqg8Y+P40gXUXoLy2AdYcF0ijwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DiS5pM5z3RlHbcRj2CX4wpIKuHlb+a8UrS3ZC20sxZCbCMHJvqbqod2eZOodzmo0aVv1J9ss+yBG5gILzOJQxMq5H2oYa6JKwVpa/tmuYmrviOKWZDpt/aZ/lgwtrcepL3Mimzw4c4g0BFl9B7FrHa8jW3FqZNHykNFN9aDhV84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaVyukPg; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rzn9TKDo"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8701fcf40d4so771305b3a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 13:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789417958; x=1790022758; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=hnQDsSks2ulbXA9S2xVxN9uyEq1YkizwYfbj2+pbKUA=;
-        b=Rzn9TKDolTE7rVBKc1QBiapBBsmcjkjLH8MOlebZ0didYh9UG1TFKC1VzugPVYLvAw
-         WUbOB6KyKwomMk0XcmtrK+WjY5NyEQj9j4pX65ODGwhVyLdRvoQ5ei+K/pozQWrD1Tu9
-         oKEtJne57LdXU4MbLkdkXgR3OVeoR+A/srTITPfBRBFWhNo+9U7Yofz3O7dKoejgQLN1
-         gnM3uKstXPLerBN8rIQIZiwmcHCKWtvW4jfITY29Tjr73aDAMSCE83DNnWv5bRUq8EDC
-         jZ3z7FXE/r6UkD/jWHuSzMpNYVdbl3fOk+PKDHGFCsQ+ahY5Ke7j8IPUMYj4SkwDphiA
-         AeTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789417958; x=1790022758;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hnQDsSks2ulbXA9S2xVxN9uyEq1YkizwYfbj2+pbKUA=;
-        b=f+DlW4LPK8vAi/NREAF3LiExHeOLDCSKu0pejHmvjQ1nqgBDA8OxiYUp/HK0lBkmz6
-         R+H0HgKGUBpUSDWWgT6eR+5lkmzHKqRE4j4r8hseUB+c2Ua8x6lzuK3juUGYWzD7gdUL
-         g/w7Ajeb/wNgoop18qX2pCP1UaGEIgZT/YkW4GPM1I91NV+zazaeibOXvK9YfJ9if56g
-         RvvjKDG1rTGvD3T8EDi48DaDddxGP6souXrYoK/jSdIZVxLdzZ8qnlvrkQCFYMUSeEY8
-         scajF3SyOHaxhV8ioPK6bcPfx4xKovs8YGAxwrCW1m1G07DdjPZNRagzIgydqTfxoFzZ
-         WWKw==
-X-Forwarded-Encrypted: i=1; AKwUvBxXTh91YkhuHEFzhwic9mVwXRy6zoG9D8oTyJGchJI1RKtsUGE5gOwaVtIVk1XdC27hX1J89wu44m8=@vger.kernel.org
-X-Gm-Message-State: AFuF++kwp65BqpBqoMmBUxJ1kJyGi6kGF05P0tckn/1r9VfGC+z3RHb3
-	bXveWURSAD8TTTLqdawWN1iPkXYGXaATGurvcWBwIQCFQOoEjos2/uNhd3ST9qI2
-X-Gm-Gg: AYBFou0qmJiPXDrb7KPThc2lBtbBbUWgKEFeOM5/RdMTp3mfWnRWrYGrxeMzG2WfFHb
-	Wotbk65iSwAh/c9TERMLhdCmWLkN8WAhyqJc5x5OJao7RNKP05BLQA5X0zMoyfLTnBB8xS9Skpl
-	oRqMbB60jQLgTDCyIeCRi/E1xZJJoh+IWJdfWrhTUDVBW1SHEOomRHD4ml/UawNb1HWn9kDRIv7
-	yVPxovrNDA6fSB1yl/P9ObDvUOOvJsEZLokLI4BIn4eaRkdd+uY/Xw7/c5RS7O8kBqNeYe8wUc1
-	XGo+s/JD1G9xJbQGN2YoyPVY8I7EFSiuG0gJkFryVHJYk4o9p9gCdzDtgQJ9NhVGxCM46JR+few
-	HzSq8MuMLmZtqnxJwBvsOYrvdVpj95EMS43+VuN5/pigZAjvpuXaJW2zJctrNyzmyXY74SNVn69
-	3Mg8yHiVA1KUCM1TCH5pPz1Li1t3uEQ/ynOb25ZD5Iipm6ne3ciNEuAQU+FHWssC5Y99H/K+kBA
-	MGLjAnFhr76DzJ3Ayu3uDFy
-X-Received: by 2002:a05:6a20:2454:b0:3da:5eda:d167 with SMTP id adf61e73a8af0-3db4039d3b3mr8560559637.5.1789417957939;
-        Mon, 14 Sep 2026 13:32:37 -0700 (PDT)
-Received: from cxlqual ([220.120.90.131])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc4c652aa9asm5513192a12.9.2026.09.14.13.32.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2026 13:32:37 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Tue, 15 Sep 2026 05:33:49 +0900
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-cxl@vger.kernel.org,
-	alison.schofield@intel.com, dave.jiang@intel.com, gourry@gourry.net,
-	icheng@nvidia.com, ming.li@zohomail.com, vishal.l.verma@intel.com,
-	dave@stgolabs.net, benjamin.cheatham@amd.com,
-	Ira Weiny <iweiny@kernel.org>, Wonjae Lee <wj28.lee@samsung.com>,
-	Junhee Park <jh9934.park@samsung.com>,
-	Heesoo Kim <habil.kim@samsung.com>
-Subject: Re: [RESEND PATCH v13 3/8] cxl/cdat: Gather DSMAS data for DCD
- partitions
-Message-ID: <aqhaLTIc8Z8VknnT@cxlqual>
-References: <20260908102124.2231730-2-anisa.su@samsung.com>
- <20260908102124.2231730-5-anisa.su@samsung.com>
- <20260908215200.6f825aa1@jic23-huawei>
- <aqNFEUWNMmTvJmh_@cxlqual>
- <20260911015625.7f06c4eb@jic23-hlaptop>
- <aqQuO-6kwau4RYk4@cxlqual>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaVyukPg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789419847; x=1820955847;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xnv86VhThlrQcvxWPqg8Y+P40gXUXoLy2AdYcF0ijwk=;
+  b=SaVyukPgHK+rAIgI+Eag5yAhNKuq4zKEJmxMh1fadnyMjhAPR3+fCVbY
+   aQFxlwBiYWydP3JsecPK6tdsxCDpHg0prmDtOnJQfGGShkWRfeRr8hk9x
+   x/mclPE7xRguW1rT18/qymJtbfY5lr591JvrbZbGg8O1IfTFTTwJtZlmH
+   QzAibLENU6pw8tch0RRiMxW1cJWRADqRsju7HmpzKyomkOXgDbwAFoeBH
+   I9Q3IUOtZoG2iAN3eWAHvDEKBeU+vwFxvBLx/gQLyLBeJAc2dj+mB9gb1
+   Ztj53ZtXornYeMcdlcLTkUlSTQBBO6BY8lEZjIvW2CwYH1m1qBtKHultB
+   g==;
+X-CSE-ConnectionGUID: LHB6w9H1QV2ixiPgAcb9rQ==
+X-CSE-MsgGUID: TrFWnjDHSeqTnIB/COv3Lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="88718053"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="88718053"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 14:04:06 -0700
+X-CSE-ConnectionGUID: NI+E2ctUTjOPPnPi8t2w1g==
+X-CSE-MsgGUID: +3QfQ3tCSpeM9VmQA5sPww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="273268290"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.142]) ([10.125.108.142])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 14:04:05 -0700
+Message-ID: <70e19ff3-37bc-4068-b7d2-9aeae3b9a754@intel.com>
+Date: Mon, 14 Sep 2026 14:04:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqQuO-6kwau4RYk4@cxlqual>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260910082141.3908416-1-kanie@linux.alibaba.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260910082141.3908416-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 12, 2026 at 01:37:15AM +0900, Anisa Su wrote:
-> On Fri, Sep 11, 2026 at 01:56:25AM +0100, Jonathan Cameron wrote:
-> > On Fri, 11 Sep 2026 09:02:25 +0900
-> > Anisa Su <anisa.su887@gmail.com> wrote:
-> > 
-> > > On Tue, Sep 08, 2026 at 09:52:00PM +0100, Jonathan Cameron wrote:
-> > > > On Tue,  8 Sep 2026 03:15:07 -0700
-> > > > Anisa Su <anisa.su887@gmail.com> wrote:
-> > > >   
-> > > > > From: Ira Weiny <iweiny@kernel.org>
-> > > > > 
-> > > > > Additional DCD partition (AKA region) information is contained in the
-> > > > > DSMAS CDAT tables, including performance and shareable attributes.
-> > > > > 
-> > > > > Match DCD partitions with DSMAS tables and store the meta data.
-> > > > > 
-> > > > > Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> > > > > Co-developed-by: Anisa Su <anisa.su@samsung.com>
-> > > > > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > > > > Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> > > > > Tested-by: Junhee Park <jh9934.park@samsung.com>
-> > > > > Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> > > > >   
-> > > > Minor thing inline. I think we can take a bit of refactoring
-> > > > you did a little further and end up with simpler code.
-> > > >   
-> > > > > ---
-> > > > >  drivers/cxl/core/cdat.c   | 32 +++++++++++++++++++++++++-------
-> > > > >  drivers/cxl/core/hdm.c    |  1 +
-> > > > >  drivers/cxl/core/mbox.c   |  9 +++++++++
-> > > > >  drivers/cxl/core/memdev.c | 17 ++++++++++-------
-> > > > >  drivers/cxl/cxlmem.h      |  2 ++
-> > > > >  include/cxl/cxl.h         |  4 ++++
-> > > > >  6 files changed, 51 insertions(+), 14 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> > > > > index 5c9f07262513..05058d4520f2 100644
-> > > > > --- a/drivers/cxl/core/cdat.c
-> > > > > +++ b/drivers/cxl/core/cdat.c
-> > > > > @@ -17,6 +17,7 @@ struct dsmas_entry {
-> > > > >  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
-> > > > >  	int entries;
-> > > > >  	int qos_class;
-> > > > > +	bool shareable;
-> > > > >  };
-> > > > >  
-> > > > >  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
-> > > > > @@ -74,6 +75,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
-> > > > >  		return -ENOMEM;
-> > > > >  
-> > > > >  	dent->handle = dsmas->dsmad_handle;
-> > > > > +	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
-> > > > > +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
-> > > > >  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
-> > > > >  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
-> > > > >  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
-> > > > > @@ -266,18 +269,33 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-> > > > >  		bool found = false;
-> > > > >  
-> > > > >  		for (int i = 0; i < cxlds->nr_partitions; i++) {
-> > > > > -			struct resource *res = &cxlds->part[i].res;
-> > > > > +			struct cxl_dpa_partition *part = &cxlds->part[i];
-> > > > >  			struct range range = {
-> > > > > -				.start = res->start,
-> > > > > -				.end = res->end,
-> > > > > +				.start = part->res.start,
-> > > > > +				.end = part->res.end,
-> > > > >  			};
-> > > > >  
-> > > > > -			if (range_contains(&range, &dent->dpa_range)) {
-> > > > > -				update_perf_entry(dev, dent,
-> > > > > -						  &cxlds->part[i].perf);
-> > > > > -				found = true;
-> > > > > +			if (!range_contains(&range, &dent->dpa_range))
-> > > > > +				continue;
-> > > > > +
-> > > > > +			found = true;
-> > > > > +			/*
-> > > > > +			 * part->handle is from Get DC Config, dent->handle
-> > > > > +			 * from the CDAT DSMAS entry.
-> > > > > +			 */
-> > > > > +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
-> > > > > +			    dent->handle != part->handle) {
-> > > > > +				dev_warn(dev,
-> > > > > +					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
-> > > > > +					 &range, part->handle,
-> > > > > +					 &dent->dpa_range, dent->handle);
-> > > > >  				break;  
-> > > > 
-> > > > For the error path I'd just return here. Maybe there is more after this loop
-> > > > in future patches that make it useful to break instead?
-> > > >   
-> > > > >  			}
-> > > > > +
-> > > > > +			update_perf_entry(dev, dent, &part->perf);
-> > > > > +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-> > > > > +				part->shareable = dent->shareable;
-> > > > > +			break;  
-> > > > 
-> > > > Come to think of it, can return in this path too.  Then you don't need the
-> > > > local variable found.
-> > > >   
-> > > Ah the break in both spots is so we print a debug message if no
-> > > partition is found matching the dsmas entry:
-> > > 
-> > > if (!found)
-> > > 	dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
-> > > 		&dent->dpa_range);
-> > > 
-> > > It got cut off in the diff.
-> > 
-> > For both break paths, found == true
-> > 
-> > Jonathan
-> > 
-> Woah that was really dumb of me. Pretend I agreed with you the first
-> time.
+
+
+On 9/10/26 1:21 AM, Guixin Liu wrote:
+> HDM decoders are emulated from the DVSEC range registers in two cases:
+> (a) the component registers expose no HDM decoder capability, or (b) the
+> capability is present but the DVSEC ranges were the ones in use at driver
+> load.
 > 
-> Anisa
+> After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() reads the HDM
+> decoder Committed bit for every decoder marked enabled, emulated ones
+> included. In case (a) regs.hdm_decoder is NULL and the read oopses. In case
+> (b) the Committed bit was never set, so a reset gets reported that never
+> happened.
+> 
+> Use the absence of cxld->commit to elide the check for emulated decoders.
+> Warn when doing so: the DVSEC range registers are non-sticky, so a reset
+> may have cleared the decode and, with no Committed bit to read, the loss
+> cannot be detected here.
+> 
+> Case (b) tested under QEMU: a reset on an endpoint driven down the DVSEC
+> emulation path no longer reports a reset or strips the decoder flags.
+> 
+> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
 
-Wait sorry I think the break is still correct...? The break exists to leave
-the inner for each partition loop, but continue onto the next dsmas entry from
-the outer xa_for_each.
+I reapplied the change with the printk to cxl/next.
+ddcce1734d11
 
-Returning would skip all following dsmas entries, which leaves those
-partitions with CXL_QOS_CLASS_INVALID.
+> This was patch 4/8 of the "cxl: Assorted fixes" series [1], resent
+> individually per review feedback.
+> 
+> The two synchronisation concerns the review bot raised on v2 - the missing
+> exclusion against a cxl_port unbind freeing the devm allocated cxl_hdm, and
+> the plain read-modify-write of cxld->flags in
+> cxl_endpoint_decoder_clear_reset_flags() while the region paths update the
+> same word under cxl_rwsem.region - are still untouched here. Both are
+> about the reset handler's locking rather than about which registers it
+> reads, and neither fix is local; happy to follow up with separate patches.
+> 
+> Testing
+> 
+> Reaching case (b) needs an endpoint whose DVSEC ranges are live while the
+> global HDM decoder enable is clear. Unbinding cxl_pci runs the
+> disable_hdm() and clear_mem_enable() devm actions, so both bits start
+> clean. setpci then programs DVSEC Range 1 Base to 0x890000000, which sits
+> inside a RAM capable CFMWS, and sets Mem_Enable. Rebinding takes the
+> emulation path:
+> 
+>   cxl_port endpoint3: Fallback map 1 range register
+>   cxl_pci 0000:35:00.0: DVSEC Range0 allowed by platform
+> 
+> The endpoint ends up with a single decoder, enabled and locked, with no
+> Committed bit behind it:
+> 
+>   decoder3.0: locked=1 start=0x890000000 size=0x100000000 mode=ram
+> 
+> The device's only available reset method is cxl_bus, which unmasks SBR
+> through the port DVSEC. Before this change:
+> 
+>   cxl_pci 0000:35:00.0: resetting
+>   cxl_pci 0000:35:00.0: SBR happened without memory regions removal.
+>   cxl_pci 0000:35:00.0: System may be unstable if regions hosted system memory.
+> 
+> /proc/sys/kernel/tainted picked up TAINT_USER (8192 -> 8256) and locked
+> dropped from 1 to 0. After this change the same reset logs only
+> "resetting", locked stays 1, and no taint is added. The decoder is
+> decoder6.0 in the second run because reloading cxl_core renumbered the
+> memdevs.
+> 
+> QEMU does not clear the DVSEC range registers on SBR, so the emulated
+> decode is still fully programmed by the time the reset completes. The old
+> report was spurious here too.
+> 
+> Not covered: case (a) needs an endpoint with no component register block,
+> which QEMU's type3 always provides, and the FLR variant needs FLR support
+> that QEMU's type3 does not advertise (FLReset-). I also did not run a
+> positive control confirming that a normally committed HDM decoder is still
+> detected after this change. The QEMU run above predates the v6 warning:
+> the warning fires on the skip path that run exercises, but it has not been
+> observed directly.
+> 
+> v1->v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>   the code change (Alison Schofield)
+> 
+> v2->v3:
+> - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
+>   emulated from the DVSEC ranges are also skipped when the HDM decoder
+>   registers exist but are globally disabled (Richard Cheng)
+> - update the subject and the commit message for the widened scope
+> 
+> v3->v4:
+> - shorten the commit message (Dave Jiang)
+> 
+> v4->v5:
+> - condense the commit message further, wording taken from Jonathan
+>   Cameron's suggestion on v4
+> - note the case (b) test in the commit message
+> 
+> v5->v6:
+> - rebase onto master, per Dave's request to send patches against master
+>   rather than cxl/next
+> - warn when the check is skipped, as the DVSEC range registers are
+>   non-sticky and a reset may have cleared the emulated decode (Dave Jiang)
+> 
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+> 
+>  drivers/cxl/core/pci.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..03dae6b701a4 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,16 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>  	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>  		return 0;
+>  
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult, so a reset
+> +	 * that cleared the non-sticky range registers cannot be detected.
+> +	 */
+> +	if (!cxld->commit) {
+> +		dev_warn(dev, "DVSEC emulated decode may have been cleared by reset\n");
+> +		return 0;
+> +	}
+> +
+>  	cxlhdm = dev_get_drvdata(&port->dev);
+>  	hdm = cxlhdm->regs.hdm_decoder;
+>  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> 
+> base-commit: 50d05c7c76c96b90462f24debacca971d2e86713
 
-Thanks,
-Anisa
-> > > 
-> > > > >  		}  
-> > > >   
-> > > > >  
-> > > > >  		if (!found)  
-> > 
