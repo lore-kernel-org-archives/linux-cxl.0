@@ -1,131 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460DC4756B2;
-	Mon, 14 Sep 2026 13:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B730747ECF3
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 14:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789394348; cv=none; b=EeUK/vDYFao1bMWz3xtvV09FIecQYMtxwNhLYViNx5es9sfjT3KfGiLrciEVAo+eWwwi03eQdECI6M5MI/pwa8CjdTm0xhYK5FkLpTVmyyntVYPdhLnYDhzVa2xLzKIBYME437K9Whrx8S8q/2Nrnh1yRF42oND7fAmnKhLDNd0=
+	t=1789396707; cv=none; b=bOsKoO7krVsfP2Z9TtB1JTbgJATumesA2N3LfL5AQz7dP3a07c/tVB3V/LEUEBfm7ocWescG5md/OFjHgUirUCMRROZuse98/+P0jejDoLjo63fgjkCO6oLgXUA6PijADj/BolTxf9NKB6KD+3mH4O1xN92AXVtKbOspFBsYxX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789394348; c=relaxed/simple;
-	bh=Qg9LwbOdaMGkf7CVB6H1EXHo6FAE8pG54xWV86tXFvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kYej3LpqCjkIWCX4NSbG3MoaVeFP/kfJ1HPi1CwypLfHAX8uqdTJTkEWYFiXMzMlyWKT03V0e/AmqoLv4JyugJbmGn0iBGyvzSEDmpb5xBT6x5MzEs+TQhCVGfSmYz8aKOBd++wMT5mzhV7KbV9lCRmg0sJXIe1fOMJHsuvcSO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CibaVAqP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789396707; c=relaxed/simple;
+	bh=TtHTqL+UFORJacBemcx0LNXtW0Z0/+7lM+21HB24SRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TpOzxCzCsyTxYQF7yyuU/xBpcH9l3osCaiEuevC04qNtPywobO6XBw9UayJtv9TrF0kc3hmkA7cM8F/I4IGVvu0mBV3gJjPIPXfcKZtTpTzw1NeFHVX1FgjUqIyBJC8a5Zv0sEL3m0J/cZT1zdJ5YoPKPyC4z4wTv5Nl53od+6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Daqay4nY; arc=none smtp.client-ip=74.125.230.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CibaVAqP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22DA81F000FF;
-	Mon, 14 Sep 2026 13:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789394347;
-	bh=9DEU6QsyXChy/GNzbkJuNaSb8Hkm06ZCmsscDaeUHKc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CibaVAqPIiF/6RRTs79s4K8eiz9mDHOvYrBjBHoXQXg8uD7COKeiH4kxt+ve1ygC4
-	 3FLhWybNVg2rVs2eI1XbR4YbzHvFgLPoMDvZrVtj9NVzbW0RXnza0/gpGUUFo1rt6b
-	 v1JwZn4gW4Lk1DCw7J94hAR4e3GdJwqi1OJ784ONbUCMH1n+fvFmG6h2BqoQBWjEDm
-	 szq3ulHIdtoVvM+L74W4URViePKeV6PCkoFHEQwqrQX7nM+gr8HRq0H4LwIbHzthNe
-	 CBZU4qXHOZKE9nkzph7NzQ0e/3PbYeJrBJibvyglzdMJ/pr781zvji8od5RYSUIeq5
-	 /pB1vNK2fpVsQ==
-Message-ID: <56f1171f-b7c3-47f5-8fee-0320eafcfd2d@kernel.org>
-Date: Mon, 14 Sep 2026 15:58:54 +0200
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Daqay4nY"
+Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-90cdfc6db0aso28027816d6.1
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 07:38:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1789396704; x=1790001504; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TtHTqL+UFORJacBemcx0LNXtW0Z0/+7lM+21HB24SRA=;
+        b=Daqay4nY2s6tbkXzJ0vN4Ka+1kIEYnajThgzwV8fysYG7Ac7jm5swh6CAppt8rsTAe
+         Vaf8nCTJFAqGhnjETEJJMQFpJuT4qkhJmO6wzJD32l5KyWMhGELxeiyezO9n4BwAjFxH
+         dlWYGyZDjxzh4kCWEMQhKIMJdp2zFU1wzoPRmccHq5ILsT23a6B64PfTZKgjuz97F1wi
+         9M9BBJF2ne4kR0x/+5qikJ87Gwv5TQuhx94YmcwSdHO5lCTsMKxzpA3ks6ZnYiYzSKlo
+         v/hkI7yMQy20vYVOze/cYbbJGyN//+9EjrQX6qqq4ro4EiJUvybo1ZNh+qwcfmXF0sIN
+         DUqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789396704; x=1790001504;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TtHTqL+UFORJacBemcx0LNXtW0Z0/+7lM+21HB24SRA=;
+        b=sYUkJXlEtp4mmQMwLBfOxz1oU4dx/dbboXA22SoK/F748AmB6YJg+sg/4toInTc5gC
+         7Zby0rH7RBG/dQc3orDyz4Y56jvyrunWVQTwt+alxLvkTm1yhoFtVEtIkZ3hP7u8VlgL
+         80U78/mpSbpp4g5ljziHDNvOEfEUiSRc8hbofmRhXPz6dugnNof18Mpj+dA/XQ3KRB79
+         /5mzDw8Iel/ZUGUpyrzB6AW4aavL4ifPf8VWl6o4dipEGSnjPjPez3dAUo4pUq870H0c
+         IqrafKe5OnXKdf7tYyDASQOdFQubizVaERjU1qcfIhJWrQ+9O9Jz5s7fUAoQAD79OREN
+         T6uA==
+X-Forwarded-Encrypted: i=1; AKwUvBzMA6PDpfOlF+mcNH/nsspS7TEum+Ib3KXQ2zv9OjS92KfqJihP8MkxLxQULDGAb/w283odksNf/pg=@vger.kernel.org
+X-Gm-Message-State: AFuF++mR2r7hzHNJN010C8SYfbAb/wQMxPN8PTJ+NOJ5hQE8TGjr3vly
+	D1qqTM65GCq++kOiI8//GqFM532zhYcNnqSKiK7rl3/0WWZjIGchIafD0n5+QJzhBf8=
+X-Gm-Gg: AYBFou2s5qIc6Mo8s60geEDSSryVSkO0Wyicy2FQ+w+/FJqyOYNpov6BS0v1RaXcMTe
+	zgmYgJD7vsS+67FFak5cwppizDTT54jsO9so+Gz6iTmw+wgpNDFI/mkpBGbpRsvnVAUs8BqPN+b
+	kVAkcV1ItfsnYUKzPOEHK+HXjWftWdbJ6M4pkk5hl3QRZ4seL6c6MqDEszYzpPi+SHr20JQcAoF
+	29x+bPGIxqaY/Fv+cJ9KnDWLdkQxe43B2FbO4hqpHFNM/chUqpjyWyvJ6xuINeB5RGCsXfZ8Koc
+	peA77UBwlzYae7WmcpUvskvVQNST/eR4b8NfPaNGG8cF9xrkNPmtArJ6NCbfN0RYchTWAZ9PmZ9
+	z6ndDroXQsA7VNSHaLk2uK/AQgDUyNl78Qc4YXeOokNNAjXAMXUGY8NGjtK2J2rI9co5hWUNYDD
+	3ZSlJpIPBBAqTxlRlRp+GJC9lpL0F5D36rSFPMNIWSxEZyGCDm1NZ+dXUSmXa1DLzS8soeENe+m
+	ufG1rB1vrAKfbyCr+SCIPMe220DBp3CoB0E9D1GuPl+wCuQoTnewII=
+X-Received: by 2002:a05:6214:8613:b0:912:12cc:33d with SMTP id 6a1803df08f44-9122e552dadmr42040046d6.23.1789396704371;
+        Mon, 14 Sep 2026 07:38:24 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9120f4d389esm95618176d6.42.2026.09.14.07.38.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 07:38:23 -0700 (PDT)
+Date: Mon, 14 Sep 2026 10:38:22 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Zimo.Lu" <louis2665573906@gmail.com>
+Cc: David Hildenbrand <david@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm/memory_hotplug: use public nodes for migration
+ targets
+Message-ID: <aqgGVIJwV9wt8gon@gourry-fedora-PF4VCD3F>
+References: <20260914074323.3567923-1-louis2665573906@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] mm/sparse: remove SECTION_MARKED_PRESENT and
- further cleanups
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Kairui Song <kasong@tencent.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <178937914266.4188640.7965323974267420342.b4-review@b4>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <178937914266.4188640.7965323974267420342.b4-review@b4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260914074323.3567923-1-louis2665573906@gmail.com>
 
-On 9/14/26 11:45, Mike Rapoport wrote:
-> On Wed, 09 Sep 2026 15:32:53 +0200, David Hildenbrand (Arm) <david@kernel.org> wrote:
->> mm/sparse: remove SECTION_MARKED_PRESENT and further cleanups
->>
->> SECTION_MARKED_PRESENT is really only needed during boot, where we
->> can instead just rely on SECTION_IS_EARLY_BIT by setting that flag
->> earlier.
->>
->> Some preparations for doing that conversion and some cleanups in the same
->> (sparse) area.
->>
->> [...]
-> 
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> 
+On Mon, Sep 14, 2026 at 03:43:22PM +0800, Zimo.Lu wrote:
+> base-commit: 38c7f48162aa282dc6a9edfb7011378594057c10
 
-Thanks for the review!
+This commit is a random github hash from my v6 working branch that no
+one cares to (or should) know about.
 
--- 
-Cheers,
+I haven't even RFC'd this to the list yet.
 
-David
+I'm happy to work with you if you have feedback, but you're getting well
+ahead of the work here.
+
+~Gregory
