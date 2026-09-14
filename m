@@ -1,112 +1,98 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29292C11CA
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 12:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9370E477295
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Sep 2026 12:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789388340; cv=none; b=gdU5yTWjjPRyUyIJPUBZpDRmPU/XKQiJrjNVU8+eVQ3WJSVU9H9C454YJm22y9Jslyx0xc9gQx/hwdqdRbcNpes5TjDGvkLnjQLJ1OHDkX7TUtmVpMPfnKova8SEPkSK+G6le8bGKCm2kbo34rLdktBpPVtzhKR1osuv3g6oHYk=
+	t=1789389152; cv=none; b=p2h+VlhWLFbPcYuz+zTup1RlpfdwnScjaYG1fTcRzpfrkdlLmG6TNb0i7ELuyarPnrTRQL++9W0mbxr8TfbvSahnYUW75crTUFwlqdTUkAYXAYlNGV72EX6xQcaRhPh9UN8rlwW9VAzIuQc6rFV886biidLpRsxr9O7Tq/XiEtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789388340; c=relaxed/simple;
-	bh=U5TFJ9tCQeTl3AT+UBa40vjHEcCEGJ48f3dQ/PSKDXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XSq9Bh3h/9ys/MWpJXovlI2zQzjpDaB0DMJzm+c1PhPMIPtyc2cSuEhxm+INbS2rAx+SjRRX9kJXV9nUs+fHQjn3hOq9ISRs5uF6bV+q5vqzdtqelpaWDyYDZTu7hfWURXigI4N4de0chUKfXnmOoFRq3vC+Hen3Rh6xCHHZ4kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Mu/Aypz8; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1789389152; c=relaxed/simple;
+	bh=NFpjw25Y/P6YQ94yhokdCvoY44JFO9SFUyQ4XZ7/8r0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Ai2A1mebxQYlmi1WZWOE4xMDVNfuLkh6U2xDKiga1k6g3jBHCq3uyLRncskBuMCzIPNMFWKMFCzrSgVE0Cj2VX2cYkpPVp/u2t7XpKXrxzuatZuDdrJiRbFhc06oWpf6geHVm3K1mx6ayDkbxrUmSTO9OSbqkifBIcTX3t+76GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3/nCrOy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Mu/Aypz8"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1789388328; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=1XzOyZSnDu8f0xU2VzS4OOU4BZKnEsPvU5nTVXZYoBM=;
-	b=Mu/Aypz8r8c0o9v4qNP8YIPdW2/Wi8dUJvjtUENP1mu60F+iCJctaEtn4+Sxach52akasghSi1ub0wKoDvB7L5uUyULblK0Qju9lWhWceGpejhdvEUQz1b+87kRzXWSyyLvPpC6NV4cMM7BsTb8R9pRz6HVKiuvQ9wok7Ldr7Ys=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XAwT2Kn_1789388327;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XAwT2Kn_1789388327 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Sep 2026 20:18:48 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3/nCrOy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0251F0089E;
+	Mon, 14 Sep 2026 12:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789389143;
+	bh=arX8gXhYYZiyv6rsC87oXWfF6DhG/c7iPUt6LcQJefQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=c3/nCrOy9gVDRmK9wxqSH7LN9qUBlAy0d6gy7YTgF6PSHu9lbD25mVOcxg/fiGuYz
+	 ewwFyu0ybSy9BjHzfiCSEK7PHyJS0uruFvIlVxD5n/47rKNBD0s9B9FGDII/AFs3x+
+	 y6AUrUau32Zd4KljCS+l+Au1rMGVtxVbqAgn0gCLxW6nOhOnRL6NHtIbyqzdky3xBL
+	 xtd/BXj2LmdOItzaYsmkSKqbu7NtA0P0DZehAC++4sAFfiSGBhdeW2y8asR8lx4VuX
+	 /g3RBx2PG1vyQeFESLwqBU0rYi2ZOvxvd7uKa7KaVUwaGcTSF2j2+iBrNOn2nbW587
+	 dN9ON/kLi06OA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4] cxl/core: Fix dport use-after-free via the
+ einj_inject debugfs file
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guixin Liu" <kanie@linux.alibaba.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v4] cxl/core: Fix dport use-after-free via the einj_inject debugfs file
-Date: Mon, 14 Sep 2026 20:18:43 +0800
-Message-ID: <20260914121843.718493-1-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260914121843.718493-1-kanie@linux.alibaba.com>
+References: <20260914121843.718493-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 12:32:22 +0000
+Message-Id: <20260914123223.0C0251F0089E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The per-dport einj_inject debugfs file retains a pointer to the
-'struct cxl_dport', but its lifetime is not tied to the dport. Unbinding
-the dport host frees the dport and leaves einj_inject behind, so writing
-the file dereferences freed memory.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Ignoring the return value of devm_add_action_or_reset() leads to a=
+ use-after-free of the debugfs directory dentry on the error path.
+--
 
-The stale directory also prevents recreation on rebind.
+commit acaad538920d3905d33312c0501a79695900337c
+Author: Guixin Liu <kanie@linux.alibaba.com>
 
-Remove the per-dport debugfs directory when the dport host is released.
+cxl/core: Fix dport use-after-free via the einj_inject debugfs file
 
-Found by code inspection, then reproduced on a QEMU CXL topology with
-KASAN (the einj_cxl_is_initialized() guard had to be forced open, as
-QEMU emits no EINJ table). Unpatched, writing the leftover file after
-unbind gives a KASAN slab-use-after-free report in cxl_einj_inject(),
-and rebind hits "already exists in 'cxl'". Patched, the directory goes
-away with the dport and rebind recreates a working einj_inject.
+This commit fixes a use-after-free when accessing the per-dport einj_inject
+debugfs file after unbinding the dport host. It registers a devm action to
+remove the debugfs directory when the dport host is released.
 
-Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
----
-v3: https://lore.kernel.org/linux-cxl/20260828074752.3336779-1-kanie@linux.alibaba.com/
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 625e4aa427db0..82513b46f6347 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+[ ... ]
+> @@ -832,6 +837,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_d=
+port *dport)
+> =20
+>  	dir =3D cxl_debugfs_create_dir(dev_name(dport->dport_dev));
+> =20
+> +	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
+> +
 
-v3->v4:
-- move the devm_add_action_or_reset() call next to the directory creation
-  (Jonathan Cameron)
-- drop the KASAN stack from the commit message (Alison Schofield)
-- rebase onto master (v7.3-rc2), per Dave's request for patches against
-  Linus's tags rather than cxl/next
+[Severity: High]
+If devm_add_action_or_reset() fails, will this lead to a use-after-free of
+the dir dentry?
 
- drivers/cxl/core/port.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+When devm_add_action_or_reset() fails to allocate memory for the devres
+node, it immediately executes the registered action before returning an
+error. In this case, remove_debugfs() would be called, which runs
+debugfs_remove_recursive(dir) and drops the reference to the dentry,
+potentially freeing it.
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 625e4aa427db..82513b46f634 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -814,6 +814,11 @@ static int cxl_einj_inject(void *data, u64 type)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
- 			 "0x%llx\n");
- 
-+static void remove_debugfs(void *dentry)
-+{
-+	debugfs_remove_recursive(dentry);
-+}
-+
- static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- {
- 	struct cxl_port *parent = parent_port_of(dport->port);
-@@ -832,6 +837,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- 
- 	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
- 
-+	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
-+
- 	debugfs_create_file("einj_inject", 0200, dir, dport,
- 			    &cxl_einj_inject_fops);
- }
+Since cxl_debugfs_create_dport_dir() ignores the return value of
+devm_add_action_or_reset(), it proceeds to call debugfs_create_file(),
+passing the freed dir pointer as the parent directory.
 
-base-commit: 50d05c7c76c96b90462f24debacca971d2e86713
--- 
-2.43.7
+Should this check the return value and return early if the devm action
+fails to register?
 
+>  	debugfs_create_file("einj_inject", 0200, dir, dport,
+>  			    &cxl_einj_inject_fops);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914121843.7184=
+93-1-kanie@linux.alibaba.com?part=3D1
