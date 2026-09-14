@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE60046C4C5;
-	Mon, 14 Sep 2026 13:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460DC4756B2;
+	Mon, 14 Sep 2026 13:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789394237; cv=none; b=sqZxaMpz/0uI1++WkuZJiTpwgIOd13P6Pvl74jOu3RF5E2uLLO450S//PgsbOR8XO47285J1oUdgiysijhDf3fP9cdaEqOHIuoSqydt/ljoKftpDDNP/TenF8HHDyY3B7odCmPcHYlDO1/t544t1lnMiS0H0tk6NjfN+00bTdo8=
+	t=1789394348; cv=none; b=EeUK/vDYFao1bMWz3xtvV09FIecQYMtxwNhLYViNx5es9sfjT3KfGiLrciEVAo+eWwwi03eQdECI6M5MI/pwa8CjdTm0xhYK5FkLpTVmyyntVYPdhLnYDhzVa2xLzKIBYME437K9Whrx8S8q/2Nrnh1yRF42oND7fAmnKhLDNd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789394237; c=relaxed/simple;
-	bh=HGlYVddOLYKv650ZKhm+9atcEI4BlwBVnvlFLb1GRek=;
+	s=arc-20240116; t=1789394348; c=relaxed/simple;
+	bh=Qg9LwbOdaMGkf7CVB6H1EXHo6FAE8pG54xWV86tXFvw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQZjSbjzNCGAbQp+66XJkGQW46NHxlQehtl5MvEGimGIqPhdrTzfvsUR7fkxprg2NBqA0YLm/7MBFFQA+GX8+UPohF9HDL2/rYPL7818OWuCCxnkcWdYv0yddZaLvJZcW2vn6ZxFXk8r7k8l5qHd2EZcncmkzCb778MA/mVLFvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K20TONwx; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=kYej3LpqCjkIWCX4NSbG3MoaVeFP/kfJ1HPi1CwypLfHAX8uqdTJTkEWYFiXMzMlyWKT03V0e/AmqoLv4JyugJbmGn0iBGyvzSEDmpb5xBT6x5MzEs+TQhCVGfSmYz8aKOBd++wMT5mzhV7KbV9lCRmg0sJXIe1fOMJHsuvcSO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CibaVAqP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K20TONwx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49541F000FF;
-	Mon, 14 Sep 2026 13:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CibaVAqP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22DA81F000FF;
+	Mon, 14 Sep 2026 13:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789394235;
-	bh=Q3jTCo5Zrmr3wVVQs4J2MuJx8Av/2jYs7lg8QKqp49E=;
+	s=k20260515; t=1789394347;
+	bh=9DEU6QsyXChy/GNzbkJuNaSb8Hkm06ZCmsscDaeUHKc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=K20TONwxzBEU1Zu7mkOTxd5YED8e+Y59q7/Yo0oiBrkANvddumCkJS+TvSxyNaeIF
-	 H45l9C8qjM7zl5GyjASyOdXb6m8/wN+FaFnD2IaNwzKJOyajVYG3F8spJMUf2M/1oc
-	 yE1+/JgGFYg5HMgg1xYmgJ2j3Am/tt+OrGB9kq9EG/CU6kFxYHpCzaEPe3qRa+EZSx
-	 eHv08z08nJgSYyJ3itkk5py9mOenvfgjWjLJ4vwXKO3M90FrXVf1oz0280tjyTghcA
-	 AixxEX7dmnMCpPNluxp6KPGtAoYGKi8oG8WkCbbWBEO11HtFE/kEFNPxuHOyZ/UB4q
-	 5Q6xl0UDo3zMw==
-Message-ID: <9f28f634-9015-4b62-a197-0414122ddd4c@kernel.org>
-Date: Mon, 14 Sep 2026 15:57:02 +0200
+	b=CibaVAqPIiF/6RRTs79s4K8eiz9mDHOvYrBjBHoXQXg8uD7COKeiH4kxt+ve1ygC4
+	 3FLhWybNVg2rVs2eI1XbR4YbzHvFgLPoMDvZrVtj9NVzbW0RXnza0/gpGUUFo1rt6b
+	 v1JwZn4gW4Lk1DCw7J94hAR4e3GdJwqi1OJ784ONbUCMH1n+fvFmG6h2BqoQBWjEDm
+	 szq3ulHIdtoVvM+L74W4URViePKeV6PCkoFHEQwqrQX7nM+gr8HRq0H4LwIbHzthNe
+	 CBZU4qXHOZKE9nkzph7NzQ0e/3PbYeJrBJibvyglzdMJ/pr781zvji8od5RYSUIeq5
+	 /pB1vNK2fpVsQ==
+Message-ID: <56f1171f-b7c3-47f5-8fee-0320eafcfd2d@kernel.org>
+Date: Mon, 14 Sep 2026 15:58:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/12] mm/sparse: rename __highest_present_section_nr to
- __highest_used_section_nr
+Subject: Re: [PATCH 00/12] mm/sparse: remove SECTION_MARKED_PRESENT and
+ further cleanups
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
@@ -56,8 +56,7 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
  driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
 References: <20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org>
- <20260909-b4-sparsemem_cleanups-v1-6-008fc8d579fe@kernel.org>
- <178937914266.4188640.6188797346240816067.b4-review@b4>
+ <178937914266.4188640.7965323974267420342.b4-review@b4>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -104,23 +103,27 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <178937914266.4188640.6188797346240816067.b4-review@b4>
+In-Reply-To: <178937914266.4188640.7965323974267420342.b4-review@b4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 9/14/26 11:45, Mike Rapoport wrote:
->>  /*
->> - * There are a number of times that we loop over NR_MEM_SECTIONS,
->> - * looking for section_present() on each.  But, when we have very
->> - * large physical address spaces, NR_MEM_SECTIONS can also be
->> - * very large which makes the loops quite long.
->> - *
->> - * Keeping track of this gives us an easy way to break out of
->> - * those loops early.
->> + * Looping over all memory sections is expensive, especially if NR_MEM_SECTIONS
-> ... all possible ... maybe?
+> On Wed, 09 Sep 2026 15:32:53 +0200, David Hildenbrand (Arm) <david@kernel.org> wrote:
+>> mm/sparse: remove SECTION_MARKED_PRESENT and further cleanups
+>>
+>> SECTION_MARKED_PRESENT is really only needed during boot, where we
+>> can instead just rely on SECTION_IS_EARLY_BIT by setting that flag
+>> earlier.
+>>
+>> Some preparations for doing that conversion and some cleanups in the same
+>> (sparse) area.
+>>
+>> [...]
+> 
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
 
-Ack, thanks!
+Thanks for the review!
 
 -- 
 Cheers,
