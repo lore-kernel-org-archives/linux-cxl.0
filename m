@@ -1,48 +1,48 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012059.outbound.protection.outlook.com [52.101.53.59])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013047.outbound.protection.outlook.com [40.93.201.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE8D34751B
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 07:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5A74457C6
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 07:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789455892; cv=fail; b=CNPMRZGRq/naBUavzRbdgMNSRsQPiltBBWaZZttGX347fBr8XRP0g7CIiM0ijyx4raAv6vqvy3pgIB/khBEftGkb3ge5BGVUYAEDImrb+42NC/OWEnny1ZO7iHysmB2CR5VkXo3idKQ9rXqoB1b5pLE6NFGYgWS8iqk0PgJ2AzI=
+	t=1789457457; cv=fail; b=a1cQ+20cQ6I/ZXpk4J61Mw6ArUfpjFFMSa93G6qpMelAOXryn0d4bqXgz9tSIE6+ALu0HuVSmRyd8glZTBbG9cEe5NEcQrJ7h5CZlKEfo80lRulVBVSBiZ2F7xv7IVzWnEKRPGtYMiFBubGfadBFS5W83O/qwfKazzCqNt4yfIw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789455892; c=relaxed/simple;
-	bh=z233/v9TFeVf9EdiaEynOBBmEzsDjwMuhsRSp85GxF0=;
+	s=arc-20240116; t=1789457457; c=relaxed/simple;
+	bh=UKYnAAO2i/L5cFv5v6aNaf1D80DAKgfu4S6pMQMYJHQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ATqFqP96XEOhLbAK82kgcc7krjXlUg/siFr47iCfyL5cMBtsp1EYkNTH0vrNy1z/Hp70+uN1APKIyNAbqztVbyoiCtezk9FhOWtkMQvlB//WYSqDVsajy6Hgwbx7GQllLJV3XFPUazSt9spWUBsm4b+sYDbkNmJrJpY5FxDOcM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dxiuUB8T; arc=fail smtp.client-ip=52.101.53.59
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZkslM9/LallbY3Spia/zUM8Eae215ufK9SzidlyEc4Ndmg565HlAvo9F07D9cl321WeMMc0dH1Upv/RqWHEAFsnDZWoKMawTrp0uDo31W2Gjqe/+XTvA9I6C9Av10AEQ9OOeoKkje1oCr4iZSDKFBgjxuTQx5kKbyjAwdvgziIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JR7nbxL9; arc=fail smtp.client-ip=40.93.201.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dxiuUB8T"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JR7nbxL9"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sSzyCYTRD3ZsN17dhn/2plxayPMvKfYGkhjSEtb2O3r6djZ3MJEDH61/9tcdoyM9tdRXS5Dwsw0HWTiCpjG8Gd0HLFHt3syMYYVpLUFQtI8dxH5yFrbHQkYynRKDA8BvTQQTr4CcbN5lAcWHNuj1BUTzuZBb4Mh55D5NeOdEfqYILwED16uP6dcZb2WPqXZbrWtRiKjr19sZqvTgD+7Ns9kzwacDz6UNG2/TihB1mYKkvvAb3sxhQtY65cQmu9qZDCz65Cdv0zgppKF+AERc6xJWCIxf9MVo1cPn/8Mk4tLxH97twVogTQeRq4KJvUe3ge78u2tY47ywVD15F+kJ2Q==
+ b=ynjBKatQOi556a/XhayPv3KWQbI8i9ec1n1pvWlLi/gnPTqeAOEJh4z8qxQtA6lt61UvMBPSqDi9msubjTOvu282teJ2Yac5egu8h37JEu0BLcwIaiMyiYcEH0N5BRzgGKfn03t1HQs20Opb58c5YH+V7lfMcVm6NUoQbezpPUyvvWpqKhRXRCcDXSiqg2mxRg727dnH+YQ1deU8C7mmDyejmD+lxpSG9phoN0b7SLOAuMt+2zhRcsX8uTs4bgTFjEM9p/HNrcHSW4EfCERwhh5HDvfZBGK9s3tbVtFn7Gr1CA4WFzoSLYqV7WFs9dooMxqvxSgdSBCTp5MrcME3Gw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uQ1QZlCmCQKK8guwiY8nq4Xsi2WZgko+vWlEBSEBmhg=;
- b=eSYeVP8M/3qeZ6aWDXbL6pwNmCkvAxDUtBJQHXqlc0cyra5nkeVbVQr9b9JLqpUNvgY9nFczkoxfLx9xYC8MAe2CjUy+9tYWxtjRqhVlrTi7WapRu7O1XDXl5Y8EzHE6nB14vDqbm3r7lhCOnFWZJyzusz9//ASSmMmbtFqin2pnwc4S8w49wzznd/R/xlhdvAhZ0ummkBiLqWbEf78rv3c45qjngRTnABE/DI8fJ4l3NHxYfAZ6Q/5K8nua3wnoIsz2+rtk53TbjCuC2MTy/UVvGaSCdE3nzWS5yso7ik8PifgHiMmJV9QrwrsnRZo9J36EJMKN7l3BulD7KHcnag==
+ bh=5VGzKhVO/gJh67qD7wa5mJwWPkuFoM/LYS/usUOWFmk=;
+ b=RMP/izvpxnvjSuHPWZI5X9k2HnBHq+0PElHEDmx8zI4nRWmhHnjlqKviKbykq69zeYjfjf35f5KVh5WZl/VhSzWFafWFq5yfGgQ9KoXUBG2+MVms9lyirao9h8zflY/XJxhgYmzvgyMkaDAwBgxxv1CU9EJAVJie+hg8UYry6t6tvfL5S6WQ+e9wV0y+fGLtSmNsjVHFgfhZFouCBxP8J+G28rK2JCFUM4CNCDdQhme/fxhIRcgIfcR0wcdVz7z48dxP5z8GjsD1leSuJ8SV9+H45lsH7EZzwbfMLQ3Z8WulJg72yuJvt4QfKxhatEA/ylsioU283tkLxqnmu2/EXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uQ1QZlCmCQKK8guwiY8nq4Xsi2WZgko+vWlEBSEBmhg=;
- b=dxiuUB8T30U7Z83R5Vdq7KFP4jyEb4QHiXqT9ifHfdSw0zBWJRllEdXalpAnHiDA4kqDh3K21JbxK8FC219EHEeQVHzx/D1nIjlCxxaTxm3BKlRbndHvW0AYL141zpwC1z/9SnJGbrGcytatffxUWC4Aa5pkpc+fx8bL7g7Sl+Vfgm6zS6HfOz0YEjPSrWFTIx5VRgnp8F8x9lvJ98UyD9zCT22tADDAxyBxfmuL5bWnR9BEcyh2POO48SFvl57XWPbiVedNmLuumwoupW//GxHl/lmDW/g4i+fV0Q4iPThE6999sbTFFd7hj9/vLTMjhf0OYh+H0kOlE01YJz1PwQ==
+ bh=5VGzKhVO/gJh67qD7wa5mJwWPkuFoM/LYS/usUOWFmk=;
+ b=JR7nbxL9FOR//vd6LcwPA+1AM1v4faSBw7Ah3rgB9VG4yfRQAgG9jb07p6ajsd6KGeFCZbMGJGCTjXZad82INMHzS2ZLV/D65JANAgcQdE/oG/64iqsWTm++GjAusPFAiAS/IIbU6cFhM52VqL+VV35neuHMFiYfpTQtGRrqzyDKjYXbSZDjhgDepCOSj+o9bWPpbP25g1bb/qCzrGztOJ2p88d9qwIMfcPG7ahKp3nN2l2K2zqPnPvw7UUcPUpiHxkDLMT3+N50flT66ljyE7rFFxSJWidz5SAbMPYIHwIgL9pa/loHbqZb89++1O7B0CH4rc3Y+bGePFV5jW7Mlg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by BY5PR12MB4323.namprd12.prod.outlook.com (2603:10b6:a03:211::10) with
+ by SA1PR12MB9492.namprd12.prod.outlook.com (2603:10b6:806:459::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Tue, 15 Sep
- 2026 07:04:47 +0000
+ 2026 07:30:43 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0406.007; Tue, 15 Sep 2026
- 07:04:46 +0000
-Date: Tue, 15 Sep 2026 15:04:42 +0800
+ 07:30:42 +0000
+Date: Tue, 15 Sep 2026 15:30:35 +0800
 From: Richard Cheng <icheng@nvidia.com>
 To: Anisa Su <anisa.su887@gmail.com>
 Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com, 
@@ -51,15 +51,15 @@ Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com,
 	Ira Weiny <iweiny@kernel.org>, Anisa Su <anisa.su@samsung.com>, 
 	Wonjae Lee <wj28.lee@samsung.com>, Junhee Park <jh9934.park@samsung.com>, 
 	Heesoo Kim <habil.kim@samsung.com>
-Subject: Re: [RESEND PATCH v13 1/8] cxl/mbox: Flag support for Dynamic
- Capacity Devices (DCD)
-Message-ID: <aqjsuqQP0dmgJyJs@MWDK4CY14F>
+Subject: Re: [RESEND PATCH v13 2/8] cxl/mem: Read dynamic capacity
+ configuration from the device
+Message-ID: <aqjxpUZSylwTN01S@MWDK4CY14F>
 References: <20260908102124.2231730-2-anisa.su@samsung.com>
- <20260908102124.2231730-3-anisa.su@samsung.com>
+ <20260908102124.2231730-4-anisa.su@samsung.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260908102124.2231730-3-anisa.su@samsung.com>
-X-ClientProxiedBy: TP0P295CA0056.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:3::7)
+In-Reply-To: <20260908102124.2231730-4-anisa.su@samsung.com>
+X-ClientProxiedBy: SG2P153CA0043.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::12)
  To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -68,76 +68,83 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BY5PR12MB4323:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b252d8a-b412-4df8-2377-08df12f7a067
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA1PR12MB9492:EE_
+X-MS-Office365-Filtering-Correlation-Id: 211a0d48-0ed4-4fe4-acd0-08df12fb3fc1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|23010399003|376014|1800799024|11063799006|56012099006|10067099003|4143699003|22082099003|18002099003|3023799007;
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|23010399003|6133799003|3023799007|10067099003|18002099003|4143699003|11063799006|56012099006|5023799004|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	AoOc86rZEnQh5G6h/K1kIIdebge/cSelRR7DaEYINFKcKqCmy4jRa3XpVCf6ZjXabCkjS33Cc+6uNUhTDWDxuJkS9hz8nOrFOykkQaFJij7Q6HkYDfgsz8oD3fj/UoGoHMAiSRg+fb6N11akqNLaSUKHL3IX1Z1MUCwMEX7Go+AgrJY2j7+7HOlTw8J/zMCKi2PIupurBVoiHLTU7e8fpXt4vzG9TUbUk5FkM57qg8Ggw4VgwZTsYLUqYPhWoHuRuiv3gUneCQXeCAxQexjARGirTqrHR9Bn8ZZ648x7w2diW4MGjAQ7aq/nf98A3SCw2toLcBRXSiTfYGjXnzYtBupPwGGqNoTHmcUO26yA71q36RQ39hEPHoISGMfixU85YbSyK4UEF1QdC1a09UnFF5Dky9lKXb0KZw70rVgbQY3DupZx6NWgeU8f76bUY5MVVbg49MK3N9j23LgUcpqBA9r5MC+bLHCs27HYK3ZeugfO0vfShFXFC02cJ7686mTfg2xUcUL2tzQP3DAgXVB4VfX6TqXlFzkY0XUVFCTCGMZYLG2MY/06eok5Xxe/y4LtS+Fa0kOPS0C1U31nWQalaQAnJfHufWI7rhj8EuQrLDJpqtZKhHHIlXYuVuj7Qc1/ImZHCahN0kySxTAtMMWyxM7+dwbwOTKOc0KhH6JomHw=
+	n17ma0Upgcoo2vbr9NWS0UtGAJoCzhJsGAEFawNdiwSGCUAVmKM4hHnL0yYWIawS2x017Eq61B1D6TE8TWZUtcy69HI5H/Qw9F+h6xCqKLOT0WaCXzh77q13hlFTPBOSApMIUpsTQKz/kk6TjsrYuTqIFHbYta7liHgm7qBfi+Vf+J2Tw0QTVeA8lRrqCiPm2/VV2LWgFgxBIAy45VZZgz2ZmfUS0HGK7FhYwjAzIMgulePacqZ+wEpfV3Hsasb3RTfvYoEJF9wblfG9T9lbF4Jolh7ZaDoKjxF0XLzWfy6WjOv8GJlSI9u/QeM9/EycZOfFPI8uDog0ULHEwRZlItdBpFhbAFnNVlfql3j+EhMv5aAFhS16c7N1f1iDMzUd8+jnQbyM2cV+lVBSE9Zsy7QsLVqb6DTht+Ok5Gf0XrNz9odwqcbG9kmGfNlkHhnlxe0bjM8vSMisErSrSfc4cyp+ByMwdcwvfuKWmkj+ATNBrHjvxL0AdO4M1dCUOdXEjU2AYetF47hgIyXQP5/qFTeA2wiuynqIchAYWfomwB9+1RPpZayMl5buBRmjkgjjGAHaOikUJsXVVsimd181gojLqQ3NfOZg47QaVXEw19QIHHFUAhZkp+hiWUFTE2msjHksanHBVzoJq8XncPoNmqF8fNiNvVHFCafOxrF9s90=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(23010399003)(376014)(1800799024)(11063799006)(56012099006)(10067099003)(4143699003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(23010399003)(6133799003)(3023799007)(10067099003)(18002099003)(4143699003)(11063799006)(56012099006)(5023799004)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z1cbsNmovjp0nvaDYFY4HoY/aTzEbnZa9wf0sCC5CYeahjfnXsmvedsD6Y7V?=
- =?us-ascii?Q?ENfoVqu1NMmpszRIgVTQ6hm9qYaVGlMf+9WzlG8GOxvP+x8PW2WW5CySrNhh?=
- =?us-ascii?Q?EOKh44kdTkeVcOAUDeAqvZTTEMO0uoI1CG6KgqQFLYgo5lK6BWAryRNSGGc9?=
- =?us-ascii?Q?b0MwdokqOwE/2RWg+sakSWzit59cZPozUvA53U4DQlBHzeeBZ6ROc/dY5kpa?=
- =?us-ascii?Q?rJTJuRBLsIe3pQ8de1ZM43VS3MW4iEiHgWpUHB4qIhneoYLkLIpceoZTdxFN?=
- =?us-ascii?Q?sgsM1gUfIhQqOH81Q5WDNUpcM1DiKNt12Yr5MTtLE3wGFoLeCZK9w65Gi/XG?=
- =?us-ascii?Q?SBMscbURz3xZdr1p5wkGMorka6/0dlrMRaWEYp/mDu5yo51wo8pJaleG0PIB?=
- =?us-ascii?Q?IEOt7m6TbkP7ZQl3M7fTa8WPIfbKDshW3mz9L8nM2G++yWiAn3/HdzOa1FU6?=
- =?us-ascii?Q?uDt84cDsjnNNGcRqvlhCy19Ir2LnlUdZc17uhL7SkKd7Bljg68ff4yKNUSgB?=
- =?us-ascii?Q?ueZsPxRYgVZ3uOKf8q5nuVmkAZMLy1AqGFumMsWQe/HGXQ2JCYoKii3Cui69?=
- =?us-ascii?Q?TSOeV6ZU0XRZgi3PabdKuutwRo7EHptY8ToKnGerNGx8Jk+2KZkueEB+pR7U?=
- =?us-ascii?Q?6EM0NMElw1QE/1+Te3w3xGlwAZPPdHxjIqfq/08WrkAhyKAOYHtIFfQrxVIJ?=
- =?us-ascii?Q?WaPbLGHptZ/l8zAjIU31aFcZL5eGsIbHWF99L7tgcfqKTn9LrFGZQvaNrGN3?=
- =?us-ascii?Q?kan+bt6gZMWhOu99wJtvlH7Crqw2ZzX2Y4lsb9niTmISxxVrVLUtaS/O9uEz?=
- =?us-ascii?Q?C8KTT5y8kzl4zd4UkkZnCE70Z2nCy1SfSWrKRFSJg9XCdQA6AAMDxutwBXMt?=
- =?us-ascii?Q?AgAmS7y1blrxwJ725xykvTQBllEDUry2qdVh5M4xzjG1noG01cKk2mK2EaWR?=
- =?us-ascii?Q?ToGD0C3gLL8CNAYTWKbNLxWqiZOQ/kLkcvnpcHk8u8/8VH7itJ1+JaAbXqpk?=
- =?us-ascii?Q?b/+F16abG58yMFhpzqODEmK1x7uUCMpc/ERTW01OiIES4AhOJZer9ohWaZ48?=
- =?us-ascii?Q?EojSMS+cQ/E+q+9P0NYvf5C61rsvNR5ZXIphmd1lDaYwHb4NTSE0GLEkxSy0?=
- =?us-ascii?Q?rQhZwhsjxLb+J92EXU2XRVNudou0ArWp3RHfYloMcridNdDscKZ7Xp3X3wXW?=
- =?us-ascii?Q?r/5IHjle8Pel5k3Vg+/+YX5BdOCPAbtvWhjg6XSKue5oRE2tX2WUHdo3lOgb?=
- =?us-ascii?Q?nAen5wGZyhoASke+jLmm0gtRbBxl6+iosLEWLG16EJbubQSLqwqnFQsJ1fLQ?=
- =?us-ascii?Q?9ZXkP8l2eBPw9P7aYg9nZt2uBl01DL0BTznV7/k6XPfk9GphTWRVGD41DHka?=
- =?us-ascii?Q?XzkA33wFY1kDJR/7Oujb9+9y+2lHLFF99/RbKmoDoRws0VXc6cn/9PYf5FuC?=
- =?us-ascii?Q?JXe59DsU2vrt6GH+cxsNBkZZV6GphPvzK6eriXS0RR8zOwNumKMPCzrFBfZ6?=
- =?us-ascii?Q?IsULVNDH0eikJu1XXW11VsFGq2W+BsGyLNW0GbhBToCzVvE2mI+89lMSU7x6?=
- =?us-ascii?Q?8LKVSP5p/1eXlZ35UK66CflQv5HpYbOtasYoSCybEkTMx4hF+l+g8v7zFItD?=
- =?us-ascii?Q?x/rxwbVE5HLJZeJKW1oZj5kiAVsE3JuQ6n41N8me8vB9q/MpGzRKWgGiAX5K?=
- =?us-ascii?Q?9bJBKjPmHGbDDGBPz6i0qcr3+q/7bl17g8nRapNHKXd6XasY?=
+	=?us-ascii?Q?bT7LFuC3nLaxA3empjmJDEcXwG0RpaXkId1uMsp0GSAeYZV0pyio0ZxtQIkc?=
+ =?us-ascii?Q?gbCZkRd+XvR9imRrh8faj1FEC4PHxH2RA1odFhqdZnCEVC+wKQT9fZ6HIa2e?=
+ =?us-ascii?Q?RX39gi2RlVkAqgL3P5s0anSqipPmaWg51FD0dcqmqj6QOZTjbnRA2JZBue8C?=
+ =?us-ascii?Q?Gq7ulmYYQiYX9BKiveQZkaiREH2dX9nhPRaxkf2nMj1+qkTUWr0DmpuPz+sr?=
+ =?us-ascii?Q?EJpJqxgEUS96Xh/n3fP4veDdJuxg4cOohjT0Lrxuv1hBPLNyhJb5h9oXnCQo?=
+ =?us-ascii?Q?k23X6iick5vyzYTN3mjdit3sO89kz7QVD3St/eEhCZB5CPUeD66ZQu+1Uph7?=
+ =?us-ascii?Q?CB8dzBUtmRxQSV8fd6/KdVX+s3dBoI9qTYMzmnRpRTkKsiSw5r9TFjzEFSxY?=
+ =?us-ascii?Q?C8SagX6zQR3o2o+yZeAkz7eIFmQMgnmN1e26Yti3lfXRpWeIMNavgn6QsfRu?=
+ =?us-ascii?Q?LgKV9DrH6bP8TQlrtz/D4pWqHFH11rNoiKrFzDT2IuNePUEKdX1dptB0IzRr?=
+ =?us-ascii?Q?d0cFKDqOlyQwipYfvIEP2w8m9EC3jO4ORQfSuCtkbSez8hib5YqO09N5Hnh4?=
+ =?us-ascii?Q?zwkt+FccdzDAEDX9+YRoFEfveQkk2eHxdpaKbyAGCEgjMmnlm504Qu+y/mb1?=
+ =?us-ascii?Q?9rlfTVbq4091v2cigvp93N5eBxEvezanI5SFVmLCQh75dUozDYzY+d3D69b2?=
+ =?us-ascii?Q?QlzCxP+HDQHGCgri5WyJr7DNCQVikOV/YDtlIjD3RXCGRlanAOaLe2tGyJ+0?=
+ =?us-ascii?Q?yUfvsZLxwQHdu3CFDN3vmnzlqKxl/KieQgGOTGXaotVnifN1bkyJlYB3LMIh?=
+ =?us-ascii?Q?tkbOm+319nH3+8ej7tlNOGt00JXtvqywdHHyQ+Q5VluYYXITp7kPZc7UVe1g?=
+ =?us-ascii?Q?tKKUzc0bT9V+/ZFCgZNUitlINh6SFu3lrCs4Z2byyeFh3hdB5M+dhrKFsGmv?=
+ =?us-ascii?Q?uAeg98nR1LlYYDa2tk69npyYweUIJUMLjgVHGNDnd2MB91pnbp8yAp27JH2x?=
+ =?us-ascii?Q?YAsOHwOGwhfYsJZ54p9XlR+c0Evy+c86Yrprnny1vemCjdpXIXKrveurLGU0?=
+ =?us-ascii?Q?uZS1XIvMKHIUjDYp2OQE0IbjlSxMLnGmyGUGxIDSiwcprvyE+tE86XgdMo+t?=
+ =?us-ascii?Q?mO8y/ZrbZ7hEe4T3fWjMsBXhErVsjtXByeapzOzkHdu8+5HnXlNhJ//57NR5?=
+ =?us-ascii?Q?mBEXTbzXqnncEo4UjQcIPtoud1o51K11C+hgP/O8+olxDOwEK1lti8IXK7CD?=
+ =?us-ascii?Q?T3rs1TtOJavi9Wl3sj+6pPUU7OiKK2ECixQILqKjq+5GxoScuDbcN9HzKD+1?=
+ =?us-ascii?Q?NC5xfne8kOZ5rrmnDgo1PLFL34EzRQ8z15R2IiwF4dz3d+LiJgnqX8+O/UDu?=
+ =?us-ascii?Q?9/RpJOGKNOzK2GIsVkCDyBvWlYOAbf/8zjnT6XkNCpgA7HPWrtgRvc52ByeL?=
+ =?us-ascii?Q?Pt1qrk0uA2PK/tbRcjvw73/BtvDqAK+/DZOT5AtVZr79sqzWu4KkV/PQug8R?=
+ =?us-ascii?Q?86hq1FB7gpB0HIIJOlL1zCi2eNtJXZfZl7iPFwikOj8uNTj+GHXxmrm2N2Se?=
+ =?us-ascii?Q?qTshk5qh3cBFF/c1XaY09533N+GGvNCIt+ypKNJqoAXR6BligHJgXSMygKwi?=
+ =?us-ascii?Q?P5Bzz/9FkV8f27AlvohgXz7pnXZmihgOEzA2ALgQugCFZXoCpdlCIot9dJmj?=
+ =?us-ascii?Q?aUAW0Y9GztETEALktOq4fFdX8ESOIxwLs1nvCtZb5ixyn9//?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b252d8a-b412-4df8-2377-08df12f7a067
+X-MS-Exchange-CrossTenant-Network-Message-Id: 211a0d48-0ed4-4fe4-acd0-08df12fb3fc1
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 07:04:46.8816
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 07:30:42.8104
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AbhlEyKKn1IQnF6Rz5Mtl77Gm0p3WxethVXetHabD5cWArPnQSPcVCYjqd0zVsUP+55HAMfEjmb0ehMcCy3C/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4323
+X-MS-Exchange-CrossTenant-UserPrincipalName: oRszUGVkGfe0AaA4Rpc1mSpa7DAL9CW2VV84tsIQl5o/zdoYrqeQu8NPkTDQpoqFq7kKwGZ8D/RkO6P3Uzxsbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9492
 
-On Tue, Sep 08, 2026 at 03:15:05AM +0800, Anisa Su wrote:
+On Tue, Sep 08, 2026 at 03:15:06AM +0800, Anisa Su wrote:
 > From: Ira Weiny <iweiny@kernel.org>
 > 
-> Per the CXL 4.0 specification software must check the Command Effects
-> Log (CEL) for dynamic capacity command support.
+> Devices which support Dynamic Capacity (DC) are configured
+> via mailbox commands. CXL r4.0 section 9.13.3 requires the host to issue
+> the Get DC Configuration command in order to properly configure DCDs.
 > 
-> Detect support for the DCD commands while reading the CEL, including:
+> Implement the DC mailbox commands as specified in CXL 4.0 section
+> 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> information. Disable DCD if an invalid configuration is found.
 > 
-> 	Get DC Config
-> 	Get DC Extent List
-> 	Add DC Response
-> 	Release DC
+> Linux has no support for more than one dynamic capacity partition. Read
+> all the partitions the device reports but validate only the first, and
+> configure it as 'dynamic ram 1'.
 > 
-> Leave mds->dcd_supported false. Dynamic capacity is only usable once
-> the driver can handle Add and Release Capacity events. Detect and log
-> the capability here and let the commit which adds DCD event handling set
-> the flag.
+> The specification requires that volatile capacity starts at DPA 0 and pmem
+> starts at the DPA immediately following it, but DC partitions only need
+> to be 256MB aligned according to CXL r4.0 section 8.2.10.9.9.1 Table 8-347.
+> So a device could leave a gap between ram/pmem (static) capacity and its first
+> DC partition, or between one DC partition and the next.
+> 
+> However, Linux follows the precedent set by PMEM/RAM partitions and requires the
+> first DC partition to begin at the DPA immediately following static
+> capacity.
 > 
 > Based on an original patch by Navneet Singh.
 > 
@@ -146,159 +153,508 @@ On Tue, Sep 08, 2026 at 03:15:05AM +0800, Anisa Su wrote:
 > Tested-by: Wonjae Lee <wj28.lee@samsung.com>
 > Tested-by: Junhee Park <jh9934.park@samsung.com>
 > Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
->
-
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
-
-Just a small nit below.
-
- 
+> 
 > ---
 > Changes:
-> 1. Commit message: explain why mds->dcd_supported is left
->    false and when it's re-enabled in the commit message.
+> 1. mbox.c: validate only the first DC partition. Other partitions are read
+>    to make it easier to add support for additional partitions but not
+>    checked. Richard/Alison
 > 
-> 2. mbox.c: drop the single use cxl_verify_dcd_cmds() helper and test
->    bitmap_full(dcd_cmds, CXL_DCD_ENABLED_MAX) directly. Reported by
->    Alison Schofield.
+> 2. mbox.c: rework the cxl_dc_check() validation. Run the checks in
+>    dependency order -- block size, decode length, length, base -- so the
+>    block size is validated before IS_ALIGNED() uses it as an alignment,
+>    and give each failure its own message naming the field that is wrong.
+>    Drop the block size alignment requirement on the region base; CXL
+>    r4.0 Table 8-347 requires the base to be 256M aligned and states the
+>    block size alignment for extent start DPAs, not for the base.
+>    Reported by Alison.
+> 
+> 3. mbox.c: range check the number of available DC partitions reported by
+>    the device. CXL r4.0 Table 8-346 requires a DCD to report between 1
+>    and 8 regions, but the count was used unchecked as the read loop
+>    bound, so an out of range value failed later as "Invalid num of
+>    dynamic capacity partitions". Reported by Alison.
+> 
+> 4. mbox.c/pci.c: cxl_configure_dcd() returns an error instead of void,
+>    and cxl_pci_probe() decides what to do with it. Failure to read the
+>    DC configuration is now reported rather than silently swallowed;
+>    -EINVAL for a partition overlapping static capacity, -EOPNOTSUPP for
+>    the gap Linux does not support, and the mailbox error propagated
+>    otherwise. cxl_disable_dcd() moves to the caller so the function
+>    reports and the caller sets policy. Probe still continues without
+>    DCD rather than failing the memdev, which would cost the device its
+>    static capacity too. Reported by Jonathan Cameron.
+> 
+> 5. mbox.c: check the block size is a power of 2 in 64 bits.
+>    is_power_of_2() takes an unsigned long, so on a 32 bit build blk_size
+>    was truncated to its low 32 bits and a value such as 0x100000040 --
+>    non-zero and a multiple of 40h -- passed validation. CXL_BUS only
+>    depends on PCI, so this builds on 32 bit. Reported by Sashiko.
 > ---
->  drivers/cxl/core/mbox.c | 39 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    | 20 ++++++++++++++++++++
->  2 files changed, 59 insertions(+)
+>  drivers/cxl/core/hdm.c    |   2 +
+>  drivers/cxl/core/mbox.c   | 235 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/memdev.c |  37 ++++++
+>  drivers/cxl/cxlmem.h      |  55 +++++++++
+>  drivers/cxl/pci.c         |   6 +
+>  include/cxl/cxl.h         |   3 +-
+>  6 files changed, 337 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 0c80b76a5f9b..0ef076c08ed2 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -446,6 +446,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
+>  		return "ram";
+>  	case CXL_PARTMODE_PMEM:
+>  		return "pmem";
+> +	case CXL_PARTMODE_DYNAMIC_RAM_1:
+> +		return "dynamic_ram_1";
+>  	default:
+>  		return "";
+>  	};
 > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 55828a836c01..199bb986d674 100644
+> index 199bb986d674..a484e23b2b3a 100644
 > --- a/drivers/cxl/core/mbox.c
 > +++ b/drivers/cxl/core/mbox.c
-> @@ -171,6 +171,33 @@ static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
->  	}
+> @@ -1349,6 +1349,241 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>  	return -EBUSY;
 >  }
 >  
-> +static bool cxl_is_dcd_command(u16 opcode)
+> +/*
+> + * A partition unavailable for Dynamic Capacity reports zeros for decode_length,
+> + * length, and block_size.
+> + */
+> +static bool cxl_dc_partition_unavailable(struct cxl_dc_partition *dev_part)
 > +{
-> +#define CXL_MBOX_OP_DCD_CMDS 0x48
-> +
-> +	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
+> +	return !le64_to_cpu(dev_part->decode_length) &&
+> +	       !le64_to_cpu(dev_part->length) &&
+> +	       !le64_to_cpu(dev_part->block_size);
 > +}
+> +
+> +static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+> +			struct cxl_dc_partition *dev_part)
+> +{
+> +	u64 blk_size = le64_to_cpu(dev_part->block_size);
+> +	u64 len = le64_to_cpu(dev_part->length);
+> +
+> +	/*
+> +	 * Not an error; leave the entry empty. A partially zeroed partition
+> +	 * is rejected by the checks below. CXL r4.0 Table 8-347.
+> +	 */
+> +	if (cxl_dc_partition_unavailable(dev_part)) {
+> +		*part = (struct cxl_dc_partition_info) { };
+> +		dev_dbg(dev, "Partition 0 unavailable for DC\n");
+> +		return 0;
+> +	}
+> +
+> +	*part = (struct cxl_dc_partition_info) {
+> +		.start = le64_to_cpu(dev_part->base),
+> +		.size = le64_to_cpu(dev_part->decode_length) * CXL_CAPACITY_MULTIPLIER,
+> +	};
+> +
+
+Hi Anisa,
 
 
-why not (opcode & 0xff00) == CXL_MBOX_OP_DCD_CMDS
-and #define CXL_MBOX_OP_DCD_CMDS 0x4800
+I think this might have overflowing issue, if decode_length = 0x1000000002 , it produces
+2^64 + 512 MB, which wraps to 512MB in u64. The following check wouldn't reject such case.
 
-so we don't have to shift bits
+Maybe a check_mul_overflow() here ?
+
+
+> +	/*
+> +	 * Block size is a power of 2 and a multiple of 40h. is_power_of_2()
+> +	 * takes an unsigned long, which truncates blk_size on 32 bit.
+> +	 */
+> +	if (blk_size == 0 || (blk_size & (blk_size - 1)) ||
+> +	    blk_size % CXL_DCD_BLOCK_LINE_SIZE) {
+> +		dev_err(dev, "DC partition 0 invalid block size %#llx\n", blk_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (part->size == 0) {
+> +		dev_err(dev, "DC partition 0 zero decode length\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (len == 0) {
+> +		dev_err(dev, "DC partition 0 zero length\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (len > part->size) {
+> +		dev_err(dev, "DC partition 0 length %#llx exceeds decode length %#llx\n",
+> +			len, part->size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!IS_ALIGNED(len, blk_size)) {
+> +		dev_err(dev, "DC partition 0 length %#llx not a multiple of block size %#llx\n",
+> +			len, blk_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!IS_ALIGNED(part->start, SZ_256M)) {
+> +		dev_err(dev, "DC partition 0 base %#llx not aligned to 256M\n",
+> +			part->start);
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(dev, "DC partition 0 start %#llx size %#llx blk_size: %#llx\n",
+> +		part->start, part->size, blk_size);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Returns the number of partitions in dc_resp or -ERRNO */
+> +static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
+> +			     u8 partition_count,
+> +			     struct cxl_mbox_get_dc_config_out *dc_resp,
+> +			     size_t dc_resp_size)
+> +{
+> +	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
+> +		.partition_count = partition_count,
+> +		.start_partition_index = start_partition,
+> +	};
+> +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
+> +		.payload_in = &get_dc,
+> +		.size_in = sizeof(get_dc),
+> +		.size_out = dc_resp_size,
+> +		.payload_out = dc_resp,
+> +		/* The device must return at least the fixed header */
+> +		.min_out = sizeof(*dc_resp),
+> +	};
+> +	size_t expected_sz;
+> +	int rc;
+> +
+> +	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	/* A DCD reports between 1 and 8 partitions */
+> +	if (dc_resp->avail_partition_count == 0 ||
+> +	    dc_resp->avail_partition_count > CXL_MAX_DC_PARTITIONS) {
+> +		dev_err(mbox->host,
+> +			"Device reported %u available DC partitions, expected 1 to %u\n",
+> +			dc_resp->avail_partition_count, CXL_MAX_DC_PARTITIONS);
+> +		return -EIO;
+> +	}
+> +
+> +	if (dc_resp->partitions_returned > partition_count) {
+> +		dev_err(mbox->host, "Device returned %u partitions, requested %u\n",
+> +			dc_resp->partitions_returned, partition_count);
+> +		return -EIO;
+> +	}
+> +
+> +	/*
+> +	 * The payload carries trailing extent/tag count fields after the
+> +	 * partition array (CXL r4.0 Table 8-346) which the driver ignores, so
+> +	 * the response is at least, not exactly, expected_sz.
+> +	 */
+> +	expected_sz = struct_size(dc_resp, partition,
+> +				  dc_resp->partitions_returned);
+> +
+> +	if (mbox_cmd.size_out < expected_sz) {
+> +		dev_err(mbox->host,
+> +			"Payload size %zu less than expected %zu for %u partitions\n",
+> +			mbox_cmd.size_out,
+> +			expected_sz,
+> +			dc_resp->partitions_returned);
+> +		return -EIO;
+> +	}
+> +
+> +	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
+> +		dc_resp->partitions_returned, dc_resp->avail_partition_count);
+> +	return dc_resp->partitions_returned;
+> +}
+> +
+> +/**
+> + * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
+> + *                         device.
+> + * @mbox: Mailbox to query
+> + * @dc_info: The dynamic partition information to return
+> + *
+> + * Read every partition the device reports, but validate only the first:
+> + * Linux maps partition 0 and nothing else, so a defect in capacity the
+> + * driver never touches is not a reason to refuse the device dynamic
+> + * capacity.  The remaining entries of @partitions are left unset.
+> + *
+> + * Return: 0 if identify was executed successfully, -ERRNO on error.
+> + *         on error only dc_info is left unchanged.
+> + */
+> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> +			struct cxl_dc_partition_info *dc_info)
+> +{
+> +	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS] = { };
+> +	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) = NULL;
+> +	struct device *dev = mbox->host;
+> +	u8 start_partition;
+> +	u8 num_partitions;
+> +	u8 partition_count;
+> +	size_t dc_resp_size;
+> +
+> +	/*
+> +	 * Bound requested number of partitions by mailbox payload size. The
+> +	 * 256 byte spec minimum, verified in cxl_pci_setup_mailbox(), keeps
+> +	 * the subtraction below from underflowing.
+> +	 */
+> +	partition_count = min_t(size_t, CXL_MAX_DC_PARTITIONS,
+> +				(mbox->payload_size - sizeof(*dc_resp) -
+> +				 sizeof(struct cxl_mbox_get_dc_config_tail)) /
+> +				sizeof(struct cxl_dc_partition));
+> +	dc_resp_size = struct_size(dc_resp, partition, partition_count) +
+> +		       sizeof(struct cxl_mbox_get_dc_config_tail);
+> +
+> +	dc_resp = kmalloc(dc_resp_size, GFP_KERNEL);
+> +	if (!dc_resp)
+> +		return -ENOMEM;
+> +
+> +	start_partition = 0;
+> +	num_partitions = 0;
+> +	do {
+> +		int returned, rc;
+> +
+> +		returned = cxl_get_dc_config(mbox, start_partition,
+> +					     partition_count, dc_resp,
+> +					     dc_resp_size);
+> +		if (returned < 0) {
+> +			dev_err(dev, "Failed to get DC config: %d\n", returned);
+> +			return returned;
+> +		}
+> +
+> +		if (returned == 0) {
+> +			dev_err(dev,
+> +				"Device reported %u partitions available but returned none at index %u\n",
+> +				dc_resp->avail_partition_count, start_partition);
+> +			return -EIO;
+> +		}
+> +
+> +		/*
+> +		 * Only partition 0 is mapped, so it is the only one checked.
+> +		 * The rest are read to complete the enumeration and dropped.
+> +		 */
+> +		if (start_partition == 0) {
+> +			rc = cxl_dc_check(dev, &partitions[0],
+> +					  &dc_resp->partition[0]);
+> +			if (rc)
+> +				return rc;
+> +		}
+> +
+> +		num_partitions += returned;
+> +
+> +		if (num_partitions > CXL_MAX_DC_PARTITIONS) {
+> +			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
+> +				num_partitions);
+> +			return -EINVAL;
+> +		}
+> +
+> +		start_partition = num_partitions;
+> +
+> +	} while (num_partitions < dc_resp->avail_partition_count);
+> +
+> +	/* Linux only supports the 1st partition; nothing to do if it is unavailable */
+> +	if (partitions[0].size == 0)
+> +		return -ENODEV;
+> +
+> +	*dc_info = partitions[0];
+> +	dev_dbg(dev, "Returning partition 0 %#llx size %#llx\n",
+> +		dc_info->start, dc_info->size);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
+> +
+>  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
+>  {
+>  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index b3419df586b9..fdd6b395dcdf 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -643,6 +643,43 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+>  
+> +int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+> +{
+> +	struct cxl_dc_partition_info dc_info = { };
+> +	struct device *dev = mds->cxlds.dev;
+> +	int rc;
+> +
+> +	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
+> +	if (rc) {
+> +		dev_warn(dev,
+> +			 "Failed to read Dynamic Capacity config: %d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	if (dc_info.start < info->size) {
+> +		dev_err(dev,
+> +			"DC partition 0 base %#llx overlaps static capacity ending at %#llx\n",
+> +			dc_info.start, info->size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* A gap between static capacity and the DC partition is not supported */
+> +	if (dc_info.start > info->size) {
+> +		dev_warn(dev,
+> +			 "DC partition 0 base %#llx leaves a gap from static capacity ending at %#llx\n",
+> +			 dc_info.start, info->size);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	info->size += dc_info.size;
+
+Overflowing issue issue as well.
+
+With 2 GB static capacity, DC base = 0x80000000, DC size = 0xffffffff80000000.
+The placement checks pass but the total wrpas to 0.
+
+Maybe check_add_overflow() and return an error before changing info->size .
 
 Best regards,
 Richard Cheng.
 
+> +	dev_dbg(dev, "Adding dynamic ram partition 1; %#llx size %#llx\n",
+> +		dc_info.start, dc_info.size);
+> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
 > +
-> +static void cxl_set_dcd_cmd_enabled(u16 opcode, unsigned long *cmd_mask)
-> +{
-> +	switch (opcode) {
-> +	case CXL_MBOX_OP_GET_DC_CONFIG:
-> +		set_bit(CXL_DCD_ENABLED_GET_CONFIG, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
-> +		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_ADD_DC_RESPONSE:
-> +		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_RELEASE_DC:
-> +		set_bit(CXL_DCD_ENABLED_RELEASE, cmd_mask);
-> +		break;
-> +	default:
-> +		break;
-> +	}
+> +	return 0;
 > +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
 > +
->  static bool cxl_is_poison_command(u16 opcode)
->  {
->  #define CXL_MBOX_OP_POISON_CMDS 0x43
-> @@ -759,6 +786,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_cel_entry *cel_entry;
->  	const int cel_entries = size / sizeof(*cel_entry);
-> +	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX) = {};
->  	struct device *dev = mds->cxlds.dev;
->  	int i, ro_cmds = 0, wr_cmds = 0;
 >  
-> @@ -787,11 +815,22 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->  			enabled++;
->  		}
->  
-> +		if (cxl_is_dcd_command(opcode)) {
-> +			cxl_set_dcd_cmd_enabled(opcode, dcd_cmds);
-> +			enabled++;
-> +		}
-> +
->  		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
->  			enabled ? "enabled" : "unsupported by driver");
->  	}
->  
->  	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
-> +	/*
-> +	 * Disabled until event handling implemented.
-> +	 */
-> +	if (bitmap_full(dcd_cmds, CXL_DCD_ENABLED_MAX))
-> +		dev_dbg(dev, "Device supports DCD; capability disabled\n");
-> +	mds->dcd_supported = false;
->  }
->  
->  static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
+>  /**
+>   * cxl_set_capacity: initialize dpa by a driver without a mailbox.
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index c401e3a1af06..0c8e23276dc6 100644
+> index 0c8e23276dc6..4fac65dbb808 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -252,6 +252,20 @@ struct cxl_event_state {
->  	struct mutex log_lock;
+> @@ -407,6 +407,8 @@ struct cxl_security_state {
+>  	struct kernfs_node *sanitize_node;
 >  };
 >  
-> +/*
-> + * CXL r4.0 Section 8.2.10.9 - Memory Device Command Sets. See Table 8-308.
-> + *
-> + * The 48h Command Set (Opcodes 4800h - 4803h) defines the device-enabled DCD
-> + * commands.
-> + */
-> +enum dcd_cmd_enabled_bits {
-> +	CXL_DCD_ENABLED_GET_CONFIG,
-> +	CXL_DCD_ENABLED_GET_EXTENT_LIST,
-> +	CXL_DCD_ENABLED_ADD_RESPONSE,
-> +	CXL_DCD_ENABLED_RELEASE,
-> +	CXL_DCD_ENABLED_MAX
+> +#define CXL_MAX_DC_PARTITIONS 8
+> +
+>  static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
+>  {
+>  	/*
+> @@ -689,6 +691,39 @@ struct cxl_mbox_set_shutdown_state_in {
+>  	u8 state;
+>  } __packed;
+>  
+> +/* See CXL r4.0 Table 8-345 get dynamic capacity config Input Payload */
+> +struct cxl_mbox_get_dc_config_in {
+> +	u8 partition_count;
+> +	u8 start_partition_index;
+> +} __packed;
+> +
+> +/* See CXL r4.0 Table 8-346 get dynamic capacity config Output Payload */
+> +struct cxl_mbox_get_dc_config_out {
+> +	u8 avail_partition_count;
+> +	u8 partitions_returned;
+> +	u8 rsvd[6];
+> +	/* See CXL r4.0 Table 8-347 */
+> +	struct cxl_dc_partition {
+> +		__le64 base;
+> +		__le64 decode_length;
+> +		__le64 length;
+> +		__le64 block_size;
+> +		__le32 dsmad_handle;
+> +		u8 flags;
+> +		u8 rsvd[3];
+> +	} __packed partition[] __counted_by(partitions_returned);
+> +	/* Trailing extent/tag count fields unused */
+> +} __packed;
+> +
+> +/* Trailing counts; cannot be a member after the flex array above */
+> +struct cxl_mbox_get_dc_config_tail {
+> +	__le32 num_extents_supported;
+> +	__le32 num_extents_available;
+> +	__le32 num_tags_supported;
+> +	__le32 num_tags_available;
+> +} __packed;
+> +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
+> +
+>  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>  struct cxl_mbox_set_timestamp_in {
+>  	__le64 timestamp;
+> @@ -812,9 +847,18 @@ enum {
+>  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+>  			  struct cxl_mbox_cmd *cmd);
+>  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> +
+> +struct cxl_dc_partition_info {
+> +	u64 start;
+> +	u64 size;
 > +};
 > +
->  /* Device enabled poison commands */
->  enum poison_cmd_enabled_bits {
->  	CXL_POISON_ENABLED_LIST,
-> @@ -427,6 +441,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
->   * @partition_align_bytes: alignment size for partition-able capacity
->   * @active_volatile_bytes: sum of hard + soft volatile
->   * @active_persistent_bytes: sum of hard + soft persistent
-> + * @dcd_supported: all DCD commands are supported
->   * @event: event log driver state
->   * @poison: poison driver state info
->   * @security: security driver state info
-> @@ -445,6 +460,7 @@ struct cxl_memdev_state {
->  	u64 partition_align_bytes;
->  	u64 active_volatile_bytes;
->  	u64 active_persistent_bytes;
-> +	bool dcd_supported;
+> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> +			struct cxl_dc_partition_info *dc_info);
+>  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+> +int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+>  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+>  						 u16 dvsec);
+>  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> @@ -828,6 +872,17 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+>  			    const uuid_t *uuid, union cxl_event *evt);
+>  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
+>  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+> +
+> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+> +{
+> +	return mds->dcd_supported;
+> +}
+> +
+> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+> +{
+> +	mds->dcd_supported = false;
+> +}
+> +
+>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index c7c91e8dc51d..2fe9db4b3d86 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -868,6 +868,12 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
 >  
->  	struct cxl_event_state event;
->  	struct cxl_poison_state poison;
-> @@ -505,6 +521,10 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_UNLOCK		= 0x4503,
->  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
->  	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
-> +	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
-> +	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
-> +	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
-> +	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
->  	CXL_MBOX_OP_MAX			= 0x10000
+> +	if (cxl_dcd_supported(mds)) {
+> +		rc = cxl_configure_dcd(mds, &range_info);
+> +		if (rc)
+> +			cxl_disable_dcd(mds);
+> +	}
+> +
+>  	rc = cxl_dpa_setup(cxlds, &range_info);
+>  	if (rc)
+>  		return rc;
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 802b143de83d..4ef9511fbbdd 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -133,6 +133,7 @@ struct cxl_dpa_perf {
+>  enum cxl_partition_mode {
+>  	CXL_PARTMODE_RAM,
+>  	CXL_PARTMODE_PMEM,
+> +	CXL_PARTMODE_DYNAMIC_RAM_1,
 >  };
 >  
+>  /**
+> @@ -147,7 +148,7 @@ struct cxl_dpa_partition {
+>  	enum cxl_partition_mode mode;
+>  };
+>  
+> -#define CXL_NR_PARTITIONS_MAX 2
+> +#define CXL_NR_PARTITIONS_MAX 3
+>  
+>  /**
+>   * struct cxl_dev_state - The driver device state
 > -- 
 > 2.43.0
 > 
