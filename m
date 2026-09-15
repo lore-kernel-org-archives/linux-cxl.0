@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2089F4BCABA;
-	Tue, 15 Sep 2026 23:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99E349CF5B;
+	Tue, 15 Sep 2026 23:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789514934; cv=none; b=IIS9cMWWFqtRJh6sVBfkzqtv1cUI4CQnLrgSpL959DPcWg9PDXMhXqxO/eNTz2TJjOn9MTgMcEuI8Bf9as1YUB36CyJjzLpHwDEoz8OPZFPiFS5RJ+M9cqAv79RmNGe+AL1LQuzEUAe8WoCBHRn88mYgGLTxb3rJmdCGBzSH/gA=
+	t=1789515231; cv=none; b=B/FBs06395mdIZP99v8iF1kARSltQeddDXvLi64cMpntvrCv806yH4837yK7TDRbpqjnsxh488vY8CqiHp9LQjFFQ6LE+oEQJ753rKEfkg0FaMnGwcvvRoulUkSdVDuvJWApx9yYEYHxBpJHehbEEayO3X4y1z7AvcmOwiZFyK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789514934; c=relaxed/simple;
-	bh=qKoWvplAH6DgwyVkxaNOoPP54cwOiVLVAMhemT7u5CQ=;
+	s=arc-20240116; t=1789515231; c=relaxed/simple;
+	bh=Z57LOcg0OrLjjlaHVAOBTUjDHYIFxogNnEG+cClQOHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F1FlyvIfmDfADapN+9OBCNGfRTgVAycpO0KjgfYtf+3nTjiGzwTD+IEPsauZwkWpWq4cX0+fp7kLT6hHWEBud15DGOwBndcvHPGyEcnfVitY7XkcAEs0GUmwsX3B4ixfDsF0FT2cBFf8HppUwq2Q+NNZfF4eLwqaOYOC0AbD/f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXQdE+GS; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=mi53zL29zkGGaU5QFQyTcYVEdyG+Y1d+qy6yzHgZiyY/vqgmLAImX/RuTIuVE1dnGE8hUcpTAgvAPD5SIPA5/wI6mgT50tKJoe1lXhoFjjXWU8YJY6eIG+K6SAX7rgAXs+b8CO5Q0yHvsxNwDoCtxfGpsxOL1yHDp2/yGmXT1DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYngZS38; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXQdE+GS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903F61F000FF;
-	Tue, 15 Sep 2026 23:28:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYngZS38"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CF1E1F000FF;
+	Tue, 15 Sep 2026 23:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789514932;
-	bh=nsnqk+K9KcVSTLlwNYyLqXbWMQBB5C/cAddubGUzGOo=;
+	s=k20260515; t=1789515229;
+	bh=KF608vhfL9nsLc8v+HclhfNTNMosZ1VxzWv3+rwIhTk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=lXQdE+GSJSpOCX16sf+zbxKx16qkPkj+y3jKRksmoi3CuyPsZ5u7rLHkpZuE3cc9D
-	 A5Aw6T2wOxtKTf4Y6SBcK+sqMyJB/Gvqssc6IrWOoiIcQ51y5ljWPVyX1Z45dzhNP5
-	 D7xcyTEf4W2f7xzbiM6S8h0ZOQUwoULtaWUN7q0tX4B1uMUll9bnJ7F/rcPFPvXLxd
-	 ClnxLSn67gsK8AqTylwROhWwz01o29W266RYQmcUuIH20zVqBoIJarBS1bMDWH6Sc0
-	 tV2oajUsF3OL5Umx8G3AF/o47P1bWvTz4Pok3R/NMx+cjy2K3N2TwKokBPZu8pyh+b
-	 jg/YA3IlkAV2Q==
-Date: Wed, 16 Sep 2026 00:28:51 +0100
+	b=UYngZS38jyUG8QnBeYrend6hjZhfwvzGTdRlHBBwOJOwdC5ZxbCSkGkNVnIgtAUwO
+	 hxoG4cmdp/XVn09X3Tjw92xB/7YxX9UBG6vDE4tsKDE67fB2x8XqiCC26ahMfqSqDA
+	 2I9SXayKTg3jGUQpFFeeTX1VAUNOmVp1WK7TyXcQyp8v5ioiRPl+tHsQDd1DOUGe4q
+	 1h9n6TEuehIuo3MHfsjdlSvIQdbl+6pXwQXXUgKHl/fhbiiIFi3RSti3+cN+/69qZS
+	 SZC58Tyb+gbsdfo2pwHUahpx9+sP/WjNmKM6K2NKEmzkUnodaOkN3dd3D4vYL6Jl0g
+	 BHZzhCgNHHCfg==
+Date: Wed, 16 Sep 2026 00:33:46 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, anisa.su887@gmail.com,
- benjamin.cheatham@amd.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/events: Return IRQ_NONE when no event is pending
-Message-ID: <20260916002851.4407b04f@jic23-hlaptop>
-In-Reply-To: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
-References: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: dave@stgolabs.net, dave.jiang@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, iweiny@kernel.org, ming.li@zohomail.com,
+ kaihengf@nvidia.com, kobak@nvidia.com, vaslot@nvidia.com,
+ newtonl@nvidia.com, mochs@nvidia.com, kristinc@nvidia.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v10 1/3] cxl/region: Simplify poison_by_decoder() error
+ handling
+Message-ID: <20260916003346.74446134@jic23-hlaptop>
+In-Reply-To: <20260914090858.19181-2-icheng@nvidia.com>
+References: <20260914090858.19181-1-icheng@nvidia.com>
+	<20260914090858.19181-2-icheng@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,25 +51,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 12 Sep 2026 15:08:15 +0530
-Shaikh Kamaluddin <shaikhkamal2012@gmail.com> wrote:
+On Mon, 14 Sep 2026 17:08:56 +0800
+Richard Cheng <icheng@nvidia.com> wrote:
 
-> CXL event interrupts may share an MSI/MSI-X vector with other event
-> logs or device features. Consequently, cxl_event_thread() is registered
-> with IRQF_SHARED and must determine whether the event-log facility
-> claimed the interrupt.
+> "rc" carries both an error code and the loop control
+> signal for device_for_each_child(), so returning it bare is misleading,
+> the early guards mean "keep walking", not "no error". Zeroing "rc" to
+> forgive an -EFAULT on a RAM partition adds to that by discarding what
+> the device actually returned.
 > 
-> The handler masks the Device Event Status register to the event logs
-> supported by the driver. However, when no supported status bit is set,
-> it exits the processing loop and still returns IRQ_HANDLED. This
-> incorrectly reports that the interrupt was claimed and prevents the
-> generic spurious-interrupt detector from accounting it as unhandled.
+> Return a literal 0 where the walk should continue, and test the
+> forgiven case directly instead of rewriting "rc". Give that test a
+> name, poison_efault_forgiven(), so cxl_get_poison_unmapped() and
+> poison_by_decoder() spell the same rule the same way. No functional
+> change.
 > 
-> Track whether the CXL event handler claimed the interrupt and return
-> IRQ_NONE when no supported event is detected. If no handler sharing the
-> vector claims a sustained interrupt storm, the generic spurious-
-> interrupt detector can eventually identify and disable the affected
-> IRQ.
-> 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
