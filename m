@@ -1,120 +1,158 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C5547F76F
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 09:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3603B71B2;
+	Tue, 15 Sep 2026 12:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789466197; cv=none; b=NDJw3g3eZBCtU8Vt8S44gI+iFUHZAR/3EBLHPlLldfOQF9T/Y7vmpwVonpc/QkF5Q8EZW04iDEKwgmUEaz5DXsNZCCCz0qb5JDx2v4HtKNVZ3wR4+b5ezUs4YfkhNhYdZd7bxjNICnuCIrzqlhzOZcjha1TbD774DnaKFvB3kxo=
+	t=1789476852; cv=none; b=ZPREgijl2KuhVPmaEA+I5xqtpIo2PfPU8Lb8GQrA0xbNJoxgAb+3iaS5lPFpsU33nRV785q9ZmXVrSIlmv96USfIV4nxsAyAL1owWKpZdXSUcA86DIrJlfd+yio45ITh/ELQ6I5p7sPoaq8TXg1d3sPgfYZR3P49pwYeNT638M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789466197; c=relaxed/simple;
-	bh=0ldLI0jIdMK8AiSGipfQlJFMXUeME3rzoXRpb5rfrmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LRvwiTL7JwwShqF5Qj5PGdTHlBjSvgH3c6T00lL29HtT3tkIELv78S9zlbwqF7XzwL1ej+TE81i5AyS/vJN/A6JSkFx1YtTbbL0fH4TzjzrDoDWVHQhN2qzLqeSf3A6OGk0qCIJK4E1p6uemUMKtqr51vqWhPzpS5qqdvRx9TsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bEm6i+h7; arc=none smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1789476852; c=relaxed/simple;
+	bh=QndDTWh5bGLYFpgTzNsBMcjtlSoq6B2ZnR6/EP1pCQo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PTZJEMiQZXwnZiutAzBHljys5DXx3asz2i/p8NdfeQoNxe3gENm+4eXLzEe/w4CINXz2zgXZM0sStAzkUzOl66HfZLyzchKKlwvuyqrR4iZw4+SPv7n0Iflq1Hyhp15lD3A+qq5NYDpNWGsOK6gBYiyV+rWk8JOwktdS0FTcgGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=QY0GrUg+; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bEm6i+h7"
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-39b5b07ec78so58435a91.3
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 02:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1789466194; x=1790070994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jvp3AKdBFRuYXKGE5C8H1XVVcyDgnt4wpE1IB5bJa88=;
-        b=bEm6i+h7blKf6wpQSvFMiBTrEG4i1jhAxD194Vdo0qpjTukmqypChECy1GenGBDr6/
-         xr71Ucb3OSMciAny1RgksWs6js5dmWdUK+K1YIQkwlwp/D4pf2Ll7/akVCs6UKIFdRZE
-         TIOXv8Opabz9obRFw8ItLuRfO1e4agkSglI9UhRjDArhv4kJp0a2W0Ck3W8RySEOXUdF
-         BYyh5MQbU/qIgIo3L6TX242XzDyQE59R20nqhf5tIeIbD3kFx4TH12TqaGTlFCAguSUc
-         pM0rLSETAt2noGH84EmkPDZfEjv41DAp+3hGXhgF2qPai7XESt2x2eSMW14J7wZiMKVD
-         8hYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789466194; x=1790070994;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jvp3AKdBFRuYXKGE5C8H1XVVcyDgnt4wpE1IB5bJa88=;
-        b=0b7cnbK+s5lYL/WvDzvpeDwL82HE7jxbWCdBxAIRNpka96E8vlncp7inbVsIOww+Vz
-         PaKj6ss3CLj3ROqCI77ykaPkKYkaNtN2tC+5AhWmwCucIP09/r9pQMzeI5mXa9Po5WLf
-         ugTXnBXEpJ89Va2xvVGyoB1ORPAt0ZsvO994TbwWD/n0gV+dOOsvms3S1s2D0EksKPE+
-         vDLRMkKDvpkKDkN/PLRP1QQu942DxVXTfDP9Py71ggdz2g46hG6U8w89iHhHbjxgm/K1
-         pqy8/cGjJtnWHokLIl3odcNlExUXnJwztFwQjUV4a9B1SW85dP1hxiM89pbCOa87OZIC
-         cbPQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzI2gHIzRuwiZHB51la5uyVSxsjbLygjD0OTJyB/jNum81/1AErqRYEVy9p1ZadimatFRRjIHClWa0=@vger.kernel.org
-X-Gm-Message-State: AFuF++nYXwcxyztLfVHMpF4virVgHUb3++hKaw/NIDeo2u377hFd/x0u
-	n5eMw393Lyb7ivi/KF8iCh5dZtQyFQI5T6pofSk4Lupys0reEDFWWCp/ibEHDSSD97g=
-X-Gm-Gg: AYBFou1dC3UUYZX7OKPXixATT2LpVnPFDcGsdepejss37Ne7H31rVpfOPtdSCJDkhsR
-	+6hov3x5wIY/dI2kfqtrOOu/JqyR+O1lO9HLIqKmEXiCSG8eAOF88R9wkrE6aKVl/Sh/ceDT286
-	3L7xtTnn2xPaAllip1IwdkwlSMYt5ISf5Ui78TbnvmTVSX3OUxbLqaj9XUZWIUENxTEwNgPqym3
-	tOMJg98gDyzxbbmaWsrjJsW6OeqwXuppG1JTOTiNlidytrOXuxLdZQzu+7ZTub9SzETtglkiDHv
-	eI9qcMnTlTgS9nB6dI/ETLScfP91nOmQseD2vVV869mBbb62gluD1XG+DoZ1ObnjjqS4k69HLbF
-	PDR29TipbyPahk180Pimg0QgdFeFmNcn5d9o8qkQVskSVVSvyOg0Yok7qjM4SHjpuyXJxDKOeed
-	KA8BfYxBR5jwUCW1qdtTeD9hA8SfKt/Ydvvi39GrT34kB5ylw26JDEfcT2E0DVr0sQQOzIBdRDl
-	qCfiv1EeIJTLJjaUjAZ
-X-Received: by 2002:a17:90b:2c8f:b0:398:ba9e:75ff with SMTP id 98e67ed59e1d1-39e1107004emr273952a91.21.1789466193983;
-        Tue, 15 Sep 2026 02:56:33 -0700 (PDT)
-Received: from n232-176-004.byted.org ([36.110.163.97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39dfd6b9687sm4477827a91.0.2026.09.15.02.56.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 02:56:33 -0700 (PDT)
-From: Muchun Song <songmuchun@bytedance.com>
-To: Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Muchun Song <songmuchun@bytedance.com>,
-	muchun.song@linux.dev
-Subject: [PATCH 2/2] dax/bus: fix mapping attribute error reporting
-Date: Tue, 15 Sep 2026 17:56:21 +0800
-Message-ID: <20260915095621.3744167-3-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260915095621.3744167-1-songmuchun@bytedance.com>
-References: <20260915095621.3744167-1-songmuchun@bytedance.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="QY0GrUg+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=txqh/4dMVNkv3jAnEFkWYzpJcEFlwoVpdz1x6TA4rUQ=; b=QY0GrUg+hg2FpxWgJ8xxZXb26i
+	a40KcG1CY1FLiZgOkpyJzp7DOw1gx1xQpWXRtn5i+i0aRmh548I+laXxHuxipkTKTvSiRNGRa5cCa
+	15eEcGqTe1tBJvKRukwl9HWsRnOCulnpK4y+qO0fhIOzcDFrlMZl+0CfRcEvuSOcPBgro4LJ8Yp5T
+	+W95tZNqEZYj0PJvLqiJ78uIB6UGaw0dgkHbkpn2unqZVyAM2xLbbEbzam7ULQANjEZAiAHBDlgK7
+	ZG96j8aQrDleLqQAt/XRd2xXSUxwLy+Qib1h43v3kLn4zpG6CtscsiWn1xAmBwv68+/Wm51M3Kvks
+	hdLJbdeA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1x6Sfl-004P5U-0I;
+	Tue, 15 Sep 2026 12:54:05 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 15 Sep 2026 05:53:35 -0700
+Subject: [PATCH v5 1/9] mm/page_alloc: factor out the accept-and-free tail
+ of __free_pages_core()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260915-hwpoison-kho-v5-1-3bc7a57bd503@debian.org>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+In-Reply-To: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+To: Ard Biesheuvel <ardb@kernel.org>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
+ kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Brendan Jackman <brendan.jackman@linux.dev>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+ Oscar Salvador <osalvador@suse.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ hannes@cmpxchg.or, shakeel.butt@linux.dev
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, 
+ Breno Leitao <leitao@debian.org>, harry@kernel.org, 
+ linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
+ kernel-team@meta.com
+X-Mailer: b4 0.16-dev-f8e9d
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2075; i=leitao@debian.org;
+ h=from:subject:message-id; bh=QndDTWh5bGLYFpgTzNsBMcjtlSoq6B2ZnR6/EP1pCQo=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqqT/e/q5/cYr405F2RzQcKhfWFrisnYG55iAgq
+ UvT/67s8SiJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaqk/3gAKCRA1o5Of/Hh3
+ bceTEACgTXdW1ZYLhwiIgzpNy3/tIJlO0t6mQw1xMfw4l9nQV4a9dvbY/XfEh5CoXZ1SxwevYyr
+ jYhT3krAmc4hkLt0U0WC3K64jg+VIQ1OpVudj7jjOnaFTFoQCk+Wco/JApTvPg0TXGejrmXZnAA
+ 7bmbJKaGYUBr0k+GH132hy4tzAGPNsbMghbh0+ZOx+CUZOLCAJ1OW+tW8seGCZ1H1iOZb33i/cN
+ yfqd5+3JA5PFya4Rq4iDZ+h+fhXelxujWlvkWhenA1TReHsfprrwXMK5NAlwxaOUqqy2mhKpzfd
+ WWyC+BjxTCT1RAF47MCnkAAi3/QAS8UDySy7+N26+WFvGImkuhmkRHw+Fb+yqxmn9erNjh6i2Da
+ pkX0o7jatRDIeeA0Tc6nEDsHerPH/Ao+Ph2vjQVWkC42Hy0Criep/Mi5EcLHD16RcBqgbyGCVHZ
+ Zmh4ahHaN07+XvCyatxhM9P3MiIQK+etSZDTegputerYeHbzVpCcMCTOkBz2i3R7GmpRoq/7IGf
+ u3uZYqGtBbqF5p5463cbsewXIL75U79WBO5rTMPMvegvHF85MkpAbTtQK5N/RZckds3O02TLBIY
+ ttKp3I2XptzsAjyHnmWewT1GB5fAUo2ahpu2ryFEAHzvDUf6GoZMUUMxTP39H4en8Sr4iglVSmT
+ l5jNgyb+RfmoLoQ==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-After the DAX configuration locking was converted to rwsems, successful
-lock acquisition leaves rc set to zero in mapping_store(). If the requested
-range size is misaligned, the allocation is skipped and the zero rc is
-converted to len. The sysfs write therefore reports success without
-allocating the requested range.
+__free_pages_core() ends by accepting the block if it is still
+unaccepted and then handing it to the allocator. The poisoned-memory
+replay later in this series needs that same tail for the parts of a
+block it does not withhold.
 
-Call alloc_dev_dax_range() unconditionally and let its full range
-validation return -EINVAL for a misaligned start or size.
+Move it into accept_and_free_block(). This will be used later, when
+we need to accept and free a subset of a order-block that is
+not-poisioned.
 
-Fixes: c05ae9d85b47 ("dax/bus.c: replace driver-core lock usage by a local rwsem")
-Assisted-by: LLM
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- drivers/dax/bus.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ mm/page_alloc.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 54e4bbc98218..f232001ff5b7 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1276,8 +1276,7 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 404896b53003ef..b07b5f4751cb95 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1579,6 +1579,24 @@ static void __free_pages_ok(struct page *page, unsigned int order,
+ 		free_one_page(zone, page, pfn, order, fpi_flags);
+ }
+ 
++/* Accept the block if it needs it, then hand it to the allocator. */
++static void __meminit accept_and_free_block(struct page *page,
++					    unsigned int order)
++{
++	if (page_contains_unaccepted(page, order)) {
++		if (order == MAX_PAGE_ORDER && __free_unaccepted(page))
++			return;
++
++		accept_memory(page_to_phys(page), PAGE_SIZE << order);
++	}
++
++	/*
++	 * Bypass PCP and place fresh pages right to the tail, primarily
++	 * relevant for memory onlining.
++	 */
++	__free_pages_ok(page, order, FPI_TO_TAIL);
++}
++
+ void __meminit __free_pages_core(struct page *page, unsigned int order,
+ 		enum meminit_context context)
+ {
+@@ -1613,18 +1631,7 @@ void __meminit __free_pages_core(struct page *page, unsigned int order,
+ 		atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
  	}
  
- 	to_alloc = range_len(&r);
--	if (size_is_aligned(dev_dax, to_alloc))
--		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-+	rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
- 	up_write(&dax_dev_rwsem);
- 	up_write(&dax_region_rwsem);
+-	if (page_contains_unaccepted(page, order)) {
+-		if (order == MAX_PAGE_ORDER && __free_unaccepted(page))
+-			return;
+-
+-		accept_memory(page_to_phys(page), PAGE_SIZE << order);
+-	}
+-
+-	/*
+-	 * Bypass PCP and place fresh pages right to the tail, primarily
+-	 * relevant for memory onlining.
+-	 */
+-	__free_pages_ok(page, order, FPI_TO_TAIL);
++	accept_and_free_block(page, order);
+ }
  
+ /*
+
 -- 
-2.54.0
+2.53.0-Meta
 
