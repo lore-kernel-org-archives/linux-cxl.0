@@ -1,186 +1,136 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F94C3C1970;
-	Tue, 15 Sep 2026 14:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE34F38B7D7
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789482862; cv=none; b=rsGTO/TstIbVH+SaCtaVdFqtQiPNSH8frIeBWt9b8leHg05NueCT3oyFqVic74C5NdDjOuBpJJzElCKOcMGkuXKikSm7tfPvzA9gX665x1BxtKSVVdOUl+lkw6lfNcstDQl3Jqs4LVevWc+lNLMBRXSvU6egUxxdGlCzpDNaJpo=
+	t=1789485112; cv=none; b=CfPIsZNRbDQHwdWM46eQ+HHWXXFlCOV6XCUlJuyC8E62wzNUCZ8X4dUVn09CRdNuO1S6LflsWrnCRl2Xb2yculkpu1vgXX9AXtEDx6wP4AO1/q87UScpVhiHxsTJYlwidCN8tELjKzoaqXQ46vTTMTmc3LzuLMWTIFnwZxm6XVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789482862; c=relaxed/simple;
-	bh=8bv+/h4lZvkpcyPGdIrWEtBJS/FfAgOnu6jxAERwwzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VrQ6n+nf4h7+9Uwcd3VGUR5Y8y1EcC60fqRjq1T2uNXjgDxVBdpxsZn19vV4G1zGTeJJh/ToGjcRhmLBm5NiXPh56PQ9S55lpq28zyIXfDhlHWUhWoIekMRKozKWNjKn2QvE5BrgLnH+J5Nst6vdrQwpi72YZXAdHEg4vRiBF+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=rxIZo+ME; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1789485112; c=relaxed/simple;
+	bh=FLMpObrNFi9IClkRd1Kc6eOo73FJWnKKrgI2yNAfRZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=cxnfEBI5fQJ7NZFJFt7xSbmwmLqk+NVp1OLpH4s0Y1pCgdsTjjzjkKGy+gNM8sGUjCpZszo4Iat/xIWcTkGZzHThz5lvnHFQ9xW5glci7MmlPCFVcNYCowjVR7IDLmIL9yZQnbI6X9G65hyMv67p3rxkbdIkSoQ5jBxsKa0jULs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KVxI2Pur; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="rxIZo+ME"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lDBTit4NoXLRMGpd4sVgLpWCd4j9Sa9yMZ+BGUjsUHM=; b=rxIZo+ME/rnXqtE9cMmhwEEDF8
-	herFmWck0rdzUOYTwXmZp0pi2WTQkMtFZNmZgCe0aEf9jVCe0Fu1nbdZWoIal6/iUa2akZj1+HXbC
-	+GLyz8VgoecklgzBC+RQ0T30hnVb2tPPJHlVdbwNN12DbSHBCszNGMMRvZDagv7QXAylN+YTwSUpT
-	EKdKzj8I1gZugRwDY3wWMw3szm63xr/sJAZZ9dyFVm//APAxrwVmHwFgeCM7y89NHhxaUXsVXvy/7
-	0aLs3fr2d8hoF0rhzA/vk7+SaxeIokLEUqWp9SqGvSmnLn5m+JK1SaAXp6Ycl37ZbKo9tDy/xHHr/
-	i7HszdgA==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6UEZ-004Scw-23;
-	Tue, 15 Sep 2026 14:34:07 +0000
-Date: Tue, 15 Sep 2026 07:33:59 -0700
-From: Breno Leitao <leitao@debian.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: David Hildenbrand <david@kernel.org>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, kas@kernel.org, Zi Yan <ziy@nvidia.com>, hannes@cmpxchg.or, 
-	shakeel.butt@linux.dev, "Liam R. Howlett" <liam@infradead.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mike Rapoport <rppt@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org, rmikey@meta.com, driver-core@lists.linux.dev, riel@surriel.com, 
-	harry@kernel.org
-Subject: Re: [PATCH v5 5/9] mm/memory-failure: efi: record hardware-poisoned
- frames into the poisoned-memory table
-Message-ID: <aqlVkbx8j5cQ3eNX@gmail.com>
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-5-3bc7a57bd503@debian.org>
- <20260915133629.700EE1F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KVxI2Pur"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1789485109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6rV63i5zLz4J/LUzf54w3p9IiUX+skDQOv9c6EGZuIE=;
+	b=KVxI2Pur5gpzCP625WgxU03uGV+oZSY44At+prrdper+Kzp35JpiFtvlF56R12f2HtIa1/
+	VcnMeXn3gX1uti6TVFEyU6X/SyrjE6xdOuBW+lsTv97zqo8XJdQElilp8lxg97b5oNGdts
+	1V9JyPOINewKwkBFVLC37CqesRCG2Nk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-o9sgasYJN_CKZfXvsCe8sQ-1; Tue,
+ 15 Sep 2026 11:11:45 -0400
+X-MC-Unique: o9sgasYJN_CKZfXvsCe8sQ-1
+X-Mimecast-MFC-AGG-ID: o9sgasYJN_CKZfXvsCe8sQ_1789485103
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C735E1800675;
+	Tue, 15 Sep 2026 15:11:42 +0000 (UTC)
+Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 32313195604E;
+	Tue, 15 Sep 2026 15:11:37 +0000 (UTC)
+From: John Snow <jsnow@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Fabiano Rosas <farosas@suse.de>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Kevin Wolf <kwolf@redhat.com>,
+	Peter Xu <peterx@redhat.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jason Wang <jasowangio@gmail.com>,
+	Lukas Straub <lukasstraub2@web.de>,
+	Eric Blake <eblake@redhat.com>,
+	Hanna Reitz <hreitz@redhat.com>,
+	Markus Armbruster <armbru@redhat.com>,
+	linux-cxl@vger.kernel.org,
+	Zhao Liu <zhao1.liu@intel.com>,
+	qemu-block@nongnu.org,
+	John Snow <jsnow@redhat.com>
+Subject: [PATCH v2 1/7] qapi: convert remaining simple intros for block-export.json
+Date: Tue, 15 Sep 2026 11:11:21 -0400
+Message-ID: <20260915151127.1002244-2-jsnow@redhat.com>
+In-Reply-To: <20260915151127.1002244-1-jsnow@redhat.com>
+References: <20260915151127.1002244-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260915133629.700EE1F000FF@smtp.kernel.org>
-X-Debian-User: leitao
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: ubM85EqEfDUT1Mt1N60IwmToZv56lObVZx7jryjOIJ0_1789485103
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Tue, Sep 15, 2026 at 01:36:29PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Critical] efi: memblock_add() with PAGE_ALIGN_DOWN forces adjacent MMIO into system RAM
-> - [High] efi: ABI breakage in linux_efi_poisoned_memory due to native word size
-> - [Medium] mm: hard memory failures on soft-offlined pages are omitted from EFI table
-> --
-> 
-> commit e69689c81050c18119d69206dc9a7cb1e2fa4eeb
-> Author: Breno Leitao <leitao@debian.org>
-> 
-> mm/memory-failure: efi: record hardware-poisoned frames into the poisoned-memory table
-> 
-> This commit hooks memory_failure() hard offline reports into the EFI
-> poisoned memory table so that they persist across kexec. Soft-offlined
-> pages are deliberately excluded to prevent predictive offlining from
-> becoming a permanent loss.
-> 
-> > diff --git a/drivers/firmware/efi/poison.c b/drivers/firmware/efi/poison.c
-> > index 3f12db3dc9b84..847592862f01d 100644
-> > --- a/drivers/firmware/efi/poison.c
-> > +++ b/drivers/firmware/efi/poison.c
-> > @@ -91,3 +91,30 @@ void __init efi_poisoned_memory_reserve(void)
-> >  	memblock_add(start, end - start);
-> >  	memblock_reserve(start, end - start);
-> 
-> [Severity: Critical]
-> Does this forcefully override the firmware's memory map for adjacent 4KB
-> chunks on larger page architectures? 
-> 
-> On architectures like ARM64 where the kernel page size can be 16KB or
-> 64KB, EFI memory descriptors remain 4KB. If the EFI poisoned memory table
-> occupies a 4KB region within a 64KB page, rounding down to the kernel
-> page boundary expands the range.
-> 
-> This could force adjacent 4KB EFI regions containing firmware MMIO or
-> reserved non-RAM regions into system RAM via memblock_add(). If the
-> kernel later maps these regions with Write-Back caching attributes in the
-> direct map, could this cause fatal Machine Check Exceptions or SError
-> panics during speculative CPU accesses?
+These are either structs or unions that are used in an inlinable
+context: i.e. the generated documentation is likely to feature a
+version of this documentation block that does not include the intro in
+context of another command, event, or structure.
 
-arm64 already rounds every EFI descriptor outward via
-memrange_efi_to_native(), so it adds no new class of over-mapping, and
-reserve_regions() adds and reserves this WB ACPI-reclaim table anyway
-moments later.
+Signed-off-by: John Snow <jsnow@redhat.com>
+---
+ qapi/block-export.json | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-So, it doesn't seem relevant?!
+diff --git a/qapi/block-export.json b/qapi/block-export.json
+index 2893c6456d5..e9f7e72c8ee 100644
+--- a/qapi/block-export.json
++++ b/qapi/block-export.json
+@@ -37,10 +37,9 @@
+ 
+ ##
+ # @NbdServerOptions:
+-#
+-# Keep this type consistent with the `NbdServerOptionsLegacy` type.
+-# The only intended difference is using `SocketAddress` instead of
+-# `SocketAddressLegacy`.
++#     Keep this type consistent with the `NbdServerOptionsLegacy`
++#     type.  The only intended difference is using `SocketAddress`
++#     instead of `SocketAddressLegacy`.
+ #
+ # @addr: Address on which to listen (since 4.2).
+ ##
+@@ -50,10 +49,9 @@
+ 
+ ##
+ # @NbdServerOptionsLegacy:
+-#
+-# Keep this type consistent with the `NbdServerOptions` type.  The
+-# only intended difference is using `SocketAddressLegacy` instead of
+-# `SocketAddress`.
++#     Keep this type consistent with the `NbdServerOptions` type.  The
++#     only intended difference is using `SocketAddressLegacy` instead
++#     of `SocketAddress`.
+ #
+ # @addr: Address on which to listen (since 1.3).
+ ##
+@@ -339,9 +337,8 @@
+ 
+ ##
+ # @BlockExportOptions:
+-#
+-# Describes a block export, i.e. how single node should be exported on
+-# an external interface.
++#     Describes a block export, i.e. how single node should be
++#     exported on an external interface.
+ #
+ # @type: Block export type
+ #
+-- 
+2.55.0
 
-> > diff --git a/include/linux/efi.h b/include/linux/efi.h index
-> > dd3263456dd4a..56402fdccd114 100644 --- a/include/linux/efi.h +++
-> > b/include/linux/efi.h @@ -1288,8 +1288,10 @@ struct
-> > linux_efi_poisoned_memory {
-> 
-> [Severity: High] Does the linux_efi_poisoned_memory ABI structure
-> break on architectures where the native word size differs from the
-> firmware? 
-> 
-> The struct uses an unsigned long flexible array for the bitmap, which
-> alters the element size depending on the kernel bitness (4 bytes on
-> 32-bit and 8 bytes on 64-bit). efi_poison_geometry_valid() rejects
-> tables where the size is not a multiple of sizeof(unsigned long). 
-> 
-> If a 32-bit EFI firmware generates this table, it will use 4-byte
-> alignment and a 32-bit word array. Because CONFIG_EFI_POISONED_MEMORY
-> is 64-bit only, the 64-bit kernel will evaluate sizeof(unsigned long)
-> as 8 and reject perfectly valid 32-bit firmware tables as malformed. 
-> 
-> Since bit array layouts also differ across word sizes on big-endian
-> architectures, should this firmware-to-kernel ABI boundary use
-> fixed-size types like u32 or u64 instead?
-
-That is not the case, because this feature depends on 64-bits and
-!BIG_ENDIAN.
-
-In fact, CONFIG_EFI is depends on OF && !CPU_BIG_ENDIAN
-> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c index
-> > a2ca8df501cae..d9b8be696aac3 100644 --- a/mm/memory-failure.c +++
-> > b/mm/memory-failure.c
-> [ ... ]
-> > @@ -1326,6 +1327,8 @@ static int action_result(unsigned long pfn,
-> > enum mf_action_page_type type, if (type != MF_MSG_ALREADY_POISONED
-> > && type != MF_MSG_PFN_MAP) { num_poisoned_pages_inc(pfn);
-> > update_per_node_mf_stats(pfn, result); +		/* Only hard
-> > offlines are carried over to the next kernel. */
-> > +		efi_hwpoison_record_pfn(pfn); }
-> 
-> [Severity: Medium] Does placing efi_hwpoison_record_pfn() inside this
-> conditional block unintentionally skip recording hard errors on
-> previously soft-offlined pages? 
-> 
-> Soft-offline marks a page with PageHWPoison but intentionally does not
-> record it in the EFI table to avoid permanent loss for predictive
-> errors. 
-> 
-> If a genuine hard, uncorrectable error later occurs on that same page,
-> memory_failure() will see the existing PageHWPoison flag and pass
-> MF_MSG_ALREADY_POISONED to action_result(). 
-> 
-> By coupling the EFI recording to the meminfo stat increments, genuine
-> hard errors on soft-offlined pages are omitted from the EFI table.
-> Could this allow the next kernel to map and crash on physically broken
-> RAM?
-
-Yes, this one is real, thanks.
-
-soft_offline_page() reaches num_poisoned_pages_inc() through
-page_handle_poison() and never calls action_result(), so the hook does
-not need the MF_MSG_ALREADY_POISONED guard to keep soft offlines out of
-the table. That guard is there for the stats, and coupling to it drops a
-hard error on a page that was soft-offlined earlier.
-
-The frame is not lost for good -- the next kernel hands it out, the error
-comes back and is recorded then -- but that is one machine check per
-kexec that this series exists to avoid.
-
-I will move the call out of the stats guard in v6, keeping MF_MSG_PFN_MAP
-excluded since that path is not System RAM
