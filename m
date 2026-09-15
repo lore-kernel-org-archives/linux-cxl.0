@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D5743C058
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 17:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6AB3D5C06
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 17:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789494763; cv=none; b=Y4Tiyfdvt/hy3v2seEd91jDY+qAKeta/UVC8Ojqq2pT+EsyeCh5j4ePN7Vwz1Lw21hueSRJri1sTXPy07xO6RZFRRvAerqkCsIXeKTh1NdNkAhiJD39uBpHZEr3zn9OnH+VXpPPmUZVXK5k4V9CO9mcnjuM1yYFlA1GY8JvYXOw=
+	t=1789494799; cv=none; b=IbBrQ/q/8kunaS6Ow8IY/9BVS/iysZc3kpPPqKcTZVEzYrs4qMp6LiBwk1l3jhe5NYUQHqwNqVFB9Nr+RH7NwEpFlFf7xL6M3WlM2pfN7kY9F5sDnBQVwo7vWH7s1fxFeOFgeqDfwBXuAZ3EMCfr+8TWWY7lbRmmcS5Fb7vS1T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789494763; c=relaxed/simple;
-	bh=e37wfpgbSCQE0mk69Y90W9JsX4G1tcdJSU+sDiJaYcU=;
+	s=arc-20240116; t=1789494799; c=relaxed/simple;
+	bh=eoO0T5VH+uJuj+uvehPjVGuftHhBAR4zMzZ7VcA56Ic=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ijL1ziDTLf+51XuwH3q5q6RH4+0mFWXI4lt5Vi0zQVwkkfT/5A8vwU4c99Ij86Fhon5s6DUKI4C2BzPzP1YF5YsIvfqpK63dZ39fv7MS4yvUkaCMf4bPEziudGYmT5dpUYyHhd5iFN3oK1nq7Gzh5/IKlvRpwM3fgS5G8OOkVMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlVCiFBa; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=DKC//RjqtFQwuNjzzMhan6EmKLohzve2wXXEr/JuOjHMv8+i4F9UpBvEqsY/7KpsvGB8Wes3uPKJXWDHjcnUfr6sM7jSzCWTv4pFqIieQ3eEe58ILHgpfQ0+AOTB+TV1DFEjA9aV29c0xOlQhPC2g5FDhKbEz3vwtbNAbBYv768=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdhlOSlb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlVCiFBa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F14E1F000FF;
-	Tue, 15 Sep 2026 17:52:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdhlOSlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38E31F000FF;
+	Tue, 15 Sep 2026 17:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789494762;
-	bh=uodPxlgBecGq4pzVFqjxaJw1KTwHptSdfwPzXkSyiuw=;
+	s=k20260515; t=1789494797;
+	bh=EDg2lbS9FxueOTc0OmiHtUQtfNsIvgIeTNuEARoespI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YlVCiFBaRvrGblGKhXWX0PxF5kcleH4rh9Y0lxfn0a0Mz7zGL4jdPdqKnZ0WFSk9N
-	 7aPkCOAmh6DKccghtpgJEGfw+hH3HObZmGsryJmRpX+fQpWP8hbk7zdqlctelNeoue
-	 o4durAKKYs3rOPIOalli+DFCv1i/9EVpGIUY6t+L1Mt/ILbNqufHFuLXu0kg0ixQbv
-	 mZQwOkYR/mgqF+uYd8qyjbT2MZ01AyCniFWZnu3kuKj/VQMGAaLjYC9ZPNMgcmi1A+
-	 jwM16nUQmJsLz2b7kyKxlSYugeES1y7cWm+ezjIO7Ktv+HBywktaZ/Z9SVEggNokv9
-	 saR39xa7TzoYQ==
-Date: Tue, 15 Sep 2026 18:52:39 +0100
+	b=CdhlOSlbpttVGy84O4uFXV4oqNG9WLZTkedirtWQhq/IGhK5rsW/OOoOlK3H7PbT/
+	 iGkdJSxbjuMrlUxr6GUyUVG9k34URDKZ7KT81+QdLHlsHpk96d6Qfv27jBij2Rhwcn
+	 bLJRgs9tDAjWT39A31I+TRpfSUGsFjrUSxbIwglwW+aq27PESlJKKBsNh+sjh33m29
+	 xKSxgk5w+5W4sc8vwj/l0LOSg9mRkfUfyybGEQygoENeHO1Mfn5yLwhLkbofmkgCrC
+	 15z6jidU/ZJRTtrDrdPKa6wplSGjUCO8N2aIk2/J9iMRyYlP8GqW6vLSHYJTbhGVz5
+	 38I/aowXoYmhA==
+Date: Tue, 15 Sep 2026 18:53:12 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Chen Pei <cp0613@linux.alibaba.com>
 Cc: palmer@dabbelt.com, alistair.francis@wdc.com, mst@redhat.com,
@@ -36,12 +36,12 @@ Cc: palmer@dabbelt.com, alistair.francis@wdc.com, mst@redhat.com,
  anisinha@redhat.com, dave.jiang@intel.com, alison.schofield@intel.com,
  junjie.cao@intel.com, guoren@kernel.org, qemu-riscv@nongnu.org,
  qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 3/6] hw/riscv/virt: Advertise the CXL host bridge to
- firmware via extra-pci-roots
-Message-ID: <20260915185239.2c79393a@jic23-hlaptop>
-In-Reply-To: <20260907093735.2753-4-cp0613@linux.alibaba.com>
+Subject: Re: [PATCH v6 4/6] tests/qtest: Prepare golden files for the RISC-V
+ CXL ACPI test
+Message-ID: <20260915185312.3af64924@jic23-hlaptop>
+In-Reply-To: <20260907093735.2753-5-cp0613@linux.alibaba.com>
 References: <20260907093735.2753-1-cp0613@linux.alibaba.com>
-	<20260907093735.2753-4-cp0613@linux.alibaba.com>
+	<20260907093735.2753-5-cp0613@linux.alibaba.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -52,39 +52,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  7 Sep 2026 17:37:30 +0800
+On Mon,  7 Sep 2026 17:37:31 +0800
 Chen Pei <cp0613@linux.alibaba.com> wrote:
 
-> The pxb-cxl expander bridge presents as a class 0x0600 host bridge with
-> a type-0 header, so EDK2's PciBusDxe never recurses into it and never
-> assigns the CXL root port a memory window or bus numbers.  As a result
-> build_crs() produces an empty _CRS for the ACPI0016 host bridge and the
-> CXL devices behind it are not enumerated by the OS.
-> 
-> Advertise the pxb-cxl expander root buses to firmware via the
-> etc/extra-pci-roots fw_cfg file, the same way arm/virt and x86 do, by
-> calling pci_bus_add_fw_cfg_extra_pci_roots() from virt_machine_done().
-> EDK2's PciBusDxe then enumerates behind the CXL host bridge and assigns
-> the root-port window and bus numbers.  The ACPI tables are rebuilt when
-> the guest reads them (after that firmware enumeration), so build_crs()
-> then emits a correct _CRS for the ACPI0016 host bridge.
-> 
-> The call is made unconditionally, in line with arm/virt, pc and hppa,
-> so plain pxb-pcie expander bridges, which likewise depend on
-> etc/extra-pci-roots, are advertised as well; the generator simply
-> returns nothing when there is no expander root bus.
-> 
-> This approach also scales to multiple pxb-cxl host bridges (each gets
-> its own window from the shared aperture) and lets firmware size the
-> window to what is actually behind the bridge, rather than reserving a
-> fixed carve-out.
-> 
-> Verified by booting an RVA22 guest: the CXL root port and Type3 device
-> enumerate, and 'cxl enable-memdev' / 'cxl create-region' /
-> 'daxctl online-memory' bring the CXL memory online as system RAM.
+> Add empty DSDT.cxl and CEDT.cxl golden files and list them in
+> bios-tables-test-allowed-diff.h, in preparation for the RISC-V CXL
+> bios-tables test added in the following patch.  The populated golden
+> master binaries are committed separately in a final patch, following
+> the bios-tables-test update process.
 > 
 > Reviewed-by: Junjie Cao <junjie.cao@intel.com>
-> Tested-by: Junjie Cao <junjie.cao@intel.com>
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-Aligns with other arch, so makes sense.
+boilerplate but for completeness
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
