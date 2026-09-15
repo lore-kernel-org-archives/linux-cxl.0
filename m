@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DB13CA49A
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF373DAAB8
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789485131; cv=none; b=TYt6Wiolv38EQxKxpjkUe4w3vHn5CRNHnu9PrBwsYIbDJ/c5tPg1stbXEDwZo6VMW8xCRoh+ugXSvgC9Mk5Tm0do6NK8eZ6RXX8qzC/ZiUa53pu0hR2MDZJ7SAzI8FEg4oj2L3qkhWZilaUo7TD4e5bU1CI7xsbCS5Js6GR3lmc=
+	t=1789485134; cv=none; b=KkUKJBBqxny+K0Txsr/Ip7poTnrgYBosaDa0EXQCKbNOMKqnipbw+/MycYdfboSz3yMazE2siZoXq2XkbC3cQD9x9Q7+BoN5xc0m1VX3+byV3vhTVHOBRGXQitJv2BQ3IdBDi6AAtRkdTiDM7Y9ds8ItsfHchPIgd+ZcbQjty1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789485131; c=relaxed/simple;
-	bh=PlInlaoSQ2TYK3E0aYB5EFRIERIM/ePqnj4j9J6f3x8=;
+	s=arc-20240116; t=1789485134; c=relaxed/simple;
+	bh=cRhQ2aJpW5m0U7L7kR2287ijD2hZ5l7rQzttAhAPelg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=kCpqB73I3AqmNy0fQFp71NCxq497pMjKf99BZkAo+CrclShuoHbZZzGXfqsncsSv+kGdiCcA/4YqtqS1RSpNN8T7CAt/FHGLWx8vg96f5O9B5TwXM9LGB6H0LUSN9JOg8fGucIuGcVwx4KOAs4fSjuU9kp1mVMmEL0RDsgCPbAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GWOIfK8J; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=N2criKS7QLBzq2Z1ut6XrPnYG7xWeyCFoG5wx2fJ2XApa2sR3Tr3/5g/FN4JRldTx2xqmYInPyYiTB0LebrbC6V0tAgFl1qKk7+JhDEpBw646WJigxoDLQvcFIZ20QIRvXJli0vk0WfSZHxLpo36JY1KNQ9wCvPgnCYPaS9fJVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JDfABJAH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GWOIfK8J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDfABJAH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789485128;
+	s=mimecast20190719; t=1789485132;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+/TEs6WfoqvbeLKb/7GlRm0zX4tMP9iSW1sKdXtrjYQ=;
-	b=GWOIfK8JizI5ZvFX2Gm0WsVFGaQ5fj4YYd607Np1cvFMxpsVL+rmiyPoSEV6jkb13nnJtc
-	oMc3KvXr5YIu1jcRQllZ0Ars5nhr38/Zl65HwAsx5u62miotee7RBdyOzrDEH8fOEb1P3n
-	W2teUDj+WZOD6liwgdzZdjviN0J68VE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=fVqJB7RA7wK1A3wU0gjI5S+gtvyNP6b0TlS+G7syIFw=;
+	b=JDfABJAHoG6BxFyKLNNnwTMErgB2BWG4IIlUjU04YbGN+tZW5JWTSTL6iN/UJQusReSBwd
+	VwNfHjiBAqC9DrUBD9PtD6ljxFS49kq2ZaEOW4akF8xLHuT/3SynT7HhTSNDRYqv9TQhZp
+	auD1BcuvZhXWQXTSuTTLiXlPDrOP5jc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-332-8zwyUbarOoeWSs4bnphLzQ-1; Tue,
- 15 Sep 2026 11:12:05 -0400
-X-MC-Unique: 8zwyUbarOoeWSs4bnphLzQ-1
-X-Mimecast-MFC-AGG-ID: 8zwyUbarOoeWSs4bnphLzQ_1789485123
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-b5gphxSzNg2L9JiAL5ofrw-1; Tue,
+ 15 Sep 2026 11:12:08 -0400
+X-MC-Unique: b5gphxSzNg2L9JiAL5ofrw-1
+X-Mimecast-MFC-AGG-ID: b5gphxSzNg2L9JiAL5ofrw_1789485126
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 608141956077;
-	Tue, 15 Sep 2026 15:12:03 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2BF11843AE4;
+	Tue, 15 Sep 2026 15:12:05 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 93C33195604E;
-	Tue, 15 Sep 2026 15:11:59 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 99941195604C;
+	Tue, 15 Sep 2026 15:12:03 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Fabiano Rosas <farosas@suse.de>,
@@ -60,9 +60,9 @@ Cc: Fabiano Rosas <farosas@suse.de>,
 	Zhao Liu <zhao1.liu@intel.com>,
 	qemu-block@nongnu.org,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH v2 5/7] qapi/parser: fix intermediate "intro" detection
-Date: Tue, 15 Sep 2026 11:11:25 -0400
-Message-ID: <20260915151127.1002244-6-jsnow@redhat.com>
+Subject: [PATCH v2 6/7] qapi: convert intro sections with "TODO" markers
+Date: Tue, 15 Sep 2026 11:11:26 -0400
+Message-ID: <20260915151127.1002244-7-jsnow@redhat.com>
 In-Reply-To: <20260915151127.1002244-1-jsnow@redhat.com>
 References: <20260915151127.1002244-1-jsnow@redhat.com>
 Precedence: bulk
@@ -72,52 +72,105 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: rbc1ksgG9TCSlSUYhXPSwQieDon7FX4F0OdE7FdihEs_1789485123
+X-Mimecast-MFC-PROC-ID: ZfhJmyV3XYpRhkeJlHP1vJRBA1L6Cb09U0suxREQe2A_1789485126
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-In 43e7ad1a3fa5, I adjusted the insertion algorithm for inserting
-something after the "introduction" to cope with both the old and new
-syntax while we converted QAPI to the new syntax. There's a bug in
-that code that only shows up in a handful of cases and only when using
-the new syntax while this affordance/flex code is still enabled.
-
-In the case that we do actually have a real bona-fide intro section,
-we want to insert directly after that real-deal intro section, not
-after any plaintext sections that may follow it. This code adjusts the
-temporary code to strongly prefer inserting after the actual intro
-section if it exists.
-
-Once again: once conversion is done, you will be delighted by how much
-of this ugly code goes away.
+This patch converts intro sections that are immediately followed by a
+"TODO:" that was formerly used to demarcate the stub member insertion
+point.
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- scripts/qapi/parser.py | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ qapi/machine.json   |  7 ++-----
+ qapi/migration.json | 10 ++--------
+ qapi/net.json       |  9 +++------
+ qapi/yank.json      |  5 +----
+ 4 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/scripts/qapi/parser.py b/scripts/qapi/parser.py
-index 9e14c2f7921..6ded504835d 100644
---- a/scripts/qapi/parser.py
-+++ b/scripts/qapi/parser.py
-@@ -845,6 +845,16 @@ def _insert_after_intro(
-         needed and ``_insert_near_kind(QAPIDoc.Kind.INTRO, ...)`` will
-         be sufficient.
-         """
-+        first = self.all_sections[0]
-+        if first.text and first.kind == QAPIDoc.Kind.INTRO:
-+            # First section is introduction and is non-empty: insert here.
-+            # Rest assured all of this ugliness will very soon go away.
-+            # Pinkie-swear.
-+            return self._insert_near_kind(
-+                QAPIDoc.Kind.INTRO, section, after=True
-+            )
-+
-+
-         index = 0
-         for index, ref_section in enumerate(self.all_sections):
-             if ref_section.kind.name in ("PLAIN", "INTRO"):
+diff --git a/qapi/machine.json b/qapi/machine.json
+index 13875fc4642..108033b6d64 100644
+--- a/qapi/machine.json
++++ b/qapi/machine.json
+@@ -1216,11 +1216,8 @@
+ 
+ ##
+ # @query-memory-size-summary:
+-#
+-# Return the amount of initially allocated and present hotpluggable
+-# (if enabled) memory in bytes.
+-#
+-# TODO: This line is a hack to separate the example from the body
++#     Return the amount of initially allocated and present
++#     hotpluggable (if enabled) memory in bytes.
+ #
+ # .. qmp-example::
+ #
+diff --git a/qapi/migration.json b/qapi/migration.json
+index 8096ef64682..70a1854fb73 100644
+--- a/qapi/migration.json
++++ b/qapi/migration.json
+@@ -1604,10 +1604,7 @@
+ 
+ ##
+ # @query-xen-replication-status:
+-#
+-# Query replication status while the vm is running.
+-#
+-# TODO: This line is a hack to separate the example from the body
++#     Query replication status while the vm is running.
+ #
+ # .. qmp-example::
+ #
+@@ -1657,10 +1654,7 @@
+ 
+ ##
+ # @query-colo-status:
+-#
+-# Query COLO status while the vm is running.
+-#
+-# TODO: This line is a hack to separate the example from the body
++#     Query COLO status while the vm is running.
+ #
+ # .. qmp-example::
+ #
+diff --git a/qapi/net.json b/qapi/net.json
+index 7aabd8b9260..7a809d9a8a6 100644
+--- a/qapi/net.json
++++ b/qapi/net.json
+@@ -1113,12 +1113,9 @@
+ 
+ ##
+ # @announce-self:
+-#
+-# Trigger generation of broadcast RARP frames to update network
+-# switches.  This can be useful when network bonds fail-over the
+-# active slave.
+-#
+-# TODO: This line is a hack to separate the example from the body
++#     Trigger generation of broadcast RARP frames to update network
++#     switches.  This can be useful when network bonds fail-over the
++#     active slave.
+ #
+ # .. qmp-example::
+ #
+diff --git a/qapi/yank.json b/qapi/yank.json
+index 8ac4b773653..187a0952e66 100644
+--- a/qapi/yank.json
++++ b/qapi/yank.json
+@@ -96,10 +96,7 @@
+ 
+ ##
+ # @query-yank:
+-#
+-# Query yank instances.  See `YankInstance` for more information.
+-#
+-# TODO: This line is a hack to separate the example from the body
++#     Query yank instances.  See `YankInstance` for more information.
+ #
+ # .. qmp-example::
+ #
 -- 
 2.55.0
 
