@@ -1,47 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9DB3DB994
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D66C3D523F
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789485122; cv=none; b=bVHhyoq8kj9JcVKoob2MqlNMErnxwjLbEHG23Q/yVarGLcNgd81g+jntKsspQoC8qeVM9mrorA/7wbDeRkDAZ0KvL6xmtXgpVczvggXrhrA/6KSr0cu4mE29nalEXXFqKHLSh8VQaUR0Tw0vx0GcXEFlUoDL3N7d3zRVebwVNmI=
+	t=1789485123; cv=none; b=AYH7KkVCpx6Xzv5G3WSJLLEYxP1ixsqFXTVjtQ1yLmcUkp/rNJSrfqjRukkMsOgx5t3Vj0bCywsxg5lLPQpaTpwcQ6xDRd9Q917BxuPRUj6rDKG4rqwPkrV1oqKRoXS4QTFh+kI8+9FqBq8gvBNl1pW1WsVZq64FuVw5gHtPTnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789485122; c=relaxed/simple;
-	bh=wTwGo027G09ny0Oezhb8fiL95bd/OgKGCgd0x9bhGME=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=kaBjAhlWo/jtasHRkQ6b5IPPS6FcsrwpFLbnc7BjmgLZZBheOWw5afRLMQcz7uTmqe8s1vDHclK/SadKUJkMA9Dmn/TPhLdi3gnIhjD4MU8nRnbksU5S035uaiZtFKYqcGpHKiDviGchUdVNmirOGjBqlHBO6vC1TirQwJyDVOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X4PyW0w0; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1789485123; c=relaxed/simple;
+	bh=mGXj9rYQ89EiksEgZ8ooYwjgVj6u19LVUEMnARCW4Rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PGuryZYpdwKZaSihKBbFq497GTXO6HofVDAAbF1xJcYF9sGqpfqZN/Omhv3UI4bFF3LCYooYBtkVpuwwJHY/oZX87DHb5tGT0yBy1hSicfZlSZkfcCwWeJiqgKYxKe6H1inZKkC36GxB1Pw3LBEroOiHVtnHcwXmbKf/RNCTm24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZJyvkInU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4PyW0w0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJyvkInU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789485120;
+	s=mimecast20190719; t=1789485119;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kqnCn6G38OWUssJgOIyQiwhSLKRNKgZZBvo5dTe58DE=;
-	b=X4PyW0w0pOCcmQwN7aGQvNwq6uXyMB7wRNvAQTppIdWVX6o8kYqwOXk3U50uPGSGF58FSs
-	hJvVwq2GHrWsX4+inHOFDS8vCv8B7B4GDKJ/SfrMx+93rbJgHqp2T+ap2KJJ/6m1SO2a3N
-	Zu/M79n4ngqO1vmqKnLmFtEalhRgMmg=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mE8Bh+0jAQgytsO/tFgPUQ0Y3d9Rgu+QmNzdfxlDTYw=;
+	b=ZJyvkInUK/kaHrxlSTMwVQXHtypHXSBxSqN/UaKdpr7gntckLYM6acyVoQGbn2O4XvErKr
+	eEKAWWRhe6+uDOZpOk1wOf+75o7ns7Wuma1qdqbmzfyzFtqEk01djgDQV+iYcHiwJAuh1K
+	jcRIgh7r4XjpSU/NuqG4vSlAm9qdm8s=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-534-41nLmPF9My6Bm6Da_F6EBQ-1; Tue,
- 15 Sep 2026 11:11:56 -0400
-X-MC-Unique: 41nLmPF9My6Bm6Da_F6EBQ-1
-X-Mimecast-MFC-AGG-ID: 41nLmPF9My6Bm6Da_F6EBQ_1789485114
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-193-QzRJia2PPACiAii6EyZ61A-1; Tue,
+ 15 Sep 2026 11:11:55 -0400
+X-MC-Unique: QzRJia2PPACiAii6EyZ61A-1
+X-Mimecast-MFC-AGG-ID: QzRJia2PPACiAii6EyZ61A_1789485114
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 171E7195604A;
-	Tue, 15 Sep 2026 15:11:54 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA31E19539A7;
+	Tue, 15 Sep 2026 15:11:37 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B02D2195604C;
-	Tue, 15 Sep 2026 15:11:48 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9FC0B195604C;
+	Tue, 15 Sep 2026 15:11:32 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Fabiano Rosas <farosas@suse.de>,
@@ -60,11 +58,9 @@ Cc: Fabiano Rosas <farosas@suse.de>,
 	Zhao Liu <zhao1.liu@intel.com>,
 	qemu-block@nongnu.org,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH v2 3/7] qapi: convert remaining simple intros for machine.json
-Date: Tue, 15 Sep 2026 11:11:23 -0400
-Message-ID: <20260915151127.1002244-4-jsnow@redhat.com>
-In-Reply-To: <20260915151127.1002244-1-jsnow@redhat.com>
-References: <20260915151127.1002244-1-jsnow@redhat.com>
+Subject: [PATCH v2 0/7] qapi: convert remaining "simple" intro sections
+Date: Tue, 15 Sep 2026 11:11:20 -0400
+Message-ID: <20260915151127.1002244-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -72,35 +68,67 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: P9Fd5sL44lcll_EseJywzUjfs58zZsQDud2Wd1Qs2J4_1789485114
+X-Mimecast-MFC-PROC-ID: 1WrYN1qoBXDgpsZpe0v-1EhY0evboc3R81j2PJ_90aU_1789485114
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-These are either structs or unions that are used in an inlinable
-context: i.e. the generated documentation is likely to feature a
-version of this documentation block that does not include the intro in
-context of another command, event, or structure.
-
-Signed-off-by: John Snow <jsnow@redhat.com>
----
- qapi/machine.json | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 0516112f8e8..13875fc4642 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -449,8 +449,7 @@
- 
- ##
- # @NumaOptions:
--#
--# A discriminated record of NUMA options.  (for OptsVisitor)
-+#     A discriminated record of NUMA options.  (for OptsVisitor)
- #
- # @type: NUMA option type
- #
--- 
-2.55.0
+v2:=0D
+ - Fix stub insertion algorithm for some "TODO:" replacement cases=0D
+=0D
+Hello, this work converts the remaining "simple" intro sections in the=0D
+QAPI schema to use the new syntax. This is part of our ongoing effort=0D
+to add the mythical "inliner" to our generated QMP documentation.=0D
+=0D
+This batch covers structures that *are* likely to be inlined, and thus=0D
+have introductory paragraphs that are quite likely to be omitted when=0D
+the member documentation is copied into other contexts (e.g. as=0D
+arguments for command documentation, or as members of a branch for=0D
+commands that accept union arguments.)=0D
+=0D
+"simple" here is a non-technical distinction that means a single=0D
+paragraph of text followed by an existing section boundary that=0D
+naturally already delineates what comprises the intro.=0D
+=0D
+If you are a non-QAPI maintainer who has been CC'd on this series, you=0D
+may wish to review what information is being codified as the "intro"=0D
+(The indented paragraph) and keep in mind that in the future, this=0D
+text may not be visible to the end-user reading our QMP documentation=0D
+if this structure is utilized as the 'base' for another struct, used=0D
+as the arguments for a command or event, or used as branch of a=0D
+union. This series keeps it pretty simple, and every conversion herein=0D
+is being codified as "the intro", i.e. "not crucial to understanding=0D
+the behavior of the members of this struct".=0D
+=0D
+This is the last of the brain-dead, simple conversions apart from any=0D
+new cases that may have been merged during the development of this=0D
+series. The remaining patches all convert or split longer paragraphs=0D
+and require more scrutiny.=0D
+=0D
+We're almost back to reviewing actual code! Hang in there, everybody.=0D
+=0D
+John Snow (7):=0D
+  qapi: convert remaining simple intros for block-export.json=0D
+  qapi: convert remaining simple intros for cxl.json=0D
+  qapi: convert remaining simple intros for machine.json=0D
+  qapi: convert remaining simple intros for block-core.json=0D
+  qapi/parser: fix intermediate "intro" detection=0D
+  qapi: convert intro sections with "TODO" markers=0D
+  qapi: convert intro sections followed by notes/examples=0D
+=0D
+ qapi/block-core.json   | 45 ++++++++++++++++++------------------------=0D
+ qapi/block-export.json | 19 ++++++++----------=0D
+ qapi/cxl.json          | 14 +++++--------=0D
+ qapi/machine.json      | 15 +++++---------=0D
+ qapi/migration.json    | 25 +++++++++--------------=0D
+ qapi/misc.json         |  3 +--=0D
+ qapi/net.json          |  9 +++------=0D
+ qapi/run-state.json    |  7 +++----=0D
+ qapi/yank.json         |  5 +----=0D
+ scripts/qapi/parser.py | 10 ++++++++++=0D
+ 10 files changed, 64 insertions(+), 88 deletions(-)=0D
+=0D
+--=20=0D
+2.55.0=0D
+=0D
 
