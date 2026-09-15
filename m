@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24FB4508EB
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 21:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE347DFBF
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 21:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789506907; cv=none; b=g76nkY507JkGqK5gQ3vF73/hxwS1q1kLzVGYovSXmsHc+3ZihWdPBe9/TQ2B2qBRIqVBOwhi2+W/2brSRbiZ1xzJyG2JxoCy05JNYW+2GxdE3HYbDnIAOK5FXvuFGQQwGIdvESSl+DcH5QxOkmtIT1wUcr1OpvCAD0O00d9tPxo=
+	t=1789506911; cv=none; b=B9QIsKzm2/Sv7jqzflHMXhmJUBgMPWQWrBqfsVpWHIXa5kYM+9Eb7wgP18UM5qmgWCDAKn92e2MYHEopktoumwAMAqKrCG4gIxzDTckLSRnlZ7bed9ZkyIgyHVFNh6R4/HWXivgC+Mx1zGsmfVPoad3IqatBvkDOMA18lAtZa6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789506907; c=relaxed/simple;
-	bh=eIK9WpF+eRAOvzAMoBh/7Gj01xt7ap8sY0vUmBPiat0=;
+	s=arc-20240116; t=1789506911; c=relaxed/simple;
+	bh=eZjc0C8ESNGAHqDow+EMnxuRsWcslzuDp/Cljtuw+yI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=LS+YtgoyKg4A54PC0AYiHv354Ks9m2cKbvv28FXaq/s7LpcRVfmi/8vJlwcQzD2yhO07+O0Pejhw7uNTBgWdsai3NKGqHkshYanzSOpofRROa2gIaY/vI9tO1atD9ZWNSncMTdzCf+QUzKCoFPPLC5tzZiXOoUjcOkSKbJlwWfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qga3Kx5h; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=bGb/xwY5828c16Xvm6hoe8lT6tS981QkdoAmOMWcbqYrYk34zpezhPq4v3A3AuaFYHXe4Ho0HaJLcz4EowbZVilPX2B61w1bii+RLNu96z4tvhnurNmE9cbyh8284F3DN0Woo9xBjNROwcYeZ1eACj0FS37qX3sqNOEwuvSZpmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHxvVqyd; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qga3Kx5h"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHxvVqyd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789506905;
+	s=mimecast20190719; t=1789506909;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YBhz2UZF8bOOsvlTvTMmJ20/Eqyxkh0IEGurbSrhuto=;
-	b=Qga3Kx5hCREjBllCmON8bw9SMw9mphMTNUsT0SGrJ37LVjEvKkHTt+WdfD2P+P3tZqZPAr
-	jMuNgZp74bwwYHFKErjDXKSv+FYZjmoa71Bs9SXDQ1Ccf/FQePMXIBTFKv6M5BGdDfU1HH
-	H9N2oJe3ks4kHeDJ1CwW3C3eK2DJ+AE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=pxwSvjyweKaZCuJXGsfI9jwtz+eDtnLs/f3FZEar0W4=;
+	b=BHxvVqydrddysgFf8RD/WBxqpQonM/HOd5GOrYw28FfmOC1WlIIVbsw02ROxjpC/7MTbhp
+	r8bUvnI4+OdNBLnPEZ1auLu8qS9kPDj/rnmARK9EoUKEb+sEbSed42s5TVhM/sbUBAIC2g
+	yk981xd7pHRiSN+w00qbfdAIe9OXDCw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-8TXqaac9OUGBwGpMIUjstw-1; Tue,
- 15 Sep 2026 17:15:01 -0400
-X-MC-Unique: 8TXqaac9OUGBwGpMIUjstw-1
-X-Mimecast-MFC-AGG-ID: 8TXqaac9OUGBwGpMIUjstw_1789506899
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-110-R9xoFrn1OU-Yu0kfS8WLBA-1; Tue,
+ 15 Sep 2026 17:15:04 -0400
+X-MC-Unique: R9xoFrn1OU-Yu0kfS8WLBA-1
+X-Mimecast-MFC-AGG-ID: R9xoFrn1OU-Yu0kfS8WLBA_1789506902
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B54CF19540C3;
-	Tue, 15 Sep 2026 21:14:59 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 86278184B383;
+	Tue, 15 Sep 2026 21:15:02 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1EC551956042;
-	Tue, 15 Sep 2026 21:14:57 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE54A1956095;
+	Tue, 15 Sep 2026 21:14:59 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: Fabiano Rosas <farosas@suse.de>,
@@ -62,9 +62,9 @@ Cc: Fabiano Rosas <farosas@suse.de>,
 	Kevin Wolf <kwolf@redhat.com>,
 	Junjie Cao <junjie.cao@intel.com>,
 	John Snow <jsnow@redhat.com>
-Subject: [PATCH v3 6/7] qapi: convert intro sections with "TODO" markers
-Date: Tue, 15 Sep 2026 17:14:33 -0400
-Message-ID: <20260915211434.3511110-7-jsnow@redhat.com>
+Subject: [PATCH v3 7/7] qapi: convert intro sections followed by notes/examples
+Date: Tue, 15 Sep 2026 17:14:34 -0400
+Message-ID: <20260915211434.3511110-8-jsnow@redhat.com>
 In-Reply-To: <20260915211434.3511110-1-jsnow@redhat.com>
 References: <20260915211434.3511110-1-jsnow@redhat.com>
 Precedence: bulk
@@ -74,105 +74,110 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: xwzZQQx6kMkRaMS3YHrJ1IOMmJMlcgpMmyBesxhRpo4_1789506899
+X-Mimecast-MFC-PROC-ID: A1N2kTQfPL2K-kp38Q0sndUdPiKFifwIOsp7hWzwWwE_1789506902
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This patch converts intro sections that are immediately followed by a
-"TODO:" that was formerly used to demarcate the stub member insertion
-point.
+These provide a rather natural cutoff point, but technically this does
+introduce a new intro/details split to these documentation blocks.
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/machine.json   |  7 ++-----
- qapi/migration.json | 10 ++--------
- qapi/net.json       |  9 +++------
- qapi/yank.json      |  5 +----
- 4 files changed, 8 insertions(+), 23 deletions(-)
+ qapi/machine.json   |  5 ++---
+ qapi/migration.json | 15 +++++++--------
+ qapi/misc.json      |  3 +--
+ qapi/run-state.json |  7 +++----
+ 4 files changed, 13 insertions(+), 17 deletions(-)
 
 diff --git a/qapi/machine.json b/qapi/machine.json
-index a58e373dd70..84d95c8d87f 100644
+index 84d95c8d87f..276258d9e5c 100644
 --- a/qapi/machine.json
 +++ b/qapi/machine.json
-@@ -1244,11 +1244,8 @@
+@@ -1209,9 +1209,8 @@
  
  ##
- # @query-memory-size-summary:
+ # @HV_BALLOON_STATUS_REPORT:
 -#
--# Return the amount of initially allocated and present hotpluggable
--# (if enabled) memory in bytes.
--#
--# TODO: This line is a hack to separate the example from the body
-+#     Return the amount of initially allocated and present
-+#     hotpluggable (if enabled) memory in bytes.
+-# Emitted when the hv-balloon driver receives a "STATUS" message from
+-# the guest.
++#     Emitted when the hv-balloon driver receives a "STATUS" message
++#     from the guest.
  #
- # .. qmp-example::
+ # .. note:: This event is rate-limited.
  #
 diff --git a/qapi/migration.json b/qapi/migration.json
-index 0428f777882..d571c06fc20 100644
+index d571c06fc20..a272e701385 100644
 --- a/qapi/migration.json
 +++ b/qapi/migration.json
-@@ -1617,10 +1617,7 @@
+@@ -1254,10 +1254,10 @@
  
  ##
- # @query-xen-replication-status:
+ # @migrate_cancel:
 -#
--# Query replication status while the vm is running.
+-# Cancel the currently executing migration process.  Allows a new
+-# migration to be started right after.  When postcopy-ram is in use,
+-# cancelling is not allowed after the postcopy phase has started.
++#     Cancel the currently executing migration process.  Allows a new
++#     migration to be started right after.  When postcopy-ram is in
++#     use, cancelling is not allowed after the postcopy phase has
++#     started.
+ #
+ # .. note:: This command succeeds even if there is no migration
+ #    process running.
+@@ -1632,8 +1632,8 @@
+ 
+ ##
+ # @xen-colo-do-checkpoint:
 -#
--# TODO: This line is a hack to separate the example from the body
-+#     Query replication status while the vm is running.
+-# Xen uses this command to notify replication to trigger a checkpoint.
++#     Xen uses this command to notify replication to trigger a
++#     checkpoint.
  #
  # .. qmp-example::
  #
-@@ -1670,10 +1667,7 @@
+@@ -1700,8 +1700,7 @@
  
  ##
- # @query-colo-status:
+ # @migrate-pause:
 -#
--# Query COLO status while the vm is running.
--#
--# TODO: This line is a hack to separate the example from the body
-+#     Query COLO status while the vm is running.
+-# Pause a migration.  Currently it only supports postcopy.
++#     Pause a migration.  Currently it only supports postcopy.
  #
  # .. qmp-example::
  #
-diff --git a/qapi/net.json b/qapi/net.json
-index 526108ca0bb..d0bacb4dcfe 100644
---- a/qapi/net.json
-+++ b/qapi/net.json
-@@ -1159,12 +1159,9 @@
+diff --git a/qapi/misc.json b/qapi/misc.json
+index b7d08532768..b62cabc2b79 100644
+--- a/qapi/misc.json
++++ b/qapi/misc.json
+@@ -103,8 +103,7 @@
  
  ##
- # @announce-self:
+ # @query-iothreads:
 -#
--# Trigger generation of broadcast RARP frames to update network
--# switches.  This can be useful when network bonds fail-over the
--# active slave.
--#
--# TODO: This line is a hack to separate the example from the body
-+#     Trigger generation of broadcast RARP frames to update network
-+#     switches.  This can be useful when network bonds fail-over the
-+#     active slave.
+-# Return a list of information about each iothread.
++#     Return a list of information about each iothread.
  #
- # .. qmp-example::
- #
-diff --git a/qapi/yank.json b/qapi/yank.json
-index 8ac4b773653..187a0952e66 100644
---- a/qapi/yank.json
-+++ b/qapi/yank.json
-@@ -96,10 +96,7 @@
+ # .. note:: This list excludes the QEMU main loop thread, which is not
+ #    declared using the ``-object iothread`` command-line option.  It
+diff --git a/qapi/run-state.json b/qapi/run-state.json
+index 703ca1bb5b9..8bbd9884087 100644
+--- a/qapi/run-state.json
++++ b/qapi/run-state.json
+@@ -232,10 +232,9 @@
  
  ##
- # @query-yank:
+ # @SUSPEND_DISK:
 -#
--# Query yank instances.  See `YankInstance` for more information.
--#
--# TODO: This line is a hack to separate the example from the body
-+#     Query yank instances.  See `YankInstance` for more information.
+-# Emitted when guest enters a hardware suspension state with data
+-# saved on disk, for example, S4 state, which is sometimes called
+-# hibernate state
++#     Emitted when guest enters a hardware suspension state with data
++#     saved on disk, for example, S4 state, which is sometimes called
++#     hibernate state
  #
- # .. qmp-example::
- #
+ # .. note:: QEMU shuts down (similar to event `SHUTDOWN`) when
+ #    entering this state.
 -- 
 2.55.0
 
