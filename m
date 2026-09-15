@@ -1,132 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525FA389E07
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 17:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A482B4A1E1A
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 17:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789494907; cv=none; b=aE0DV0lizcrXdQJauYQhSsCfzWNp+KODp7wx4r52Lb5o6LogifBY4qp+paDLElk3547sbC9Mk5Kcjn1wy1zvZYS1kDz+zwe6nVMVSyey7fSzxti/iALisJM/E6sm3eo8/KQUfvdretOGLGvzpswcdPoh3C3FOhEIDLfoFJH8nlA=
+	t=1789494951; cv=none; b=CRUQ42G6VU4x5x2PTCOd+UmkLmZ7RkDC/khUkoe1pi9grdBHC99dStOL3pATG/QL8YqEa+jpJ0jMMs43Mdl5u6WVrBaaF8d9jJPMFpTJBa48SSL2WlkfywYFi+m9f3S/BmKFEtIa2dUsqVsRa8/Sxq2OnEVebVl5HQOv240kkXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789494907; c=relaxed/simple;
-	bh=hdtUKyG3EQZLjxTWr84JSsClsYqHszuDmDiyAcxyI4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=NyWTvnA5tMVx2SQkxGgxesi6sKQaYPZcT90mkCPBJGi8I5CM4am6DA7xrqxwFKZdIZ0l3QlWJGdHLylEK7tErt04H1wLfv7Szzh6jzF5N7YlhivIHZ7vgClsGo9UspC8v1tGf1U4PzqT+rHA0WK20zv2x0Bgh79BZs0EPzUmamY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OdR41IGE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789494951; c=relaxed/simple;
+	bh=I7sWJPbVKTLzF7keQNRj6hV0qE5IKqOsaze8pQwlVTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bpGbCDUZH8NIxTvTrL5wp4+0ko29gk/YmMGX4T5vWpIlFA1ks8T0P0v41ra/4PydhPbFwOara5iNa9etv6Cdoxr1LLxO2GkY/COSJfZzWOMa2GyLQH9ulRAMzHXosD0nV6bbIB/4NSdc9FyijfEmWxu1mRCY66b43jCL92ZeW/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfTMvzD7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdR41IGE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789494903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=isG/UafLGI1WqGN/jYrgbdMUzSDVyDgdbVXFdCNZheI=;
-	b=OdR41IGEmzp3GdJgBYziacZitNgmahbDmQbsxiEhq7FM00A2fPoSovWrB9rKngrDqWqpzg
-	Al3QtoBEV836L5nVKsTYxFyIqHnTI0Rw/AvjsnxsZXx4wbNZw8u38iGPpa6MoG3aEocEdZ
-	b5CrZZ9dOHoxhyAuYCxk8OgUpgN8nzI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-322-rV7c59QbPgyhx1f-br9AwA-1; Tue, 15 Sep 2026 13:55:02 -0400
-X-MC-Unique: rV7c59QbPgyhx1f-br9AwA-1
-X-Mimecast-MFC-AGG-ID: rV7c59QbPgyhx1f-br9AwA_1789494901
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49cf5bd2f12so50041705e9.1
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 10:55:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789494901; x=1790099701;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=isG/UafLGI1WqGN/jYrgbdMUzSDVyDgdbVXFdCNZheI=;
-        b=OzBVhc3jn9AVmnxiimnEATnlq4BcDWa3IsBY6oU612C5gQN6WiEPHOYGxCZhAWjOWX
-         qYBPKu5eZWSb7D3VqzQac9T5kRjr0Yp1T1aO0H51uzzArar/lOQJFzpNQGfg4k2UWCRc
-         Ju2yd5g5JjSucj4y/Su4YcOmcjOe0W57xx8P4N1GRRyaZu3a6m9wNLP1Ec06f1Xx0EoH
-         ptw2fhWamnpbEYLVKqiCCLxUpCVC2SKOZT5VCn4UPUsT6UlKr+XHzNroJlWA6UEn2Y4s
-         /kRltWovT3RSLF/20+BRN23OxKK4GuFGn0qq9uTmS66IuFXAuryNAsdi1h3uij/jl/Cu
-         QVlw==
-X-Forwarded-Encrypted: i=1; AKwUvBxWD6DULCgRo93nyhjrEKvI6x2slRnb1D7SlxXVDKGgBUoxlmrMAc4vFS4vR1Y05sRIuD90F0RGiAs=@vger.kernel.org
-X-Gm-Message-State: AFuF++lNNGnb6yyZIQb5M+yAEQWJh6sjBcYE+VHh/YYJglxCeUwj+Ggj
-	yN+NbkT200Avv4BeZL4dyrsS0xJdRz9arI5HHd0oAoSpW951XcMjqZ8zg0EnAeJR6oAyO/l5uTS
-	qzh9pduCe1La0g9pm5CxXRxDz2tYeSQ8o+WGPTK2qT6FWDJ7B4WlNoRAXOo7CbwnwuLLXNg==
-X-Gm-Gg: AYBFou0EuoVJx39pUy4bGG00/XQNWLXCsFXKoWVMeejL2blnITNVPq7NSEBeLCKEsSH
-	ADhOFu9wiW0NVs4Ke4/FWvVkmDK/5FefZowqNN2gO77UpWrhrSVemL3F/6IrawJ58RdVj/GVn15
-	03OyH+i15vRzi3iYeH2KRn+Z4ns5wiXCGhfNXxUwx+2Z/ft9sNTNxxZpkNe7pu6AApSIQWgiNh6
-	si/PuSkoVKZhL7N2SXbXyl47Ni3UCoKPWa/eggk+QAAoEDsNCoRLeaPTwLu/Ib2clSg+onfuIjH
-	dOtoCW1FthPfai5FeCAN3NFRrM/Gw7lC9mI3OS8L2MUnl0o/UOIRU4JGJf9TPDQOOcVCgzmFR1z
-	yFdBYMpf6IF5JXd1Q9/fryUE=
-X-Received: by 2002:a05:600c:c168:b0:496:c1f3:e8f8 with SMTP id 5b1f17b1804b1-49e7a662e89mr100913825e9.7.1789494900966;
-        Tue, 15 Sep 2026 10:55:00 -0700 (PDT)
-X-Received: by 2002:a05:600c:c168:b0:496:c1f3:e8f8 with SMTP id 5b1f17b1804b1-49e7a662e89mr100913515e9.7.1789494900520;
-        Tue, 15 Sep 2026 10:55:00 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e83d903f6sm6702965e9.4.2026.09.15.10.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 10:55:00 -0700 (PDT)
-Date: Tue, 15 Sep 2026 13:54:57 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Junjie Cao <junjie.cao@intel.com>, qemu-devel@nongnu.org,
-	jonathan.cameron@oss.qualcomm.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add Junjie Cao as CXL reviewer
-Message-ID: <20260915135403-mutt-send-email-mst@kernel.org>
-References: <20260908042310.493882-1-junjie.cao@intel.com>
- <20260915184056.44f30b8e@jic23-hlaptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfTMvzD7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9A81F000FF;
+	Tue, 15 Sep 2026 17:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789494941;
+	bh=CfFwWgtl+eibAQ5fpOdX+5AtdE11X/LWsJ9WbQHfDiY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=AfTMvzD7PiM80+hUHUu4fUIuPoZOK2mTmLvGj/ejAnfuET5O1Slpl4dyAR+Z1Ra58
+	 cU1IBTVLAwrbTQan9ht5X5UCdYGPcgaJaP0NkvvCpShhriEf0AejyqKkKP0J2zGuaw
+	 f7C69KAfcnzqAbj29k64F/3o+WbCTGJCMjPM7/8LzWqkkYYtYgqu3cp81h7AOT/l1G
+	 veI0F7mvOjUIASJvpx0pUhw22O6Tsk/U4750xn5h1e5gqSU5HSiArtuhdz0Esxewml
+	 eS74sfUdG2xQxgmpCohzpuhVvDoYdDHeewHEBbRofeTNFZlTwRh1id0licX2eJUdrE
+	 KBi9aXQ7bsTlQ==
+Date: Tue, 15 Sep 2026 18:55:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: palmer@dabbelt.com, alistair.francis@wdc.com, mst@redhat.com,
+ imammedo@redhat.com, sunilvl@ventanamicro.com, pbonzini@redhat.com,
+ liwei1518@gmail.com, daniel.barboza@oss.qualcomm.com,
+ zhiwei_liu@linux.alibaba.com, chao.liu@processmission.com,
+ anisinha@redhat.com, dave.jiang@intel.com, alison.schofield@intel.com,
+ junjie.cao@intel.com, guoren@kernel.org, qemu-riscv@nongnu.org,
+ qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] tests/qtest: Add RISC-V ACPI bios tables test
+ for CXL
+Message-ID: <20260915185538.18e5526a@jic23-hlaptop>
+In-Reply-To: <20260907093735.2753-6-cp0613@linux.alibaba.com>
+References: <20260907093735.2753-1-cp0613@linux.alibaba.com>
+	<20260907093735.2753-6-cp0613@linux.alibaba.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260915184056.44f30b8e@jic23-hlaptop>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ouiIPjyTGU_Mmfw4I0uy--w9LRE0sC7g78nMiaNYs_U_1789494901
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 15, 2026 at 06:40:56PM +0100, Jonathan Cameron wrote:
-> On Tue,  8 Sep 2026 12:23:10 +0800
-> Junjie Cao <junjie.cao@intel.com> wrote:
-> 
-> > I have been reviewing, testing and contributing to hw/cxl for the past
-> > few months, and would like to be Cc'd on incoming CXL changes to help
-> > with review.
-> > 
-> > Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> > Signed-off-by: Junjie Cao <junjie.cao@intel.com>
-> 
-> Apologies for slow reply but for the record.
-> Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-> 
-> Thanks for helping out!
-> 
-> I'm jumping through hoops to get a CXL staging tree up under new employer's
-> github.
-> 
-> Just waiting on what I think is final step so maybe have that done today.
-> 
-> Jonathan
+On Mon,  7 Sep 2026 17:37:32 +0800
+Chen Pei <cp0613@linux.alibaba.com> wrote:
 
-great! just to confirm the things you acked so far you will repost
-as you did previously? if u want me to pick something up out of band,
-pls let me know.
+> Add test_acpi_riscv64_virt_tcg_cxl() to verify that enabling CXL on
+> the RISC-V virt machine produces correct ACPI tables, including the
+> ACPI0017 CXLM device with _DEP in the DSDT and the CEDT table.
+> 
+> The test boots with cxl=on, one pxb-cxl bus (bus_nr=12), a CXL root
+> port, a cxl-type3 device and a fixed memory window, mirroring the
+> existing x86 q35 CXL test pattern.
+> 
+> Since pxb-cxl is a root bus, using -cdrom causes QEMU to auto-plug the
+> cdrom drive into pxb-cxl, triggering "Only PCI/PCIe bridges can be
+> plugged into pxb-cxl".  The ISO is instead attached explicitly via a
+> virtio-scsi-pci controller on pcie.0, following the same approach as
+> test_acpi_aarch64_virt_tcg_pxb().
+> 
+> Acked-by: Alistair Francis <alistair.francis@wdc.com>
+> Reviewed-by: Junjie Cao <junjie.cao@intel.com>
+> Tested-by: Junjie Cao <junjie.cao@intel.com>
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7183babd6a..bbabcf8cca 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3328,6 +3328,7 @@ F: docs/devel/migration/CPR.rst
-> >  
-> >  Compute Express Link
-> >  M: Jonathan Cameron <jic23@kernel.org>
-> > +R: Junjie Cao <junjie.cao@intel.com>
-> >  L: linux-cxl@vger.kernel.org
-> >  S: Supported
-> >  F: hw/cxl/
+One possible extra thing below and a general comment. This does the job
+though so no need to change anything.
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+
+
+> ---
+>  tests/qtest/bios-tables-test.c | 54 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
+> index f6dfa4131b..41c0d6a295 100644
+> --- a/tests/qtest/bios-tables-test.c
+> +++ b/tests/qtest/bios-tables-test.c
+> @@ -2214,6 +2214,56 @@ static void test_acpi_riscv64_virt_tcg(void)
+>      free_test_data(&data);
+>  }
+>  
+> +#ifdef CONFIG_POSIX
+> +static void test_acpi_riscv64_virt_tcg_cxl(void)
+> +{
+> +    gchar *tmp_path = g_dir_make_tmp("qemu-test-cxl.XXXXXX", NULL);
+> +    gchar *params;
+> +
+> +    test_data data = {
+> +        .machine = "virt",
+> +        .arch = "riscv64",
+> +        .tcg_only = true,
+> +        .uefi_fl1 = "pc-bios/edk2-riscv64-code.fd",
+> +        .uefi_fl2 = "pc-bios/edk2-riscv64-vars.fd",
+> +        .ram_start = 0x80000000ULL,
+> +        .scan_len = 128ULL * MiB,
+> +        .variant = ".cxl",
+> +    };
+> +
+> +    /*
+> +     * While using -cdrom, the cdrom would auto-plug into pxb-cxl because
+> +     * its bus is also a root bus, triggering "Only PCI/PCIe bridges can be
+> +     * plugged into pxb-cxl".  Attach the ISO explicitly to a scsi controller
+> +     * on pcie.0 instead, following the same pattern as
+> +     * test_acpi_aarch64_virt_tcg_pxb().
+> +     */
+> +    params = g_strdup_printf("-cpu rva22s64"
+> +                             " -machine cxl=on"
+> +                             " -device pcie-root-port,chassis=1,id=pci.1,bus=pcie.0"
+> +                             " -device virtio-scsi-pci,id=scsi0,bus=pci.1"
+> +                             " -drive file=tests/data/uefi-boot-images/"
+> +                             "bios-tables-test.riscv64.iso.qcow2,"
+> +                             "if=none,media=cdrom,id=drive-scsi0-0-0-1,readonly=on"
+> +                             " -device scsi-cd,bus=scsi0.0,scsi-id=0,"
+> +                             "drive=drive-scsi0-0-0-1,id=scsi0-0-0-1,bootindex=1"
+> +                             " -object memory-backend-file,id=cxl-mem1,mem-path=%s,size=256M"
+> +                             " -object memory-backend-file,id=lsa1,mem-path=%s,size=256M"
+> +                             " -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1"
+> +                             " -device cxl-rp,port=0,bus=cxl.1,id=rp1,chassis=0,slot=2"
+> +                             " -device cxl-type3,bus=rp1,persistent-memdev=cxl-mem1,lsa=lsa1"
+
+Only thing maybe to consider adding is the serial number given the problems we've had with
+that in the past and that persistent mem is basically unuseable without one (it ends
+up as part of the stuff stored in LSA).
+
+I am a bit curious if you actually care enough about persistent for that to be better to
+test than volatile, but doesn't really matter wrt to what is being tested in practice
+which is the arch integration.
+
+> +                             " -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,"
+> +                             "cxl-fmw.0.interleave-granularity=8k",
+> +                             tmp_path, tmp_path);
+> +    test_acpi_one(params, &data);
+> +
+> +    g_free(params);
+> +    g_assert(g_rmdir(tmp_path) == 0);
+> +    g_free(tmp_path);
+> +    free_test_data(&data);
+> +}
+> +#endif /* CONFIG_POSIX */
+> +
+>  static void test_acpi_aarch64_virt_tcg(void)
+>  {
+>      test_data data = {
+> @@ -2971,6 +3021,10 @@ int main(int argc, char *argv[])
+>                             test_acpi_riscv64_virt_tcg_numamem);
+>              qtest_add_func("acpi/virt/acpispcr",
+>                             test_acpi_riscv64_virt_tcg_acpi_spcr);
+> +#ifdef CONFIG_POSIX
+> +            qtest_add_func("acpi/virt/cxl",
+> +                           test_acpi_riscv64_virt_tcg_cxl);
+> +#endif
+>          }
+>      } else if (strcmp(arch, "loongarch64") == 0) {
+>          if (has_tcg && qtest_has_machine("virt")) {
 
