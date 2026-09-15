@@ -1,181 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24423E0724
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 15:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE0240F8F8;
+	Tue, 15 Sep 2026 16:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789485140; cv=none; b=IzFsBwz8qJQx4UKoFBN8dJdIM7sXEcGTRejvZkDRW9SflcN/pG6X308PMbXUgbkqaL4X6CiQwRjo+WlDdbx7kiT0/anzxpV8yLiyi8rXdjrt6axQj+xmxI75MolEQbcczVcNTHEZ4b+2RlmIoM9Z5XKccrpB1Z+pXnjkinrYsqE=
+	t=1789488070; cv=none; b=mZrTMUsjq3ZO1C5trMF423oC3FsYYa96HPW/uVQAMw8EcvsPt0TAiKrxUS3UGPD8R+GrVJnbIXp1JPiw8ITsSm+g4QuGILFp6k1C8ebvUfkVjsOTPbuQqeuLDs5/1D3ducQmWZaoNRcfnQH6dFcU3Rhf+qBiMt5/u6Ky/Eh64WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789485140; c=relaxed/simple;
-	bh=2i93qfcx0F3So8tgLtZx10IEAJ8eYu+mdlnrXUtbFwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Or9T+tc0FbTGKII3KWFjSirwmHRw+K0ULYWWnfw2GYgC/I1TeVQIWYW01flP/Ad1jVuFkDBSLwm0y6/mgDM0/fnLHY6nGJqn+HFBrUEsaHQViFcBeMmaVNn9Ak2DywvIsiOCMTVoitEcj2+jku5DasX0bRwry7K/o6CWLVM0s3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ts6qoiGg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789488070; c=relaxed/simple;
+	bh=PB1yceFjWeCqfa6rjL80BB6h/HYLGuvETNZIdbClL3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d22LwDsMbJc5IXLw1iDb+eOovtwsIN1G8N0HPKVDEL2lP5PxTMoktk6KG/6YBa6ugmz9IgxL8xly6i0J4oVpsTXyMeLB6/Ju5orYFN11hMUsRqhAEK44FSameQBQLRksgkeWwI590gzEelePrI6hl+hDPevylH9GmAuCN42yMmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fhczkw8l; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ts6qoiGg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789485137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OhXIqCf/hAEpGNtdeyWPDfvZ8dculLK71e35WLjicQI=;
-	b=Ts6qoiGghyWkn0Wb9U9vBMDikdFoOGY8qXst2UOIrwWxNT8iXFTw8OBCvsG7gtFRok8eVU
-	g+fGhmSl2zzeWQhBGQR+ly349gj3AtDoq7cFt6NJVC0odFM1R3y6mgpAqImDvgggQxrS2T
-	4XMN9hVBFIaqcitezUa2SlmtcPxsAi8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-437-Oz1ezOxcMLqFNN-FKlVgMQ-1; Tue,
- 15 Sep 2026 11:12:12 -0400
-X-MC-Unique: Oz1ezOxcMLqFNN-FKlVgMQ-1
-X-Mimecast-MFC-AGG-ID: Oz1ezOxcMLqFNN-FKlVgMQ_1789485130
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AF261955EA0;
-	Tue, 15 Sep 2026 15:12:10 +0000 (UTC)
-Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2294C195604C;
-	Tue, 15 Sep 2026 15:12:06 +0000 (UTC)
-From: John Snow <jsnow@redhat.com>
-To: qemu-devel@nongnu.org
-Cc: Fabiano Rosas <farosas@suse.de>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Kevin Wolf <kwolf@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Lukas Straub <lukasstraub2@web.de>,
-	Eric Blake <eblake@redhat.com>,
-	Hanna Reitz <hreitz@redhat.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	linux-cxl@vger.kernel.org,
-	Zhao Liu <zhao1.liu@intel.com>,
-	qemu-block@nongnu.org,
-	John Snow <jsnow@redhat.com>
-Subject: [PATCH v2 7/7] qapi: convert intro sections followed by notes/examples
-Date: Tue, 15 Sep 2026 11:11:27 -0400
-Message-ID: <20260915151127.1002244-8-jsnow@redhat.com>
-In-Reply-To: <20260915151127.1002244-1-jsnow@redhat.com>
-References: <20260915151127.1002244-1-jsnow@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fhczkw8l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789488069; x=1821024069;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PB1yceFjWeCqfa6rjL80BB6h/HYLGuvETNZIdbClL3Q=;
+  b=Fhczkw8lH3DPVoTqi4ND1C1X2Z+xzmJuopQ1uQhF0bZANF9IqMiPTbn/
+   yv4xml2CrE1s+3EnfzQXBx2vrr+E/6WbfYXL1gZlROqH9mR2uMmlJSty9
+   DiAbSBV/bB55qwN7oBNS5DIXQNxEXP1t8u9na95ihjUAoUAMZgKVoKput
+   lylhki6lnDT5Prh0ZLikjp2jtUpPONsiXQHBfGxHGc+I6r+4rjfaaAjGq
+   KV5pwcoKpVFM7jaIJdpsOCY/Sv98W/9S8rHKjfj5cN7qrrBiwUsCmm4s5
+   ExrTrkzMbiJplEfvA0y7Zz6uKwNjwt9ZemdtzrJiT39z4e914/mOQ12JX
+   A==;
+X-CSE-ConnectionGUID: QjfPcNS+TcKY9maYSsry0w==
+X-CSE-MsgGUID: EgYpbGbDTjOK5n7vMD7NXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101374072"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="101374072"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 09:01:08 -0700
+X-CSE-ConnectionGUID: sfeft0puT22gUaGyx+68eA==
+X-CSE-MsgGUID: AibJa8UsT0WeRaXSZUtpDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="302939802"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.195]) ([10.125.108.195])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 09:01:07 -0700
+Message-ID: <8a889714-f492-4975-b326-bb2ee866c6a1@intel.com>
+Date: Tue, 15 Sep 2026 09:01:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: 8W7g-hnpdLuPI6hQzjiAuH2Z7bIc7T1_2J4nsokoKE4_1789485130
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/3] Support zero-sized HDM decoders
+To: Richard Cheng <icheng@nvidia.com>, jic23@kernel.org, dave@stgolabs.net,
+ vishal.l.verma@intel.com, alison.schofield@intel.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, kaihengf@nvidia.com,
+ kobak@nvidia.com, vaslot@nvidia.com, newtonl@nvidia.com, mochs@nvidia.com,
+ kristinc@nvidia.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260914090858.19181-1-icheng@nvidia.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260914090858.19181-1-icheng@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-These provide a rather natural cutoff point, but technically this does
-introduce a new intro/details split to these documentation blocks.
 
-Signed-off-by: John Snow <jsnow@redhat.com>
----
- qapi/machine.json   |  5 ++---
- qapi/migration.json | 15 +++++++--------
- qapi/misc.json      |  3 +--
- qapi/run-state.json |  7 +++----
- 4 files changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 108033b6d64..9a790da9db2 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -1181,9 +1181,8 @@
- 
- ##
- # @HV_BALLOON_STATUS_REPORT:
--#
--# Emitted when the hv-balloon driver receives a "STATUS" message from
--# the guest.
-+#     Emitted when the hv-balloon driver receives a "STATUS" message
-+#     from the guest.
- #
- # .. note:: This event is rate-limited.
- #
-diff --git a/qapi/migration.json b/qapi/migration.json
-index 70a1854fb73..c831e692feb 100644
---- a/qapi/migration.json
-+++ b/qapi/migration.json
-@@ -1241,10 +1241,10 @@
- 
- ##
- # @migrate_cancel:
--#
--# Cancel the currently executing migration process.  Allows a new
--# migration to be started right after.  When postcopy-ram is in use,
--# cancelling is not allowed after the postcopy phase has started.
-+#     Cancel the currently executing migration process.  Allows a new
-+#     migration to be started right after.  When postcopy-ram is in
-+#     use, cancelling is not allowed after the postcopy phase has
-+#     started.
- #
- # .. note:: This command succeeds even if there is no migration
- #    process running.
-@@ -1619,8 +1619,8 @@
- 
- ##
- # @xen-colo-do-checkpoint:
--#
--# Xen uses this command to notify replication to trigger a checkpoint.
-+#     Xen uses this command to notify replication to trigger a
-+#     checkpoint.
- #
- # .. qmp-example::
- #
-@@ -1687,8 +1687,7 @@
- 
- ##
- # @migrate-pause:
--#
--# Pause a migration.  Currently it only supports postcopy.
-+#     Pause a migration.  Currently it only supports postcopy.
- #
- # .. qmp-example::
- #
-diff --git a/qapi/misc.json b/qapi/misc.json
-index b3c2a1421f3..ec783c067c9 100644
---- a/qapi/misc.json
-+++ b/qapi/misc.json
-@@ -103,8 +103,7 @@
- 
- ##
- # @query-iothreads:
--#
--# Return a list of information about each iothread.
-+#     Return a list of information about each iothread.
- #
- # .. note:: This list excludes the QEMU main loop thread, which is not
- #    declared using the ``-object iothread`` command-line option.  It
-diff --git a/qapi/run-state.json b/qapi/run-state.json
-index 703ca1bb5b9..8bbd9884087 100644
---- a/qapi/run-state.json
-+++ b/qapi/run-state.json
-@@ -232,10 +232,9 @@
- 
- ##
- # @SUSPEND_DISK:
--#
--# Emitted when guest enters a hardware suspension state with data
--# saved on disk, for example, S4 state, which is sometimes called
--# hibernate state
-+#     Emitted when guest enters a hardware suspension state with data
-+#     saved on disk, for example, S4 state, which is sometimes called
-+#     hibernate state
- #
- # .. note:: QEMU shuts down (similar to event `SHUTDOWN`) when
- #    entering this state.
--- 
-2.55.0
+On 9/14/26 2:08 AM, Richard Cheng wrote:
+> 
+> CXL r4.0 §8.2.4.20.12 ("Committing Decoder Programming") and
+> §14.13.10 ("CXL HDM Decoder Zero Size Commit") permit committing an
+> HDM decoder with size 0. Firmware may commit and lock such decoders so
+> the OS cannot program regions through them; this is a platform design
+> choice rather than a specification requirement.
+> 
+> The kernel currently rejects these decoders with -ENXIO during port
+> enumeration and aborts enumeration of the entire port. On affected
+> systems, this prevents the CXL topology from appearing in userspace.
+> 
+> This series enumerates empty committed decoders into the topology while
+> keeping them out of region assembly.
+> 
+> Patch 1 is a preparatory cleanup with no functional change. It clarifies
+> the error handling and iteration control in poison_by_decoder(), and
+> shares the check for a forgiven -EFAULT on a RAM partition with
+> cxl_get_poison_unmapped().
+> 
+> Patch 2 makes zero-size DPA reservations first-class. Since the resource
+> tree cannot represent an empty range, an empty decoder is backed by a
+> separately allocated resource. This keeps port->hdm_end, skip handling,
+> and in-order DPA accounting consistent. Operations requiring non-empty
+> capacity, including region attachment and poison queries, are guarded
+> appropriately.
+> 
+> Patch 3 adds the mock_zero_size_decoders cxl_test module parameter,
+> disabled by default. When enabled, it installs committed, locked,
+> zero-sized endpoint, switch, and host-bridge decoders under
+> host-bridge0.
+> 
+> Testing:
+> 
+> As reported in v9, the series was tested on arm64 with cxl_test and
+> the ndctl v85 unit suite, with KASAN and lockdep enabled. With
+> mock_zero_size_decoders disabled, the full CXL suite reported 15 tests
+> passed and 1 skipped.
+> 
+> cxl-poison.sh was skipped because its unaligned translation section
+> was unreachable; both run_poison_test() rounds passed. Details:
+> https://lore.kernel.org/linux-cxl/anKpY6Y1Sqne1f7Y@MWDK4CY14F/
+> 
+> The core patch was also previously validated on a Montage CXL Type 3
+> device.
+> 
+> The corresponding ndctl test:
+> https://lore.kernel.org/linux-cxl/20260709022857.18732-1-icheng@nvidia.com/
+> 
+> Runtime-tested v10 on a CXL Type 3 device and confirmed that normal
+> device operation continues to work with the series applied.
+> 
+> Changelog:
+> 
+> v9->v10 (Alison Schofield):
+> - Patch 2: propagate -ENOMEM when allocation of the standalone
+>   zero-sized resource fails.
+> - Patch 2: retain the original !cxled->dpa_res guard in cxl_dpa_free().
+>   An existing zero-sized reservation must reach the region,
+>   enabled-state, and release-order checks.
+> - Patch 2: update the commit message.
+> - Patches 1 and 3 are unchanged.
+> 
+> Previous version:
+> https://lore.kernel.org/linux-cxl/20260805055524.22311-1-icheng@nvidia.com/
+> 
+> 
+> Richard Cheng (3):
+>   cxl/region: Simplify poison_by_decoder() error handling
+>   cxl/hdm: Allow zero sized HDM decoders
+>   tools/testing/cxl: Enable zero sized decoders under hb0
+> 
+>  drivers/cxl/core/hdm.c       |  58 +++++++++++++------
+>  drivers/cxl/core/mbox.c      |   3 +
+>  drivers/cxl/core/region.c    |  69 ++++++++++++++--------
+>  drivers/cxl/cxl.h            |  10 ++++
+>  drivers/cxl/port.c           |   3 +
+>  tools/testing/cxl/test/cxl.c | 109 ++++++++++++++++++++++++++++++-----
+>  6 files changed, 195 insertions(+), 57 deletions(-)
+> 
+> 
+> base-commit: 899648a2707d0405f573dfc7fe15385d9ba3af55
+
+Applied to cxl/next:
+057dc2892d1f
+00f9ef9ad1ce
+fef22d37d470
 
