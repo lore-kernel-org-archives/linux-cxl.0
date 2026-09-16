@@ -1,309 +1,543 @@
-Received: from mta0.migadu.com (out-7.mta0.migadu.com [91.218.175.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013042.outbound.protection.outlook.com [40.93.201.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2C859D62F
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 15:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789573205; cv=none; b=aJVN/ve4uaQXkp84QOSCy7HFUM3thYbEHxJ992o+ZXL080kD0ovrqKWwi2qbFRlCqN/jYOIJuucKF4PfA+jeTuxg50KgAuhUVUF2SB1pTLEBBHne2HV+rB1t7dOPnT9cv+atut6NWEHJb3do4A2LTodxC/HHhLSzwz2aVsyGMws=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789573205; c=relaxed/simple;
-	bh=7tSYx1YNaVm49StAg6iVU/9rtvR8g/9RYPq4x+SxYQs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mKwra+SCSO4byw0znAhya90a9YJUawv4UDmESnz3FW+GD+3fW58Ln2ubNz8Er07wBUZlgaGzhQaTfEs+tr5Qy9tsOUIvJTHNhCwCCbtV7JyPMVipl+j2YQhFtSajZ7O0BJ3DdOP1ykgYK5e7NfUEeSU5fZCpWYeoTxCk49BXvQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S2GkJ7ud; arc=none smtp.client-ip=91.218.175.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571964B0E40
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 16:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789576875; cv=fail; b=aws8wrmYanoVQsjvZ7iMZzwb13lixKn4b/qpnp4h7bwMEa7mlBNuYh4iUlJBck/EH0XGnKNO+xNX9gGKzZKA2xD7tesT7DOCo+SWGcvQIRH3ur6e119wU1PIE5nuYlF2Y/7P/I0RLSUeBeEKBOj2BO1WKDrPMr5UV83CyJ7aKow=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789576875; c=relaxed/simple;
+	bh=1xttxHR6Tda0SHDnELDFkOUUBjksu93WPl1WTCEkswk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ki4sdLkwA0sdU+p7Qd/Vr1bmOI68kzexT9Q1NSz0f9we/Ktp/yueW79ar+oLYabBvqmqA8qibsXtyYqp1rtP+6hrnaoZqdaeJJ7R/K6m+iqH1jKabQG3VH7ufHplKV4rww00GKs+9gc61Wb2R5RhgWMM6MSDi+oM7Bv/314lJlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OTW9F5d7; arc=fail smtp.client-ip=40.93.201.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S2GkJ7ud"
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=7tSYx1YNaVm49StAg6iVU/9rtvR8g/9RYPq4x+SxYQs=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789573199; v=1; x=1790177999;
- b=S2GkJ7udYAy1rj1ZYrcWezocAALqVdwo5zRefftGOE/6y8e9BIQ8quM0fEIK/i8Fhw67S0qx
- DmkSoXzNoaR+J6Pdxt5NHzZO0Rqzt3f6ZHlrS6EXXu6qoQfEDG65gw5mWOEiYEBwCRW2qmGUbZk
- HCslw6VmCq3AZASQkAAn4yfI=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta12.migadu.com with ESMTPS id 55f1b8f3b5fd4211;
-	Wed, 16 Sep 2026 15:39:57 +0000
-X-Mizu-Trace-ID: 55f1b8f3b5fd4211
-X-Migadu-Flow: FLOW_OUT
-From: Usama Arif <usama.arif@linux.dev>
-To: Breno Leitao <leitao@debian.org>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kas@kernel.org,
-	kexec@lists.infradead.org,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	hannes@cmpxchg.or,
-	shakeel.butt@linux.dev,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	rmikey@meta.com,
-	riel@surriel.com,
-	harry@kernel.org,
-	linux-cxl@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 3/9] mm/memory-failure: libstub: install the poisoned-memory EFI table
-Date: Wed, 16 Sep 2026 08:39:53 -0700
-Message-ID: <20260916153954.1054456-1-usama.arif@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260915-hwpoison-kho-v5-3-3bc7a57bd503@debian.org>
-References: 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OTW9F5d7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vbt0YBvtcVVI+JnCmonpcNM6P3EseCtGMIRn6JbDdQcEh+yAPQ3kQtrvIgFCf7DYg85MDRw73qK/30/MS9UC03ljyF5CYiWDIbHpdpUhgTEV3lu7jM0OCFMkjDrz85zMuCVzQJ4VgMC9mu+MUuK3jfrcdCiADIVnFofh60Ka0I0pPHJHs3N+C2ZQ+8TkByOtn+CaXQ5WB6XhjAvnSaT0EGR+oFvANAHgBoDr0srKoCJ9FPJ1C3Ls+l2T2j4gQnKnMdzKU2r5Uct2Ernaq2pKY/YT8MwHGDU4Rgs+NUXIDj7WQyHrIUHVYpHEKVgdsE9+IoZiCO7r8RZhJ2VnhxzaEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UjZPM2OVTX/h9qwmyIHLcVIR+qaNMCBjO1KfKmAYtL0=;
+ b=sPIwXYD0ZOHhCkLZSrdApALKiW3EdF7wNr7yF8KPBTEuFgzrfkQYUUj3HoF1TobDI3ZSCKrkpajpXYOi913dqngF1AcObH/mHupqGHXU6gmjjem/HX8thE3jTT5DUyWMHzS/OnNQqBSRyZLRzz50g8q6L6KdL0NJpgzpYlBYS4dhJsfi7FhTmmpHV5PvSUpaCtSZfS9zahLbPhgNqv12b4eIJqzMPE4OfAa0nnOEVTFwZWMJAoXePUvR1yVusOIBrcluVF4a2GzARNFVnfL2RL0qW4Zf0rH3285ED8eehFpHAtfAlVklYj61fCIht/URoU51jHrQDkUDXL8733kYgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UjZPM2OVTX/h9qwmyIHLcVIR+qaNMCBjO1KfKmAYtL0=;
+ b=OTW9F5d7Y8VzeXuMYH/fyhW1oCN4r09OsoMrXh4n421uAAnrsxKREOA1bxrbR0Xd2lNu18/buh+SpiCLyH850X5Fi7x4V64rvtNIs/v8VvoakEZ0A8ET13eIN6jZUszeJ37UHFwOplJJyPJ5rkAmbIGls3El/rxEiqXKG1JTikI=
+Received: from SA9PR13CA0162.namprd13.prod.outlook.com (2603:10b6:806:28::17)
+ by CY5PR12MB6106.namprd12.prod.outlook.com (2603:10b6:930:29::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Wed, 16 Sep
+ 2026 16:40:56 +0000
+Received: from SA2PEPF00003AE9.namprd02.prod.outlook.com
+ (2603:10b6:806:28:cafe::a7) by SA9PR13CA0162.outlook.office365.com
+ (2603:10b6:806:28::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.9 via Frontend Transport; Wed, 16
+ Sep 2026 16:40:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF00003AE9.mail.protection.outlook.com (10.167.248.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.428.7 via Frontend Transport; Wed, 16 Sep 2026 16:40:55 +0000
+Received: from [10.236.187.71] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Wed, 16 Sep
+ 2026 11:40:53 -0500
+Message-ID: <c60ee4b7-f2b5-4c45-8414-6f7c31462d28@amd.com>
+Date: Wed, 16 Sep 2026 11:40:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] cxl/test: Add ELC MCE alias retirement tests
+To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>
+CC: <dave.jiang@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+References: <20260906041844.13891-1-shaikhkamal2012@gmail.com>
+ <aqqtlTAh9faQzqCE@acer-nitro-anv15-41>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <aqqtlTAh9faQzqCE@acer-nitro-anv15-41>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE9:EE_|CY5PR12MB6106:EE_
+X-MS-Office365-Filtering-Correlation-Id: 800d1d4a-5956-405a-b397-08df1411478e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|7416014|82310400026|1800799024|376014|36860700016|11063799006|4143699003|6133799003|56012099006|3023799007|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	FBliAVk0rF8XMlwUGqPhgen9HddkF2JgguZaujvzeS8mryJmZuMFj5LsgnJwsMJGgT35qIAVq8tdIQnmUt576DZs0gmc08MsY/99X4Nk4FtjkSYYgdFaf3fJ0UiV6DhLLFWCh4WKxiN/IzgZfHm0FB2pLygmYJhKurx1Fbuo15661s2hyQDhULAL3To5u1Mg/gibz5pXwG4r1OQ36SVXV2Z96kVE7RFhXAcSQYmUBQyysN6Nro5jMVh68ESaNq2vAM7vdY/3SLT4fhwuC+qNJqfVvUVY4HPT9ZQjS33MLvKocxESOuNaXfzeSgmas2zEfyqC6tgWWcugX/Sn47R0wZj9aYvFQoR7UIQSHjFebk6I2M/UrBwwuQhs01UGzc8Tc6wmBaXcRhJdAqaAXD0RuqAAg5O41/18gfqBRojoDhSOpkobHIK40QaNrRFd5117tzKoz+dMsQBXz1Wd5PHLztISmF3KRyzlE3ttwnSGLibQOLQ+zZXbHqaniFMKnPhDLYcmjMbHF/rANY6ZviAn3t2unAoHS/txG2yU2aMFAlHhaj1QLrg7p3Re05+fJeZ9wZtbk0Qgaj5jeOqeiBJcQ0ru1fNos7YeqHA8KorbC7EXjUClB2KGWmf+cKzZErzIubTgbEBWpH75bgFZ/FmA3z9obKiCIDhaC8TWCzbTLCDu9d028gX9oSI+kVQ5B6nVbPRZ+Or+QlCdkyoNxbO3sQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(82310400026)(1800799024)(376014)(36860700016)(11063799006)(4143699003)(6133799003)(56012099006)(3023799007)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	gJieIkDxeBZ8LkkYBIRwStsqxA0Bk7AKa+F/dgN2pizedJWEGOuCmddM6YBFIBt6S238P+IE6Cxdc6GR3kNTPOh9CQ1ee6sx3O6yeoJ6Sz1lVotry0tcGVpxHpmeWzdiTFxilJtLzkEjCSiXdHXgLGmehWjxc8FMA5PozqllNGjbCO9OgaqYM4bAIFaJlpFVQVQpHHb9CNiF2jKxcr7euRf0rlyiO90wAj6Xn3oCTxr9RWxcmiC+XQ/Z8luRlelYzMuT+XItDfU8xXy1HggfrNXmPz1wD33FzSnox0Wu8FAFA7uRXaeJjHNevRA1AZNRDSEpWcvT3Y4qhMWuyRHBbEPU3UDY+KvWg1tJp18i24DaN0Po6Pw5xuxZ/0MxJMuMadJpjkzM6Ri+kANKu7T7ueWRRYcgq40mV1hk/z/JQRjG9EWX7nnVm2p0v2LQocnR
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2026 16:40:55.6775
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 800d1d4a-5956-405a-b397-08df1411478e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003AE9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6106
 
-On Tue, 15 Sep 2026 05:53:37 -0700 Breno Leitao <leitao@debian.org> wrote:
+Hi Shaikh,
 
-> A EFI config table can only be installed while boot services are still
-> up, so the stub has to create it; the running kernel can only flip bits
-> in a table that already exists.
-> 
-> Size the bitmap from the span the UEFI memory map describes, which
-> efi_get_ram_range() walks since the stub has no max_pfn. Bit 0 covers
-> the bottom of that span, recorded in phys_base, so a machine whose RAM
-> starts high does not pay for the hole below it. Memory the firmware
-> hot-adds later sits outside the span and is not carried across a kexec.
-> 
-> One table has to serve every architecture, and what they agree on is the
-> attribute: setup_e820() takes a descriptor as RAM only if it is writeback
-> cacheable, and so does is_usable_memory() on arm64.
-> 
-> The bitmap spans from the lowest to the highest descriptor that is
-> write-back cacheable or unaccepted memory, as discussed with Kiryl. That
-> leaves out the MMIO apertures, which sit high enough to stretch it far
-> past the RAM it needs to describe.
-> 
-> At one bit per 2M that is 64K per TiB, and 256M at the 4PB x86
-> architectural maximum. The 2M granule is called "unit" here, and the
-> table carries it so the granule can change later without breaking the
-> kernels already reading it.
-> 
-> Allocate it as EFI_ACPI_RECLAIM_MEMORY so the next kernel does not take
-> it for free RAM, and install it empty.
-> 
-> A table installed by an earlier boot rides the system table across kexec
-> and is reused as-is.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  drivers/firmware/efi/libstub/efi-stub-helper.c | 103 +++++++++++++++++++++++++
->  drivers/firmware/efi/libstub/efi-stub.c        |   1 +
->  drivers/firmware/efi/libstub/efistub.h         |   6 ++
->  drivers/firmware/efi/libstub/x86-stub.c        |   2 +
->  4 files changed, 112 insertions(+)
-> 
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> index 48f93f7758e9e9..9c66e06c972c5a 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> @@ -774,3 +774,106 @@ void efi_remap_image(unsigned long image_base, unsigned alloc_size,
->  			efi_warn("Failed to remap data region non-executable\n");
->  	}
->  }
-> +
-> +#ifdef CONFIG_EFI_POISONED_MEMORY
-> +/*
-> + * Find the base and top of the memory, so, we can create the bitmap for
-> + * the full range.
-> + */
-> +static efi_status_t efi_get_ram_range(u64 *base, u64 *top)
-> +{
-> +	struct efi_boot_memmap *map __free(efi_pool) = NULL;
-> +	u64 ram_base = ULLONG_MAX, ram_top = 0;
-> +	efi_status_t status;
-> +	int i, nr_desc;
-> +
-> +	status = efi_get_memory_map(&map, false);
-> +	if (status != EFI_SUCCESS)
-> +		return status;
-> +
-> +	nr_desc = map->map_size / map->desc_size;
-> +	for (i = 0; i < nr_desc; i++) {
-> +		efi_memory_desc_t *d;
-> +
-> +		d = efi_memdesc_ptr((unsigned long)map->map, map->desc_size, i);
-> +		if (!(d->attribute & EFI_MEMORY_WB) &&
-> +		    d->type != EFI_UNACCEPTED_MEMORY)
-> +			continue;
-> +		ram_base = min(ram_base, d->phys_addr);
+Sorry I've been on vacation for the last week and half and just now starting to get caught up. I don't have time
+to do more than just a quick glance at the moment, but I'll come back and do a full review in the next few days.
 
-Can this use the architecture's full RAM predicate?  On x86,
-setup_e820() maps EFI_LOADER_CODE, EFI_LOADER_DATA, both boot-services
-types, and EFI_CONVENTIONAL_MEMORY as E820_TYPE_RAM without requiring
-EFI_MEMORY_WB.
-
-If a non-WB descriptor is at either end of RAM, this code omits it
-from the bitmap span.  efi_hwpoison_record_pfn() then rejects a
-poisoned PFN there, so the next kernel can allocate the bad frame.
-
-One possible way to preserve the x86 behavior before applying the WB rule is:
-
-    if (IS_ENABLED(CONFIG_X86) &&
-        (d->type == EFI_LOADER_CODE ||
-         d->type == EFI_LOADER_DATA ||
-         d->type == EFI_BOOT_SERVICES_CODE ||
-         d->type == EFI_BOOT_SERVICES_DATA ||
-         d->type == EFI_CONVENTIONAL_MEMORY))
-            goto include;
-    if (!(d->attribute & EFI_MEMORY_WB) &&
-        d->type != EFI_UNACCEPTED_MEMORY)
-            continue;
-include:
-    ram_base = min(ram_base, d->phys_addr);
-
-
-> +		ram_top = max(ram_top,
-> +			      d->phys_addr + d->num_pages * EFI_PAGE_SIZE);
-> +	}
-> +	if (!ram_top || ram_base == ULLONG_MAX)
-> +		return EFI_NOT_FOUND;
-> +
-> +	*base = round_down(ram_base, EFI_POISON_UNIT_SIZE);
-> +	*top = round_up(ram_top, EFI_POISON_UNIT_SIZE);
-> +
-> +	return EFI_SUCCESS;
-> +}
-> +
-> +/* The size of the bitmap */
-> +static u64 efi_poison_bitmap_size(u64 span)
-> +{
-> +	u64 bytes = DIV_ROUND_UP(DIV_ROUND_UP(span, EFI_POISON_UNIT_SIZE),
-> +				 BITS_PER_BYTE);
-> +
-> +	return round_up(bytes, sizeof(unsigned long));
-> +}
-> +
-> +static struct linux_efi_poisoned_memory *efi_poison_alloc(u64 phys_base,
-> +							  u64 bitmap_size)
-> +{
-> +	struct linux_efi_poisoned_memory *pm;
-> +	efi_status_t status;
-> +
-> +	status = efi_bs_call(allocate_pool, EFI_ACPI_RECLAIM_MEMORY,
-> +			     sizeof(*pm) + bitmap_size, (void **)&pm);
-> +	if (status != EFI_SUCCESS)
-> +		return NULL;
-> +
-> +	pm->version = 1;
-> +	pm->unit_size = EFI_POISON_UNIT_SIZE;
-> +	pm->phys_base = phys_base;
-> +	pm->size = bitmap_size;
-> +	memset(pm->bitmap, 0, bitmap_size);
-> +
-> +	return pm;
-> +}
-> +
-> +/* This needs to be done while boot service is still active */
-> +void install_poisoned_memory_table(void)
-> +{
-> +	efi_guid_t poisoned_memory_table_guid = LINUX_EFI_POISONED_MEMORY_TABLE_GUID;
-> +	struct linux_efi_poisoned_memory *pm;
-> +	u64 ram_base, ram_top, bitmap_size;
-> +	efi_status_t status;
-> +
-> +	/* A table installed by an earlier boot rides the system table across kexec. */
-> +	pm = get_efi_config_table(poisoned_memory_table_guid);
-> +	if (pm) {
-> +		if (pm->version != 1)
-> +			efi_err("Unknown version of poisoned-memory table\n");
-> +		return;
-> +	}
-> +
-> +	if (efi_get_ram_range(&ram_base, &ram_top) != EFI_SUCCESS) {
-> +		efi_err("Failed to size the poisoned-memory table!\n");
-> +		return;
-> +	}
-> +
-> +	bitmap_size = efi_poison_bitmap_size(ram_top - ram_base);
-> +	pm = efi_poison_alloc(ram_base, bitmap_size);
-> +	if (!pm) {
-> +		efi_err("Failed to allocate poisoned-memory table!\n");
-> +		return;
-> +	}
-> +
-> +	status = efi_bs_call(install_configuration_table,
-> +			     &poisoned_memory_table_guid, pm);
-> +	if (status != EFI_SUCCESS) {
-> +		efi_bs_call(free_pool, pm);
-> +		efi_err("Failed to install poisoned-memory config table!\n");
-> +	}
-> +}
-> +#endif
-> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> index 235c9738da2d63..22a315e2814a1a 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> @@ -179,6 +179,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
->  			 EFI_RT_SUPPORTED_SET_VIRTUAL_ADDRESS_MAP);
->  
->  	install_memreserve_table();
-> +	install_poisoned_memory_table();
->  
->  	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
->  
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index fd91fc15ec810b..44436869c4efe1 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -1169,6 +1169,12 @@ efi_enable_reset_attack_mitigation(void) { }
->  
->  void efi_retrieve_eventlog(void);
->  
-> +#ifdef CONFIG_EFI_POISONED_MEMORY
-> +void install_poisoned_memory_table(void);
-> +#else
-> +static inline void install_poisoned_memory_table(void) { }
-> +#endif
-> +
->  struct sysfb_display_info *alloc_primary_display(void);
->  struct sysfb_display_info *__alloc_primary_display(void);
->  void free_primary_display(struct sysfb_display_info *dpy);
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 0bae0f06b6763a..3136132b9628ab 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -1024,6 +1024,8 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
->  
->  	setup_unaccepted_memory();
->  
-> +	install_poisoned_memory_table();
-> +
->  	status = exit_boot(boot_params, handle);
->  	if (status != EFI_SUCCESS) {
->  		efi_err("exit_boot() failed!\n");
+On 9/16/2026 9:54 AM, Shaikh Kamaluddin wrote:
+> Hi Alison and Ben,
 > 
-> -- 
-> 2.53.0-Meta
+> Gentle ping on this patch. Could you please take a look when you have a
+> time?
 > 
+> Thanks,
+> Shaikh Kamaluddin
 > 
+> On Sun, Sep 06, 2026 at 09:48:44AM +0530, Shaikh Kamaluddin wrote:
+>> ELC alias retirement depends on the error severity and on whether
+
+You should spell out ELC on the first usage, helps with context.
+>> vendor-specific MCE rules consider the reported address usable. Add
+>> regression coverage for these decisions to cxl-elc.sh.
+>>
+>> Inject MCE records through the mce-inject debugfs interface and verify
+>> the resulting bank status and alias-offlining messages in dmesg. Test
+>> corrected and uncorrected errors on Intel, and exercise the poison,
+>> deferred, and legacy bank-4 cases required by AMD address validation.
+>>
+>> Derive the ELC SPA and its alias from cxl-list output, select offline
+>> test addresses from lsmem, and discover available MCA banks dynamically.
+>> Use a distinct SPA for each case and clean up modules loaded by the test.
+>>
+>> Suggested-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+>> ---
+>> Testing:
+>> The test was run under virtme-ng with cxl_test configured for Extended
+>> Linear Cache operation:
+>>
+>> Intel, GenuineIntel:
+>> --------------------
+>>
+>> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu Skylake-Server-v4,+mce,+mca -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
+>>
+>> 2 . Go to ndctl-main directoy with this patches 
+>>
+>> env NDCTL="$PWD/build/ndctl/ndctl" 
+>> DAXCTL="$PWD/build/daxctl/daxctl" 
+>> CXL="$PWD/build/cxl/cxl" 
+>> ./test/cxl-elc.sh
+>>
+>> RESULT:
+>> --------
+>>
+>> PASS Intel corrected: alias no
+>> PASS Intel uncorrected: alias yes
+>> CXL ELC MCE validation passed for GenuineIntel: 2 cases
+>> -----------------------------------------------------------------
+>>
+>> AMD, AuthenticAMD legacy MCA: 
+>> -----------------------------
+>>
+>> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu EPYC-Milan -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
+
+One thing to note: real Milan hardware doesn't support CXL; CXL 1.1 support was added in the next generation (Genoa). The kernel is also broken on Genoa since the driver is geared towards CXL 2.0+, so I'd
+recommend a Turin+ machine for hardware testing.
+
+I don't think this is really applicable though, since I'm 99% sure AMD hardware doesn't have ELC support to begin with. I'll try running the tests on hardware and see what happens, though I think it will just
+break. There may need to be a check to see what platform the test is running on so we can skip platforms that don't have support (i.e. real AMD hardware).
+
+I think it's probably fine to leave the test in place though in the event AMD adds ELC support later on.
+
+Thanks,
+Ben
+>>
+>> 2. Go to ndctl-main directoy with this patches  
+>> env NDCTL="$PWD/build/ndctl/ndctl" 
+>> DAXCTL="$PWD/build/daxctl/daxctl" 
+>> CXL="$PWD/build/cxl/cxl" 
+>> ./test/cxl-elc.sh
+>>
+>> RESULT:
+>> ---------
+>> PASS AMD plain corrected: alias no
+>> PASS AMD plain uncorrected: alias no
+>> PASS AMD poison-only (invalid encoding): alias no
+>> PASS AMD deferred without poison: alias no
+>> PASS AMD deferred with poison: alias yes
+>> PASS AMD uncorrected with poison: alias yes
+>> PASS AMD bank-4 non-memory poison (invalid encoding): alias no
+>> PASS AMD legacy bank-4 corrected DRAM ECC: alias no
+>> CXL ELC MCE validation passed for AuthenticAMD: 8 cases
+>>
+>>  test/cxl-elc.sh | 313 +++++++++++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 312 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/test/cxl-elc.sh b/test/cxl-elc.sh
+>> index cfa09cb..bd600b4 100755
+>> --- a/test/cxl-elc.sh
+>> +++ b/test/cxl-elc.sh
+>> @@ -8,6 +8,30 @@ rc=77
+>>  
+>>  set -ex
+>>  
+>> +mce_inject_loaded=0
+>> +
+>> +cleanup()
+>> +{
+>> +	local status=$?
+>> +	local cleanup_status=0
+>> +
+>> +	trap - EXIT ERR
+>> +	set +e
+>> +
+>> +	if ((mce_inject_loaded)); then
+>> +		modprobe -r mce-inject || cleanup_status=1
+>> +	fi
+>> +
+>> +	modprobe -r cxl_test || cleanup_status=1
+>> +
+>> +	if ((status == 0 && cleanup_status != 0)); then
+>> +		status=1
+>> +	fi
+>> +
+>> +	exit "$status"
+>> +}
+>> +
+>> +trap cleanup EXIT
+>>  trap 'err $LINENO' ERR
+>>  
+>>  check_prereq "jq"
+>> @@ -85,10 +109,297 @@ compare_bases()
+>>  	((cxlrd_hpa == ep1_hpa - ep1_size)) || err "$LINENO"
+>>  }
+>>  
+>> +mce_skip()
+>> +{
+>> +	echo "SKIP CXL ELC MCE subtest: $*"
+>> +	return 0
+>> +}
+>> +
+>> +dmesg_count()
+>> +{
+>> +	dmesg | grep -F -c -- "$1" || true
+>> +}
+>> +
+>> +wait_for_dmesg()
+>> +{
+>> +	local pattern="$1"
+>> +	local previous="$2"
+>> +	local count
+>> +
+>> +	for _ in {1..50}; do
+>> +		count="$(dmesg_count "$pattern")"
+>> +		((count > previous)) && return 0
+>> +		sleep 0.1
+>> +	done
+>> +
+>> +	return 1
+>> +}
+>> +
+>> +address_is_offline()
+>> +{
+>> +	local address="$1"
+>> +	local range start end
+>> +
+>> +	while read -r range; do
+>> +		[[ "$range" == *-* ]] || continue
+>> +		start=$(( ${range%%-*} ))
+>> +		end=$(( ${range##*-} ))
+>> +		((address >= start && address <= end)) && return 0
+>> +	done < <(echo "$lsmem_json" | jq -r \
+>> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+>> +		 .range')
+>> +
+>> +	return 1
+>> +}
+>> +
+>> +find_offline_spas()
+>> +{
+>> +	local nr_spas="$1"
+>> +	local range start end low high candidate alias spa_string alias_string
+>> +	local page_size region_end cache_end i
+>> +	local stride=0x10000
+>> +
+>> +	lsmem_json="$(lsmem --json --bytes --output RANGE,STATE)"
+>> +	page_size="$(getconf PAGESIZE)"
+>> +	region_end=$((region_hpa + region_size))
+>> +	cache_end=$((region_hpa + elc_size))
+>> +	inject_spas=()
+>> +	alias_spas=()
+>> +
+>> +	while read -r range; do
+>> +		[[ "$range" == *-* ]] || continue
+>> +		start=$(( ${range%%-*} ))
+>> +		end=$(( ${range##*-} ))
+>> +
+>> +		low=$start
+>> +		((low < region_hpa)) && low=$region_hpa
+>> +		high=$((end + 1))
+>> +		((high > cache_end)) && high=$cache_end
+>> +		((low < high)) || continue
+>> +
+>> +		# Stay away from the first pages of the hotplugged range.
+>> +		candidate=$((low + stride))
+>> +		candidate=$((
+>> +			(candidate + page_size - 1) / page_size * page_size
+>> +		))
+>> +		inject_spas=()
+>> +		alias_spas=()
+>> +		for ((i = 0; i < nr_spas; i++)); do
+>> +			candidate=$((candidate + (i > 0 ? stride : 0)))
+>> +			alias=$((candidate + elc_size))
+>> +			((candidate < high && alias < region_end)) || break
+>> +			address_is_offline "$alias" || break
+>> +			printf -v spa_string '0x%x' "$candidate"
+>> +			printf -v alias_string '0x%x' "$alias"
+>> +			inject_spas+=("$spa_string")
+>> +			alias_spas+=("$alias_string")
+>> +		done
+>> +		((${#inject_spas[@]} == nr_spas)) || continue
+>> +		return 0
+>> +	done < <(echo "$lsmem_json" | jq -r \
+>> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+>> +		 .range')
+>> +
+>> +	return 1
+>> +}
+>> +
+>> +discover_mca_banks()
+>> +{
+>> +	local path name
+>> +
+>> +	for path in \
+>> +		/sys/devices/system/machinecheck/machinecheck0/bank[0-9]*; do
+>> +		[[ -e "$path" ]] || continue
+>> +		name="${path##*/}"
+>> +		printf '%s\n' "${name#bank}"
+>> +	done | sort -n -u
+>> +}
+>> +
+>> +has_bank()
+>> +{
+>> +	local wanted="$1"
+>> +	local bank
+>> +
+>> +	for bank in "${mca_banks[@]}"; do
+>> +		[[ "$bank" == "$wanted" ]] && return 0
+>> +	done
+>> +
+>> +	return 1
+>> +}
+>> +
+>> +select_mce_parameters()
+>> +{
+>> +	local bank
+>> +
+>> +	vendor="$(awk '/^vendor_id/{ print $3; exit }' /proc/cpuinfo)"
+>> +	readarray -t mca_banks < <(discover_mca_banks)
+>> +	((${#mca_banks[@]})) || return 1
+>> +
+>> +	case "$vendor" in
+>> +	GenuineIntel)
+>> +		test_bank="${mca_banks[-1]}"
+>> +		test_case_count=2
+>> +		;;
+>> +	AuthenticAMD)
+>> +		# The usable-address corrected-error case is the legacy bank-4 DRAM
+>> +		# ECC encoding (XEC 8). It is not valid for an SMCA bank.
+>> +		grep -qw smca /proc/cpuinfo && return 1
+>> +		has_bank 4 || return 1
+>> +		non_b4_bank=
+>> +		for bank in "${mca_banks[@]}"; do
+>> +			[[ "$bank" == 4 ]] || non_b4_bank="$bank"
+>> +		done
+>> +		[[ -n "$non_b4_bank" ]] || return 1
+>> +		test_case_count=8
+>> +		;;
+>> +	*)
+>> +		return 1
+>> +		;;
+>> +	esac
+>> +}
+>> +
+>> +inject_mce()
+>> +{
+>> +	local status="$1"
+>> +	local bank="$2"
+>> +	local mce_inject=/sys/kernel/debug/mce-inject
+>> +
+>> +	echo sw > "$mce_inject/flags"
+>> +	echo "$status" > "$mce_inject/status"
+>> +	echo 0x80 > "$mce_inject/misc"
+>> +	echo "$inject_spa" > "$mce_inject/addr"
+>> +	echo "$bank" > "$mce_inject/bank"
+>> +}
+>> +
+>> +run_mce_case()
+>> +{
+>> +	local name="$1"
+>> +	local status="$2"
+>> +	local bank="$3"
+>> +	local expect_alias="$4"
+>> +	local index="$5"
+>> +	local alias_msg bank_msg status_tag
+>> +	local alias_before bank_before
+>> +
+>> +	inject_spa="${inject_spas[$index]}"
+>> +	alias_spa="${alias_spas[$index]}"
+>> +	alias_msg="Offlining aliased SPA address0: $alias_spa"
+>> +	status_tag="${status#0x}"
+>> +	bank_msg="Bank $bank: $status_tag"
+>> +	alias_before="$(dmesg_count "$alias_msg")"
+>> +	bank_before="$(dmesg_count "$bank_msg")"
+>> +
+>> +	inject_mce "$status" "$bank"
+>> +	wait_for_dmesg "$bank_msg" "$bank_before" || err "$LINENO"
+>> +
+>> +	if [[ "$expect_alias" == "yes" ]]; then
+>> +		wait_for_dmesg "$alias_msg" "$alias_before" || err "$LINENO"
+>> +	else
+>> +		(($(dmesg_count "$alias_msg") == alias_before)) || \
+>> +			err "$LINENO"
+>> +	fi
+>> +
+>> +	echo "PASS $name: SPA $inject_spa, alias $alias_spa, bank $bank, alias $expect_alias"
+>> +}
+>> +
+>> +run_intel_mce_cases()
+>> +{
+>> +	run_mce_case "Intel corrected" 0x9c00000000000080 \
+>> +		"$test_bank" no 0
+>> +	run_mce_case "Intel uncorrected" 0xbc00000000000080 \
+>> +		"$test_bank" yes 1
+>> +}
+>> +
+>> +run_amd_mce_cases()
+>> +{
+>> +	# Mirror the full AMD matrix documented with the kernel fix. The two
+>> +	# poison-only records have UC=0 and Deferred=0, so they are not valid
+>> +	# architectural records. Keep them as software-injection robustness
+>> +	# coverage and expect the corrected-error filter to reject them.
+>> +	run_mce_case "AMD plain corrected" 0x9c00000000000080 \
+>> +		"$non_b4_bank" no 0
+>> +	run_mce_case "AMD plain uncorrected" 0xbc00000000000080 \
+>> +		"$non_b4_bank" no 1
+>> +	run_mce_case "AMD poison-only (invalid encoding)" \
+>> +		0x9c00080000000080 "$non_b4_bank" no 2
+>> +	run_mce_case "AMD deferred without poison" 0x9c00100000000080 \
+>> +		"$non_b4_bank" no 3
+>> +	run_mce_case "AMD deferred with poison" 0x9c00180000000080 \
+>> +		"$non_b4_bank" yes 4
+>> +	run_mce_case "AMD uncorrected with poison" 0xbc00080000000080 \
+>> +		"$non_b4_bank" yes 5
+>> +	run_mce_case "AMD bank-4 non-memory poison (invalid encoding)" \
+>> +		0x9c00080000000080 4 no 6
+>> +	run_mce_case "AMD legacy bank-4 corrected DRAM ECC" \
+>> +		0x9c00000000080000 4 no 7
+>> +}
+>> +
+>> +test_mce_alias()
+>> +{
+>> +	local region_json
+>> +
+>> +	[[ "$(uname -m)" == "x86_64" ]] || {
+>> +		mce_skip "x86_64 is required"
+>> +		return 0
+>> +	}
+>> +	command -v lsmem >/dev/null 2>&1 || {
+>> +		mce_skip "lsmem is unavailable"
+>> +		return 0
+>> +	}
+>> +
+>> +	region_json="$(echo "$json" | jq -c --arg region "$region" \
+>> +		'.[] | select(.region == $region)')"
+>> +	region_hpa="$(echo "$region_json" | jq -r '.resource // empty')"
+>> +	region_size="$(echo "$region_json" | jq -r '.size // empty')"
+>> +	elc_size="$(echo "$region_json" | jq -r \
+>> +		'.extended_linear_cache_size // empty')"
+>> +
+>> +	[[ "$region_hpa" =~ ^[0-9]+$ ]] || err "$LINENO"
+>> +	[[ "$region_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+>> +	[[ "$elc_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+>> +	((elc_size > 0x10000 && region_size >= elc_size * 2)) || \
+>> +		err "$LINENO"
+>> +
+>> +	select_mce_parameters || {
+>> +		mce_skip "no supported MCA bank configuration for $vendor"
+>> +		return 0
+>> +	}
+>> +
+>> +	if [[ ! -d /sys/module/mce_inject ]]; then
+>> +		modprobe mce-inject || {
+>> +			mce_skip "mce-inject module is unavailable"
+>> +			return 0
+>> +		}
+>> +		mce_inject_loaded=1
+>> +	fi
+>> +	[[ -d /sys/kernel/debug/mce-inject ]] || {
+>> +		mce_skip "mce-inject debugfs interface is unavailable"
+>> +		return 0
+>> +	}
+>> +
+>> +	find_offline_spas "$test_case_count" || {
+>> +		mce_skip "offline lsmem range lacks enough ELC test addresses"
+>> +		return 0
+>> +	}
+>> +
+>> +	case "$vendor" in
+>> +	GenuineIntel)
+>> +		run_intel_mce_cases
+>> +		;;
+>> +	AuthenticAMD)
+>> +		run_amd_mce_cases
+>> +		;;
+>> +	esac
+>> +
+>> +	echo "CXL ELC MCE validation passed for $vendor: $test_case_count cases"
+>> +}
+>> +
+>>  find_region
+>>  retrieve_info
+>>  compare_sizes
+>>  compare_bases
+>>  
+>> +# Check before injecting the expected machine-check messages.
+>> +check_dmesg "$LINENO"
+>> +test_mce_alias
+>>  check_dmesg "$LINENO"
+>> -modprobe -r cxl_test
+>>
+>> base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
+>> -- 
+>> 2.43.0
+>>
+
