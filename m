@@ -1,161 +1,184 @@
-Received: from mail-pz2-f41.google.com (mail-pz2-f41.google.com [74.125.228.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900761A5B8A
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 00:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA67377A8E;
+	Wed, 16 Sep 2026 00:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789519050; cv=none; b=nE5UmYLJb7aYfqeKUy9sfVernDdSCteHvSgbx81QOYSauOaX7io+zECHDJlro33JXNuc5eGi1HETz1cfoABufKrtk1ulpWbOrxQZv20EZeyEgZSnQx2ksFzFDRnVJJ/ZiW1OmWuw2sEl/0aYX8Zxfxk/7o9khgD7X3bozl34ZXM=
+	t=1789519379; cv=none; b=hZS1Xa7/wUxCaB6LzlDtz8x+MVW86wukCXmxv4EpFSuTiqC1A7qG76DhZaqDDzshz6PPjBNGl/lG28fnWBDcNVrTBO+gq8F/MmN0tNOXEvQTFou5fhHTUj1FhC0ttphuGAbV0D/vQmY9/wLN4DG+hnFLgPmbQa9QgcCvIplpOEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789519050; c=relaxed/simple;
-	bh=/PjDFzNQ4MwfKQTCx8WL+nddwpz++fXoI2e7Z6CnAHo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ul5/K2yY9ZizmPvF68dd8p+hVuzH59L59wtjg+V60vPHRFdVJfx0GXXqm4WWqgw9PcysnZTuuUtfzlfn2401/dI8FMf0yM6Yh0ybqKcofUpk9Nv58ymsiKjf7/WP2dcFGIjcaOEf9oAI2XCAuA2LlOp0xlqH/AP85W5oXZ4Rt5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E45Rm/5p; arc=none smtp.client-ip=74.125.228.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789519379; c=relaxed/simple;
+	bh=UXvRvtYs5SM7qqmMPXpR8IdB9uprW9cKhJW9oYN9nI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lqWLqSMei4I/g8Rl5KoD7V9eRv117aRo8jgEZYWtcap656so0t+fU8ljKIpDlql93yn+KNlaDf3BHDGI2dfI2T0uP/1BjKC1Qb+ohGIjTt/aE+5+ckmPH1jqL4MATdtK0Y+0tt4v+NZ8QCSzgGFTNGYhWzFdUQCOVJO3veUXIm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKPwrzEt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E45Rm/5p"
-Received: by mail-pz2-f41.google.com with SMTP id d2e1a72fcca58-8686f46e4adso274743b3a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Sep 2026 17:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789519048; x=1790123848; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yqKkVTQQYcwc0gbDN5faBzOyekyMfBu7hjn3LfeaFvo=;
-        b=E45Rm/5plnl8zHt1CD+RThMP5/scOyy233xBzGtB5YzAGoEzY3jGavgwAz6pc1JjlC
-         IPTfgbqzAJMukih5nybTFkQxbzqYHtNExrgIBEIjtzvOVGFRXiypKEfe0wE8/YmDX9ic
-         dDZVC5WxXNHrRfdrd0YjHeW/icCvHwbU+OEkhXe+C5rTF4SRue4OJ+8QANrNxUE4fOUx
-         FW4f+IcPoIc1deTpOidGwoGjUWv99DnEGyhAVEyf+iLYr6PkfmnGFdkJI5lBFfxd5qct
-         cAWp4DSdUqh2nPu6o7Zq1QuFgOc5mj2V30S6KhxWE1Y4nHy3YHNWrbnWWVUCfdU23g3z
-         2iWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789519048; x=1790123848;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yqKkVTQQYcwc0gbDN5faBzOyekyMfBu7hjn3LfeaFvo=;
-        b=lZnIzNQXOL0Y8uWKVAzgbITDDobw0SpHsTckq0wol1Fpc0v8s7gxdhLFn9tl5z0Ys6
-         lapZiDXjfZmzZz+hxwFZJr9/dfXXMJYIajRqxavQh3xXxZSp6M8JmsTqstA5zduyPb4d
-         2VfdMdU4nKmg9avR7RSMEWaHg+NYxSqnAmbsizZXDRaV50HW72S8P1ubJe3gcxdwsmne
-         T5NMNwozBn15bPiQIRn+5b24jD1wpwwp/B80PURhnf02oLZcNNiHRr1w2HxZzIZd9Ag7
-         COXkwfX3ckSHvyCiwPOyr06KJ2pMdpokg5YnWi6Mh+tw6bLr6OojsnrlcVO3l+AY/4gz
-         8XAw==
-X-Forwarded-Encrypted: i=1; AKwUvBwT48wXGYkgvADRHVfqGJoFchmqX6SrmUTfxhDj6dO1sJ0B7n8W0C0T84FCDA3asXGZaEYtHM5ivQI=@vger.kernel.org
-X-Gm-Message-State: AFuF++kzdtVy/CB0GZJC6d2tQzfazUmugFRZgFlTdWuGkwleKQmZN8iy
-	2wLb0woj556hjzZjjyjvUmOMN8twfGoGWVrDb+g8Gxztm6Gun/ri/E7k
-X-Gm-Gg: AYBFou0Rc+yOV+BbSLp4vNLeUEfGFrpLCTTDK6pbCNT7QElM91r+PMoRjbUpsl1/Yug
-	rPauP759YJEB4xFaQkthYegRQW/RWA5pIqXRQV3KnClQ5FiYLkdTDWCBG0KKa+LbAQO5R6E/7EP
-	qqrk7J0V47GBa46tzn03iukb54iz+/nUCfCyf99yL83xs8LNh9WPKGbJ56j/UIbFRdeJV3EYG8Q
-	FGIXQprKmLHLxXMt89RVa12aaYN+eS7PeF3GXaA+pzn6rzmCAGZ2dqDYkDYUsaoktYLIukQJYbb
-	DU9Uns+AkqSDCtWln13z45XNbB9vWkkRZ9YagIV60Wyxw1NJrmiuDp7JNU1mE3d6qEbigfR/3cS
-	HIrh43WmKUB3BtY7p8AZtkyWPQb6Gas++4XCoORlL9AjM7HD14E3E1IBAgSy8+zFk1nKdzSSY8P
-	sBQRlzbEGxwHa0inav6YpJKPQeIsnPsRvmPj9LFV0pGTl0Mc0cZSMha1CzUL1Iiw1XzH55kgcO0
-	9pM+KmZqeEWnoC8krAm3n4haoww4FbKG1Rw
-X-Received: by 2002:a05:6a00:244a:b0:837:e9cc:d474 with SMTP id d2e1a72fcca58-872369ec1c8mr829313b3a.2.1789519047717;
-        Tue, 15 Sep 2026 17:37:27 -0700 (PDT)
-Received: from cxlqual ([220.120.90.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-871febde2f7sm317692b3a.6.2026.09.15.17.37.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 17:37:27 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 16 Sep 2026 09:38:37 +0900
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>, anisa.su887@gmail.com,
-	benjamin.cheatham@amd.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/events: Return IRQ_NONE when no event is pending
-Message-ID: <aqnlDSdofHDUNdiT@cxlqual>
-References: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKPwrzEt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC2CA1F00898;
+	Wed, 16 Sep 2026 00:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789519371;
+	bh=5z6g9Duf+OkHU2UE3UiCryMND85Dnf4QyKBC0RtUTC8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=OKPwrzEtUvR3xys/mlgF9vgmLTLvnJ8KOPseqZR4bRHYrWveGJBARKCTEhJbJiqNS
+	 LZs2nwFPnHZuqf7lEJbUJfAuC3Dm3Ov5ezqh04mj7Fn5ea5wCVCMpWbakDs5kCKhSG
+	 QPpq7RyPFu1KiyuG+QHYIFZtGFmbhUpvbhS5LEJV65wfoM3+Dafiieqp0BLNo8jN7q
+	 9LYlWmO6vVKWV+fneEr1ZS7EMbYYLllzjs5OyyQ+qp/Di7HhbHBKKSTJOKGDJv7jI5
+	 xc0TNU1xrYC/x2/1wxXw0aoHJGMC5X6beyHbfFpwfFFyVdDKS00VIIXrJD1xZ7A9uD
+	 REml73gGnjRDg==
+Date: Wed, 16 Sep 2026 01:42:47 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gaobin Huang <huanggaobin23@semi.ac.cn>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] cxl/mbox: bound the Get Supported Logs entry count
+ by the payload
+Message-ID: <20260916014247.247c4333@jic23-hlaptop>
+In-Reply-To: <20260914125701.1160136-3-huanggaobin23@semi.ac.cn>
+References: <20260914125701.1160136-1-huanggaobin23@semi.ac.cn>
+	<20260914125701.1160136-3-huanggaobin23@semi.ac.cn>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 12, 2026 at 03:08:15PM +0530, Shaikh Kamaluddin wrote:
-> CXL event interrupts may share an MSI/MSI-X vector with other event
-> logs or device features. Consequently, cxl_event_thread() is registered
-> with IRQF_SHARED and must determine whether the event-log facility
-> claimed the interrupt.
+On Mon, 14 Sep 2026 20:57:01 +0800
+Gaobin Huang <huanggaobin23@semi.ac.cn> wrote:
+
+> cxl_enumerate_cmds() iterates gsl->entries entries of gsl->entry[] using
+> the count the device put in the Get Supported Logs response.  The response
+> is only checked with .min_out = 2, so a device may report more entries
+> than it delivered and the driver reads past the end of the buffer.  This
+> is probe time, so it happens on every boot of a machine with such a
+> device, without any host action.
 > 
-> The handler masks the Device Event Status register to the event logs
-> supported by the driver. However, when no supported status bit is set,
-> it exits the processing loop and still returns IRQ_HANDLED. This
-> incorrectly reports that the interrupt was claimed and prevents the
-> generic spurious-interrupt detector from accounting it as unhandled.
+> cxl_get_gsl() can already tell the caller how much arrived, because
+> __cxl_pci_mbox_send_cmd() records the copied byte count in
+> mbox_cmd.size_out.  Derive the number of entries that fit from it and stop
+> the loop there.
+> Guard the subtraction too: min_out is smaller than the response header, so
+> a two byte response would otherwise wrap the size_t arithmetic and leave
+> the bound with nothing to do.
 > 
-> Track whether the CXL event handler claimed the interrupt and return
-> IRQ_NONE when no supported event is detected. If no handler sharing the
-> vector claims a sustained interrupt storm, the generic spurious-
-> interrupt detector can eventually identify and disable the affected
-> IRQ.
+> Seen with a QEMU Type-3 device that reports 0xffff entries while writing
+> one, in a 2048 byte buffer:
 > 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Reviewed-by: Anisa Su <anisa.su@samsung.com>
+> 	BUG: KASAN: slab-out-of-bounds in cxl_enumerate_cmds+0x1e3/0x980
+> 	Read of size 4 at addr ffff888003707810 by task kworker/u8:2/38
+> 	cxl_enumerate_cmds+0x1e3/0x980
+> 	cxl_pci_probe+0x84a/0x11e0
+> 	 which belongs to the cache kmalloc-2k of size 2048
+> 	The buggy address is located 16 bytes to the right of the
+> 	 allocated region
+> 
+> The Read of size 4 is gsl->entry[i].size.  The buffer can hold 102
+> entries, so claiming 102 is still inside it and 103 is not, which is what
+> the sweep shows.  With the bound in place the same device logs
+> 
+> 	GSL: device claimed 65535 entries but the payload holds 1
+> 
+> and enumeration continues with the entries that are present.
+> 
+> This is the cross-check get_supported_features() already performs in
+> drivers/cxl/core/features.c, where a device supplied count is compared
+> against the retrieved length before the entries are used.
+> 
+> Fixes: 472b1ce6e9d6 ("cxl/mem: Enable commands via CEL")
+
+Similar to previous.  So far we aren't treating buggy devices as
+something we must harden against.  Where it is simple though we can
+do so.
+
+> Signed-off-by: Gaobin Huang <huanggaobin23@semi.ac.cn>
 > ---
-> Changes in V2:
-> - Emphasize that returning IRQ_NONE enables generic spurious-interrupt
->   detection and drop the Fixes tag. (Jonathan Cameron)
-> - Check whether the event interrupt is already disabled by Anisa Su's
->   patch; no code changes were needed. (Ben Cheatham)
-
-One thing I want to correct: The change requested was to say a
-spurious IRQ will eventually be disabled in the commit message, not
-check whether the event interrupts is already disabled...
-See https://lore.kernel.org/linux-cxl/aqLZP3ORYzCLfSgR@acer-nitro-anv15-41/T/#m32c74ebf05eee9a3ee49c57dd24848db29919031
-I do see that it's been added to the commit message though, so no need
-to do anything.
-
-Thanks,
-Anisa
-> - Rebase onto v7.3-rc2; no code changes.
+>  drivers/cxl/core/mbox.c | 32 +++++++++++++++++++++++++++-----
+>  1 file changed, 27 insertions(+), 5 deletions(-)
 > 
->  drivers/cxl/pci.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index c7c91e8dc51d..8b560cae91f2 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  	struct cxl_dev_id *dev_id = id;
->  	struct cxl_dev_state *cxlds = dev_id->cxlds;
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	bool handled = false;
->  	u32 status;
->  
->  	do {
-> @@ -527,11 +528,13 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  		status &= CXLDEV_EVENT_STATUS_ALL;
->  		if (!status)
->  			break;
-> +
-> +		handled = true;
->  		cxl_mem_get_event_records(mds, status);
->  		cond_resched();
->  	} while (status);
->  
-> -	return IRQ_HANDLED;
-> +	return handled ? IRQ_HANDLED : IRQ_NONE;
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index a8f51bf0f..c94439554 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -794,7 +794,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>  	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
 >  }
 >  
->  static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
-> 
-> base-commit: df2908090cda368b01ff43709f51890076c56157
-> -- 
-> 2.43.0
-> 
+> -static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
+> +static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds,
+> +						       size_t *len)
+>  {
+>  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>  	struct cxl_mbox_get_supported_logs *ret;
+> @@ -818,7 +819,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *
+>  		return ERR_PTR(rc);
+>  	}
+>  
+> -
+> +	*len = mbox_cmd.size_out;	/* bytes actually received */
+
+blank line here.
+
+>  	return ret;
+>  }
+>  
+> @@ -849,18 +850,39 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  	struct cxl_mbox_get_supported_logs *gsl;
+>  	struct device *dev = mds->cxlds.dev;
+>  	struct cxl_mem_command *cmd;
+> +	size_t gsl_len, gsl_hdr, max_entries;
+>  	int i, rc;
+>  
+> -	gsl = cxl_get_gsl(mds);
+> +	gsl = cxl_get_gsl(mds, &gsl_len);
+>  	if (IS_ERR(gsl))
+>  		return PTR_ERR(gsl);
+>  
+> +	/*
+> +	 * The device chooses the reported payload length and may return a
+> +	 * response as short as the entry count field on its own (min_out is
+> +	 * 2), so derive the entry count without underflowing.
+> +	 */
+> +	gsl_hdr = offsetof(struct cxl_mbox_get_supported_logs, entry);
+
+	gsl_hdr_size = struct_offset(gsl, entry);
+
+Note the size is to make it clear this isnt a pointer to the gsl header.
+
+> +	max_entries = gsl_len > gsl_hdr ?
+> +		      (gsl_len - gsl_hdr) / sizeof(gsl->entry[0]) : 0;
+
+I'd error out first on it not being big enough for the header.
+Nothing else useful is going to happen and we know it will return
+an error anyway.
+
+> +
+>  	rc = -ENOENT;
+>  	for (i = 0; i < le16_to_cpu(gsl->entries); i++) {
+> -		u32 size = le32_to_cpu(gsl->entry[i].size);
+> -		uuid_t uuid = gsl->entry[i].uuid;
+> +		u32 size;
+> +		uuid_t uuid;
+>  		u8 *log;
+>  
+> +		if (i >= max_entries) {
+> +			dev_warn_ratelimited(dev,
+> +					     "GSL: device claimed %u entries but the payload holds %zu\n",
+> +					     le16_to_cpu(gsl->entries),
+> +					     max_entries);
+> +			break;
+> +		}
+> +
+> +		size = le32_to_cpu(gsl->entry[i].size);
+> +		uuid = gsl->entry[i].uuid;
+> +
+>  		dev_dbg(dev, "Found LOG type %pU of size %d", &uuid, size);
+>  
+>  		if (!uuid_equal(&uuid, &log_uuid[CEL_UUID]))
+
