@@ -1,200 +1,373 @@
-Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010056.outbound.protection.outlook.com [52.101.46.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A87F377558
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 14:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789567940; cv=none; b=R0fIA/au/utyl0NkAYVnvRsDjBP2p/v/toCk8084XEuJsylG9s6Sg4Zdw9+nJABlSVDCgkB3VOlZJ/uF0G4h/t3ii3fJa4TFwSXh8eKsAV9xJ1v21ti6X2dXROUy8YWwMr7NgzFBWaFo/Iq3MsadM6XN6nFpwbuwIJl0ZnjoUa8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789567940; c=relaxed/simple;
-	bh=Bz9SWBLA/1RUN89ZB/1c7INvPOzJTqABef8L2hV1+9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EV2JcJ7EOE/T3hRo+OE+yuQKl6fUYmaV+gWZU40Kf1P9oqQV+iZHHnetd9krfdEJ2/C5nRzVPmI0WvIixsbc4dHb7GvhshDv/wFp99mpWBpp7Em0ZwBZiocxoHv+Tl57wojvr53LTWJP2oJ1K4jarhr/lLk1DE/r7XGzWCbYy3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C/YurIq2; arc=none smtp.client-ip=74.125.230.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40D650AC13
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 14:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789568165; cv=fail; b=cLGXva3TxwlDWN/S3N4M03PjtCC8HzqkgTN1kXJdi7kz8JcAGJ+Lj8WIRqnExMuPXj8I5O9GvPQR31h0doTK83iRYxRhmtAwXEZLsKP1kuspe3+Xshe74EdMU7/vxsAXuw1t5Q3aBFRk9HRvfAr+GutzNGI5Crcj0jjwuATdB4U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789568165; c=relaxed/simple;
+	bh=FFGBNzor1rIxqfuj0KKESembbEJFdAEygtO47ktC6sA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pTAz04uxfn7Drk46L0CQjl0OguEwfwzMFgtai/NFXv4SSSOjQ2+7Yp85CvMs3Zy/SohHAF0SWet/6s7xHoxZnYQPP9SeFZo/PrttrhldcjzokxYo2bMge7Ub0f2OAmvZBI+DgIVR8JzH8ksTU6q0dDIrv6WvIVrVpp6+h8cprfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ggHgLn0M; arc=fail smtp.client-ip=52.101.46.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/YurIq2"
-Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-910531ea7feso8890886d6.0
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 07:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789567938; x=1790172738; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qgJdcm+eEONTUrvoohdyqwlV+G7FBK9fgCXEE2k/YEU=;
-        b=C/YurIq2G082WWILuhgO0wffWiWvBJvqSEhSmBAXro4md/JPsFJpyqJNfm9+/SDghf
-         Q2wBzdFs1MCt/Xmw7Sw9IFS10iWsPHlouJejzlhxdlffK89TJPezgQI8IirhVuf9T7UC
-         zHzHT2JbFT9vFve2PnRZmKpeZOeJVmYjKqBTBTq8Vt7idFBBcreAExue3ZvEcIJq0lN0
-         uby0o9cqiD3nDgmCnmq1wodV5m+o4Jy+Y6J3powtLhj8ROQTguIPy8iVFnrdNdUTzD0/
-         8oFnNGZSlWhwrWg5sBMAiZCqgnPHfaEWl/7iA/Jfc7UtMdNaCTw6JaTGDHK96xqOrzAH
-         U8lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789567938; x=1790172738;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=qgJdcm+eEONTUrvoohdyqwlV+G7FBK9fgCXEE2k/YEU=;
-        b=Vg+PzhGbYy+Njl70A3/0WTfR48Z6Fn8XJAW/eLvZPLZT+J0Aci8nRCEYDk+NwCe3a/
-         gSU3UTyoU0tjnpTTLNqca+oNR48MKywHA0H8Y2JbrWzQWOMSWUA9jaCD+tCsRRyI/d99
-         jOi2Pf7GpCuGqBjBEMX+X2AFWXt9oLDvcI+GEd4+9zf8a5ZGzNy3YSzvg7u321w1Ub2R
-         WywgLzsXz4oDMK4qURMHfQn27YqcexOvnuRkgAOC9sF4VJH1yOD3h3mTiDoNxuwIpGkU
-         JmtkLkDhEnScEm7MIXJYgc02icgNLP5H5pyjxnVlUumeTOMgOTJmuqIKPIM6+BtunHyM
-         sjYw==
-X-Gm-Message-State: AFuF++mbOKsIYM3Nji1/nT6iANdX/2OM6lstITBsHYOA7netfpf7qP1z
-	QzdtPaECglsLMPfBEWC9kTvUPNljh8DUSWWcx5j386TW+a9PzevbMZ/0
-X-Gm-Gg: AYBFou3OndT1dTmT+KgHX5TeYKlXw/CjHUGLVYR1EgwvezwvUMnubCFMmjpz2cIpPqa
-	SBFS6ZxE80Tazv2S18FUmGMhie9YSheB3Dr4UC9MAE30tOxNeuYBtofFO54mEfD9vIeE6dCl5Ll
-	quui4JQif0VEXtf5qiBVKk8eWA+PIhgLo7wnS7xE9XgqDFCHDoy0lmLWAgRP3sWCl8baxEymQhQ
-	EHfkFthYAUi0H4awBkb1g7aFBxFX3zb6E3lgZNp6JG2eo2qbUj7fBtr+H/dWriZLckotaCDgNmb
-	PH2zswLF9nErMo0Ybjf7zvbmbbyncODrJy9w+CFbuwpNyrVCmD//vg02y/+cBfuZwEm2aq7NN5J
-	hgtMjr9rDZ/RAZtmxaU7dtgy31j0qL1LlqecCxw/CTiR2FzkBXJTbnpB3kgu37Jz3RIgVN5/eX5
-	kafbSwhB1nk4PGYyFcFW2ledVNws96mUrCJlp0vUTCZ7hLWWrX/nUbR0caQ81ksuqwl1vMmBzu7
-	g==
-X-Received: by 2002:a05:620a:172a:b0:93b:6f87:ff60 with SMTP id af79cd13be357-93bb7774174mr417814385a.14.1789567932952;
-        Wed, 16 Sep 2026 07:12:12 -0700 (PDT)
-Received: from localhost ([118.34.230.2])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93b81d18e5asm229043985a.44.2026.09.16.07.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 07:12:10 -0700 (PDT)
-Date: Wed, 16 Sep 2026 19:42:08 +0530
-From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/events: Return IRQ_NONE when no event is pending
-Message-ID: <aqqjuLNtbROumYj_@acer-nitro-anv15-41>
-References: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
- <20260912094807.65E461F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ggHgLn0M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YeMo/CGfn8mEmrPr/m8+UhOQm9A9L6+r3WGnEzvDrjD7/l6Mrv4jLO8/eY27jUekMZaaduv+HDanUVqtxAzG0KstlKCaZKACkN+kPj/a80WU+YVMMgNZ52wMabTpzNroLKkPrO4x2chmWzmRG1h+RPv6saU3aAuNE4VtcMuG3AhgXHEeqBVU+9ppxFy/Xrfo/jPBSsO71uE0NVpoOu377Xt7gRDhx3s/7v3JccPlMPiCV0WNKhPC0wwZZindf7DBkzt5gcVqDg61bD73E9HMSr0QUb/u1OMNqGR9yLbm3+d8sNMoh98Fwalb030o1dUSms/zucMY6vP4xyaLpKFDYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=brL31mXnWQVBv7AoNNs9NjWm9aGM8C8dQz2mkRbV008=;
+ b=aZKtuFKtWE8ytwTKYjTRInBxmTAg3QgY+dcncrQX5d7ZEW47ynss8sNoV6FmqG8bUJxLW0sRUmshbe4EWSgEaGCtyU2SsLJr4tDIY21cIJvfw5ysAtsedv6oG19aKR2cL9cc/3kL0+HI13oCXLITkNYYF+Kdxkkyr4j3kqyGd+VmNTNEZ1cLDl2k93BwfdzaSdKwTL9N3hW5u3sw/ZiFrsZcvaRqwlF1HwJPnWZZdOO7tj1878mvEyB2SAUf/PA59Kv8Qqd0wKO+sZK9kzwwsAT/OgBxeORjxTjgm4M1gMQE0kzae6Rgy2pSJiRgeUkogEMWkTTxqKtI7bzZJchjEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=brL31mXnWQVBv7AoNNs9NjWm9aGM8C8dQz2mkRbV008=;
+ b=ggHgLn0MOrrUbYFS1r6qoUs1bv+dSujtlzVII424W1lEmnP5DD/s4jBzByB85VQ5GMSclGyx60rjxXBrYTuIYraC3hW2xviYwYmc9J9Qzm4i56A+Ogqr6qAbEaX2gklyqp9cgEM2ulZu0KyClBxbi/ocF+ewyTJ3t1HorXOw6gg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
+ DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.428.9; Wed, 16 Sep 2026 14:15:59 +0000
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0406.007; Wed, 16 Sep 2026
+ 14:15:59 +0000
+Date: Wed, 16 Sep 2026 16:15:53 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] cxl/region: Generalize endpoint position mapping
+Message-ID: <aqqkmU98Hpv5xZ9m@rric.localdomain>
+References: <cover.1788475206.git.alison.schofield@intel.com>
+ <16d749d4eef2f6f142bbf6c48e4210e0587e466c.1788475206.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16d749d4eef2f6f142bbf6c48e4210e0587e466c.1788475206.git.alison.schofield@intel.com>
+X-ClientProxiedBy: FR4P281CA0345.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ea::6) To DM4PR12MB6085.namprd12.prod.outlook.com
+ (2603:10b6:8:b3::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260912094807.65E461F000FF@smtp.kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|DM3PR12MB9287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b5d3f3d-33ed-4117-3864-08df13fd07c8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|23010399003|1800799024|4143699003|11063799006|5023799004|56012099006|10067099003|22082099003|18002099003|6133799003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	ehoWlntcRcTIC5CoBc8T5EH8CBCbeehLQIssLK0edk3MG2uWyYLl2If8sMDIn5kA/Bh+vPJTAjlrXVcPeyPH5FRuOPHeuQqlgbdkNLjANnnZp0bE/w48x6fYmbVUj0Xl0rVHF+kilumIXUPAA5RkLdW9QTLnTyjLU7ARW5TnH7J8DhO0d/RRdbQmfGXh3pWSiyf1w0ti9zgLHhbSX5+AWRKkkrJmdA/ffDYpuB3X94W5TbOdPQOd4DisvtmTvvwWUzA2D9hhSF74wLWU295U6/e0hEEdxQq742qh8zloyVJAafRl17DR5Um/fpremovesJL9gk81Pl2KJR7D+j0lW8/IbiFfRO4jr/Ksx+/frKlgQV2YGZn36c/tYNRjeShabWFqK3wPCXEZvaNe8hRD+WuKAw+jF3STmbgkZ9Fa8DXLy24pc9MUw4BudsD/nFuPUQugJgxhFAopX1K0CDXTi/esYwPi3tPCvMrPUt0aOPfp5Gie4EG2EjyKp1K+pDTdH0JueG4p5Ne4KWqUEmZm3wFVzqKUKm9iRUdmiG2z8FgVikosDGcAeM11vfyz5w3Tka53PnQIhnXHQD30tJmijOCEIY6xHO4cmNY52IpmGFHijYpnfZQSY5ikzN2oFxJRCU4CWUvz8XwilytjL+Rj4E/Oz9yAvPdji1L7fOUdWQE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(23010399003)(1800799024)(4143699003)(11063799006)(5023799004)(56012099006)(10067099003)(22082099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IT0aEeYPt8JkKL/ok+yCARQOIj4+B1EwlWlZPRQ4MgNbVK+D0poj8Tvw4n+s?=
+ =?us-ascii?Q?jvDxJVtzIqAkhYgu8VYgfxBaLo/RtzPLDPjH1m78dYxMk3rtiPDf+1Rf6+4+?=
+ =?us-ascii?Q?mKScYs/fngqPZ9hAfHhL2KeEm8o42S2xBWh9HEPGKw2kXDHK+NCwJwGxJ2K7?=
+ =?us-ascii?Q?pMZUlm2xwJ0OmrAejzu0d35svQ3o9smqVq8a4s0TakqfCN5tkQw1ST810nV5?=
+ =?us-ascii?Q?Va2yR7tQjN+aeS/OioFekgMOBDcZwaMumKfwV/I0XDFMB26Jurz0Wjt3DSuI?=
+ =?us-ascii?Q?OL6wGFmpYLtSa83IEwm7QRBIbfJjmujVuuC7aWbEqZYloL8oH9syrA03fha1?=
+ =?us-ascii?Q?ryzAIST0nyf8+Y1RizD/tIw0SVS5cez0Xw4KXigVVuQ/JMmHct+IA8ap9L//?=
+ =?us-ascii?Q?a7VxCCjjaNuLAEGR5+5ZsNiuTznoOBHm6xmiskYFve5G8REmCvRxUeEiFWvk?=
+ =?us-ascii?Q?7tPuHMFzpUWTHJiV0K85umgA4sTm3knre+eFNKgK6mP2UWhQqzvnZSBIRn4Y?=
+ =?us-ascii?Q?fqhbNv2YE5clpybxgIHJkazSVA8L5qWohsI8PhoiYIq9bC5KeF084ktFGUAw?=
+ =?us-ascii?Q?zMQWhKkgZz4TkwxZJpk6G/ACUcrPw3jAWu75aV7uIPqdw25shIM0WdCgBd9l?=
+ =?us-ascii?Q?VAc9JDbSkRneXkosGlVfY4KggTdlVnfV+rQgoC69OB/K/9jGpeNPe0LPBsur?=
+ =?us-ascii?Q?Ulp44wVJZRnGwSws5CvJtB/Mp5JqQzPkI+OJIFt4lXnT+q+haUASuL11oVaJ?=
+ =?us-ascii?Q?vnUlJcXjVRMM2bd7yQYvFFSKqboezezdQEPdb11qHB32/X9ugC6EhK7sOu55?=
+ =?us-ascii?Q?4xM/FsFzJ7T8bjt8IPNsuq2cpMevYXSuFu3W1HCvlJw+v3CSWfoaEXAwpm/s?=
+ =?us-ascii?Q?+WZGJOtFJYcFQLdJ6QaxVqYj6NTCuLX6z0qDDNm50hRjmlZVB/3ERVKQl+Os?=
+ =?us-ascii?Q?VSaB7V/CTsKJ+0BAn9m5ORWHlM8VztUdiACtFkZAYRvMErqpQS4I3V0E78o+?=
+ =?us-ascii?Q?CaFFtAFSvCbpD+QCv/dx3cjSIkhZTT1xiwlQNODKWwTH1sjFVfbOoKmiyF7w?=
+ =?us-ascii?Q?o/SD9JUCfip5IsT+t+wkwZt/j5tuu2WjyDLoIEOfXmg8Ngb71s6a8Oa/pVYP?=
+ =?us-ascii?Q?p+S5HY5UXudGCmMyJY4y9VfuxQ1mJCrQOzk5hvT3ESDKYDHHumpZ4nOPN+7k?=
+ =?us-ascii?Q?0xCRB+CFQNeT+y6L8bKVXkInwsNj/M0c5vx4wHT3yt6X0hDVj8NcOGObkIB7?=
+ =?us-ascii?Q?12V495PimvIBWXm1+Ozuly4ykQeita0yKV8GQlm7Sw0rVQj+iiJfbTT3QwCw?=
+ =?us-ascii?Q?HbzOla4i08xtlEiJMbOeEbqRbwfFN6Ooy0lzMCrefbypNc7RGcTKuFojESyj?=
+ =?us-ascii?Q?+h4igKEVDV/3vJ4YQyuQh3l8n+fRAOXkVs5W6ar2hWKHfjV9/NtCcio2LlxA?=
+ =?us-ascii?Q?Toq120fWrgJDPUYMakQtZF/kAjOCmzq9L1ack2aiXV9br67tqDoDSEYSf53a?=
+ =?us-ascii?Q?4L0GU9FS/NQpS4Nrbeud/76GPMkOCOvffx9kftzBIXDGeex7fcvbM8naiDoA?=
+ =?us-ascii?Q?4uiT2NL4T1Zz+XN37lLDyz5tvKxp3B/Q43GMsuH1Q77kgy6uQI7Gm7e1p3R2?=
+ =?us-ascii?Q?CNgqmr6gj/ujPyAXDIjRIZJ6g+VDRnT68qV46ThDX4bdpkl4ZlVUr2Jpj7BZ?=
+ =?us-ascii?Q?pa2wEsLLjI2RKv2YyKnZw2cIsKD2qSBeZA8TEs5ut+TGuvns?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b5d3f3d-33ed-4117-3864-08df13fd07c8
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2026 14:15:59.1411
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sze9GAIASW9LMzVLaDir28E8/sd8gzpYvMkpAc88qIJqJZNYRFwdiBrOOrnbu+Ft3BGY3jDQvp3adAV1zLMKAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
 
-On Sat, Sep 12, 2026 at 09:48:06AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+On 03.09.26 16:23:45, Alison Schofield wrote:
+> Endpoint position calculation currently relies on the requirement that an
+> interleaving root have the same granularity as the region. Auto region
+> creation builds the position by multiplying by the parent decoders' ways,
+> while user region creation selects the root target with 'pos % ways'. Those
+> calculations are sufficient under the current granularity restriction.
 > 
-> Pre-existing issues:
-> - [High] The threaded IRQ handler `cxl_event_thread()` can enter an infinite loop if mailbox commands fail to clear event records on the device, or if a PCIe surprise removal causes the MMIO read to persistently return all 1s (~0U).
-> - [High] The driver blindly trusts the `record_count` and `count` fields returned by the device in mailbox payloads, leading to out-of-bounds kernel memory reads and potential information leaks.
-> --
+> In order to support mixed-granularity regions, that granularity restriction
+> will need to be removed so decoder granularity can change between levels of
+> the interleave hierarchy. The position calculation needs to account for
+> those changes to produce the correct endpoint ordering.
 > 
-> commit 659b756fc25aa4e783ce4a882044a537d7b5d643
-> Author: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> Change the position calculation so each decoder's contribution is weighted
+> by its granularity relative to the region granularity:
 > 
-> cxl/events: Return IRQ_NONE when no event is pending
-> 
-> This patch tracks whether the CXL event handler claimed the interrupt and
-> returns IRQ_NONE when no supported event is detected. This allows the generic
-> spurious-interrupt detector to identify and disable the affected IRQ during
-> interrupt storms where no handler claims the event.
-> 
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index c7c91e8dc51dc..8b560cae91f2e 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> [ ... ]
-> > @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  	struct cxl_dev_id *dev_id = id;
-> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
-> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> > +	bool handled = false;
-> >  	u32 status;
-> >  
-> >  	do {
-> >  		/*
-> >  		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
-> >  		 * ignore the reserved upper 32 bits
-> >  		 */
-> >  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> >  		/* Ignore logs unknown to the driver */
-> >  		status &= CXLDEV_EVENT_STATUS_ALL;
-> >  		if (!status)
-> >  			break;
-> 
-> [Severity: High]
-> This is a pre-existing issue, but can this loop become infinite if a PCIe
-> surprise removal or fatal device error occurs?
-> 
-> If readl() returns all 1s (~0U), status & CXLDEV_EVENT_STATUS_ALL will
-> still evaluate to a non-zero value, passing the if (!status) check. The
-> handler will then call into cxl_mem_get_event_records() where mailbox
-> commands will fail on the removed device, exiting without clearing the
-> hardware event status.
-> 
-> Since status is never cleared and the error handling doesn't break the
-> loop, this evaluates to true at the while (status) condition and repeats
-> indefinitely. Does this IRQF_ONESHOT threaded handler need to check for ~0U
-> to avoid monopolizing a CPU and preventing device teardown during hotplug
-> removal?
-> 
-> > +
-> > +		handled = true;
-> >  		cxl_mem_get_event_records(mds, status);
->
+>     position += target_pos *
+>                 (decoder_granularity / region_granularity)
 
-On the drain loop: Jonathan already responded to the same report on v1 — surprise removal isn't supported today, so there's no evidence this is reachable in practice. 
-link : https://lore.kernel.org/linux-cxl/20260907194400.17bb5f5c@jic23-huawei/
+Yes, that reflects the stripped off bits the endpoint does to
+determine the DPA. Actually this reflects bit positions of the
+selector bits in the SPA:
 
-Li Ming and Davidlohr made the same point on Anisa Su's series: the Event Status register is device-owned and the spec requires the device to clear it, so a device that doesn't is a firmware bug, not something the driver should work around.
+|XXX...XXX|SSS|GGGGGGGG|
 
+S ... Selector bit (width is defined by region's ways without factor 3)
+G ... Granularity bit (defined by region's gran which has the smallest
+      size of all decoders)
 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does this code blindly trust
-> the record_count returned by the device hardware?
+Position can be calculated using bit logic:
+
+  target_shift = dec_gran_bits - reg_gran_bits
+  pos &= ~(target_ways_mask << target_shift)
+  pos |= target << target_shift
+
+Assuming target < target_ways and reg_gran_bits <= dec_gran_bits.
+
+Note: the 3-factor part must be added too.
+
+A rather prefer the bit logic here.
+
 > 
-> When cxl_mem_get_event_records() calls into cxl_mem_get_records_log(), the
-> driver reads the count directly from the untrusted payload:
+> Use the same relationship to select the root target during user region
+> creation.
 > 
-> drivers/cxl/core/mbox.c:cxl_mem_get_records_log() {
->     ...
->     nr_rec = le16_to_cpu(payload->record_count);
->     ...
->     for (i = 0; i < nr_rec; i++)
->         __cxl_event_trace_record(cxlmd, type, &payload->records[i]);
->     ...
-> }
+> Weight each level by the region granularity, passed in by the caller,
+> rather than by the granularity programmed in the endpoint decoder. The two
+> are equal for most configurations, but not when Normalized Addressing
+> leaves the endpoint decoder programmed passthrough while the region
+> interleaves.
+
+In case of Normalized Addressing, only the Endpoints have different
+configurations. Root decoders, host bridges and switches keep the
+config as is, thus the region's granularity is still the smallest
+granularity programmed in the associated HDM decoders or described in
+CFMWS.
+
+The address translation code handles the region detection before the
+targets are enumerated. Normalized Addressing should not affect the
+target and position setup.
+
 > 
-> If a compromised or malicious CXL device returns an artificially large
-> record_count, could this read out-of-bounds kernel memory and leak it to
-> userspace via tracing? 
+> For currently supported regions, the new weighted calculation reduces to
+> the existing position calculation and produces identical endpoint
+> positions. The exception is a region wider than a same-granularity Mod3
+> root, where address bit routing programs the level below the root at the
+> region granularity, so the ratio derives a weight of one rather than three.
+> A later patch in this series rejects that layout.
 > 
-
-Valid, and not introduced here -- different file, different Fixes: tag, so
-I'm not folding it into this patch.
-
-record_count comes from the device and records[] lives in mds->event.buf,
-which is sized at probe. Nothing checks one against the other, so a bad
-count walks off the end of the buffer.
-
-> The same pattern appears in cxl_clear_event_record() and
-> cxl_mem_get_poison(), where the untrusted count is used as a loop bound.
-> Should the payload size be validated against mbox_cmd.size_out or the
-> maximum allocated buffer size before iterating?
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/region.c | 69 ++++++++++++++++++++++++---------------
+>  1 file changed, 42 insertions(+), 27 deletions(-)
 > 
-> >  		cond_resched();
-> >  	} while (status);
-> >  
-> > -	return IRQ_HANDLED;
-> > +	return handled ? IRQ_HANDLED : IRQ_NONE;
-> >  }
->
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6a698f36aa6d..506b1cba1a92 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1806,9 +1806,15 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
+>  	struct cxl_decoder *cxld = &cxlsd->cxld;
+>  	int iw = cxld->interleave_ways;
+>  	struct cxl_port *iter;
+> +	int root_pos = pos;
+>  	int rc;
+>  
+> -	if (dport != cxlrd->cxlsd.target[pos % iw]) {
+> +	/* Root target selection advances at root-granularity intervals */
+> +	if (iw > 1)
+> +		root_pos = pos * cxlr->params.interleave_granularity /
+> +			   cxld->interleave_granularity;
 
-These are pre-existing issues and independent of the IRQ_NONE versus
-IRQ_HANDLED change in this patch.
+Use shift right here.
 
-Anisa is already taking care of these checks in her upcoming patch series, 
-so this can be handled there.
+So root_pos is defined as the Nth host-bridge in the cxlsd.target[]
+list.
 
-Anisa's patch link: https://lore.kernel.org/linux-cxl/20260901002912.958-3-anisa.su@samsung.com/
+> +
+> +	if (dport != cxlrd->cxlsd.target[root_pos % iw]) {
 
+Isn't root_pos always smaller that iw? Better check for this
+assumption and use root_pos to directly access the array.
 
+>  		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
+>  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+>  			dev_name(&cxlrd->cxlsd.cxld.dev));
+> @@ -1909,12 +1915,13 @@ static int match_switch_decoder_by_range(struct device *dev,
+>  	return (r1->start == r2->start && r1->end == r2->end);
+>  }
+>  
+> -static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+> -			     int *pos, int *ways)
+> +static int find_pos_and_gran(struct cxl_port *port, struct range *range,
+> +			     int *pos, int *gran)
+>  {
+>  	struct cxl_switch_decoder *cxlsd;
+>  	struct cxl_port *parent;
+>  	int rc = -ENXIO;
+> +	int ways;
+>  
+>  	parent = parent_port_of(port);
+>  	if (!parent)
+> @@ -1929,9 +1936,10 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+>  		return rc;
+>  	}
+>  	cxlsd = to_cxl_switch_decoder(dev);
+> -	*ways = cxlsd->cxld.interleave_ways;
+> +	ways = cxlsd->cxld.interleave_ways;
+> +	*gran = cxlsd->cxld.interleave_granularity;
+>  
+> -	for (int i = 0; i < *ways; i++) {
+> +	for (int i = 0; i < ways; i++) {
+>  		if (cxlsd->target[i] == port->parent_dport) {
+>  			*pos = i;
+>  			rc = 0;
+> @@ -1951,24 +1959,29 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+>   * cxl_calc_interleave_pos() - calculate an endpoint position in a region
+>   * @cxled: endpoint decoder member of given region
+>   * @hpa_range: translated HPA range of the endpoint
+> + * @region_gran: interleave granularity of the region
+>   *
+> - * The endpoint position is calculated by traversing the topology from
+> - * the endpoint to the root decoder and iteratively applying this
+> - * calculation:
+> + * A region position is the index of a region-granularity chunk within one full
+> + * pass of the region interleave. The position is calculated by traversing the
+> + * topology from the endpoint to the root decoder and accumulating the
+> + * contribution of each decoder level:
+>   *
+> - *    position = position * parent_ways + parent_pos;
+> + *    position += parent_pos * (parent_granularity / region_gran);
+>   *
+> - * ...where @position is inferred from switch and root decoder target lists.
+> + * ...where @parent_pos is inferred from switch and root decoder target lists.
+> + * The multiplier is the weight of that level: how many region positions pass
+> + * between successive advances of the level's target index. A level that selects
+> + * a single target contributes nothing.
+>   *
+>   * Return: position >= 0 on success
+>   *	   -ENXIO on failure
+>   */
+>  static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+> -				   struct range *hpa_range)
+> +				   struct range *hpa_range, int region_gran)
+
+Better pass cxlr here. That covers both, hpa_range and region_gran.
+
+>  {
+>  	struct cxl_port *iter, *port = cxled_to_port(cxled);
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	int parent_ways = 0, parent_pos = 0, pos = 0;
+> +	int parent_gran = 0, parent_pos = 0, pos = 0;
+>  	int rc;
+>  
+>  	/*
+> @@ -1981,20 +1994,20 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+>  	 *        |    |           |    |
+>  	 *       mem0 mem1        mem2 mem3
+>  	 *
+> -	 * In the example the calculator will iterate twice. The first iteration
+> -	 * uses the mem position in the host-bridge and the ways of the host-
+> -	 * bridge to generate the first, or local, position. The second
+> -	 * iteration uses the host-bridge position in the root_port and the ways
+> -	 * of the root_port to refine the position.
+> +	 * The region and the root decoder interleave at the region
+> +	 * granularity, so each host-bridge decoder interleaves at twice that.
+> +	 * The host-bridge decoders advance one target every two region
+> +	 * positions, weight 2, and the root decoder advances one target every
+> +	 * region position, weight 1.
+>  	 *
+>  	 * A trace of the calculation per endpoint looks like this:
+> -	 * mem0: pos = 0 * 2 + 0    mem2: pos = 0 * 2 + 0
+> -	 *       pos = 0 * 2 + 0          pos = 0 * 2 + 1
+> +	 * mem0: pos += 0 * 2       mem2: pos += 0 * 2
+> +	 *       pos += 0 * 1             pos += 1 * 1
+>  	 *       pos: 0                   pos: 1
+>  	 *
+> -	 * mem1: pos = 0 * 2 + 1    mem3: pos = 0 * 2 + 1
+> -	 *       pos = 1 * 2 + 0          pos = 1 * 2 + 1
+> -	 *       pos: 2                   pos = 3
+> +	 * mem1: pos += 1 * 2       meam3: pos += 1 * 2
+> +	 *       pos += 0 * 1             pos += 1 * 1
+> +	 *       pos: 2                   pos: 3
+>  	 *
+>  	 * Note that while this example is simple, the method applies to more
+>  	 * complex topologies, including those with switches.
+> @@ -2005,12 +2018,12 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+>  		if (is_cxl_root(iter))
+>  			break;
+>  
+> -		rc = find_pos_and_ways(iter, hpa_range, &parent_pos,
+> -				       &parent_ways);
+> +		rc = find_pos_and_gran(iter, hpa_range, &parent_pos,
+> +				       &parent_gran);
+>  		if (rc)
+>  			return rc;
+>  
+> -		pos = pos * parent_ways + parent_pos;
+> +		pos += parent_pos * (parent_gran / region_gran);
+
+How about squashing all the logic into a function and just return the
+positional offset caused by the decoder? Sort of cxl_port_interleave_pos?
+
+>  	}
+>  
+>  	dev_dbg(&cxlmd->dev,
+> @@ -2029,7 +2042,8 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+>  	for (i = 0; i < p->nr_targets; i++) {
+>  		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>  
+> -		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
+> +		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range,
+> +						     p->interleave_granularity);
+
+That interface could be simplified passing cxlr, see above.
+
+-Robert
+
+>  		/*
+>  		 * Record that sorting failed, but still continue to calc
+>  		 * cxled->pos so that cxl_calc_interleave_pos() emits its
+> @@ -2214,7 +2228,8 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		struct cxl_endpoint_decoder *target = p->targets[i];
+>  		int test_pos;
+>  
+> -		test_pos = cxl_calc_interleave_pos(target, &cxlr->hpa_range);
+> +		test_pos = cxl_calc_interleave_pos(target, &cxlr->hpa_range,
+> +						   p->interleave_granularity);
+>  		if (test_pos != target->pos)
+>  			dev_warn(&cxlr->dev,
+>  				 "%s: position mismatch: calculated:%d assigned:%d\n",
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260912093815.14455-1-shaikhkamal2012@gmail.com?part=1
+> 2.37.3
+> 
