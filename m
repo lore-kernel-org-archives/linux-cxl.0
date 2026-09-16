@@ -1,124 +1,106 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49343D7D89;
-	Wed, 16 Sep 2026 09:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F75B44A3F0
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 11:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789551374; cv=none; b=ILHaIrNFZsen1neeegdXEntV2Md1UBwhOqPzut6cM+QLT3zMP2FX7kB4kG5m9aJF/GlpCFz4XEHa9e5cq/Ve5MgCdViNsbTRoAxaKjBn0Q4KGlb/kMADqpQx3O1dJokcztNoEzeUOmHy3hAntZERl4OolPGYC3vU1dFBzS90NDU=
+	t=1789558499; cv=none; b=r0ag88mWx3CHncF2hi2Ss++qcqMleO16rIZShZJBN8UIcNi7VYB2H1RGgkCrTbHznDskBRVe98tCJYRlzjvkvkv0sYStmzn2csyU1cEPqrrJofLsf0KgIeqVnvwMNAwpQC0fZz6unXrqoVoxD6DAwVxKOD4QvCL1nQhMCKYYfhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789551374; c=relaxed/simple;
-	bh=C4Pgd/QE7Npkzcs4mLoH2ntp6E0i7P7iP2KMXQdLf4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GiqVvaeqinEMjmRR/qpcrP7Pkt9JWV5i+JNOdgGGycRkzqtozJXB6cVgNysdZXxTbutVOT9/EHGSDL/T6eGs3rmC5vmEw6X3QzqvBOhuMV/LGHFV5zT15fk6M1WwA4Sp+DqIrNmdGpq1ZLs4++8XPHhlR5j/kKjVAn8CF/m5JD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=FG+PhcCJ; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1789558499; c=relaxed/simple;
+	bh=uXvmMlfMjgYOxoB6CaK+rtD4BDV4+DFyN6UEqa6bl8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JM6s/7IPalHSFPSNcdtGanHvwh0Cjmr1iy8aAy1gMwrBL/EbRGTb9hkhwxXlyIa4SfUFt5DNHYeKB4wLzD7tKgF/QFYRQYKLPynpgv6OKlg8q4BDpOAE++R+KpzIwGcDQKwKXX7VgSfOaDEIIL12ftffUlRIdnPg8JpmpIi++8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iNQaUAHU; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="FG+PhcCJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lQusxUCZOg61iBhz+gh2H7namnoGRC3noT9Nzn5HIqQ=; b=FG+PhcCJdohk4nnU98iT/zoR5N
-	BCgB6P043DOhKlGyArs7g31LKrnMGQt2zWbGrRVZDTebMTiVX0hrOpMLGDYK9SjK4Nbhr1XO9Z/oe
-	9kYRquCRmoHMSfDt5RL9ZF+HqohR7f9iO3YfQb2nxLasS8aJC+6WBFFBZVtfu5594dMAJdGAlSEor
-	T//McaeWE/JqURKCLjDalwcD9SxGNYRZ1Ndf6cU2qsZSXzppknaqswzTmRM1m9nMELechoHJ3sF6b
-	SPpSFa5JtX7hBI+K/IGPBKSM0MEmySJV5UgazfmjiDgO8UjZf6aP6k+M7p32sRjJG2WLJIf/ZesHH
-	AEqfN1nw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x6m2s-0054bo-2i;
-	Wed, 16 Sep 2026 09:35:15 +0000
-Date: Wed, 16 Sep 2026 02:35:06 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org, 
-	kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or, 
-	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
-	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, kernel-team@meta.com
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-Message-ID: <aqpczrtIwSG948iv@gmail.com>
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iNQaUAHU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1789558483; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=O+y/Q9mdt9PnTTtST4xQER5OnK2laopva58JNzfhxRc=;
+	b=iNQaUAHUAZtMbZvVreEXqb3fpzRLA4A6kfsNX671HTva1+WU3S2oxc5YkQIofmLs0BShO2NqlTeL1OtHdJTvaACaM4KKuft6nJRq6JrQbA317h7SK/JG7Ld0l5AG8HrL5EJr0b8dbdTue7+Kk+iAgfE3Drg0AdwdDaAbDk//+4k=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XB4vJcC_1789558482;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XB4vJcC_1789558482 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 16 Sep 2026 19:34:42 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] nvmet: copy the hostid into the ctrl before creating PR pc_refs
+Date: Wed, 16 Sep 2026 19:34:35 +0800
+Message-ID: <20260916113435.324095-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
 
-Hello David,
+Commit 6202783184bf ("nvmet: Improve nvmet_alloc_ctrl() interface and
+implementation") added a second uuid_copy() of args->hostid near the end
+of nvmet_alloc_ctrl(), and commit 7b658153f1b8 ("nvmet: Remove duplicate
+uuid_copy") removed the original copy that sat before
+nvmet_ctrl_init_pr() instead of the new one.
 
-First of all, thanks for your time looking at this patchset.
+Since then nvmet_ctrl_init_pr() snapshots ctrl->hostid into the
+per-controller per-namespace reservation refs while the uuid_copy()
+from the connect data runs later, after the controller is published.
+The ctrl is allocated with kzalloc(), so every pc_ref created on this
+path stores the nil UUID.
 
-On Wed, Sep 16, 2026 at 08:48:56AM +0200, David Hildenbrand (Arm) wrote:
-> On 9/15/26 14:53, Breno Leitao wrote:
-> > +static void memblk_nr_poison_init(struct memory_block *mem)
-> > +{
-> > +	unsigned long pfn = section_nr_to_pfn(mem->start_section_nr);
-> > +	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
-> > +	unsigned long i, nr_poison = 0;
-> > +
-> > +	/* A hotplugged block is created before its pages are online. */
-> > +	if (mem->state != MEM_ONLINE)
-> > +		return;
-> > +
-> > +	if (!range_contains_poisoned_memory(PFN_PHYS(pfn),
-> > +					    nr_pages << PAGE_SHIFT))
-> > +		return;
-> > +
-> > +	for (i = 0; i < nr_pages; i++) {
-> > +		struct page *page = pfn_to_online_page(pfn + i);
-> > +
-> > +		if (page && PageHWPoison(page))
-> > +			nr_poison++;
-> > +	}
-> 
-> That just slows down boot unnecessarily on 99.9999999999999999999% of all
-> systems out there.
+pc_ref->hostid has a single consumer: nvmet_pr_set_ctrl_to_abort()
+matches it against the preempted registrant's hostid to kill and drain
+the victim's in-flight I/O for Preempt and Abort.  The match can never
+hit with the nil UUID, so whenever a namespace with reservations
+enabled exists before a host connects, which includes every reconnect,
+Preempt and Abort silently degrades into a plain Preempt: the
+preempting host sees success while the victim's in-flight I/O is still
+in the air.
 
-hmmm, I am not sure I see it that way.
+Copy the hostid where the rest of the connect data is consumed, before
+the controller is published and before nvmet_ctrl_init_pr() takes its
+snapshot.
 
-The loop only runs for a block the bitmap marks. On a machine with nothing
-recorded the bitmap is all zeros, the range_contains_poisoned_memory() check
-right above it returns false, and the loop never executes.
+Fixes: 7b658153f1b8 ("nvmet: Remove duplicate uuid_copy")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+---
+ drivers/nvme/target/core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-What every boot does pay is that check, once per block. The stub installs
-the table whether or not anything was ever recorded in it, so this is not a
-NULL test: it is two 64-bit divisions by the unit size plus a
-find_next_bit() over the single word a 128M block covers at one bit per 2M.
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 43871a8f56ca..8c8c8627871f 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -1648,6 +1648,8 @@ struct nvmet_ctrl *nvmet_alloc_ctrl(struct nvmet_alloc_ctrl_args *args)
+ 	INIT_DELAYED_WORK(&ctrl->ka_work, nvmet_keep_alive_timer);
+ 
+ 	memcpy(ctrl->hostnqn, args->hostnqn, NVMF_NQN_SIZE);
++	if (args->hostid)
++		uuid_copy(&ctrl->hostid, args->hostid);
+ 
+ 	kref_init(&ctrl->ref);
+ 	ctrl->subsys = subsys;
+@@ -1706,9 +1708,6 @@ struct nvmet_ctrl *nvmet_alloc_ctrl(struct nvmet_alloc_ctrl_args *args)
+ 
+ 	nvmet_start_keep_alive_timer(ctrl);
+ 
+-	if (args->hostid)
+-		uuid_copy(&ctrl->hostid, args->hostid);
+-
+ 	dhchap_status = nvmet_setup_auth(ctrl, args->sq, false);
+ 	if (dhchap_status) {
+ 		pr_err("Failed to setup authentication, dhchap status %u\n",
+-- 
+2.43.7
 
-The real cost (that "for loop above"), comes when you kexec (not on cold
-boot -- given the bitmap is empty), and you are trying to init
-a memory block that has poisoned pages into it. Which seems the right
-trade-off, no?
-
-That said, can we do better? Yes. The silly win is to let the table say
-whether anything was ever recorded in it, something like a
-linux_efi_poisoned_memory->empty that the first recorded frame clears,
-and return on that before the bitmap is reached at all.
-
-Is this what you are looking for, or something more drastic?
-
-Thanks for your review,
---breno
