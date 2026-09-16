@@ -1,169 +1,143 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013004.outbound.protection.outlook.com [40.93.201.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D899151E45C
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 14:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789569043; cv=none; b=pBw6bX83PE9OCiR2BzQA3fs4L0kaY9lnOB6trXxtjqUHYwMvtRulCEPGJMp9ADAl45yIFWxAyMdGTdRI/2OZ7i3szgcVjBgr/gXyFzcjuCbdArcYj2C2VChA8e9FOUdqQJ3eJ+LGli5afkNfvLL6mfLUp9Azmdq4sZ0D+i5wwxU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789569043; c=relaxed/simple;
-	bh=n50EDLBpp0PcLVpFQaOjQv7TAzbBAn/fBTN5CuZ51Vs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DGkcXa1lSgmrGT90m1A5fVmkamqQ9LU6WumWxaczGvqaQFtGllsaPY4GrfsGLahJxTlFT8ptV2WiMnSn6TQivlB+U5XbwlFwP0onLifM6SebwS1A93QFHl8TS/KzOqAF1LKQRcBb1AT8xq+S3KeDSYa0a1gFDxx2JIiGgNuzyaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egE/5NQz; arc=none smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29BD3B0AEF
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 14:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789569301; cv=fail; b=f8FOsh2wt6EmnUBS+0W4R54A4jadnZO7iE+Ssmg/FwB6XArmqWHnCJAUTy15wvYqhc0GbOWosxDWU4kMNdjdD5j2IQ6FZlyzO4cGX2HHbR5T63S+WQZ3BaFRetexgodKaMGgl+s+KJvkIVM6YqtFkxP/DxCWsxfm7vLlPuzCNeU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789569301; c=relaxed/simple;
+	bh=kiyv4vacSBm5u6ez4Z+d/y5ogMEvgFNltOdMlnUl5CA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qXkn1DkN4QPHAqA4ySlMs3RQD21MsxOFhqtngSMBgf92pH1TJZYf1MoiFGoqTM5Z3Qp5ReYNr2fWOq1hqGsLXZz6UFssbVE5KfCtTSJnr0p7RDOg7cwYlV9pnWrpwVlrVXP23bQ6Y/3n+xsbbEPCJQoksHbvoBkqLr3S/e9wdyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Gtz8qFNj; arc=fail smtp.client-ip=40.93.201.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egE/5NQz"
-Received: by mail-pj2-f12.google.com with SMTP id d9443c01a7336-2d90ba1d807so11245155ad.3
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 07:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789569040; x=1790173840; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=vAIxdcn+2euFFjhYmCcfT0OwZlA6a1v07ZRE8SeJ058=;
-        b=egE/5NQz07o8f6MlS/eWFB13irJak2X01K20lnHxBmmobkH2i3Doz6rTLAsAHwNre0
-         12VNT8cs2NCcv9rGWNhxnU9QuJFVfJc6mCtEwKzwRf69CWZvvzIQodSHv9I7OWlwcW2E
-         PJ5OFvmHVcCtC/jpZDB3jRvtfS1CG63Ms6VdqWx/2ABi/+aPcOkxd9T2S4Z+RFr1gwrQ
-         kGVpx+hAhTnmxXSN7Nls0p41n0MGFA6N4vhKaQJH2Spprl4zIjc0f9CPsiYg67AfAGfD
-         LsZ7NJkHVMepyOVVjen2fTaa4//m9H27PVOjwDUIgAA3q/blKVskdc1JPM23ztBfaVfl
-         YDqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789569040; x=1790173840;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vAIxdcn+2euFFjhYmCcfT0OwZlA6a1v07ZRE8SeJ058=;
-        b=XFFULsdmvSHRgEol6gx1Vh8f4l3jDbhHqDkylZEd/1826kVlqWK/Qpee5HGRu2D6k/
-         962pd6Rq59TrQ0GQK5IgVl+wm4+gEcVW65NFLc8dLoo8pmjM8LX6o2urq9WAG9kd01bC
-         lP6H3E0De1ZCbGSOXsMbjIckNlyDggaDennP8cd4hEA0tr/NO8MsAI6fqcXwIyKcZ6t2
-         JgLa7KyKh/9PbYf8ut+Lsbs786Etsi9omFQeldI5oAOEgUsFL6oDJ4N7uFyq1x6MQw9k
-         t0+md3wzZhLJgCpH3SXNdct1AFxy36OPC0S/5/G1nohqsPr7KpDLfvFA5QC6hjllVp3S
-         zePw==
-X-Forwarded-Encrypted: i=1; AKwUvBwrvYXqfRJa+t2Ed9sIXwQ7xcR6UVNj9dvE6aLdSdda8mE8s0Cnudq0tPeOPTckVayNrDRhsZsYYxc=@vger.kernel.org
-X-Gm-Message-State: AFuF++nToFVFeLVSfNltVc6rYW864j6//LWL6e9/Yt4J48eMbPWW7URN
-	PiSjR1JbJ2GTShgpxt0mNT1xr6l1WY9C5WubaeEAQJZZcOKTbkPdfIDp
-X-Gm-Gg: AYBFou1PFpJCslfyyjNFUeL7IzZJsU0cd6Pwq9TMVzryuhClud52pgsbE+OEU6lLySI
-	5/u5fmKUMfuBrjHsDBa8KXdXP8h3Vxk1ZRCO9yH2KXh0D9H5UPo9I2BXsSMnU8WVvtQrHbELkXi
-	l0fQSFwj5MHRU52Z0Y1sZ41Sdpu1ZIajj58KsFDaI7UWuaAEdvNcDpLf+fti64WzsXMz8CK10YO
-	hVBV/yhg4h1u2zWtgWmbeJK6F9VA1DaAQetESetZOTv62O9BMriiaqfoCrjkiDbP1UYTfcNKsxy
-	Bp///rBFBLOpWN/R7Ogp36AaLghcl3+orHYfHVIqHgJAd2/Pmmehj02KUE5U9cGsnFTC2GwjP36
-	0Jy+XlAOHI4fuK0bd13BbW0L8uzTwuk+T/lVZKWsDKvKWsghaFI0aC15j7AQCkFAjBUGJi629f5
-	P8UQQqXVR4Wzu4k2mvL8/41qR73XTkjgVbwB8CI4nXpSkMX6yJVkPuxAcYF9QHV+x6kPujeWS0W
-	A==
-X-Received: by 2002:a17:90a:1c97:b0:39e:1fb6:9659 with SMTP id 98e67ed59e1d1-39e1fb6994cmr4255054a91.22.1789569039499;
-        Wed, 16 Sep 2026 07:30:39 -0700 (PDT)
-Received: from localhost ([118.34.230.2])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc50ab51c2csm1747149a12.7.2026.09.16.07.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 07:30:38 -0700 (PDT)
-Date: Wed, 16 Sep 2026 20:00:36 +0530
-From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-To: Anisa Su <anisa.su887@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Gtz8qFNj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rCQr3zxyBClBWGuz3uSSAE51zfdUYutTWAmQ2V04SwUYXA5L4RA/8MYQRGxUlE8efmPIxzdwbcwm7zqIPJ4qh1dmmi605rt5qLd0k4RJzUDSG4fW9/ryolB+1JHvJhXNVn26WvCcqlwMTxcQfZRWA6QUYOuGs0CbH5zqIJIrkeMNMhcQmx3kWNjjoopV37DjcMpcZYAfBBuMat2fO0q8AEmj+gmgHqUn+YUhOrJPCvqNoLuwwFYg70qtkvG9s1FWw4moYWXuecKzd+CKn3ur9QRR33e7vzzTS5Pdv8appSw/NCX4Lhq4hyqTyBG1bLqGa6Q/Gg6uQoMI8grQ8+efjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D0WyYXhYoIR3tSHY8P1AxlILNAU0RBZmcjCaQvdpeps=;
+ b=PABkSRPxHFA0HO2CV6LNkHIYXeZhLHLhkl28gjuQqfxV5iiJnRfKr9SZotEK07IFLpPuaDnp/J+QzPV1ocCkc8qrUFg/ZBLVINjqbnOZgpERGRUg3wKMiPxx+4komBg/69gr3utaFXdCPF9OLXJYSqScfXbA52CM+8XveP5SAa8IWrJFymAp7ESZEzwEzsa7dp1meTuPQ2Udbbjq7WIwLIOrQa2S2fcr1etUFwDAU9no/p4exlz/+a7zyA5ic8JfEqKADCYmQIFoliSv2gcZ4LMonhIjBph+j0aBJN5xLKVvZGav0d4lrh6FZrtrqzi5MptlEGxZVoLgtGxREHpJOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D0WyYXhYoIR3tSHY8P1AxlILNAU0RBZmcjCaQvdpeps=;
+ b=Gtz8qFNjGuCs1VIZlytLdw3ZumkmkgpJ+Ib1jxnIgscNgiKlNf/giNcGy40Oe/veUBeLg29hn+g6eQxvAHO2n/grwwgN+tfZy0vF3NGPjvL6A9eJ+F/uUpuYrcaM+po8lDjTB5mcChZvnggZCU1p+8V8LMMTrhMCuHy/+XEC8tA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
+ CH8PR12MB9839.namprd12.prod.outlook.com (2603:10b6:610:274::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.13; Wed, 16 Sep
+ 2026 14:34:49 +0000
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0406.007; Wed, 16 Sep 2026
+ 14:34:49 +0000
+Date: Wed, 16 Sep 2026 16:34:44 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
 	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>, benjamin.cheatham@amd.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/events: Return IRQ_NONE when no event is pending
-Message-ID: <aqqoDPmG9lfDNAwc@acer-nitro-anv15-41>
-References: <20260912093815.14455-1-shaikhkamal2012@gmail.com>
- <aqnlDSdofHDUNdiT@cxlqual>
+	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/7] cxl/region: Name the interleave locals in
+ cxl_port_setup_targets()
+Message-ID: <aqqpBBtJ9CWYGQDT@rric.localdomain>
+References: <cover.1788475206.git.alison.schofield@intel.com>
+ <b3ceb52dfb0da2f164b941adff60d2db6aaac9f1.1788475206.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3ceb52dfb0da2f164b941adff60d2db6aaac9f1.1788475206.git.alison.schofield@intel.com>
+X-ClientProxiedBy: FR2P281CA0160.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:99::9) To DM4PR12MB6085.namprd12.prod.outlook.com
+ (2603:10b6:8:b3::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aqnlDSdofHDUNdiT@cxlqual>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|CH8PR12MB9839:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c7e6775-d909-41c4-c01e-08df13ffa962
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|10067099003|4143699003|56012099006|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	8/VvqZYB5Ui06gDhLQuNVHBQd1iSLv8vuvZm2c00hFZgBbXIdAkIc1IOziLi92/kRG2BhumLMH4OKcqLuDocT78J6cfOIKHkAT8v7NDB4m8po5Llw6b1s9GXY0JHiPanRR74xLvuyBYqyxvqbW34Gco2WSts+dFv7mFvPa+V4JMo60POzTD9Bry3Xv570hWDghAnbWECr9hOJHlLjH48DF1tGg9IPo6KurB7CIx5cNHSkhFSE760NL1JxcIpjC7X1z5qdYioBImUs6l+XuLpRbq1J68TXaS7fqTh5GjpLEv7/N7a8J2lKuVyyQAZneSR6RESzgrg2WawTD2FkKeWoEKWIkDK5d8+FrGy5RSEvQI9PHn8/CLjbX/XaMUGmiqKFQ2SCXaul1EoNQBbrkdgifsLFl4suqijTs7ga0igDT2bxBC1itowARG4EBYogk3uFO8Voh8FJQgDX8P9TdxilSSnmrPYo3fsPJelpJFBoluuJjS3Jj/Q8nqwIYFbzTJAo+Mntz2mEtQ1DjuQisbw0kI5vtQk1YtZ/fPo+o7vE+dgsYJzF7QsljTGa+TTMFZIKC2zrBcTt+QloE/fqj6JDFsut4dyFfwqiBnsR2X+B6v8ILrwgH3H1ayN/7LQ4v6SIgC08oSpUBTtxHFSGlnOyyuN2Af4Vs3FXafkr6qrWEA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(10067099003)(4143699003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dxcXdk2/jwvXV0xW1eGEXoIqJ3z5PBeARGQT2McIDPWR+72/XFyH9N+nMCz/?=
+ =?us-ascii?Q?0pHmn/F/fq30alDXn1+6nXuzrfKhIJU8yUjKMV8qzGDzAZVYa8hOFso3LguD?=
+ =?us-ascii?Q?rlYewdt5Jt0Oy5AczZp0ofBjh1Rtxq6eQqSMFkJoo3QYrowRMh6vWU8qgweB?=
+ =?us-ascii?Q?Q56pojGM/URDo0qzUQx3Fcu6qqDzUXM2FhbsL+1c84nspjeRTDWxEp3zT5rd?=
+ =?us-ascii?Q?JkXG9nopfkXTn0Bq89R4iFk+5/+NJX6Fy0rJn+d2/sxw3bet50SmfevzEBdU?=
+ =?us-ascii?Q?LBV6y1jgPIDOXC/MTKnZFFVjbE/0L3YyUZtlwb5w4xDIdvq8iyOTEzHqxLy1?=
+ =?us-ascii?Q?bZRrVZl4QN+FxYLvNjNb9bD+sjwfEIZ/S7ZnFuiMurlsKVfqQIPrZAPG1IgL?=
+ =?us-ascii?Q?Bx0qLu9dOm5kV+CdJKibrKoF7udij5x1E4Vjf5eWrqV1m1KZ0Xiq8DCJBpGL?=
+ =?us-ascii?Q?Bpd6sf+vsViIZ16oseghHxD/C8vUSw7UXsFb15iee/MAzgxgj/dkr2Gi8tEf?=
+ =?us-ascii?Q?acAGgQCoIitwbMJLtlCOPZH6M5nfqU7Vk9+dYBAhMhHQa+dbTgiDRgZfyT3i?=
+ =?us-ascii?Q?ZpBzpF+ztlWPX2q0OOsPaw0CtcV3bs8Z1amymYHBUJv6QyJ2AugQxCgsyA7F?=
+ =?us-ascii?Q?O5QQJIpNzwPEUDq254TpgJbjykNQ1v3rd0psQQV79X/6bDDg+uILfmhexWiP?=
+ =?us-ascii?Q?0iZPpBdrznLlEGDF6bDBHQCcOAk3NPuz8KvYX73qNAkt4KgfcODd78GcYimg?=
+ =?us-ascii?Q?hlDojh+TrUav6Nuu05wnYksK3nJlSgXcHeHQ9XSptEYqLr0p+9Kf+oa+oO7d?=
+ =?us-ascii?Q?G/9l73cKCTk3Zfv7L1sQx/7CVPhPJW89CRKGTW84iyLPWLQ3PbRDnWlxLyy0?=
+ =?us-ascii?Q?32QYQrmV8p2RIrzKcIcWesRCQ29/DAYlYYO8m53Xaod5jXBTDdD3bumyUExc?=
+ =?us-ascii?Q?8HnuEQZaKPBo3dQkdGo2sPkmdKJ073GRbxawA0gkysOLuZCTzx5pz6vkCfhw?=
+ =?us-ascii?Q?0wY7AzNjml8P0d8cwYhioO/aW/24AWPPeGTWGLJfwLxvfwK5bNcaVzMEN7DZ?=
+ =?us-ascii?Q?ZZRQXm5DyZea0oCc5zH4cDN4PHL/QjjHUE6y0rMM2YTDztcCvwcg9t7ufIyd?=
+ =?us-ascii?Q?xHRm9zFjtgB+695rkvoXfAiQe4m1a/A6D6ZRnymo2+MpWz8SNoFKZHA7bf5Z?=
+ =?us-ascii?Q?Id4E5iQkM+dvMiFCJTb99xAuk7C7tsmjAVsEK+OV5m6COj1MOEdayczfk/BW?=
+ =?us-ascii?Q?F8UvQEW9Acfiwy1jcEXb8DchoXNPM8heA4Uo3imab3DBdumg91uv907Ap7AE?=
+ =?us-ascii?Q?ieC+r8b9GuUqcTkTxi4Zt3DqqOzeH7k21tDZ7HlM8CyVCgF1mRxvLPUPJ6r0?=
+ =?us-ascii?Q?FimBj3k6b36Sw+pKcfqzj0qDxJ52drsoALFsHa4/VWVivi3MFn0DIVI9gaDJ?=
+ =?us-ascii?Q?PytDE/aYn9nOM1FRFBPsaBLhJi5zsd2CjHZvGiymqojKZbbuzg6gDvcPKXij?=
+ =?us-ascii?Q?wAY1WV5TynbnKyCYY2mT6UvK6gRe6G7Q969GQGeKrdXaQ8kBofmG1Fz41CCZ?=
+ =?us-ascii?Q?TUIe3f/IQHG637BYF44gHgAbjT4GMlFlw9aawGLkUID2wQBt7xV1KxewljE0?=
+ =?us-ascii?Q?BoO5RDUjaQM3qoOgUs+1s16/7jFxm3OlbZXIICTERhMfnef8HQeBCFoSmGVC?=
+ =?us-ascii?Q?pgdtBSwT0ovsXkYvE25fhYbOd0/eH5NS4547UTsYj1uKUu08?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c7e6775-d909-41c4-c01e-08df13ffa962
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2026 14:34:49.0695
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8QnE/i0vcxOsUP62bmdJfcpRZ92AIqUcgv7W9Bjm4YYVvLKGITBrC1DugyWYG7VhwJvh6WvTpk5GT2bRStwsFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9839
 
-On Wed, Sep 16, 2026 at 09:38:37AM +0900, Anisa Su wrote:
-> On Sat, Sep 12, 2026 at 03:08:15PM +0530, Shaikh Kamaluddin wrote:
-> > CXL event interrupts may share an MSI/MSI-X vector with other event
-> > logs or device features. Consequently, cxl_event_thread() is registered
-> > with IRQF_SHARED and must determine whether the event-log facility
-> > claimed the interrupt.
-> > 
-> > The handler masks the Device Event Status register to the event logs
-> > supported by the driver. However, when no supported status bit is set,
-> > it exits the processing loop and still returns IRQ_HANDLED. This
-> > incorrectly reports that the interrupt was claimed and prevents the
-> > generic spurious-interrupt detector from accounting it as unhandled.
-> > 
-> > Track whether the CXL event handler claimed the interrupt and return
-> > IRQ_NONE when no supported event is detected. If no handler sharing the
-> > vector claims a sustained interrupt storm, the generic spurious-
-> > interrupt detector can eventually identify and disable the affected
-> > IRQ.
-> > 
-> > Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> Reviewed-by: Anisa Su <anisa.su@samsung.com>
-> > ---
-> > Changes in V2:
-> > - Emphasize that returning IRQ_NONE enables generic spurious-interrupt
-> >   detection and drop the Fixes tag. (Jonathan Cameron)
-> > - Check whether the event interrupt is already disabled by Anisa Su's
-> >   patch; no code changes were needed. (Ben Cheatham)
+On 03.09.26 16:23:46, Alison Schofield wrote:
+> cxl_port_setup_targets() derives the interleave granularity of one decoder
+> from the granularity and ways of the decoder above it, and takes that
+> decoder's own ways from the topology below it. The values from the level
+> above are named parent_iw and parent_ig, but the values being derived are
+> the bare iw and ig, so the reader has to work out which level each one
+> describes.
 > 
-> One thing I want to correct: The change requested was to say a
-> spurious IRQ will eventually be disabled in the commit message, not
-> check whether the event interrupts is already disabled...
-> See https://lore.kernel.org/linux-cxl/aqLZP3ORYzCLfSgR@acer-nitro-anv15-41/T/#m32c74ebf05eee9a3ee49c57dd24848db29919031
-> I do see that it's been added to the commit message though, so no need
-> to do anything.
->
+> Rename iw and ig to child_iw and child_ig to match the parent_ prefix used
+> for the level above.
 
-Hi Anisa,
+Aren't my parents my child's grandparents. :-)
 
-I got your point, yes commit message already covered this.
+I fear that does not improve it. iw_up/_down? Unsure.
 
-Thanks,
-Shaikh 
+-Robert
 
-> Thanks,
-> Anisa
-> > - Rebase onto v7.3-rc2; no code changes.
-> > 
-> >  drivers/cxl/pci.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index c7c91e8dc51d..8b560cae91f2 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -515,6 +515,7 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  	struct cxl_dev_id *dev_id = id;
-> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
-> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> > +	bool handled = false;
-> >  	u32 status;
-> >  
-> >  	do {
-> > @@ -527,11 +528,13 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  		status &= CXLDEV_EVENT_STATUS_ALL;
-> >  		if (!status)
-> >  			break;
-> > +
-> > +		handled = true;
-> >  		cxl_mem_get_event_records(mds, status);
-> >  		cond_resched();
-> >  	} while (status);
-> >  
-> > -	return IRQ_HANDLED;
-> > +	return handled ? IRQ_HANDLED : IRQ_NONE;
-> >  }
-> >  
-> >  static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
-> > 
-> > base-commit: df2908090cda368b01ff43709f51890076c56157
-> > -- 
-> > 2.43.0
-> > 
+> 
+> No functional change.
