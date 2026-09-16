@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104E237D110;
-	Wed, 16 Sep 2026 02:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E95345EAC;
+	Wed, 16 Sep 2026 02:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789525863; cv=none; b=Xh8/Lz0sXxGV/yAyuy7CyleipiTZ47y3e+ePttSTXjZITdEYXUT0SsTNcq0zFNermZlrIv6i6++xSe6ttOWVYlxffXs2kDbLOCCnGwMiYqf2dmi8Qh7D0ljiSI7DbVxMEzf02CMhSoLPD8EBpfDGBscX30xFsOJIgE9XJpyUFu8=
+	t=1789525968; cv=none; b=eTIWXetd/y6QNlYAlmfbj1Y/08stVcgTcUgDvZ9bV2zmU87hDNq+cjitH+eMgPl3SquzkEyf9KEE0kxR9soiarYz6/adJuvfiuI3hLHCRUIfoF3Fe5q7KQpbWCFgslqrFlBDOYwwovUUKZBe1d1aj/3VEtql+I5NYPzwJVrsZgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789525863; c=relaxed/simple;
-	bh=pw+n6er4vS4wyzBCMDGhcqZmWJ9EK0FIgNbuKws4uHA=;
+	s=arc-20240116; t=1789525968; c=relaxed/simple;
+	bh=+gvY37AcT3k5wbBYEtbtg6xNzgR7aqPbXSkxXJ4FWOE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=td68QOoWY1A3zKr/Jj2HfmXMUXwjv0BiZguKg7uw+W5i62ARlgSH+at1G+yKR0FmPan0JAiIx9RNOrZCt9O7jLnERLFpMLRDaNhVjGn7nq6cAotYDV1dUX7zr6QlpAThZnLVzs+GpV17O7Nwksru52f1YfmF+jGjUQiBpPIzn34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRwnRwjE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=pVd30B/5gPskXGJWoH5C8VT6GHJXaryQdW4vU5kTfNIyURGbU/IfzcWx6i22xL7vNR2VpAV952fT1Ox/Amv8hZA7HkkVREk82/FhO8FlSgnWtd06BC5fM04dY5x2sqof8PJBKDq350iDXnof4nDCmB/L/N8wPPBBJhAdlwmIols=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJtaT7fB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRwnRwjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54771F000FF;
-	Wed, 16 Sep 2026 02:30:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJtaT7fB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2BD1F000FF;
+	Wed, 16 Sep 2026 02:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789525859;
-	bh=XayTTHaA/20/1YHJcAIDuIRqedh5Y2E5vDdd0Hn0sM0=;
+	s=k20260515; t=1789525964;
+	bh=vwHTsbU5VsC9bg5GbUtPtfKqW9squjPWGLhZeAaw10k=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oRwnRwjERKFYQDK/2mLv9Yf0I9hJ0FToDH1T/KyP2sCOTLUyw/azzYzJXe0v2/03T
-	 J4LIBBmMDdxFZmASyxatdrDhVi8knxpWIQwgp5pN+eTQuWuwGCYlNYdt2Z7+NVEYLL
-	 D9aBB656odwb605fKZpBHSDdq9kwAv/bLrRsEYYSHNWudgE8lt1nvEl/jygjGYmGbz
-	 SoAa2ELMCXs6SDWCh0WBhGKNqPQGPK32GWp0h5CCXc0ibcbXYpnz9TG5qO9wW+Ee8E
-	 X4I+hoPQsKATcOwlUusHiTi+qDEpeQs53Zd030Nxalner+mbhCiDP/yvzEGUs2rnGK
-	 N0X0Re1ybmaOw==
-Date: Wed, 16 Sep 2026 03:30:56 +0100
+	b=nJtaT7fBH4ug66H5PilqmXMG9aw8jB1TzX1pyBfA/vk+Tw+9VhJ2j2b+zSwhUmk+3
+	 Lv9lr7BewnJNrN9OgmXsKIpLCq6gYgFZRVeJ4Kxm6KnJVmFcOG5LQnuYfNdQV+ohQ6
+	 UBAPNurFHwtKmvXsf6u/BNxPiQ5pVYAWCmpd/8GpzKd/z3qfKIEgQlW3FaliMHuQn7
+	 IHzcUPl+bsPWVoa5duC1wHjwNAiK6jvOZ/WHZ0dXS9icHACxrUZnvOk95FrRgeUSto
+	 7tpovPCUnXsjnWKOfIFSUOlhkf1LIxLr2hJ9s0vsop+U0LTzsfVut+wkwGGoHM9gec
+	 oshffKJOMD/dA==
+Date: Wed, 16 Sep 2026 03:32:40 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, iweiny@kernel.org, ming.li@zohomail.com,
- gourry@gourry.net, rrichter@amd.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, newtonl@nvidia.com,
- kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
-Subject: Re: [PATCH v7 4/7] cxl/region: Start unmapped poison scan at the
- committed decoder boundary
-Message-ID: <20260916033056.7f7be089@jic23-hlaptop>
-In-Reply-To: <20260902053839.25595-5-icheng@nvidia.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Richard Cheng <icheng@nvidia.com>, <dave@stgolabs.net>,
+ <dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <iweiny@kernel.org>,
+ <ming.li@zohomail.com>, <gourry@gourry.net>, <rrichter@amd.com>,
+ <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <kees@kernel.org>, <newtonl@nvidia.com>, <kristinc@nvidia.com>,
+ <kaihengf@nvidia.com>, <kobak@nvidia.com>
+Subject: Re: [PATCH v7 5/7] cxl/memdev: Don't overwrite the error from an
+ earlier partition poison query
+Message-ID: <20260916033240.36c5b6ea@jic23-hlaptop>
+In-Reply-To: <appXoR5rCn91KF34@aschofie-mobl2.lan>
 References: <20260902053839.25595-1-icheng@nvidia.com>
-	<20260902053839.25595-5-icheng@nvidia.com>
+	<20260902053839.25595-6-icheng@nvidia.com>
+	<appXoR5rCn91KF34@aschofie-mobl2.lan>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,55 +52,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  2 Sep 2026 13:38:36 +0800
-Richard Cheng <icheng@nvidia.com> wrote:
+On Thu, 3 Sep 2026 22:31:13 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-> poison_by_decoder() stops at the last committed decoder and records the
-> handoff in ctx->offset, but cxl_get_poison_unmapped() ignores it and
-> starts after the highest DPA allocation instead. Allocation exist for
-> uncommitted decoders too, so their DPA is skipped by both phases and
-> poison there is never reported. Resume the scan at ctx->offset, and scan
-> later partitions in full, restoring the pre-rewrite behavior.
+> On Wed, Sep 02, 2026 at 01:38:37PM +0800, Richard Cheng wrote:
+> > cxl_get_poison_by_memdev() queries Get Poison List per partition but
+> > never checks the result inside the loop, so a later partition's success
+> > overwrites an earlier partition's failure and the whole scan reports
+> > success while that partition's poison went unlisted. Before the loop
+> > conversion the PMEM query returned early on error. Stop the loop on any
+> > error not already tolerated as a RAM -EFAULT.  
 > 
-> Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> Before be5cbd084027 pmem was queried first, then ram, so a ram failure
+> was reported after the pmem records had been collected. Now w the order
+> reversed, breaking on a ram error means pmem is never queried. I'm not
+> sure that is what we want.
+> 
+> What matters more to poison list user - a truthful return code or every
+> record the device is able to give us?
 
-Whilst ctx->offset is conviently there, I do sort of wonder if
-we should instead be figuring out directly what is committed.
+If we can have both, that would be nice.  That sort of multiple return code
+fusing is nasty to read but here I think it makes sense.
 
-Meh, too complicated. This works for me.
 Jonathan
 
-> ---
->  drivers/cxl/core/region.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index ddf12075b95c..b7dc5d4988da 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2907,7 +2907,6 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
->  {
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	const struct resource *res;
-> -	struct resource *p, *last;
->  	u64 offset, length;
->  	int rc = 0;
->  
-> @@ -2920,10 +2919,8 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
->  	 */
->  	for (int i = ctx->part; i < cxlds->nr_partitions; i++) {
->  		res = &cxlds->part[i].res;
-> -		for (p = res->child, last = NULL; p; p = p->sibling)
-> -			last = p;
-> -		if (last)
-> -			offset = last->end + 1;
-> +		if (i == ctx->part)
-> +			offset = ctx->offset;
->  		else
->  			offset = res->start;
->  		length = res->end - offset + 1;
+> -- Alison
+> 
+> 
+> > 
+> > Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia.com?part=5
+> > Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> > ---
+> >  drivers/cxl/core/memdev.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index b3419df586b9..e39b3d13fd56 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -231,6 +231,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+> >  		 */
+> >  		if (rc == -EFAULT && cxlds->part[i].mode == CXL_PARTMODE_RAM)
+> >  			rc = 0;
+> > +		if (rc)
+> > +			break;
+> >  	}
+> >  	return rc;
+> >  }
+> > -- 
+> > 2.53.0
+> >   
+> 
 
