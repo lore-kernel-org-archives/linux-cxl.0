@@ -1,101 +1,138 @@
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9523644A4
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 12:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789562139; cv=pass; b=YORnbD5+E6WuVZ/WKsWVuLbsr+wl2T8Fbe3x2SCwsBMvMST9eCzwXSC9VCmqDGim6b4n2rOs2y7OuzTCQiW99yAzUm4aufrTLWzUYFiBzQ5MZYw6lBxGeLb1mYkiYQT5YwQG8uuoqvPz4G+lKlpjKgc1wI2iwtrHs6AGiwbVQ20=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789562139; c=relaxed/simple;
-	bh=DxRmwu5RmIuj24FLntDF1Q0HuDOjwAgaAKyPiBxutpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FYkrENZx+x8W4hc64iHt5GXt+CZltqJRCaA6ZDLixd1ZN971Gafk7bV8H7JP9UQ3Rkjyiw5n1HPr+j8JaiEUnj2gfH+uZIlSZ/4cSVUN38YE4nEn2zPlWvn8hbFeGwUmpIOiwXa450T2iyJif0HZphnewyYeNr74iacGrLzM8ZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=BoGGaODd; arc=pass smtp.client-ip=165.173.180.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4F341C71
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Sep 2026 13:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789567144; cv=none; b=NlAVS8obvuzwi5j8AbFX96r4vtwVhtmDh7RejaxTdlQ4bMNehiJZeDBb+nf+r6DBobdASLY3UVY74GsKp3aNZ5E+5g97CwsLv4JH55NMYNWpsqlusBsuKhmVbOyt3laEz7Nv82mC1pl7eOmvIq6xdNEz0RNYLkEUk+8fM82Fg0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789567144; c=relaxed/simple;
+	bh=FLMpObrNFi9IClkRd1Kc6eOo73FJWnKKrgI2yNAfRZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=J2D0aDEFHaOeg2XbWxX/K+0QKPT/DC6gzhgSKmW+2oCaJsFMhgRv2fsVJTgntF0Q0q3kjtDKObh539c0cI8KORMExHLFSH7p3k7iIqJSkYCl/7OCSoE1zQnBsLPKOvl2qfFXWcxqLVUgor6ATPEV02uDNR0ztFiOEqFTm0amwjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZhFS51H/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="BoGGaODd"
-ARC-Seal: i=1; a=rsa-sha256; t=1789562128; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bz8wmMy8gbcoZabw85SSQOP96jrW7f1Ijt1FHX+Qh5AFb1ber9MtHtP8PFtdHV2TjMwQpAOCnWwcJmq3jJZeHIPaifQ6ZCvZiGEBUb6CVl5Unl59FUcYt71Ob5TGaHKWmu91LGh7BtkxKiBAhlkrFI+y/Ez/rgVbu+uPnd62Pms=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789562128; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dR6Gj1EOdj2p2PtEbDRGOtKh6e5OI+ee9X0HvlTunZ0=; 
-	b=nr0ZdCL5dXilCVxQWfcPNK2wSxJTbmDAxoVrrSdUQEyWBTLLr5M8TYlAWjkCU2t3woZ9EYH5/ruAV5NIrO826F7mfn5dItpObVeonCI7dakcepS0TWWYC1EttxGhWREx1R/lwwFP/6MJsiq06ZNAhaJ+AZqJ0OJxohLIkAGGf8I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789562128;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=dR6Gj1EOdj2p2PtEbDRGOtKh6e5OI+ee9X0HvlTunZ0=;
-	b=BoGGaODd95z0UH9nxStDcdT/UFUXs7cAv+PnxwLqsm5cS8tKVnkpHfx1i3LYN3Ru
-	N1XP6gH+f/lZ2jptQzSjv/r0yhZpezlXmkWCN7+A8i4jIQRzKihloeodm7dR1s/snnn
-	56NyqoQf4TuuwI90SDvxgKFn0RPQffGMz6g85ZUY=
-Received: by smtp.zohomail.com with SMTPS id 1789562127810983.7620596622855;
-	Wed, 16 Sep 2026 05:35:27 -0700 (PDT)
-Message-ID: <3ee67324-a11d-4538-88c9-13d102255bed@zohomail.com>
-Date: Wed, 16 Sep 2026 20:35:24 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZhFS51H/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1789567142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6rV63i5zLz4J/LUzf54w3p9IiUX+skDQOv9c6EGZuIE=;
+	b=ZhFS51H/0cPs4Vk2zYKCpjYJPFVyF4VZP/1hQavM4Z3dJfSDMFh9TSYr3/VPPOCPLfxeav
+	bdUCq+8EXFOa5b0JMd5d6M7g5jkhnjH6CuwqGoF5UCZSPJXUXxk7x5pWXjHa/3e11gNWM8
+	40Wc62X5lZH5oN6QgxVzKVCqM2Mpsjg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-D6iXkVmfNwmnVSZS8mh5ow-1; Wed,
+ 16 Sep 2026 09:58:57 -0400
+X-MC-Unique: D6iXkVmfNwmnVSZS8mh5ow-1
+X-Mimecast-MFC-AGG-ID: D6iXkVmfNwmnVSZS8mh5ow_1789567136
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B188318558A9;
+	Wed, 16 Sep 2026 13:58:55 +0000 (UTC)
+Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.64.46])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 566BD1956058;
+	Wed, 16 Sep 2026 13:58:50 +0000 (UTC)
+From: John Snow <jsnow@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Markus Armbruster <armbru@redhat.com>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	Peter Xu <peterx@redhat.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Eric Blake <eblake@redhat.com>,
+	Fabiano Rosas <farosas@suse.de>,
+	Kevin Wolf <kwolf@redhat.com>,
+	Michael Roth <michael.roth@amd.com>,
+	linux-cxl@vger.kernel.org,
+	qemu-block@nongnu.org,
+	Junjie Cao <junjie.cao@intel.com>,
+	Lukas Straub <lukasstraub2@web.de>,
+	Hanna Reitz <hreitz@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jason Wang <jasowangio@gmail.com>,
+	John Snow <jsnow@redhat.com>
+Subject: [PATCH v4 1/7] qapi: convert remaining simple intros for block-export.json
+Date: Wed, 16 Sep 2026 09:58:35 -0400
+Message-ID: <20260916135841.3614495-2-jsnow@redhat.com>
+In-Reply-To: <20260916135841.3614495-1-jsnow@redhat.com>
+References: <20260916135841.3614495-1-jsnow@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/core: Skip einj_inject creation when
- devm_add_action_or_reset() fails
-To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>
-Cc: linux-cxl@vger.kernel.org
-References: <20260915060138.2007974-1-kanie@linux.alibaba.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260915060138.2007974-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: zu0801122706dd8b87bd40953161ca9e100000a89e3fc25dbee197f777364b466ac53b4a661d2c746982645d:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: aCCydb5AmjXFc42We4ryJsC1dAc2droeAgo-MYP79Fg_1789567136
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 9/15/2026 2:01 PM, Guixin Liu wrote:
-> cxl_debugfs_create_dport_dir() ignores the devm_add_action_or_reset()
-> result and creates the einj_inject file below @dir unconditionally.
->
-> When the devres allocation fails, remove_debugfs() has already run
-> before devm_add_action_or_reset() returns, i.e. debugfs_remove() has
-> released @dir. The subsequent debugfs_create_file() would then use
-> that dentry as its parent although its final reference was dropped in
-> the removal and its memory is subject to call_rcu() delayed freeing.
->
-> Skip the file creation in that case, consistent with how the rest of
-> the helper tolerates debugfs failures.
->
-> Fixes: 9185b1a3043c ("cxl/core: Fix dport use-after-free via the einj_inject debugfs file")
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-> ---
->  drivers/cxl/core/port.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 8d715739995b..95c0be57ed53 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -837,7 +837,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
->  
->  	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
->  
-> -	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
-> +	if (devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir))
-> +		return;
->  
->  	debugfs_create_file("einj_inject", 0200, dir, dport,
->  			    &cxl_einj_inject_fops);
+These are either structs or unions that are used in an inlinable
+context: i.e. the generated documentation is likely to feature a
+version of this documentation block that does not include the intro in
+context of another command, event, or structure.
 
+Signed-off-by: John Snow <jsnow@redhat.com>
+---
+ qapi/block-export.json | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/qapi/block-export.json b/qapi/block-export.json
+index 2893c6456d5..e9f7e72c8ee 100644
+--- a/qapi/block-export.json
++++ b/qapi/block-export.json
+@@ -37,10 +37,9 @@
+ 
+ ##
+ # @NbdServerOptions:
+-#
+-# Keep this type consistent with the `NbdServerOptionsLegacy` type.
+-# The only intended difference is using `SocketAddress` instead of
+-# `SocketAddressLegacy`.
++#     Keep this type consistent with the `NbdServerOptionsLegacy`
++#     type.  The only intended difference is using `SocketAddress`
++#     instead of `SocketAddressLegacy`.
+ #
+ # @addr: Address on which to listen (since 4.2).
+ ##
+@@ -50,10 +49,9 @@
+ 
+ ##
+ # @NbdServerOptionsLegacy:
+-#
+-# Keep this type consistent with the `NbdServerOptions` type.  The
+-# only intended difference is using `SocketAddressLegacy` instead of
+-# `SocketAddress`.
++#     Keep this type consistent with the `NbdServerOptions` type.  The
++#     only intended difference is using `SocketAddressLegacy` instead
++#     of `SocketAddress`.
+ #
+ # @addr: Address on which to listen (since 1.3).
+ ##
+@@ -339,9 +337,8 @@
+ 
+ ##
+ # @BlockExportOptions:
+-#
+-# Describes a block export, i.e. how single node should be exported on
+-# an external interface.
++#     Describes a block export, i.e. how single node should be
++#     exported on an external interface.
+ #
+ # @type: Block export type
+ #
+-- 
+2.55.0
 
