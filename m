@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E8F5221F2
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 13:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480F9526A86
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 13:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789651249; cv=none; b=tWYSBJ1aUILi1cYOT+EJw2o1RqF1vlU7COH6bTqgRYBhnzJpO65J/LY4BwIrPmcxdJV8tPG+Qf9mQdTOfYt9lird43kAmGIZh0XslnLCIs5gUSFuTcKILDyoNpVCUs8y/fOV2z2aYmPxy6aZiUgH8AMzRfuZt1JiNIZt7GGwUBo=
+	t=1789651658; cv=none; b=CdM0A3bRrqy4BlQMDKfD+W9PvJXsmDmGWay9NutAVSRIhKRVAoNn7Oqf1xm/7TXOmfosVmJIhr8bhKoqQyspmdT2Orj2YQSfb+q9uuydLYopI0u9vXwozidFGJr+KZJdVDrg2u/f2DHkEjw7shTEETlCkXs8Di9TS07xw8WnglQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789651249; c=relaxed/simple;
-	bh=lqfizPJlOGDAw0qvLOL1eNL1ZoTj9XiDL54Gx02m200=;
+	s=arc-20240116; t=1789651658; c=relaxed/simple;
+	bh=enXwzA9BcIOkYsH2pguE945nGXNFjkYL8fMgKtjyR6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k68IariZVghut1dDocJ9q9MjXpTi98zLwR7ny97czOUIS783rf4lwT2HJNQEv4NIGk+mjt2p5Ch867eZ+3MS4KXhfpbKG/25h/syNkvWVFMwL4g3D/SSLoKJBaLZPsjf9J/yg9mn7Q3EFRgxrIJ0+IKcw19I9a9ZY38nymrWXlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WhXrg6P1; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=MX4QLqk4fCVvRpBjpRoirX/Y8hxOT1C5dHgWgkx5r2Tlpspp2DhYCA0FvMgHbHSjmwQApjJbdWZCDeNstRm8ZrKjVp3OwHbtBRA+RLB2LuziOXPjO8/9RHaILwymBlz5+qOtr9h7YzY47mVqQhqQ+jQfh+YfGXNa+Jd9A4xJC9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rd3z23Qc; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WhXrg6P1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rd3z23Qc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789651243;
+	s=mimecast20190719; t=1789651655;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FXeF9QO8P5r2rG6ZTH1DuOvCEfHtOL4VAoVqn+et7fo=;
-	b=WhXrg6P1+9ViAGmVz9svbXex4uD9sl7yZqayGk3SmrLOnpy93fTWr9B04t31qrKlJIO0NE
-	WB7VZ6c5OEvxyjfgcr+YYvd9TKTEw5hG69GcJNSPd3Z0AJkt64PMR7hTHgMARO2lhZ7S0o
-	GfJJkb+xJpURb2MnNKmVsf/4ARATaRE=
+	bh=Os4V/Nh6hpIAE4QELnwb/Aon1/X5FEXVxFR2MrZLV0c=;
+	b=Rd3z23QcH+hScsqRjHlTVBVa4TW2To703cEfrhfchJOuckJXi8QgDES61Q9j/3RZ5oM8hw
+	7+HKc3fZ7ytIO2PA6aYkw5b5dYj+iAkcIXLCvn2dy9ST5iUWlbW4dhtBzr87hf7dK3jASJ
+	zEg1YIrrtvtXKvTEjR4Tg6Nbpk9ZcM0=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-477-RDDyoiKkN12axlv_U7oodw-1; Thu, 17 Sep 2026 09:20:41 -0400
-X-MC-Unique: RDDyoiKkN12axlv_U7oodw-1
-X-Mimecast-MFC-AGG-ID: RDDyoiKkN12axlv_U7oodw_1789651240
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4957287363bso7392355e9.0
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 06:20:40 -0700 (PDT)
+ us-mta-19-eLboj1v0PL2TnmEftFe6-A-1; Thu, 17 Sep 2026 09:27:33 -0400
+X-MC-Unique: eLboj1v0PL2TnmEftFe6-A-1
+X-Mimecast-MFC-AGG-ID: eLboj1v0PL2TnmEftFe6-A_1789651653
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4994cf6cdb9so7159425e9.3
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 06:27:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789651240; x=1790256040;
+        d=1e100.net; s=20260707; t=1789651653; x=1790256453;
         h=content-transfer-encoding:content-type:in-reply-to:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=FXeF9QO8P5r2rG6ZTH1DuOvCEfHtOL4VAoVqn+et7fo=;
-        b=zq7AQZxaSY3qzzbR/W2wko8c3CE1xY0uU9qm4n0rZs1ySXyB1KyQy9zWwVyCY5b6mk
-         gvXxoOPX28iuYd6hqr92GSGoQe5PF6ryYbwOw0hxcw+nGoUY/GUn4h7pSWAobDJwF1fL
-         ItWjywVIHIJL6TmLeb6XZ+of8Sk+/7G2jQgaikepCUd/+uKc8de1UO1o/Fe1dcrbVfLf
-         Sks7ipxCbWNgME9gQURu11wbwU07Z4VXXx+PcMCjL4l3ZqFNdRwLc+hBJ0VVGdkZVU51
-         8gQ6Ch/C6F7Nhvec+ZBCeWbCrSBCIH4MN51gIMIN8cBeG6FfeAoARjXGLQDv4wJyQfoF
-         bGmA==
-X-Forwarded-Encrypted: i=1; AKwUvBwk/A59bYeIhXaiNUG3+32jauwOIqouVHrNOWclq/bw4jG148EHH6riDzv4kfAzNEbHi9EvI7w9zD8=@vger.kernel.org
-X-Gm-Message-State: AFuF++n83oE3Mo51Hpg8theyArvdmQn/Tt4ZTH2ubDSNtqiK5sV6k+MH
-	XTwQ2YMAGk52vbik/FfqC7JzntMqOuAthD+aXeeIxlF4JUBMgJvqRS9DqWY1LtEsBql3109GaR3
-	kRExgQp/yNSD/ZlE4w4j2i97UjbPyrjeo3fMlstzChfhb52peIqD9xyGhMYV3fw==
-X-Gm-Gg: AYBFou0ZqdbvmY6BskQrYI8jtzZfgYVSgzdHvcJKLkFbl47fmRb73R72FkiadKyoqN8
-	uA5632zgCCJMetlxHs9gqTKCkGx1ZynYvrNjgqZnMEJybb4Jw9YLw5WKBWXfuoF0GhuPJII6tJu
-	4wxTf5gMA3q7ZX2oIXlQx+pxczaXa9jMFFpY7hoXr1XNZJWZJ+Z0WJG30WRgVGRELJK/K2XuYxQ
-	CDkcdGxgvj2rcvruWQPd/0lEN+eQpHkyWSLwIrVLnPo3D50kBJRw9cz3TPWRDZ7BtJuBPutRaeb
-	WkEFSHFsalGd8A9KDtVMf9si9uWgn6c0gqcrxgBSLiiJT3s1jdQz3q9WuQCRr84QjhHYdiH7B+1
-	Auo/v7gb7fu+4pzIGqHJw7wMo/OYKMDWIHLXTS70l3g==
-X-Received: by 2002:a05:600c:1f96:b0:49e:69f8:e846 with SMTP id 5b1f17b1804b1-49eb72f24camr77305405e9.9.1789651239735;
-        Thu, 17 Sep 2026 06:20:39 -0700 (PDT)
-X-Received: by 2002:a05:600c:1f96:b0:49e:69f8:e846 with SMTP id 5b1f17b1804b1-49eb72f24camr77304775e9.9.1789651239185;
-        Thu, 17 Sep 2026 06:20:39 -0700 (PDT)
+        bh=Os4V/Nh6hpIAE4QELnwb/Aon1/X5FEXVxFR2MrZLV0c=;
+        b=zzZvqPQhxKY5dOccRNCNvTpCcx50F/41IPtI+OftqXoNVJeDMtK/Vku2I7uhf1tijt
+         SNwrtKcswQCzXqQXxBMUljb8Ac/Pbrtm6Yfs3R9UTCQNwV+bEyleA8+ZYxYf9LVj7Gh3
+         AIus6V9GQvulXtRI7E/vaxHlvZVJXyfEjjU7wE8XKcxOfylEHRaw7tu44J65KUYlHzlb
+         oV/HFhfCMcdxbqJNDOJLDiC0m3gBCPuyu0FyKfvzslKes3mlyqZqS3M7E94OXBFLfRsl
+         6tM/h/FZqmeSJ/Gh+osSyyslk7lSaqmOTS6sySLANPdLJOPTK49b4rjnMFt3cGyU6xnq
+         95Sw==
+X-Forwarded-Encrypted: i=1; AKwUvBxW1T3LHe6MWcarJ750vL3a4Z5OIK3d4nUPEaq6B0XW5WKRtBFhLwHTcAITAVwu5sH32QSnAKgSiJ4=@vger.kernel.org
+X-Gm-Message-State: AFuF++ndxBV9O5XeLAWhkMSgKbzjvrIRScDq8HBHbV0UVBYCaaL6TYoR
+	Bx2Vp2O+uSrVJjC94Uzbg1V0V6/8S5J6ao+w6SlG22A5DAnIhNcYqanb26mVXNY6Z6OAvjuvsHq
+	SjeKlyjgVO5XgUF6X2YbG9NXbhmtQYzBgTy4zcNt2Pzz8LtfdbvwqVLM9CldjHw==
+X-Gm-Gg: AYBFou2/l/ADUV4Cc3/OghjPY9OZGD5iVt+wjf4HdvHFGB4FJAjmf+2uy1haxutG3bL
+	Uk9B2Hh//hfNioGY8kxQpyq9crEOMPnnYsSK34q3A53HpaaLm+8+ZUEcJ+pokJOzHhKYmiiP2Ra
+	woudd40ltCx78Wop1Jvf5xmRVRCFCVFxx5dL/TdrY5zlNox0eq94RGIvRrjiEDHsnCNoGC8Xub+
+	1eKYjs7fQEs9us0k6185eUaGuVQjxekeszDtY032CRkwSZ1TpbPrfeWz3K5ZyzgmNZpA+bl3Ey0
+	vuJtUSNoMRsqR4b/M+j8Q39rhosdo4r5djkpAwXX5ClufOQYYo7dkQ3QQG5kxS2yJYoiqZFRTH1
+	Z7PzvcE89c3YJPjVVlAKJI4MAoy3NzaS0lATEeAxsUw==
+X-Received: by 2002:a05:600c:8b86:b0:49c:fff9:f684 with SMTP id 5b1f17b1804b1-49eb7320be4mr78559835e9.21.1789651651948;
+        Thu, 17 Sep 2026 06:27:31 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b86:b0:49c:fff9:f684 with SMTP id 5b1f17b1804b1-49eb7320be4mr78559305e9.21.1789651651438;
+        Thu, 17 Sep 2026 06:27:31 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:1292:d530:e939:7a09:c368:e5d5? ([2a01:e0a:1292:d530:e939:7a09:c368:e5d5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd17051fsm78318555e9.0.2026.09.17.06.20.37
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd32c5e1sm108386465e9.5.2026.09.17.06.27.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2026 06:20:38 -0700 (PDT)
-Message-ID: <401f2150-fee9-4f9d-981e-f6bdde37a234@redhat.com>
-Date: Thu, 17 Sep 2026 15:20:36 +0200
+        Thu, 17 Sep 2026 06:27:30 -0700 (PDT)
+Message-ID: <3d799d0d-1365-4bbb-a159-c8d926f2863c@redhat.com>
+Date: Thu, 17 Sep 2026 15:27:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,8 +74,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/10] hw/vfio/pci: Enforce the passthrough topology
- for a CXL device
+Subject: Re: [PATCH v2 02/10] hw/vfio/region: Add vfio_region_setup_with_ops()
 To: mhonap@nvidia.com, alex@shazbot.org, ankita@nvidia.com, jic23@kernel.org,
  dave.jiang@intel.com, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
  pierrick.bouvier@oss.qualcomm.com, mst@redhat.com, imammedo@redhat.com,
@@ -84,7 +83,7 @@ To: mhonap@nvidia.com, alex@shazbot.org, ankita@nvidia.com, jic23@kernel.org,
 Cc: kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
  qemu-devel@nongnu.org, qemu-arm@nongnu.org, linux-cxl@vger.kernel.org
 References: <20260916184412.3825713-1-mhonap@nvidia.com>
- <20260916184412.3825713-5-mhonap@nvidia.com>
+ <20260916184412.3825713-3-mhonap@nvidia.com>
 From: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>
 Autocrypt: addr=clg@redhat.com; keydata=
  xsFNBFu8o3UBEADP+oJVJaWm5vzZa/iLgpBAuzxSmNYhURZH+guITvSySk30YWfLYGBWQgeo
@@ -129,9 +128,9 @@ Autocrypt: addr=clg@redhat.com; keydata=
  HQoPn9qrDJgsgcbBVc1gkUT6hnxShKPp4PlsZVMNjvPAnr5TEBgHkk54HQRhhwcYv1T2QumQ
  izDiU6iOrUzBThaMhZO3i927SG2DwWDVzZltKrCMD1aMPvb3NU8FOYRhNmIFR3fcalYr+9gD
  uVKe8BVz4atMOoktmt0GWTOC8P4=
-In-Reply-To: <20260916184412.3825713-5-mhonap@nvidia.com>
+In-Reply-To: <20260916184412.3825713-3-mhonap@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WJD8I3h7epwGzStb4NnIXD8Orz4PNqQRe8cd1FAt9rI_1789651240
+X-Mimecast-MFC-PROC-ID: Ljb7OIKZ_z532CRquUbQvHagZ-1sn_LYY3UaIOTmfDU_1789651653
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US, fr
 Content-Type: text/plain; charset=UTF-8; format=flowed
@@ -140,106 +139,68 @@ Content-Transfer-Encoding: 7bit
 On 9/16/26 20:44, mhonap@nvidia.com wrote:
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> Only the guest's endpoint HDM decoder is programmed by the guest; the
-> decoders above it are covered only while the pxb-cxl host bridge stays in
-> passthrough mode. Reject a switch in the path, or a host bridge taken out
-> of passthrough, at realize before any mapping exists.
+> A CXL Type-2 device traps its HDM decoder block, so that region needs
+> custom MemoryRegionOps rather than the pass-through default. Split the
+> setup body out and let a caller supply the ops; NULL keeps the existing
+> behaviour.
 > 
 > AI-used-for: code (prototype)
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
 > ---
->   hw/vfio/pci.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 73 insertions(+)
+>   hw/vfio/region.c      | 27 ++++++++++++++++++++++++---
+>   hw/vfio/vfio-region.h |  3 +++
+>   2 files changed, 27 insertions(+), 3 deletions(-)
 > 
-> diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
-> index 2f84af5cf8..10b13f200d 100644
-> --- a/hw/vfio/pci.c
-> +++ b/hw/vfio/pci.c
-> @@ -27,6 +27,7 @@
->   #include "hw/pci/msi.h"
->   #include "hw/pci/msix.h"
->   #include "hw/pci/pci_bridge.h"
-> +#include "hw/cxl/cxl.h"
->   #include "hw/core/qdev-properties.h"
->   #include "hw/core/qdev-properties-system.h"
->   #include "hw/vfio/vfio-cpr.h"
-> @@ -3570,6 +3571,73 @@ bool vfio_pci_interrupt_setup(VFIOPCIDevice *vdev, Error **errp)
->       return true;
+> diff --git a/hw/vfio/region.c b/hw/vfio/region.c
+> index 54ad11a6c8..21b54978b5 100644
+> --- a/hw/vfio/region.c
+> +++ b/hw/vfio/region.c
+> @@ -228,8 +228,9 @@ static int vfio_setup_region_sparse_mmaps(VFIORegion *region,
+>       return 0;
 >   }
 >   
-> +/*
-> + * Walk the endpoint's ancestor bridges up to its pxb-cxl host bridge. A CXL
-> + * switch in the path is rejected: the guest would then have to program switch
-> + * decoders, which the passthrough model does not yet cover. This is the single
-> + * place the supported-topology assumption lives, so switch support later
-> + * relaxes it here.
-> + */
-> +static PXBCXLDev *vfio_cxl_find_pxb(VFIOPCIDevice *vdev, Error **errp)
+> -int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+> -                      int index, const char *name, Error **errp)
+> +static int vfio_region_do_setup(Object *obj, VFIODevice *vbasedev,
+> +                                VFIORegion *region, int index, const char *name,
+> +                                const MemoryRegionOps *ops, Error **errp)
+>   {
+>       struct vfio_region_info *info = NULL;
+>       int ret;
+> @@ -249,7 +250,7 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+>   
+>       if (region->size) {
+>           region->mem = g_new0(MemoryRegion, 1);
+> -        memory_region_init_io(region->mem, obj, &vfio_region_ops,
+> +        memory_region_init_io(region->mem, obj, ops,
+>                                 region, name, region->size);
+>   
+>           if (!vbasedev->no_mmap &&
+> @@ -273,6 +274,26 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+>       return 0;
+>   }
+>   
+> +int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+> +                      int index, const char *name, Error **errp)
 > +{
-> +    PCIBus *bus = pci_get_bus(&vdev->parent_obj);
-
-Could this routine be moved to the CXL subsytem component ?
-> +
-> +    if (!object_dynamic_cast(OBJECT(bus), TYPE_CXL_BUS)) {
-> +        error_setg(errp,
-> +                   "vfio-cxl: %s: endpoint is not on a CXL root port (cxl-rp)",
-> +                   vdev->vbasedev.name);
-> +        return NULL;
-> +    }
-> +
-> +    for (; bus; ) {
-
-Why walk, since this is looking for the case "no-switch in between the
-bus and the ep" ? the no-switch case is just two hops in the topology.
-
-
-> +        PCIDevice *bridge = bus->parent_dev;
-> +
-> +        if (!bridge) {
-> +            break;
-> +        }
-> +        if (object_dynamic_cast(OBJECT(bridge), TYPE_CXL_USP) ||
-> +            object_dynamic_cast(OBJECT(bridge), TYPE_CXL_DSP)) {
-> +            error_setg(errp,
-> +                       "vfio-cxl: %s: switch-attached topology not supported",
-> +                       vdev->vbasedev.name);
-> +            return NULL;
-> +        }
-> +        if (object_dynamic_cast(OBJECT(bridge), TYPE_PXB_CXL_DEV)) {
-> +            return PXB_CXL_DEV(bridge);
-> +        }
-> +        if (pci_bus_is_root(bus)) {
-> +            break;
-> +        }
-> +        bus = pci_get_bus(bridge);
-> +    }
-> +
-> +    error_setg(errp, "vfio-cxl: %s: not attached below a pxb-cxl host bridge",
-> +               vdev->vbasedev.name);
-> +    return NULL;
+> +    return vfio_region_do_setup(obj, vbasedev, region, index, name,
+> +                                &vfio_region_ops, errp);
 > +}
 > +
 > +/*
-> + * Only guest's endpoint decoder is programmed, so the host bridge must stay in
-> + * HDM passthrough mode. Reject anything else at realize, before a mapping is
-> + * built. cxl_get_hb_passthrough() reflects reset state and is not
-> + * settled yet here, so gate on the static hdm_for_passthrough property.
+> + * Like vfio_region_setup() but traps the region through @ops instead of the
+> + * default pass-through, so a caller can intercept accesses (the CXL HDM
+> + * decoder block). A NULL @ops keeps the default.
 > + */
-> +static bool vfio_cxl_check_topology(VFIOPCIDevice *vdev, Error **errp)
+> +int vfio_region_setup_with_ops(Object *obj, VFIODevice *vbasedev,
+> +                               VFIORegion *region, int index, const char *name,
+> +                               const MemoryRegionOps *ops, Error **errp)
 > +{
-> +    PXBCXLDev *pxb = vfio_cxl_find_pxb(vdev, errp);
-> +
-> +    if (!pxb) {
-> +        return false;
-> +    }
-> +    if (pxb->hdm_for_passthrough) {
+> +    return vfio_region_do_setup(obj, vbasedev, region, index, name,
+> +                                ops ? ops : &vfio_region_ops, errp);
 
-This naming is a bit confusing:
-
-   hdm_for_passthrough=false means "use HDM passthrough mode" (no decoders), while
-   hdm_for_passthrough=true means "keep HDM decoders even in passthrough topology.
-
-I will get used to it.
+if you're calling _with_ops(), you have custom ops, that's whole point.
+Passing NULL is a caller bug, no need to have a fall back. Or assert().
 
 Thanks,
 
@@ -247,27 +208,23 @@ C.
 
 
 
-> +        error_setg(errp,
-> +                   "vfio-cxl: %s: the pxb-cxl must be in HDM passthrough mode "
-> +                   "(do not set hdm_for_passthrough)", vdev->vbasedev.name);
-> +        return false;
-> +    }
-> +    return true;
 > +}
 > +
->   /*
->    * Learn the CXL geometry the kernel reports: the HPA-backed HDM memory region
->    * and the trapped HDM decoder block (which BAR carries it and at what offset).
-> @@ -3623,6 +3691,11 @@ static bool vfio_cxl_setup(VFIOPCIDevice *vdev, Error **errp)
->       cxl->dpa_size = mem_info->size;
->       cxl->comp_bar = cap->bar;
->       cxl->hdm_offset = cap->offset;
-> +
-> +    if (!vfio_cxl_check_topology(vdev, errp)) {
-> +        return false;
-> +    }
-> +
->       cxl->enabled = true;
->   
->       return true;
+>   static void vfio_subregion_unmap(VFIORegion *region, int index)
+>   {
+>       trace_vfio_region_unmap(memory_region_name(&region->mmaps[index].mem),
+> diff --git a/hw/vfio/vfio-region.h b/hw/vfio/vfio-region.h
+> index 58b236f113..8d5699013a 100644
+> --- a/hw/vfio/vfio-region.h
+> +++ b/hw/vfio/vfio-region.h
+> @@ -39,6 +39,9 @@ uint64_t vfio_region_read(void *opaque,
+>                             hwaddr addr, unsigned size);
+>   int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+>                         int index, const char *name, Error **errp);
+> +int vfio_region_setup_with_ops(Object *obj, VFIODevice *vbasedev,
+> +                               VFIORegion *region, int index, const char *name,
+> +                               const MemoryRegionOps *ops, Error **errp);
+>   int vfio_region_mmap(VFIORegion *region);
+>   void vfio_region_mmaps_set_enabled(VFIORegion *region, bool enabled);
+>   void vfio_region_exit(VFIORegion *region);
 
