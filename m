@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480F9526A86
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 13:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBAC53D0D0
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 13:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789651658; cv=none; b=CdM0A3bRrqy4BlQMDKfD+W9PvJXsmDmGWay9NutAVSRIhKRVAoNn7Oqf1xm/7TXOmfosVmJIhr8bhKoqQyspmdT2Orj2YQSfb+q9uuydLYopI0u9vXwozidFGJr+KZJdVDrg2u/f2DHkEjw7shTEETlCkXs8Di9TS07xw8WnglQ=
+	t=1789653389; cv=none; b=rhmfDjSfC6NcRVjML9N+yxXrgnR948xI0yYLwelK1p24xZKYk1n6db0cKGf7zkxeu6bmbYxckdd4pIhhZOixVJ6yjN4s6KsE3uZ8VAo0BOgOtFzFkJD2EhdeYI3ZHufLZ+MV0UP9JOxeBJ50t1nULqx0f3cTLP7Wm/Amg+fR5pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789651658; c=relaxed/simple;
-	bh=enXwzA9BcIOkYsH2pguE945nGXNFjkYL8fMgKtjyR6w=;
+	s=arc-20240116; t=1789653389; c=relaxed/simple;
+	bh=Zjjci0+aDWX/aytoGwfkG7efnUrvo8c2PS38ljbvCH0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MX4QLqk4fCVvRpBjpRoirX/Y8hxOT1C5dHgWgkx5r2Tlpspp2DhYCA0FvMgHbHSjmwQApjJbdWZCDeNstRm8ZrKjVp3OwHbtBRA+RLB2LuziOXPjO8/9RHaILwymBlz5+qOtr9h7YzY47mVqQhqQ+jQfh+YfGXNa+Jd9A4xJC9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rd3z23Qc; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=kU21ULJe6woLbeMsVeTgEURXBTK3HyqUSdnDO6m0RyTaiwAqhYC4fALe6pNjLWzNwJ/KZz4wuBArmqZcNrA2uoxliWlDOrNmRXndgVaoEGByd+6oNNte5xhy2ki0Pos1bfkvGK2l82P+gsKzf/VPtfLlZ0VP8FQc614jRT/MWkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPHP4Ssq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rd3z23Qc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPHP4Ssq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789651655;
+	s=mimecast20190719; t=1789653380;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Os4V/Nh6hpIAE4QELnwb/Aon1/X5FEXVxFR2MrZLV0c=;
-	b=Rd3z23QcH+hScsqRjHlTVBVa4TW2To703cEfrhfchJOuckJXi8QgDES61Q9j/3RZ5oM8hw
-	7+HKc3fZ7ytIO2PA6aYkw5b5dYj+iAkcIXLCvn2dy9ST5iUWlbW4dhtBzr87hf7dK3jASJ
-	zEg1YIrrtvtXKvTEjR4Tg6Nbpk9ZcM0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=SeeVHLhsNNmXNhyLrRU75c16AY5Z+goC/mThK3A06qY=;
+	b=UPHP4SsqrhRPEKu92igGbQMkUKMtQH3hN7lQDwwC23Zp3WiMQeVoXy24dA692loV+XEv4S
+	FJygG1pLivRgeenLCb3QJFaydfR1e5tCwkS+r/75ce3SJSI03oR/CK5eQ4UXxBTSKToF8V
+	x0/S5M5vErZVgqg7LaynJH84RZNasM4=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-19-eLboj1v0PL2TnmEftFe6-A-1; Thu, 17 Sep 2026 09:27:33 -0400
-X-MC-Unique: eLboj1v0PL2TnmEftFe6-A-1
-X-Mimecast-MFC-AGG-ID: eLboj1v0PL2TnmEftFe6-A_1789651653
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4994cf6cdb9so7159425e9.3
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 06:27:33 -0700 (PDT)
+ us-mta-675--BWYfA0POHGH3wZsO5VWDA-1; Thu, 17 Sep 2026 09:56:17 -0400
+X-MC-Unique: -BWYfA0POHGH3wZsO5VWDA-1
+X-Mimecast-MFC-AGG-ID: -BWYfA0POHGH3wZsO5VWDA_1789653376
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-6a178080182so1241343a12.2
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 06:56:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789651653; x=1790256453;
+        d=1e100.net; s=20260707; t=1789653376; x=1790258176;
         h=content-transfer-encoding:content-type:in-reply-to:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=Os4V/Nh6hpIAE4QELnwb/Aon1/X5FEXVxFR2MrZLV0c=;
-        b=zzZvqPQhxKY5dOccRNCNvTpCcx50F/41IPtI+OftqXoNVJeDMtK/Vku2I7uhf1tijt
-         SNwrtKcswQCzXqQXxBMUljb8Ac/Pbrtm6Yfs3R9UTCQNwV+bEyleA8+ZYxYf9LVj7Gh3
-         AIus6V9GQvulXtRI7E/vaxHlvZVJXyfEjjU7wE8XKcxOfylEHRaw7tu44J65KUYlHzlb
-         oV/HFhfCMcdxbqJNDOJLDiC0m3gBCPuyu0FyKfvzslKes3mlyqZqS3M7E94OXBFLfRsl
-         6tM/h/FZqmeSJ/Gh+osSyyslk7lSaqmOTS6sySLANPdLJOPTK49b4rjnMFt3cGyU6xnq
-         95Sw==
-X-Forwarded-Encrypted: i=1; AKwUvBxW1T3LHe6MWcarJ750vL3a4Z5OIK3d4nUPEaq6B0XW5WKRtBFhLwHTcAITAVwu5sH32QSnAKgSiJ4=@vger.kernel.org
-X-Gm-Message-State: AFuF++ndxBV9O5XeLAWhkMSgKbzjvrIRScDq8HBHbV0UVBYCaaL6TYoR
-	Bx2Vp2O+uSrVJjC94Uzbg1V0V6/8S5J6ao+w6SlG22A5DAnIhNcYqanb26mVXNY6Z6OAvjuvsHq
-	SjeKlyjgVO5XgUF6X2YbG9NXbhmtQYzBgTy4zcNt2Pzz8LtfdbvwqVLM9CldjHw==
-X-Gm-Gg: AYBFou2/l/ADUV4Cc3/OghjPY9OZGD5iVt+wjf4HdvHFGB4FJAjmf+2uy1haxutG3bL
-	Uk9B2Hh//hfNioGY8kxQpyq9crEOMPnnYsSK34q3A53HpaaLm+8+ZUEcJ+pokJOzHhKYmiiP2Ra
-	woudd40ltCx78Wop1Jvf5xmRVRCFCVFxx5dL/TdrY5zlNox0eq94RGIvRrjiEDHsnCNoGC8Xub+
-	1eKYjs7fQEs9us0k6185eUaGuVQjxekeszDtY032CRkwSZ1TpbPrfeWz3K5ZyzgmNZpA+bl3Ey0
-	vuJtUSNoMRsqR4b/M+j8Q39rhosdo4r5djkpAwXX5ClufOQYYo7dkQ3QQG5kxS2yJYoiqZFRTH1
-	Z7PzvcE89c3YJPjVVlAKJI4MAoy3NzaS0lATEeAxsUw==
-X-Received: by 2002:a05:600c:8b86:b0:49c:fff9:f684 with SMTP id 5b1f17b1804b1-49eb7320be4mr78559835e9.21.1789651651948;
-        Thu, 17 Sep 2026 06:27:31 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b86:b0:49c:fff9:f684 with SMTP id 5b1f17b1804b1-49eb7320be4mr78559305e9.21.1789651651438;
-        Thu, 17 Sep 2026 06:27:31 -0700 (PDT)
+        bh=SeeVHLhsNNmXNhyLrRU75c16AY5Z+goC/mThK3A06qY=;
+        b=DdusgkQ3JpVqO3JTX2Hp1RvbYgVO30VuGnmgokOnWnRfKKMIvhGQHN9zjZm9wKkI27
+         Rfqf8PBoxe9kWA//OdSOQiNF11358O2YdYhbsAq0yuzSimHXqzcU5FJBGSdFsLC6zYOO
+         5f1kAJrzG6c5fXEtKfvQisgEQ+4mslvBsBEHr5yHAfnM1ea2L7rqGe/QvxvGUKIPRhRV
+         wcs6H1dAJsAFPo241q/m2GkPEXSnTBpVquFfFwfCqVyM7gekzonPoePa0z145hDrFZqH
+         8EVk3rNps/v4JvJz91DYfJfHjEFNZ7xtQV+SmwA+SC8GUwfKailJx/iajwX8Dijl6BdS
+         NB1w==
+X-Forwarded-Encrypted: i=1; AKwUvBxeXthau6azXW1Ay5b4tmQmha30YZ5pEqhzvabKLilAbwyA3t2d9dPmIy7sG3NCMQC1gXQKwzjMM38=@vger.kernel.org
+X-Gm-Message-State: AFuF++mF3PniwaiC1XTeN5yMFtS7SrpTQr0hwEUYYs3sJ9JkBdPYBa6v
+	4uHYZIVaA2sqUDbz4kJTnghCFp14/QpKIcXfsRdtrAgIxOZtbxd6yNICyiv1NdgMZrYWhttAcNx
+	dMZwuzHuztCJTNh3m/V5G4QaESOe9biRarqq0lm0TTDnDFslNNP6GvwTO7NhqjA==
+X-Gm-Gg: AYBFou3UTJGGa6JHMwVJdpdKAL6tSZ+favltwAuydKfGzLcTJt869lOz1dqDxkH1oW1
+	BRu0yzO/hEwckldCgoEPOP+U0+MzKnQf6UB0QyanLBMTnI+fVYpgndoeqTQlkhsCYOLRrvD9Ku2
+	KLpK90QMRKx50huReUYIKS1hRJwPG/XXVMtF5JWGCUDXAPaxaHEoUAOX03gitkdwd+d19M7cpMZ
+	PXn/R8dOhUC3PqRzcK/CW011fSgxIX1p2pMTvTH+ZWkxOV4CaVBZJ1/dFC1bDtC3Nb99prh6FDm
+	25JQGjIeyDTBwGofqDvUqM/UAQF6vaVLzg5q+YI6jp1gqXeqAzZEuZgmyLgccwJCtDvHT3v5zgQ
+	I1bLYCMaVUVMPaL+dumfKrbMNJz2xFDPyddFaIPzMQA==
+X-Received: by 2002:a05:6402:28cc:b0:6aa:1da6:3536 with SMTP id 4fb4d7f45d1cf-6aa2235ac04mr4345192a12.10.1789653376090;
+        Thu, 17 Sep 2026 06:56:16 -0700 (PDT)
+X-Received: by 2002:a05:6402:28cc:b0:6aa:1da6:3536 with SMTP id 4fb4d7f45d1cf-6aa2235ac04mr4345173a12.10.1789653375597;
+        Thu, 17 Sep 2026 06:56:15 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:1292:d530:e939:7a09:c368:e5d5? ([2a01:e0a:1292:d530:e939:7a09:c368:e5d5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd32c5e1sm108386465e9.5.2026.09.17.06.27.29
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6aa1d2727bfsm3365323a12.20.2026.09.17.06.56.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2026 06:27:30 -0700 (PDT)
-Message-ID: <3d799d0d-1365-4bbb-a159-c8d926f2863c@redhat.com>
-Date: Thu, 17 Sep 2026 15:27:29 +0200
+        Thu, 17 Sep 2026 06:56:15 -0700 (PDT)
+Message-ID: <0991dccb-a123-471c-8a72-e4194da6c596@redhat.com>
+Date: Thu, 17 Sep 2026 15:56:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,7 +74,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/10] hw/vfio/region: Add vfio_region_setup_with_ops()
+Subject: Re: [PATCH v2 05/10] hw/vfio/pci: Back the CXL memory with a
+ RAM-device region
 To: mhonap@nvidia.com, alex@shazbot.org, ankita@nvidia.com, jic23@kernel.org,
  dave.jiang@intel.com, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
  pierrick.bouvier@oss.qualcomm.com, mst@redhat.com, imammedo@redhat.com,
@@ -83,7 +84,7 @@ To: mhonap@nvidia.com, alex@shazbot.org, ankita@nvidia.com, jic23@kernel.org,
 Cc: kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
  qemu-devel@nongnu.org, qemu-arm@nongnu.org, linux-cxl@vger.kernel.org
 References: <20260916184412.3825713-1-mhonap@nvidia.com>
- <20260916184412.3825713-3-mhonap@nvidia.com>
+ <20260916184412.3825713-6-mhonap@nvidia.com>
 From: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>
 Autocrypt: addr=clg@redhat.com; keydata=
  xsFNBFu8o3UBEADP+oJVJaWm5vzZa/iLgpBAuzxSmNYhURZH+guITvSySk30YWfLYGBWQgeo
@@ -128,9 +129,9 @@ Autocrypt: addr=clg@redhat.com; keydata=
  HQoPn9qrDJgsgcbBVc1gkUT6hnxShKPp4PlsZVMNjvPAnr5TEBgHkk54HQRhhwcYv1T2QumQ
  izDiU6iOrUzBThaMhZO3i927SG2DwWDVzZltKrCMD1aMPvb3NU8FOYRhNmIFR3fcalYr+9gD
  uVKe8BVz4atMOoktmt0GWTOC8P4=
-In-Reply-To: <20260916184412.3825713-3-mhonap@nvidia.com>
+In-Reply-To: <20260916184412.3825713-6-mhonap@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ljb7OIKZ_z532CRquUbQvHagZ-1sn_LYY3UaIOTmfDU_1789651653
+X-Mimecast-MFC-PROC-ID: 7ULNNPv9eI5BqB6L09vh2W_F5tk8VdEG4nOBCQm8L18_1789653376
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US, fr
 Content-Type: text/plain; charset=UTF-8; format=flowed
@@ -139,92 +140,104 @@ Content-Transfer-Encoding: 7bit
 On 9/16/26 20:44, mhonap@nvidia.com wrote:
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> A CXL Type-2 device traps its HDM decoder block, so that region needs
-> custom MemoryRegionOps rather than the pass-through default. Split the
-> setup body out and let a caller supply the ops; NULL keeps the existing
-> behaviour.
+> mmap the kernel's HDM memory region so its host physical pages back a
+> RAM-device MemoryRegion. It stays out of the guest address space until
+> the guest commits its decoder and QEMU learns the GPA to place it at.
 > 
 > AI-used-for: code (prototype)
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
 > ---
->   hw/vfio/region.c      | 27 ++++++++++++++++++++++++---
->   hw/vfio/vfio-region.h |  3 +++
->   2 files changed, 27 insertions(+), 3 deletions(-)
+>   hw/vfio/pci.c | 34 ++++++++++++++++++++++++++++++++++
+>   hw/vfio/pci.h |  1 +
+>   2 files changed, 35 insertions(+)
 > 
-> diff --git a/hw/vfio/region.c b/hw/vfio/region.c
-> index 54ad11a6c8..21b54978b5 100644
-> --- a/hw/vfio/region.c
-> +++ b/hw/vfio/region.c
-> @@ -228,8 +228,9 @@ static int vfio_setup_region_sparse_mmaps(VFIORegion *region,
->       return 0;
+> diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
+> index 10b13f200d..4716266595 100644
+> --- a/hw/vfio/pci.c
+> +++ b/hw/vfio/pci.c
+> @@ -3221,8 +3221,11 @@ bool vfio_pci_populate_device(VFIOPCIDevice *vdev, Error **errp)
+>       return true;
 >   }
 >   
-> -int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
-> -                      int index, const char *name, Error **errp)
-> +static int vfio_region_do_setup(Object *obj, VFIODevice *vbasedev,
-> +                                VFIORegion *region, int index, const char *name,
-> +                                const MemoryRegionOps *ops, Error **errp)
->   {
->       struct vfio_region_info *info = NULL;
->       int ret;
-> @@ -249,7 +250,7 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
->   
->       if (region->size) {
->           region->mem = g_new0(MemoryRegion, 1);
-> -        memory_region_init_io(region->mem, obj, &vfio_region_ops,
-> +        memory_region_init_io(region->mem, obj, ops,
->                                 region, name, region->size);
->   
->           if (!vbasedev->no_mmap &&
-> @@ -273,6 +274,26 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
->       return 0;
->   }
->   
-> +int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
-> +                      int index, const char *name, Error **errp)
-> +{
-> +    return vfio_region_do_setup(obj, vbasedev, region, index, name,
-> +                                &vfio_region_ops, errp);
-> +}
+> +static void vfio_cxl_teardown(VFIOPCIDevice *vdev);
 > +
-> +/*
-> + * Like vfio_region_setup() but traps the region through @ops instead of the
-> + * default pass-through, so a caller can intercept accesses (the CXL HDM
-> + * decoder block). A NULL @ops keeps the default.
-> + */
-> +int vfio_region_setup_with_ops(Object *obj, VFIODevice *vbasedev,
-> +                               VFIORegion *region, int index, const char *name,
-> +                               const MemoryRegionOps *ops, Error **errp)
-> +{
-> +    return vfio_region_do_setup(obj, vbasedev, region, index, name,
-> +                                ops ? ops : &vfio_region_ops, errp);
+>   void vfio_pci_put_device(VFIOPCIDevice *vdev)
+>   {
+> +    vfio_cxl_teardown(vdev);
+>       vfio_display_finalize(vdev);
+>       vfio_bars_finalize(vdev);
+>       vfio_cpr_pci_unregister_device(vdev);
+> @@ -3696,11 +3699,42 @@ static bool vfio_cxl_setup(VFIOPCIDevice *vdev, Error **errp)
+>           return false;
+>       }
+>   
+> +    /*
+> +     * The HDM memory is host physical. Set up the region, which installs the
+> +     * fd read/write path, and mmap it for direct guest access; it is added to
+> +     * the guest address space only once the guest commits its endpoint decoder.
+> +     */
+> +    if (vfio_region_setup(OBJECT(vdev), vbasedev, &cxl->mem_region,
+> +                          cxl->mem_region_index, "cxl-mem", errp)) {
+> +        return false;
+> +    }
+> +    if (vfio_region_mmap(&cxl->mem_region)) {
+> +        /*
+> +         * Without mmap the region falls back to the kernel's fd read/write
+> +         * path, which works but traps every access. Warn rather than fail.
+> +         */
+> +        warn_report("vfio-cxl: %s: failed to mmap the HDM memory region; "
+> +                    "performance may be slow", vbasedev->name);
+> +    }
 
-if you're calling _with_ops(), you have custom ops, that's whole point.
-Passing NULL is a caller bug, no need to have a fall back. Or assert().
+vfio_cxl_setup calls vfio_region_setup() then vfio_region_mmap()
+back-to-back when other 'normal' BARs split these calls across
+vfio_populate_device() and vfio_bar_register(). I guess it is fine
+for CXL since it is not a PCI BAR.
+
+>       cxl->enabled = true;
+>   
+>       return true;
+>   }
+>   
+> +static void vfio_cxl_teardown(VFIOPCIDevice *vdev)
+> +{
+> +    VFIOCXL *cxl = &vdev->cxl;
+> +
+> +    if (!cxl->enabled) {
+> +        return;
+> +    }
+> +    if (cxl->mem_region.mem) {
+> +        vfio_region_exit(&cxl->mem_region);
+> +        vfio_region_finalize(&cxl->mem_region);
+
+However, the tear down should be split between :
+
+1. vfio_exitfn (unrealize)
+    drops mmaps, removes subregions and removes references so the
+    MR refcount can reach zero.
+2. vfio_pci_finalize (instance_finalize)
+    frees the MemoryRegion.
 
 Thanks,
 
 C.
 
-
-
+> +    }
 > +}
 > +
->   static void vfio_subregion_unmap(VFIORegion *region, int index)
+>   static void vfio_pci_realize(PCIDevice *pdev, Error **errp)
 >   {
->       trace_vfio_region_unmap(memory_region_name(&region->mmaps[index].mem),
-> diff --git a/hw/vfio/vfio-region.h b/hw/vfio/vfio-region.h
-> index 58b236f113..8d5699013a 100644
-> --- a/hw/vfio/vfio-region.h
-> +++ b/hw/vfio/vfio-region.h
-> @@ -39,6 +39,9 @@ uint64_t vfio_region_read(void *opaque,
->                             hwaddr addr, unsigned size);
->   int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
->                         int index, const char *name, Error **errp);
-> +int vfio_region_setup_with_ops(Object *obj, VFIODevice *vbasedev,
-> +                               VFIORegion *region, int index, const char *name,
-> +                               const MemoryRegionOps *ops, Error **errp);
->   int vfio_region_mmap(VFIORegion *region);
->   void vfio_region_mmaps_set_enabled(VFIORegion *region, bool enabled);
->   void vfio_region_exit(VFIORegion *region);
+>       ERRP_GUARD();
+> diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
+> index 7fdd695704..06d15e807d 100644
+> --- a/hw/vfio/pci.h
+> +++ b/hw/vfio/pci.h
+> @@ -134,6 +134,7 @@ typedef struct VFIOCXL {
+>       uint32_t comp_bar;               /* component BAR carrying that block */
+>       uint64_t hdm_offset;             /* block offset within the component BAR */
+>       uint64_t dpa_size;               /* size of the HDM memory region */
+> +    VFIORegion mem_region;           /* HDM memory, mapped at committed GPA */
+>   } VFIOCXL;
+>   
+>   struct VFIOPCIDevice {
 
