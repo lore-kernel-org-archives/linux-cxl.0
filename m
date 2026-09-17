@@ -1,32 +1,32 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9753D37E5D4
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 02:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993C363CB
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Sep 2026 02:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789610458; cv=none; b=L4RarnpHBS3zu4+/N3mO0GNeWGfIFH4EFo8bpJVbMt0cXaQUkUKLVP77cc4GRsSD8NXeVCf+SDLWKGi/vTlxxt3YbuUcWustuDg6HlWu9rz/eEIeis7euerMwv6Nof9b4Rvfs2FKn3VNfAjgkgMiwTw1qDp5WnWDjQF6lnsRY1E=
+	t=1789610616; cv=none; b=AqNBcRpKnvmrxMi1JlYUcvSezYWSpEd0v0cwxGDVKnvkW6ARe0k8xy9nBKp9Tj/V5/LUlLUvwjWK6HQwWwhrYEB2xD4KNbBOaYsYD/JbQEwYqSLN9jqaZhEgXR3hnkt7Ic/OB/t2NLzO37ChXaA9V+VMSkKxBEUlrTCNJ23qCbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789610458; c=relaxed/simple;
-	bh=zybqAl2mPIJjIHKXfGeQzEXvXKIq2J4F5a8U7Z3U02k=;
+	s=arc-20240116; t=1789610616; c=relaxed/simple;
+	bh=0tVYT+wSb+9hOqsS0E38Aj1VLCPgbCUmoZOi8zXO4Nw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zo8AGPlapaMDGgo3PF3q6lzG9nBo30/9TuznQZKqjoWg1w98EBqpTKfo61tgamh/SeM/lveUGxDJlA83ZsJaOVQnV15JbifqvgWqObRYj7Rj4bU48KUjHixMWBpcNrTuTQd+mk8w2fRWY3SHm1M1sTppq0+H0aQGYsPF/nAwICs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=orVu4Zwt; arc=none smtp.client-ip=115.124.30.131
+	 In-Reply-To:Content-Type; b=PBx+gWzzUZnr1j3N0oX3l+1VJt6fCdu1CWmPBmXiLc3wEvTPmJNaeEzpaU6N74u+UgyhWjoWmK66VSm1talrORaRzhzKFVWnjXUqTQw01WXBS3lC/2e0INU4k6GUOFvNm5kzR7+MDRmKXWen8f1Dw0xgUdtHetJkmbxCDceC1bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xV06fQhc; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="orVu4Zwt"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xV06fQhc"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1789610452; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bgWZfFAcPi1mzdmrB/16GltAevfulIgfWxPTGmzTcno=;
-	b=orVu4Zwtq5vNsOM4qMLEoevljG2SZdIBpzM8Uu/cOoFOVDsQjmTIkdDSvwBZGPnS4sHS1ljVTIo2LAg72eYj+iRypsadf5Q2gD+CRWmZUpmkSPZpmyvh4i0XNsKqCYjY1Mic+Z4JLr54/dAajkdsT41paJ2Uak0cN9JZJIXIOI4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XB6HEFs_1789610450;
-Received: from 30.178.84.27(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XB6HEFs_1789610450 cluster:ay36)
+	t=1789610610; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=8gzbtwRcIdmkqh4syihUHuvGsmlmPv1htouLwBCSNa8=;
+	b=xV06fQhcVUprxyNmWCb2pym0zXNXkBDmNmMRWGjSlTB4jxEf0BQDgXt72vXevhw3zZ/SrGEkoxk577fX3VeVXhCyzxWrMH+OPHG8dXFTXbTkqVHEGs4B8+XOjeI/4qS7u78elj/VpnnSwvqQ5p3eWPL/OrJKg1K8s4wtOiV3I8Y=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XB6PS9w_1789610608;
+Received: from 30.178.84.27(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XB6PS9w_1789610608 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 17 Sep 2026 10:00:51 +0800
-Message-ID: <368696a0-901f-4adf-9477-1ec2acb31512@linux.alibaba.com>
-Date: Thu, 17 Sep 2026 10:00:49 +0800
+          Thu, 17 Sep 2026 10:03:29 +0800
+Message-ID: <b9965fdb-32d2-4f1c-8794-ee64de5ad47f@linux.alibaba.com>
+Date: Thu, 17 Sep 2026 10:03:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -36,24 +36,25 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] cxl/region: Create node access attributes for CFMWS-only
  NUMA nodes
-To: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org
 References: <20260916120338.369436-1-kanie@linux.alibaba.com>
- <1b2d9995-ea0f-44c2-a11d-e41d1f321671@intel.com>
+ <20260916190059.66a15306@jic23-hlaptop>
 From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <1b2d9995-ea0f-44c2-a11d-e41d1f321671@intel.com>
+In-Reply-To: <20260916190059.66a15306@jic23-hlaptop>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-在 2026/9/17 01:49, Dave Jiang 写道:
+在 2026/9/17 02:00, Jonathan Cameron 写道:
+> On Wed, 16 Sep 2026 20:03:38 +0800
+> Guixin Liu <kanie@linux.alibaba.com> wrote:
 >
-> On 9/16/26 5:03 AM, Guixin Liu wrote:
 >> A NUMA node that only backs a CXL fixed memory window and is not
 >> enumerated by SRAT has no memory_target in the HMAT code. When the
 >> first memory of such a node comes online, hmat_callback() exits early
@@ -86,6 +87,27 @@ Content-Transfer-Encoding: 8bit
 >>
 >> Fixes: 2e454fb8056d ("cxl, acpi/hmat: Update CXL access coordinates directly instead of through HMAT")
 >> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> Ah.  I should have caught this one.  Indeed looks correct.
+>
+> My only concern is it is relying heavily on the fact we only do this
+> once which is not apparent at this layer in the code.  You need to go
+> looking in cxl_region_perf_attrs_callback() for that.
+>
+> It is also a one way gate so even you tear down all regions in the NUMA
+> node (so the CFWMS) we don't do this update again.
+>
+> Anyhow, I think all we need here is a note that this function will only
+> be called once per CFWMS and thus it is fine to register the sysfs attrs
+> here.
+OK, added in v2, thanks.
+
+Best Regards,
+Guixin Liu
+>
+> With that added, this looks good to me
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+>
+>
 >> ---
 >> checkpatch reports one "Prefer a maximum 75 chars per line" warning:
 >> the 2e454fb8056d reference line above is 84 columns because checkpatch
@@ -135,14 +157,6 @@ Content-Transfer-Encoding: 8bit
 >>   		if (cxlr->coord[i].read_bandwidth) {
 >> -			node_update_perf_attrs(nid, &cxlr->coord[i], i);
 >> +			if (cxl_need_node_perf_attrs_update(nid))
-> Given that it's only used once and it's straight forward enough, just open code it instead of creating a helper.
->
-> DJ
-OK,  removed in v2, thanks.
-
-Best Regards,
-Guixin Liu
->
 >> +				node_set_perf_attrs(nid, &cxlr->coord[i], i);
 >> +			else
 >> +				node_update_perf_attrs(nid, &cxlr->coord[i], i);
