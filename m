@@ -1,109 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F0233D512
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 15:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AADD2EEE8A;
+	Fri, 18 Sep 2026 15:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789746094; cv=none; b=dcIoLPZU0QU79Upq3QwPrbG7o4sgodOVdELInmrnWfrLoS0+HZ+PPNmFZg/HJq56tNvf7aloykdiAsU5II55pQoS1hN/58jozm4g/v/SXKzhbXql7UZElU/6s7sXCEPAl4VGo7PeYennbgOWOtV9M9+emRYw2tMFLBdKohBVhjU=
+	t=1789746835; cv=none; b=DHSWBHU2lCublLHbjrpNT4TXoUTqfl7Qc1F+NPZXdxHEx+UqoSOPitAghU3qPWjbKUGX5g2dP93jj8i0xBSEmcM6Xxdf/YQOM3PQlM4ZldvXNxSLrL51K5MMRqI9Ygxe3iONFAOxD+9fm7QjkkKMf+7dvnLBCZ04SCMRdbgyl1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789746094; c=relaxed/simple;
-	bh=BXc40hl8edIGQaTrGuBV+UxPmykecZKhCMsV7XlBK40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k7IgeNxVqSgWg87ENojOYbYIrbi2btxyCNPJmQWMi/hofCZxY8tJb7xVouhx9GoQHmzJNtERNumBWLRY5BYQ6qZPEhFGaTa3kTqs+aBxCIvzwciJHKZCZOm3up0I9MiUBydvcnRuW8Feu/aqKWs0QiO0gwIqjSog4mF4bquioVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bt2vW3Mg; arc=none smtp.client-ip=192.198.163.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789746835; c=relaxed/simple;
+	bh=Zz0HowFz1DRXJxqvbviPYdYtj5Lq4iMssj0Vb4eQCqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hTeUfzXJbnpRh3g9wpPpK8yQEu/6c0dUIu62puuaijCVb/tSzACWU6UFH4AykWuWdGrxRuEMk+pudyXIjFS3YktPI1SDn1+BWeTtqSEWrxlOM4Sffqpk9Gx/FKjG3PISSs5MAfZm05N/7+8hh3OBWyg+HdY4ygcb/nYcILmrvwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIEriSXV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bt2vW3Mg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789746092; x=1821282092;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BXc40hl8edIGQaTrGuBV+UxPmykecZKhCMsV7XlBK40=;
-  b=Bt2vW3Mgo9rJZtg7k/NhP/GKsFmUdoX+Qd3wVl7nvZwK0OF1Yr27e5aI
-   fbJA+ISdJjIo3fKhzN3nz6YQjm8r4oED0NfxMGXHcLp1rp2Ahpfh1D5x4
-   qWWx9cLRe2zQXDq6+dUOEwhoBH52XGPhJQ/2ZeTvMUAxClfCT5YQBHdd+
-   lDbnt3IMd0QSQxJmp1ORHDaasnY5aLCRRuPsT04xooLT8zFGeZQElwKXE
-   MvoHFGo8Im27odWq47ciSOjZE1mNL5lt8lwAJFMhj6AJ/50uztjybhHl2
-   p22ld7qwC7WPObp1bxfU9uxfAW0AXmsLnFoSgLudHPu0WHhesqaQtHTO9
-   g==;
-X-CSE-ConnectionGUID: YmFXs0TzRry9qzUie35v/Q==
-X-CSE-MsgGUID: MJuWlxbXT2yafb0a/qP8CA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="759913"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="759913"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa115.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 08:41:31 -0700
-X-CSE-ConnectionGUID: jnBzmdoDQCWXTFiWfBGUrQ==
-X-CSE-MsgGUID: qy5V2QRgRt2AKheTfBAc0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="297908925"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.117]) ([10.125.109.117])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 08:41:31 -0700
-Message-ID: <c2792074-d37d-49e4-979a-335dc4240502@intel.com>
-Date: Fri, 18 Sep 2026 08:41:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIEriSXV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5BA1F000FF;
+	Fri, 18 Sep 2026 15:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789746834;
+	bh=lbVpbtgdB6gGZcR4lzgAB3myFCTkj71uHlYAh1fjtFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=IIEriSXVzQQIbmH/FW5DBcrqsy76Yaczc0C0Ik4WHYjVQnzytaQllHxVnCbSmc/wf
+	 3ip1FhCfubcWvgEFGaFqhoSBjDlBrbvhIHU25A/1RM1nk2BmIm70/Hxw8/S+DydAV0
+	 3SGFaiA3XRt4FWTK9+c0V8lv5q/l4wftpnHooY14rs1ubyLM6hw2/hfF2VKKSwVh1e
+	 FhOV+8MyczBeZB8UNCkeyseDoJ5Ct12tMLHGuGVDnY5b3vFJgGhlAZihGM0UyCgXsG
+	 35aKDXN/yNndhmB4yIr2PssE15X1XCIQ3h0rbbmm3vNlaIAaUfJsNDydr5HXuEh6Xe
+	 SOp7bD+QGVffA==
+Date: Fri, 18 Sep 2026 16:53:52 +0100
+From: Harry Yoo <harry@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	sashiko-reviews@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, hannes@cmpxchg.or, 
+	Borislav Petkov <bp@alien8.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, x86@kernel.org, kas@kernel.org, 
+	Suren Baghdasaryan <surenb@google.com>, Zi Yan <ziy@nvidia.com>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, "Rafael J. Wysocki" <rafael@kernel.org>, shakeel.butt@linux.dev, 
+	Johannes Weiner <hannes@cmpxchg.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Ard Biesheuvel <ardb@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Mike Rapoport <rppt@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Ingo Molnar <mingo@redhat.com>, linux-mm@kvack.org, kexec@lists.infradead.org, 
+	linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rmikey@meta.com, kernel-team@meta.com, driver-core@lists.linux.dev, 
+	riel@surriel.com
+Subject: Re: [PATCH v5 6/9] mm/memory-failure: efi: answer whether a range is
+ poisoned
+Message-ID: <aq1eWgGenthqMNd7@thinkstation>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-6-3bc7a57bd503@debian.org>
+ <20260915134535.C3FC91F00899@smtp.kernel.org>
+ <edafd246-0bd8-4335-9037-77f552968b56@kernel.org>
+ <aq1Xr4b7BXZForCe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/core: Skip einj_inject creation when
- devm_add_action_or_reset() fails
-To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260915060138.2007974-1-kanie@linux.alibaba.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260915060138.2007974-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aq1Xr4b7BXZForCe@gmail.com>
 
-
-
-On 9/14/26 11:01 PM, Guixin Liu wrote:
-> cxl_debugfs_create_dport_dir() ignores the devm_add_action_or_reset()
-> result and creates the einj_inject file below @dir unconditionally.
+On Fri, Sep 18, 2026 at 08:27:40AM -0700, Breno Leitao wrote:
+> On Wed, Sep 16, 2026 at 08:44:30AM +0200, David Hildenbrand (Arm) wrote:
+> > On 9/15/26 15:45, sashiko-bot@kernel.org wrote:
+> > >> The bitmap an earlier kernel filled in gets in this one through EFI,
+> > >> but nothing reads it back yet.
+> > >>
+> > >> Introduce range_contains_poisoned_memory(), which the page allocator
+> > >> will use to ask about a block before handing it out.
+> > >>
+> > >> Signed-off-by: Breno Leitao <leitao@debian.org>
+> > >
+> > > Sashiko has reviewed this patch and found no issues. It looks great!
+> > >
+> >
+> > David has reviewed this mail and it annoyed him.
 > 
-> When the devres allocation fails, remove_debugfs() has already run
-> before devm_add_action_or_reset() returns, i.e. debugfs_remove() has
-> released @dir. The subsequent debugfs_create_file() would then use
-> that dentry as its parent although its final reference was dropped in
-> the removal and its memory is subject to call_rcu() delayed freeing.
-> 
-> Skip the file creation in that case, consistent with how the rest of
-> the helper tolerates debugfs failures.
-> 
-> Fixes: 9185b1a3043c ("cxl/core: Fix dport use-after-free via the einj_inject debugfs file")
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> Breno is curious what annoyed David here.
 
-Applied to cxl/next:
-b25af6afd2f2
+Harry assumed David was annoyed by Sashiko replying with
+every 'LGTM' email :-)
 
-> ---
->  drivers/cxl/core/port.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 8d715739995b..95c0be57ed53 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -837,7 +837,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
->  
->  	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
->  
-> -	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
-> +	if (devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir))
-> +		return;
->  
->  	debugfs_create_file("einj_inject", 0200, dir, dport,
->  			    &cxl_einj_inject_fops);
-
+-- 
+Cheers,
+Harry / Hyeonggon
