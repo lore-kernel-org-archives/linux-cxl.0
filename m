@@ -1,105 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130C84D598C;
-	Fri, 18 Sep 2026 17:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599C51C33D;
+	Fri, 18 Sep 2026 17:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789750981; cv=none; b=FrfUN0l3oIN0kL2Ve0y2m1QyvkkhZBivSe4HnS+E+ntfVcSU/Dh1UDUayHLVZJRASubWFOGgfUpHIqOZlpyLPzlC7/lskbg867NwV2Cts7OXfkyrp4UzW36chDjQg8tRjawDIGvqbHTgMiadxkfXBSOCDTH9vyeBKdcByi2vK70=
+	t=1789752770; cv=none; b=WnK6T2rlAG9dcngu+ahCzTnKlnyyAK1k+CIL2Qs4Yh0q0Bhfv6kV5RlCS6yyiDsCM8TrZbpg0LbKX8LlsgymsweP6pHejVfeMlHuRo+PaRNJT6a3NDpuxJiPqttItbL2v83bq6WMtJmOJI5+3LsF56L/MIUiEeq3Kaw0IwLf6BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789750981; c=relaxed/simple;
-	bh=asQGZXBqPwc40v+1IHCxrKjtk5cmKY6XVm4QKcR3Knk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bPrIuDXs+v2fUsAFKcZc6jS80I5NHMrf5/IU2D8kWlqJ1OcUf+XJPlFlU+JKOaXDSW4K2ty/jNID+UTuxH3kIqux4WLgDvPtQxGGxamIs+CXPmxGCMH6BhmgGkhGnIjk6EqjvlSsE4cO01mBqnecKTgsJs0h7IOhzXneIbofy2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kN0S1/ri; arc=none smtp.client-ip=192.198.163.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789752770; c=relaxed/simple;
+	bh=+MipdwgB9d8LhkU7pI5Fn9ExzsC+2EygZrsOkOi4Gvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhTn2txLjEVPQ7OTVfBORbWcrD1Zx7GAhSiQAe7zXF7YwgfkSng/6Qr1jkvs5JQ1+CpAGVdESWj7t/MVOB2OT22jIRYRdflr4vSOs56a1cQHLie59OUjdKxAj7Gyy72l66jWVmzc8LzrAGSeFhmsT8hVZ8blQFzC3te5LRfycyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0aQiQJ9d; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kN0S1/ri"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789750980; x=1821286980;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=asQGZXBqPwc40v+1IHCxrKjtk5cmKY6XVm4QKcR3Knk=;
-  b=kN0S1/riN7A41eO4kBJQ/KGHw6j+Vbrk1K4P4TyQJqKiOb6cI/4DWF0u
-   gDkYA3hg5pVtweicuZr8Z1u1queKE2Nj17XSKP2LF38anCzSVxchhq6t5
-   +O5pmXApOW1BMDkD+73AWe6vIZSvST7EKdbGJ7zFmO5Edjy7zlgTHHX2y
-   A2IQ2MT3R2sPSFmRVK9XNaG+7nClAO8ovfU68BkoSRt/iebz/TbawuxA3
-   //92ed5C0JGN4OWKoR0CBrDE+VQV1zsxWObq5ZQTNE74sOUhzNcNCtvX8
-   L6wPsjR8RYVWvUNY8zYl3igwOqsGglIVXEATXA65vzj+krrYtvSYc+hQj
-   Q==;
-X-CSE-ConnectionGUID: mgo6vIWMT9Cmgv4hmCf4Mw==
-X-CSE-MsgGUID: WR8+fEbUTyaV+uggvFsF4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="783460"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="783460"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 10:02:51 -0700
-X-CSE-ConnectionGUID: Zw2LwmXHQ7ySKFwhJmtFDg==
-X-CSE-MsgGUID: x2GKyjZCSySyeDCzgcFzlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="2701457"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.117]) ([10.125.109.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 10:02:50 -0700
-Message-ID: <ab129288-17e8-440d-b544-70ada8925cf0@intel.com>
-Date: Fri, 18 Sep 2026 10:02:48 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0aQiQJ9d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A6F31F00898;
+	Fri, 18 Sep 2026 17:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1789752765;
+	bh=BuanVriHcbqPQQUX4nBe3Unkk+xi8JLt3kizAHx+IBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=0aQiQJ9d5eoc2Rb8gAjNDbnU3FpbauR/JR6FyNbuTEWhJ46MztAJ8sf2FZj6mjPIi
+	 vKFjWNxFdk7gagEEktZOERwqu81UFrQriLKCLF/wnbWAFbhTQEMCVQuzjAHxELt+3z
+	 FPRJc09qZ2P6+fWM1SD6G/waL7EdMWzG4rAe2MgY=
+Date: Fri, 18 Sep 2026 18:30:49 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Guixin Liu <kanie@linux.alibaba.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shaikh Kamaluddin <shaikhkamal2012@gmail.com>,
+	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev
+Subject: Re: [PATCH v4 0/2] cxl/memdev: Fix poison debugfs vs unbind deadlock
+Message-ID: <2026091839-pennant-imperfect-0e46@gregkh>
+References: <20260916025453.3532614-1-kanie@linux.alibaba.com>
+ <be97d805-94e7-48a0-9812-446d08dab7ce@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] dax: Fix Device DAX range allocation validation
-To: Muchun Song <songmuchun@bytedance.com>, Dan Williams <djbw@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Joao Martins <joao.m.martins@oracle.com>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- muchun.song@linux.dev
-References: <20260915095621.3744167-1-songmuchun@bytedance.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260915095621.3744167-1-songmuchun@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be97d805-94e7-48a0-9812-446d08dab7ce@intel.com>
 
+On Fri, Sep 18, 2026 at 08:26:28AM -0700, Dave Jiang wrote:
+> 
+> 
+> On 9/15/26 7:54 PM, Guixin Liu wrote:
+> > Writing a memdev poison debugfs file while cxl_mem is being unbound
+> > deadlocks. Patch 2 fixes it by not waiting for the device lock in those
+> > handlers. Patch 1 adds the trylock guard it uses.
+> > 
+> > Patch 2 does not build without patch 1, so the two need to travel
+> > together.
+> > 
+> > Testing:
+> > 
+> > Reproduced on a QEMU CXL topology whose type3 devices advertise poison
+> > inject support:
+> > 
+> >   while :; do echo 0 > /sys/kernel/debug/cxl/mem0/inject_poison; done &
+> >   while :; do
+> >       echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
+> >       echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
+> >   done
+> > 
+> > Without the fix the unbind wedges within seconds. The three tasks
+> > involved, from /proc/<pid>/stack:
+> > 
+> >   writer, state S, holds the debugfs reference and waits for the lock
+> >     cxl_debugfs_poison_inject+0x25/0xa0 [cxl_mem]
+> >     debugfs_attr_write+0x61/0xb0
+> >     full_proxy_write+0xfc/0x1c0
+> >     vfs_write+0x1d4/0xe60
+> > 
+> >   unbind, state D, holds the lock and waits for the reference to drain
+> >     remove_one+0x27f/0x3d0
+> >     debugfs_remove+0x44/0x60
+> >     release_nodes+0xfa/0x2c0
+> >     devres_release_all+0x113/0x1a0
+> >     device_unbind_cleanup+0x76/0x260
+> >     device_release_driver_internal+0x3eb/0x540
+> >     unbind_store+0xde/0x100
+> > 
+> >   cxl_port workqueue, state D, blocked on the same lock
+> >     device_release_driver_internal+0x96/0x540
+> >     detach_memdev+0x79/0xb0 [cxl_core]
+> >     process_one_work+0x6b0/0xfb0
+> > 
+> > The writer is in interruptible sleep and can be killed; the unbind
+> > cannot, and because cxl_bus_wq is an ordered workqueue the wedged
+> > detach_memdev() blocks every other CXL bus work item behind it.
+> > 
+> > The same deadlock shows up with a pciehp hot-remove racing the writer
+> > loop: the pciehp thread hits the same debugfs_remove() drain holding
+> > the memdev lock, and the hot-remove wedges the same way. With both
+> > patches applied the hot-remove flow completes normally.
+> > 
+> > With both patches applied, 46 unbind/bind cycles against the same writer
+> > loop all completed, no task was left in D state, and the writer collected
+> > 10920 EBUSY returns from the contended trylock. Note that lockdep stays
+> > quiet either way: one leg of the cycle is the debugfs active_users
+> > completion rather than a lock it tracks.
+> > 
+> > v3 -> v4:
+> > - reword the patch 2 commit message per Alison: enumerate the teardown
+> >   paths that race a poison write into an unbind, and state that mixing
+> >   poison writes with cxl_mem teardown is not a supported use of this
+> >   debug ABI, though the fix keeps the cost of doing so to a failed write
+> > - add the pciehp hot-remove reproduction, reported during v3 review,
+> >   to the patch 2 commit message
+> > - collect Jonathan's Reviewed-by on both patches (no code change)
+> > 
+> > v1 -> v2:
+> > - add the device_trylock() guard and use ACQUIRE(device_try, ...) instead
+> >   of open-coding device_trylock()/device_unlock(), keeping the style the
+> >   Fixes: commit established (Shaikh Kamaluddin)
+> > - cut the changelog down to the failing condition, the consequence and
+> >   the fix; the call graph and the reproducer live here instead
+> > - say how the issue was found and how it was tested
+> > 
+> > v2 -> v3:
+> > - rebase onto v7.3-rc2 (master), per Dave's request to send the series
+> >   against Linus's tags rather than cxl/next
+> > 
+> > v1:
+> > https://lore.kernel.org/linux-cxl/20260826125248.4003792-1-kanie@linux.alibaba.com/
+> > 
+> > v2:
+> > https://lore.kernel.org/linux-cxl/20260831124809.889829-1-kanie@linux.alibaba.com/
+> > 
+> > v3:
+> > https://lore.kernel.org/linux-cxl/20260910094017.4032170-1-kanie@linux.alibaba.com/
+> > 
+> > Guixin Liu (2):
+> >   driver core: Add conditional guard support for device_trylock()
+> >   cxl/memdev: Fix deadlock between poison debugfs and cxl_mem unbind
+> > 
+> >  drivers/cxl/mem.c      | 14 ++++++++++----
+> >  include/linux/device.h |  1 +
+> >  2 files changed, 11 insertions(+), 4 deletions(-)
+> > 
+> 
+> For the series
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> Greg,
+> I can take the patches through the CXL tree if you ack the first patch. Thanks!
 
+Please do!
 
-On 9/15/26 2:56 AM, Muchun Song wrote:
-> While working on the HugeTLB Vmemmap Optimization (HVO) generalization,
-> Sashiko reported that memmap_init_zone_device() could be asked to
-> initialize struct pages with a large-page order for a physical range
-> that was not naturally aligned to that order.
-> 
-> Following the Device DAX call path confirmed that the condition was
-> reachable. Device DAX range validation checks the range size, but not
-> its start address. An unaligned range can therefore reach
-> memmap_init_zone_device() after the device binds, and a subsequent write
-> to a userspace mapping may trigger a kernel panic. With the help of an
-> LLM, I was able to reproduce the failure.
-> 
-> The automatic resize path has a related problem. It can split an aligned
-> size request across arbitrary free gaps, consume an unaligned fragment,
-> and leave the resize partially applied when a later allocation fails.
-> 
-> This series validates both the start and size of every Device DAX range
-> and makes automatic resize account only for usable aligned space. It
-> also fixes the mapping sysfs attribute to propagate validation failures
-> instead of reporting success without allocating the requested range.
-> 
-> Muchun Song (2):
->   dax/bus: fix Device DAX range alignment validation
->   dax/bus: fix mapping attribute error reporting
-> 
->  drivers/dax/bus.c | 144 +++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 109 insertions(+), 35 deletions(-)
-> 
-> 
-> base-commit: 1a1de54f7369cd2b5bac0f265910e60ad3a6b4c3
-
-This commit does not exist in Linus's tree. Can you please base the series on top of the latest 7.3-rc tag so sashiko can look over it? Thanks!
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
