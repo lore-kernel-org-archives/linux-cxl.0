@@ -1,236 +1,332 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f40.google.com (mail-yx2-f40.google.com [74.125.224.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2596551E443;
-	Fri, 18 Sep 2026 20:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBC94B2CC1
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 20:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789762600; cv=none; b=ojt+CgmomFRMeXuwCMV5R14H7tF6whFmGWDAK0iXmAa438YioRqCEwr9qnBzdnaLEzP8hcBQW2KCDi9sHrndOeoblBpHL8viqUQIQywpvKSsWL0EetiKRmlpmTr+ysuFY04nya3aIa7OPkcMUd+ke6kIqW83aBukJ89vNNTYDNg=
+	t=1789763484; cv=none; b=VIpds8MmsGEeM4c0t3py6Jc6WVzlcN8TUd4afTqNaUPMk7PuB3pYt7/71q5Z9x8M1eAxzoGB+uITzTNfWRamjq4J92X+mtqZz0606NQSbAjvwn43weDMmktX/r5Nr1Fgo2CdZqxn1c5qbeZPH8xpsGA3dK6T0Xwqz2lls6HXX2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789762600; c=relaxed/simple;
-	bh=cv8vVpnnj2UGKdGTLGRsq3sewTuHTVIFj4FS+qbfjPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DaH0+Z6ht5pGFdHzf5cXI9o6ckthveTukdij+oULYZTa3KIgZTyZpEb/8a2fmeutn1ya+w3pncTzm6pUErOkg2EYtAL2knwLwuPm/z3uNw8W3yzUSVUQKIdPrMBBniNJ52nYme5wjW0Uj4NevXIdDWoYd0ilMHtiXd3lUbVg++Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+iUhoEv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789763484; c=relaxed/simple;
+	bh=FVfF7eyyYHmTLrDdWiUkROoH0hOGPxG2rtI9sQydSj0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IpifOeGW30akjBQ7tSKJyTYt2pf87bhow8YfmZr575FGq1ht60yBMYFMOjpA3z5k0WgLKr2YyMx21MWEKiQLd+WyUWICiPX6hkmkTLMsQsZg4SZpTqgwG+zcJD+S5x1DhAqttj9DMaGLgfPr4mOWwl60yedCIEgz5unipwRCSbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UetJOfvT; arc=none smtp.client-ip=74.125.224.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+iUhoEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64EE61F000FF;
-	Fri, 18 Sep 2026 20:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789762598;
-	bh=VYaubdXxcUwKWOQn0o2fbISMmeIi1yDg6KMH9HfcrUU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=C+iUhoEvnenOGPfNailivpYzYDg4gP4jzv2/IuKp3jznRu06ADQgAx90OX+8tzfVM
-	 B9Yy395vy8nHpvbsNsEdnZK5BTNHynIWxmwy0l9LnA1UVoHyIG1OOQCcCRrzzuclMF
-	 //WgBqUYUiSUqV67tzfCKagvLO4BFwf5WHeCYWmAC9MqXMuul4bJCEz2EhZg1Uv2CY
-	 UD88hLIVddkWZCw39GqlrX9l/dWuu8zk1flxzWPU0XX+gPLgK5NcRtAoV8wHOegtM8
-	 Bhp5RIgTGmlvDgkT2ZcDFnxXk2SYgSfJuCQ3chKm5Usrxe2Vof2AwfYkbb2yNb8uVC
-	 I5+8TWkbDl+kg==
-Message-ID: <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
-Date: Fri, 18 Sep 2026 22:16:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UetJOfvT"
+Received: by mail-yx2-f40.google.com with SMTP id 956f58d0204a3-66e4aa8d881so1331553d50.1
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 13:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789763482; x=1790368282; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=QA2M7HL67nwdh3oyVRAR92DnNn2znpflWpr2FV6wdvg=;
+        b=UetJOfvTF5EWlN/pcxt5Ocz/5Ga72pWKCKeeF3NHT6vC0YOousZKhl0B/CVrdFQNUM
+         f9ss60r6t0FRXycOHlTpj7lS7SVwc8Kv8GtG7Wpc597bb3GR9/pwOVtgmH+7nVLVcWZv
+         ZuyM2xb656nyjeq6MBp68jqoVxpgKTQrVRim+g/SyO4kVaemsjnPABlPNnyZGLUxZeGG
+         6V4b8IIwTIqL8R/aSp6BHGjaAGEyU10Zv6u3jK8yTY6TC7jmABtNSMM8KwzIx2fbY+hp
+         AV11BqkfZq6fL0W0QaV4+MRx51pAQfjtlCS7Lr40ot/BJjmyMLcL4o9YVChrAb7zYBbT
+         tAaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789763482; x=1790368282;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QA2M7HL67nwdh3oyVRAR92DnNn2znpflWpr2FV6wdvg=;
+        b=Pa0gv6m4SKYea2evn0C9qRGAfN+052UJYmfiBWg30ib+iPKn/2RvsPCVPTvIJxoftq
+         XT5+I/gQ8IVHUHsfjXCikMP70VL0MPEJ1Izbwk+bwdaERwZF6y9OTcQe8UoKL7IBmy2e
+         qP+YzrUSXtTwZba/Ax+/t0S0zInf/B+3UREbSFczNs6MOf9GC805M9xo4KDMMKhqkJmD
+         uMwSDvdobAXtsHHBN2xtbQlWB+0DLlD/NGeKhZOvTENzR2h0VIHYQK2N1V0UEhlXHgkj
+         BAo0EDoEnjIhdXrjpvAwxR1jtY1T4EyfvH01qCEuO7gxKxGHK83eQ02r+uZn5bB8WlqY
+         xuHA==
+X-Gm-Message-State: AFuF++mhOrwkiVxRjT52ayGUSDKi5Pz5d/wy90dCaEg7syuqau8Kt+bb
+	YDHhdX57+6WQHKbLrNHx1GEuxhXvMRcY4FUEhxUPF1wr4TDMqqzcRtyZx9CUIg==
+X-Gm-Gg: AYBFou0guLThMR3oxNK+gkYcc5bxmPqUTpUpsYqCM4+BcrUFPicQ9XyEolxjch4XDFW
+	i7ZCdEiRElNqHi1rzYoeO4D4zxhc4Wf2nK5IpvbLbZGoqYT1wdmz7NVabRsYlUH7c3U3NHeEVh+
+	+OXTCZToMAFXeAgUpYl18/fSlh7vmtbBsybOZD0zfailk+L8MQME+ahQ/oJpmIn9P6uQl3kN8z2
+	tyW/tIqfPgPIyWhlcd7LJhH7o6LRqBfB7BowSDSgTHJT/ZCevALrWCX/sXrst7sIqlVUro6jnPd
+	G6MbF/0Hiepg3zLKMSfzBsuq7n5e1UGRF/nM69oIwgi/uv0d3YqXdJ9x4BdyLQBWkkx5MtOKpjk
+	0O0tfI580JIW24DtRyT2ihsy76ebUA2W4syBiovPMlZCy60arekmzFSqdOBnuwNpZ4BLQuGdJAu
+	yd4zRrdq93yM/XpJ8syGWBuCLeAXXAwbg6udjaAONUwzBuqr3jzPVv+nAV03cnbKbYUDJ5HDrtr
+	cyhkTAljo10yYeoPW/0NLrArDIpiM524R5bK+vcPad1uIuGyA==
+X-Received: by 2002:a05:690e:1697:b0:671:282d:6b15 with SMTP id 956f58d0204a3-6717fcb2a9fmr1606864d50.33.1789763481831;
+        Fri, 18 Sep 2026 13:31:21 -0700 (PDT)
+Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67298f64b74sm427240d50.1.2026.09.18.13.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2026 13:31:21 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+To: linux-cxl@vger.kernel.org
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Li Ming <ming.li@zohomail.com>,
+	Gregory Price <gourry@gourry.net>,
+	Richard Cheng <icheng@nvidia.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	Anisa Su <anisa.su@samsung.com>
+Subject: [PATCH v14 0/8] DCD Prep Series
+Date: Fri, 18 Sep 2026 13:30:09 -0700
+Message-ID: <20260918203049.7273-1-anisa.su@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
- <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
- riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, kernel-team@meta.com
-References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
- <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
- <aqpczrtIwSG948iv@gmail.com>
- <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
- <aqvHHHuWJ-y4WRJZ@gmail.com>
- <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
- <aq1RaH0eE0hZfNpr@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aq1RaH0eE0hZfNpr@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/18/26 17:22, Breno Leitao wrote:
-> On Fri, Sep 18, 2026 at 02:18:03PM +0200, David Hildenbrand (Arm) wrote:
->> On 9/17/26 15:01, Breno Leitao wrote:
->>>
->>> Fair point, I'll clean up the naming in the next revision.
->>>
->>> I'll also add that ->empty field, which should help locate this bit
->>> faster and may let us skip the bitmap query entirely on the happy path.
->>>
->>> Anything else you'd like addressed?
->>>
->>> Good to know this moved the needle from "David hates this feature" to
->>> "David only hates the naming" -- I'll take that as progress.  :-P
->>
->> ;)
->>
->> I think the crucial part is to find a way to cleanly distinguish our source of
->> information, and also how the source does only apply to some memory.
-> 
-> Right, we have two source for poisoned page information, today.
-> 
-> 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
->    poisioned, and will be passed around during kexec.
-> 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
->    touching it.
+These are the first eight patches of the Dynamic Capacity Device (DCD)
+series. They set up: DCD enumeration, CDAT handling for DC partitions,
+the event interrupt plumbing, a preparatory refactor, and
+documentation of the DPA partition layout. They stand alone and keep DCD
+disabled, and are not dependent on the rest of the series.
 
-How are both kept in sync? See below.
+Patch 1 detects the 48h command set and then leaves mds->dcd_supported
+false. The flag is only turned on by the series that adds DCD event
+handling, so every DCD specific path added here is shut off at runtime:
+cxl_configure_dcd() never runs, no DC partition is created, no DCD
+interrupt is armed, and the CXL_PARTMODE_DYNAMIC_RAM_1 paths are
+unreachable. The intent is to land the enumeration and plumbing while
+the extent to DAX pipeline is still under review.
 
-> 
-> And I understand that this design is fine, and we want to be easy to
-> identify what we are querying on function name. For instance,
-> I understand you confusion in range_contains_poisoned_memory() came
-> from:
-> 
-> range_contains_poisoned_memory():
->    * What the caller reads: 
-> 	* "is any memory in this range hardware poisoned?"
->    * What actually runs:
-> 	* "is any bit set in an EFI table that a PREVIOUS kernel wrote,
-> 	   at 2 MiB granularity, for this memory region?"
+Based on v7.3-rc3
 
-Right, and we should use that only as a source for anything during early boot.
-So maybe it should hint at the "early" aspect somehow.
+GitHub Branch:
+https://github.com/anisa-su993/anisa-linux-kernel/tree/dcd-prep-v14
 
-Which brings me back to: is the bitmap kept in sync when memory gets hwpoisoned?
+v13: https://lore.kernel.org/linux-cxl/20260908102124.2231730-2-anisa.su@samsung.com/T/#m5b414fa4a1ae0bf26421e2a38a668c43e1aec1fb
+v12: https://lore.kernel.org/linux-cxl/20260731084901.1512819-1-anisa.su@samsung.com/
 
-That is: as memory gets hwpoisoned, will the bitmap get set immediately?
+Patch organization
+==================
+ 1-3: enumerate DCD command support, read the DC configuration, and pick
+      up DSMAS data for DC partitions.
+ 4-6: split event msgnum configuration from irq setup, factor out the
+      interrupt policy check, then configure the DCD event interrupt.
+   7: preparatory refactor -- enforce partition order while collapsing
+      the ram/pmem specific partition helpers into one.
+   8: document the DPA partition layout the previous patches enforce,
+      and where Linux is stricter than the specification.
 
-> 
-> So, I think think this is a naming issue, and I need to think more about
-> it. Maybe appending efiposioned (on data that is coming from EFI config
-> table). Let me think more about it.
-> 
->> Regarding this patch here, I'd assume it's sufficient.
->>
->> But I do wonder why we are walking pages when we have a bitmap to walk/process
->> at hand?
-> 
-> Because the counter has to agree with the page flag, and the page flag is
-> not the bitmap.
+v13 -> v14 Changes:
+===================
+ - Patch 1: cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+        - No code change. Tags only.
 
-But how could they go out of sync? I'd assume only for memory holes
-(!pfn_to_online_page), but for that we don't need to test actual page flags.
+ - Patch 2: cxl/mem: Read dynamic capacity configuration from the device
+        - Don't disable DCD when the device reports more than
+          CXL_MAX_DC_PARTITIONS. Today's spec allows 1 to 8, but a later
+          revision may allow more. Read only the first 8 and only configure
+	  partition 0. (Jonathan)
+        - Reject a decode length that overflows when scaled by
+          CXL_CAPACITY_MULTIPLIER. Decode length is a count of 256M
+          units, so a device reporting 2^36 or more wraps and result in
+          a plausible looking partition size instead of an error
+          (Richard).
+        - Reject a DC partition size that overflows the DPA total in
+          cxl_configure_dcd(). The wrapped total read as zero capacity,
+          which cxl_dpa_setup() accepts silently, so the device
+          enumerated with no DPA and no error (Richard).
+        - Commit message: CXL r4.0 9.13.3 describes Get DC
+          Configuration as the way to obtain partition characteristics
+          rather than "require" it for set up; the single partition limit is
+          stated as initial enablement (Jonathan)
+        - Use min() instead of min_t() for calculating partition_count (Jonathan).
+	- Check media_ready at the start of cxl_configure_dcd();
+	  don't configure DC partition 0 if the media is not ready (Claude /kreview) 
 
-> 
-> PG_hwpoison in a block is the union of every source that poisoned a
-> frame; the inherited EFI table is one of them, and it is the coarse and
-> partial one.
+ - Patch 3: cxl/cdat: Gather DSMAS data for DCD partitions
+        - Record the DSMAS shareable flag independently of QOS
+	  discovery. cxl_port_perf_data_calculate() returns -ENOENT when
+          firmware recommends no QTG for any entry, so the early return
+          on that skipped assigning the shareable flag even though the
+	  the CDAT was successfully parsed. (Richard).
 
-So you're saying that this code is possibly racy with other setting code? Or
-which other sources might there be if the generically called
+ - Patch 4: cxl/events: Split event msgnum configuration from irq setup
+        - No code change. Tags only.
 
-range_contains_poisoned_memory()
+ - Patch 5: cxl/pci: Factor out interrupt policy check
+        - No code change. Tags only.
 
-wouldn't be able to identify it (and it only queries the bitmap?).
+ - Patch 6: cxl/mem: Configure dynamic capacity interrupts
+        - Drop CXLDEV_EVENT_STATUS_ALL and instead opt into
+	  each event log explicitly, especially because more log types
+	  may be added in the future (Jonathan).
+	- Return early from cxl_event_config() if DCD is disabled and
+	  BIOS owns the other logs. Nothing is left to configure, so
+	  return early (Claude /kreview)
 
-> 
-> You might ask why I do not just count the bits set in the bitmape and
-> multiply by the frames a unit covers.
-> 
-> That was my first try. It over-counts: a bit stands for a whole 2M unit,
-> but only the frames that reach __free_pages_core() get flagged -- CMA
-> comes back through __free_pages(), the initrd and __init memory through
-> free_reserved_pages(), and KHO-preserved frames never get an initialised
-> struct page at all.
+ - Patch 7: cxl/core: Enforce partition order/simplify partition calls
+        - No code change. Tags only.
 
-Why are other hwpoisoned pages not flagged? If initrd or anything else is
-hwpoisoned, we should not be running this kernel?
+ - Patch 8: Documentation/cxl: Document DPA partition layout and
+   ordering rules
+        - Drop the paragraph saying support for additional DC partitions
+          may be added later; documentation should not predict future
+          work. (Jonathan / Davidlohr).
+        - Break the DCD entry in maturity-map.rst into sub-items so
+          multi-step upstreaming shows what is there and sets
+          expectations: partition enumeration / configuration is [1],
+          extent add / release handling and DC-backed DAX regions stay
+          [0], and the parent stays [0] because nothing is usable until
+          dcd_supported is turned on (Davidlohr).
 
-> 
-> And the over-count cannot be undone later. 
+Review status
+=============
+- Dropped Alison's Tested-by tags, since the NDCTL regression testing
+was ran against v13
 
-The inconsistency is worrisome.
-I wouldn't say that I hate it but it certainly has "great, more hwpoison hacks"
-smell to it.
+Patch 2:
++ Alison's Reviewed-by tag on v13, but I added a check for media_ready
+at the top of cxl_configure_dcd() before configuring DC partition 0
 
-We have enough semi-broken hwpoison ... stuff ... in our code base already. So
-I'm hoping we're not adding more to it?
+Please let me know if you would rather re-review!
 
-> If the walk itself is what bothers you, the way out is not the bitmap
-> but counting as we flag: hwpoison_boot_page() already knows the pfn, so
-> it can bump a per-block-id counter in a small memblock array that
-> memblk_nr_poison_init() then just reads.
+Patch 6: + Reviewed-by Jonathan, Alison.
 
-The inconsistency is what worries me.
+Besides the change requested by Jonathan (drop CXL_EVENT_STATUS_ALL),
+I also added an early return in cxl_event_config() on BIOS-first
+platforms once DCD has been disabled. I kept the tags, but please
+let me know if both of you would rather re-review.
 
-And that we have pages we are told are hwpoisoned but we seem to ignore that and
-carry on with our kernel letting it boot?
+Testing
+=======
 
-> 
-> Exact by construction, no walk. Happy to go that way instead if you
-> prefer it.
+On HW:
+This series leaves mds->dcd_supported false on purpose, so
+cxl_configure_dcd(), cxl_dev_dc_identify() and cxl_dc_check() are
+unreachable at runtime as posted. So the test below is done with the rest
+of the series on top, otherwise the results would not be very meaningful.
 
-Let me first try to understand the semantics here.
+Tested by Wonjae Lee/Junhee Park/Heesoo Kim whose tested-by tags are
+carried over to this revision.
 
+Since this is the prep patch, we just tested adding and removing 1 extent
+(2GB, tag=5be13bce-ae34-4a77-b6c3-16df975fcf1a) to verify that the
+partition and interrupts are configured correctly.
+
+--- Add ---
+[14181.811999] cxl_pci 0000:b8:00.0: Reading event logs: 10
+[14181.812040] cxl_pci 0000:b8:00.0: Sending command: 0x0100
+[14181.812077] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14181.812121] cxl_pci 0000:b8:00.0: DCD event add : DPA:0x0 LEN:0x80000000
+[14181.812133] cxl_pci 0000:b8:00.0: DC extent DPA [range 0x0000000000000000-0x000000007fffffff] (DCR:[range 0x0000000000000000-0x0000001fffffffff])(5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14181.812146] cxl_pci 0000:b8:00.0: DC extent DPA [range 0x0000000000000000-0x000000007fffffff] (DCR:[range 0x0000000000000000-0x0000001fffffffff])(5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14181.812152] cxl_pci 0000:b8:00.0: DC extent DPA [range 0x0000000000000000-0x000000007fffffff] (DCR:[range 0x0000000000000000-0x0000001fffffffff])(5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14181.812162] cxl decoder9.0: dpa:0x0 mapped in region:region9
+[14181.812201] cxl decoder9.0: Add extent [range 0x0000000000000000-0x000000007fffffff] (5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14181.812208] cxl_dax_region dax_region9: Alloc new tag group
+[14181.812257]  extent9.1: dc_extent HPA [range 0x0000000000000000-0x000000007fffffff] (5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14181.812265] cxl_dax_region dax_region9: Trying notify: type 0 tag 5be13bce-ae34-4a77-b6c3-16df975fcf1a
+[14181.812270] cxl_dax_region dax_region9: Notify: type 0 tag 5be13bce-ae34-4a77-b6c3-16df975fcf1a
+[14181.812299] cxl_pci 0000:b8:00.0: Sending command: 0x4802
+[14181.812473] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14181.812482] cxl_pci 0000:b8:00.0: Event log '4': Clearing 1
+[14181.812488] cxl_pci 0000:b8:00.0: Sending command: 0x0101
+[14181.812514] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14181.812520] cxl_pci 0000:b8:00.0: Sending command: 0x0100
+[14181.812550] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+
+--- Release -- 
+[14291.325683] cxl_pci 0000:b8:00.0: Reading event logs: 10
+[14291.325701] cxl_pci 0000:b8:00.0: Sending command: 0x0100
+[14291.325737] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14291.325820] cxl_pci 0000:b8:00.0: DCD event release : DPA:0x0 LEN:0x80000000
+[14291.325833] cxl decoder9.0: dpa:0x0 mapped in region:region9
+[14291.444166] cxl_dax_region dax_region9: Trying notify: type 1 tag 5be13bce-ae34-4a77-b6c3-16df975fcf1a
+[14291.444175] cxl_dax_region dax_region9: Notify: type 1 tag 5be13bce-ae34-4a77-b6c3-16df975fcf1a
+[14291.444203]  extent9.1: DAX region rm extent HPA [range 0x0000000000000000-0x000000007fffffff]
+[14291.444238] cxl decoder9.0: Remove extent [range 0x0000000000000000-0x000000007fffffff] (5be13bce-ae34-4a77-b6c3-16df975fcf1a)
+[14291.444242] cxl_pci 0000:b8:00.0: Release response dpa [range 0x0000000000000000-0x000000007fffffff]
+[14291.444258] cxl_pci 0000:b8:00.0: Sending command: 0x4803
+[14291.444448] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14291.444471] cxl_pci 0000:b8:00.0: Event log '4': Clearing 3
+[14291.444474] cxl_pci 0000:b8:00.0: Sending command: 0x0101
+[14291.444497] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+[14291.444500] cxl_pci 0000:b8:00.0: Sending command: 0x0100
+[14291.444523] cxl_pci 0000:b8:00.0: Doorbell wait took 0ms
+
+cxl_test:
+Ran cxl_test ndctl/pending for regression testing:
+https://github.com/anisa-su993/ndctl-test-runner/actions/runs/35388628475/job/105741489718
+
+18/18 Ok
+
+QEMU:
+Additional testing is done on QEMU for catching various cases that would not
+occur on the hardware because of configuration differences.
+
+The tool used automatically starts various topos using a QEMU branch
+I modified to allow certain bad inputs for testing:
+https://github.com/anisa-su993/cxl-tests/blob/main/dcd/run-all.sh
+
+1. Eight DC partitions, only the first is used
+-----------------------------------------------
+2G ram + 512M pmem static, so static capacity ends at 0xa0000000, and
+eight 512M DC partitions above it. Five partition records fit in one
+reply on the 256 byte mailbox, so the read continues from partition 5
+in a second command. This also tests that the loop to Get DC Region Info
+works.
+
+  cxl_pci 0000:0d:00.0: Read 5/8 DC partitions
+  cxl_pci 0000:0d:00.0: DC partition 0 start 0xa0000000 size 0x20000000 blk_size: 0x200000
+  cxl_pci 0000:0d:00.0: Read 3/8 DC partitions
+  cxl_pci 0000:0d:00.0: Adding dynamic ram partition 1; 0xa0000000 size 0x20000000
+  cxl_pci 0000:0d:00.0: DPA(ram): [mem 0x00000000-0x7fffffff flags 0x200]
+  cxl_pci 0000:0d:00.0: DPA(pmem): [mem 0x80000000-0x9fffffff flags 0x200]
+  cxl_pci 0000:0d:00.0: DPA(dynamic_ram_1): [mem 0xa0000000-0xbfffffff flags 0x200]
+
+All eight partitions are read, but only the first is validated and set up for use.
+
+2. Block size/decode len/DSMAD handle validation
+-------------------------------------------------
+1 DC Partition.
+Fuzz QEMU to respond to Get DC Configuration with a bad block size /
+decode length / partition base/ DSMAD handle / # of partitions and
+look for the corresponding dev_err message:
+
+  block size 0x100000040    DC partition 0 invalid block size 0x100000040
+  decode length 0           DC partition 0 zero decode length
+  decode length 2^36        DC partition 0 decode length 0x1000000000 overflows
+  base 0xa0001000           DC partition 0 base 0xa0001000 not aligned to 256M
+  base 0x90000000           DC partition 0 base 0x90000000 overlaps static capacity ending at 0xa0000000
+  base 0xb0000000           DC partition 0 base 0xb0000000 leaves a gap from static capacity ending at 0xa0000000
+  DSMAD handle 0x100        DSMAD handle 0x100 exceeds the 8 bit CDAT DSMAD handle
+  0 partitions available    Device reported no DC partitions
+
+Anisa Su (1):
+  Documentation/cxl: Document DPA partition layout and ordering rules
+
+Ira Weiny (7):
+  cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+  cxl/mem: Read dynamic capacity configuration from the device
+  cxl/cdat: Gather DSMAS data for DCD partitions
+  cxl/events: Split event msgnum configuration from irq setup
+  cxl/pci: Factor out interrupt policy check
+  cxl/mem: Configure dynamic capacity interrupts
+  cxl/core: Enforce partition order/simplify partition calls
+
+ .../driver-api/cxl/linux/cxl-driver.rst       |  35 +++
+ Documentation/driver-api/cxl/maturity-map.rst |   4 +
+ drivers/cxl/core/cdat.c                       |  49 ++-
+ drivers/cxl/core/hdm.c                        |  13 +
+ drivers/cxl/core/mbox.c                       | 285 ++++++++++++++++++
+ drivers/cxl/core/memdev.c                     |  95 ++++--
+ drivers/cxl/cxl.h                             |   6 +-
+ drivers/cxl/cxlmem.h                          |  88 +++++-
+ drivers/cxl/mem.c                             |   2 +-
+ drivers/cxl/pci.c                             | 162 ++++++++--
+ include/cxl/cxl.h                             |  27 +-
+ tools/testing/cxl/test/mem.c                  |   5 +-
+ 12 files changed, 684 insertions(+), 87 deletions(-)
+
+
+base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
 -- 
-Cheers,
+2.43.0
 
-David
