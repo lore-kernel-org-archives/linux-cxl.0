@@ -1,190 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f12.google.com (mail-yx2-f12.google.com [74.125.224.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93143A48C5
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 21:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789766309; cv=fail; b=ChJmRzsLgnX+5zBYlEhRuxuDb7R0fV4IoPoEOt/5g5H2w7zvRjkxkazVvme13SfdWwJrIvjbRxDYlkIbr3/fT01hXNIhl1poNZ70W9C2hqViIhlRnVOeH/4A35woBOuPWqjb1SHl5Thiuw1itjzsUk3TtB1k0IPiXn2Mot0LDQc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789766309; c=relaxed/simple;
-	bh=5xpWilD3M+RmAXfbApNnxGRyKUvtp9nUBR8fAWQze5I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oHBZgyLzYMri4lmchu1SvE19ZPve2NFFZDDZq5c3oSS95EKGKaKWjYJG/Kyn8quOT1JQw6Qj9axS7rLMrASkSchVlPjN6S+SogQ7ys2Uf/l67aUTyDDDhPQ7O/WY9BUKTAbW8bUv4NmsF0mcwTkxqdZNX/r11V0n9ug8h0kSo7s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8RHsJyb; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5BF3A48C5
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 21:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789766334; cv=none; b=uGhBeOzJ/AdwHYgMkDboVK7ZmeFHpoKyEJD8i017SvxgKR1jUO2O5yEqhTW1bPn02IPD57gKDC9QY5aodtEfXbvX967+27d5rEQsXEmHIZ+mB0R7tBX9UTmTxD6P7NRvcbjB1uAVjUOk5iez0XZ5JCzO8SwcUd988q/s52hyYlo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789766334; c=relaxed/simple;
+	bh=Lovxf9/OZwSdlztHvA8OyntDfii6WbEpsCIzxxCnNIo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=merNP9d5TOFuhT/epZN0CLyMKH9ZnTbzflwgxJYzDXGrG0GHF7PO4DpJnvJq8ELfzMcrgZ1Dzcs+oXdEuLlxuTKLxsoW62Un1hl3Dqe12QrTNsWle6KskkCXavW18Gy8jquK5KgCs3P11+0UGaWcXba45IBIvzwnVEtoCVjyrQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAVRwI1R; arc=none smtp.client-ip=74.125.224.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8RHsJyb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789766308; x=1821302308;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=5xpWilD3M+RmAXfbApNnxGRyKUvtp9nUBR8fAWQze5I=;
-  b=B8RHsJybNDlxDcgK1nSvM9qUCpFQUVRvbbzUjaN9MkJhwimRN575RywO
-   AxOV6QWlhocJdmMMYcdgs4dsyl39v+l9biY/RbdxWIGqI53Ster7IZgo/
-   WvtjhzBlospvUiNJ1IzmZVZtpv2Bf7imyeJbxADlU+IbcZxORET/82qsM
-   MwUNaonMr2vXyWU5HuY/JMdcAvKGM3xTJ8fqC6937Un21X3rpG6JzGDnt
-   ErEH0fCk9YIClB1vl8OASBnGkuDl8lsfbDl+HtAv6MVkZw+w5JFLA6ETV
-   JNovlJoCQSrGzjTE2RNns5pi2ea0jbuFrNWEXplTsGQ+7SN3DG+uHlhGC
-   Q==;
-X-CSE-ConnectionGUID: aGyscCO3SpyEo4fqrIM54Q==
-X-CSE-MsgGUID: a/I3fAdQSLWErmOUlsTJSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="101649291"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="101649291"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 14:18:27 -0700
-X-CSE-ConnectionGUID: qs+NHL6iQ6ur8xBSFBazbQ==
-X-CSE-MsgGUID: HRhafbmXT8a5yNe3Bh9pcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="276547834"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 14:18:27 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Fri, 18 Sep 2026 14:18:26 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Fri, 18 Sep 2026 14:18:26 -0700
-Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.36) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Fri, 18 Sep 2026 14:18:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jAGAw6qeq6qRa2Ak7/003ZufW3UuTkrFVjRwU8NxmYHJRYkUWoZQzkXAQghO6roIQl8DuGUZiYn4y8H8wrqZZym4Jv88wxin3So67q53z4AieCVfPU343VTP3Zkx/cRCmLASSR9dMeLev5NlAjSQfJ/wra3YF/vy+PIFT3R8p2q7ZEXXTVYpNDO577F1htGuXl5oOu7IpiVJFpRmXF36L2b3j/2YqaVlmapia2JsZfisq2GOZmykH6lAGGsg8BO2nuJZ4J40MfvJgvB+9nFRrj+NY3dI5l8DRQNyPuwPNCmBpoTXFD3bPs/VlA7a9bBwn3ohtEdHbD2M9HhkmNUBrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LXJzDx14sLmbHFxmlYjghvRzanGX4+YvGd1CND29NBg=;
- b=e4XWGqmWNSPT2EX7yOEmvfsOJXoNXqqBF7evRCbys94EYEU9ifX1/GcG/7EX7YJriYED1cMjR3iP3mYtQfMzJd/yidtxtiIblxep2+BpTB+7OBa1Pe7bUfNyo3rt6SmM1tH3H1LoHkEljzaLyfLupw6CFikY4jKX15bcL4E63M+pk/U+NDcbC1FizwwVdQFmGxAvJtsPLOykBYTdF55zfRg8NqTdvz7hs7zbF5PZEZbTlP1s1lBiL3CCnvhky8tc69kf/3PXgeUGUx8QetWB148re7+desZGftw6pRivTnF3IPXJgmOblAWLNu6U2ED5BXjgmpvpxBb3cb3b6K+5fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by CY5PR11MB6462.namprd11.prod.outlook.com (2603:10b6:930:32::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Fri, 18 Sep
- 2026 21:18:17 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0428.011; Fri, 18 Sep 2026
- 21:18:17 +0000
-Date: Fri, 18 Sep 2026 14:18:13 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
-	<linux-cxl@vger.kernel.org>, Jonathan Cameron
-	<jonathan.cameron@oss.qualcomm.com>
-Subject: Re: [PATCH v5 2/7] cxl/region: Warn on user region position mismatch
-Message-ID: <aq2qlauyD3qSosT8@aschofie-mobl2.lan>
-References: <cover.1788475206.git.alison.schofield@intel.com>
- <1d662e3ea78ec8b05fceb500f04e69ee9f6d4a72.1788475206.git.alison.schofield@intel.com>
- <aqqF98W7MnnDTTet@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aqqF98W7MnnDTTet@rric.localdomain>
-X-ClientProxiedBy: SJ0PR13CA0177.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::32) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAVRwI1R"
+Received: by mail-yx2-f12.google.com with SMTP id 956f58d0204a3-66e4ab1ba47so604952d50.0
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 14:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789766331; x=1790371131; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=981K/DGg/xv+r6hCcK9Ai2U7Tk2PZGl7LeSIC71KBGE=;
+        b=AAVRwI1RjKi7hGob3hoJlUd8bi2jNAKpDi1XLjDuxRaYhfiLMbs/MXUzJaztQsODcu
+         b9AplWKCTWe7O7Z8YCxPnnw6j0edVSH6/dxYSWZ/bMkurwd0zwziLgBeV1YILMb3VAsI
+         j7mZPYNVc5mtaxRHk2KkOWhzNhmz675+8nJFVevpBJHN42+W5xF1f1hqQG1kgooAzEmH
+         jjwcZ+pxvXstiBP5C5VehBdG7m5Qri4ZkOjEvRWwGQtWAQqsXcIg5SuIza44sw75bVN4
+         diaT/HVtNJBSRpkgNS1X9rN5GtFNvp3ihX7feBlHARUU0tEHPejZUXd06nGWfIRoW1YU
+         Ax3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789766331; x=1790371131;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=981K/DGg/xv+r6hCcK9Ai2U7Tk2PZGl7LeSIC71KBGE=;
+        b=1wSLNRv5H76HdBSKC5gGGTEtKiijvYHM/NfLtqYuqu0Rkrb95j8gMA2evgJm04rn05
+         WWekdKmcbFRZyG++QmdWWQuBRV77IbpJoP2Rl0dMYEW2cuQu4W9xArcg4+56xkpydFky
+         I7qaJTz80ILRvxCH2+lE+R1CUouNO6D0sfp8wES1Wax5GOvw/V5uG2zW4S4gCjwxIywc
+         0+YnnUQ0ga/MnNYP7b+k1KWTv7IK3pBvd/ZjV1SQWReAFM6nAw1r8b/OIRQYqD+WUyrn
+         fAZV4Y9s726Uso8mMm9Y8HzHy5HZxp6wMJ/Vihzlb8QSyeFXq10L3nEZGtjDOnHebPab
+         P9yw==
+X-Forwarded-Encrypted: i=1; AKwUvBzD2YKsu05UBSchQqNFEARwYSdFv2jpIcC4Z+kC1+HB4wQfQhF+y3xj5DM7Jo9DhXR6QM1YZ2XxpO8=@vger.kernel.org
+X-Gm-Message-State: AFuF++nC+mI/6l9My+3K8NxTq1qHfe2BLETOyNr5K4Q4jkkOeUgVUE1S
+	o9CMdg2EghoIkW+YtAasSm9WP8MPk8cJIxqAmiZDqADIuifw+uNDRU0o
+X-Gm-Gg: AYBFou3Hh6JLdjMHPJ0g0NbLtarTjKJEaJnkTQIBmkOJP8IgW+eThgvAY+ftWmECAQ8
+	FTZ/n3GmamaolT+k2uk+Nde1cpBOCg5wsZVRSDovAzKKt+4kYwCoRl31D1Um6ADZ3/X1l7OrmQv
+	oIAqvLamzQREmAzfmdvmpdKVi4mh8Hy/Ah4Xq4SQBnSqGlY99kLkU5coyq0qSLq2LZDiuy38BO0
+	qHzPdocVsJAB6r3Lxrd6Sz5anfij+tOpQhMlCrwKmIeDlsvOo+lW7ssDMVWK89mI90bOj0Mvjhc
+	sfHH+tH32eqbHd3nuSpme5JvvnufkZdbz5RcHN9Dv0+2euKEmGmoU8jzEiDJRwpkQpAKAIfZj+W
+	g0wPFTGJOuzK/bipBThuq2QJcRSXquK5hmrLYPQsoYGtUnaisfLKlfaPTZ3CoyUFO1WxjEx7CT7
+	B0UphhZnuSKc196fbCk1ArdLSbskaKhVuTpVNxJu4TtRF3Zjvoua28oS19BS08NffCRf/O17b/v
+	94onwLDA/enmH8nlaAsb7n+9Puf17keg06czXFS8/Oqcrpx2g==
+X-Received: by 2002:a05:690e:191e:b0:671:7f4:ac68 with SMTP id 956f58d0204a3-6717fe10e31mr1105271d50.18.1789766330726;
+        Fri, 18 Sep 2026 14:18:50 -0700 (PDT)
+Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67299104e3bsm484197d50.15.2026.09.18.14.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2026 14:18:49 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 18 Sep 2026 14:18:46 -0700
+To: Gaobin Huang <huanggaobin23@semi.ac.cn>
+Cc: Ira Weiny <iweiny@kernel.org>, linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>, linux-kernel@vger.kernel.org,
+	Anisa Su <anisa.su887@gmail.com>
+Subject: Re: [PATCH RESEND] cxl/mbox: validate the DCD extent list counts
+ against the payload
+Message-ID: <aq2qtqtPN97Kffvr@4470NRD-ASU.ssi.samsung.com>
+References: <20260917104656.2658591-1-huanggaobin23@semi.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CY5PR11MB6462:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aadc609-8c14-4295-de5e-08df15ca5b73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|18002099003|6133799003|56012099006|4143699003|11063799006|22082099003|10067099003;
-X-Microsoft-Antispam-Message-Info: WOFnz74MiXuR/mN54VqolcF+iZI9j/LsFAw3AJnCt91JFCNHIUNN85Mn+sDNqrpmbozoYGXwUD+fJasIPS8S4sRqH/ulgfgKgbSEzJxRVwqN0yUb/rZH+T6zxFeqSDTJIROnwcMbAq+oSB3Yt5re9TS/0TKFXnDWqoqk+3qzrSu2X9+zgSMc4YlRe6Lz12dAnyPWg1yle08kXJe1taTY5Tqmkjg3w+b8e0GIFqQ2aGbiODQn8D0x+suU4D7QFIX8amGnfpqu5nEALeMYNMsAw1zDwTj7M0bohdGy03p+L8cKi6ajc1xTT5OHy/pBS0q7lQnHR133Wjt5ossZ9o+xATurIUAvVsKKhmhWdaev/7+sonYF6qOzQsFgWvFtUQHvK64QfNSErBJCigd3P37iAsLhKABJt+FVizI7dKd5MwEPJzaVNl9morkfAazrczdzWmOf/by78Boi+44JtZmtL0D4BJD+sV5RgqdTVaHoIVj9TitBwthzOR/yD/3bTliAGRbQPn6At9ZEUlU9N1l1TNuI8g4Ku0D7zhUdrX7TS2sLx5p2J2z1KcHVFek8HCSMxO4zL2nFDXxj3QKk9Jb7DaBGDE7J9v8N/Hu66imsIS5EBC/dKHA6xtxPGQyBs+QEhSJdXVTGJ14LFZpek8z2YHU3sj7z3S4wQDcRrosaEh8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(18002099003)(6133799003)(56012099006)(4143699003)(11063799006)(22082099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?inAMkPAPtbx2yO3m1pIpzZg4PzmG6y41IC++wCDtyx/KZIZT80BHTKepQrgT?=
- =?us-ascii?Q?U1CZUvZ1yhZwRQ8Ko2IHXJ3TxpKC9I9oEGPch4DkRTsJr1e6GSnaIZfAg+7b?=
- =?us-ascii?Q?fk7gse8VA5xhHoayEFKABUMQXh80Z2+c8vPVTIodHGHHf9+esRzYHd5T+VHE?=
- =?us-ascii?Q?Pc64MNgO1hgOA8I6ryqnxSMvzVQw4P31SWelxHPpQsBL/uo2FbOBthY0CKuy?=
- =?us-ascii?Q?2PtBFN8BaBsUt6S8FJe1rM39j03kWgjbtiVsR8kWsJXRClEsUa6DSxNtz6cf?=
- =?us-ascii?Q?/Oou343ThKi4STUfU687wrMnnuR2/tRTyNhntpzx4Iyc/wCGh0ACNaozm7bB?=
- =?us-ascii?Q?NCWSFH8gnr9074x1lw4F/wBLEFm47bZGlzTWhJwe7x4PLU7lhWfdAIrs1X0+?=
- =?us-ascii?Q?v7uq+19ugOX6cneQxew3aAZgF6GDgy4d2hKtz8grZajEVdczMkzXwq/Hr8tl?=
- =?us-ascii?Q?fvWKPtL7MZvIihIaRo2UJSq2c9CRC5r3ZudsOp2bwCmpuvjZp26bLFDWa3IU?=
- =?us-ascii?Q?Jt7cjAU/50w0NmzLqtQHO1ScgyDeUbBvYFRdsSczOIcPnmfkTKyxllubJkvx?=
- =?us-ascii?Q?WTKPt3tQlmyvZHl3HhFxZoHbSDQmhFV2LS4E4zZHygKQ+nVMNSRoA/JV2n4E?=
- =?us-ascii?Q?n0/Jrj4FuxBtNe6YmKF3+EUpndefDBcxMQbLhriylqE0ZE+9tM9fDqQOIOhs?=
- =?us-ascii?Q?743wvWM3TGqU/ljqqoBZ39D0JIwu3RGXZmeB6meiRO+CKJN/g1VFocMH4ACk?=
- =?us-ascii?Q?K4jEXgiOVSJJrk9ro6j7mgWhLMo6yX64uHjV6anwznQOuqU8FOUM7CwP4Fof?=
- =?us-ascii?Q?h9gE1QcHYcfLvKbeILsB2OVYLdtSd9uguP9hbC8NW0HyAnE2Pmv4ei3d+oHQ?=
- =?us-ascii?Q?VXrsCkSFEo6w6Xx5HJMV6MuLTpNFhJRmuJxjTzFJzCKH6kVkI9EbmPYxtC2e?=
- =?us-ascii?Q?veQGD+mRca7OmaphxM6xo/+1HDgsHmjZ4O4U0c1TCagygVMU161/Lagjze6Y?=
- =?us-ascii?Q?Lzn6SW6fOyGsqTv5jnIm92r6oEvUxgxcxvqzLLymlUHHGBXZpMCJNwYRCQ2w?=
- =?us-ascii?Q?fhva7TP4l+PNNwXLIukqlJy1dDYbhaOObfIb9P13H0D0QEP5Y2y04+y1xg8g?=
- =?us-ascii?Q?gnGzEkYLMYmaVIK2b3MQ+xIBBEF2WwbV6oyxV6wC2XB/KRqZgxK1fwgTX5/y?=
- =?us-ascii?Q?xsj3wZwvZu43LGSfCuO4MuDPtIYwyVJtdiwRx3gv0OAOpds4Ha2rc34c7u2G?=
- =?us-ascii?Q?nzRfqCGnkf4IlxNSvGbZb1ltwCvXfp+95cp1+xWxtMoa6jh4LCgh+z1/QfqM?=
- =?us-ascii?Q?NkMQKb9WfHAP+ocFClL+AZdtp/0OKxHfOIHbuF7+Wu9L4BJf8Z7yCHVXoUS9?=
- =?us-ascii?Q?CEmfzEZdCk44EntTyVMVnNG7xqPD5ov8ul2dqOGqz2FPIcp50Md3a1CLSLi/?=
- =?us-ascii?Q?YI6eEy7DSuPw5EO00SpZ6jAyZv3sVHEQsuukiNoNglbPsnDlRjBdOCgOkzwL?=
- =?us-ascii?Q?imj1eyR/UsvgMbYzXUTko71bWzdkZsIVMPDCHKdEKpQD6FSbQ4lUF648qVBa?=
- =?us-ascii?Q?nJ8jgsTG+yi0LrzEtes1H3MNVX9v8dlgT9cAdQqBGe9zK7aCUikdJ94v6xy9?=
- =?us-ascii?Q?1V9heHq0L3VM1n059fDBeuZwgRC/8eVuXhR9+oFFuUZcpyWq+TURtOiZjT5j?=
- =?us-ascii?Q?bYJIkRUShYPmgdV87O1i0NoFBGxtuZPApHtp/CzRQSL81mYdxsUGyaLIAk0k?=
- =?us-ascii?Q?U7DYjoLVagrpTYxuWBIc6jHj3RoOTEY=3D?=
-X-Exchange-RoutingPolicyChecked: 51JZhfG6DBhQmeVMOZhdLdfm1dAWR/TVy5VNEMMMnH8xi3bIpi2r4pfyOYPu2BemZk5MzfTB4lsD5R6SfWlN4cXJ9XlGrwrbDX5H2p95ftURI9nN19GrwjNbadb+2pERTsJwYgUNHJKrctcgGRB1DdOoYTWcNJb1VKH+pkuGyEQ0WPGgSHeRwTMMAxBYt0LU5ncw2BiJilekIQRXQ4XH6YyoF+Kw3tqvOvcGtH1rzxQlqG2fpTD6X2uBoC+Ndjkc5yr+HasMm471ByHfekJb7L54pm0uGE+EUwNmWuenhz0tmZ6piNrkr28Gx0OKOksw9v2LJrXudFlV8GDJlpFeOw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aadc609-8c14-4295-de5e-08df15ca5b73
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2026 21:18:17.4273
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OifDmA27gKtbmNuHRwLvW0vrZHKkSACnysBwj2H5mBoAFfaCHA5VSJYw1GQcQ44LXD2t1UM5eTIRcSIWy7GnusWZVCuvdp/0I2zzSc9ZTlw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6462
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260917104656.2658591-1-huanggaobin23@semi.ac.cn>
 
-On Wed, Sep 16, 2026 at 02:05:11PM +0200, Robert Richter wrote:
-> On 03.09.26 16:23:44, Alison Schofield wrote:
-> > User region creation includes a self-test that checks the assigned endpoint
-> > positions against the position calculation used by auto region creation.
-> > The result, matching or not, is reported with dev_dbg().
+On Thu, Sep 17, 2026 at 06:46:56PM +0800, Gaobin Huang wrote:
+> __cxl_process_extent_list() trusts two counts from the Get DC Extent List
+> response: returned_extent_count bounds the loop over the flexible
+> extents->extent[] array, and total_extent_count decides when the enclosing
+> do/while is finished.  Neither is compared against what the device
+> actually returned, and the command is only issued with .min_out = 1.
 > 
-> As commented to the doc, the position is clearly defined as the bit
-> mask that is striped off by the endpoint. That should be documented in
-> the code to describe, what position means in that context, esp. how
-> the position in the target list of each level adds to the position.
-> That clarity is missing.
+> A device that reports more extents than it delivered walks the loop past
+> the end of the mailbox buffer.  A device that reports a large total while
+> returning nothing makes the loop spin forever, because total_read never
+> reaches total_expected; a stable generation number and total also keep the
+> existing -EAGAIN check from firing.  The caller cannot recover from that
+> one: __cxl_process_extent_list() never returns, so the retry loop around
+> it never runs.
+> 
+> Derive the bound from mbox_cmd.size_out, clamp the claim to it, and fail
+> with -EIO when the device stops making progress.  min_out is smaller than
+> the response header, so the subtraction needs the same underflow guard.
+> 
+Hello Gaobin,
 
+As Jonathan mentioned in his reply, specific debug info does not need to be
+included in the commit message. I would suggest adding this kind of information
+to a cover letter.
 
-Agreed that position could use a clearer definition. Patch 3 updates the
-cxl_calc_interleave_pos() documentation, so I'll address this there in v6,
-along with the documentation changes discussed in patch 1
+> Seen with QEMU emulating a device that lies.  The response header is 16
+> bytes and an extent is 40, so a 2048 byte mailbox buffer holds 50:
+> 
+> 	BUG: KASAN: slab-out-of-bounds in cxl_validate_extent+0xca/0x310
+> 	Read of size 2 at addr ffff888005758800 by task sh/1
+> 	 cxl_validate_extent+0xca/0x310
+> 	 cxl_process_extent_list+0x2c1/0x430
+> 	 cxl_region_probe+0xb2b/0xc40
+> 	 which belongs to the cache kmalloc-2k of size 2048
+> 
+> The Read of size 2 is extent->shared_extn_seq.  extent[50] starts at
+> 16 + 50 * 40 = 2016 and the field is 32 bytes into the record, so that
+> read is the first byte outside the buffer; a claimed count of 50 stays
+> inside and 51 does not, as the sweep shows.  Reporting
+> total_extent_count = 100000 with returned_extent_count = 0 instead spins
+> region bring-up until the guest stops answering console commands; with the
+> fix it logs "Extent list: no progress after 0/100000" and fails.
+> 
+> This is in the dynamic capacity device series under review (branch
+> dcd-v6-2025-04-13 of weiny2/linux-kernel, based on 6.15-rc2), so the fix
+> belongs in that series before it is merged.
+> 
 
--- Alison
+Ira has dropped the DCD series and I have continued to work on it. The last
+revision is here:
+https://lore.kernel.org/linux-cxl/20260625112638.550691-1-anisa.su@samsung.com/
 
+Sashiko reported the same issue on the previous revision:
+https://lore.kernel.org/linux-cxl/20260625183203.3042C1F000E9@smtp.kernel.org/
+and I have already patched it in my working tree.
+
+I plan to post the next revision after the DCD Prep Series is complete:
+https://lore.kernel.org/linux-cxl/20260918203049.7273-1-anisa.su@samsung.com/T/#t
+
+You are welcome to review both. FYI, if you would like to keep up-to-date with
+community news, there is a monthly meeting at 11AM PST every 3rd Tuesday of the
+month. So the next one is Tuesday October 20 11AM PST. If you would like to
+attend, I can forward the invite to you.
+
+> Signed-off-by: Gaobin Huang <huanggaobin23@semi.ac.cn>
+> ---
+> Resend note: the patch is byte-for-byte unchanged.  v1 went to
+> ira.weiny@intel.com, which no longer exists, so the author it is addressed to
+> never received it.  The v2 revision of the linux-cxl patch (drop the Fixes:
+> tag, struct_offset(), fail on a response too short for the header) does not
+> apply to this one: this code is not in mainline, so there is no commit to point
+> a Fixes: at, and the bound here already guards the subtraction against wrap.
 > 
-> > 
-> > Promote that to a dev_warn() that fires only on a mismatch, so bugs in the
-> > auto region position calculation are easier to catch as that calculation is
-> > extended to support more region configurations.
+If the original send failed and did not make it to the mailing list, there's no
+need to prefix this patch with RESEND.
+
+Thanks,
+Anisa
+>  drivers/cxl/core/mbox.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> dev_warn() change looks good to me.
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 0b51a5d..c12ff86 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1764,6 +1764,7 @@ static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+>  	struct device *dev = mds->cxlds.dev;
+>  	struct cxl_mbox_cmd mbox_cmd;
+>  	u32 max_extent_count;
+> +	size_t extents_hdr, max_returned;
+>  	int latched_rc = 0;
+>  	bool first = true;
+>  
+> @@ -1808,7 +1809,24 @@ static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+>  			first = false;
+>  		}
+>  
+> +		/*
+> +		 * The returned count is device-supplied: never index
+> +		 * extent[] past the payload the device actually returned.
+> +		 * The device also chooses the reported length and may return a
+> +		 * response shorter than the header (min_out is 1), so derive the
+> +		 * bound without underflowing.
+> +		 */
+> +		extents_hdr = offsetof(struct cxl_mbox_get_extent_out, extent);
+> +		max_returned = mbox_cmd.size_out > extents_hdr ?
+> +			       (mbox_cmd.size_out - extents_hdr) /
+> +			       sizeof(struct cxl_extent) : 0;
+>  		nr_returned = le32_to_cpu(extents->returned_extent_count);
+> +		if (nr_returned > max_returned) {
+> +			dev_warn_ratelimited(dev,
+> +					     "Extent list: device claimed %u extents but the payload holds %zu\n",
+> +					     nr_returned, max_returned);
+> +			nr_returned = max_returned;
+> +		}
+>  		total_read += nr_returned;
+>  		current_total = le32_to_cpu(extents->total_extent_count);
+>  		current_gen_num = le32_to_cpu(extents->generation_num);
+> @@ -1823,6 +1841,18 @@ static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+>  			return -EAGAIN;
+>  		}
+>  
+> +		/*
+> +		 * A device that keeps claiming more extents without ever
+> +		 * delivering any would otherwise spin this loop forever
+> +		 * (the outer retry cannot help: this call never returns).
+> +		 */
+> +		if (!nr_returned && total_expected > total_read) {
+> +			dev_warn_ratelimited(dev,
+> +					     "Extent list: no progress after %u/%u extents; aborting\n",
+> +					     total_read, total_expected);
+> +			return -EIO;
+> +		}
+> +
+>  		for (int i = 0; i < nr_returned ; i++) {
+>  			struct cxl_extent *extent = &extents->extent[i];
+>  
+> -- 
+> 2.34.1
 > 
-> > 
-> > The matching case no longer prints, so dynamic debug on region.c no longer
-> > confirms that the self-test ran.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-> 
-> Reviewed-by: Robert Richter <rrichter@amd.com>
