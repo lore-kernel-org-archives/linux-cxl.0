@@ -1,413 +1,236 @@
-Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B8498915
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 20:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2596551E443;
+	Fri, 18 Sep 2026 20:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789762395; cv=none; b=jS6YMH+EZi5EUqAT1i1Xi+tRuUKSclszVc3QxL4vWQ/iCMIqHoQQWMu/Kzwjw5DEKp7pyUIGCJN6QohCuUJNrBwjqXRQFTLKGLoAdT7niWMWYpGSmaRsWuct+ZlhbOwrK/wvhreZStTF2zlkogmIpyexi7rlE1wDxRB0VN5W3Ys=
+	t=1789762600; cv=none; b=ojt+CgmomFRMeXuwCMV5R14H7tF6whFmGWDAK0iXmAa438YioRqCEwr9qnBzdnaLEzP8hcBQW2KCDi9sHrndOeoblBpHL8viqUQIQywpvKSsWL0EetiKRmlpmTr+ysuFY04nya3aIa7OPkcMUd+ke6kIqW83aBukJ89vNNTYDNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789762395; c=relaxed/simple;
-	bh=uTLlL9UW2eMAokmDS2eaGoXOgEExOB09WB6FPR70k6M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HaSa038tj4WRI14xM/OFnclJZqQ8PKRY+Sezoc/wObzK84BQuOl0FUZRXKlX3CvyW6qWnJp0q8wnpCDH0EKFj1WBPtmr+ZHWiRI8wHPklOYiy116H8VrK9N84wC66T4t/HgYj6ZLa/7CeNx3L/LyanPStF8X0gWhoGH/9P89V+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gx7mUc44; arc=none smtp.client-ip=74.125.224.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789762600; c=relaxed/simple;
+	bh=cv8vVpnnj2UGKdGTLGRsq3sewTuHTVIFj4FS+qbfjPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DaH0+Z6ht5pGFdHzf5cXI9o6ckthveTukdij+oULYZTa3KIgZTyZpEb/8a2fmeutn1ya+w3pncTzm6pUErOkg2EYtAL2knwLwuPm/z3uNw8W3yzUSVUQKIdPrMBBniNJ52nYme5wjW0Uj4NevXIdDWoYd0ilMHtiXd3lUbVg++Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+iUhoEv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx7mUc44"
-Received: by mail-yx2-f13.google.com with SMTP id 956f58d0204a3-66e56a1fe83so1140012d50.2
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Sep 2026 13:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789762393; x=1790367193; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DOX8YPIOfmWI2AVdIok7w+/1uAAwUEqBZHB4O7fScGc=;
-        b=Gx7mUc44ibJfSK6E0+Fd+ueiLV/AkKhG5NrsBtdLMHL/O/o/aTb6vNDHgD7ryNBr8t
-         xhARniCpPfSRS+XANsiMgU3PgdRV63gWw9bJmNE+JsrII7U2mUGKlnOPEtOcz62hP0d/
-         txk5Ww4wsybgDGi7fycbJHv5VKfhXWaMOfqLpL5KJibPeIC8/4rkY4+oLfwvSH/5M6ep
-         Pw0NdmtXJiyWuFHmLGkQjEN6y8D5v4mkUaK3JiwomIA8myGqVvb+4jsHjsT7PXc+htH3
-         JDKjqOicKbdncciAHAyC62jLLIx4sxcr6yBSSD5h1N6pfnLDNVqlS6pD1FKW1/um96vt
-         wfkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789762393; x=1790367193;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DOX8YPIOfmWI2AVdIok7w+/1uAAwUEqBZHB4O7fScGc=;
-        b=nubWnpHivrRPqEFFzRGRrzRLnuNr55xceXblIVFe0vahAwEO+AOhfWize88aj+homs
-         s562kf+yl/UYyxQw2M3gvnPCjUP9cKuKrSCkXmSFYrRjASVvCor55bWVbVJhR3j2CFEt
-         SW9WB9vxzYAExK7URG7Mvz1yOvqokDUsOE6RcP1VuBZ7/60J0SR1qd7PzztKaOm76ly5
-         xyZXH8CA3AVUUqNBaUE2+MnmHwso3bqYomfDisY7U1rDP5fntNNw2qEGQxxYDzsC2mx6
-         m2X5M4UFKVKAkbp51xNM7tCeSk8TBq1caAdWr1QqwQ3zwmSWasRRKk8cQ3/qDJlB8u87
-         bhrw==
-X-Gm-Message-State: AFuF++mcjvh8ANiSKtepMIgqRbjvmUHMZ0dGYGKCj11CNVX3rNM6dort
-	cOH/LvAwAM+poHXDH7oMQg0bqH0XWXfrES4XSZW5FWQBKA03XBNgV8dJ
-X-Gm-Gg: AYBFou1T2ob82acnbNXp50mv37Vc86sr7OJQBYxYuipuUY4/vak2VuvWEJBJwHhgGy8
-	jKS6cWBDw3kLSFMOh1mzSmVFHnLMU1aIkhiPESwE2tz5QdsLSjCEflroL9edLoeGHeP7TUjs93N
-	ptE+nzJcXWQKIa0kdPbn9FidG1mP3uFMUkcu4rm7zAErcMgg+cFa0+2ikK/97b27ecKKHtI3TS7
-	xeDyzRZfvGO99aBIzhCkUaKzMU95xjNpLkwsoPV0xaFIuwCtnWULCWxh2axmewl4Q/hMacfKy3D
-	/jk6MVFkvVfDYHD1CnjFz3q3unLgIPwp5WbuVrNcJ0JZ4RpuPN8L8fq8Fl5TBZOIjfCF2B83rgC
-	EFzessnUFgUzXeBDsVhcwZTiMXHHTQxSv06IQLZrl2Syf4TMebMPhqKNqCOLGoy6ZmpfYFHYtn2
-	PLBOEVc4A5Uw9xfmLnd2aFbsem9DXPahHwtV1uhkc2y3BizgMw13xZAWU5878CWKnI9Nyp2HCZ+
-	a/swaZkiDrC5KgrmhxO9jYWlhwBTUUtnkd881COoaqbSR4/4j1ccnbHAlPp4A==
-X-Received: by 2002:a05:690c:4803:b0:873:5ddf:d861 with SMTP id 00721157ae682-897346e35d6mr12578227b3.44.1789762392732;
-        Fri, 18 Sep 2026 13:13:12 -0700 (PDT)
-Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-89a41521d6csm3372637b3.1.2026.09.18.13.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 13:13:12 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Fri, 18 Sep 2026 13:13:09 -0700
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com, jic23@kernel.org,
-	dave.jiang@intel.com, gourry@gourry.net, icheng@nvidia.com,
-	ming.li@zohomail.com, vishal.l.verma@intel.com, dave@stgolabs.net,
-	benjamin.cheatham@amd.com, Ira Weiny <iweiny@kernel.org>,
-	Wonjae Lee <wj28.lee@samsung.com>,
-	Junhee Park <jh9934.park@samsung.com>,
-	Heesoo Kim <habil.kim@samsung.com>
-Subject: Re: [RESEND PATCH v13 6/8] cxl/mem: Configure dynamic capacity
- interrupts
-Message-ID: <aq2bVXp5RMm-c7lR@4470NRD-ASU.ssi.samsung.com>
-References: <20260908102124.2231730-2-anisa.su@samsung.com>
- <20260908102124.2231730-8-anisa.su@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+iUhoEv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64EE61F000FF;
+	Fri, 18 Sep 2026 20:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789762598;
+	bh=VYaubdXxcUwKWOQn0o2fbISMmeIi1yDg6KMH9HfcrUU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=C+iUhoEvnenOGPfNailivpYzYDg4gP4jzv2/IuKp3jznRu06ADQgAx90OX+8tzfVM
+	 B9Yy395vy8nHpvbsNsEdnZK5BTNHynIWxmwy0l9LnA1UVoHyIG1OOQCcCRrzzuclMF
+	 //WgBqUYUiSUqV67tzfCKagvLO4BFwf5WHeCYWmAC9MqXMuul4bJCEz2EhZg1Uv2CY
+	 UD88hLIVddkWZCw39GqlrX9l/dWuu8zk1flxzWPU0XX+gPLgK5NcRtAoV8wHOegtM8
+	 Bhp5RIgTGmlvDgkT2ZcDFnxXk2SYgSfJuCQ3chKm5Usrxe2Vof2AwfYkbb2yNb8uVC
+	 I5+8TWkbDl+kg==
+Message-ID: <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+Date: Fri, 18 Sep 2026 22:16:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908102124.2231730-8-anisa.su@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
+ <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
+ riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, kernel-team@meta.com
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
+ <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+ <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+ <aq1RaH0eE0hZfNpr@gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aq1RaH0eE0hZfNpr@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 08, 2026 at 03:15:10AM -0700, Anisa Su wrote:
-> From: Ira Weiny <iweiny@kernel.org>
+On 9/18/26 17:22, Breno Leitao wrote:
+> On Fri, Sep 18, 2026 at 02:18:03PM +0200, David Hildenbrand (Arm) wrote:
+>> On 9/17/26 15:01, Breno Leitao wrote:
+>>>
+>>> Fair point, I'll clean up the naming in the next revision.
+>>>
+>>> I'll also add that ->empty field, which should help locate this bit
+>>> faster and may let us skip the bitmap query entirely on the happy path.
+>>>
+>>> Anything else you'd like addressed?
+>>>
+>>> Good to know this moved the needle from "David hates this feature" to
+>>> "David only hates the naming" -- I'll take that as progress.  :-P
+>>
+>> ;)
+>>
+>> I think the crucial part is to find a way to cleanly distinguish our source of
+>> information, and also how the source does only apply to some memory.
 > 
-> Dynamic Capacity Devices (DCD) support extent change notifications
-> through the event log mechanism. The interrupt mailbox commands were
-> extended in CXL 3.1 to support these notifications. Firmware can't
-> configure DCD events to be FW controlled but can retain control of
-> memory events.
+> Right, we have two source for poisoned page information, today.
 > 
-> Configure DCD event log interrupts on devices supporting dynamic
-> capacity. Disable DCD if interrupts are not supported.
-> 
-> The DCD event log is not drained here. cxl_event_drain_mask() reports
-> only the logs the driver can service, and the DCD bit is added by
-> the patch introducing DCD event handling. Until then a DCD interrupt
-> wakes the event thread, which finds no log it owns and returns.
-> 
-> Care is taken to preserve the interrupt policy set by the FW if FW first
-> has been selected by the BIOS.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> Tested-by: Junhee Park <jh9934.park@samsung.com>
-> Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> 
-> ---
-> Changes:
-> 1. pci.c: disable DCD when the device supports the DCD commands but its
->    interrupt policy is too short to carry dcd_settings. The Set is sized
->    by the device's own policy length, so on a short policy dcd_settings
->    is never sent, and the re-read afterwards leaves the driver's own
->    value in the struct because the device does not return that byte.
->    cxl_irqsetup() would then arm the DCD interrupt from a setting the
->    device never accepted. A conforming device cannot be in that state,
->    DCD is CXL 3.x and a 3.x policy carries the field, but nothing tied
->    the two facts together. Reported by Alison Schofield.
-> 
-> 2. pci.c: move the DCD bit out of cxl_event_drain_mask(), dropping the
->    mds argument it no longer needs, so the bit lands with the code that
->    drains the log as described above.  Requested by Alison Schofield.
-> ---
->  drivers/cxl/cxl.h    |   4 +-
->  drivers/cxl/cxlmem.h |   2 +
->  drivers/cxl/pci.c    | 124 ++++++++++++++++++++++++++++++++++++-------
->  3 files changed, 109 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index cab8ce39f465..d6e02bd0cf50 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -192,11 +192,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
->  #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
->  #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
-> +#define CXLDEV_EVENT_STATUS_DCD			BIT(4)
->  
->  #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
->  				 CXLDEV_EVENT_STATUS_WARN |	\
->  				 CXLDEV_EVENT_STATUS_FAIL |	\
-> -				 CXLDEV_EVENT_STATUS_FATAL)
-> +				 CXLDEV_EVENT_STATUS_FATAL |	\
-> +				 CXLDEV_EVENT_STATUS_DCD)
->  
->  /* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
->  #define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 9fd5af2e41d4..9106affd7c81 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -240,7 +240,9 @@ struct cxl_event_interrupt_policy {
->  	u8 warn_settings;
->  	u8 failure_settings;
->  	u8 fatal_settings;
-> +	u8 dcd_settings;
->  } __packed;
-> +#define CXL_EVENT_INT_POLICY_BASE_SIZE 4 /* info, warn, failure, fatal */
->  
->  /**
->   * struct cxl_event_state - Event log driver state
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 7b754af2168d..1ea505b1f40e 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -510,11 +510,23 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
->  	return true;
->  }
->  
-> +/* Event logs the driver drains: standard logs when native_cxl */
-> +static u32 cxl_event_drain_mask(struct pci_host_bridge *host_bridge)
-> +{
-> +	if (host_bridge->native_cxl_error)
-> +		return CXLDEV_EVENT_STATUS_ALL & ~CXLDEV_EVENT_STATUS_DCD;
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t cxl_event_thread(int irq, void *id)
->  {
->  	struct cxl_dev_id *dev_id = id;
->  	struct cxl_dev_state *cxlds = dev_id->cxlds;
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct pci_host_bridge *host_bridge =
-> +		pci_find_host_bridge(to_pci_dev(cxlds->dev)->bus);
-> +	u32 mask = cxl_event_drain_mask(host_bridge);
->  	u32 status;
->  
->  	do {
-> @@ -523,8 +535,8 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  		 * ignore the reserved upper 32 bits
->  		 */
->  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> -		/* Ignore logs unknown to the driver */
-> -		status &= CXLDEV_EVENT_STATUS_ALL;
-> +		/* Ignore logs unknown to the driver or owned by BIOS */
-> +		status &= mask;
->  		if (!status)
->  			break;
->  		cxl_mem_get_event_records(mds, status);
-> @@ -551,42 +563,62 @@ static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
->  }
->  
->  static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
-> -				    struct cxl_event_interrupt_policy *policy)
-> +				    struct cxl_event_interrupt_policy *policy,
-> +				    size_t *policy_size)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_cmd mbox_cmd = {
->  		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
->  		.payload_out = policy,
->  		.size_out = sizeof(*policy),
-> +		/* CXL 2.0 firmware omits dcd_settings; accept the shorter reply */
-> +		.min_out = CXL_EVENT_INT_POLICY_BASE_SIZE,
->  	};
->  	int rc;
->  
->  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> -	if (rc < 0)
-> +	if (rc < 0) {
->  		dev_err(mds->cxlds.dev,
->  			"Failed to get event interrupt policy : %d", rc);
-> +		return rc;
-> +	}
->  
-> +	if (policy_size)
-> +		*policy_size = mbox_cmd.size_out;
->  	return rc;
->  }
->  
->  static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
-> -				    struct cxl_event_interrupt_policy *policy)
-> +				    struct cxl_event_interrupt_policy *policy,
-> +				    bool native_cxl, size_t policy_size)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_cmd mbox_cmd;
->  	int rc;
->  
-> -	*policy = (struct cxl_event_interrupt_policy) {
-> -		.info_settings = CXL_INT_MSI_MSIX,
-> -		.warn_settings = CXL_INT_MSI_MSIX,
-> -		.failure_settings = CXL_INT_MSI_MSIX,
-> -		.fatal_settings = CXL_INT_MSI_MSIX,
-> -	};
-> +	/* memory event policy is left if FW has control */
-> +	if (native_cxl) {
-> +		*policy = (struct cxl_event_interrupt_policy) {
-> +			.info_settings = CXL_INT_MSI_MSIX,
-> +			.warn_settings = CXL_INT_MSI_MSIX,
-> +			.failure_settings = CXL_INT_MSI_MSIX,
-> +			.fatal_settings = CXL_INT_MSI_MSIX,
-> +			.dcd_settings = 0,
-> +		};
-> +	}
-> +
-> +	/*
-> +	 * A CXL 3.0+ device can carry dcd_settings field without DCD command
-> +	 * support, so size the request by the device's policy_size and only
-> +	 * enable the DCD interrupt when DCD commands are supported.
-> +	 */
-> +	if (cxl_dcd_supported(mds))
-> +		policy->dcd_settings = CXL_INT_MSI_MSIX;
->  
->  	mbox_cmd = (struct cxl_mbox_cmd) {
->  		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
->  		.payload_in = policy,
-> -		.size_in = sizeof(*policy),
-> +		.size_in = policy_size,
->  	};
->  
->  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> @@ -597,7 +629,7 @@ static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
->  	}
->  
->  	/* Retrieve final interrupt settings */
-> -	return cxl_event_get_int_policy(mds, policy);
-> +	return cxl_event_get_int_policy(mds, policy, NULL);
->  }
->  
->  static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
-> @@ -633,6 +665,30 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
->  	return 0;
->  }
->  
-> +static int cxl_irqsetup(struct cxl_memdev_state *mds,
-> +			struct cxl_event_interrupt_policy *policy,
-> +			bool native_cxl)
-> +{
-> +	struct cxl_dev_state *cxlds = &mds->cxlds;
-> +	int rc;
-> +
-> +	if (native_cxl) {
-> +		rc = cxl_event_irqsetup(mds, policy);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	if (cxl_dcd_supported(mds)) {
-> +		rc = cxl_event_req_irq(cxlds, policy->dcd_settings);
-> +		if (rc) {
-> +			dev_err(cxlds->dev, "Failed to get interrupt for DCD event log\n");
-> +			cxl_disable_dcd(mds);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static bool cxl_event_int_is_fw(u8 setting)
->  {
->  	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-> @@ -651,32 +707,54 @@ static bool cxl_event_fw_owns_mem_logs(struct cxl_event_interrupt_policy *policy
->  static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  			    struct cxl_memdev_state *mds, bool irq_avail)
->  {
-> -	struct cxl_event_interrupt_policy policy;
-> +	struct cxl_event_interrupt_policy policy = { 0 };
-> +	bool native_cxl = host_bridge->native_cxl_error;
-> +	size_t policy_size;
-> +	u32 mask;
->  	int rc;
->  
->  	/*
->  	 * When BIOS maintains CXL error reporting control, it will process
->  	 * event records.  Only one agent can do so.
-> +	 *
-> +	 * If BIOS has control of events and DCD is not supported skip event
-> +	 * configuration.
->  	 */
-> -	if (!host_bridge->native_cxl_error)
-> +	if (!native_cxl && !cxl_dcd_supported(mds))
->  		return 0;
->  
->  	if (!irq_avail) {
->  		dev_info(mds->cxlds.dev, "No interrupt support, disable event processing.\n");
-> +		if (cxl_dcd_supported(mds)) {
-> +			dev_info(mds->cxlds.dev, "DCD requires interrupts, disable DCD\n");
-> +			cxl_disable_dcd(mds);
-> +		}
->  		return 0;
->  	}
->  
-> -	rc = cxl_event_get_int_policy(mds, &policy);
-> +	rc = cxl_event_get_int_policy(mds, &policy, &policy_size);
->  	if (rc)
->  		return rc;
->  
-> -	if (cxl_event_fw_owns_mem_logs(&policy)) {
-> +	/*
-> +	 * dcd_settings cannot be sent to a device whose policy is too short
-> +	 * to hold it, so the device would never accept the setting
-> +	 * cxl_irqsetup() arms the DCD interrupt with.
-> +	 */
-> +	if (cxl_dcd_supported(mds) && policy_size < sizeof(policy)) {
-> +		dev_warn(mds->cxlds.dev,
-> +			 "DCD supported but interrupt policy is only %zu bytes\n",
-> +			 policy_size);
-> +		cxl_disable_dcd(mds);
-		
-		if (!native_cxl)
-			return 0;
-		
-If BIOS owns the other logs, we can return early here and skip allocating the
-event buffer for no reason (cxl_mem_alloc_event_buf(mds);)
+> 1) LINUX_EFI_POISONED_MEMORY: Used to track memory block that got
+>    poisioned, and will be passed around during kexec.
+> 2) PG_hwpoison on struct page: Used by the memory subsystem to avoid
+>    touching it.
 
-Found by Claude /kreview skill
+How are both kept in sync? See below.
 
-> +	}
-> +
-> +	if (native_cxl && cxl_event_fw_owns_mem_logs(&policy)) {
->  		dev_err(mds->cxlds.dev,
->  			"FW still in control of Event Logs despite _OSC settings\n");
->  		return -EBUSY;
->  	}
->  
-> -	rc = cxl_event_config_msgnums(mds, &policy);
-> +	rc = cxl_event_config_msgnums(mds, &policy, native_cxl, policy_size);
->  	if (rc)
->  		return rc;
->  
-> @@ -684,11 +762,17 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_event_irqsetup(mds, &policy);
-> +	rc = cxl_irqsetup(mds, &policy, native_cxl);
->  	if (rc)
->  		return rc;
->  
-> -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> +	mask = cxl_event_drain_mask(host_bridge);
-> +	if (mask)
-> +		cxl_mem_get_event_records(mds, mask);
-> +
-> +	dev_dbg(mds->cxlds.dev, "Event config : %s DCD %s\n",
-> +		native_cxl ? "OS" : "BIOS",
-> +		cxl_dcd_supported(mds) ? "supported" : "not supported");
->  
->  	return 0;
->  }
-> -- 
-> 2.43.0
 > 
+> And I understand that this design is fine, and we want to be easy to
+> identify what we are querying on function name. For instance,
+> I understand you confusion in range_contains_poisoned_memory() came
+> from:
+> 
+> range_contains_poisoned_memory():
+>    * What the caller reads: 
+> 	* "is any memory in this range hardware poisoned?"
+>    * What actually runs:
+> 	* "is any bit set in an EFI table that a PREVIOUS kernel wrote,
+> 	   at 2 MiB granularity, for this memory region?"
+
+Right, and we should use that only as a source for anything during early boot.
+So maybe it should hint at the "early" aspect somehow.
+
+Which brings me back to: is the bitmap kept in sync when memory gets hwpoisoned?
+
+That is: as memory gets hwpoisoned, will the bitmap get set immediately?
+
+> 
+> So, I think think this is a naming issue, and I need to think more about
+> it. Maybe appending efiposioned (on data that is coming from EFI config
+> table). Let me think more about it.
+> 
+>> Regarding this patch here, I'd assume it's sufficient.
+>>
+>> But I do wonder why we are walking pages when we have a bitmap to walk/process
+>> at hand?
+> 
+> Because the counter has to agree with the page flag, and the page flag is
+> not the bitmap.
+
+But how could they go out of sync? I'd assume only for memory holes
+(!pfn_to_online_page), but for that we don't need to test actual page flags.
+
+> 
+> PG_hwpoison in a block is the union of every source that poisoned a
+> frame; the inherited EFI table is one of them, and it is the coarse and
+> partial one.
+
+So you're saying that this code is possibly racy with other setting code? Or
+which other sources might there be if the generically called
+
+range_contains_poisoned_memory()
+
+wouldn't be able to identify it (and it only queries the bitmap?).
+
+> 
+> You might ask why I do not just count the bits set in the bitmape and
+> multiply by the frames a unit covers.
+> 
+> That was my first try. It over-counts: a bit stands for a whole 2M unit,
+> but only the frames that reach __free_pages_core() get flagged -- CMA
+> comes back through __free_pages(), the initrd and __init memory through
+> free_reserved_pages(), and KHO-preserved frames never get an initialised
+> struct page at all.
+
+Why are other hwpoisoned pages not flagged? If initrd or anything else is
+hwpoisoned, we should not be running this kernel?
+
+> 
+> And the over-count cannot be undone later. 
+
+The inconsistency is worrisome.
+I wouldn't say that I hate it but it certainly has "great, more hwpoison hacks"
+smell to it.
+
+We have enough semi-broken hwpoison ... stuff ... in our code base already. So
+I'm hoping we're not adding more to it?
+
+> If the walk itself is what bothers you, the way out is not the bitmap
+> but counting as we flag: hwpoison_boot_page() already knows the pfn, so
+> it can bump a per-block-id counter in a small memblock array that
+> memblk_nr_poison_init() then just reads.
+
+The inconsistency is what worries me.
+
+And that we have pages we are told are hwpoisoned but we seem to ignore that and
+carry on with our kernel letting it boot?
+
+> 
+> Exact by construction, no walk. Happy to go that way instead if you
+> prefer it.
+
+Let me first try to understand the semantics here.
+
+-- 
+Cheers,
+
+David
