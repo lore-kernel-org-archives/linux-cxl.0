@@ -1,293 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f43.google.com (mail-pj2-f43.google.com [74.125.227.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF626377AA2
-	for <linux-cxl@vger.kernel.org>; Sat, 19 Sep 2026 07:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5C847252A
+	for <linux-cxl@vger.kernel.org>; Sat, 19 Sep 2026 10:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789804460; cv=none; b=XDUFKwXPvNdk6FSzRQyZi85OI94j3QiSpvJg7xvVQ1rD/RrP0QiXpjyCe6IIE1GHL0MI1ZeJ/3M34gjuIxyiCC1AIEQJHF0PDzTwOEbgFdKOqPj+8oEzjhdN58JqTepfXxxjhtQEDZWt3jD95ykWGJdPdjb7TE8u7CgscSJzjh8=
+	t=1789813709; cv=none; b=SZDPI48daVUVf8obmuLU6RdKxF5lFfW7fd2CSdDHFqe2lb3fBIckdZ7LyjdUzYP5Xs7B46oMRQAUMmKy8mbeqQ2Zm75eCLAA1lPjaVsAoC1h3AIZTNJgczch7nOmF+IYO/C+AJMXfCvxe9iosXgpHt9htM7N5fITY0ZZ6S921aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789804460; c=relaxed/simple;
-	bh=c/hqj+QCKVsVsl/G5YwUaou3XfSvCpNmVNNJH8C6y8k=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Z1ezB13GEsADNcs7C04MDQarIm2LHPGZV/ZI4WSkdUYE5vhbVQo22bkfFyzgMipqpryldt3Bpp9xVAh8bgPLUPz+OSJo3TADfq4h4r+7i1vQOIrU6JHWuGhEr6FHxmVcoEiexAKjioRirCnncUWqRQ2kpmaGj82S3TlM3LxoTT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEj55ZqA; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789813709; c=relaxed/simple;
+	bh=5oMA+CY9eg2MPQW/ZzazYNrDQiFaMFZzkKAVWP9/XHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtXsd/MvFHq+mE0bf79mVoKACg2m1p7VNHlsPD88KyL/gtM+jDtR53KOwv2isnr9SoWsUVcBNLtSfbxwP6RkMauPKzyOfmCyaPdysfzDcuQjPSi70J9Y5cVy1XwA8DcwUmsKNsRif/n+WxbkLGRtB52ZAnDXo9frZxS8Mch+y80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2kNP1WL; arc=none smtp.client-ip=74.125.227.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEj55ZqA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789804458; x=1821340458;
-  h=date:from:to:cc:subject:message-id;
-  bh=c/hqj+QCKVsVsl/G5YwUaou3XfSvCpNmVNNJH8C6y8k=;
-  b=MEj55ZqAVFaUhbmNltV9XvjvxOlxkP9AQJbiFBFyQilPowF2eaJINp3a
-   51e6CyjhtjOBOHnFcGULNhhXjy9J+NXh2KOxBWG7hFSKrSJiBblW9XSNM
-   LSOp1u+fYqa96ka1I7T6irc51nKy+t9k1z3lGHuy+TujuVXY6GkQ5vsQ/
-   TlKYgACy82Ar8+nAUvaLkzzhBRs1KKAP3xFOpGc1ovCl0LQ6z/VpHOOws
-   38vhFhAX/GwMeoCG4aJv23NaymSS7J0OR7QuMT74Rjn3yyIA+L0wBk2mD
-   OW9WOGVaYnpmNerLEgBf9NOp4KW1mfX9WGj9NkX0wgc/QjzT8S+lHSYve
-   Q==;
-X-CSE-ConnectionGUID: 6TZvz1r+SnCFdAFLxkbFrQ==
-X-CSE-MsgGUID: A0SWy66pRACuWYQyBshwvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="90467452"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="90467452"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2026 00:54:17 -0700
-X-CSE-ConnectionGUID: D2GVRQZ9R/C09SIB+eW+7w==
-X-CSE-MsgGUID: +B7Q29DHQAmbYSVeSnnGHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="298190779"
-Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 19 Sep 2026 00:54:15 -0700
-Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1x7pth-00000000Ajt-0Gva;
-	Sat, 19 Sep 2026 07:54:09 +0000
-Date: Sat, 19 Sep 2026 15:53:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 7faee05e3ce7582845f272a3141d85241ff2b35e
-Message-ID: <202609191553.mx6UjjmQ-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2kNP1WL"
+Received: by mail-pj2-f43.google.com with SMTP id 98e67ed59e1d1-39b31b4281eso1625464a91.2
+        for <linux-cxl@vger.kernel.org>; Sat, 19 Sep 2026 03:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789813707; x=1790418507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+T4o7Z4sldFW89gg456PmAN7vw155d0OxgwruAX/bjg=;
+        b=f2kNP1WLxpvn/t+tUVbCCW9qQi8v7yZhZP4wuzHoq4yZG7bfEaEBwN+SEWo6eBRm5H
+         SbIVwc0QnCDZ5rGfb8sej1SbFqn2GErZWE10spac0xqjx6paYxJNUllIIAddz6FLhLYL
+         OlVQyWI0JH82nLIWJ56HmEgC5rKT32x1JiTBj5BLHy7I0O3snFQpmHtZmwOhSlHiSn1p
+         Sc4/gHlaWDWgbJisvSBIID3Ut9Nz4R+1ngKB989GtrrU9jADnNTciwPQ4PtMJ5AH4Fn0
+         c6u8c3j3Honlrca1efBY2qMpBppoLgxDBfuXLj4IpffBUBgSlbsyx3IUnWqrFjAszNVH
+         CO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789813707; x=1790418507;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+T4o7Z4sldFW89gg456PmAN7vw155d0OxgwruAX/bjg=;
+        b=sQ0wf/sIiwbwZEvpVfrUk19frJR1c78aPu0+zNnLKINmtKixi5w4Ass2xoZOplxtUz
+         GN1V41PjpBNnOsFczXVZ9fbzb8djvJLamm0MC4np2EdBGQNqug0wvDZ8SCJRSSsb60lu
+         7TWk4tRp7/DR9qT0CrSjTSeAa6m+LEHHA1HKMPH7ixWmw5zKX95QOfSPBslakB9179CK
+         iCUxR7SP5P7hfh0suslLQbV1xLglM0EW350822S7NyJSzQDQKMTjs6Rc84NbMLfE6SSd
+         h48t0cFuldZDEq7G7ENJu9uugWqcdyIYE9uR/pgUzGsmJIDq1Sab7wMQyFZjemdMiKYE
+         ZzZw==
+X-Forwarded-Encrypted: i=1; AKwUvBzBOE1l48JIf01ki6MmE9WNcfsf4WA9mudiJCVB7vA5SILeb8A6JYFyrsN2Kzc1EkBwGTe8Lmf7Vy4=@vger.kernel.org
+X-Gm-Message-State: AFuF++nMDZ3CWQFOUI60A4Fqgn6qUZkSXVPi1okAbt0S9Bd6ZmPL9uU6
+	RRfX+f4a6//SUYmbNxiOhbkutPS4QG4B/Nm0+wq/xai09x4xWiAjcOob
+X-Gm-Gg: AYBFou19G4RZRi9gDRUU2gEmvpOR6X5ez62tKeWGBpNbnlonhKAmOfQJiQ/O1XxtxOa
+	AjdIb4Z5jzYbQ7BD/tx9OYja44GwPTUEWmCyjSM0k67YCoKDGlMyM+7us722m+IFXwFU8vwEfQ7
+	6qchv/UAdJ60mPmI2eJui8QeNAcG+m0429B9FUePttReZ0PRVRC4K4dVT6cAqYaLTFYhJJAL8LX
+	Q+yCISlc3VHvYV+sw4GDx7kk4ZKu9kPMGOnwN8IYQpM/G8J54UZSpJZBUQX7a3kOzz535H+U6LH
+	bdVGWMJLsz3eAg9ZdWervnAiIcLqsvzJr8mw4LHKYtSDTQ0mLzWlyIzMKHufpUm7Eg+mM3E6nn+
+	Ps5yS4UFQYAxTneL/0r7XETfOHGBMXMl1pJ2tAaQ2SnnjDB3T13MGxbO4cjKwl/AQa8+PL/R0Pl
+	Qs896opN3ImDVGpkkxtvyPnMCWXlwx/6lVIhHv1V044qa9sH2uk4AOK0g7HDAK9Mt+ZnXMPlQy8
+	5I7UI0CDnM=
+X-Received: by 2002:a17:90b:184d:b0:39e:6a7f:1dcc with SMTP id 98e67ed59e1d1-39e6a7f222amr3389602a91.40.1789813707258;
+        Sat, 19 Sep 2026 03:28:27 -0700 (PDT)
+Received: from localhost ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e6c615f05sm4060068a91.15.2026.09.19.03.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Sep 2026 03:28:26 -0700 (PDT)
+Date: Sat, 19 Sep 2026 15:58:25 +0530
+From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kas@kernel.org,
+	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, hannes@cmpxchg.or,
+	shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
+	riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
+	driver-core@lists.linux.dev, kernel-team@meta.com
+Subject: Re: [PATCH v5 8/9] mm/memory-failure: add hwpoison_boot_page() to
+ flag an inherited frame
+Message-ID: <aq5jyXzuDAANeCJs@acer-nitro-anv15-41>
+References: <20260915-hwpoison-kho-v5-0-3bc7a57bd503@debian.org>
+ <20260915-hwpoison-kho-v5-8-3bc7a57bd503@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260915-hwpoison-kho-v5-8-3bc7a57bd503@debian.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 7faee05e3ce7582845f272a3141d85241ff2b35e  Merge branch 'for-7.4/cxl-fixes' into cxl-for-next
+On Tue, Sep 15, 2026 at 05:53:42AM -0700, Breno Leitao wrote:
+> A frame the previous kernel recorded as poisoned has to be flagged before
+> it reaches the allocator, which is long before memory_failure() can run.
+> Add a helper that leaves it in the state a frame poisoned by this kernel
+> would be in, so everything that already understands PG_hwpoison covers it,
+> the kexec segment placement check included.
+> 
+> num_poisoned_pages_inc() does not work at boot: its per memory block half
+> looks the block up by pfn, and memory_dev_init() has not run, so it
+> divides by zero. Take only the global counter there. A hotplugged block is
+> already there, so that path takes both counters as usual.
+> 
+> The caller comes later in this series.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  include/linux/mm.h  |  7 +++++++
+>  mm/memory-failure.c | 26 ++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b68824fcfbef19..8039830998dd4b 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -5225,6 +5225,8 @@ extern const struct attribute_group memory_failure_attr_group;
+>  extern void memory_failure_queue(unsigned long pfn, int flags);
+>  void num_poisoned_pages_inc(unsigned long pfn);
+>  void num_poisoned_pages_sub(unsigned long pfn, long i);
+> +void __meminit hwpoison_boot_page(struct page *page,
+> +				  enum meminit_context context);
+>  phys_addr_t range_first_hwpoison(phys_addr_t start, unsigned long size);
+>  phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size);
+>  #else
+> @@ -5232,6 +5234,11 @@ static inline void memory_failure_queue(unsigned long pfn, int flags)
+>  {
+>  }
+>  
+> +static inline void hwpoison_boot_page(struct page *page,
+> +				      enum meminit_context context)
+> +{
+> +}
+> +
+>  static inline void num_poisoned_pages_inc(unsigned long pfn)
+>  {
+>  }
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index d9b8be696aac38..60e9682434700b 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -137,6 +137,32 @@ phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size)
+>  	return range_hwpoison(start, size, false);
+>  }
+>  
+> +static void update_per_node_mf_stats(unsigned long pfn, enum mf_result result);
+> +
+> +void __meminit hwpoison_boot_page(struct page *page,
+> +				  enum meminit_context context)
+> +{
+> +	unsigned long pfn = page_to_pfn(page);
+> +
+> +	if (PageHWPoison(page))
+> +		return;
+> +
+> +	SetPageHWPoison(page);
+> +	set_page_count(page, 1);
+> +	/* The page has been completely isolated == MF_RECOVERED */
+> +	update_per_node_mf_stats(pfn, MF_RECOVERED);
 
-elapsed time: m
 
-configs tested: 215
-configs skipped: 6
+snip
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +
+> +	/*
+> +	 * The per memory block half of num_poisoned_pages_inc() has no block to
+> +	 * find at boot, and divides by zero looking for one. A hotplugged block
+> +	 * is already there.
+> +	 */
+> +	if (context == MEMINIT_HOTPLUG)
+> +		num_poisoned_pages_inc(pfn);
+> +	else
+> +		atomic_long_inc(&num_poisoned_pages);
+> +}
 
-tested configs:
-alpha                              allnoconfig    gcc-16.1.0
-alpha                             allyesconfig    gcc-16.1.0
-alpha                                defconfig    gcc-16.1.0
-alpha                randconfig-r2101-20260918    gcc-15.2.0
-alpha                randconfig-r2107-20260918    gcc-11.5.0
-arc                               allmodconfig    gcc-16.1.0
-arc                                allnoconfig    gcc-16.1.0
-arc                               allyesconfig    gcc-16.1.0
-arc                                  defconfig    gcc-16.1.0
-arc                   randconfig-1000-20260919    gcc-15.2.0
-arc                   randconfig-1001-20260919    gcc-13.4.0
-arm                                allnoconfig    clang-17
-arm                               allyesconfig    gcc-16.1.0
-arm                          bcm2835_defconfig    clang-17
-arm                                  defconfig    clang-24
-arm                           ep93xx_defconfig    clang-24
-arm                          lpc32xx_defconfig    clang-17
-arm                         multi_v7_defconfig    gcc-16.1.0
-arm                   randconfig-1000-20260919    gcc-10.5.0
-arm                   randconfig-1001-20260919    gcc-11.5.0
-arm                   randconfig-1002-20260919    gcc-13.4.0
-arm                   randconfig-1003-20260919    gcc-15.2.0
-arm                  randconfig-r1304-20260919    gcc-10.5.0 sparse
-arm                  randconfig-r2104-20260918    clang-18
-arm                        spear13xx_defconfig    gcc-16.1.0
-arm64                             allmodconfig    clang-24
-arm64                              allnoconfig    gcc-16.1.0
-arm64                                defconfig    gcc-16.1.0
-arm64                 randconfig-1000-20260919    gcc-16.1.0
-arm64                 randconfig-1001-20260919    gcc-10.5.0
-arm64                 randconfig-1002-20260919    gcc-8.5.0
-arm64                 randconfig-1003-20260919    clang-24
-csky                              allmodconfig    gcc-16.1.0
-csky                               allnoconfig    gcc-16.1.0
-csky                                 defconfig    gcc-16.1.0
-csky                  randconfig-1000-20260919    gcc-11.5.0
-csky                  randconfig-1001-20260919    gcc-16.1.0
-csky                 randconfig-r1305-20260919    gcc-16.1.0 sparse
-csky                 randconfig-r2100-20260918    gcc-16.1.0
-hexagon                           allmodconfig    clang-24
-hexagon                            allnoconfig    clang-24
-hexagon                              defconfig    clang-24
-hexagon               randconfig-1000-20260919    clang-17
-hexagon               randconfig-1001-20260919    clang-18
-hexagon              randconfig-r1306-20260919    clang-20   sparse
-i386                              allmodconfig    gcc-14
-i386                               allnoconfig    gcc-14
-i386        buildonly-randconfig-1000-20260919    clang-22
-i386        buildonly-randconfig-1001-20260919    clang-22
-i386        buildonly-randconfig-1002-20260919    clang-22
-i386        buildonly-randconfig-1003-20260919    clang-22
-i386        buildonly-randconfig-1004-20260919    gcc-14
-i386        buildonly-randconfig-1005-20260919    clang-22
-i386                                 defconfig    clang-22
-i386                  randconfig-1000-20260919    clang-22
-i386                  randconfig-1001-20260919    clang-22
-i386                  randconfig-1002-20260919    clang-22
-i386                  randconfig-1003-20260919    clang-22
-i386                  randconfig-1004-20260919    clang-22
-i386                  randconfig-1005-20260919    gcc-14
-i386                  randconfig-1006-20260919    gcc-14
-i386                  randconfig-1007-20260919    clang-22
-i386                  randconfig-1008-20260919    clang-22
-i386                  randconfig-1009-20260919    gcc-14
-i386                  randconfig-1010-20260919    clang-22
-i386                  randconfig-1011-20260919    gcc-14
-i386                  randconfig-1012-20260919    gcc-14
-i386                  randconfig-1013-20260919    gcc-14
-i386                  randconfig-1300-20260919    gcc-12     sparse
-i386                  randconfig-1301-20260919    clang-22   sparse
-i386                  randconfig-1302-20260919    clang-22   sparse
-i386                  randconfig-2100-20260918    clang-22
-i386                  randconfig-2101-20260918    gcc-14
-i386                  randconfig-2102-20260918    clang-22
-i386                  randconfig-2103-20260918    clang-22
-i386                  randconfig-2200-20260918    clang-22
-loongarch                         allmodconfig    clang-19
-loongarch                          allnoconfig    clang-20
-loongarch                            defconfig    clang-24
-loongarch             randconfig-1000-20260919    clang-24
-loongarch             randconfig-1001-20260919    clang-18
-m68k                              allmodconfig    gcc-16.1.0
-m68k                               allnoconfig    gcc-16.1.0
-m68k                              allyesconfig    gcc-16.1.0
-m68k                                 defconfig    gcc-16.1.0
-m68k                 randconfig-r1308-20260919    gcc-9.5.0  sparse
-m68k                           sun3x_defconfig    gcc-16.1.0
-microblaze                         allnoconfig    gcc-16.1.0
-microblaze                        allyesconfig    gcc-16.1.0
-microblaze                           defconfig    gcc-16.1.0
-microblaze           randconfig-r1301-20260919    gcc-11.5.0 sparse
-mips                              allmodconfig    gcc-16.1.0
-mips                               allnoconfig    gcc-16.1.0
-mips                              allyesconfig    gcc-16.1.0
-mips                 randconfig-r2202-20260918    gcc-15.2.0
-mips                        rbtx49xx_defconfig    gcc-16.1.0
-nios2                             allmodconfig    gcc-11.5.0
-nios2                              allnoconfig    gcc-11.5.0
-nios2                                defconfig    gcc-11.5.0
-nios2                 randconfig-1000-20260919    gcc-8.5.0
-nios2                 randconfig-1001-20260919    gcc-11.5.0
-nios2                randconfig-r2103-20260918    gcc-10.5.0
-openrisc                           allnoconfig    gcc-16.1.0
-openrisc                             defconfig    gcc-16.1.0
-openrisc             randconfig-r1303-20260919    gcc-16.1.0 sparse
-openrisc             randconfig-r1309-20260919    gcc-16.1.0 sparse
-parisc                            allmodconfig    gcc-16.1.0
-parisc                             allnoconfig    gcc-16.1.0
-parisc                            allyesconfig    gcc-16.1.0
-parisc                               defconfig    gcc-16.1.0
-parisc                randconfig-1000-20260919    gcc-8.5.0
-parisc                randconfig-1001-20260919    gcc-11.5.0
-parisc64                             defconfig    gcc-16.1.0
-powerpc                           allmodconfig    gcc-16.1.0
-powerpc                            allnoconfig    gcc-16.1.0
-powerpc                         icon_defconfig    gcc-16.1.0
-powerpc               randconfig-1000-20260919    clang-21
-powerpc               randconfig-1001-20260919    gcc-16.1.0
-powerpc64             randconfig-1000-20260919    clang-17
-powerpc64             randconfig-1001-20260919    clang-24
-powerpc64            randconfig-r2102-20260918    gcc-16.1.0
-powerpc64            randconfig-r2106-20260918    gcc-8.5.0
-powerpc64            randconfig-r2200-20260918    clang-24
-powerpc64            randconfig-r2201-20260918    clang-24
-riscv                             allmodconfig    clang-24
-riscv                              allnoconfig    gcc-16.1.0
-riscv                             allyesconfig    clang-24
-riscv                                defconfig    clang-24
-riscv                 randconfig-1000-20260919    clang-24
-riscv                 randconfig-1001-20260919    clang-17
-riscv                 randconfig-2000-20260918    gcc-12.5.0
-riscv                 randconfig-2001-20260918    clang-24
-riscv                randconfig-r1307-20260919    clang-24   sparse
-s390                              allmodconfig    clang-24
-s390                               allnoconfig    clang-24
-s390                              allyesconfig    gcc-16.1.0
-s390                                 defconfig    clang-18
-s390                  randconfig-1000-20260919    clang-24
-s390                  randconfig-1001-20260919    clang-19
-s390                  randconfig-2000-20260918    gcc-8.5.0
-s390                  randconfig-2001-20260918    clang-17
-s390                 randconfig-r2105-20260918    clang-24
-sh                                allmodconfig    gcc-16.1.0
-sh                                 allnoconfig    gcc-16.1.0
-sh                                allyesconfig    gcc-16.1.0
-sh                                   defconfig    gcc-16.1.0
-sh                    randconfig-1000-20260919    gcc-15.2.0
-sh                    randconfig-1001-20260919    gcc-9.5.0
-sh                    randconfig-2000-20260918    gcc-13.4.0
-sh                    randconfig-2001-20260918    gcc-11.5.0
-sparc                              allnoconfig    gcc-16.1.0
-sparc                                defconfig    gcc-16.1.0
-sparc                 randconfig-1000-20260919    gcc-11.5.0
-sparc                 randconfig-1001-20260919    gcc-16.1.0
-sparc                 randconfig-2000-20260918    gcc-8.5.0
-sparc                 randconfig-2001-20260918    gcc-11.5.0
-sparc                randconfig-r1300-20260919    gcc-16.1.0 sparse
-sparc64                              defconfig    clang-24
-sparc64               randconfig-1000-20260919    clang-20
-sparc64               randconfig-1001-20260919    clang-22
-sparc64               randconfig-2000-20260918    gcc-8.5.0
-sparc64               randconfig-2001-20260918    clang-20
-um                                allmodconfig    clang-17
-um                                 allnoconfig    clang-17
-um                                allyesconfig    gcc-14
-um                                   defconfig    clang-24
-um                              i386_defconfig    gcc-14
-um                    randconfig-1000-20260919    clang-24
-um                    randconfig-1001-20260919    gcc-12
-um                    randconfig-2000-20260918    gcc-14
-um                    randconfig-2001-20260918    gcc-14
-um                            x86_64_defconfig    clang-24
-x86_64                            allmodconfig    clang-22
-x86_64                             allnoconfig    clang-22
-x86_64                            allyesconfig    clang-22
-x86_64      buildonly-randconfig-1000-20260919    clang-22
-x86_64      buildonly-randconfig-1001-20260919    gcc-14
-x86_64      buildonly-randconfig-1002-20260919    clang-22
-x86_64      buildonly-randconfig-1003-20260919    clang-22
-x86_64      buildonly-randconfig-1004-20260919    gcc-13
-x86_64      buildonly-randconfig-1005-20260919    clang-22
-x86_64                               defconfig    gcc-14
-x86_64                randconfig-1000-20260919    clang-22
-x86_64                randconfig-1001-20260919    clang-22
-x86_64                randconfig-1002-20260919    clang-22
-x86_64                randconfig-1003-20260919    clang-22
-x86_64                randconfig-1004-20260919    gcc-14
-x86_64                randconfig-1005-20260919    clang-22
-x86_64                randconfig-1006-20260919    clang-22
-x86_64                randconfig-1007-20260919    clang-22
-x86_64                randconfig-1008-20260919    clang-22
-x86_64                randconfig-1009-20260919    gcc-14
-x86_64                randconfig-1010-20260919    clang-22
-x86_64                randconfig-1011-20260919    clang-22
-x86_64                randconfig-1012-20260919    gcc-14
-x86_64                randconfig-1013-20260919    gcc-14
-x86_64                randconfig-1014-20260919    clang-22
-x86_64                randconfig-1015-20260919    gcc-14
-x86_64                randconfig-1016-20260919    gcc-14
-x86_64                randconfig-1017-20260919    clang-22
-x86_64                randconfig-1300-20260919    clang-22   sparse
-x86_64                randconfig-1301-20260919    gcc-14     sparse
-x86_64                randconfig-1302-20260919    clang-22   sparse
-x86_64                randconfig-2100-20260918    clang-22
-x86_64                randconfig-2101-20260918    clang-22
-x86_64                randconfig-2102-20260918    gcc-14
-x86_64                randconfig-2103-20260918    clang-22
-x86_64                randconfig-2200-20260918    gcc-14
-x86_64                           rhel-9.4-rust    clang-22
-xtensa                             allnoconfig    gcc-16.1.0
-xtensa                randconfig-1000-20260919    gcc-13.4.0
-xtensa                randconfig-1001-20260919    gcc-15.2.0
-xtensa                randconfig-2000-20260918    gcc-8.5.0
-xtensa                randconfig-2001-20260918    gcc-13.4.0
-xtensa               randconfig-r1302-20260919    gcc-8.5.0  sparse
+Hi Breno,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+num_poisoned_pages_inc() currently assumes that the supplied PFN can
+be used for per-memory-block accounting and therefore calls
+memblk_nr_poison_inc() unconditionally. The early-boot path needs
+global-only accounting because the memory-block infrastructure is not
+initialized yet.
+
+Could num_poisoned_pages_inc() treat -1UL as global-only accounting,
+matching num_poisoned_pages_sub()?
+
+Example as below:
+
+void num_poisoned_pages_inc(unsigned long pfn)
+{
+	atomic_long_inc(&num_poisoned_pages);
+
+	if (pfn != -1UL)
+		memblk_nr_poison_inc(pfn);
+}
+
+
+The caller could then use:
+
+num_poisoned_pages_inc(context == MEMINIT_HOTPLUG ? pfn : -1UL);
+
+This would keep updates to `num_poisoned_pages` encapsulated rather than
+manipulating the counter directly here, while also making the increment
+and decrement interfaces consistent.
+
+Thanks,
+Shaikh Kamaluddin.
+> +
+>  /**
+>   * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
+>   * @_name: name of the file in the per NUMA sysfs directory.
+> 
+> -- 
+> 2.53.0-Meta
+> 
