@@ -1,71 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FC436F405;
-	Mon, 21 Sep 2026 22:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDB03F44FC;
+	Mon, 21 Sep 2026 23:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790031186; cv=none; b=UL+frGKmU6NLuhR1SXVB4h83d5ZNnJjcKIwaYzf8z1alL212CQDc2aPLOcxYScY96cuzrif95WcthQbZPOzXpdxxLbUJ36FcO1liiHtIweqFxaJzw0gcnl0Yt8PbXTvMfeNCAPSMNWKAu1jFIm+vDd5PHv64XSVtHKg2VRni8JM=
+	t=1790032046; cv=none; b=p3WG0FZuk84uAuJu7O3vyRRuZOmeJfIbOKX7em/8LpS2qPzb1zR7V6fT6vumqEwoX0sNH1/WS0WkbMzkfZFLNcggmD7PRyvTfFNyI/u9NpJ12jRl2GEtPzcwu3zoWWCx5wBzBLB+nfbNoo3SsSQU7Qt0rxdx9KihXjswNafERYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790031186; c=relaxed/simple;
-	bh=Mf5GJife6VZoabI9QINny6v+W6UXRMvScQI+ADs8ylE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AwRVI+2654UYwiRvGhkWSJWzBY1ril1we9l5HCw1DuHLt/JdljCCgwRO9rbeGxT7LCicdUSsx8iN75Wqrm7sg9Gllh7WbjOtAuNowEWyRf4JPf7tAfZRW0O6nSwlC/zsS3CENKQhBj9OD0B4hfgZxRNwJjAYZW+4eqnCBJweB4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YzqYCbK6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790032046; c=relaxed/simple;
+	bh=Ee1m8mvmXFOEfyP1iDT8QKt8AH3zJmufzdxQyWmw6ag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cv6h/PgCy/vjhAz5cYMGY7llbW7wDBK4s8PL/iuLzqhkX85FA1jwdErYU7wSHLcOlegkUX7kzdNg0+jifFY3tS4MjKBIGXRQwifHKIFjbeahdS3u/c3Dd5v8UoTfy8MJdnERxbVu7JwGGW/8bRFGlCp7yMztN6aB604WSbhgnnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEobv4f5; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YzqYCbK6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90921F00893;
-	Mon, 21 Sep 2026 22:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1790031184;
-	bh=vr/gx0Gk1vpjpHWM5sT+D++JQRExEkJQGlPWeyGVKCo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YzqYCbK6VIEv4Im4C6xgjIzbiK246j5gGNTbeA/gxJmKzhCvtWP2kvF+17L0uRaHe
-	 9vPeZg02uN09f8r+AS+I/MvdRcZkvexqG2w4jVdQpqn3c32VGwxf7ayQ15zilHy7G1
-	 chR39CDncH1ayD3EMiA0ehzS0yV4nyaQlejUFI2o=
-Date: Mon, 21 Sep 2026 15:53:03 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Kairui Song <kasong@tencent.com>, Qi Zheng
- <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Barry Song
- <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
- <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He
- <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner
- <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Jan Kiszka
- <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>, Oscar
- Salvador <osalvador@suse.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, Seongjun Hong <hsj0512@snu.ac.kr>
-Subject: Re: [PATCH v2 00/13] mm/sparse: remove SECTION_MARKED_PRESENT and
- further cleanups
-Message-Id: <20260921155303.0ac97f17e4bda6140079dc9c@linux-foundation.org>
-In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
-References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEobv4f5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790032033; x=1821568033;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ee1m8mvmXFOEfyP1iDT8QKt8AH3zJmufzdxQyWmw6ag=;
+  b=CEobv4f5dPkMigVV2J0OB0+qqai1PAjlYUQKrmC1VWDuvPh1lBcdMq+Q
+   /bBjYGyzfByCdGIu2yA3suax5hGrgV+eu92yyC21e2sA8OUT9TtEewPWi
+   BH7jHrjI2oz371SCO9tO0jTz/wCxT851DNwkoyJlwppyRvYGINvP1f6Ab
+   US0MLePgn86VP1qIrmZGI3RLiW55VK8kRPX8qW38ZhkMm/QoHfttLALPU
+   0uQEpBdorpetGkFsupSAXkmbE6M+j+EBb5G+g5UyZ/p1cWh7trApqpGio
+   vdWiA4bgCoESlGSeoeOzyGVIQULvQVDHtgwyZaCTDYW/Cg4KXyt6mAGLY
+   A==;
+X-CSE-ConnectionGUID: gRmm2iq2S5+J6vUDFwFoVw==
+X-CSE-MsgGUID: ITntlJtNRqCQrvgOZIz7MA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="90455576"
+X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
+   d="scan'208";a="90455576"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 16:07:12 -0700
+X-CSE-ConnectionGUID: N/l7hms9SMCqnk9FsLi47A==
+X-CSE-MsgGUID: NmOE4VuCSWGLlVfJQ64O9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
+   d="scan'208";a="299106627"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.234]) ([10.125.109.234])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 16:07:10 -0700
+Message-ID: <4d46bd37-1016-41a9-a810-66144be71ed4@intel.com>
+Date: Mon, 21 Sep 2026 16:07:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] cxl/memdev: Add support for multi PF devices
+To: alucerop@amd.com, linux-cxl@vger.kernel.org, netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
+ rafael@kernel.org
+References: <20260921191239.4249-1-alucerop@amd.com>
+ <20260921191239.4249-4-alucerop@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260921191239.4249-4-alucerop@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 21 Sep 2026 21:58:52 +0200 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
 
-> SECTION_MARKED_PRESENT is really only needed during boot, where we
-> can instead just rely on SECTION_IS_EARLY_BIT by setting that flag
-> earlier.
+
+On 9/21/26 12:12 PM, alucerop@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Some preparations for doing that conversion and some cleanups in the same
-> (sparse) area.
+> A PCI device can present multiple Physical Functions(PFs) but the CXL
+> specs restrict to the first one, PF0, the discovery and management of
+> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
+> obtain the CXL.mem range to work with somehow.
+> 
+> Add a device link between the cxl region a PF0 memdev is attached to and
+> the non-PF0 wanting to use the CXL region. A CXL region release will
+> trigger such a PF to be released from its driver first.
+> 
+> PF0 being unbound from its driver triggers memdev and region release
+> leading to non-PF0s being unbound first keeping the CXL memory use safe.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/memdev.c | 66 +++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h         |  1 +
+>  2 files changed, 67 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index b3419df586b9..67be02faa7e1 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -802,6 +802,72 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	return ERR_PTR(rc);
+>  }
+>  
+> +static int match_memdev_by_parent_device(struct device *dev, const void *data)
+> +{
+> +	const struct device *pf_dev = data;
+> +	struct cxl_memdev *cxlmd;
+> +
+> +	if (!is_cxl_memdev(dev))
+> +		return 0;
+> +
+> +	cxlmd = to_cxl_memdev(dev);
+> +	return (cxlmd->cxlds->dev == pf_dev);
+> +}
+> +
+> +/**
+> + * cxl_get_pf0_memdev - register a device link with the region PF0 memdev is
+> + * attached to. The region release will imply the link consumer to be unbound
+> + * from its driver first.
+> + *
+> + * @pf0: device to use for finding target memdev.
+> + * @pfx: device to link to PF0's memdev region, the link consumer.
+> + * @range: to be set with the PF0's memdev range.
+> + *
+> + * Return: PF0 memdev pointer or error.
+> + */
+> +struct cxl_memdev *cxl_get_pf0_memdev(struct device *pf0, struct device *pfx,
 
-Added to mm-new, thanks.
+cxl_link_to_pf0_region() may be a better name? cxl_get_pf0_memdev() hides the intention of linking.
 
+> +				      struct range *range)
+> +{
+> +	struct cxl_attach_region *attach;
+> +	struct cxl_memdev *cxlmd;
+> +	struct device *mem_dev __free(put_device) =
+> +		bus_find_device(&cxl_bus_type, NULL, pf0,
+> +				match_memdev_by_parent_device);
+> +
+> +	if (!mem_dev)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	cxlmd = to_cxl_memdev(mem_dev);
+> +
+> +	/*
+> +	 * we got the cxl_memdev and the implicit get_device in bus_find_device
+> +	 * makes the next steps safe.
+> +	 */
+> +	attach = container_of(cxlmd->attach, struct cxl_attach_region, attach);
+> +
+> +	/*
+> +	 * The cxlmd object does exist and it can be found in the cxl bus after
+> +	 * creation but before attach probe setting the proper HPA range. If so,
+> +	 * the caller will need to try later.
+> +	 */
+> +	if (attach->hpa_range.end == -1)
+
+CXL_RESOURCE_NONE instead of -1?
+
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	/*
+> +	 * Create the device link between the region and the consumer device.
+> +	 * AUTOREMOVE_CONSUMER means the link implicitly to be removed if the
+> +	 * consumer unbinds first with no consequences for the supplier.
+> +	 */
+> +	if (!device_link_add(pfx, &attach->cxlr->dev, DL_FLAG_AUTOREMOVE_CONSUMER))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	range->start = attach->hpa_range.start;
+> +	range->end = attach->hpa_range.end;
+> +
+> +	return to_cxl_memdev(mem_dev);
+
+Should we bother returning cxl_memdev? Does the SFC driver consumer it at all?
+
+DJ
+
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_pf0_memdev, "CXL");
+> +
+>  static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
+>  			       unsigned long arg)
+>  {
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 802b143de83d..e3b1e5be95f8 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -228,4 +228,5 @@ struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
+>  				      struct range *range);
+>  
+>  int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
+> +struct cxl_memdev *cxl_get_pf0_memdev(struct device *pf0, struct device *pfx, struct range *range);
+>  #endif /* __CXL_CXL_H__ */
 
