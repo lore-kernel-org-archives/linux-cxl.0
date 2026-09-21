@@ -1,136 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77120383325;
-	Mon, 21 Sep 2026 19:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118673F1051;
+	Mon, 21 Sep 2026 19:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790018587; cv=none; b=Y8INEWbofDcT5XQrnpXVvOCtLeR4rzfxqBZ4zkHrmyuAKRrXoX+1dLhHzyfgMz9z82RAAiapGiVAsqszURWuzkaWBdZB+1gtehZ1MkrhshFpZoFbmU5F7lIoSQBcTPCJJMz8FWoFqAjziYbA4r6VrZgL/hirKmcIbfKDtyVRyTI=
+	t=1790020755; cv=none; b=Fy2kABAGLDRsH5PRnwgiId36eYHQu1s1h/j6xjdgMAkhvYuzGbtUN/xIvhQrYP/6DtdRfW9Yx5nLwLzzLglSd/EGzXlW5qajwBlPYJ3z6Sp8dNvoXktPrGy9oZHfTMuc28bybxLXcCEQmtl/6myZl7qtwgiFbmBNi4Blw+euOrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790018587; c=relaxed/simple;
-	bh=DNC+Il0AkMXko37Uh06NOWpHEz0/nN0JeHGmGrcFMuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m4xfpB14DuX5T8KRXXK5p89DZ/QJ0OJGUzKikcBQHmPzXGnMHAjeumzqIWjxOQRg8jtbk1DxbCGj9ERaa9vWbkvV+eVHZ3Tcg2DFVFv6rb+WetBJbZINkd3L+/CK7mW0C77h+dHyLlWYdoF6fD4nNtjP6vo2an7qg06u7OTjICc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TF0N0o3n; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790020755; c=relaxed/simple;
+	bh=Av9neL0LEVkPlIU1KnqHDojloJ3A/Q9yM5MGKwqz6Z0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q40lFonglCdh5oxAXV9ap9gXQx2hQzfSC5uRvcoSap6TCLlMOW1TsszdcHRF5zsXkzRK2sMByxrsiJpMGtauGiniKWxy3oVLy5Hhusx9Cfp8J93HACVPDEuqXk21XdWMlaCNItYHw7pZM6fPTjx5RgceiLzoXIVP5q/19izt0EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl18dBiu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TF0N0o3n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790018585; x=1821554585;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DNC+Il0AkMXko37Uh06NOWpHEz0/nN0JeHGmGrcFMuw=;
-  b=TF0N0o3nWmCqaJySeD80l4qd7lewYKnIoggl5DI2xIWygs8XeZE2OjL+
-   1chavaT+KzcKFHv5FuxRprD2R2wFeD8Lt6ZxzoRY7WiROGlgGk7/YgK6B
-   R799tyvITL/rw/sOCC9a6eHs05p5EpxJ5q1Ir+e3jJAvKJ2BYw8i+p5Km
-   urFE46c/9uEYgQF1tcXo8o+mnCdW+/JGvl47yCSwCH4NVt08iLLxcMj/7
-   AdFRMRUnq+ze8jbF3gP6byTWnBvOayZBYP1mVcC/dzFO49XVl3moIEuEd
-   PX6cWMMoB/hQn/esmPRqFLDOUoOVa2biQI35wFDN1UzCaNvFl+G2rafzt
-   g==;
-X-CSE-ConnectionGUID: kVE5rXwJQZyZPECmZyMwuA==
-X-CSE-MsgGUID: P4nFmrfGQiejSegoUgtofg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="108062234"
-X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
-   d="scan'208";a="108062234"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 12:23:04 -0700
-X-CSE-ConnectionGUID: LdXRakwwSOiAZXLt6v7iiA==
-X-CSE-MsgGUID: 8/8hjT/bRZWiK8KSIfLyLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
-   d="scan'208";a="280872416"
-Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.234]) ([10.125.109.234])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 12:23:03 -0700
-Message-ID: <7619863e-0690-4f45-ae99-c75ad7573c61@intel.com>
-Date: Mon, 21 Sep 2026 12:23:02 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl18dBiu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882BE1F000FF;
+	Mon, 21 Sep 2026 19:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790020752;
+	bh=iyANBTrd7/pQCJull/2ya68CuRnYwJGmlUALpFhfxZM=;
+	h=From:Subject:Date:To:Cc;
+	b=Sl18dBiuA4/EcO/wURcyJXVuiTjSKzlt0ZDnKrZ5DJGIgt1rmqDll6IZBY1wAtpO7
+	 XTBMmLJIWLjdgi2EL5+yBmWA7R4uaeIldDhBCR9wcrzy3NfqCnrHDTHYXoayI4kJRk
+	 dcSFZ9lgaTQeRv0VSUU30KLeJZfzWqFlOMoNdtIFO1PPltCeAMpi9Cbdu7WJ2qQpwL
+	 MBa+i1zskmQrAOobZZhLzibU5sMolxgcgEepK4ENj1qOiN3zqd7R39uxym0bKelLHg
+	 Rr8djNbHAnLlGg6+6VvWodq8iGgVslYeN/nOaG86PoI1jBU9eRRDD/2ZKmeBPKaCgf
+	 r31F22OT7n6dA==
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: [PATCH v2 00/13] mm/sparse: remove SECTION_MARKED_PRESENT and
+ further cleanups
+Date: Mon, 21 Sep 2026 21:58:52 +0200
+Message-Id: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dax/bus: fix mapping attribute error reporting
-To: Muchun Song <songmuchun@bytedance.com>, Dan Williams <djbw@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Joao Martins <joao.m.martins@oracle.com>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- muchun.song@linux.dev
-References: <20260915095621.3744167-1-songmuchun@bytedance.com>
- <20260915095621.3744167-3-songmuchun@bytedance.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260915095621.3744167-3-songmuchun@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHyMsWoC/3WNyw6CMBBFf8XM2poWqxRX/ochhpYBqlDIDBAN4
+ d/lsXZ5knvPmYCRPDLcDhMQjp59GxaIjgdwVRZKFD5fGCIZXaVRWlgtuMuIscHm6WrMwtCxMNZ
+ pq2OptDvD8u0IC//ZvI90Zx7sC12/ytZF5blv6buFR7Xu9kYikz+NUQkppDSFM/klTgq8v5EC1
+ qeWSkjnef4B29vNdM0AAAA=
+X-Change-ID: 20260814-b4-sparsemem_cleanups-8bc4b47014c3
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Kairui Song <kasong@tencent.com>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Brendan Jackman <brendan.jackman@linux.dev>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>, 
+ Oscar Salvador <osalvador@suse.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
+ linux-fsdevel@vger.kernel.org, Seongjun Hong <hsj0512@snu.ac.kr>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3671; i=david@kernel.org;
+ h=from:subject:message-id; bh=Av9neL0LEVkPlIU1KnqHDojloJ3A/Q9yM5MGKwqz6Z0=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLI29jQWPntcY31479w5PF+UeARMPh39VhNd7ON83GDRY
+ 45yNbP9HaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAExkfRXDP0XnLbs+1z7pU53L
+ 8axpTfXE2/IfTrxlaA28+VFsh6bqpceMDFs2vRJtqbwXJNS4wl1zMff8iSK7/hzfrJDdtuHSquT
+ EqwwA
+X-Developer-Key: i=david@kernel.org; a=openpgp;
+ fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
+SECTION_MARKED_PRESENT is really only needed during boot, where we
+can instead just rely on SECTION_IS_EARLY_BIT by setting that flag
+earlier.
 
+Some preparations for doing that conversion and some cleanups in the same
+(sparse) area.
 
-On 9/15/26 2:56 AM, Muchun Song wrote:
-> After the DAX configuration locking was converted to rwsems, successful
-> lock acquisition leaves rc set to zero in mapping_store(). If the requested
-> range size is misaligned, the allocation is skipped and the zero rc is
-> converted to len. The sysfs write therefore reports success without
-> allocating the requested range.
-> 
-> Call alloc_dev_dax_range() unconditionally and let its full range
-> validation return -EINVAL for a misaligned start or size.
-> 
-> Fixes: c05ae9d85b47 ("dax/bus.c: replace driver-core lock usage by a local rwsem")
-> Assisted-by: LLM
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  drivers/dax/bus.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 54e4bbc98218..f232001ff5b7 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1276,8 +1276,7 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
->  	}
->  
->  	to_alloc = range_len(&r);
-> -	if (size_is_aligned(dev_dax, to_alloc))
-> -		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-> +	rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
->  	up_write(&dax_dev_rwsem);
->  	up_write(&dax_region_rwsem);
->  
+Tested on x86 with and without memory hotplug through virtio-mem.
 
-So this patch becomes somewhat of a backport issue as it depends on patch 1. Please consider swap the ordering of your patch series and fix this issue first. Maybe something like so the fix can be independently backported:
+---
+Changes in v2:
+- Rebased to mm-unstable
+- Add "scripts/gdb: mm.py: remove fallbacks for SECTION_HAS_MEM_MAP and
+  SECTION_IS_EARLY"
+- Improve comment in mmzone.h for __highest_used_section_nr
+- Improve comment in fs/proc/page.c for get_max_dump_pfn()
+- Move __highest_used_section_nr handling directly into
+  __section_mark_present() callers and use max()
+- Make pfn const in sparse_metadata_init_nid()
+- Take care of .clang_format
+- Smaller patch description fixes
+- Link to v1: https://patch.msgid.link/20260909-b4-sparsemem_cleanups-v1-0-008fc8d579fe@kernel.org
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index b809e1a264af..e40c25401cf0 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1192,7 +1192,7 @@ static ssize_t mapping_store(struct device *dev, struct de
-vice_attribute *attr,
-                return rc;
-        if (!dax_region->dev->driver) {
-                up_write(&dax_region_rwsem);
--               return rc;
-+               return -ENXIO;
-        }
-        rc = down_write_killable(&dax_dev_rwsem);
-        if (rc) {
-@@ -1201,8 +1201,12 @@ static ssize_t mapping_store(struct device *dev, struct d
-evice_attribute *attr,
-        }
+To: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@kernel.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+To: "Liam R. Howlett" <liam@infradead.org>
+To: Vlastimil Babka <vbabka@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+To: Michal Hocko <mhocko@suse.com>
+To: Kairui Song <kasong@tencent.com>
+To: Qi Zheng <qi.zheng@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+To: Barry Song <baohua@kernel.org>
+To: Axel Rasmussen <axelrasmussen@google.com>
+To: Yuanchu Xie <yuanchu@google.com>
+To: Wei Xu <weixugc@google.com>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: Brendan Jackman <brendan.jackman@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+To: Zi Yan <ziy@nvidia.com>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+To: Kieran Bingham <kbingham@kernel.org>
+To: Oscar Salvador <osalvador@suse.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org
+Cc: driver-core@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
 
-        to_alloc = range_len(&r);
--       if (alloc_is_aligned(dev_dax, to_alloc))
-+       if (!alloc_is_aligned(dev_dax, to_alloc)) {
-+               dev_dbg(dev, "%s: size: %zu misaligned\n", __func__, to_alloc);
-+               rc = -EINVAL;
-+       } else {
-                rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-+       }
-        up_write(&dax_dev_rwsem);
-        up_write(&dax_region_rwsem);
+---
 
+David Hildenbrand (Arm) (13):
+      mm/sparse: move mem_section init to sparse_extreme_init()
+      mm/sparse: refactor sparse_sections_init()
+      mm/sparse: move initialization of section metadata to sparse_metadata_init()
+      mm/sparse: rename and cleanup sparse_init_nid()
+      mm/sparse: cleanup sparse_init_one_section()
+      mm/sparse: rename __highest_present_section_nr to __highest_used_section_nr
+      mm/sparse: remove pfn_in_present_section()
+      mm/sparse: move __highest_used_section_nr handling
+      scripts/gdb: mm.py: remove fallbacks for SECTION_HAS_MEM_MAP and SECTION_IS_EARLY
+      mm/sparse: remove SECTION_MARKED_PRESENT
+      mm/sparse: remove flags parameter from sparse_init_one_section()
+      fs/proc/page: clarify comment in get_max_dump_pfn()
+      mm/memory_hotplug: drop CONFIG_HAVE_ARCH_PFN_VALID handling from pfn_to_online_page()
+
+ .clang-format           |   2 +-
+ drivers/base/memory.c   |   2 +-
+ fs/proc/page.c          |   7 +--
+ include/linux/cache.h   |   1 +
+ include/linux/mmzone.h  |  43 ++++---------
+ mm/compaction.c         |   2 +-
+ mm/memory_hotplug.c     |   9 +--
+ mm/sparse-vmemmap.c     |   4 +-
+ mm/sparse.c             | 160 +++++++++++++++++++++++-------------------------
+ mm/sparse.h             |  19 ++----
+ scripts/gdb/linux/mm.py |   8 +--
+ 11 files changed, 108 insertions(+), 149 deletions(-)
+
+---
+
+base-commit: 8d61431ed2607386b427752505379536eb634ce8
+
+change-id: 20260814-b4-sparsemem_cleanups-8bc4b47014c3
+
+--
+
+Cheers,
+
+David
 
