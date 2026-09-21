@@ -1,65 +1,73 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013064.outbound.protection.outlook.com [40.93.201.64])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011022.outbound.protection.outlook.com [52.101.52.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B0C3EC69A;
-	Mon, 21 Sep 2026 07:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA6A42BC31;
+	Mon, 21 Sep 2026 07:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.22
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789975762; cv=fail; b=fiUdWr9gZFrmaXgmu3WUF0zbcNewl3wtzQSLXAEc9mg7iXz0YKRi0t01b3MzPhvlU8SVxCFpnOYzkoAYGRtzd1hG7PYsUa1nJB1p+r00QPKmihUNLKMujmcqqB7sEM3z3qR132AOdrSYpNnMKBv3Dd/jFyTspA46I6e9frqBIaU=
+	t=1789976039; cv=fail; b=mK/UoU/jTRU6m2Gauqas4DQO1EVftVB3qnqe/Fk4aSVCsTKi6dRoY6Yg63+uJA8XX41zMbfUExgYLL3uXok6+SHwa5IZ78X1/+zeeNlPM+t94+BT85k05G67cddGYupcuKjp/GXRmrIg/wXzX8MLxW80X6CvyjTp02+byNWQar8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789975762; c=relaxed/simple;
-	bh=xzXXEOvBKADIqYgT308UZ2eSBS3a+ZXoBUY1e0z1Th0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lMEiMwPZE1sg1sKhdaV4IunfzL/LlXvbBy4XkB0cMmn/S3wkN5KP40KMUsEtWdbX8R62fjyAHEPUOy36lrI3nTE8OQMkqzHYXAIeHfXP9uCX+AuFqed+dbu+1UGqN2UVOyONXvNQFrKOWVrjN7gEBYCOnhf0EPsaWRKosrg2qKU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dnrEs2ot; arc=fail smtp.client-ip=40.93.201.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1789976039; c=relaxed/simple;
+	bh=Ey/NBfv6EzTbK2m1vmGJT92VQqpYIVZEM3hopsoc5fY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=d1BSAMhAQFN1OIOhya/dNAv5f37J7W7kxIbQslYegsi+fsPXZuzw+txGBDAFSgL7y0QFha/LcCE7dPFxGV0z4Ju+wbh2QXnitWixUErMdFQO+jD4OnoX2pTONveMIt2mo146jLM6hXvk4IX0KvERo8gEVGTqU7IKxTn/jKh2FK4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DrkLF1WX; arc=fail smtp.client-ip=52.101.52.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dnrEs2ot"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DrkLF1WX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JCjq5IXoS2PQyCf4FvY768Rbnq/pJoozLi/ACsie/7fd66Neq6Yk1MVgyGzhGeai6NicuiahUE+7JoGUHfWSc4OIjJGSnKyv1oGF8QcusSW3fcmPFXWkJLQEXyIu0U/yb/S9slHvMl3Wf3cTUssRfR2HVGjmu1fMW36ChACj9e5aFv5vyi5Y+enh2j4lFdngJKK6kl9solb8BMs/g6a2Ker4qFZUWdiEUhX88MBZe8Xuy0g8obnCPMtBxhlI4qXW04YW7KE+jvIMtYo+JtLJ5vjjAtMbPp3rmg2iHvcm73XvmPb1tk2xETbYKqPEUBu6B/s/RWUM2ig7oVrsGMSOGw==
+ b=amfFQuqlJoK8y0AQB2DT6VJhXz210dymOf0TCdgbHdBkGYBSN59S7h8TnFqdRUs5bbYpvHI36z9YRHY3SgfU6U8N1sKMJktwR0tXqh0L6iqBzyJDG/MR9LViOYhz0UumFnjU1b0qIBiIaOWndfbA/+iLS1x/d5VAwUzVfZ4cjsQNNoAX99Y/UuVuVAPy/py+ZRZ5rGf0GuToDFS3BqBf8v+xZDvswp3RY3SYnIpQKaBndN0xwh1zR5tZw+2zV99wHl4fHO5p/O7qaaYu3alI09dfIeDvNc1+Qe52CgPuY7gIIJGWs/9lUTslySeKy4vYDAycbKaY14RVVFuad1zftQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gb6UYdaV5ujDirAD4qUa/TmbZnJn0g/wALO8BU32t04=;
- b=k31OIwZcBdy6JPiF670WieFy9J7KEm1qGDSzdBpLLqgej+584ubxXy+AR3puNOTQeCutgYJ9l8RBE+Mp31iPSOapgbl2LUpLtP9FzZznFuIxtr2HX2xLaSv+ScThizJN/hKfUnMMUYpNTJCpfZMOntBW8z4sIZj3raU7BYwqYLYP1zExR+MQIcUG1kdralLbD6mbNLLdt50bm3bb8m3DgVBocHzCzkSnMdvPwn77DFDDdmYTaNITUDrXWLXyDlJVj2YJY3CBKkin9osfj4oZn0Z8F9QRn8MZ0cW7c0+oLQLSwJkFXbGWm4RGyf67tPOaWLAoJPQYePtcIpOX64Cv3g==
+ bh=zV+QACpXjEvm6RJAXFhj4Occ7Mw1vd18DFNj5epZ9qo=;
+ b=srU3wPQYFOHYhufvc/6eMpNguoeTFNTYle1jviTb/Av9PWKLM5Aqi/fWNJ2XiFp93IULebxdPo7diG2dzrSd7HHnRUaMAwjUgwWCGcZWQdqw1ClzgvwupvYqSPJSch758mYCrsyfsau06co0S9Kmkld1wMmSwBA/lr4IXoKmjMVg1G8snU3BwlotjtfwdSYfNBaIBD6RVfQokT/+gtUdqZV34yHC2kaCfPcoZausKm7lGbp/iDYwzm8fZy34fPGSmJmqDeO//RStvSnWV3HpccAz1r7ange8M9bc7G3wpoWH5XQ+5ZVF/bqFRYcKRI/L8Mx+NAqsa/ugKe4uKFw1WQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gb6UYdaV5ujDirAD4qUa/TmbZnJn0g/wALO8BU32t04=;
- b=dnrEs2otwe3z/DKQhaipEEBP38gm4lxVkgGtnWWCDE/FguqFLrR44tMBZdUZ0M/rU4CfPdyaZT28GjncgBghQgs8zzFG8Np2/Y8LsNH1sqIdHHIGaLlSmcuhBQ/ChhInIgfQPQCZJ4MwoUwUyHIf5VXBFXQbyKZOIW95Qv2D8TfB++BuCMDDRmccKFEomRPeajlPWr9Pe445fTQ5eJRvXsKuKSpPGlI18CXAYshQqAD3rat55XFSnDIMuP0HtAWod2ZEeX6BnDd7Rv7iAM0f9AnGsNo5muTI+FCX9GWg3L773uXCmZjzY9nCGT5Pi3AocKZegWsJNEwoFtj7Jou24A==
+ bh=zV+QACpXjEvm6RJAXFhj4Occ7Mw1vd18DFNj5epZ9qo=;
+ b=DrkLF1WXHXzC7ro39kLxXLNIiGDjR4oFOkDJDzFta9D6FDFS3aHwbbbWW1f/lyMXw41ye7UVdYkaTqU33iKlP5NOqD908t11hmzHuPaL4B/RbkZvSe84SAJaJbbekfI8agDLKoZvBfluC1OCuwFcNSsv4tLR9R/p/O+HAdMdqCk=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by MW4PR12MB6949.namprd12.prod.outlook.com (2603:10b6:303:208::19) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB7771.namprd12.prod.outlook.com (2603:10b6:8:138::6) by
+ IA0PPF6483BC7EA.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bcf) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
- 2026 07:29:11 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%7]) with mapi id 15.21.0428.014; Mon, 21 Sep 2026
- 07:29:10 +0000
-Date: Mon, 21 Sep 2026 15:29:03 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Gaobin Huang <huanggaobin23@semi.ac.cn>
-Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>, linux-kernel@vger.kernel.org, 
-	Anisa Su <anisa.su887@gmail.com>
-Subject: Re: [PATCH v2] cxl/mbox: bound the Get Supported Logs entry count by
- the payload
-Message-ID: <arDU-kTVCa4z8C8l@MWDK4CY14F>
-References: <20260917104603.2658529-1-huanggaobin23@semi.ac.cn>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260917104603.2658529-1-huanggaobin23@semi.ac.cn>
-X-ClientProxiedBy: TPYP295CA0032.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:7::13) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+ 2026 07:33:53 +0000
+Received: from DS0PR12MB7771.namprd12.prod.outlook.com
+ ([fe80::9a3e:791f:33b6:3d8c]) by DS0PR12MB7771.namprd12.prod.outlook.com
+ ([fe80::9a3e:791f:33b6:3d8c%4]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
+ 07:33:53 +0000
+Message-ID: <ca48b82c-75a7-47db-b259-86b44e9bd789@amd.com>
+Date: Mon, 21 Sep 2026 09:33:40 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] nvdimm/pmem: avoid HWPoison flag updates for clean
+ pages
+To: Muchun Song <songmuchun@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Dan Williams <djbw@kernel.org>,
+ David Hildenbrand <david@kernel.org>
+Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Ira Weiny <iweiny@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Qi Zheng <qi.zheng@linux.dev>, muchun.song@linux.dev
+References: <20260903122128.12264-1-songmuchun@bytedance.com>
+ <20260903122128.12264-3-songmuchun@bytedance.com>
+Content-Language: en-US
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <20260903122128.12264-3-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PEPF0000017F.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::4f) To DS0PR12MB7771.namprd12.prod.outlook.com
+ (2603:10b6:8:138::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,253 +75,102 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|MW4PR12MB6949:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d8efea5-590a-4244-610c-08df17b206b4
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7771:EE_|IA0PPF6483BC7EA:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1e08333-452f-4982-d05e-08df17b2af7f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|56012099006|3023799007|11063799006|5023799004|10067099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|376014|7416014|23010399003|366016|1800799024|22082099003|18002099003|56012099006|11063799006|4143699003|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	dkOe979zAvRVYla3n0ygW8fVZPqjwGPo4qe/cWoeYB5UrjpLxZ9pnzb7OzL/ScGiF82NhUcrFNVs/ekAn+uv4nDR3SwaE1BOo7l6DgqKLhkZQGz82HSfrg7wjxHHmQUdfG9Zpgl5hH8n2XJlidXalqC42WsU1XK998bb6dndezbysXhZEIUuoNnW11PAO0FAsPPBUKWQ2EkixoIe5ydSMyUmbHCG2LAdCNa6hDUJhv84+1bT/5EW/Uek3cmk0q4Rplaoh43ky00FCbxdyWZeNxWFDeZU24N43d0vZC3CLTRTmBpT56Bl9Y0IhyZ+fqVw6rDrnFE8SaudP0S6H5dRq4lXK1zFGF7ITws3vxoONruo7nHzOVSzN70nAphMJwJAZGfklzfHV3HOp51lFaE6d/lYfzGjVzIKRwtdrdk/xUVLmLPUB5He5z5bcGFeUOIYzHXK7Z/ZsJdnNtKBdNwn9U3EB5A2QUSiI930uvrH+3n+iZXGxo3ETfcsdO3IKeoypbVktvIA0QZ2Lu5Kk9VTWksykctJ3+vSu6QeNR9YWtnSvYlLouBborUP4DfxfTSwn7CsqP729GYXff0Tq/X+uWTpItEvibLSs4/5pyMC9hshWoJ5+gWB/FDG3THIOSbCDu86+U+kG28Xxr/2sBjtEkKHKdHwkcqrwU4Rkzg/LA8=
+	AF7sQBDlGlRdnxoczmg77YG0CjiW6gnQvZpRWeLGewv0BUVHZsbjcXS8O+A5jKlNTy0BMfLpFKA4mwsyoPDDtip7C8UKvOted2ZBRVWi1YaFsoAMTDxNCjtIs5yETErz6f10hPJIiH8bNNJao3Us8tyGJj4IYs8L++8cyriawm+FX0XY+eOGxoM6xGeCD2LLKdq2eLvRsCPGkuNS9AwF42TXxMiQ/WbhZVP2Lt49zpYOIK1fH45Dm7ggBBqrYzmMTuctd514tSm5Yq3QjAETB0qOC9+nUsaTHfD8vWjyNrdfOQt2JWVMP5gLOT5YEVDpHa/PSi1ZwPO/GqZqYuTxClBIHBhs1Oa1ahRTZxA7m9/VnDBbMtl3i1zh1S8qG74eD/FzOzIPRDUA+44cgQe7sRtUxvfPfrqdq7OZKmdfU5Elj3fc3GbdfPf1VtVv6RUdVB4tNTeBSnv/HSruzA4oVctXlJnSSpvinR1e5z1dFX2ip1FbalCygvmwP+fX1J5OOXIN7/EN+kUFs9dUZnAI8tNc98AazND6PrOTGFNMNkqEXlRjkaKhMZXov5WMpFtVVpOO0MGzXYEsnUbVNd3prK0FePM8ymv8o84g2o95Ny7k/335IncmckV2JVH5mRmGWINgxUsqhl3cuSYCcm+/wDX4g1Nd1jsFa/utZV89mmU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(56012099006)(3023799007)(11063799006)(5023799004)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7771.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(366016)(1800799024)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hncahagcPQGBqt2hCqd6NBndyWbsuJGVWedD7Zab7FHxwyHWU91yRzUBaXki?=
- =?us-ascii?Q?+xYHSH8t+a9Tsm0ldqkHBZEhCHHdWtzfLRTxISnVsk+FRKpE9J7drbBR3Vl0?=
- =?us-ascii?Q?XywNChnOQCK5AbwlWimW2I+5zZxEJeCgCAO4I1JYXM0365Y1xEWKPzzGcom5?=
- =?us-ascii?Q?24ndMrm4qFBysgLdq+/fc9ogAMwPPCh9Delo9FR4NLHty9p9+VTkgXlYmOma?=
- =?us-ascii?Q?iOsvtMUEujCWG5cqf40ypVJM1C7vCNIfFevKGMniuiW9q5TC9iaawx9RhJTf?=
- =?us-ascii?Q?LBiqbe9CmQxK4TMhpSmVQK6FBM8ZqPz6sR88hE8UjSTF4lzUHObtnhm3+BY7?=
- =?us-ascii?Q?YJWPLuXtFDQubRGr6MhG3AmiDWwvUhPMcrCli/uY0kfueXc0xJgvCu2Q4z7i?=
- =?us-ascii?Q?01Ucd921GPPMLHbOZy1zvpSjjbli5YacRh8Toy0cTAkRX5vfdtU751wLnF01?=
- =?us-ascii?Q?Ssze6++sUrss58qcWYRIevgCidG9HDtDA9VlqUzP/eKisBDjRYbInW4Yt6lQ?=
- =?us-ascii?Q?dk0kgQLY555L8VtzbHsflE4xz1ZpLG2rqzgx37l4oAkAObC64PFPip5WT0Dw?=
- =?us-ascii?Q?/vw993TE+sQL41iwp03gHdI9CUIdVDPxV4qKwqvYBgOgEfzzKp23wmfQ6PWo?=
- =?us-ascii?Q?Gl8CR+CHdsfazN+35oazDheoI/9hnT3uUbyiviuvI9tYpJ1zBn5MGaSUDqad?=
- =?us-ascii?Q?AMlwa7JkLXeQ8qqj0MJis8rF2TRVSfLP47xlSLZ4ae8oPIOvSn7wmcEO2O2d?=
- =?us-ascii?Q?bqduARlv6sdemDtjijvQXreN4xb5iOoTOfkJC8TtppBkj7j2LwvMns2L76Cc?=
- =?us-ascii?Q?tZMa0p9B37PBQw5Rkqieg1mkx0I/zYr5fSELmI7ZI3/C84Ex35mhtAKr8FUS?=
- =?us-ascii?Q?Uv4d9ZZwtkQAlmxIx0DgdzNs0fkrnBWHOLBavTLfsOOrDGPer5ZaezIxVlv2?=
- =?us-ascii?Q?1PJ/emgrmu3680xVCCgjtCq/OKvcYFAEJdp+5Ajtz025gUb0uEPL8PGWiGyn?=
- =?us-ascii?Q?sDdfPb2EGA9mcfodBUBhtJOmhuhMQrUU8cbTZbl0hF/HjIQ+nJrlRBypC3Ph?=
- =?us-ascii?Q?5XnT8AemEAfROWm029VtfbV4TjNJb/kduorr79rOgY7OVm5wiBPt1c2dZuPY?=
- =?us-ascii?Q?r0BoPMsLutkWRw6SVw1TF14h1M1RVRKzfF/DZKGL7TVubZybbhwHp6qH7Wsk?=
- =?us-ascii?Q?oTYEjGLgGPxBQ8vuFsJgH4bZD3B9EQ8VLUGmZLBamFIjb7fDNAcTnngXytq9?=
- =?us-ascii?Q?vNVsQOqykjNjPHQH6YxnZwQ0IEwKuaeU7NLPjtVNSOeGUWJTU6Q9evxSF9V6?=
- =?us-ascii?Q?qKQ34IjAt6ddDyLwqMi4hfHERped9Tjbpe4HL0cWFHj8UKaPKZMxFB26SCX8?=
- =?us-ascii?Q?zEYYPzpJmMYmpFm9Wi8GXL/pjoqKr/5uIyc049s0y9jIcvJZaiEL8M/i7ZPn?=
- =?us-ascii?Q?gXMCbFB6ts8cFIB61wfQtzirCcQhkBJqyKHlZORQdB9y97A3pS6UHEMb7wdt?=
- =?us-ascii?Q?eiyW4758Vk2zoJD0HID4RcGLpQ7CHrk3gg8w94pW2HAJBXkms2H95vOkEId6?=
- =?us-ascii?Q?aNqyLWoop9qWt7Fkf/7zBOheH+m7wn/eDK8Z8O33l5Q3HjSsA9HYOGC+Ab9T?=
- =?us-ascii?Q?vgLUjKoankW/r+g7wwmKwbOr/tqybdg7TyX+cJMBDXsmx3QQNb+cXMAGVoK6?=
- =?us-ascii?Q?vRh+xwbdQ4Uxh2JDjw+5PNAW+nO6rzeIWfonWlg0vhp5U30NvdTZjbrISzbj?=
- =?us-ascii?Q?AQv1XeEsWg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d8efea5-590a-4244-610c-08df17b206b4
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+	=?utf-8?B?ZTVaaUJNeDdlN01odGIxWU9tdzBKYk43SWZzUkkzQXVNWFJYOGdBeHh4VXlH?=
+ =?utf-8?B?STdWQ1A2bFI4bzhUby9TbXB5N3cwdUJHU0I0SzRsODRMMzdCTlVVL09xNnJ2?=
+ =?utf-8?B?eFgzWUx5RVFHU3ZLekdmUDZjY3ZMbXYwWkJCZW9JMTdBK1FQYWVnMWR5K2xV?=
+ =?utf-8?B?bkMxSFFlMzAzVVVHZ3Jzb1dQM3pXMTloT1VEdCtEeWp1c01nbkdYOGlYVEd5?=
+ =?utf-8?B?LzRFbytKSkV2OW54M1NjUkVmZ2NidjFKZWFtd29XNUhFaTQ5eGxUQm4xSGhq?=
+ =?utf-8?B?Q3VDOS9YTEZLL2xFUCthS3pidUxuL3M4bW10ZjZvY05XZGkwTDJEeEFnK3Rz?=
+ =?utf-8?B?Ymh1MmZxM1A1TVFtRHRwYkdaYXpnT2xDdjFYV2FRb0tRUkhXeEZFalhlbHdo?=
+ =?utf-8?B?OXF5OStEMzVIK01VVEI4bjF4Z2J2VGk5dWs3cWdDQWg3SmhDT1g2SHpiamxP?=
+ =?utf-8?B?UXlGYVJPOHlsYTZtd2VyVWNlTmx3RE5ubEplUUt1MVJ6a0hOemhYdFozdGhG?=
+ =?utf-8?B?YjRUbUFyeHI3NDVqNC9XbGlrSG9Ud25wYkVPa0FJYjNyendUUFlZb1o4dmFT?=
+ =?utf-8?B?UUZ0V1VKaHNNQnBtWFZzVzNZM09LT0M1Ri9adGZKdXMyQ1EzUVBVN0RYZGNS?=
+ =?utf-8?B?dHFKTkZBMk1XY3hCeGVMTnlja21FdFJmMHYyaFZpVXhncXgrY2NnNnFNdVNL?=
+ =?utf-8?B?TkJtMmJ3QzZ0UngvdERZT2JQaWtobEVnb3VZaHAzQ3o0K2dDZDlUNCswQnZv?=
+ =?utf-8?B?TGl5TTdGRUp6WE9NczVkSVlWZXRMYlVDRWZTRG52RVNJdVJGVXZid3RLaklp?=
+ =?utf-8?B?bE9EWUJTK1N4d2FDdW5Ia1g1T0Fzd3FZQndxZnlUSGpLNVBhbkhXTjZya2xq?=
+ =?utf-8?B?MEhROEJvYjgwdDZwMVhjM29NRnM4Y0t1SzI0R0R0Y2JGd2NDWWFYbUU5VWdY?=
+ =?utf-8?B?WWxHTkRnYzUwWGtKY0YvcVNSVHRIN2QyQzBjTkRvaXZ5UEZvOWRhRHl4WTZr?=
+ =?utf-8?B?UWZLT3VkbERPanMzZUt6SWV0Tjk2c3oyL0ZqRFllaGFzYXBjcUJPZjA0dTd6?=
+ =?utf-8?B?V0szWGFoVGhNQmdwYlpBREMwZTR4QnF4QmtoL0pIdUhYaFJkcUMyVi8rSGM3?=
+ =?utf-8?B?MFRjdWR6V3R5SGgwTXptbFRNM3BwYlh3YmwyYUt5VGMrQlVYbWdJUHllbHpj?=
+ =?utf-8?B?YkU3aUw2S1BXVlJvV2lVbWYydm1wUUYzc2FYdUI5bWVQQWJZYVJNSjNBQTBv?=
+ =?utf-8?B?SkJqZmpaVEVBcWxwaFovVm1FdnZ1eXp5Z3hpV2pEenVhdTIvV1RJdkZoQkVs?=
+ =?utf-8?B?ZXdnY0Q0djIxKzhTY28zM2pWaC9tajNmNUJ2WDBFN01uaHByQ2VRd1IvWS9h?=
+ =?utf-8?B?a0ZqbmxlcmgrRlBYVW9lS0p4WjlEQ2d3bFQwNkwzNFdkMHVkNTJaMGMrWFU4?=
+ =?utf-8?B?TmZiTDZuNlZHc2tiKzVUVmRsaGpubTdLcHJjZjBxRTlJSFBKbG1TUVY3Skhl?=
+ =?utf-8?B?VW5sQkI5UHlVTE10NFErdVlMQ1ptU2xNVVRaOGEwSWlLTEh0OVg0ajkrOEh3?=
+ =?utf-8?B?OXQ2eW0rZmFaS05ZZXMyakNmTWdvd3RldForYXBpUGl6MVhBZERrVCt5NHhu?=
+ =?utf-8?B?d3RJY3JOQno5aFhZaGM4VC93NitzVEtVdkJlQXZCU3Z5a1VXSUZMNmRJSEFM?=
+ =?utf-8?B?c01BdlNpUHNuMUNFdmpTR3kxYUt0R2drb2Q1ZDVlMWM0TmpiUUVsMHQ1Qytp?=
+ =?utf-8?B?WmhKeXF4UjhtRVZrYlU5c2tBaERkcXVjY2RqMCszYVR6OGg0MGVzZ3k5SlFn?=
+ =?utf-8?B?ZzU0d3R2c3Q2YWRHWWRrN1UycEQzWWZlOWFiZEU2N3FQbFBQckRPTXJzbERn?=
+ =?utf-8?B?TDNXQ2dWdnVYRkFLNy9PVk96cjJCOWJONi9pb2pxSW1wTytQa1VBSkE1dDUz?=
+ =?utf-8?B?N0RhanhBNm9BeUpLZThhRUtzMmtHQ1JtNkdHNnVwTXRzcDFKZzMycEJKYVFt?=
+ =?utf-8?B?VTUvNS9pR2s1STF5NElCSG5pK3ZUSm95Vjl3RUF0UnVMUVY1czJ5QUphM2xx?=
+ =?utf-8?B?NGl1MWR3Y3BFYzQvR3V4U3NVYmNONFlZVnJSMEdlWUJWV2dYWnJtQk42amcz?=
+ =?utf-8?B?bzlpRE1kSXRsYnBVb3lvNWpidUtraUhjRzBrMUExeVlkem5BYm5vK0tIbG16?=
+ =?utf-8?B?UHNTcS9vV255dWFCbWYveHdqdHhrYS9Jdi9KWUNKcHJuelA5ZXFWTnROM1hD?=
+ =?utf-8?B?b1hvYVpybWJiT1V6NnB2RnNSRHUrcUlKMzhWUVVJR2MwZjJKTlJWTVpwTkhW?=
+ =?utf-8?B?bm15dWJNWU0wVXdPS2lkT1BxQURvTmdpVDhnanYybkJtYXNGMDIrQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1e08333-452f-4982-d05e-08df17b2af7f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7771.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 07:29:09.9101
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 07:33:52.9748
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: odmPtUnW2eInVCIQwJx/ZcAG0EOPX2hWxTxkOOsvrkBuVKKADZ+fPRPF8m/2RrJYbmBG1q1ZaYZZQlEjpcIOvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6949
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3IsJSYDfu3pZ694+mDP4olYgJiey30YsZI5JN/zPmOquZ/gG2zHpE+PIal1UtmhMWcbqtIQRApsnzFTsJpC3Rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF6483BC7EA
 
-On Thu, Sep 17, 2026 at 06:46:03PM +0800, Gaobin Huang wrote:
-> cxl_enumerate_cmds() iterates gsl->entries entries of gsl->entry[] using
-> the count the device put in the Get Supported Logs response.  The response
-> is only checked with .min_out = 2, so a device may report more entries
-> than it delivered and the driver reads past the end of the buffer.  This
-> is probe time, so it happens on every boot of a machine with such a
-> device, without any host action.
-> 
-> cxl_get_gsl() can already tell the caller how much arrived, because
-> __cxl_pci_mbox_send_cmd() records the copied byte count in
-> mbox_cmd.size_out.  Derive the number of entries that fit from it and stop
-> the loop there.
-> Guard the subtraction too: min_out is smaller than the response header, so
-> a two byte response would otherwise wrap the size_t arithmetic and leave
-> the bound with nothing to do.
-> 
-> Like 1/2, this is hardening against a device that does not honour the
-> protocol rather than a fix for a regression: an honest device never reports
-> more entries than it returned, so no existing hardware is affected.
+
+> pmem_mkpage_present() is called after persistent-memory poison has been
+> cleared. It only needs to clear PG_hwpoison and undo the MCE nospec state
+> for PFNs that are still marked poisoned.
 >
+> For clean PFNs, test_and_clear_pmem_poison() has no semantic effect, but it
+> still performs an atomic clear operation against struct page flags. That is
+> unnecessary today and conflicts with the FS-DAX vmemmap optimization added
+> later in the series, where clean PFNs may be backed by shared read-only
+> metadata.
+>
+> Check PageHWPoison() first so only poisoned PFNs update the page state.
+> Poison recovery keeps the same behavior, while clean PFNs no longer require
+> writable per-PFN metadata.
+>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-Hi Gaobin,
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-I have some comments and issue, maybe they can help.
- 
-> Reproduced on the tree this series is based on with a QEMU Type-3 device
-> that reports 0xffff entries while writing one.  The 2048 byte buffer holds
-> 102 entries, so a claim of 102 is still inside it and 103 is not:
-> 
-> 	BUG: KASAN: slab-out-of-bounds in cxl_enumerate_cmds+0x1e1/0x870
-> 	Read of size 4 at addr ffff8880036de810 by task kworker/u8:4/48
-> 	 which belongs to the cache kmalloc-2k of size 2048
-> 	The buggy address is located 16 bytes to the right of
-> 
-> The Read of size 4 is gsl->entry[i].size.  With the bound in place the
-> same device logs
-> 
-> 	GSL: device claimed 65535 entries but the payload holds 1
-> 
-> and enumeration continues with the entries that are present.
-> 
-> This is the cross-check get_supported_features() already performs in
-> drivers/cxl/core/features.c, where a device supplied count is compared
-> against the retrieved length before the entries are used.
-> 
-> Signed-off-by: Gaobin Huang <huanggaobin23@semi.ac.cn>
 > ---
-> v1 -> v2.
-> 
-> 1/2 of the v1 series (the event record count and cxl_clear_event_record) is
-> dropped.  Anisa Su posted a fix for the same bug in the same function on
-> 2026-08-31:
-> 
->   [PATCH v2 2/4] cxl/events: Validate the record count reported by the device
->   https://lore.kernel.org/linux-cxl/20260901002912.958-3-anisa.su@samsung.com/
-> 
-> It bounds the count with the same expression (struct_size() against
-> mbox_cmd.size_out) and carries the same Fixes: commit (6ebe28f9ec72), so this
-> is a duplicate, and hers is the better of the two: it fails the command rather
-> than clamping, which also bounds the per-log loop.  Clamping leaves nr_rec
-> non-zero, so `} while (nr_rec);` keeps issuing Get and Clear Event Records to a
-> device that never clears them -- a hang, which is worse than the read it fixes.
-> No reason to post both.
-> 
-> The patch kept here (formerly 2/2) is not in her series: it is the Get
-> Supported Logs entry count during command enumeration, a different function and
-> a different response.
-> 
-> Changes from v1 to this patch, from Jonathan Cameron's review:
-> - drop the Fixes: tag; this is hardening against a device that does not honour
->   the protocol, not a fix for a regression, and the commit message says so now
->   rather than leaving it to be inferred.
-> - use struct_offset(gsl, entry) and name it gsl_hdr_size so it is not read as a
->   pointer to the header.
-> - fail the command when the response is shorter than the header instead of
->   deriving a zero bound from the subtraction.  That also removes the ternary
->   and the underflow it was guarding against, so the comment about wrapping went
->   with it.  -EIO because that is what cxl_internal_send_cmd() returns for a
->   payload size mismatch.
-> - add the missing blank line before return ret in cxl_get_gsl().
-> 
-> Anisa Su is on the Cc list, as she asked on the v1 thread.
-> 
->  drivers/cxl/core/mbox.c | 39 +++++++++++++++++++++++++++++++++++----
->  1 file changed, 35 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 55828a836..e7daa23de 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -794,7 +794,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->  	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
->  }
->  
-> -static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
-> +static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds,
-> +						       size_t *len)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_get_supported_logs *ret;
-> @@ -818,6 +819,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *
->  		return ERR_PTR(rc);
->  	}
->  
-> +	*len = mbox_cmd.size_out;	/* bytes actually received */
+>   drivers/nvdimm/pmem.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-
-I would suggest to keep the signature and do the check here instead.
-cxl_get_gsl() issues the command, owns the buffer and already has the kvfree()/
-ERR_PTR error path. Then the caller doesn't need to know the header size or
-the entry size, and gsl->entries can be trusted by whoever uses the struct.
-
-.min_out = 2 is the only min_out in the tree that's not a full header.
-Raising it to struct_size(ret, etnry, 0) lets cxl_internal_send_cmd() reject
-the short response with -EIO, so the "too short for the header" part can
-go away.
-
-
->  	return ret;
->  }
-> @@ -849,18 +851,47 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->  	struct cxl_mbox_get_supported_logs *gsl;
->  	struct device *dev = mds->cxlds.dev;
->  	struct cxl_mem_command *cmd;
-> +	size_t gsl_len, gsl_hdr_size, max_entries;
->  	int i, rc;
->  
-> -	gsl = cxl_get_gsl(mds);
-> +	gsl = cxl_get_gsl(mds, &gsl_len);
->  	if (IS_ERR(gsl))
->  		return PTR_ERR(gsl);
->  
-> +	/*
-> +	 * The device chooses the reported payload length and min_out only
-> +	 * requires the entry count field on its own (2 bytes), so a response
-> +	 * shorter than the header is reachable.  There is nothing to enumerate
-> +	 * in that case: fail rather than derive a bound from an underflowed
-> +	 * subtraction.
-> +	 */
-> +	gsl_hdr_size = struct_offset(gsl, entry);
-> +	if (gsl_len < gsl_hdr_size) {
-> +		dev_err(dev,
-> +		"GSL: response of %zu bytes is too short for the header\n",
-> +		gsl_len);
-> +		return -EIO;
-> +	}
-> +
-
-The only kvfree() is at "out" section, directly return here would leak
-gsl.
-
-> +	max_entries = (gsl_len - gsl_hdr_size) / sizeof(gsl->entry[0]);
-> +
->  	rc = -ENOENT;
->  	for (i = 0; i < le16_to_cpu(gsl->entries); i++) {
-> -		u32 size = le32_to_cpu(gsl->entry[i].size);
-> -		uuid_t uuid = gsl->entry[i].uuid;
-> +		u32 size;
-> +		uuid_t uuid;
->  		u8 *log;
->  
-> +		if (i >= max_entries) {
-> +			dev_warn_ratelimited(dev,
-> +					     "GSL: device claimed %u entries but the payload holds %zu\n",
-> +					     le16_to_cpu(gsl->entries),
-> +					     max_entries);
-> +			break;
-> +		}
-> +
-
-Agree with Alison and Jonathan, don't clamp here.
-CXL r4.0 Section 8.2.10.5.1 Get Supported Logs, Table 8-249 Get Supported Logs
-Output Payload, defines "Number of Supported Logs Entries" as "the number of
-Supported Log Entries returned in the output payload".
-It's not total, so a counter larger than what arrived is a malformed response,
-not a partial list.
-
-About -EIO v.s. -ENXIO, I would go with -EIO.
-cxl_internal_send_cmd() documents -EIO as "Unexpacted output size",
--ENXIO as "device reported an error", and this is a size mismatch so I think
-the former suits better.
-
-Best regards,
-Richard Cheng.
-
-> +		size = le32_to_cpu(gsl->entry[i].size);
-> +		uuid = gsl->entry[i].uuid;
-> +
->  		dev_dbg(dev, "Found LOG type %pU of size %d", &uuid, size);
->  
->  		if (!uuid_equal(&uuid, &log_uuid[CEL_UUID]))
-> 
-> base-commit: 999811aca000b0d3d1c838c60dc9db7c72eb0c73
-> -- 
-> 2.34.1
-> 
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 30a51c365ce8..b14f75daeda7 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -80,7 +80,7 @@ static void pmem_mkpage_present(struct pmem_device *pmem, phys_addr_t offset,
+>   		 * here since we're in the driver I/O path and
+>   		 * outstanding I/O requests pin the dev_pagemap.
+>   		 */
+> -		if (test_and_clear_pmem_poison(page))
+> +		if (PageHWPoison(page) && test_and_clear_pmem_poison(page))
+>   			clear_mce_nospec(pfn);
+>   	}
+>   }
