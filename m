@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FAB2C3757;
-	Mon, 21 Sep 2026 20:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2DF3AEF46;
+	Mon, 21 Sep 2026 20:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790020825; cv=none; b=CU1QpfmySGhbfI2MmE1v/X3TnmdfTCgwYXOEAETGS1oKVeDFwuFJBLY5RuQ3HeAGLNUfGyp2ryL78+NLnml3KMGrvVx0DZLTIU4KYRZipl2AQxJqX2tr1vHIueSfjBeyYNPgWmxIdrDyvTpS7cwn3Rm3jXSnyYMgWV/ClfM5K/I=
+	t=1790020835; cv=none; b=C0vuJsBB3eG9xtTuxTFFLWYVS5ir+cW51ExLQsTTS0BzuGMGfj6D5A6QfjEcYQIMMOMjYFvBhFBa1SfHMYHigfpEa3i4cgf4SlqMs9/Rk2EL2i825wyNOQCZW2mimaxAzH18I/sgluB3hsffY680AivT4H0yvCs1hqd16K7NfkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790020825; c=relaxed/simple;
-	bh=Jle8I94CDmdb6pvC+qkgL9TgIKRqIkcLTUltvuexjhY=;
+	s=arc-20240116; t=1790020835; c=relaxed/simple;
+	bh=MAPvsLwqeTEpF0LPG4Zd4p1dImR5G5txQSW8jy2p0x0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j+uK4ieLedmfzoWls/TKln68Dgob3x0eXzwAYlOI3MBkgE3UgCP5qBftXJMG8Moo2GJfEPnE8oGQhj2DN0w4ugU1rVhneIt9e0e0LPoptKW9WH+A3Q97DUDe4kydZJCEcXrJIFn7tcou2yljzK5cNu1NXaXh37mnvnhcx4p2Drs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcANY6MP; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=HPuHlRS3KFv/DP5QEodZ1PrepRtA8QIVXme/6zSyRFLYukEEMMR76mzw1/DSRGp1YZefTkgUFkzNUAZ0zD30GYz8yknXX1T7JJW7DdAwA6cnbx+t3SJMeN0xXtyM01kr4RnUooXeBvJOtng+UtddAdPOyzu4FBtfLYIEP6GC/nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiceSYwR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcANY6MP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD45C1F000FF;
-	Mon, 21 Sep 2026 20:00:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiceSYwR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DC41F00898;
+	Mon, 21 Sep 2026 20:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790020823;
-	bh=BWjdXfohek7UjopKrNfrvbb5fe9CUNtaKf7mkTIpAPM=;
+	s=k20260515; t=1790020832;
+	bh=yBc8LKQV5IFSgEgJspkfgYC6oU0VoqbkBUUOKxrLma4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=RcANY6MPoJ2cYKtAT9WPPzebl6rnP5o06GtQRzAxnS2cy1JZ5rgXmtN1t5ZGKsbbH
-	 25x3qs1W6FlHMH+KF9gdSLgkXJJDREvTRnQOsdNal5ankk+VYml4E3fGwimsdCp+vM
-	 NphSgLOkAm8GFPTWivHmIIzFeB7/OnEU35Yc3BVa4QQQv05VDFFeVgjETOBb2q9efS
-	 UfR3jAZA1LhbPlCRhFxkd+wgwhcEzqtp1K1JVxIW5XjepqiRLEQ9j3mzScmCq15cuF
-	 txdI0eKbUsdLOcCl/QC9e9PRxydnF8kcOTUTluQs+R8x/ciTLTZ7+1Y/in+RED0gUP
-	 xjPfr/4voZJnA==
+	b=CiceSYwR28kIPNtzcNquf4Sh/wpB3CCKPRYksMJN0pwKLDxPCWxVukiYM4DxQ1uTQ
+	 SEyzoPrbJ5ELSiIrtANuNkJV7S8MtyUoCOp7LEpkk0/CeCf0gAfnzuyNRun28aUl2j
+	 S6CCU8Quz/caod0JWfTGcdm3JUBY16Pb6xp4qcZU7zUdDsZa9t4mvzMswZ9fekHhR6
+	 /3NCDf1sJ1RTAEEAmjXdgnYnkuYzs1MMFkx2WTFgquIsiNO9qpO8nQKx/JvJkFbVyv
+	 qGiLYaZ0JvQTPplNs8Ap8BLhHKMLPDtU4sieD9ykGvDQxG3G/uyKwav/Z9fRcRZitD
+	 PnfcGMkZvExJA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Mon, 21 Sep 2026 21:58:59 +0200
-Subject: [PATCH v2 07/13] mm/sparse: remove pfn_in_present_section()
+Date: Mon, 21 Sep 2026 21:59:00 +0200
+Subject: [PATCH v2 08/13] mm/sparse: move __highest_used_section_nr
+ handling
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260921-b4-sparsemem_cleanups-v2-7-54d81d65e125@kernel.org>
+Message-Id: <20260921-b4-sparsemem_cleanups-v2-8-54d81d65e125@kernel.org>
 References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
 In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -60,53 +61,98 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
  linux-fsdevel@vger.kernel.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1195; i=david@kernel.org;
- h=from:subject:message-id; bh=Jle8I94CDmdb6pvC+qkgL9TgIKRqIkcLTUltvuexjhY=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLI29rR5GKiXvujIEuRX+Shp77folP9Hhcre57Mi2+uuh
- UzlW3W7o5SFQYyDQVZMkSUo+L7By5fraqvd+Jhh5rAygQxh4OIUgIl8DWNkmH3816TKqS9/GBwT
- FvpV72i/X7Pp4S2vhPiCTQ81t7TUMDIytObKHBOrfc2cGm/kGp2tX7D0qsnpc8I8L2xSHCW7wzZ
- zAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2996; i=david@kernel.org;
+ h=from:subject:message-id; bh=MAPvsLwqeTEpF0LPG4Zd4p1dImR5G5txQSW8jy2p0x0=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLI29rSFGC3dkXbvkGKa5dnAUxud6j/kdO5f0lJlNf33V
+ 6bTWfXyHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAExkxxtGhhXfSo9k71N907zI
+ a1FqCS+DwBsOMZGuHsngK3bK9fNO+jD8d095IxFZ8c9UN1HWXURgtuC0Cw/57nJPsVL9b9j8awk
+ XNwA=
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
-Unused, let's remove it.
+In preparation for removing __section_mark_present(), let's move
+__highest_used_section_nr handling into its callers. Verify in
+sparse_init_one_section() that it was properly updated.
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+In sparse_sections_init() we can just set it to the last processed
+section_nr.
+
+No functional change intended.
+
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- include/linux/mmzone.h | 10 ----------
- 1 file changed, 10 deletions(-)
+ mm/sparse-vmemmap.c | 1 +
+ mm/sparse.c         | 5 +++--
+ mm/sparse.h         | 4 +---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 0c2fea48c261b..a3937577fbfb2 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -2326,13 +2326,6 @@ static inline unsigned long next_valid_pfn(unsigned long pfn, unsigned long end_
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 96506f594924c..e89efb67e8e6d 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -865,6 +865,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+ 		page_init_poison(memmap, sizeof(struct page) * nr_pages);
  
- #endif
+ 	__section_mark_present(ms, section_nr);
++	__highest_used_section_nr = max(section_nr, __highest_used_section_nr);
  
--static inline int pfn_in_present_section(unsigned long pfn)
--{
--	if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
--		return 0;
--	return present_section(__pfn_to_section(pfn));
--}
--
- static inline unsigned long next_present_section_nr(unsigned long section_nr)
+ 	/* Align memmap to section boundary in the subsection case */
+ 	if (section_nr_to_pfn(section_nr) != start_pfn)
+diff --git a/mm/sparse.c b/mm/sparse.c
+index bb89017254f4d..a0f50ca5acf5a 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -177,7 +177,7 @@ static inline unsigned long first_present_section_nr(void)
+ 
+ void __init sparse_sections_init(void)
  {
- 	while (++section_nr <= __highest_used_section_nr) {
-@@ -2362,9 +2355,6 @@ static inline unsigned long next_present_section_nr(unsigned long section_nr)
- #else
- #define pfn_to_nid(pfn)		(0)
- #endif
--
--#else
--#define pfn_in_present_section pfn_valid
- #endif /* CONFIG_SPARSEMEM */
+-	unsigned long pfn, start_pfn, end_pfn;
++	unsigned long pfn, start_pfn, end_pfn, section_nr;
+ 	int i, nid;
  
- /*
+ 	sparse_extreme_init();
+@@ -187,9 +187,9 @@ void __init sparse_sections_init(void)
+ 		mminit_validate_memmodel_limits(&start_pfn, &end_pfn);
+ 
+ 		for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+-			unsigned long section_nr = pfn_to_section_nr(pfn);
+ 			struct mem_section *ms;
+ 
++			section_nr = pfn_to_section_nr(pfn);
+ 			sparse_index_init(section_nr, nid);
+ 			ms = __nr_to_section(section_nr);
+ 			if (ms->section_mem_map)
+@@ -201,6 +201,7 @@ void __init sparse_sections_init(void)
+ 			__section_mark_present(ms, section_nr);
+ 		}
+ 	}
++	__highest_used_section_nr = section_nr;
+ }
+ #ifndef CONFIG_SPARSEMEM_VMEMMAP
+ struct page __init *__populate_section_memmap(unsigned long pfn,
+diff --git a/mm/sparse.h b/mm/sparse.h
+index 242b7bab0013c..c396d5c05cfc8 100644
+--- a/mm/sparse.h
++++ b/mm/sparse.h
+@@ -26,6 +26,7 @@ static inline void sparse_init_one_section(struct mem_section *ms,
+ 	unsigned long coded_mem_map;
+ 
+ 	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
++	VM_WARN_ON_ONCE(section_nr > __highest_used_section_nr);
+ 
+ 	/*
+ 	 * We encode the start PFN of the section into the mem_map such that
+@@ -44,9 +45,6 @@ static inline void sparse_init_one_section(struct mem_section *ms,
+ static inline void __section_mark_present(struct mem_section *ms,
+ 		unsigned long section_nr)
+ {
+-	if (section_nr > __highest_used_section_nr)
+-		__highest_used_section_nr = section_nr;
+-
+ 	ms->section_mem_map |= SECTION_MARKED_PRESENT;
+ }
+ 
 
 -- 
 2.43.0
