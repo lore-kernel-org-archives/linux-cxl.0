@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2024A43E9E0;
-	Mon, 21 Sep 2026 20:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B6340B360;
+	Mon, 21 Sep 2026 20:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790020877; cv=none; b=jpUfl3/qarT72FKy92FO6ed5SATW1s51R80cdJYwwpTeE2kKquPAXeW6ssK4SMXWYAIyQ9/6BkUrV8nLoR9xeONuzfC38P1jDVMKzztTJbBt5z8KIxx5UPYV72PDSgtnVDCsCbUMadq04+W/5hU8wIPo89eealTc3QjpPMDCSLg=
+	t=1790020885; cv=none; b=FDv+57asQ/DwZjyKGYbky8MuqeHYUoliJWoA64gexca/9mxvlOg14TSz7Kbn6gjBd9++jGFfYFH0XtOLFJxtFZ8gvTwxlNPkVSKP4S0gRnq12Rts9JDJekXd/NaiXu3m7D8catcaGQrNdsUqckOFCQeI1UkVsBIcxYvbOC4IG+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790020877; c=relaxed/simple;
-	bh=kW71CGw1PYjxPgKG6zvCBhURTueD7ZfqBQYFE8KvMsc=;
+	s=arc-20240116; t=1790020885; c=relaxed/simple;
+	bh=wS9y+w2lDfEszO4z/i/MtEKk8SGbU5ElVBcX2HbtZBQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YIEPdUUl53jLYFm8MHlKCw74Dy0pGySo67pqG33rlYgCBZ5U5BWN1ZZ+5ub5K/U/GbX08o9NAdgn8J++Za+qXQTFWIKTZ+XwAXY0fehHD8ouAp4q5Rp+YGCjPAWzP4zNuIGSGf7uqshTwByspScD9C2wVsspTbNJWkyn/ImTv5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPA7bQ0Y; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=k3Mcc8qavhFQtY2UM9Ay+iPoGWZl+GLQ2Sr7AppCpw7/MPXnKRNOxR3U2NYH2OHDgxykd+uRJZYydStQvOu7zYFZ6wBSJmuEQIt14WsJk1nvw1RoxVvM9cDaQkzXkRun2jNgLpYBl9+5HHQrW5KdBp5S1KHM+YOSwssRiMlDSMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElKC23rv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPA7bQ0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142131F000FF;
-	Mon, 21 Sep 2026 20:01:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElKC23rv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB2A1F00893;
+	Mon, 21 Sep 2026 20:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790020873;
-	bh=AX6nGJVBYsmzhxob//RZpUMd+OEByTGb1my+643nlcM=;
+	s=k20260515; t=1790020884;
+	bh=Zg9d2/OMUG70qYu7TGJ+44plepcpjkecBMRJ5CVA3ok=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=lPA7bQ0Y8NxC0wuxHCH8bXKmGCDNvYNwrEnqOF9CaZeXU6vSkj2f3dtIY254mbADY
-	 3wrcuT/NmJsCr5vJIcN2+Rz8l5EE0EOLaufW17kc9fxVSj7Frao5VgbBSKfe2t0+EQ
-	 tQC6mXZmOFpNtg3z5krpUo/v1PYq89Cv8XZNO49C29i62EzNT3KJcJZFd2KG+E1ooX
-	 TGojP2sXyqOw+85W+UJEEzDVsBAqzEmh33DjIPdbbGUJbarzWsQ5a0VtjQk2N1emnG
-	 OalGVrUHAe1GmmuW/Z0uLwW3dHLhlQWFGXu15hYmBp/c5bFFtYDlku6c1HEPC81FYc
-	 ZoHoVwdO7VSUQ==
+	b=ElKC23rvyO1EuK7ppMEoqRlqUUtGVy9Pz99ZAK05LZl3sJAPS75pzvrKqOsPpMgSb
+	 FTEy/U2s99jvXjlClKts/61uXJrC7PNs5Epfa9Ml3BSUNVIX4qPifcyM5sI4VnmLVU
+	 cm+xh/89Ej/nrPYsQkBbXBOkGWgAAr/hPCA62KX48Znd7jlaSKZKGiH1v2oKkfeYf2
+	 c+/9CXxxMqPaexpw+ptD0gfSJkdiuNr0xZWKWLEYmjtFZkOJocwym4L156YICwZmVM
+	 X9C4Hcqq/vLNsn0djO4/LCjOEZ/JH9R+fjbZRDcyxD00LGgKcMemXOFR+XDlM14Y6h
+	 oV0lnvOj+dCJQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Mon, 21 Sep 2026 21:59:04 +0200
-Subject: [PATCH v2 12/13] fs/proc/page: clarify comment in
- get_max_dump_pfn()
+Date: Mon, 21 Sep 2026 21:59:05 +0200
+Subject: [PATCH v2 13/13] mm/memory_hotplug: drop
+ CONFIG_HAVE_ARCH_PFN_VALID handling from pfn_to_online_page()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260921-b4-sparsemem_cleanups-v2-12-54d81d65e125@kernel.org>
+Message-Id: <20260921-b4-sparsemem_cleanups-v2-13-54d81d65e125@kernel.org>
 References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
 In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -61,46 +61,53 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
  linux-fsdevel@vger.kernel.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1209; i=david@kernel.org;
- h=from:subject:message-id; bh=kW71CGw1PYjxPgKG6zvCBhURTueD7ZfqBQYFE8KvMsc=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLI29rSJql0Rmifnxm7RJB25RG++8bZ1RycJLL/6xmvXc
- u8ejZNHOkpZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZjI1UhGhnkph/08EjdN0PbP
- n3Poxc1Ndb6bredc2LR4i2hVj+mMJycZGfb5KoXvrJq+fdGnK+LJ6YcM9y/Q+PPTvDG5Zm+v9EX
- H1fwA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1240; i=david@kernel.org;
+ h=from:subject:message-id; bh=wS9y+w2lDfEszO4z/i/MtEKk8SGbU5ElVBcX2HbtZBQ=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLI29rTv7z8j2O2UNOnPlhj7adzO/DcSrXuzc8wyL7/j2
+ fR5wuXDHaUsDGIcDLJiiixBwfcNXr5cV1vtxscMM4eVCWQIAxenAExkdjIjw5OOOasDtXXZFWsu
+ mq11P5rI8LLx5J5zS/rTo17pzi7hnMLI8LBoT8j79/clv2qv5/nSPOHy5oshduf3T1LfdzFzaeN
+ 8AU4A
 X-Developer-Key: i=david@kernel.org; a=openpgp;
  fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
-pfn_to_online_page() will only succeed on some PFNs within the same
-section, not necessarily all. Let's make that clearer.
+Drop CONFIG_HAVE_ARCH_PFN_VALID handling, as CONFIG_HAVE_ARCH_PFN_VALID
+is never used with CONFIG_MEMORY_HOTPLUG, as the latter depends on
+CONFIG_SPARSEMEM_VMEMMAP. Make sure it stays that way.
 
-While at it, rephrase it to "Allow inspection of".
-
-Acked-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- fs/proc/page.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ mm/memory_hotplug.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index f90e1030825e9..6aa99e42ec222 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -31,10 +31,9 @@ static inline unsigned long get_max_dump_pfn(void)
- {
- #ifdef CONFIG_SPARSEMEM
- 	/*
--	 * The memmap of early sections is completely populated and marked
--	 * online even if max_pfn does not fall on a section boundary -
--	 * pfn_to_online_page() will succeed on all pages. Allow inspecting
--	 * these memmaps.
-+	 * If max_pfn does not fall on a section boundary, pfn_to_online_page()
-+	 * can succeed on PFNs beyond max_pfn within the same section. Allow
-+	 * inspection of these memmaps.
- 	 */
- 	return round_up(max_pfn, PAGES_PER_SECTION);
- #else
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index d7a59167bec43..796af1028ee23 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -345,6 +345,8 @@ struct page *pfn_to_online_page(unsigned long pfn)
+ 	struct dev_pagemap *pgmap;
+ 	struct mem_section *ms;
+ 
++	BUILD_BUG_ON(IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID));
++
+ 	if (nr >= NR_MEM_SECTIONS)
+ 		return NULL;
+ 
+@@ -352,13 +354,6 @@ struct page *pfn_to_online_page(unsigned long pfn)
+ 	if (!online_section(ms))
+ 		return NULL;
+ 
+-	/*
+-	 * Save some code text when online_section() +
+-	 * pfn_section_valid() are sufficient.
+-	 */
+-	if (IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID) && !pfn_valid(pfn))
+-		return NULL;
+-
+ 	if (!pfn_section_valid(ms, pfn))
+ 		return NULL;
+ 
 
 -- 
 2.43.0
