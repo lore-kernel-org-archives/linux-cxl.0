@@ -1,118 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.4])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012026.outbound.protection.outlook.com [52.101.48.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61518434E42
-	for <linux-cxl@vger.kernel.org>; Mon, 21 Sep 2026 17:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790012316; cv=none; b=o8vzVuBK5md/tqqMrixDRihHKjQ6D4X22iNi+M3MTo32he08SPzvY4IFqsQZiNtDFKFfr1yJDF10xuxuoUgm4lPdNwu3yIku0Nlr1GWoc1dQO3Jv5L73AH+ZUYcLLX1n8zwZHD4B0EsEuj/HN/6mFC2ISoxAwBBg5Tw8RWciRCQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790012316; c=relaxed/simple;
-	bh=Xlv/AxjxOFv31D8DVUmFYg3/LbMCYuvnXERLTRUKfH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i/TXVNujE1Kk0tuBsPmOyezbbEptxPowvoHthOI+5FKnu1gURVj1nfTUGbkX7ocMcSit6kvpM74A37W6rkKGKPKFbxVW/UVEsZog2+bLwV2cFZcAT7INhnuxhuHJRLeo+diRdbJKMeP/I9MgB0qQSN4mjOlod6dAjiUuiJnVzQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PmtvkTzA; arc=none smtp.client-ip=192.198.163.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F894DA540;
+	Mon, 21 Sep 2026 17:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790013359; cv=fail; b=lXwTJL/6nnlCPopm4Y5jZah6eA4AvEAOPYSO2j0lxie4WCitxUJRzg6b5MoKQyTgOGaZzrhg+Po/Ohpsmjj5/fD5wYwupV2uKol2EO3jqZVZWEfCmn5/8bBNTcekGJFsyMSR9Ja5TyMW25pw+OVOgc2guoO3d6vbTf8Okh18HaA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790013359; c=relaxed/simple;
+	bh=fGErNgzHd5oPsoPw0XmyIj+xqIKgqHMlCTPVJz68j1k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mn1gd35GvXopU+fgOgEzzjspyWBR4tHCuK/KPjIKXFdnom6ZV0eFHYHMLAuEwO5fQmDhZDI+BtopS18Hpilr1fWipWar4CWxUX15wcCsLR7YcnkDCD6WwVAJyWT56Me6MUvnNa0dyGUXqs4CUT8BCbKNBtPrdP3c6SATumNV0Xw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N/vltTpo; arc=fail smtp.client-ip=52.101.48.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PmtvkTzA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790012315; x=1821548315;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Xlv/AxjxOFv31D8DVUmFYg3/LbMCYuvnXERLTRUKfH8=;
-  b=PmtvkTzAChcwqAb98GwHSHfK6FoTuFQWKq3mN8ikZ17rq0f/cixq6IhN
-   9qgtqm8lGp/O9Ucrgr6K1Oo4dBnMmPWfgr9xUgCfNrnUZkHwLUhnZ+UK/
-   /FoiA6Kcg4qqP+G88H2veanNipPsyOZt08MIwcM/8dbZb/rROr+GGxIZ7
-   YWAlqHzbLgjZK4xCcolsUvuhs2b7bHf7YV/n58bJM2zZGgn84g+GVVeRL
-   pIISa4RnhvQ6ZYFwqoHb90iLinxdouv4nhMTE1B1qxGFJzmqdFNGQdwEn
-   09azBksY3+oOTXwxmOwBhoj3QveZRwETpWXQMunh/A0OG9kqSie2/J/VA
-   Q==;
-X-CSE-ConnectionGUID: L4DAW+ncSCOpVC5p2yOrDw==
-X-CSE-MsgGUID: NDilJVjjSP+FTyjjsQ4qqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="1060619"
-X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
-   d="scan'208";a="1060619"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa114.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 10:38:34 -0700
-X-CSE-ConnectionGUID: wACOXqfnRyK2og0YwTa+bg==
-X-CSE-MsgGUID: e7ipcMgHQpanEVNpwfuiag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
-   d="scan'208";a="300708529"
-Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.234]) ([10.125.109.234])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 10:38:34 -0700
-Message-ID: <b19de9d5-ed37-4b55-8aca-0393a8fa6efa@intel.com>
-Date: Mon, 21 Sep 2026 10:38:32 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N/vltTpo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oUIOWjEVB5/wQHmAfzBAcFtmO3OMtfr59iRoXNYdcNyMA6CNRzGjSO2AeVgJCVk4s4rSBoBiYKkaX5QsCH/QSP6xkcvLycaiK6/aaxp3c37VdLc70olFv/z7wUJtMoilpPdWGGMjvp2JwF8MSSuFyINuuzBe+BKJGZZ25ReUfyyndefjh7V3/aCF8FFoH9EQGcUtBPsnnm9rmyPtgfGpkEQqNTW/9Gx4xgIChcTNztsIQvnH0gbhC8+QVNNto/dRvN5D+arR8fjqHXXj/3R5+LTOpBRchxtOfTyHtP+IljTg/GOlINxfTv8B4WslmVOCIvgUj+CyrNEIL5XOAkCQrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tlnfl2uCkEoL+4boiuau7MAt8w47zdRmmK2LxZTvLLY=;
+ b=CuxD/Dp5Oh3GsipfF7w9psS6JTTpSxQW7d4RGSoboDiMoAkTjvXTE1CL/+ia1IsrJcUbtLXJ5a0AOsMTynczIuBXNyZGyZ1B2cDS3icx18bjk/a/cZyjzbGciXXuzox6UGkD3NDc3KSDrNkJWBrp0r7o1XqMwAvQIsULD4TIw4Jnfb000O+EERIMwEYc5yZ6tCuGZG69Wq4QUveU8A3S0rcBsPJ5mQ9KzQr0DcYrthEBly24LF1VWLPleCFN+/UKq5CDODVbsPu6PoCACwpEF5he3EL5nwlqmrwkOmlIIQRBdSqB+Mon6xQXz+r8cmLtBarzbg/MWOybkcC47RQbDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tlnfl2uCkEoL+4boiuau7MAt8w47zdRmmK2LxZTvLLY=;
+ b=N/vltTpon1bGUwxTLYMQpfOuvaJdHoCnoMl7xT/yezyBkx2IhB2MVH+pCmFa1+6VIN6PpwRp6qqY2QP9Ttvg2Rz7WV3jeL/k6Oe4CuO5YUB+oWmIXVV4pHFx58gkCn5peRW1YQz1xeGboyOuxjiwbPA6l+/qeELImeCf2n0O3QU=
+Received: from PH7P223CA0026.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::31)
+ by SN7PR12MB8602.namprd12.prod.outlook.com (2603:10b6:806:26d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
+ 2026 17:55:53 +0000
+Received: from SJ1PEPF000023CE.namprd02.prod.outlook.com
+ (2603:10b6:510:338:cafe::98) by PH7P223CA0026.outlook.office365.com
+ (2603:10b6:510:338::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.11 via Frontend Transport; Mon,
+ 21 Sep 2026 17:55:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF000023CE.mail.protection.outlook.com (10.167.244.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.451.8 via Frontend Transport; Mon, 21 Sep 2026 17:55:52 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Mon, 21 Sep
+ 2026 12:55:51 -0500
+Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49 via Frontend Transport; Mon, 21 Sep 2026 12:55:51 -0500
+From: <alucerop@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <ecree.xilinx@gmail.com>, <icheng@nvidia.com>,
+	<rafael@kernel.org>, Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v1 1/4] driver core: Rely on supplier driver binding at link creation
+Date: Mon, 21 Sep 2026 20:12:36 +0100
+Message-ID: <20260921191239.4249-2-alucerop@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260921191239.4249-1-alucerop@amd.com>
+References: <20260921191239.4249-1-alucerop@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/events: Fix event type check for CME counter
- expiration
-To: Alison Schofield <alison.schofield@intel.com>,
- Guixin Liu <kanie@linux.alibaba.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org
-References: <20260921120932.1769566-1-kanie@linux.alibaba.com>
- <arFpVVElCIlCqvVb@aschofie-mobl2.lan>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <arFpVVElCIlCqvVb@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CE:EE_|SN7PR12MB8602:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9eb7ade-d6d7-4545-6a47-08df180993f5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|36860700016|82310400026|1800799024|10067099003|22082099003|18002099003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	HfN2RIeYh73M/jEv+Ei8pdVUzI8mFyaRe/eNEuzV1woXlDndPEzNnjuWFTziBQxKIpjGjHtWR4fXH2q84c5hLbxv8wJ39HIhDdcMNa9mBPUv+oEtFKHyG1NuHZd7kuA63CGuJyVMANimFBH9MK2Zlg0K65hAjiYeu8Nst3UafRfEZzGGfc4p+pLRsph9Wc1Lh9gJDminnDlMj+TfSqrAxhvnBRrqS30v5kj1S1QR1CYrgT/20fL8dzdZ2GoOUAhPWj2AMzo6/Uo9MFP3MyIlAFbfnwm3MNHP9O0Zn+O3G3GU1Jy1O6r03xnBlCKN6dwBJXDSViwzBhKMnaAt5NhjnqMbI5Bl86lpTQEamRnbwpEY3a76rIk2cVwJd59RUSGe6Iopb+Ona/njKu7HUio1u9AIbUXd1fb5+euVTUwSKj0PP5+2XjZeclRGruDOD6UqFJ7tkXI1Rz0WBAh6y8fJ8Uvv/goIfiPhwjMiN6Z+gBMTj39Ax7FMEcy6P6cpuOY9/pAOw9fjEVYZV26KOc5+vEKxCXY3Gvdjvo8XMinXwg5r1Ve8ZbmPHOhwNSKr7KTxdkpcs6VvWv+Wezvd69vCb9OXky0aiGizwrRcxW6XUwORbDs7rU6HEbioyCjNqlJQ0kn9SFQZQ7LYTCoLTCRH7s2qwetoUy+P01bgn875cKWQIk+/PGwxi11HrjEIN5f9fNWHlDuunids/RfMSygQmw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(36860700016)(82310400026)(1800799024)(10067099003)(22082099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	fu7M+t5ewsoSGIwed3B0JiAEL6fPjRqVEfqPaZPtlpmLKsdmCd9fJ85jg9++Bf6oY7b+25zRRhjxI1KSXFcqnGcvIuB7lMGf4tQNE4eYF/aMXilPEIxQ3Jdz8I3bxHqRNnJz3IQo0GAPTpDR0T4Fflsw90yOz+LgvXUjwLrmi1hyyJlNFCZnDH6FMmeqK70GCsSYmodu9QMM/ijzOiOjxFauPkDB+v1I0Ni8fM6gucJGcL7lf597SxyWxLklIVKQEbWvJQdRPBaion807fQ735xojCI0SFSMhW0uHrckfFMvmE+WNO7dxS+EEqrCBHQXyQkc+zHyefBblSbd8DSqFUlyrxj9lqDfyioXYKFKDFLNhd0kY4YlU+xu1d8AEbaeN3rSsMxW1rXKEzO5WM+RmG9KSSFJAOP/swHHJuvUgar7y4XTq2rgQMi/eWSUcNBq
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 17:55:52.5354
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9eb7ade-d6d7-4545-6a47-08df180993f5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023CE.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8602
 
+From: Alejandro Lucero <alucerop@amd.com>
 
+Differentiate between driver binding from PM dependency when a device
+link is created. Rely on the device being bound to a driver for validating
+the supplier as some device drivers could not support PM.
 
-On 9/21/26 10:28 AM, Alison Schofield wrote:
-> On Mon, Sep 21, 2026 at 08:09:32PM +0800, Guixin Liu wrote:
-> 
-> 
-> Hi Guixin,
-> 
-> Agree w DaveJ's commit log suggestion.
-> 
-> Also, the Subject can be specific, like:
-> cxl/events: Test CME counter expiry with equality, not bitwise AND
-> 
-> You may want to add something like I've appended below to your agent instructions.
-> It is intended to better calibrate your agent. Also try giving your agent this
-> patch (v1 and v2) as a concrete example in the skill. It's a good one because the
-> original one isn't bad, it is actually thorough and technically valid, but it is
-> trying to make the commit log serve as the entire bug report, reproduction recipe
-> and test report. That's exactly the tendency you want this agent to stop doing.
-> 
-> Teach your agent (w example):
-> 
-> For Linux kernel commit messages, be concise and focus on why the change is
-> needed, not a detailed narration of the investigation.
-> 
-> Structure the commit message as:
-> 
-> 1. Background only when needed to understand the problem.
-> 2. Problem: what the current code gets wrong.
-> 3. Impact: the meaningful consequence, especially user-visible impact.
-> 4. Resolution: what the patch changes and why that addresses the problem.
-> 5. Brief "Found by" / "Tested by" information when useful.
-> 
-> Do not include every example, reproduction step, intermediate observation, or
-> possible consequence just because that information is available. Keep only
-> details needed to establish the problem and impact.
-> 
-> For small, obvious fixes, aim for roughly 1-3 short paragraphs plus concise
-> testing information. Explain the semantic error. Do not narrate the code diff.
-> 
-> Subjects should describe the change specifically. Avoid generic "Fix ..."
-> subjects when a more descriptive imperative subject is available.
-> 
-> -- Alison
+Check for supplier's PM state only if consumer specifies PM_RUNTIME flag.
 
+Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+---
+ drivers/base/core.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-And if you are uisng an AI agent, please include the following tag:
-Assisted-by: LLM
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4c0c373998a1..eb6d87e35d76 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -834,15 +834,26 @@ struct device_link *device_link_add(struct device *consumer,
+ 	device_pm_lock();
+ 
+ 	/*
+-	 * If the supplier has not been fully registered yet or there is a
+-	 * reverse (non-SYNC_STATE_ONLY) dependency between the consumer and
+-	 * the supplier already in the graph, return NULL. If the link is a
+-	 * SYNC_STATE_ONLY link, we don't check for reverse dependencies
+-	 * because it only affects sync_state() callbacks.
++	 * If the supplier has not been fully registered yet with a driver
++	 * return NULL.
+ 	 */
+-	if (!device_pm_initialized(supplier)
+-	    || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
+-		  device_is_dependent(consumer, supplier))) {
++	scoped_guard(device, supplier) {
++		if (!device_is_bound(supplier)) {
++			link = NULL;
++			goto out;
++		}
++	}
++	/*
++	 * If consumer asks for PM to use the link and the supplier has not
++	 * PM initialized, or if there is a reverse (non-SYNC_STATE_ONLY)
++	 * dependency between the consumer and the supplier already in the
++	 * graph, return NULL. If the link is a SYNC_STATE_ONLY link, we
++	 * don't check for reverse dependencies because it only affects
++	 * sync_state() callbacks.
++	 */
++	if (((flags & DL_FLAG_PM_RUNTIME) && !device_pm_initialized(supplier)) ||
++	    (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
++	     device_is_dependent(consumer, supplier))) {
+ 		link = NULL;
+ 		goto out;
+ 	}
+-- 
+2.34.1
+
