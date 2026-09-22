@@ -1,146 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781945326CD;
-	Tue, 22 Sep 2026 10:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9D251812E
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 10:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790072558; cv=none; b=LRku5kEGB5HxYE3pb/DeT42FksYXSo1hbXiFm0i8IScTBq7nhI/L6z+3LZ3WfxJZ2ouWJgoatirBhvLF6F7rbSz+6AxyRu5K7BgberY5ZJDeIycx5phkA3+kQhHl/xRPxQj2yFApgVj2B+Ev16o4rlsUaGKXQRKYASDT/Wq1x34=
+	t=1790073003; cv=none; b=FJAltaChWlLGq/x9ydqoB66U+zMhHGQ0JkDQTQGQEa1fpwPQZ4HjO9dvIzk2VUpQi1I14gGpmdDN8QRMXYj8MYKc9/eJqAcS5rHjJKAtMAqOcGXaYbhquoml1/EMNay72MF+QN36KCedOPzab3E3s4V+RP6/ImrJudaheJE1kZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790072558; c=relaxed/simple;
-	bh=R569XAwdmmOiD7erNy5+Hyo0+62FkYyZfHWHrrTjUmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HeiE02S7zFrbtBDNjDy/RGQ8xJdVZHUfgdvgqxlGwiniXNllCOmFhaa5n/NtuWY5pfn3IhZqSHCXLwQEmWL0AHe83RXUojl7j8vkIZoVOkjl7ygLYWdUKnGM/77/6WwXDK3P3wqlCXo4Ucl0a56Y73mPx5vOUDTK1vRwgSSKH9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihY+h/wb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790073003; c=relaxed/simple;
+	bh=xeVxUNIw0tbij1oxVqQWqhCFZRa49bgqKQ8gINWeENw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DwfmSllPAMDolYG3UtSJjbozPXwQRU9y0vUzUxzK8CMBCOqe4HyhVsgs297GFuNhH/pesSYdMQkGQ7Ou4Y7VLvHtz9SN8O1/P+TPXBZ3P6goiMcWAyWjLtklr/KSyhk6bezH+WeT+hD9VQsqysthOWNz9zKjWy+95vl/GKbYer8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac7ipG/B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihY+h/wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8A61F000FF;
-	Tue, 22 Sep 2026 10:22:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac7ipG/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A861F00893;
+	Tue, 22 Sep 2026 10:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790072553;
-	bh=DN0EkF+UVww2zD+JWORW1dS7pehZEzk3ZOGPbCH+2mU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ihY+h/wbIr9rgYOMg9hmVVaut1LOYTuIrifpMlalFf74N6LgXDLXSnn910Zz74fR2
-	 LvFYMvp/3j7aVJDQtj/SqNTrpyudQKmeZPHt1ubnVVg+8srIjVkJCENRqEN74MChDf
-	 +Ec08GzZgLLY3pq+E3KpbetqEL5kRgkx8VZv+BkAvKLkazMolEzzw3ENwaGK0ZN/tz
-	 AQi6pagd6hE+NAy+Eanob4UxWff+yVMYCEpMDHw/ynqWj3Nx7gK6fUJt4gsMZfAspn
-	 pRGXUZD2aVt+239kbQMIxpM5SZujE0wc8bFmvhyuw8Cy9lfK9tsbvO5ky7faQZPaM2
-	 wFGJ8zpD9PinA==
-Message-ID: <53761d0c-e4c2-41c8-89e6-3c9916934c69@kernel.org>
-Date: Tue, 22 Sep 2026 12:22:21 +0200
+	s=k20260515; t=1790073000;
+	bh=mPF4XLYseATzApBoEkAP2wsNJznc71kGrqxEQekJYms=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ac7ipG/BkdW2+2KdL7r/oEKl0XUlo4wG7LWQTnxrNv0Mea3e/h16QmEMHew1JbmvE
+	 QsQiTC5iWGpv6yqlVxq7t2T67DoPw+67msJPW3hyDnD/7UW8QaIGjQGyEv2ax8ENrh
+	 rklzLHGdK3INi688ov/2Ov33EMPptXJppZIuGIRFJV6Vs6iKQ9ruji8hlmmHe7GGeG
+	 Rid4acibn1k7VzSGRLpoek6wjNtFT6KJa9w/t3h4AuoGkvaArE0pySdJ+wdHrySWcT
+	 YUs/ilvLve6cbnM2MYE8IWt9iP+15UR1ifvReDKQ1FhAwcbZJh/KYCQJBAafMOjp5s
+	 lCQq2fnwy+H3g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 3/4] cxl/region: Start unmapped poison scan at the
+ committed decoder boundary
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Richard Cheng" <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260922101129.52794-4-icheng@nvidia.com>
+References: <20260922101129.52794-1-icheng@nvidia.com>
+ <20260922101129.52794-4-icheng@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 22 Sep 2026 10:29:59 +0000
+Message-Id: <20260922103000.88A861F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/13] mm/sparse: move __highest_used_section_nr
- handling
-To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
- <20260921-b4-sparsemem_cleanups-v2-8-54d81d65e125@kernel.org>
- <arIC7BheTHzBnLoq@localhost.localdomain>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <arIC7BheTHzBnLoq@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 9/22/26 06:24, Oscar Salvador (SUSE) wrote:
-> On Mon, Sep 21, 2026 at 09:59:00PM +0200, David Hildenbrand (Arm) wrote:
->> In preparation for removing __section_mark_present(), let's move
->> __highest_used_section_nr handling into its callers. Verify in
->> sparse_init_one_section() that it was properly updated.
->>
->> In sparse_sections_init() we can just set it to the last processed
->> section_nr.
->>
->> No functional change intended.
->>
->> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> 
-> Acked-by: Oscar Salvador <osalvador@suse.de>
-> 
->> ---
-> ...
->> --- a/mm/sparse.h
->> +++ b/mm/sparse.h
->> @@ -26,6 +26,7 @@ static inline void sparse_init_one_section(struct mem_section *ms,
->>  	unsigned long coded_mem_map;
->>  
->>  	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
->> +	VM_WARN_ON_ONCE(section_nr > __highest_used_section_nr);
-> 
-> I wonder, have we seen this in the wild?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] cxl: integer underflow in cxl_get_poison_unmapped() from unmapped =
+decoder offset
+--
 
-No, it would be highly unexpected (thus VM_WARN_ON_ONCE).
+commit 8602a2ffbae3a910b43392bb444acb65b6b365e7
+Author: Richard Cheng <icheng@nvidia.com>
 
-Thanks!
+cxl/region: Start unmapped poison scan at the committed decoder boundary
 
--- 
-Cheers,
+poison_by_decoder() stops at the last committed decoder and records the
+handoff in ctx->offset, but cxl_get_poison_unmapped() ignores it and
+starts after the highest DPA allocation instead. Allocation exist for
+uncommitted decoders too, so their DPA is skipped by both phases and
+poison there is never reported. Resume the scan at ctx->offset, and scan
+later partitions in full, restoring the pre-rewrite behavior.
 
-David
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 042356c71ed79..4869cdd6a3d48 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+
+[ ... ]
+
+> @@ -2944,10 +2943,8 @@ static int cxl_get_poison_unmapped(struct cxl_memd=
+ev *cxlmd,
+>  	 */
+>  	for (int i =3D ctx->part; i < cxlds->nr_partitions; i++) {
+>  		res =3D &cxlds->part[i].res;
+> -		for (p =3D res->child, last =3D NULL; p; p =3D p->sibling)
+> -			last =3D p;
+> -		if (last)
+> -			offset =3D last->end + 1;
+> +		if (i =3D=3D ctx->part)
+> +			offset =3D ctx->offset;
+> +		else
+> +			offset =3D res->start;
+>  		length =3D res->end - offset + 1;
+
+[Severity: High]
+Does this code risk an integer underflow if offset is greater than res->end?
+
+If poison_by_decoder() encounters a zero-sized commit_end decoder, it can
+set ctx->part =3D -1 and ctx->offset =3D cxled->dpa_res->end + 1. If that
+decoder was configured by firmware with a large skip value, ctx->offset can
+be strictly greater than the end of the first partition (part[0].res.end).
+
+Later, cxl_get_poison_by_endpoint() forces ctx.part =3D 0 before calling
+cxl_get_poison_unmapped():
+
+drivers/cxl/core/region.c:cxl_get_poison_by_endpoint() {
+    ...
+	if (rc =3D=3D 1) {
+		/* ... */
+		if (ctx.part < 0)
+			ctx.part =3D 0;
+		rc =3D cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
+					     &ctx);
+	}
+    ...
+}
+
+Because ctx.offset is not reset to part[0].res.start, offset is assigned
+the out-of-bounds ctx->offset when i =3D=3D 0. This causes the length
+calculation to underflow in unsigned 64-bit arithmetic to an enormous
+positive value.
+
+Could this underflow bypass the !length check and result in sending an
+invalid mailbox command to the hardware?
+
+A massive out-of-bounds length passed directly to cxl_mem_get_poison() may
+cause the CXL device to hang, time out, or process out-of-bounds requests,
+leading to system instability.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922101129.5279=
+4-1-icheng@nvidia.com?part=3D3
