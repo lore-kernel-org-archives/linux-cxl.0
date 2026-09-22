@@ -1,301 +1,525 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C952BE31
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 22:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8586940BCB8
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 23:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790114710; cv=none; b=pcUbQFREce1EvHQ9c8+C2IRXtto2e4BMHy74tIPbhK5iNscFP9odI7sGipMfxYZuSCnNNy7usZ9u/PpDsjw4DuvHDVPkRzOTfMWfeFhMMPr43j36pV0LnZrUvAY6jHhWpJBiyMwKp8nAi480OL0E474kj6MOleV/go5IaR/B1Fk=
+	t=1790118311; cv=none; b=pqmSPt1vu57B9WLt0YqxylCymq+HvDT3V/0N6Ay35lKUEaZQcXPYxfpLV56rAvkDGOCwKFmIVgE4nA8jpfn4HUwwHYzgXt2hEuQjIt0BIMEa6/D7j47zQxgOAfuNzfJWKar/NzZZHXek83dfqOT/o/3K0TW3jwgnHIizuVYIQFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790114710; c=relaxed/simple;
-	bh=RRH1Vy+Zp/3SPkBGo9aHf3zXVNOp+j6j9mQwfJznZmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wiu8wQ4yk4cWtjQLqiyoNnifIyHFK6WeFKnw2tfLUPNgVbb91N3jca1Arb0Br71HxhyR2oZKwN1pG2Jmb4Lh0JEn0DVUCrtE2EFZLIAiT8kF9SlQ7OeNtNvj4vtzCIixtnyrJvmFUBvpNivGzrdkcuJk5Xdp36FWVz8Fnd4VS0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qyAeO4Im; arc=none smtp.client-ip=74.125.230.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1790118311; c=relaxed/simple;
+	bh=VdToNMW/24BHsqYHOTLilTFPEmmKxIX7NuIso+o5ivI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nRDpTNri/DZvl03/xLFm4vgGG26W24kfQgrF1Hn7EtvU8HztNnT65jcgjJyjSZLsAwmQtC+i9vp+2H3O5p8e9zACMYibaDabPqnRwZq1am0To6A24XYrzqLufSz8dwmRptoAbzLEZeTfadDFLDQkc/HeEnq5GISUBO+4yuky4Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJHUSqNb; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qyAeO4Im"
-Received: by mail-qk2-f13.google.com with SMTP id af79cd13be357-939656ff6d9so33842585a.1
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 15:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1790114700; x=1790719500; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=anrpgiCeXWmBr1az5PEHzf4nylW2QouLqia/wBZNbT4=;
-        b=qyAeO4ImlxQWHWrY3rOI+d0jNqWFqqyELQ56tlRiHnq25pIvKuTEJrR3OrKTFcd4FP
-         IBWytxk9SOvSacV53yQXEJxrCz7JFBDHXXmbeZzXj0EB/0NOWsfpSVn6yoXESESrC7en
-         dWDirDwk2QkTXluyyhV/DpGjnVcz/j2jc1v8BpLdtDbcf5sjhv0PBXWkeMqUn2k3Taqh
-         Br/RM3e48CnC2TjK95UIB1Un9r7oOaUxLLkos8lL9ixrdl11BIKHZKIuPajT92vSGr1Q
-         qIAPWwqVvLVWxLDUlYny2dsxjQOz/CXVwD1OBKCicazpUsOUeEuMWOX7N+ZjO7LVxQvN
-         v/GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790114700; x=1790719500;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=anrpgiCeXWmBr1az5PEHzf4nylW2QouLqia/wBZNbT4=;
-        b=zdoPRIJ0C9SMM1jveoC8886q+vnAYBTZ/JG1iSwOU8KEvqmlFIhaRvKJyU4y9jnayI
-         /abrZsY9JZNbwcYZxLaf6idhN7AsKy8EAR94n09wkfHDyz8ZN7pa4l0HjTvIYTp6xPzI
-         vjdNTbwj2OPblO52/cU5MInEMF9438PcY5lLP6DLB8976e1mOI+3H0vgEa51T/bD8UFL
-         RLRPSb6YGKgfRrG2Hj/DBYeG9TyJqZPzpEPkPyILjM3D/6J+Vq7CxrooIQI66E+Gqfo4
-         b3FXEMEE7w0dvoB3Zr+MuCvWveNGuSmIho5V9/xJOPa/hzgUvQ4KMyBO9cXT21iVSTag
-         tpog==
-X-Forwarded-Encrypted: i=1; AKwUvBxzQHk9hM2XJWh7dVi5FoTf44SA9TvlBqk4ZbK10UDZrQqGN6WNuy6dMabK+ttNEh9wwSjR82A8Ynw=@vger.kernel.org
-X-Gm-Message-State: AFuF++ke/n2LYpy+cDTLGrSaXDXZDInQlayeWjLhpAxeKYPACviIZ/fI
-	7t9GGxR7TF3vkphevyiaz84LTScJ6p407NAEGlzhhc2DCd2DXQwqvAmQ4c+SzHnE5KE=
-X-Gm-Gg: AYBFou07mcy58t1+vdhwcN7rQ3RZo9QAEQf9AJUoOh6YMsigsA1Dw0HQLTbQI7NJtvA
-	fYZ16GcvOkt29ZkIYKAYy2fYpcrxhq9vY4nzDN3RTDbwJ48OLP5n0cLlu4j1+BY6N7FMq5KkRgC
-	PVlv+RdERPVcawsujCvHsZ25ipycfgUw9WA5QHUHIn+5K8mELXD7D8M8UNdTfp1pddP6yiQwuN1
-	/WsrkFnTCwIzvlGqX0zxHi7OoYSFiki1Wf3qUBT1ixD1yKmiJTOVjew05ixDpAe1Vl6jsQJ1PIn
-	fezm63S18rxuNa4IFH07Lot7bSPa7y+NNNktvK9OFDUabAYPpaSehpC16ZIWPs03jU5IHHiGkcY
-	UF9+ewzCiUjd2Gp2eab90V5n5aRHVN5EGyViPS5OsEjCmtWRctefBCpirZuYaXvPk2izeqYUYD3
-	UWOdZdJp8dOFSjYiTRedD4DuFuZvqqiWLBDZJfsno2v6KTCvNPV+eBUjhRCn/ZGSwed4yOMmOuL
-	YYzAN946f7juJBAQ9wh0KgUmZhkPT++YqHdJnyXnFIV/U3iEuiSIEU=
-X-Received: by 2002:a05:620a:4890:b0:939:a1cc:f234 with SMTP id af79cd13be357-93c2509dec2mr122764985a.5.1790114700080;
-        Tue, 22 Sep 2026 15:05:00 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c284a1cd9sm4296985a.39.2026.09.22.15.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 15:04:59 -0700 (PDT)
-Date: Tue, 22 Sep 2026 18:04:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Arun George/Arun George <arun.george@samsung.com>
-Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, balbirs@nvidia.com, 
-	brendan.jackman@linux.dev, yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com, 
-	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
-	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
-	mhocko@suse.com, corbet@lwn.net, skhan@linuxfoundation.org, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, 
-	vishal.l.verma@intel.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	osandov@osandov.com, jannh@google.com, pfalcato@suse.de, jackmanb@google.com, 
-	hannes@cmpxchg.org, ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com, hokyoon.lee@samsung.com, wj28.lee@samsung.com, 
-	gost.dev@samsung.com, vikash.k5@samsung.com, d.bueso@samsung.com
-Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
-Message-ID: <arL2eTRaDeR3DCQx@gourry-fedora-PF4VCD3F>
-References: <CGME20260720193443epcas5p167fa7d8490edfb4d8c0aa6a259db058f@epcas5p1.samsung.com>
- <20260720193431.3841992-1-gourry@gourry.net>
- <963815509.21784796303385.JavaMail.epsvc@epcpadp1new>
- <amJGUuBZ2857QjDB@gourry-fedora-PF4VCD3F>
- <360067785.01790071202608.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJHUSqNb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790118308; x=1821654308;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VdToNMW/24BHsqYHOTLilTFPEmmKxIX7NuIso+o5ivI=;
+  b=VJHUSqNbsujj4rAHGLQL/O8uwe/cJkG4QX2esdlLQTYbkSf2E4GBCalL
+   x1kOA+vq+BEvY+ySusZen+3r8uPpBZdKdwLROVrT7JkGNv7EU9cHhRuiL
+   ZequgMWRLduR9rhbYJt7WqFvfAc5Sr/kfKUZYsJcFQvLar/BjVyk9KeA4
+   45DRLbGqXMfSNcFjvkwWEl9xJA0O1q6FJC13SZXFvYImdAWq+CRbg0Iha
+   OAptL9CB8Ii1kTXZSbVsydNsEFPlqVcIkk5UcDC4uNyppWLXjkgv9scqh
+   FLLn9D928zSXR/kVetQOdTV5DANB8+fbvKdM8DtA4Aa7jLshudPJKTQ3c
+   w==;
+X-CSE-ConnectionGUID: hpjezp+uTkKWnv1hk1Vm5A==
+X-CSE-MsgGUID: /N2qHqRgS7ueEKyeNRvVJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="89685811"
+X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
+   d="scan'208";a="89685811"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 16:05:06 -0700
+X-CSE-ConnectionGUID: bw2EZPN8SAW49RlQxqR2VQ==
+X-CSE-MsgGUID: uYdHQQLqRte+bIClHiHgjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
+   d="scan'208";a="299590187"
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.110.50]) ([10.125.110.50])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 16:05:05 -0700
+Message-ID: <59dd77a4-3ab0-4a6b-bab3-dd634c95f0f5@intel.com>
+Date: Tue, 22 Sep 2026 16:05:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <360067785.01790071202608.JavaMail.epsvc@epcpadp1new>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>,
+ Gregory Price <gourry@gourry.net>, Ben Cheatham <benjamin.cheatham@amd.com>,
+ Ira Weiny <iweiny@kernel.org>, Wonjae Lee <wj28.lee@samsung.com>,
+ Junhee Park <jh9934.park@samsung.com>, Heesoo Kim <habil.kim@samsung.com>
+References: <20260918203049.7273-1-anisa.su@samsung.com>
+ <20260918203049.7273-4-anisa.su@samsung.com> <arH67By0gfwd-b1e@MWDK4CY14F>
+ <fdccd5b2-69ac-4a00-af65-4b0584fa07e9@intel.com>
+ <arLv12gmC-6ClDX6@4470NRD-ASU.ssi.samsung.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <arLv12gmC-6ClDX6@4470NRD-ASU.ssi.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 22, 2026 at 03:27:44PM +0530, Arun George/Arun George wrote:
-> Hi Gregory,
+
+
+On 9/22/26 2:15 PM, Anisa Su wrote:
+> On Tue, Sep 22, 2026 at 10:08:08AM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 9/21/26 8:53 PM, Richard Cheng wrote:
+>>> On Fri, Sep 18, 2026 at 01:30:12PM +0800, Anisa Su wrote:
+>>>> From: Ira Weiny <iweiny@kernel.org>
+>>>>
+>>>> Additional DCD partition (AKA region) information is contained in the
+>>>> DSMAS CDAT tables, including performance and shareable attributes.
+>>>>
+>>>> Match DCD partitions with DSMAS tables and store the meta data.
+>>>>
+>>>> Signed-off-by: Ira Weiny <iweiny@kernel.org>
+>>>> Co-developed-by: Anisa Su <anisa.su@samsung.com>
+>>>> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+>>>> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+>>>> Tested-by: Junhee Park <jh9934.park@samsung.com>
+>>>> Tested-by: Heesoo Kim <habil.kim@samsung.com>
+>>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>>>
+>>>
+>>> Hi Anisa,
+>>>
+>>> LGTM but I have limited knowledge for details of device's CDAT.
+>>> Other experts would be more suitable to leave their tag.
+>>>
+>>> I have a question here only, I wonder if a CDAT with no DSLBIS supported is
+>>> possible ? seems that the implementation has the assumption that device's
+>>> CDAT would be always supported with valid DSMAS and DSLBIS.
+>>
+>> According to the spec, the device suppoort DCD shall provide DSMAS (CXL r4.0 9.13.3). DSLBIS is optional.
+>>
+>> So I do wonder if we need to add plumbing to disable DCD if DSMAS is missing or malformed. 
+>>
+>> DJ
+>>
+> Can do. DSMAS is missing/malformed in 3 scenarios:
+> - CDAT is missing
+> - Failed to parse DSMAS from the CDAT
+> - No DSMAS entry matched the DC partition.
 > 
-> Thanks for sharing the working branch.
+> So we can make a helper function to disable DCD and call from all 3 sites:
 > 
-> Some of us at Samsung are testing the series (both v4 & v5) on a 
-> compression capable CXL expander and are observing encouraging results.
->
-
-This is really cool, thank you so much for spending the cycles to test.
-
-I'm working on getting a v6 out soon.  Glad to see the progress!
-
-> Good things first! We feel that the isolation using private nodes and 
-> the capability selection using NODE_PRIVATE_CAP_* work functionally well 
-> for the compressed memory use cases.
+> +/*
+> + * A DCD shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3).
+> + * Without one the partition's attributes are unknown, so disable DCD.
+> + */
+> +static void cxl_dcd_dsmas_missing(struct cxl_dev_state *cxlds, const char *why)
+> +{
+> +	struct cxl_memdev_state *mds;
+> +
+> +	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
+> +		return;
+> +
+> +	mds = to_cxl_memdev_state(cxlds);
+> +	if (!cxl_dcd_supported(mds) ||
+> +	    !cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM_1))
+> +		return;
+> +
+> +	dev_warn(cxlds->dev, "DC partition has no valid DSMAS entry (%s), disabling DCD\n",
+> +		 why);
+> +	cxl_disable_dcd(mds);
+> +}
 > 
-> On improvement points, we observed much higher 'page_faults', 
-> 'allocation_stalls' etc. which contributed to the higher tail latencies 
-> in some tests. I hope these are already part of the optimization plans. 
-> The higher latencies might have resulted from the write_protection 
-> applied to the private node, I believe.
+> Called if there's no CDAT/fails to parse CDAT:
 > 
-
-Yes, this is expected, and I think there are questions about how it
-should be optimized both in a provisioning sense and a software sense.
-
-For example, exposing a full memory expander as 100% compressible may
-not make sense - given that this could many a lot of memory.  I have
-some data that shows it may make more sense to split a memory expander
-into two regions to better fit the compressible region to meet the
-actual capacity the cold-tail is capable of consuming.
-
-On the software side there may be some ability to adjust this at
-runtime with hotplug instead of requiring a reboot, but I think that
-needs to be experimented with.
-
-> On the tools side, we used MLC and Taobench for the tests.
+> void cxl_endpoint_parse_cdat(struct cxl_port *port)
+>  	int rc;
+>  
+>  	xa_init(&__dsmas_xa);
+> -	if (!port->cdat.table)
+> +	if (!port->cdat.table) {
+> +		cxl_dcd_dsmas_missing(cxlds, "no CDAT");
+>  		return;
+> +	}
+>  
+>  	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+>  	if (rc < 0) {
+>  		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+> +		cxl_dcd_dsmas_missing(cxlds, "CDAT parse failed");
+>  		return;
+>  	}
 > 
-
-Great! I also have some TaoBench and fio results i'm looking to share,
-glad to have some additional peer review using Tao.
-
-> Note that our intention for this phase of experiments was to test only 
-> the 'private node' layer based isolation, and not the cram and below 
-> layers for the compressed memory. Therefore we did not enable/utilize 
-> the compression capability in the hardware for these set of experiments 
-> (enabling compression would require the cram level ballooning/memory 
-> shrinking and cxl level interfacing driver to the compression device). 
-> That would be different set of experiments where we would be testing the 
-> cram balloon shrinkers and our alternate algorithms (upstream targeted). 
-> So cram and below layers were used only for enumeration of private node 
-> regions for these tests and not for the run-time memory shrinkers.
+> Or no DSMAS entry matched the DC partition:
+> static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
+>  	struct device *dev = cxlds->dev;
+>  	struct dsmas_entry *dent;
+> +	bool dc_matched = false;
+>  	unsigned long index;
+> ...
+>  			if (set_perf)
+>  				update_perf_entry(dev, dent, &part->perf);
+> -			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
+> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1) {
+>  				part->shareable = dent->shareable;
+> +				dc_matched = true;
+> +			}
+>  			break;
+>  		}
 > 
-
-Agreed, i'm looking forward to getting past the isolation bits and get
-more focused on the compression implementation details.
-
-> ======= Test Methodology ==============
+> ... 
+> 			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
+>  				&dent->dpa_range);
+>  	}
+> +
+> +	if (!dc_matched)
+> +		cxl_dcd_dsmas_missing(cxlds, "no matching entry");
+>  }
 > 
-> We explored these 3 cases:
+> But currently cxl_cdat_endpoint_process() fails if there's no DSLBIS or it's
+> empty and DSLBIS is optional for DCD, so need a prep patch to allow empty DSLBIS
+> and skip cxl_port_perf_data_calculate(port, dsmas_xa) if it's empty.
+
+But perf calc failure does not stop the probe. cxl_endpoint_parse_cdat() returns void. We swallow the error. So I don't think changes are needed around here? You get -ENOENT if no entries from cdat_table_parse_output(). 
+
+DJ
+
 > 
->     1) (Baseline – existing CXL infra):  DRAM 16GB + CXL 32GB. Here we 
-> used the existing CXL driver infra to enable the device. No private node 
-> is involved. And compression is disabled on device.
+> Something like this:
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -181,7 +181,7 @@
+>  }
+>  
+>  static int cxl_cdat_endpoint_process(struct cxl_port *port,
+> -				     struct xarray *dsmas_xa)
+> +				     struct xarray *dsmas_xa, bool *has_dslbis)
+>  {
+>  	int rc;
+>  
+> @@ -191,9 +191,13 @@
+>  	if (rc)
+>  		return rc;
+>  
+> +	/* DSLBIS is optional; without it there is no perf data to apply */
+>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
+>  			      dsmas_xa, port->cdat.table, port->cdat.length);
+> -	return cdat_table_parse_output(rc);
+> +	if (rc < 0)
+> +		return rc;
+> +	*has_dslbis = rc > 0;
+> +	return 0;
+>  }
+>  
+>  static int cxl_port_perf_data_calculate(struct cxl_port *port,
+> @@ -430,19 +434,22 @@
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>  	struct xarray __dsmas_xa;
+>  	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
+> +	bool has_dslbis = false;
+>  	int rc;
+>  
+>  	xa_init(&__dsmas_xa);
+>  	if (!port->cdat.table)
+>  		return;
+>  
+> -	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+> +	rc = cxl_cdat_endpoint_process(port, dsmas_xa, &has_dslbis);
+>  	if (rc < 0) {
+>  		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+>  		return;
+>  	}
+>  
+> -	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+> +	rc = -ENOENT;
+> +	if (has_dslbis)
+> +		rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>  	if (rc)
+>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
 > 
->     2) (private node in default write protected path): DRAM 16GB + CXL 
-> Private Node 32GB. Here private node infra is used to enable the device. 
-> And compression is disabled on device.
 > 
->     3) (private node with no write protection): DRAM 16GB + CXL Private 
-> Node 32GB. Here private node infra is used to enable the device without 
-> the write protection/fencing enabled. Compression is disabled on device. 
-> We could not complete these runs as they resulted in kernel panics. 
-> Guess the code path is not stable yet for this (We had hoped that case 1 
-> and case 3 results would be similar). We also observed some unmovable 
-> page warnings logs in 'dmesg' before crash (might be related to the 
-> panic). Adding the log snippets at the end.
+> Would something like this work? (I am also not an expert in CDAT/DSMAS/DSLBIS)
 > 
+> Thanks,
+> Anisa
+>>>
+>>> Best regards,
+>>> Richard Cheng.
+>>>
+>>>  
+>>>> ---
+>>>> Changes:
+>>>> 1. cdat.c: record the DSMAS shareable flag independently of QTG
+>>>>    discovery. cxl_port_perf_data_calculate() returns -ENOENT when FW
+>>>>    recommends no QTG for any entry, which skipped the assignment even
+>>>>    though the CDAT parsed successfully and the DSMAS flag was valid.
+>>>>    Richard
+>>>> ---
+>>>>  drivers/cxl/core/cdat.c   | 49 +++++++++++++++++++++++++++++----------
+>>>>  drivers/cxl/core/hdm.c    |  1 +
+>>>>  drivers/cxl/core/mbox.c   |  9 +++++++
+>>>>  drivers/cxl/core/memdev.c | 17 ++++++++------
+>>>>  drivers/cxl/cxlmem.h      |  2 ++
+>>>>  include/cxl/cxl.h         |  4 ++++
+>>>>  6 files changed, 63 insertions(+), 19 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>>>> index 5c9f07262513..6e7950f12134 100644
+>>>> --- a/drivers/cxl/core/cdat.c
+>>>> +++ b/drivers/cxl/core/cdat.c
+>>>> @@ -17,6 +17,7 @@ struct dsmas_entry {
+>>>>  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+>>>>  	int entries;
+>>>>  	int qos_class;
+>>>> +	bool shareable;
+>>>>  };
+>>>>  
+>>>>  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+>>>> @@ -74,6 +75,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+>>>>  		return -ENOMEM;
+>>>>  
+>>>>  	dent->handle = dsmas->dsmad_handle;
+>>>> +	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
+>>>> +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
+>>>>  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+>>>>  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+>>>>  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+>>>> @@ -255,8 +258,13 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+>>>>  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
+>>>>  }
+>>>>  
+>>>> -static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>>>> -				     struct xarray *dsmas_xa)
+>>>> +/*
+>>>> + * The DSMAS shareable flag is a property of the CDAT entry and is recorded
+>>>> + * even if FW returns no QTG recommendations for any entry; only update perf
+>>>> + * if those recommendations exist, indicated by @set_perf
+>>>> + */
+>>>> +static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
+>>>> +				   struct xarray *dsmas_xa, bool set_perf)
+>>>>  {
+>>>>  	struct device *dev = cxlds->dev;
+>>>>  	struct dsmas_entry *dent;
+>>>> @@ -266,18 +274,34 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>>>>  		bool found = false;
+>>>>  
+>>>>  		for (int i = 0; i < cxlds->nr_partitions; i++) {
+>>>> -			struct resource *res = &cxlds->part[i].res;
+>>>> +			struct cxl_dpa_partition *part = &cxlds->part[i];
+>>>>  			struct range range = {
+>>>> -				.start = res->start,
+>>>> -				.end = res->end,
+>>>> +				.start = part->res.start,
+>>>> +				.end = part->res.end,
+>>>>  			};
+>>>>  
+>>>> -			if (range_contains(&range, &dent->dpa_range)) {
+>>>> -				update_perf_entry(dev, dent,
+>>>> -						  &cxlds->part[i].perf);
+>>>> -				found = true;
+>>>> +			if (!range_contains(&range, &dent->dpa_range))
+>>>> +				continue;
+>>>> +
+>>>> +			found = true;
+>>>> +			/*
+>>>> +			 * part->handle is from Get DC Config, dent->handle
+>>>> +			 * from the CDAT DSMAS entry.
+>>>> +			 */
+>>>> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
+>>>> +			    dent->handle != part->handle) {
+>>>> +				dev_warn(dev,
+>>>> +					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
+>>>> +					 &range, part->handle,
+>>>> +					 &dent->dpa_range, dent->handle);
+>>>>  				break;
+>>>>  			}
+>>>> +
+>>>> +			if (set_perf)
+>>>> +				update_perf_entry(dev, dent, &part->perf);
+>>>> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
+>>>> +				part->shareable = dent->shareable;
+>>>> +			break;
+>>>>  		}
+>>>>  
+>>>>  		if (!found)
+>>>> @@ -419,12 +443,13 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+>>>>  	}
+>>>>  
+>>>>  	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>>>> -	if (rc) {
+>>>> +	if (rc)
+>>>>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+>>>> +
+>>>> +	cxl_memdev_apply_dsmas(cxlds, dsmas_xa, rc == 0);
+>>>> +	if (rc)
+>>>>  		return;
+>>>> -	}
+>>>>  
+>>>> -	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
+>>>>  	cxl_qos_class_verify(cxlmd);
+>>>>  	cxl_memdev_update_perf(cxlmd);
+>>>>  }
+>>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>>>> index 0ef076c08ed2..7f63b86887f4 100644
+>>>> --- a/drivers/cxl/core/hdm.c
+>>>> +++ b/drivers/cxl/core/hdm.c
+>>>> @@ -477,6 +477,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+>>>>  
+>>>>  		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>>>  		cxlds->part[i].mode = part->mode;
+>>>> +		cxlds->part[i].handle = part->handle;
+>>>>  
+>>>>  		/* Require ordered + contiguous partitions */
+>>>>  		if (i) {
+>>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>>>> index c96c16cc08e1..d84a90320081 100644
+>>>> --- a/drivers/cxl/core/mbox.c
+>>>> +++ b/drivers/cxl/core/mbox.c
+>>>> @@ -1366,6 +1366,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>  	u64 decode_len = le64_to_cpu(dev_part->decode_length);
+>>>>  	u64 blk_size = le64_to_cpu(dev_part->block_size);
+>>>>  	u64 len = le64_to_cpu(dev_part->length);
+>>>> +	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
+>>>>  	u64 size;
+>>>>  
+>>>>  	/*
+>>>> @@ -1378,6 +1379,13 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>  		return 0;
+>>>>  	}
+>>>>  
+>>>> +	/* The CDAT DSMAD handle this refers to is 8 bits */
+>>>> +	if (handle & ~0xFF) {
+>>>> +		dev_warn(dev, "DSMAD handle 0x%x exceeds the 8 bit CDAT DSMAD handle\n",
+>>>> +			 handle);
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +
+>>>>  	/*
+>>>>  	 * Decode length is a count of 256M units, so a device reporting 2^36
+>>>>  	 * or more wraps.
+>>>> @@ -1391,6 +1399,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>  	*part = (struct cxl_dc_partition_info) {
+>>>>  		.start = le64_to_cpu(dev_part->base),
+>>>>  		.size = size,
+>>>> +		.handle = handle,
+>>>>  	};
+>>>>  
+>>>>  	/*
+>>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>>> index 15df8db314d9..8883c8850759 100644
+>>>> --- a/drivers/cxl/core/memdev.c
+>>>> +++ b/drivers/cxl/core/memdev.c
+>>>> @@ -594,7 +594,8 @@ bool is_cxl_memdev(const struct device *dev)
+>>>>  }
+>>>>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
+>>>>  
+>>>> -static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+>>>> +static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
+>>>> +		     enum cxl_partition_mode mode, u8 handle)
+>>>>  {
+>>>>  	int i = info->nr_partitions;
+>>>>  
+>>>> @@ -606,6 +607,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
+>>>>  		.end = start + size - 1,
+>>>>  	};
+>>>>  	info->part[i].mode = mode;
+>>>> +	info->part[i].handle = handle;
+>>>>  	info->nr_partitions++;
+>>>>  }
+>>>>  
+>>>> @@ -623,9 +625,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>  	info->size = mds->total_bytes;
+>>>>  
+>>>>  	if (mds->partition_align_bytes == 0) {
+>>>> -		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
+>>>> +		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
+>>>>  		add_part(info, mds->volatile_only_bytes,
+>>>> -			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
+>>>> +			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
+>>>>  		return 0;
+>>>>  	}
+>>>>  
+>>>> @@ -635,9 +637,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>  		return rc;
+>>>>  	}
+>>>>  
+>>>> -	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
+>>>> +	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
+>>>>  	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
+>>>> -		 CXL_PARTMODE_PMEM);
+>>>> +		 CXL_PARTMODE_PMEM, 0);
+>>>>  
+>>>>  	return 0;
+>>>>  }
+>>>> @@ -685,7 +687,8 @@ int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>  	info->size = total;
+>>>>  	dev_dbg(dev, "Adding dynamic ram partition 1; %#llx size %#llx\n",
+>>>>  		dc_info.start, dc_info.size);
+>>>> -	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
+>>>> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1,
+>>>> +		 dc_info.handle);
+>>>>  
+>>>>  	return 0;
+>>>>  }
+>>>> @@ -704,7 +707,7 @@ int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
+>>>>  		.size = capacity,
+>>>>  	};
+>>>>  
+>>>> -	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
+>>>> +	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM, 0);
+>>>>  	return cxl_dpa_setup(cxlds, &range_info);
+>>>>  }
+>>>>  EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
+>>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>>> index 4fac65dbb808..9fd5af2e41d4 100644
+>>>> --- a/drivers/cxl/cxlmem.h
+>>>> +++ b/drivers/cxl/cxlmem.h
+>>>> @@ -140,6 +140,7 @@ struct cxl_dpa_info {
+>>>>  	struct cxl_dpa_part_info {
+>>>>  		struct range range;
+>>>>  		enum cxl_partition_mode mode;
+>>>> +		u8 handle;
+>>>>  	} part[CXL_NR_PARTITIONS_MAX];
+>>>>  	int nr_partitions;
+>>>>  };
+>>>> @@ -851,6 +852,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+>>>>  struct cxl_dc_partition_info {
+>>>>  	u64 start;
+>>>>  	u64 size;
+>>>> +	u8 handle;
+>>>>  };
+>>>>  
+>>>>  int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+>>>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>>>> index 4ef9511fbbdd..43edcde5bce3 100644
+>>>> --- a/include/cxl/cxl.h
+>>>> +++ b/include/cxl/cxl.h
+>>>> @@ -141,11 +141,15 @@ enum cxl_partition_mode {
+>>>>   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+>>>>   * @perf: performance attributes of the partition from CDAT
+>>>>   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
+>>>> + * @handle: DSMAS handle that represents this partition
+>>>> + * @shareable: Is the partition shareable (from its CDAT DSMAS entry)
+>>>>   */
+>>>>  struct cxl_dpa_partition {
+>>>>  	struct resource res;
+>>>>  	struct cxl_dpa_perf perf;
+>>>>  	enum cxl_partition_mode mode;
+>>>> +	u8 handle;
+>>>> +	bool shareable;
+>>>>  };
+>>>>  
+>>>>  #define CXL_NR_PARTITIONS_MAX 3
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>>
+>>
 
-Very similar to my test setup, seems like good signal we are of similar
-mind on the use case.  (For readers: there was no coordination here).
-
-I personally did not test private-node without write protection,
-although it makes sense to test the throughput of a demotion-only
-node as a baseline.  Smart.
-
-My guess is there was probably a reclaim throughput issue, or there may
-have been a bug in the v4/v5 code.  I will look at adding some pressure
-tests to my suite that test demotion-only explicitly.
-
-> ========= Results summary ===================
-> 
-> Private (CRAM) node performance is lower compared to a normal CXL memory 
-> allocation path. VM stats shows more page_faults and allocation_stalls 
-> on the private node case. Could it be the allocator waits for migration 
-> path to demote pages to private node? Or the actual hot pages in dram 
-> got demoted to private node to make space during overwrites? We will try 
-> further analysis on this.
-> 
-
-- allocator waits for migration?
-  
-  Yes.  And worse, once the node is full, migration will fail and you'll
-  swap directly from the top tier and reduce your reclaim behavior on
-  the lower node.  It becomes very important to push proactive reclaim
-  on a demotion-only tier to ensure there is sufficient headroom to
-  receive demotions in the future, since direct-reclaim basically never
-  targets a lower-tier on the first pass.
-
-  There's a big discussion about whether tiered systems need to invert
-  their reclaim behavior (reclaim from the lowest node first to find
-  progress there, then do demotion - rather than the other way around).
-
-- Hot pages in dram 
-
-  Also yes.  The comparison to make isn't only against a raw CXL node,
-  but also against Zswap or Zram or Swap.  How does the workload fair
-  on a system with 16GB RAM and 32GB Zswap/Swap?
-
-  This is important context.
-
-> ========== MLC Experiments ====================
-> 
-> CMD:
->    $./mlc --loaded_latency -j0 -c0 -b1g -k1-15 -W5 -r
-> 
-> Experiment Results:
-> 
-> 1. (Baseline) DRAM 16GB + CXL 32GB
-> 
-> Inject  Latency Bandwidth
-> Delay   (ns)    MB/sec
-> ================
->   00000  686.18   40137.5
->   00002  686.69   40124.0
->   00008  709.74   40362.7
-...
-> 2. (private node in default write protected path)
->      DRAM 16GB + CXL Private Node(Uncompressed) 32GB
-> 
-> Inject  Latency Bandwidth
-> Delay   (ns)    MB/sec
-> ================
->   00000  320.09   12186.2
->   00002  543.42   22726.1
->   00008  482.11   28385.2
-...
-> Takeaway: Our MLC tests show a trade-off between the two configurations. 
-> During low inject delay, the private Node is faster. But when inject 
-> delay goes high, the baseline shows better latency. Could it be the TLB 
-> cache effects?
-> 
-
-These latency results suggest to me that the memory being tested was
-always DRAM, though the initial memory fault would have been CXL.
-
-i.e. even if the memory was faulted directly onto the node via
-mempolicy, the very first write to it would have caused promotion.
-
-If you dropped the write protection you'd probably see it equals the
-baseline.
-
-The bandwidth numbers support this.  Higher stall, but faster latency
-means the migration was more beneficial for latency than letting the
-memory sit on CXL.
-
-Neat.  I'm not sure these results are particularly useful in describing
-how a workload would react.
-
-> --------------------------------------------------------------------
-> Case 3 dmesg log snippet:
-> 
-> [   82.525741] page: refcount:1 mapcount:0 mapping:0000000000000000 
-> index:0x0 pfn:0x5f5800
-> [   82.525753] flags: 
-> 0x17ffffc0002000(reserved|node=0|zone=2|lastcpupid=0x1fffff)
-> [   82.525762] raw: 0017ffffc0002000 ffefc85717d60008 ffefc85717d60008 
-> 0000000000000000
-> [   82.525764] raw: 0000000000000000 0000000000000000 00000001ffffffff 
-> 0000000000000000
-> [   82.525766] page dumped because: unmovable page
-> ..............
-> 
-
-Was this memory hotplugged via cram.c or did you replicate the code and
-hotplug it another way?  If so, did you hotplug it as ZONE_NORMAL or
-ZONE_MOVABLE?
-
-For a compressed tier, it must always be hotplugged as ZONE_MOVABLE,
-without exception, because otherwise it can allow a GUP pin or kernel
-allocation that would eventually become permanently stuck there - and by
-definition of a compression tier must be 100% movable memory.
-
-~Gregory
