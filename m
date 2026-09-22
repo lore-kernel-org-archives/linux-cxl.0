@@ -1,29 +1,30 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F374D2EE0
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 10:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3264DA9A6
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 10:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790071245; cv=none; b=RKepl7HaMiXgAdLSi0PkLYvA1tzD7yzYs43XPY/Ts7u+D3vKoC6t57zZk/2kgfgGrZ28NgmPwO4hKatTAyhJt3eabY6ojaqwd6Glx4E768ZMqP63n+z+UAJD0GQ2kfyvGY1CkCOewXWpf4FMG2CXiZk/VbfiHzdfyUD53vescgE=
+	t=1790071247; cv=none; b=VJiLSs802LEA6FvqTjt8IrZc1krAe/3PI8ZZgdiuOFmFRND4e8wlai8I95VaWH7oFOHjDEexYmR2cLhrQ7Ul1QOWsqTmEWJU45ZOkzx4ERCPYOXeZ1vXT/KAwSMLY4oANa0qHDt9czuebm79g3FNMt4oFUSdWJe00RkAcd6oLU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790071245; c=relaxed/simple;
-	bh=hLeOaGRKwShyWnP3nrQLerTbei87kG0uq39h/M5hSkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GUowGHX3Hpg8WWJ/IURcXEhIpvEXC4Skb4h2OPcD8tkPuz8/Bz4Bfo4yvBwHI+fgqyUcJq+tst5f/fxeptEe7oK4b8eWB8qygBFNq8VAJtDcDBh3EFs8O1UGLvVoxDE0ZKR8E8xb1e1XnCd5kFmjHJNbhnOFaF69cluFErB7Zh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eBOt1xWv; arc=none smtp.client-ip=115.124.30.130
+	s=arc-20240116; t=1790071247; c=relaxed/simple;
+	bh=peEzekh2xRWg0FCAFsBROVbniNwPXY+qz4MT+0O7fV4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WVnztUo+OExlbC+pKa7zx1+Cynf0QDhSV4VadDPYldruk7I0Sam0g+TyqxzcOruyBmhSU9jD1hcXJI4rcSdbioppSpIXdwxYTcMz8p7FfjZNEO5vQ966CcANsafKoa8TMNhzwgQ01jES3zsF5iOqkyybaAVi4ctqf5ylK4sBKN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tOYk0fsU; arc=none smtp.client-ip=115.124.30.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eBOt1xWv"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tOYk0fsU"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1790071239; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=JsIiRZNkpyBe+/dH8L1IcL2VzLkCQXHvkxHWejvDxZQ=;
-	b=eBOt1xWvcgMsNECqtTiw9QU2/f3LFcP7M/cfVUVJ9bJ1T+UpoTyiYMw42yYrJ9YLqABtcClKYRtlxij56/T4Qx83dzAraAGeVJMvfcElqD0QwYBy6udmfC8RE0IcncUMvEm6C6jJBcx5xvAux1PeIPe2RzBRoWFYhlhwc4EvOjs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XBTWPKy_1790071238;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XBTWPKy_1790071238 cluster:ay36)
+	t=1790071241; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=b4ImL5VlB75JRIIspuPGxfB0Nl49btHa8l49BbsEbkE=;
+	b=tOYk0fsU5zPFSyBhPEaQN6a4WMsE5vTO/eD1wmUeoTvLi0kELmT1nfU5Q+tAfU3AVpS2g3kxtfYuhqg06c7+/AoCqkfWCTIhx6ABx8vD2/MMTL1SOrLLvFxecpJTx7p8qmGs1gFd8oyA2QeFXwy4kVuYH2D1sp9VfDTDQzG3Rm8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XBTWPLf_1790071240;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XBTWPLf_1790071240 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 22 Sep 2026 18:00:39 +0800
+          Tue, 22 Sep 2026 18:00:41 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -34,54 +35,103 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 0/3] cxl/pci: Fix the GPF DVSEC setup path
-Date: Tue, 22 Sep 2026 18:00:10 +0800
-Message-ID: <20260922100026.3742401-1-kanie@linux.alibaba.com>
+Subject: [PATCH 2/3] cxl/pci: Program the Port GPF timeouts before caching the DVSEC
+Date: Tue, 22 Sep 2026 18:00:12 +0800
+Message-ID: <20260922100026.3742401-3-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260922100026.3742401-1-kanie@linux.alibaba.com>
+References: <20260922100026.3742401-1-kanie@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Three small fixes for the GPF setup path in cxl/core/pci.c, found
-while reworking the same area for a downstream backport.
+cxl_gpf_port_setup() caches the Port GPF DVSEC offset in the dport
+before programming the phase timeouts, and ignores the return value
+of both update_gpf_port_dvsec() calls: the function always reports
+success.
 
-Patch 1 is the one with user-visible impact: on an RCD the GPF DVSEC
-lookup takes the port path, so dirty shutdown tracking never arms and
-the count stays invalid. The other two deal with error handling and
-a full-register rewrite of the phase control register.
+A failing config write is therefore not only silent, it is also
+permanent: the timeouts stay at the hardware defaults instead of the
+maximum flush window the kernel is asking for, and the cached offset
+keeps any later endpoint attach from retrying the update.
 
-Testing on a QEMU CXL topology, with the patched cxl_core hot-swapped
-in and the topology re-enumerated. With the phase 1/2 timeout
-registers of all four dports (two root ports, two switch downstream
-ports) zeroed beforehand, every dport came back at 0x0702 — base 2,
-scale 7, the same value the unpatched code writes. So the timeout
-write ran on each of them: the read-modify-write of patch 3, through
-the error-checked setup of patch 2. With the registers left at their
-programmed value instead, the setup takes the "already at max" early
-return and writes nothing. Re-enumeration comes up clean, all three
-memdevs back.
+Propagate the errors and cache the offset only after both phases are
+programmed, so the next endpoint attach retries the setup.
 
-What QEMU cannot exercise: the topology has no RCD, so the RC_END
-branch of patch 1 never ran — though the emulated type-3 devices do
-expose the Device GPF DVSEC that the fix selects for a restricted
-endpoint. A config write to a live DVSEC does not fail, so the error
-paths of patch 2 stayed cold. And the phase control register defines
-no non-timeout bits today, so patch 3 lands on the same value the old
-full rewrite did.
+Fixes: 6af941db6a60 ("cxl/pci: Update Port GPF timeout only when the first EP attaching")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+---
+ drivers/cxl/core/pci.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-Guixin Liu (3):
-  cxl/pci: Use the Device GPF DVSEC for restricted endpoints
-  cxl/pci: Program the Port GPF timeouts before caching the DVSEC
-  cxl/pci: Update only the Port GPF timeout fields
-
- drivers/cxl/core/pci.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index e31aad7a525a..1f470ab0df3b 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -840,7 +840,7 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+ 
+ 	rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
+ 	if (rc)
+-		return rc;
++		return pcibios_err_to_errno(rc);
+ 
+ 	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+ 	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+@@ -850,11 +850,17 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+ 	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+ 
+ 	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
+-	if (!rc)
+-		pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
+-			phase, GPF_TIMEOUT_BASE_MAX);
++	if (rc) {
++		rc = pcibios_err_to_errno(rc);
++		pci_warn(pdev, "Port GPF phase %d timeout write failed: %d\n",
++			 phase, rc);
++		return rc;
++	}
+ 
+-	return rc;
++	pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
++		phase, GPF_TIMEOUT_BASE_MAX);
++
++	return 0;
+ }
+ 
+ int cxl_gpf_port_setup(struct cxl_dport *dport)
+@@ -864,16 +870,22 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
+ 
+ 	if (!dport->gpf_dvsec) {
+ 		struct pci_dev *pdev;
+-		int dvsec;
++		int dvsec, rc;
+ 
+ 		dvsec = cxl_gpf_get_dvsec(dport->dport_dev);
+ 		if (!dvsec)
+ 			return -EINVAL;
+ 
+-		dport->gpf_dvsec = dvsec;
+ 		pdev = to_pci_dev(dport->dport_dev);
+-		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 1);
+-		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 2);
++		rc = update_gpf_port_dvsec(pdev, dvsec, 1);
++		if (rc)
++			return rc;
++
++		rc = update_gpf_port_dvsec(pdev, dvsec, 2);
++		if (rc)
++			return rc;
++
++		dport->gpf_dvsec = dvsec;
+ 	}
+ 
+ 	return 0;
 -- 
 2.43.7
 
