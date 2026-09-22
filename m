@@ -1,535 +1,709 @@
-Received: from mail-yx2-f42.google.com (mail-yx2-f42.google.com [74.125.224.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8285F443C38
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 21:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790111726; cv=none; b=Kg1YtnH+SBN91V6tDcIj7r+h/dJ0y5minScTRcWeeiPv3o7ut6hngglDWcTG30RNIUaTL744JiX+a1BNLw2a2kY9l0rrLA3bqi3/fPern5dLHz6luIDdtl1I0sOGE7ir2POY8ntVq4OA8yg/rXw3Tr2l6jeIVO/r39xuxlQy9O4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790111726; c=relaxed/simple;
-	bh=+Qg606mcoMEIDvs5qh52qdTbJr7CR31Cjsd1oPwZcqI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nCMcQB7hXP+SdfSzQQ8q0TEQLNzaLySthFnZ5y0eZnHRpSqPUYl+TDbmMfQKXO1OjzI5GXpgjqr3x9IYvmRPZo6gNVRY9S/CvOgG9elQYhGr8FNTFC2QtSu5fbYYOzGJC0QPrwxIaWDv0Dgpwic8Pl5/KmHs0dGm4aChjgeMRUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkVwHZcs; arc=none smtp.client-ip=74.125.224.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7939D519914
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 21:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790111733; cv=fail; b=nBfsKpOoj4nM6M7aANLZ4ndsaRXZJHhghqg1uc+6gEzYSWa1T8QDVSRKe6UL4CU80S1wyoKqDUas7KYlYCIEv7CzkryolZmQQNLjcMkR+lQel540xncPz9nJkqjWxCFQ7YUJ+xTJIiT/ByeoP2dSMNC3XtQSYOHPoNFgzap//hA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790111733; c=relaxed/simple;
+	bh=G7U9JHJBQ0r8fs2kYZDlw1LQUX8TLO7wDJ5A7aF6m/8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eI/fyMqgUQfZZvsOk8GeR8UalGytG8Ab3afI/9yCCtmIrlbICF2vX+DV+qq/O7Ws1izu+RgEFBB3ULgMRDRMgIGwWtdjVkx4WVa51ODJQrx5lAjggwhq13vtSFQf0xRFBnrMui1GNmqgIj65xzBTDurTAyehzaTqKE6uTJm0lnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIoAJCF7; arc=fail smtp.client-ip=192.198.163.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkVwHZcs"
-Received: by mail-yx2-f42.google.com with SMTP id 00721157ae682-8a45b788a71so3106707b3.0
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 14:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790111708; x=1790716508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=8xG4shhtEMUp1vlYbuHuspioFiiu+OhQ+SNPhDgxf4E=;
-        b=EkVwHZcsYa1pzB8vwS+chYr/bhRIYYHJgoqIjz2Az06x8mPDmvs0/Bc0oE85GFMJXw
-         Y6P8vfuOUAUguk9t0vV5Y31xCtR1evSkv//puvGmEFKLhMhHvzP00xeL8weCF+/6+WMF
-         x9wu3tYDYg5D9rRg7Hw5R97kURvyB9CXfIn3rE9eJkotPn5ZyAZ2Q9ZS6A+0Addqauus
-         R59Owzhrop02vF4rnHwW/RZ4mVCgQaVxDCTpghFofCdSsa8e4B6wrMci4CiqIvf/ak5F
-         M6pdn9vR8kDCAqFT9m7zq4Xn77CkNIMGF8gGbq5tZ2UFcU6TayBt/dZw3i4bvwT5lk+X
-         lOgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790111708; x=1790716508;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8xG4shhtEMUp1vlYbuHuspioFiiu+OhQ+SNPhDgxf4E=;
-        b=Xkz4O5PqlIUjiQcBfhQsg3284cOpmlRXY4i318Qi3T2aHEaonPVtFz/1qvyQn0UEWi
-         MrNbVDoRErJ4i+VIwawnKr3RytAnyHQPP+Dnau9VUjYnjyeI+BGxkeE1qACVlE9ds4Ex
-         fX0oyY9ud8Ql2gWGzU3bRf8/Iuwh+Tmnf/j04pPAEAmPSIEUvsBuQGTxPs+YJvORaE3K
-         w/5K/IxJ0h1DI5Rnr9zvFcdD9qNg0eRkz38JqEwAq1O63jskzUzZlF/7/TC3QkD5TGa/
-         cSNdDX2Wi5d7sbXopId8xptaFCM0ma7MgGm0YwDv3IHBKW0Mlob3s5crAD8z9WhDLr4B
-         SqXw==
-X-Forwarded-Encrypted: i=1; AKwUvBxNfM2SV7hA7OHs7gIPrrRaYZ2OCKm6avB9d1RtwhzyLFLxK04mE6mMNP/YDn5HvK9WEfz4ynrD5as=@vger.kernel.org
-X-Gm-Message-State: AFuF++kgGR/gK6mx4B+soZJrupuNGXw6W26z6FFiOB+8XLWwEp6czm0y
-	abyXj8CgwmwKWTdj6uGHGWoDoANLxTPEZFojG9dhNJE3xImkFjYnL9il
-X-Gm-Gg: AYBFou3jcqPfoTx7u/21nlEar0Mlv7nr+maQV/lp9L7b8+HDcDoPBX+UEz4qMaZhgQd
-	R892U+tv6av46QAZV/F/rltieKQSYrvCZsmF8t3tqGkcZf4Ce3TW+rwVRtjSSRgx3K8nO7KgjIj
-	KIbYwLip6NS8ax4F5BN90XlqGTlHLAvwPff+iIgNNVeFpWCn3ys4FLq+Kj0kyhFQQt/cbl5cQnd
-	IYnqtnJipDcuhkNJ0FUKvG4lUzyBxKKOSRhGTVnyk6RsAs3xbtWUUqeNsF9I6vEVtKgOwBrXY9G
-	ddL/1GQjrl0jrFe+M4/KvSEbgVJbcZ2ZpES1sU9F9nQ+tGOEflEDttxBX5n9N5duKbXkoprZJqT
-	5nCByKTfN63sNW2t2hdkNtIQriGmtE/47ur3w0RmaTrW/zsfakggW4QQcUorZy55ktZpBMCmjCq
-	ObiY+FCGakqa9J6k5mZrYW9jOPz/MejKQZWDUd5UzKBJzdbcfLWYRwkDfx4LJcN2rJoTAEAJzEG
-	LEbXhKnoU/m2EvVyKUJ/B83Ic4qzEDtgu91to2tEV5tsGjYIA==
-X-Received: by 2002:a05:690c:e258:20b0:836:3dfb:dd0e with SMTP id 00721157ae682-8a457c72602mr4358047b3.11.1790111707407;
-        Tue, 22 Sep 2026 14:15:07 -0700 (PDT)
-Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a4614814a6sm2715697b3.2.2026.09.22.14.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 14:15:07 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Tue, 22 Sep 2026 14:15:03 -0700
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Richard Cheng <icheng@nvidia.com>, Anisa Su <anisa.su887@gmail.com>,
-	linux-cxl@vger.kernel.org,
-	Alison Schofield <alison.schofield@intel.com>,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ben Cheatham <benjamin.cheatham@amd.com>,
-	Ira Weiny <iweiny@kernel.org>, Wonjae Lee <wj28.lee@samsung.com>,
-	Junhee Park <jh9934.park@samsung.com>,
-	Heesoo Kim <habil.kim@samsung.com>
-Subject: Re: [PATCH v14 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
-Message-ID: <arLv12gmC-6ClDX6@4470NRD-ASU.ssi.samsung.com>
-References: <20260918203049.7273-1-anisa.su@samsung.com>
- <20260918203049.7273-4-anisa.su@samsung.com>
- <arH67By0gfwd-b1e@MWDK4CY14F>
- <fdccd5b2-69ac-4a00-af65-4b0584fa07e9@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIoAJCF7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790111719; x=1821647719;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=G7U9JHJBQ0r8fs2kYZDlw1LQUX8TLO7wDJ5A7aF6m/8=;
+  b=PIoAJCF7tzH7cSt4Q2TNC5Db4aGtrcSVFYB6AYAdtmAMRCfDnil9k3b4
+   TEpMms3mImWbPf6qN4732HRhPiztY/MZtNG/4SVz/ISv6+AeaaoEfqGYz
+   TO+1m3ZjN5Ismdjpv1Er0qmQpfvOrZ0Qfi1TlHmAy0dDOpxf5wf4QLSvo
+   l/09e8G9LsFZrofpp9lU8CuwqdtfpW+tyIL6LtEN35zyJ407w+ILSCAV4
+   zMPo/KS79iz7+LUsU4qIiN7V8DO0U7H0wN3V+pJgWxC4MPc2hPFq4XnrK
+   J5rJShI6lYal8E1dje5RGcawKcB+mEMvB+Hoy1veq+z1TPdNFPcxZYAhU
+   g==;
+X-CSE-ConnectionGUID: TMtmgN2fSlyfCd6UFei1Gw==
+X-CSE-MsgGUID: TA6SzH4URJ+VHddQB8fyBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="1267585"
+X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
+   d="scan'208";a="1267585"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa114.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 14:15:16 -0700
+X-CSE-ConnectionGUID: wI/+EXJwT1yUvFxUZEvlHg==
+X-CSE-MsgGUID: VLCV0IgPT56otMfZ1anIfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
+   d="scan'208";a="269810309"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 14:15:17 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Tue, 22 Sep 2026 14:15:16 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46 via Frontend Transport; Tue, 22 Sep 2026 14:15:16 -0700
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.35)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Tue, 22 Sep 2026 14:15:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H1lCC/6NfoFusrc3f27v57LjaoelQteptza3OIECCMIg3Zvv0StCn7GRctUejd0MJsZGQBM0RF3OC+79AyF0jMBi0CpIibzRkgljl4bI/qC0bXqjwVS8VSRUOlq8ZBuZcmAn2Ncz4gr32yJgmLWeZQL4VML0lXxUe8Rioc/MMA/tYYrz+Xiv93ovIF239rM8kZWzaPwFsOtSMcZT6bcm7qAAYxqT29lrXJe6kFHUAaGSwXfSm++7GRzA1NPv0Q6EVbrVrVss5xpyLCR/f0IJh/ptH16a5W2kimwCNwLcB0CFBeNoOuEUTyWrjDVeiR1aDk2hAE7QGXW9eQ/U39NEvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yAYsZvXdxoHTfFw5Vl7JlNPZ/q4eFo9X308Y8jf0J5M=;
+ b=CyRjeWzFkEbnt0Xgwj7OgHkQsPce2byumxSmM6Pdxyah3PaVLADCMZqH8puI3h7g4vVJXAFJr574+Bo4UB3yghcucnQlKM3k0zslsqL7nIQhUw/YdcmyYfvgnXt9YksrzUWod5ZALLNCgY65XngMpCrddopgAufbEIACBw/ETlO8OrZJ42fXOYaqnEBcgNPFA6szMAY1V8CCNPQUcdhIs97GU8hRFF5yCIkoeQHHjBY5eclAaxndZXxHjJkLhOv5rJdtSm9KpoIOp5lRNUqNtcjPDr5PTGN5xXop/owQrmATI/ckv62dRwEIPyy/raw4y9Xj0QGYo3ZWrGhZGARvRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by CY8PR11MB7289.namprd11.prod.outlook.com (2603:10b6:930:99::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.13; Tue, 22 Sep
+ 2026 21:15:12 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0428.015; Tue, 22 Sep 2026
+ 21:15:12 +0000
+Date: Tue, 22 Sep 2026 14:15:02 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<dave.jiang@intel.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <benjamin.cheatham@amd.com>
+Subject: Re: [ndctl PATCH] cxl/test: Add ELC MCE alias retirement tests
+Message-ID: <arLv1oHxpiNCrgnw@aschofie-mobl2.lan>
+References: <20260906041844.13891-1-shaikhkamal2012@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260906041844.13891-1-shaikhkamal2012@gmail.com>
+X-ClientProxiedBy: CY8PR12CA0022.namprd12.prod.outlook.com
+ (2603:10b6:930:4e::17) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdccd5b2-69ac-4a00-af65-4b0584fa07e9@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CY8PR11MB7289:EE_
+X-MS-Office365-Filtering-Correlation-Id: 112197c4-3a7a-40d0-c259-08df18ee969f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|56012099006|11063799006|5023799004|10067099003|22082099003|18002099003|6133799003|3023799007;
+X-Microsoft-Antispam-Message-Info: J/cgMJOsiQGOt0jSGyNpYDhNQDY90gr8hdAJdmQjyB6th9Vd/ZDTJCNpN4C8ocjOi3GuVhY2izoInUyBMiEmWBwpw8AJ3JOwHM7rll91zBVTaPHZSNOh54thL4JdwpinDMRLEOdblf7cdgA8kgkwzeLAVE2t3g1BCeCtfMah/pZcvHw/eIWMMefQ3UrtUkjEem/zjHC/d+qh4t7bcq6u8+2fc5d2BRKaFyDKLNAr73CgwWpLuIoQBura6lL7+MtqtZqy0LCH2inQsrpKU3SmL27ch4hf2UAgHsDcLh0rgJxNDYXMyboMYSs/QGTNyAHiRb2ZXu3Apk6P+hOn4nxGerFEQuYoM0LOQCcoltzg5edm2bbjcFDvj8ZBKYEVlE5gnpUs90O5VCklifm/Opbu8A10sGm7hGV4ZpaJgLXj6gGGmPMbUSU/QWU0wnF0JMpoJtvaX29fauioFbPzCDFpNmazyPZ8JzBqSTYsGY7PQ+BXrLAlWM1GClvwJ7FIe2ap8jlshv7R0rYF/aco+Z2TY4FGuoeuruQz53m4Oq0u09tNwjH98veaXMeedSaXb2bjPyQb17ZbULw+PtV1bpZIirT/KzrePU9v3PJ8YxDNTCAgtfMduu49SRqqRWQ02Hor8KPZkPPiu55B03l9LwjJYnLXJUSVryp1ZrcKMBpozQA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(56012099006)(11063799006)(5023799004)(10067099003)(22082099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZCvpW8u3xNmBpqtYi0oXeh5rkxAynwO0+LRJ3kU1r8BSb3cFnKA3b9kHXMKH?=
+ =?us-ascii?Q?fySCG8R+cV2gYSsxP6daRq3R0h5mkeok786P65wFfnbj1BkMpiU1AGkWkFtW?=
+ =?us-ascii?Q?kobB8eFzi68OnPe4Y28t/3l4iPnV6SCRsKO7nb76pcHxz1rZKfCb5GPOt84m?=
+ =?us-ascii?Q?v5t0t+DIc7aem3obLfdxWwBwHgqJjMu9fz1d0TDTAEdwVypoOQ2wWKMQ+2/z?=
+ =?us-ascii?Q?t3qv38G/IT1nwwYSx8dyiIRNWLUdMEriUK/8Lgyxhft6SI3LqB8Lc2JZg7/V?=
+ =?us-ascii?Q?RGffKXLLvAPJzUtbbI35ppLWFABDCHsh4JmyDSzpGAweqU8KECr0PqQVxGKk?=
+ =?us-ascii?Q?/pckR+6s+mZgoJ8VNfPAooWnfi5gtGs2DQMPrJZDePN17QcSYneMFAIAlAO5?=
+ =?us-ascii?Q?ZMviRT9UAsxU27DkzYUzM1M8Hi6gU6bytklZ5O1Q+roCdeOHV1akcscXq9Pj?=
+ =?us-ascii?Q?9ajfNF1IzgPF5iQuAcbIcMM7sVoDAal/VsBpgS2O/VjyotKfWTBZ+9R1RY9t?=
+ =?us-ascii?Q?C7yAuEUJ+kXx+ywNjBZL4R7jmNgFQVziK+zgwrwqrnyMItZYZCZkn5gaGTKI?=
+ =?us-ascii?Q?u5JK3Q0UD2heEsJsM923vDrtEb8Nf6KO5xaVZub6gE6ldRJDg2hgtQ2an8Tb?=
+ =?us-ascii?Q?ZUFSQo88NNHmhEJqr3NvD26oEi+a+/EFKf8ccdwHs3yjWpKRtBh6QrqLlNkq?=
+ =?us-ascii?Q?oQ0E9k2Y6N+ERqkvBR+8DfHmj3MIhDZCeJTeXJzr9E0XMFsjvEgZ2uevBJXz?=
+ =?us-ascii?Q?RT9w3r0otafsfJvA+d2DKYLDfGKpd/Dv982yTgEnFea662ZKiPvNo9ANXjQr?=
+ =?us-ascii?Q?6jJBSXwNImUNLvE3ZPwo5HyZ3zlGkS34Pt7tdMyEUteCTCwqrIocyRbzF5Cu?=
+ =?us-ascii?Q?rCIK9NRvCb0VU7f4Jsw1KhdpG4H+dkGMMGluIIwEsm4AJohTpxiYQD2138Rv?=
+ =?us-ascii?Q?Hd6tdb0Krh53uyswADIg2ZzuGJRwcFNXjsN6cAclAIrA0dyoywmGeJggYTqa?=
+ =?us-ascii?Q?SbDw+kG+Aa4C6j48A3M8F7pkDL+7KalduCEPGA2OkTNkYZUgYQU5iPlLWUH4?=
+ =?us-ascii?Q?2biEEuMCJzRfOliDBmRBjvIdGIU/OQowHJSDZ1GPBsFRDLzBVQXUhup0GnG+?=
+ =?us-ascii?Q?DO3p0fjKtbIgnq+WAuT20uHmpGtmh1+MYZQ/89iknh3kOFn6cdPLd12fmpmX?=
+ =?us-ascii?Q?NiIYNgHHmn/KA2WRQWjLc+Clp+Y/F9PdolQhWmgP/0Xv6hT4dVZM58LXEB3F?=
+ =?us-ascii?Q?6tIgbMfDThFCTKHJ0KBs84xF0TF7niG5V5K8Oc219yO88a5R1uhOzc1RsPp/?=
+ =?us-ascii?Q?B+YjuINQX1UQwJR+ILvYNhzkN1sSwyBrVqqZbZ0wJlUnm1prMI7FEotfcvNf?=
+ =?us-ascii?Q?NLmdnONbOG9LnXCSCAaQqccqx5ZZsyACNANBVGyAsvO5Smo+uUqrwdqGTf8r?=
+ =?us-ascii?Q?IYOi0WK2OLp+YUIXoljeXFHOJVXAsy58TRVORf/rG/uk0IA5fPwlyfVHO4fR?=
+ =?us-ascii?Q?BZoiGdOQ2NFVuY+m61pBL8/osPn/HCtzyCBDzU5m+r++/RPsP4aeRRIzR+w1?=
+ =?us-ascii?Q?CtYaM+Uku5TRCVzKPBxujbVEpMCnHGfq6JWg7vN3rLzHwRmuliwr1oY9kpxR?=
+ =?us-ascii?Q?44n4N4ZlIgZyUqJS2nrErZEXrr8YQvhToQ+2NiF/kQ5rn/ZeZHK9GEZHSQDA?=
+ =?us-ascii?Q?mPFy1EwiCt8HOtiVf6JUtq7VJzHeHbOUKWV3Cn6LZ4dJKvb8lEidWASOIhHO?=
+ =?us-ascii?Q?wUN4Uv48ed4ltzC54dE3/MvE+uTWKTM=3D?=
+X-Exchange-RoutingPolicyChecked: 3n/snJ2I9jWiI0eE37vXg2ZcDzjdvPrpobol922mnx4uYhxuBRnd3pA/umrcopLjyZtpYnsfv0XTOKfSOlDRkkrJDev/QnnEG+1m2uDk3pFIEwlVl6ThX309IGLS4uYbrbff34d8AuLdQ1XsiV9u/OYojJIlBhFPWFeLs9Mf7VoS/pd01LhtquQqypjTYLnFNiRo9KIUR/pKdFRDq5ZGIhkHYc69o2lxzobp+9NMIPuWFKeiv7Bp3vBYg22mcrpBTTdsgOlZ5xQoFzwNmS5d8Z3QzOZ7zrf5jGE8N7tIsjtFTj3BkdAWyyxs3aGZDWbnv+VHgJYC/19vqIiG4ts9Ag==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 112197c4-3a7a-40d0-c259-08df18ee969f
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2026 21:15:12.2146
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yXPP0Hfzz4y0Q6k7VIgJkX5x0QAoFVulRaSj2mkDsXBZKzZ/CbD3for3H+k3r1St81YtP2ubILp3HpwiR4osdhV/5ll0ub2Bamk9fLsKCbk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7289
+X-OriginatorOrg: intel.com
 
-On Tue, Sep 22, 2026 at 10:08:08AM -0700, Dave Jiang wrote:
+On Sun, Sep 06, 2026 at 09:48:44AM +0530, Shaikh Kamaluddin wrote:
+> ELC alias retirement depends on the error severity and on whether
+> vendor-specific MCE rules consider the reported address usable. Add
+> regression coverage for these decisions to cxl-elc.sh.
 > 
-> 
-> On 9/21/26 8:53 PM, Richard Cheng wrote:
-> > On Fri, Sep 18, 2026 at 01:30:12PM +0800, Anisa Su wrote:
-> >> From: Ira Weiny <iweiny@kernel.org>
-> >>
-> >> Additional DCD partition (AKA region) information is contained in the
-> >> DSMAS CDAT tables, including performance and shareable attributes.
-> >>
-> >> Match DCD partitions with DSMAS tables and store the meta data.
-> >>
-> >> Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> >> Co-developed-by: Anisa Su <anisa.su@samsung.com>
-> >> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> >> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> >> Tested-by: Junhee Park <jh9934.park@samsung.com>
-> >> Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> >> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> >>
-> > 
-> > Hi Anisa,
-> > 
-> > LGTM but I have limited knowledge for details of device's CDAT.
-> > Other experts would be more suitable to leave their tag.
-> > 
-> > I have a question here only, I wonder if a CDAT with no DSLBIS supported is
-> > possible ? seems that the implementation has the assumption that device's
-> > CDAT would be always supported with valid DSMAS and DSLBIS.
-> 
-> According to the spec, the device suppoort DCD shall provide DSMAS (CXL r4.0 9.13.3). DSLBIS is optional.
-> 
-> So I do wonder if we need to add plumbing to disable DCD if DSMAS is missing or malformed. 
-> 
-> DJ
-> 
-Can do. DSMAS is missing/malformed in 3 scenarios:
-- CDAT is missing
-- Failed to parse DSMAS from the CDAT
-- No DSMAS entry matched the DC partition.
+> Inject MCE records through the mce-inject debugfs interface and verify
+> the resulting bank status and alias-offlining messages in dmesg. Test
+> corrected and uncorrected errors on Intel, and exercise the poison,
+> deferred, and legacy bank-4 cases required by AMD address validation.
 
-So we can make a helper function to disable DCD and call from all 3 sites:
+Hi Shaikh,
 
-+/*
-+ * A DCD shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3).
-+ * Without one the partition's attributes are unknown, so disable DCD.
-+ */
-+static void cxl_dcd_dsmas_missing(struct cxl_dev_state *cxlds, const char *why)
-+{
-+	struct cxl_memdev_state *mds;
-+
-+	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
-+		return;
-+
-+	mds = to_cxl_memdev_state(cxlds);
-+	if (!cxl_dcd_supported(mds) ||
-+	    !cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM_1))
-+		return;
-+
-+	dev_warn(cxlds->dev, "DC partition has no valid DSMAS entry (%s), disabling DCD\n",
-+		 why);
-+	cxl_disable_dcd(mds);
-+}
+Thanks for taking this on. I ran it both ways: on a pre-fix kernel it
+fails on the corrected case, and with 6e7ab3c8107c ("cxl/mce: Avoid
+alias page retirement for corrected errors") applied the Intel cases
+pass. So it does detect the regression it was written for.
 
-Called if there's no CDAT/fails to parse CDAT:
+I do have a scope question about the vendor-specific coverage.
 
-void cxl_endpoint_parse_cdat(struct cxl_port *port)
- 	int rc;
- 
- 	xa_init(&__dsmas_xa);
--	if (!port->cdat.table)
-+	if (!port->cdat.table) {
-+		cxl_dcd_dsmas_missing(cxlds, "no CDAT");
- 		return;
-+	}
- 
- 	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
- 	if (rc < 0) {
- 		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
-+		cxl_dcd_dsmas_missing(cxlds, "CDAT parse failed");
- 		return;
- 	}
+The cxl tests in this repo exercise behavior controlled by the cxl_test
+mock topology. CPU vendor, MCA bank layout, and SMCA capability aren't
+properties cxl_test controls. Should the test matrix depend on them?
 
-Or no DSMAS entry matched the DC partition:
-static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
- 	struct device *dev = cxlds->dev;
- 	struct dsmas_entry *dent;
-+	bool dc_matched = false;
- 	unsigned long index;
+Looking at cxl_handle_mce(), I see these decision points:
+
+if (mce_is_correctable(mce))			/* 1 */
+	return NOTIFY_DONE;
+if (!mce_usable_address(mce))			/* 2 */
+	return NOTIFY_DONE;
+spa = mce->addr & MCI_ADDR_PHYSADDR;
+if (!cxl_resource_contains_addr(p->res, spa))	/* 3 */
+	return NOTIFY_DONE;
+if (spa >= p->res->start + p->cache_size)	/* 4 */
+	spa_alias = spa - p->cache_size;
+else
+	spa_alias = spa + p->cache_size;
+pfn = spa_alias >> PAGE_SHIFT;
+if (!pfn_valid(pfn))				/* 5 */
+	return NOTIFY_DONE;
 ...
- 			if (set_perf)
- 				update_perf_entry(dev, dent, &part->perf);
--			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-+			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1) {
- 				part->shareable = dent->shareable;
-+				dc_matched = true;
-+			}
- 			break;
- 		}
+if (!memory_failure(pfn, 0))			/* 6 */
+	set_mce_nospec(pfn);
 
-... 
-			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
- 				&dent->dpa_range);
- 	}
-+
-+	if (!dc_matched)
-+		cxl_dcd_dsmas_missing(cxlds, "no matching entry");
- }
+This patch mostly exercises 1 and 2. Point 2 is where the arch-specific
+MCE policy lives. Points 3 through 6 are driven by the cxl_test topology.
 
-But currently cxl_cdat_endpoint_process() fails if there's no DSLBIS or it's
-empty and DSLBIS is optional for DCD, so need a prep patch to allow empty DSLBIS
-and skip cxl_port_perf_data_calculate(port, dsmas_xa) if it's empty.
+Could we keep this test focused on the behavior cxl_test controls and go
+deeper on those cases instead? Can we test both alias directions, the
+boundary between them, and an SPA outside the ELC region.
 
-Something like this:
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -181,7 +181,7 @@
- }
- 
- static int cxl_cdat_endpoint_process(struct cxl_port *port,
--				     struct xarray *dsmas_xa)
-+				     struct xarray *dsmas_xa, bool *has_dslbis)
- {
- 	int rc;
- 
-@@ -191,9 +191,13 @@
- 	if (rc)
- 		return rc;
- 
-+	/* DSLBIS is optional; without it there is no perf data to apply */
- 	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
- 			      dsmas_xa, port->cdat.table, port->cdat.length);
--	return cdat_table_parse_output(rc);
-+	if (rc < 0)
-+		return rc;
-+	*has_dslbis = rc > 0;
-+	return 0;
- }
- 
- static int cxl_port_perf_data_calculate(struct cxl_port *port,
-@@ -430,19 +434,22 @@
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct xarray __dsmas_xa;
- 	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
-+	bool has_dslbis = false;
- 	int rc;
- 
- 	xa_init(&__dsmas_xa);
- 	if (!port->cdat.table)
- 		return;
- 
--	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
-+	rc = cxl_cdat_endpoint_process(port, dsmas_xa, &has_dslbis);
- 	if (rc < 0) {
- 		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
- 		return;
- 	}
- 
--	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
-+	rc = -ENOENT;
-+	if (has_dslbis)
-+		rc = cxl_port_perf_data_calculate(port, dsmas_xa);
- 	if (rc)
- 		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+That would mean dropping the vendor dispatch, bank discovery, has_bank(),
+non_b4_bank, and the AMD matrix from this patch.
+
+I don't think that analysis should be thrown away. It looks like useful
+coverage of the arch-specific MCE handling. Could we treat that as separate
+follow-on work and discuss the appropriate test mechanism and home with the
+x86 MCE maintainers rather than making it part of v2?
+
+More feedback on the cxl test appropriate pieces inline -
+
+> 
+> Derive the ELC SPA and its alias from cxl-list output, select offline
+> test addresses from lsmem, and discover available MCA banks dynamically.
+> Use a distinct SPA for each case and clean up modules loaded by the test.
+> 
+> Suggested-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> ---
+> Testing:
+> The test was run under virtme-ng with cxl_test configured for Extended
+> Linear Cache operation:
+> 
+> Intel, GenuineIntel:
+> --------------------
+> 
+> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu Skylake-Server-v4,+mce,+mca -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
+> 
+> 2 . Go to ndctl-main directoy with this patches 
+> 
+> env NDCTL="$PWD/build/ndctl/ndctl" 
+> DAXCTL="$PWD/build/daxctl/daxctl" 
+> CXL="$PWD/build/cxl/cxl" 
+> ./test/cxl-elc.sh
+> 
+> RESULT:
+> --------
+> 
+> PASS Intel corrected: alias no
+> PASS Intel uncorrected: alias yes
+> CXL ELC MCE validation passed for GenuineIntel: 2 cases
+> -----------------------------------------------------------------
+> 
+> AMD, AuthenticAMD legacy MCA: 
+> -----------------------------
+> 
+> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu EPYC-Milan -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
+> 
+> 2. Go to ndctl-main directoy with this patches  
+> env NDCTL="$PWD/build/ndctl/ndctl" 
+> DAXCTL="$PWD/build/daxctl/daxctl" 
+> CXL="$PWD/build/cxl/cxl" 
+> ./test/cxl-elc.sh
+> 
+> RESULT:
+> ---------
+> PASS AMD plain corrected: alias no
+> PASS AMD plain uncorrected: alias no
+> PASS AMD poison-only (invalid encoding): alias no
+> PASS AMD deferred without poison: alias no
+> PASS AMD deferred with poison: alias yes
+> PASS AMD uncorrected with poison: alias yes
+> PASS AMD bank-4 non-memory poison (invalid encoding): alias no
+> PASS AMD legacy bank-4 corrected DRAM ECC: alias no
+> CXL ELC MCE validation passed for AuthenticAMD: 8 cases
+> 
+>  test/cxl-elc.sh | 313 +++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 312 insertions(+), 1 deletion(-)
+> 
+> diff --git a/test/cxl-elc.sh b/test/cxl-elc.sh
+> index cfa09cb..bd600b4 100755
+> --- a/test/cxl-elc.sh
+> +++ b/test/cxl-elc.sh
+> @@ -8,6 +8,30 @@ rc=77
+>  
+>  set -ex
+>  
+> +mce_inject_loaded=0
+> +
+> +cleanup()
+> +{
+> +	local status=$?
+> +	local cleanup_status=0
+> +
+> +	trap - EXIT ERR
+> +	set +e
+> +
+> +	if ((mce_inject_loaded)); then
+> +		modprobe -r mce-inject || cleanup_status=1
+> +	fi
+> +
+> +	modprobe -r cxl_test || cleanup_status=1
+> +
+> +	if ((status == 0 && cleanup_status != 0)); then
+> +		status=1
+> +	fi
+> +
+> +	exit "$status"
+> +}
+> +
+> +trap cleanup EXIT
+>  trap 'err $LINENO' ERR
 
 
-Would something like this work? (I am also not an expert in CDAT/DSMAS/DSLBIS)
+Don't need EXIT trap and status rewrite here.
+The cxl tests generally use the ERR trap and unload explicitly. For a
+multi-module example, cxl-dax-hmem.sh has an unload() helper using:
+modprobe -r ... 2>/dev/null || true
 
-Thanks,
-Anisa
-> > 
-> > Best regards,
-> > Richard Cheng.
-> > 
-> >  
-> >> ---
-> >> Changes:
-> >> 1. cdat.c: record the DSMAS shareable flag independently of QTG
-> >>    discovery. cxl_port_perf_data_calculate() returns -ENOENT when FW
-> >>    recommends no QTG for any entry, which skipped the assignment even
-> >>    though the CDAT parsed successfully and the DSMAS flag was valid.
-> >>    Richard
-> >> ---
-> >>  drivers/cxl/core/cdat.c   | 49 +++++++++++++++++++++++++++++----------
-> >>  drivers/cxl/core/hdm.c    |  1 +
-> >>  drivers/cxl/core/mbox.c   |  9 +++++++
-> >>  drivers/cxl/core/memdev.c | 17 ++++++++------
-> >>  drivers/cxl/cxlmem.h      |  2 ++
-> >>  include/cxl/cxl.h         |  4 ++++
-> >>  6 files changed, 63 insertions(+), 19 deletions(-)
-> >>
-> >> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> >> index 5c9f07262513..6e7950f12134 100644
-> >> --- a/drivers/cxl/core/cdat.c
-> >> +++ b/drivers/cxl/core/cdat.c
-> >> @@ -17,6 +17,7 @@ struct dsmas_entry {
-> >>  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
-> >>  	int entries;
-> >>  	int qos_class;
-> >> +	bool shareable;
-> >>  };
-> >>  
-> >>  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
-> >> @@ -74,6 +75,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
-> >>  		return -ENOMEM;
-> >>  
-> >>  	dent->handle = dsmas->dsmad_handle;
-> >> +	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
-> >> +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
-> >>  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
-> >>  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
-> >>  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
-> >> @@ -255,8 +258,13 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
-> >>  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
-> >>  }
-> >>  
-> >> -static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-> >> -				     struct xarray *dsmas_xa)
-> >> +/*
-> >> + * The DSMAS shareable flag is a property of the CDAT entry and is recorded
-> >> + * even if FW returns no QTG recommendations for any entry; only update perf
-> >> + * if those recommendations exist, indicated by @set_perf
-> >> + */
-> >> +static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
-> >> +				   struct xarray *dsmas_xa, bool set_perf)
-> >>  {
-> >>  	struct device *dev = cxlds->dev;
-> >>  	struct dsmas_entry *dent;
-> >> @@ -266,18 +274,34 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-> >>  		bool found = false;
-> >>  
-> >>  		for (int i = 0; i < cxlds->nr_partitions; i++) {
-> >> -			struct resource *res = &cxlds->part[i].res;
-> >> +			struct cxl_dpa_partition *part = &cxlds->part[i];
-> >>  			struct range range = {
-> >> -				.start = res->start,
-> >> -				.end = res->end,
-> >> +				.start = part->res.start,
-> >> +				.end = part->res.end,
-> >>  			};
-> >>  
-> >> -			if (range_contains(&range, &dent->dpa_range)) {
-> >> -				update_perf_entry(dev, dent,
-> >> -						  &cxlds->part[i].perf);
-> >> -				found = true;
-> >> +			if (!range_contains(&range, &dent->dpa_range))
-> >> +				continue;
-> >> +
-> >> +			found = true;
-> >> +			/*
-> >> +			 * part->handle is from Get DC Config, dent->handle
-> >> +			 * from the CDAT DSMAS entry.
-> >> +			 */
-> >> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
-> >> +			    dent->handle != part->handle) {
-> >> +				dev_warn(dev,
-> >> +					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
-> >> +					 &range, part->handle,
-> >> +					 &dent->dpa_range, dent->handle);
-> >>  				break;
-> >>  			}
-> >> +
-> >> +			if (set_perf)
-> >> +				update_perf_entry(dev, dent, &part->perf);
-> >> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-> >> +				part->shareable = dent->shareable;
-> >> +			break;
-> >>  		}
-> >>  
-> >>  		if (!found)
-> >> @@ -419,12 +443,13 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
-> >>  	}
-> >>  
-> >>  	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
-> >> -	if (rc) {
-> >> +	if (rc)
-> >>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
-> >> +
-> >> +	cxl_memdev_apply_dsmas(cxlds, dsmas_xa, rc == 0);
-> >> +	if (rc)
-> >>  		return;
-> >> -	}
-> >>  
-> >> -	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
-> >>  	cxl_qos_class_verify(cxlmd);
-> >>  	cxl_memdev_update_perf(cxlmd);
-> >>  }
-> >> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> >> index 0ef076c08ed2..7f63b86887f4 100644
-> >> --- a/drivers/cxl/core/hdm.c
-> >> +++ b/drivers/cxl/core/hdm.c
-> >> @@ -477,6 +477,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
-> >>  
-> >>  		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
-> >>  		cxlds->part[i].mode = part->mode;
-> >> +		cxlds->part[i].handle = part->handle;
-> >>  
-> >>  		/* Require ordered + contiguous partitions */
-> >>  		if (i) {
-> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> >> index c96c16cc08e1..d84a90320081 100644
-> >> --- a/drivers/cxl/core/mbox.c
-> >> +++ b/drivers/cxl/core/mbox.c
-> >> @@ -1366,6 +1366,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
-> >>  	u64 decode_len = le64_to_cpu(dev_part->decode_length);
-> >>  	u64 blk_size = le64_to_cpu(dev_part->block_size);
-> >>  	u64 len = le64_to_cpu(dev_part->length);
-> >> +	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
-> >>  	u64 size;
-> >>  
-> >>  	/*
-> >> @@ -1378,6 +1379,13 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
-> >>  		return 0;
-> >>  	}
-> >>  
-> >> +	/* The CDAT DSMAD handle this refers to is 8 bits */
-> >> +	if (handle & ~0xFF) {
-> >> +		dev_warn(dev, "DSMAD handle 0x%x exceeds the 8 bit CDAT DSMAD handle\n",
-> >> +			 handle);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >>  	/*
-> >>  	 * Decode length is a count of 256M units, so a device reporting 2^36
-> >>  	 * or more wraps.
-> >> @@ -1391,6 +1399,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
-> >>  	*part = (struct cxl_dc_partition_info) {
-> >>  		.start = le64_to_cpu(dev_part->base),
-> >>  		.size = size,
-> >> +		.handle = handle,
-> >>  	};
-> >>  
-> >>  	/*
-> >> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> >> index 15df8db314d9..8883c8850759 100644
-> >> --- a/drivers/cxl/core/memdev.c
-> >> +++ b/drivers/cxl/core/memdev.c
-> >> @@ -594,7 +594,8 @@ bool is_cxl_memdev(const struct device *dev)
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
-> >>  
-> >> -static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
-> >> +static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
-> >> +		     enum cxl_partition_mode mode, u8 handle)
-> >>  {
-> >>  	int i = info->nr_partitions;
-> >>  
-> >> @@ -606,6 +607,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
-> >>  		.end = start + size - 1,
-> >>  	};
-> >>  	info->part[i].mode = mode;
-> >> +	info->part[i].handle = handle;
-> >>  	info->nr_partitions++;
-> >>  }
-> >>  
-> >> @@ -623,9 +625,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-> >>  	info->size = mds->total_bytes;
-> >>  
-> >>  	if (mds->partition_align_bytes == 0) {
-> >> -		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
-> >> +		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
-> >>  		add_part(info, mds->volatile_only_bytes,
-> >> -			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
-> >> +			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
-> >>  		return 0;
-> >>  	}
-> >>  
-> >> @@ -635,9 +637,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-> >>  		return rc;
-> >>  	}
-> >>  
-> >> -	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
-> >> +	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
-> >>  	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
-> >> -		 CXL_PARTMODE_PMEM);
-> >> +		 CXL_PARTMODE_PMEM, 0);
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -685,7 +687,8 @@ int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-> >>  	info->size = total;
-> >>  	dev_dbg(dev, "Adding dynamic ram partition 1; %#llx size %#llx\n",
-> >>  		dc_info.start, dc_info.size);
-> >> -	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
-> >> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1,
-> >> +		 dc_info.handle);
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -704,7 +707,7 @@ int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
-> >>  		.size = capacity,
-> >>  	};
-> >>  
-> >> -	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
-> >> +	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM, 0);
-> >>  	return cxl_dpa_setup(cxlds, &range_info);
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
-> >> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> >> index 4fac65dbb808..9fd5af2e41d4 100644
-> >> --- a/drivers/cxl/cxlmem.h
-> >> +++ b/drivers/cxl/cxlmem.h
-> >> @@ -140,6 +140,7 @@ struct cxl_dpa_info {
-> >>  	struct cxl_dpa_part_info {
-> >>  		struct range range;
-> >>  		enum cxl_partition_mode mode;
-> >> +		u8 handle;
-> >>  	} part[CXL_NR_PARTITIONS_MAX];
-> >>  	int nr_partitions;
-> >>  };
-> >> @@ -851,6 +852,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> >>  struct cxl_dc_partition_info {
-> >>  	u64 start;
-> >>  	u64 size;
-> >> +	u8 handle;
-> >>  };
-> >>  
-> >>  int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> >> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> >> index 4ef9511fbbdd..43edcde5bce3 100644
-> >> --- a/include/cxl/cxl.h
-> >> +++ b/include/cxl/cxl.h
-> >> @@ -141,11 +141,15 @@ enum cxl_partition_mode {
-> >>   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
-> >>   * @perf: performance attributes of the partition from CDAT
-> >>   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
-> >> + * @handle: DSMAS handle that represents this partition
-> >> + * @shareable: Is the partition shareable (from its CDAT DSMAS entry)
-> >>   */
-> >>  struct cxl_dpa_partition {
-> >>  	struct resource res;
-> >>  	struct cxl_dpa_perf perf;
-> >>  	enum cxl_partition_mode mode;
-> >> +	u8 handle;
-> >> +	bool shareable;
-> >>  };
-> >>  
-> >>  #define CXL_NR_PARTITIONS_MAX 3
-> >> -- 
-> >> 2.43.0
-> >>
-> > 
+Could we follow that pattern here and leave the test result coming from
+err()/do_skip()?
+
+
+>  
+>  check_prereq "jq"
+> @@ -85,10 +109,297 @@ compare_bases()
+>  	((cxlrd_hpa == ep1_hpa - ep1_size)) || err "$LINENO"
+>  }
+>  
+> +mce_skip()
+> +{
+> +	echo "SKIP CXL ELC MCE subtest: $*"
+> +	return 0
+> +}
+> +
+
+
+Please use do_skip() here.
+
+As written, a prerequisite failure returns 0, so meson reports PASS even
+if none of the MCE coverage ran. I think this test needs to be
+all-or-nothing: if its prerequisites aren't available, the test should
+SKIP rather than PASS with cases omitted.
+
+
+> +dmesg_count()
+> +{
+> +	dmesg | grep -F -c -- "$1" || true
+> +}
+> +
+> +wait_for_dmesg()
+> +{
+> +	local pattern="$1"
+> +	local previous="$2"
+> +	local count
+> +
+> +	for _ in {1..50}; do
+> +		count="$(dmesg_count "$pattern")"
+> +		((count > previous)) && return 0
+> +		sleep 0.1
+> +	done
+> +
+> +	return 1
+> +}
+
+
+Do we want to count matches across the whole ring buffer?
+
+What happens if the ring buffer wraps between the before and after
+samples? Also, are messages left by an earlier run something the
+negative checks need to account for?
+
+cxl-translate.sh has the pattern of recording a start time and looking
+at messages since that point. Could a scoped log window work here?
+
+
+> +
+> +address_is_offline()
+> +{
+> +	local address="$1"
+> +	local range start end
+> +
+> +	while read -r range; do
+> +		[[ "$range" == *-* ]] || continue
+> +		start=$(( ${range%%-*} ))
+> +		end=$(( ${range##*-} ))
+> +		((address >= start && address <= end)) && return 0
+> +	done < <(echo "$lsmem_json" | jq -r \
+> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+> +		 .range')
+
+
+With set -x, doesn't this expand the JSON into the trace each time this
+is evaluated?
+
+Could the offline ranges be parsed once and then iterated?
+
+
+> +
+> +	return 1
+> +}
+> +
+> +find_offline_spas()
+> +{
+> +	local nr_spas="$1"
+> +	local range start end low high candidate alias spa_string alias_string
+> +	local page_size region_end cache_end i
+> +	local stride=0x10000
+> +
+> +	lsmem_json="$(lsmem --json --bytes --output RANGE,STATE)"
+> +	page_size="$(getconf PAGESIZE)"
+> +	region_end=$((region_hpa + region_size))
+> +	cache_end=$((region_hpa + elc_size))
+> +	inject_spas=()
+> +	alias_spas=()
+> +
+> +	while read -r range; do
+> +		[[ "$range" == *-* ]] || continue
+> +		start=$(( ${range%%-*} ))
+> +		end=$(( ${range##*-} ))
+> +
+> +		low=$start
+> +		((low < region_hpa)) && low=$region_hpa
+> +		high=$((end + 1))
+> +		((high > cache_end)) && high=$cache_end
+
+
+Doesn't limiting high to cache_end mean every injected SPA comes from
+the first half of the ELC region?
+
+If so, aren't we only exercising:
+
+spa_alias = spa + p->cache_size;
+
+and never:
+
+spa_alias = spa - p->cache_size;
+
+Could we select addresses from both halves? Are there other useful
+boundary cases?
+
+
+> +		((low < high)) || continue
+> +
+> +		# Stay away from the first pages of the hotplugged range.
+> +		candidate=$((low + stride))
+> +		candidate=$((
+> +			(candidate + page_size - 1) / page_size * page_size
+> +		))
+> +		inject_spas=()
+> +		alias_spas=()
+> +		for ((i = 0; i < nr_spas; i++)); do
+> +			candidate=$((candidate + (i > 0 ? stride : 0)))
+> +			alias=$((candidate + elc_size))
+> +			((candidate < high && alias < region_end)) || break
+> +			address_is_offline "$alias" || break
+> +			printf -v spa_string '0x%x' "$candidate"
+> +			printf -v alias_string '0x%x' "$alias"
+> +			inject_spas+=("$spa_string")
+> +			alias_spas+=("$alias_string")
+> +		done
+> +		((${#inject_spas[@]} == nr_spas)) || continue
+> +		return 0
+> +	done < <(echo "$lsmem_json" | jq -r \
+> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+> +		 .range')
+> +
+> +	return 1
+> +}
+> +
+> +discover_mca_banks()
+> +{
+> +	local path name
+> +
+> +	for path in \
+> +		/sys/devices/system/machinecheck/machinecheck0/bank[0-9]*; do
+> +		[[ -e "$path" ]] || continue
+> +		name="${path##*/}"
+> +		printf '%s\n' "${name#bank}"
+> +	done | sort -n -u
+> +}
+> +
+> +has_bank()
+> +{
+> +	local wanted="$1"
+> +	local bank
+> +
+> +	for bank in "${mca_banks[@]}"; do
+> +		[[ "$bank" == "$wanted" ]] && return 0
+> +	done
+> +
+> +	return 1
+> +}
+> +
+> +select_mce_parameters()
+> +{
+> +	local bank
+> +
+> +	vendor="$(awk '/^vendor_id/{ print $3; exit }' /proc/cpuinfo)"
+> +	readarray -t mca_banks < <(discover_mca_banks)
+> +	((${#mca_banks[@]})) || return 1
+> +
+> +	case "$vendor" in
+> +	GenuineIntel)
+> +		test_bank="${mca_banks[-1]}"
+> +		test_case_count=2
+> +		;;
+> +	AuthenticAMD)
+> +		# The usable-address corrected-error case is the legacy bank-4 DRAM
+> +		# ECC encoding (XEC 8). It is not valid for an SMCA bank.
+> +		grep -qw smca /proc/cpuinfo && return 1
+> +		has_bank 4 || return 1
+> +		non_b4_bank=
+> +		for bank in "${mca_banks[@]}"; do
+> +			[[ "$bank" == 4 ]] || non_b4_bank="$bank"
+> +		done
+> +		[[ -n "$non_b4_bank" ]] || return 1
+> +		test_case_count=8
+> +		;;
+> +	*)
+> +		return 1
+> +		;;
+> +	esac
+> +}
+
+
+The above host specfic funcs should move out of this test.
+
+
+> +
+> +inject_mce()
+> +{
+> +	local status="$1"
+> +	local bank="$2"
+> +	local mce_inject=/sys/kernel/debug/mce-inject
+> +
+> +	echo sw > "$mce_inject/flags"
+> +	echo "$status" > "$mce_inject/status"
+> +	echo 0x80 > "$mce_inject/misc"
+
+
+That 0x80 needs a comment.
+
+
+
+> +	echo "$inject_spa" > "$mce_inject/addr"
+> +	echo "$bank" > "$mce_inject/bank"
+
+Also isn't the write to "bank" what triggers the injection? If so,
+could that ordering get a comment too, since it needs to remain last?
+
+
+
+> +}
+> +
+> +run_mce_case()
+> +{
+> +	local name="$1"
+> +	local status="$2"
+> +	local bank="$3"
+> +	local expect_alias="$4"
+> +	local index="$5"
+> +	local alias_msg bank_msg status_tag
+> +	local alias_before bank_before
+> +
+> +	inject_spa="${inject_spas[$index]}"
+> +	alias_spa="${alias_spas[$index]}"
+> +	alias_msg="Offlining aliased SPA address0: $alias_spa"
+> +	status_tag="${status#0x}"
+> +	bank_msg="Bank $bank: $status_tag"
+
+
+Does this depend on status already being written as exactly 16 hex
+digits to match __print_mce()?
+
+Would formatting it explicitly be safer? like -
+
+printf -v status_tag '%016x' "$status"
+
+
+
+> +	alias_before="$(dmesg_count "$alias_msg")"
+> +	bank_before="$(dmesg_count "$bank_msg")"
+> +
+> +	inject_mce "$status" "$bank"
+> +	wait_for_dmesg "$bank_msg" "$bank_before" || err "$LINENO"
+> +
+> +	if [[ "$expect_alias" == "yes" ]]; then
+> +		wait_for_dmesg "$alias_msg" "$alias_before" || err "$LINENO"
+> +	else
+> +		(($(dmesg_count "$alias_msg") == alias_before)) || \
+> +			err "$LINENO"
+> +	fi
+
+Wondering about checking dmesg at all. Would an mce_record tracepoint give
+us a more reliable indication that the injection occurred? cxl-poison.sh
+and cxl-events.sh already have examples of using tracefs. (Which would 
+make irrelevant my comments about dmesg log checking earlier.)
+
+Stopping here for now. Will pick up again in a v2 that's been trimmed.
+
+-- Alison
+
+
+
+
+> +
+> +	echo "PASS $name: SPA $inject_spa, alias $alias_spa, bank $bank, alias $expect_alias"
+> +}
+> +
+> +run_intel_mce_cases()
+> +{
+> +	run_mce_case "Intel corrected" 0x9c00000000000080 \
+> +		"$test_bank" no 0
+> +	run_mce_case "Intel uncorrected" 0xbc00000000000080 \
+> +		"$test_bank" yes 1
+> +}
+> +
+> +run_amd_mce_cases()
+> +{
+> +	# Mirror the full AMD matrix documented with the kernel fix. The two
+> +	# poison-only records have UC=0 and Deferred=0, so they are not valid
+> +	# architectural records. Keep them as software-injection robustness
+> +	# coverage and expect the corrected-error filter to reject them.
+> +	run_mce_case "AMD plain corrected" 0x9c00000000000080 \
+> +		"$non_b4_bank" no 0
+> +	run_mce_case "AMD plain uncorrected" 0xbc00000000000080 \
+> +		"$non_b4_bank" no 1
+> +	run_mce_case "AMD poison-only (invalid encoding)" \
+> +		0x9c00080000000080 "$non_b4_bank" no 2
+> +	run_mce_case "AMD deferred without poison" 0x9c00100000000080 \
+> +		"$non_b4_bank" no 3
+> +	run_mce_case "AMD deferred with poison" 0x9c00180000000080 \
+> +		"$non_b4_bank" yes 4
+> +	run_mce_case "AMD uncorrected with poison" 0xbc00080000000080 \
+> +		"$non_b4_bank" yes 5
+> +	run_mce_case "AMD bank-4 non-memory poison (invalid encoding)" \
+> +		0x9c00080000000080 4 no 6
+> +	run_mce_case "AMD legacy bank-4 corrected DRAM ECC" \
+> +		0x9c00000000080000 4 no 7
+> +}
+> +
+> +test_mce_alias()
+> +{
+> +	local region_json
+> +
+> +	[[ "$(uname -m)" == "x86_64" ]] || {
+> +		mce_skip "x86_64 is required"
+> +		return 0
+> +	}
+> +	command -v lsmem >/dev/null 2>&1 || {
+> +		mce_skip "lsmem is unavailable"
+> +		return 0
+> +	}
+> +
+> +	region_json="$(echo "$json" | jq -c --arg region "$region" \
+> +		'.[] | select(.region == $region)')"
+> +	region_hpa="$(echo "$region_json" | jq -r '.resource // empty')"
+> +	region_size="$(echo "$region_json" | jq -r '.size // empty')"
+> +	elc_size="$(echo "$region_json" | jq -r \
+> +		'.extended_linear_cache_size // empty')"
+> +
+> +	[[ "$region_hpa" =~ ^[0-9]+$ ]] || err "$LINENO"
+> +	[[ "$region_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+> +	[[ "$elc_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+> +	((elc_size > 0x10000 && region_size >= elc_size * 2)) || \
+> +		err "$LINENO"
+> +
+> +	select_mce_parameters || {
+> +		mce_skip "no supported MCA bank configuration for $vendor"
+> +		return 0
+> +	}
+> +
+> +	if [[ ! -d /sys/module/mce_inject ]]; then
+> +		modprobe mce-inject || {
+> +			mce_skip "mce-inject module is unavailable"
+> +			return 0
+> +		}
+> +		mce_inject_loaded=1
+> +	fi
+> +	[[ -d /sys/kernel/debug/mce-inject ]] || {
+> +		mce_skip "mce-inject debugfs interface is unavailable"
+> +		return 0
+> +	}
+> +
+> +	find_offline_spas "$test_case_count" || {
+> +		mce_skip "offline lsmem range lacks enough ELC test addresses"
+> +		return 0
+> +	}
+> +
+> +	case "$vendor" in
+> +	GenuineIntel)
+> +		run_intel_mce_cases
+> +		;;
+> +	AuthenticAMD)
+> +		run_amd_mce_cases
+> +		;;
+> +	esac
+> +
+> +	echo "CXL ELC MCE validation passed for $vendor: $test_case_count cases"
+> +}
+> +
+>  find_region
+>  retrieve_info
+>  compare_sizes
+>  compare_bases
+>  
+> +# Check before injecting the expected machine-check messages.
+> +check_dmesg "$LINENO"
+> +test_mce_alias
+>  check_dmesg "$LINENO"
+> -modprobe -r cxl_test
+> 
+> base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
+> -- 
+> 2.43.0
 > 
