@@ -1,98 +1,132 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f35.google.com (mail-pj2-f35.google.com [74.125.227.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357EF41B8E0
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 08:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF4A41DDE5
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 08:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790065504; cv=none; b=gvEglo5xr3yedJ7vNrYTk7ONeOzvCjt5XoUnmd8K6NNYYAL3FUGPowK8ezv2UklJcz8vkQnL9EtYfjcywSVJakNjsY8iqu9TJK/vSa/iFB3iB3iMezHMbvuJtVM4l2wWM7mCOrfJhHMnBJZBK7eCSqtkDUgyTCeTgD/xdN3QWeA=
+	t=1790065561; cv=none; b=M86fdoAlwRBnkCLL5EKk7UF0Q4n36DarmFVgcIk9gql13CwbxrXT/AEdrrV6yiQMaeCu0vceGeo2pP6srZiYdZj1l3nBz7FvK2YFq3zeHv/xpppUj5xY1GF0oEW/lsFz4JtxoN2tfuLv2owUgdzJzhPs04O5YjIVrFX0rcirXLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790065504; c=relaxed/simple;
-	bh=jcCY0fCSpx3QirVvRU/RoqQbTsFduVL9H17E2G53sIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fRh38lOmUwnAW2soW0CW2QIbEf5M18j8CjxMon5CdcUrxx7WBOpQuLepwgajOmKztLOZtDTt/GqcjpmNZaPBdU6zsQgCqqknWyngUuvq+uUGWaSlUgPp02xTGQ19LFjOMOrO/GHOijSdXVzExmO7G5nK+4BFQPuWzTCP/QvaHYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=asEbdaIw; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1790065561; c=relaxed/simple;
+	bh=dBBpa7Ydst38i8cZsMQVxzXK9rqMNseU8twqVhQtE78=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BR4KktfgJzhdTNaNu9izttW2QxrWOiRE36i2FX73ky5qfHnJaFaPoyRkyuUBOhfwBn8sTLuiAqimqT6ABihgGemrLdxX4883S+IjUT9/z8E44ggfWAy5A+pU+eQw0jBa397/fOEY9Jq6VdA+i0+0uSCgt2EhfXjPNYq3Mzu15Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EHyNhINq; arc=none smtp.client-ip=74.125.227.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="asEbdaIw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1790065498; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=jcCY0fCSpx3QirVvRU/RoqQbTsFduVL9H17E2G53sIA=;
-	b=asEbdaIweAk8XHfDsXx+WpjfLv88R+pFjTCAYTP5WEPW5SLwzgVCeHeQBEfY6DyB5Kh7EptVT59AaXjBG/F9k2PAR4FxomVUl1rHHZGAlsVzgjo5G6X0gVP9WBQgXHNC/fQTBEkuOtL27na29y2lWrrg3b4xKFdZe61GyLrni2w=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XBT75sK_1790065496;
-Received: from 30.178.81.152(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XBT75sK_1790065496 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 22 Sep 2026 16:24:57 +0800
-Message-ID: <04792a46-9a85-4f2d-a1ec-4cf27a771e6b@linux.alibaba.com>
-Date: Tue, 22 Sep 2026 16:24:56 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EHyNhINq"
+Received: by mail-pj2-f35.google.com with SMTP id d9443c01a7336-2dd77300825so38736925ad.1
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 01:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1790065558; x=1790670358; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Id4aiEwWk24mT8CByvlZpwQS9RXne8NT6QXvKFa3y1M=;
+        b=EHyNhINq+oMknrG/8IGrEy2BE5yyRk8MEMJKq7Jbnnt/Sz0/usHcGFLqXJ4X8+kQS7
+         UHZ8rN8b+/Qv4tJGJAbDRTXU+TcvuFLd5vBBWT3ZQhLu5VlDFyiCVDwLUEjLhfKu0HYt
+         qSZWTDDmfKD85R0WFIEohMZKKnX9slN7Ii3rYNEWkVvpJAeIuI3KXXDhojiUZOgyzM1y
+         mZDyyVet2TkAY4X3csjUQQtk5geFpHZpuGoQT7GwunKmS2L7BQu/BoYwjWPujhB+iyjh
+         N524K2N4wC2wE8Xc8Mdn5NlvxK4sLgYlKFTx9rdvJrYBElfskWNQ5WX8iJC2iJbI9++k
+         0vWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790065558; x=1790670358;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Id4aiEwWk24mT8CByvlZpwQS9RXne8NT6QXvKFa3y1M=;
+        b=nD3e1UiSAm/Lh9tAjEtfAFO3MX06WGedM+o8Ec/8Swwk1Ez1cXX+PcVlBRKyjeMgWJ
+         HIzOatZdRM6V54316fctA+cI6B4Pq/ObO9QNbS0Hhas8C2qGzWTnAo7HFBaE9cYJCtrN
+         HA64vMl1Ii4E4y7qrSjEo/0NjwnX3LYQG7G869bkF25TAqnPXw6MyF47KDgmG+izgLqS
+         QNTrpac22LXRa4g0qn8ngawhTBsZNrA2WG10z/dOkRCGnSkwZMeg/OSE4f3RnyfHjnet
+         jEPh0X+5/K60AXF+tBQ0TYIm4UU3NuS5j+WlTgNK+7bBFRzWN4RaPrpTcqO0DUe9hd/0
+         lS7A==
+X-Forwarded-Encrypted: i=1; AKwUvBwqfT9LQmff0JGe8MevYX4jao+GXSlapIvJaxd9eCW6POxtDeeqY3V7LStSl+4n+RZeuy5+3UJmYEs=@vger.kernel.org
+X-Gm-Message-State: AFuF++nbO8zIEK8sHe5VXMfGF7imdXHWn7YcJ6fTvJuK5KG5F/0TBrQN
+	K+Vafe6Z4vqzTRQfv1lLWPOZgkogMT3VkfUdPVW2/HaNE82KF1mzuRBjClnoSBJAXmQ=
+X-Gm-Gg: AYBFou1pZdkXhZ2EQk1QNEvQjM0b/80sNxOjv0hRcTpMUXh3gQHQVvZBDwi4aYPY8+p
+	tVgxrQe6+lctlx6oTeoB+OCBKqs/qbsWX1TNNbbslTThahlkQ3PpgBvMoQZNcjL0xu+2ystHHgc
+	JY8c5yrMdUesQ62llDDzJ5Xth3N+6SwuT0hlNmgNTKKLnuXzgf75fEe5GMr9cioK6I1rKAUyd3j
+	Oe4wYxgy3UWEJv2r3teauCLM4F+FmVL7Az87zf9duCMElih5YsGOLsgE4Ai+pMznwQCM3NUFQKM
+	NTzaVZp5MSspV73I9C+6SrOsD48l3nwamRTS+wzvIvIPf8MqahbrMJI6KGfuYXZBPIDC51mofyC
+	RegqcfRbJW8MnSERRnJcFbS1BHvqS2mIi+G6kS8reQ/SbmAdIZVn+i6cP4CD+UxRBbqjVnB8Wce
+	c/+SIj8Ayy7y304ZR5rw0r2eIcYcBeFMPM5gYe4AoKgGP8eMzLfLzPoHfXDm/Q0O/7YvYJSe9dR
+	cYiQghgFggtXF0T9MqK
+X-Received: by 2002:a17:90b:1e53:b0:39e:2c5c:a69a with SMTP id 98e67ed59e1d1-3a07309eb75mr436231a91.5.1790065558109;
+        Tue, 22 Sep 2026 01:25:58 -0700 (PDT)
+Received: from n232-176-004.byted.org ([36.110.163.97])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a07385e516sm223056a91.0.2026.09.22.01.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 01:25:57 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Muchun Song <songmuchun@bytedance.com>,
+	muchun.song@linux.dev
+Subject: [PATCH v2 0/2] dax: Fix Device DAX range allocation validation
+Date: Tue, 22 Sep 2026 16:25:49 +0800
+Message-ID: <20260922082551.874901-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/events: Fix event type check for CME counter
- expiration
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-References: <20260921120932.1769566-1-kanie@linux.alibaba.com>
- <arFpVVElCIlCqvVb@aschofie-mobl2.lan>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <arFpVVElCIlCqvVb@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+While working on the HugeTLB Vmemmap Optimization (HVO) generalization,
+Sashiko reported that memmap_init_zone_device() could be asked to
+initialize struct pages with a large-page order for a physical range
+that was not naturally aligned to that order.
+
+Following the Device DAX call path confirmed that the condition was
+reachable. Device DAX range validation checks the range size, but not
+its start address. An unaligned range can therefore reach
+memmap_init_zone_device() after the device binds, and a subsequent write
+to a userspace mapping may trigger a kernel panic. With the help of an
+LLM, I was able to reproduce the failure.
+
+The automatic resize path has a related problem. It can split an aligned
+size request across arbitrary free gaps, consume an unaligned fragment,
+and leave the resize partially applied when a later allocation fails.
+
+This series first fixes the mapping sysfs attribute to propagate
+validation failures. It then validates both the start and size of every
+Device DAX range and makes automatic resize account only for usable
+aligned space.
+
+The changes were tested by booting the kernel in a VM with a fragmented
+dynamic DAX region. Misaligned mappings were rejected with -EINVAL,
+aligned allocation and multi-range mmap read/write succeeded, and an
+allocation exceeding the usable aligned space returned -ENOSPC without
+leaving a partial allocation.
+
+v2:
+- Return explicit errors before Device DAX range allocation
+  (suggested by Dave Jiang)
+- Move the mapping error reporting fix before the range alignment
+  validation fix for independent backports (suggested by Dave Jiang)
+- Keep the alloc_is_aligned() name to avoid unrelated helper renaming
+  (suggested by Dave Jiang)
+
+v1: https://lore.kernel.org/all/20260915095621.3744167-1-songmuchun@bytedance.com/
+
+Muchun Song (2):
+  dax/bus: fix mapping attribute error reporting
+  dax/bus: fix Device DAX range alignment validation
+
+ drivers/dax/bus.c | 142 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 110 insertions(+), 32 deletions(-)
 
 
-在 2026/9/22 01:28, Alison Schofield 写道:
-> On Mon, Sep 21, 2026 at 08:09:32PM +0800, Guixin Liu wrote:
->
->
-> Hi Guixin,
->
-> Agree w DaveJ's commit log suggestion.
->
-> Also, the Subject can be specific, like:
-> cxl/events: Test CME counter expiry with equality, not bitwise AND
->
-> You may want to add something like I've appended below to your agent instructions.
-> It is intended to better calibrate your agent. Also try giving your agent this
-> patch (v1 and v2) as a concrete example in the skill. It's a good one because the
-> original one isn't bad, it is actually thorough and technically valid, but it is
-> trying to make the commit log serve as the entire bug report, reproduction recipe
-> and test report. That's exactly the tendency you want this agent to stop doing.
->
-> Teach your agent (w example):
->
-> For Linux kernel commit messages, be concise and focus on why the change is
-> needed, not a detailed narration of the investigation.
->
-> Structure the commit message as:
->
-> 1. Background only when needed to understand the problem.
-> 2. Problem: what the current code gets wrong.
-> 3. Impact: the meaningful consequence, especially user-visible impact.
-> 4. Resolution: what the patch changes and why that addresses the problem.
-> 5. Brief "Found by" / "Tested by" information when useful.
->
-> Do not include every example, reproduction step, intermediate observation, or
-> possible consequence just because that information is available. Keep only
-> details needed to establish the problem and impact.
->
-> For small, obvious fixes, aim for roughly 1-3 short paragraphs plus concise
-> testing information. Explain the semantic error. Do not narrate the code diff.
->
-> Subjects should describe the change specifically. Avoid generic "Fix ..."
-> subjects when a more descriptive imperative subject is available.
-Thank you for your patient explanation, I summarized these to a skill, thanks.
-
-Best Regards,
-Guixin Liu
-> -- Alison
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.54.0
 
