@@ -1,67 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EF213CF82
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 00:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1689633689D
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 00:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790037589; cv=none; b=Ky3Yw4Ic4axzdFqOGMHKQtl8NlGlmVGtPRht5LC8sJfEGAAyS6uPotjoBHd7WxCvzBIKH/boM/BwFrKcqYAiuc1dA03q7mEWSWufu4URULYZxn9EI7RgQKWzeiRlCbMc8i9JfG6xTSg3Xwz8qah5P86Fv5R7qKK3JhJZVJQIJCI=
+	t=1790037961; cv=none; b=F/qzD1BG2Ne2ptmSqNmCxqfyNtO6k8FGXajWCaKLkeRSK2Td7/+/DqfvvbDX0QalWP9BX87QCs8hyd35spFNkn4ExL7rlqSoqheVDKLG4Vhfm9p5KH36Ua2UUQEAvr3QCUYUbH/LrrQem6oZYuRCl++vNIo84OkDLT08+1OIR84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790037589; c=relaxed/simple;
-	bh=9SdDAD95xMYFQ4gfCjrZDNf1uTiQ0xw1LMY2aBSgE2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=snKFr1ItQyK8cg1ovctD5W2mOb6xaACpCIKJFhcYHcPudWi41vmFfxQK6qiAcCvSy/nQ02B5brYxbxtkyzSt7FrfrSTbhCDInQw7BDcpB42zkNRg3/+S/Qm2TixYZ/Aut/d0ZHbay2/HHUIkOtUB+ZdFdmQgKS7VIprkIPW4U2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxG0XaJL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790037961; c=relaxed/simple;
+	bh=4130k4LuiPyuws7zmeOKc+NHb5OH8+IuNpbCvLEt+vw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n/uB5vIimDvM5z2+0ObAVMAknjZUKVszxKxgqTIs4csSq2ZstOH9XiEWWsknPE6332UbbfXfxfmEiBKlY1bH1NDyPe9mMx45JebbEmzRLWHOVRss7mo9kBe7MnD/vQFdqC4BerFCL2g5D7cFQ+g5l75lR+TCowSG5ilqZx79jM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZwshbraU; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxG0XaJL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FA41F000FF;
-	Tue, 22 Sep 2026 00:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790037587;
-	bh=50nU5Tf/W6+TzXP/ktV4AFtIrpd6f4nmN4oL0ztCO6M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=bxG0XaJLpm/aXAimXYdvFiz/HKzumzqEI6WtmKBvfa5ND+z1N/9hYELj8234sWiHG
-	 9IHG3aSqHDIzJnNCe2QiRy8OwkObbMhLaJlaFQNMNMhbjTazUeR+cCnu/6+jwTVX0z
-	 z1nkFH92wZ0xEXcJ0LQ3Z46EY8h4uR2MIv8etDgbtingkf8aU6nyw30qBL2NSyCnnJ
-	 Byw997+zzAlVnG95A/3Mf1LU+NAm33qcj1+JMBndvZKTGNS5yyMUjzaaubkhyxbn08
-	 CX13S3BjPoHWoQGdXTqpl8EWE+2RStdVHqPce1GNv3Y8l3a5N1ZHPtA0/1PfrhTn8Z
-	 rMdhrIH1f8Frg==
-Date: Tue, 22 Sep 2026 01:39:42 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org, Markus Armbruster <armbru@redhat.com>, Peter Xu
- <peterx@redhat.com>, Junjie Cao <junjie.cao@intel.com>, Michael Roth
- <michael.roth@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, Zhao Liu
- <zhao1.liu@intel.com>, linux-cxl@vger.kernel.org, Jason Wang
- <jasowangio@gmail.com>, Eric Blake <eblake@redhat.com>, Fabiano Rosas
- <farosas@suse.de>, Philippe =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?=
- <philmd@oss.qualcomm.com>, Kevin Wolf <kwolf@redhat.com>, Hanna Reitz
- <hreitz@redhat.com>, qemu-block@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
- =?UTF-8?B?dS1EYXVkw6k=?= <philmd@mailo.com>, Lukas Straub
- <lukasstraub2@web.de>
-Subject: Re: [PATCH v5 2/7] qapi: convert remaining simple intros for
- cxl.json
-Message-ID: <20260922013942.0abc8165@jic23-hlaptop>
-In-Reply-To: <20260917194614.549584-3-jsnow@redhat.com>
-References: <20260917194614.549584-1-jsnow@redhat.com>
-	<20260917194614.549584-3-jsnow@redhat.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZwshbraU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790037959; x=1821573959;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4130k4LuiPyuws7zmeOKc+NHb5OH8+IuNpbCvLEt+vw=;
+  b=ZwshbraUCKcnGoJk4Pohw8vM5EebsCLNTREMu71V3QBoQYYCJeintUIS
+   CYGMlBCX5FfrBE+RAQzSZOOotMYF8eu8Aqnc4glc/0iq6Ete86kxfTnH9
+   hv/LhSWBAgr02gMwjkkEE6L/cDDVulaDJibnGXOYpY5pDSAlMcpI+Nt2M
+   SAhidfEwu2rpETcjEzfAjz8I3twrUFVOqzNs6A5VrHf5dEHB4usfdsFDv
+   gXq0yRiyhhqagB90uR36eqr1JN0HchLVv0mBchjxJ8Y0MZwGAFh4d+HKa
+   C3CsyFfAeiCuhsy8gAmSIK9RQK4LxBMGr37y1CCiHO0QnAHyloQYUPW8e
+   g==;
+X-CSE-ConnectionGUID: Nn0xeUS5SaqaaiWvXQpOGQ==
+X-CSE-MsgGUID: LVTwIV5BRz2cUvKT5L5o0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="89734933"
+X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
+   d="scan'208";a="89734933"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 17:45:58 -0700
+X-CSE-ConnectionGUID: bwY+PQjlQ1KkSYXYn9RpIw==
+X-CSE-MsgGUID: eTdp9kO/R5eU+TerrEQg+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,115,1787036400"; 
+   d="scan'208";a="300831687"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.234]) ([10.125.109.234])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 17:45:57 -0700
+Message-ID: <a26d002f-1dcf-4bf4-bfd5-dd587c559029@intel.com>
+Date: Mon, 21 Sep 2026 17:45:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 6/8] cxl/mem: Configure dynamic capacity interrupts
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>,
+ Gregory Price <gourry@gourry.net>, Richard Cheng <icheng@nvidia.com>,
+ Ben Cheatham <benjamin.cheatham@amd.com>, Ira Weiny <iweiny@kernel.org>,
+ Anisa Su <anisa.su@samsung.com>, Wonjae Lee <wj28.lee@samsung.com>,
+ Junhee Park <jh9934.park@samsung.com>, Heesoo Kim <habil.kim@samsung.com>
+References: <20260918203049.7273-1-anisa.su@samsung.com>
+ <20260918203049.7273-7-anisa.su@samsung.com>
+ <da6deab0-de16-43ea-bd13-5861f84a587b@intel.com>
+ <20260922004228.5a0c027b@jic23-hlaptop>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260922004228.5a0c027b@jic23-hlaptop>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Sep 2026 15:46:09 -0400
-John Snow <jsnow@redhat.com> wrote:
 
-> These are either structs or unions that are used in an inlinable
-> context: i.e. the generated documentation is likely to feature a
-> version of this documentation block that does not include the intro in
-> context of another command, event, or structure.
+
+On 9/21/26 4:42 PM, Jonathan Cameron wrote:
 > 
-> Signed-off-by: John Snow <jsnow@redhat.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+>>> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+>>> index 7b756000a1a6..6ef47265da10 100644
+>>> --- a/tools/testing/cxl/test/mem.c
+>>> +++ b/tools/testing/cxl/test/mem.c
+>>> @@ -1818,7 +1818,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>>>  	if (rc)
+>>>  		dev_dbg(dev, "No CXL FWCTL setup\n");
+>>>  
+>>> -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+>>> +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_INFO |
+>>> +				       CXLDEV_EVENT_STATUS_WARN |
+>>> +				       CXLDEV_EVENT_STATUS_FAIL |
+>>> +				       CXLDEV_EVENT_STATUS_FATAL);  
+>>
+>> Second time I'm seeing this constructed mask being used in this commit. Maybe create a define for it?
+>>
+>> s/CXLDEV_EVENT_STATUS_ALL/CXLDEV_EVENT_STATUS_BASE/ perhaps?
+> 
+> That was Anisa acting on my feedbakc on previous.
+> I don't like _ALL because we already have an example of the spec
+> expanding and the definition becoming messy. But mainly I was
+> pushing back against _ALL + masking with one element we didn't
+> want as fragile.  So I'm not against _ALL if it is made up of
+> another define + DCD (for now) and that other define can be
+> used in places like this.
+> 
+> Bikeshed time... BASE is usually a define for a reg address and it is
+> is hard to come up with a name for that when it is a mixture of
+> RAS stuff and INFO which can be a wide range of random nasty
+> and nice things.
+> 
+> So with the right name seems fine to have what Dave suggests.
+> I'm just not sure what that name is!  Hence I'd just stick
+> to the long hand option.
+
+Yeah if we can't come up with anything good then leave it as is. 
+
+> 
+> Jonathan
+> 
+>>
+>>>  	cxl_mock_test_feat_init(mdata);
+>>>  
+>>>  	return 0;  
+>>
+>>
+> 
+
