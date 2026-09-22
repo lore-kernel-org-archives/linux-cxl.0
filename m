@@ -1,129 +1,120 @@
-Received: from mail-pj2-f42.google.com (mail-pj2-f42.google.com [74.125.227.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27CC4DDB4E
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 06:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC54141A4E2
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 08:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790059789; cv=none; b=d86yJRxluwzRz2Ra6oK6tz46PKr2yVnOrmqTBjHZmxztNVR5gc20SOXC07iFEPfR1XDg+A+x3fcxYUxlq4gW+5qsnCURn9Gc7VAVZqap9aYJOCL/Xh/XJlwkb76c5+m5hp1J5HDP36euFyRDiRKZgtWyoHLuYqTlSWv9CxlEt3w=
+	t=1790065354; cv=none; b=DhNBIWRCpdnOHNDmxiaspQ1vCKqtvrxGz7OWmx76a31kGaMqFZiBn3xLSnBPjbiqlJlfOSPII5DMj3P1YrStdGw85SWixn98UFFpElPH3+Ijh3MMLpNCM9xMq9BWeZi/QZrepXhwMAyHu8gDNS73sT0fI8VVa1dM6oLJ+IReQY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790059789; c=relaxed/simple;
-	bh=B3wosUAQJBLDFLILxBPX0SZDChxcSn3whe2zVQE5GLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDqVLybGTcBFaSn/9MwP0DH+oZoI0J9gLiccRtp2pWtwUE4Xh8zNPSnsIhxABrxKhgz3KNx0aAfmiEXaYRqo1czGofsYMMY9puieTw6FdSRj7d8m90c7sKwmZanuAfv5gN+fTJsAyT7SVCV+EYAj87mbpb3WVhIgEGrhUB83L9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=VNUVZ8GX; arc=none smtp.client-ip=74.125.227.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=snu.ac.kr
+	s=arc-20240116; t=1790065354; c=relaxed/simple;
+	bh=EPqwyilWhpOD5tFZROFJnkleyX6cIx/NtiLGOw3ejdg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l3shp/mrlJJeyBRzOHdljZUO0YADsUkNYEjjqO3T1YmCJ8saGzZTmwrSbR8t3D2hFB3QwHi88ioxBB0h4vgi8SoywshOjHluDeeDl/8fTQdqt3KIrE1RbQJN583n4S3cSNfed1kzWLugoOkEQuzPxaSTbZA8qMwE0UefYPCQQQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hvCspqyF; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b="VNUVZ8GX"
-Received: by mail-pj2-f42.google.com with SMTP id 98e67ed59e1d1-39b5b07ec78so2615166a91.3
-        for <linux-cxl@vger.kernel.org>; Mon, 21 Sep 2026 23:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snu.ac.kr; s=google; t=1790059784; x=1790664584; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=dt+xEJCMHk3Wb3Te/EW5gGwA4SLsGhrrMq07tSq9fOs=;
-        b=VNUVZ8GXOFMTGEI9z7q/1YahEKijl0Jl5E+fTOzx8qdM7lH8sb4BeQqcBsJ09gcDEv
-         2R0zdX08N0Cmvx3dmP2ArSCH1L0XZ4c5uqF71piSsrUYyQgkQQ3PHNIHag1cILhfQu+G
-         qJhQW6mUjVmhq8otLhvURDcfWddXtEdXT5+8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790059784; x=1790664584;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dt+xEJCMHk3Wb3Te/EW5gGwA4SLsGhrrMq07tSq9fOs=;
-        b=1SsE9bpVJ85HcTIRMxB5sEDlvOm+a6pn5w/lv19KUtsUl7AC7lXXSWIqCvpJZ5Arj4
-         UKr/nrs7FPbnUIe3YeqO8B/WPluJgvEDdverL+sKHtjcvTLCIynSpfSWKFwK7xOyjSxU
-         KlCSUa/AXS7sT2d6eA2XEDu3lqLJ4md0Y579KW/U8HgvyuSkihPw/Jhi3E98kTdVKte7
-         DabiVo+uru/3vfugZ6JMsujzrCTgnVRmaj6CMYKwN2PTk5x9BHZHY1v/S+Kr8po4ipbV
-         Pflyrie1OC8i3rSNBkyXVBzuwdplfNvPF5zRQl+RI+1jwNSlgKzifuwF1KdM1IFKfAtM
-         En6w==
-X-Forwarded-Encrypted: i=1; AKwUvBzETS8cTCoU+8dBJh9+4pFgal+TSZqnMN/HkkV3O50An/aCArPEedKsH1eK9pZTZ+BDWrd2mnGuc2A=@vger.kernel.org
-X-Gm-Message-State: AFuF++kVTEtg41GxA9o1puIFECS7nGWGNqiH+mT0CtZ9D5Ia1k0EIdJS
-	ewC3XBsaGuHqdPJlh9S4Epd7LIu4oLdKKUHCM3l81Bj8y1zIW/kb8GJlQvy/orrxGvE=
-X-Gm-Gg: AYBFou1aPiq4nwxdWxYjw8e8wXdOqwtiHs1tqaPZYYQastdi0aRoK5XKPTCuG05Bd24
-	ExXcBeqa7i1lh76wKRZkljOAryuMaYteWz455PGQeorpwZQ8ytzKTBgDB+YSn0RQSVAPCqF6E6k
-	E2W32/U0ovuBopCMGxNIfWSy4QQEBjkX6Gw9nRMIEOr3bxgAgyL3pGuxUdX9zFAiZpk6UFm+IzO
-	ON7Y17mZyH4IwdJRjj8KBDfEHNBnC+HLAJsUB9K8vmDhr2xvH1FtfzGrp7A+5yXUCGlPV6XegH3
-	/W90sDIKoq3f3UfFOpGBYVJUPI33Hyl6W5NzL8qfDpdOcb5BMRCxlxpYsqxvWu9EEiF6bUAVF2I
-	fS5nDvgBuqzBaqA3evkwVmlgU8ECZXuacQ0Fa5t+G4b7fmhYIsvzpikBTpJr0wnv5v1tBEetAFC
-	haWeK1XiIVZbWT56DxTU4IDmsTyLZx/fyFkhdLK9zFOwAxPFsX3zJitWvw9jmQyxro
-X-Received: by 2002:a17:90b:574e:b0:39e:4c81:6c61 with SMTP id 98e67ed59e1d1-3a073119e14mr213705a91.28.1790059784299;
-        Mon, 21 Sep 2026 23:49:44 -0700 (PDT)
-Received: from 1c1aead48890 ([49.142.45.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a067409854sm2985765a91.7.2026.09.21.23.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2026 23:49:43 -0700 (PDT)
-Date: Tue, 22 Sep 2026 06:49:36 +0000
-From: Seongjun Hong <hsj0512@snu.ac.kr>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kairui Song <kasong@tencent.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Kieran Bingham <kbingham@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 09/13] scripts/gdb: mm.py: remove fallbacks for
- SECTION_HAS_MEM_MAP and SECTION_IS_EARLY
-Message-ID: <54itd5fvuuqpwzc7nr4cvygcpfqh5tfizrt3oudnwjth7nwbs7@lk7pjhgoxmwc>
-References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
- <20260921-b4-sparsemem_cleanups-v2-9-54d81d65e125@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hvCspqyF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1790065340; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=XyM1loYO9/H03Z51j5yHCOlMEkMqUDVCmLJ62Ikh6PA=;
+	b=hvCspqyFV98ugRDfVeO+bVuqivr9UlTvul08RW69EfP0dAh1p7UhnJKDeaAwZkqMF/Bl1Fx0fmQLRWW2VnGgg65hbeMTpPzJQ8eKRWVVXWsCy17TbRob465hBSIeXyjWCxv0PlOBy4t1yuSnQqL8VGNmh8veMfu5tX3zE7wt8Ag=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0XBT6joJ_1790065339;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XBT6joJ_1790065339 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 22 Sep 2026 16:22:20 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v2] cxl/events: Test CME counter expiry with equality, not bitwise AND
+Date: Tue, 22 Sep 2026 16:22:14 +0800
+Message-ID: <20260922082214.3526355-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-9-54d81d65e125@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 21, 2026 at 09:59:01PM +0200, David Hildenbrand (Arm) wrote:
-> There is no reason to handle the absence of the corresponding BIT
-> values. So let's remove the fallbacks.
-> 
-> Link: https://lore.kernel.org/r/vpz5zqg5nwbpolxbkip45vxxdt3lni7j2haal7q42skc3b57tu@uh4cec4x32dq
-> Cc: Seongjun Hong <hsj0512@snu.ac.kr>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  scripts/gdb/linux/mm.py | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/scripts/gdb/linux/mm.py b/scripts/gdb/linux/mm.py
-> index 193a88d763abf..7398105ff3f67 100644
-> --- a/scripts/gdb/linux/mm.py
-> +++ b/scripts/gdb/linux/mm.py
-> @@ -71,12 +71,8 @@ class x86_page_ops():
->  
->          self.NR_SECTION_ROOTS = DIV_ROUND_UP(self.NR_MEM_SECTIONS, self.SECTIONS_PER_ROOT)
->  
-> -        try:
-> -            self.SECTION_HAS_MEM_MAP = 1 << int(gdb.parse_and_eval('SECTION_HAS_MEM_MAP_BIT'))
-> -            self.SECTION_IS_EARLY = 1 << int(gdb.parse_and_eval('SECTION_IS_EARLY_BIT'))
-> -        except:
-> -            self.SECTION_HAS_MEM_MAP = 1 << 0
-> -            self.SECTION_IS_EARLY = 1 << 3
-> +        self.SECTION_HAS_MEM_MAP = 1 << int(gdb.parse_and_eval('SECTION_HAS_MEM_MAP_BIT'))
-> +        self.SECTION_IS_EARLY = 1 << int(gdb.parse_and_eval('SECTION_IS_EARLY_BIT'))
->  
->          self.SUBSECTION_SHIFT = 21
->          self.PAGES_PER_SUBSECTION = 1 << (self.SUBSECTION_SHIFT - self.PAGE_SHIFT)
-> 
-> -- 
-> 2.43.0
+The Memory Event Type field in the General Media and DRAM event records
+is an enumeration, not a bitmask. The validity checks for the advanced
+programmable CME counter expiration event (05h) test the field with a
+bitwise AND, so types 01h, 03h, 04h and 06h match it as well.
 
-It looks nice.
-Thanks! :)
+A device reporting one of those types trips WARN_ON_ONCE once the
+general media or DRAM tracepoint is enabled, which is the case anywhere
+rasdaemon collects CXL events. Under panic_on_warn=1 that kills the
+machine.
 
+Compare the type field for equality instead. Type 05h records that do
+violate the spec conditions still warn.
+
+Fixes: cd3b36cfc659 ("cxl/events: Add extra validity checks for corrected memory error count in General Media Event Record")
+Fixes: d8145bb8af5c ("cxl/events: Add extra validity checks for CVME count in DRAM Event Record")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+---
+Found by code inspection during review of a downstream backport of
+these two patches. Reproduced in a QEMU CXL topology by injecting
+General Media events through the cxl-inject-general-media-event QMP
+command: a type 01h event warns in cxl_event_trace_record() without
+the fix and is traced without a warning with it; type 05h events that
+violate the spec conditions still warn.
+
+Changes since v1 [1]:
+- Collect the commit log suggested by Dave Jiang and the subject
+  suggested by Alison Schofield.
+- Move the reproducer explanation below '---' (Dave Jiang).
+- Add the 'Assisted-by: LLM' tag (Dave Jiang).
+
+[1]: https://lore.kernel.org/all/20260921120932.1769566-1-kanie@linux.alibaba.com/
+
+ drivers/cxl/core/mbox.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 55828a836c01..01341f524a93 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -942,11 +942,11 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+ 
+ 			if (evt->gen_media.media_hdr.descriptor &
+ 			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+-				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
++				WARN_ON_ONCE((evt->gen_media.media_hdr.type ==
+ 					      CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
+ 					     !get_unaligned_le24(evt->gen_media.cme_count));
+ 			else
+-				WARN_ON_ONCE(evt->gen_media.media_hdr.type &
++				WARN_ON_ONCE(evt->gen_media.media_hdr.type ==
+ 					     CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
+ 
+ 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+@@ -957,11 +957,11 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+ 
+ 			if (evt->dram.media_hdr.descriptor &
+ 			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+-				WARN_ON_ONCE((evt->dram.media_hdr.type &
++				WARN_ON_ONCE((evt->dram.media_hdr.type ==
+ 					      CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
+ 					     !get_unaligned_le24(evt->dram.cvme_count));
+ 			else
+-				WARN_ON_ONCE(evt->dram.media_hdr.type &
++				WARN_ON_ONCE(evt->dram.media_hdr.type ==
+ 					     CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
+ 
+ 			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
 -- 
-Best regards,
-Seongjun Hong
+2.43.7
+
