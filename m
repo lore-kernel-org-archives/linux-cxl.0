@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8614E56853B;
-	Tue, 22 Sep 2026 17:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B422560ADD
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 17:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790098120; cv=none; b=aCbkqoGViZhEqpxirBp170fH1wgYwVxqyMA8BPS0U3SJ4m12s2icfd1xVC1z1g1qwML4MzvLBPuyamBtRysKHnTZ33xVBM42257wfpU3DJeE/ZkoONI0ZHxH905uT+jCb4J2w19XAyaHxX+JHTng5Jn1ZCUO6EfW6ltZ7qGgd1w=
+	t=1790098146; cv=none; b=TGrbxGOZV3GAeSMF8EMRnQ53zFwpanjb80txrAdOH0O+P+qYhv8HaPHVJ5TI9PDtcOdSZJ2g54D+aSKFb5KSMG4qYH7wmZW7jgj8pXphL3p9L1ouRfiIM3/E58mrkRFE7AClDt51icGbFJLGfK9VuSxptFUEBYOEgwb3N5vtEhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790098120; c=relaxed/simple;
-	bh=sykwAUjfH/+0gLVEjN37IzgGmxNEUOl0jd4VRWhhmOk=;
+	s=arc-20240116; t=1790098146; c=relaxed/simple;
+	bh=Hypwxct+j3Ot7qW9oW8IuXUEy77WfENLBR9rwZ7wRBA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QpGwS/Uvi3ASGD7ljyHi04vxdTAIrtepVjr+XTU+RlL+sirhfuSOimrDiFLMp2OFw903uhVnEc3F9u63FEBuvyrCudwB2QLqsEf5/zFotiKI4EAGWmATioBuF5j/ZW0uMPgS0iPOVTR0gAvE8Qzx59a2duy3py6lQe9lAsyv58Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gTyZsSNR; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=WBagPzu/TTfMisTyMp8fi4/4Kvqt5SbM+vwA1HGO8gojTJzqOnbgU++iJP1aGmp9MZp5aXR94jKGL5qdWz1Vfx9KXT77+8oVLaLJxKY8BMIvzRxSXkKVeppSnrXOLOpa7IUM09F4gf/lVNL3Y10uc2VYu05LHXXR2jO/2mZJm2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVSkfGTe; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gTyZsSNR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVSkfGTe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790098119; x=1821634119;
+  t=1790098143; x=1821634143;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=sykwAUjfH/+0gLVEjN37IzgGmxNEUOl0jd4VRWhhmOk=;
-  b=gTyZsSNRm1ZxnuwNdoRhieF/1D91zovDOBxCdVBtn3ed14wXmxYTCmC8
-   aV7yHdFCPWHAW8wgWKcSQKeZv6/IaOtILNAHVSy7dH2LOoW5ymnyUG4HP
-   bHHloJYYYxaR5mghgQFfHMkKSYKoblf0SLMPoIuUEKytuCOPZp36AZaAK
-   /uPxnxo6Oro41EglVCJZNJB7Ob/uQEQSGGRB/oH1tEGbNRke4yeyiC04S
-   dVp0Jmo/vRaCR0KLBfhmElCdmZR3uEsn3ANMOHfdEyewwJtBLVXmtxqlg
-   2HEz+bntQ9BAnKBI2t+CW5w5r4XZyEiWCml14NJFWLr+Ujwp0k+vO4vW7
-   w==;
-X-CSE-ConnectionGUID: 9VagCfbPStGVUwhjmFw58Q==
-X-CSE-MsgGUID: MFAygRwvReGN8xAvyPqUsA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="89642743"
+  bh=Hypwxct+j3Ot7qW9oW8IuXUEy77WfENLBR9rwZ7wRBA=;
+  b=AVSkfGTewfanerAbCY3+xu4yYB5rBeRIrr6NZ/tbzcIV7EuzjBijty8s
+   wYrNwYsTo9DmhDxyHlAzbydB7QHckl1bZXv89/GMHiNqDHMoRldNXMgHZ
+   f24flSbpUbZYhZ1IzaxW01sWYDL+n4+uAtUQe6W30WC9WDxykFufkYCN3
+   d5ooD46JPQoOHOlffZhsESgghKpiMB+iTbIY2LVxcykaZff0DxRktrYZk
+   TOXPWkbdb+fvCjhHMA2D4bleNotfKWqjWGFsNsYtooGIOilZCgDL38fqy
+   nzohiqS+xQafx6hrYP0G0WIDsFmWJBIyXvKijdUMuMBUxGiqIM6lL6nVT
+   g==;
+X-CSE-ConnectionGUID: QwTzhq70SkeWjESvp5clmw==
+X-CSE-MsgGUID: zzM5j4IqTNy2zj/niJig7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="89642791"
 X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="89642743"
+   d="scan'208";a="89642791"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 10:28:36 -0700
-X-CSE-ConnectionGUID: GIFsa5c4TQaPmNkGoM6/fA==
-X-CSE-MsgGUID: XnPyavsZTiGampxTdtcGWA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 10:29:02 -0700
+X-CSE-ConnectionGUID: 57va9qvxRRqn3LaZZ2fhcw==
+X-CSE-MsgGUID: 1hkhuLK3ToSGQUrXukZ9WA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="301128999"
+   d="scan'208";a="301129116"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.110.50]) ([10.125.110.50])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 10:28:35 -0700
-Message-ID: <af3edb82-5247-461e-a5c4-e63476e69e25@intel.com>
-Date: Tue, 22 Sep 2026 10:28:33 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 10:29:01 -0700
+Message-ID: <8908efc5-8add-4dcc-9df6-c4de9cf6de2b@intel.com>
+Date: Tue, 22 Sep 2026 10:29:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,75 +52,94 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dax/bus: fix mapping attribute error reporting
-To: Muchun Song <songmuchun@bytedance.com>, Dan Williams <djbw@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Joao Martins <joao.m.martins@oracle.com>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- muchun.song@linux.dev
-References: <20260922082551.874901-1-songmuchun@bytedance.com>
- <20260922082551.874901-2-songmuchun@bytedance.com>
+Subject: Re: [PATCH v2] cxl/events: Test CME counter expiry with equality, not
+ bitwise AND
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260922082214.3526355-1-kanie@linux.alibaba.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20260922082551.874901-2-songmuchun@bytedance.com>
+In-Reply-To: <20260922082214.3526355-1-kanie@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/22/26 1:25 AM, Muchun Song wrote:
-> After the DAX configuration locking was converted to rwsems, successful
-> lock acquisition leaves rc set to zero in mapping_store(). Two error
-> paths can return this stale value: an unbound region driver and a
-> misaligned range size. The sysfs write therefore reports success without
-> allocating the requested range.
+On 9/22/26 1:22 AM, Guixin Liu wrote:
+> The Memory Event Type field in the General Media and DRAM event records
+> is an enumeration, not a bitmask. The validity checks for the advanced
+> programmable CME counter expiration event (05h) test the field with a
+> bitwise AND, so types 01h, 03h, 04h and 06h match it as well.
 > 
-> Return -ENXIO when the region driver is not bound and -EINVAL when the
-> range size is misaligned.
+> A device reporting one of those types trips WARN_ON_ONCE once the
+> general media or DRAM tracepoint is enabled, which is the case anywhere
+> rasdaemon collects CXL events. Under panic_on_warn=1 that kills the
+> machine.
 > 
-> Fixes: c05ae9d85b47 ("dax/bus.c: replace driver-core lock usage by a local rwsem")
+> Compare the type field for equality instead. Type 05h records that do
+> violate the spec conditions still warn.
+> 
+> Fixes: cd3b36cfc659 ("cxl/events: Add extra validity checks for corrected memory error count in General Media Event Record")
+> Fixes: d8145bb8af5c ("cxl/events: Add extra validity checks for CVME count in DRAM Event Record")
+> Cc: stable@vger.kernel.org
 > Assisted-by: LLM
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
-> v2:
-> - Return explicit errors before Device DAX range allocation
->   (suggested by Dave Jiang)
-> - Move the patch before range alignment validation for independent
->   backports (suggested by Dave Jiang)
-> ---
->  drivers/dax/bus.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> Found by code inspection during review of a downstream backport of
+> these two patches. Reproduced in a QEMU CXL topology by injecting
+> General Media events through the cxl-inject-general-media-event QMP
+> command: a type 01h event warns in cxl_event_trace_record() without
+> the fix and is traced without a warning with it; type 05h events that
+> violate the spec conditions still warn.
 > 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index b809e1a264af..e40c25401cf0 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1192,7 +1192,7 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
->  		return rc;
->  	if (!dax_region->dev->driver) {
->  		up_write(&dax_region_rwsem);
-> -		return rc;
-> +		return -ENXIO;
->  	}
->  	rc = down_write_killable(&dax_dev_rwsem);
->  	if (rc) {
-> @@ -1201,8 +1201,12 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
->  	}
+> Changes since v1 [1]:
+> - Collect the commit log suggested by Dave Jiang and the subject
+>   suggested by Alison Schofield.
+> - Move the reproducer explanation below '---' (Dave Jiang).
+> - Add the 'Assisted-by: LLM' tag (Dave Jiang).
+> 
+> [1]: https://lore.kernel.org/all/20260921120932.1769566-1-kanie@linux.alibaba.com/
+> 
+>  drivers/cxl/core/mbox.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 55828a836c01..01341f524a93 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -942,11 +942,11 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
 >  
->  	to_alloc = range_len(&r);
-> -	if (alloc_is_aligned(dev_dax, to_alloc))
-> +	if (!alloc_is_aligned(dev_dax, to_alloc)) {
-> +		dev_dbg(dev, "%s: size: %zu misaligned\n", __func__, to_alloc);
-> +		rc = -EINVAL;
-> +	} else {
->  		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-> +	}
->  	up_write(&dax_dev_rwsem);
->  	up_write(&dax_region_rwsem);
+>  			if (evt->gen_media.media_hdr.descriptor &
+>  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+> -				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
+> +				WARN_ON_ONCE((evt->gen_media.media_hdr.type ==
+>  					      CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
+>  					     !get_unaligned_le24(evt->gen_media.cme_count));
+>  			else
+> -				WARN_ON_ONCE(evt->gen_media.media_hdr.type &
+> +				WARN_ON_ONCE(evt->gen_media.media_hdr.type ==
+>  					     CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
 >  
+>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+> @@ -957,11 +957,11 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+>  
+>  			if (evt->dram.media_hdr.descriptor &
+>  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+> -				WARN_ON_ONCE((evt->dram.media_hdr.type &
+> +				WARN_ON_ONCE((evt->dram.media_hdr.type ==
+>  					      CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
+>  					     !get_unaligned_le24(evt->dram.cvme_count));
+>  			else
+> -				WARN_ON_ONCE(evt->dram.media_hdr.type &
+> +				WARN_ON_ONCE(evt->dram.media_hdr.type ==
+>  					     CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
+>  
+>  			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
 
