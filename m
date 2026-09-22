@@ -1,134 +1,301 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B04A53A394;
-	Tue, 22 Sep 2026 21:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C952BE31
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 22:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790113222; cv=none; b=GP+H5CCYKQzfwvs7m/H+UM1MjtdY/n3HY4PV12NAZDwPUk7HU579OiXqUChKd8MKHX3j0E73jS4BzNoMxYPBmVnPQiHqtOvLH2cEsM0WNX8btsRsvBMf6Q/pr/PBCAeu16Gfla60gElDmEW8kAYR605w9yHWyQaEWH03yucQY+U=
+	t=1790114710; cv=none; b=pcUbQFREce1EvHQ9c8+C2IRXtto2e4BMHy74tIPbhK5iNscFP9odI7sGipMfxYZuSCnNNy7usZ9u/PpDsjw4DuvHDVPkRzOTfMWfeFhMMPr43j36pV0LnZrUvAY6jHhWpJBiyMwKp8nAi480OL0E474kj6MOleV/go5IaR/B1Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790113222; c=relaxed/simple;
-	bh=b52fxys5+JskWFAf5yl+wkNYs/t6huZQ1B0sIT8adqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J7In8X5Ns+OFrikadI0kJc/4d7q1ahuRHox3vEiZ3KoESjhJmS0iqxta9F53rufy+3S4BDofH6NWXrACCYmlJ9hzOsZ78Izbl3dyTDNB+i/VThJ3fd+/Yi8hoAvdCYtiXvWXWWoi03EeZDJrx5iv7irymefSV5raX1lF3HkYgsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XcygRiyS; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1790114710; c=relaxed/simple;
+	bh=RRH1Vy+Zp/3SPkBGo9aHf3zXVNOp+j6j9mQwfJznZmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wiu8wQ4yk4cWtjQLqiyoNnifIyHFK6WeFKnw2tfLUPNgVbb91N3jca1Arb0Br71HxhyR2oZKwN1pG2Jmb4Lh0JEn0DVUCrtE2EFZLIAiT8kF9SlQ7OeNtNvj4vtzCIixtnyrJvmFUBvpNivGzrdkcuJk5Xdp36FWVz8Fnd4VS0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qyAeO4Im; arc=none smtp.client-ip=74.125.230.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XcygRiyS"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id E37EE4E41030;
-	Tue, 22 Sep 2026 21:40:07 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9AF5C60580;
-	Tue, 22 Sep 2026 21:40:07 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D16651032939F;
-	Tue, 22 Sep 2026 23:39:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1790113202; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=6tyfnpYZ0mMFqiLM6eDkPIcq+fEPA8V61d4wvOUJZYA=;
-	b=XcygRiySRCugVGdntLKKaLPhq08hFKAfBSGE+g7IkrLEAKLJW+Vs0F1HaGs3TxQrZN9Fh7
-	SFtyqqM3FgrkkrWaIVC2FDC/Tj6oQMX+bnw3HFSw5VlVD7C29+dkyETL0IvYLMHVV071ps
-	q4mFMpmT9QkgE14HfyMHfCXX44MIBK0rvr0mPigzwrNTw87OmAxio/ctkJcyabtwIfgY6B
-	T8j1UUEBHmiQs3fZtmmPwQgbZUKYX2UIp2jmlbUu8E6VnG6bOWjPyuwqnvnbwEK7YV7L5g
-	bc3HAFk46RhS3ftb+bqHgmx7LIfZupl7CYLVXwBTql+PybRIw4fNIEk/evshZg==
-Message-ID: <2055ead9-201f-4878-aa09-07d7fc3ab3c2@bootlin.com>
-Date: Tue, 22 Sep 2026 23:39:57 +0200
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qyAeO4Im"
+Received: by mail-qk2-f13.google.com with SMTP id af79cd13be357-939656ff6d9so33842585a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 15:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1790114700; x=1790719500; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=anrpgiCeXWmBr1az5PEHzf4nylW2QouLqia/wBZNbT4=;
+        b=qyAeO4ImlxQWHWrY3rOI+d0jNqWFqqyELQ56tlRiHnq25pIvKuTEJrR3OrKTFcd4FP
+         IBWytxk9SOvSacV53yQXEJxrCz7JFBDHXXmbeZzXj0EB/0NOWsfpSVn6yoXESESrC7en
+         dWDirDwk2QkTXluyyhV/DpGjnVcz/j2jc1v8BpLdtDbcf5sjhv0PBXWkeMqUn2k3Taqh
+         Br/RM3e48CnC2TjK95UIB1Un9r7oOaUxLLkos8lL9ixrdl11BIKHZKIuPajT92vSGr1Q
+         qIAPWwqVvLVWxLDUlYny2dsxjQOz/CXVwD1OBKCicazpUsOUeEuMWOX7N+ZjO7LVxQvN
+         v/GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790114700; x=1790719500;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=anrpgiCeXWmBr1az5PEHzf4nylW2QouLqia/wBZNbT4=;
+        b=zdoPRIJ0C9SMM1jveoC8886q+vnAYBTZ/JG1iSwOU8KEvqmlFIhaRvKJyU4y9jnayI
+         /abrZsY9JZNbwcYZxLaf6idhN7AsKy8EAR94n09wkfHDyz8ZN7pa4l0HjTvIYTp6xPzI
+         vjdNTbwj2OPblO52/cU5MInEMF9438PcY5lLP6DLB8976e1mOI+3H0vgEa51T/bD8UFL
+         RLRPSb6YGKgfRrG2Hj/DBYeG9TyJqZPzpEPkPyILjM3D/6J+Vq7CxrooIQI66E+Gqfo4
+         b3FXEMEE7w0dvoB3Zr+MuCvWveNGuSmIho5V9/xJOPa/hzgUvQ4KMyBO9cXT21iVSTag
+         tpog==
+X-Forwarded-Encrypted: i=1; AKwUvBxzQHk9hM2XJWh7dVi5FoTf44SA9TvlBqk4ZbK10UDZrQqGN6WNuy6dMabK+ttNEh9wwSjR82A8Ynw=@vger.kernel.org
+X-Gm-Message-State: AFuF++ke/n2LYpy+cDTLGrSaXDXZDInQlayeWjLhpAxeKYPACviIZ/fI
+	7t9GGxR7TF3vkphevyiaz84LTScJ6p407NAEGlzhhc2DCd2DXQwqvAmQ4c+SzHnE5KE=
+X-Gm-Gg: AYBFou07mcy58t1+vdhwcN7rQ3RZo9QAEQf9AJUoOh6YMsigsA1Dw0HQLTbQI7NJtvA
+	fYZ16GcvOkt29ZkIYKAYy2fYpcrxhq9vY4nzDN3RTDbwJ48OLP5n0cLlu4j1+BY6N7FMq5KkRgC
+	PVlv+RdERPVcawsujCvHsZ25ipycfgUw9WA5QHUHIn+5K8mELXD7D8M8UNdTfp1pddP6yiQwuN1
+	/WsrkFnTCwIzvlGqX0zxHi7OoYSFiki1Wf3qUBT1ixD1yKmiJTOVjew05ixDpAe1Vl6jsQJ1PIn
+	fezm63S18rxuNa4IFH07Lot7bSPa7y+NNNktvK9OFDUabAYPpaSehpC16ZIWPs03jU5IHHiGkcY
+	UF9+ewzCiUjd2Gp2eab90V5n5aRHVN5EGyViPS5OsEjCmtWRctefBCpirZuYaXvPk2izeqYUYD3
+	UWOdZdJp8dOFSjYiTRedD4DuFuZvqqiWLBDZJfsno2v6KTCvNPV+eBUjhRCn/ZGSwed4yOMmOuL
+	YYzAN946f7juJBAQ9wh0KgUmZhkPT++YqHdJnyXnFIV/U3iEuiSIEU=
+X-Received: by 2002:a05:620a:4890:b0:939:a1cc:f234 with SMTP id af79cd13be357-93c2509dec2mr122764985a.5.1790114700080;
+        Tue, 22 Sep 2026 15:05:00 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c284a1cd9sm4296985a.39.2026.09.22.15.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 15:04:59 -0700 (PDT)
+Date: Tue, 22 Sep 2026 18:04:56 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Arun George/Arun George <arun.george@samsung.com>
+Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, balbirs@nvidia.com, 
+	brendan.jackman@linux.dev, yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com, 
+	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
+	mhocko@suse.com, corbet@lwn.net, skhan@linuxfoundation.org, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, 
+	vishal.l.verma@intel.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	osandov@osandov.com, jannh@google.com, pfalcato@suse.de, jackmanb@google.com, 
+	hannes@cmpxchg.org, ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
+	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
+	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
+	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
+	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
+	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
+	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
+	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	kernel-team@meta.com, hokyoon.lee@samsung.com, wj28.lee@samsung.com, 
+	gost.dev@samsung.com, vikash.k5@samsung.com, d.bueso@samsung.com
+Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
+Message-ID: <arL2eTRaDeR3DCQx@gourry-fedora-PF4VCD3F>
+References: <CGME20260720193443epcas5p167fa7d8490edfb4d8c0aa6a259db058f@epcas5p1.samsung.com>
+ <20260720193431.3841992-1-gourry@gourry.net>
+ <963815509.21784796303385.JavaMail.epsvc@epcpadp1new>
+ <amJGUuBZ2857QjDB@gourry-fedora-PF4VCD3F>
+ <360067785.01790071202608.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] driver core: Rely on supplier driver binding at
- link creation
-To: alucerop@amd.com, linux-cxl@vger.kernel.org, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
- rafael@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20260921191239.4249-1-alucerop@amd.com>
- <20260921191239.4249-2-alucerop@amd.com>
-Content-Language: en-US
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-In-Reply-To: <20260921191239.4249-2-alucerop@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <360067785.01790071202608.JavaMail.epsvc@epcpadp1new>
 
-Hi,
-
-On 9/21/26 21:12, alucerop@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Tue, Sep 22, 2026 at 03:27:44PM +0530, Arun George/Arun George wrote:
+> Hi Gregory,
 > 
-> Differentiate between driver binding from PM dependency when a device
-> link is created. Rely on the device being bound to a driver for validating
-> the supplier as some device drivers could not support PM.
+> Thanks for sharing the working branch.
 > 
-> Check for supplier's PM state only if consumer specifies PM_RUNTIME flag.
+> Some of us at Samsung are testing the series (both v4 & v5) on a 
+> compression capable CXL expander and are observing encouraging results.
+>
 
-Hmmm this patch seems to have broken pretty much all the boards I'm running that
-boot with DT. I'm getting logs such as :
+This is really cool, thank you so much for spending the cycles to test.
 
-platform 16100000.serial: Failed to create device link (0x124) with supplier
-  16000400.clock-controller
+I'm working on getting a v6 out soon.  Glad to see the progress!
 
-Some are just hanging at "Starting kernel..." from u-boot.
-
-Then boards go silent as the uart dies, and I'm using that uart to access the
-device's console :(
-
-Found with a WIP stmmac runner for netdev CI.
-
-Unfortunately I don't have much logs to share, as this just prevents the boards
-from booting :( With this patch reverted, all boards boot fine
-
-Maxime
-
+> Good things first! We feel that the isolation using private nodes and 
+> the capability selection using NODE_PRIVATE_CAP_* work functionally well 
+> for the compressed memory use cases.
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/base/core.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
+> On improvement points, we observed much higher 'page_faults', 
+> 'allocation_stalls' etc. which contributed to the higher tail latencies 
+> in some tests. I hope these are already part of the optimization plans. 
+> The higher latencies might have resulted from the write_protection 
+> applied to the private node, I believe.
 > 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 4c0c373998a1..eb6d87e35d76 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -834,15 +834,26 @@ struct device_link *device_link_add(struct device *consumer,
->  	device_pm_lock();
->  
->  	/*
-> -	 * If the supplier has not been fully registered yet or there is a
-> -	 * reverse (non-SYNC_STATE_ONLY) dependency between the consumer and
-> -	 * the supplier already in the graph, return NULL. If the link is a
-> -	 * SYNC_STATE_ONLY link, we don't check for reverse dependencies
-> -	 * because it only affects sync_state() callbacks.
-> +	 * If the supplier has not been fully registered yet with a driver
-> +	 * return NULL.
->  	 */
-> -	if (!device_pm_initialized(supplier)
-> -	    || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
-> -		  device_is_dependent(consumer, supplier))) {
-> +	scoped_guard(device, supplier) {
-> +		if (!device_is_bound(supplier)) {
-> +			link = NULL;
-> +			goto out;
-> +		}
-> +	}
-> +	/*
-> +	 * If consumer asks for PM to use the link and the supplier has not
-> +	 * PM initialized, or if there is a reverse (non-SYNC_STATE_ONLY)
-> +	 * dependency between the consumer and the supplier already in the
-> +	 * graph, return NULL. If the link is a SYNC_STATE_ONLY link, we
-> +	 * don't check for reverse dependencies because it only affects
-> +	 * sync_state() callbacks.
-> +	 */
-> +	if (((flags & DL_FLAG_PM_RUNTIME) && !device_pm_initialized(supplier)) ||
-> +	    (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
-> +	     device_is_dependent(consumer, supplier))) {
->  		link = NULL;
->  		goto out;
->  	}
 
+Yes, this is expected, and I think there are questions about how it
+should be optimized both in a provisioning sense and a software sense.
+
+For example, exposing a full memory expander as 100% compressible may
+not make sense - given that this could many a lot of memory.  I have
+some data that shows it may make more sense to split a memory expander
+into two regions to better fit the compressible region to meet the
+actual capacity the cold-tail is capable of consuming.
+
+On the software side there may be some ability to adjust this at
+runtime with hotplug instead of requiring a reboot, but I think that
+needs to be experimented with.
+
+> On the tools side, we used MLC and Taobench for the tests.
+> 
+
+Great! I also have some TaoBench and fio results i'm looking to share,
+glad to have some additional peer review using Tao.
+
+> Note that our intention for this phase of experiments was to test only 
+> the 'private node' layer based isolation, and not the cram and below 
+> layers for the compressed memory. Therefore we did not enable/utilize 
+> the compression capability in the hardware for these set of experiments 
+> (enabling compression would require the cram level ballooning/memory 
+> shrinking and cxl level interfacing driver to the compression device). 
+> That would be different set of experiments where we would be testing the 
+> cram balloon shrinkers and our alternate algorithms (upstream targeted). 
+> So cram and below layers were used only for enumeration of private node 
+> regions for these tests and not for the run-time memory shrinkers.
+> 
+
+Agreed, i'm looking forward to getting past the isolation bits and get
+more focused on the compression implementation details.
+
+> ======= Test Methodology ==============
+> 
+> We explored these 3 cases:
+> 
+>     1) (Baseline – existing CXL infra):  DRAM 16GB + CXL 32GB. Here we 
+> used the existing CXL driver infra to enable the device. No private node 
+> is involved. And compression is disabled on device.
+> 
+>     2) (private node in default write protected path): DRAM 16GB + CXL 
+> Private Node 32GB. Here private node infra is used to enable the device. 
+> And compression is disabled on device.
+> 
+>     3) (private node with no write protection): DRAM 16GB + CXL Private 
+> Node 32GB. Here private node infra is used to enable the device without 
+> the write protection/fencing enabled. Compression is disabled on device. 
+> We could not complete these runs as they resulted in kernel panics. 
+> Guess the code path is not stable yet for this (We had hoped that case 1 
+> and case 3 results would be similar). We also observed some unmovable 
+> page warnings logs in 'dmesg' before crash (might be related to the 
+> panic). Adding the log snippets at the end.
+> 
+
+Very similar to my test setup, seems like good signal we are of similar
+mind on the use case.  (For readers: there was no coordination here).
+
+I personally did not test private-node without write protection,
+although it makes sense to test the throughput of a demotion-only
+node as a baseline.  Smart.
+
+My guess is there was probably a reclaim throughput issue, or there may
+have been a bug in the v4/v5 code.  I will look at adding some pressure
+tests to my suite that test demotion-only explicitly.
+
+> ========= Results summary ===================
+> 
+> Private (CRAM) node performance is lower compared to a normal CXL memory 
+> allocation path. VM stats shows more page_faults and allocation_stalls 
+> on the private node case. Could it be the allocator waits for migration 
+> path to demote pages to private node? Or the actual hot pages in dram 
+> got demoted to private node to make space during overwrites? We will try 
+> further analysis on this.
+> 
+
+- allocator waits for migration?
+  
+  Yes.  And worse, once the node is full, migration will fail and you'll
+  swap directly from the top tier and reduce your reclaim behavior on
+  the lower node.  It becomes very important to push proactive reclaim
+  on a demotion-only tier to ensure there is sufficient headroom to
+  receive demotions in the future, since direct-reclaim basically never
+  targets a lower-tier on the first pass.
+
+  There's a big discussion about whether tiered systems need to invert
+  their reclaim behavior (reclaim from the lowest node first to find
+  progress there, then do demotion - rather than the other way around).
+
+- Hot pages in dram 
+
+  Also yes.  The comparison to make isn't only against a raw CXL node,
+  but also against Zswap or Zram or Swap.  How does the workload fair
+  on a system with 16GB RAM and 32GB Zswap/Swap?
+
+  This is important context.
+
+> ========== MLC Experiments ====================
+> 
+> CMD:
+>    $./mlc --loaded_latency -j0 -c0 -b1g -k1-15 -W5 -r
+> 
+> Experiment Results:
+> 
+> 1. (Baseline) DRAM 16GB + CXL 32GB
+> 
+> Inject  Latency Bandwidth
+> Delay   (ns)    MB/sec
+> ================
+>   00000  686.18   40137.5
+>   00002  686.69   40124.0
+>   00008  709.74   40362.7
+...
+> 2. (private node in default write protected path)
+>      DRAM 16GB + CXL Private Node(Uncompressed) 32GB
+> 
+> Inject  Latency Bandwidth
+> Delay   (ns)    MB/sec
+> ================
+>   00000  320.09   12186.2
+>   00002  543.42   22726.1
+>   00008  482.11   28385.2
+...
+> Takeaway: Our MLC tests show a trade-off between the two configurations. 
+> During low inject delay, the private Node is faster. But when inject 
+> delay goes high, the baseline shows better latency. Could it be the TLB 
+> cache effects?
+> 
+
+These latency results suggest to me that the memory being tested was
+always DRAM, though the initial memory fault would have been CXL.
+
+i.e. even if the memory was faulted directly onto the node via
+mempolicy, the very first write to it would have caused promotion.
+
+If you dropped the write protection you'd probably see it equals the
+baseline.
+
+The bandwidth numbers support this.  Higher stall, but faster latency
+means the migration was more beneficial for latency than letting the
+memory sit on CXL.
+
+Neat.  I'm not sure these results are particularly useful in describing
+how a workload would react.
+
+> --------------------------------------------------------------------
+> Case 3 dmesg log snippet:
+> 
+> [   82.525741] page: refcount:1 mapcount:0 mapping:0000000000000000 
+> index:0x0 pfn:0x5f5800
+> [   82.525753] flags: 
+> 0x17ffffc0002000(reserved|node=0|zone=2|lastcpupid=0x1fffff)
+> [   82.525762] raw: 0017ffffc0002000 ffefc85717d60008 ffefc85717d60008 
+> 0000000000000000
+> [   82.525764] raw: 0000000000000000 0000000000000000 00000001ffffffff 
+> 0000000000000000
+> [   82.525766] page dumped because: unmovable page
+> ..............
+> 
+
+Was this memory hotplugged via cram.c or did you replicate the code and
+hotplug it another way?  If so, did you hotplug it as ZONE_NORMAL or
+ZONE_MOVABLE?
+
+For a compressed tier, it must always be hotplugged as ZONE_MOVABLE,
+without exception, because otherwise it can allow a GUP pin or kernel
+allocation that would eventually become permanently stuck there - and by
+definition of a compression tier must be 100% movable memory.
+
+~Gregory
