@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B2A3C0613;
-	Tue, 22 Sep 2026 04:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECA43B840F;
+	Tue, 22 Sep 2026 04:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790051071; cv=none; b=jWMHjI9dTUilUibroOpRbknHv4gDhPQ7/YWPX7uOoyLTpM6RH0H/hVLNAbPsz7GQg6urZVn98EPGP6BjZ7mcLhO5D/nMzSJrPxiwQpn51DbtwaQn2LcMEcIvPGkRNuDpFicVj0+k6m36q9ZMOh35xt1Ub6i7BDwxMt6YvWqyWxA=
+	t=1790051161; cv=none; b=RKyyxWI4Gm9VNoGodWv9JR/6xmSUg4uSNh/mO6vALkSc5J2kFwLEKBDQFbYWl/LAOCZ8r0OQ7qyWbatKB7wnrCbI66SAJUTuykP375178qIy5I3Giaa+INM415XnjEDqQ7ZP2Wr7zlsVT6D4YMoV0y5aopHx0sMgvT5Zf64IGLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790051071; c=relaxed/simple;
-	bh=nwLT3Ldo1wB5gu/m/ecllRVClTEwW/Zux21DrKNdeSY=;
+	s=arc-20240116; t=1790051161; c=relaxed/simple;
+	bh=lekNrCeizC80DsGXP6pOl7QXhc03K2jyvI0Q4G/xeCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvrorVMTV1hrXlYOpv+ZZAETG30OvPhjuw1J1sJCiizoAvemz85ievVY14xwzIpm+5KIpt+UzYFZ4PQvC5pNfJwPj8uu1HhtbLORZ0x/AEpXFs+lDKN0geyCgYA1YvRwnHIrUd7Sc71tsAwtQ91jsYKqozPGi4WyFbz8aLUntso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeBKWAdu; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpIncmsKl4WolDHbX0Hai5ugwhpRnaixaHJQHCi0HVx7c4/OiT/xgk1P2gY2BGaBvUtJYSiv+b9ccBZOhjUFQell2aj5zVvuXhqglWkNldY/mkYlZxtiiSh4FzELqxqJHko7MZHfGItYYKg51YwrcqWPh9+B5vlKQO7DpqpqM6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER3J5r3V; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeBKWAdu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01161F000FF;
-	Tue, 22 Sep 2026 04:24:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER3J5r3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14A901F00898;
+	Tue, 22 Sep 2026 04:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790051065;
-	bh=kUmTSY/Kcrd/EARta1ekGXPCkorBIVhm7Emk4UPB6UY=;
+	s=k20260515; t=1790051159;
+	bh=D28fmX0v2APqwSVoGcnG1C5Rh5Hd9l3BseXRfD4IHME=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GeBKWAduepmASI5QfstEaM87hWv2Bg3RjQMNLN3TIUIIV/q65OVgGpQHjZPX/L3F3
-	 +vioQtuyHw8JiHbKfrWsFOBmPNCicGhpVx5Ec+wUqO0PAl1i5TNMaro6JG8/ZbUbxo
-	 gZ4N1SdmdKSJntNnSzg+XsZqDCA+lQFOQO074S/kC0rKgLH5bleljcrSb8W3Q13R40
-	 ryIKaqaB3mjJDSUVZJPHMXBXINtlYxYJBxMqrDUSwueueXzBP+GDpYJIwxzR9rJhF3
-	 wsPmwnAacZU0ks5wnRxr3dFGwiboPxZ6lHxjlwkkSxEwQM4QoV9rOo1Q/AnIPnRZ+j
-	 eqkxXYbnm054g==
-Date: Tue, 22 Sep 2026 06:24:12 +0200
+	b=ER3J5r3VzZNuMuHQZZdT2tmD/sauynFhocssTfXIyQ+aeQ6bHpu8UA/btjPDGg3MH
+	 NfePtUdGHG+QdKUDw/Hf0NGR7IZE7GwghF/aWpWREdZXIu24P6AHSeBPDeGCLdrDIx
+	 Wo2hVOEZoDUAtcCdLZA3wprGabCwotwqb5oR8Sxge67tTTQNIQJfd0/VaVOMDx61j7
+	 +cDtnjNI9J99y88D82hGsEYUaZkrWCSbySiRs5MQTyfbTWfoiTKsRuMG4xw3dJF/61
+	 wFzzJtYuXoUWfMMZjp6HroZWXyPWrA8cZ9PVa08HOFKF79taCFtsp8GJ7ykAzcwjQk
+	 z8EZnhQvf7G5A==
+Date: Tue, 22 Sep 2026 06:25:50 +0200
 From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -53,11 +53,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
 	driver-core@lists.linux.dev, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] mm/sparse: move __highest_used_section_nr
- handling
-Message-ID: <arIC7BheTHzBnLoq@localhost.localdomain>
+Subject: Re: [PATCH v2 13/13] mm/memory_hotplug: drop
+ CONFIG_HAVE_ARCH_PFN_VALID handling from pfn_to_online_page()
+Message-ID: <arIDTjj5C05Z0Hp5@localhost.localdomain>
 References: <20260921-b4-sparsemem_cleanups-v2-0-54d81d65e125@kernel.org>
- <20260921-b4-sparsemem_cleanups-v2-8-54d81d65e125@kernel.org>
+ <20260921-b4-sparsemem_cleanups-v2-13-54d81d65e125@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,36 +66,20 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-8-54d81d65e125@kernel.org>
+In-Reply-To: <20260921-b4-sparsemem_cleanups-v2-13-54d81d65e125@kernel.org>
 
-On Mon, Sep 21, 2026 at 09:59:00PM +0200, David Hildenbrand (Arm) wrote:
-> In preparation for removing __section_mark_present(), let's move
-> __highest_used_section_nr handling into its callers. Verify in
-> sparse_init_one_section() that it was properly updated.
+On Mon, Sep 21, 2026 at 09:59:05PM +0200, David Hildenbrand (Arm) wrote:
+> Drop CONFIG_HAVE_ARCH_PFN_VALID handling, as CONFIG_HAVE_ARCH_PFN_VALID
+> is never used with CONFIG_MEMORY_HOTPLUG, as the latter depends on
+> CONFIG_SPARSEMEM_VMEMMAP. Make sure it stays that way.
 > 
-> In sparse_sections_init() we can just set it to the last processed
-> section_nr.
-> 
-> No functional change intended.
-> 
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Acked-by: Oscar Salvador <osalvador@suse.de>
 
-> ---
-...
-> --- a/mm/sparse.h
-> +++ b/mm/sparse.h
-> @@ -26,6 +26,7 @@ static inline void sparse_init_one_section(struct mem_section *ms,
->  	unsigned long coded_mem_map;
->  
->  	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
-> +	VM_WARN_ON_ONCE(section_nr > __highest_used_section_nr);
-
-I wonder, have we seen this in the wild?
-
-
+ 
 
 -- 
 Oscar Salvador
