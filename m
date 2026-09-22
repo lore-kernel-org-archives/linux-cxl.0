@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C7C34A79D
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 00:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0911A3166;
+	Tue, 22 Sep 2026 00:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790038335; cv=none; b=kp5T2jMmUUuUyU5TeWgYflrgRnCTdDojDzjYZPPmwetHcvAJghFBIE6qxlD/zU70Ov2TvRlWHiAPLO9a4qfgaXH0rd0Z9VLbCgnxDGd71cWTXRCYUOFhMXv06Yyt26JE2o5lJAR+EsoXDY3uPj37HWS/rMDTVc90EV85huSStfY=
+	t=1790038693; cv=none; b=OJt7meYX1ECcfv4oDLuiy+QHQqZZJptDzom49mD4qWc6Md+AJ1NhLe4JA0WXKlf+BzpyzBrpEP9vIqYd0vrQpi0A56cQBxjKw2skifsHfWdhLJ+x8MxgjFS8vWTUt2TEey0AolxTxpEytQrGT9vJiit7D+qYoNpg8gPn8KJH4AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790038335; c=relaxed/simple;
-	bh=IY5kSutBT9Z11Dr2gAk7UtYvFA6niVU+fTglioNtqYs=;
+	s=arc-20240116; t=1790038693; c=relaxed/simple;
+	bh=Zdl5HCvWrVIZs7k06QEa9jK0/9hhOJZugYVa2ccIjOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sgSI3dlWYp8Y4pxxnQJHHlDclfaMiS+sXZ4u7mQiZtRb37zZo0F2kKzjshIJ6TAp8pR7vMg0ADv9eFKul0NjXsnQXVQwBdXT4E/WYWUa1YpicbWQr17vhFXaca9Cu8g/nwZdzm1QGEfYzlQnJDDDEBIh8xJY2y/rPJcWdhjWsGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0e7Go/+; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=WaF1fhWOeUrN+J0YhiyUxXg3lICNvZX/8hiD9EY3miPQB9/eM7ZzQ8kz/uQ/Hf0sQWR/l6VK4YoUchVRHcDrbLmX2jr1A2pxj3OkE8Hi/rXvrj8ryU4GOdHB0lbWmYVeIl7Y1B+zi+r/Wz4R9XX2+oS1mEmuCYlX8suLDSjwUQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1T2+e9V; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0e7Go/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 756DD1F000FF;
-	Tue, 22 Sep 2026 00:52:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1T2+e9V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EC01F000FF;
+	Tue, 22 Sep 2026 00:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790038333;
-	bh=Pb3g+fzUh/thaZ71z9Xl1PmXFKl24rStrJzyQqArrlM=;
+	s=k20260515; t=1790038691;
+	bh=YbXtzLSgr9892+N+EUKioiAWB7IAkzRDYOqEEJNihS0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=K0e7Go/+hIFLmVeW8mqM/X7sL/fIDhqZcv/7/PTJ99q5JQPBDF/wvpxrDABitB3Hw
-	 QmYAJhEbVDal+eezZupErC2pRaKLZbWXkWQ5Vc9k8QR8+ZTeE8GUCbYy7YQ6KTGrXJ
-	 FYpyTezYj3QLhe5mh0mNHrbOEZ6WkqGmBTJXUNsSYIjl0uQcgWGmoUKyx2G71mT0jO
-	 GlZDI8r3EohY7bntUs7jwMymCXQ0bmfRYlfiffJ+06COd/iY0fm7Xv66qLAL45Mo4n
-	 c26uW9g1BLjiLE4DAFVONSn5uozy8g2hZ0E/o1UZdpxu/sATIAscVhknaH182rmhe7
-	 Mkl9CY+XPoF+Q==
-Date: Tue, 22 Sep 2026 01:52:09 +0100
+	b=I1T2+e9VTiANv3awlsNIe+oKfbxOxJGFDIcuPqqq/iNpqFs+XEzadRQPeULc9P2oZ
+	 G3Sc4uHx2aqnyYTvFnF8NyrWJk70ybF2rSt19LMSkcp1JmhAk7JrT33NG1+4FcbNuT
+	 OC0BiKDTBYeg5M4Q5fjkFxpLhtkiBBgUXNMIfcFGA8zTNHCAHBaMYb3p6/51uJDLsD
+	 Kem2llr+ECVz3uBp+3d0UbPHl2Ab3GoycHcGZubxIwG7IUrSqBrgl+QGAheG/lmmHs
+	 i/DIqywfaDiqFn9EZqtrjPRHWwp9F2eytvEp/wEfnkcffhd7R64vhNyq42etkPbzUp
+	 VkhHPaS7H+g2A==
+Date: Tue, 22 Sep 2026 01:58:06 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li
- Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org, Srirangan Madhavan
- <smadhavan@nvidia.com>, Richard Cheng <icheng@nvidia.com>
-Subject: Re: [PATCH v5 1/4] cxl/hdm: Reject switch decoder interleave ways
- that overflow targets
-Message-ID: <20260922015209.4106942b@jic23-hlaptop>
-In-Reply-To: <af094094813d7f51d86cbf608936270b7d85526e.1786143520.git.alison.schofield@intel.com>
-References: <cover.1786143520.git.alison.schofield@intel.com>
-	<af094094813d7f51d86cbf608936270b7d85526e.1786143520.git.alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ robin.murphy@arm.com, icheng@nvidia.com, sashiko-bot@kernel.org
+Subject: Re: [RESEND PATCH v4 02/11] perf/cxl: Clear stale event fields
+ before reprogramming a counter
+Message-ID: <20260922015806.6e0a1f4c@jic23-hlaptop>
+In-Reply-To: <20260805155911.1304807-3-dave.jiang@intel.com>
+References: <20260805155911.1304807-1-dave.jiang@intel.com>
+	<20260805155911.1304807-3-dave.jiang@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,28 +48,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri,  7 Aug 2026 17:05:48 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Wed,  5 Aug 2026 08:59:02 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Switch decoder enumeration validates that the interleave ways encoding
-> is legal, but not that the resulting number of ways fits the available
-> targets. This can overrun the target array (target_list.target_id[])
-> during enumeration of 12 or 16 way interleaves.
+> cxl_pmu_event_start() ORs the event group id, event mask, edge and invert
+> selections into a configurable counter's config register without clearing
+> them first, and cxl_pmu_event_stop() leaves them set. Reuse the counter for
+> another event and the new selection lands on top of the old one, so the
+> counter counts the wrong events with stale edge and invert behaviour.
 > 
-> Bound the target count where it is established rather than at each use.
-> Reject an HDM capability whose reported target count is zero or exceeds
-> the target list register capacity, and reject a zero target switch
-> decoder allocation in cxl_switch_decoder_init(). Enumeration is then
-> left with a single check: reject a decoder whose interleave ways exceed
-> the targets it has.
+> Use FIELD_MODIFY() so each field is replaced rather than accumulated.
 > 
-> Add a clarifying comment that target_count is a direct count, not
-> 0-based like decoder_count.
-> 
-> Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
-> Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
-> Tested-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Richard Cheng <icheng@nvidia.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+> Reported-by: sashiko-bot@kernel.org
+> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
