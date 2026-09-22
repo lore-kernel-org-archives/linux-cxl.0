@@ -1,170 +1,235 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011013.outbound.protection.outlook.com [52.101.52.13])
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79E82BE03B;
-	Wed, 23 Sep 2026 00:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790122815; cv=fail; b=Zji8zhXJLyXDtY76TwpbElFLp0fzZC/egb+4W0Z40TaT5ObZpLsYOOSChp9jAoOWWUnxBBGjepBg+vXSlBQTpGSaiaoxhPAJy0ercD+n5DKOcD2nzMbugw1piEjkWiCD7gLPPCxREifmgEZ6C2EEWbsvRdI05Wh6r9qBycQVC9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790122815; c=relaxed/simple;
-	bh=5dVaRoCMaj8H0l//DcicP9RM1R1tu/ornqQGKHDdZyE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HFr8UswS73keMJ26LW3J3MENISXnQDosPI5QyMD2cfk3dijk9zxxy9aUyx/7lK+GZc4HJ4ZuxhkDeNYswJcsHhKYaQ1B+1M85Juu1wJRnBoRnY/V8zzATZp9QGSj/kcSSADq/tdS1YGGuWzW5NQSzfzFGbYnThmkolkCQnjDDEs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XAMiIuih; arc=fail smtp.client-ip=52.101.52.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D582EEE75
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 00:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.248
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790123737; cv=none; b=bU6JrT22UBxHP3H194YtnGR3/kUXKrBgV+mwO0nWRQBuxqnlRMsCun0yLOtM4uC21YDy0gltxmcMNH60kqtdrkgwDxqvC+bCzvw/hgpIoXPb+wmG0f7dPURv0XRa4Ejl5ilZpWsgVxKfSLTXuTvYGwjTIMU0FPoHjq/bjmeB4XM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790123737; c=relaxed/simple;
+	bh=xTW3FCK0CJpliQ9oWzaRz1kv0kLvRFt51qlmgfsiC2c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tyZTqtv81r8nTaqH8G6UbgUjaKKnnMbojxLpCd9B5OSoClMG/nvAJ9js4kX/wVY7BkCAmuVhXRqUVcoODi2zC+DJbw496HFeiDiQ+My2BF1WBrDbhd1/k/KpWUcUtDS1V7MsDajc3TESlsky/1gto0+TBTK2gwhuZHgBQKLjbnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BGTaEGuo; arc=none smtp.client-ip=23.83.218.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XAMiIuih"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OGDP5oSxkX6he3xGMbgpCZtjV6Kdn3zhNoNPZYo0Vnc0yJuoB4aMUN+CCuFexKOtI2RnAs1f8sS1DdAMFwQmdzax6/Tfj46itnUMy8M0ZSDzInSZrYEkOi7ls3mtnqDDS924kpTR/2a5wk3JcqG5COCGjxYUjZXavOrlBr1yQ7Yd1faVAChnJeAypwMDwpFwjhJVUeAfDLxvq+fY/jIAK4YjRYy8G5qEKH3NB2SVQbejScMXmEe+z+BlS5LsgCwMWtpyh38PW4k1J1WgQE7hJSc18TaBB2UdrBHAIMgWyWAdWUMh1n2Lao73XjpJUL+whuc95k2xiccajm4bL+Mb+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sTPb681fvzI6Ccei5zX5QCPvf4O5T8e15sRAN0uWCsY=;
- b=HKgtdx/LvYa+pRwT6le0E82fpFapyzGna1eVarHfSed30CuRe7dRZvaxizqiY4DDSbA3yBIIeQu2peMDlgAL+Syoxu5yA67Iw7PZQi+uN+4a0Kplfjbj6tHsfvionWyWBx4ph3KL4ZfZH/DEh9Eppnx83LlVlQ6eP3b34ULD4BlSzRZBlwFloLrOeWrrTugOHq7dPjhDC1SuuIsAxUW0VWmUaZi98hDKj7VsZZ2ANpAg3+nGAShJaDnsHUu6qd8JrtaMy5NNpD0XpBdmCcq/2tpNE7tjd2XWjRLSWjrLh29FrG/HIgSxxwIAzi5QCOyeM1dQRWWwtglz9gNNrVmSjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sTPb681fvzI6Ccei5zX5QCPvf4O5T8e15sRAN0uWCsY=;
- b=XAMiIuihjxDKxfk39bv0bSjBEZ9QyqjRgzgIj3hD9kxv17N+1OXQK2LrS8v9F1CuTepHDGGwwnzKk8LfsRZl4GcEhInQ7hBsj1rN/Jau7hgvs9/65TtbHqdujCs1m7Yz+hE9HtNXL20Z49qRpff0kAsfQTKQN3qJ/XBq/92EQ8Oft1exiC+Qc4k0w3q8mpKUZbV84NbexBmFl07MMCCW17DR28bFR7LChq0vvjMGSov7IUrmx5jPLUkhLQ4FVlkkA+3vlPWHkPp8D9MeJzcFSGL1Gctfyy/0sl1iO7Mm3P2MOcvvFnvU5WzIInJFGANp7s5LmFUbm5+iS6hklGp5vg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DSVPR12MB827618.namprd12.prod.outlook.com (2603:10b6:8:3e5::24)
- by LV3PR12MB9185.namprd12.prod.outlook.com (2603:10b6:408:199::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.15; Wed, 23 Sep
- 2026 00:20:09 +0000
-Received: from DSVPR12MB827618.namprd12.prod.outlook.com
- ([fe80::c673:6b00:5b48:b56f]) by DSVPR12MB827618.namprd12.prod.outlook.com
- ([fe80::c673:6b00:5b48:b56f%5]) with mapi id 15.21.0451.014; Wed, 23 Sep 2026
- 00:20:09 +0000
-Message-ID: <9ea4b1cd-d801-486b-959a-47e6d1914005@nvidia.com>
-Date: Tue, 22 Sep 2026 17:20:06 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 06/12] cxl: Add CXL Device Reset helper
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260910070808.1444264-1-smadhavan@nvidia.com>
- <20260910070808.1444264-7-smadhavan@nvidia.com>
- <20260912022617.47860862@jic23-hlaptop>
-Content-Language: en-US
-From: Srirangan Madhavan <smadhavan@nvidia.com>
-In-Reply-To: <20260912022617.47860862@jic23-hlaptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH8PR07CA0014.namprd07.prod.outlook.com
- (2603:10b6:510:2cd::25) To DSVPR12MB827618.namprd12.prod.outlook.com
- (2603:10b6:8:3e5::24)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BGTaEGuo"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 340CC46252D;
+	Tue, 22 Sep 2026 23:39:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a228.dreamhost.com (100-100-245-87.trex-nlb.outbound.svc.cluster.local [100.100.245.87])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 072D1462075;
+	Tue, 22 Sep 2026 23:39:05 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Attack-Plucky: 2e284cc205cca6c7_1790120345125_1576028048
+X-MC-Loop-Signature: 1790120345125:2661781955
+X-MC-Ingress-Time: 1790120345125
+Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.100.245.87 (trex/8.0.2);
+	Tue, 22 Sep 2026 23:39:05 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4hqGlD1zNlzND;
+	Tue, 22 Sep 2026 16:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1790120344;
+	bh=SXL8eeZTj6qUB3KVAyQPThUjBn31It6t9zWDGXnfW/k=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=BGTaEGuokf2OX4DXIAKYWFZ1lIRj6P8vdM96MJXae+Bb/1P7eJBA0b0OQb5qKiZHj
+	 c4k5FfWREjJcLD+zuKQ+Q2ydkSh7iqB1YePt1KKDASepIqQMWMehdqz/Ca6TCBZcQz
+	 lHdq7uz0OvP7sZ9VjsiJUd8KK1ZMe4bWmBhrrwitFJ2QD5OTNXRntDRf3RiSPmnD1z
+	 cbMkn/uQmrAH2COXPoDhquKaNyXYzNI53VgcMuHXqRLOXNXvNbCzVviFVI3jiDRSVy
+	 /x5SVd2dRObVr8wh8o171EIFGMuow4Sp2gbDvLMOaKTTyHkq+pqtwmgXlU16HTd04Q
+	 R8Iv7bjjuOPhg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jic23@kernel.org,
+	alison.schofield@intel.com,
+	icheng@nvidia.com,
+	ming.li@zohomail.com,
+	benjamin.cheatham@amd.com,
+	alucerop@amd.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [PATCH v9 07/10] cxl/pci: Split BI capability probe from setup
+Date: Tue, 22 Sep 2026 16:38:44 -0700
+Message-Id: <c61a057a45837e29c53cc8cd4e15df8712439011.1790103847.git.dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <cover.1790103847.git.dave@stgolabs.net>
+References: <cover.1790103847.git.dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DSVPR12MB827618:EE_|LV3PR12MB9185:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdc576b7-ec61-47b8-c771-08df19086d4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|1800799024|23010399003|376014|3023799007|5023799004|10067099003|11063799006|4143699003|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	6KRs2T6tKm6uTgOuagsOM4Quw5mCdgWCd8xOC75Or7jo+kYPrnDukDVqFjIZtBDMg4wqd0fQE5bu1T2ZMwUGCKxgMMfVbOJ1xewaOKderGoKeTwCWo2CLANp9pS7SavUEoBDpJjA7WiNpOJXd7VRPbDczKb8X7tK4Kdt4lCQhoubpo4WSz/fsN9NaoS8gltJVbDSL7GiEJwNqiXIm75Caos23RwRDbQ6hXosucN/Mm3O/xqRnALfr/AaubIOqekOUa330s456I+43T7gBigp0mDuE1YdedQ1/UXLGKXs9Zf6FgCSeD/8xV2ux36PEXvDHsnVkbyXDTcUC4croJU7kDoPGMQ5MY9vk7RMRVZ98jyWDUo/Zh15/AOajglKA22twTE1v3WZDxjiq22PLiVNC6kJPfbdgi+NsI6m4ZQb0b/RtOyzzsUcUz5pQDro7xqm1aMrAgtVD2V2OGNJM/DbFvC3iLEAhn4ST2t3r5yGj6/nKEJ/ub1k41yN58uyg69hejgpmH5WGfEWgZx8f2apgKePJmLRpYTJkoWbziTJenvQeWFAVayietLTX9WsHUoeofGVCSMpDkaIPmipwgrxgBbQdPCXoUTNwJE8ezdlDshLju2myAykGrsg+tntawXDynxQMl0eTuNIWGWPE7S6s25djXeegDEejT8Q0kjRkzI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR12MB827618.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(23010399003)(376014)(3023799007)(5023799004)(10067099003)(11063799006)(4143699003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OEtSRE9OUUdYaFA1RnR0aUI5WHdiV1F1dGRKNGF2c3FWY2xhRUN1Z09iY1BL?=
- =?utf-8?B?d1RmNkVTMzV3dmpiVWo1elhGdkhMaGU2RmF0cHZXK08yU3FGbi9VUW52VUlC?=
- =?utf-8?B?a3owak9ZK3owa2gvNFdoQWY1Q003OVphem0xcXdzSFl2RlRrUHlOTXFOWDYw?=
- =?utf-8?B?ejVHUG90WTZwaEdTQjVDL2FSV2dwYXlnS3VuRDVXN2hPTUF3TW9Dd1NCYWlI?=
- =?utf-8?B?c2RFM3JPUVJQL3NzdnZrL09QWVdNeFJiTlhIRzVreDlnVHdBaUUxbTNtc3I4?=
- =?utf-8?B?MUJ1eEFRdmhJNXVnSGNEYkFFS2x3R25CTjQvcjUxd285SzRDUTMwOXJidTJW?=
- =?utf-8?B?djEwTFk5NWJTQjdjQlg0ZVRRNlQ1MWlBYmhVU0lDZ3RuK0hBQzBMSi9jYk02?=
- =?utf-8?B?RVJqclJKdzdqbVlkVFR3RkZteFdHQ1ZKc200bWZQbklhT3FRZ3FwaUR5Y1NV?=
- =?utf-8?B?QVc3QldncXhDVGFDN2twcDh6OW5YeVJOWjRMN2Z4Uk1jQS9JekhPRjVIQjIz?=
- =?utf-8?B?QWlRUEo5Yk9mRkFPa2ZMV1h1OXNKQko3TEJzQ3l6N2dzMS8zRFhNbTRDOEE1?=
- =?utf-8?B?QldRajVpVDF0Zm1pRGd3ZW9QSDRoWFFpUGpPdG4yZEVLMldyREVHa25yU2wz?=
- =?utf-8?B?QjdnN2tCc3daNHlYWTV3OU5qVWtHNUh0eDhXRDRiNlc1ZERIZXdxSDdTMGFs?=
- =?utf-8?B?QjNxQTk2TU9haUhZZFdWTERadC8xT092dnRwZGg1MzBwc2NTc0lIbWpPcVNw?=
- =?utf-8?B?VEZ0Z092cUcwR0JhQVhYYzVlZUo1aUYrbVZhWEdQakgvOHF6YmYzWHhaT2d3?=
- =?utf-8?B?aEc3VGlpOXNib3loeXd0NlJta1cvVmpPcnBISnJNREhTQU56VzFxZ0dvWlNC?=
- =?utf-8?B?aEE1TjVZeGgwalVHQnJ1OHJWSU5zRG5mOUZSZXFWRUJxQ3FmcW4xN2hDZU9z?=
- =?utf-8?B?S0p1UmlMTWpBYnFpbkVSUTdabmdpSURPaXBMY2V3NU5Ra0R5KzRGNXNmVC83?=
- =?utf-8?B?bVpXU0RvdTZHT1o1YVV5K1BhTnV5MmdaajZ0SlhiWXlVdDlmUU0yTC93Tmpr?=
- =?utf-8?B?K3l5NFFVaXN6MkE5R1p2SVdJcFFZZXRVem9NbEZCdVp3djZ2b1JDLy9uNCty?=
- =?utf-8?B?ekFsWklxcktHYlF0WDBkM1p1SUNjb2pOQ0FPZ1hYMDlCbG5ScWpWMnFOdnJZ?=
- =?utf-8?B?dVlTVWxlV25zOUh1aXlqTkNpamdDc0Z0aTdSMzBVNGlKcGRoR0FCK1IvVmpE?=
- =?utf-8?B?bXo1NVdROWt4SDJJTHI5SVlTd080MU4yaGVzZHE2VWJFL0pyNDlRakwwaTFB?=
- =?utf-8?B?am9yL3MreGlPR1I1ZjlMUHFBTnNkVTNxWHk0Y1hPa3VVblFiTnRYb3VwazBI?=
- =?utf-8?B?YmxObnRJQWtOYkJqc3pIVGFBcGo0NXp0QUVBb2FtZUR0K1VxUm4vN3k3TW4z?=
- =?utf-8?B?QXVlUEFGSUZXbTFPendCS0tjVk9jdzNWUndud1NMWUtHYjhBWEk5cXBwMGdF?=
- =?utf-8?B?YTNqK1JrNnNhTmpHVnhMckF4WXBhSnpqZ2JISFI1QlJYYXZqRjlxS09NeG9R?=
- =?utf-8?B?dWk4c3pRVENtbjc0Y2oyaHM4RXJHSE5JMDhJK0NHQmZSNEdiR2V0Q1VmUHJH?=
- =?utf-8?B?UDBrRUl3S3BCckNwdjYvZU8wWmh0ZzZ5TDloNGY2QUJwenpVWXFYcC9YY3Ry?=
- =?utf-8?B?K2svY0d2dGJkVUVhSHNDdWNjR3dwMWt2NFZOV1Nva2p3RG9GWVBoM2tnbmVt?=
- =?utf-8?B?ZVhQalZ2TjZzbVZOT2llWlVMNTdSMFU2UEFEaTJHNWtqejJvQmdWME1FUVlG?=
- =?utf-8?B?eGI4WmFldVFINjM1MTlSQUE3QWtqT3dzTDdoQWJmY2NjU3hMbzBWTVluQS8r?=
- =?utf-8?B?VkhsUkN4VjlFVjJLMjZIVkh4WmlMbkRmZFlETUdCV0ljZnBaSnYvMzdvbUFP?=
- =?utf-8?B?NmtINUx1RllwOXBQRlVnM1BTU21qdjZ5dWVPVHF4RlBCZmpSSW9CakhseCtX?=
- =?utf-8?B?SWVlMlhialY3VXEzMWpxcXU2b00zZzBYWDhZQ3RpckdzbEtDQ3pVODJWOWlt?=
- =?utf-8?B?TE9ka05sM09yVTh1YXVzc3pCQjdVUHMyOTRkQXlTSnhCZk9VN05FVkpmaFR5?=
- =?utf-8?B?OTFMb3lycUNYU2lNa3BBdlhtTHlLdU5RNUEyUXZQTWVRN2YyRlRqUm9GeHRP?=
- =?utf-8?B?T0pIdU9TczBzeksybDRlNkRoM2w0c0ZhNHhTeXNCM3NRLzVqblBuOW1Iakt3?=
- =?utf-8?B?OXhvRnkvOUZreGU4ZEhUUGwzODhyUlhUWEZKa0szOUlTK3B6SHpod2RIVXdG?=
- =?utf-8?B?S29iTE82NGk3TytiNUpJT3k3SWlTWEVYZFNIZ05oZnJVM3cxR0pBZz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdc576b7-ec61-47b8-c771-08df19086d4a
-X-MS-Exchange-CrossTenant-AuthSource: DSVPR12MB827618.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 00:20:09.5156
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yy8g4S2xMdSIl6PpTeFjZQAyYTCeAlu2xDN816VaVCfYczD95E9NrSMIpl1/ffgVSCxupNFa6P8SOV32J/jrXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9185
+Content-Transfer-Encoding: 8bit
 
-On 9/11/26 6:26 PM, Jonathan Cameron wrote:
->> +     if (dvsec < 0)
->> +             return dvsec;
->> +
->> +     if (!(cap & PCI_DVSEC_CXL_CACHE_CAPABLE) ||
->> +         !(cap & PCI_DVSEC_CXL_MEM_CAPABLE))
-> Why do we need them both? Sure that's type 2, but a non
-> class code matching type3 would I think need the same infrastructure
-> you are building here. That would have cxl.mem but not cxl.cache
-> - I think some of the CXL SSD prototypes fit in this category.
+Decouple the topology read-only capability verification phase from
+cxl_bi_setup() into cxl_bi_probe_capable(), recording the result in
+cxlds->bi_capable.
 
-I did not yet address this in v13 because I did not want to expand the 
-series beyond its original Type 2 scope without settling the expected 
-eligibility policy first.
+This allows further dealing with auto-committed BI hdm decoders;
+having such knowledge upon decoder enumeration time.
 
-The current check requires both CXL.cache and CXL.mem capability and 
-both protocols to be enabled. The reset sequence currently assumes that 
-CXL.cache is active and performs cache disable, optional writeback, and 
-subsequent cache-policy restoration. This might need change.
+No functional change intended.
 
-Is the current policies (HDM snapshot, range synchronization, and 
-restoration infrastrcture) adapted by these patches for cxl_reset also 
-apply directly for type 3? If so, I can generalize this. But if Type 3 
-requires additional ownership or lifecycle handling, can we please 
-address that separately?
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/pci.c | 40 +++++++++++++++++++++++++++++-----------
+ drivers/cxl/cxl.h      |  1 +
+ drivers/cxl/port.c     |  1 +
+ include/cxl/cxl.h      |  2 ++
+ 4 files changed, 33 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index f3ca9861a7ba..9bf05820c142 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1332,34 +1332,38 @@ void cxl_bi_reset_detected(struct cxl_port *endpoint)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_bi_reset_detected, "CXL");
+ 
+-int cxl_bi_setup(struct cxl_port *endpoint)
++/*
++ * Verify the device and every component in the path up to the root
++ * are BI capable.
++ */
++void cxl_bi_probe_capable(struct cxl_port *endpoint)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	struct cxl_dport *dport = endpoint->parent_dport;
+ 	struct cxl_dport *dport_iter;
+ 	struct cxl_port *port_iter;
+-	int rc;
++
++	cxlds->bi_capable = false;
+ 
+ 	if (!dev_is_pci(cxlds->dev))
+-		return 0;
++		return;
+ 
+ 	/* BI is VH-only */
+ 	if (cxlds->rcd)
+-		return 0;
++		return;
+ 
+ 	if (!cxl_is_bi_capable(to_pci_dev(cxlds->dev),
+ 			       endpoint->regs.bi_decoder))
+-		return 0;
++		return;
+ 
+-	port_iter = dport->port;
+-	dport_iter = dport;
++	dport_iter = endpoint->parent_dport;
++	port_iter = dport_iter->port;
+ 	while (!is_cxl_root(port_iter)) {
+ 		/* check rp, dsp */
+ 		if (!cxl_is_bi_capable(to_pci_dev(dport_iter->dport_dev),
+ 				       dport_iter->regs.bi_decoder)) {
+ 			dev_dbg(cxlds->dev, "BI not supported by topology\n");
+-			return 0;
++			return;
+ 		}
+ 
+ 		/* check usp */
+@@ -1370,13 +1374,13 @@ int cxl_bi_setup(struct cxl_port *endpoint)
+ 					       NULL)) {
+ 				dev_dbg(cxlds->dev,
+ 					"BI not supported by USP\n");
+-				return 0;
++				return;
+ 			}
+ 			if (port_iter->reg_map.component_map.bi_rt.valid &&
+ 			    !port_iter->regs.bi_rt) {
+ 				dev_dbg(cxlds->dev,
+ 					"BI RT advertised but unmapped\n");
+-				return 0;
++				return;
+ 			}
+ 		}
+ 
+@@ -1384,6 +1388,20 @@ int cxl_bi_setup(struct cxl_port *endpoint)
+ 		port_iter = dport_iter->port;
+ 	}
+ 
++	cxlds->bi_capable = true;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_bi_probe_capable, "CXL");
++
++int cxl_bi_setup(struct cxl_port *endpoint)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
++	struct cxl_dport *dport = endpoint->parent_dport;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	int rc;
++
++	if (!cxlds->bi_capable)
++		return 0;
++
+ 	rc = cxl_bi_enable_path(cxlds, dport->port, dport);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 3639cd2daf0c..5ab2f9c39f5c 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -962,6 +962,7 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 			     struct access_coordinate *c2);
+ 
+ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
++void cxl_bi_probe_capable(struct cxl_port *endpoint);
+ int cxl_bi_setup(struct cxl_port *endpoint);
+ void cxl_bi_reset_detected(struct cxl_port *endpoint);
+ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index eab935eca9b1..8e58adbc2e29 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -170,6 +170,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+ 	cxl_endpoint_parse_cdat(port);
+ 
+ 	devm_cxl_port_bi_setup(port);
++	cxl_bi_probe_capable(port);
+ 
+ 	get_device(&cxlmd->dev);
+ 	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index f9e9058a85da..d0f03f305072 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -170,6 +170,7 @@ struct cxl_dpa_partition {
+  * @cxl_dvsec: Offset to the PCIe device DVSEC
+  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+  * @bi: device is BI (Back-Invalidate) enabled
++ * @bi_capable: device and topology path are BI capable
+  * @media_ready: Indicate whether the device media is usable
+  * @dpa_res: Overall DPA resource tree for the device
+  * @part: DPA partition array
+@@ -190,6 +191,7 @@ struct cxl_dev_state {
+ 	int cxl_dvsec;
+ 	bool rcd;
+ 	bool bi;
++	bool bi_capable;
+ 	bool media_ready;
+ 	struct resource dpa_res;
+ 	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
 -- 
-Regards,
-Srirangan
+2.39.5
+
