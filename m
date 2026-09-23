@@ -1,185 +1,221 @@
-Received: from mail-yx2-f42.google.com (mail-yx2-f42.google.com [74.125.224.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender5-pp-o94.zoho.com (sender5-pp-o94.zoho.com [165.173.182.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973E93921D8
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 06:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBCB3955CF
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 06:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790143269; cv=pass; b=gJZ2MXJhYMpVrwU6MNfB22mG3n4gvGqJH2dY+aFB54Kguw7dYdMW/SznDGaewHCJ4nfZ7jhVyoVDlGN45gb+wSf5KherplVOWiyHYPt3bIPYY5RzbgSpKHGtdzm+xZssJZFB4V3lQOYJ3oQeDVZ7aRHF79Q9yReHIcageUc1LAo=
+	t=1790143624; cv=pass; b=jcecG4KJJGNk9JWCYCpPOZpKdK4y5D0Y8TPHftWOijRSZTeF4z1w0QmUInNhXvem3pufVg1yZm3JIwqszTsK3gjQjSd5XA/I/qjo3ZOl/3MkEKwW480Azl9DWtMSVnzqn7zpSbaByOqg5dawdEbH2n5cyoj5YW5D7HcaYXKox0Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790143269; c=relaxed/simple;
-	bh=HgLSZl8XxyK20T4gh3lI0f3nK0YB9PmdSCSKHAKyLFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IboCTkH/u/vtuImIxX/mo6evk+sffY4azm0/0pDRpXdowXhccCcy30M0fqdzsIj19c7A1ZtbPNVc4q9dtgLcBprBUpDlB+1Z2JnL3VzJXoBGSTxlWZjDsjQurayOewQoCn5K/MkiUl8tET9OYWAE+ia1wVXJEwEjh2rS5qJuebs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EgPUbUrx; arc=pass smtp.client-ip=74.125.224.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1790143624; c=relaxed/simple;
+	bh=Ye/SGgi0SE2Lp3bxsZf9SBN2UWqQwnj3I39W7gR7/tg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nUSI7R9wXASZT3Gpp8pjF2ND2HhdauGnVPDjyB1CmAaB49x3JZvENkmiBZQ1/J4J6x6eJXqrG1KeaY589jnBQH4ZBpKASqbPHIFVZWyh1+Xra1n6HQOTmq09jH3xGRDD7FYbxEeTi2MEZXh4+m7C5aZbaemq6QO5bR6s/VQ8jOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=LFXnzz5I; arc=pass smtp.client-ip=165.173.182.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EgPUbUrx"
-Received: by mail-yx2-f42.google.com with SMTP id 956f58d0204a3-6729ca45e37so621624d50.2
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Sep 2026 23:01:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790143266; cv=none;
-        d=google.com; s=arc-20260327;
-        b=R10C4rVNajAmqiEF5opDa7j9eayhC4Dcoo5CgAg32lRAUv5zahAiDQN+3oOoKHo3P7
-         ITYUu64ROoxjkDDeB47em/i1Bj494+bidoHaOuVWQnK4Tv21FUpZ4xeWSpiPWuQIFMrX
-         uBY28OB6nDc9fT98X/TB4OCDuH5/jV2SUk6E/mmIfhCeI2YTuO28MQr/AxDnpHPsF/Er
-         3i1ZM0TFTDcVbIIZbMfqEXTM+l5gB/ZWo035Xx7We8nV8ylpRJZ1lFqBG/tv7u/yLmtk
-         LpDq4gaTYwlIUQtSHpCx0NuZ24II8lrXMcKFk48EDeiGXlyBLYoLvEHSkC3EOXfVRBD0
-         MUmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BI7bwcNjzQv13pRkfjbMflvweeVEe6lYqf3+ijkmu54=;
-        fh=XV7sKTyah1K7aipQhcnsXSXP1qrM3RCNndYxUeBi5Vg=;
-        b=cdJf9CPRgANsF2kz2f4ZVpvm3g9+IazzoR6pjhrixctu0mqw2C8HbhcU022aZQAPFQ
-         KLNIa1Ay8c1HnC05RX2zvDVjMWeKQJO95yjnf6lOcDAAfGbHCfFXA5aGltsARKgzSRZ1
-         9Yous1IvZPKqBoNvGJ6SegNmkovy4HATpVaWgMwuHSyB/RpNycJjI92u+l5kB3H6zjuP
-         sxX6dY7rV0ZHTkkqhWBDouNPQKQ4+OZxMS5tkvj9Eb8Nfp9tWW+uhlOd8Ic0f+wdiZi4
-         nSTT3EXprkT1NdD1TMKyBG/oOJm0i47O/M+08rnXnGFtaxM7CRF8YQePZ9rXO15pu50b
-         BpWA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1790143266; x=1790748066; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=BI7bwcNjzQv13pRkfjbMflvweeVEe6lYqf3+ijkmu54=;
-        b=EgPUbUrxZTVaE/iU2QOnC+73p/clDqDxQhp3fwzABG5j/n48P1q6ns07VHFwkjRezH
-         07MMs9BgA492axyK+3OynfnTgZl9eY4Wje0qNmI/T/VncZaiuqNOI2l147sC+A/Gh4Iy
-         gn2wwYJ7E4/Szse6RcHkpVbPioI8pzdFfWHbpFliodkMsdmPArJP0rjvjbJRXM44AuOr
-         RfnWYBtdii2YT66YO16DIwRkHk1t3QgAw6CYC1kICmHGSG1JXofQ0ZSkO7eRGKIWNVMi
-         5YhewlwgeQNEKKG9uBoeGR7CuRfgsvcawqRZB615nghP4gtljCTWdMyyAgZt7f7WE1bH
-         TbCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790143266; x=1790748066;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BI7bwcNjzQv13pRkfjbMflvweeVEe6lYqf3+ijkmu54=;
-        b=ocUHIIwlkahgd4nyNzUr6BfqGdqm4s9vptCJ1+3Pg4w422VFOLkaIA3JO5+Tqb4GlO
-         Nnmz8ek5XcDu7FWu49Ong5GVzs6i+m0i++BtT+fGKJQF/E0wYtYRghoKxrcsjaJPORBp
-         jrqaNenkmIsQppz6/lsapd9t3EEU2lijnAX07f4Of/tN+UMOEZ2YEDrLVh6sAajQgxT+
-         7qtigkgtrtPwoD5ceth0kKf1cjLfKaDu6eFS0OkHOds4B9gbLZTz4dHjmvv47+Ucj06t
-         z1Jpffj6wzwOD6Ae+2IeFfYmr1yRm/jDl6B/1OAHT5mcS+Bge53esZGkIWzueUnWoJty
-         MlqA==
-X-Gm-Message-State: AFuF++mrq/JfSOIzFdbz761mGFYAU8OHgVnqzSPuaPJzx6kCPXlddZaO
-	z8M2sN/4/9AQ4PQ29oTwiwRvKNwW4Cfxl/Km3qD6XJxpfYboYsosZae5X+WLjOZwE6rSvUkPajj
-	oLgBBIqV82K03+yGaqY436LUjivSjUcGSo/Sp53f6ug==
-X-Gm-Gg: AYBFou2Yo5Li/Fo57ZcDrQFLFA1na5i2sMnP+tPlSHeFp726TNr6Hgp0RCtUsfrO7qr
-	ebnHF6hvLZ3J0UoGN9wEjWkC3jpdNNKIkLVQjxBeROw6L5te4F7aDtGY2Aqa1+GTrd3bqI9JZZh
-	diT2cgYQCvv8fGyiLLs2bTaP28uQTgjAPrnh7yzozWu+F6+NS6VOti87iWKKpldOu0wusEwlAjj
-	a17OzwlRTqwPIPAx38MkZVvcNeQIjXPmeRuIou4fpEj5N5GonmNURkoJjri1APsrPpQJ2wlQjtU
-	0dgJhRD9WNPpQv9YOBES5YoJR2VhNyKXYBxiN+I68URzyyIg3f1Nazg=
-X-Received: by 2002:a53:ad50:0:b0:66f:c1bc:40a0 with SMTP id
- 956f58d0204a3-672d58abf06mr470879d50.99.1790143266221; Tue, 22 Sep 2026
- 23:01:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="LFXnzz5I"
+ARC-Seal: i=1; a=rsa-sha256; t=1790143612; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eRlP6J2KXUp4DMu2TH5av4+mB7a9U48zYy637brSxEUNsRqR+uziEFKPjz5X8Fn7b3FwLdhrG88Gko7f0xLfKEIxNz8GnFBnscDMGmHa880U01Z3ly6ikX99V50tzomndoFByQGy9BN5G2l/zhxkoKrZ2TrbTw149vGWKdUVCGQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1790143612; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/7xn8s91vgpRYkAk/xUWCGQhnGjOl1Apcekn5yopVHc=; 
+	b=SAp6MJU+S8pNMF8Cy5VoqtSO1F/rAmidhpYnM/1t8oQ9PAB2Nn/dne4UZBjIlTmKRMUIPvBAUYk42j60qqS/Ao4Q7tL5zotp8gbAn2u1EGpXZhROzQEZ6oTvFGjs8UY745JF4Zk6nZkhRKcFlWMg7AG9Ykx0LhDljjM9C1zoom4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790143612;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=/7xn8s91vgpRYkAk/xUWCGQhnGjOl1Apcekn5yopVHc=;
+	b=LFXnzz5IHk1qzx7CK28qIvWZ7/qvUaqcYx7EsqD4empNIxruu97+70IawLRZRoIv
+	5Otq7HMo4AeuybJ/W5eD2yzTlk0ulYARbWxTp8rnx7d9yxPQK06tfZLKU4lNXVUOz9Q
+	6izd20QXLS156HI4v31PlkuRAMA6s0zJCB8idm70=
+Received: by smtp.zohomail.com with SMTPS id 1790143611174194.58057088860164;
+	Tue, 22 Sep 2026 23:06:51 -0700 (PDT)
+Message-ID: <1e681988-e64a-4ab5-97f6-5b595d029a93@zohomail.com>
+Date: Wed, 23 Sep 2026 14:06:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260922082551.874901-1-songmuchun@bytedance.com>
- <20260922082551.874901-3-songmuchun@bytedance.com> <20260922083712.A89111F00893@smtp.kernel.org>
-In-Reply-To: <20260922083712.A89111F00893@smtp.kernel.org>
-From: Muchun Song <songmuchun@bytedance.com>
-Date: Wed, 23 Sep 2026 14:00:29 +0800
-X-Gm-Features: AcwNN1U14lhaEIPXhrx92Llhfbcm9mObr2diD8G4hu8c12kamR6vjUggv5v3RCQ
-Message-ID: <CAMZfGtURkCQo4DCbdj+KcG0zbZHzECfY2c0aqnDeLWYt_uo9Eg@mail.gmail.com>
-Subject: Re: Re: [PATCH v2 2/2] dax/bus: fix Device DAX range alignment validation
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 03/10] cxl/hdm: Add BI coherency support for endpoint
+ decoders
+To: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com
+Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
+ benjamin.cheatham@amd.com, alucerop@amd.com, linux-cxl@vger.kernel.org,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+References: <cover.1790103847.git.dave@stgolabs.net>
+ <ebc907df26d229138fb46051e5b9f4a2299b6432.1790103847.git.dave@stgolabs.net>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <ebc907df26d229138fb46051e5b9f4a2299b6432.1790103847.git.dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227a4cfedbd156ed37675e64b630000affe8d42339a1705d47a7d3c4333d759a1f7b878cd043cf2f3:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Tue, Sep 22, 2026 at 4:37=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] dax: TOCTOU race in size_store causes partial shrink failure
-> --
->
-> commit 519db297333e73581e0bbd5524e7d6959d7610a7
-> Author: Muchun Song <muchun.song@linux.dev>
->
->     dax/bus: fix Device DAX range alignment validation
->
->     dev_dax->align describes the page size used by a Device DAX mapping.
->     Both the start and size of every range must therefore be aligned to i=
-t;
->     otherwise the starting PFN cannot represent a naturally aligned page =
-of
->     that size.
->
-> > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> > index e40c25401cf06..277c3ce23b831 100644
-> > --- a/drivers/dax/bus.c
-> > +++ b/drivers/dax/bus.c
-> [ ... ]
-> > @@ -923,6 +964,9 @@ static int adjust_dev_dax_range(struct dev_dax *dev=
-_dax, struct resource *res, r
-> >       if (dev_WARN_ONCE(dev, !size, "deletion is handled by dev_dax_shr=
-ink\n"))
-> >               return -EINVAL;
-> >
-> > +     if (!range_is_aligned(dev_dax, range->start, size))
-> > +             return -EINVAL;
-> > +
->
-> [Severity: Medium]
-> Does this new strict alignment check introduce a regression where partial
-> shrink fails if the device alignment changes concurrently?
 
-Thanks for pointing this out. The underlying TOCTOU race is not
-introduced by this
-patch. It was introduced by commit 6d82120f4156 (=E2=80=9Cdevice-dax: add a=
-n =E2=80=98align=E2=80=99
-attribute=E2=80=9D), which made dev_dax->align writable while leaving the
-size-alignment check
-outside the locking scope.
+在 2026/9/23 07:38, Davidlohr Bueso 写道:
+> Cache the HDM decoder's Supported Coherency Models on struct cxl_hdm.
+> A later patch has region attach consult it to verify the HDM supports
+> the region's coherency type.
+>
+> For uncommitted endpoint decoders, init_hdm_decoder() defaults
+> target_type from supported_coherency: Type 3 devices default to
+> HDM-DB when the HDM is device-coherent-only, HDM-H otherwise.
+>
+> Pre-committed decoders with the BI bit set are refused. cxl_bi_setup()
+> does not yet take over a path firmware already enabled, so nothing
+> verifies that such a decoder's topology can route BISnp.
+>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 
-That is also the commit this patch is intended to fix, as indicated by
-its Fixes: tag.
-The stricter check added by this patch merely makes the existing race
-visible as a
-partial-shrink failure. I will therefore fold a fix into this patch by
-moving the size-
-alignment validation under dax_region_rwsem and dax_dev_rwsem, before any
-ranges are modified.
-
+> ---
+>   drivers/cxl/core/core.h |  1 +
+>   drivers/cxl/core/hdm.c  | 35 ++++++++++++++++++++++++-----------
+>   drivers/cxl/cxl.h       |  8 +++++++-
+>   drivers/cxl/cxlmem.h    |  2 ++
+>   4 files changed, 34 insertions(+), 12 deletions(-)
 >
-> In the sysfs interface, size_store validates the size alignment before
-> acquiring dax_region_rwsem. If a root user concurrently writes to align_s=
-tore
-> and changes the alignment requirement under lock, the shrink path proceed=
-s
-> with an outdated alignment assumption.
->
-> During a shrink, dev_dax_shrink irreversibly deletes fully trailing range=
-s by
-> calling trim_dev_dax_range. When it reaches the final range to be partial=
-ly
-> shrunk, it calls adjust_dev_dax_range.
->
-> If the concurrently updated alignment causes this new range_is_aligned ch=
-eck
-> to fail, it returns an error mid-operation after trailing ranges have alr=
-eady
-> been deleted.
->
-> Since sysfs writes require root privileges, can this time-of-check to
-> time-of-use race leave the local resource state corrupted, with the devic=
-e
-> configuration permanently broken due to missing ranges and an inconsisten=
-t
-> size?
->
-> >       rc =3D adjust_resource(res, range->start, size);
-> >       if (rc)
-> >               return rc;
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922082551.87=
-4901-1-songmuchun@bytedance.com?part=3D2
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index ef41632d7b7d..d0f352899903 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -221,6 +221,7 @@ struct cxl_hdm;
+>   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>   			struct cxl_endpoint_dvsec_info *info);
+>   int cxl_port_get_possible_dports(struct cxl_port *port);
+> +enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled);
+>   
+>   #ifdef CONFIG_CXL_FEATURES
+>   struct cxl_feat_entry *
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 0e9d652b568e..18200a8f3f72 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -87,6 +87,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>   		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
+>   	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
+>   		cxlhdm->iw_cap_mask |= BIT(16);
+> +	cxlhdm->supported_coherency =
+> +		FIELD_GET(CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK, hdm_cap);
+>   }
+>   
+>   static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> @@ -968,6 +970,19 @@ static int cxl_setup_hdm_decoder_from_dvsec(
+>   	return 0;
+>   }
+>   
+> +enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
+> +	struct cxl_port *port = cxled_to_port(cxled);
+> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+> +
+> +	if (cxlds->type == CXL_DEVTYPE_CLASSMEM &&
+> +	    cxlhdm->supported_coherency != CXL_HDM_DECODER_COHERENCY_DEV)
+> +		return CXL_DECODER_HOSTONLYMEM;
+> +
+> +	return CXL_DECODER_DEVMEM;
+> +}
+> +
+>   static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   			    void __iomem *hdm, int which,
+>   			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
+> @@ -1023,6 +1038,14 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   		else
+>   			cxld->target_type = CXL_DECODER_DEVMEM;
+>   
+> +		/*
+> +		 * Autocommit BI-enabled decoders is not supported. A path
+> +		 * firmware enabled is not taken over, so nothing verifies
+> +		 * it can route BISnp.
+> +		 */
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl))
+> +			return -ENXIO;
+> +
+>   		guard(rwsem_write)(&cxl_rwsem.region);
+>   		if (cxld->id != cxl_num_decoders_committed(port)) {
+>   			dev_warn(&port->dev,
+> @@ -1040,17 +1063,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   		port->commit_end = cxld->id;
+>   	} else {
+>   		if (cxled) {
+> -			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -			struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> -
+> -			/*
+> -			 * Default by devtype until a device arrives that needs
+> -			 * more precision.
+> -			 */
+> -			if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
+> -				cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> -			else
+> -				cxld->target_type = CXL_DECODER_DEVMEM;
+> +			cxld->target_type = cxled_default_type(cxled);
+>   		} else {
+>   			/* To be overridden by region type at commit time */
+>   			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ad7c991f0f9b..a990ed41edef 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -50,7 +50,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>   #define CXL_BI_RT_CAPABILITY_LENGTH 0xC
+>   #define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
+>   
+> -/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+> +/* HDM decoders CXL 4.0 8.2.4.20 CXL HDM Decoder Capability Structure */
+>   #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+>   #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+>   #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+> @@ -58,6 +58,11 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>   #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
+>   #define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
+>   #define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
+> +#define   CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK GENMASK(22, 21)
+> +#define     CXL_HDM_DECODER_COHERENCY_UNKNOWN 0x0
+> +#define     CXL_HDM_DECODER_COHERENCY_DEV 0x1
+> +#define     CXL_HDM_DECODER_COHERENCY_HOST 0x2
+> +#define     CXL_HDM_DECODER_COHERENCY_BOTH 0x3
+>   #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
+>   #define   CXL_HDM_DECODER_ENABLE BIT(1)
+>   #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
+> @@ -72,6 +77,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>   #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
+>   #define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+>   #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
+> +#define   CXL_HDM_DECODER0_CTRL_BI BIT(13)
+>   #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+>   #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+>   #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index c401e3a1af06..33bac6bbdb59 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -857,6 +857,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+>    * @target_count: for switch decoders, max downstream port targets
+>    * @interleave_mask: interleave granularity capability, see check_interleave_cap()
+>    * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
+> + * @supported_coherency: HDM Decoder Capability supported coherency models
+>    * @port: mapped cxl_port, see devm_cxl_setup_hdm()
+>    */
+>   struct cxl_hdm {
+> @@ -865,6 +866,7 @@ struct cxl_hdm {
+>   	unsigned int target_count;
+>   	unsigned int interleave_mask;
+>   	unsigned long iw_cap_mask;
+> +	unsigned int supported_coherency;
+>   	struct cxl_port *port;
+>   };
+>   
