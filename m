@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2D8414A3B
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 17:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D076741F344
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 17:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790185281; cv=none; b=ZkNixTNho1v514S/o/1NZjlazCQQobxT42jqAlieJjuxiUYH6MVIDynT+WwW10ZfEaNWtfyUjwkvKf7XwLl2b5hLHEKkO+waKilCUCJRtMW7NQwDb7eNzzyJuQ651Vlm58bsvIjWMp7PaRRlzxO5M7UMP2h49BDnbo3GmJVPFV4=
+	t=1790185570; cv=none; b=bmbCXJmqYj8zLGTnaCApBvgPagpAIOnlWpLLOWc4Ty933hcdmcJW8cPFWlHXgxFuMo6ygmA0ijfaB6J/w7u7dTU2pYV+RopgyQUiX5tOaYK2ZEUjG9XIvOzLz5vPPL4mHCmLpBpurRuMERfScCSCPjDM7CT3FBqy6lE/t7dpwB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790185281; c=relaxed/simple;
-	bh=8m7eP/1UtYiDAiJtdBf49/o6VBNsOWV+uJv+8Zp1JU8=;
+	s=arc-20240116; t=1790185570; c=relaxed/simple;
+	bh=9oU8SbOVrsfc/1OxuUbl1NZ63bo12Bpk0Ng7/CZtw7E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YXaK5yv/Lwmm5wWTWLjAQhLxjz/mRNRVL0pSdKH9ZcLDbVFkas+CnQ7G+zmvPRc3NouIih5evqr7aUrAQqQXOzp974ASiQ4TS3OA2ASPlVNFN+tAeDcoO977kvjdw6SMcLDR9qvpTiJe7IW9EmpEt8OmZcsNXExIbh4y8G5i9rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqmCfQ3o; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=r42XXqApup8FBA1ae2EdA7SXtt6Ilu2c8ItXJXd81SPSr9thIwGhALFccdi3/mssGIivrrS7HtHlVYIloSstEiLcsBGfuM4BvWB4M1FYDJOLPA/awA03KKBglX2EHG0/0wt18PTQjAymemkclNMpd5kKheCyEOEjaY4y4ugSWmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCKoecV+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqmCfQ3o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E001F000FF;
-	Wed, 23 Sep 2026 17:41:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCKoecV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12881F000FF;
+	Wed, 23 Sep 2026 17:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790185277;
-	bh=ujqYjfNckY5MGqDqjM20DTRpZNxO+UhIh9NJz24RskY=;
+	s=k20260515; t=1790185566;
+	bh=fnebqtGV3Vo1f42njei1T7ki6CI8ofpmcKeGcPIPmDY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eqmCfQ3ow8Eh9Fh6Wgnax1RlJStQbmko+QKQTuYS8HRefhjmMIQipDdksi+vd0lDE
-	 S0eWGEQA0p7C/PZY73adfypnOWzlfJoALUBpMq6FMqnXPw/5+UeJtrvg8593Mk4nb7
-	 du0u4MNEfVoPFfj0ufyw3ryQd6ouhtKh7yB41d+71nfcz2aastzKEFzGawPR1uE/qv
-	 yKHFLgbqw5sjkeGNkbsrGRvWNRnLph7ysyi0OscsLd7rbbUCbzqvkjovM/NG0o0QbT
-	 M6ZKLt91MsuYsyD8uh+VuoZpJHBJDStMwtLh/zNSqTo5qobc4vEHbdTDXFoP42Vhok
-	 ymNSZVDbHiu2A==
+	b=fCKoecV+Q7kAgnWparCCT67uusHKDJ46XGmpymntsXhIcfbIE0fzdqpOk12YjRSus
+	 3cIaylyjmKi+POF0xPYafIsXEbPBkd4Jje/ZQN0+0IRgEAOHKipRjAMBF2E9FpbA39
+	 NjskUzgUcWIhzrGKKcKQwEkjK2RO/p47F7SVFWPbLwCW8wOpwsGefowVbEb7of8uPu
+	 TpGt0ZhfpQTyvfOEplopmQC53yvrNk/oBvGzpHrC9SfAVsCIyrQg9vGDNbQolUAYzv
+	 AIyTNQDSTODgjd8kIeCadz2ok+MG2h14NEFSO2Z2s9b91e3riHwn4YqsSRdvGANk8s
+	 4m6O8GvpsUXSQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/15] cxl/core: Add CXL.cache device struct
+Subject: Re: [PATCH 08/15] cxl/core, cache: Add Cache ID register probing
+ and init
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ben Cheatham" <Benjamin.Cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260923173342.5584-2-Benjamin.Cheatham@amd.com>
+In-Reply-To: <20260923173342.5584-9-Benjamin.Cheatham@amd.com>
 References: <20260923173342.5584-1-Benjamin.Cheatham@amd.com>
- <20260923173342.5584-2-Benjamin.Cheatham@amd.com>
+ <20260923173342.5584-9-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 17:41:17 +0000
-Message-Id: <20260923174117.A6E001F000FF@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 17:46:05 +0000
+Message-Id: <20260923174605.F12881F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,64 +47,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] cxl: unused 'attach' parameter in __devm_cxl_add_cachedev()
+- [Low] build: function redefinition in cache.c when CONFIG_CXL_CACHE=3Dn
 --
 
-commit 16ca3df82e8ba8b03985c5445d288c9759b9ba65
+commit 666bdbfb794604b7884fcb19d8260bded28d941b
 Author: Ben Cheatham <Benjamin.Cheatham@amd.com>
 
-cxl/core: Add CXL.cache device struct
+cxl/core, cache: Add Cache ID register probing and init
 
-Add a new CXL.cache device (struct cxl_cachedev) that is the cache
-analogue to struct cxl_memdev. This device will be created by CXL type
-1 & 2 endpoint drivers to enable and manage the cache capabilities of
-the underlying PCIe device via the CXL core.
+The CXL Cache ID Route Table capability and CXL Cache ID Decoder
+capability are optional capabilities required when more than one CXL.cache
+device is enabled under a host bridge. This commit probes for these
+registers and maps them if found during the cxl_port probe.
 
-> diff --git a/drivers/cxl/core/cachedev.c b/drivers/cxl/core/cachedev.c
-> new file mode 100644
-> index 0000000000000..3a7a60165f621
-> --- /dev/null
-> +++ b/drivers/cxl/core/cachedev.c
-[ ... ]
-> +struct cxl_cachedev *__devm_cxl_add_cachedev(struct cxl_dev_state *cxlds,
-> +					     void *attach)
-
-[Severity: Low]
-Is it intentional that the attach parameter is completely ignored in the
-implementation of __devm_cxl_add_cachedev() in drivers/cxl/core/cachedev.c?
-Any data passed to it is silently discarded, which might cause API confusio=
-n.
-Does it perhaps stem from an incomplete copy of __devm_cxl_add_memdev()?
-
-> +{
-> +	struct device *dev;
-> +	int rc;
-> +
-> +	struct cxl_cachedev *cxlcd __free(put_cxlcd) =3D
-> +		cxl_cachedev_alloc(cxlds);
-[ ... ]
-> diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
-> new file mode 100644
-> index 0000000000000..6ca887e078a1e
-> --- /dev/null
-> +++ b/drivers/cxl/cxlcache.h
-[ ... ]
-> +struct cxl_cachedev {
-> +	struct device dev;
-> +	struct cxl_dev_state *cxlds;
-> +	struct cxl_port *endpoint;
-> +	int id;
-> +	int depth;
-> +};
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index f51575abe5af4..33420aaf40db9 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -15,6 +15,7 @@ cxl_core-y +=3D pci.o
+>  cxl_core-y +=3D hdm.o
+>  cxl_core-y +=3D pmu.o
+>  cxl_core-y +=3D cdat.o
+> +cxl_core-y +=3D cache.o
 
 [Severity: Low]
-Should struct cxl_cachedev in drivers/cxl/cxlcache.h have an attach member
-to store the attachment data provided to __devm_cxl_add_cachedev()?
+Will this cause a build failure when CONFIG_CXL_CACHE is disabled?
 
-> +
-> +bool is_cxl_cachedev(const struct device *dev);
-[ ... ]
+Because cache.o is added unconditionally here, drivers/cxl/core/cache.c is
+compiled even when CONFIG_CXL_CACHE=3Dn. This causes a function redefinition
+error for cxl_port_map_cache_id_rt() and cxl_dport_map_cache_id_dc() since
+they are also defined as static inline stubs in drivers/cxl/cxl.h:
+
+#if IS_ENABLED(CONFIG_CXL_CACHE)
+int cxl_port_map_cache_id_rt(struct cxl_port *port);
+int cxl_dport_map_cache_id_dc(struct cxl_dport *dport);
+#else
+static inline int cxl_port_map_cache_id_rt(struct cxl_port *port)
+{ return -ENXIO; }
+static inline int cxl_dport_map_cache_id_dc(struct cxl_dport *dport)
+{ return -ENXIO; }
+#endif
+
+Should cache.o be added to cxl_core-$(CONFIG_CXL_CACHE) instead of
+cxl_core-y?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923173342.5584=
--1-Benjamin.Cheatham@amd.com?part=3D1
+-1-Benjamin.Cheatham@amd.com?part=3D8
