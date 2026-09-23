@@ -1,260 +1,562 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010036.outbound.protection.outlook.com [40.93.198.36])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAA5471421;
-	Wed, 23 Sep 2026 09:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790157542; cv=fail; b=qCnlf3byqpUoKqHnTwWpUbdEyTdMB6lD4Vha9IFD0vxUW2PZ2euXAri3gDCQ92uZlOSoQ4zFXIKk8Gpdup3FiRjiXkG04hdnPgo5ZSxYNOigDNsLuxWKgWRc9eyx1uMONhgPL35N3ccd5qbR/rvsfrajm0huMxi1R8p6vsMJu5s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790157542; c=relaxed/simple;
-	bh=1RrxUbUKgTgh1V9ia5/Bg2AwoLzKcGgLfNDkyAlLPIo=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PsiLmzVoFj5jL+MxdNCUcPFOUkgTj8I/k+sQIww9l0u/K4YbOjCsuuLCvd69XTuJ0v6zvvDxJW5eX+wR4KStwp2FrnGZeSWdxLDIKUlIdQDoO32eMGAcsTiJoglU36fZdXkZXmaztreMOlg/0GNnkVed65jMXwIVVz6jl2MeEzk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5icpnrYG; arc=fail smtp.client-ip=40.93.198.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F0F495504
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 15:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790177809; cv=none; b=f0b4XeXKc/Tntj/d8IfwEBdy47orLVA08z80AK1eLMiIqxaiQiVEp+LcK6wo17jSiQ/WQhrLsfFDTXxHau2306JFyLLX3FTjG5dqcrtx1FfzfR2KXK9r2Szf/vFcI51dP0C69rxVfRfJZhsHBh908kvYjzJPCF5sg1uEBGnbHKE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790177809; c=relaxed/simple;
+	bh=2o0CX7locVs9at4jlyYz8rtbJTm++/TC2/vtxjkKNgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sx/80LYp3BwCRN+uBXkDUeD58YCj2vso4ZLS5FzJrJdSIdJzkJt7BaaGLOIE/Dbx8cvPpPNBS5kR62HryROP1e3C+/if4QZFUcOvMF7K2LKNl5dlnI0LQj3i22N+siRgxYhduSkD/1AbYMfsQs1ispolYYOXpbUJz9YC7frHffM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JpHXSizV; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5icpnrYG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Pv2+uf3TvX5cRnhgu/T4bVN+wQGw+vv7iuFqr3ClLlXbrvJnD3mfSZFa/6mTE5q5Tv45gj7lYyOtOUhfRlm71C6lzOdjrkJhTclmYuPZt5GudTwypl3nrPBXi9cyHDaUYtwjQUSyGeTqyKPb8EmCc+EsxK+9qfbnnKRfYczUKPdeekthLdRO3ae18RxRvLYNO5yPjAnWqipPHYtdbqDZT+AzwlUk0jC18AXwOQ2KF9gqOFjFKwxjlZwNCcreTxWcrsXviGIo/nN6WW+UOkBlZ9Beut0YjjHClVsKijjylDIiZWfBHMIb8kchtNpIrpF7mG1Ud3eZpRPOrPDor59N5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qbfxl9aaQFa34j9IVzSvyuwHK6Xdt53iXRP3yBYlTls=;
- b=OoSxWwFSHnVbkcU2+asd4LX2WNBdhTzFNHUSm+t4O2NXvDYYPK5h6ksWzrbt9IUtqADPey2Dgy0R17LmigAbSS3m4apDiDWN7m2KLWOG0fpkBPg147Cu9KlPlTMkVRU351/6vE11VSdKXFd7CEN9bWON8LHqrK3eerPVJDaMvbl/2KO1ztreSfDlhSvY/k4At2+gmZJA4qYYYWdCUXhMmCNE7nx7hPyjWOFCyo02NQztNglt9GKw+uZR8TO+G5HSq1HvkL546SPG3GYvR3j7FaJDTx7PfvZGtHHidOh5kw8RUNZW1mC/bf/FiZUbtigQl2f64V+QUN9ApqQVNSv4Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qbfxl9aaQFa34j9IVzSvyuwHK6Xdt53iXRP3yBYlTls=;
- b=5icpnrYGNTptIm7QkxgV/R53EzzgQFUjwQpEhHzaTKiKYEhcaWXfS5xFSCYnmvIsHhy1JOvkxxyB4cU8vWLZynSS6zEKqhVzYj0Uh8osq5NNQvw4o2AkrMiZbmSnC7VuaK9oao6TohJR1uooHgzy8DuM8B2cuwNWKxKGRJXFr4c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- CY5PR12MB6153.namprd12.prod.outlook.com (2603:10b6:930:27::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.14; Wed, 23 Sep 2026 09:58:55 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0428.014; Wed, 23 Sep 2026
- 09:58:55 +0000
-Message-ID: <5e60ed2c-b50f-4949-9edb-ede80436f501@amd.com>
-Date: Wed, 23 Sep 2026 10:58:51 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] driver core: Rely on supplier driver binding at
- link creation
-From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, alucerop@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
- rafael@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20260921191239.4249-1-alucerop@amd.com>
- <20260921191239.4249-2-alucerop@amd.com>
- <2055ead9-201f-4878-aa09-07d7fc3ab3c2@bootlin.com>
- <3ab9bc66-f3b3-465b-b736-09df1da2fcac@amd.com>
-Content-Language: en-GB
-In-Reply-To: <3ab9bc66-f3b3-465b-b736-09df1da2fcac@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0128.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::16) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JpHXSizV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790177806; x=1821713806;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2o0CX7locVs9at4jlyYz8rtbJTm++/TC2/vtxjkKNgg=;
+  b=JpHXSizVBzNwjAgJ0bpZ+EjE21mv5BI1MZXTZuaIwfG0t1J8wQ6CHbcb
+   TJ3Fu8U3G28B+HUY77stTH4HIGF5dLt6V1jTMkLz/Mh3k7zxaX+9OiIHE
+   Is6zZ6o3ocDcDxX/Sx6B2GsLG0PKh9HXWszFS3LcLmWi5xv2AzH5UDF+M
+   saoSifp3OA+zYtJjdMUGJaRMvbE7+F7VPZhP8CePL0xAunf43RhNnLh04
+   M9car8e4NxudPDK5NY3v9c+RiuP0TvmPgu0uj1jI27843eesJed0ejCo9
+   FvQByxJZ3AFitImaZLGllrjeK8pCrlszMpoOoUZ6n55pb7hON4e8ruiGc
+   w==;
+X-CSE-ConnectionGUID: WMTNxTbjRkW6XVvIQ8oVVg==
+X-CSE-MsgGUID: bDqCc1uXRWyFbavw8c7oJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="93386277"
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="93386277"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:35:18 -0700
+X-CSE-ConnectionGUID: nYlCJy+rT86DNKDnk9lr0w==
+X-CSE-MsgGUID: C4bMildSS/+IJK3Mdnvk2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="299909419"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.110.118]) ([10.125.110.118])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:35:17 -0700
+Message-ID: <4a5d67c0-baf7-4b70-a8e9-47dc555d8264@intel.com>
+Date: Wed, 23 Sep 2026 08:35:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|CY5PR12MB6153:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c3c4e88-4d9d-436f-5c0e-08df195947a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|6133799003|10067099003|56012099006|11063799006|22082099003|18002099003|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	U4oEjbe25jVhvjXLmIHYsDBSKuNBuBXwi1x4uol5rNsHZgRXBLLQ6Sc8gpMxUYut45mAKM3eyGWK0VvXIQ7sG0Cw9LDST5w7I6dD4K3fp5FZJSxWb1n/hr5KJBhfTrVbUHtF1VlWfyhxfqKh+jcFS79+bquAl1262+UtWs62d/0oqgHQFnS50IODDOEpfG3XmxJXoB/134wm/aT7JElhwF95iUFdKeArVkqKURnnF5X0DXRUoBM0QRjYt1RkqKp6+8A2RXVtb+1zXFAZapvNGBZnG+iG569bl24Lg9snrSo6+aJeIePyrZR3JF1b0qFnIwWgNMtJBnAtI5H2IApWrgcfVI/RJqJF/i4RsNP84ZTgk4jJG73rxxGq4lSVO4F3lxzyy4z3pAwWJCOO+DgWXTbx455Ezm1caPzNCaVeu6fy/SSakG/jYw0AokK/FVMdOW09/wkcVjDhTSoGbSDFnzkJ8wzHFNf4zvOnP80gP0dzS1H9xrjU39kBoS1NeeXRtANlWo1lE2gOHeEConPkw7bbvND+nuaR56HVuSdfsR2YJjoBaAvFBsrVdLPimUBknjU8QwNirSun9Dd0a0ASxkMenLKME2Yh6580Op75K04dWEiC/BUBB2j0EHn5sEdLVXtjnOI5d2pg2LKLbcCKRBq7h/P3VZgwnHKNcFQpxjw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(6133799003)(10067099003)(56012099006)(11063799006)(22082099003)(18002099003)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QStERllTRzVmK0hycktsNTZFZXk1ZkFERm1XQjlNdkdwZXk5V015c3hKQzBD?=
- =?utf-8?B?cjNSVFE5NFJXVnVhUkJTZDR0WE1GY1gwcUt4U0x4RXpFUzBkQ3NYcTIzOUsz?=
- =?utf-8?B?dlVma3hWQmRaVm51andMQWVOU05KUGlZM3JkaWhBU3JaUVpOWm9neUxEcTQ4?=
- =?utf-8?B?N0h2WHYxVHNRcitHVmZRN1htdTBtMHpmcnlVWkt5aTBRVjI3VTcyUlYxZ0NK?=
- =?utf-8?B?S0ljd1luRzh5U2NqWEZrR0NVa3FtZ0t6cjN4eDlWRjdIcS96emtSQW9OYTB2?=
- =?utf-8?B?THBLNkJEdVd1L1RMTWJYcVVmMVJ0SHNnSzRFL1hESHMxOXljYUZHUGRheGM2?=
- =?utf-8?B?dWd3a3hjQ3ZSclc0M1o1Ni9GSUsyM3czanNMN0xnUHNxdVdnT0RkRlhKRnNt?=
- =?utf-8?B?V3lJTFc2UmlRK0l4ZE9wd2IxMUJCYndNY09WalFpVDJicmUyd21pbDYzT2I2?=
- =?utf-8?B?elBIZmI3K1VocGUzOVZaNTRqWnlmaHdRT2dLODgvQXFhZGsvMy9zcHAyaDFG?=
- =?utf-8?B?cEFLeThHb3IzOFJLekRLeG00UWRQamltdHZhV0N4UEwza1ZacWRVc256ZEY1?=
- =?utf-8?B?dllwbUxpcjlmN21ITjJhb050QnlnSXZqZGZac1RMUkdaMDVyNXdDMm1KRDdV?=
- =?utf-8?B?ZmhaS0NPY1hDQllqVEpYZUxBWnRCeTArSVphTnFiNjIwTE1qOUpYLzlQK0J6?=
- =?utf-8?B?MmtXcFRUT0FmbnI5ak9KcktLMml1OG5kL1Bya2Q5UFJyMFlpMG1JdjdlSWk3?=
- =?utf-8?B?MldqUUduTzNaZUZZNjlkK1MwQlR2WWtMRGdxWWVqTStGR3hXU0RaVFBDVE1r?=
- =?utf-8?B?K0tkWnQ2OXErTHoweElLTkhpYXhXRVNjL25qZ0NGTUFCNVdwMitFQTliWWt2?=
- =?utf-8?B?bzUzSElaUUJwODhpem5VQ0ExQXpmYldUdVgrMGlIV05MUmUxb3c5ZmNPeTBT?=
- =?utf-8?B?V1NTL1hMOHBQLy81VFJPbmRFMFhnVEdZbU9nUjMzUEZCeHR5ZWRCTW9WS3Vo?=
- =?utf-8?B?ajlvcHZoWkgvckIvRWpsUmNycTEzVUR0V0h1NzNUc1RqWld6K1IwbDI2UUtT?=
- =?utf-8?B?dENwTUtta1lTeVRsWUZzUFVFTGlpS0xBeCtwbkxjNmhmZXgyRWlKdnV5R1lN?=
- =?utf-8?B?dy9qZjlHeDJyK3Q2SGpMdnFmTUU4eWhrQW1FMFBOZ2JueHFnTTR4d3kzN3Vz?=
- =?utf-8?B?aC9rSVNCWG1OZkxiOTk0a2dPMS9GZFZDNi9kdFZsbkhZVFdyUVV2dE95RGov?=
- =?utf-8?B?Q0Q1L2ZvVjE1WG5KTnNPUWFyYzJQOVdwTFIvQ21UZllJSUR1RjhXYkN4RDFp?=
- =?utf-8?B?T29OMnNCbnl3QmxaRUphdGpRdlRZeTlBTlVuNFEwZFpiUWhpTDIzeWtUMWpt?=
- =?utf-8?B?TFM0OWpOT1BLeVNsNWd3WjR5VE9GeFdCRktWNVBvR3I1Z3dyM0pGZnA4L3I4?=
- =?utf-8?B?S1BMV2ZkV0hROVJRK3RGVUc2K1FFYjFvVjJITGpaUmZIanlJTFExcHd4UlUr?=
- =?utf-8?B?R1lqL2V4Y2tGaGNkWlNVa0dBeWI3MU5UVFJqMFQ4aHFVR1owMlNDdzYzN3hk?=
- =?utf-8?B?d2F5NU5FMEppQTVMcXhzZDgyV3NXN3ZQZnNlTWMyR1dUbU5nVUhEaDV1UjVa?=
- =?utf-8?B?c1ozeDJ3MThnLzZvRDZQY0xUOVk2T2VmY0g5OFhuMjFUK1hnaWtsV3hBS1VG?=
- =?utf-8?B?OTBiaVd2U3hPejBlNjc1a09DVFRCSFAzWmVmdS9WNnZQYzRsVHhSMk83K1hl?=
- =?utf-8?B?YlFVUjJQdmQwNm03T2xSY2ZWc0JELy9Fd2R2akt2OVgrRTlhTU11elY0UTFD?=
- =?utf-8?B?OFkvN3FSdWF4ZGJKQ2FWOVQzK08xMkpIQTlOVG5wb3F6RUE0WVY2UERGMWhV?=
- =?utf-8?B?c2VaNml1WEtmczR0WUQrcEd1ZG1MdUsyU2RvVnhDNjNTTzZpMVlsTVF2RjFZ?=
- =?utf-8?B?YTI5Yk40NTdxdXhpRjkxalJaOFdPb0NValV1UTkrdHZhV3pPRlFubDg2L0RI?=
- =?utf-8?B?eVp0dDdyYlFkeExvZENCTHJEVEVBNDUyWHQ2R1duQWV3MHpsS0FxOXNZbjVu?=
- =?utf-8?B?cElSbHpwcE9mSnUxM0JVV1k0a1NIRXZjaTdaeUxmRTdoS1U5WGZIamllb2d6?=
- =?utf-8?B?c1FhbzdybHR5TU1yN2hBbzJTa05OMUc5QTdwWWtyeXlaMDlCem5iK1dFU3JW?=
- =?utf-8?B?QUYrUkkxYmd2Rit1SWduakpEdjlIM3dCUjNLVzh0K1pIT1k3NjI1aXMvd1o2?=
- =?utf-8?B?c0lZY25KMTBkQzhUYy92dU95bzA5My9SSGFrcUtDSmdiYitEeGV2U2YxeTNV?=
- =?utf-8?B?S0hQNi96K1hQdmVac2hHNTJNWlpJNnNCSDlBOEFVVDZ0YTh5K0FZUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3c4e88-4d9d-436f-5c0e-08df195947a4
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 09:58:55.5785
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iMQhzuXV4DkBtmFVEkolnbQ9wwZt4JCjJQWszGJCRlA186AzdAwj1r7AY9ORe9oXnOff4l4WsIdBOnmaQGxkaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6153
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>,
+ Gregory Price <gourry@gourry.net>, Ben Cheatham <benjamin.cheatham@amd.com>,
+ Ira Weiny <iweiny@kernel.org>, Wonjae Lee <wj28.lee@samsung.com>,
+ Junhee Park <jh9934.park@samsung.com>, Heesoo Kim <habil.kim@samsung.com>
+References: <20260918203049.7273-1-anisa.su@samsung.com>
+ <20260918203049.7273-4-anisa.su@samsung.com> <arH67By0gfwd-b1e@MWDK4CY14F>
+ <fdccd5b2-69ac-4a00-af65-4b0584fa07e9@intel.com>
+ <arLv12gmC-6ClDX6@4470NRD-ASU.ssi.samsung.com>
+ <59dd77a4-3ab0-4a6b-bab3-dd634c95f0f5@intel.com>
+ <arMXg40FTKYB585z@4470NRD-ASU.ssi.samsung.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <arMXg40FTKYB585z@4470NRD-ASU.ssi.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 23/09/2026 09:49, Lucero Palau, Alejandro wrote:
->
-> On 22/09/2026 22:39, Maxime Chevallier wrote:
->> Hi,
+
+On 9/22/26 5:05 PM, Anisa Su wrote:
+> On Tue, Sep 22, 2026 at 04:05:03PM -0700, Dave Jiang wrote:
 >>
->> On 9/21/26 21:12, alucerop@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> On 9/22/26 2:15 PM, Anisa Su wrote:
+>>> On Tue, Sep 22, 2026 at 10:08:08AM -0700, Dave Jiang wrote:
+>>>>
+>>>>
+>>>> On 9/21/26 8:53 PM, Richard Cheng wrote:
+>>>>> On Fri, Sep 18, 2026 at 01:30:12PM +0800, Anisa Su wrote:
+>>>>>> From: Ira Weiny <iweiny@kernel.org>
+>>>>>>
+>>>>>> Additional DCD partition (AKA region) information is contained in the
+>>>>>> DSMAS CDAT tables, including performance and shareable attributes.
+>>>>>>
+>>>>>> Match DCD partitions with DSMAS tables and store the meta data.
+>>>>>>
+>>>>>> Signed-off-by: Ira Weiny <iweiny@kernel.org>
+>>>>>> Co-developed-by: Anisa Su <anisa.su@samsung.com>
+>>>>>> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+>>>>>> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+>>>>>> Tested-by: Junhee Park <jh9934.park@samsung.com>
+>>>>>> Tested-by: Heesoo Kim <habil.kim@samsung.com>
+>>>>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>>>>>
+>>>>>
+>>>>> Hi Anisa,
+>>>>>
+>>>>> LGTM but I have limited knowledge for details of device's CDAT.
+>>>>> Other experts would be more suitable to leave their tag.
+>>>>>
+>>>>> I have a question here only, I wonder if a CDAT with no DSLBIS supported is
+>>>>> possible ? seems that the implementation has the assumption that device's
+>>>>> CDAT would be always supported with valid DSMAS and DSLBIS.
+>>>>
+>>>> According to the spec, the device suppoort DCD shall provide DSMAS (CXL r4.0 9.13.3). DSLBIS is optional.
+>>>>
+>>>> So I do wonder if we need to add plumbing to disable DCD if DSMAS is missing or malformed. 
+>>>>
+>>>> DJ
+>>>>
+>>> Can do. DSMAS is missing/malformed in 3 scenarios:
+>>> - CDAT is missing
+>>> - Failed to parse DSMAS from the CDAT
+>>> - No DSMAS entry matched the DC partition.
 >>>
->>> Differentiate between driver binding from PM dependency when a device
->>> link is created. Rely on the device being bound to a driver for 
->>> validating
->>> the supplier as some device drivers could not support PM.
+>>> So we can make a helper function to disable DCD and call from all 3 sites:
 >>>
->>> Check for supplier's PM state only if consumer specifies PM_RUNTIME 
->>> flag.
->
->
-> Hi Maxime,
->
->
->> Hmmm this patch seems to have broken pretty much all the boards I'm 
->> running that
->> boot with DT. I'm getting logs such as :
->>
->> platform 16100000.serial: Failed to create device link (0x124) with 
->> supplier
->>    16000400.clock-controller
->>
->> Some are just hanging at "Starting kernel..." from u-boot.
->>
->> Then boards go silent as the uart dies, and I'm using that uart to 
->> access the
->> device's console :(
->>
->> Found with a WIP stmmac runner for netdev CI.
->>
->> Unfortunately I don't have much logs to share, as this just prevents 
->> the boards
->> from booting :( With this patch reverted, all boards boot fine
->
->
-> It is obvious I did not understand well the implications ...
->
->
-> I think the supplier device lock could be the problem behind the 
-> hanging and how the supplier initialization is checked now based on 
-> the driver bound behind the console issue ...
->
->
-> I have a couple of embedded boards to play with so I will try to 
-> reproduce the problem for getting more info. FWIW, all was fine with 
-> the server I tested this, no device link errors at all.
->
-
-I have to amend my words ... the server had not exactly the same code 
-:-)  I have to copy things in and out due to security measures and 
-sometimes is hard to have all synced.
-
-
-I think the sashiko reports could be a good start to fixing this.
-
-
-Apologies for the any inconvenient.
-
-Thanks,
-
-Alejandro.
-
-
->
-> Thank you for testing it!
->
->
->
->>
->> Maxime
->>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> ---
->>>   drivers/base/core.c | 27 +++++++++++++++++++--------
->>>   1 file changed, 19 insertions(+), 8 deletions(-)
+>>> +/*
+>>> + * A DCD shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3).
+>>> + * Without one the partition's attributes are unknown, so disable DCD.
+>>> + */
+>>> +static void cxl_dcd_dsmas_missing(struct cxl_dev_state *cxlds, const char *why)
+>>> +{
+>>> +	struct cxl_memdev_state *mds;
+>>> +
+>>> +	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
+>>> +		return;
+>>> +
+>>> +	mds = to_cxl_memdev_state(cxlds);
+>>> +	if (!cxl_dcd_supported(mds) ||
+>>> +	    !cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM_1))
+>>> +		return;
+>>> +
+>>> +	dev_warn(cxlds->dev, "DC partition has no valid DSMAS entry (%s), disabling DCD\n",
+>>> +		 why);
+>>> +	cxl_disable_dcd(mds);
+>>> +}
 >>>
->>> diff --git a/drivers/base/core.c b/drivers/base/core.c
->>> index 4c0c373998a1..eb6d87e35d76 100644
->>> --- a/drivers/base/core.c
->>> +++ b/drivers/base/core.c
->>> @@ -834,15 +834,26 @@ struct device_link *device_link_add(struct 
->>> device *consumer,
->>>       device_pm_lock();
->>>         /*
->>> -     * If the supplier has not been fully registered yet or there is a
->>> -     * reverse (non-SYNC_STATE_ONLY) dependency between the 
->>> consumer and
->>> -     * the supplier already in the graph, return NULL. If the link 
->>> is a
->>> -     * SYNC_STATE_ONLY link, we don't check for reverse dependencies
->>> -     * because it only affects sync_state() callbacks.
->>> +     * If the supplier has not been fully registered yet with a driver
->>> +     * return NULL.
->>>        */
->>> -    if (!device_pm_initialized(supplier)
->>> -        || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
->>> -          device_is_dependent(consumer, supplier))) {
->>> +    scoped_guard(device, supplier) {
->>> +        if (!device_is_bound(supplier)) {
->>> +            link = NULL;
->>> +            goto out;
->>> +        }
->>> +    }
->>> +    /*
->>> +     * If consumer asks for PM to use the link and the supplier has 
->>> not
->>> +     * PM initialized, or if there is a reverse (non-SYNC_STATE_ONLY)
->>> +     * dependency between the consumer and the supplier already in the
->>> +     * graph, return NULL. If the link is a SYNC_STATE_ONLY link, we
->>> +     * don't check for reverse dependencies because it only affects
->>> +     * sync_state() callbacks.
->>> +     */
->>> +    if (((flags & DL_FLAG_PM_RUNTIME) && 
->>> !device_pm_initialized(supplier)) ||
->>> +        (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
->>> +         device_is_dependent(consumer, supplier))) {
->>>           link = NULL;
->>>           goto out;
->>>       }
+>>> Called if there's no CDAT/fails to parse CDAT:
+>>>
+>>> void cxl_endpoint_parse_cdat(struct cxl_port *port)
+>>>  	int rc;
+>>>  
+>>>  	xa_init(&__dsmas_xa);
+>>> -	if (!port->cdat.table)
+>>> +	if (!port->cdat.table) {
+>>> +		cxl_dcd_dsmas_missing(cxlds, "no CDAT");
+>>>  		return;
+>>> +	}
+>>>  
+>>>  	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+>>>  	if (rc < 0) {
+>>>  		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+>>> +		cxl_dcd_dsmas_missing(cxlds, "CDAT parse failed");
+>>>  		return;
+>>>  	}
+>>>
+>>> Or no DSMAS entry matched the DC partition:
+>>> static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
+>>>  	struct device *dev = cxlds->dev;
+>>>  	struct dsmas_entry *dent;
+>>> +	bool dc_matched = false;
+>>>  	unsigned long index;
+>>> ...
+>>>  			if (set_perf)
+>>>  				update_perf_entry(dev, dent, &part->perf);
+>>> -			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
+>>> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1) {
+>>>  				part->shareable = dent->shareable;
+>>> +				dc_matched = true;
+>>> +			}
+>>>  			break;
+>>>  		}
+>>>
+>>> ... 
+>>> 			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
+>>>  				&dent->dpa_range);
+>>>  	}
+>>> +
+>>> +	if (!dc_matched)
+>>> +		cxl_dcd_dsmas_missing(cxlds, "no matching entry");
+>>>  }
+>>>
+>>> But currently cxl_cdat_endpoint_process() fails if there's no DSLBIS or it's
+>>> empty and DSLBIS is optional for DCD, so need a prep patch to allow empty DSLBIS
+>>> and skip cxl_port_perf_data_calculate(port, dsmas_xa) if it's empty.
+>>
+>> But perf calc failure does not stop the probe. cxl_endpoint_parse_cdat() returns void. We swallow the error. So I don't think changes are needed around here? You get -ENOENT if no entries from cdat_table_parse_output(). 
+>>
+> Hmmm my explanation was bad. I'm not worried about the probe, but rather 
+> if -ENOENT is returned by cdat_table_parse_output() due to empty DSLBIS,
+> then cxl_cdat_endpoint_process() propagates it to cxl_endpoint_parse_cdat(). It
+> returns early, even though the DSMAS was valid for the DC partition and
+> the DSLBIS is optional:
+> 
+> 	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+> 	if (rc < 0) {
+> 		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+> 		return; <---- skips cxl_memdev_set_qos_class, which is where we
+> read the shareable attr from dsmas 
+> 	}
+> 
+> 	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+> 	if (rc) {
+> 		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+> 		return;
+> 	}
+> 	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
+> 	cxl_qos_class_verify(cxlmd);
+> 	cxl_memdev_update_perf(cxlmd);
+> 
+> I hope that makes sense?
+
+Yeah that makes sense now. What do you think if for the optional handlers if we don't find entries we return MAX_INT? And we just add a comment somewhere that says it means no entires but it's optional? That should reduce the amount of hack around needed right? We can just fixup cdat_table_parse_output(). 
+
+DJ
+> 
+> - Anisa
+> 
+>> DJ
+>>
+>>>
+>>> Something like this:
+>>> --- a/drivers/cxl/core/cdat.c
+>>> +++ b/drivers/cxl/core/cdat.c
+>>> @@ -181,7 +181,7 @@
+>>>  }
+>>>  
+>>>  static int cxl_cdat_endpoint_process(struct cxl_port *port,
+>>> -				     struct xarray *dsmas_xa)
+>>> +				     struct xarray *dsmas_xa, bool *has_dslbis)
+>>>  {
+>>>  	int rc;
+>>>  
+>>> @@ -191,9 +191,13 @@
+>>>  	if (rc)
+>>>  		return rc;
+>>>  
+>>> +	/* DSLBIS is optional; without it there is no perf data to apply */
+>>>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
+>>>  			      dsmas_xa, port->cdat.table, port->cdat.length);
+>>> -	return cdat_table_parse_output(rc);
+>>> +	if (rc < 0)
+>>> +		return rc;
+>>> +	*has_dslbis = rc > 0;
+>>> +	return 0;
+>>>  }
+>>>  
+>>>  static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>>> @@ -430,19 +434,22 @@
+>>>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>>>  	struct xarray __dsmas_xa;
+>>>  	struct xarray *dsmas_xa __free(dsmas) = &__dsmas_xa;
+>>> +	bool has_dslbis = false;
+>>>  	int rc;
+>>>  
+>>>  	xa_init(&__dsmas_xa);
+>>>  	if (!port->cdat.table)
+>>>  		return;
+>>>  
+>>> -	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+>>> +	rc = cxl_cdat_endpoint_process(port, dsmas_xa, &has_dslbis);
+>>>  	if (rc < 0) {
+>>>  		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+>>>  		return;
+>>>  	}
+>>>  
+>>> -	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>>> +	rc = -ENOENT;
+>>> +	if (has_dslbis)
+>>> +		rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>>>  	if (rc)
+>>>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+>>>
+>>>
+>>> Would something like this work? (I am also not an expert in CDAT/DSMAS/DSLBIS)
+>>>
+>>> Thanks,
+>>> Anisa
+>>>>>
+>>>>> Best regards,
+>>>>> Richard Cheng.
+>>>>>
+>>>>>  
+>>>>>> ---
+>>>>>> Changes:
+>>>>>> 1. cdat.c: record the DSMAS shareable flag independently of QTG
+>>>>>>    discovery. cxl_port_perf_data_calculate() returns -ENOENT when FW
+>>>>>>    recommends no QTG for any entry, which skipped the assignment even
+>>>>>>    though the CDAT parsed successfully and the DSMAS flag was valid.
+>>>>>>    Richard
+>>>>>> ---
+>>>>>>  drivers/cxl/core/cdat.c   | 49 +++++++++++++++++++++++++++++----------
+>>>>>>  drivers/cxl/core/hdm.c    |  1 +
+>>>>>>  drivers/cxl/core/mbox.c   |  9 +++++++
+>>>>>>  drivers/cxl/core/memdev.c | 17 ++++++++------
+>>>>>>  drivers/cxl/cxlmem.h      |  2 ++
+>>>>>>  include/cxl/cxl.h         |  4 ++++
+>>>>>>  6 files changed, 63 insertions(+), 19 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>>>>>> index 5c9f07262513..6e7950f12134 100644
+>>>>>> --- a/drivers/cxl/core/cdat.c
+>>>>>> +++ b/drivers/cxl/core/cdat.c
+>>>>>> @@ -17,6 +17,7 @@ struct dsmas_entry {
+>>>>>>  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+>>>>>>  	int entries;
+>>>>>>  	int qos_class;
+>>>>>> +	bool shareable;
+>>>>>>  };
+>>>>>>  
+>>>>>>  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+>>>>>> @@ -74,6 +75,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+>>>>>>  		return -ENOMEM;
+>>>>>>  
+>>>>>>  	dent->handle = dsmas->dsmad_handle;
+>>>>>> +	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
+>>>>>> +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
+>>>>>>  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+>>>>>>  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+>>>>>>  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+>>>>>> @@ -255,8 +258,13 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+>>>>>>  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
+>>>>>>  }
+>>>>>>  
+>>>>>> -static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>>>>>> -				     struct xarray *dsmas_xa)
+>>>>>> +/*
+>>>>>> + * The DSMAS shareable flag is a property of the CDAT entry and is recorded
+>>>>>> + * even if FW returns no QTG recommendations for any entry; only update perf
+>>>>>> + * if those recommendations exist, indicated by @set_perf
+>>>>>> + */
+>>>>>> +static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
+>>>>>> +				   struct xarray *dsmas_xa, bool set_perf)
+>>>>>>  {
+>>>>>>  	struct device *dev = cxlds->dev;
+>>>>>>  	struct dsmas_entry *dent;
+>>>>>> @@ -266,18 +274,34 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+>>>>>>  		bool found = false;
+>>>>>>  
+>>>>>>  		for (int i = 0; i < cxlds->nr_partitions; i++) {
+>>>>>> -			struct resource *res = &cxlds->part[i].res;
+>>>>>> +			struct cxl_dpa_partition *part = &cxlds->part[i];
+>>>>>>  			struct range range = {
+>>>>>> -				.start = res->start,
+>>>>>> -				.end = res->end,
+>>>>>> +				.start = part->res.start,
+>>>>>> +				.end = part->res.end,
+>>>>>>  			};
+>>>>>>  
+>>>>>> -			if (range_contains(&range, &dent->dpa_range)) {
+>>>>>> -				update_perf_entry(dev, dent,
+>>>>>> -						  &cxlds->part[i].perf);
+>>>>>> -				found = true;
+>>>>>> +			if (!range_contains(&range, &dent->dpa_range))
+>>>>>> +				continue;
+>>>>>> +
+>>>>>> +			found = true;
+>>>>>> +			/*
+>>>>>> +			 * part->handle is from Get DC Config, dent->handle
+>>>>>> +			 * from the CDAT DSMAS entry.
+>>>>>> +			 */
+>>>>>> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
+>>>>>> +			    dent->handle != part->handle) {
+>>>>>> +				dev_warn(dev,
+>>>>>> +					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
+>>>>>> +					 &range, part->handle,
+>>>>>> +					 &dent->dpa_range, dent->handle);
+>>>>>>  				break;
+>>>>>>  			}
+>>>>>> +
+>>>>>> +			if (set_perf)
+>>>>>> +				update_perf_entry(dev, dent, &part->perf);
+>>>>>> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
+>>>>>> +				part->shareable = dent->shareable;
+>>>>>> +			break;
+>>>>>>  		}
+>>>>>>  
+>>>>>>  		if (!found)
+>>>>>> @@ -419,12 +443,13 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+>>>>>>  	}
+>>>>>>  
+>>>>>>  	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>>>>>> -	if (rc) {
+>>>>>> +	if (rc)
+>>>>>>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+>>>>>> +
+>>>>>> +	cxl_memdev_apply_dsmas(cxlds, dsmas_xa, rc == 0);
+>>>>>> +	if (rc)
+>>>>>>  		return;
+>>>>>> -	}
+>>>>>>  
+>>>>>> -	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
+>>>>>>  	cxl_qos_class_verify(cxlmd);
+>>>>>>  	cxl_memdev_update_perf(cxlmd);
+>>>>>>  }
+>>>>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>>>>>> index 0ef076c08ed2..7f63b86887f4 100644
+>>>>>> --- a/drivers/cxl/core/hdm.c
+>>>>>> +++ b/drivers/cxl/core/hdm.c
+>>>>>> @@ -477,6 +477,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+>>>>>>  
+>>>>>>  		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>>>>>  		cxlds->part[i].mode = part->mode;
+>>>>>> +		cxlds->part[i].handle = part->handle;
+>>>>>>  
+>>>>>>  		/* Require ordered + contiguous partitions */
+>>>>>>  		if (i) {
+>>>>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>>>>>> index c96c16cc08e1..d84a90320081 100644
+>>>>>> --- a/drivers/cxl/core/mbox.c
+>>>>>> +++ b/drivers/cxl/core/mbox.c
+>>>>>> @@ -1366,6 +1366,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>>>  	u64 decode_len = le64_to_cpu(dev_part->decode_length);
+>>>>>>  	u64 blk_size = le64_to_cpu(dev_part->block_size);
+>>>>>>  	u64 len = le64_to_cpu(dev_part->length);
+>>>>>> +	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
+>>>>>>  	u64 size;
+>>>>>>  
+>>>>>>  	/*
+>>>>>> @@ -1378,6 +1379,13 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>>>  		return 0;
+>>>>>>  	}
+>>>>>>  
+>>>>>> +	/* The CDAT DSMAD handle this refers to is 8 bits */
+>>>>>> +	if (handle & ~0xFF) {
+>>>>>> +		dev_warn(dev, "DSMAD handle 0x%x exceeds the 8 bit CDAT DSMAD handle\n",
+>>>>>> +			 handle);
+>>>>>> +		return -EINVAL;
+>>>>>> +	}
+>>>>>> +
+>>>>>>  	/*
+>>>>>>  	 * Decode length is a count of 256M units, so a device reporting 2^36
+>>>>>>  	 * or more wraps.
+>>>>>> @@ -1391,6 +1399,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>>>>>>  	*part = (struct cxl_dc_partition_info) {
+>>>>>>  		.start = le64_to_cpu(dev_part->base),
+>>>>>>  		.size = size,
+>>>>>> +		.handle = handle,
+>>>>>>  	};
+>>>>>>  
+>>>>>>  	/*
+>>>>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>>>>> index 15df8db314d9..8883c8850759 100644
+>>>>>> --- a/drivers/cxl/core/memdev.c
+>>>>>> +++ b/drivers/cxl/core/memdev.c
+>>>>>> @@ -594,7 +594,8 @@ bool is_cxl_memdev(const struct device *dev)
+>>>>>>  }
+>>>>>>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
+>>>>>>  
+>>>>>> -static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+>>>>>> +static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
+>>>>>> +		     enum cxl_partition_mode mode, u8 handle)
+>>>>>>  {
+>>>>>>  	int i = info->nr_partitions;
+>>>>>>  
+>>>>>> @@ -606,6 +607,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
+>>>>>>  		.end = start + size - 1,
+>>>>>>  	};
+>>>>>>  	info->part[i].mode = mode;
+>>>>>> +	info->part[i].handle = handle;
+>>>>>>  	info->nr_partitions++;
+>>>>>>  }
+>>>>>>  
+>>>>>> @@ -623,9 +625,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>>>  	info->size = mds->total_bytes;
+>>>>>>  
+>>>>>>  	if (mds->partition_align_bytes == 0) {
+>>>>>> -		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
+>>>>>> +		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
+>>>>>>  		add_part(info, mds->volatile_only_bytes,
+>>>>>> -			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
+>>>>>> +			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
+>>>>>>  		return 0;
+>>>>>>  	}
+>>>>>>  
+>>>>>> @@ -635,9 +637,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>>>  		return rc;
+>>>>>>  	}
+>>>>>>  
+>>>>>> -	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
+>>>>>> +	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
+>>>>>>  	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
+>>>>>> -		 CXL_PARTMODE_PMEM);
+>>>>>> +		 CXL_PARTMODE_PMEM, 0);
+>>>>>>  
+>>>>>>  	return 0;
+>>>>>>  }
+>>>>>> @@ -685,7 +687,8 @@ int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>>>>  	info->size = total;
+>>>>>>  	dev_dbg(dev, "Adding dynamic ram partition 1; %#llx size %#llx\n",
+>>>>>>  		dc_info.start, dc_info.size);
+>>>>>> -	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
+>>>>>> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1,
+>>>>>> +		 dc_info.handle);
+>>>>>>  
+>>>>>>  	return 0;
+>>>>>>  }
+>>>>>> @@ -704,7 +707,7 @@ int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
+>>>>>>  		.size = capacity,
+>>>>>>  	};
+>>>>>>  
+>>>>>> -	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
+>>>>>> +	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM, 0);
+>>>>>>  	return cxl_dpa_setup(cxlds, &range_info);
+>>>>>>  }
+>>>>>>  EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
+>>>>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>>>>> index 4fac65dbb808..9fd5af2e41d4 100644
+>>>>>> --- a/drivers/cxl/cxlmem.h
+>>>>>> +++ b/drivers/cxl/cxlmem.h
+>>>>>> @@ -140,6 +140,7 @@ struct cxl_dpa_info {
+>>>>>>  	struct cxl_dpa_part_info {
+>>>>>>  		struct range range;
+>>>>>>  		enum cxl_partition_mode mode;
+>>>>>> +		u8 handle;
+>>>>>>  	} part[CXL_NR_PARTITIONS_MAX];
+>>>>>>  	int nr_partitions;
+>>>>>>  };
+>>>>>> @@ -851,6 +852,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+>>>>>>  struct cxl_dc_partition_info {
+>>>>>>  	u64 start;
+>>>>>>  	u64 size;
+>>>>>> +	u8 handle;
+>>>>>>  };
+>>>>>>  
+>>>>>>  int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+>>>>>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>>>>>> index 4ef9511fbbdd..43edcde5bce3 100644
+>>>>>> --- a/include/cxl/cxl.h
+>>>>>> +++ b/include/cxl/cxl.h
+>>>>>> @@ -141,11 +141,15 @@ enum cxl_partition_mode {
+>>>>>>   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+>>>>>>   * @perf: performance attributes of the partition from CDAT
+>>>>>>   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
+>>>>>> + * @handle: DSMAS handle that represents this partition
+>>>>>> + * @shareable: Is the partition shareable (from its CDAT DSMAS entry)
+>>>>>>   */
+>>>>>>  struct cxl_dpa_partition {
+>>>>>>  	struct resource res;
+>>>>>>  	struct cxl_dpa_perf perf;
+>>>>>>  	enum cxl_partition_mode mode;
+>>>>>> +	u8 handle;
+>>>>>> +	bool shareable;
+>>>>>>  };
+>>>>>>  
+>>>>>>  #define CXL_NR_PARTITIONS_MAX 3
+>>>>>> -- 
+>>>>>> 2.43.0
+>>>>>>
+>>>>>
+>>>>
+>>
+
