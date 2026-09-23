@@ -1,294 +1,206 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A40420486
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 17:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CC94219F2
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 17:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790185770; cv=none; b=tMkE+gJhUk91GAa9vTiQ8iMcs6dhPNLiLj06F8enqAD682mjFLnMpJRJ+OpTCyh6NImhMDHaaKgt64K+QOOHMrpkYwa1BbO9+xo/zdrWl0Q80WbF707vMxzrWaJIUu52MF5AjR0QlX1WqO+nUgkab8esn5Kbw510G0sG+B5TPts=
+	t=1790185785; cv=none; b=urPRbrZl4PlWiNqvIqq89QXcXXMXNVAiDvEHK+l0hytKRynvNkjSir4Sm0vymw7yz5l9nKakQxGclF9UcGd/fkoqOlt0V6dLbfkAkHCdbOAWFuqJbYHvHjO6KUuWDzejBQdPmd92fFnFN0BZ5zcR/JFqDXZT3qAUVd7spP66iWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790185770; c=relaxed/simple;
-	bh=OU5ZGDh8wqNe+PXCiiXrM66mxwBj7wED8tyw6mcXYdk=;
+	s=arc-20240116; t=1790185785; c=relaxed/simple;
+	bh=zr0+eArNUZPM9G2BX8dSQvTt0XJNdEmIED9WHTZcyc4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LplNuSDPmxR9NKb0vMHFIn3Nv56YhOnIj3mEQWRXYKgpkRuhA8hmwwyqX1Sf517zb6OotBVLlZ9kGi3yIKDKOs2vt6jEilKbvjyWDJPlqgDjVcX1FC6Y059Ibc6uEfeF3ApLZDOkXBnHxXA+ZIxb8XhDxtchn4HY7o4bPCn+51k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZu5s/qO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=UHEsV5G3b72qLq2uaRVF6NwIdilDRO6I8n5in7q0rGUCvIO6O92YSeyBhDUqVvyKAdgQXCwvwMCQoCv3JniiSZIuJv3ln0J8jXRhKRmEQmOGP+OtkpJUt6a/coBy1cF+/6N2F+Ds1xFCIZPdjotPqhZIwwzy+V7dIQP9me0OJkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWy55SVa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZu5s/qO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86BB1F000FF;
-	Wed, 23 Sep 2026 17:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWy55SVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792281F00893;
+	Wed, 23 Sep 2026 17:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790185767;
-	bh=ztaL9DijclDSsLsj27FzmQE7HFHaSplfNZLIGpnYlTc=;
+	s=k20260515; t=1790185783;
+	bh=NSvLx4VIRsbr1hQJLnEsrhYVrziSdZNfCnyPS5aR078=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QZu5s/qOxcCthUu5+vJryqFgcNkJ2/8j1sE/voxYBn+dHdvYdQS59yDOt+qYPG6Us
-	 VgGiI4tbP40ftRhEul36pH9cYPrsbLkO9mJbiJ+LKhMB2buYOaQcp1HNGiImbXj6d6
-	 LDYD4iNbsuHuHvTu1o8AqzXOe7QnwluLQzld+EIXS024Uvn6hvjZ0SVeLCFI4jFqD3
-	 8iviYze3OVLBPu24nNKFsSKVYzDlANIF/BJF7kb4lSCAW4ylbcXnzWtaY0NU9x6ujZ
-	 NJTeJ/ZNwn92B3KrobfIyr+IapPEs1IXqTnKGtct6dDyi8nNwJj4GLqpsgddlVezov
-	 vMOlHPT/bVOVg==
+	b=FWy55SVaMJx4TiUO06WYCVsVV2YE8kUeAgUugKPiadXMRNQ6sEsRIAqhQysWBsXI8
+	 BU/ZUsaShu5HOIn108Wv+W5HQecZTUMVSS7L+lLyzCWb7D/I7lcdGKJk5JdrkBA3wB
+	 YeCICrsxINg09qjvBQAueyAWOGir2Awh1nBEvX6Rrzg5NrT2ZKdKEZWkfXV2TrqgWe
+	 RoxdjBKI520FIgTdDfho31+cxvAwnE+xKdK97oMcPeAcstqhpRktJSU9GZdhfUKEEK
+	 VPp1EV+ypcpi+KW8bANcb457RKPmn2d0RxBy5t+yJ9gsCADEQz2AEqYrsxa9bYL4Pn
+	 xHQF46zly/+2A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/15] cxl/core: Add Cache ID allocation
+Subject: Re: [PATCH 09/15] cxl/core: Add Cache ID verification
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ben Cheatham" <Benjamin.Cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260923173342.5584-11-Benjamin.Cheatham@amd.com>
+In-Reply-To: <20260923173342.5584-10-Benjamin.Cheatham@amd.com>
 References: <20260923173342.5584-1-Benjamin.Cheatham@amd.com>
- <20260923173342.5584-11-Benjamin.Cheatham@amd.com>
+ <20260923173342.5584-10-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 17:49:26 +0000
-Message-Id: <20260923174926.D86BB1F000FF@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 17:49:42 +0000
+Message-Id: <20260923174942.792281F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [High] cxl: reference leak of CXL root device in cxl_cachedev_deprogram_c=
-ache_id()
-- [High] cxl: cxl_cid_program_decoder() fails to clear HDM-D fields
-- [High] cxl: __deprogram_cache_id() clobbers valid routing table entries o=
-f other devices
-- [High] cxl: modifying decoder and routing registers while COMMIT bit is s=
-et
-- [High] cxl: toggling COMMIT bit without polling STATUS_COMMITTED causes r=
-ace condition
-- [Medium] cxl: get_max_cid() improperly returns 0 for zero-capacity routin=
-g tables
+- [High] cxl/cache: missing rcu_read_lock during xa_for_each iteration
+- [High] cxl/cache: unconditional probe failure for Restricted CXL Host (RC=
+H) topologies
+- [High] cxl/cache: use-after-free of parent_dport during asynchronous tear=
+down
+- [Medium] cxl/core: missing validation of hdmd state against hardware cach=
+e ID
+- [Low] cxl/core: returning negative error code for truthy boolean condition
 --
 
-commit 3ec914a55f349bd29cbb06f7c4d3468cbd56c388
+commit fb180ed6317b83962ae34e684038bcea834c1f39
 Author: Ben Cheatham <Benjamin.Cheatham@amd.com>
 
-    cxl/core: Add Cache ID allocation
+cxl/core: Add Cache ID verification
    =20
-    Add allocation and programming of CXL cache ids for struct
-    cxl_cachedevs as part of cxl_cache::probe(). Programming only occurs
-    when system firmware has not already programmed an id and the device is
-    *not* using HDM-D flows.
+Check if system firmware has pre-programmed a CXL.cache device's cache
+id as part of cxl_cache::probe(). A cache id is required when multiple
+CXL.cache devices are present under a host bridge, so fail probe if the
+id has not been programmed and another device is present.
 
-> diff --git a/drivers/cxl/core/cache.c b/drivers/cxl/core/cache.c
-> index be570d3dc6090..9c6c8ea713ef3 100644
-> --- a/drivers/cxl/core/cache.c
-> +++ b/drivers/cxl/core/cache.c
-[ ... ]
-> @@ -112,6 +116,260 @@ static int cache_idrt_entry_valid(struct cxl_port *=
-port, int id)
-[ ... ]
-> +static int cxl_cid_commit_decoder(struct cxl_dport *dport)
-> +{
-> +	void __iomem *ciddc =3D dport->regs.ciddc;
-> +	u32 cap, ctrl, status;
-> +	u8 scale, base;
-> +	int rc;
-> +
-> +	cap =3D readl(ciddc + CXL_CACHE_ID_DC_CAP_OFFSET);
-> +	if (!FIELD_GET(CXL_CACHE_ID_DC_CAP_COMMIT_REQ, cap))
-> +		return 0;
-> +
-> +	status =3D readl(ciddc + CXL_CACHE_ID_DC_STATUS_OFFSET);
-> +	scale =3D FIELD_GET(CXL_CACHE_ID_DC_STATUS_TM_SCALE, status);
-> +	base =3D FIELD_GET(CXL_CACHE_ID_DC_STATUS_TM_BASE, status);
-> +
-> +	ctrl =3D readl(ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
-> +	if (FIELD_GET(CXL_CACHE_ID_DC_CTRL_COMMIT, ctrl)) {
-> +		ctrl &=3D ~CXL_CACHE_ID_DC_CTRL_COMMIT;
-> +		writel(ctrl, ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
-> +	}
-> +
-> +	ctrl |=3D CXL_CACHE_ID_DC_CTRL_COMMIT;
-> +	writel(ctrl, ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
+Also add @hdmd to struct cxl_dev_state for endpoint drivers to indicate
+whether their device is using HDM-D flows. This is required for
+correctly validating cache id programming.
 
-[Severity: High]
-Does toggling the COMMIT bit from 1 to 0 to 1 without polling the status
-register cause a race condition? If the hardware hasn't cleared the
-STATUS_COMMITTED bit from the uncommit, the subsequent poll might immediate=
-ly
-succeed on the stale state before hardware processes the cycle.
-
-> +
-> +	rc =3D __cxl_cid_wait_commit(dport->dport_dev,
-> +				   ciddc + CXL_CACHE_ID_DC_STATUS_OFFSET,
-> +				   CXL_CACHE_ID_DC_STATUS_COMMITTED,
-> +				   CXL_CACHE_ID_DC_STATUS_COMMIT_ERR, scale,
-> +				   base);
-[ ... ]
-> +static int cxl_cid_program_decoder(struct cxl_dport *dport, int cid,
-> +				   bool endpoint)
-> +{
-> +	void __iomem *ciddc =3D dport->regs.ciddc;
-> +	u32 ctrl;
-> +
-> +	if (!ciddc)
-> +		return -EINVAL;
-> +
-> +	ctrl =3D readl(ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
-> +
-> +	/*
-> +	 * The decoder may have been programmed before, so we zero out
-> +	 * all the fields before writing to them
-> +	 */
-> +	ctrl &=3D ~(CXL_CACHE_ID_DC_CTRL_ASGN_ID | CXL_CACHE_ID_DC_CTRL_FWD_ID);
-
-[Severity: High]
-Does this actually zero out all the fields as the comment suggests? It looks
-like CXL_CACHE_ID_DC_CTRL_HDMD_PRESENT and HDMD_ID are left intact, which
-could result in hardware routing using a stale HDMD_ID instead of the
-programmed LOCAL_ID if firmware previously set this up in HDM-D mode.
-
-> +	if (endpoint) {
-> +		ctrl |=3D CXL_CACHE_ID_DC_CTRL_ASGN_ID;
-> +	} else {
-> +		ctrl |=3D CXL_CACHE_ID_DC_CTRL_FWD_ID;
-> +	}
-> +
-> +	FIELD_MODIFY(CXL_CACHE_ID_DC_CTRL_LOCAL_ID, &ctrl, cid);
-> +	writel(ctrl, ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
-
-[Severity: High]
-Could writing to the control register fail to take effect if the COMMIT bit
-is still set (e.g. by firmware)? The register might ignore writes while
-committed, which would cause the new configuration to be lost when
-cxl_cid_commit_decoder() subsequently reads and commits the old value.
-
-> +
-> +	return cxl_cid_commit_decoder(dport);
-> +}
-> +
-> +static int cxl_cid_commit_table(struct cxl_port *port)
-> +{
-> +	void __iomem *cidrt =3D port->regs.cidrt;
-> +	u32 cap, ctrl, status;
-> +	u8 scale, base;
-> +	int rc;
-> +
-> +	cap =3D readl(cidrt + CXL_CACHE_ID_RT_CAP_OFFSET);
-> +	if (!FIELD_GET(CXL_CACHE_ID_RT_CAP_COMMIT_REQ, cap))
-> +		return 0;
-> +
-> +	status =3D readl(cidrt + CXL_CACHE_ID_RT_STATUS_OFFSET);
-> +	scale =3D FIELD_GET(CXL_CACHE_ID_RT_STATUS_TM_SCALE, status);
-> +	base =3D FIELD_GET(CXL_CACHE_ID_RT_STATUS_TM_BASE, status);
-> +
-> +	ctrl =3D readl(cidrt + CXL_CACHE_ID_RT_CTRL_OFFSET);
-> +	if (FIELD_GET(CXL_CACHE_ID_RT_CTRL_COMMIT, ctrl)) {
-> +		ctrl &=3D ~CXL_CACHE_ID_RT_CTRL_COMMIT;
-> +		writel(ctrl, cidrt + CXL_CACHE_ID_RT_CTRL_OFFSET);
-> +	}
-> +
-> +	ctrl |=3D CXL_CACHE_ID_RT_CTRL_COMMIT;
-> +	writel(ctrl, cidrt + CXL_CACHE_ID_RT_CTRL_OFFSET);
-
-[Severity: High]
-Similar to cxl_cid_commit_decoder(), does this sequence risk a race conditi=
-on
-by clearing and setting the COMMIT bit without waiting for the status regis=
-ter
-to clear?
-
-[ ... ]
-> +static int cxl_cid_program_table_entry(struct cxl_port *port, int cid,
-> +				       unsigned int dport_id)
-> +{
-> +	void __iomem *cidrt =3D port->regs.cidrt;
-> +	u8 target_cnt, portn;
-> +	u16 target_n;
-> +	u32 cap;
-[ ... ]
-> +	target_n =3D CXL_CACHE_ID_RT_TARGETN_VALID;
-> +	target_n |=3D FIELD_PREP(CXL_CACHE_ID_RT_TARGETN_PORTN, dport_id);
-> +	writew(target_n, cidrt + CXL_CACHE_ID_RT_TARGETN_OFFSET(cid));
-
-[Severity: High]
-Can writing the new target to the routing table fail if the table is still
-committed? Since the table is uncommitted in cxl_cid_commit_table() after
-this write, hardware might ignore the write here.
-
-> +
-> +	return cxl_cid_commit_table(port);
-> +}
-> +
-[ ... ]
-> +static int get_max_cid(struct cxl_port *endpoint)
-> +{
-> +	struct cxl_port *port =3D parent_port_of(endpoint);
-> +	void __iomem *cidrt;
-> +	u32 cap;
-> +	u8 cnt;
-> +
-> +	if (!port)
-> +		return -EINVAL;
-> +
-> +	while (!is_cxl_root(port) && !is_cxl_root(parent_port_of(port)))
-> +		port =3D parent_port_of(port);
-> +
-> +	cidrt =3D port->regs.cidrt;
-> +	if (!cidrt)
-> +		return -EINVAL;
-> +
-> +	cap =3D readl(cidrt + CXL_CACHE_ID_RT_CAP_OFFSET);
-> +	cnt =3D FIELD_GET(CXL_CACHE_ID_RT_CAP_TARGET_CNT, cap);
-> +	if (cnt =3D=3D 0)
-> +		return 0;
-
-[Severity: Medium]
-Will returning 0 here for a zero-capacity routing table mislead the caller?
-This seems to conflate a table with no capacity (0 entries) with a table
-that has 1 entry (max ID 0), potentially allowing the IDA to allocate ID 0
-and fail later. Should this return an error like -EINVAL instead?
-
-[ ... ]
-> @@ -196,4 +465,64 @@ int cxl_cachedev_validate_cache_id(struct cxl_cached=
-ev *cxlcd)
+> diff --git a/drivers/cxl/cache.c b/drivers/cxl/cache.c
+> index dfefd301696a2..6c098010149ae 100644
+> --- a/drivers/cxl/cache.c
+> +++ b/drivers/cxl/cache.c
+> @@ -84,6 +84,90 @@ static int cxl_endpoint_cache_enabled(struct cxl_port =
+*endpoint)
 >  	return 0;
 >  }
->  EXPORT_SYMBOL_FOR_MODULES(cxl_cachedev_validate_cache_id, "cxl_cache");
-> +
-> +static void __deprogram_cache_id(struct cxl_cachedev *cxlcd,
-> +				 struct cxl_port *stop)
+> =20
+> +static struct cxl_port *find_host_bridge(struct cxl_port *endpoint)
 > +{
-> +	struct cxl_port *iter =3D cxlcd->endpoint->parent_dport->port;
-> +
-> +	/*
-> +	 * Leave cache id decoders programmed; the table entry being invalidated
-> +	 * should be enough
-> +	 */
-> +	while (!is_cxl_root(iter)) {
-> +		cxl_cid_invalidate_table_entry(iter, cxlcd->cache_id);
-> +
-> +		if (iter =3D=3D stop)
-> +			return;
+> +	struct cxl_port *parent =3D endpoint->parent_dport->port;
 
 [Severity: High]
-Does invalidating the entry on the stop port before checking the loop
-condition clobber valid routing table entries belonging to other devices?
-When cxl_cid_program_table_entry() fails and triggers rollback, running
-the invalidation on the failing stop port might destroy a legitimate
-configuration owned by another port.
+Can this result in a use-after-free during asynchronous teardown?
+
+When a CXL host bridge is hot-removed, the upstream CXL port topology can be
+torn down, and devres can free parent_dport, before the PCI device is
+unbound.
+
+During PCI unbind, the cachedev's devres will call deprogram_cache_id()
+which dereferences cxlcd->endpoint->parent_dport->port here, accessing
+freed memory.
+
+> +	struct cxl_port *hb =3D endpoint;
+> +
+> +	if (is_cxl_root(parent))
+> +		return NULL;
+
+[Severity: High]
+Will this unconditionally fail probes for Restricted CXL Host (RCH)
+topologies?
+
+In an RCH topology, the endpoint's parent is the root port, so
+is_cxl_root(parent) will evaluate to true immediately, causing
+find_host_bridge() to return NULL.
+
+Later in program_cache_id(), this NULL return causes the entire cache
+programming and probe sequence to fail with -ENODEV.
 
 > +
-> +		iter =3D parent_port_of(iter);
+> +	while (!is_cxl_root(parent)) {
+> +		hb =3D parent;
+> +		parent =3D hb->parent_dport->port;
 > +	}
+> +
+> +	return hb;
 > +}
-[ ... ]
-> +void cxl_cachedev_deprogram_cache_id(struct cxl_cachedev *cxlcd)
+> +
+> +static int get_num_cachedevs_present(struct cxl_port *host_bridge, u32 *=
+num)
 > +{
-> +	struct cxl_root *root =3D find_cxl_root(cxlcd->endpoint);
+> +	u32 num_cachedevs =3D 0;
+> +	unsigned long index;
+> +	struct cxl_ep *ep;
 > +
-> +	if (!root)
-> +		return;
-> +
-> +	__deprogram_cache_id(cxlcd, &root->port);
-> +}
+> +	xa_for_each(&host_bridge->endpoints, index, ep) {
+> +		if (is_cxl_cachedev(ep->ep))
+> +			num_cachedevs++;
+> +	}
 
 [Severity: High]
-Does this leak the reference to the CXL root device? find_cxl_root()
-returns a reference-counted device, but it appears to be missing a call
-to put_device() before returning, which would pin the root device
-in memory and prevent proper teardown.
+Is an rcu_read_lock() or xa_lock() required here when iterating the
+host_bridge->endpoints array?
+
+While program_cache_id() holds the host bridge device lock (hb->dev),
+concurrent endpoint probes in cxl_add_ep() insert into this array without
+holding the higher-level hb->dev lock.=20
+
+Iterating xa_for_each() without RCU protection or the array's lock risks
+data races and use-after-free, especially since cxl_ep_remove() can free the
+endpoint structures concurrently.
+
+[ ... ]
+> diff --git a/drivers/cxl/core/cache.c b/drivers/cxl/core/cache.c
+> index 17df0e603b68f..be570d3dc6090 100644
+> --- a/drivers/cxl/core/cache.c
+> +++ b/drivers/cxl/core/cache.c
+> @@ -39,3 +39,161 @@ int cxl_dport_map_cache_id_dc(struct cxl_dport *dport)
+>  	return cxl_map_component_regs(map, &dport->regs.component,
+>  				      BIT(CXL_CM_CAP_CAP_ID_CACHE_ID_DC));
+>  }
+> +
+> +static int cache_decoder_committed(struct cxl_dport *dport)
+> +{
+> +	u32 cap, stat;
+> +
+> +	cap =3D readl(dport->regs.ciddc + CXL_CACHE_ID_DC_CAP_OFFSET);
+> +	if (!FIELD_GET(CXL_CACHE_ID_DC_CAP_COMMIT_REQ, cap))
+> +		return -ENXIO;
+
+[Severity: Low]
+Is it safe to return a negative error code for a truthy boolean condition?
+
+When the COMMIT_REQ bit is not set, this returns -ENXIO, which the caller
+evaluates as truthy via negation (e.g., !cache_decoder_committed(dport)
+evaluates to false since !(-ENXIO) is false).
+
+While this happens to work in C, returning a negative integer to signify a
+successful or truthy condition creates a silent refactoring hazard.
+
+> +
+> +	stat =3D readl(dport->regs.ciddc + CXL_CACHE_ID_DC_STATUS_OFFSET);
+> +	return FIELD_GET(CXL_CACHE_ID_DC_STATUS_COMMITTED, stat);
+> +}
+> +
+> +static int cache_decoder_get_id(struct cxl_dport *dport)
+> +{
+> +	u32 ctrl;
+> +
+> +	ctrl =3D readl(dport->regs.ciddc + CXL_CACHE_ID_DC_CTRL_OFFSET);
+> +	if (FIELD_GET(CXL_CACHE_ID_DC_CTRL_HDMD_PRESENT, ctrl))
+> +		 return FIELD_GET(CXL_CACHE_ID_DC_CTRL_HDMD_ID, ctrl);
+> +
+> +	return FIELD_GET(CXL_CACHE_ID_DC_CTRL_LOCAL_ID, ctrl);
+> +}
+
+[Severity: Medium]
+Does this miss validating the hardware's HDM-D capability against the
+endpoint driver's expectation?
+
+The commit message notes that @hdmd is added to struct cxl_dev_state to
+indicate whether the device uses HDM-D flows, and that this is required for
+correctly validating cache id programming.=20
+
+However, cache_decoder_get_id() parses the ID purely based on the hardware
+HDMD_PRESENT bit, and cxl_cachedev_validate_cache_id() never
+cross-references this with the software cxlds->hdmd state. Firmware
+misconfigurations where the cache ID flow type doesn't match the endpoint
+driver's requirement will go undetected.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923173342.5584=
--1-Benjamin.Cheatham@amd.com?part=3D10
+-1-Benjamin.Cheatham@amd.com?part=3D9
