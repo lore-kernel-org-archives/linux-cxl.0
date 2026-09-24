@@ -1,202 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874BB3812EF;
-	Thu, 24 Sep 2026 17:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6A73D8122;
+	Thu, 24 Sep 2026 17:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790269397; cv=none; b=ObE8FprE4t8zttcErNhLhlMymq/CJHDuNdgYGSaKswz4S0apRaSZ/wz+pBbPHcwASv4kBTU2kmA90P46hswSsk1zUdce3NKKYghBEKDYc4KT7FqIdIuoxd0W8+EHhJDdS6S6Xgzmw1E34zJz0W1gkIBRmAyXaXXeBNxnKOH9yIk=
+	t=1790270099; cv=none; b=rkefMLAv0CpZ6O0bnoadjY4ghIxhaDOvq0W97EgLtj5H0DcVYLyJeFecoqpVbKlBnp21wKNHHn4qSlxWmoRMp8LW/dFdwJvz9yqtG0Q6YHv4zz0d1s9PFxRBuw/d6L0UjZJlzQhJUKGcwBFEQ3kQIdmbP953nP0IvRGRVuALUOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790269397; c=relaxed/simple;
-	bh=uLN0PLp38P1ERr1lmZ+b+Qi7oSMitMGBCDGQZA29yL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MAZv0IZJukZeXdTHA3mmULloMvORhfPOODewBmqguTbZRCP9so+cc/uDoUZDxjgzX6o+RdLtyBdOeuLrjOVekbI0c+kQPIxiJYixKRsBGkUhHh0UoKZh+v4+/pKQ6GIhr2Cbr61UPdIX7r8WIaDJT0bKDHKB+qlfTgdZHEvbFqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmrnO4fk; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmrnO4fk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790269396; x=1821805396;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uLN0PLp38P1ERr1lmZ+b+Qi7oSMitMGBCDGQZA29yL4=;
-  b=LmrnO4fk/3Ct670CQ8yi41cw9YOxjZSBJxA/s31urnyI83o9tdcy1iAT
-   RrML8MASh5TyuSisFYf2J0Wyy0o1WEA3XIn8OxgAz40RmqBu1HbFci+OW
-   FhtP8pA9zFPGFFVYjqvMc2nU3qFKbtxZ1jdIu/Aoh8PYKxiOTwIhXfYMy
-   y4ljmFjLO4xa6PMlGWeG0R1cyQLs1/mNBSYAGmUBveaiseFl9CBwe9oy4
-   gnaUYixmUZtub6yQkamzavOKug3JIcgTASpnYsQNPdNsRh67t1o4Mg/K0
-   S30LvXMXiibOjoAGjDf/+n3qZkBxeg5j4WQ8VO2GscD1MDSiWDaJK2Wye
-   A==;
-X-CSE-ConnectionGUID: 8aUwxsNASMyIXclNBt+SWQ==
-X-CSE-MsgGUID: y6wQNyZvTHC/apV9WD8h3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="91155459"
-X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="91155459"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 10:03:15 -0700
-X-CSE-ConnectionGUID: aS7c0gCDQN6fFrHh+Zk+Zw==
-X-CSE-MsgGUID: +gVmZIy9SXOvEjbiO3rPOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="277263362"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.110.186]) ([10.125.110.186])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 10:03:14 -0700
-Message-ID: <33a1c478-3912-4441-8a37-7e91600581f3@intel.com>
-Date: Thu, 24 Sep 2026 10:03:12 -0700
+	s=arc-20240116; t=1790270099; c=relaxed/simple;
+	bh=JDOqA9647s0CbjvLTs1DO4z0udNARZPkCxebgG/HoW8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Rk3XoEAtoal99bDIA5uVAlz9ym02LjEO6bNzG+eREdpkTG53NqlAlU7EMkUZpS8jCnyyiJ/cIce1M30zIbGY1zxgdRasNmTcTZ0F7sDKiiUkQqYn8hwdkxFLMeWgbn3HFYxDLWBO5aCsudui8miwOCapmSS9G+6grt3OhSa2k68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id F1781C044D;
+	Thu, 24 Sep 2026 17:09:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf02.hostedemail.com (Postfix) with ESMTPA id 1F8B280011;
+	Thu, 24 Sep 2026 17:09:25 +0000 (UTC)
+Message-ID: <6595ac9f640a3796f34f58ba6d97d61bc0c07558.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch: don't flag ACQUIRE_ERR() assignments in
+ if conditions
+From: Joe Perches <joe@perches.com>
+To: Guixin Liu <kanie@linux.alibaba.com>, Andy Whitcroft
+ <apw@canonical.com>,  Jonathan Cameron	 <jic23@kernel.org>, Alison
+ Schofield <alison.schofield@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Date: Thu, 24 Sep 2026 10:09:24 -0700
+In-Reply-To: <20260924033923.4140210-1-kanie@linux.alibaba.com>
+References: <20260924033923.4140210-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 04/15] cxl: Move decoder declarations to shared header
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260922083924.2451158-1-smadhavan@nvidia.com>
- <20260922083924.2451158-5-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260922083924.2451158-5-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Stat-Signature: tqfxd6up1j46rfi63kk4s6jc54tdepsa
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 1F8B280011
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+DSww5OxxxLCzqeHV0GUsIxtm6SADd11Q=
+X-HE-Tag: 1790269765-928210
+X-HE-Meta: U2FsdGVkX18cazg6m/kgQwUVdNwkMYWOUOblu/6JTHxPjGmDtTbBSQa2BY4s/nHCMxOVuHIqWHasjHKAQYeP0WXa+Rv74NbC/unGxpsqdmXXl00ZiOtXqPw0DQqqwwy8Bl13Tt5zVZ7ETL7XvYBWCNzlyeY4xB63Ov/nvzCWp8MvVKTl+O4B+/DaeZnDSAJXxEfguWTQoTc141zUXxzA+xiWLebRgwoYF8H6RuT0yjgWRO+XQUJ6prh2E/iig8rGYYw2gK1FxYRn1xwJ7BFTsj1ICwvB1+HyckAp+WP8XuTySqLuG4la5VulBsOTBtQoCflkvnD2/IgE5tbQqlUdCA2c0m0TZ6jjC656aN/KlkbA2OuxbiaahYJ+QefwdaPeZ/XLpDz7ImACtxhtZZvtCLZwLo/4YI2DHFLI5TtVETLJ/i1ZhZHfrPYIZ+oF9To5+xbbmNor1vSOOqJPe7vTYOxsBVKrEa58
 
+On Thu, 2026-09-24 at 11:39 +0800, Guixin Liu wrote:
+> ACQUIRE_ERR() and its wrappers, PM_RUNTIME_ACQUIRE_ERR() and
+> IIO_DEV_ACQUIRE_FAILED(), report whether a conditional cleanup.h guard
+> was acquired, and drivers consume the result directly in an if
+> condition:
+>=20
+> 	if ((rc =3D ACQUIRE_ERR(mutex_intr, &lock)))
+> 		return rc;
+>=20
+> That combined form is the established style at the 49 in-tree call
+> sites under drivers/cxl and drivers/pci/tsm.c, so ASSIGN_IN_IF fires
+> there only as a false positive, and every patch touching those lines
+> carries noise that reviewers have to wave off manually.
+>=20
+> Skip the check only when every assignment in the condition assigns the
+> result of such a call, matched by the *_ACQUIRE_ERR() /
+> *_ACQUIRE_FAILED() naming convention of its wrappers. Plain
+> assignments, mixed conditions and near-miss identifiers still get
+> flagged.
+>=20
+> Suggested-by: Alison Schofield <[alison.schofield@intel.com](mailto:aliso=
+n.schofield@intel.com)>
+> Cc: [linux-cxl@vger.kernel.org](mailto:linux-cxl@vger.kernel.org)
+> Assisted-by: LLM
+> Signed-off-by: Guixin Liu <[kanie@linux.alibaba.com](mailto:kanie@linux.a=
+libaba.com)>
 
+Acked-by: Joe Perches <joe@perches.com>
 
-On 9/22/26 1:39 AM, Srirangan Madhavan wrote:
-> Move the common decoder declarations to include/cxl/cxl.h for use by
-> shared decoder settings. Preserve their layout and documentation.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+>=20
 > ---
->  drivers/cxl/cxl.h | 37 -------------------------------------
->  include/cxl/cxl.h | 41 ++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 40 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 9e0500d56866..44ff3334648c 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -264,45 +264,8 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
->  #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
->  #define CXL_DECODER_F_RESET_MASK (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK)
->  
-> -enum cxl_decoder_type {
-> -	CXL_DECODER_DEVMEM = 2,
-> -	CXL_DECODER_HOSTONLYMEM = 3,
-> -};
-> -
-> -#define CXL_DECODER_MAX_INTERLEAVE 16
-> -
->  #define CXL_QOS_CLASS_INVALID -1
->  
-> -/**
-> - * struct cxl_decoder - Common CXL HDM Decoder Attributes
-> - * @dev: this decoder's device
-> - * @id: kernel device name id
-> - * @hpa_range: Host physical address range mapped by this decoder
-> - * @interleave_ways: number of cxl_dports in this decode
-> - * @interleave_granularity: data stride per dport
-> - * @target_type: accelerator vs expander (type2 vs type3) selector
-> - * @region: currently assigned region for this decoder
-> - * @flags: memory type capabilities and locking
-> - * @target_map: cached copy of hardware port-id list, available at init
-> - *              before all @dport objects have been instantiated. While
-> - *              dport id is 8bit, CFMWS interleave targets are 32bits.
-> - * @commit: device/decoder-type specific callback to commit settings to hw
-> - * @reset: device/decoder-type specific callback to reset hw settings
-> -*/
-> -struct cxl_decoder {
-> -	struct device dev;
-> -	int id;
-> -	struct range hpa_range;
-> -	int interleave_ways;
-> -	int interleave_granularity;
-> -	enum cxl_decoder_type target_type;
-> -	struct cxl_region *region;
-> -	unsigned long flags;
-> -	u32 target_map[CXL_DECODER_MAX_INTERLEAVE];
-> -	int (*commit)(struct cxl_decoder *cxld);
-> -	void (*reset)(struct cxl_decoder *cxld);
-> -};
-> -
->  /*
->   * Track whether this decoder is free for userspace provisioning, reserved for
->   * region autodiscovery, whether it is started connecting (awaiting other
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 802b143de83d..69941f7fdb76 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -5,8 +5,10 @@
->  #ifndef __CXL_CXL_H__
->  #define __CXL_CXL_H__
->  
-> +#include <linux/device.h>
->  #include <linux/node.h>
->  #include <linux/ioport.h>
-> +#include <linux/range.h>
->  #include <cxl/mailbox.h>
->  
->  /**
-> @@ -23,7 +25,44 @@ enum cxl_devtype {
->  	CXL_DEVTYPE_CLASSMEM,
->  };
->  
-> -struct device;
-> +struct cxl_region;
-> +
-> +enum cxl_decoder_type {
-> +	CXL_DECODER_DEVMEM = 2,
-> +	CXL_DECODER_HOSTONLYMEM = 3,
-> +};
-> +
-> +#define CXL_DECODER_MAX_INTERLEAVE 16
-> +
-> +/**
-> + * struct cxl_decoder - Common CXL HDM Decoder Attributes
-> + * @dev: this decoder's device
-> + * @id: kernel device name id
-> + * @hpa_range: Host physical address range mapped by this decoder
-> + * @interleave_ways: number of cxl_dports in this decode
-> + * @interleave_granularity: data stride per dport
-> + * @target_type: accelerator vs expander (type2 vs type3) selector
-> + * @region: currently assigned region for this decoder
-> + * @flags: memory type capabilities and locking
-> + * @target_map: cached copy of hardware port-id list, available at init
-> + *              before all @dport objects have been instantiated. While
-> + *              dport id is 8bit, CFMWS interleave targets are 32bits.
-> + * @commit: device/decoder-type specific callback to commit settings to hw
-> + * @reset: device/decoder-type specific callback to reset hw settings
-> +*/
-> +struct cxl_decoder {
-> +	struct device dev;
-> +	int id;
-> +	struct range hpa_range;
-> +	int interleave_ways;
-> +	int interleave_granularity;
-> +	enum cxl_decoder_type target_type;
-> +	struct cxl_region *region;
-> +	unsigned long flags;
-> +	u32 target_map[CXL_DECODER_MAX_INTERLEAVE];
-> +	int (*commit)(struct cxl_decoder *cxld);
-> +	void (*reset)(struct cxl_decoder *cxld);
-> +};
->  
->  /*
->   * Using struct_group() allows for per register-block-type helper routines,
-
+> Changes since v1 [1]:
+>=20
+> - Check each assignment in the condition instead of the condition as a
+>   whole, so a mixed condition such as
+>   "if ((rc =3D regular_function()) || (ret =3D ACQUIRE_ERR(...)))" keeps
+>   getting flagged (Alison Schofield).
+> - Match the assigned-to expression with $Lval, as Joe Perches
+>   suggested on Alison's earlier attempt at this exception [2].
+> - Cc linux-cxl, where most users of this form live.
+>=20
+> Two deviations from [2]: the assigned expression capture excludes '=3D',
+> so an '=3D=3D' comparison in a mixed condition is not mistaken for a bad
+> assignment, and the check requires an assignment the $Lval match can
+> see, so compound assignments like '+=3D', which it cannot see, are not
+> silently allowed.
+>=20
+> Testing: ran checkpatch on a test file with the allowed forms (bare
+> macro and both wrappers, member and array element lhs, multiple
+> ACQUIRE family assignments in one condition, an '=3D=3D' comparison
+> alongside, no spaces around '=3D') and with 14 cases that must still
+> trigger (plain assignments, near-miss identifiers, arithmetic on the
+> call result, ACQUIRE_ERR in a comment, indirect assignment, mixed
+> conditions in both orders). All allowed forms pass, all 14 still
+> trigger. The 49 in-tree call sites under drivers/cxl and
+> drivers/pci/tsm.c no longer report ASSIGN_IN_IF, and checkpatch output
+> is unchanged for fs/namei.c, kernel/sched/core.c, mm/vmscan.c and
+> net/core/dev.c.
+>=20
+> [1] [https://lore.kernel.org/all/20260916020921.3480730-1-kanie@linux.ali=
+baba.com/](https://lore.kernel.org/all/20260916020921.3480730-1-kanie@linux=
+.alibaba.com/)
+> [2] [https://lore.kernel.org/linux-cxl/20250815010645.2980846-1-alison.sc=
+hofield@intel.com/](https://lore.kernel.org/linux-cxl/20250815010645.298084=
+6-1-alison.schofield@intel.com/)
+> ---
+>  scripts/checkpatch.pl | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 8a7787d228a6..eee06ac6737f 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -5777,7 +5777,21 @@ sub process {
+>  			my ($s, $c) =3D ($stat, $cond);
+>  			my $fixed_assign_in_if =3D 0;
+> =20
+> +			# ACQUIRE_ERR() and its wrappers, e.g. PM_RUNTIME_ACQUIRE_ERR()
+> +			# and IIO_DEV_ACQUIRE_FAILED(), are meant to be evaluated in an
+> +			# if condition, with the error assigned in the condition:
+> +			#	if ((rc =3D ACQUIRE_ERR(name, &lock)))
+> +			# Allow that only when every assignment in the condition assigns
+> +			# the result of such a call, so that a mixed condition keeps
+> +			# getting flagged:
+> +			#	if ((rc =3D regular_function()) || (ret =3D ACQUIRE_ERR(name, &lock=
+)))
+> +			my $assign_in_if =3D 0;
+>  			if ($c =3D~ /\bif\s*\(.*[^<>!=3D]=3D[^=3D].*/s) {
+> +				my $has_assignment =3D $c =3D~ /\b$Lval\s*=3D\s*[^,)&|=3D]+/;
+> +				my $has_other_assignment =3D $c =3D~ /\b$Lval\s*=3D\s*(?!\s*\w*ACQUI=
+RE_(?:ERR|FAILED)\s*\()[^,)&|=3D]+/;
+> +				$assign_in_if =3D !$has_assignment || $has_other_assignment;
+> +			}
+> +			if ($assign_in_if) {
+>  				if (ERROR("ASSIGN_IN_IF",
+>  					  "do not use assignment in if condition\n" . $herecurr) &&
+>  				    $fix && $perl_version_ok) {
+>=20
