@@ -1,208 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E235C389106;
-	Thu, 24 Sep 2026 17:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EA83EB80D;
+	Thu, 24 Sep 2026 17:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790269272; cv=none; b=TUIngXqO/b/tBQvaNOpU9P00FuBzjoM97aGUxwRP7bjgSPuB2Gyz8wGqDreA8F4AYdJNotnYZkCXji/+w2YoAkIW8BBLQtN2+tt9HV9BKspqXI9lOpf4SWb0WoZ1zCalVAw1iYwIwUvKSEBk/o8N+EZeaDqSHAPB2Te/aZ5FOtk=
+	t=1790269275; cv=none; b=mBSbkvjv8Xj78jgtf/mQL7+TQz0XtZZXQqg5hrsWFh0XIRM6pRnLJn+pV4BDlHiL1dkmnrkkbRvHiBNrRQ/OnIwwkcYxpUFxB2il5OHehAHMODDBQFTydY+i6LdRCwc4DKP/qm+PVEP5EIfeMbwxEdWG2tDLjETOhDHaeF7GjH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790269272; c=relaxed/simple;
-	bh=Z6QzJKP3pf8IWxcTxVLAMkJMrnXGMTEb6PJxP0Kxoc8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=my6zrVATUd2wtI61mDfa1rakLWzWuuq82FQJgilN9CCJS+GrDVBUIUcVPRzN7GN1rMi+ZU7cELTDjtYwQKXfG6FbEAiSU9KZsQ0iUT8/KxofzfPHb6lbSbPAZqg29YcxI+2lFqNH5SaIvd10YLKwmYpojMeUTrzNZKAkUMU0eXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YHQnmLUI; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790269275; c=relaxed/simple;
+	bh=MiAlFzz/JgKGEQ1e00PaKqXcB98BZc0aDPq4O46YCEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjkM24Kv3KC22M16hZxKi6rh0r+bfLvWiTdkhen8kJ4pjzQp9X7LPOfkPbk8GpzqS8glNSqiRHj7Ns8YPl7kkUr2cAHIAwSAQHTKf2HfRe90SWxN9G0Emdb/2gQHXS7EMFU3jR+SBA5fqrzqMkMHB2JSxBtWiub/J53ZFkSM1pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=FrbCG3sk; arc=none smtp.client-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YHQnmLUI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790269271; x=1821805271;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Z6QzJKP3pf8IWxcTxVLAMkJMrnXGMTEb6PJxP0Kxoc8=;
-  b=YHQnmLUI6WyunnTSt7hxXGovyALoONwhjMe4gLhsqw86QTBSYHJcjVOA
-   DXVjr0ptkXJMJNuwaQ9u7TasN8ljFEknuMqnKpOQus2uOHFOUqKgmaJRO
-   K2h/MZsxghPsWNMr0aBqSQFgvEFhTemd23sbJfPjdexzWqxVXXFsESL7G
-   FNlbY/jFSSKau+yGD3i8le6uVdEZQ7MRZU20/IdiGD6NKKsD5Z3+H6vB2
-   LPLiR9AipDpmvJLCUEzoVOxReqkkx37fWMUMMW53RwnuNt9jzdnjWr9Dr
-   z4+6gY/HmNocdECDIE6+x+zrEqSoVwJGQriV9ra9rcMTyWB9NIi9xWsLh
-   A==;
-X-CSE-ConnectionGUID: 1PM15BBNSiqW7RFmHpAB2Q==
-X-CSE-MsgGUID: 9wkbh4e2RoKrJpAyj8zW0g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="89955649"
-X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="89955649"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 10:01:10 -0700
-X-CSE-ConnectionGUID: rYbqzNeMQw+Buo+qxqTRoA==
-X-CSE-MsgGUID: +kJVQkejSSy80t7V6GLx2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="273301655"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.110.186]) ([10.125.110.186])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 10:01:08 -0700
-Message-ID: <a8498db1-b400-4fd9-a9c8-dbf8a3d14dbb@intel.com>
-Date: Thu, 24 Sep 2026 10:01:07 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="FrbCG3sk"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A70A4402F69;
+	Thu, 24 Sep 2026 16:42:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a252.dreamhost.com (trex-green-5.trex.outbound.svc.cluster.local [100.96.3.213])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 153B9402BFC;
+	Thu, 24 Sep 2026 16:42:51 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Left-Industry: 23044e9a64930f9d_1790268171342_686159737
+X-MC-Loop-Signature: 1790268171342:3160133764
+X-MC-Ingress-Time: 1790268171342
+Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.3.213 (trex/8.0.2);
+	Thu, 24 Sep 2026 16:42:51 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4hrKQ22WSnz102x;
+	Thu, 24 Sep 2026 09:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1790268170;
+	bh=iQSb0yDnh3rC42nJgA6uJqywfCVo70Z2eMm5wrmYWBA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=FrbCG3skknlDwgQDxmuHsTp8S3fYtvbiBlG6xSVWdcSluf/D4jsUtSEyYCbNZBNrv
+	 joSMU8fxdTGRUWd97w5G43PA9FsXQqsyYDcHFl5xkWIz4bznR9yKsLEZC2PGhr9+/V
+	 ejL7xXf3SLDt1sKaq0fQYdIbjNDBkwibC+H/8bKNfvd4KmUcuR+KOOoHBzW7KEBg52
+	 aCwwMX4bA5itzTkGlS1AaWz1iDPirHSKCUW+WraC8dz88jhi+79GZNAAK3OuFD/2kL
+	 fKthIR+CrnemWRh4hCAnB/oOsQub8Ig9Tud+eGNuguXiOCz53jdzcp1TD6be39A+3J
+	 9cIRKemJUni9A==
+Date: Thu, 24 Sep 2026 09:42:47 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jiale Yao <yaojiale02@163.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cxl/acpi: Check ACPI companion before use
+Message-ID: <20260924164247.rsb4h7qjx5bvrthg@offworld>
+References: <20260924125404.923551-1-yaojiale02@163.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 02/15] cxl: Share CXL port upstream PCI device lookup
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260922083924.2451158-1-smadhavan@nvidia.com>
- <20260922083924.2451158-3-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260922083924.2451158-3-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260924125404.923551-1-yaojiale02@163.com>
+User-Agent: NeoMutt/20220429
 
+On Thu, 24 Sep 2026, Jiale Yao wrote:
 
+>Platform drivers can be forced to match devices outside their ID tables
+>through driver_override.  cxl_acpi_probe() assumes that every bound device
+>has an ACPI companion and dereferences adev->dev.bus without checking the
+>result of ACPI_COMPANION().  Force-binding cxl_acpi to a platform device
+>without a companion therefore causes a NULL pointer dereference.
+>
+>This was reproduced by setting the driver override for the pcspkr platform
+>device to cxl_acpi and binding it through sysfs:
+>
+>  BUG: kernel NULL pointer dereference, address: 0000000000000280
+>  #PF: supervisor read access in kernel mode
+>  RIP: cxl_acpi_probe+0xf4/0x220
+>  Call Trace:
+>   platform_probe+0x4d/0x80
+>   really_probe+0x106/0x370
+>   device_driver_attach+0x4c/0xa0
+>   bind_store+0xd0/0x100
+>
+>Commit 2b3a5dabe89e ("platform/surface: acpi-notify: Check ACPI
+>companion before use") fixed the same force-binding issue in another
+>platform driver.  Check the companion before setting up the CXL root and
+>return -ENODEV when it is absent.
+>
+>Fixes: 7d4b5ca2e2cb ("cxl/acpi: Add downstream port data to cxl_port instances")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Jiale Yao <yaojiale02@163.com>
 
-On 9/22/26 1:39 AM, Srirangan Madhavan wrote:
-> read_cdat_data() resolves a CXL port's upstream device to its backing PCI
-> device. HDM cache updates need the same mapping.
-> 
-> Factor the lookup into cxl_port_get_uport_pci_dev() and return a referenced
-> PCI device to make caller ownership explicit.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+With Dave's comment,
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/cxl/core/core.h |  1 +
->  drivers/cxl/core/pci.c  | 23 ++++++-----------------
->  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
->  3 files changed, 33 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 35eaf636adc9..983d7690c3a5 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -157,6 +157,7 @@ long cxl_pci_get_latency(struct pci_dev *pdev);
->  int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
->  int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->  					struct access_coordinate *c);
-> +struct pci_dev *cxl_port_get_uport_pci_dev(struct cxl_port *port);
->  
->  static inline struct device *port_to_host(struct cxl_port *port)
->  {
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d807c1a002c..bf7fc77626d9 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -564,26 +564,13 @@ static unsigned char cdat_checksum(void *buf, size_t size)
->   */
->  void read_cdat_data(struct cxl_port *port)
->  {
-> -	struct device *uport = port->uport_dev;
-> +	struct pci_dev *pdev = cxl_port_get_uport_pci_dev(port);
->  	struct device *dev = &port->dev;
->  	struct pci_doe_mb *doe_mb;
-> -	struct pci_dev *pdev = NULL;
-> -	struct cxl_memdev *cxlmd;
->  	struct cdat_doe_rsp *buf;
->  	size_t table_length, length;
->  	int rc;
->  
-> -	if (is_cxl_memdev(uport)) {
-> -		struct device *host;
-> -
-> -		cxlmd = to_cxl_memdev(uport);
-> -		host = cxlmd->dev.parent;
-> -		if (dev_is_pci(host))
-> -			pdev = to_pci_dev(host);
-> -	} else if (dev_is_pci(uport)) {
-> -		pdev = to_pci_dev(uport);
-> -	}
-> -
->  	if (!pdev)
->  		return;
->  
-> @@ -591,14 +578,14 @@ void read_cdat_data(struct cxl_port *port)
->  				      CXL_DOE_PROTOCOL_TABLE_ACCESS);
->  	if (!doe_mb) {
->  		dev_dbg(dev, "No CDAT mailbox\n");
-> -		return;
-> +		goto out;
->  	}
->  
->  	port->cdat_available = true;
->  
->  	if (cxl_cdat_get_length(dev, doe_mb, &length)) {
->  		dev_dbg(dev, "No CDAT length\n");
-> -		return;
-> +		goto out;
->  	}
->  
->  	/*
-> @@ -625,11 +612,13 @@ void read_cdat_data(struct cxl_port *port)
->  	port->cdat.table = buf->data;
->  	port->cdat.length = length;
->  
-> -	return;
-> +	goto out;
->  err:
->  	/* Don't leave table data allocated on error */
->  	devm_kfree(dev, buf);
->  	dev_err(dev, "Failed to read/validate CDAT.\n");
-> +out:
-> +	pci_dev_put(pdev);
->  }
->  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
->  
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 625e4aa427db..5dc2815d82d8 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -34,6 +34,32 @@
->  static DEFINE_IDA(cxl_port_ida);
->  static DEFINE_XARRAY(cxl_root_buses);
->  
-> +/**
-> + * cxl_port_get_uport_pci_dev - get the PCI device for a port's upstream device
-> + * @port: CXL port to map to a PCI device
-> + *
-> + * Return: A referenced PCI device, or NULL if the upstream device is not PCI.
-> + * The caller must release the returned reference with pci_dev_put().
-> + */
-> +struct pci_dev *cxl_port_get_uport_pci_dev(struct cxl_port *port)
-> +{
-> +	struct device *uport = port->uport_dev;
-> +	struct device *host;
-> +
-> +	if (is_cxl_memdev(uport)) {
-> +		struct cxl_memdev *cxlmd = to_cxl_memdev(uport);
-> +
-> +		host = cxlmd->dev.parent;
-> +	} else {
-> +		host = uport;
-> +	}
-> +
-> +	if (!host || !dev_is_pci(host))
-> +		return NULL;
-> +
-> +	return pci_dev_get(to_pci_dev(host));
-> +}
-> +
->  /*
->   * The terminal device in PCI is NULL and @platform_bus
->   * for platform devices (for cxl_test)
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
