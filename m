@@ -1,50 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132DD2E040D
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 00:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60EE30EF97
+	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 01:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790211518; cv=none; b=ij0sP4dTh2yqKqMfnGmLssqnSd2tNmRqn3YLoky+6GPUGvATlGE7qHt68CxB5yxRHC8eflT2ol6B5KQ+7YQWaYIN2O1SsattTwTiRDBYxSXa0IcX4fYpeyBrBKCpfNXdM+SL5LCUqfEkfp5sxmBbkEVGrvK5OoyjHb0V6+IBFBE=
+	t=1790211608; cv=none; b=Un9dahcBfSJvFf++dZPQQDGa5kvYSHq13au6XIxXqo8IQKgOEQUGZbwviTyiPYKWgSte539rZ/LPGIS6qlj/Dz8+UcaKimDn/dnH48elX356p8MFjVc/2jTRkhC+HWP7zoOX13R99Zt210BbYjxAN1plWJBr4dZ3yEQSs1+NSOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790211518; c=relaxed/simple;
-	bh=NaAnJBt/azjCgFybHoLP/OgKlqakTmdm0UAaoO+iGUE=;
+	s=arc-20240116; t=1790211608; c=relaxed/simple;
+	bh=iUrsVHKsgDmwfg7fK0oldIASjxrV/ADNgB1Hm+Q9iK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W1rgTF9eyjZ9c5L3xWDdD74bejZr9o3o1mIEON03YMSKMwIJYg3PZgZxSpF8FZYjq3JO1fsBdI+a9/ubsVl7pAX7WJhJi9LeZ9Yqh2KD+us2QxZixYqZO7QxRvQ45pftNdBpL/ysUHTs6Z+q+Df0Pm1F8w0h9YONI67M7VQ4nBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7iPH7+Z; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=dgRRyt3YC0dLDbBeBvfjXjY5dPwTiPeROb+rroZbav6vdDwvDvOIt6IE4qWKU7cZO7b9+LG+4dS9PNVKbO4koTziB/+szIatGAzolhqCiUGDqJgThIcJ8nlNwx03gROhZAPjrgGoXuCFmZ5O0m35XvabbIrjx6fiXgFb63nUnpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoxkB/xe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7iPH7+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA701F000FF;
-	Thu, 24 Sep 2026 00:58:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoxkB/xe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1769A1F000FF;
+	Thu, 24 Sep 2026 01:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790211516;
-	bh=/7+ogZZx1OT6sECvNNrwHzdqsQC/kkI31LUKDJ+ibOg=;
+	s=k20260515; t=1790211606;
+	bh=T/tQ9GzmdWPHAnk8DShbDV7IjgTNUjRLPo8kuCIKXEs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=L7iPH7+ZpxiIxMBn51GaxlEVa7VvajbRVz3CQFNzFvojmKq2sIPFxLNjFLJ6Nz+8U
-	 j0uWYjf5OmlaW0koHsAL2r6+Z3sUhjLTxDXrNdfHwK/Yj6P3y9GoXRCv9O4cIvkJBA
-	 OEaXftAZl5xVfOBsl/KhLLSqWQysuJ05gaIgs9BCgCk3oX9oGFvUWxXKB1J0hOBvS7
-	 ZUgYH/oUbOV/6fqWktVAvAFEeFY5l1OkgT/n9YOTY8UVj3vYFrnnkc73k5rh7adSx8
-	 8kRsGTATZvibOqDzKk7lZzcbuh/PlsumPO1QL0bURqXpc8Z8P4iIeDUGcojlK7Gfep
-	 lGc1CwvROf8Cw==
-Date: Thu, 24 Sep 2026 01:58:30 +0100
+	b=OoxkB/xelNuRl3ZtajyiwD0Oj5VDjJ/WXonH3IWOwyKAeyO8ON8EVPfmz/p7GLl6e
+	 harmm30eyYHAHr/6ljHGxdUkK+rSVtk0W9IG862A/Q/+99EQBzcDniTfIp3g1srkvb
+	 RlcO0XYTFn/9P8UDCiq7iVNC94W0xIv3ClPkk7QjzPXT4RSPBdi1NkR5URjAdxF5Vf
+	 vkCV70ToyJD3464Jh/0D1n26eMiTG4H4ku+hX0r+BkIeUpXd+oMhUc+oE+BTmJI6c6
+	 CYDsCla7xATBIUaN+s/cER3RQYva+XBlUzq/zlpgibQBvEB5EWHBq47JlnyNQjIMV+
+	 pNeGAbMF35ctQ==
+Date: Thu, 24 Sep 2026 02:00:00 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org, Alison
- Schofield <alison.schofield@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>, Gregory Price
- <gourry@gourry.net>, Richard Cheng <icheng@nvidia.com>, Ben Cheatham
- <benjamin.cheatham@amd.com>, Ira Weiny <iweiny@kernel.org>, Wonjae Lee
- <wj28.lee@samsung.com>, Junhee Park <jh9934.park@samsung.com>, Heesoo Kim
- <habil.kim@samsung.com>
-Subject: Re: [PATCH v14 6/8] cxl/mem: Configure dynamic capacity interrupts
-Message-ID: <20260924015830.1b8a8963@jic23-hlaptop>
-In-Reply-To: <arLxp9mx-IPNCPQq@4470NRD-ASU.ssi.samsung.com>
-References: <20260918203049.7273-1-anisa.su@samsung.com>
-	<20260918203049.7273-7-anisa.su@samsung.com>
-	<da6deab0-de16-43ea-bd13-5861f84a587b@intel.com>
-	<20260922004228.5a0c027b@jic23-hlaptop>
-	<a26d002f-1dcf-4bf4-bfd5-dd587c559029@intel.com>
-	<arLxp9mx-IPNCPQq@4470NRD-ASU.ssi.samsung.com>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/events: Test CME counter expiry with equality,
+ not bitwise AND
+Message-ID: <20260924020000.390875d2@jic23-hlaptop>
+In-Reply-To: <20260922082214.3526355-1-kanie@linux.alibaba.com>
+References: <20260922082214.3526355-1-kanie@linux.alibaba.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -55,77 +49,25 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Sep 2026 14:22:47 -0700
-Anisa Su <anisa.su887@gmail.com> wrote:
+On Tue, 22 Sep 2026 16:22:14 +0800
+Guixin Liu <kanie@linux.alibaba.com> wrote:
 
-> On Mon, Sep 21, 2026 at 05:45:56PM -0700, Dave Jiang wrote:
-> > 
-> > 
-> > On 9/21/26 4:42 PM, Jonathan Cameron wrote:  
-> > >   
-> > >>> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > >>> index 7b756000a1a6..6ef47265da10 100644
-> > >>> --- a/tools/testing/cxl/test/mem.c
-> > >>> +++ b/tools/testing/cxl/test/mem.c
-> > >>> @@ -1818,7 +1818,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
-> > >>>  	if (rc)
-> > >>>  		dev_dbg(dev, "No CXL FWCTL setup\n");
-> > >>>  
-> > >>> -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> > >>> +	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_INFO |
-> > >>> +				       CXLDEV_EVENT_STATUS_WARN |
-> > >>> +				       CXLDEV_EVENT_STATUS_FAIL |
-> > >>> +				       CXLDEV_EVENT_STATUS_FATAL);    
-> > >>
-> > >> Second time I'm seeing this constructed mask being used in this commit. Maybe create a define for it?
-> > >>
-> > >> s/CXLDEV_EVENT_STATUS_ALL/CXLDEV_EVENT_STATUS_BASE/ perhaps?  
-> > > 
-> > > That was Anisa acting on my feedbakc on previous.
-> > > I don't like _ALL because we already have an example of the spec
-> > > expanding and the definition becoming messy. But mainly I was
-> > > pushing back against _ALL + masking with one element we didn't
-> > > want as fragile.  So I'm not against _ALL if it is made up of
-> > > another define + DCD (for now) and that other define can be
-> > > used in places like this.
-> > > 
-> > > Bikeshed time... BASE is usually a define for a reg address and it is
-> > > is hard to come up with a name for that when it is a mixture of
-> > > RAS stuff and INFO which can be a wide range of random nasty
-> > > and nice things.
-> > > 
-> > > So with the right name seems fine to have what Dave suggests.
-> > > I'm just not sure what that name is!  Hence I'd just stick
-> > > to the long hand option.  
-> > 
-> > Yeah if we can't come up with anything good then leave it as is. 
-> >   
-> CXLDEV_EVENT_STATUS_STANDARD_LOGS...? And just add a comment kind of explaining
-> what "standard" means:
+> The Memory Event Type field in the General Media and DRAM event records
+> is an enumeration, not a bitmask. The validity checks for the advanced
+> programmable CME counter expiration event (05h) test the field with a
+> bitwise AND, so types 01h, 03h, 04h and 06h match it as well.
 > 
-> /* Logs whose ownership follows native_cxl_error; the DCD log is always OS owned */
-> #define CXLDEV_EVENT_STATUS_STANDARD_LOGS	(CXLDEV_EVENT_STATUS_INFO | \
-> 						 CXLDEV_EVENT_STATUS_WARN | \
-> 						 CXLDEV_EVENT_STATUS_FAIL | \
-> 						 CXLDEV_EVENT_STATUS_FATAL)
+> A device reporting one of those types trips WARN_ON_ONCE once the
+> general media or DRAM tracepoint is enabled, which is the case anywhere
+> rasdaemon collects CXL events. Under panic_on_warn=1 that kills the
+> machine.
 > 
-> That's all I can come up with.
-
-I can cope with that
-
-Jonathan
-
+> Compare the type field for equality instead. Type 05h records that do
+> violate the spec conditions still warn.
 > 
-> - Anisa
-> > > 
-> > > Jonathan
-> > >   
-> > >>  
-> > >>>  	cxl_mock_test_feat_init(mdata);
-> > >>>  
-> > >>>  	return 0;    
-> > >>
-> > >>  
-> > >   
-> >   
-
+> Fixes: cd3b36cfc659 ("cxl/events: Add extra validity checks for corrected memory error count in General Media Event Record")
+> Fixes: d8145bb8af5c ("cxl/events: Add extra validity checks for CVME count in DRAM Event Record")
+> Cc: stable@vger.kernel.org
+> Assisted-by: LLM
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
