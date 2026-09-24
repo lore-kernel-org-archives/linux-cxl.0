@@ -1,302 +1,317 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011062.outbound.protection.outlook.com [40.107.208.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEF7448BB6;
-	Thu, 24 Sep 2026 08:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790240398; cv=fail; b=QT0bi2xq+hBU9rio+IyQ3UyHedGaGve+sz67Ipzz/xxarLkx35WcRW5816Ds8OxMGLKliqKqv3YW0xEJzIjCDgYnVAmCRN5OLe5pTy1egw7OHsJW9qWBdE7cr/dKXM4bEcs+CxnbcBJWyqdmb08a5tkgQzv5Qn9t2Qlr/bKVH5M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790240398; c=relaxed/simple;
-	bh=p8xtrAMDPM/HGeVcl/HJnagfcZfG551Yy0Ws76LlTcI=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NYxLQ/DDDqS/Ouwns1SaGuCkVAYm9h78ZECmmV68W7ehNf8qusZaR8X71btJ0wQuvOCCZHcjP42BnFNVRT07iK9M+bKoEKgU7CVBciB5nKBlpIEtc+KE3JpgU4ItT8/bRWiAQ+8vZ7Dtuk9xPpAbkHyOY7jrHtqgNA+eDxuHMA0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VFOvHh4O; arc=fail smtp.client-ip=40.107.208.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E351FC0;
+	Thu, 24 Sep 2026 11:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790248934; cv=none; b=Jm3m0NGTRipPGN15YU+69/Bj/TXlb2rSbNDBrzg6kZiRT/B/FFk8zQ0WwkLbrUiXe5Ax03izykK7hpXLtaTkyK1tuFeKFz750V9VpoIrIQfw54zY5/MFGOwrHC2q5r4Ez39SaAlscZSyS6k7Sk6vS68UHodzKXw+q9lLhIsySYY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790248934; c=relaxed/simple;
+	bh=rze6CINkdKHlKzndBHRiT/PxC1IWBZnOHLGEvwtg5eE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tOYiXy8+KeUNj/p7CXCcS/A2+GAfwCo01M7SKGnimoJM39GJve+PZgdSHj20P9btmXKmlU38jVs40jo3YNTibgySZzuo5tS3+1X2DP2bUoZKPbt+f/+gP6fDkQsW1csUxmUoz4hGCtEv/JquAi5QU9K9R0tOazhpQy7bzjo7VBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLcpADPq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VFOvHh4O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K/5kxpOECzRBaWb3hVCa201SgpCkDakaxdohj0yo3rdMEtWF5aHMN9N1LO3KPRBIi38UzWTf5AKAN9GyCoNLEB0WSJROSn71HW50flzAf9ry9q5TXBNS8m6tIWf9FnG2+5DjKK7vXC8HnJYDx/oBZ73dbIu6jKzJCevUY5Th9Afdc8uGXa6WHvP5hX6eTW4e9ZCMYXELdtmJCnz+XEGSugOSiPUtgl77LhX7/6dRvuC+w+xOSWpfsAGwFjM4sbuD9sCFm2znkbhP0SjsiZl09XyX1wvGQav1SIZNYJVgJfdAOwu2KQp6Cy/wv/KbxF5sigLBRAXust3Gc6I5BGDoKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h3y9OGj4aTsmm9kM+ENbJjz7dcbxws9oyVQm/yypd1Q=;
- b=gViL07HidZ0/thuGjGIjf9Br+MXms6yOo8chwU9JYvL2A/tCil808bHoWEcDzMqlu0Dd+g/Cpbrojyb0OS9tpnFJRsnzwQpDTnWan8hr+zCjlUSFeUu+CMfx4wNSykZt8gsJSgtOZcWtYCnxE1gJX2HwSZqvb75nMvayHxhAfoR9P1r6tXGJLPxSZY+AAZ0HWvChjqnHMFTh8IxwSsNeh8dmf5hNPoIhkQterNwa2KMH2soVx4qDCDw/itokb77AZNudX0uRpuLS7g4COM8yzvuykwHfCU4RJbqtJ2Ti5EguPpdxcBVartkhe4yA/bM9jLRdwhajN0ZmozAUqJAGUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3y9OGj4aTsmm9kM+ENbJjz7dcbxws9oyVQm/yypd1Q=;
- b=VFOvHh4OVUUmKdcjWQsdcpqMEQl676ww/SfpclP395FdXGgkQTqAXxpsZ/lwJmDZyqd/vKnUdy1oSQoxtT+FolhGTIw5y2LFQdm8ppENrmwdxZJFQKirxrzL2yRkPomi3XW+rxLvJw1jyAR8DD4fWZa1rgFw4oD8ZktTmRk5m7U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- DM4PR12MB6183.namprd12.prod.outlook.com (2603:10b6:8:a7::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.14; Thu, 24 Sep 2026 08:59:52 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0428.018; Thu, 24 Sep 2026
- 08:59:52 +0000
-Message-ID: <574bd4c5-62a1-4004-9b35-21fc05b5a2c1@amd.com>
-Date: Thu, 24 Sep 2026 09:59:45 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] driver core: Rely on supplier driver binding at
- link creation
-From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, alucerop@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
- rafael@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20260921191239.4249-1-alucerop@amd.com>
- <20260921191239.4249-2-alucerop@amd.com>
- <2055ead9-201f-4878-aa09-07d7fc3ab3c2@bootlin.com>
- <3ab9bc66-f3b3-465b-b736-09df1da2fcac@amd.com>
- <5e60ed2c-b50f-4949-9edb-ede80436f501@amd.com>
-Content-Language: en-GB
-In-Reply-To: <5e60ed2c-b50f-4949-9edb-ede80436f501@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PR1P264CA0123.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2cd::8) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLcpADPq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9961F00893;
+	Thu, 24 Sep 2026 11:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790248932;
+	bh=ctwayjHvAj5rO/ALkHWHVIPs9SRT5FDkZw4zngF4FsM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=SLcpADPq4EEZy7CYxm/FfpTvXhOBlV7k27ge46+15mUNqtekLfytiC8znGla+1Snm
+	 PSbv92RSUcUv8ktM2tceZ9jdbEwC8TEK3PQTCtuySbOVTtsTySc7dsgsv/ScPTeVF8
+	 +JF2qqpHzRTVTTLnIT7nMcFBnjMaGkSGLudLCsU3Ix3do4DOJ90KnBEK+xYnM0mcGj
+	 H5k6GSwsaDxcQo4fcythrZ1YRBgmS802wUIdl4m/qMSmatE8+BseUx2JXkwVVqypy0
+	 ezrylZ6VcLud0LgaGtIs5YFzeuzIQDJh4PMRLOmx9POlfqEiLVL+b/y1OT7BZwTuEG
+	 GQ56tSjWThlVw==
+Message-ID: <cf2fe0bb-a79a-420e-8b65-3c8dfa5fadbb@kernel.org>
+Date: Thu, 24 Sep 2026 13:22:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|DM4PR12MB6183:EE_
-X-MS-Office365-Filtering-Correlation-Id: fde42373-2bbf-429f-3f64-08df1a1a3201
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|23010399003|366016|1800799024|4143699003|56012099006|11063799006|10067099003|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	K9aIwL4iL0r7a9z42cewS/WR7q2BlSgG38MjIdi2xCTvOKye1kcfvqkMLVAGJBCNfCi1JQ0cYLE86sBsxTYg0TgBe34pq9aV6UmkaevPH00XSAXY76xQSFzoSOVmvOiW6mC6sjTFdzfdOzNqRlD2OLD3NzgSLA7XP8Kl9CooTyIlRAW8z02jPZgNGjspHi1Uvxf1gqb8Xh+sG+0W+U029sCc8kalqfaktfrE59Xq0pXqKOw95vN03zqtk8ZIQW/ARMD95dm+Hj+d5LPD2to+//Q13VfFOfHIoF6X9VDSNsZGI5EN5ndhV47HSI+nh7fhtzrDOMhiURbENTzFVvlzofioXFan+E+YdNxwc+iUAYbtaatD2NfnVsXq+6tmmDIXE35notMr69AcAoLT/c+UYd8mktWq6A3qKkT5EG8UmazQ2Vim+QcZ9uCmBTQh/yJzOek/0UNBt1+K6ev1orlJ97ETZkwhFoHJpcI8fCC6evmNIsNpKN2PxnF5fbl1w5yAvaMO1o/mngoT4pMZULgPkEtkiHW0vlDBYc1tT6lOSIjBaBvBaNJIF6F6o/e0aZXXO/rjm0G3vMLLM80Cz6l3wsyMz7XyToPIdv1kYq1pfc/E7gy9YgksXDq6CXs7M5MvuBnH5Ri7WVeIGFXGS7g2HtEJwEG6cZN6zf8HIiH3oGg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(366016)(1800799024)(4143699003)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1RpTy9kdUZyV0RRUmsrcnQycTU2dXIvNElMdmowQnZwNkNWRVZpOG82ZUNB?=
- =?utf-8?B?RHovNUJ0WVd5V1cvQlJKcG9LZDRYUnFzR1hFTCtQaFV1RU82L3hSdFhtZnM1?=
- =?utf-8?B?VXhnNmFMYnhqb2VYUWtlUGY5RjE5bjdXeGt0UW9JeVFnQVZtNXd6UGFvNGx3?=
- =?utf-8?B?TzV6SEljcnA1emlmWGNrUGU1WjNlTmN2Z1MwMUJTamNoSUYxNGZsTTYybTJr?=
- =?utf-8?B?UlZndFdjQzVVRzhKSGJ1blFLUURud3h5VzNRQ2VTWmQ2Z2l0dGJvK1FUdkQ5?=
- =?utf-8?B?czYrN1pmZUFYLytrRVFPUkRZa0R1eitnd1Flekc2RGJRUVQyMitidVJtclp0?=
- =?utf-8?B?NXI3NG5oZUFqZGx2UGZZUENZbUFORTMvNVQ0ZGg1ZG9vc252WWVzdTRSQU5x?=
- =?utf-8?B?SVg4aGx4bWFUQjhKVUhjT2x5OGV5VXRNT2JPd01XZ20wSGZGM1VUaFFQUTNo?=
- =?utf-8?B?aXF3MmR5MVdqcVF1NFAxVGFjdzYvM2FlSHZqZCtneXdQMCs0NUh5ekFBNlJr?=
- =?utf-8?B?Uk5vZFEwNzdvMjNwaFVHZGFZRkJJOXZncm1leS9SaWdVbVZCemVKN0k4VjZm?=
- =?utf-8?B?SHF3TzNlc3k2UnF0cDFZTndZcG9QUmFvMG1VZGtGY0lzaGhpZWo5dXA5bGVp?=
- =?utf-8?B?bDZweVZPWFV3S1dNQS8xVjMxTy8wVmJ3TWVxckV5eEkyQ0VxNzh2Qm9GK0xq?=
- =?utf-8?B?YUVrdUVBNDUrc01IQUlaRkVaZDgvRDZzVnh5NTF0b0o5MytJcDYwZVBaTi81?=
- =?utf-8?B?MmpSSldTUmlndjYrRmRoRGZ1TFA4NHJsTzl1S215NU5MZURMUW1BT2pDdG85?=
- =?utf-8?B?T3E1V3p6WGdRcjlFS2ZWd2xYWDhWa2pRMU9YMWRXOVNHZzFOWmdPek0rSG1p?=
- =?utf-8?B?TExLTjZWNXc1aDdZT0paTnJ5VnBpZ3pJK3hmTDArUTVZRVNwdkxrMTk4VmNl?=
- =?utf-8?B?QzVRQzJXd0R6WWxPRlppdlVVUVlzZUhCME1sQlhtdEJpZm9KeWFnbUQrbEtF?=
- =?utf-8?B?Y1ZkdERMUHRyRm1yUXNyL2ZuZ1NwNGZieWZMZVJDRXVZV2FFOXN5eTYvZGFo?=
- =?utf-8?B?dDdXcmxlZm5JdVFrbWFUdk5EZHN1WW83enpmeVlRcEpidFZDK1RpN0t2ZEVa?=
- =?utf-8?B?a21QYnFGQ2JST2Y5NXpVOTQ2dUp3dEhXcDRycWZtVW5NWmtBSUJRR1pIakpP?=
- =?utf-8?B?Qk05QXJyQlFTRmROejVmd2JPbjBaTkRpVkQrWS8zbUQxclAva0NjWThBRmFF?=
- =?utf-8?B?SG8xa0VYR3BqVWNmaVhsZ2NQNWZiS3pOY0s4cUlpbVlYZEZ5L0VuRS9xR1FS?=
- =?utf-8?B?bHJyYjVQbHpIMjVkT2w4UG5abmpJTWJJeHROSy9XU01kajUxNTVHajNRRm93?=
- =?utf-8?B?TVNWK2lVcHlqZVk5UFArdHd1N0Z3d3RORjBicEU5VHUwNzhFeFFVeVRMSzgy?=
- =?utf-8?B?MXZaRHNtdUdXbHlQQmxsamNhVkpKMFlCRWZZR0RudGVKdzU3RlpEV3BlVUVY?=
- =?utf-8?B?U2VXamtKaDBHUmV5MnU3Y3ZhMWlNc0hOL3Z0aVZzS3ltSHFwMXo0TkRoaEFD?=
- =?utf-8?B?dy96ekhiaXh6bENrSUIwRWZWMk1nazRJQXNQQ2VOT1JOZU4xN0FRMGMrdU96?=
- =?utf-8?B?M1FSaFBzTnp6YVEzWE1SVGpybUlTSjBLVzFvTXZRdWJkV21xT1NxZnBtcmcr?=
- =?utf-8?B?R3lZMW5KZTl0alpuMWh3RWFBWExpbi9vQS8wcmpqaEYrV3hhSFhSUlZ1eUlJ?=
- =?utf-8?B?NjZrWjd6YTh6NjlkcTJ5SlBWekgwU0RORGVmWWJrQ0NEOWZHdmdGb0g3bGNP?=
- =?utf-8?B?WjhtTTRQVHc5TUg0eVZiVWJRNEZFVlNFT1ZQNnpuME1JS0xwbW1yeGdSVUcz?=
- =?utf-8?B?cFFjQ3pTK3dRQUcxVXhyT1pISTBwS0l3THh4aldUMkR3SmZRZVd5ZmhwTzZF?=
- =?utf-8?B?YjNmaTZTM1dUUE1sVk02cjB1aVlLNGhlR3Z5ZlY4dUNUQ1BOKzdaZHgvSjR5?=
- =?utf-8?B?WW9hTG82WTlITmUwYTBXd05Mbkl3RUtoNzBVTXQ3MXM4QjhWUE9jVEtxckNL?=
- =?utf-8?B?dnVWcWkxMmJsZlRYSUwyUVBSaTZlMlNNUlpJUzl4VDBrRis1KzdJQ3Zwd3Zq?=
- =?utf-8?B?ZDNKMlNRVG8ybFowWHF3UXVOalhHWTBKYUFNQ2hzZkk1ZkhidjdhdXhBV253?=
- =?utf-8?B?MWtyYnJMVC9WOVM0WnV2MEJVc3BKSFV3djVwOEJpRW15V0FkL24rYVhMWm5o?=
- =?utf-8?B?bWdZR2VJYzNDQlBKTytmL25ieHQ0eG9UZVE3K0V0M0VlRXhyL1lZT3hUL1Uz?=
- =?utf-8?B?Yit3RXpGdk9jTEhPbEtPTmJnek1FNFF2ZnJNTjhRclhoZVF0aWp1Zz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fde42373-2bbf-429f-3f64-08df1a1a3201
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2026 08:59:52.1732
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RGAV6P3aE91VWMcwvCqkPWRaiwALN6Bwma1PvHr6srdTYpqINljhg7+Mm8MREsHQAiwkLyFU+tWT+SztTlvuxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6183
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
+ frames into the block
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
+ <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
+ riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, kernel-team@meta.com
+References: <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
+ <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
+ <aqpczrtIwSG948iv@gmail.com>
+ <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
+ <aqvHHHuWJ-y4WRJZ@gmail.com>
+ <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
+ <aq1RaH0eE0hZfNpr@gmail.com>
+ <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
+ <arE3UjqPsxctWckg@gmail.com>
+ <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
+ <arJqVWN-prvI_0NP@gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <arJqVWN-prvI_0NP@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On 23/09/2026 10:58, Lucero Palau, Alejandro wrote:
->
-> On 23/09/2026 09:49, Lucero Palau, Alejandro wrote:
->>
->> On 22/09/2026 22:39, Maxime Chevallier wrote:
->>> Hi,
+On 9/22/26 14:34, Breno Leitao wrote:
+> Hello David,
+> 
+> On Tue, Sep 22, 2026 at 01:33:51PM +0200, David Hildenbrand (Arm) wrote:
+>> On 9/21/26 16:31, Breno Leitao wrote:
 >>>
->>> On 9/21/26 21:12, alucerop@amd.com wrote:
->>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>
->>>> Differentiate between driver binding from PM dependency when a device
->>>> link is created. Rely on the device being bound to a driver for 
->>>> validating
->>>> the supplier as some device drivers could not support PM.
->>>>
->>>> Check for supplier's PM state only if consumer specifies PM_RUNTIME 
->>>> flag.
->>
->>
->> Hi Maxime,
->>
->>
->>> Hmmm this patch seems to have broken pretty much all the boards I'm 
->>> running that
->>> boot with DT. I'm getting logs such as :
+>>> The EFI table is only written when there is a memory failure. That is
+>>> the only thing that writes to it:
 >>>
->>> platform 16100000.serial: Failed to create device link (0x124) with 
->>> supplier
->>>    16000400.clock-controller
+>>> 	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
 >>>
->>> Some are just hanging at "Starting kernel..." from u-boot.
+>>> You can see it on patch "mm/memory-failure: efi: record
+>>> hardware-poisoned frames into the poisoned-memory table"
 >>>
->>> Then boards go silent as the uart dies, and I'm using that uart to 
->>> access the
->>> device's console :(
->>>
->>> Found with a WIP stmmac runner for netdev CI.
->>>
->>> Unfortunately I don't have much logs to share, as this just prevents 
->>> the boards
->>> from booting :( With this patch reverted, all boards boot fine
+>>> Then, when the kernel kexecs into a second kernel, the EFI config table
+>>> is queried and the pages are poisoned from it at boot, as they are
+>>> getting into the buddy allocator, in __free_pages_core().
 >>
->>
->> It is obvious I did not understand well the implications ...
->>
->>
->> I think the supplier device lock could be the problem behind the 
->> hanging and how the supplier initialization is checked now based on 
->> the driver bound behind the console issue ...
->>
->>
->> I have a couple of embedded boards to play with so I will try to 
->> reproduce the problem for getting more info. FWIW, all was fine with 
->> the server I tested this, no device link errors at all.
->>
->
-> I have to amend my words ... the server had not exactly the same code 
-> :-)  I have to copy things in and out due to security measures and 
-> sometimes is hard to have all synced.
->
->
-> I think the sashiko reports could be a good start to fixing this.
->
+>> I am not sure that is really the right place. That means we only poison free
+>> memory.
+> 
+> Right, and that is a real gap. A frame only reaches __free_pages_core()
+> if it is handed to the buddy allocator, so anything this kernel already
+> took from memblock -- the memmap itself, early page tables, percpu --
+> can be sitting on a recorded frame with nobody noticing.
+> 
+>> Shouldn't we poison as soon as we initialize the memmap, and check
+>> whether any memblock allocations ended up on that poisoned memory and bail out?
+> 
 
-FWIW, the problem seems to be the scoped guard. I had a plain 
-device_lock for using device_is_bound as required then device_unlock 
-after it, but moved to scoped_guard blindly ... .
+Thanks for the history on this.
+
+> 
+> That is close to what I had until v2, where the bitmap was walked at EFI
+> parse time and every set unit was memblock_reserve()d:
+> 
+> 	for (off = 0; off < bitmap_size; off += PAGE_SIZE) {
+> 		...
+> 		for_each_set_bit(bit, map, nbits) {
+> 			u64 unit = off * BITS_PER_BYTE + bit;
+> 
+> 			memblock_reserve(phys_base + unit * unit_size, unit_size);
+> 			nr_units++;
+> 		}
+> 		...
+> 	}
+
+Yes, that what I have in mind.
+
+> 
+> Set the full v2 patch at
+> https://lore.kernel.org/all/20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org/
+> 
+> Kiryl raised some concerns, such as x86 does not keep memblock past
+> boot,
+
+The memmap contains that information. If it's a scalability problem with
+thousands of hwpoisoned 2M ranges, don't try to keep kernels running on utterly
+broken systems, seriously.
+
+> and kexec picks placement from iomem_resource via
+> walk_system_ram_res(), which memblock_reserve() does not touch. 
+
+Where we could scan the memmap. If we find scalability problems with that they
+should be addressed there.
+
+> So the
+> frames stay out of buddy, but the next image can still be placed on
+> them, and since nothing sets PG_hwpoison none of the existing hwpoison
+> users see them either.
+
+Memblock knows which ranges were poisoned. It shouldn't hand these out, neither
+to memblock users or the buddy.
+
+And is it knows that these ranges are poisoned, it should be marking them as
+hwpoisoned when we initialize the memmap.
+
+Kiryl probably remembered the unaccepted-memory hammer and thought of hwpoison
+of being just another nail. It's not. hwpoison is a proper kernel infrastructure.
+
+> 
+> Most of the discussion happened here:
+> https://lore.kernel.org/all/aog_uH5fTsJzXjjx@thinkstation/
+> 
+> v3 then poisoned the frames from mm_core_init(), right after
+> memblock_free_all(), taking them back off buddy. 
+
+They should have never been exposed to the buddy.
+
+> That breaks with
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT, where the struct pages above
+> first_deferred_pfn do not exist yet at that point, and Kiryl's other
+> point was that the shape was wrong regardless: flag the frame on its
+> first add to buddy, not after buddy is up.
+
+The flags should be set earlier and pages never even handed to the buddy.
+
+Handing out poisoned pages from one allocator to hide them from another
+allocator is stupid.
+
+> 
+> See the discussion at:
+> https://lore.kernel.org/all/apGbDOnPm5VXP5ez@thinkstation/
+> 
+> Which is how it ended up in __free_pages_core().
+>>>> From that point on, the memmap should be our reliable source of information.
+> 
+> Sure, is this approach better?
+> 
+>   - the bitmap is read as the struct pages are initialised, and the only
+>     thing it does there is SetPageHWPoison();
+> 
+>   - __free_pages_core() keeps the hook but tests PageHWPoison() instead
+>     of the table, so a recorded frame is still held back before it can
+>     enter buddy;
+> 
+>   - nothing else queries the table.
+
+Why should we give pages we know are poisoned to the buddy? And why should we
+let memblock hand out poisoned ranges?
+
+I'm sorry, it's all hacky.
+
+I see why we want a bitmap from kernel A to kernel B, but once the kernel is up
+we have established infrastrcture to identify poisoned pages.
+
+Just look at the mess in the patch here I replied to. Pairing bitmap scans with
+memmap scans ... hacky.
+
+> 
+> One caveat on "exactly once": if that means one pass at one point in
+> boot, it is what v3[1] did -- hwpoison_init_boot() from mm_core_init(),
+> right after memblock_free_all() -- and it does not work. With
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT the struct pages above
+> first_deferred_pfn are not there yet at that point.
+> 
+> Link: https://lore.kernel.org/all/20260826-hwpoison-kho-v3-5-6f79c4b605bc@debian.org/
+> 
+> So I _think_ we want to do it once per frame, as that frame's struct
+> page comes up. __init_single_page() is the single function they all pass
+> through. Is __init_single_page() the right place to query the bitmap and
+> mark is as poisoned?
+
+That's what I originally had in mind, but I am not sure if it's the right time
+to query it.
+
+Assume we tell memblock about the poisoned ranges early and it would not hand
+them out.
+
+memblock_free_pages() would never get called in the first place.
+
+All pages would look like they are simply allocated by memblock.
+
+We'd have to traverse the poisoned ranges in memblock once to set the hwpoisoned
+bits.
+
+> 
+>> For this code here, just remember globally whether we hwpoisoned any page. If
+>> so, just walk the memmap. If not (the 99.9999% of all systems, no need to scan
+>> anything).
+> 
+> Yes, and the counter already exists: num_poisoned_pages and we can query
+> it. I am also planning to add something similar in the EFI table, like
+> an ->empty field, which will be cleared when a bit is set, avoiding
+> doing bitmap walk on the happy path (not a single poisoned page).
+> 
+> Anyway, range_hwpoison() short-circuits on it today,
+> 
+>       if (!size || !atomic_long_read(&num_poisoned_pages))
+>               return poison;
+> 
+> so memblk_nr_poison_init() can gate on the same thing and walk the
+> memmap, with no EFI call left in drivers/base/memory.c at all. That
+> disposes of the misleading name there too, which was where this
+> started.
+> 
+> Now, the half I am less sure about is checking whether a memblock
+> allocation landed on a recorded frame. Poisoning at memmap init cannot
+> prevent that -- the memmap is itself a memblock allocation, so the
+> struct pages do not exist while the early allocations are being made --
+> it can only detect it afterwards, as a pass over memblock.reserved
+> before memblock_free_all().
+> 
+> The alternative is to bring v2's memblock_reserve() back purely to keep
+> the early allocator off those frames, and still poison at memmap init
+> so the flag is there for everyone else. That gets both properties, at
+> the cost of frames that are Reserved and HWPoison and never in buddy,
+> which I have not thought through for unpoison.
 
 
-I think for my impending multipf support I only need something like this:
+Thanks for the history on this. I tried to summarize my thoughts above. I might
+be wrong.
 
+-- 
+Cheers,
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -761,7 +761,7 @@ struct device_link *device_link_add(struct device 
-*consumer,
-          * SYNC_STATE_ONLY link, we don't check for reverse dependencies
-          * because it only affects sync_state() callbacks.
-          */
--       if (!device_pm_initialized(supplier)
-+       if ((!device_pm_not_required(supplier) && 
-!device_pm_initialized(supplier))
-             || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
-                   device_is_dependent(consumer, supplier))) {
-                 link = NULL;
-
-but when I studied the code I thought checking for "the supplier has not 
-been fully registered yet" was not being achieved if the registration 
-meant driver binding, what honestly confuses me because checking for 
-device_pm_initialized implies looking at the dev->power.in_dpm_list what 
-seems to only happen at device_add time ... so I wonder how the 
-device_link_add could use a supplier device without device_add completed.
-
-
-Anyway, I will go with the simpler change posted above in v2, and keep 
-studying the other potential problem not directly connected to my 
-multipf support.
-
-
->
-> Apologies for the any inconvenient.
->
-> Thanks,
->
-> Alejandro.
->
->
->>
->> Thank you for testing it!
->>
->>
->>
->>>
->>> Maxime
->>>
->>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>>> ---
->>>>   drivers/base/core.c | 27 +++++++++++++++++++--------
->>>>   1 file changed, 19 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
->>>> index 4c0c373998a1..eb6d87e35d76 100644
->>>> --- a/drivers/base/core.c
->>>> +++ b/drivers/base/core.c
->>>> @@ -834,15 +834,26 @@ struct device_link *device_link_add(struct 
->>>> device *consumer,
->>>>       device_pm_lock();
->>>>         /*
->>>> -     * If the supplier has not been fully registered yet or there 
->>>> is a
->>>> -     * reverse (non-SYNC_STATE_ONLY) dependency between the 
->>>> consumer and
->>>> -     * the supplier already in the graph, return NULL. If the link 
->>>> is a
->>>> -     * SYNC_STATE_ONLY link, we don't check for reverse dependencies
->>>> -     * because it only affects sync_state() callbacks.
->>>> +     * If the supplier has not been fully registered yet with a 
->>>> driver
->>>> +     * return NULL.
->>>>        */
->>>> -    if (!device_pm_initialized(supplier)
->>>> -        || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
->>>> -          device_is_dependent(consumer, supplier))) {
->>>> +    scoped_guard(device, supplier) {
->>>> +        if (!device_is_bound(supplier)) {
->>>> +            link = NULL;
->>>> +            goto out;
->>>> +        }
->>>> +    }
->>>> +    /*
->>>> +     * If consumer asks for PM to use the link and the supplier 
->>>> has not
->>>> +     * PM initialized, or if there is a reverse (non-SYNC_STATE_ONLY)
->>>> +     * dependency between the consumer and the supplier already in 
->>>> the
->>>> +     * graph, return NULL. If the link is a SYNC_STATE_ONLY link, we
->>>> +     * don't check for reverse dependencies because it only affects
->>>> +     * sync_state() callbacks.
->>>> +     */
->>>> +    if (((flags & DL_FLAG_PM_RUNTIME) && 
->>>> !device_pm_initialized(supplier)) ||
->>>> +        (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
->>>> +         device_is_dependent(consumer, supplier))) {
->>>>           link = NULL;
->>>>           goto out;
->>>>       }
+David
