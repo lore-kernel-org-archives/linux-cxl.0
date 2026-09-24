@@ -1,317 +1,367 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazolkn19012048.outbound.protection.outlook.com [52.103.66.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E351FC0;
-	Thu, 24 Sep 2026 11:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790248934; cv=none; b=Jm3m0NGTRipPGN15YU+69/Bj/TXlb2rSbNDBrzg6kZiRT/B/FFk8zQ0WwkLbrUiXe5Ax03izykK7hpXLtaTkyK1tuFeKFz750V9VpoIrIQfw54zY5/MFGOwrHC2q5r4Ez39SaAlscZSyS6k7Sk6vS68UHodzKXw+q9lLhIsySYY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790248934; c=relaxed/simple;
-	bh=rze6CINkdKHlKzndBHRiT/PxC1IWBZnOHLGEvwtg5eE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tOYiXy8+KeUNj/p7CXCcS/A2+GAfwCo01M7SKGnimoJM39GJve+PZgdSHj20P9btmXKmlU38jVs40jo3YNTibgySZzuo5tS3+1X2DP2bUoZKPbt+f/+gP6fDkQsW1csUxmUoz4hGCtEv/JquAi5QU9K9R0tOazhpQy7bzjo7VBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLcpADPq; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD874749FC
+	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 12:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.66.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790252430; cv=fail; b=I4XKH3DbLig+sZLuKKSzPXGuWPpTiEkQhSks4GFHjAVqf3zEidesbm+D8gb10rOBxDAFVCFs6kgCJrHof82GEMK4cPVE5oaZuNtkf7T9ecuxOfCa+eAlpNlleo6v2yEMJ/isgtslg2Z6uZySi+EY1GvzZv54gIcW2nLM9i9T3/g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790252430; c=relaxed/simple;
+	bh=T9zWlA5kvXHm/ttPIFC+fIzE//rH/a028HQ6BQzdQhg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b2ZGhmeyaRFWoyC38T8r2m7t0qX+8K1oyHMBiFCvw8vidusWgiwvX9u5Folt5wdig9zzKgpm7+UYcvqLbT/iJwnteGW7w6W8RXNDAp3HKZM4+xwufFSSGvRv/kdbwYoA/Qs1izqMGN/qaa0ERm+uSTkv+QjxT4tCZDj5EW8O/Cs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=H0JMUh2R; arc=fail smtp.client-ip=52.103.66.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLcpADPq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9961F00893;
-	Thu, 24 Sep 2026 11:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790248932;
-	bh=ctwayjHvAj5rO/ALkHWHVIPs9SRT5FDkZw4zngF4FsM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=SLcpADPq4EEZy7CYxm/FfpTvXhOBlV7k27ge46+15mUNqtekLfytiC8znGla+1Snm
-	 PSbv92RSUcUv8ktM2tceZ9jdbEwC8TEK3PQTCtuySbOVTtsTySc7dsgsv/ScPTeVF8
-	 +JF2qqpHzRTVTTLnIT7nMcFBnjMaGkSGLudLCsU3Ix3do4DOJ90KnBEK+xYnM0mcGj
-	 H5k6GSwsaDxcQo4fcythrZ1YRBgmS802wUIdl4m/qMSmatE8+BseUx2JXkwVVqypy0
-	 ezrylZ6VcLud0LgaGtIs5YFzeuzIQDJh4PMRLOmx9POlfqEiLVL+b/y1OT7BZwTuEG
-	 GQ56tSjWThlVw==
-Message-ID: <cf2fe0bb-a79a-420e-8b65-3c8dfa5fadbb@kernel.org>
-Date: Thu, 24 Sep 2026 13:22:00 +0200
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="H0JMUh2R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uxXvGfTBI9GIVxFS8N5KpAFUojg40LPr4yyprlc1P87P7OELyK0VnWxNBYZzyy/wdCbAlvc5zTlaEcLvfkmOO32xeLqjofiZb6tthg3exePLCFH7g/SUjuX64Qo1nOP2lfx7sWOM/OwK/4Lzg/f+5Y6V71ZfAgWD5NdQ9c2s7rWtQG9NKM6RV8YAKmpDkbj/ARWvRr6DvVFzvV45uadb4KtpOj6pcQzOmNS7LIMWJvavFKkFoyIAaRq56sUzN962bB8HXhkqnXdx/37YLTc4agi0/Z2xPK8nopCR8PfWRguRg0854u/0Kd7MdF02sFzQQifVvCAaOjJ0vaoJMG3ORg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3Pg88/0sXW/G8H8zZJZSyXeCuWopeMB4Jaw4vNpJ1+8=;
+ b=o9KJuQRWRQ13xNZI70ufAnWuRBu0s0p8KcEvB0nWjk4odieYVhU555uNmXN2PHD2Lpna/bBDq26ADdmuKQmfYCH6bOSc2PTgGHj3n3CPy4hAR4FxFy0yi7Ga/yuRCSznA1Get8hTyLJB3tupO4ToUtvKwOCjFROR6/oW58tBxUiDOUUyn0bzgKCUak38n+x/q+8Wk6DMZsau5EvMNvdLGftETkJlDT+1AfJ5QY/4toYRRjoWyNab215qJ67e52Int0mkLCJSPwIx8DF/kZaRNyHImxURQZ8F1bGEbe8d41TAY1B49KACca03/ZQpSfTepF+AplPM8Y7OHi60IWiN3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Pg88/0sXW/G8H8zZJZSyXeCuWopeMB4Jaw4vNpJ1+8=;
+ b=H0JMUh2R76jwGdWs7NiZELm1IZx4iEQR4FRnpbV5e959Rq5bfu39/1Bcocmz1o/yZYfetT8Z4khW8/j4FQ9xbdHxTWcv7V2AIlS9AVqpKOQoZxa7PE71az1C+BDnWhtfUZksI+Ax/IKtpLfSzAIwK4SFTjlj/Wk5WUbi5/cA9lGKa2eVizUMTxrJ0JoTXGQTSw4ZFubOyGp91RwGcXXiDg7MlNjQGB1Qkso9bgm0HUgmZ3yXekto5tiKR6wle8/zz0QhKR9BLhjOH5AYG+Z/vFMTbD14AjR+fNUoveBNy/CflLRyHBl8ABsZWraDt7n2H3+U5mecLJ/hXvkbvfiFww==
+Received: from SE3PR04MB8922.apcprd04.prod.outlook.com (2603:1096:101:2e9::7)
+ by TYUPR04MB6912.apcprd04.prod.outlook.com (2603:1096:400:35f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.18; Thu, 24 Sep
+ 2026 12:20:20 +0000
+Received: from SE3PR04MB8922.apcprd04.prod.outlook.com
+ ([fe80::3450:f139:5238:8f58]) by SE3PR04MB8922.apcprd04.prod.outlook.com
+ ([fe80::3450:f139:5238:8f58%5]) with mapi id 15.21.0451.014; Thu, 24 Sep 2026
+ 12:20:20 +0000
+Message-ID:
+ <SE3PR04MB8922CC005D47473207768FD7F3812@SE3PR04MB8922.apcprd04.prod.outlook.com>
+Date: Thu, 24 Sep 2026 20:20:09 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/6] hw/riscv/virt: Add CXL support to the RISC-V virt
+ machine
+To: Chen Pei <cp0613@linux.alibaba.com>, palmer@dabbelt.com,
+ alistair.francis@wdc.com, mst@redhat.com, imammedo@redhat.com,
+ sunilvl@ventanamicro.com, jic23@kernel.org
+Cc: pbonzini@redhat.com, liwei1518@gmail.com,
+ daniel.barboza@oss.qualcomm.com, zhiwei_liu@linux.alibaba.com,
+ chao.liu@processmission.com, anisinha@redhat.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, junjie.cao@intel.com, guoren@kernel.org,
+ qemu-riscv@nongnu.org, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+References: <20260907093735.2753-1-cp0613@linux.alibaba.com>
+ <20260907093735.2753-2-cp0613@linux.alibaba.com>
+Content-Language: en-US
+From: "Nutty.Liu" <nutty.liu@hotmail.com>
+In-Reply-To: <20260907093735.2753-2-cp0613@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TPYP295CA0007.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:9::12) To SE3PR04MB8922.apcprd04.prod.outlook.com
+ (2603:1096:101:2e9::7)
+X-Microsoft-Original-Message-ID:
+ <a23d3890-5b5d-4f17-ab61-bbf6bf306ab1@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/9] drivers/base/memory: count inherited poisoned
- frames into the block
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- kas@kernel.org, kexec@lists.infradead.org, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Brendan Jackman
- <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- hannes@cmpxchg.or, shakeel.butt@linux.dev, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com,
- riel@surriel.com, harry@kernel.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, kernel-team@meta.com
-References: <20260915-hwpoison-kho-v5-7-3bc7a57bd503@debian.org>
- <de41b78a-8471-4832-be0c-35d410a4499a@kernel.org>
- <aqpczrtIwSG948iv@gmail.com>
- <b8ad366a-a019-4462-9dce-f687f60ee7f2@kernel.org>
- <aqvHHHuWJ-y4WRJZ@gmail.com>
- <caac2cb9-8faa-49bc-ae8a-47c5fd7b7e58@kernel.org>
- <aq1RaH0eE0hZfNpr@gmail.com>
- <fb2237be-f7bc-4ad6-bcb0-7c3ef53136ef@kernel.org>
- <arE3UjqPsxctWckg@gmail.com>
- <ad2ed3ed-959a-4af3-a2f5-4c21e5af62d6@kernel.org>
- <arJqVWN-prvI_0NP@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <arJqVWN-prvI_0NP@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 9/22/26 14:34, Breno Leitao wrote:
-> Hello David,
-> 
-> On Tue, Sep 22, 2026 at 01:33:51PM +0200, David Hildenbrand (Arm) wrote:
->> On 9/21/26 16:31, Breno Leitao wrote:
->>>
->>> The EFI table is only written when there is a memory failure. That is
->>> the only thing that writes to it:
->>>
->>> 	action_result() -> efi_hwpoison_record_pfn() -> set_bit()
->>>
->>> You can see it on patch "mm/memory-failure: efi: record
->>> hardware-poisoned frames into the poisoned-memory table"
->>>
->>> Then, when the kernel kexecs into a second kernel, the EFI config table
->>> is queried and the pages are poisoned from it at boot, as they are
->>> getting into the buddy allocator, in __free_pages_core().
->>
->> I am not sure that is really the right place. That means we only poison free
->> memory.
-> 
-> Right, and that is a real gap. A frame only reaches __free_pages_core()
-> if it is handed to the buddy allocator, so anything this kernel already
-> took from memblock -- the memmap itself, early page tables, percpu --
-> can be sitting on a recorded frame with nobody noticing.
-> 
->> Shouldn't we poison as soon as we initialize the memmap, and check
->> whether any memblock allocations ended up on that poisoned memory and bail out?
-> 
-
-Thanks for the history on this.
-
-> 
-> That is close to what I had until v2, where the bitmap was walked at EFI
-> parse time and every set unit was memblock_reserve()d:
-> 
-> 	for (off = 0; off < bitmap_size; off += PAGE_SIZE) {
-> 		...
-> 		for_each_set_bit(bit, map, nbits) {
-> 			u64 unit = off * BITS_PER_BYTE + bit;
-> 
-> 			memblock_reserve(phys_base + unit * unit_size, unit_size);
-> 			nr_units++;
-> 		}
-> 		...
-> 	}
-
-Yes, that what I have in mind.
-
-> 
-> Set the full v2 patch at
-> https://lore.kernel.org/all/20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org/
-> 
-> Kiryl raised some concerns, such as x86 does not keep memblock past
-> boot,
-
-The memmap contains that information. If it's a scalability problem with
-thousands of hwpoisoned 2M ranges, don't try to keep kernels running on utterly
-broken systems, seriously.
-
-> and kexec picks placement from iomem_resource via
-> walk_system_ram_res(), which memblock_reserve() does not touch. 
-
-Where we could scan the memmap. If we find scalability problems with that they
-should be addressed there.
-
-> So the
-> frames stay out of buddy, but the next image can still be placed on
-> them, and since nothing sets PG_hwpoison none of the existing hwpoison
-> users see them either.
-
-Memblock knows which ranges were poisoned. It shouldn't hand these out, neither
-to memblock users or the buddy.
-
-And is it knows that these ranges are poisoned, it should be marking them as
-hwpoisoned when we initialize the memmap.
-
-Kiryl probably remembered the unaccepted-memory hammer and thought of hwpoison
-of being just another nail. It's not. hwpoison is a proper kernel infrastructure.
-
-> 
-> Most of the discussion happened here:
-> https://lore.kernel.org/all/aog_uH5fTsJzXjjx@thinkstation/
-> 
-> v3 then poisoned the frames from mm_core_init(), right after
-> memblock_free_all(), taking them back off buddy. 
-
-They should have never been exposed to the buddy.
-
-> That breaks with
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT, where the struct pages above
-> first_deferred_pfn do not exist yet at that point, and Kiryl's other
-> point was that the shape was wrong regardless: flag the frame on its
-> first add to buddy, not after buddy is up.
-
-The flags should be set earlier and pages never even handed to the buddy.
-
-Handing out poisoned pages from one allocator to hide them from another
-allocator is stupid.
-
-> 
-> See the discussion at:
-> https://lore.kernel.org/all/apGbDOnPm5VXP5ez@thinkstation/
-> 
-> Which is how it ended up in __free_pages_core().
->>>> From that point on, the memmap should be our reliable source of information.
-> 
-> Sure, is this approach better?
-> 
->   - the bitmap is read as the struct pages are initialised, and the only
->     thing it does there is SetPageHWPoison();
-> 
->   - __free_pages_core() keeps the hook but tests PageHWPoison() instead
->     of the table, so a recorded frame is still held back before it can
->     enter buddy;
-> 
->   - nothing else queries the table.
-
-Why should we give pages we know are poisoned to the buddy? And why should we
-let memblock hand out poisoned ranges?
-
-I'm sorry, it's all hacky.
-
-I see why we want a bitmap from kernel A to kernel B, but once the kernel is up
-we have established infrastrcture to identify poisoned pages.
-
-Just look at the mess in the patch here I replied to. Pairing bitmap scans with
-memmap scans ... hacky.
-
-> 
-> One caveat on "exactly once": if that means one pass at one point in
-> boot, it is what v3[1] did -- hwpoison_init_boot() from mm_core_init(),
-> right after memblock_free_all() -- and it does not work. With
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT the struct pages above
-> first_deferred_pfn are not there yet at that point.
-> 
-> Link: https://lore.kernel.org/all/20260826-hwpoison-kho-v3-5-6f79c4b605bc@debian.org/
-> 
-> So I _think_ we want to do it once per frame, as that frame's struct
-> page comes up. __init_single_page() is the single function they all pass
-> through. Is __init_single_page() the right place to query the bitmap and
-> mark is as poisoned?
-
-That's what I originally had in mind, but I am not sure if it's the right time
-to query it.
-
-Assume we tell memblock about the poisoned ranges early and it would not hand
-them out.
-
-memblock_free_pages() would never get called in the first place.
-
-All pages would look like they are simply allocated by memblock.
-
-We'd have to traverse the poisoned ranges in memblock once to set the hwpoisoned
-bits.
-
-> 
->> For this code here, just remember globally whether we hwpoisoned any page. If
->> so, just walk the memmap. If not (the 99.9999% of all systems, no need to scan
->> anything).
-> 
-> Yes, and the counter already exists: num_poisoned_pages and we can query
-> it. I am also planning to add something similar in the EFI table, like
-> an ->empty field, which will be cleared when a bit is set, avoiding
-> doing bitmap walk on the happy path (not a single poisoned page).
-> 
-> Anyway, range_hwpoison() short-circuits on it today,
-> 
->       if (!size || !atomic_long_read(&num_poisoned_pages))
->               return poison;
-> 
-> so memblk_nr_poison_init() can gate on the same thing and walk the
-> memmap, with no EFI call left in drivers/base/memory.c at all. That
-> disposes of the misleading name there too, which was where this
-> started.
-> 
-> Now, the half I am less sure about is checking whether a memblock
-> allocation landed on a recorded frame. Poisoning at memmap init cannot
-> prevent that -- the memmap is itself a memblock allocation, so the
-> struct pages do not exist while the early allocations are being made --
-> it can only detect it afterwards, as a pass over memblock.reserved
-> before memblock_free_all().
-> 
-> The alternative is to bring v2's memblock_reserve() back purely to keep
-> the early allocator off those frames, and still poison at memmap init
-> so the flag is there for everyone else. That gets both properties, at
-> the cost of frames that are Reserved and HWPoison and never in buddy,
-> which I have not thought through for unpoison.
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SE3PR04MB8922:EE_|TYUPR04MB6912:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78c3dcc2-3b9a-448a-9267-08df1a363291
+X-MS-Exchange-SLBlob-MailProps:
+	iS5pQZgsAQDZd5pLvsexcGXRgbvG27NWtkDZdHuz01eHefeASp3stehSsdjLPYSA1TiX7Wy66l1XhlEYDPAPXQ6SqfFXjSZDYJlkBU87V3IPfHSjVo9Bi8QIIRSYWkOZP9iIeyBapKl/xjVNlynpZVNFfbfU3nHwzyQSI+ZxM3bPesGRXfpiovCKYmftzaisRms5nCBAMRHY2yMY+FHXCocyHymG7Z12IOyLMiNuKI4J87BlThmp6rEl+JxzuxTfe4b6rgnFQ1qxvlda0bKEWpANf1B461E0WazIQ8OPgO1pFc4ZYWId7JYzlqVExcMjWoDr6L2MvwE6TVJdTOr5aZd5hSjgjMbU5HWAcmf+s/LWLh47hadhf6gMuD6xb/bKfez/mc++Lrv8/xiZLIE9CHe35w3Lc5NRwVgTCTjkhjkU9YebOzPC0FQTYWED5gj+m+G0GpsJlUkvm6/tqs02EXc9pz+q5lZSYv6e19M0SxqAc3iwM85U6NzT0Axg+QRxS+hv3qnuGn0sxQRsX32PiAvht7hC05x86rBozKdrjRER5oYoS7Jcy8Hue2mCH2JLn/wYtFyKptITocySNJw8fUXS/7Xak5YtXZMk4TXZPlHoic2ZqC98pk4eszKRk7Xd/Cbyk+0Dm7XaUkdPM3DMusR14hB1kgQSWN6u2KPZbSm1H2dE96EVktVhG5W4yHN7T3Eny2r3CYegb1wNnSirDImQsRSTWxMeyisWKEiRPHVaHdFHWhTGehRsPPq9Q8pZ38wXVm/5cA4U5Doh/Tm6RUdrQpKqa/EilWI4h40kk7fk1gnnG1R6iBCulPASH32t
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|41001999006|55001999006|19101099003|22091999003|23021999003|6090799003|24121999003|15080799012|5072599009|8060799015|19110799012|4140399003|25010399006|40105399003|52005399003|2607281247196008|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SE5XbTVpWnVOSGd2azh1bFZjYzhEbkhXQnhXUUJjWjhaY3dOdExjTEFmeGtY?=
+ =?utf-8?B?ZVFCV1lSZTBDVnNqV0RJcGpOWSs2RzVZQWF6U0pPZGtwRmxJT1dhOVhYZ3Qx?=
+ =?utf-8?B?RmNBWUcraHc5SkdUUUdlVWVIYkFXWURPMkQ2aU9vakZDNWx5STBZaW1vZkFT?=
+ =?utf-8?B?NDBVeVJtdlcrTEJlOHJNbmtkMi82bG9kVjhjd3BNMEErRGNtNzZqZnlhNGZ5?=
+ =?utf-8?B?VXI3a0w4azVsNHRsWTZRYlVtL2p0b3NvcUdVVitneCtxN09oRzMwQS9yRVp0?=
+ =?utf-8?B?STZBeFNuZ2VabndUYjRRUXZXYmxCcGxRR3ErM0c3NXRIeDRlR3FvN04rbnhN?=
+ =?utf-8?B?M0t5ejc4YzU5WFYxdTlMZlh4WTRScjhLeHBzTUh5TExhQUN3NmhrVGN2b1ZR?=
+ =?utf-8?B?MkRKLzdGVmdKek5DWENsbk1SSFZDaDFiTjkyOTFUNGRxRllBTWl6cGhWQWZT?=
+ =?utf-8?B?T3NjczhOV0FEdVpnWFVUUjNMMHFvakVRMkU2SzdraEVWb1V0MnhGYzZVb0d4?=
+ =?utf-8?B?S04yYTNhOEpxK3NpU3I3VStZb2czNUhxTmZWVEtVdERJbGc4MHpTMnlMMkxT?=
+ =?utf-8?B?YnVEbWExcWtoTmtqYWEwZzQydXpqK0dSaktKQUhOZWpEM1dZN2pvb3EzUG1F?=
+ =?utf-8?B?ZEtPMisyZkhtcFR5TG0vWk1qeFVZS3VZSU5sUFBBSitWb3lIb1YyTnZEZHdJ?=
+ =?utf-8?B?eEpZcWFkLzZOWEJHK3pxT3p3RnowaHRsK3BWZXhpZDhnbWdjTUxmYnJlcldZ?=
+ =?utf-8?B?T25YTkxOYTBHaXAra2IwZDZsbllncnJGN1l3WW1UalFFRFZLMFo5OFJtNmZn?=
+ =?utf-8?B?ZkxUU0duaU9pY0pVR1l4VTJVSkRzUSsyTzk3dXVnWnhXdm9kSjBCSUkwLyt3?=
+ =?utf-8?B?eHhzcVJmcGVKdVIyWmpBL0NldUVxNWhpZzNpZjZ0enVLbFNpdCtLN25ROWMx?=
+ =?utf-8?B?ek1kTjdibUZxYlZZMjZORmM2VWZGZXV4a0wrY1VaTlR3TGFuOFRNemMwSGdH?=
+ =?utf-8?B?dUx4dmJRaURCbWIzTnlUaFNZTXJRLzh6dUkyMEFBc1duQ3kvR3JTTmI5blRU?=
+ =?utf-8?B?UktMam1CWTl2WCs2Q2NNRUI1NTFwMjFHWDFiVzM5d2dJNWFHd3BNc2tiRmVU?=
+ =?utf-8?B?SFJyZFZMTzB0RXR6RndiSVJkOUltVkc2YUgxdml0UlFlYXNpNDRvMzlvcDBI?=
+ =?utf-8?B?bng1L2EwSGpEMWx0UHhTaHE0WldGbXNydTB6NmdjY2crOW1wTXZFYzFKY1pI?=
+ =?utf-8?B?WWZyMlVueEtwRXRBRUJTZHVCRldxTGpOb0FqL2I0MCs5WXFpOVI2RHRZMFNP?=
+ =?utf-8?B?Wkc2Qjk0dFY5S2NGTzRtTjRsZFN0THdscU5xcTduTlRnbzNSc2ZmUFFEckta?=
+ =?utf-8?B?dUdBRklKU2JnbUZtNnNWZjF0N1V3cjFQODRjbFMwTm5oeGMyOXRIVytVeXRH?=
+ =?utf-8?B?V0Z0S2VnTW5La2ZwQTgvajFMVGxObUkxK3N3S2Z3PT0=?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QXhoQVdPWDZBQ295cU9NaEpRdTRsR2hQc0k1dTh3UEx3OUQrT3JEcU9SM2tT?=
+ =?utf-8?B?WjZGdUtpNTdmQ09FaHNRVitCYU5weDRydTBneUlzbUROWWFFREVxNEZ4bnZZ?=
+ =?utf-8?B?RjJQbDhoSUhXMWN3bUdMUDZRMjNzSmZvNG02VHVaY0hMak9IYUc2L0ZVczRD?=
+ =?utf-8?B?R3JLU0ozMkdZaWRLTTFYVXNTeG15RGpTVE9rNEpkNVZHbDRhUUlWNGV5YWJj?=
+ =?utf-8?B?QnZNRFJEMDlYWU5zWk1zVkthYzhjRkRuYWFSK1h3a1BMNW1oaldlV1RXTmhk?=
+ =?utf-8?B?NlVTbWxrYlJET1RIaEd4ZHFsSVBrU0s0UG52Y0VBUUpWeVV1Tk1PM2V0TGtF?=
+ =?utf-8?B?VUtRT3lyODd4VXVUTlBUYThOR1A0OU5tNlRWSm1sdUtHUkVDNCswV2FxNXE3?=
+ =?utf-8?B?Mk9ia041V3VqdEVsZWU5aVVSaGpEWWpYVEduSGNYZ290SEhOV3lyQWNoREkx?=
+ =?utf-8?B?UHl0NDRMSGJQdHFzN1VvNE92cmtHRDFPSFk0bmFnaDdkN2VXMCtNWWlSU1l1?=
+ =?utf-8?B?NThNSGFZSTFVNHlObDFrUC9xUDNJSlFFMUppRHUwejVpM2dEd1RUZ0plTm9P?=
+ =?utf-8?B?SkIrMVpaSXBTMkltVDhDUU82RjZxMkkxWFV0NXZtSll0Y3NFTjI5NW5ybUVv?=
+ =?utf-8?B?S0FKcWd6UFV3MVlkMEZPeEpJRlY4SzM1QTZYakd6NVI0MlMybklqdXNESUlk?=
+ =?utf-8?B?QzZpNUt6VnNvTGY4RWlYemVPd00wejd1MHhEbnhsbGZCWk40VWxHRGZkd210?=
+ =?utf-8?B?Vkh1aDczWnRGRUM4aUdIdURaVTVuWkJKRWhjNUpwNGF6em92eTNpejVRVHhn?=
+ =?utf-8?B?bHVZY1pOK1E3ZTRQbmIxOHMzVDlCbkJ0VWtVODZUVnlySlUwQjlIRnBxendH?=
+ =?utf-8?B?dm1DajRqMnpJTEtjcThja3NYWHpmSlRYd0U2ci8zazRMUHdFV2dZcUNUa0Ni?=
+ =?utf-8?B?L015bDYwcFkzZzdNZTd1YUFNOXM3Wlh0Q1dtaG5Bay91WGJkdnZrTk5hcGxK?=
+ =?utf-8?B?M2RkT1g5Vkd6WWJJdDFuWFJiNk9rUXRVUVVHSDVCcWh0TCtaU2VmMVNNNklh?=
+ =?utf-8?B?b0dxODI3WDlpbG9yZUVVNkR2aGF6MFRtYmN3L2g3MVZJY2FINmZsbjFMam1y?=
+ =?utf-8?B?a2RuRkwyNDN3dmtxbWNzdkFYbXFkNEF6U0hJTytEN0Y3RDdDRjBuc3ViNHYz?=
+ =?utf-8?B?SHAyRWk2eG04YnlxSHRZQjNtcXNacVl1M3JrcGRYYzFrUXA4S2U5OE9ub1g0?=
+ =?utf-8?B?STVUblZSNnhCbTFMS05uZmJoV2VlVHR3RkhOaGk3MkFNRk1Kdlc4d2tBTXJB?=
+ =?utf-8?B?MWJVZTVyQmJ2MlBsTHJoajJtcEhyUndwYWJjOEo4aDBwa3ErRHNGV2R6K1hu?=
+ =?utf-8?B?bktsQ0dVamYxbStjSjNJOGZLN2RhTXVuNFJwTHRlOTVhUXpMVGduaHhMZ0Nh?=
+ =?utf-8?B?OWtUQ2kwa2RyTDVqRWNKS0Q4SmJzZUo2czVUcWFhYW55YnJTdW9CYkVBb3hN?=
+ =?utf-8?B?aEJQMUFKUVBQTG1peWdUc3FmUjJTSG0vbTdnS3FiSUkyVDFuZ1JZdVJHQVN5?=
+ =?utf-8?B?c3hUQkVKVmo2c3d3bmRlbUJZWnVTaWZqUzRmWkoxcCt3OEJyT21kaDhpZUs0?=
+ =?utf-8?B?WjNwRzd0R0wvbG1leW4vSWU0VGo0K3Qwem1iQm9BajAwVHR3bkU1dmNLbzJu?=
+ =?utf-8?B?c2dXc1BZNTYwUEJTM2t3cUhlN0cvbUU4UmFYRWRVaU12bHpabUkwdUhObXVK?=
+ =?utf-8?B?QWhIbzZkMGFFTHNzTmNJaHFvUFZRdEVRU3ZsUHgydW9sUjFrRXRZVnFwM2VT?=
+ =?utf-8?B?cS84bVdRWFZDaFFLNEU4aVpHOVZEMWtnWGg0dTV6bjdHdjlOaTlDSnZoOFp6?=
+ =?utf-8?Q?jWZHSsKOSCyDG?=
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-c3e7a.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78c3dcc2-3b9a-448a-9267-08df1a363291
+X-MS-Exchange-CrossTenant-AuthSource: SE3PR04MB8922.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2026 12:20:19.8862
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR04MB6912
 
 
-Thanks for the history on this. I tried to summarize my thoughts above. I might
-be wrong.
+On 9/7/2026 5:37 PM, Chen Pei wrote:
+> Enable CXL support on the RISC-V virt machine following the same
+> approach used by the ARM virt machine:
+> - Add PXB and ACPI_CXL Kconfig selections
+> - Add CXLState and PCIBus pointer to RISCVVirtState
+> - Register CXL machine properties via cxl_machine_init()
+> - Create CXL host register region above the PCIe high MMIO region
+> - Call cxl_hook_up_pxb_registers() and cxl_fmws_link_targets() at
+>    machine_done time
+> - Map Fixed Memory Windows above the CXL host register region
+> - Add ACPI0017 device in DSDT and build CEDT table in virt-acpi-build.c
+>
+> Reviewed-by: Junjie Cao <junjie.cao@intel.com>
+> Tested-by: Junjie Cao <junjie.cao@intel.com>
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
 
--- 
-Cheers,
-
-David
+Thanks,
+Nutty
+> ---
+>   hw/riscv/Kconfig           |  2 ++
+>   hw/riscv/virt-acpi-build.c | 20 ++++++++++++++++
+>   hw/riscv/virt.c            | 47 ++++++++++++++++++++++++++++++++++----
+>   include/hw/riscv/virt.h    |  3 +++
+>   4 files changed, 68 insertions(+), 4 deletions(-)
+>
+> diff --git a/hw/riscv/Kconfig b/hw/riscv/Kconfig
+> index d06ac26648..c2f8c5d2da 100644
+> --- a/hw/riscv/Kconfig
+> +++ b/hw/riscv/Kconfig
+> @@ -66,8 +66,10 @@ config RISCV_VIRT
+>       select VIRTIO_MMIO
+>       select FW_CFG_DMA
+>       select PLATFORM_BUS
+> +    select PXB
+>       select ACPI
+>       select ACPI_PCI
+> +    select ACPI_CXL
+>   
+>   config SHAKTI_C
+>       bool
+> diff --git a/hw/riscv/virt-acpi-build.c b/hw/riscv/virt-acpi-build.c
+> index 8e516ec114..2be8c6d572 100644
+> --- a/hw/riscv/virt-acpi-build.c
+> +++ b/hw/riscv/virt-acpi-build.c
+> @@ -29,12 +29,16 @@
+>   #include "hw/acpi/aml-build.h"
+>   #include "hw/acpi/pci.h"
+>   #include "hw/acpi/utils.h"
+> +#include "hw/acpi/cxl.h"
+>   #include "hw/intc/riscv_aclint.h"
+>   #include "hw/nvram/fw_cfg_acpi.h"
+>   #include "hw/pci-host/gpex.h"
+> +#include "hw/pci/pci_bus.h"
+>   #include "hw/riscv/virt.h"
+>   #include "hw/riscv/numa.h"
+>   #include "hw/virtio/virtio-acpi.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_host.h"
+>   #include "kvm/kvm_riscv.h"
+>   #include "migration/vmstate.h"
+>   #include "qapi/error.h"
+> @@ -518,6 +522,17 @@ static void build_dsdt(GArray *table_data,
+>           acpi_dsdt_add_gpex_host(scope, PCIE_IRQ + s->num_sources * 2);
+>       }
+>   
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        Aml *cxl_dev = aml_device("CXLM");
+> +        aml_append(cxl_dev, aml_name_decl("_HID", aml_string("ACPI0017")));
+> +        Aml *method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+> +        aml_append(method, aml_return(aml_int(0x0B)));
+> +        aml_append(cxl_dev, method);
+> +        build_cxl_dsm_method(cxl_dev);
+> +
+> +        aml_append(scope, cxl_dev);
+> +    }
+> +
+>       aml_append(dsdt, scope);
+>   
+>       /* copy AML table into ACPI tables blob and patch header there */
+> @@ -925,6 +940,11 @@ static void virt_acpi_build(RISCVVirtState *s, AcpiBuildTables *tables)
+>                      s->oem_table_id);
+>       }
+>   
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
+> +                       s->oem_id, s->oem_table_id, &s->cxl_devices_state);
+> +    }
+> +
+>       if (ms->numa_state->num_nodes > 0) {
+>           acpi_add_table(table_offsets, tables_blob);
+>           build_srat(tables_blob, tables->linker, s);
+> diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+> index f3a1cc5ba3..70090ca70a 100644
+> --- a/hw/riscv/virt.c
+> +++ b/hw/riscv/virt.c
+> @@ -56,6 +56,8 @@
+>   #include "hw/pci/pci.h"
+>   #include "hw/pci-host/gpex.h"
+>   #include "hw/display/ramfb.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_host.h"
+>   #include "hw/acpi/aml-build.h"
+>   #include "qapi/qapi-visit-common.h"
+>   #include "hw/virtio/virtio-iommu.h"
+> @@ -540,6 +542,29 @@ static void create_fdt(RISCVVirtState *s)
+>       create_fdt_pmu(s);
+>   }
+>   
+> +static void cxl_host_state_init(RISCVVirtState *s)
+> +{
+> +    MemoryRegion *sysmem = get_system_memory();
+> +    MemoryRegion *mr = &s->cxl_devices_state.host_mr;
+> +    hwaddr base;
+> +
+> +    if (!s->cxl_devices_state.is_enabled) {
+> +        return;
+> +    }
+> +
+> +    base = virt_high_pcie_memmap.base + virt_high_pcie_memmap.size;
+> +    base = ROUND_UP(base, 64 * KiB);
+> +
+> +    memory_region_init(mr, OBJECT(s), "cxl_host_reg", 64 * KiB * 16);
+> +    memory_region_add_subregion(sysmem, base, mr);
+> +
+> +    /* Map the Fixed Memory Windows above the CXL host register region. */
+> +    base += memory_region_size(mr);
+> +    base = ROUND_UP(base, 256 * MiB);
+> +    cxl_fmws_set_memmap(base, UINT64_MAX);
+> +    cxl_fmws_update_mmio();
+> +}
+> +
+>   static FWCfgState *create_fw_cfg(const MachineState *ms, hwaddr base)
+>   {
+>       FWCfgState *fw_cfg;
+> @@ -625,6 +650,13 @@ static void virt_machine_done(Notifier *notifier, void *data)
+>       BlockBackend *pflash_blk0;
+>       RISCVBootInfo boot_info;
+>   
+> +    cxl_hook_up_pxb_registers(s->pci_bus, &s->cxl_devices_state,
+> +                              &error_fatal);
+> +
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        cxl_fmws_link_targets(&error_fatal);
+> +    }
+> +
+>       /*
+>        * An user provided dtb must include everything, including
+>        * dynamic sysbus devices. Our FDT needs to be finalized.
+> @@ -716,6 +748,7 @@ static void virt_machine_init(MachineState *machine)
+>       MemoryRegion *system_memory = get_system_memory();
+>       MemoryRegion *mask_rom = g_new(MemoryRegion, 1);
+>       DeviceState *mmio_irqchip, *virtio_irqchip, *pcie_irqchip;
+> +    DeviceState *gpex_dev;
+>       int i, base_hartid, hart_count;
+>       int socket_count = riscv_socket_count(machine);
+>   
+> @@ -871,6 +904,8 @@ static void virt_machine_init(MachineState *machine)
+>               ROUND_UP(virt_high_pcie_memmap.base, virt_high_pcie_memmap.size);
+>       }
+>   
+> +    cxl_host_state_init(s);
+> +
+>       /* register system main memory (actual RAM) */
+>       memory_region_add_subregion(system_memory, s->memmap[VIRT_DRAM].base,
+>                                   machine->ram);
+> @@ -898,10 +933,12 @@ static void virt_machine_init(MachineState *machine)
+>               qdev_get_gpio_in(virtio_irqchip, VIRTIO_IRQ + i));
+>       }
+>   
+> -    riscv_gpex_pcie_init(system_memory, pcie_irqchip,
+> -                   &s->memmap[VIRT_PCIE_ECAM], &s->memmap[VIRT_PCIE_MMIO],
+> -                   &virt_high_pcie_memmap, &s->memmap[VIRT_PCIE_PIO],
+> -                   PCIE_IRQ);
+> +    gpex_dev = riscv_gpex_pcie_init(system_memory, pcie_irqchip,
+> +                                    &s->memmap[VIRT_PCIE_ECAM],
+> +                                    &s->memmap[VIRT_PCIE_MMIO],
+> +                                    &virt_high_pcie_memmap,
+> +                                    &s->memmap[VIRT_PCIE_PIO], PCIE_IRQ);
+> +    s->pci_bus = PCI_HOST_BRIDGE(gpex_dev)->bus;
+>   
+>       s->platform_bus_dev = riscv_create_platform_bus(mmio_irqchip,
+>           &s->memmap[VIRT_PLATFORM_BUS], VIRT_PLATFORM_BUS_IRQ,
+> @@ -972,6 +1009,8 @@ static void virt_machine_instance_init(Object *obj)
+>       s->acpi = ON_OFF_AUTO_AUTO;
+>       s->iommu_sys = ON_OFF_AUTO_AUTO;
+>       s->num_sources = VIRT_IRQCHIP_NUM_SOURCES;
+> +
+> +    cxl_machine_init(obj, &s->cxl_devices_state);
+>   }
+>   
+>   static char *virt_get_aia_guests(Object *obj, Error **errp)
+> diff --git a/include/hw/riscv/virt.h b/include/hw/riscv/virt.h
+> index e516898f9a..a7b74d10c6 100644
+> --- a/include/hw/riscv/virt.h
+> +++ b/include/hw/riscv/virt.h
+> @@ -24,6 +24,7 @@
+>   #include "hw/core/sysbus.h"
+>   #include "hw/block/flash.h"
+>   #include "hw/intc/riscv_imsic.h"
+> +#include "hw/cxl/cxl.h"
+>   
+>   #define VIRT_CPUS_MAX_BITS             9
+>   #define VIRT_CPUS_MAX                  (1 << VIRT_CPUS_MAX_BITS)
+> @@ -66,6 +67,8 @@ struct RISCVVirtState {
+>       OnOffAuto iommu_sys;
+>       uint16_t pci_iommu_bdf;
+>       uint16_t num_sources;
+> +    CXLState cxl_devices_state;
+> +    PCIBus *pci_bus;
+>   };
+>   
+>   enum {
