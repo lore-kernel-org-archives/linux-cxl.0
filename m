@@ -1,114 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A200175A97;
-	Thu, 24 Sep 2026 02:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2643531F985
+	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 02:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790218189; cv=none; b=fR7CGdQqqu4EMsKgk8SC+xD6tq+o/OLwMGUFhIW4BACua+j64GznK/72CZo9BkwMyHe4Y30AKzn2JAX5oAzzbm3a5p6pEPj7TGPbfk7mbO+rUxET1xrNB+LaiDWHVd0SvvtnvUFLQaXkk58Q/hGhqHGZB0mwgGwjmmB4bXr/UZI=
+	t=1790218245; cv=none; b=j2MgFlLNDHMYtn8wVI4n/r0xpySXU6vRY2KlqdF1H9uNXAnSfsIQS6WZziT0MPVGrk9vK7NkQ+gnTUUkoCOXJ/fdammjWXoSozWS5bjihFiDGDlqf1R6x2yWZzrSliyTQsGK381f4Exs+H/n2Vyhf+rqHgd+1JlVg18gd7IF/9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790218189; c=relaxed/simple;
-	bh=BLQzwM9CA3pvKcX6gamTi/W9oZ+qPtKWcjCSvOYd8O8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LqzSNKmTBAcZn3oSGtgpDqqytbqNHqawEjKZ9dWRhLwTInQ3sAEjnmhvvavQRGRl+GVQfEMahYN1UkdTD12g3/sPz3x34qy5ENfCi7uWsKw8A0iAkJUVJDTalIBxT8x7jQH5JP6e87p5ip6QtAR53UOcMuN0rvCMex/YZGEPO+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnWvXjPz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790218245; c=relaxed/simple;
+	bh=HZdsv4xPU2mPZq3H1+rj/rzm1nmW2gVvYpGBVmgJSZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IvJsLd816OlR6ZbGjsXwmzqvte/3mgZN2U03D9iLOaYaOmMo+5P3xLTr0amfC9jU5GjW6IpCwuxA2ujvSpDWR4Nq7msd4f5ANiYV0OjTnYZ34xjQ6btsQBpvfraG/NtuXo3bjVo1smeFuVCHkwmKrK7JvxQzf6FSatNKUP/XoEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Q7Uj6jDM; arc=none smtp.client-ip=74.125.227.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnWvXjPz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6021F000FF;
-	Thu, 24 Sep 2026 02:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790218187;
-	bh=nqKrv9j7nwDwuCkYFcrrxbsaXIr+3HPgnP9RBtNkUtk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mnWvXjPzkgHH6kgadH3CpVG3/VA5eagnZtRckk8d0VkjGBBkB806jU1X6jt1mWPD5
-	 tUpaWV31reVS3JiKeFz0ljtBOJdhtxllzI0RCx0gV2T8q3BsNyNHb5TGIEEGXdW96S
-	 Va0SWGANeyCGUjewwLXMYdqtsutrwjKpPzdLt6cYbJOeGSLAObJG9gWtW6MMHKhhrM
-	 jRijO53y+HzTilCwrRoUFvLAVgbqppYN3UgQD2sCicvKT+pIehNUwaXroy4uvjiQV7
-	 eyDGkqadQd9tKMmOev8TNldNgsvgBK9HY9JocFG2ME9JOUSUQm8vmevck2gE5z7Fin
-	 /Pa8jbHuFPZlQ==
-Date: Thu, 24 Sep 2026 03:49:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: Srirangan Madhavan <smadhavan@nvidia.com>, Alison Schofield
- <alison.schofield@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, Dave
- Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, Ira
- Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, Alex Williamson
- <alex.williamson@redhat.com>, <vsethi@nvidia.com>,
- <alwilliamson@nvidia.com>, Sai Yashwanth Reddy Kancherla
- <skancherla@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>, Manish Honap
- <mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, Richard Cheng
- <icheng@nvidia.com>, <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v13 06/15] cxl: Make HDM reset helpers available to
- built-in PCI code
-Message-ID: <20260924034940.2e22b300@jic23-hlaptop>
-In-Reply-To: <6dc03976-faa8-49cb-9b74-680e957f2f9e@amd.com>
-References: <20260922083924.2451158-1-smadhavan@nvidia.com>
-	<20260922083924.2451158-7-smadhavan@nvidia.com>
-	<6dc03976-faa8-49cb-9b74-680e957f2f9e@amd.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Q7Uj6jDM"
+Received: by mail-pj2-f12.google.com with SMTP id d9443c01a7336-2d91ede8035so14502385ad.3
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Sep 2026 19:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1790218243; x=1790823043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CPGTCvzEDldSCqnC4/5DFnL7iPnVDOTde0NQNs3OjKo=;
+        b=Q7Uj6jDMw/E5feAf62war9B+nm2mIzExY+zMKqN1nXocTpJ3XguuyaECqD7NWQ9/nv
+         +P/gFafhB7CHIDRRCwnJVmf5VDQdQhS1Ph+80ZPec2oH3C/Kw7P6pX1sRi0mou85tWNh
+         xeUGtIgBUbCNK2NdtALO3vMbniismqsdU0IJgKMIjacVrEljkI4uD5pCrJzQl6DNO/4L
+         deZAV4Wivfb7vriljsT2IvE2mG/ClB9nGZ3dOAT9RPkyxM7anYqe6gI/lYnL+SC7rFiT
+         oPB1kYiL2hjD5lrYJ4qb2DKHBdtJGV/Xs4fiR9EJbMIitcywlL3QPiQpOxbIPPCe1KdC
+         e18g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790218243; x=1790823043;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CPGTCvzEDldSCqnC4/5DFnL7iPnVDOTde0NQNs3OjKo=;
+        b=eWMAxjA5koFuT2Asnm+bKiFbcmB150Q9nofqqm9w6pRkgcuCXlSk5kghe3O+6ochQv
+         EFMlkA8yHiwHgi41UNW89KX/inJ9Bo/eMgY0O0k7hwwWqiRz9pwMUOXUnKpOMje2Fbzf
+         pFkmUdIIlL2+r7Y+jqxhWdwJLyV+okr20Rze/jSxfwGxmVoW2yVgGYYaZwl8rddDF9Ai
+         P5i6TceqZG3wrIM3RpJpS3OMEjqReEE4r1QFBV77up9wyrrG6dahxyu3USt1ZA0p6MQr
+         3f8mxnu8GVtg2uPZZCUWx/kf9NOwYIw+BTTTJcE25v0/TAt/GeK5/cjMxgtt9pjioGQV
+         gHfg==
+X-Forwarded-Encrypted: i=1; AKwUvBzMZouluohNU3jfzR7O7S/joruHi8QVvLlP8wasiXZie3FaILwE4tm2EUm4XljB5wgmAtCDt8MZ66Y=@vger.kernel.org
+X-Gm-Message-State: AFuF++lQt27/Iuojh+jz7KJ8kwl7BB4hsAxD3sySzlFetJHf4i6/ueXM
+	eB9zQIPn0+lFLQqZsKYMMHcvAaCuABVNrNfVWwbMlbV0zdSo4s3JCze/1fzBAYGpT2c=
+X-Gm-Gg: AYBFou2aSplIms3dW+4JXJ9mgIdexaLHMoCgHGIMu7M6KF4P8v2pdK0B/3aP7H8w7GE
+	OHN2qnfmCqjpJFIeM0SxfDn/BDnAMzxPsn6rOOWGgt+KooimGXm5yUSTCPZEedhf+1IbWcOybOx
+	wqb1wIXsVjr63MfHqqQYsB7rtNF+DVU7TW1TyWJZ4L1PdUHzbSLpNo27vclZYPo0K+9gk9VZy7i
+	veM1LC0P6CMLTWyD5KzOtFVlVInyVhY474jvgJrDul4zE8HiH1xVOyPxyrfA0JDVTwyAcSSq3eE
+	LhhfrueI9HTm4twk8/4TCJq7mkfonGSA32qLN3mzfjLtiXcoCduUOsbm6qHwHKC06AOwrtlFfAN
+	L/8ETpOKEvLDcr6DLpbZygEs0324ezpCXhBtRHF6P+pwoub/6CQc9W5lkfBiPo9DXnVi+s2cag6
+	tNzm1GdmcJKKOhj+GDXajxstMnikfR0c72t7GXmfQOQxAE+BMPFrkVhsADQ7D9nZP1VOjtWnAxH
+	vWmmRg8ZiF3lKsxtZ6p
+X-Received: by 2002:a17:902:fc48:b0:2d9:484:861d with SMTP id d9443c01a7336-2df7e24f14cmr8581875ad.10.1790218242834;
+        Wed, 23 Sep 2026 19:50:42 -0700 (PDT)
+Received: from n232-176-004.byted.org ([36.110.163.100])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2df6a5a4f6bsm18638185ad.15.2026.09.23.19.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 19:50:41 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Muchun Song <songmuchun@bytedance.com>,
+	muchun.song@linux.dev
+Subject: [PATCH v3 0/2] dax: Fix Device DAX range allocation validation
+Date: Thu, 24 Sep 2026 10:50:33 +0800
+Message-ID: <20260924025035.1265035-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Sep 2026 16:40:05 -0500
-"Cheatham, Benjamin" <benjamin.cheatham@amd.com> wrote:
+While working on the HugeTLB Vmemmap Optimization (HVO) generalization,
+Sashiko reported that memmap_init_zone_device() could be asked to
+initialize struct pages with a large-page order for a physical range
+that was not naturally aligned to that order.
 
-> On 9/22/2026 3:39 AM, Srirangan Madhavan wrote:
-> > PCI can be built in while CXL_BUS is modular, so PCI reset code cannot
-> > depend on helpers provided by the cxl_core module.
-> > 
-> > Build the HDM resource helpers under CONFIG_CXL_RESET and restrict their
-> > exports to cxl_core.
-> >   
-> 
-> I think you should squash this patch into 3/15. Having this earlier does two things:
-> 1) it makes it more clear why you're moving everything earlier in the set, and 2)
-> bisects across the pass 3 patches will all result in the same configuration.
-> 
-> An alternative option would be to refactor the preceding 3 patches in-place and then
-> move all of the helpers to this file in this patch, either would work.
+Following the Device DAX call path confirmed that the condition was
+reachable. Device DAX range validation checks the range size, but not
+its start address. An unaligned range can therefore reach
+memmap_init_zone_device() after the device binds, and a subsequent write
+to a userspace mapping may trigger a kernel panic. With the help of an
+LLM, I was able to reproduce the failure.
 
-There may indeed be some better orderings that make it easier to review
-still - though this is already a great improvement on the earlier versions.
+The automatic resize path has a related problem. It can split an aligned
+size request across arbitrary free gaps, consume an unaligned fragment,
+and leave the resize partially applied when a later allocation fails.
 
-> 
-> > Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> > ---
+This series first fixes the mapping sysfs attribute to propagate
+validation failures. It then validates both the start and size of every
+Device DAX range and makes automatic resize account only for usable
+aligned space.
 
-> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > index 57995777af0d..30470799e059 100644
-> > --- a/drivers/cxl/core/Makefile
-> > +++ b/drivers/cxl/core/Makefile
-> > @@ -1,12 +1,12 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > +obj-$(CONFIG_CXL_RESET) += resource.o  
-> 
-> This file should probably be called reset.c instead of resource.c to match the
-> Kconfig functionality.
+The changes were tested by booting the kernel in a VM with a fragmented
+dynamic DAX region. Misaligned mappings were rejected with -EINVAL,
+aligned allocation and multi-range mmap read/write succeeded, and an
+allocation exceeding the usable aligned space returned -ENOSPC without
+leaving a partial allocation.
 
-I'm not keen on that change because the functions are core CXL stuff
-that just happens to also be useful in reset.  You could change the object
-name via some Kconfig magic so that matches, but the c file itself
-wants to remain with some generic name.
+v3:
+- Collect Reviewed-by from Dave Jiang
+- Serialize size alignment validation with alignment updates to avoid a
+  partial shrink after a concurrent alignment change (reported by Sashiko)
+- Document the size validation serialization in the commit message
+
+v2: https://lore.kernel.org/all/20260922082551.874901-1-songmuchun@bytedance.com/
+- Return explicit errors before Device DAX range allocation
+  (suggested by Dave Jiang)
+- Move the mapping error reporting fix before the range alignment
+  validation fix for independent backports (suggested by Dave Jiang)
+- Keep the alloc_is_aligned() name to avoid unrelated helper renaming
+  (suggested by Dave Jiang)
+
+v1: https://lore.kernel.org/all/20260915095621.3744167-1-songmuchun@bytedance.com/
+
+Muchun Song (2):
+  dax/bus: fix mapping attribute error reporting
+  dax/bus: fix Device DAX range alignment validation
+
+ drivers/dax/bus.c | 152 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 115 insertions(+), 37 deletions(-)
 
 
-> >  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
-> >  
-> >  ccflags-y += -I$(srctree)/drivers/cxl
-> >  CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
-> >  
-> >  cxl_core-y := port.o
-> > -cxl_core-y += resource.o
-> >  cxl_core-y += pmem.o
-> >  cxl_core-y += regs.o
-> >  cxl_core-y += memdev.o
-
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.54.0
 
