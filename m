@@ -1,19 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE03642D746
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 21:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D92424D75
+	for <linux-cxl@vger.kernel.org>; Thu, 24 Sep 2026 21:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790284926; cv=none; b=ROuk02dKYl/Zy1IJKMsVpPJpCXroYaGwcwijZE+OrE6GAsjVnEd3M0+lzQ7ItaOap1Z4v6GgH+Npk9EOIeKqCx5+X6AFfwchIVO4OF4p9q1OCTRhxq8D50AKRkBNOuOghUdN2ezQYCdP9UeFmIiZlifHstXY7q28pvUxJwpZcjU=
+	t=1790285003; cv=none; b=ra+yIG2mFrEb9gEXCyhRCts7Bx7FRNTPfXf2fDtVaRESc7YB9cmwnNzzo3W8awAJ8PiYuT+5jSECWStWvM1o7AVPFbO4AKd3H3uYpyKzjeNV5LDj0Xo4aayLEbwbk4cPvc1vATEnYh3SKWm3mCRd2XRcjHmQVWBlVVwgJs+JUEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790284926; c=relaxed/simple;
-	bh=8i/l+C6jTKLdaUYygbQZCiR4MB9uhEkEibrP3c1Q8vk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XVub6Tj9sBmMR1mnPzukiPMCzxQtgFH1RitjoD1bsIVznXRAQ0qrUrTn3cGhmQg5CqftP53u6Y8g6CmYGY2DE6Ipyx0TVil4l6wjaBfPImrPIb8briyVr/AQEjn0rKXq9RJAGv43a8oigY8BERrLwVx+NKFdNigswat15Jqk12Y=
+	s=arc-20240116; t=1790285003; c=relaxed/simple;
+	bh=THwvvT6z/bO0cPUYHoOJ8TbQBXdyhCWIgrs0rmYt1Og=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FCI/DynubAu4gTgQbcmBMeADfEqbOsMslmw9AHdQR4UBvo405w4/ZN21B4nSRZ4HcDdmv/Fj6gVdw1n4YeMOmznaE5Wpt5MqKbhiRxS0YfffPwxIZgxmp01sPvBhGXe1SVgknMFpYwTwb94QovTBwuG4n2SlrlpSUPuitHc2AFk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7B61F00898;
-	Thu, 24 Sep 2026 21:22:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A5A1F000FF;
+	Thu, 24 Sep 2026 21:23:21 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -21,12 +20,10 @@ Cc: dave@stgolabs.net,
 	alison.schofield@intel.com,
 	ming.li@zohomail.com,
 	icheng@nvidia.com
-Subject: [PATCH 2/2] cxl/core: Hold the dport host lock across dport lookup and use
-Date: Thu, 24 Sep 2026 14:21:59 -0700
-Message-ID: <20260924212159.52920-3-dave.jiang@intel.com>
+Subject: [PATCH] cxl/mbox: Store event records for EDAC repair regardless of tracing
+Date: Thu, 24 Sep 2026 14:23:20 -0700
+Message-ID: <20260924212320.56573-1-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260924212159.52920-1-dave.jiang@intel.com>
-References: <20260924212159.52920-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,306 +32,135 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Callers of cxl_pci_find_port() and cxl_mem_find_port() can be handed a
-'struct cxl_dport' that is already freed, and all four dereference it
-without the lock that would prevent that.
+The driver throws away media error records unless a tracepoint is enabled.
 
-A dport is kzalloc()'d into a devres group on its host device, so it dies
-when that host unbinds. The host is &port->dev for a switch port and
-port->uport_dev for the root port.
+cxl_event_trace_record() stores general media and DRAM records for EDAC
+repair, but both calls sit inside a block gated on the cxl_general_media
+and cxl_dram tracepoints. That gate only exists to skip the DPA-to-HPA
+lookup used to annotate those tracepoints. Storing a record does not need
+the lookup.
 
-Both helpers return the dport through an output parameter. The caller's
-port reference pins struct cxl_port, not the dport allocation, and the
-lookup itself is a bare xa_load() under no lock.
+With both tracepoints off, two things break. The kernel clears the device
+event log either way, so the records are destroyed in hardware and kept
+nowhere else. And live repair stops working altogether: sPPR and memory
+sparing require the target DPA to have reported an error, no DPA ever has
+a record, so every request fails with -EINVAL.
 
-Add cxl_port_dport_host() to name the device that pins a dport, and
-cxl_pci_find_dport() / cxl_mem_find_dport() to look one up with that
-device's lock held and asserted. Convert the four callers to use them and
-bail if the dport is gone. cxl_port_add_dport() already follows this rule.
+Move the two stores ahead of the tracepoint check. Keep them under the
+memdev lock, which is what stops err_rec_free() from freeing
+cxlmd->err_rec_array while the CPER callback runs. Leave the region and
+DPA rwsems with the lookup.
 
-cxl_mem_probe() chose its endpoint devm host from dport->rch, which meant
-dereferencing the dport before taking any lock. Use cxl_port_dport_host():
-rch dports only ever land on the root port, so it selects the same device
-without needing the dport.
-
-Fixes: 733b57f262b0 ("cxl/pci: Early setup RCH dport component registers from RCRB")
+Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Assisted-by: LLM
 ---
-Found by review, not from a failure report.
+Found by reviewing the gate, not from a failure report.
 
-Untested: two of the four converted sites add a new lock acquisition, and
-neither executed under test.
+The documented flow is unaffected, which is why this has gone unnoticed:
+rasdaemon watches the tracepoints, so they are on and the records exist
+(Documentation/edac/memory_repair.rst:94-97). Offline repair is unaffected
+too, since both checks sit under cxl_is_memdev_memory_online():
 
-  cxl_pci_setup_regs()        new guard() sits behind is_cxl_restricted(),
-                              which needs a PCI_EXP_TYPE_RC_END device
-  cxl_handle_rdport_errors()  needs an RCH dport AER error; cxl_test has no
-                              injection path
+  edac.c:1807  sPPR     -EINVAL when neither cxl_find_rec_dram() nor
+                        cxl_find_rec_gen_media() finds a record
+  edac.c:1357  sparing  -EINVAL when cxl_mem_get_rec_dram() finds none
 
-Only cxl_pci_setup_regs() introduces a lock order lockdep has not already
-seen: device_lock(&pdev->dev) from probe, then the dport host lock.
+The unconditional log clear is at mbox.c:1115, after the record loop.
 
-cxl_handle_rdport_errors() nests its new host lock inside the
-device_lock(&cxlmd->dev) that core/ras.c:274 and :298 hold, but
-cxl_mem_probe() takes that same pair in that same order and ran clean under
-PROVE_LOCKING, so the edge itself is covered. What is untested there is the
-path, not the ordering.
+The memdev lock has to cover the store. err_rec_free() is a devm action on
+&cxlmd->dev (edac.c:2021) that NULLs err_rec_array and frees it, and the
+CPER path (cxl/pci.c:1053) can run while cxl_mem unbinds. Hoisting the
+stores out from under guard(device) would trade the gating bug for a
+use-after-free.
 
-Reaching either needs a cxl-type3 attached directly to a host bridge so
-pci_pcie_type() is PCI_EXP_TYPE_RC_END, which run_qemu.sh does not generate.
+The casts on cxlmd go away because the parameter has not been const since
+dc372e5f429c ("cxl/pci: Hold memdev lock in cxl_event_trace_record()").
 
-Tested in QEMU with cxl_test, PROVE_LOCKING and KASAN on, 8 module
-load/unload cycles with concurrent sysfs readers. No lockdep splat, no
-device_lock_assert() firing, enumeration unchanged (15 memdev, 12 port,
-192 decoder before and after).
+Tested in QEMU with cxl_test. kprobe entry counts over the same 220 mock
+event records, using cxl_event_trace_record() as the control:
 
-cxl_mem_find_dport() ran for 15 memdevs on each of 9 loads, covering both
-cxl_port_dport_host() branches. The rch branch is covered too: "cxl_mem
-mem2: endpoint9 added to root3" shows the new selection picking the same
-parent dport->rch did.
+  tracepoints off      control   store_gen_media   store_dram
+    before                 220                 0            0
+    after                  220                22           33
 
-Not fixed here, found by KASAN during the same run: emit_target_list()
-(port.c:158) dereferences cxlsd->target[i]->port_id under only
-cxl_rwsem.region, and cxl_dport_remove() (port.c:1091) never clears those
-cached pointers, so a switch decoder target array keeps dangling dports.
+  tracepoints on       control   store_gen_media   store_dram
+    before                 220                22           33
+    after                  220                22           33
 
-Same bug class, different mechanism - a stale cached pointer rather than an
-unlocked lookup - so it wants its own patch in dport teardown.
+Records are kept with tracing off, and the tracing-on path is unchanged -
+the hoist neither drops nor duplicates a store. The guest log shows
+cxl_clear_event_record() draining the device log in both cases, so the
+records really are gone from hardware whether or not the kernel kept them.
+Builds warning-free with CONFIG_CXL_EDAC_MEM_FEATURES=y and disabled.
+
+Not covered: the -EINVAL itself. cxl_test mocks no sPPR or sparing feature,
+so the repair path cannot be driven end to end.
+
+Left alone to keep this minimal: the WARN_ON_ONCE checks on the AP/CME
+counter-expire descriptor (mbox.c:952-964) stay inside the gate, and are
+arguably mis-gated for the same reason.
 ---
- drivers/cxl/core/core.h    |  6 +-----
- drivers/cxl/core/pci.c     |  8 +++++++-
- drivers/cxl/core/port.c    | 36 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/ras_rch.c | 12 +++++++++++-
- drivers/cxl/cxl.h          | 16 ++++++++++++++++
- drivers/cxl/mem.c          | 14 +++++++++-----
- drivers/cxl/pci.c          | 11 ++++++-----
- 7 files changed, 86 insertions(+), 17 deletions(-)
+ drivers/cxl/core/mbox.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 35eaf636adc9..0a39e500029a 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -178,11 +178,7 @@ static inline struct device *port_to_host(struct cxl_port *port)
- 
- static inline struct device *dport_to_host(struct cxl_dport *dport)
- {
--	struct cxl_port *port = dport->port;
--
--	if (is_cxl_root(port))
--		return port->uport_dev;
--	return &port->dev;
-+	return cxl_port_dport_host(dport->port);
- }
- #ifdef CONFIG_CXL_RAS
- void cxl_ras_init(void);
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9d807c1a002c..8a236e22bb3f 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -734,10 +734,16 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
- 		struct cxl_dport *dport;
- 		struct cxl_port *port __free(put_cxl_port) =
--			cxl_pci_find_port(pdev, &dport);
-+			cxl_pci_find_port(pdev, NULL);
- 		if (!port)
- 			return -EPROBE_DEFER;
- 
-+		guard(device)(cxl_port_dport_host(port));
-+
-+		dport = cxl_pci_find_dport(pdev, port);
-+		if (!dport)
-+			return -EPROBE_DEFER;
-+
- 		rc = cxl_rcrb_get_comp_regs(pdev, map, dport);
- 		if (rc)
- 			return rc;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6ff3353865e3..336d7c0f5d98 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1428,6 +1428,10 @@ static struct cxl_port *__find_cxl_port_by_dport(struct cxl_find_port_ctx *ctx)
-  *
-  * Return a 'struct cxl_port' with an elevated reference if found. Use
-  * __free(put_cxl_port) to release.
-+ *
-+ * The port reference does not pin @dport, which is a devm allocation of
-+ * cxl_port_dport_host(). Pass NULL and use cxl_pci_find_dport() or
-+ * cxl_mem_find_dport() under that device's lock instead.
-  */
- static struct cxl_port *find_cxl_port_by_dport(struct device *dport_dev,
- 					       struct cxl_dport **dport)
-@@ -1943,6 +1947,38 @@ struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, "CXL");
- 
-+/**
-+ * cxl_pci_find_dport - find the dport of @port that @pdev is below
-+ * @pdev: PCI device below the dport
-+ * @port: port to search, typically from cxl_pci_find_port()
-+ *
-+ * Context: Caller must hold the cxl_port_dport_host() lock of @port, and
-+ *	    must not use the result after dropping it.
-+ */
-+struct cxl_dport *cxl_pci_find_dport(struct pci_dev *pdev,
-+				     struct cxl_port *port)
-+{
-+	device_lock_assert(cxl_port_dport_host(port));
-+	return cxl_find_dport_by_dev(port, pdev->dev.parent);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_pci_find_dport, "CXL");
-+
-+/**
-+ * cxl_mem_find_dport - find the dport of @port that @cxlmd is below
-+ * @cxlmd: memdev below the dport
-+ * @port: port to search, typically from cxl_mem_find_port()
-+ *
-+ * Context: Caller must hold the cxl_port_dport_host() lock of @port, and
-+ *	    must not use the result after dropping it.
-+ */
-+struct cxl_dport *cxl_mem_find_dport(struct cxl_memdev *cxlmd,
-+				     struct cxl_port *port)
-+{
-+	device_lock_assert(cxl_port_dport_host(port));
-+	return cxl_find_dport_by_dev(port, grandparent(&cxlmd->dev));
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_find_dport, "CXL");
-+
- static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
- 				    struct cxl_port *port)
- {
-diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
-index e0e01aa5eba6..827a2f64d892 100644
---- a/drivers/cxl/core/ras_rch.c
-+++ b/drivers/cxl/core/ras_rch.c
-@@ -118,10 +118,20 @@ void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
- 	int severity;
- 
- 	struct cxl_port *port __free(put_cxl_port) =
--		cxl_pci_find_port(pdev, &dport);
-+		cxl_pci_find_port(pdev, NULL);
- 	if (!port)
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 55828a836c01..89fb2f569e4b 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -913,6 +913,22 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
  		return;
- 
-+	/*
-+	 * The dport may have been freed since the lookup above, so take the
-+	 * lock that pins it and find it again.
-+	 */
-+	guard(device)(cxl_port_dport_host(port));
-+
-+	dport = cxl_pci_find_dport(pdev, port);
-+	if (!dport)
-+		return;
-+
- 	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
- 		return;
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index cab8ce39f465..508f590a08c4 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -701,6 +701,18 @@ static inline bool is_cxl_root(struct cxl_port *port)
- 	return port->uport_dev == port->dev.parent;
- }
- 
-+/*
-+ * The dports of @port are devm allocations of this device, so they live
-+ * only as long as it stays bound to its driver. Hold its lock across any
-+ * lookup and use of a 'struct cxl_dport'.
-+ */
-+static inline struct device *cxl_port_dport_host(struct cxl_port *port)
-+{
-+	if (is_cxl_root(port))
-+		return port->uport_dev;
-+	return &port->dev;
-+}
-+
- /* Address translation functions exported to cxl_translate test module only */
- int cxl_validate_translation_params(u8 eiw, u16 eig, int pos);
- u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
-@@ -747,6 +759,10 @@ DEFINE_FREE(put_cxl_dax_region, struct cxl_dax_region *, if (!IS_ERR_OR_NULL(_T)
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
- void cxl_bus_rescan(void);
- void cxl_bus_drain(void);
-+struct cxl_dport *cxl_pci_find_dport(struct pci_dev *pdev,
-+				     struct cxl_port *port);
-+struct cxl_dport *cxl_mem_find_dport(struct cxl_memdev *cxlmd,
-+				     struct cxl_port *port);
- struct cxl_port *cxl_pci_find_port(struct pci_dev *pdev,
- 				   struct cxl_dport **dport);
- struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 798e5c369cfc..91137487ac1f 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -133,7 +133,7 @@ static int cxl_mem_probe(struct device *dev)
- 		return rc;
- 
- 	struct cxl_port *parent_port __free(put_cxl_port) =
--		cxl_mem_find_port(cxlmd, &dport);
-+		cxl_mem_find_port(cxlmd, NULL);
- 	if (!parent_port) {
- 		dev_err(dev, "CXL port topology not found\n");
- 		return -ENXIO;
-@@ -148,10 +148,7 @@ static int cxl_mem_probe(struct device *dev)
- 		}
  	}
  
--	if (dport->rch)
--		endpoint_parent = parent_port->uport_dev;
--	else
--		endpoint_parent = &parent_port->dev;
-+	endpoint_parent = cxl_port_dport_host(parent_port);
++	/*
++	 * EDAC memory repair looks these records up from the current boot, so
++	 * store them whether or not tracing is enabled. Hold the memdev lock
++	 * across the store to keep cxlmd->err_rec_array alive against a
++	 * concurrent cxl_mem unbind.
++	 */
++	guard(device)(&cxlmd->dev);
++
++	if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
++		if (cxl_store_rec_gen_media(cxlmd, evt))
++			dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
++	} else if (event_type == CXL_CPER_EVENT_DRAM) {
++		if (cxl_store_rec_dram(cxlmd, evt))
++			dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
++	}
++
+ 	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+ 		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
+ 		struct cxl_region *cxlr;
+@@ -922,7 +938,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+ 		 * translations. Take topology mutation locks and lookup
+ 		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
+ 		 */
+-		guard(device)(&cxlmd->dev);
+ 		guard(rwsem_read)(&cxl_rwsem.region);
+ 		guard(rwsem_read)(&cxl_rwsem.dpa);
  
- 	scoped_guard(device, endpoint_parent) {
- 		if (!endpoint_parent->driver) {
-@@ -160,6 +157,13 @@ static int cxl_mem_probe(struct device *dev)
- 			return -ENXIO;
+@@ -937,9 +952,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
  		}
  
-+		/* @dport is only valid while @endpoint_parent stays bound */
-+		dport = cxl_mem_find_dport(cxlmd, parent_port);
-+		if (!dport) {
-+			dev_err(dev, "CXL topology dport not found\n");
-+			return -ENXIO;
-+		}
-+
- 		rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
- 		if (rc)
- 			return rc;
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c7c91e8dc51d..6e1d7ee94c19 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -706,22 +706,23 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
- 	struct device *root_dev;
- 	struct cxl_dport *dport;
- 	struct cxl_port *root __free(put_cxl_port) =
--		cxl_mem_find_port(cxlmd, &dport);
-+		cxl_mem_find_port(cxlmd, NULL);
- 
- 	if (!root)
- 		return -ENXIO;
- 
--	root_dev = root->uport_dev;
-+	root_dev = cxl_port_dport_host(root);
- 	if (!root_dev)
- 		return -ENXIO;
- 
--	if (!dport->regs.rcd_pcie_cap)
--		return -ENXIO;
+ 		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
+-			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
+-				dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
 -
- 	guard(device)(root_dev);
- 	if (!root_dev->driver)
- 		return -ENXIO;
- 
-+	dport = cxl_mem_find_dport(cxlmd, root);
-+	if (!dport || !dport->regs.rcd_pcie_cap)
-+		return -ENXIO;
-+
- 	switch (width) {
- 	case 2:
- 		return sysfs_emit(buf, "%#x\n",
+ 			if (evt->gen_media.media_hdr.descriptor &
+ 			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+ 				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
+@@ -952,9 +964,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+ 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+ 						hpa_alias, &evt->gen_media);
+ 		} else if (event_type == CXL_CPER_EVENT_DRAM) {
+-			if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
+-				dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
+-
+ 			if (evt->dram.media_hdr.descriptor &
+ 			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+ 				WARN_ON_ONCE((evt->dram.media_hdr.type &
+
+base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
 -- 
 2.54.0
 
