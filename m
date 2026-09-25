@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114004E8DF3
-	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 22:44:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B04FB9C4;
+	Fri, 25 Sep 2026 22:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790376270; cv=none; b=El/CnLCsDiliKFKYHGL2KbvuTs/aH7iBWENgcW9yOENUkBJaL3YhkBoQoSDpsLLd91ArGt++zMFT9C+XujzbyPvWG8pul1p1nk2+hMrdhpMe/2hzaYV2N0iHSwBbDwv2M5ZcAe8gCuaIclR4vzDa+wYtJgrAQv4HjqjRZ49LTjQ=
+	t=1790376444; cv=none; b=D2h+k/o+TaV0GQo6JklkT21HsDTGpyAIgwo9AyymSdZr0fadQ5lhqSDRVYPGS4QhuPyt5S+wXWOV4xSumJgD2XJo2ljHFoJmD2sOo4a4R4NS1WAzTvjEN+Ipvz7A/54/5qdmsWabwISk4kjVuSHtrdOX3hoyw9A8wrmYAP0KCJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790376270; c=relaxed/simple;
-	bh=KgbUemQ8EUpvjtfKxsbHzIm3Hx539cKWxHTJLX6EgSQ=;
+	s=arc-20240116; t=1790376444; c=relaxed/simple;
+	bh=Rgf8udR+rQjJzAqykPz3wFMIa3epGbIJWetZmofNUFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gRuOnzJt2RPWCDPamO8BJI2qcg9D67G9FHUTju7DCqPecgglJdb8XZViaX/ywNsoJroE9kaD9Bm1cjyX7pHKe9nc/4Xjwe7Y2nvNtPF+fq961uoE0f45hR3kfqi2yRwvh6NWoZgRNFHqc/vyp4vx0wqZYfd1iGhUpnMbLEwei0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+4QGDrg; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=gQ1V9JaEsW51lDZSFif8gwfZpb+EcRqTfMlJJUh5K1q9VXt08chimSGxUjI8FdhEgUzFsvBoUaOeWrQnlfYZYq/IvkvB6z8MAOaqNwTd8R+UsaeVvDN0fye32UcBrUHlUhzfQ37XeZ4oYDAZYo7YIb5z/c5NNl0/cfggnVNUqUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+W0FEql; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+4QGDrg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41651F000FF;
-	Fri, 25 Sep 2026 22:44:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+W0FEql"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8358C1F00893;
+	Fri, 25 Sep 2026 22:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790376268;
-	bh=5O937KCLTEC38DRTn8Gym++ANvtFPbpQf8VqrQ92MSU=;
+	s=k20260515; t=1790376441;
+	bh=WV+hFf4p0LF2j1rjEGjSxXXM4uBQ5tn19LUpagYhO8U=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=f+4QGDrgNHukV4OCW4gi1oEy7yBKTmMw3UzWplfjyB9rOW65YP5OgfX/bRnDQY9LV
-	 tGCICIoxwA7Rv5MTceEYcY6099wKbLEcqkuTbwFuUWKgNjf7PnCiR8JWQdJ7FR5AS+
-	 BZnP4KuR2BD+C/WULv/65iNMXJGLLV+Jk6IdhFe2bePpDaG1GyohFm8EQ5m5r1681b
-	 wI5aG/+GHA/8Qa7DPa5WeRYLDG2ngY99lObUz7YSj9SzxP5GiztQ9+MDP4jdxOiME7
-	 Edb3xRswh8ezLgu/+X6D/Rrm8YpRLgqwMg8BOQJF4MrNvRg23GmQ1R/yCRg7oZgdav
-	 /Y7exg8a7l8eg==
-Date: Fri, 25 Sep 2026 23:44:25 +0100
+	b=G+W0FEqlsV5CI1tI6dz67kTLugYVNUu43SODlzX8KrmfdIKQxkwI0+q+4KdGy4ghN
+	 XOTvMe4oJNJjiMRC7ggVT5ZnpzUQyXgyH64N/TjXGPUCThL0YaMhfEiex2vmlLuV7g
+	 qd5e1eyksAQP4+1h403U1leMZvRpGxs42BKyPseZXgWr0IP53msb1eo2lRcI6IY+fo
+	 qHZXtaX6yVGtwCUQQcOUQcARBB52+k+vLV0XWS0/EpEcuIiFxGoWiGnUtKgTNecRuW
+	 ZW8IIahdMtH0acJqQD7vs7eS2ydgwIEJPeGmHvgDYB+PflXwo1mQI7s5Gp0cuS1Anr
+	 KJ6MqUoYej0kQ==
+Date: Fri, 25 Sep 2026 23:47:17 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- alison.schofield@intel.com, ming.li@zohomail.com, icheng@nvidia.com
-Subject: Re: [PATCH] cxl/mbox: Store event records for EDAC repair
- regardless of tracing
-Message-ID: <20260925234425.67be0e2e@jic23-hlaptop>
-In-Reply-To: <20260924212320.56573-1-dave.jiang@intel.com>
-References: <20260924212320.56573-1-dave.jiang@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiale Yao <yaojiale02@163.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] cxl/acpi: Check ACPI companion before use
+Message-ID: <20260925234718.37fdcc56@jic23-hlaptop>
+In-Reply-To: <20260924164247.rsb4h7qjx5bvrthg@offworld>
+References: <20260924125404.923551-1-yaojiale02@163.com>
+	<20260924164247.rsb4h7qjx5bvrthg@offworld>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,152 +50,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Sep 2026 14:23:20 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu, 24 Sep 2026 09:42:47 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> The driver throws away media error records unless a tracepoint is enabled.
+> On Thu, 24 Sep 2026, Jiale Yao wrote:
 > 
-> cxl_event_trace_record() stores general media and DRAM records for EDAC
-> repair, but both calls sit inside a block gated on the cxl_general_media
-> and cxl_dram tracepoints. That gate only exists to skip the DPA-to-HPA
-> lookup used to annotate those tracepoints. Storing a record does not need
-> the lookup.
+> >Platform drivers can be forced to match devices outside their ID tables
+> >through driver_override.  cxl_acpi_probe() assumes that every bound device
+> >has an ACPI companion and dereferences adev->dev.bus without checking the
+> >result of ACPI_COMPANION().  Force-binding cxl_acpi to a platform device
+> >without a companion therefore causes a NULL pointer dereference.
+> >
+> >This was reproduced by setting the driver override for the pcspkr platform
+> >device to cxl_acpi and binding it through sysfs:
+> >
+> >  BUG: kernel NULL pointer dereference, address: 0000000000000280
+> >  #PF: supervisor read access in kernel mode
+> >  RIP: cxl_acpi_probe+0xf4/0x220
+> >  Call Trace:
+> >   platform_probe+0x4d/0x80
+> >   really_probe+0x106/0x370
+> >   device_driver_attach+0x4c/0xa0
+> >   bind_store+0xd0/0x100
+> >
+> >Commit 2b3a5dabe89e ("platform/surface: acpi-notify: Check ACPI
+> >companion before use") fixed the same force-binding issue in another
+> >platform driver.  Check the companion before setting up the CXL root and
+> >return -ENODEV when it is absent.
+> >
+> >Fixes: 7d4b5ca2e2cb ("cxl/acpi: Add downstream port data to cxl_port instances")
+> >Cc: stable@vger.kernel.org
+> >Signed-off-by: Jiale Yao <yaojiale02@163.com>  
 > 
-> With both tracepoints off, two things break. The kernel clears the device
-> event log either way, so the records are destroyed in hardware and kept
-> nowhere else. And live repair stops working altogether: sPPR and memory
-> sparing require the target DPA to have reported an error, no DPA ever has
-> a record, so every request fails with -EINVAL.
+> With Dave's comment,
+> 
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Andy Shevchenko was looking at ways to have drivers set a flag to 
+disable matches on driver_override. Not sure if that is still ongoing.
 
-Hi Dave,
++CC Andy
 
-Given userspace is always in that path (I think), without the
-tracepoints being enabled it will be one impressive guess to
-successfully make repair happen - you'll have to magically know
-what address will see a hit in the stored error records.
-
-Maybe that happens in some test case, but it doesn't feel real
-to me.
-
-> 
-> Move the two stores ahead of the tracepoint check. Keep them under the
-> memdev lock, which is what stops err_rec_free() from freeing
-> cxlmd->err_rec_array while the CPER callback runs. Leave the region and
-> DPA rwsems with the lookup.
-> 
-> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-
-Why the fixes tag?   Maybe this is enabling something new that is
-useful but I'm not immediately understanding what was 'broken' before.
-
-
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Assisted-by: LLM
-> ---
-> Found by reviewing the gate, not from a failure report.
-> 
-> The documented flow is unaffected, which is why this has gone unnoticed:
-> rasdaemon watches the tracepoints, so they are on and the records exist
-> (Documentation/edac/memory_repair.rst:94-97). Offline repair is unaffected
-> too, since both checks sit under cxl_is_memdev_memory_online():
-> 
->   edac.c:1807  sPPR     -EINVAL when neither cxl_find_rec_dram() nor
->                         cxl_find_rec_gen_media() finds a record
->   edac.c:1357  sparing  -EINVAL when cxl_mem_get_rec_dram() finds none
-> 
-> The unconditional log clear is at mbox.c:1115, after the record loop.
-> 
-> The memdev lock has to cover the store. err_rec_free() is a devm action on
-> &cxlmd->dev (edac.c:2021) that NULLs err_rec_array and frees it, and the
-> CPER path (cxl/pci.c:1053) can run while cxl_mem unbinds. Hoisting the
-> stores out from under guard(device) would trade the gating bug for a
-> use-after-free.
-> 
-> The casts on cxlmd go away because the parameter has not been const since
-> dc372e5f429c ("cxl/pci: Hold memdev lock in cxl_event_trace_record()").
-> 
-> Tested in QEMU with cxl_test. kprobe entry counts over the same 220 mock
-> event records, using cxl_event_trace_record() as the control:
-> 
->   tracepoints off      control   store_gen_media   store_dram
->     before                 220                 0            0
->     after                  220                22           33
-> 
->   tracepoints on       control   store_gen_media   store_dram
->     before                 220                22           33
->     after                  220                22           33
-> 
-> Records are kept with tracing off, and the tracing-on path is unchanged -
-> the hoist neither drops nor duplicates a store. The guest log shows
-> cxl_clear_event_record() draining the device log in both cases, so the
-> records really are gone from hardware whether or not the kernel kept them.
-> Builds warning-free with CONFIG_CXL_EDAC_MEM_FEATURES=y and disabled.
-> 
-> Not covered: the -EINVAL itself. cxl_test mocks no sPPR or sparing feature,
-> so the repair path cannot be driven end to end.
-> 
-> Left alone to keep this minimal: the WARN_ON_ONCE checks on the AP/CME
-> counter-expire descriptor (mbox.c:952-964) stay inside the gate, and are
-> arguably mis-gated for the same reason.
-> ---
->  drivers/cxl/core/mbox.c | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 55828a836c01..89fb2f569e4b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -913,6 +913,22 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
->  		return;
->  	}
->  
-> +	/*
-> +	 * EDAC memory repair looks these records up from the current boot, so
-> +	 * store them whether or not tracing is enabled. Hold the memdev lock
-> +	 * across the store to keep cxlmd->err_rec_array alive against a
-> +	 * concurrent cxl_mem unbind.
-> +	 */
-> +	guard(device)(&cxlmd->dev);
-> +
-> +	if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
-> +		if (cxl_store_rec_gen_media(cxlmd, evt))
-> +			dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
-> +	} else if (event_type == CXL_CPER_EVENT_DRAM) {
-> +		if (cxl_store_rec_dram(cxlmd, evt))
-> +			dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
-> +	}
-> +
->  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
->  		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
->  		struct cxl_region *cxlr;
-> @@ -922,7 +938,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
->  		 * translations. Take topology mutation locks and lookup
->  		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
->  		 */
-> -		guard(device)(&cxlmd->dev);
->  		guard(rwsem_read)(&cxl_rwsem.region);
->  		guard(rwsem_read)(&cxl_rwsem.dpa);
->  
-> @@ -937,9 +952,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
->  		}
->  
->  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
-> -			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
-> -				dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
-> -
->  			if (evt->gen_media.media_hdr.descriptor &
->  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
->  				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
-> @@ -952,9 +964,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
->  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->  						hpa_alias, &evt->gen_media);
->  		} else if (event_type == CXL_CPER_EVENT_DRAM) {
-> -			if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
-> -				dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
-> -
->  			if (evt->dram.media_hdr.descriptor &
->  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
->  				WARN_ON_ONCE((evt->dram.media_hdr.type &
-> 
-> base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
+Jonathan
 
