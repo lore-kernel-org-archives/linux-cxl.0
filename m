@@ -1,296 +1,153 @@
-Received: from mail-qk2-f43.google.com (mail-qk2-f43.google.com [74.125.230.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD787509EEA
-	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A7C3E559A
+	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790377386; cv=none; b=Hh/NMs27zXq8SblBUtX4qGnlTfyc3Bwz37dJwFL+qUfyWbB2hfceqO2qZpSEw25GE/QuXN6EyEtDfrdHbuoI7k4hrmIoDKr9NgcB+kr1SRCzNts/IZ4DgcmUioMw0oClYKgRvKeO4o/RDUCYN2Qdp5HsF1XIZ3+jWZyB30c/bi4=
+	t=1790377666; cv=none; b=ECRE6m2w4c80OBP2DpTHQrbOPcnfhxTgI/bFDnKbi+Z0jJLRWdj0ki9aDiUywdbOE+SlqWjdS/HOnMGE3K48NPcE/6b54HwRGKGPZHglgFd7JnB4l7bsyDBUd56eEE3KDq+nz2lcAUZ/tbj3WCvx/u/2ox95zLvkliWQjl9WHYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790377386; c=relaxed/simple;
-	bh=jandskfkITyjC7rvkXLAEoCYbYIdJkGLy5tzhgU6M4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/CTLjLUhWvlpyUbu58zMTlbTbxE8vsxiiWIisIJMltUxiUO72uQvGeTHLW3LCCEoBc5/p9eTyIAmJFtyg/zsWet8xUxkbD+FBgn7+trInvwwmCUC8MrD1NHfCuJBzOMmoeJA2640Y/qDMpI2euxiP+Bnv9ZcajR9cGC9EtqQlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=A94lZouv; arc=none smtp.client-ip=74.125.230.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1790377666; c=relaxed/simple;
+	bh=shUJrpvqV+6xIHr046mZAVP02M+Vrhne5D8tPeGJOvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lZjMveK+pM/1KOm/+WbopCCf1GKxay3h8wwBcWQ3aUsbAuG0BZ6FUJJsX+RcuMLumqaT1giC+RKl10VKt3TyGX8mGJbAP85fw2rz8BGlMCa0k7QuV7tHVHqMOTXnMWY/ZNwiAKHVpDxGzNgvx7T9p3AiNLP55gy00d8GMiPsG/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZq+vaZk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="A94lZouv"
-Received: by mail-qk2-f43.google.com with SMTP id af79cd13be357-93910a0cefaso131112685a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 16:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1790377383; x=1790982183; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PiEVC1BfM3JbJHmz6IrQSpeOS1QFhfgMFnl3j26Htjk=;
-        b=A94lZouvKAzEKsqSL/a6UzMxCA9GzIsQbusgbX18VD/4DwKuWyDb6CLr8AdemoenTW
-         617YC8IOvzTvhVbOpq/AGAEAVnxLR1trNp2nuOZ/gQBf0n9rM6+fp0sRgPpsvGPcpU14
-         Us49emjjkXz5t8Ymv5sPiXC+LvBbNpDFTRl0f6Qt5SJepfum1T4JRhrSTH28n/2XHWkL
-         vyz8ZZaHH/XKcZ9yTKCQOZrjW/5wXNTizOddw0dBQfLNqN+LKKjdHZ11eGj3uy6l4U6a
-         i8Ca67ZUXj09625YduPLfKVCsBCTuVPUvbAoNa63euPMbiJmP4dYz6vSluHidDJcvTQL
-         5XCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790377383; x=1790982183;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PiEVC1BfM3JbJHmz6IrQSpeOS1QFhfgMFnl3j26Htjk=;
-        b=AkWRcbAsDU38+kiDrSFs1FiDs5/uVQY3JZeb9FDLWmeLQE8yZWDUFImXrBn1V2lHBc
-         NPtZ0jE8K8h91vdY22xign0lBiRFlZfoCEiauFtJyJoI8n+rEdoCTfPhMMHy8zzo1L/9
-         lNTwYFbPXQQoDo1T3nDwSt6mFgBmvZ9p2y7zHGTVSIVR/vTR9ozBG5pisLD6mCu6VGLy
-         NkrnCXSqemVCb7AEaPQB67c4O2ERc1ZLDGPNaI4M9bLcGO88H5Ppdh8hZFfFE6ORr+W8
-         r1WCk4ZCPfethnGhMJNu9AcOoKVy440MCE294YFK7ru3bU+spOiOyygvkhvQ16qD4ZFy
-         nYlQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwdBNmYpSw+Lukh2XL0+fxtvTl5f71lLDjLATFuUomgMa1hdyf2W+WzVogeY9kgkgl52YqYO05jric=@vger.kernel.org
-X-Gm-Message-State: AFuF++kE6GlowtKNy+GnED83M1lKW6SYVTBO2CcRTYC2BHwb4D8aA1iM
-	wf4M5sy+J01PtMKoWVbXnKZUFuClHm/l4NWdyzrI2bpdt5emM0Y3abV0nSl1FGz254U=
-X-Gm-Gg: AYBFou0m4iVqTzRKwEVEEUevXFddAEIvVbn2Wt6FPza6E225+vBxtPxhT1RwL2QOpdR
-	NCsbPfzg8S0qUfBdCfM4Aaw+41hsI70Nr2CsI7YyoEe5UpnMPvmvy8GAEQdjD7b4aiFx68i3ElX
-	Fw3B/ecUr1w8IWzAUpzYBLRRGcyno1aJl5mSvSHA37GnnoPwp0PtnyfMncplVlxA8Gt5qcj8M2x
-	yNXhEzErindHnOCFixzO2E9omWMx31kbpzUny5CRmzHaifEmXYIfssl3QqESBx6KHRpRRiFPAjb
-	QvK/z7oX6daUJCeqHRNb4NuWdRe1gpXma1RBNz7+X8mc8jwBBGK28ea2Z5HZGrCuFlENigIUzpb
-	FvUjBQ1JGV4wBAUFDZiPr/5/D13Ijwm/Weca/SDkBusMsdryyZTrq7MKVvaAPGLGN0JDDi2wINP
-	oi3CwPuNJ7gSFyqAK5kyFa01cXd24DTyieL+9JvyZapwL+nhrIzHWpUBzcd009tj2ha5e+zyRL2
-	USOBFggDnMLFu89q8K0my3GA7MMlhn5NuX5McPYGA3ICzzvFBYejFU=
-X-Received: by 2002:a05:620a:2614:b0:93a:2bdc:cd57 with SMTP id af79cd13be357-93c43b7f72amr755724385a.2.1790377382584;
-        Fri, 25 Sep 2026 16:03:02 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c4493af29sm290317085a.28.2026.09.25.16.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 16:03:02 -0700 (PDT)
-Date: Fri, 25 Sep 2026 19:02:59 -0400
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: Zhigang.Luo@amd.com, arun.george@samsung.com, balbirs@nvidia.com, 
-	brendan.jackman@linux.dev, yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com, 
-	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
-	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
-	mhocko@suse.com, corbet@lwn.net, skhan@linuxfoundation.org, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, 
-	vishal.l.verma@intel.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	osandov@osandov.com, jannh@google.com, pfalcato@suse.de, jackmanb@google.com, 
-	hannes@cmpxchg.org, ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
-Message-ID: <arb0mV23QmRVDtB3@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZq+vaZk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76201F000FF;
+	Fri, 25 Sep 2026 23:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790377664;
+	bh=bqTFWV71aLVU8qQaKxf8tnjgBFXTIkBK6SaG/+OP+eY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=EZq+vaZkKysGU3FUeFpWLT0JLKptEhgIBYe/MPk0d6wgLn4SPG6SiRMUamV5Yd7r4
+	 XZpNvn1ikpDKQi9F1Et2FZu4QnbCBlm9ayG+faZCkHM57PhsADhtO8UxBDAAXu/u+q
+	 toEFuK7WmFQDT6RoUTPOgJqgvTynP8cTbDiOk+UasO+/GCM9FTBJPBFzXkuD2UgSXC
+	 xxGSxotlCXNS1fsS2fuCDOqCPP1qEQ9xaooissNQ0qIuI9sv38XXSu4GB4gCjc4InA
+	 v2WGaHOhfHZwbw6eVLTeAsSo9l45RsbRdHdNDVnqa8xlHf17TIrtTZCdh8La4MYrLv
+	 4XwHSbpq9XMVw==
+Date: Sat, 26 Sep 2026 00:07:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ alison.schofield@intel.com, ming.li@zohomail.com, icheng@nvidia.com
+Subject: Re: [PATCH 2/2] cxl/core: Hold the dport host lock across dport
+ lookup and use
+Message-ID: <20260926000741.7cd17073@jic23-hlaptop>
+In-Reply-To: <20260924212159.52920-3-dave.jiang@intel.com>
+References: <20260924212159.52920-1-dave.jiang@intel.com>
+	<20260924212159.52920-3-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 20, 2026 at 03:33:54PM -0400, Gregory Price wrote:
-> This series introduces the concept of "Private Memory Nodes", which
-> are opted into two basic functionalities by default:
->   - page allocation (mm/page_alloc.c)
->   - OOM killing
+On Thu, 24 Sep 2026 14:21:59 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> Callers of cxl_pci_find_port() and cxl_mem_find_port() can be handed a
+> 'struct cxl_dport' that is already freed, and all four dereference it
+> without the lock that would prevent that.
 > 
+> A dport is kzalloc()'d into a devres group on its host device, so it dies
+> when that host unbinds. The host is &port->dev for a switch port and
+> port->uport_dev for the root port.
+> 
+> Both helpers return the dport through an output parameter. The caller's
+> port reference pins struct cxl_port, not the dport allocation, and the
+> lookup itself is a bare xa_load() under no lock.
+> 
+> Add cxl_port_dport_host() to name the device that pins a dport, and
+> cxl_pci_find_dport() / cxl_mem_find_dport() to look one up with that
+> device's lock held and asserted. Convert the four callers to use them and
+> bail if the dport is gone. cxl_port_add_dport() already follows this rule.
+> 
+> cxl_mem_probe() chose its endpoint devm host from dport->rch, which meant
+> dereferencing the dport before taking any lock. Use cxl_port_dport_host():
+> rch dports only ever land on the root port, so it selects the same device
+> without needing the dport.
+> 
+> Fixes: 733b57f262b0 ("cxl/pci: Early setup RCH dport component registers from RCRB")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Assisted-by: LLM
+> ---
+> Found by review, not from a failure report.
+> 
+> Untested: two of the four converted sites add a new lock acquisition, and
+> neither executed under test.
+> 
+>   cxl_pci_setup_regs()        new guard() sits behind is_cxl_restricted(),
+>                               which needs a PCI_EXP_TYPE_RC_END device
+>   cxl_handle_rdport_errors()  needs an RCH dport AER error; cxl_test has no
+>                               injection path
+> 
+> Only cxl_pci_setup_regs() introduces a lock order lockdep has not already
+> seen: device_lock(&pdev->dev) from probe, then the dport host lock.
+> 
+> cxl_handle_rdport_errors() nests its new host lock inside the
+> device_lock(&cxlmd->dev) that core/ras.c:274 and :298 hold, but
+> cxl_mem_probe() takes that same pair in that same order and ran clean under
+> PROVE_LOCKING, so the edge itself is covered. What is untested there is the
+> path, not the ordering.
+> 
+> Reaching either needs a cxl-type3 attached directly to a host bridge so
+> pci_pcie_type() is PCI_EXP_TYPE_RC_END, which run_qemu.sh does not generate.
+> 
+> Tested in QEMU with cxl_test, PROVE_LOCKING and KASAN on, 8 module
+> load/unload cycles with concurrent sysfs readers. No lockdep splat, no
+> device_lock_assert() firing, enumeration unchanged (15 memdev, 12 port,
+> 192 decoder before and after).
+> 
+> cxl_mem_find_dport() ran for 15 memdevs on each of 9 loads, covering both
+> cxl_port_dport_host() branches. The rch branch is covered too: "cxl_mem
+> mem2: endpoint9 added to root3" shows the new selection picking the same
+> parent dport->rch did.
+> 
+> Not fixed here, found by KASAN during the same run: emit_target_list()
+> (port.c:158) dereferences cxlsd->target[i]->port_id under only
+> cxl_rwsem.region, and cxl_dport_remove() (port.c:1091) never clears those
+> cached pointers, so a switch decoder target array keeps dangling dports.
 
-All, I wanted to preface v6 with an update, I probably won't be sending
-it out on-list before LPC (i've been a bit noisey as it is, I'll give
-it a rest).
+Given that is I think what you fix in previous patch, drop this paragraph.
 
+> 
+> Same bug class, different mechanism - a stale cached pointer rather than an
+> unlocked lookup - so it wants its own patch in dport teardown.
 
-But I would like to give you the highlights for those interested.
-
-The latest working branch can be found here:
-https://github.com/gourryinverse/linux/tree/scratch/gourry/managed_nodes/rfc6-nonuma
-
-You will find the following:
-
-- There is no depedency on exported alloc_flags (willy, i found a way),
-  but there is a need for `folio_alloc_private()` to explicitly ask
-  for the ALLOC_ZONELIST_PRIVATE.
-
-- feature bits have been converted to node_state[] bits
-
-- N_MEMORY_COMMON was added to mean "common memory" - i.e. the existing
-  N_MEMORY set.  A private node is now defined as !N_MEMORY_COMMON.
-
-- opt-out sites no longer check for !N_MEMORY_PRIVATE, they instead
-  iterate over node_state[N_MEMORY_COMMON].  This is *much* cleaner.
-
-- opt-in sites get to define bits in terms of their own service, e.g.
-
-  /* for each reclaimable node */
-  for_each_node_mask_state(..., N_MEMORY_RECLAIM) {
-     ...
-  }
-
-  Or maybe even:
-
-  for_each_reclaimable_node()    :)
-
-
-- There are only 2 node features in the base set:
-
-  N_MEMORY_RECLAIM    -  generic reclaim runs on the node
-  N_MEMORY_COMPACTION -  compaction will run on the node
-
-  You'll notice there's no userland numa control support, more on this
-  in a moment.
-
-  This is all you need to have functional device-private coherent
-  memory that uses the page allocator.
-
-  Disabling N_MEMORY_RECLAIM does not necessarily mean you're prevented
-  from using vmscan.c and the LRU - it just means we'd need to expose an
-  interface for a !N_MEMORY_RECLAIM node to explicitly ask for reclaim
-  to operate on it.
-
-  Tiering (Demotion) *to* a node is not supported.  We can probably
-  debate whether this should mean tiering *from* a node should be
-  supported or not as well.  This is easy to change.
-
-
-- The working branch also includes a minimal compressed-ram service
-  that only supports anonymous memory.
-
-  Supporting file-backed memory (and shmem) is a whole different can
-  of worms that deserves its own discussion.
-
-  I will post this as a separate RFC from the base set, but it is
-  available to play with on my working branch.
-
-
-- I ship a basic dax driver for the base series, `anondax` which allows
-  existing devices to online a private node with both compaction and
-  reclaim support for testing.  This enables this use case:
-
-  fd = open(/dev/my_device, ..., O_DIRECT);
-  buf = mmap(fd, ..., MAP_SHARED)
-  my_file = open(myfile, ...);
-  read(buf, myfile); /* fault directly onto device memory */
-
-  With swap (and no tiering), this gives you a private over-commitable
-  node for which aspiring drivers can use to implement their own
-  mmu_notifier callback stream to manage device page tables and such.
+I think the fix is good, but one thing about wording of an
+explanatory comment inline.
 
 
-- The reason mempolicy (and user numa in general) is not supported is a
-  critical relationship between the OOM killer and page allocator.
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index cab8ce39f465..508f590a08c4 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -701,6 +701,18 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  	return port->uport_dev == port->dev.parent;
+>  }
+>  
+> +/*
+> + * The dports of @port are devm allocations of this device, so they live
+> + * only as long as it stays bound to its driver. Hold its lock across any
+what is 'its' here?  Also 'this device' the one returned? Perhaps.
 
-  In trivial scenarios, if a consumer of a private node overshoots and
-  causes an OOM - it will be the largest consumer and be chosen as the
-  victim.
+Return the owner device of the devm allocation of dports associated with
+@port. device_lock() should be held for the returned device 
+across any lookup and use of any of these struct cxl_dport instances.
 
-  If there are many consumers - what actually happens in practice is the
-  oom killer attempts to select a victim based on *task* policy... which
-  makes every task a candidate.  This leads to, among other things,
-  either an OOM storm and/or a full blown panic because a victim cannot
-  be located (depending on the constraints).
-
-  I've concluded that as-is, this is not tractable. But also, it is not
-  actually needed if the devices provide their own chardev to provide
-  a basic wrapper around folio_alloc_private().
-
-  This unfortunately means potential users like guest_memfd are unlikely
-  to be able to use the nodes without hard-coding the allocator
-  interface, as opposed to a mempolicy.
-
-  I think it's possible instead to *maybe* add N_MEMORY_USER_MIGRATION
-  and allow for explicit movement between nodes, but not full blown
-  mempolicies.
-
-  The relationship between page_alloc, cpuset, mempolicy, and the oom
-  killer is just too tight to allow allocations without the use of
-  __GFP_THISNODE - which the private allocation interface will enforce.
+> + * lookup and use of a 'struct cxl_dport'.
+> + */
+> +static inline struct device *cxl_port_dport_host(struct cxl_port *port)
+> +{
+> +	if (is_cxl_root(port))
+> +		return port->uport_dev;
+> +	return &port->dev;
+> +}
+> +
 
 
-As it stands, the series has been heavily minimized in both line count
-and patch number.
-
-The base series is ~22 commits with the scary diffstat below, but many
-of the core mm/ patches are similar to the patch below - with nearly
-all of the real complexity happening in reclaim and memory hotplug.
-
-despite the branch name, I intend to drop RFC from here-on, everything
-else required for the base series is in mm-new.
-
-
-See you at LPC
-~Gregory
-
--------
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 7bdcdb57652f8..cd61566b44fa1 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2266,7 +2266,7 @@ static int __add_folio_for_migration(struct folio *folio, int node,
-        if (is_zero_folio(folio) || is_huge_zero_folio(folio))
-                return -EFAULT;
-
--       if (folio_is_zone_device(folio))
-+       if (!folio_is_common_memory(folio))
-                return -ENOENT;
-
-        if (folio_nid(folio) == node)
-@@ -2390,7 +2390,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-                err = -ENODEV;
-                if (node < 0 || node >= MAX_NUMNODES)
-                        goto out_flush;
--               if (!node_state(node, N_MEMORY))
-+               if (!node_state(node, N_MEMORY_COMMON))
-                        goto out_flush;
-
-                err = -EACCES;
-@@ -2475,7 +2475,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
-                if (folio) {
-                        if (is_zero_folio(folio) || is_huge_zero_folio(folio))
-                                err = -EFAULT;
--                       else if (folio_is_zone_device(folio))
-+                       else if (!folio_is_common_memory(folio))
-                                err = -ENOENT;
-                        else
-                                err = folio_nid(folio);
-
-
- Documentation/ABI/stable/sysfs-devices-node |  21 +++++++++++++++++
- Documentation/admin-guide/cgroup-v2.rst     |   7 ++++++
- Documentation/mm/physical_memory.rst        |  15 ++++++++++++-
- drivers/base/node.c                         |  67 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
- drivers/dax/kmem.c                          |   2 +-
- include/linux/gfp.h                         |   6 +++++
- include/linux/memory_hotplug.h              |   2 +-
- include/linux/mmzone.h                      |  45 +++++++++++++++++++++++++++++++++++++
- include/linux/node.h                        |  12 ++++++++++
- include/linux/nodemask.h                    |  53 ++++++++++++++++++++++++++++++++++++++++++-
- kernel/cgroup/cpuset.c                      |  39 ++++++++++++++++++++++++++------
- kernel/sched/fair.c                         |   6 ++---
- mm/compaction.c                             |  21 +++++++++++------
- mm/damon/ops-common.c                       |  15 ++++++++-----
- mm/damon/vaddr.c                            |  20 +++++++++++++----
- mm/huge_memory.c                            |   2 +-
- mm/internal.h                               |  22 ++++++++++++++++++
- mm/khugepaged.c                             |   9 ++++++--
- mm/ksm.c                                    |   8 ++++---
- mm/madvise.c                                |   6 ++---
- mm/memory-tiers.c                           |  25 +++++++++++----------
- mm/memory_hotplug.c                         | 109 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------
- mm/mempolicy.c                              |  51 +++++++++++++++++++++++++-----------------
- mm/migrate.c                                |   6 ++---
- mm/mm_init.c                                |  22 +++++++++---------
- mm/page_alloc.c                             | 115 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------
- mm/page_alloc.h                             |   5 +++++
- mm/vmscan.c                                 |  31 +++++++++++++++-----------
- 28 files changed, 585 insertions(+), 157 deletions(-)
