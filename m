@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8DD4F55DB
-	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3778F45DF48
+	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790379421; cv=none; b=mbsFAuwQ3ACZV//yebNc7bFTpNx8RK5Gk+SjeJ5pRUx0Ku9j4MzgtMAyf+6fN2GyFlbN8f3gGaVu9jYwS0UTrPL2aHXJYiLrRqNPk1sP1Ds2O6KzaQi7PA1u4G/NbyUMmXKciGSaZmQiz7KXu+qBzHaFaKE6ds8ntwbhjjvxHhg=
+	t=1790379797; cv=none; b=XWUT7A1MP448pwwegxaNYNIodppG+T8I6VC1/xtr0LnQakVpuG38knDRCzZb0goVS0uDzBsL/SOMYKKvBTjS23/+JcTsbMY0I2Iej9YkHhoYbQBTF+uQKdLQypP8cnMveNIMnNF3nFJnp3KY928IFeYGEpKuQwre8VDZH3L8o9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790379421; c=relaxed/simple;
-	bh=jGR/+umJ8FoV6CkyNwn3NWGTfYU2nT4ZyDT1PLGSg7A=;
+	s=arc-20240116; t=1790379797; c=relaxed/simple;
+	bh=5uZX9fDqvdGTL/lxBCf8aIxOx6wgqNei7OvznJITzVM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UIx5umwBbm8BHixvL2tLpK+yRe74WkdkKmSz9Q6fymQd8A4Re6usWySZUxcwxAUQav9sHjHYohhNatZpjmD98989KCU0a8qIdJlJt2zs4oICREQJoOMB5WzcGmaIEZb4JHZxEHoutY0t7gQ8EZVluHIFflaZs88nShCYDsa0EG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbAo/BL/; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=n56vJ78oYEyIy5FhyO1YCwBC5gs17DU+MACsXmVsAPpxmn5UQt84fKoJYJNOI4/140xx0iQE63wVISmSshPL2MsXQNampAuxUrnMRzvdeEbKpTslbYm/PrZtTvo82YgiqxqK2KDhl3vTAi3R6zRWWpdIZwSUrT/ktJqBkf8gaxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9/TaNQv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbAo/BL/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E241F000FF;
-	Fri, 25 Sep 2026 23:36:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9/TaNQv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE2D1F000FF;
+	Fri, 25 Sep 2026 23:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790379419;
-	bh=XqMzeqbu6EUsUyf3O0nbnYhyIdSoUYWkSooy8oW8Q7o=;
+	s=k20260515; t=1790379796;
+	bh=PUGI89d6TT61t1HMFILnYTz+B7cirrUhtCX7SawrQ2c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=SbAo/BL/igc0R4PbBFo2c1PjnL8g0yGxzjmyAPdw7i2RTuvkwUrZCg904pgmmhwZY
-	 f7HjF6A48o/B2A3cRT8i8798NjokpyFsO/6iEZ5Tj9pZxCteXITGsKjSmPfoB3q9kG
-	 0RutP0HZ001XDttFgYUolN3Wg7s2uuH4WvXwhqW8hKRcxhgl/ChhFrfIJugEXgaQVt
-	 eWwHDIRf4KfU0XGTk6ygS/ewbm/TqIko/HAKl6J8VuVfPEPMbSG/6NOnzgKRmZQdw2
-	 eGKJR5G4yDgJasz17GmwnVOTVFSQyKLR5DK3HAjoTe4ZkrOgnvcVVGTv2ioCWdgy5Q
-	 dtIXmNuMrAnEA==
-Date: Sat, 26 Sep 2026 00:36:53 +0100
+	b=R9/TaNQvYV9owW/9dMzLfLqzh1CFPyWyWyvy4i6TKaJgzJCPbirigGlIh6Gi4Ytru
+	 mn1Hqm3YGD8sbnt2bAizjYMDsX1mwAD/rGe9AL33OmNdZ/VPxI2FVUJp8T9vAtSz8G
+	 XuYSlUBTjvAiW2a126NwO2b8CrWR1PiSO2t240tkFhhnhJRA9h625JQesBFLuja0+i
+	 Rru7SH579QkghobxzBcZlEz/Df8l0rtbhrffBl/2dJ9QqKIbafl/0mpw7YYzP2ivvo
+	 TTfIr9vAGn9+/h9UwqAwvn7xFMjsOHwKqxV+r83A/VqouAKWqU8F4aiGY4B9izY1hs
+	 aKOvUtXz+3v2A==
+Date: Sat, 26 Sep 2026 00:43:12 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Guixin Liu <kanie@linux.alibaba.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
@@ -34,12 +34,12 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
  <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
  <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
  linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] cxl/pci: Use the Device GPF DVSEC for restricted
- endpoints
-Message-ID: <20260926003653.591284c9@jic23-hlaptop>
-In-Reply-To: <20260922100026.3742401-2-kanie@linux.alibaba.com>
+Subject: Re: [PATCH 2/3] cxl/pci: Program the Port GPF timeouts before
+ caching the DVSEC
+Message-ID: <20260926004312.130e2b3e@jic23-hlaptop>
+In-Reply-To: <20260922100026.3742401-3-kanie@linux.alibaba.com>
 References: <20260922100026.3742401-1-kanie@linux.alibaba.com>
-	<20260922100026.3742401-2-kanie@linux.alibaba.com>
+	<20260922100026.3742401-3-kanie@linux.alibaba.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,47 +50,101 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Sep 2026 18:00:11 +0800
+On Tue, 22 Sep 2026 18:00:12 +0800
 Guixin Liu <kanie@linux.alibaba.com> wrote:
 
-> cxl_gpf_get_dvsec() picks between the Port and the Device GPF DVSEC
-> from the PCIe type of the given device, and only a plain endpoint
-> counts as a device. A restricted CXL device is an endpoint too, but
-> it falls into the port case and is probed for the Port GPF DVSEC
-> instead of the Device GPF DVSEC.
+> cxl_gpf_port_setup() caches the Port GPF DVSEC offset in the dport
+> before programming the phase timeouts, and ignores the return value
+> of both update_gpf_port_dvsec() calls: the function always reports
+> success.
 > 
-> On an RCD, dirty shutdown tracking therefore never arms: the DVSEC
-> lookup in cxl_nvdimm_arm_dirty_shutdown_tracking() fails, the dirty
-> shutdown count stays invalid, and the warning complains about a
-> missing Port GPF DVSEC on a device.
+> A failing config write is therefore not only silent, it is also
+> permanent: the timeouts stay at the hardware defaults instead of the
+> maximum flush window the kernel is asking for, and the cached offset
+> keeps any later endpoint attach from retrying the update.
 > 
-> Treat restricted endpoints as devices.
+> Propagate the errors and cache the offset only after both phases are
+> programmed, so the next endpoint attach retries the setup.
 > 
-> Fixes: 36aace15d9bd ("cxl/pci: Drop the parameter is_port of cxl_gpf_get_dvsec()")
+> Fixes: 6af941db6a60 ("cxl/pci: Update Port GPF timeout only when the first EP attaching")
 > Cc: stable@vger.kernel.org
 > Assisted-by: LLM
 > Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Not an area I ever really messed around with, but the description and
-fix look valid to me. So a somewhat tentative.
+
+Handling config write fails is a bit of an esoteric corner.
+I don't mind it being improved but not for me that important unless
+there is some reason we see these in the real world?
+
+Definitely good to make it return errno rather than the pcibios_err_
+though so overall I think this is good to have.
 
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
 > ---
->  drivers/cxl/core/pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/pci.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d807c1a002c..e31aad7a525a 100644
+> index e31aad7a525a..1f470ab0df3b 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -804,7 +804,8 @@ u16 cxl_gpf_get_dvsec(struct device *dev)
->  		return 0;
+> @@ -840,7 +840,7 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
 >  
->  	pdev = to_pci_dev(dev);
-> -	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT)
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT ||
-> +	    is_cxl_restricted(pdev))
->  		is_port = false;
+>  	rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
+>  	if (rc)
+> -		return rc;
+> +		return pcibios_err_to_errno(rc);
 >  
->  	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+>  	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+>  	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+> @@ -850,11 +850,17 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+>  	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+>  
+>  	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
+> -	if (!rc)
+> -		pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
+> -			phase, GPF_TIMEOUT_BASE_MAX);
+> +	if (rc) {
+> +		rc = pcibios_err_to_errno(rc);
+> +		pci_warn(pdev, "Port GPF phase %d timeout write failed: %d\n",
+> +			 phase, rc);
+
+> +		return rc;
+> +	}
+>  
+> -	return rc;
+> +	pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
+> +		phase, GPF_TIMEOUT_BASE_MAX);
+> +
+> +	return 0;
+>  }
+>  
+>  int cxl_gpf_port_setup(struct cxl_dport *dport)
+> @@ -864,16 +870,22 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
+>  
+>  	if (!dport->gpf_dvsec) {
+>  		struct pci_dev *pdev;
+> -		int dvsec;
+> +		int dvsec, rc;
+>  
+>  		dvsec = cxl_gpf_get_dvsec(dport->dport_dev);
+>  		if (!dvsec)
+>  			return -EINVAL;
+>  
+> -		dport->gpf_dvsec = dvsec;
+>  		pdev = to_pci_dev(dport->dport_dev);
+> -		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 1);
+> -		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 2);
+> +		rc = update_gpf_port_dvsec(pdev, dvsec, 1);
+> +		if (rc)
+> +			return rc;
+> +
+> +		rc = update_gpf_port_dvsec(pdev, dvsec, 2);
+> +		if (rc)
+> +			return rc;
+> +
+> +		dport->gpf_dvsec = dvsec;
+>  	}
+>  
+>  	return 0;
 
