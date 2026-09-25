@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310763B6354
-	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD993E0081
+	for <linux-cxl@vger.kernel.org>; Fri, 25 Sep 2026 23:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790379879; cv=none; b=aFc/nXALIVayM5OTCsnPOj6/qWmwC95DxKmekIkye6ndn7Ln7rT5zPsRbC72BjbDPKxkezUSvNFPEeAzvuQ48T0h09q2VXw2dEoETBPPgDkcvcKUBmvaJ1u4EcSe9+kLQqzFaig76ioyCN8w5faYaztEkUl1FYePlXzn0VBkN+4=
+	t=1790380260; cv=none; b=thA6i22nrWKMGCz95WJDE0oL1/5I1tRZsBy+cbsWHvTjq8f0gU2auiBkiHQHzR0GJpPg2zNBpP2lUSyu+iUKxJSYwSs+iI9lkVz/Wwv+k8H2xhp7/MPfIJvS70uoFC63P3/WZ2ELEy5R4AJzXjPBW0mpRTeJwkqmYOgJEREtlNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790379879; c=relaxed/simple;
-	bh=7LoFXl1Ck/H3nadU5sQSCnsNowtOpKjInGpxEZ/upGQ=;
+	s=arc-20240116; t=1790380260; c=relaxed/simple;
+	bh=SrvoDjHeahQVrFqTyC9S7tedeiBYnH0DDVcTYNnZwv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GrU5HebnoxlKjjQyTDxmDmqMkUbDrJDVppjRs8EVcG0tb/r2WEGYYtypPQLojyMks81unFHF1uuJp8JpQRCGz1Lw+NBnB5H+fqU9V6zW1JTGcvhQxrJEEFXx86qdmO6sCi+zG2H/72atqPxJWt8usDTcppZiolPyiKlAqpRxMmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWxkitrm; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=onIQLE+rUrq/iysftb1X4jdIaHriKSz/t9NSAzV2lbijj/R3OQhkJf99DYEpxvILejz8OpxUjKyOWClZXcCNGC1PX6qH/Bu9q4Bk+nSieTgWWEBEA3IvQNRSsYXKxJlJr4o5LJwGx2DmKgGXatjSz+IBn33m+HihSJz9q5F8R7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHSQhrAZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWxkitrm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D2B1F000FF;
-	Fri, 25 Sep 2026 23:44:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHSQhrAZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A9A1F000FF;
+	Fri, 25 Sep 2026 23:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790379878;
-	bh=4nqsfaY+6tQwnIu75iPdcCJo/y1shOfBAt6r8OVNwCU=;
+	s=k20260515; t=1790380258;
+	bh=m9J/83atOHnkqAzMurs9poDbw8zW+WOfyHIwf0G34sA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YWxkitrms/WiNZ84Tey+8xfqlEkOI2IeZarwfk6gd23Hv+/dWlGotaUOfkQjt9Ypt
-	 oSdUR+L8m6AvsZ0Z/TO0S3jGXRyZTc8FBJzJaeWvlK3wWDujI2zWt7rATmvEtmK+j7
-	 9LMvK4wQasSO48twfAdIRF+Cc0iliRzZvvqNUlxOaIQp0n2nCgs6d+cUCVi+x1tc4t
-	 oqP7iRj3OQ3iQ7zICebRPYdci8pvbU2xM5dgMoy0DcqG87qOrPJzfcqWBYdVo6cLYX
-	 H3MVVA7a1vV8zZdGjCHn2MRx5unS6UxI2hW9boCaFhQ3h7vq5IPzTFrlY4GrGAYaoR
-	 xAAlZMXMUl2AQ==
-Date: Sat, 26 Sep 2026 00:44:30 +0100
+	b=gHSQhrAZi5HHFAPTeeKDZIM5JA25hzEAINJDSPJqo/uPl3QtF5mOSGq6ZJwb6Cf+8
+	 FB1XaG/uZU7v4Gt9ITAdEf/lyuDD9za3x4934XzY2orp5v7SJLLH6DusIQI4t5LGEx
+	 bDK4dt9icCiFJLixJt1MYsENfT9mpnY/RArinvAtDeRY2AF2Zoon1S5INDxVXeZJpY
+	 7YXjyI6V1/OiV4MKxHrBdfXXaNfFJPlCtCPgrcvkE6Iz3gvMgQUNxKXD5x5v2iDC6Q
+	 RYdt6seA+WS7lMdV34tekfFyGFURGKocPK80+QJiCA04Lw+HA+q4VINCfEhWlHXHMd
+	 qQLFYOLH5jQ/g==
+Date: Sat, 26 Sep 2026 00:50:53 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Guixin Liu <kanie@linux.alibaba.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/3] cxl/pci: Update only the Port GPF timeout fields
-Message-ID: <20260926004430.42e9cec3@jic23-hlaptop>
-In-Reply-To: <20260922100026.3742401-4-kanie@linux.alibaba.com>
-References: <20260922100026.3742401-1-kanie@linux.alibaba.com>
-	<20260922100026.3742401-4-kanie@linux.alibaba.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ alison.schofield@intel.com, ming.li@zohomail.com, icheng@nvidia.com
+Subject: Re: [PATCH] cxl/mbox: Store event records for EDAC repair
+ regardless of tracing
+Message-ID: <20260926005053.4c823321@jic23-hlaptop>
+In-Reply-To: <a266e6db-eb28-4ca9-9214-de62df8b10b0@intel.com>
+References: <20260924212320.56573-1-dave.jiang@intel.com>
+	<20260925234425.67be0e2e@jic23-hlaptop>
+	<a266e6db-eb28-4ca9-9214-de62df8b10b0@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,43 +48,174 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Sep 2026 18:00:13 +0800
-Guixin Liu <kanie@linux.alibaba.com> wrote:
+On Fri, 25 Sep 2026 15:53:23 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> update_gpf_port_dvsec() rebuilds the phase control register from just
-> the timeout base and scale, so the rest of the register is cleared by
-> the write. The other bits are reserved today and nothing is lost, but
-> the full-register rewrite would clobber any field the spec defines
-> there later.
+> On 9/25/26 3:44 PM, Jonathan Cameron wrote:
+> > On Thu, 24 Sep 2026 14:23:20 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> The driver throws away media error records unless a tracepoint is enabled.
+> >>
+> >> cxl_event_trace_record() stores general media and DRAM records for EDAC
+> >> repair, but both calls sit inside a block gated on the cxl_general_media
+> >> and cxl_dram tracepoints. That gate only exists to skip the DPA-to-HPA
+> >> lookup used to annotate those tracepoints. Storing a record does not need
+> >> the lookup.
+> >>
+> >> With both tracepoints off, two things break. The kernel clears the device
+> >> event log either way, so the records are destroyed in hardware and kept
+> >> nowhere else. And live repair stops working altogether: sPPR and memory
+> >> sparing require the target DPA to have reported an error, no DPA ever has
+> >> a record, so every request fails with -EINVAL.  
+> > 
+> > Hi Dave,
+> > 
+> > Given userspace is always in that path (I think), without the
+> > tracepoints being enabled it will be one impressive guess to
+> > successfully make repair happen - you'll have to magically know
+> > what address will see a hit in the stored error records.
+> > 
+> > Maybe that happens in some test case, but it doesn't feel real
+> > to me.  
 > 
-> Read-modify-write the register and change only the two timeout
-> fields.
+> If you don't think that's possible then I'll drop the patch.
 > 
-> Fixes: a52b6a2c1c99 ("cxl/pci: Support Global Persistent Flush (GPF)")
-> Assisted-by: LLM
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> ---
->  drivers/cxl/core/pci.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 1f470ab0df3b..72e54facafe8 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -846,8 +846,9 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
->  	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
->  		return 0;
->  
-> -	ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
-> -	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
-> +	ctrl &= ~(base | scale);
-> +	ctrl |= FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX) |
-> +		FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
 
-I think a little nicer if you use a pair of FIELD_MODIFY() and let
-the compiler figure out that it can combine things.
+It is possible if you injected the error and so know where it is.
+We may also get other paths by which people obtain that info such
+as anyone who is reporting via fabric management paths.  I just
+don't think it is a fix and perhaps we should wait for a user
+to come along who needs it.
 
->  
->  	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
->  	if (rc) {
+Jonathan
+
+
+
+> DJ
+> 
+> >   
+> >>
+> >> Move the two stores ahead of the tracepoint check. Keep them under the
+> >> memdev lock, which is what stops err_rec_free() from freeing
+> >> cxlmd->err_rec_array while the CPER callback runs. Leave the region and
+> >> DPA rwsems with the lookup.
+> >>
+> >> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")  
+> > 
+> > Why the fixes tag?   Maybe this is enabling something new that is
+> > useful but I'm not immediately understanding what was 'broken' before.
+> > 
+> >   
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> >> Assisted-by: LLM
+> >> ---
+> >> Found by reviewing the gate, not from a failure report.
+> >>
+> >> The documented flow is unaffected, which is why this has gone unnoticed:
+> >> rasdaemon watches the tracepoints, so they are on and the records exist
+> >> (Documentation/edac/memory_repair.rst:94-97). Offline repair is unaffected
+> >> too, since both checks sit under cxl_is_memdev_memory_online():
+> >>
+> >>   edac.c:1807  sPPR     -EINVAL when neither cxl_find_rec_dram() nor
+> >>                         cxl_find_rec_gen_media() finds a record
+> >>   edac.c:1357  sparing  -EINVAL when cxl_mem_get_rec_dram() finds none
+> >>
+> >> The unconditional log clear is at mbox.c:1115, after the record loop.
+> >>
+> >> The memdev lock has to cover the store. err_rec_free() is a devm action on
+> >> &cxlmd->dev (edac.c:2021) that NULLs err_rec_array and frees it, and the
+> >> CPER path (cxl/pci.c:1053) can run while cxl_mem unbinds. Hoisting the
+> >> stores out from under guard(device) would trade the gating bug for a
+> >> use-after-free.
+> >>
+> >> The casts on cxlmd go away because the parameter has not been const since
+> >> dc372e5f429c ("cxl/pci: Hold memdev lock in cxl_event_trace_record()").
+> >>
+> >> Tested in QEMU with cxl_test. kprobe entry counts over the same 220 mock
+> >> event records, using cxl_event_trace_record() as the control:
+> >>
+> >>   tracepoints off      control   store_gen_media   store_dram
+> >>     before                 220                 0            0
+> >>     after                  220                22           33
+> >>
+> >>   tracepoints on       control   store_gen_media   store_dram
+> >>     before                 220                22           33
+> >>     after                  220                22           33
+> >>
+> >> Records are kept with tracing off, and the tracing-on path is unchanged -
+> >> the hoist neither drops nor duplicates a store. The guest log shows
+> >> cxl_clear_event_record() draining the device log in both cases, so the
+> >> records really are gone from hardware whether or not the kernel kept them.
+> >> Builds warning-free with CONFIG_CXL_EDAC_MEM_FEATURES=y and disabled.
+> >>
+> >> Not covered: the -EINVAL itself. cxl_test mocks no sPPR or sparing feature,
+> >> so the repair path cannot be driven end to end.
+> >>
+> >> Left alone to keep this minimal: the WARN_ON_ONCE checks on the AP/CME
+> >> counter-expire descriptor (mbox.c:952-964) stay inside the gate, and are
+> >> arguably mis-gated for the same reason.
+> >> ---
+> >>  drivers/cxl/core/mbox.c | 23 ++++++++++++++++-------
+> >>  1 file changed, 16 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index 55828a836c01..89fb2f569e4b 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -913,6 +913,22 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >>  		return;
+> >>  	}
+> >>  
+> >> +	/*
+> >> +	 * EDAC memory repair looks these records up from the current boot, so
+> >> +	 * store them whether or not tracing is enabled. Hold the memdev lock
+> >> +	 * across the store to keep cxlmd->err_rec_array alive against a
+> >> +	 * concurrent cxl_mem unbind.
+> >> +	 */
+> >> +	guard(device)(&cxlmd->dev);
+> >> +
+> >> +	if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
+> >> +		if (cxl_store_rec_gen_media(cxlmd, evt))
+> >> +			dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
+> >> +	} else if (event_type == CXL_CPER_EVENT_DRAM) {
+> >> +		if (cxl_store_rec_dram(cxlmd, evt))
+> >> +			dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
+> >> +	}
+> >> +
+> >>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+> >>  		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
+> >>  		struct cxl_region *cxlr;
+> >> @@ -922,7 +938,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >>  		 * translations. Take topology mutation locks and lookup
+> >>  		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
+> >>  		 */
+> >> -		guard(device)(&cxlmd->dev);
+> >>  		guard(rwsem_read)(&cxl_rwsem.region);
+> >>  		guard(rwsem_read)(&cxl_rwsem.dpa);
+> >>  
+> >> @@ -937,9 +952,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >>  		}
+> >>  
+> >>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
+> >> -			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
+> >> -				dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
+> >> -
+> >>  			if (evt->gen_media.media_hdr.descriptor &
+> >>  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+> >>  				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
+> >> @@ -952,9 +964,6 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+> >>  						hpa_alias, &evt->gen_media);
+> >>  		} else if (event_type == CXL_CPER_EVENT_DRAM) {
+> >> -			if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
+> >> -				dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
+> >> -
+> >>  			if (evt->dram.media_hdr.descriptor &
+> >>  			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
+> >>  				WARN_ON_ONCE((evt->dram.media_hdr.type &
+> >>
+> >> base-commit: fd73f4a6659897191fa0d40695fe370925dd3780  
+> >   
+> 
 
