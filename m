@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBACF440A3E;
-	Fri, 25 Sep 2026 22:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430C447A86E;
+	Fri, 25 Sep 2026 22:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790373939; cv=none; b=PNxGnu3S1SA7Av1qHKlQS4N18K3UDtQ9HiIzTG94hmK5zknamYNCGidz1/apJZ19RGwkf9kBev9nz4XI7RqKVEApkWwA1NqJmhcv2TkU6sgiDx5FsoK6Eyy/7sJOPuMCOv/AIqtMs5ElSJQFa48FPCDn5qSeT87kH4Kd7dQnMJg=
+	t=1790374548; cv=none; b=eQddBHMwZjJ1Z3yldYrs9e0IQIcHBkF3ahw580ArrA1gsK3C0Rxe3Rown497jPtXqq/uXepEQXwO78k/wwaYSeMSeg/ujsp31ulbVtUBlwvR6yg67pwzDH5LNehMz0QDV47fVu3XJ4zU4LAAUR7zyRKybMfr56U7DULrRLQ9bKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790373939; c=relaxed/simple;
-	bh=2EOpSBVwiFTyJODrgdVakePWlXOI6UWDhn5KowBzIQ4=;
+	s=arc-20240116; t=1790374548; c=relaxed/simple;
+	bh=x/uAG0FitG5iZp0v0Vp/9nBY/NOtuPTIO0fVuK3nucM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OzrHuRszoq2ahITQ8RARyoFZIL/EMAz2dlH0EtWw14o1Irff/3M6/eUBEjpn80swtXcJeDpPWQfm3xifEc7HpqPUls9gWS6E0i5g/DzlaGwHrCEHr/dYJyf1i6DkIgd0X8TB73EYCc+i1DdSElVjRQbPgLoFVvUX9LWHdTH6DyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aW/1X2dA; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=OXbMN/QKFoa0xMLgs1K5r5ngS87jBrGz/I/av6bfdIVKzlSw+lqCPwnCwG03wPvU88VYc6+HXlZa6EZnLVoAXCtRrrgl7ciB+cswiFVe/nw+OE3Xx9jCubZTiki9B03O/JEymMLsI5dBIblG7XvejaF25JDfvW1LBdDQqkQpFoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mREPbVWM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aW/1X2dA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79301F000FF;
-	Fri, 25 Sep 2026 22:05:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mREPbVWM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A401F000FF;
+	Fri, 25 Sep 2026 22:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790373937;
-	bh=l+YfFAXDtzOvvAcpNn6JM07GzhHKVnZX6drhhNawXKk=;
+	s=k20260515; t=1790374546;
+	bh=jvKsa/YXVFhRAptUPmeNIrjnuYg/JjP3HHUk0KSUo2s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=aW/1X2dAcrgTp6XTDHYRMTvAIo3LsC0iWnytkzVEcKaiv3k8e7ot3mkyzAj9pd6S2
-	 s5YoLVCD4DscVM+BZ7b8QabDnL2am+4sOjnDiaD01LQX860U7sek8Yhc5IXJ/ThyD2
-	 7CAHYsbH2iA9OHQ2d/g1TjDTOQy+bZ51RmEa1LpKc5uyYSO9gXaNk5HIlbhGhkEfvS
-	 lAuY+eel3A196tXEYYZA7IA+eX38zrquyLZUPBxBU4xUDt/6OkF5TrA3pI4R2BeN1q
-	 Q4oIWBhYHXEwAOKY+msEAGZPZ8YUTTIT+WYGMAjNM28Jp+0D5VIsE3uDucb2BTtZ9J
-	 2HMxrLbIeJKZg==
-Date: Fri, 25 Sep 2026 23:05:28 +0100
+	b=mREPbVWMUbVbHx93byJSxHP4NjQ9kSEKOYw5phXvqbq77VzO7JdXcPqIS9klisCXA
+	 NS02aslwAkeBLfK0QtxfHCirTMNHhIvWG5Lf0teNnmGZVm1dkC9Ii++NTPsC48H222
+	 dIpoFEO2blm7bjUcaK8M6A5tDikRy9xbDgUga3IEnac6nEYwm8Hb1F2kh5R+mXl05n
+	 UDyW5yYOiGeG6RVkb2mMpkRetrnhKlgDu3TnMUcGCutxidh0Ss8kJlm4HkO1V05Wua
+	 3Dqq+XE5tXc7yIcm0ytwk+Y7XCDZUojtk4O47L7pttAnok1XqsJXVmLmkVnKdD9fO1
+	 zvy5M+rA7wK7A==
+Date: Fri, 25 Sep 2026 23:15:41 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: <mhonap@nvidia.com>
 Cc: <alex@shazbot.org>, <jgg@ziepe.ca>, <ankita@nvidia.com>,
@@ -41,11 +41,12 @@ Cc: <alex@shazbot.org>, <jgg@ziepe.ca>, <ankita@nvidia.com>,
  <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
  <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v5 09/27] vfio/pci: Add a generic excluded-range list
-Message-ID: <20260925230528.33f70daf@jic23-hlaptop>
-In-Reply-To: <20260916183540.3813685-10-mhonap@nvidia.com>
+Subject: Re: [PATCH v5 11/27] vfio/pci: Virtualize the CXL DVSEC in
+ vfio_pci_config.c
+Message-ID: <20260925231541.492d5407@jic23-hlaptop>
+In-Reply-To: <20260916183540.3813685-12-mhonap@nvidia.com>
 References: <20260916183540.3813685-1-mhonap@nvidia.com>
-	<20260916183540.3813685-10-mhonap@nvidia.com>
+	<20260916183540.3813685-12-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -56,256 +57,181 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Sep 2026 00:05:22 +0530
+On Thu, 17 Sep 2026 00:05:24 +0530
 <mhonap@nvidia.com> wrote:
 
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> The MSI-X table is virtualized in vfio_pci_bar_rw() by an open-coded
-> x_start/x_end window that fills reads with -1 and drops writes. Now that
-> a generic excluded-range list expresses the same fill/drop behavior,
-> register the MSI-X table as a read and write excluded range instead of
-> special-casing it in the read/write path.
+> A CXL Type-2 device is reprogrammable through its CXL DVSEC: a guest could
+> set Config Lock, toggle CXL.cache and CXL.mem enable, or rewrite the HDM
+> range registers that govern host memory decode. Virtualize the DVSEC so
+> the guest sees a shadow it cannot use to reprogram the hardware.
 > 
-> Add the range when the MSI-X capability is parsed in
-> vfio_pci_core_enable() and clear the list in vfio_pci_core_disable()
-> alongside the config teardown. The read/write path now relies solely on
-> vfio_pci_bar_find_exclusion(), so MSI-X and a provider's (e.g. vfio-cxl)
-> trapped registers share one mechanism.
+> Build a per-device cxl_perm permission map, modeled on msi_perm, when the
+> device is bound through the CXL provider (e.g. vfio-cxl). The whole CXL
+> DVSEC is served from the vconfig shadow; only Control and Control2 are
+> guest programmable, while Capability, Status, Lock and the Range registers
+> keep their firmware snapshot. A vendor DVSEC on the same device is
+> unaffected: the map is selected only for the CXL DVSEC offset.
 > 
-> No functional change.
+> Control2 carries the CXL reset and cache write-back-invalidate initiate
+> bits as self-clearing doorbells. vfio never forwards them to hardware, so
+> a custom writefn synthesizes their completion in the shadow: the initiate
+> bit self-clears and the matching Status2 bit (Cache Invalid or Reset Done)
+> is set, so a guest following the spec reset sequence
+> (INIT_CACHE_WBI, poll Cache Invalid, INIT_CXL_RST, poll Reset Done)
+> progresses instead of timing out. The host performs the real cache
+> write-back and reset at the vfio reset points.
 > 
 > Assisted-by: LLM
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
-A few things inline that might tidy up the implementation and make
-it a little more readable. Also you've use object allocators in some
-places but not universally.  
+A few minor comments inline.
 
-Jonathan
-
+J
 > ---
->  drivers/vfio/pci/vfio_pci_core.c | 209 +++++++++++++++++++++++++++++++
->  drivers/vfio/pci/vfio_pci_priv.h |   9 ++
->  drivers/vfio/pci/vfio_pci_rdwr.c |   8 ++
->  include/linux/vfio_pci_core.h    |  14 +++
->  4 files changed, 240 insertions(+)
+>  drivers/vfio/pci/vfio_pci_config.c | 132 ++++++++++++++++++++++++++++-
+>  include/linux/vfio_pci_core.h      |   3 +
+>  2 files changed, 133 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 9a75c30b67e2..9e4fa5d088a4 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> +#include <linux/sort.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
->  #include <linux/vgaarb.h>
-> @@ -1012,6 +1013,204 @@ static int msix_mmappable_cap(struct vfio_pci_core_device *vdev,
->  	return vfio_info_add_capability(caps, &header, sizeof(header));
->  }
->  
-> +struct vfio_pci_excluded_range {
-> +	struct list_head	entry;
-> +	int			bar;
-> +	u64			start;
-> +	u64			size;
-> +	u32			flags;
-> +};
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 9914f3ac69ae..9a020a768055 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+
 > +
-> +int vfio_pci_core_add_excluded_range(struct vfio_pci_core_device *vdev, int bar,
-> +				     u64 start, u64 size, u32 flags)
+> +static int init_cxl_dvsec_perm(struct perm_bits *perm, int len)
 > +{
-> +	struct vfio_pci_excluded_range *range;
+> +	int i;
 > +
-> +	range = kzalloc_obj(*range);
-> +	if (!range)
+> +	if (alloc_perm_bits(perm, len))
 > +		return -ENOMEM;
 > +
-I'd be tempted to do kmalloc_obj and
-	*range = (struct vfio_pci_excluded_range) {
-		.bar = bar,
-		.start = start,
-		.size = size,
-		.flags = flags,
-	};
-	list_add_tail(...)
+> +	perm->writefn = vfio_cxl_dvsec_write;
+> +
+> +	/* Serve the whole CXL DVSEC from the shadow. */
+> +	for (i = 0; i < len; i++)
+	for (int i = 0;
 
-> +	range->bar = bar;
-> +	range->start = start;
-> +	range->size = size;
-> +	range->flags = flags;
-> +	list_add_tail(&range->entry, &vdev->excluded_ranges);
+Is mostly acceptable in the kernel these days and keeps
+the scope tightly defined.
+
+> +		p_setb(perm, i, (u8)ALL_VIRT, NO_WRITE);
+> +
+> +	/*
+> +	 * Control and Control2 are guest programmable; Capability, Status,
+> +	 * Lock and the Range registers keep their firmware snapshot, so the
+> +	 * guest cannot set Config Lock or rewrite the capability and ranges.
+> +	 */
+> +	p_setw(perm, PCI_DVSEC_CXL_CTRL, (u16)ALL_VIRT, (u16)ALL_WRITE);
+> +	p_setw(perm, PCI_DVSEC_CXL_CTRL2, (u16)ALL_VIRT, (u16)ALL_WRITE);
 > +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(vfio_pci_core_add_excluded_range);
 > +
-> +static void vfio_pci_free_excluded_ranges(struct vfio_pci_core_device *vdev)
+> +/* Virtualize the CXL DVSEC so a guest cannot reprogram the device through it. */
+> +static int vfio_cxl_dvsec_init(struct vfio_pci_core_device *vdev)
 > +{
-> +	struct vfio_pci_excluded_range *range, *tmp;
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	u32 dword;
+> +	u16 dvsec;
+> +	int len, ret;
 > +
-> +	list_for_each_entry_safe(range, tmp, &vdev->excluded_ranges, entry) {
-> +		list_del(&range->entry);
-> +		kfree(range);
-> +	}
-> +}
-
-
-> +
-> +/* A page-aligned mmap hole, derived from an mmap-excluded range. */
-> +struct vfio_pci_mmap_hole {
-> +	u64 start;
-> +	u64 end;
-> +};
-This is just a range. Do we need another define for this specific case?
-
-> +/*
-> + * Advertise the BAR as mmappable minus every page-aligned mmap-excluded hole.
-> + * A BAR can carry several holes at unrelated offsets (for example an MSI-X
-> + * table and one or more trapped CXL component sub-blocks, which the CXL spec
-> + * locates by pointer, not at fixed offsets).
-> + * Collect the holes, page-align and sort them, coalesce any that overlap or
-> + * touch, and advertise the gaps.
-> + */
-> +static int vfio_pci_excluded_sparse_cap(struct vfio_pci_core_device *vdev,
-> +					int index, struct vfio_info_cap *caps)
-> +{
-> +	u64 bar_len = pci_resource_len(vdev->pdev, index);
-> +	struct vfio_region_info_cap_sparse_mmap *sparse;
-> +	struct vfio_pci_excluded_range *range;
-> +	struct vfio_pci_mmap_hole *holes;
-> +	int nr_holes = 0, nr_areas = 0, i, j;
-
-Generally avoid mixing declarations with assignment with those that don't
-on a single line. It is harder to read than splitting them into each
-time of declaration.
-
-> +	size_t size;
-> +	u64 pos;
-> +	int ret;
-> +
-> +	list_for_each_entry(range, &vdev->excluded_ranges, entry)
-> +		if (range->bar == index &&
-> +		    (range->flags & VFIO_PCI_EXCLUDE_MMAP))
-> +			nr_holes++;
-> +
-> +	if (!nr_holes)
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_DEVICE);
+> +	if (!dvsec)
 > +		return 0;
 > +
-	struct vfio_pci_mmap_hole *holes __free(kfree) =
-		kzalloc_objs(*holes, nr_holes);
-or something like that.  Kees is well his way to getting rid of almost
-all places where objects are allocated in non typesafe ways.
-
-> +	holes = kmalloc_array(nr_holes, sizeof(*holes), GFP_KERNEL);
-> +	if (!holes)
-> +		return -ENOMEM;
+> +	ret = pci_read_config_dword(pdev, dvsec + PCI_DVSEC_HEADER1, &dword);
+> +	if (ret)
+> +		return pcibios_err_to_errno(ret);
+> +	len = PCI_DVSEC_HEADER1_LEN(dword);
 > +
 > +	/*
-> +	 * mmap is page granular, so each hole rounds out to the page boundaries
-> +	 * enclosing its excluded sub-range. The byte-granular exclusion still
-> +	 * governs the fault and read/write paths; only the advertised mmap areas
-> +	 * round to whole pages.
+> +	 * The virtualization writes fixed DVSEC offsets up to Status2 (the reset
+> +	 * doorbell stamps it). A device that reports a shorter DVSEC is not a
+> +	 * usable Type-2 function; leave it as plain vfio-pci rather than index the
+> +	 * device-length-sized perm allocation past its end.
 > +	 */
-> +	i = 0;
-> +	list_for_each_entry(range, &vdev->excluded_ranges, entry) {
-> +		if (range->bar != index ||
-> +		    !(range->flags & VFIO_PCI_EXCLUDE_MMAP))
-> +			continue;
-
-		holes[i++] = (struct vfio_pci_mmap_hole) {
-			.start = ALIGN_DOWN(range->start, PAGE_SIZE),
-			.end = ALIGN(range->start + range->size, PAGE_SIZE),
-		};
-
-Mind you vfio_pci_mmap_hole seems a lot like a range. So maybe just use a
-struct range then you get 
-
-		holes[i++] = DEFINE_RANGE(ALIGN_DOWN(range->start, PAGE_SIZE),
-					  ALIGN(range->start + range->size, PAGE_SIZE));
-
-
-> +		holes[i].start = ALIGN_DOWN(range->start, PAGE_SIZE);
-> +		holes[i].end = ALIGN(range->start + range->size, PAGE_SIZE);
-> +		i++;
-> +	}
+> +	if (len < PCI_DVSEC_CXL_STATUS2 + 2)
+> +		return 0;
 > +
-> +	sort(holes, nr_holes, sizeof(*holes), vfio_pci_mmap_hole_cmp, NULL);
-> +
-> +	/* Coalesce holes that overlap or touch after page alignment. */
-> +	for (i = 0, j = 0; i < nr_holes; i++) {
-> +		if (j && holes[i].start <= holes[j - 1].end)
-> +			holes[j - 1].end = max(holes[j - 1].end, holes[i].end);
-> +		else
-> +			holes[j++] = holes[i];
-> +	}
-> +	nr_holes = j;
-> +
-> +	/* One mmappable area per gap: before, between, and after the holes. */
-> +	for (i = 0, pos = 0; i < nr_holes; i++) {
-> +		if (holes[i].start > pos)
-> +			nr_areas++;
-> +		pos = holes[i].end;
-> +	}
-> +	if (pos < bar_len)
-> +		nr_areas++;
-> +
-> +	size = struct_size(sparse, areas, nr_areas);
+> +	vdev->cxl_perm = kmalloc_obj(struct perm_bits, GFP_KERNEL_ACCOUNT);
 
-	struct vfio_region_info_cap_sparse_mmap *sparse =
-		kzalloc_flex(*sparse, areas, nr_areas);
+I'd use *vdev->cxl_perm instead of struct perm_bits just because
+that saves anyone checking types.
 
-> +	sparse = kzalloc(size, GFP_KERNEL);
-> +	if (!sparse) {
-> +		kfree(holes);
-with the __free above this can simply return.
+> +	if (!vdev->cxl_perm)
 > +		return -ENOMEM;
+> +
+> +	ret = init_cxl_dvsec_perm(vdev->cxl_perm, len);
+> +	if (ret) {
+> +		kfree(vdev->cxl_perm);
+> +		vdev->cxl_perm = NULL;
+> +		return ret;
 > +	}
 > +
-> +	sparse->header.id = VFIO_REGION_INFO_CAP_SPARSE_MMAP;
-> +	sparse->header.version = 1;
-> +	sparse->nr_areas = nr_areas;
+> +	vdev->cxl_dvsec = dvsec;
+> +	vdev->cxl_dvsec_len = len;
 > +
-> +	for (i = 0, j = 0, pos = 0; i < nr_holes; i++) {
-> +		if (holes[i].start > pos) {
-> +			sparse->areas[j].offset = pos;
-> +			sparse->areas[j].size = holes[i].start - pos;
-> +			j++;
-Bit of a long line because of the indent but I'd still go for setting whole
-structure in one shot - so something like:
-
-			sparse->areas[j++] = (struct vfio_region_sparse_mmap_area) {
-				.offset = pos,
-				.size = holes[i].start - pos,
-			};
-> +		}
-> +		pos = holes[i].end;
-> +	}
-> +	if (pos < bar_len) {
-> +		sparse->areas[j].offset = pos;
-> +		sparse->areas[j].size = bar_len - pos;
-
-Similar for setting it in one go so we only do the indexing
-once + looks more like above (where this trick is more advantageous!)
-
-		sparse->areas[j] = (struct vfio_sparse_mmap_area) {
-			.offset = pos,
-			.size = bar_len - pos, 
-		};
-
-
-> +	}
-> +
-> +	kfree(holes);
-
-This looks like a good place to use __free magic to simplify things.
-
-> +	ret = vfio_info_add_capability(caps, &sparse->header, size);
-> +	kfree(sparse);
-> +	return ret;
+> +	return 0;
 > +}
 > +
+>  int vfio_config_init(struct vfio_pci_core_device *vdev)
+>  {
+>  	struct pci_dev *pdev = vdev->pdev;
+> @@ -1842,6 +1955,12 @@ int vfio_config_init(struct vfio_pci_core_device *vdev)
+>  	if (ret)
+>  		goto out;
+>  
+> +	if (vdev->cxl_ops) {
+> +		ret = vfio_cxl_dvsec_init(vdev);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+>  	return 0;
+>  
+>  out:
+> @@ -1863,6 +1982,12 @@ void vfio_config_free(struct vfio_pci_core_device *vdev)
+>  		kfree(vdev->msi_perm);
+>  		vdev->msi_perm = NULL;
+>  	}
+> +	if (vdev->cxl_perm) {
+> +		free_perm_bits(vdev->cxl_perm);
+> +		kfree(vdev->cxl_perm);
+> +		vdev->cxl_perm = NULL;
+> +		vdev->cxl_dvsec = 0;
 
+I'd define a vfio_cxl_dvsec_exit() or _unint() for this so
+it is clear it pairs with vfio_cxl_dvsec_init() above.
+
+
+> +	}
+>  }
+>  
+>  /*
+> @@ -1926,12 +2051,15 @@ ssize_t vfio_pci_config_rw_single(struct vfio_pci_core_device *vdev,
+>  			 * of the extended capability list.  Use default, ro
+>  			 * access, which will virtualize the id and next values.
+>  			 */
+> +			cap_start = vfio_find_cap_start(vdev, *ppos);
+> +
+>  			if (cap_id > PCI_EXT_CAP_ID_MAX)
+>  				perm = &direct_ro_perms;
+> +			else if (cap_id == PCI_EXT_CAP_ID_DVSEC && vdev->cxl_perm &&
+> +				 cap_start == vdev->cxl_dvsec)
+
+If it is only used here (I haven't read on in series)
+				 vfio_find_cap_start(vdev, *ppos) == vdev->cxl_dvsec)
+seems fine to me.  It's only just over 80 chars and hopeful this bit of the kernel
+is flexible on that!
+
+> +				perm = vdev->cxl_perm;
+>  			else
+>  				perm = &ecap_perms[cap_id];
+> -
+> -			cap_start = vfio_find_cap_start(vdev, *ppos);
+>  		} else {
+>  			WARN_ON(cap_id > PCI_CAP_ID_MAX);
+>  
 
