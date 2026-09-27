@@ -1,206 +1,127 @@
-Received: from mail-ed2-f34.google.com (mail-ed2-f34.google.com [74.125.228.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D60C3B6378
-	for <linux-cxl@vger.kernel.org>; Sun, 27 Sep 2026 22:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790549235; cv=pass; b=Xu9w2AVEMNlsuCIRINAHFQ3slCnd3xU1YmbVMynAr8JBNDKfLa2p7L4LghfsCydFZg0WqZ6iOGTO8B6K8/+RZ5c4kt195fG3xDAFIIBy3q5fEAxaaTcgGtMPkn4YuGbzjVuvKnQDBn9Mkn9FfZJo5wxPCObB/PAtBH7OIUA2jTQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790549235; c=relaxed/simple;
-	bh=13e/yABJLuq5e3xhn1IcZZe5oBwPbnwbTkVGh4XSUbI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=By6dzoQCBhWSnmP+N503YcX9YZKqZ9+E5tYrYnpMp4bRsAcjtS+yYUSmznhBCrUgnvwYq5abLm+8ybLPt5gfPtdINNBhCwPGWqZuJucvc5LrykaFjjfF5WQE3SIMEq/mwtgEbu3eIS+5nbQzVVlTkSVH1ZOa/62qG/M5hZ9f63o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=puL1Zdvz; arc=pass smtp.client-ip=74.125.228.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E533C3EA97A;
+	Sun, 27 Sep 2026 22:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790549410; cv=none; b=DypliISdELAWUXrNxBV36DLNO9wSqaOsATdanEFjeC/MwJ98kWG2PEZ1pDJRT8DNp+3kweMjHwYRuitYuYX005IBhr+js0gahwSMsZTC8Rdb2FJnso0i5Ke+S4SQ8Ueqy2HrUhJ7Uey/OEnIiBGPjf0mR14Td2pkuwdnAkdXXGQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790549410; c=relaxed/simple;
+	bh=/aCovl8RC0lzVIS7AQKYGh0WIGySO+B7ueAYz7HP4Bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k92WMvP+YzvfLKu5WkQp4+7JQ1arMM9HJ2WNWJ5UGxFI+3OXNWHbzhXJ4Mz+lF6hLG6lYPYWdWTo3vkjDJI/mKIOVDgZgKsVG9r5hz81qj2BZSSzIPxBJRt3HxetPSXkM1niNIi8SGWFGX/dOD5kpjE7cA+effdSAGkeSOQf5pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRh1OBiB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puL1Zdvz"
-Received: by mail-ed2-f34.google.com with SMTP id 4fb4d7f45d1cf-6aae90f528fso3421436a12.1
-        for <linux-cxl@vger.kernel.org>; Sun, 27 Sep 2026 15:47:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790549232; cv=none;
-        d=google.com; s=arc-20260327;
-        b=PO1XK+pnqIlIcLLUxXF2w9YwRe3xoFNEBC7ovG/GEp2X2ZT27j32mwEVKPHXFiJ2ga
-         QhM33lD8U2q7r1/CNHGogm+QMpCPj3RUV66cg453Z+6vJekP8IY9ZB5z2SY1e4Eew5Bw
-         gctDai8k5c/qVdsXre7n2AtvjrXnW0TF5mOSpD8eBedWbpvixO5ZPcAJvbTmByd3FiHR
-         W5duEGTyqmXtsUiN5nObRC50Hhd/4pAnKqtVM5jxsh8ZFpVd2ImOCCrIHV2RiwwXWdi1
-         Hp1XcL1n3FTT0zaHaq8GULtTEHu6WrwZMmrftCNBS0ARcbkXCoyTgXXrnouE2hRYcLaK
-         fCFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=QIJ+NAQNwQQ8hmxlSZFAjXknCZBUfMJn51nkt5PbrzA=;
-        fh=CugdTDtauM+wDkHEZWjoky5Kpxg+kDUni0mVgX/YmIM=;
-        b=E6QovCkh0oJCvJRVtDHMKlDacxwoEB0pr9nTr3gIGg5Mv7aeHUBjmgbNQtuEVrdSWP
-         powgjp6zElCG+Krzm+8Miq/eZWiLiM86HaUEfm4dszPGZIiOMy8oqJ/RY08BnFcmS8Zu
-         QsMTEblSwzir4xPLLH3QoJdQ7hnu3ZHtUWmJWFWbeLebDrwvRSu+qevEOFnslKoQgWbM
-         bKXcrQ9bv8ghbTS930xVcryJA2BCX2h0ONL5g6Hpv3JVW45mZFVWmnTnxiaJxSFP7N1s
-         jKPt97kHZ+OVuA3U9GBCmgDWbylchHN5w0ynrvxX5txj3uAm0gBBW56c45aDWtb/9o8P
-         74CQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790549232; x=1791154032; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=QIJ+NAQNwQQ8hmxlSZFAjXknCZBUfMJn51nkt5PbrzA=;
-        b=puL1ZdvzDYmudKZIuFOaYnWzG342b+nzJQNuuZY82V8jaL+oJ1dKweO+f2avwCLxtL
-         YA92OIzOPmYat7HWruZTV0XxaAsjtHCrnZkiFShFO5BpgrkWycNT7vhOYH8wbPuIz7/J
-         vbk/Olp/IloFqZq1LIhdYI3dEg5sD+SaY7jb7W7X34GCWRpjOLBmIEW6zN7UxCHh3hJO
-         0kDTNEhcBCUq5v3odU0s8+uyGA+kL7KA64fHltP1VCmUl8zrrDQLp1OrX6wP73Yrfry9
-         SJBj7Qsl3HPLmf/GAECXK0fziXMq1nb4nEVC4/Bawv8V3FxA6hauMrzfWaWp0s0BeRS3
-         TCyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790549232; x=1791154032;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QIJ+NAQNwQQ8hmxlSZFAjXknCZBUfMJn51nkt5PbrzA=;
-        b=LPdVT9sdHOwSvPmtkPqJ97VdeQ6goUfM4hmE5Z44iasgVc39o1xMeVgoj+TKSZKBAF
-         qxujPbgiLeFvXXQsknBZbvS8HGOBKtksDhj4yolTyuQV1E6qluIkf9fAqST/xgY6Df6q
-         5Se0PI452EHx0qfiIRkIS9znB+G9UknwkOu+wQ/Rb4bczFSnHEg0IlUjRnjcOvOYbfeJ
-         UKuwjgMEBrj0PhVhwfalXDF3MN8mOLJjPQ6eQveNYzcWvkKtxAGRfwQt46Ggm5YWSaZa
-         47gktp73OhbM/5PX89dO+oMbjW0lCaae+s6fGj66un4ynnp1F5CB+TDY9sXzSUzEZCdg
-         255g==
-X-Forwarded-Encrypted: i=1; AKwUvBwCNpkay+6puUl7JvR0m79JcGR7HYJ0MWdMb91y4csJjvQLsN+EzcJ8qtj8vSbRV4c20mkSUUkDLLI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKyfa9GMhEcbj3OC3S3YG9htPn39uV7+c1hdU0iQPZsaCtvY7TW
-	W5p7UtDF26aARo3EIJsqua4cCeDOQr7lNZMEj1D24ciCshkNro+YnJJm2FxKBbOf+tdsrb3kSxk
-	Qh73GoQYdImAd3J/4rKQYApz21sumRPY=
-X-Gm-Gg: AYBFou2fLGnQPXozy7czCh7WmvOiA+0e1e9prYtaJ8O6Oz/nXFRLii+WbY6GSR/hx2y
-	Xkb6pzvPHJTrbDMNWZiDHeVRyZxFSGb/ZxQuVjlaE25LqHvFftfJBvPwgW/pMTbSAF6GPaQpKsl
-	4i/2MrA+dM8ANVBCOGaRDq8VllqFaOmRkI/DCoFNuEeNyKyxmbgNxUGgU1Fcj53xcg41vFVZbqB
-	AsSM1eJ/2+s+dS0ICuZwqR0i9m91TQsWnh9IuQYnRMSrwO/EFa64PTueP+bk5amyd1j5Jvs7REb
-	FZsg/LXwI1KN8o/lWs8HBNVZmHxdDAQFugLa5/mOM21oafxfeQWhN9mS+1y/R7KUN1J/5v+E6jN
-	Zm7o/099+CA==
-X-Received: by 2002:a05:6402:23d9:b0:6ac:8dce:5a8a with SMTP id
- 4fb4d7f45d1cf-6ac8dce626dmr16296a12.9.1790549231274; Sun, 27 Sep 2026
- 15:47:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRh1OBiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5991F000FF;
+	Sun, 27 Sep 2026 22:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790549408;
+	bh=MmIw28LazQjnyo5PLms13QRbrvuqaROTWE9kzh5dsd0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=eRh1OBiBveklXrJl07N/c1ijew76Eo2PYq39QJthaynDmuL48HN4EPJe86y/ZWlBP
+	 Sp1qZpVNdoe0/FNFoL9wJnU1WETWNGNm/vR9U5JALoul5sq9EKDqGD5V3Ay0vTKLXs
+	 IY3tK92ncocacEEGTqT47cVCNSKPRDDNTL75WlUstw2uwOpMay0nY4IORU/M1jlKu3
+	 keLUBFwd7C1Cp8H86ngIRwKWcspvZ39M6raFXABEYFZVRgNHoVcN1KYpRqtlVmYCqq
+	 Qco8zEvFb89/kBE99c52EkFvkqFJtoo4bazwiHRs3JLdxWZr+w76BUp5Q71IZjydex
+	 0u/9vWMww6fiw==
+Date: Sun, 27 Sep 2026 23:50:01 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jiale Yao <yaojiale02@163.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/acpi: Check ACPI companion before use
+Message-ID: <20260927235001.01316b18@jic23-hlaptop>
+In-Reply-To: <20260926071605.3013893-1-yaojiale02@163.com>
+References: <20260926071605.3013893-1-yaojiale02@163.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260901010347.2614656-1-alistair.francis@wdc.com>
- <20260901010347.2614656-18-alistair.francis@wdc.com> <20260901012040.554EE1F000E9@smtp.kernel.org>
- <20260909013616.13993627@jic23-huawei>
-In-Reply-To: <20260909013616.13993627@jic23-huawei>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Mon, 28 Sep 2026 08:46:45 +1000
-X-Gm-Features: AclHuK80qnvQONQBTNAnvCROC7Xx41gEGXL0iR9jU1dQigho_4UbMx7DCECDSXU
-Message-ID: <CAKmqyKN3ik5nHvRVEdAb96+CjXO8x53bFNsKMdOUWCWw-4Z2kA@mail.gmail.com>
-Subject: Re: [PATCH v3 17/21] lib: rspdm: Support SPDM get_digests
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, 
-	linux-pci@vger.kernel.org, ojeda@kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 9, 2026 at 10:36=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Tue, 01 Sep 2026 01:20:39 +0000
-> sashiko-bot@kernel.org wrote:
->
-> > Thank you for your contribution! Sashiko AI review found 3 potential is=
-sue(s) to consider:
-> > - [High] Buffer under-allocation for SPDM 1.3+ GET_DIGESTS responses le=
-ading to transport failure, transcript truncation, and EIO crashes.
-> > - [Medium] The GET_DIGESTS implementation validates the payload length =
-but completely discards the returned certificate digests.
-> > - [Low] An undersized/truncated GET_DIGESTS response incorrectly logs a=
-n 'Overflow' error.
-> > --
-> >
-> > commit 7b16689f564246befd0f0c43fa0d4515876746e6
-> > Author: Alistair Francis <alistair@alistair23.me>
-> >
-> > lib: rspdm: Support SPDM get_digests
-> >
-> > This commit adds support for the GET_DIGESTS SPDM command.
-> >
-> > > diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> > > index b78086c753702..131c22319b262 100644
-> > > --- a/lib/rspdm/state.rs
-> > > +++ b/lib/rspdm/state.rs
-> > [ ... ]
-> > > @@ -612,4 +630,64 @@ pub(crate) fn negotiate_algs(&mut self) -> Resul=
-t<(), Error> {
-> > >
-> > >          Ok(())
-> > >      }
-> > > +
-> > > +    pub(crate) fn get_digests(&mut self) -> Result<(), Error> {
-> > > +        let mut request =3D GetDigestsReq::default();
-> > > +        request.version =3D self.version;
-> > > +
-> > > +        let req_sz =3D core::mem::size_of::<GetDigestsReq>();
-> > > +        let rsp_sz =3D core::mem::size_of::<GetDigestsRsp>() + SPDM_=
-SLOTS * self.hash_len;
-> >
-> > [Severity: High]
-> > Does this calculation fail to account for SPDM 1.3+ fields like KeyPair=
-ID,
-> > CertificateInfo, and KeyUsageMask?
-> >
-> > For SPDM 1.3+ compliant responders, up to 32 bytes of additional fields
-> > can be returned. Because param2 is a bitmask of provisioned slots rathe=
-r
-> > than a count, any device using slots >=3D 4 will produce a response siz=
-e far
-> > larger than the allocated buffer, which could trigger an EIO crash.
-> >
-> > Even for lower slots, this calculation omits the 1.3 fields from the
-> > transcript, which could cause a permanent signature verification failur=
-e
-> > in challenge authentication due to transcript desynchronization.
->
-> Nope. Feature turned off by requester not asking for it (yet!)
->
-> >
-> > > +
-> > > +        // SAFETY: `request` is repr(C) and packed, so we can conver=
-t it to a slice
-> > > +        let request_buf =3D unsafe { from_raw_parts_mut(&mut request=
- as *mut _ as *mut u8, req_sz) };
-> > > +
-> > > +        let mut response_vec: KVec<u8> =3D KVec::from_elem(0u8, rsp_=
-sz, GFP_KERNEL)?;
-> > > +
-> > > +        let len =3D self.spdm_exchange(request_buf, response_vec.as_=
-mut_slice())? as usize;
-> > > +
-> > > +        // The transport must report a length within the buffer we p=
-rovided.
-> > > +        if len > response_vec.len() {
-> > > +            pr_err!("Overflowed digests response\n");
-> > > +            return Err(EIO);
-> > > +        }
-> > > +        response_vec.truncate(len);
-> > > +
-> > > +        let response: &GetDigestsRsp =3D Untrusted::new(response_vec=
-.as_slice()).validate()?;
-> >
-> > [Severity: Medium]
-> > Does this completely discard the returned certificate digests?
-> >
-> > The SPDM specification mandates that requesters compare the hash of the
-> > certificate chain with the digest returned in get_digests. There doesn'=
-t
-> > seem to be any storage for these digests in SpdmState, meaning this
-> > cryptographic binding between the get_digests response and the certific=
-ate
-> > chain downloaded in get_certificate might never be verified.
->
-> This one is curious. I can't find a reference to the spec requiring that.
-> Digests are a short cut, I think you can always ignore them and just use =
-the certs
-> themselves.  I couldn't find any text requiring the certs if we ignore th=
-e digests
-> but maybe it is hiding in there somewhere.
+On Sat, 26 Sep 2026 15:16:05 +0800
+Jiale Yao <yaojiale02@163.com> wrote:
 
-It's not in the spec, it's just a hallucination
+> Platform drivers can be forced to match devices outside their ID tables
+> through driver_override.  cxl_acpi_probe() assumes that every bound device
+> has an ACPI companion and dereferences adev->dev.bus without checking the
+> result of ACPI_COMPANION().  Force-binding cxl_acpi to a platform device
+> without a companion therefore causes a NULL pointer dereference.
+> 
+Given I had this drawn to my attention earlier (thanks to Uwe)
+let me draw attention to an attempt to add a flag to remove the need
+for this sort of defense by blocking driver_override.
 
-Alistair
+https://lore.kernel.org/lkml/20260922-driver-override-opt-out-v1-0-58c35ded3b83@nvidia.com/
+
+So maybe we can replace what we do here once that lands.
+In the meantime it's a valid bug so 
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+
+> This was reproduced by setting the driver override for the pcspkr platform
+> device to cxl_acpi and binding it through sysfs:
+> 
+>   BUG: kernel NULL pointer dereference, address: 0000000000000280
+>   #PF: supervisor read access in kernel mode
+>   RIP: cxl_acpi_probe+0xf4/0x220
+>   Call Trace:
+>    platform_probe+0x4d/0x80
+>    really_probe+0x106/0x370
+>    device_driver_attach+0x4c/0xa0
+>    bind_store+0xd0/0x100
+> 
+> Commit 2b3a5dabe89e ("platform/surface: acpi-notify: Check ACPI
+> companion before use") fixed the same force-binding issue in another
+> platform driver.  Check the companion before setting up the CXL root and
+> return -ENODEV when it is absent.
+> 
+> Fixes: 7d4b5ca2e2cb ("cxl/acpi: Add downstream port data to cxl_port instances")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jiale Yao <yaojiale02@163.com>
+> ---
+> 
+> Notes:
+>     Changes in v2:
+>     - Move the ACPI companion assignment immediately before its NULL check.
+>     - Reorder local declarations in reverse Christmas tree order.
+> 
+>  drivers/cxl/acpi.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 3b818adbd38b..fb09a5ff48c1 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -885,13 +885,17 @@ static int pair_cxl_resource(struct device *dev, void *data)
+>  
+>  static int cxl_acpi_probe(struct platform_device *pdev)
+>  {
+> -	int rc;
+> +	struct cxl_cfmws_context ctx;
+> +	struct acpi_device *adev;
+>  	struct resource *cxl_res;
+>  	struct cxl_root *cxl_root;
+>  	struct cxl_port *root_port;
+>  	struct device *host = &pdev->dev;
+> -	struct acpi_device *adev = ACPI_COMPANION(host);
+> -	struct cxl_cfmws_context ctx;
+> +	int rc;
+> +
+> +	adev = ACPI_COMPANION(host);
+> +	if (!adev)
+> +		return -ENODEV;
+>  
+>  	device_lock_set_class(&pdev->dev, &cxl_root_key);
+>  	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
+
