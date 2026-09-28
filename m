@@ -1,165 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C163A3E9A;
-	Mon, 28 Sep 2026 17:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A169B38333A;
+	Mon, 28 Sep 2026 18:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790617403; cv=none; b=mHVYaemzEEVgd5/vuFBW5ZaywA7TvYtyYO2yqwENGJZ9C8zxFiJb9TC5BFlpHrgGSUpYCUp+3tDKI/SUiPXzGGdIdq+OqbgliN1wUWILB+ptPne6MJcE4DTX7qnvVBJum497k728l7iC5NNq+8EqJLVO9uEdxQLduBt+CKGdPXk=
+	t=1790619693; cv=none; b=P3M/NmDLWwoIQAJjT7ArfwEfwT8eKAoxRMZcNl0BURHTgrGMKsuj46r213ZLgqZKe7m9uIGEmKbM//UlAytnqsdublV/aEeVq19+6o3SMFn8ByT1vjE7pSlTvAH2pshtnE36DEqepHzDwO627tN6utSb2ThstIHmEvzj6q5VrT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790617403; c=relaxed/simple;
-	bh=ryb09pFPeF7Togyu5rRGmyyzNr+3gn9WfSykpvsACBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uVS3VKFpDmcAgBnzE5uLrRNNDYgIPTObc+/GlNWs+PE1Ib4M7Nj/6+z/tS8me3KYyRqkNY6LAN0S8CJW38Wu+vKie1Qw7KeCLu17t4YkLwYowuZfee1WyorSGBzCwXn4/k67n5ob3ywUx7bJHqsLlVEYDUZzNrERAy9cpqBb6JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDZaOmmx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790619693; c=relaxed/simple;
+	bh=s2tsQKHUzn1NMF9iclAXB1A3Gy/joyPQ+aTH9c8pRUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mJnsFyWwMnLVbe8726SE76L69JtiCXksFK7OxZcd1NAN9tQZCPmBY2pV8ykNvapPn4qYMYQwNnIWRC9Z5zEl64JNvYlZM8Be3j5Ew8OKGAbHpb/SMJEdNF4XRaN28VCiG46UwEA1/zVNvG0mDUIAULUwihDwJe/lHwkwcjaXmzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EY0zAZ+O; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDZaOmmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7931F00898;
-	Mon, 28 Sep 2026 17:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790617402;
-	bh=NibMVE7Rbn2cdnnpH1xf5xfPMGYhh0V3wESIcQR4aeo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YDZaOmmxHJXOWadrXzSHq/NQ/dFDVhU5C7NAIXSJhc2bQw0sYfa6SBvN06c0mAVVv
-	 CJxyZee1xtwuTOmqYBArhJd1BMk/Gppm/hpRzQXMwQuR1M2Dzu9MfvGoEnJclIfo8i
-	 huXHCrDypq7pbOfVivklwZVeLm/RIM3YEJISTqSQFqyRUjTZnlfq4P6kZOPgY4ePL2
-	 Z1MgMcMUvAnNalNF9vKMr/2ecIxIuLLeogTTdRtfFLHU4HGZ/eYR5MXVR9AteFHdxE
-	 r3ewUNRtIFz9kRKumZS74j3UDVgZUS7lydu83Us71rYCtW2q3gDNuKjixKTMlg+cRY
-	 KmzghmITPakHw==
-Date: Mon, 28 Sep 2026 18:43:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Ankit Agrawal <ankita@nvidia.com>
-Cc: Richard Cheng <icheng@nvidia.com>, "Lucero Palau, Alejandro"
- <alejandro.lucero-palau@amd.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
- <alison.schofield@intel.com>, "vishal.l.verma@intel.com"
- <vishal.l.verma@intel.com>, "djbw@kernel.org" <djbw@kernel.org>,
- "iweiny@kernel.org" <iweiny@kernel.org>, "ming.li@zohomail.com"
- <ming.li@zohomail.com>, "gourry@gourry.net" <gourry@gourry.net>,
- "rrichter@amd.com" <rrichter@amd.com>, "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Newton Liu <newtonl@nvidia.com>, Kristin
- Chuang <kristinc@nvidia.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Koba Ko
- <kobak@nvidia.com>
-Subject: Re: [RFC PATCH 0/3] cxl: Auto-create a region for Type-2 memdev
- attach
-Message-ID: <20260928184315.05038feb@jic23-hlaptop>
-In-Reply-To: <SAWPR12MB9992678E92777730BE483F6511B08D2@SAWPR12MB999267.namprd12.prod.outlook.com>
-References: <20260805074042.30173-1-icheng@nvidia.com>
-	<a3978557-59d5-49bc-bdb3-9ef2dfa025d3@amd.com>
-	<aobIoBYBACGlJ-OD@MWDK4CY14F>
-	<53689d31-3707-4c15-9eb9-eb6c77ab3ca0@amd.com>
-	<apU6tyyxSIGvzSs6@MWDK4CY14F>
-	<20260922022518.1002b083@jic23-hlaptop>
-	<SAWPR12MB9992678E92777730BE483F6511B08D2@SAWPR12MB999267.namprd12.prod.outlook.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EY0zAZ+O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790619692; x=1822155692;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s2tsQKHUzn1NMF9iclAXB1A3Gy/joyPQ+aTH9c8pRUI=;
+  b=EY0zAZ+ObULIQ8StZEsiT03Mv3CNfv8zczvQdsftLudDnFfQ+yE5+qFq
+   UI8bfawC9X4tm7BQKcaENtr7Fs/z8JP/CwQ5P9o3umNnF/sRg4aB7ktmI
+   p+u+Mxkq74+oKhCJqYjcS/+vWwFd5gvMyh8v74TPAAjtCj25YTRUWlCe5
+   mESbNjP43pF3o0uBfAgznmBfo9UUQ7pTz7/jjby9BrFPK2U14G+nM/fas
+   Jv+Ze0SoHQcszIyKBHqD5ADlXCZhUqi8QbgSEnzC9WqnkQmHY13NvimFw
+   6Fi+eGkO85FQ9WB4S2G8jrMNc/eVHLOH2ZzfsFqi5C2ilQTkyKk0KYZ5C
+   g==;
+X-CSE-ConnectionGUID: uIUxe1ORSzGavQ3EpkE13A==
+X-CSE-MsgGUID: waClS0D1SDqK99EXFvQiIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="90092671"
+X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
+   d="scan'208";a="90092671"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 11:21:31 -0700
+X-CSE-ConnectionGUID: TflOUfHhRHC74YF93lEBgQ==
+X-CSE-MsgGUID: ggTk/IAcTeqqwfk4KJIpng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
+   d="scan'208";a="278329622"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.79]) ([10.125.111.79])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 11:21:31 -0700
+Message-ID: <51e4cfe6-b3c7-43ff-8b1c-512cfb23b9be@intel.com>
+Date: Mon, 28 Sep 2026 11:21:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/edac: Bounds-check ECS threshold index from device
+To: Yili Zhang <zhangyili01@baidu.com>, linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org
+References: <20260928073553.85669-1-zhangyili01@baidu.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260928073553.85669-1-zhangyili01@baidu.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Mon, 28 Sep 2026 05:37:45 +0000
-Ankit Agrawal <ankita@nvidia.com> wrote:
 
-> >> >=20
-> >> >=20
-> >> > <snip> =20
-> >> > > I think you are right that this RFC doesn't currently have a produ=
-ction platform
-> >> > > where the system FW publishes a Type-2 CFMWS but leaves the EP dec=
-oder
-> >> > > uncommitted.
-> >> > >=20
-> >> > > However, the config appears to be permitted by the CXL model. A CF=
-MWS describes
-> >> > > a FW-established root HPA window and the restrictions governing it=
-s use,
-> >> > > including Type-2 v.s. Type-3 and volatile v.s. PMEM. The CFMWS def=
- also
-> >> > > describes OSPM assigning HPA ranges from those windows to discover=
-ed CXL.mem
-> >> > > devices [1].=C2=A0  =20
-> >> >=20
-> >> >=20
-> >> > Right. I'm not saying this should not be supported, just pointing ou=
-t the
-> >> > use case does not make sense with current BIOS functionality. I thin=
-k BIOS
-> >> > will/could support a config option for just leaving a Type2 HDM unco=
-mmitted,
-> >> > but then why the kernel should do the same a default BIOS config wou=
-ld do?
-> >> >=C2=A0  =20
-> >>=20
-> >> Agreed. The kernel shouldn't recreate the config that BIOS would norma=
-lly provide. =20
-> >
-> > I'm a bit lost. Both BIOS doing nothing beyond cfmws as a design decisi=
-on and
-> > hotplug (where bios isn't in the loop) require this sort of flow.
-> >
-> > Sure both might not be what you happen to have today but they are both
-> > very much real usecases!
-> >
-> > Jonathan =20
->=20
-> So, can we consider doing both in 2 phases..
-> 1. Autocreate a default region that is sized to the device's DVSEC report=
-ed
-> DPA capacity when the platform signals it (applicable only to CFMWS prese=
-nt
-> Type-2 CXL.mem-capable, decoder uncommitted case?). I suppose this could
-> cover the use cases suggested by Jonathan?
-> 2. Let the driver explicitly replace/override it with a different sized r=
-egion
-> once bound per its own policy.
 
-I don't see a reason for 1.  The bios has to have provided a CFMWS that will
-work or option 2 will fail - if it supports hotplug or indeed doesn't want =
-to
-do config of devices on cold plug it just provides 'enough space'.  Whether=
- it
-does that by hard coded big number, bios menu option or otherwise doesn't
-matter to us.
+On 9/28/26 12:35 AM, Yili Zhang wrote:
+> cxl_get_ecs_threshold() extracts a 3-bit index (0-7) from the
+> device-supplied ECS config word and uses it to
+> index ecs_supp_threshold[], which only has 6 elements. A device reporting
+> index 6 or 7 causes an out-of-bounds read of adjacent .rodata, whose
+> value is then returned to userspace via the EDAC 'threshold' sysfs
+> attribute (small info leak and wrong reported threshold).
+> 
+> Return 0 for indices outside the table.
 
-But in general a driver should bind before we create anything (assuming we
-are in a host OS managed flow).  Why would we want to do anything before th=
-at
-as we have no idea if a driver will ever bind - or if there is flexibility
-in size exposed that can't be known until driver bind.
+Why return 0 instead of errno?
 
->=20
-> >> And that's why I think we should move region createion out of devm_cxl=
-_probe_mem().
-> >> That helper should discover and attach to an already committed region.
-> >>=20
-> >> If FW leaves the decoders unconfigured intentionally , a driver may ex=
-plicitly request a region
-> >> and provide the size it needs.
-> >>=20
-> >> In my mind the new model should be
-> >> - FW-committed config is only discovered and attached
-> >> - an uncommitted config remains untouched unless a driver explicitly r=
-equests it
-> >> - CXL core supplieds the allocation, validation, programming, accounti=
-ng and teardown mechnism
-> >> - the requesting driver owns the policy and the use of the region =20
->=20
-> Is there going to be a custom non-default size to commit be communicated
-> to the vendor driver? AIU currently the size is only driver-internal cons=
-tant.
+DJ
 
-Given it is potentially a contended resource, we may need a way to clamp
-the maximum a particular instances is allowed to request. For now maybe
-first come, first served is good enough? No idea.=20
-
-Jonathan
-
->=20
-> Thanks
-> Ankit Agrawal
+> 
+> Fixes: 85fb6a16ad14 ("cxl/edac: Add CXL memory device ECS control feature")
+> Signed-off-by: Yili Zhang <zhangyili01@baidu.com>
+> ---
+>  drivers/cxl/core/edac.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index b321971fef58..73335b980b11 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -633,6 +633,9 @@ static u16 cxl_get_ecs_threshold(u8 log_cap, u16 config)
+>  {
+>  	u8 index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK, config);
+>  
+> +	if (index >= ARRAY_SIZE(ecs_supp_threshold))
+> +		return 0;
+> +
+>  	return ecs_supp_threshold[index];
+>  }
+>  
 
