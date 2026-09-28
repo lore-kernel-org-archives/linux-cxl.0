@@ -1,115 +1,146 @@
-Received: from mta0.migadu.com (out-116.mta0.migadu.com [91.218.175.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98CB44A403
-	for <linux-cxl@vger.kernel.org>; Mon, 28 Sep 2026 08:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8E12931E9;
+	Mon, 28 Sep 2026 08:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790584326; cv=none; b=KamploxE6RM1v+HLEQgY5MPyQRHocNbN4KbQGCpyVTGOcovqReNu0Y705IpklGsruIWRX+1pxOg+eWsb5PuQhbXhjKq0BSXq6miinYZ1ebnBVY75/CqTzFpaMsxcgPPLlyhpT9D2RgTQyfdbWJwSFOyLsw1KFolnePIv+iT6Dwg=
+	t=1790585424; cv=none; b=YSVNQvOF7kdgOjd6+pKnLgjmLGCaEZosXHGPptmwrKf6wCt3fof2mjrHJ+R87TJm574eYHy3cEwlKeNdwZYKlNfGVtQDMsrWFvkd9oSrfvJOTNv54zuTqmS+J3CWMi/UcWtFFZmKbrQ9ClSoGkTSlYSoqhTlouFJxys9u5gDeCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790584326; c=relaxed/simple;
-	bh=0vsNUizkmzlbu8y8J+IZWSMNjN9v2l2Yufh8n4d8/RU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMzko2J9Qfo6B3BQzOIjsm0OVKl7Y++b2I8JglD75WBkM4vEQUKPvqTmlnLudkBqLhEHvYDyBw9rV7w6m4c1MqqEm87DSkm3vl0zj9VBcBkcMQyEUepHKnAnup2IxtlMvqqHzkS5oeF2ozlsDkLmI8ihCka1Sm/26enwWXUF3yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tyjF0o3c; arc=none smtp.client-ip=91.218.175.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790585424; c=relaxed/simple;
+	bh=7xqsvgBUdY0jvRKC//ezf518jUci4xRkjMuj7wAJTI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=um25eGTusDMjs+On1Z1DBngrkyc8RRjkCG744MAro7VL2CoQYeaM0u3iaNc5b8IiPXg57B3B63O+dPHPGbvRGzhTPblOdjIET92Iij2PB0Oo2Ro4g0PSh8BITssGU/lRq9W4R+P4xHMLaW8yIzMEerI34T+MWPjpx9fgPqNjznw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEK97vav; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tyjF0o3c"
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=0vsNUizkmzlbu8y8J+IZWSMNjN9v2l2Yufh8n4d8/RU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790584322; v=1; x=1791189122;
- b=tyjF0o3cR9ljeFX4XK3gL8z3b7xqobt2exvjAkbD+PvnbxNfg2F1GudPKGeS+nnZnBWsZe8e
- AEK7Cwjwz0O91OKfGmf/5KNZvAVKzBK9uEzR8gkDGuKYdlvX3ue6Aq1wiZnpSoUClPeZEUe3bhA
- 4Klw25etPFVrQB63qCKJd9bo=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 42d1b3bbabd087ec;
-	Mon, 28 Sep 2026 08:32:01 +0000
-X-Mizu-Trace-ID: 42d1b3bbabd087ec
-X-Migadu-Flow: FLOW_OUT
-Date: Mon, 28 Sep 2026 16:31:51 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: "David Hildenbrand (Arm)" <david@kernel.org>, k-hagio-ab@nec.com,
-	ruirui.yang@linux.dev
-Cc: David Carlier <devnexen@gmail.com>, akpm@linux-foundation.org,
-	axelrasmussen@google.com, baohua@kernel.org,
-	baolin.wang@linux.alibaba.com, brendan.jackman@linux.dev,
-	dakr@kernel.org, driver-core@lists.linux.dev,
-	gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-	jan.kiszka@siemens.com, kasong@tencent.com, kbingham@kernel.org,
-	liam@infradead.org, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, ljs@kernel.org, mhocko@suse.com,
-	osalvador@suse.de, qi.zheng@linux.dev, rafael@kernel.org,
-	rppt@kernel.org, shakeel.butt@linux.dev, surenb@google.com,
-	vbabka@kernel.org, weixugc@google.com, yuanchu@google.com,
-	ziy@nvidia.com, devel@lists.crash-utility.osci.io
-Subject: Re: [PATCH v2 10/13] mm/sparse: remove SECTION_MARKED_PRESENT
-Message-ID: <arol9w7G3vupIVZ7@MiWiFi-R3L-srv>
-References: <20260921-b4-sparsemem_cleanups-v2-10-54d81d65e125@kernel.org>
- <20260927192013.144672-1-devnexen@gmail.com>
- <655c509e-318f-48bc-8183-2b1274dd05ac@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEK97vav"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EE51F000FF;
+	Mon, 28 Sep 2026 08:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790585422;
+	bh=Xux5ZPoLqrz1mbftErEicTW9loRDj4oR9SfIqryQVFI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=iEK97vavCrO6FGamvL6w7E2I1MX2GZCebpDkO0cMSJDvo5xQ2vNNjADjci6TP8N29
+	 b8f5WsNIuHiiAVePejbUiD2f14ejjCMal/GCUjIpIQcT74Gun81v7NHdK2Qm42IMCn
+	 7yrkD2JQqZC3M8VbYDcqxuGS8IbhDUEdbAyK4k0BgbhaG1CS5D+9XqaUVVL7X0I6o7
+	 fReqiFglUmaWiN2BlAbXClfp2HnuyMig/dz67ReP7rtvxpERkOiDkfJTJ/t/SPpeS1
+	 7uKDXsEYc3REZnADw9w8J+97lG7Kzs/sY9a6AjOEiFY2bkpohtKyBzjjxopxg2+1jP
+	 x6teGcrUOIaqg==
+Message-ID: <9009312f-0ffb-4425-ab82-1eb7e52a4646@kernel.org>
+Date: Mon, 28 Sep 2026 10:50:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <655c509e-318f-48bc-8183-2b1274dd05ac@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/13] mm/sparse: remove SECTION_MARKED_PRESENT
+To: Dave Young <ruirui.yang@linux.dev>
+Cc: David Carlier <devnexen@gmail.com>, akpm@linux-foundation.org,
+ axelrasmussen@google.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+ baoquan.he@linux.dev, brendan.jackman@linux.dev, dakr@kernel.org,
+ driver-core@lists.linux.dev, gregkh@linuxfoundation.org, hannes@cmpxchg.org,
+ jan.kiszka@siemens.com, kasong@tencent.com, kbingham@kernel.org,
+ liam@infradead.org, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ljs@kernel.org, mhocko@suse.com, osalvador@suse.de,
+ qi.zheng@linux.dev, rafael@kernel.org, rppt@kernel.org,
+ shakeel.butt@linux.dev, surenb@google.com, vbabka@kernel.org,
+ weixugc@google.com, yuanchu@google.com, ziy@nvidia.com,
+ devel@lists.crash-utility.osci.io, kexec@lists.infradead.org,
+ Baoquan He <baoquan.he@linux.dev>
+References: <20260921-b4-sparsemem_cleanups-v2-10-54d81d65e125@kernel.org>
+ <20260927192013.144672-1-devnexen@gmail.com>
+ <655c509e-318f-48bc-8183-2b1274dd05ac@kernel.org> <aroezLexo1WoeYI7@darkstar>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <aroezLexo1WoeYI7@darkstar>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 09/28/26 at 09:28am, David Hildenbrand (Arm) wrote:
-> On 9/27/26 21:20, David Carlier wrote:
-> > On Mon, Sep 21, 2026 at 09:59:02PM +0200, David Hildenbrand (Arm) wrote:
-> >>  enum {
-> >> -	SECTION_MARKED_PRESENT_BIT,
-> >>  	SECTION_HAS_MEM_MAP_BIT,
-> >>  	SECTION_IS_ONLINE_BIT,
-> >>  	SECTION_IS_EARLY_BIT,
-> > 
-> > Hi David,
+On 9/28/26 10:01, Dave Young wrote:
+> Cced kexec list.
 > 
-> Hi!
+> On Mon, Sep 28, 2026 at 09:28:08AM +0200, David Hildenbrand (Arm) wrote:
+>> On 9/27/26 21:20, David Carlier wrote:
+>>>
+>>> Hi David,
+>>
+>> Hi!
+>>
+>>>
+>>> It seems dropping SECTION_MARKED_PRESENT_BIT shifts the other section flags down
+>>> one bit. crash hardcodes SECTION_HAS_MEM_MAP as (1UL << 1) in
+>>> pfn_to_map(), so it now tests SECTION_IS_ONLINE: offline and
+>>> ZONE_DEVICE sections no longer resolve to a struct page. makedumpfile
+>>> only checks bit 0 and is fine.
+>>
+>> Thanks. To be expected when relying on kernel internals.
+>>
+>> Which makes me wonder why makedumpfile
+>> (https://github.com/makedumpfile/makedumpfile) not require any such information.
+>>
+>>>
+>>> Keep bit 0 reserved, or export the bits via vmcoreinfo?
+>> We could export it, or crash can simply detect the change based on the kernel
+>> version. I remember the latter was done in makedumpfile in the past (although we
+>> export it).
+>>
+>> I can send a separate patch to export it.
 > 
-> > 
-> > It seems dropping SECTION_MARKED_PRESENT_BIT shifts the other section flags down
-> > one bit. crash hardcodes SECTION_HAS_MEM_MAP as (1UL << 1) in
-> > pfn_to_map(), so it now tests SECTION_IS_ONLINE: offline and
-> > ZONE_DEVICE sections no longer resolve to a struct page. makedumpfile
-> > only checks bit 0 and is fine.
-> 
-> Thanks. To be expected when relying on kernel internals.
-> 
-> Which makes me wonder why makedumpfile
-> (https://github.com/makedumpfile/makedumpfile) not require any such information.
+> Thanks David.   Checking kernel internals via kernel version is not a good idea
+> due to the downstream kernels.
 
-Makedumpfile requires it too, while it doesn't ask for HAS_MEM_MAP. So
-checking MARKED_PRESENT becomes checking HAS_MEM_MAP's value, it luckily
-works.
+Patch at:
 
-# git grep MARKED_PRESENT
-makedumpfile.c:                 if (!(map_mask & SECTION_MARKED_PRESENT)) {
-makedumpfile.h:#define SECTION_MARKED_PRESENT  (1UL<<0)
+https://lore.kernel.org/r/20260928-section_has_mem_map-v1-1-4129f6ba2838@kernel.org
 
+-- 
+Cheers,
 
-Add makedumpfile maintainer Kazu here.
-
-And add Dave Young here since I heard he is taking over Crash maintenance
-as a volunteer.
-
-> 
-> > 
-> > Keep bit 0 reserved, or export the bits via vmcoreinfo?
-> We could export it, or crash can simply detect the change based on the kernel
-> version. I remember the latter was done in makedumpfile in the past (although we
-> export it).
-> 
-> I can send a separate patch to export it.
-> 
-> -- 
-> Cheers,
-> 
-> David
+David
