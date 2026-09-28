@@ -1,127 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f41.google.com (mail-pj2-f41.google.com [74.125.227.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E533C3EA97A;
-	Sun, 27 Sep 2026 22:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD023264FD
+	for <linux-cxl@vger.kernel.org>; Mon, 28 Sep 2026 01:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790549410; cv=none; b=DypliISdELAWUXrNxBV36DLNO9wSqaOsATdanEFjeC/MwJ98kWG2PEZ1pDJRT8DNp+3kweMjHwYRuitYuYX005IBhr+js0gahwSMsZTC8Rdb2FJnso0i5Ke+S4SQ8Ueqy2HrUhJ7Uey/OEnIiBGPjf0mR14Td2pkuwdnAkdXXGQ=
+	t=1790557897; cv=none; b=KsyeDVCy907VM014/yJu09CpjA7FLfO7FNcCP/ed7CKZASOtQKioedRmvTH84z1AVgplazcKP3w2KuLVWhoiEhJqbkXymzae/bf8CPKFJwRIV28qcWlpquamv6gk96iIRHq1BfhlHfL8SLJyQnmw8ybYvqz61vPWeJ/CuCJBOAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790549410; c=relaxed/simple;
-	bh=/aCovl8RC0lzVIS7AQKYGh0WIGySO+B7ueAYz7HP4Bw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k92WMvP+YzvfLKu5WkQp4+7JQ1arMM9HJ2WNWJ5UGxFI+3OXNWHbzhXJ4Mz+lF6hLG6lYPYWdWTo3vkjDJI/mKIOVDgZgKsVG9r5hz81qj2BZSSzIPxBJRt3HxetPSXkM1niNIi8SGWFGX/dOD5kpjE7cA+effdSAGkeSOQf5pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRh1OBiB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790557897; c=relaxed/simple;
+	bh=EPdeW1aBgFHDFZpGpsIJz4GmqdiCJzGIjKmzSX3COM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LILR9/O/PT5SNldGsaI2nfdZ7Z364z24VWDmBwj0vtoVGKZWHKVK/J8jboSQ61Vn8dk+gj1tTmQIfrlDNj/7YSxunDTQX0mZ8Cj0bIO2KL0GCOcVI2pfdIRtFv/vWREldWzRsHgJuK00PK6WFF3zk1GvqQy2Y5B5J4vxnnN1i5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hGVQFhi8; arc=none smtp.client-ip=74.125.227.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRh1OBiB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5991F000FF;
-	Sun, 27 Sep 2026 22:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790549408;
-	bh=MmIw28LazQjnyo5PLms13QRbrvuqaROTWE9kzh5dsd0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=eRh1OBiBveklXrJl07N/c1ijew76Eo2PYq39QJthaynDmuL48HN4EPJe86y/ZWlBP
-	 Sp1qZpVNdoe0/FNFoL9wJnU1WETWNGNm/vR9U5JALoul5sq9EKDqGD5V3Ay0vTKLXs
-	 IY3tK92ncocacEEGTqT47cVCNSKPRDDNTL75WlUstw2uwOpMay0nY4IORU/M1jlKu3
-	 keLUBFwd7C1Cp8H86ngIRwKWcspvZ39M6raFXABEYFZVRgNHoVcN1KYpRqtlVmYCqq
-	 Qco8zEvFb89/kBE99c52EkFvkqFJtoo4bazwiHRs3JLdxWZr+w76BUp5Q71IZjydex
-	 0u/9vWMww6fiw==
-Date: Sun, 27 Sep 2026 23:50:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jiale Yao <yaojiale02@163.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/acpi: Check ACPI companion before use
-Message-ID: <20260927235001.01316b18@jic23-hlaptop>
-In-Reply-To: <20260926071605.3013893-1-yaojiale02@163.com>
-References: <20260926071605.3013893-1-yaojiale02@163.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGVQFhi8"
+Received: by mail-pj2-f41.google.com with SMTP id 98e67ed59e1d1-3a0abca97c0so1256753a91.1
+        for <linux-cxl@vger.kernel.org>; Sun, 27 Sep 2026 18:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790557894; x=1791162694; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ALSDRNmeEGjWasC/X3d6yy51t9PzoB79Z3+YEI0TCbU=;
+        b=hGVQFhi8SuKS82iU0wheiwlEry1bxrt5/k2CGh89gHKGdfBWWPYR/3qe3Q+iImDS4f
+         r6wcWdGwKQI5974woAO8ETcwYgR6gx9+nTjGJFKOe3FyH4bizXfR/Q8GAITT5dx6o9zZ
+         T8G9YgTJ7FxMsJwcfTkxe0035ise/gKWWjh5NtPhq/cTiUUfZUFLOtAvgS7srMbL4no7
+         FQMBEuE9NnCbY7GNNxrLJtOpD7DdyY5rwc/I83nPisPzuPH47OfMuC8eJhwxGrlldyvf
+         Y8jC7SKQMt526aFhgJQ21gBOc7Y3WAbceB8KTiE5wssqoZ4bA6S9/+3V0TG1jLRbCth7
+         YieQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790557894; x=1791162694;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ALSDRNmeEGjWasC/X3d6yy51t9PzoB79Z3+YEI0TCbU=;
+        b=x19c/RQ1Cx9KQ9k+vNj+pPVYnQZ6uc3nLDnlhwVMkO9S/j44DiTQ//bwejfUVYkp3A
+         FU1BVMtqjnJe6cfuseMrBRRrE9gEHObOqTGTCfELJ6R4VQdpsNYV96rlBgURPIE/4Wiu
+         IxYgbQven8kT5QM7YgVIjw5IBJPmx+pvl6TKpZHIog1TY3QumX8q53lO3C8Gr37lOTtt
+         SuNO6teegKJ8qEvISETk4qQZEiQQ2fp0DThBcoN8tjWHuYXBwA1/AxjLupPSqSlqaMQO
+         sCwVsBDcSbPKPkEg1iyt/Ts+5p8I/IX5Oymg2vzqsy0qQj7dMACKxpMoG8nbqGrM7pVh
+         wLEg==
+X-Forwarded-Encrypted: i=1; AKwUvBxP3buTODEBe/NsBM6vKX6irwnj3KmA001vYyumr/kFaDH5pnTyZAP7Q4JBQn+q7tpluUd8w8iW3lc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYL9y5/rvdo2nC2sn5VXXZlUFWnpzricI/OLdviGA80h8okAbbeZ
+	LagXnCc6FgmttaYYLj/kxTE0CMARtp3RLCULL5kTTbgwzsGZCaiGSqmQ
+X-Gm-Gg: AYBFou1bSafmcuGnza625ti63DoJMRBy/+YqURXu1ddaIXTiUIduppOUcl7LoqeqguW
+	9HhBMghgu3SrkwwSbbq8NceeH+72HEJWH5cHInWcPY1hS1dE+sOJ7wxKRdjDz+GntYnIPUpOtQd
+	SSDJgi1UEv8OY8ufwvW864o/oVoVF78n0BLMrs5GdgUex+qpR/i6s53MAu54/4UL1UlWuqmrrzt
+	oD47EVrAgpJORqAoRvacLnhJyy6I5/S49+W0ZP713Z0QpmKbF6vcu4Zwji/ZUvnSsoHME5vAFtO
+	065z9nlgdyFxewoVrjkQqSlWeZon1jX2kdFc8VqjsLlloM8WUtiVQsF5oUoqabDxB/RLAfhm6HF
+	Lo0g3Zjc57cMM8eibpbXsXhI+lZy4VhG2mkp+UIRNJGvK+7oBYo3z5VlaTxdPwwb6rftJn1kmkd
+	SsKDZL9WXZVnDOo1EG3xAQDlVixKwyjA+i7sQPstQGcWbcUxbFYilVPhoD3kLxl1k7HuykCt5Uz
+	1/sEYqfqORNK4/7hkkLo7rPwlQ/
+X-Received: by 2002:a17:90b:2e8c:b0:3a2:b09e:784d with SMTP id 98e67ed59e1d1-3a2b09e7a74mr1078732a91.45.1790557893540;
+        Sun, 27 Sep 2026 18:11:33 -0700 (PDT)
+Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0e7036e3bsm10425773a91.13.2026.09.27.18.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Sep 2026 18:11:33 -0700 (PDT)
+From: alistair23@gmail.com
+X-Google-Original-From: alistair.francis@wdc.com
+To: lukas@wunner.de,
+	linux-cxl@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Jonathan.Cameron@huawei.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jic23@kernel.org,
+	bhelgaas@google.com,
+	alistair@alistair23.me,
+	djbw@kernel.org,
+	linux-pci@vger.kernel.org
+Cc: wilfred.mallawa@wdc.com,
+	a.hindborg@kernel.org,
+	gregkh@linuxfoundation.org,
+	alex.gaynor@gmail.com,
+	alistair23@gmail.com,
+	aliceryhl@google.com,
+	benno.lossin@proton.me,
+	boqun.feng@gmail.com,
+	bjorn3_gh@protonmail.com,
+	tmgross@umich.edu,
+	gary@garyguo.net,
+	ojeda@kernel.org,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v4 00/22] lib: Rust implementation of SPDM
+Date: Mon, 28 Sep 2026 11:11:01 +1000
+Message-ID: <20260928011123.450800-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 26 Sep 2026 15:16:05 +0800
-Jiale Yao <yaojiale02@163.com> wrote:
+From: Alistair Francis <alistair.francis@wdc.com>
 
-> Platform drivers can be forced to match devices outside their ID tables
-> through driver_override.  cxl_acpi_probe() assumes that every bound device
-> has an ACPI companion and dereferences adev->dev.bus without checking the
-> result of ACPI_COMPANION().  Force-binding cxl_acpi to a platform device
-> without a companion therefore causes a NULL pointer dereference.
-> 
-Given I had this drawn to my attention earlier (thanks to Uwe)
-let me draw attention to an attempt to add a flag to remove the need
-for this sort of defense by blocking driver_override.
+Security Protocols and Data Models (SPDM) [1] is used for authentication,
+attestation and key exchange. SPDM is generally used over a range of
+transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
 
-https://lore.kernel.org/lkml/20260922-driver-override-opt-out-v1-0-58c35ded3b83@nvidia.com/
+From the kernels perspective SPDM is used to authenticate and attest devices.
+In this threat model a device is considered untrusted until it can be verified
+by the kernel and userspace using SPDM. As such SPDM data is untrusted data
+that can be mallicious.
 
-So maybe we can replace what we do here once that lands.
-In the meantime it's a valid bug so 
+The SPDM specification is also complex, with the 1.2.1 spec being almost 200
+pages and the 1.3.0 spec being almost 250 pages long.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+As such we have the kernel parsing untrusted responses from a complex
+specification, which sounds like a possible exploit vector. This is the type
+of place where Rust excels!
 
-> This was reproduced by setting the driver override for the pcspkr platform
-> device to cxl_acpi and binding it through sysfs:
-> 
->   BUG: kernel NULL pointer dereference, address: 0000000000000280
->   #PF: supervisor read access in kernel mode
->   RIP: cxl_acpi_probe+0xf4/0x220
->   Call Trace:
->    platform_probe+0x4d/0x80
->    really_probe+0x106/0x370
->    device_driver_attach+0x4c/0xa0
->    bind_store+0xd0/0x100
-> 
-> Commit 2b3a5dabe89e ("platform/surface: acpi-notify: Check ACPI
-> companion before use") fixed the same force-binding issue in another
-> platform driver.  Check the companion before setting up the CXL root and
-> return -ENODEV when it is absent.
-> 
-> Fixes: 7d4b5ca2e2cb ("cxl/acpi: Add downstream port data to cxl_port instances")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jiale Yao <yaojiale02@163.com>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - Move the ACPI companion assignment immediately before its NULL check.
->     - Reorder local declarations in reverse Christmas tree order.
-> 
->  drivers/cxl/acpi.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 3b818adbd38b..fb09a5ff48c1 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -885,13 +885,17 @@ static int pair_cxl_resource(struct device *dev, void *data)
->  
->  static int cxl_acpi_probe(struct platform_device *pdev)
->  {
-> -	int rc;
-> +	struct cxl_cfmws_context ctx;
-> +	struct acpi_device *adev;
->  	struct resource *cxl_res;
->  	struct cxl_root *cxl_root;
->  	struct cxl_port *root_port;
->  	struct device *host = &pdev->dev;
-> -	struct acpi_device *adev = ACPI_COMPANION(host);
-> -	struct cxl_cfmws_context ctx;
-> +	int rc;
-> +
-> +	adev = ACPI_COMPANION(host);
-> +	if (!adev)
-> +		return -ENODEV;
->  
->  	device_lock_set_class(&pdev->dev, &cxl_root_key);
->  	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
+This series implements a SPDM requester in Rust.
+
+This is done using the `Validate` and `Untrusted` traits. The `validate()`
+function has been updated updated to allow `context` which we use as
+part of the validation.
+
+The validation has also swapped from a C style pointer cast to using a valid
+Rust struct and copying the data from the original buffer to the new struct.
+This obvious has some overhead, but as SPDM packets are relativly small, and
+not used as part of a constant hot path this seems fine. The big advantage is
+that we can validate everyting at once, convert the endianess when creating
+the struct and we get left with valid (not repr[c, packed]) Rust structs.
+
+This makes the code a lot cleaner and more robust. It also removes a large
+number of `unsafe`s and using `get()` for the arrays removes a large number
+of possible `panic`s. Thanks for everyone at Kangrejos for the help with this!
+
+I have kept Jonathon's reviews of the SPDM code, as the changes since the
+last vesion are mostly just mechanical, convertting the repr[c, packed] structs
+to copy structs.
+
+This is based on Lukas' C implementation [2], but has been refacted during the
+first few RFCs. I have included some of the relevent patchesfrom Lukas' C
+SPDM implementation in this series where they are required.
+
+This is a standalone series and doesn't depend on Lukas' implementation.
+
+The goal of this series is to get the smallest possible SPDM implementation
+upstream. That will provide building blocks for us to continue working on.
+
+As such we don't yet provide evidence or certificates to userspace, allow
+userspace to provide a nonce, support PQC or more advanced SPDM features.
+This is enough to communicate with a device and return "authenticated" to
+userspace.
+
+Note that RFC v3 did provide evidence and certificates to userspace and
+allowed a custom nonce. Showing that it's possible. I also have patches
+that build apon [4] to do this via a TSM driver, again showing it's
+possible with the current approach.
+We just don't support it yet and for TSM I need [4] upstream first.
+
+This series is different to Lukas' original approach and the approach taken
+in the previous RFCs and instead adds the PCI-CMA support as a TSM driver.
+This was described by Dan in [3] and [5]. The advantage here is that for PCIe
+we can leverage the TSM work for a lot of the features and provide userspace
+a consistient interface between PCI TSM and CMA.
+
+This series also doesn't check the certificate chain against the kernel
+keyring and will instead leave that to userspace once [4] is merged.
+
+Other transport mode (such as ATA, SCSI, NVMe and MCTP) will
+therefore need slightly different approaches, as TSM doesn't apply.
+The library can support this though, it will just need some netlink
+and sysfs wrappers added as applicable. This way each transport can support
+SPDM in the way it sees fit.
+
+The entire tree can be seen here:
+https://github.com/alistair23/linux/tree/alistair/spdm-rust-tsm
+
+I'm testing this by running the following
+
+```shell
+cargo run -- --qemu-server response
+
+qemu-system-x86_64 \
+  -nic none \
+  -object rng-random,filename=/dev/urandom,id=rng0 \
+  -device virtio-rng-pci,rng=rng0 \
+  -drive file=deploy/images/qemux86-64/core-image-pcie-qemux86-64.rootfs.ext4,if=virtio,format=raw \
+  -usb -device usb-tablet -usb -device usb-kbd \
+  -cpu Skylake-Client \
+  -machine q35,i8042=off \
+  -smp 4 -m 2G \
+  -drive file=blknvme,if=none,id=mynvme,format=raw \
+  -device pcie-root-port,chassis=1,id=pci.1 \
+  -device nvme,drive=mynvme,serial=deadbeef,spdm_port=2323,spdm_trans=doe,bus=pci.1 \
+  -snapshot \
+  -serial mon:stdio -serial null -nographic \
+  -kernel deploy/images/qemux86-64/bzImage \
+  -append 'root=/dev/vda rw  console=ttyS0 console=ttyS1 oprofile.timer=1 tsc=reliable no_timer_check rcupdate.rcu_expedited=1 swiotlb=0 '
+
+echo tsm0 > /sys/bus/pci/devices/0000:01:00.0/tsm/connect
+```
+
+1: https://www.dmtf.org/standards/spdm
+2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+3: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
+4: https://lore.kernel.org/all/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch/
+5: https://lore.kernel.org/lkml/69e19c80b892b_fe0831000@djbw-dev.notmuch/
+
+v4:
+ - Based on discussions at Kangrejos the following changes were made
+     - Add context to the validate functions
+     - Convert the validate() functions to be complete Rust structs and copy the
+       data, instead of C style pointer casts
+     - Use ForeignOwnable trait for SpdmState
+     - Use get() for array accesses
+ - Address review comments
+v3:
+ - Rebase on 7.3-rc1
+v2:
+ - Tidy up the PCI/TSM function naming and is_pci_tsm_host()
+ - A large number of changes (mostly to the Rust code) based on Sashiko reviews
+     - This includes a few local runs of Sashiko
+     - This has fixed a few undefined behviour bugs in the Rust code
+ - Rebase on v4 of Benno's validate patches (patch 1, 2, 3)
+v1:
+ - Add CMA as a TSM driver
+ - Initial support for SPDM 1.4
+ - Cleanup a range of comments and concerns from RFC
+ - Remove kernel keyring checks
+RFC v3:
+ - Use netlink to send information to userspace
+ - Don't autogenerate Rust helpers
+RFC v2:
+ - Drop support for Rust and C implementations
+ - Include patches from Lukas to reduce series deps
+ - Large code cleanups based on more testing
+ - Support for authentication
+
+Alistair Francis (15):
+  virt: coco: change tsm_register() to use a const struct
+  rust: add bindings for hash.h
+  rust: error: impl From<FromBytesWithNulError> for Kernel Error
+  lib: rspdm: Initial commit of Rust SPDM
+  PCI/TSM: Rename pf0 to host
+  PCI/TSM: Support connecting to PCIe CMA devices
+  PCI/CMA: Add a PCI TSM CMA driver using SPDM
+  lib: rspdm: Support SPDM get_version
+  lib: rspdm: Support SPDM get_capabilities
+  lib: rspdm: Support SPDM negotiate_algorithms
+  lib: rspdm: Support SPDM get_digests
+  lib: rspdm: Support SPDM get_certificate
+  lib: rspdm: Support SPDM certificate validation
+  rust: allow extracting the buffer from a CString
+  lib: rspdm: Support SPDM challenge
+
+Benno Lossin (3):
+  rust: transmute: add `cast_slice[_mut]` functions
+  rust: create basic untrusted data API
+  rust: validate: add `Validate` trait
+
+Lukas Wunner (4):
+  X.509: Make certificate parser public
+  X.509: Parse Subject Alternative Name in certificates
+  X.509: Move certificate length retrieval into new helper
+  PCI/CMA: Validate Subject Alternative Name in certificates
+
+ MAINTAINERS                               |   13 +
+ crypto/asymmetric_keys/x509_cert_parser.c |    9 +
+ crypto/asymmetric_keys/x509_loader.c      |   38 +-
+ crypto/asymmetric_keys/x509_parser.h      |   42 +-
+ drivers/crypto/ccp/sev-dev-tio.h          |    4 +-
+ drivers/crypto/ccp/sev-dev-tsm.c          |   14 +-
+ drivers/pci/Kconfig                       |   14 +
+ drivers/pci/Makefile                      |    5 +
+ drivers/pci/cma.asn1                      |   41 +
+ drivers/pci/cma.c                         |  271 +++++
+ drivers/pci/doe.c                         |    6 +-
+ drivers/pci/tsm.c                         |  122 ++-
+ drivers/virt/coco/tsm-core.c              |    4 +-
+ include/keys/asymmetric-type.h            |    2 +
+ include/keys/x509-parser.h                |   57 ++
+ include/linux/oid_registry.h              |    3 +
+ include/linux/pci-doe.h                   |    4 +
+ include/linux/pci-tsm.h                   |   48 +-
+ include/linux/pci.h                       |    1 +
+ include/linux/spdm.h                      |   37 +
+ include/linux/tsm.h                       |    2 +-
+ lib/Kconfig                               |   17 +
+ lib/Makefile                              |    2 +
+ lib/rspdm/Makefile                        |   10 +
+ lib/rspdm/consts.rs                       |  186 ++++
+ lib/rspdm/lib.rs                          |  160 +++
+ lib/rspdm/state.rs                        | 1121 +++++++++++++++++++++
+ lib/rspdm/validator.rs                    | 1091 ++++++++++++++++++++
+ rust/bindings/bindings_helper.h           |    5 +
+ rust/helpers/hash.c                       |   18 +
+ rust/helpers/helpers.c                    |    1 +
+ rust/kernel/error.rs                      |   18 +-
+ rust/kernel/lib.rs                        |    1 +
+ rust/kernel/str.rs                        |   13 +-
+ rust/kernel/transmute.rs                  |   71 +-
+ rust/kernel/validate.rs                   |  229 +++++
+ 36 files changed, 3545 insertions(+), 135 deletions(-)
+ create mode 100644 drivers/pci/cma.asn1
+ create mode 100644 drivers/pci/cma.c
+ create mode 100644 include/keys/x509-parser.h
+ create mode 100644 include/linux/spdm.h
+ create mode 100644 lib/rspdm/Makefile
+ create mode 100644 lib/rspdm/consts.rs
+ create mode 100644 lib/rspdm/lib.rs
+ create mode 100644 lib/rspdm/state.rs
+ create mode 100644 lib/rspdm/validator.rs
+ create mode 100644 rust/helpers/hash.c
+ create mode 100644 rust/kernel/validate.rs
+
+-- 
+2.55.0
 
