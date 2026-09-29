@@ -1,102 +1,92 @@
-Received: from cstnet.cn (smtp87.cstnet.cn [159.226.251.87])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA2345CDA;
-	Tue, 29 Sep 2026 06:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C5C3515DE
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 06:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790662542; cv=none; b=mcUC9R8ulZN+3jZI08u+9wXFs9RvMP/YWY40LcUWZ0ynULqjcW0uciQWNF62ZqkgAhqqE74bprcU+jlmbewPIL30ZgMRNtd687K/kLQhBSPlPz4Cs1vGpbR7kbIPWkJr1XlFSRzgti1jxgLVMCyDyfjWv2T2JRPPUxkMgg3/UUQ=
+	t=1790662548; cv=none; b=Y3oDuSz13LRlLfuCSqyRV1mWJ1hPbwOSbuGNiN41HBAT2094+gDutwNic9KEMTlwy6D5ZJegTdQtGurvOpqPfzyBkPvQz3fML3K1sIB97Q5sRBwI6KX2ZsCDwk3lwMNP5q9bX2vqqoyZI36T++yBmJ++44C3pLJzmrAGoIqam00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790662542; c=relaxed/simple;
-	bh=Z2+H9o/My65At5c+ZTlwoYFtlygGFbGf6bDMNB9Nw+c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=NRXSAJzbT0IrCBHnHqd5A+F4pb1RsIkzNcC1qODEXcGrzxR/2H4oaBuI7V3B4DX1kPQPsiujZTYAguPoMQoHvU7l/1mFUpVel9WS/fmmsibTRutg0J5zRGeB4oph+4+sKhKra0SJuXx6hK8rf4sjJyPPVBHpHgGZ4nYmPF942F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn; spf=pass smtp.mailfrom=semi.ac.cn; arc=none smtp.client-ip=159.226.251.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semi.ac.cn
-Received: from huanggaobin23$semi.ac.cn ( [159.226.228.11] ) by
- ajax-webmail-APP-17 (Coremail) ; Tue, 29 Sep 2026 14:15:31 +0800
- (GMT+08:00)
-Date: Tue, 29 Sep 2026 14:15:31 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?6buE6auY5b2s?= <huanggaobin23@semi.ac.cn>
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org, "Davidlohr Bueso" <dave@stgolabs.net>, 
-	"Jonathan Cameron" <jic23@kernel.org>, 
-	"Dave Jiang" <dave.jiang@intel.com>, 
-	"Alison Schofield" <alison.schofield@intel.com>, 
-	"Vishal Verma" <vishal.l.verma@intel.com>, 
-	"Dan Williams" <djbw@kernel.org>, "Li Ming" <ming.li@zohomail.com>, 
-	linux-kernel@vger.kernel.org, "Anisa Su" <anisa.su887@gmail.com>
-Subject: Re: Re: [PATCH v2] cxl/mbox: bound the Get Supported Logs entry
- count by the payload
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.1-cmXT5 build
- 20240627(e6c6db66) Copyright (c) 2002-2026 www.mailtech.cn cnic.cn
-In-Reply-To: <arDU-kTVCa4z8C8l@MWDK4CY14F>
-References: <20260917104603.2658529-1-huanggaobin23@semi.ac.cn>
- <arDU-kTVCa4z8C8l@MWDK4CY14F>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1790662548; c=relaxed/simple;
+	bh=y83iVJbYBuNpJrk9ZXRTAO7ONK13iH+NBXkW6CgCoWo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=j//hO0nIxE4zGyId8ubDjvjgqYFxBmAHzWpHhuCDEbTb9DAUVOOyS7ygiE50so4cG7aRPjmGS9+H/7ORysj9lLoj7/sxmbsv2MCa+qZHTSI0PykXeWh7s6P7sN9M7scf6t8EGlCm0frsKTG7qwtZOHjif17+9UvSnT6St2ygk9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMacATeh; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMacATeh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4419C1F000FF;
+	Tue, 29 Sep 2026 06:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790662546;
+	bh=vp7WHQK9GL7BEpeEsdpYl9GBk91uY9pKhDOsWpHFnYo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KMacATehCAUrebJzlV31uFcJIsIsRDuiYTTQWP+HimgUqqMPmWrcygDlFO4yDkvCt
+	 6pSzt7F+pAFAKYE/F2Kk3c2ofPaX3ruJTLyZO30CbsFMYjgFzcnwk7LO9FzOc2EJ5D
+	 pBs+REEZssVhMzOxk7nmM797N6YCvYlaXi6MEVone9THs+FAFR7/IaCO0ZYjE+hxhW
+	 xtBg46R5NeqgULPJbiBHa2hTt7i/iNoPf010ahfm5hl6NZflMz/pba1RzX2p5/2WBI
+	 o/zmQZGOPpJ3YnLL7g4741wFqmjErTI5JTyQ3X4vZ1q3ftn4d9jyDK0n03ROt8FzRJ
+	 PAQaml2UykhZQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] cxl/mbox: bound the device-supplied command return code
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gaobin Huang" <huanggaobin23@semi.ac.cn>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260929060747.3550005-1-huanggaobin23@semi.ac.cn>
+References: <20260929060747.3550005-1-huanggaobin23@semi.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 29 Sep 2026 06:15:45 +0000
+Message-Id: <20260929061546.4419C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <7fe55f2c.2a158.1a0ebcdda1a.Coremail.huanggaobin23@semi.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:qgCowAA3IhGDV7tqW6ISAA--.28423W
-X-CM-SenderInfo: xkxd0wxjdruxrqstq2xhplhtffof0/1tbiBwMFDGq7TSQcvgADsU
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWDJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
 
-SGkgUmljaGFyZCwKClRoYW5rIHlvdSwgYW5kIHNvcnJ5IGZvciB0aGUgc2xvdyB0dXJuLWFyb3Vu
-ZCAtLSBib3RoIHN1Z2dlc3Rpb25zIGFyZSBpbiB2MywKYW5kIHRoZSBzcGVjIHBvaW50ZXIgc2V0
-dGxlcyB0aGUgY2xhbXBpbmctdmVyc3VzLXJlamVjdGluZyBxdWVzdGlvbiByYXRoZXIKdGhhbiBq
-dXN0IG1ha2luZyByZWplY3Rpbmcgc2FmZXIuCgo+IEkgd291bGQgc3VnZ2VzdCB0byBrZWVwIHRo
-ZSBzaWduYXR1cmUgYW5kIGRvIHRoZSBjaGVjayBoZXJlIGluc3RlYWQuCj4gY3hsX2dldF9nc2wo
-KSBpc3N1ZXMgdGhlIGNvbW1hbmQsIG93bnMgdGhlIGJ1ZmZlciBhbmQgYWxyZWFkeSBoYXMgdGhl
-Cj4ga3ZmcmVlKCkvRVJSX1BUUiBlcnJvciBwYXRoLiBUaGVuIHRoZSBjYWxsZXIgZG9lc24ndCBu
-ZWVkIHRvIGtub3cgdGhlIGhlYWRlcgo+IHNpemUgb3IgdGhlIGVudHJ5IHNpemUsIGFuZCBnc2wt
-PmVudHJpZXMgY2FuIGJlIHRydXN0ZWQgYnkgd2hvZXZlciB1c2VzIHRoZQo+IHN0cnVjdC4KCkFn
-cmVlZCwgYW5kIHRoYXQgaXMgd2hlcmUgdjMgcHV0cyBpdC4gIGN4bF9lbnVtZXJhdGVfY21kcygp
-IGlzIG5vdyB1bmNoYW5nZWQKZnJvbSBtYWlubGluZToKCgltYm94X2NtZCA9IChzdHJ1Y3QgY3hs
-X21ib3hfY21kKSB7CgkJLm9wY29kZSA9IENYTF9NQk9YX09QX0dFVF9TVVBQT1JURURfTE9HUywK
-CQkuc2l6ZV9vdXQgPSBjeGxfbWJveC0+cGF5bG9hZF9zaXplLAoJCS5wYXlsb2FkX291dCA9IHJl
-dCwKCQkvKiBBdCBsZWFzdCB0aGUgaGVhZGVyIG11c3QgYmUgdmFsaWQgKi8KCQkubWluX291dCA9
-IHN0cnVjdF9zaXplKHJldCwgZW50cnksIDApLAoJfTsKCXJjID0gY3hsX2ludGVybmFsX3NlbmRf
-Y21kKGN4bF9tYm94LCAmbWJveF9jbWQpOwoJaWYgKHJjIDwgMCkgewoJCWt2ZnJlZShyZXQpOwoJ
-CXJldHVybiBFUlJfUFRSKHJjKTsKCX0KCgltYXhfZW50cmllcyA9IChtYm94X2NtZC5zaXplX291
-dCAtIHN0cnVjdF9zaXplKHJldCwgZW50cnksIDApKSAvCgkJICAgICAgc2l6ZW9mKHJldC0+ZW50
-cnlbMF0pOwoJaWYgKGxlMTZfdG9fY3B1KHJldC0+ZW50cmllcykgPiBtYXhfZW50cmllcykgewoJ
-CWRldl9lcnIobWRzLT5jeGxkcy5kZXYsCgkJCSJHU0w6IGRldmljZSBjbGFpbWVkICV1IGVudHJp
-ZXMgYnV0IHRoZSBwYXlsb2FkIGhvbGRzICV6dVxuIiwKCQkJbGUxNl90b19jcHUocmV0LT5lbnRy
-aWVzKSwgbWF4X2VudHJpZXMpOwoJCWt2ZnJlZShyZXQpOwoJCXJldHVybiBFUlJfUFRSKC1FSU8p
-OwoJfQoKPiAubWluX291dCA9IDIgaXMgdGhlIG9ubHkgbWluX291dCBpbiB0aGUgdHJlZSB0aGF0
-J3Mgbm90IGEgZnVsbCBoZWFkZXIuCj4gUmFpc2luZyBpdCB0byBzdHJ1Y3Rfc2l6ZShyZXQsIGVu
-dHJ5LCAwKSBsZXRzIGN4bF9pbnRlcm5hbF9zZW5kX2NtZCgpIHJlamVjdAo+IHRoZSBzaG9ydCBy
-ZXNwb25zZSB3aXRoIC1FSU8sIHNvIHRoZSAidG9vIHNob3J0IGZvciB0aGUgaGVhZGVyIiBwYXJ0
-IGNhbgo+IGdvIGF3YXkuCgpUYWtlbi4gIFRoZSBzdWJ0cmFjdGlvbiBjYW5ub3QgdW5kZXJmbG93
-IG9uY2UgbWluX291dCBndWFyYW50ZWVzIHRoZSBoZWFkZXIsCnNvIHRoZSBndWFyZCBhcm91bmQg
-aXQgaXMgZ29uZSB0b28sIGFuZCBpdCBtYXRjaGVzIHRoZSB0d28gdXNlcnMgYWxyZWFkeSBpbgp0
-aGlzIGZpbGUgKHN0cnVjdF9zaXplKHBheWxvYWQsIHJlY29yZHMsIDApIGFuZCBzdHJ1Y3Rfc2l6
-ZShwbywgcmVjb3JkLCAwKSkuCgo+IFRoZSBvbmx5IGt2ZnJlZSgpIGlzIGF0ICJvdXQiIHNlY3Rp
-b24sIGRpcmVjdGx5IHJldHVybiBoZXJlIHdvdWxkIGxlYWsKPiBnc2wuCgpUaGF0IHdhcyBtaW5l
-LCBpbiB2Mi4gIE1vdmluZyB0aGUgY2hlY2sgaW50byBjeGxfZ2V0X2dzbCgpIHJlbW92ZXMgdGhl
-IHBhdGgKaW5zdGVhZCBvZiByZXBhaXJpbmcgaXQuICBzYXNoaWtvIHJlcG9ydGVkIHRoZSBzYW1l
-IGxlYWsgb24gdjIuCgo+IEFncmVlIHdpdGggQWxpc29uIGFuZCBKb25hdGhhbiwgZG9uJ3QgY2xh
-bXAgaGVyZS4KPiBDWEwgcjQuMCBTZWN0aW9uIDguMi4xMC41LjEgR2V0IFN1cHBvcnRlZCBMb2dz
-LCBUYWJsZSA4LTI0OSAuLi4gZGVmaW5lcwo+ICJOdW1iZXIgb2YgU3VwcG9ydGVkIExvZ3MgRW50
-cmllcyIgYXMgInRoZSBudW1iZXIgb2YgU3VwcG9ydGVkIExvZyBFbnRyaWVzCj4gcmV0dXJuZWQg
-aW4gdGhlIG91dHB1dCBwYXlsb2FkIi4KPiBJdCdzIG5vdCB0b3RhbCwgc28gYSBjb3VudGVyIGxh
-cmdlciB0aGFuIHdoYXQgYXJyaXZlZCBpcyBhIG1hbGZvcm1lZAo+IHJlc3BvbnNlLCBub3QgYSBw
-YXJ0aWFsIGxpc3QuCgpUaGFuayB5b3UgZm9yIHRoZSBjaXRhdGlvbi4gIEl0IGlzIGluIHRoZSBj
-b21taXQgbWVzc2FnZSBub3csIGJlY2F1c2UgaXQgaXMKd2hhdCBtYWtlcyByZWplY3RpbmcgdGhl
-IHJpZ2h0IGFuc3dlciByYXRoZXIgdGhhbiBtZXJlbHkgdGhlIHNhZmVyIG9uZS4KCj4gQWJvdXQg
-LUVJTyB2LnMuIC1FTlhJTywgSSB3b3VsZCBnbyB3aXRoIC1FSU8uCgotRUlPIGl0IGlzLCBhbmQg
-aXQgaXMgbm93IGxpdGVyYWxseSBjeGxfaW50ZXJuYWxfc2VuZF9jbWQoKSdzIHBheWxvYWQgc2l6
-ZQptaXNtYXRjaCBlcnJvciByYXRoZXIgdGhhbiBhIGNob2ljZSBtYWRlIGhlcmUuCgp2MzoKaHR0
-cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjYwOTI5MDYwNjEwLjM1NDk3MTgtMS1odWFuZ2dh
-b2JpbjIzQHNlbWkuYWMuY24vCgpHYW9iaW4=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] cxl: incorrect comment about return code mappings
+--
+
+commit 2dcefe093dad494dcbd18a284c00e32e26f8041e
+Author: Gaobin Huang <huanggaobin23@semi.ac.cn>
+
+cxl/mbox: bound the device-supplied command return code
+
+Validates the device-supplied command return code from the mailbox status
+register before indexing the command return code table. This prevents an
+out-of-bounds read if a device reports an undefined code.
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index c401e3a1af06f..7f89dc4fcf050 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+[ ... ]
+
+>  static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
+>  {
+> -	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].err;
+> +	const struct cxl_mbox_cmd_rc *rc =3D cxl_mbox_cmd_rc_entry(mbox_cmd);
+> +
+> +	/*
+> +	 * Unknown codes are still failures, and -ENXIO is what every
+> +	 * non-success entry in the table maps to, so the caller cannot tell
+> +	 * an undefined code from a defined error in a way that matters.
+> +	 */
+
+[Severity: Low]
+This isn't a bug, but in cxl_mbox_cmd_rc2errno(), is this comment accurate
+regarding the table mappings?
+
+While most non-success entries map to -ENXIO, PADDR maps to -EFAULT and
+POISONLMT maps to -EBUSY. The fallback to -ENXIO is safe, but the comment
+and the commit message claim that every non-success entry maps to -ENXIO,
+which could be confusing.
+
+> +	return rc ? rc->err : -ENXIO;
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929060747.3550=
+005-1-huanggaobin23@semi.ac.cn?part=3D1
