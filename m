@@ -1,55 +1,55 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CA32C11CF
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 05:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBA43F12EF
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 05:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790660231; cv=none; b=inYD7EZnjP0YQ/4srhwNoogWJ4SYcf2UkaS1YxoA0HlArZRllCO8sN1xVzeCJXPmZYHhR+d0/Y8MiC/ohrLEiKwp6bnj5L3yCccObhar2mJlIaYiGRK4BlHP+i92mwKs6xhWL8FfRh7GiO89b07gFIOkDXdzu1pQA8pAEFWxTag=
+	t=1790660232; cv=none; b=s9MDobMLnXlyQChuu90iWvtBBC6hJx027ZtLrdI3c48h4Ylj1Pgbv2C+FBmDGqOL8tet5cBB1Hdsec8lW1h3u8tQTpO/OYC5hz7L4JzPP852cfFW3uPHt0dgGbWPsDdh40dP6rLQPj/7h4hi66DO463CNYImXDsV4ASgli/Q76c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790660231; c=relaxed/simple;
-	bh=Tx+BpZtleJ3iyeci4TFtZJsyQU8zBp5DmChVSHZgyHA=;
+	s=arc-20240116; t=1790660232; c=relaxed/simple;
+	bh=fnzaeLx7gy8SJJnJe5RBXXbaPYUfSZ9qcNgeHoD+lRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JwK1leQli3ZubeubvYLUXghkDPWUwZpbV2KLS4UnUPNe+7UXHEcddaDsZQVEKEJ0+P6Nx4tTnBzYkjF75EmnZS+9dEZItmggRq0NK9yIOS0u7mS34HbZlMmxbDdGd2p7LYuPDxqca7pqv9OB1w7Ip9/DkUkXHqsjByah/HzBkfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cG1xHypq; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=r7YrY9whmCzA6aCGdE45M9zx0u1FL/QI2enTb/xvplR+7I4jOMfbsYgSXrT9NZrSm4AhwfqffCoTIKsgi7TyEDLDOAKAWYq/43l477z90svvLHf+qdlRv0+/AmT8f9bgCDio52E+0XlBPpJ50U+MIhcAv3IoI93lMK0SihFgJII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PHsFtOA6; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cG1xHypq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHsFtOA6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790660229; x=1822196229;
+  t=1790660230; x=1822196230;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Tx+BpZtleJ3iyeci4TFtZJsyQU8zBp5DmChVSHZgyHA=;
-  b=cG1xHypqKDFDuGRz3PHwrkh5OI6shRdzVQY6istLVgdXPWDa/BVmfdcg
-   qmqPWYkeIS0rQFA/19v8agUIj04Q/E11b0hzeFf4e1oOGgbPINDWNz8+B
-   sbAPfjKg3HxIyI3y98PUzx+xsJwZOvVq2Kf1W/WZR42Uaw3GvtWV205h3
-   nDgTEgx8LcBtS8GfD9DCOCxLJ78JTLyIf5Pn5xHCGgTnDOnVMIjGj/H1P
-   yZh3uANmf0AnCYLtxIEVjzrzIShSeDS3xQFTcHfIEAUh4FPyVWKBVuAAC
-   iNuAuNFpINk1LNvfQWfuAYdT0jbs9ZB7vQEJR5UDwZ2t+cZp24j9UyPFW
-   Q==;
-X-CSE-ConnectionGUID: Yj0mQXZpTn68zarcT9MmKw==
-X-CSE-MsgGUID: 3u6uuAtgRVutuSga0rG40Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="100700079"
+  bh=fnzaeLx7gy8SJJnJe5RBXXbaPYUfSZ9qcNgeHoD+lRo=;
+  b=PHsFtOA6Nv5UUmKzyoudhQPrVWZcAVDaFxtToPLI1cuNYgawc06Swu38
+   54Dba2ZDWQKHm6+qgumxfh38cfFWtrqP3guBlWfuqhqjEg/hf6gSciMhO
+   4A7ylXgDONPQloawhISID+c5aCUptlYvaMFMHscC/o/8bDolGVTm1s3H3
+   TMTZ9CUXucPUss9Jkl8gOtEFq5zCICR5XbIKQflRqzBNjvlP8pEhNz9tW
+   Gg3zGfqHmneJ5fGmZLFSPrUqboFC0qY2tosXBYmnwowSSPZzM61a0ZbNU
+   RNPV/du0YEXDtjafAygTdnhvZc4AZzx1gmydKg5rjN9nbenbl+eLwMzOR
+   g==;
+X-CSE-ConnectionGUID: Iu4SAxN5ST2kW/UwVE6m3w==
+X-CSE-MsgGUID: 8JT6AMfhTFSfouTnXxO+lA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="100700086"
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="100700079"
+   d="scan'208";a="100700086"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:09 -0700
-X-CSE-ConnectionGUID: w/0lDpBpQkmiXLapNHJ1pw==
-X-CSE-MsgGUID: pUArpG5fSBiHNgUKoSQ8Kg==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:10 -0700
+X-CSE-ConnectionGUID: S3X7o2phTUeZFxAETGKd5g==
+X-CSE-MsgGUID: hMc5jwS7QRCn4rUs2RqfrQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="304767490"
+   d="scan'208";a="304767501"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.149])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:09 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:10 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
 Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH 6/7] cxl/region: validate granularity before region creation
-Date: Mon, 28 Sep 2026 22:36:58 -0700
-Message-ID: <d5773b082d9dc27441076658f84427f3f1f7a8bd.1790658549.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH 7/7] cxl/region: document --decoder as required
+Date: Mon, 28 Sep 2026 22:36:59 -0700
+Message-ID: <2c079cbc4b37271f0b7f06da0990233539890ed6.1790658549.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1790658549.git.alison.schofield@intel.com>
 References: <cover.1790658549.git.alison.schofield@intel.com>
@@ -61,130 +61,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The root decoder and requested granularity are known before region
-creation, so cxl create-region can determine whether the request is valid
-before sending it to the kernel.
+The cxl create-region documentation describes automatic root decoder
+selection when --decoder is omitted, but that behavior has never been
+implemented. Users see:
 
-Currently that check happens only after the region device is created,
-requiring the failed request to be cleaned up afterward.
+	# cxl create-region -m mem0 mem1
+	cxl region: parse_create_options: no root decoder specified
+	cxl region: cmd_create_region: created 0 regions
 
-Validate encodable values during option parsing and resolve the effective
-granularity before creating the region.
+Document --decoder as required.
 
-Fixes: 21b089025178 ("cxl: add a 'create-region' command")
 Assisted-by: LLM
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- cxl/region.c              | 22 ++++++++++++----------
- test/cxl-create-region.sh | 26 ++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 10 deletions(-)
 
-diff --git a/cxl/region.c b/cxl/region.c
-index e4fc8bb2942c..2e62e3faace2 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -407,8 +407,11 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
- 		p->ways = p->num_memdevs;
+Automatic root decoder selection may be revisited as part of future
+usability enhancements to the cxl create-region command.
+---
+ Documentation/cxl/cxl-create-region.txt | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+index b244af60b8a6..47c23ffb2565 100644
+--- a/Documentation/cxl/cxl-create-region.txt
++++ b/Documentation/cxl/cxl-create-region.txt
+@@ -94,16 +94,15 @@ include::bus-option.txt[]
+ -g::
+ --granularity=::
+ 	The interleave granularity for the new region. Must match the selected
+-	root decoder's (if provided) granularity. If the root decoder is
++	root decoder's granularity. If the root decoder is
+ 	interleaved across more than one host-bridge then this value must match
+ 	that granularity. Otherwise, for non-interleaved decode windows, any
+ 	granularity can be specified as long as all devices support that setting.
  
- 	if (param.granularity < INT_MAX) {
--		if (param.granularity <= 0) {
--			log_err(&rl, "Invalid interleave granularity: %d\n",
-+		/* HDM granularity is a power of two from 256B through 16KiB. */
-+		if (param.granularity < 256 || param.granularity > 16384 ||
-+		    !is_power_of_2(param.granularity)) {
-+			log_err(&rl,
-+				"Invalid interleave granularity: %d, expected a power of 2 from 256 to 16384\n",
- 				param.granularity);
- 			goto err;
- 		}
-@@ -670,10 +673,9 @@ do { \
- 	} \
- } while (0)
+ -d::
+ --decoder=::
+-	The root decoder that the region should be created under. If not
+-	supplied, the first cross-host bridge (if available), decoder that
+-	supports the largest interleave will be chosen.
++	The root decoder under which to create the region. This option is
++	required.
  
--static int cxl_region_determine_granularity(struct cxl_region *region,
--					    struct parsed_params *p)
-+static int cxl_region_determine_granularity(struct parsed_params *p)
- {
--	const char *devname = cxl_region_get_devname(region);
-+	const char *devname = cxl_decoder_get_devname(p->root_decoder);
- 	int granularity, ways;
- 
- 	/* Default granularity will be the root decoder's granularity */
-@@ -769,6 +771,11 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 	if (size > max_extent)
- 		size = ALIGN_DOWN(max_extent, SZ_256M * p->ways);
- 
-+	rc = cxl_region_determine_granularity(p);
-+	if (rc < 0)
-+		return rc;
-+	granularity = rc;
-+
- 	if (p->mode == CXL_DECODER_MODE_PMEM) {
- 		region = cxl_decoder_create_pmem_region(p->root_decoder);
- 		if (!region) {
-@@ -797,11 +804,6 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 		goto out;
- 	}
- 
--	rc = cxl_region_determine_granularity(region, p);
--	if (rc < 0)
--		goto out;
--	granularity = rc;
--
- 	try(cxl_region, set_interleave_granularity, region, granularity);
- 	try(cxl_region, set_interleave_ways, region, p->ways);
- 	if (p->mode == CXL_DECODER_MODE_PMEM) {
-diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
-index 02358af7837a..0d98b61a7e13 100644
---- a/test/cxl-create-region.sh
-+++ b/test/cxl-create-region.sh
-@@ -240,6 +240,16 @@ setup_interleave_shape()
- 		return 1
- 	fi
- 
-+	x2_granularity=$($CXL list -b cxl_test -D -d "$x2_decoder" |
-+			 jq -r ".[0].interleave_granularity")
-+
-+	# Pick a valid granularity different from the x2 root's.
-+	if [[ $x2_granularity -eq 256 ]]; then
-+		other_granularity=512
-+	else
-+		other_granularity=256
-+	fi
-+
- 	pos0=$(find_memdev "$x2_decoder" 0 0)
- 	pos1=$(find_memdev "$x2_decoder" 1 0)
- 	pos2=$(find_memdev "$x2_decoder" 0 1)
-@@ -391,6 +401,21 @@ release_dpa_on_failure()
- 	destroy_regions "$filler"
- }
- 
-+# Reject invalid encodings and granularities incompatible with the root.
-+refuse_bad_granularity()
-+{
-+	if ! setup_interleave_shape; then
-+		echo "skipping granularity refusals"
-+		return
-+	fi
-+
-+	create_expect_fail "Invalid interleave granularity: 1000" \
-+		-d "$x2_decoder" -m "$pos0 $pos1" -g 1000
-+
-+	create_expect_fail "only root decoder granularity ($x2_granularity)" \
-+		-d "$x2_decoder" -m "$pos0 $pos1" -g "$other_granularity"
-+}
-+
- # test region creation on devices behind a single-port host-bridge
- create_single
- 
-@@ -407,6 +432,7 @@ done
- create_csv_targets
- refuse_bad_target_list
- release_dpa_on_failure
-+refuse_bad_granularity
- 
- # Repeat x1/x2/x3/x4 region creation with XOR interleave arithmetic.
- load_cxl_test interleave_arithmetic=1
+ -Q::
+ --enforce-qos::
 -- 
 2.37.3
 
