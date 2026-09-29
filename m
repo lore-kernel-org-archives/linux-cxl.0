@@ -1,92 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp87.cstnet.cn [159.226.251.87])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C5C3515DE
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 06:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBE33F3287;
+	Tue, 29 Sep 2026 06:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790662548; cv=none; b=Y3oDuSz13LRlLfuCSqyRV1mWJ1hPbwOSbuGNiN41HBAT2094+gDutwNic9KEMTlwy6D5ZJegTdQtGurvOpqPfzyBkPvQz3fML3K1sIB97Q5sRBwI6KX2ZsCDwk3lwMNP5q9bX2vqqoyZI36T++yBmJ++44C3pLJzmrAGoIqam00=
+	t=1790662827; cv=none; b=kKAjxR4ZXYKiLLN/erDRfvnpFSYooedJXsSsiQ4wyHaQ7EoL/a9puyRUhmmIZ22VCRo7IYx6pgzpdT82PLVMirsfC1uMasLunReXfwrgRQ/3XjIfzVcLUx0qow3LfHhx3doDpOmuEAV106rxzF4sSHbdIMAmf7WJUXHdFQ5RfP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790662548; c=relaxed/simple;
-	bh=y83iVJbYBuNpJrk9ZXRTAO7ONK13iH+NBXkW6CgCoWo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j//hO0nIxE4zGyId8ubDjvjgqYFxBmAHzWpHhuCDEbTb9DAUVOOyS7ygiE50so4cG7aRPjmGS9+H/7ORysj9lLoj7/sxmbsv2MCa+qZHTSI0PykXeWh7s6P7sN9M7scf6t8EGlCm0frsKTG7qwtZOHjif17+9UvSnT6St2ygk9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMacATeh; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMacATeh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4419C1F000FF;
-	Tue, 29 Sep 2026 06:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790662546;
-	bh=vp7WHQK9GL7BEpeEsdpYl9GBk91uY9pKhDOsWpHFnYo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KMacATehCAUrebJzlV31uFcJIsIsRDuiYTTQWP+HimgUqqMPmWrcygDlFO4yDkvCt
-	 6pSzt7F+pAFAKYE/F2Kk3c2ofPaX3ruJTLyZO30CbsFMYjgFzcnwk7LO9FzOc2EJ5D
-	 pBs+REEZssVhMzOxk7nmM797N6YCvYlaXi6MEVone9THs+FAFR7/IaCO0ZYjE+hxhW
-	 xtBg46R5NeqgULPJbiBHa2hTt7i/iNoPf010ahfm5hl6NZflMz/pba1RzX2p5/2WBI
-	 o/zmQZGOPpJ3YnLL7g4741wFqmjErTI5JTyQ3X4vZ1q3ftn4d9jyDK0n03ROt8FzRJ
-	 PAQaml2UykhZQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] cxl/mbox: bound the device-supplied command return code
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gaobin Huang" <huanggaobin23@semi.ac.cn>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260929060747.3550005-1-huanggaobin23@semi.ac.cn>
-References: <20260929060747.3550005-1-huanggaobin23@semi.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 06:15:45 +0000
-Message-Id: <20260929061546.4419C1F000FF@smtp.kernel.org>
+	s=arc-20240116; t=1790662827; c=relaxed/simple;
+	bh=sPS10sa+ZcmkXBaq8HSQjC9VXsdOah9uJU4Rj32DyDc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=X3AlGwOhPKwoaZFY88cxMcPTfikAhqA97U8Xty4gFGYoqAPh0K9hzSWMkilgd0Wp9Ozx04yqN2ZfpPJ8kTotaOUac6EH8Je6Nm8g2O9SbjmXR+5UYQ1OEITj8/9tEsbFLwjkx1Cado2DKLcvpbvXdLws1/5X93jwmnFcn2S98J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn; spf=pass smtp.mailfrom=semi.ac.cn; arc=none smtp.client-ip=159.226.251.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semi.ac.cn
+Received: from huanggaobin23$semi.ac.cn ( [159.226.228.11] ) by
+ ajax-webmail-APP-17 (Coremail) ; Tue, 29 Sep 2026 14:14:31 +0800
+ (GMT+08:00)
+Date: Tue, 29 Sep 2026 14:14:31 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?6buE6auY5b2s?= <huanggaobin23@semi.ac.cn>
+To: "Alison Schofield" <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, "Davidlohr Bueso" <dave@stgolabs.net>, 
+	"Jonathan Cameron" <jic23@kernel.org>, 
+	"Dave Jiang" <dave.jiang@intel.com>, 
+	"Vishal Verma" <vishal.l.verma@intel.com>, 
+	"Dan Williams" <djbw@kernel.org>, "Li Ming" <ming.li@zohomail.com>, 
+	"Richard Cheng" <icheng@nvidia.com>, linux-kernel@vger.kernel.org, 
+	"Anisa Su" <anisa.su887@gmail.com>
+Subject: Re: Re: [PATCH v2] cxl/mbox: bound the Get Supported Logs entry
+ count by the payload
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.1-cmXT5 build
+ 20240627(e6c6db66) Copyright (c) 2002-2026 www.mailtech.cn cnic.cn
+In-Reply-To: <aqx6rM90rFZEsTuB@aschofie-mobl2.lan>
+References: <20260917104603.2658529-1-huanggaobin23@semi.ac.cn>
+ <aqx6rM90rFZEsTuB@aschofie-mobl2.lan>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-ID: <3420eadb.2a145.1a0ebccf099.Coremail.huanggaobin23@semi.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:qgCowACnUhFHV7tqSKISAA--.50663W
+X-CM-SenderInfo: xkxd0wxjdruxrqstq2xhplhtffof0/1tbiBwMFDGq7TSQcvgACsV
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWkKw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] cxl: incorrect comment about return code mappings
---
-
-commit 2dcefe093dad494dcbd18a284c00e32e26f8041e
-Author: Gaobin Huang <huanggaobin23@semi.ac.cn>
-
-cxl/mbox: bound the device-supplied command return code
-
-Validates the device-supplied command return code from the mailbox status
-register before indexing the command return code table. This prevents an
-out-of-bounds read if a device reports an undefined code.
-
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index c401e3a1af06f..7f89dc4fcf050 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-
-[ ... ]
-
->  static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
->  {
-> -	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].err;
-> +	const struct cxl_mbox_cmd_rc *rc =3D cxl_mbox_cmd_rc_entry(mbox_cmd);
-> +
-> +	/*
-> +	 * Unknown codes are still failures, and -ENXIO is what every
-> +	 * non-success entry in the table maps to, so the caller cannot tell
-> +	 * an undefined code from a defined error in a way that matters.
-> +	 */
-
-[Severity: Low]
-This isn't a bug, but in cxl_mbox_cmd_rc2errno(), is this comment accurate
-regarding the table mappings?
-
-While most non-success entries map to -ENXIO, PADDR maps to -EFAULT and
-POISONLMT maps to -EBUSY. The fallback to -ENXIO is safe, but the comment
-and the commit message claim that every non-success entry maps to -ENXIO,
-which could be confusing.
-
-> +	return rc ? rc->err : -ENXIO;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929060747.3550=
-005-1-huanggaobin23@semi.ac.cn?part=3D1
+SGkgQWxpc29uLAoKVGhhbmtzIGZvciB0aGUgcmV2aWV3LCBhbmQgc29ycnkgZm9yIHRoZSBzbG93
+IHR1cm4tYXJvdW5kLgoKPiBBcmUgd2UgaW50ZW50aW9uYWxseSBib3VuZGluZyB0aGUgZW51bWVy
+YXRpb24gYW5kIGNvbnRpbnVpbmcgd2l0aCBhIHBhcnRpYWwKPiByZXNwb25zZSwgb3Igc2hvdWxk
+IHdlIGJlIHZhbGlkYXRpbmcgdGhlIGRldmljZSBzdXBwbGllZCBjb3VudCBhbmQgcmVqZWN0aW5n
+Cj4gYW4gaW5jb25zaXN0ZW50IHJlc3BvbnNlLCBhcyBnZXRfc3VwcG9ydGVkX2ZlYXR1cmVzIGRv
+ZXM/CgpWYWxpZGF0aW5nIGFuZCByZWplY3RpbmcsIGFuZCBSaWNoYXJkJ3MgcmV2aWV3IG9uIHRo
+aXMgdGhyZWFkIG1vdmVkIHRoZSBjaGVjawp0byB3aGVyZSBpdCBiZWxvbmdzLiAgVGhlcmUgaXMg
+bm8gcmVhc29uIHRvIHNhbHZhZ2UgdGhlIGVudHJpZXMgdGhhdCBmaXQ6CkNYTCByNC4wIFRhYmxl
+IDgtMjQ5IGRlZmluZXMgdGhlIGNvdW50IGFzIHRoZSBudW1iZXIgb2YgZW50cmllcyByZXR1cm5l
+ZCBpbgp0aGlzIHBheWxvYWQsIG5vdCBhIHJ1bm5pbmcgdG90YWwsIHNvIGEgY291bnQgdGhlIHBh
+eWxvYWQgY2Fubm90IGhvbGQgaXMgYQptYWxmb3JtZWQgcmVzcG9uc2UgcmF0aGVyIHRoYW4gYSBw
+YXJ0aWFsIGxpc3QuICB2MyB0aGVyZWZvcmUgdmFsaWRhdGVzIGluc2lkZQpjeGxfZ2V0X2dzbCgp
+LCB3aGljaCBpc3N1ZXMgdGhlIGNvbW1hbmQsIG93bnMgdGhlIGJ1ZmZlciBhbmQgY2FuIHJldHVy
+biB0aGUKZXJyb3IgaXRzZWxmOgoKCW1ib3hfY21kID0gKHN0cnVjdCBjeGxfbWJveF9jbWQpIHsK
+CQkub3Bjb2RlID0gQ1hMX01CT1hfT1BfR0VUX1NVUFBPUlRFRF9MT0dTLAoJCS5zaXplX291dCA9
+IGN4bF9tYm94LT5wYXlsb2FkX3NpemUsCgkJLnBheWxvYWRfb3V0ID0gcmV0LAoJCS8qIEF0IGxl
+YXN0IHRoZSBoZWFkZXIgbXVzdCBiZSB2YWxpZCAqLwoJCS5taW5fb3V0ID0gc3RydWN0X3NpemUo
+cmV0LCBlbnRyeSwgMCksCgl9OwoJcmMgPSBjeGxfaW50ZXJuYWxfc2VuZF9jbWQoY3hsX21ib3gs
+ICZtYm94X2NtZCk7CglpZiAocmMgPCAwKSB7CgkJa3ZmcmVlKHJldCk7CgkJcmV0dXJuIEVSUl9Q
+VFIocmMpOwoJfQoKCW1heF9lbnRyaWVzID0gKG1ib3hfY21kLnNpemVfb3V0IC0gc3RydWN0X3Np
+emUocmV0LCBlbnRyeSwgMCkpIC8KCQkgICAgICBzaXplb2YocmV0LT5lbnRyeVswXSk7CglpZiAo
+bGUxNl90b19jcHUocmV0LT5lbnRyaWVzKSA+IG1heF9lbnRyaWVzKSB7CgkJZGV2X2VycihtZHMt
+PmN4bGRzLmRldiwKCQkJIkdTTDogZGV2aWNlIGNsYWltZWQgJXUgZW50cmllcyBidXQgdGhlIHBh
+eWxvYWQgaG9sZHMgJXp1XG4iLAoJCQlsZTE2X3RvX2NwdShyZXQtPmVudHJpZXMpLCBtYXhfZW50
+cmllcyk7CgkJa3ZmcmVlKHJldCk7CgkJcmV0dXJuIEVSUl9QVFIoLUVJTyk7Cgl9CgpjeGxfZW51
+bWVyYXRlX2NtZHMoKSBpcyB1bmNoYW5nZWQgbm93LCBhbmQgbm8gY2FsbGVyIGNhbiBzZWUgYW4g
+ZW50cnkgd2l0aG91dAphIGNvdW50IGl0IGNhbiB0cnVzdC4gIFJhaXNpbmcgbWluX291dCB0byB0
+aGUgaGVhZGVyIGFsc28gbGV0cwpjeGxfaW50ZXJuYWxfc2VuZF9jbWQoKSByZWplY3QgYSByZXNw
+b25zZSB0b28gc2hvcnQgdG8gaG9sZCB0aGUgY291bnQsIHNvIHRoZQptYW51YWwgbGVuZ3RoIGNo
+ZWNrIC0tIGFuZCB0aGUgc3VidHJhY3Rpb24gaXQgaGFkIHRvIGd1YXJkIC0tIGFyZSBnb25lLgoK
+VGhhdCBhbHNvIG1ha2VzIHRoZSBsYXN0IHBhcmFncmFwaCBvZiB2MidzIGNvbW1pdCBtZXNzYWdl
+IHRydWUuICB2MiBjbGFpbWVkIHRvCmJlIHRoZSBjcm9zcy1jaGVjayBnZXRfc3VwcG9ydGVkX2Zl
+YXR1cmVzKCkgcGVyZm9ybXMsIGJ1dCBpdCBib3VuZGVkIHRoZSBsb29wCmFuZCBjYXJyaWVkIG9u
+LCB3aGljaCBpcyBub3Qgd2hhdCB0aGF0IGZ1bmN0aW9uIGRvZXMuICBUaGFuayB5b3UgZm9yIGNh
+dGNoaW5nCnRoZSBjb250cmFkaWN0aW9uLgoKT25lIGNvbnNlcXVlbmNlIHRvIGJlIGV4cGxpY2l0
+IGFib3V0OiBjeGxfZW51bWVyYXRlX2NtZHMoKSBpcyBjYWxsZWQgZnJvbQpjeGxfcGNpX3Byb2Jl
+KCksIHNvIGEgZGV2aWNlIHdob3NlIGNvdW50IGRvZXMgbm90IGZpdCB0aGUgcGF5bG9hZCBub3cg
+ZmFpbHMgdG8KcHJvYmUgaW5zdGVhZCBvZiBjb21pbmcgdXAgd2l0aCB0aGUgZW50cmllcyB0aGF0
+IGZpdC4gIFRoYXQgaXMgdGhlIGxvdWQgZmFpbHVyZQp5b3UgYm90aCBhc2tlZCBmb3IuCgo+IEkg
+ZG9uJ3QgdGhpbmsgdGhlIGNvbW1lbnQgaXMgbmVlZGVkLiBUaGUgY2hlY2sgYW5kIGVycm9yIG1l
+c3NhZ2UgbWFrZSB0aGUKPiByZXF1aXJlbWVudCBjbGVhci4gQXMgd3JpdHRlbiwgaXQgaXMgZ29v
+ZCBzZWxmLWRvY3VtZW50aW5nIGNvZGUgOikKClRoZSBjb21tZW50IGlzIGdvbmUuICBTbyBpcyB0
+aGUgb25lIG9uIHRoZSAqbGVuIGFzc2lnbm1lbnQgLS0gdGhhdCBhc3NpZ25tZW50CmlzIGdvbmUg
+dG9vLCBzaW5jZSBjeGxfZ2V0X2dzbCgpIG5vdyBkb2VzIHRoZSB2YWxpZGF0aW9uIGl0c2VsZi4K
+Cj4gTml0OiBDWEwgc3Vic3lzdGVtIGJlZ2lucyBzdWJqZWN0cyB3IHVwcGVyY2FzZQoKQ2FwaXRh
+bGl6ZWQ6ICJjeGwvbWJveDogQm91bmQgdGhlIEdldCBTdXBwb3J0ZWQgTG9ncyBlbnRyeSBjb3Vu
+dCBieSB0aGUKcGF5bG9hZCIuCgo+IEFsc28sIEkgZG9uJ3QgdGhpbmsgeW91IGNhbiBjbGFpbSBu
+byBleGlzdGluZyBoYXJkd2FyZSBpcyBhZmZlY3RlZC4KCkRyb3BwZWQgLS0gSSBjYW5ub3QgcnVs
+ZSB0aGF0IG91dCwgc28gdGhlIGNvbW1pdCBtZXNzYWdlIG9ubHkgc2F5cyB3aGF0IHRoZQpyZXNw
+b25zZSBtYXkgY29udGFpbiBhbmQgd2hhdCB0aGUgZHJpdmVyIGRvZXMgYWJvdXQgaXQuCgo+IE5v
+dGUgdGhhdCBvbmNlIHRoaXMgcGF0Y2ggaXMgYXBwbGllZCwgdGhlIHRleHQgYmVsb3cgdGhlIHNj
+aXNzb3JzIGxpbmVzCj4gZGlzYXBwZWFycyBhbmQgcmVmZXJlbmNpbmcgMS8yIGxvc2VzIG1lYW5p
+bmcuCgpUaGUgY2hhbmdlbG9nIG5vdyBkZXNjcmliZXMgdjIgLT4gdjMgb25seSwgYW5kIG5vdGhp
+bmcgZWxzZSByZWZlcnMgdG8gdGhlCmRyb3BwZWQgcGF0Y2guCgo+IAlUaGUgR2V0IFN1cHBvcnRl
+ZCBMb2dzIHJlc3BvbnNlIGluY2x1ZGVzIGEgZGV2aWNlIHN1cHBsaWVkIGVudHJ5IGNvdW50Lgo+
+IAkuLi4KPiAJUmVwcm9kdWNlZCB3aXRoIFFFTVUgbW9kaWZpZWQgdG8gcmV0dXJuIGFuIGluY29u
+c2lzdGVudCBlbnRyeSBjb3VudC4KPiAJS0FTQU4gcmVwb3J0ZWQgYW4gb3V0LW9mLWJvdW5kcyBy
+ZWFkIGluIGN4bF9lbnVtZXJhdGVfY21kcygpLgoKQWRvcHRlZC4gIFRoZSAxMDIvMTAzIHN3ZWVw
+IGFuZCB0aGUgYm91bmRhcnkgYXJpdGhtZXRpYyBhcmUgZ29uZTsgdGhlIHJlcHJvIGlzCm9uZSBz
+ZW50ZW5jZS4KCj4gU2Vjb25kZWQuIEVycm9yIG91dCBhcyBlYXJseSBhcyBpdCBpcyBjb252ZW5p
+ZW50IHRvIGRvIHZhbGlkYXRpb24uCj4gSGVyZSB0aGF0IGlzIGFzIEFsaXNvbiBzYXlzIGJlZm9y
+ZSB0aGUgbG9vcCBzdGFydHMuCgpEb25lLCBhcyBhYm92ZS4KCnNhc2hpa28gYWxzbyByZXBvcnRl
+ZCB0aGUgbGVhayBvbiB2MiwgYW5kIFJpY2hhcmQgcG9pbnRlZCBpdCBvdXQKaW5kZXBlbmRlbnRs
+eTsgdGhlIGVhcmx5IHJldHVybiBpdCBjb25jZXJuZWQgaXMgZ29uZSB3aXRoIHRoZSByZXN0cnVj
+dHVyZS4KCnYzOgpodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNjA5MjkwNjA2MTAuMzU0
+OTcxOC0xLWh1YW5nZ2FvYmluMjNAc2VtaS5hYy5jbi8KCkdhb2Jpbgo=
