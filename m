@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3092EBBAF
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 00:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C1531F9AC
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 00:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790643394; cv=none; b=ZII+86XsTAco6J+v5Sm+4wozK4oIoGSRlaN7t/rhZYCxUQkWtbXC/WcJUdFYVMCblv9+jNzcuXD6KAIQ0rPkwZV2oeim0A8WD6ZGndVuxwjrKXKF2I9/Lqb0niR0sW96uMNrgxN1+o3m/mcgRvkgBhjwinM2MybKTK9/QM235iE=
+	t=1790643395; cv=none; b=ETCP6MCHZHLAdNkXm75vx8t/EOXN4j7ckjmu5TL8CCKIY1aOsyQfn8Y1feehs8nDvD+o5e20cNWXwqLLJcOlAN6qo1vgd9aQv5H4Ftg1Nl7F3juhT8fXKRyx275LmuuNNiJOhaX1xuCyGBCaipNJ36gUSodM0YH52aLFySCoFiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790643394; c=relaxed/simple;
-	bh=BIiAQ8/6GnYIoNrH8efemRR+oatI6XQ4TjdcxFliL/g=;
+	s=arc-20240116; t=1790643395; c=relaxed/simple;
+	bh=gvApHvJnosvEA/WywkIT+7jr8+B0gTxGgFGoZ33jF/Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q8l5DJYqNkzkFLhhD+xRjwwaCY+YVfZgyfgV1yuB5eSwZ15IRVXQ/fCcyp1RNxQyN1n6wRBHb1C82/YZPkYbwnpF2X5t1QfY+5CYZwUkKFbr17ge/6Hwanjrzx/bgGzVJHIe+I106vOitcB9qRsqvVuiZEa42vnCom/gokEhsFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZfT4Xx0; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=AcytRKY/5y7DrnD8pACH5IfzGOV4TIoRHApWu7JhZ7yhEN+58YxRXPLXChOXOlP2xaY3Wlc9Dcc7QCjxMeI0Wt63HGSmoix/6n8Y1p8uJUBBpJM8G8wffqihEW/8Lz3chzBss8c8RSrWw8lHjS+KZXKIlpW6S3SU4CmADXvFpk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9CHMEzC; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZfT4Xx0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9CHMEzC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790643391; x=1822179391;
+  t=1790643394; x=1822179394;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BIiAQ8/6GnYIoNrH8efemRR+oatI6XQ4TjdcxFliL/g=;
-  b=nZfT4Xx0PSonHbu9WUFBLV0k+JaKOsDI8ypv/QCFmY34UV7IhoUQMBB6
-   nnBJJJvF4BO/GTdZZ+36yOoddHgoEDkvST1UdHz8GOY9fAIiEPouWSn7+
-   LINt/tg07O61XJ3VS6EKyFtX2FHIWbYzNkI2eAeMs/7yUadSdX/3dc7Xd
-   2ZPNrmlDKqF66XADcjabslAxU2slRs/7ouoZCUz0DUjYr2lXoIJyb1n1I
-   HBcLpDYNQtgI9zRiXrm22vE+344Aumy5yrPHlr1x6OXXt/ZkwH/UDKFU5
-   6fa+nZf4vzxgXTWgEejSXVBKl+uu4yYKyCvLujBryAzLk502ArZCVSXq8
-   A==;
-X-CSE-ConnectionGUID: sSlr+ZLfQWCoJEyh1pjypQ==
-X-CSE-MsgGUID: EATW5GcsR4O1xb4l6CzhTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="101923934"
+  bh=gvApHvJnosvEA/WywkIT+7jr8+B0gTxGgFGoZ33jF/Y=;
+  b=K9CHMEzCdxbVXIYg0jjGDk2czgCCIW3QwWBsGHedgDDTBonysmtCO43c
+   TO5FahxplIqMXExF205EnXn7oO1u9aTK3mEcjoS0i7m+84W7h99mzN13c
+   WjLru645AnIM6cIt7ci7OI1y8CEsK1lLlOrIvo+4VuVN0oXKq4VNSrtFQ
+   2W0vtjXDpJ+EDRd47d1cYdzqgoB+bjU/++LdFns0Fhkpgh/XCBiuSsWms
+   CIYjwFVac/yJ3pVAlDOrc82bSxhwgxk5Q7lhjAMziR7HgG5e0reDduThX
+   8tsdbM64UhxiDMbH72xLsKXT4kReOPrIt0g1eea6b6B73xH4jfcKcejpI
+   Q==;
+X-CSE-ConnectionGUID: IvfhUB52RWW0yFhBbz8D7w==
+X-CSE-MsgGUID: mVrkNnsoQKK8oAcKbv7NfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="101923940"
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="101923934"
+   d="scan'208";a="101923940"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 17:56:31 -0700
-X-CSE-ConnectionGUID: xvr0YP8YSce6ic8NU19N6A==
-X-CSE-MsgGUID: eLbLUsyhQb6a8EOQx0kMPg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 17:56:32 -0700
+X-CSE-ConnectionGUID: 7TcXrxBGQ7Ks8UvgqQV4Cw==
+X-CSE-MsgGUID: b0SKRZeZQFiDwHHW8UeJ9A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="273012215"
+   d="scan'208";a="273012218"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.149])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 17:56:30 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 17:56:31 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,9 +53,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 2/3] tools/testing/cxl: Skip the auto region when no volatile window is active
-Date: Mon, 28 Sep 2026 17:56:17 -0700
-Message-ID: <ccc11aec8658ff29e604aded94ac4ce0da7b5fb8.1790641236.git.alison.schofield@intel.com>
+Subject: [PATCH 3/3] tools/testing/cxl: Add CFMWS windows for region selection tests
+Date: Mon, 28 Sep 2026 17:56:18 -0700
+Message-ID: <86859bf360612deb991dc61862f2e4aa6fe54a6a.1790641236.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1790641236.git.alison.schofield@intel.com>
 References: <cover.1790641236.git.alison.schofield@intel.com>
@@ -67,73 +67,158 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The mock auto region always uses CFMWS0. With XOR interleave arithmetic
-that window is inactive, so its HPA base is never assigned and the
-endpoint decoders are programmed at HPA 0.
+Region selection needs topologies where multiple root decoders can
+satisfy a request and where a decoder supports both RAM and PMEM. The
+mock topology provides neither.
 
-No root decoder matches that range, leaving DPA allocated to endpoint
-decoders that are not part of a region.
-
-Set up the auto region only when a volatile window is active.
+Add two x1 windows, one PMEM only and one supporting both RAM and PMEM,
+while preserving the existing modulo decoder identities.
 
 Assisted-by: LLM
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ tools/testing/cxl/test/cxl.c | 71 ++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 15 deletions(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index aa140307e0c3..9d844932f0c6 100644
+index 9d844932f0c6..3e76d9bb2d5f 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -423,6 +423,18 @@ struct acpi_cedt_cxims *mock_cxims[1] = {
- 	[0] = &mock_cedt.cxims0.cxims,
+@@ -184,12 +184,20 @@ static struct {
+ 	} cfmws6;
+ 	struct {
+ 		struct acpi_cedt_cfmws cfmws;
+-		u32 target[2];
++		u32 target[1];
+ 	} cfmws7;
+ 	struct {
+ 		struct acpi_cedt_cfmws cfmws;
+-		u32 target[3];
++		u32 target[1];
+ 	} cfmws8;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[2];
++	} cfmws9;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[3];
++	} cfmws10;
+ 	struct {
+ 		struct acpi_cedt_cxims cxims;
+ 		u64 xormap_list[2];
+@@ -324,22 +332,20 @@ static struct {
+ 		},
+ 		.target = { 3 },
+ 	},
+-	/* .cfmws6,7,8 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
+ 	.cfmws6 = {
+ 		.cfmws = {
+ 			.header = {
+ 				.type = ACPI_CEDT_TYPE_CFMWS,
+ 				.length = sizeof(mock_cedt.cfmws6),
+ 			},
+-			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+-			.window_size = SZ_256M * 8UL,
++			.window_size = SZ_256M * 4UL,
+ 		},
+-		.target = { 0, },
++		.target = { 2 },
+ 	},
+ 	.cfmws7 = {
+ 		.cfmws = {
+@@ -347,16 +353,17 @@ static struct {
+ 				.type = ACPI_CEDT_TYPE_CFMWS,
+ 				.length = sizeof(mock_cedt.cfmws7),
+ 			},
+-			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+-			.interleave_ways = 1,
+-			.granularity = 0,
++			.interleave_ways = 0,
++			.granularity = 4,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+-			.window_size = SZ_256M * 8UL,
++			.window_size = SZ_256M * 4UL,
+ 		},
+-		.target = { 0, 1, },
++		.target = { 1 },
+ 	},
++	/* .cfmws8,9,10 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
+ 	.cfmws8 = {
+ 		.cfmws = {
+ 			.header = {
+@@ -364,6 +371,38 @@ static struct {
+ 				.length = sizeof(mock_cedt.cfmws8),
+ 			},
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 0,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, },
++	},
++	.cfmws9 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws9),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 1,
++			.granularity = 0,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, 1, },
++	},
++	.cfmws10 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws10),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 8,
+ 			.granularity = 1,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+@@ -406,18 +445,20 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
+ 	[3] = &mock_cedt.cfmws3.cfmws,
+ 	[4] = &mock_cedt.cfmws4.cfmws,
+ 	[5] = &mock_cedt.cfmws5.cfmws,
+-	/* Modulo Math above, XOR Math below */
+ 	[6] = &mock_cedt.cfmws6.cfmws,
+ 	[7] = &mock_cedt.cfmws7.cfmws,
++	/* Modulo Math above, XOR Math below */
+ 	[8] = &mock_cedt.cfmws8.cfmws,
++	[9] = &mock_cedt.cfmws9.cfmws,
++	[10] = &mock_cedt.cfmws10.cfmws,
  };
  
-+static struct acpi_cedt_cfmws *mock_auto_region_cfmws(void)
-+{
-+	for (int i = cfmws_start; i <= cfmws_end; i++) {
-+		struct acpi_cedt_cfmws *window = mock_cfmws[i];
-+
-+		if (window->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
-+			return window;
-+	}
-+
-+	return NULL;
-+}
-+
- struct cxl_mock_res {
- 	struct list_head list;
- 	struct range range;
-@@ -1114,6 +1126,10 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	    pdev->id > 4 || cxld->id > 0)
- 		return MOCK_DECODER_INIT_DEFAULT;
+ static int cfmws_start;
+ static int cfmws_end;
+ #define CFMWS_MOD_ARRAY_START 0
+-#define CFMWS_MOD_ARRAY_END   5
+-#define CFMWS_XOR_ARRAY_START 6
+-#define CFMWS_XOR_ARRAY_END   8
++#define CFMWS_MOD_ARRAY_END   7
++#define CFMWS_XOR_ARRAY_START 8
++#define CFMWS_XOR_ARRAY_END   10
  
-+	/* XOR windows are all pmem, no window to host the RAM region */
-+	if (!mock_auto_region_cfmws())
-+		return MOCK_DECODER_INIT_DEFAULT;
-+
- 	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
- 			    MOCK_DECODER_INIT_TYPE3_AUTO;
- }
-@@ -1137,7 +1153,7 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
- static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
- 				      struct cxl_port *port)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
-+	struct acpi_cedt_cfmws *window = mock_auto_region_cfmws();
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
-@@ -1211,7 +1227,7 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
- 				      struct platform_device *pdev,
- 				      bool hb0)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
-+	struct acpi_cedt_cfmws *window = mock_auto_region_cfmws();
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
+ struct acpi_cedt_cxims *mock_cxims[1] = {
+ 	[0] = &mock_cedt.cxims0.cxims,
 -- 
 2.37.3
 
