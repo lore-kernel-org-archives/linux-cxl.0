@@ -1,55 +1,55 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4760E3F0767
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 05:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C703F12EF
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Sep 2026 05:37:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790660229; cv=none; b=d3kdyR9HRcjcFbzg0M9cu5IHmq5qS/Ig8DD7zPKVfRXoPA6lLM5+Zi0uf3Jvb7AqeLTBJcjO3StoZgvMajGEix5NcBxcjUC4/8o0r1iLToNCIC8Y5F5POGvCQc4jVbCiW1COLsJlUI6tKgc7zLW4/yc609rW7aiQ5lu2nY+GKg8=
+	t=1790660229; cv=none; b=sbQhzU5sj3lypaZl3weArzJewzdCWcnJrlkHiZ97ZVUjYGd0SUuTjwxKERYASAX16/K4Ki0fR1MLAukyVoI+KwbU7hRXtA/5txH6dWPV8rcDaSOHWHoGM6cyQQKB727A4htWf2gqLa6IHMXpZ0pjN3aIGviPY8DcLwPqzOR13aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790660229; c=relaxed/simple;
-	bh=VM9OM/Jipei1p2ggJbxoXiZuVLMq+0NcSk0UCT2QTjI=;
+	bh=m7JQKFlbjiS7WePXrLpmMkujKGWCHnHFP4o14RLKbDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=otyEXHWbGqJti5HA5lTqENM0w4dphw+CXVGw4G0nsa0URx8zlbwuFwop+1cNZ31a5V9CgDNG9fwy3EgUZGqlf7NPhTQc78vApBQI5lxdQBfbyRG701DqtzPEQu6NQI6sqIo+3q+X3Ypv1lQ0L70oz4Qgub7FEwTVgNsDf4dlRao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZWsBm2yg; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=rnNSnxm2l3XrvhlbwZTZF7twNiEJ7wXBS32ZSFFEy1gEfEMBQTIQXc1vdbp5C7l8WJd+0nFmaR2y8l+Ag3q6SjM732ifZSdREzyNhVr6qo/Rj2Bg/kUHJnnFHcLkyC1RSMjchDzOCeI+FdcrJVw6IZZn66z2GQ7ppt8H+3M0MQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k/G0wTGu; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZWsBm2yg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k/G0wTGu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790660227; x=1822196227;
+  t=1790660228; x=1822196228;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VM9OM/Jipei1p2ggJbxoXiZuVLMq+0NcSk0UCT2QTjI=;
-  b=ZWsBm2yge+Wl2dRpYGEI9bYFgqxR7g9c+xFIj+fWybaJLOUV++a1LzA8
-   zvbMxM+2NfppAwgm71IhshAN8rQDAc5bo0ONSC8GTd1lnxhDHAlwikNdX
-   JbtbaO+jz36+B4OreOrjeIQnF9CpWyZCnZrpo7R+3sQVXjKtzxE6O+efK
-   1ipfK0TST50Z6nQ2E02kwJ2kdjEoZdYJY9IA9zytHuZoJ3X/Yyvfm1kLj
-   xdx2w+gpF3yfLxcosExlkVY+WMKCZNyVBXJJqLVG4WC2SQkIwJsDIY9dm
-   r7MkvUB1R+fjnP65MaTAqdSLoXDhQQR9hz+5xc8CwdQSM3174XbS76//e
+  bh=m7JQKFlbjiS7WePXrLpmMkujKGWCHnHFP4o14RLKbDE=;
+  b=k/G0wTGuFQen9LrEUnKq4CsU/WmnooBUssSfctGUJObJZPPE8SJLRsH+
+   sqqoSVY0gitank548bjTpV7j5eXgQzCdi22UbMbWNa5pV0P9gQtvXClxh
+   MjjV+GziaMZeiW9IscbX0897XReGXbym4qMvXppOQfsj6BLqtaCHxKtBk
+   l2bBSSe8I/tLO4pvzmojai2P/0xE6nR+04sF+iB1KWovMpKogHiqLHZlQ
+   sQXCLk1yaMvdtY+STjCvb+5g9FVZ0WZmNK5rVKPxiHG2pzdeXgoR89oy6
+   fBduIqvcHTzhi33oOBQpM8VWvEKXJUl9WmEFoimDuah4jD4exKrm4m6P+
    A==;
-X-CSE-ConnectionGUID: fuq4KEc1QC26JDxUKriyrA==
-X-CSE-MsgGUID: v5ebBvlcSMGirNIS1s+BzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="100700066"
+X-CSE-ConnectionGUID: tnJ4Pz7CSWmxntApyCenTA==
+X-CSE-MsgGUID: wqrRgcnQRN6ELyDPdwcmAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="100700069"
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="100700066"
+   d="scan'208";a="100700069"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:06 -0700
-X-CSE-ConnectionGUID: 9R8VsYiSQyOr5QxK/NIjrA==
-X-CSE-MsgGUID: ejo1O1CsRiecut3qBQTcvw==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:07 -0700
+X-CSE-ConnectionGUID: RDm/hNXoScusyoSlUyZXMQ==
+X-CSE-MsgGUID: az5LuCIMTAKa1N8iwpGZrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,129,1787036400"; 
-   d="scan'208";a="304767473"
+   d="scan'208";a="304767476"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.149])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:06 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 22:37:07 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
 Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH 3/7] cxl/region: parse comma-separated target lists
-Date: Mon, 28 Sep 2026 22:36:55 -0700
-Message-ID: <6cfb02216cb0bad45eb7eb7fb40e921fecb423a1.1790658549.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH 4/7] cxl/region: reject duplicate or unknown target memdevs
+Date: Mon, 28 Sep 2026 22:36:56 -0700
+Message-ID: <6d6e1cecbda379a7499ed146c434cf99bcbfa5be.1790658549.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1790658549.git.alison.schofield@intel.com>
 References: <cover.1790658549.git.alison.schofield@intel.com>
@@ -61,166 +61,168 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A comma-separated target list can be miscounted, causing cxl create-region
-to reject a valid multi-target request when --ways is omitted. The
-generated filter can also acquire a trailing comma.
+Target filtering silently drops unknown names and collapses overlapping
+matches. cxl create-region can therefore build a smaller region than the
+target list requested, or report only a ways mismatch.
 
-This happens because the separator is re-evaluated after tokenization has
-already modified the input.
-
-Choose the separator before tokenizing and use the target count when
-emitting the flattened list.
+Validate the target list against the resolved memdevs. Reject unmatched
+targets and memdevs claimed by more than one target filter, while allowing
+one filter to select multiple memdevs.
 
 Fixes: 3d6cd829ec08 ("cxl/region: Use cxl_filter_walk() to gather create-region targets")
 Assisted-by: LLM
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- cxl/region.c              | 21 +++++++-----
- test/cxl-create-region.sh | 72 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+), 9 deletions(-)
+ cxl/region.c              | 65 +++++++++++++++++++++++++++++++++++++++
+ test/cxl-create-region.sh | 45 +++++++++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
 
 diff --git a/cxl/region.c b/cxl/region.c
-index 85d4d9bb54f2..43c228f2f999 100644
+index 43c228f2f999..2bb3b90940b0 100644
 --- a/cxl/region.c
 +++ b/cxl/region.c
-@@ -124,24 +124,25 @@ static const struct option destroy_options[] = {
- static const char *to_csv(int *count, const char **strings)
- {
- 	ssize_t len = 0, cursor = 0;
-+	int i, new_count = 0, emitted = 0;
- 	char *csv, *list, *save;
--	int i, new_count = 0;
--	const char *arg;
-+	const char *arg, *sep;
- 
- 	if (!*count)
- 		return NULL;
- 
- 	for (i = 0; i < *count; i++) {
- 		/*
--		 * An entry in strings may itself by a space or comma
--		 * separated list, so decompose that for the final csv
-+		 * An entry may itself be space- or comma-separated. strtok_r()
-+		 * modifies @list, so choose the separator before tokenizing.
- 		 */
- 		list = strdup(strings[i]);
- 		if (!list)
- 			return NULL;
- 
--		for (arg = strtok_r(list, which_sep(list), &save); arg;
--		     arg = strtok_r(NULL, which_sep(list), &save)) {
-+		sep = which_sep(list);
-+		for (arg = strtok_r(list, sep, &save); arg;
-+		     arg = strtok_r(NULL, sep, &save)) {
- 			len += strlen(arg);
- 			new_count++;
- 		}
-@@ -161,10 +162,12 @@ static const char *to_csv(int *count, const char **strings)
- 			return NULL;
- 		}
- 
--		for (arg = strtok_r(list, which_sep(list), &save); arg;
--		     arg = strtok_r(NULL, which_sep(list), &save)) {
-+		sep = which_sep(list);
-+		for (arg = strtok_r(list, sep, &save); arg;
-+		     arg = strtok_r(NULL, sep, &save)) {
- 			cursor += snprintf(csv + cursor, len - cursor, "%s%s",
--					   arg, i + 1 < new_count ? "," : "");
-+					   arg,
-+					   ++emitted < new_count ? "," : "");
- 			if (cursor >= len) {
- 				csv[len - 1] = 0;
- 				break;
-diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
-index 927edf4c17d4..6fc845c7d382 100644
---- a/test/cxl-create-region.sh
-+++ b/test/cxl-create-region.sh
-@@ -226,6 +226,76 @@ setup_x3()
- 	memdevs="$mem0 $mem1 $mem2"
+@@ -222,6 +222,66 @@ static int memdev_sort(const void *a, const void *b)
+ 	return a_pos - b_pos;
  }
  
-+# Build a 4-way target list over an x2 root in interleave position order.
-+setup_interleave_shape()
++/*
++ * Reject unmatched target names and overlapping target filters.
++ * A single filter may match multiple memdevs.
++ */
++static bool validate_target_list(struct json_object *jmemdevs, const char *csv)
 +{
-+	x2_decoder=$($CXL list -b cxl_test -D -d root |
-+		     jq -r ".[] |
-+		     select(.pmem_capable == true) |
-+		     select(.nr_targets == 2) |
-+		     .decoder")
++	int i, nr_memdevs = json_object_array_length(jmemdevs);
++	const char *arg, *sep = which_sep(csv);
++	struct json_object *jobj;
++	struct cxl_memdev *memdev;
++	bool valid = true;
++	char *list, *save;
++	int *claims;
 +
-+	if [[ ! $x2_decoder ]]; then
-+		echo "no pmem capable x2 root decoder found"
-+		return 1
-+	fi
++	claims = calloc(nr_memdevs, sizeof(*claims));
++	if (!claims)
++		return false;
 +
-+	pos0=$(find_memdev "$x2_decoder" 0 0)
-+	pos1=$(find_memdev "$x2_decoder" 1 0)
-+	pos2=$(find_memdev "$x2_decoder" 0 1)
-+	pos3=$(find_memdev "$x2_decoder" 1 1)
++	list = strdup(csv);
++	if (!list) {
++		free(claims);
++		return false;
++	}
 +
-+	if [[ ! $pos0 || ! $pos1 || ! $pos2 || ! $pos3 ]]; then
-+		echo "$x2_decoder: no memdev pair for each interleave position"
-+		return 1
-+	fi
++	for (arg = strtok_r(list, sep, &save); arg;
++	     arg = strtok_r(NULL, sep, &save)) {
++		int matched = 0;
++
++		for (i = 0; i < nr_memdevs; i++) {
++			jobj = json_object_array_get_idx(jmemdevs, i);
++			memdev = json_object_get_userdata(jobj);
++			if (!util_cxl_memdev_filter(memdev, arg, NULL))
++				continue;
++			claims[i]++;
++			matched++;
++		}
++
++		if (!matched) {
++			log_err(&rl, "no active memdev matches target '%s'\n",
++				arg);
++			valid = false;
++		}
++	}
++
++	for (i = 0; i < nr_memdevs; i++) {
++		if (claims[i] < 2)
++			continue;
++		jobj = json_object_array_get_idx(jmemdevs, i);
++		memdev = json_object_get_userdata(jobj);
++		log_err(&rl, "%s is named %d times in the target list\n",
++			cxl_memdev_get_devname(memdev), claims[i]);
++		valid = false;
++	}
++
++	free(list);
++	free(claims);
++
++	return valid;
 +}
 +
-+# A comma-separated target list must preserve its count and order.
-+create_csv_targets()
+ static struct json_object *collect_memdevs(struct cxl_ctx *ctx,
+ 					   const char *decoder, int *count,
+ 					   const char **mems)
+@@ -251,6 +311,11 @@ static struct json_object *collect_memdevs(struct cxl_ctx *ctx,
+ 	}
+ 
+ 	if (csv) {
++		if (!validate_target_list(jmemdevs, csv)) {
++			json_object_put(jmemdevs);
++			jmemdevs = NULL;
++			goto out;
++		}
+ 		sort_context.csv = csv,
+ 		json_object_array_sort(jmemdevs, memdev_sort);
+ 	}
+diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
+index 6fc845c7d382..6ffe36b852a2 100644
+--- a/test/cxl-create-region.sh
++++ b/test/cxl-create-region.sh
+@@ -296,6 +296,50 @@ create_csv_targets()
+ 	fi
+ }
+ 
++list_regions()
 +{
-+	if ! setup_interleave_shape; then
-+		echo "skipping comma separated target list"
-+		return
-+	fi
++	$CXL list -b cxl_test -R | jq -r ".[]? | .region" | sort | tr "\n" " "
++}
 +
-+	if ! json=$($CXL create-region -b cxl_test -d "$x2_decoder" \
-+		    -m "$pos0,$pos1,$pos2,$pos3"); then
-+		echo "$x2_decoder: refused $pos0,$pos1,$pos2,$pos3"
++# Verify failure occurs without creating a region and reports @expect.
++create_expect_fail()
++{
++	expect="$1"
++	shift
++
++	regions_before="$(list_regions)"
++
++	if out=$($CXL create-region -b cxl_test "$@" 2>&1); then
++		echo "create-region $*: expected failure, created a region"
 +		err "$LINENO"
 +	fi
 +
-+	region=$(jq -r ".region" <<< "$json")
-+	ways=$(jq -r ".interleave_ways" <<< "$json")
-+	if [[ $ways -ne 4 ]]; then
-+		echo "$region: interleaves $ways ways, expected 4"
-+		err "$LINENO"
-+	fi
-+
-+	targets=$(jq -r "[.mappings | sort_by(.position) | .[].memdev] |
-+		  join(\" \")" <<< "$json")
-+	if [[ "$targets" != "$pos0 $pos1 $pos2 $pos3" ]]; then
-+		echo "$region: targets '$targets', expected '$pos0 $pos1 $pos2 $pos3'"
-+		err "$LINENO"
-+	fi
-+
-+	destroy_regions "$region"
-+
-+	# Also verify a rejected filter is echoed without a trailing comma.
-+	if out=$($CXL create-region -b cxl_test -d "$x2_decoder" \
-+		 -m nomemdev0,nomemdev1,nomemdev2 2>&1); then
-+		echo "create-region accepted names that are not memdevs"
-+		err "$LINENO"
-+	fi
-+
-+	if ! grep -Fq -- "filter: nomemdev0,nomemdev1,nomemdev2" <<< "$out" ||
-+	   grep -Fq -- "nomemdev2," <<< "$out"; then
-+		echo "target list echoed back as:"
++	if ! grep -Fq -- "$expect" <<< "$out"; then
++		echo "create-region $*: expected '$expect', got:"
 +		echo "$out"
 +		err "$LINENO"
 +	fi
++
++	if [[ "$(list_regions)" != "$regions_before" ]]; then
++		echo "create-region $*: refused, but left a region behind"
++		err "$LINENO"
++	fi
++}
++
++refuse_bad_target_list()
++{
++	if ! setup_interleave_shape; then
++		echo "skipping bad target list refusals"
++		return
++	fi
++
++	create_expect_fail "$pos0 is named 2 times in the target list" \
++		-d "$x2_decoder" -m "$pos0,$pos0"
++
++	create_expect_fail "no active memdev matches target 'nomemdev'" \
++		-d "$x2_decoder" -m "$pos0,nomemdev"
 +}
 +
  # test region creation on devices behind a single-port host-bridge
  create_single
  
-@@ -239,6 +309,8 @@ for mem in ${mems[@]}; do
- 	create_subregions "$mem"
+@@ -310,6 +354,7 @@ for mem in ${mems[@]}; do
  done
  
-+create_csv_targets
-+
+ create_csv_targets
++refuse_bad_target_list
+ 
  # Repeat x1/x2/x3/x4 region creation with XOR interleave arithmetic.
  load_cxl_test interleave_arithmetic=1
- 
 -- 
 2.37.3
 
