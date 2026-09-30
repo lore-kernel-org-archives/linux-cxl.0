@@ -1,34 +1,32 @@
-Received: from outbound.baidu.com (mx21.baidu.com [220.181.3.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D65469822;
-	Wed, 30 Sep 2026 09:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.3.85
+Received: from outbound.baidu.com (mx22.baidu.com [220.181.50.185])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 1B2743EF66B;
+	Wed, 30 Sep 2026 09:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790759508; cv=none; b=PWyaBTtJZ9jabPTNyBxUaSYUhu4CFE+veTZje+cnmDgGJ11ZtMZ47I0nPGsJ9SM8c1NNCrYUQfVwdpAU4clmVYMB1s8fwYjtYtWBzrxjbOCOsjn3CAk5hsqVGfg9a3ySJIcAx/Xe/Sg3oc3yiEgUf3T9oM1FLGB6wbbp+VtWDWY=
+	t=1790762210; cv=none; b=VilcYpQ1AfZzNRYBllYV/izNelLORmlp6B/YQ7s84lzSzc5XqCqC/wkN+M3gUXbT2xcW0lXO/Uf8ZSA55HB7DNPov8utTEzeTn+MRWmPrsx+kCezOOuYFBIvHxX0c+qC+bX7ZLBP4XWBmJ90Z02C/+VAyPsoNtbn1lJNmYO4nDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790759508; c=relaxed/simple;
-	bh=mrvX5IGkSuoqsd7ntMM6S9cEXpbdR7LhQaMXhLBY55o=;
+	s=arc-20240116; t=1790762210; c=relaxed/simple;
+	bh=9j7+Yvtkz1Y4BDwYCj8xrPyEWUCrRnxQ6Rz6jVv+sdw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lybUjEnPRXXqrNoS9SKyhmcisQaKNotQ5iE3hfY7i9XLU/4W/Y9dlRrB2M7rMtGfZTalGTSE2/vn7QT5NposrEbbDbkTDgSFWbzyGM4GOLXbRknDGCjY0kU5FLTfcmFsLGEAQiJNxB1izdIqXqZpK5p30DOkVyFpS1BN44pyd5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; dkim=pass (2048-bit key) header.d=baidu.com header.i=@baidu.com header.b=BeCkWV2a; arc=none smtp.client-ip=220.181.3.85
+	 MIME-Version:Content-Type; b=NWhjyNbkSkyIO8XxLlAEh8zoWwdSH5GQ3QjECoBHRvAJZdIu+2CHJmBKLXcIg1BslwqdXeEm9lsf2cSZuBpgjyrm2+1kSMa+ypDSkjxG8vBTkK2WaOzfMPbNslH3k1kbA90nk/XRWaCjgKw/z7Q5t85rOASKcs5dFTcG2J5Jxno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; dkim=pass (2048-bit key) header.d=baidu.com header.i=@baidu.com header.b=crjW7S3X; arc=none smtp.client-ip=220.181.50.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baidu.com header.i=@baidu.com header.b="BeCkWV2a"
+	dkim=pass (2048-bit key) header.d=baidu.com header.i=@baidu.com header.b="crjW7S3X"
 X-MD-Sfrom: zhangyili01@baidu.com
 X-MD-SrcIP: 172.31.51.15
 From: Yili Zhang <zhangyili01@baidu.com>
-To: <alison.schofield@intel.com>
-CC: <dave.jiang@intel.com>, <dave@stgolabs.net>, <jic23@kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To: <linux-cxl@vger.kernel.org>
+CC: <djbw@kernel.org>, <alison.schofield@intel.com>, <dave.jiang@intel.com>,
+	<dave@stgolabs.net>, <jic23@kernel.org>, <linux-kernel@vger.kernel.org>,
 	<shiju.jose@huawei.com>, <vishal.l.verma@intel.com>, <zhangyili01@baidu.com>
-Subject: Re: [PATCH] cxl/edac: Bounds-check ECS threshold index from device
-Date: Wed, 30 Sep 2026 17:09:23 +0800
-Message-ID: <20260930090923.29654-1-zhangyili01@baidu.com>
+Subject: [PATCH v2] cxl/edac: Fail ECS threshold read for reserved encodings
+Date: Wed, 30 Sep 2026 17:56:27 +0800
+Message-ID: <20260930095627.32616-1-zhangyili01@baidu.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <arv6_znTtwN4JExY@aschofie-mobl2.lan>
-References: <arv6_znTtwN4JExY@aschofie-mobl2.lan>
+In-Reply-To: <20260928073553.85669-1-zhangyili01@baidu.com>
+References: <20260928073553.85669-1-zhangyili01@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,66 +35,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc2.internal.baidu.com (172.31.50.46) To
+X-ClientProxiedBy: bjkjy-exc12.internal.baidu.com (172.31.51.12) To
  BJKJY-Exc19.internal.baidu.com (172.31.51.15)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1790759371;
-	bh=HOJ1Ppod1GGVWlnVAn8nYirx+1WBbe32blZoFsytVkg=;
+	s=selector1; t=1790762198;
+	bh=nCYWhngtoI586LzvHoYsr085I2qHPdLYXm4hoTYbNFw=;
 	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=BeCkWV2a+F1aDpouLtO/pZ50pvphQOSV7CSrMBURgRRvI1qJdHV80FOwdwUwwItsL
-	 RMhucNkWr+bx1w1Mt3bcVABAkXxjJE0uQWx1mz1RYmMikksbGi6bMFHaQc2JkqfnwC
-	 KHx82c0WVKRIUO1aaKBRBTqSLrYoi4krjllW3yz50b2ykjHZgUVI2VYpyehjoa6Elc
-	 vqz31sa0txKgMKsAMg+RR6CuyoE4HnqhiNKydmWz2DxLv37jERDX0wlkpMpuT8xVVm
-	 FwyJrPb8QmfJYK5VaUmqf82URQwSEKcvKYUZjoF2PYDfM4AmnZaN+lMrhqK3Xa38rL
-	 i0drZh27ws5UQ==
+	b=crjW7S3Xn92ccMj1DEQSpmCnBMhkEK+ndiX6DlWaoN4uUiwAhDcozkvd5cgxUeh1Z
+	 RjftUIbkvnSz6cPTCQM2u26yt3pQuLquKruyC3kuktDNBBtmRp/CbFW6tedhGqvzrh
+	 GixRgAn4dYqi4StkrChwdRSf24WNjVhi7xnSOrlIfRdRq6ipsJoTydYVetfwxegYe0
+	 VSvauMraW1eEqbrQBK5Hun0QAW9e5RcLiPpr5KWXq8dfUEpqtAjNOJyKhDEHDCy4Lj
+	 KjK5Zle2Mpko8Y6z7jzul8D6DjcmMj/n8V7NkljgNtWVQftXzC7HfjJwigp7FvzZuh
+	 at4I9ibNWMEAA==
 
-On 2026-09-29 10:53, Alison Schofield wrote:
-> 
-> Hi Yili,
-> 
-> I see the appeal of keeping this as the smallest possible fix, but is the
-> existing behavior for 0-2 something we intentionally want to preserve, or
-> just how the current implementation works?
-> 
-> Documentation/ABI/testing/sysfs-edac-ecs lists 256, 1024, and 4096 as the
-> threshold values. If 0 is meant to represent a reserved encoding, should
-> that be part of the documented ABI?
+cxl_get_ecs_threshold() extracts a 3-bit index (0-7) from the
+device-supplied ECS config word and uses it to index
+ecs_supp_threshold[], which only has 6 elements. A device reporting
+index 6 or 7 causes an out-of-bounds read of adjacent .rodata, whose
+value is then returned to userspace via the EDAC 'threshold' sysfs
+attribute (small info leak and wrong reported threshold).
 
-Hi Alison,
+The threshold count field also has reserved encodings 0-2, which
+currently read as 0 from the sparse lookup table. That behavior is
+not intentional; it is just an artifact of the array's implicit
+zero-fill. The ABI documentation only lists 256, 1024 and 4096 as
+supported values, so rather than documenting 0 as well, make the
+read fail for all reserved encodings and only ever report the
+documented values.
 
-You're right on both counts.
+Convert the cxl_get_ecs_*() helpers to return an int and write the
+attribute value through an output parameter (u32 * to match the
+macro), so that errors propagate through the shared
+CXL_ECS_GET_ATTR() macro to the sysfs read.
 
-The 0-2 behavior is not something we want to preserve; it is just
-an artifact of the sparse array's implicit zero-fill. The ABI documentation
-only lists 256, 1024 and 4096 as supported values, so rather than documenting
-0 as well, make the read fail for all reserved encodings and only ever report
-the documented values.
+Fixes: 85fb6a16ad14 ("cxl/edac: Add CXL memory device ECS control feature")
+Suggested-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Yili Zhang <zhangyili01@baidu.com>
+---
+v2: Per review feedback, fail the read with -EINVAL for all reserved
+encodings instead of returning 0, converting the cxl_get_ecs_*()
+getters to an int return with an output parameter so the error
+reaches the sysfs read.
+---
+ drivers/cxl/core/edac.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-> Does CXL_ECS_GET_ATTR() itself prevent that? It already has an int return
-> path and can return errors from cxl_mem_ecs_get_attrbs().
-> 
-> Is the real limitation just the interface used by the cxl_get_ecs_*()
-> helpers? Would something like this work:
-> 
-> 
-> static int cxl_get_ecs_threshold(u8 log_cap, u16 config, u16 *threshold)
-> {
-> 	u8 index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK, config);
-> 
-> 	if (index >= ARRAY_SIZE(ecs_supp_threshold) ||
-> 	    !ecs_supp_threshold[index])
-> 		return -EINVAL;
-> 
-> 	*threshold = ecs_supp_threshold[index];
-> 	return 0;
-> }
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index b321971fef58..fd6612dde7f1 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -624,21 +624,31 @@ static int cxl_mem_ecs_set_attrbs(struct device *dev,
+ 			       0, NULL);
+ }
+ 
+-static u8 cxl_get_ecs_log_entry_type(u8 log_cap, u16 config)
++static int cxl_get_ecs_log_entry_type(u8 log_cap, u16 config, u32 *val)
+ {
+-	return FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
++	*val = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
++
++	return 0;
+ }
+ 
+-static u16 cxl_get_ecs_threshold(u8 log_cap, u16 config)
++static int cxl_get_ecs_threshold(u8 log_cap, u16 config, u32 *val)
+ {
+ 	u8 index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK, config);
+ 
+-	return ecs_supp_threshold[index];
++	if (index >= ARRAY_SIZE(ecs_supp_threshold) ||
++	    !ecs_supp_threshold[index])
++		return -EINVAL;
++
++	*val = ecs_supp_threshold[index];
++
++	return 0;
+ }
+ 
+-static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
++static int cxl_get_ecs_count_mode(u8 log_cap, u16 config, u32 *val)
+ {
+-	return FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
++	*val = FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
++
++	return 0;
+ }
+ 
+ #define CXL_ECS_GET_ATTR(attrb)						    \
+@@ -655,9 +665,7 @@ static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
+ 		if (ret)						    \
+ 			return ret;					    \
+ 									    \
+-		*val = cxl_get_ecs_##attrb(log_cap, config);		    \
+-									    \
+-		return 0;						    \
++		return cxl_get_ecs_##attrb(log_cap, config, val);	    \
+ 	}
+ 
+ CXL_ECS_GET_ATTR(log_entry_type)
+-- 
+2.27.0
 
-And you're correct that CXL_ECS_GET_ATTR() already propagates errors;
-the only real limitation was the helper signature, as you sketched.
-v2 restructures the cxl_get_ecs_*() helpers to return int with an
-output parameter and updates the macro accordingly.
-
-v2 follows shortly.
-
-Thanks,
-Yili
