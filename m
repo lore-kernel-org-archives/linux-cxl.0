@@ -1,296 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB104DEC36
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Sep 2026 15:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABD37E5DB;
+	Wed, 30 Sep 2026 15:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790781809; cv=none; b=rW0fm8pnBItHZdbvhAA5AaDlm0U+KFeZcfxvt6+Q2H6gh4fz61Z+oklfC9b7BQYThea4rzgoWriz4zDGxzvh69k19UpzDdaFsG9lZPFf2/2kEGxHH7sF2Sx1RXUYWbq+W6BRmjyhMRd5jHdhDJtJMbeSqlC1EEXV321vnwqpCdg=
+	t=1790782515; cv=none; b=Ytve7DpLYNKv6gAJNhURZu8vn8f2g2WNs+auKiuO2F9iKmBmd8jqvOoPGsQIGsm1kCRb05MmNax+L5ehAYTtUr7RsIRL7oJjF2n0go4cXlGjuRPwr3rfbdpzaZBjdzZjQbVLvSxdwCTzmPTQoBMHs1D9kEec0OG/FEUFivS7b58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790781809; c=relaxed/simple;
-	bh=X/DLnuvbQXMhKQH5UhEp2mzPswpwVi/A8W2xGjOn/fg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pyznU44VunciF51/hDNeDbcuXbR99P+oFVGc0cgN4iMr7/351WewrBZU79dCtES230BBVyWZJH4sf2QCONwi7mRoz3lZsQvg3HCmn5kpHjJG04gmetduhR+Vl+Fp6CR7n4kSgcakHlVy9rXdm9pkB+Dk4OPVuYg2U80t4txByMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C3E1F000FF;
-	Wed, 30 Sep 2026 15:23:20 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jic23@kernel.org,
-	alison.schofield@intel.com,
-	ming.li@zohomail.com,
-	icheng@nvidia.com
-Subject: [PATCH v3 3/3] cxl/port: Attach endpoints to a dport under the lock that pins it
-Date: Wed, 30 Sep 2026 08:23:11 -0700
-Message-ID: <20260930152311.4164036-4-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260930152311.4164036-1-dave.jiang@intel.com>
-References: <20260930152311.4164036-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1790782515; c=relaxed/simple;
+	bh=glDR9rPiqLtJKlnXuD51/1q4bP/bHKkj/e9OpZD7bVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0UHCxFVx4+RfDONQPOPe7SS3An55CrEEE2yCwFwLJiVz+mPuyTkqmnKkSyPd/WP7z76H8W1x0TCn0dNTiJf7IqkwflSkZugFnnUGGeb+Arlwq6mx5pVl6d12TB9ZEZdeiocMtdrmRtEO8JjEpkiZddcS+e4g5L65iLtNV4uN9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdWcc94T; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdWcc94T"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 14C891F00899;
+	Wed, 30 Sep 2026 15:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790782507;
+	bh=e8MML2gJrDDcMRCJ5PIStiD2beqwx3+yQN2TtHaQYhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RdWcc94THfMHwFSUABgjmg41Bq1G2/l2cJVK+SE2JZxJ7LVRoTvm70gZfQIgoPqFS
+	 fcAFHKxWUE5cOMF7E/+ldTvOV52jVo42dqn0iHEfjkM8v8e6yeih1BIm6cH2A2rC2z
+	 aogf5nyS48lpoFvwuMr3c8ivTcLl8ZHPP92kyEcBukiYtjVcj8XyIi2oirit0VF8Ok
+	 4p6DcrVx0m3JVyJ/tF9DC8RxykLQWfGAzmcLqGBvnUDpx6zl0NT04c11maqGRz0FsY
+	 1sN0qciiRS0nNWbi4ykx849AqCcYN7hX3ozmP5H//jwqm5Y38Zfu1G5qpzTcbRDNW0
+	 XBJDiDjzA5obg==
+Date: Wed, 30 Sep 2026 08:35:06 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	fuse-devel <fuse-devel@lists.linux.dev>,
+	Carlos Maiolino <cem@kernel.org>,
+	linux-xfs <linux-xfs@vger.kernel.org>, linux-kernel@vger.kernel.org,
+	John Groves <John@groves.net>
+Subject: Re: fs_put_dax() vs. dax_holder_notify_failure() race
+Message-ID: <20260930153506.GR6253@frogsfrogsfrogs>
+References: <CAJfpeguyOXGQO4Q8rSAc8GxExTJU0G2o19fxRnh_93GvAoNcRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpeguyOXGQO4Q8rSAc8GxExTJU0G2o19fxRnh_93GvAoNcRg@mail.gmail.com>
 
-devm_cxl_enumerate_ports() and add_port_attach_ep() look up or create a
-dport under its port's device lock, drop the lock, then pass the dport
-to cxl_add_ep(). add_ep() reads dport->port before taking the lock, and
-cxl_gpf_port_setup() reads and writes the dport with no lock held.
+On Wed, Sep 30, 2026 at 04:29:33PM +0200, Miklos Szeredi wrote:
+> During ->notify_failure() callback will dereference holder.  It may be
+> NULL at this point, resulting in an Oops, or it may be non-NULL but be
+> freed during that call, resulting in UAF.
+> 
+> This affects xfs at this point, but the fuse extent map patchset[1]
+> also adds dax failure handling and is affected by this issue.
+> 
+> I think this should be fixed in drivers/dax/super.c, since this will
+> be a problem in each user.
 
-A concurrent cxl_detach_ep() for another memdev below the same port can
-free the dport in that window: it calls del_dports() under the port lock
-when the last endpoint leaves. The enumerating memdev then dereferences
-freed memory.
+Yes, I would have thought that the notification code would grab a
+refcount on the dax device so that it can't go away.  Though it does
+seem a little wild that there's no means to pause fs_dax_put until
+all the notifications have cleared....?
 
-Attach the endpoint and set up GPF while the port lock from the lookup
-is still held. Make add_ep() assert that lock instead of taking it.
-Under the lock, a dport found in port->dports is still live, since
-removal erases it from the xarray before freeing it.
+--D
 
-Fixes: de516b40116e ("cxl/port: Record dport in endpoint references")
-Reported-by: Li Ming <ming.li@zohomail.com>
-Closes: https://lore.kernel.org/linux-cxl/0c68324c-cfc7-46b2-9344-24ae40e88923@zohomail.com/
-Assisted-by: LLM
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
----
-Found by review, not from a failure report.
-
-Tested in QEMU with cxl_test, PROVE_LOCKING and KASAN on: 6 module
-load/unload cycles, 12 concurrent target_list readers, and each cycle 20
-rounds of every memdev unbinding and rebinding in parallel. No KASAN
-report, no WARNING, no lockdep splat; debug_locks stays 1. Both converted
-paths run under this load, so the new device_lock_assert() in add_ep()
-never fired.
-
-Enumeration is unchanged against the same test at patch 2: 11 memdev,
-8 port, 11 endpoint, 158 decoder after every load.
-
-The races produce transient -EBUSY cxl_mem probe failures (424 with this
-patch, 407 without) from the pending detach_work check in
-cxl_mem_probe(). Memdevs left unbound rebind on the first retry.
----
- drivers/cxl/core/port.c | 115 ++++++++++++++++++++++------------------
- 1 file changed, 62 insertions(+), 53 deletions(-)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 336d7c0f5d98..b71fe3882212 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1349,7 +1349,7 @@ static int add_ep(struct cxl_ep *new)
- {
- 	struct cxl_port *port = new->dport->port;
- 
--	guard(device)(&port->dev);
-+	device_lock_assert(&port->dev);
- 	if (port->dead)
- 		return -ENXIO;
- 
-@@ -1365,6 +1365,9 @@ static int add_ep(struct cxl_ep *new)
-  * Intermediate CXL ports are scanned based on the arrival of endpoints.
-  * When those endpoints depart the port can be destroyed once all
-  * endpoints that care about that port have been removed.
-+ *
-+ * Context: Caller must hold the device lock of @dport->port, which pins
-+ *	    @dport, across the lookup of @dport and this call.
-  */
- static int cxl_add_ep(struct cxl_dport *dport, struct device *ep_dev)
- {
-@@ -1705,13 +1708,15 @@ static struct cxl_dport *probe_dport(struct cxl_port *port,
- 	return drv->add_dport(port, dport_dev);
- }
- 
--static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
--					      struct cxl_port *parent_port,
--					      struct cxl_dport *parent_dport,
--					      struct device *uport_dev,
--					      struct device *dport_dev)
-+static int devm_cxl_create_port(struct device *ep_dev,
-+				struct cxl_port *parent_port,
-+				struct cxl_dport *parent_dport,
-+				struct device *uport_dev,
-+				struct device *dport_dev)
- {
- 	resource_size_t component_reg_phys;
-+	struct cxl_dport *dport;
-+	int rc;
- 
- 	device_lock_assert(&parent_port->dev);
- 	if (!parent_port->dev.driver) {
-@@ -1728,7 +1733,7 @@ static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
- 		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
- 					 component_reg_phys, parent_dport);
- 		if (IS_ERR(port))
--			return ERR_CAST(port);
-+			return PTR_ERR(port);
- 
- 		/*
- 		 * retry to make sure a port is found. a port device
-@@ -1736,7 +1741,7 @@ static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
- 		 */
- 		port = find_cxl_port_by_uport(uport_dev);
- 		if (!port)
--			return ERR_PTR(-ENODEV);
-+			return -ENODEV;
- 
- 		dev_dbg(ep_dev, "created port %s:%s\n",
- 			dev_name(&port->dev), dev_name(port->uport_dev));
-@@ -1745,11 +1750,25 @@ static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
- 		 * Port was created before right before this function is
- 		 * called. Signal the caller to deal with it.
- 		 */
--		return ERR_PTR(-EAGAIN);
-+		return -EAGAIN;
- 	}
- 
-+	/* @dport is only valid while @port's lock is held */
- 	guard(device)(&port->dev);
--	return probe_dport(port, dport_dev);
-+	dport = probe_dport(port, dport_dev);
-+	if (IS_ERR(dport))
-+		return PTR_ERR(dport);
-+
-+	rc = cxl_add_ep(dport, ep_dev);
-+	if (rc == -EBUSY) {
-+		/*
-+		 * "can't" happen, but this error code means
-+		 * something to the caller, so translate it.
-+		 */
-+		rc = -ENXIO;
-+	}
-+
-+	return rc;
- }
- 
- static int add_port_attach_ep(struct cxl_memdev *cxlmd,
-@@ -1757,7 +1776,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 			      struct device *dport_dev)
- {
- 	struct device *dparent = grandparent(dport_dev);
--	struct cxl_dport *dport, *parent_dport;
-+	struct cxl_dport *parent_dport;
- 	int rc;
- 
- 	if (is_cxl_host_bridge(dparent)) {
-@@ -1786,33 +1805,23 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 				return PTR_ERR(parent_dport);
- 		}
- 
--		dport = devm_cxl_create_port(&cxlmd->dev, parent_port,
--					     parent_dport, uport_dev,
--					     dport_dev);
--		if (IS_ERR(dport)) {
--			/* Port or dport already exists, restart iteration */
--			if (PTR_ERR(dport) == -EAGAIN || PTR_ERR(dport) == -EBUSY)
--				return 0;
--			return PTR_ERR(dport);
--		}
-+		rc = devm_cxl_create_port(&cxlmd->dev, parent_port,
-+					  parent_dport, uport_dev, dport_dev);
- 	}
- 
--	rc = cxl_add_ep(dport, &cxlmd->dev);
--	if (rc == -EBUSY) {
--		/*
--		 * "can't" happen, but this error code means
--		 * something to the caller, so translate it.
--		 */
--		rc = -ENXIO;
--	}
-+	/* Port or dport already exists, restart iteration */
-+	if (rc == -EAGAIN || rc == -EBUSY)
-+		return 0;
- 
- 	return rc;
- }
- 
--static struct cxl_dport *find_or_add_dport(struct cxl_port *port,
--					   struct device *dport_dev)
-+static int find_or_add_dport_attach_ep(struct cxl_memdev *cxlmd,
-+				       struct cxl_port *port,
-+				       struct device *dport_dev)
- {
- 	struct cxl_dport *dport;
-+	int rc;
- 
- 	/*
- 	 * The port is already visible in CXL hierarchy, but it may still
-@@ -1828,13 +1837,28 @@ static struct cxl_dport *find_or_add_dport(struct cxl_port *port,
- 	if (!dport) {
- 		dport = probe_dport(port, dport_dev);
- 		if (IS_ERR(dport))
--			return dport;
-+			return PTR_ERR(dport);
- 
- 		/* New dport added, restart iteration */
--		return ERR_PTR(-EAGAIN);
-+		return -EAGAIN;
- 	}
- 
--	return dport;
-+	/* @dport is only valid while @port's lock is held */
-+	rc = cxl_add_ep(dport, &cxlmd->dev);
-+
-+	/*
-+	 * If the endpoint already exists in the port's list,
-+	 * that's ok, it was added on a previous pass.
-+	 * Otherwise, retry in add_port_attach_ep() after taking
-+	 * the parent_port lock as the current port may be being
-+	 * reaped.
-+	 */
-+	if (rc && rc != -EBUSY)
-+		return rc;
-+
-+	cxl_gpf_port_setup(dport);
-+
-+	return 0;
- }
- 
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-@@ -1863,7 +1887,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 	for (iter = dev; iter; iter = grandparent(iter)) {
- 		struct device *dport_dev = grandparent(iter);
- 		struct device *uport_dev;
--		struct cxl_dport *dport;
- 
- 		if (is_cxl_host_bridge(dport_dev))
- 			return 0;
-@@ -1890,27 +1913,13 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 			 * RP port enumerated by cxl_acpi without dport will
- 			 * have the dport added here.
- 			 */
--			dport = find_or_add_dport(port, dport_dev);
--			if (IS_ERR(dport)) {
--				if (PTR_ERR(dport) == -EAGAIN)
--					goto retry;
--				return PTR_ERR(dport);
--			}
--
--			rc = cxl_add_ep(dport, &cxlmd->dev);
--
--			/*
--			 * If the endpoint already exists in the port's list,
--			 * that's ok, it was added on a previous pass.
--			 * Otherwise, retry in add_port_attach_ep() after taking
--			 * the parent_port lock as the current port may be being
--			 * reaped.
--			 */
--			if (rc && rc != -EBUSY)
-+			rc = find_or_add_dport_attach_ep(cxlmd, port,
-+							 dport_dev);
-+			if (rc == -EAGAIN)
-+				goto retry;
-+			if (rc)
- 				return rc;
- 
--			cxl_gpf_port_setup(dport);
--
- 			/* Any more ports to add between this one and the root? */
- 			if (!dev_is_cxl_root_child(&port->dev))
- 				continue;
--- 
-2.54.0
-
+> Thanks,
+> Miklos
+> 
+> [1] Report from sashiko (select Patch 8):
+> 
+> https://sashiko.dev/#/patchset/20260922061019.3320196-1-mszeredi%40redhat.com
+> 
+> Or here it is inline:
+> 
+> commit 1580a2f8ad3f103a20b6280aa39a01f8b0be2d3f
+> Author: Miklos Szeredi <mszeredi@redhat.com>
+> 
+> fuse: add support for opening dax device as backing
+> 
+> Add FUSE_BACKING_IS_DEV flag that allows opening a character device
+> (dax device) as a backing, in addition to regular files. Mark the
+> inode with S_DAX if FUSE_LOOKUP returns with FUSE_ATTR_DAX set.
+> 
+> > diff --git a/fs/fuse/backing.c b/fs/fuse/backing.c
+> > index 58dbdd17c1ef4..aa558a0c2e647 100644
+> > --- a/fs/fuse/backing.c
+> > +++ b/fs/fuse/backing.c
+> [ ... ]
+> > @@ -22,9 +23,16 @@ static void fuse_backing_free(struct fuse_backing *fb)
+> >  {
+> >   pr_debug("%s: fb=0x%p\n", __func__, fb);
+> >
+> > - if (fb->file)
+> > - fput(fb->file);
+> > - put_cred(fb->cred);
+> > + switch (fb->type) {
+> > + case FUSE_BACKING_PATH:
+> > + path_put(&fb->path);
+> > + put_cred(fb->cred);
+> > + break;
+> > +
+> > + case FUSE_BACKING_DAXDEV:
+> > + fs_put_dax(fb->dax_dev, fb);
+> > + break;
+> > + }
+> >   kfree_rcu(fb, rcu);
+> 
+> Does this code introduce a use-after-free race with a concurrent hardware
+> memory failure?
+> 
+> When a DAX-backed FUSE backing file is closed, fuse_backing_free() drops the
+> DAX device holder by calling fs_put_dax() and frees the backing object using
+> normal RCU via kfree_rcu().
+> 
+> Concurrently, a hardware memory failure can trigger dax_holder_notify_failure(),
+> which protects its read-side critical section with SRCU using dax_read_lock().
+> 
+> If dax_holder_notify_failure() reads dax_dev->holder_ops and checks for NULL,
+> and is preempted here, fs_put_dax() can run to completion. This would set
+> dax_dev->holder_ops and dax_dev->holder_data to NULL, and eventually free fb
+> after a normal RCU grace period.
+> 
+> Because kfree_rcu() does not wait for SRCU readers, the memory could be freed
+> while dax_holder_notify_failure() is still running.
+> 
+> [ ... ]
+> > @@ -79,23 +87,88 @@ static struct fuse_backing *fuse_backing_id_remove(struct fuse_conn *fc, u64 id,
+> >   return fb;
+> >  }
+> >
+> > +static int fuse_dax_notify_failure(struct dax_device *daxdev, u64 offset, u64 len, int mf_flags)
+> > +{
+> > + struct fuse_backing *fb = dax_holder(daxdev);
+> > +
+> > + fb->dax_error = true;
+> 
+> Can this code cause a NULL pointer dereference or use-after-free when racing
+> with fuse_backing_free()?
+> 
+> When dax_holder_notify_failure() resumes after the race described in
+> fuse_backing_free(), it blindly calls ops->notify_failure() which is this
+> function.
+> 
+> Because fs_put_dax() may have already cleared dax_dev->holder_data,
+> dax_holder() might return NULL causing a NULL pointer dereference here.
+> Depending on the timing, it could also return a stale pointer to the freed
+> fb object, resulting in a use-after-free.
+> 
+> > +
+> > + return 0;
+> > +}
+> 
