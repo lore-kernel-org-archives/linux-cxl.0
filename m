@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA32848A8C6;
-	Thu,  1 Oct 2026 21:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C46D314D13;
+	Thu,  1 Oct 2026 22:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790890701; cv=none; b=LgrDPIc+zRDuDsXo3YHIWdl6z5UkWORABWK3Ni63W3qhsjn5QGvwy4fGyfgLpX/tLrB2MxWrGGWLUBAOaeRBOFSqSECYbTLbCm/Vhay7rbGIEBK/ogZtmgq5cFHTN+0W/uJOCsZnaHJaAuVP0lBGlDpeREGRW9GczjhwA/Mkv+E=
+	t=1790892688; cv=none; b=gaDGvndH/171B60k/ruwEGDu/055kARox2w+1FS6zIWZkcVtP9yemvpwj3rPRDTAmWs8+2tIeNwjbRfPnGZrsJY4kckXxcy+/7Gzsc4g279RAzzhPSsHVuG+OTEfUw0seXaLUjFV9hhioPcW10N9KCf6xL1i6rOa/gob0y2RwXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790890701; c=relaxed/simple;
-	bh=IxzlKcoKGQ4Xb2LDKANBq4GEy1hhinMRNIOBfmJSr1k=;
+	s=arc-20240116; t=1790892688; c=relaxed/simple;
+	bh=0koZ/OdakwdRQfNzYvVvdOX16dMsPnSTT45Brw5V45A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fwrSg4dRoBz8/hdr3pI08RrzUjMgNDylEylu+JLxBtTUXklrP0joRUca7n4ERkja97OSDpIYFrxBgTV0HwJbsFVknMUdGUHOY0QE9pgMcplS4Phdv8Jj1SfIVUBz+No+mr3vfL1DZ7xvlV0+PpOtwXsjAzLqvuNYk/xhYxZ79/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ftf0DABQ; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=lnigXTnc10amzDFlaZNHL7R3lcr7VSdyuthiov9UCwH563V1sF/W5rTDnvJLCi/H4JSeN1nDiYI7P+w1awoL3MW5/Tqx4G/KCGBFq65CYdK5iNOYuWjlw1xmpfhlROfeIU4ocrL0YSC+QCBmaZd4vLXksdAy3Ogi1YMRzwE+Tt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TMU9xOra; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ftf0DABQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TMU9xOra"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790890699; x=1822426699;
+  t=1790892687; x=1822428687;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=IxzlKcoKGQ4Xb2LDKANBq4GEy1hhinMRNIOBfmJSr1k=;
-  b=Ftf0DABQf2+k8qLa2rrIsX/e3Vf1hZ3M+ggzkR/yr2Z+T00TB2avUhdQ
-   j/Ry+ygEQfXvjhMe9qO+ldlwKzyksbXd3Z4gMyQ9B6xAzrOrNyhbWd8Tf
-   FJtkr2if8PpOxupoeieGVrWCYjrZnnnartT2ymJDdtDxjD6g6Ovmg5bWg
-   2uHVKmzbk+LYWt7yGeW5KXC+Ep3Al3QHG2H+62Hr6bK2ulgWfpwZPYjE6
-   CTSL2JAOmTU8Nseo2yBLMQl/uo3MlO47J/6ijRXTlNBV/Oyghvvd/j3r5
-   ETTlZKBxkv28lHxTAab6GuPP6QSCUSzbC8L6qun9ZvdicCmiqDqfbdfqd
-   g==;
-X-CSE-ConnectionGUID: 1VMXLGcxQl6qyJGu06HUgg==
-X-CSE-MsgGUID: u3MDnS4MTaeUDojWX/xxiw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="101825227"
+  bh=0koZ/OdakwdRQfNzYvVvdOX16dMsPnSTT45Brw5V45A=;
+  b=TMU9xOraRdiBLYN+76fIT5DF3xDfL2Hu8nTE9r5DbB9hv7sDUHR9gPRC
+   +vVIRp7dihdjqHLMTySd25e6Tvej5pD6PiRWQdR/IIx+bshSWMJH55def
+   pxdAMAiWYeuNnrAPZfSgCAJJstNDESAwxNpMNDa2r4xj9hBlZiFxU0Lqw
+   f4/8LGMXQ+qkcwQN9Q3vay79rsqpJSBq0r3b1Iz2pY+7J9ifHpcvAAwhh
+   s14LphxS5C2MkuXALq4X/neRLLXzzlkuGd6zXDGzrtIBkPg8zva8PM5Y4
+   uMBqnXd8yIeS54nuFxp41aJCt13nwrJg4H2QxT24SnSxtFmcnhqRaZ4/u
+   Q==;
+X-CSE-ConnectionGUID: RJjM8IhXQ4uI2VcLkDdieA==
+X-CSE-MsgGUID: m0c6W5ggQlKMzuDmrH9kJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="94376131"
 X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="101825227"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 14:38:18 -0700
-X-CSE-ConnectionGUID: b2PT1CwEQWWIQnI5tKt5QQ==
-X-CSE-MsgGUID: s/vFgvorQIi+tMJXn9iv3Q==
+   d="scan'208";a="94376131"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:11:26 -0700
+X-CSE-ConnectionGUID: Xx025VsMTPuPFglBA9dKJw==
+X-CSE-MsgGUID: fUT9oETlQ4KJusg7EZhykg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="275648264"
+   d="scan'208";a="273927514"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.241]) ([10.125.111.241])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 14:38:17 -0700
-Message-ID: <6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com>
-Date: Thu, 1 Oct 2026 14:38:16 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:11:25 -0700
+Message-ID: <13d92409-727b-43e7-a027-086c9a332f44@intel.com>
+Date: Thu, 1 Oct 2026 15:11:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,16 +52,16 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] cxl/region: Add region reference in memdev attach
+Subject: Re: [PATCH v2 3/4] cxl/memdev: Add support for multi PF devices
 To: alucerop@amd.com, linux-cxl@vger.kernel.org, netdev@vger.kernel.org
 Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
  edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
  rafael@kernel.org
 References: <20261001132023.17032-1-alucerop@amd.com>
- <20261001132023.17032-3-alucerop@amd.com>
+ <20261001132023.17032-4-alucerop@amd.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20261001132023.17032-3-alucerop@amd.com>
+In-Reply-To: <20261001132023.17032-4-alucerop@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -70,131 +70,172 @@ Content-Transfer-Encoding: 7bit
 On 10/1/26 6:20 AM, alucerop@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use a new field in cxl_attach_region struct for easily link it with the
-> region the memdev is attached to.
+> A PCI device can present multiple Physical Functions(PFs) but the CXL
+> specs restrict to the first one, PF0, the discovery and management of
+> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
+> obtain the CXL.mem range to work with somehow.
 > 
-> This facilitates device links creation where such a region is the supplier
-> with non-PF0 physical functions wanting to use the CXL region being the
-> consumers.
+> Add a device link between the cxl region a PF0 memdev is attached to and
+> the non-PF0 wanting to use the CXL region. A CXL region release will
+> trigger such a PF to be released from its driver first.
+> 
+> PF0 being unbound from its driver triggers memdev and region release
+> leading to non-PF0s being unbound first keeping the CXL memory use safe.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > ---
->  drivers/cxl/core/region.c | 1 +
->  drivers/cxl/cxlmem.h      | 2 ++
->  2 files changed, 3 insertions(+)
+>  drivers/cxl/core/memdev.c | 92 +++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h         |  2 +
+>  2 files changed, 94 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 27e63e6dab7c..78ca7ebc3e55 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -4132,6 +4132,7 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
->  	if (rc)
->  		return rc;
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index b3419df586b9..799cb6e75639 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -802,6 +802,98 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	return ERR_PTR(rc);
+>  }
 >  
-> +	attach->cxlr = cxlr;
->  	attach->hpa_range = (struct range) {
->  		.start = cxlr->params.res->start,
->  		.end = cxlr->params.res->end,
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index c401e3a1af06..c598561b8e5f 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -104,6 +104,7 @@ struct cxl_memdev_attach {
->  /**
->   * struct cxl_attach_region - coordinate mapping a region at memdev registration
->   * @attach: common core attachment descriptor
-> + * @cxlr: cxl region the memdev is attached to.
->   * @hpa_range: physical address range of the region
->   *
->   * For the common simple case of a CXL device with private (non-general purpose
-> @@ -112,6 +113,7 @@ struct cxl_memdev_attach {
->   */
->  struct cxl_attach_region {
->  	struct cxl_memdev_attach attach;
-> +	struct cxl_region *cxlr;
->  	struct range hpa_range;
->  };
+> +static int match_memdev_by_parent_device(struct device *dev, const void *data)
+> +{
+> +	const struct device *pf_dev = data;
+> +	struct cxl_memdev *cxlmd;
+> +
+> +	if (!is_cxl_memdev(dev))
+> +		return 0;
+> +
+> +	cxlmd = to_cxl_memdev(dev);
+> +	return (cxlmd->cxlds->dev == pf_dev);
+
+cxlmd->cxlds can be NULL? How about just do dev->parent == pf_dev instead?
+
+> +}
+> +
+> +static int __cxl_get_range_and_link(struct device *pf0, struct device *pfx,
+> +				    struct range *range)
+> +{
+> +	struct device *mem_dev __free(put_device) =
+> +		bus_find_device(&cxl_bus_type, NULL, pf0,
+> +				match_memdev_by_parent_device);
+> +	struct cxl_attach_region *attach;
+> +	struct cxl_memdev *cxlmd;
+> +
+> +	if (!mem_dev)
+> +		return -ENODEV;
+> +
+> +	cxlmd = to_cxl_memdev(mem_dev);
+> +	attach = container_of(cxlmd->attach, struct cxl_attach_region, attach);
+
+Probably not likely for a type2 device, but is there any possibility that attach == NULL?
+
+> +
+> +	/*
+> +	 * The cxlmd object does exist and it can be found in the cxl bus after
+> +	 * creation but before attach probe setting the proper HPA range. If so,
+> +	 * the caller will need to try later.
+> +	 */
+> +	if (attach->hpa_range.end == CXL_RESOURCE_NONE)
+> +		return -EPROBE_DEFER;
+
+
+Maybe you'll need something like this below to ensure that the region is valid still. And you can drop the above with the below code.
+
+      scoped_guard(rwsem_read, &cxl_rwsem.region) {
+              cxlr = READ_ONCE(attach->cxlr);
+              if (!cxlr)
+                      return -EPROBE_DEFER;
+              get_device(&cxlr->dev);
+      }
+      struct device *region_dev __free(put_device) = &cxlr->dev;
+
+      /*
+       * Region deletion holds regions_lock across xa_erase() and device_del().
+       * Being in the xarray under regions_lock means the region is still
+       * registered, and a link added now is torn down by its deletion. Drop
+       * cxl_rwsem.region above first: regions_lock nests outside it.
+       */
+      cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+      guard(mutex)(&cxlrd->regions_lock);
+      if (xa_load(&cxlrd->regions, cxlr->id) != cxlr)
+              return -ENODEV;
+
+      /* A decommit releases the region driver after dropping the rwsem */
+      guard(rwsem_read)(&cxl_rwsem.region);
+      if (cxlr->params.state != CXL_CONFIG_COMMIT)
+              return -ENODEV;
+
+DJ
+
+> +
+> +	/*
+> +	 * Create the device link between the region and the consumer device.
+> +	 * AUTOREMOVE_CONSUMER means the link implicitly to be removed if the
+> +	 * consumer unbinds first with no consequences for the supplier.
+> +	 */
+> +	if (!device_link_add(pfx, &attach->cxlr->dev,
+> +			     DL_FLAG_AUTOREMOVE_CONSUMER)) {
+> +		dev_err(pfx, "device link creation failed\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	range->start = attach->hpa_range.start;
+> +	range->end = attach->hpa_range.end;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cxl_get_range_and_link - register a device link with the region PF0 memdev
+> + * is attached to. The region release will imply the link consumer to be unbound
+> + * from its driver first. Return the cxl region range to work with related to
+> + * PF0 memdev initialization.
+> + *
+> + * @pf0: device to use for finding target memdev and supplier for the link
+> + * @pfx: device to link to PF0's memdev region, the link consumer.
+> + * @range: to be set with the PF0's memdev attach region range.
+> + *
+> + * Return: 0 or error.
+> + */
+> +int cxl_get_range_and_link(struct device *pf0, struct device *pfx,
+> +			   struct range *range)
+> +{
+> +	int rc;
+> +
+> +	if (!pf0 || !pfx)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * PF0 cxl memdev once created and region attached can only be removed
+> +	 * when PF0 unbinds from its driver which implies to obtain the device
+> +	 * lock before the unwinding starts. If this call from other PF races
+> +	 * with such unbinding:
+> +	 *
+> +	 * 1) if this next lock is obtained first, the device link is
+> +	 *    created and the later unwinding will trigger consumer (PF
+> +	 *    calling here) unbinding first.
+> +	 *
+> +	 *  2) if it is the unbinding the one getting the lock first, the
+> +	 *    memdev will not be there aymore.
+> +	 */
+> +	device_lock(pf0);
+> +	rc = __cxl_get_range_and_link(pf0, pfx, range);
+> +	device_unlock(pf0);
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_range_and_link, "CXL");
+> +
+>  static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
+>  			       unsigned long arg)
+>  {
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 802b143de83d..b28dce1f6f76 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -228,4 +228,6 @@ struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
+>  				      struct range *range);
 >  
+>  int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
+> +int cxl_get_range_and_link(struct device *pf0, struct device *pfx,
+> +			   struct range *range);
+>  #endif /* __CXL_CXL_H__ */
 
-attach->cxlr is never cleared when the region goes away. Unbinding the endpoint port runs endpoint_unregister_region(), which unregisters the region and drops its reference. PF0 stays bound until the detach work runs.
-
-A non-PF0 probe in that window still finds the memdev and calls device_link_add() on the freed region.
-
-How about something like this?
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 27e63e6dab7c..38ca73f12b84 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -4076,6 +4076,23 @@ static int first_mapped_decoder(struct device *dev, const void *data)
- 	return 0;
- }
- 
-+/*
-+ * Invalidate @attach before the region goes away so that
-+ * cxl_get_range_and_link() can not pick up a stale region.
-+ */
-+static void endpoint_detach_attach_region(void *_attach)
-+{
-+	struct cxl_attach_region *attach = _attach;
-+	struct cxl_region *cxlr;
-+
-+	scoped_guard(rwsem_write, &cxl_rwsem.region) {
-+		cxlr = attach->cxlr;
-+		WRITE_ONCE(attach->cxlr, NULL);
-+		attach->hpa_range = DEFINE_RANGE(0, -1);
-+	}
-+	endpoint_unregister_region(cxlr);
-+}
-+
- /*
-  * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
-  * simple case of single mapped decoder per memdev.
-@@ -4127,15 +4144,23 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
- 
- 	/* Only teardown regions that pass validation, ignore the rest */
- 	get_device(&cxlr->dev);
--	rc = devm_add_action_or_reset(&endpoint->dev,
--				      endpoint_unregister_region, cxlr);
--	if (rc)
-+	/*
-+	 * Not devm_add_action_or_reset(): the reset path would take
-+	 * cxl_rwsem.region for write while it is held for read here. The
-+	 * endpoint lock keeps the action from running before @attach is set.
-+	 */
-+	rc = devm_add_action(&endpoint->dev, endpoint_detach_attach_region,
-+			     attach);
-+	if (rc) {
-+		put_device(&cxlr->dev);
- 		return rc;
-+	}
- 
- 	attach->hpa_range = (struct range) {
- 		.start = cxlr->params.res->start,
- 		.end = cxlr->params.res->end,
- 	};
-+	WRITE_ONCE(attach->cxlr, cxlr);
- 	return 0;
- }
- EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index c401e3a1af06..7cd3a69cd5f5 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -104,6 +104,8 @@ struct cxl_memdev_attach {
- /**
-  * struct cxl_attach_region - coordinate mapping a region at memdev registration
-  * @attach: common core attachment descriptor
-+ * @cxlr: cxl region the memdev is attached to, cleared under cxl_rwsem.region
-+ *	before the region is unregistered
-  * @hpa_range: physical address range of the region
-  *
-  * For the common simple case of a CXL device with private (non-general purpose
-@@ -112,6 +114,7 @@ struct cxl_memdev_attach {
-  */
- struct cxl_attach_region {
- 	struct cxl_memdev_attach attach;
-+	struct cxl_region *cxlr;
- 	struct range hpa_range;
- };
- 
