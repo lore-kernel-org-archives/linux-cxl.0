@@ -1,169 +1,362 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from sender6-pp-o92.zoho.com (sender6-pp-o92.zoho.com [165.173.180.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E6F489FA8
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Sep 2026 23:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3101B2EF2
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Oct 2026 01:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790809934; cv=fail; b=bfbNr7+WbLP7/ABgvNr22QAhNZmhUo8t1L9aknOGu5Ftk2Qz/jQ/0kIpAezr8fXQ5wUfqNXPQ4E8ffMrRToVRYpTMpBoP0l8IVHhKlv/Bm1JWZQdLKHDgdAqen+Pj2zkmIoKIentPjYLpq55T7qkzHuI8M/ybIfnDjzXjCRlPrs=
+	t=1790819291; cv=pass; b=t3KD6hK8cjA7aYeaddjXIS0RMhOH5Can5mcj6oEKp1q7+tsjLE/xigr4TvVslM9kmTU8BGFtXi4Kd2UATaIdfb/eD85xjYQGWy3mH5amji85bmUfVxfVwAX307OdgHdPIPIoblLcAXM4zS5ZukHcSBqcre5rWClFjrM93TdqdGA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790809934; c=relaxed/simple;
-	bh=amexrATYvD3OENSTYDLwYkxItYwQKV8FhndrO8OJbO0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oIM8VRFcA3n5Eww5dQr6piCxkqJ2p0XVzO9OsD1rzbRXyLmQsGCkr17Yryh/awyJ7vMk52sLgM9seHEjqoYfmz4XZEqt2eRgfjp2xd2XUoWPMFthYZ8IKOFoaK8BUcF5PE1Z57PDmmWRCgD9C32aWFg9gQQDbL4SAGJf11TJEo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m83KQTk+; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790819291; c=relaxed/simple;
+	bh=UHvIMCSjsnJhbY/V+vOcAwhMNE+4uQ4v5dOrekYAEKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WI78MtIJM05FBrr8nekJ14k4O+fjU26TnhS/KYaQUov/Iz2Vgbpsbnx2n1bV+eQp5xpjUK5q2jFepS+MEmL7vTNO4mZ43bAoFz5wfqLTKMZekwwPQT3gB1/iRaYAgRaoKYHJdH28x5PkEAm6xjiLi5443OMD52JtKvIsxtfBjcY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Q4LHrprv; arc=pass smtp.client-ip=165.173.180.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m83KQTk+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790809931; x=1822345931;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=amexrATYvD3OENSTYDLwYkxItYwQKV8FhndrO8OJbO0=;
-  b=m83KQTk+5ZXwTmNYOPtgS0+ZtPShZXRIiZ5bGHIT41Oo0r/bXnp2mEa6
-   /hUHE9DH4M8xfGHZafnuhjzME+xUrVkHVQcWGYtSrG1sxdCbkIRsyffpU
-   7jGyZ5e+9SSP9XGMnzUlKnfxgxDRr50o4M6RE1uTTSgCY6q1xsRdivJAx
-   6txMrypxCZw4eeExoz4ZwiAewdbEuvP35/4xbAa7UkCXyQpxfE0DngRC0
-   rJlmwy4BXQCXPHKY76o4GYTL0i6NhSuq3etJ+qDzaaiQc6oroCazWYuRu
-   FGvezTqXSaeG5kyL7OSmcyEwM1dnhY1ZWTTry5m3KH3kbO6eZrz59lXRq
-   A==;
-X-CSE-ConnectionGUID: V9JpBAD1RbaLIzrJmkY5ag==
-X-CSE-MsgGUID: uGpYY6w9Tk+vCEHR27CQrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11921"; a="107941373"
-X-IronPort-AV: E=Sophos;i="6.27,133,1787036400"; 
-   d="scan'208";a="107941373"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 16:12:05 -0700
-X-CSE-ConnectionGUID: 5TAd0soVRSaJXzjkVzeUPQ==
-X-CSE-MsgGUID: 1rH3jMr6QjCfawnvTRVv/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,133,1787036400"; 
-   d="scan'208";a="280583859"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 16:12:04 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Wed, 30 Sep 2026 16:12:04 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Wed, 30 Sep 2026 16:12:04 -0700
-Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.32) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Wed, 30 Sep 2026 16:12:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tP1KU47plOD3U7XhQ+GTlvE9SWeEbBgWG4a0boiWwdi33uKwC+mti1k4b6G4WpQ0+x8QsTIW4ilzKr8b0mfOrT/MAPf5hFZIMdACNCCZfgYuQo3ufEI4EhxE1+xwqdbKEpgymN6x3Fmz7aA/FlkPUiTDFTaOVMV0tSk/EjL0/vAswOiPFajmYhIwXikF2Du5ZD2dpwYpChBo29F5DtmeV0xJQGIMOvUWOqlUTT2nuKhVk7ptY+6QKmuBiH9qeuHPeOsLusWW2uKfGDkoE2MSaTTqGPJx0F3gmPk+T5HRg5xFyA1Ibz6c/X1dM6kpUA5eJn/lp/ZII/7PB13lIG6g1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wMY/Mxy/25Sq2eaukuAsx9ZDWuuuYSJGzH2Z7k8BST0=;
- b=N7LUYZQVHEW0EF4McIjlq0ROy39kb+Xsoqr+odXjZxGe20dMgpXBY0FPSFvPEWfJFf60lOUgKBuu4mbLQ/+DfvJYDywILoKoLBnduT2opcx+xuCbi9lVLYxDCM2oDbrGPggFt1AcHeb3P9YRwF+zPMgo7gXuzJ6RcDq6kRJ7ZrNKhkSPYX4z9N/MBCp/Bbri68Wvpcxtjm//8KBUWo2cHU79VFJjH5YRKmZA15BWky1Br6PvCz9Oew496x8gbNkoCxSA+SU9zGM6H8A7JsePNFde7sbhY0ry8At1BUUfi63eJ+40ycN3QffLTWa/5dBFDau8c4iPjaXOansncutshQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SJ5PPF4990C6B9D.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::826) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.18; Wed, 30 Sep
- 2026 23:11:59 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0472.015; Wed, 30 Sep 2026
- 23:11:59 +0000
-Date: Wed, 30 Sep 2026 16:11:56 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <dave.jiang@intel.com>, <jic23@kernel.org>, <icheng@nvidia.com>,
-	<ming.li@zohomail.com>, <benjamin.cheatham@amd.com>, <alucerop@amd.com>,
-	<linux-cxl@vger.kernel.org>, Jonathan Cameron
-	<jonathan.cameron@oss.qualcomm.com>
-Subject: Re: [PATCH v9 03/10] cxl/hdm: Add BI coherency support for endpoint
- decoders
-Message-ID: <ar2XPKLCs92qUvmM@aschofie-mobl2.lan>
-References: <cover.1790103847.git.dave@stgolabs.net>
- <ebc907df26d229138fb46051e5b9f4a2299b6432.1790103847.git.dave@stgolabs.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ebc907df26d229138fb46051e5b9f4a2299b6432.1790103847.git.dave@stgolabs.net>
-X-ClientProxiedBy: SJ2P220CA0014.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:5da::14) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Q4LHrprv"
+ARC-Seal: i=1; a=rsa-sha256; t=1790819283; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WJywVEVMnhy9xYM8FKg41fOFvCNym+Yk2ismnQV7MXo3aEnJZBqK1a2ttMvu7fKskQ+JaHiKGAOO5GSN8pKJM5Qd04k/jQYvdZXr8JQUZBNwFc327wNWRhgnpaL54VAIp1jdiTgTIQ9B3qL3Yfx0m/gEKwf49GBWZ0GQxPRqsXo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1790819283; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=VUgy2QQ/mEqRUm8Atr5adybadF4dwXB6rDf1vercClI=; 
+	b=grH36cEAcSQRMHWrGBTH51DVwi56mCLDkhGdn39RQfbpRx9KiHLpc2Fd8RTxkWFQeQYW3YTOWIT0mT0eByuKifKwM7MecIhTzwnz5O4stqNrN2uk+phpt4QkepI/LrxHPsPouSbSpbMViURJHOrK4RawRUU1J8moTt804HRuCa0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790819283;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=VUgy2QQ/mEqRUm8Atr5adybadF4dwXB6rDf1vercClI=;
+	b=Q4LHrprvltuAPWqg78XDRPG97J4mJzeq1qPdl+mwPuuRULC6cANjKL9gZYHsBH5g
+	bB79wWTsQC/rsT9w2xJ1iAjwNVw9Dmtbo3l/Uu8tJa+Qv9bk2rsXJrJEMwuMpmsBmTH
+	ugFxBiD5ZqC998TU705dmP2NnAVnyAz1Qj+GWVbE=
+Received: by smtp.zohomail.com with SMTPS id 1790819282126895.2854752832127;
+	Wed, 30 Sep 2026 18:48:02 -0700 (PDT)
+Message-ID: <c2a820e1-c95c-4c2a-be92-2d7ed0ad71cd@zohomail.com>
+Date: Thu, 1 Oct 2026 09:47:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SJ5PPF4990C6B9D:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad393e79-31e9-4324-bee1-08df1f483aaf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|18002099003|22082099003|5023799004|56012099006|10067099003|11063799006|4143699003;
-X-Microsoft-Antispam-Message-Info: kxOqzktZ7wtlvtG3zxIgg1c6Jmc+G1pMTKiuDk9YCyuhN3T0bhGtmllpOuBN+tkISROtbse6cGgx1GPt2pGAPh3s7IL9Q410utSVNV6zCY9ez5ehsFmlDB1UN7n5izHFUTpk+CuPHV1FB4tmHgxmcs6FkVvYGDMQ+ZMjCIxER+Qevt6gfaAYuHwgVuzFLHEG0Tat/S6WAHKsNip2Bkwn2UDLRH1x+7Iel5/NoL1R3mLfSN91IQp3ytgje7qq6lcdMc3ahNR/7d4HWexCsdoPurdMjiS+ZGc53dHADQHrPRon9aW8WQnzaBK2ZW7dKrn+XjjeYrwhIyfM+RAI8TqlyteZ3jtRdCwUw0SNslFR+MjDWBpTM6sMzr/YxVXLkOGjaX/317D7jC71GPAKR5URMUPwlsd47+LjFPqOQb2PzrttOrk3UHVMp3i7WHXhsVQHsTTyzUFat7xG2zgIZf6una/WpSK42f3OBVjH6/+o7FLtl+2Nu107I8tgnFJAQ37d9PNJA6OiL6Tp6BpXIC+qr7Ws1dXVr+PjWWJ3ZA6OAOzW3ZVTEfqf3jrhhjF1dNRKNY22HtMqArKlXZAsboimWYxaU/pIxF12lTC74qhbdhsHF8pj3rK/N5Ilu7tkkZ1Xql5jG3cex6tM6ap0AoqtnLeR5Suxm1iiXiwyAdBE05Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(18002099003)(22082099003)(5023799004)(56012099006)(10067099003)(11063799006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KujmoN7omIPSS1YNjkTeyqUzRlDx9Eb8sMr6PLpt0iZZir5AYnP27a5jKSwx?=
- =?us-ascii?Q?8OTWkmcOx6E1QUZ0IX9SxnjNk0Mc4y1wxXBq3VkXlq4FTaG8kIQIfwuiWv7O?=
- =?us-ascii?Q?+LxDPmXg3b1e111mSHC0s+oerVCjAftPcasXvoLxMZsrIwGc0eu4lYfYoMf+?=
- =?us-ascii?Q?V6Kk/xUElF//zABqm7PWufT+sD+WuxVEw1kMQB0Zkg0FiG4YOkSXRTDNhr6L?=
- =?us-ascii?Q?odJXyKz07tjvNBGHXf1GaGvFmgc0zoCKnNGb806xQhh0iGHiCqHTJm+IpMiu?=
- =?us-ascii?Q?ZEOImfyN+EcBkcYzkZcNYVDQHQgi58DO1vOD+OnXP4YNutMRwNtd3Y3F5ubV?=
- =?us-ascii?Q?ndmZtwWtCQJGfmfUFM3AqPrYfQ4vTciz8pD+5fZLyHCFK6U3SmpbMVBHoV85?=
- =?us-ascii?Q?Ql4cl8o/44LdD9CJN/WrltYtRsBYRG+RppI21bacNc/K32dHWs95SZfLn8My?=
- =?us-ascii?Q?JyOouH+tv1qwegplMeRaul4Z2zeweVzcswJbqdrSkkqFWcBvTyWxOO6/8pMr?=
- =?us-ascii?Q?AzMLHAa//6XgBJUI30Crn3NpbQOZl/hhKxWvFSozTWHkakgUM3L1ydkeAktb?=
- =?us-ascii?Q?ywgORZBd70tNQnv0mbhroS1QigViQIEJH8mGrcw9dUn/NvxBIcjEIaoqOgxg?=
- =?us-ascii?Q?wKxHvb7wnjB9jBMfBom6ixUgetmCWSYdrCslGv7Yz6cLjXSMv2zCptcPvo3K?=
- =?us-ascii?Q?P1pJBYN6TQ615jBjP7mFVuySYr9n5XF1/lP5OBnjVGKT3UMVt+C9/BOWXL8z?=
- =?us-ascii?Q?12CzTxACkq9ktIV9cStJOSSYdBIZCBy8MqKM/4ZG6NYvrH7dLQhTcPnGfzQ0?=
- =?us-ascii?Q?lHuXIvXxlPt+GeUXbFNqmRFaOtBxmy4r0cqiMkJebq7tdVmmFFqc6vLgb8xf?=
- =?us-ascii?Q?nraaQxPQwE75Z//kOCBw9BBr7JJWCcl9L3kgPE3ywsP1BXkYoN5xcRXbGwhh?=
- =?us-ascii?Q?Av9ke+m5roJCSYLWZQ5AejNx6aoE3CAwy25b8K34aPp/p4JmUDLmIenShlKj?=
- =?us-ascii?Q?EJbb0ygt8bqurmw/r37ouJu8NktXAt32ERO85gr5dFVSrIODphkzuUP7w/FR?=
- =?us-ascii?Q?3LMa6YNEqb8A3gp/XabLkMOcPr6eXKq5qV7Bgj+cxP2ypIAnJ0b5J2dIVmez?=
- =?us-ascii?Q?0sn4yiIvdk8Q9HxpIa95k/bDC45K3mRAQ2Iy5vvLJS/v0wbQnQDDJIEZOnjz?=
- =?us-ascii?Q?Hn3aon5vKtppP6bJQGQzw9fRsy8XpF6crp/ZsuFZwpFm3ooRHqbAoPELmSmv?=
- =?us-ascii?Q?TMvqTOYmT0cjMIfQF17DIFnNqXsgWXh6tE02Fa0ZEmRkQrXjYTejjooVp11X?=
- =?us-ascii?Q?kW80srW2fyaddFr6rx0+zPdzNsTtlp3QybBgi+oxq8uC+VBYilKwi2Xwud+E?=
- =?us-ascii?Q?KCgHAyUQtswyHzNPTV9e1QDompWyN6/hxOvFOK8/sj6znneZASx1HbMkmewc?=
- =?us-ascii?Q?cL2Opalbf/OYG9NSWXQk9hBNGf1L/c15sFmA6BHjWfEf86ixcikRfGp8Osb8?=
- =?us-ascii?Q?nwmoCvV8w26KRvh4AGEu9ktQpKhz2NJ78Cnvgit5c1TVLzrea7w7cOq1H5oj?=
- =?us-ascii?Q?xNVA0HPkAqlItfBZwAr1kqZaK5VydqyahNtOc4xT9EDupzum7Eq8v9jiONDq?=
- =?us-ascii?Q?RX8Sc4PzWjS1WtHUQVA7CCXyp+KLqox2FQapmVRzzqiKrod1sfiGDn7UC416?=
- =?us-ascii?Q?l76/kIXoLblNOWNfJcaSI3HHhJ0GPpBUBOU4GuV0XCDNAXgAY89XmtQjIntP?=
- =?us-ascii?Q?9S+VsM3OWsMdmEQgul3/8auDcKw1HfQ=3D?=
-X-Exchange-RoutingPolicyChecked: xS6K3hfo/biECpv9jGtJCKTq5FIuI5MOsgROnsKD0VZXu7m1K6CHtkT021pJzBV9j01HI1C4WHw38qhPVCEYnHH1lqW9xo3oW8BPjhWq4M1AQbZTVgxFHX67caehkcVJaiqBtBBDNKmRHDvofDCVT0KQ2ufIX2fmKfv/KAW040ULkMIy326pglYQgijc9HRHHCtwPqGDGZPuuo1Gzo3vF8Ir1XlwAiMQKDVGjQvTLAMg1LmStWlyKnVU7VcrGmNAqEbnIN2KEzQrJF1FjYY+UIQp8OvwXYhjBRdFatGIDvhT3zLvO48rQaIuRgAsILD5p+/CfiKUqzKS0IxXTljZfQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad393e79-31e9-4324-bee1-08df1f483aaf
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 23:11:59.3884
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O81/ZeNs2AhKoLUBWP59F/Ia3HzBNSU/91Hr3QBxK68ntL9jGvag63Scbns9l/1fdhlHN4L1iciyEcEL1ySmjd6Zw/llsRSAiKjlH+jpK30=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF4990C6B9D
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] cxl/core: Hold the dport host lock across dport
+ lookup and use
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com,
+ icheng@nvidia.com
+References: <20260930152311.4164036-1-dave.jiang@intel.com>
+ <20260930152311.4164036-3-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260930152311.4164036-3-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: zu08011227ac401d325e7ed8a3e6356e580000f55bfe368229637104edbd9af1ae631c7d126a937cdb5f8e86:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Tue, Sep 22, 2026 at 04:38:40PM -0700, Davidlohr Bueso wrote:
-> Cache the HDM decoder's Supported Coherency Models on struct cxl_hdm.
-> A later patch has region attach consult it to verify the HDM supports
-> the region's coherency type.
-> 
-> For uncommitted endpoint decoders, init_hdm_decoder() defaults
-> target_type from supported_coherency: Type 3 devices default to
-> HDM-DB when the HDM is device-coherent-only, HDM-H otherwise.
-> 
-> Pre-committed decoders with the BI bit set are refused. cxl_bi_setup()
-> does not yet take over a path firmware already enabled, so nothing
-> verifies that such a decoder's topology can route BISnp.
+On 9/30/2026 11:23 PM, Dave Jiang wrote:
+> Callers of cxl_pci_find_port() and cxl_mem_find_port() can be handed a
+> 'struct cxl_dport' that is already freed, and all four dereference it
+> without the lock that would prevent that.
+>
+> A dport is kzalloc()'d into a devres group on its host device, so it dies
+> when that host unbinds. The host is &port->dev for a switch port and
+> port->uport_dev for the root port.
+>
+> Both helpers return the dport through an output parameter. The caller's
+> port reference pins struct cxl_port, not the dport allocation, and the
+> lookup itself is a bare xa_load() under no lock.
+>
+> Add cxl_port_dport_host() to name the device that pins a dport, and
+> cxl_pci_find_dport() / cxl_mem_find_dport() to look one up with that
+> device's lock held and asserted. Convert the four callers to use them and
+> bail if the dport is gone. cxl_port_add_dport() already follows this rule.
+>
+> cxl_mem_probe() chose its endpoint devm host from dport->rch, which meant
+> dereferencing the dport before taking any lock. Use cxl_port_dport_host():
+> rch dports only ever land on the root port, so it selects the same device
+> without needing the dport.
+>
+> Fixes: 733b57f262b0 ("cxl/pci: Early setup RCH dport component registers from RCRB")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Assisted-by: LLM
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+> ---
+> v2:
+> - Reword the cxl_port_dport_host() comment. (Jonathan)
+> - Drop the note on stale cxlsd->target[] pointers, fixed by patch 1. (Jonathan)
+>
+> Found by review, not from a failure report.
+>
+> Untested: two of the four converted sites add a new lock acquisition, and
+> neither executed under test.
+>
+>   cxl_pci_setup_regs()        new guard() sits behind is_cxl_restricted(),
+>                               which needs a PCI_EXP_TYPE_RC_END device
+>   cxl_handle_rdport_errors()  needs an RCH dport AER error; cxl_test has no
+>                               injection path
+>
+> Only cxl_pci_setup_regs() introduces a lock order lockdep has not already
+> seen: device_lock(&pdev->dev) from probe, then the dport host lock.
+>
+> cxl_handle_rdport_errors() nests its new host lock inside the
+> device_lock(&cxlmd->dev) that core/ras.c:274 and :298 hold, but
+> cxl_mem_probe() takes that same pair in that same order and ran clean under
+> PROVE_LOCKING, so the edge itself is covered. What is untested there is the
+> path, not the ordering.
+>
+> Reaching either needs a cxl-type3 attached directly to a host bridge so
+> pci_pcie_type() is PCI_EXP_TYPE_RC_END, which run_qemu.sh does not generate.
+>
+> Tested in QEMU with cxl_test, PROVE_LOCKING and KASAN on, 8 module
+> load/unload cycles with concurrent sysfs readers. No lockdep splat, no
+> device_lock_assert() firing, enumeration unchanged (15 memdev, 12 port,
+> 192 decoder before and after).
+>
+> cxl_mem_find_dport() ran for 15 memdevs on each of 9 loads, covering both
+> cxl_port_dport_host() branches. The rch branch is covered too: "cxl_mem
+> mem2: endpoint9 added to root3" shows the new selection picking the same
+> parent dport->rch did.
+> ---
+>  drivers/cxl/core/core.h    |  6 +-----
+>  drivers/cxl/core/pci.c     |  8 +++++++-
+>  drivers/cxl/core/port.c    | 36 ++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/ras_rch.c | 12 +++++++++++-
+>  drivers/cxl/cxl.h          | 16 ++++++++++++++++
+>  drivers/cxl/mem.c          | 14 +++++++++-----
+>  drivers/cxl/pci.c          | 11 ++++++-----
+>  7 files changed, 86 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 35eaf636adc9..0a39e500029a 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -178,11 +178,7 @@ static inline struct device *port_to_host(struct cxl_port *port)
+>  
+>  static inline struct device *dport_to_host(struct cxl_dport *dport)
+>  {
+> -	struct cxl_port *port = dport->port;
+> -
+> -	if (is_cxl_root(port))
+> -		return port->uport_dev;
+> -	return &port->dev;
+> +	return cxl_port_dport_host(dport->port);
+>  }
+>  #ifdef CONFIG_CXL_RAS
+>  void cxl_ras_init(void);
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..8a236e22bb3f 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -734,10 +734,16 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
+>  		struct cxl_dport *dport;
+>  		struct cxl_port *port __free(put_cxl_port) =
+> -			cxl_pci_find_port(pdev, &dport);
+> +			cxl_pci_find_port(pdev, NULL);
+>  		if (!port)
+>  			return -EPROBE_DEFER;
+>  
+> +		guard(device)(cxl_port_dport_host(port));
+> +
+> +		dport = cxl_pci_find_dport(pdev, port);
+> +		if (!dport)
+> +			return -EPROBE_DEFER;
+> +
+>  		rc = cxl_rcrb_get_comp_regs(pdev, map, dport);
+>  		if (rc)
+>  			return rc;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 6ff3353865e3..336d7c0f5d98 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1428,6 +1428,10 @@ static struct cxl_port *__find_cxl_port_by_dport(struct cxl_find_port_ctx *ctx)
+>   *
+>   * Return a 'struct cxl_port' with an elevated reference if found. Use
+>   * __free(put_cxl_port) to release.
+> + *
+> + * The port reference does not pin @dport, which is a devm allocation of
+> + * cxl_port_dport_host(). Pass NULL and use cxl_pci_find_dport() or
+> + * cxl_mem_find_dport() under that device's lock instead.
+>   */
+>  static struct cxl_port *find_cxl_port_by_dport(struct device *dport_dev,
+>  					       struct cxl_dport **dport)
+> @@ -1943,6 +1947,38 @@ struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, "CXL");
+>  
+> +/**
+> + * cxl_pci_find_dport - find the dport of @port that @pdev is below
+> + * @pdev: PCI device below the dport
+> + * @port: port to search, typically from cxl_pci_find_port()
+> + *
+> + * Context: Caller must hold the cxl_port_dport_host() lock of @port, and
+> + *	    must not use the result after dropping it.
+> + */
+> +struct cxl_dport *cxl_pci_find_dport(struct pci_dev *pdev,
+> +				     struct cxl_port *port)
+> +{
+> +	device_lock_assert(cxl_port_dport_host(port));
+> +	return cxl_find_dport_by_dev(port, pdev->dev.parent);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_pci_find_dport, "CXL");
+> +
+> +/**
+> + * cxl_mem_find_dport - find the dport of @port that @cxlmd is below
+> + * @cxlmd: memdev below the dport
+> + * @port: port to search, typically from cxl_mem_find_port()
+> + *
+> + * Context: Caller must hold the cxl_port_dport_host() lock of @port, and
+> + *	    must not use the result after dropping it.
+> + */
+> +struct cxl_dport *cxl_mem_find_dport(struct cxl_memdev *cxlmd,
+> +				     struct cxl_port *port)
+> +{
+> +	device_lock_assert(cxl_port_dport_host(port));
+> +	return cxl_find_dport_by_dev(port, grandparent(&cxlmd->dev));
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_find_dport, "CXL");
+> +
+>  static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+>  				    struct cxl_port *port)
+>  {
+> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+> index e0e01aa5eba6..827a2f64d892 100644
+> --- a/drivers/cxl/core/ras_rch.c
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -118,10 +118,20 @@ void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  	int severity;
+>  
+>  	struct cxl_port *port __free(put_cxl_port) =
+> -		cxl_pci_find_port(pdev, &dport);
+> +		cxl_pci_find_port(pdev, NULL);
+>  	if (!port)
+>  		return;
+>  
+> +	/*
+> +	 * The dport may have been freed since the lookup above, so take the
+> +	 * lock that pins it and find it again.
+> +	 */
+> +	guard(device)(cxl_port_dport_host(port));
+> +
+> +	dport = cxl_pci_find_dport(pdev, port);
+> +	if (!dport)
+> +		return;
+> +
+>  	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
+>  		return;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index cab8ce39f465..f08de094f412 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -701,6 +701,18 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  	return port->uport_dev == port->dev.parent;
+>  }
+>  
+> +/*
+> + * Return the owner device of the devm allocations of @port's dports. They
+> + * are freed when that device unbinds, so hold device_lock() on the returned
+> + * device across any lookup and use of a 'struct cxl_dport'.
+> + */
+> +static inline struct device *cxl_port_dport_host(struct cxl_port *port)
+> +{
+> +	if (is_cxl_root(port))
+> +		return port->uport_dev;
+> +	return &port->dev;
+> +}
+> +
+>  /* Address translation functions exported to cxl_translate test module only */
+>  int cxl_validate_translation_params(u8 eiw, u16 eig, int pos);
+>  u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
+> @@ -747,6 +759,10 @@ DEFINE_FREE(put_cxl_dax_region, struct cxl_dax_region *, if (!IS_ERR_OR_NULL(_T)
+>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+>  void cxl_bus_rescan(void);
+>  void cxl_bus_drain(void);
+> +struct cxl_dport *cxl_pci_find_dport(struct pci_dev *pdev,
+> +				     struct cxl_port *port);
+> +struct cxl_dport *cxl_mem_find_dport(struct cxl_memdev *cxlmd,
+> +				     struct cxl_port *port);
+>  struct cxl_port *cxl_pci_find_port(struct pci_dev *pdev,
+>  				   struct cxl_dport **dport);
+>  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 798e5c369cfc..91137487ac1f 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -133,7 +133,7 @@ static int cxl_mem_probe(struct device *dev)
+>  		return rc;
+>  
+>  	struct cxl_port *parent_port __free(put_cxl_port) =
+> -		cxl_mem_find_port(cxlmd, &dport);
+> +		cxl_mem_find_port(cxlmd, NULL);
+>  	if (!parent_port) {
+>  		dev_err(dev, "CXL port topology not found\n");
+>  		return -ENXIO;
+> @@ -148,10 +148,7 @@ static int cxl_mem_probe(struct device *dev)
+>  		}
+>  	}
+>  
+> -	if (dport->rch)
+> -		endpoint_parent = parent_port->uport_dev;
+> -	else
+> -		endpoint_parent = &parent_port->dev;
+> +	endpoint_parent = cxl_port_dport_host(parent_port);
+>  
+>  	scoped_guard(device, endpoint_parent) {
+>  		if (!endpoint_parent->driver) {
+> @@ -160,6 +157,13 @@ static int cxl_mem_probe(struct device *dev)
+>  			return -ENXIO;
+>  		}
+>  
+> +		/* @dport is only valid while @endpoint_parent stays bound */
+> +		dport = cxl_mem_find_dport(cxlmd, parent_port);
+> +		if (!dport) {
+> +			dev_err(dev, "CXL topology dport not found\n");
+> +			return -ENXIO;
+> +		}
+> +
+>  		rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
+>  		if (rc)
+>  			return rc;
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index c7c91e8dc51d..6e1d7ee94c19 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -706,22 +706,23 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+>  	struct device *root_dev;
+>  	struct cxl_dport *dport;
+>  	struct cxl_port *root __free(put_cxl_port) =
+> -		cxl_mem_find_port(cxlmd, &dport);
+> +		cxl_mem_find_port(cxlmd, NULL);
+>  
+>  	if (!root)
+>  		return -ENXIO;
+>  
+> -	root_dev = root->uport_dev;
+> +	root_dev = cxl_port_dport_host(root);
+>  	if (!root_dev)
+>  		return -ENXIO;
+>  
+> -	if (!dport->regs.rcd_pcie_cap)
+> -		return -ENXIO;
+> -
+>  	guard(device)(root_dev);
+>  	if (!root_dev->driver)
+>  		return -ENXIO;
+>  
+> +	dport = cxl_mem_find_dport(cxlmd, root);
+> +	if (!dport || !dport->regs.rcd_pcie_cap)
+> +		return -ENXIO;
+> +
+>  	switch (width) {
+>  	case 2:
+>  		return sysfs_emit(buf, "%#x\n",
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
