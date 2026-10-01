@@ -1,375 +1,106 @@
-Received: from mail-ed2-f32.google.com (mail-ed2-f32.google.com [74.125.228.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA563E40E4
-	for <linux-cxl@vger.kernel.org>; Thu,  1 Oct 2026 16:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790872362; cv=pass; b=pIVzbCJ79DoDRyFUD/MUU4ee84BMpGDEbin/bE+zzmEm7tHgJR5f9et1dIANDAVgrv7SVZP5fOEIgM1bkhdmWM06JBz+I2yBxzsFVhXwdwPRH9zukwvbd1ZP2MuzsU1bLUVQi4Lo77stL/hIwS/PXOBOgzq7xBtMICfrnhcOSmc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790872362; c=relaxed/simple;
-	bh=Hmrg1utwy1UsI/La0jCaZph+V7N3+1dJzQKkRO9nMBA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1801C489FA5
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Oct 2026 16:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790873127; cv=none; b=IiHdfiPzElv+dkWyIYkswdErzVmRQiWplk0K+zbuVFFPje/7BL00ltGqyrt55jXhjVMTx1LAXDFvHK6jlk+2JSVILD7iY+V2FA+AklT04N1ndx1rH1aWbW+ibLwvLfPhMxuBii1t/F+kFHioSLq8yWivXiZoMwUgXLSI5ny3eIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790873127; c=relaxed/simple;
+	bh=PY5qgS40a627xWmb4B40zcptBam7oiykXKkXPZoCEUY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1rZlIWl3aWf0F5h+tqMOwl9LdeNKhyZ+9nquAiJYc3YR/YeyJjMMCeCOTnxJZQui1o31lm8jnU1K2tGE7b+I3Cu3TMJgYN0U4WV1C7wCW/2SuuBD93daOo2t7b6eULn73K78pMGM1VWfEs8W/Pezzvn9uD8lfFpojOjhLqjFls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTlHavh7; arc=pass smtp.client-ip=74.125.228.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=l34sDWzcPPWYmej6jSS4X6wb4vukMn9Lp4U6fZXVc/1sXfRNOjiszN0HFbX5T08AaqU2McDZWtQ+8P/w9dlfv2mDff/vgCRexuhq3wRskeXjkkAKocOJ83EuPlg5MZvz/dH5Xifm5Qq21t/OP3WDQOdGJYMEPUqMZxCTpuh5riU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeJfh7bU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTlHavh7"
-Received: by mail-ed2-f32.google.com with SMTP id 4fb4d7f45d1cf-6acb8b78d6cso4891324a12.2
-        for <linux-cxl@vger.kernel.org>; Thu, 01 Oct 2026 09:32:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790872359; cv=none;
-        d=google.com; s=arc-20260327;
-        b=AH1Za1jcP6okweWDMObyemfurx2AYhSi8zkS/44t9PbwMgHTuA4qB2N2j7dBO03tZK
-         DBpJEVNv2K2hLJk0HX6U6LbrBuEBiiMRN+xEWUqzbZ6kAxptJ7maot1AsJj3f/j5vF2q
-         IXSusNel4To2TqlaGxCvckLUVLjiOhKNUIjNrudH+4L8fSIfNg8eMwIBpS0JEAH5oHHg
-         rkS7dGDSxdpXnLzLbjWjvmfD7teunt93e1yWEbI9akC7HjL7J+sP4BIN1I5aO4TOqlwi
-         Gk2N88ohjlnc1b1y5h0XdK9IHyNo2RV1uItfBltnQbDHVgrfyBd4IBEeWH1BrebIQ8N7
-         3tRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=TznGzYFAbbkKA0AdCMYN+GaZPqVPOXxDGKW1f5n1Xes=;
-        fh=moJsffImmmHLYVYxlLFW7YzmdIMcgpzgzdwBb0zkH+w=;
-        b=CzTBJnT+enYbkaJRhmD61DJ+Qrl/GzILFPc3U1/2u/IJOG+jUUKp3TMF0ua4O9JX2L
-         YfTirqhQn8TXT5LeiA8fXvKIM47IEH4TF+GDq/p/OkTCM681bY8Ba/bJTXbuPC8MAbof
-         cut58p4rZNEhl9WBIYhDdU50c1zMvfNbOBXbxHzwM4hzni2YmhkGn8krROdhWkh+up+j
-         rBGd0BdHY8Z3QsIOJIF4KiIuCC8hGhrWA1k5onrmCEtUZrGn4G/7S408WjJSOFvJcGom
-         C1SzCHzSIOUM8KWy3+6jj0dyBRvbKI8qV7LW9EJ8MqSnrxKsowCV0mq4tjxPNmwyLR/E
-         tuWw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790872359; x=1791477159; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=TznGzYFAbbkKA0AdCMYN+GaZPqVPOXxDGKW1f5n1Xes=;
-        b=OTlHavh7g0qG7ChwS/U7hraQjj6uosx5R1gX+YtvcZx9g/vWdDg4u/jfymZkaRl2/Q
-         wVGWyZyNY5DdOVPg+fbHduMkqV7xDg2LuPcfuDdHmqcc35Wc0j1o5MpUZIOA1sELOy3P
-         1E/Bt1WJEcTAdLmgxprvv58SWHMkWdcFOkSsTX1xWgO6/vnaKTRspvRku9Wq2SSHDKI+
-         am27RfcGvdTPriKqX+5B0885VGf13M1zRJTDiqj3nE10YePXcr3YOSxNnag5zzaQiRK9
-         mYOeOhsX+FXZ20M2jOK8YcKeN+QXX+v7UQ8K04t5hRGCAlgUqhbiD+hlDmCrfjEbKg4O
-         3Kqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790872359; x=1791477159;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TznGzYFAbbkKA0AdCMYN+GaZPqVPOXxDGKW1f5n1Xes=;
-        b=b1WjoUfF/qdaJKpm86tR1555g3NWoID/fQv17r3y34aGuauF5F4jXVlX4nicKGPVTx
-         ANrg5299Tgf18UfqEroU8XChQqJ/MdHTrpQSQjqaEs+jdR3f+g+52wahACyXD9AKL5DL
-         15mvxNZuRS9L0tgOfrioztdFaZG6zJo1ChNxhnYA2pd+lbc+5qDcJXU5PWqyITtoEnWv
-         u9g16SiNZ4jkhLBHIO6BVMT/ILfiqOJKhjkrSlb9RHru0UwuyVX52N6rGTr0mFM+Mei7
-         oxs+dqhmG6f9nCNt9Dn4AfB4qsn9GTEAOOeaUxPkScihZrWRAsrM4JukeLaaP3Vw1EAn
-         MB/w==
-X-Forwarded-Encrypted: i=1; AKwUvBxddWi51NbrJoMkWwBDIcUV3aNQFSBrwCqoQ1wGpO/EnvgpEXRKFVRkDx67B2hAtrEBjpukh85jPow=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK8R+aMeLudbdzLWxRy7afTIx2n1RhglJCK698Q0XJXYc3jN7WQ
-	hZ/9CisjQQ5mDcg7lWMsffcWK6XB5mQ7k/S1ODnrLzu53u1zNNuSecS+M2uKL3xkOgd3ARFmLg1
-	nUP0Q7a+q8eFZMHx5gk4BVLMIF5o3NEk=
-X-Gm-Gg: AYBFou0md3NGH9ulOImPBrQZdhSURSx1ZRhjZ3kyExJQMcNmoGVwEmKYkY4KwoU7SpU
-	Cp/W7XlmmTXvq3oatdufRU8YpCz1LoAnYKPQnjVN046gLrF5vxX3EnAuglOaCAaG89CCVl03RAX
-	Ll0BO27271nO4ulZUz3kOPWAKnByW7g5QgoEdLqULameuj5N+sQ9jE8liHjG6nyfVDZVAKs5B7O
-	7I+Vn/WmuqfDyRcXFw0sfeaw2bQYK3OcEpgc13UV5oHdop2AMCdPvQcqeTOnb9eWFDIGMbUipQN
-	6w64OhBwfuQpkHd1FI4/8BfGPmCy5Fm6TUObj4Ej3Mb5ioGdf0Y/iwUPX7/jYkIUdlE=
-X-Received: by 2002:a05:6402:2348:b0:6ac:813a:a1ef with SMTP id
- 4fb4d7f45d1cf-6ae1993bcd1mr4364855a12.26.1790872358679; Thu, 01 Oct 2026
- 09:32:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeJfh7bU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55AA1F0089F
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Oct 2026 16:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790873124;
+	bh=PY5qgS40a627xWmb4B40zcptBam7oiykXKkXPZoCEUY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=CeJfh7bUAALKgBMdcUwnxr3hBMN3xrgRoUl66u7rO0rlZByk7ZpeCOLsnPdPEIeZg
+	 EQ4YHHiQFDapR6tiEwWRYgTueaVjZkPYzNlA4oc+/uM7URJG2m0kiyfXLaf0YhARte
+	 lBs0zgltfbGeoiOWeIYiQQejlT0vSaquL+6rdnNubhJIwyHspiRZxaWqe7iZbYH2Wt
+	 l/93577ae8mAfE+IzcQZB9lWMnK+cw7MuL/up3Sy9BiwbYwRHHAvhxSgtO/QQYzd5K
+	 rDnmy9QnMSdw0xJVDsrqfxBruRmdrJ9HdmtlS/B6BEemIANBQ11NGIEwlJrbNDoEdU
+	 8eCRpPJEXZB9A==
+Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5ba3fc22439so1716165e87.1
+        for <linux-cxl@vger.kernel.org>; Thu, 01 Oct 2026 09:45:24 -0700 (PDT)
+X-Gm-Message-State: AFq9FYIs8UYPXEIh7NNZifCcF4MqVTDBVqj0675zslqcPoDCbPwSwuaa
+	5u0t7JnxUnI+CUeWz8VkEpozH83okXxUTptkRiZ+a2qxlCBwo4U6oyoi3pWqiGuSeHXBK0ySSce
+	RWoapr2zuRfQ3VDxYvSor4WdB7Ws0ASA=
+X-Received: by 2002:a05:6512:3c82:b0:5b6:183b:d20e with SMTP id
+ 2adb3069b0e04-5ba405ebc71mr2317546e87.53.1790873123100; Thu, 01 Oct 2026
+ 09:45:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261001150935.655979-1-mszeredi@redhat.com> <20261001150935.655979-3-mszeredi@redhat.com>
-In-Reply-To: <20261001150935.655979-3-mszeredi@redhat.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 1 Oct 2026 18:32:27 +0200
-X-Gm-Features: AclHuK8eTEc6STnpBDxfmRuKYDGoODXckCxazjNwWIfmWODp6sxlTPHn37GRHY0
-Message-ID: <CAOQ4uxjQYaFUG=VT1LoKbs3QUTbTeEy3tTY=_FMujMiWGRR_=A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] fuse: add helpers for EIO return value with kernel message
-To: Miklos Szeredi <mszeredi@redhat.com>
-Cc: fuse-devel@lists.linux.dev, John Groves <john@groves.net>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+References: <20260911164705.841407-1-dave.jiang@intel.com> <20260912001329.6db3222b@jic23-hlaptop>
+In-Reply-To: <20260912001329.6db3222b@jic23-hlaptop>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 1 Oct 2026 18:43:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gX4mf8ThCd4ifcwd4YSahQ4JC9oJ__mYdvDNKmagsSEw@mail.gmail.com>
+X-Gm-Features: AclHuK98bfyzp21C-YwvFUnVedmTWLA6Qdhhhta023tzcpUV5MlsjL9DmU-GRXc
+Message-ID: <CAJZ5v0gX4mf8ThCd4ifcwd4YSahQ4JC9oJ__mYdvDNKmagsSEw@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/AER: Map a raw AER Capability image field by field
+To: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, bhelgaas@google.com, 
+	ilpo.jarvinen@linux.intel.com, bp@alien8.de, guohanjun@huawei.com, 
+	mchehab@kernel.org, xueshuai@linux.alibaba.com, terry.bowman@amd.com, 
+	sashiko-bot@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 1, 2026 at 5:09=E2=80=AFPM Miklos Szeredi <mszeredi@redhat.com>=
+On Sat, Sep 12, 2026 at 1:13=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
  wrote:
 >
-> Conditions are triggered by a buggy fuse server will result in -EIO which
-> is hard to interpret without any context.
+> On Fri, 11 Sep 2026 09:47:05 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 >
-> Add helpers that print a short message to the kernel log as well as
-> returning the error value.  This serves a dual purpose:
->
->  - documents the error condition inside the code
->
->  - allows the implementor of the fuse server to get the context for the
->    error
->
-> Some debug messages are removed in favor of this.
->
-> This also changes the mmap return value from -ETXTBSY to -ENODEV if a
-> passthrough open raced with the prior check.  This makes both cases retur=
-n
-> -ENODEV if the file is in passthrough mode.
->
-> Additionally change the return value of fuse_inode_uncached_io_start() an=
-d
-> fuse_file_cached_io_open() from an error value to a bool (true on success=
-)
-> as the error value is translated anyway.
->
-> Currently these use the pr_notice_once() variant.  Possibly should be
-> changed to a ratelimit of e.g. once per minute.
->
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> ---
->  fs/fuse/file.c        |  8 ++---
->  fs/fuse/fuse_i.h      |  6 ++--
->  fs/fuse/iomode.c      | 74 ++++++++++++++++---------------------------
->  fs/fuse/passthrough.c | 19 ++++-------
->  4 files changed, 42 insertions(+), 65 deletions(-)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 6d707f2b3bff..92976906ab05 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -1478,7 +1478,7 @@ static void fuse_dio_lock(struct kiocb *iocb, struc=
-t iov_iter *from,
->                  * have raced, so check it again.
->                  */
->                 if (fuse_io_past_eof(iocb, from) ||
-> -                   fuse_inode_uncached_io_start(fi, NULL) !=3D 0) {
-> +                   !fuse_inode_uncached_io_start(fi, NULL)) {
->                         inode_unlock_shared(inode);
->                         inode_lock(inode);
->                         *exclusive =3D true;
-> @@ -2415,7 +2415,6 @@ static int fuse_file_mmap(struct file *file, struct=
- vm_area_struct *vma)
->         struct fuse_file *ff =3D file->private_data;
->         struct fuse_conn *fc =3D ff->fm->fc;
->         struct inode *inode =3D file_inode(file);
-> -       int rc;
->
->         /* DAX mmap is superior to direct_io mmap */
->         if (FUSE_IS_VDAX(inode))
-> @@ -2457,9 +2456,8 @@ static int fuse_file_mmap(struct file *file, struct=
- vm_area_struct *vma)
->                  * After first mmap, the inode stays in caching io mode u=
-ntil
->                  * the direct_io file release.
->                  */
-> -               rc =3D fuse_file_cached_io_open(inode, ff);
-> -               if (rc)
-> -                       return rc;
-> +               if (!fuse_file_cached_io_open(inode, ff))
-> +                       return -ENODEV;
->         }
->
->         if ((vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_MAYWRITE))
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 8546855386b5..3dd4dff24c50 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -11,6 +11,8 @@
->  # define pr_fmt(fmt) "fuse: " fmt
->  #endif
->
-> +#define fuse_EIO(fmt, ...) (pr_notice_once("%s: " fmt "\n", __func__, ##=
-__VA_ARGS__), -EIO)
-> +
->  #include "args.h"
->  #include <linux/fuse.h>
->  #include <linux/fs.h>
-> @@ -1251,8 +1253,8 @@ int fuse_fileattr_set(struct mnt_idmap *idmap,
->                       struct dentry *dentry, struct file_kattr *fa);
->
->  /* iomode.c */
-> -int fuse_file_cached_io_open(struct inode *inode, struct fuse_file *ff);
-> -int fuse_inode_uncached_io_start(struct fuse_inode *fi,
-> +bool fuse_file_cached_io_open(struct inode *inode, struct fuse_file *ff)=
-;
-> +bool fuse_inode_uncached_io_start(struct fuse_inode *fi,
->                                  struct fuse_backing *fb);
->  void fuse_inode_uncached_io_end(struct fuse_inode *fi);
->
-> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
-> index 79637c09e883..1a10bc65fb31 100644
-> --- a/fs/fuse/iomode.c
-> +++ b/fs/fuse/iomode.c
-> @@ -27,15 +27,15 @@ static inline bool fuse_is_io_cache_wait(struct fuse_=
-inode *fi)
->   * Blocks new parallel dio writes and waits for the in-progress parallel=
- dio
->   * writes to complete.
->   */
-> -int fuse_file_cached_io_open(struct inode *inode, struct fuse_file *ff)
-> +bool fuse_file_cached_io_open(struct inode *inode, struct fuse_file *ff)
->  {
->         struct fuse_inode *fi =3D get_fuse_inode(inode);
->
->         /* There are no io modes if server does not implement open */
->         if (!ff->args)
-> -               return 0;
-> +               return true;
->
-> -       spin_lock(&fi->lock);
-> +       guard(spinlock)(&fi->lock);
->         /*
->          * Setting the bit advises new direct-io writes to use an exclusi=
-ve
->          * lock - without it the wait below might be forever.
-> @@ -53,8 +53,7 @@ int fuse_file_cached_io_open(struct inode *inode, struc=
-t fuse_file *ff)
->          */
->         if (fuse_inode_backing(fi)) {
->                 clear_bit(FUSE_I_CACHE_IO_MODE, &fi->state);
-> -               spin_unlock(&fi->lock);
-> -               return -ETXTBSY;
-> +               return false;
->         }
->
->         WARN_ON(ff->iomode =3D=3D IOM_UNCACHED);
-> @@ -64,8 +63,7 @@ int fuse_file_cached_io_open(struct inode *inode, struc=
-t fuse_file *ff)
->                         set_bit(FUSE_I_CACHE_IO_MODE, &fi->state);
->                 fi->iocachectr++;
->         }
-> -       spin_unlock(&fi->lock);
-> -       return 0;
-> +       return true;
->  }
->
->  static void fuse_file_cached_io_release(struct fuse_file *ff,
-> @@ -82,22 +80,19 @@ static void fuse_file_cached_io_release(struct fuse_f=
-ile *ff,
->  }
->
->  /* Start strictly uncached io mode where cache access is not allowed */
-> -int fuse_inode_uncached_io_start(struct fuse_inode *fi, struct fuse_back=
-ing *fb)
-> +bool fuse_inode_uncached_io_start(struct fuse_inode *fi, struct fuse_bac=
-king *fb)
->  {
->         struct fuse_backing *oldfb;
-> -       int err =3D 0;
->
-> -       spin_lock(&fi->lock);
-> +       guard(spinlock)(&fi->lock);
->         /* deny conflicting backing files on same fuse inode */
->         oldfb =3D fuse_inode_backing(fi);
-> -       if (fb && oldfb && oldfb !=3D fb) {
-> -               err =3D -EBUSY;
-> -               goto unlock;
-> -       }
-> -       if (fi->iocachectr > 0) {
-> -               err =3D -ETXTBSY;
-> -               goto unlock;
-> -       }
-> +       if (fb && oldfb && oldfb !=3D fb)
-> +               return false;
-> +
-> +       if (fi->iocachectr > 0)
-> +               return false;
-> +
->         fi->iocachectr--;
->
->         /* fuse inode holds a single refcount of backing file */
-> @@ -107,9 +102,7 @@ int fuse_inode_uncached_io_start(struct fuse_inode *f=
-i, struct fuse_backing *fb)
->         } else {
->                 fuse_backing_put(fb);
->         }
-> -unlock:
-> -       spin_unlock(&fi->lock);
-> -       return err;
-> +       return true;
->  }
->
->  /* Takes uncached_io inode mode reference to be dropped on file release =
-*/
-> @@ -118,11 +111,9 @@ static int fuse_file_uncached_io_open(struct inode *=
-inode,
->                                       struct fuse_backing *fb)
->  {
->         struct fuse_inode *fi =3D get_fuse_inode(inode);
-> -       int err;
->
-> -       err =3D fuse_inode_uncached_io_start(fi, fb);
-> -       if (err)
-> -               return err;
-> +       if (!fuse_inode_uncached_io_start(fi, fb))
-> +               return fuse_EIO("failed to start uncached I/O");
+> > struct aer_capability_regs is not the hardware layout: the embedded
+> > struct pcie_tlp_log spans 60 bytes where the Header Log it stands in fo=
+r
+> > is 16, so a flat copy misplaces everything behind it.
+> >
+> > extlog_print_pcie(), ghes_handle_aer() and cxl_rch_get_aer_info() work
+> > around that by stopping at the Header Log, dropping everything past
+> > offset 44. Flit mode is never decoded either: the Flit bit and Logged
+> > TLP Size sit at offset 0x18, unread, so the Flit DWORDs at 0x38 are los=
+t
+> > and the log prints as non-Flit.
+> >
+> > Add aer_cap_regs_unpack() to map the registers individually, taking the
+> > TLP Log layout from the Flit bit as pcie_read_tlp_log() does. Clamp the
+> > logged length: Logged TLP Size is 5 bits wide, so an untrusted value
+> > reaches 31 where dw[] holds 14 and pcie_print_tlp_log() walks
+> > header_len unbounded.
+> >
+> > Take the image little-endian, as both sources are: CPER by definition,
+> > PCIe registers on the wire. Read it with get_unaligned_le32(), since a
+> > CPER section sits wherever firmware put it, and take the two source IDs
+> > out of the Error Source Identification register by bit position rather
+> > than byte offset. cxl_rch_get_aer_info() uses readl(), so it hands back
+> > __le32.
+> >
+> > Convert all three callers. cxl_rch_get_aer_info() now reads the whole
+> > MMIO block, so size its ioremap by the hardware registers (96 bytes)
+> > rather than by sizeof(struct aer_capability_regs) (100). Shrinking the
+> > mapping is safe: the read it replaces stopped at 44 bytes.
+> >
+> > Reported-by: sashiko-bot@kernel.org
+> > Closes: https://sashiko.dev/#/patchset/20260904172337.1409775-1-dave.ji=
+ang@intel.com?part=3D5
+> > Link: https://lore.kernel.org/linux-cxl/CAJZ5v0hDv11cPuztPZsaDd7uwD_49K=
+znJy=3DtzuRO+dZc=3DCnAEQ@mail.gmail.com/
+> > Assisted-by: LLM
+> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Nice.
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
-Why lose the internal error code?
-If server implementation is wrong that is a good hint of what went wrong.
-ETXTBSY is trying to mix cache mode and passthrough mode.
-EBUSY is trying to passthrough to two different backing inodes.
-I am not claiming this is a good API but at least we (or LLM) could do
-something useful with this lost information.
-
->
->         WARN_ON(ff->iomode !=3D IOM_NONE);
->         ff->iomode =3D IOM_UNCACHED;
-> @@ -173,9 +164,11 @@ static int fuse_file_passthrough_open(struct inode *=
-inode, struct file *file)
->         int err;
->
->         /* Check allowed conditions for file open in passthrough mode */
-> -       if (!IS_ENABLED(CONFIG_FUSE_PASSTHROUGH) || !fc->passthrough ||
-> -           (ff->open_flags & ~FOPEN_PASSTHROUGH_MASK))
-> -               return -EINVAL;
-> +       if (!IS_ENABLED(CONFIG_FUSE_PASSTHROUGH) || !fc->passthrough)
-> +               return fuse_EIO("passthrough not enabled");
-> +
-> +       if (ff->open_flags & ~FOPEN_PASSTHROUGH_MASK)
-> +               return fuse_EIO("conflicting open flags");
->
->         fb =3D fuse_passthrough_open(file, ff->args->open_outarg.backing_=
-id);
->         if (IS_ERR(fb))
-> @@ -208,11 +201,12 @@ int fuse_file_io_open(struct file *file, struct ino=
-de *inode)
->
->         /*
->          * Server is expected to use FOPEN_PASSTHROUGH for all opens of a=
-n inode
-> -        * which is already open for passthrough.
-> +        * which is already open for passthrough.  Using incorrect open m=
-ode is
-> +        * a server mistake, which results in user visible failure of ope=
-n()
-> +        * with EIO error.
->          */
-> -       err =3D -EINVAL;
->         if (fuse_inode_backing(fi) && !(ff->open_flags & FOPEN_PASSTHROUG=
-H))
-> -               goto fail;
-> +               return fuse_EIO("FOPEN_PASSTHROUGH expected");
->
->         /*
->          * FOPEN_PARALLEL_DIRECT_WRITES requires FOPEN_DIRECT_IO.
-> @@ -234,22 +228,10 @@ int fuse_file_io_open(struct file *file, struct ino=
-de *inode)
->
->         if (ff->open_flags & FOPEN_PASSTHROUGH)
->                 err =3D fuse_file_passthrough_open(inode, file);
-> -       else
-> -               err =3D fuse_file_cached_io_open(inode, ff);
-> -       if (err)
-> -               goto fail;
-> +       else if (!fuse_file_cached_io_open(inode, ff))
-> +               err =3D fuse_EIO("conflicting passthrough open");
-
-Same here.
-If we can keep this bit of information and print it - it is helpful IMO,
-even if we don't go all the way to annotate every error case with
-a pretty log.
-
-Thanks,
-Amir.
+Applied as 7.4 material, thanks!
