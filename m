@@ -1,85 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FC03FE640;
-	Thu,  1 Oct 2026 19:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A8B3D333B;
+	Thu,  1 Oct 2026 20:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790884472; cv=none; b=YvilaeXbePQ/BAOuP1OC1pFMyRtZOrspa9+KSus26VHDQytKD6g86tPt7rtfaVS6f4nYdDCMDZjvOFI29Ok/8y33e4uoANmzYsEi+bPdiClxHgVIxoC4CJ6e3jwso989f29lah6l+9nkwOkpWvReTEi5jdvzkm5NtfsP9gILPWc=
+	t=1790886711; cv=none; b=u5zqSo2l/LIplgGYZ6c72gS3r7R0cE5RSjcjKtm2quDPqhmg/t8YSVhqkLZPLIMcpU23rJ7O9xH4yumqfvvtDiJfwyksVOM/v+We7WypLc5GIfQHXROi44KYwVslrB1DampVcT8rjEBJ/ZrOz3uToEU78FRpExY9Y2MyZXwwe0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790884472; c=relaxed/simple;
-	bh=JYsLFYkjS6dJGw7qaZ/s+NGEWfI90Kyj+IKVnHzStHo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RsQgs7rXGJECqsAzpt770fdV64g+oGGHtcRryiIy6oqsm8NJqoShMT7JYVxyLvFJFLnEwrgygqHODeGAMrfJACIYsCu01+ZJz+/A/kThigQjV0+m3xQ8WA3fV5Ot6KSHdN2e54drS14RCJ9ULlyhluEugN/vaZKdddAIOVdtDS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rn4SXaRf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790886711; c=relaxed/simple;
+	bh=4s/gJcgoZvyPCX2D7wtKHquIiLK9UfjRj6xgW5iHeHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dVxEgQ1A7KWTDLk2O10TM8c3NxufN7KBl7rb86lRva5CbmeR5ogUajhLGH1yux7G3WhL6vf+93fjiF1J5peUIKhTLnjZP+r/r1idvwJ3XY4ecY2THYqj1c3ImZUpQQ3OcQ/N8MUjKYHQNKfU9F14ap7vwbkTdtxKqGilE/2R+iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LM3SASvV; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rn4SXaRf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F8211F000FF;
-	Thu,  1 Oct 2026 19:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790884469;
-	bh=CsO3dVP1rE+OXCdeZb4O5Da9+5kdAsDL/2r4hLTyU8s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=Rn4SXaRfH10u05A1D534ERpHxsGPtlfHGQ8PzRHITyxtpP/uikYQkO09ypRCLYgST
-	 YfOfWe4sNz2CXWcjUG1pHw+CCoiohUzP3ZPApImQ62ccxVNqkhf26WGRzsJTY+1KM9
-	 UD3FfzjSVnIIwRwwbbKX3U046OXTD7XmT1UO3tAZcIBIqW4+PCDsxdbKI5droVnIhY
-	 1AqzOSjGqeR+xgHfR6j1Lou4x3pbCOUpGHtkVFhfimbOoty4/pphs3J0ljfEVfJMxm
-	 /UJ5m47BhEh5Q08HqOsyQQLrUm/wL7iUyJluUoozQiSGreDcPwJKrv2X897dnEhd6U
-	 XSX7SFGj/8DRw==
-From: David Hildenbrand <david@kernel.org>
-To: david@kernel.org, osalvador@suse.de, Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260930160432.5564-1-lance.yang@linux.dev>
-References: <20260930160432.5564-1-lance.yang@linux.dev>
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: fix missing rollback in
- __add_pages()
-Message-Id: <179088446708.3427.17462740264114406030.b4-ty@b4>
-Date: Thu, 01 Oct 2026 21:54:27 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LM3SASvV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790886709; x=1822422709;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4s/gJcgoZvyPCX2D7wtKHquIiLK9UfjRj6xgW5iHeHs=;
+  b=LM3SASvVRRT7O0AzsdPP5ZhfZtmSPx7qwpHpL7Ue5GejEfHtJ9L0P4Vo
+   EHD3GliUMqrcPUPdRo/NpLXXV61v5XPgGHun1JUnhkbBf6I/zB6h6i7Bw
+   whdIHA9E7x46ow4aM8KAq/nxD0d6c/gvp8QScirGbgEjlJYYMzFCo9fBL
+   tb6sCkNJDWuh5YqcMsZrAtN+0tB2rB8ISL9fObAsJaCnCR7ZagjNTocL/
+   qdDlo5phznizfWVN1DBz41TAvhzDriqItqOgfR/37B7a11eAc5+z6VKhD
+   llvMYWGnjGh/rKm6XoO52GP8esSzftGmF0kyTntwoWoKGGCkUUATUUq59
+   Q==;
+X-CSE-ConnectionGUID: peFozmapR7aaN9eOlEVGCg==
+X-CSE-MsgGUID: FQKXVxbFS8ScrKqh+W5xGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="90689789"
+X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
+   d="scan'208";a="90689789"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 13:31:49 -0700
+X-CSE-ConnectionGUID: vLeN4aevQA6H4R2hs2ndrQ==
+X-CSE-MsgGUID: qbJXPm1SQOS3eM/SZRztLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
+   d="scan'208";a="275616583"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.241]) ([10.125.111.241])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 13:31:48 -0700
+Message-ID: <9e8a45df-1755-495f-8e80-52c65b832dc9@intel.com>
+Date: Thu, 1 Oct 2026 13:31:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] driver core: Check for supplier requiring PM at
+ link creation
+To: alucerop@amd.com, linux-cxl@vger.kernel.org, netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
+ rafael@kernel.org
+References: <20261001132023.17032-1-alucerop@amd.com>
+ <20261001132023.17032-2-alucerop@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20261001132023.17032-2-alucerop@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16.0
 
-On Thu, 01 Oct 2026 00:04:32 +0800, Lance Yang wrote:
-> __add_pages() returns on a sparse_add_section() failure without removing
-> the sections already added in the same request.
+
+
+On 10/1/26 6:20 AM, alucerop@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> For memremap_pages(), the failed range is not counted in pgmap->nr_range,
-> so memunmap_pages() skips it. The sections already added in that range
-> retain their vmemmap mappings and subsection bits. Retrying a
-> section-aligned range can then fail with -EEXIST.
+> PM initialization could not be necessary for some devices.
 > 
-> [...]
+> Avoid checking for supplier PM initialization if so.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/base/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 4c0c373998a1..bf0513beafad 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -840,7 +840,7 @@ struct device_link *device_link_add(struct device *consumer,
+>  	 * SYNC_STATE_ONLY link, we don't check for reverse dependencies
+>  	 * because it only affects sync_state() callbacks.
+>  	 */
+> -	if (!device_pm_initialized(supplier)
+> +	if ((!device_pm_not_required(supplier) && !device_pm_initialized(supplier))
+>  	    || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
+>  		  device_is_dependent(consumer, supplier))) {
+>  		link = NULL;
 
-Applied, thanks!
+A no PM supplier can now be linked at any point: before device_add(), while it fails, or after device_del(). Maybe replace with a helper like this?
 
-tree: mm/core.git
-branch: memhp-7.4.misc
+static bool device_link_supplier_ready(struct device *supplier)
+{
+      /* no PM devices never enter dpm_list, so check registration directly */
+      if (device_pm_not_required(supplier))
+              return device_is_registered(supplier);
 
-Applied patches will appear soon in mm-next, followed by linux-next.
+      return device_pm_initialized(supplier);
+}
 
-Please report any outstanding bugs that were missed during review, so we
-can either drop the patch series or decide how to fix it up.
+...
 
-It is encouraged to provide Acked-bys, Reviewed-bys, and Tested-bys even
-though the patches have already been applied. If possible, patch trailers
-will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. Further, this is not a guarantee that the
-patches will go upstream. If in doubt, please check the listed branch.
-
-[1/1] mm/memory_hotplug: fix missing rollback in __add_pages()
-      https://git.kernel.org/mm/core/c/c31bb839
-
--- 
-Cheers,
-
-David
+      if (!device_link_supplier_ready(supplier) ||
+          (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
+           device_is_dependent(consumer, supplier))) {
+              link = NULL;
+              goto out;
+      }
 
