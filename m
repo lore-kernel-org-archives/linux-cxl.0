@@ -1,328 +1,298 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19244570FD
-	for <linux-cxl@vger.kernel.org>; Fri,  2 Oct 2026 21:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32B331D366;
+	Fri,  2 Oct 2026 21:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790976903; cv=none; b=Dyok738o/FMgolkosINZbnmfK+OtxHV42Ph9WqdxYThLPHE6dodYt+4viaaqnCm/eHdGPv1iWziTRL9r9XPbVBzljhEaWpz6WwtGC4ED90CjPrfhiLn7Nt+HoL3hvModCl5rSRB5/sehg0h4QVuOdXP0qUvhOYGqEgyAHpmu5/M=
+	t=1790977595; cv=none; b=KK2JST11EUOcIjpcq4PTfZcQe0lHGZQPFWlS7CZcnk4zTCvyWnx5Rlaadogc7Vz8iFepe2SsNJwmKiqmQDs5ZpDXHDlJKKl07LUN3Pom/s6RYn7yoSraS/0HCJh2wEYKrjV4P6br9CN54/OhbIockxLdfH42UujnTYSkr9dsHPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790976903; c=relaxed/simple;
-	bh=Gaj2nIDkm7iKsKp52muDu6Kz1AN/yv2ZmGsrL8/bMas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ig/KbjDhjaPJCGlwTrnd4RwwHhiSrMh7kfy3C4W/iI1S8ytUIuQ5NA1BdB2F2Qqtg7FzuTyNRN5TjrnLv75e8tPbvw/TyLBZQT/8alEs+M0Xvp7yTkpWIHjykWV9IhNsJgLptZsDkRGyVfaKveNxnUEOXRPoGn3RnGOGtiwFWrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SaBXNwBl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8ZToiGbI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T4/ZGIJD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t2I1h8x8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1790977595; c=relaxed/simple;
+	bh=fEtWUgOBbnlnzHaDVwHu5Cm5YPUkyyuz6fV3V57WppA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TKAmX4Oz3K0qOOQcCwokUfPYOlq/Kd+Xo0TWYLUg0Ojq1W1LB62NGs+YP9w6n/1qyy8uGiLxIJ0GYH9jnYQY+YMLeLyPKg9ojrw4KHunt3eS+5FVDyex8JZyskj3DfOuOj53y2m47jtySA/pGv9Ae7HyAGGnbA+UhVaoAq94geg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jAer+0Jp; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SaBXNwBl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8ZToiGbI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T4/ZGIJD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t2I1h8x8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9B5AF1FDC5;
-	Fri,  2 Oct 2026 21:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790976894; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v2IxeNoFs1zgMWILLB8hyk9e3lt3hkRC40MEs5rXaCM=;
-	b=SaBXNwBlfIUJUHuegldFFgE1q7izh7yHRUDeReJZ3VUxn6wq7e67gRYAmerczFJMUwGEIQ
-	WuTkEONnT/eRhlbJQ/3fnGg07eoyq0wczjH3A2UmrsBODaHOKb6DXzJESWU0/Iydyb4t3i
-	jy0ubu0kKjJMn1Vt751JCqnUAGQseLM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790976894;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v2IxeNoFs1zgMWILLB8hyk9e3lt3hkRC40MEs5rXaCM=;
-	b=8ZToiGbIA8Brm9Tq7WUQVNwkOZoHS0Cq2cLhguKlugVp4vWO2SxuTykhleoNjJoSvVCtFF
-	b9tZgFxuClHT8fCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="T4/ZGIJD";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=t2I1h8x8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790976890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v2IxeNoFs1zgMWILLB8hyk9e3lt3hkRC40MEs5rXaCM=;
-	b=T4/ZGIJDW8b0lkwKpYfa0+yxyMLgOu9NXGBab1JqRHqWcycvDTZ+wP2RC4WOZOHBbskdhY
-	Ck9B3tx6veKUyhEq6buPPi0NtxuYCBJUFZEaI30fAsMsjtCXWQh92iRvNPyYohG8KgvQuk
-	bbfLs3h2c7Z670reBIrwrN3c1/pT5/0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790976890;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v2IxeNoFs1zgMWILLB8hyk9e3lt3hkRC40MEs5rXaCM=;
-	b=t2I1h8x8HmPBeCIZzBp9YcUjxn8SbnvMS9NFtxKxqXNpOqAI6k3YpA9Qg7zoCLWUTPMgNx
-	3vaij3aWVAfomcAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 14D71139E2;
-	Fri,  2 Oct 2026 21:34:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id baj7NHkjwGpDcgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 02 Oct 2026 21:34:50 +0000
-Date: Fri, 2 Oct 2026 22:34:48 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Anton Gavriliuk <antosha20xx@gmail.com>
-Cc: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org, 
-	linux-cxl@vger.kernel.org
-Subject: Re: Poor memory bandwidth performance between NUMA nodes
-Message-ID: <asAjUfNg_80sA6Yn@pedro-suse.tail5790ac.ts.net>
-References: <CAAiJnjqz+OB+PmUQBENS8ThnWHSAFK=p3EA7KPsy5UeabQCn-A@mail.gmail.com>
- <ar_rPzLhXRSA0AfS@gourry-fedora-PF4VCD3F>
- <CAAiJnjo86U27YwFNSkQNvqxDyGMZomoqHToH3GqWuzqD2+V0Vg@mail.gmail.com>
- <ar_zftIk5caN-5uV@gourry-fedora-PF4VCD3F>
- <CAAiJnjrjtseaUPo5vyqGZeDAt4ST6eqvaXOCWvdaTUsx2D3v5g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jAer+0Jp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790977592; x=1822513592;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fEtWUgOBbnlnzHaDVwHu5Cm5YPUkyyuz6fV3V57WppA=;
+  b=jAer+0Jpg3M01psLLA7RdVIZG2cu31hwu/G3UvvWVz0aCgZlGVH5HwE+
+   qCsO99wVxnIu6qFCEyAqg9o8Tvb0vbCB6SrMzPqGdWFxLwF0w0DFiTcKc
+   ChW+J0bcp2F0jcpq2KpOOIcf54yvnx6pRB6wav4fxalW81L6A3YzB9XW1
+   z3JnGjuJdBPUWHeWbbM0hB1E+DKK++4RYuwT0PBbXIQN6Q5k/HbhzIqRO
+   mD3fAjyVe/QAxI+17C+rodopSqDDy3wNXpKDfqtZXU04sd+k/BOY2QmWe
+   JR4BPRc+qNpjmpLgnL1muo5/5gZylH/eT4BjgqiHTNSBT1yPks4bMuPNw
+   w==;
+X-CSE-ConnectionGUID: CJeJQQfZQFOp3PIgbovSeA==
+X-CSE-MsgGUID: ZN8I2dfPTAe/IbnSMHKvRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11923"; a="90883059"
+X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
+   d="scan'208";a="90883059"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 14:46:31 -0700
+X-CSE-ConnectionGUID: BNce/BCKQC2j38vP7QdwxA==
+X-CSE-MsgGUID: ZiWINYMtQL+PXYDqs7ATeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
+   d="scan'208";a="284398309"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.108.45]) ([10.125.108.45])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 14:46:30 -0700
+Message-ID: <ad7f3467-2025-473f-bc9c-2870940b30e0@intel.com>
+Date: Fri, 2 Oct 2026 14:46:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAiJnjrjtseaUPo5vyqGZeDAt4ST6eqvaXOCWvdaTUsx2D3v5g@mail.gmail.com>
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,localhost:email,suse.de:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 9B5AF1FDC5
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 07/16] cxl: Share HDM decoder register unpacking
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20261001092227.3004747-1-smadhavan@nvidia.com>
+ <20261001092227.3004747-8-smadhavan@nvidia.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20261001092227.3004747-8-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 02, 2026 at 09:55:32PM +0300, Anton Gavriliuk wrote:
-> > I'm unfamiliar with Valkey, but you may want to ask how contended those
-> > pages are if they're actually being used during migration time.
-> 
-> > Do you get this same behavior when migrating the same amount of memory
-> > allocated by a toy program? (i.e. known idle pages)
-> 
-> I don't think that there is any contention.
-> There is no processing, etc.
-> This is a completely idle test server.
-> I just populated 300GB memory by key-value data store.
-> 
-> Even if I use simple stress-ng instead of Valkey,
-> 
-> [root@localhost ~]# numactl --cpunodebind=0 --preferred=0 stress-ng
-> --vm 1 --vm-bytes 300G --vm-hang 0 &
-> [1] 4353
-> [root@localhost ~]# stress-ng: info:  [4353] defaulting to a 1 day run
-> per stressor
-> stress-ng: info:  [4353] dispatching hogs: 1 vm
-> stress-ng: info:  [4355] vm: using 300GB per stressor instance (total
-> 300GB of 6.43TB available memory)
-> 
-> 
-> [root@localhost ~]# COLUMNS=500 numastat -p 4356 | cat
-> 
-> Per-node process memory usage (in MBs) for PID 4356 (stress-ng-vm)
->                            Node 0          Node 1          Node 2
->     Node 3           Total
->                   --------------- --------------- ---------------
-> --------------- ---------------
-> Huge                         0.00            0.00            0.00
->       0.00            0.00
-> Heap                         0.06            0.00            0.00
->       0.00            0.06
-> Stack                        0.03            0.00            0.00
->       0.00            0.03
-> Private                 307201.14            0.74            0.00
->       0.00       307201.88
-> ----------------  --------------- --------------- ---------------
-> --------------- ---------------
-> Total                   307201.23            0.74            0.00
->       0.00       307201.97
-> [root@localhost ~]# man migratepages
-> [root@localhost ~]# migratepages 4356 0 2
-> 
-> I see even slower (System PMM Write) than 1.4 GB/s,
-> 
-> |---------------------------------------||---------------------------------------|
-> |--            System DRAM Read Throughput(MB/s):        842.67
->         --|
-> |--           System DRAM Write Throughput(MB/s):        851.34
->         --|
-> |--             System PMM Read Throughput(MB/s):        785.27
->         --|
-> |--            System PMM Write Throughput(MB/s):        804.57
->         --|
-> |--                 System Read Throughput(MB/s):       1627.94
->         --|
-> |--                System Write Throughput(MB/s):       1655.91
->         --|
-> |--               System Memory Throughput(MB/s):       3283.85
->         --|
-> |---------------------------------------||---------------------------------------|
-> 
-> 
-> top - 21:49:22 up  4:53,  3 users,  load average: 0.97, 0.78, 0.61
-> Tasks: 774 total, 2 running, 772 sleep, 0 d-sleep, 0 stopped, 0 zombie
-> %Cpu(s):  0.0 us,  1.8 sy,  0.0 ni, 98.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> MiB Mem : 6839822.+total, 6432377.+free, 422358.2 used,    790.2 buff/cache
-> MiB Swap:   8192.0 total,   8192.0 free,      0.0 used. 6417463.+avail Mem
-> 
->     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
->    4507 root      20   0    2644   1764   1644 R  99.8   0.0   2:20.63
-> migratepages
->    1592 root      20   0   82184   5056   3932 S   0.3   0.0   0:07.26
-> irqbalance
->    4993 root      20   0       0      0      0 I   0.3   0.0   0:00.02
-> kworker/50:0-events
->    4999 root      20   0   10916   6080   3772 R   0.3   0.0   0:00.03 top
->       1 root      20   0   25528  15488  10484 S   0.0   0.0   0:02.35 systemd
->       2 root      20   0       0      0      0 S   0.0   0.0   0:00.06 kthreadd
->       3 root      20   0       0      0      0 S   0.0   0.0   0:00.00
-> pool_workqueue_release
->       4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00
-> kworker/R-rcu_gp
->       5 root       0 -20       0      0      0 I   0.0   0.0   0:00.00
-> kworker/R-sync_wq
-> 
-> Samples: 26K of event 'cpu/cycles/P', 4000 Hz, Event count (approx.):
-> 21652648047 lost: 0/0 drop: 0/0
-> Overhead  Shared Object                      Symbol
->   21.77%  [kernel]                           [k] copy_mc_fragile
->   18.88%  [kernel]                           [k] clear_highpages_kasan_tagged
->   17.81%  [kernel]                           [k] migrate_folio_unmap
->    2.67%  [kernel]                           [k] __folio_alloc_noprof
->    2.09%  [kernel]                           [k] smp_call_function_many_cond
->    1.89%  [kernel]                           [k] try_to_migrate_one
->    1.74%  [kernel]                           [k] folio_migrate_flags
->    1.69%  [kernel]                           [k] page_vma_mapped_walk
->    1.14%  [kernel]                           [k] remove_migration_pte
->    1.01%  [kernel]                           [k] rmqueue_bulk
->    0.88%  [kernel]                           [k] migrate_folio_move
->    0.87%  [kernel]                           [k] __mod_memcg_lruvec_state
-> 
-> Samples: 111K of event 'cpu/cycles/P', 4000 Hz, Event count (approx.):
-> 56222244297
-> copy_mc_fragile  /proc/kcore [Percent: local period]
->    0.00 │      cmpl  $0x8,%edx
->         │    ↓ jb    43
->         │      testl $0x7,%esi
->    0.03 │    ↓ je    27
->         │      movl  %esi,%ecx
->         │      andl  $0x7,%ecx
->         │      subl  $0x8,%ecx
->         │      negl  %ecx
->         │      subl  %ecx,%edx
->         │19:   movb  (%rsi),%al
->         │      movb  %al,(%rdi)
->         │      incq  %rsi
->         │      incq  %rdi
->         │      decl  %ecx
->         │    ↑ jne   19
->         │27:   movl  %edx,%ecx
->         │      andl  $0x7,%edx
->         │      shrl  $0x3, %ecx
->    0.02 │    ↓ je    43
->   58.57 │31:   movq  (%rsi),%r8
->   12.21 │      movq  %r8,(%rdi)
->    4.22 │      addq  $0x8,%rsi
->    8.25 │      addq  $0x8,%rdi
->    0.53 │      decl  %ecx
->   16.06 │    ↑ jne   31
->         │43:   andl  %edx,%edx
->    0.02 │    ↓ je    57
->         │      movl  %edx,%ecx
->         │49:   movb  (%rsi),%al
->         │      movb  %al,(%rdi)
->         │      incq  %rsi
->         │      incq  %rdi
->         │      decl  %ecx
->         │    ↑ jne   49
->    0.02 │57:   xorl  %eax,%eax
->    0.06 │    ← retq
->         │      int3
->         │      int3
->         │      int3
->         │      int3
-> 
-> Samples: 187K of event 'cpu/cycles/P', 4000 Hz, Event count (approx.):
-> 84234492777
-> clear_highpages_kasan_tagged  /proc/kcore [Percent: local period]
-> Percent │      nop
->    0.03 │      subq 0x1a5067c(%rip),%rdi
->    0.01 │      movl %esi,%ecx
->         │      xorl %eax,%eax
->    0.03 │      sarq $0x6, %rdi
->         │      shlq $0xc, %rcx
->    0.03 │      shlq $0xc, %rdi
->    0.03 │      addq 0x1a50675(%rip),%rdi
->   99.72 │      rep  stosb   %al, %es:(%rdi)
->    0.09 │      nop
->    0.06 │    ← retq
->         │      int3
->         │      int3
->         │      int3
->         │      int3
->         │      nop
-> 
-> Samples: 223K of event 'cpu/cycles/P', 4000 Hz, Event count (approx.):
-> 88021056491
-> migrate_folio_unmap  /proc/kcore [Percent: local period]
->    0.04 │       movq   %rdi,%rax
->         │       movq   %rcx,%rdi
->         │       movq   %rbx,0x8(%rsp)
->         │       movq   %rcx,%rbx
->    0.04 │       movq   %r12,0x18(%rsp)
->         │       movq   %rsi,%r12
->         │       movq   %rdx,%rsi
->         │       movq   %r13,0x20(%rsp)
->    0.06 │       movq   %rdx,%r13
->         │       movq   %r14,0x28(%rsp)
->         │       movl   %r9d,%r14d
->         │       movq   %r15,0x30(%rsp)
->    0.05 │       movq   %r8,%r15
->         │     → callq  *%rax
->    0.05 │       testq  %rax,%rax
->         │     ↓ je     2e3
->    0.06 │       movq   %rbp,0x10(%rsp)
->    0.04 │       movq   %rax,%rbp
->    0.20 │       movq   %rax,(%r15)
->    0.07 │       movq   $0x0,0x28(%rax)
->   97.01 │       lock
->         │       btsq   $0x0,(%rbx)
 
-...are the struct pages on the pmem node itself?
 
--- 
-Pedro
+On 10/1/26 2:22 AM, Srirangan Madhavan wrote:
+> Factor HDM register parsing into cxl_hdm_unpack_decoder(). Validate the
+> range and interleave parameters in locals before publishing the complete
+> settings, including enable/lock flags and the target-or-skip register
+> value.
+> 
+> Use the unpacked settings in init_hdm_decoder(), retaining the target-list
+> union and passing endpoint skip state to the existing DPA reservation
+> helper.
+> 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> ---
+>  drivers/cxl/core/core.h     |  4 +++
+>  drivers/cxl/core/hdm.c      | 68 +++++++++++--------------------------
+>  drivers/cxl/core/resource.c | 57 +++++++++++++++++++++++++++++++
+>  3 files changed, 81 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index a3fddb2bed63..a0bef246121d 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -142,6 +142,10 @@ extern struct cxl_rwsem cxl_rwsem;
+>  void cxl_commit_start(void __iomem *hdm, struct cxl_decoder_settings *settings);
+>  int cxld_await_commit(void __iomem *hdm, int id);
+>  
+> +int cxl_hdm_unpack_decoder(struct cxl_decoder_settings *settings, int id,
+> +			   u32 ctrl, u64 base, u64 size,
+> +			   u64 target_or_skip_reg_val);
+> +
+>  int cxl_memdev_init(void);
+>  void cxl_memdev_exit(void);
+>  void cxl_mbox_init(void);
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 629e3420ad0b..b6a8fe83d336 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -932,8 +932,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
+>  {
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u64 size, base, skip, dpa_size, lo, hi;
+> -	bool committed;
+> +	struct cxl_decoder_settings settings;
+> +	u64 size, base, skip, dpa_size, lo, hi, target_or_skip_reg_val;
+
+I don't think you need target_or_skip_reg_val here. You should be able to read and pass the single meaning variable with the change I suggested earlier and pass in to the appropriate branches depending on endpoint or switch. I think that's what the code did before the changes. In general just avoid using compound variable names for better code clarity.
+
+DJ
+
+>  	u32 remainder;
+>  	int i, rc;
+>  	u32 ctrl;
+> @@ -953,35 +953,28 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	lo = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
+>  	hi = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(which));
+>  	size = (hi << 32) + lo;
+> -	committed = !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
+> +	lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> +	hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+> +	target_or_skip_reg_val = (hi << 32) + lo;
+> +	rc = cxl_hdm_unpack_decoder(&settings, which, ctrl, base, size,
+> +				    target_or_skip_reg_val);
+> +	if (rc) {
+> +		dev_warn(&port->dev,
+> +			 "decoder%d.%d: Invalid decoder configuration (ctrl: %#x): %d\n",
+> +			 port->id, cxld->config.id, ctrl, rc);
+> +		return rc;
+> +	}
+> +
+>  	cxld->commit = cxl_decoder_commit;
+>  	cxld->reset = cxl_decoder_reset;
+> -
+> -	if (!committed)
+> -		size = 0;
+> -	if (base == U64_MAX || size == U64_MAX) {
+> -		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
+> -			 port->id, cxld->config.id);
+> -		return -ENXIO;
+> -	}
+> +	cxld->config = settings.config;
+> +	size = range_len(&cxld->config.hpa_range);
+>  
+>  	if (info)
+>  		cxled = to_cxl_endpoint_decoder(&cxld->dev);
+> -	cxld->config.hpa_range = (struct range) {
+> -		.start = base,
+> -		.end = base + size - 1,
+> -	};
+>  
+>  	/* decoders are enabled if committed */
+> -	if (committed) {
+> -		cxld->config.flags |= CXL_DECODER_F_ENABLE;
+> -		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+> -			cxld->config.flags |= CXL_DECODER_F_LOCK;
+> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
+> -			cxld->config.target_type = CXL_DECODER_HOSTONLYMEM;
+> -		else
+> -			cxld->config.target_type = CXL_DECODER_DEVMEM;
+> -
+> +	if (cxld->config.flags & CXL_DECODER_F_ENABLE) {
+>  		guard(rwsem_write)(&cxl_rwsem.region);
+>  		if (cxld->config.id != cxl_num_decoders_committed(port)) {
+>  			dev_warn(&port->dev,
+> @@ -1015,38 +1008,19 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
+>  		}
+>  	}
+> -	rc = eiw_to_ways(FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl),
+> -			  &cxld->config.interleave_ways);
+> -	if (rc) {
+> -		dev_warn(&port->dev,
+> -			 "decoder%d.%d: Invalid interleave ways (ctrl: %#x)\n",
+> -			 port->id, cxld->config.id, ctrl);
+> -		return rc;
+> -	}
+> -	rc = eig_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
+> -				 &cxld->config.interleave_granularity);
+> -	if (rc) {
+> -		dev_warn(&port->dev,
+> -			 "decoder%d.%d: Invalid interleave granularity (ctrl: %#x)\n",
+> -			 port->id, cxld->config.id, ctrl);
+> -		return rc;
+> -	}
+> -
+>  	dev_dbg(&port->dev, "decoder%d.%d: range: %#llx-%#llx iw: %d ig: %d\n",
+>  		port->id, cxld->config.id, cxld->config.hpa_range.start, cxld->config.hpa_range.end,
+>  		cxld->config.interleave_ways, cxld->config.interleave_granularity);
+>  
+>  	if (!cxled) {
+> -		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> -		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+> -		target_list.value = (hi << 32) + lo;
+> +		target_list.value = settings.target_or_skip_reg_val;
+>  		for (i = 0; i < cxld->config.interleave_ways; i++)
+>  			cxld->target_map[i] = target_list.target_id[i];
+>  
+>  		return 0;
+>  	}
+>  
+> -	if (!committed)
+> +	if (!(cxld->config.flags & CXL_DECODER_F_ENABLE))
+>  		return 0;
+>  
+>  	dpa_size = div_u64_rem(size, cxld->config.interleave_ways, &remainder);
+> @@ -1056,9 +1030,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			port->id, cxld->config.id, size, cxld->config.interleave_ways);
+>  		return -ENXIO;
+>  	}
+> -	lo = readl(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
+> -	hi = readl(hdm + CXL_HDM_DECODER0_SKIP_HIGH(which));
+> -	skip = (hi << 32) + lo;
+> +	skip = settings.target_or_skip_reg_val;
+>  	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
+>  	if (rc) {
+>  		dev_err(&port->dev,
+> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
+> index ff027cb89e57..8dfeb12de8c9 100644
+> --- a/drivers/cxl/core/resource.c
+> +++ b/drivers/cxl/core/resource.c
+> @@ -104,3 +104,60 @@ void cxl_commit_start(void __iomem *hdm, struct cxl_decoder_settings *settings)
+>  	setup_hw_decoder(hdm, settings);
+>  }
+>  EXPORT_SYMBOL_FOR_MODULES(cxl_commit_start, "cxl_core");
+> +
+> +int cxl_hdm_unpack_decoder(struct cxl_decoder_settings *settings, int id,
+> +			   u32 ctrl, u64 base, u64 size,
+> +			   u64 target_or_skip_reg_val)
+> +{
+> +	bool committed = FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
+> +	enum cxl_decoder_type target_type = 0;
+> +	int interleave_granularity;
+> +	int interleave_ways;
+> +	unsigned long flags = 0;
+> +	struct range hpa_range;
+> +	int rc;
+> +
+> +	if (!committed)
+> +		size = 0;
+> +	if (base == U64_MAX || size == U64_MAX)
+> +		return -ENXIO;
+> +
+> +	hpa_range = (struct range) {
+> +		.start = base,
+> +		.end = base + size - 1,
+> +	};
+> +
+> +	if (committed) {
+> +		flags |= CXL_DECODER_F_ENABLE;
+> +		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+> +			flags |= CXL_DECODER_F_LOCK;
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
+> +			target_type = CXL_DECODER_HOSTONLYMEM;
+> +		else
+> +			target_type = CXL_DECODER_DEVMEM;
+> +	}
+> +
+> +	rc = eiw_to_ways(FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl),
+> +			 &interleave_ways);
+> +	if (rc)
+> +		return rc;
+> +	rc = eig_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
+> +				&interleave_granularity);
+> +	if (rc)
+> +		return rc;
+> +
+> +	*settings = (struct cxl_decoder_settings) {
+> +		.config = {
+> +			.id = id,
+> +			.hpa_range = hpa_range,
+> +			.interleave_ways = interleave_ways,
+> +			.interleave_granularity = interleave_granularity,
+> +			.target_type = target_type,
+> +			.flags = flags,
+> +		},
+> +		.target_or_skip_reg_val = target_or_skip_reg_val,
+> +	};
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_unpack_decoder, "cxl_core");
+
