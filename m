@@ -1,65 +1,65 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012045.outbound.protection.outlook.com [40.107.209.45])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011064.outbound.protection.outlook.com [40.107.208.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210DE25B092;
-	Fri,  2 Oct 2026 04:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10E0385D90;
+	Fri,  2 Oct 2026 05:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790916656; cv=fail; b=C27qTp7x1dPStzDfvja4Fh0wrb/VacIWJKIGz3EhjnsIIKpE7NalM1s/5xQDfwX1U5BXAP5YV1POYyhM58XugPyeHVpFQ9s50pnCO2tEQVPJrfPwZBSnBc3jtH59X7ljIiUuS76VYmX08Y/36JWtQOaILiVCkdz9pTDC/SrCako=
+	t=1790919241; cv=fail; b=NXSiNwAJGY3eRuoPLlelpYy7Nm3qjCjU+QXcHhviDUJIc6TQqlGVk56zE+XeeoFZCnuasOBkw81yleVp1Dj38QfvV+1ySSVSqqgUkI6L2AhsJ//GvKmcYBe32a8qppffZA25EzmT4XLWQeouqGHScFto4jmvtnPCEElrHON/v5Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790916656; c=relaxed/simple;
-	bh=6IyeSZlAIj5Xk789o2+PdNuzSyqGtC1qUsj/QT41IpQ=;
+	s=arc-20240116; t=1790919241; c=relaxed/simple;
+	bh=Y0sHUyIM77be/vp4pU/0rsGMGPpc0KAQilB+BTH1nmc=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rOz3BZ+9fctTdL5iQ32wv43/X0zLaVOHiLX8YMNAITaNH7SW34bNIOmGH0g9Xczldbf5/xR665htLYsxByvep/YTxfWqAI+KfyyeznXA6FBt5M9ZmnH2qqeItrVqst1WyDboqnfF5ZQtZtCqDpoZLwjHRg4j2YKIcVXbIRvLnW4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GenG+Oo9; arc=fail smtp.client-ip=40.107.209.45
+	 Content-Type:MIME-Version; b=j3Gti5uUmLP3wSFjkablMnm3et86Ji4EgP81evCzUX+xlLrpKQuXEZ7XuMrr9oUk57ECOD1wmcvKxO68auWKRP5aAjrnofPzGoj7LK2xowdnoPRk9tEJuXoen8lAR1eHT2+XbQHbC6XQmOxtRdeGCJU/OMQggwjYP8p4cgCCQyo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Cbyz+Gt7; arc=fail smtp.client-ip=40.107.208.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GenG+Oo9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Cbyz+Gt7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=deiQ6yT3dIZnNUwL2ly3KmWi/Ba3QgzZ+teYZk+Ibee1VeuARBdbaVR18c6nmzNu1D1UXQEqudYYrxF4RpYzo5Tija+D7EYZEw94Dc4PPm+ZgVtX0zvHn27LyOvybf0mz0R8QBB0mOOtMvbNEbPTUdeMLayiy8a7yywvNcmx3QHX8EOyPm2UHwUxuNDeoBjWHdJfPxU9SfkUcpNzPvW2XFC+CfwOI6Xn2W10NlF5PCeKGWf9ufncIRvv6bCvYC2raGVtH+YHTHp41Bz5Va+0LNLbsCEwELshKGgygRIjgubZ1vXwziI53l/7LtHtQLHBsKcgyjdpS/wktNNNEEvhVw==
+ b=qx/DHZCS1XRMz4T71WMI1K7xJ0nRAUWWYMbNmeQBRU/Fcst9bLYeZ34buqMLn5Ls8T3iRCdnkfMrLt/V+IEikAtRvDFukTh1ntd9kr0bHoHKNjoGGqgNQAJq5nL+kuazxRmacoNGj6SSlWNk65porRpjm20ipQ2aWdx0FEPciS0m6gOe5n/GVt964GhPUaXWJmfdTLleQRqWUqw9zQMHCHIQhfPzujJZerkkfRQhRxCzcH/5zlGCm/wwVIxjBzzV3YwK4yzdV7HjFeVG8Yuzdv63saQ+sQ5YEOzFJiTx25QRszde1x+M+5BCw/1BAKeKTvlT8yxAQFLSnxp/GdQ5yA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=In9+vHswEBpfbOwhPnQ3aDpKMmFrdUtaHT4S02Qkhps=;
- b=enoA76RXdIcGtaJTOxejAFbM1OMSQNyp/yHTxfzJF4K7/X4QAGr2DmqGJRwh7gr/7xTg5s/i9vbMuk5QytPOUYBjI988dg2nDqYatbmQ26i2byXHKkdARU2D34aC48lHHYK2+kTdMOweYJT9MK62xt1GXfCDuatJEVyvSIZ3ECXu22XgZ4RfGOYSmYDNBe14xmuKtHS3rzGLD+ulrt80UvAXEI53AfmmVMLthQIxHgRk4dqfx2kujpyEdPn4yl51706RjRJeLgbBdp2Ldsc2Q5oFSug8mA+ryJhVoQG4yh0NZlS6tjG6ra0BRKMEGTtx2YM5J3KZihOXIFtmEGNOlQ==
+ bh=a6PnmGx1B5Jvs2n9jY1BARUtVpEfPo5BR4gGuVFe9o8=;
+ b=tHcUDCjJu335ysF5ykoxOhGWsWObZWeFDa1Wg6PfTsXscgvncGFn1OSo2ApQpK/j/IDGkIpcXE47IqOeH2TsELabDGC5aN4bbiy4EtU5cPNdzwBa+BXInsEYj+NTy4+8SM5+472aBNfht5IXzTQucGCsQgJZ/Z2xec1PNjTl6RyvRvrXDMOwSM9tH0wh32ucyiBNEdFpex8iTMD5Ud4hIZUdckknKbhp5fz2goEfi4Z3qquB+JszwQKXPLOldaNvB19/L2wWhCImA59lgGX9QVRFQdz81aV3OE2xH2v6J+GXU2gx2z6HG4x4F71vOUqEyMzi1GgoFNdGUY4R27uHGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=In9+vHswEBpfbOwhPnQ3aDpKMmFrdUtaHT4S02Qkhps=;
- b=GenG+Oo90tg7cNx4ZiTnh0vX6N1A403YUiSUnhB8NRu6KsUzBenkCHNC34FaKjM4a6cIfgor5r1ypUv861IIUM8MlyZnmvuPGWkJ8DA9a4VtLXTY1HghB1Ina0J/xWFPZl5G9gjoc/OzV9gM48a46yEMRuxKJxNU60qx1gkIy0s=
+ bh=a6PnmGx1B5Jvs2n9jY1BARUtVpEfPo5BR4gGuVFe9o8=;
+ b=Cbyz+Gt7NRLvlQzawDvuvuKd1otKy0LdoTysx89KeqNSLseW1nQ0JsPPnmdV6br46hdGsQoe0gsP8eN0amy964dXmOYZQQe5BA3i2HhkgHFTTGNzUA/bPCj4mfsoSN4V3ENQN0sPKir26LzxBZn+R50NF5F776MHT0l9nnVvibQ=
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- PH8PR12MB6916.namprd12.prod.outlook.com (2603:10b6:510:1bd::10) with
+ MN0PR12MB5836.namprd12.prod.outlook.com (2603:10b6:208:37b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.18; Fri, 2 Oct
- 2026 04:50:49 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.26; Fri, 2 Oct
+ 2026 05:33:53 +0000
 Received: from DM4PR12MB6254.namprd12.prod.outlook.com
  ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
  ([fe80::8211:9b5a:99d2:ffa1%4]) with mapi id 15.21.0451.022; Fri, 2 Oct 2026
- 04:50:49 +0000
-Message-ID: <cd70c229-0fc6-4259-870f-5bdd6f5a020a@amd.com>
-Date: Fri, 2 Oct 2026 05:50:43 +0100
+ 05:33:53 +0000
+Message-ID: <dcfb10e7-d07e-452b-974a-7e949c809465@amd.com>
+Date: Fri, 2 Oct 2026 06:33:48 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] cxl/memdev: Add support for multi PF devices
+Subject: Re: [PATCH v2 4/4] sfc: add multipf support
 To: Dave Jiang <dave.jiang@intel.com>, alucerop@amd.com,
  linux-cxl@vger.kernel.org, netdev@vger.kernel.org
 Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
  edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
  rafael@kernel.org
 References: <20261001132023.17032-1-alucerop@amd.com>
- <20261001132023.17032-4-alucerop@amd.com>
- <13d92409-727b-43e7-a027-086c9a332f44@intel.com>
+ <20261001132023.17032-5-alucerop@amd.com>
+ <57254762-04e8-4a98-9265-5376f75a6f3c@intel.com>
 Content-Language: en-GB
 From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-In-Reply-To: <13d92409-727b-43e7-a027-086c9a332f44@intel.com>
+In-Reply-To: <57254762-04e8-4a98-9265-5376f75a6f3c@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0368.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f8::15) To DM4PR12MB6254.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0116.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:bb::16) To DM4PR12MB6254.namprd12.prod.outlook.com
  (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -68,259 +68,243 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|PH8PR12MB6916:EE_
-X-MS-Office365-Filtering-Correlation-Id: edec6d19-dc1a-4231-3f17-08df2040ba7a
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|MN0PR12MB5836:EE_
+X-MS-Office365-Filtering-Correlation-Id: e74c0ecf-1d38-4d6f-970b-08df2046bef8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|23010399003|10067099003|4143699003|11063799006|56012099006|6133799003|22082099003|18002099003;
+	BCL:0;ARA:13230040|7416014|23010399003|366016|1800799024|376014|22082099003|18002099003|56012099006|11063799006|4143699003|6133799003|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	2sTWL8dcuhadcwSOACpu/HgkL6XR1JBjt9wRRX4fDhjO8hBCC8hxtZ5EObhOLw1A6TUreDV1B5569iHrJY+S8p9oLTM51jNtzx+Na57wphylSfIR8Ue/mUFadyYFWWlPA6wErC369IjJSa6v8ffilvIJvuZr0PCHPkiPhxVN7hZ8mNxCX3ZS9DzTePscRGsJB5dBO761hE+GR/KuiuaJePd5ikFIendOpsMmxaLGJW/z0wmF8SHmQTNko90kD8Nq4zuVv2XBIolrnH/ZT0/UKz2nUWPtvZNFFzGHP53pBel+BFCCNkF2ttxX4enTRRrnIalGJUg5MQzYMN2pGy4T4fzm+MFZzjhmtBvs5KW6GqyuU9GeOqZGetJpirkkjYdpW8btwRnaNSIW1NDwb0Xa8CZ7BgN+KeAgfHcOPICvF468/Lf4KVShV/ajjCWFUe/3Btdxms7KZNqFh9piUERxSr691O/LNXUzIiphnx7+J0oODKFiuTxGiz70M9Xhuu9fRjgCZh0oyRzDQKHOUpzA98Nvy/rZe4Sk/UT/tVFiTi6GN6IHawv6Y2K8//r36bVSZSDJZKW9ItJEFAiBV4V+NYjtsfNWU2OXqzwGD7FvZ4/q8yfmCI2MmaYA4M06GId7+p8uHSwzdR5VMnyPPz+dupDVIiTFOurtUvjfbnKBDEQ=
+	4J2dqCfnGYsxfXez+FpvHDBlHbc4GiWyIViLGxRCB/hw0fIjfYrgWXoS9rDzFdREeDcmPnERnuVacre4nUI/PGv/+JvGs9uEXjYCMPzn2qL1+BFsyqrkKrEYirjKJ7Upu6Z66l8hWAcsiMmuH5sSTmYcnyhZJyds2yNapHK2q6AHkrF0AhIKxvLr1GQyt2f/OnHPCe99W3dlkkqcCCcN13R/LErpvZjyNPmnzfm+9tdH5oBdf8ihYPt5QW2DAxK3ZTDm+6x96E4Hto2z0djtGnLVD3es3NwveaCC41mJC334tSRGHmZttqBjbiRkahqpg3yXiwRkIAD0+HjWD6QQTOHQ2DkPTMdMq4roYk/HcP73QfzC9aWLb+RuAm79R56pIjpr2SO0ylW3nZr8qiV3bj/YaFx6/+FfIvvNLDmH7kgFnVuNqQYbQEre/MV0xC6VyTe9EVmhFC4IMLZlvKCVUElTzeEoUAyVIlk9nrUUUSHQ1Ld00JmGqbghI9X4XqycagVCAVfvuawb5Ppexgx7/bSAwwUFD4QKOFDKdnP2tK4a9gnoeZ7rr09WDUfYYMc00Q7VMaQRpOzoySq4PKCHh5pRuUe1JAPOKJHYX3ViFL1ID4T8AsogwmJKeruxMLTBqgBwOUjv6rYC4ZebqiukMcfaeHr2AtKGzlcpFDQgx9Y=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(23010399003)(10067099003)(4143699003)(11063799006)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(366016)(1800799024)(376014)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(6133799003)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WFlWNlkrbnRRZU0vOGZyRmZucW1EbUFvQUxmaVBncHdRMDRLZnVxS3BpWVlP?=
- =?utf-8?B?elRueThIOStWR3pJWllldTNEVnhBbkt4QWpmVFVudFVzOEFnbmxqTC9LV3BF?=
- =?utf-8?B?Z0FaTWtjVWdtU0Z2K0tHU0tnWDlHL2N4d2tBenNleko2RHpQTEdXQjdhT1NJ?=
- =?utf-8?B?a2tVV1dwLytKeVRiVDR4Ull2U1RpbVhjM01ram40b095Ui9hUGZkTURvSksz?=
- =?utf-8?B?aytrcStLUDRKUFRJNHNiUnJSRXk5VTZlZzMrYUJ0c3Vnb2xuekQzdUtyb3F5?=
- =?utf-8?B?VDJUYUliMUE3OUFVTVhoK09IdzJGcmFGK0JGWnFSNVZzS0RaTEw5bklSZG5a?=
- =?utf-8?B?WFJFaFV1cm8rejgrNzNWM255aU9OVlFXSkFEajByVzM2OUpnRTRVV1hwNEEy?=
- =?utf-8?B?TVJoUE1idkV0ZWtQRXF4aFNlR21ualROWW9XVHN5RkR0QWRMUUJxV1FEOFRO?=
- =?utf-8?B?QjNGQlBlZTkxWXdkbENsczdUZkVHWWRURy8zWXF2blJyS3ZzWWNxeGp4ZmxF?=
- =?utf-8?B?ZjBaRnhaNldQbDdFUStzSFJJdHdGNGNwaGhNZUZaV3IyVDdxc0JNK0hkYy9H?=
- =?utf-8?B?amY5ZkxnSUZHSDRRbm85VER5NGRpMTNvWnJNdGdTRFVpRzdwMlBJN21UNXJD?=
- =?utf-8?B?Wk1WampRTDBPQi9aZy9FS1BVeE9NN0krbFkwRXJLeXJtVEM0QmthQU9BbWJL?=
- =?utf-8?B?TFN4UUh6b2dCQTNUdEp2Y282L0oyRU9YK2pxMnV3TUZlZllCSk5DTUtZdTZi?=
- =?utf-8?B?RjUyK0NsK0tCOXAxajZvaGVPWWR0OFFjSFVGbEJ2cWxHTTVxNU9CMCtIL0Z3?=
- =?utf-8?B?TzRFOWd3REFjVVBHTDJackUreXFJY0pLQjNWL2Y2amVBeWxMdktpSytoR20v?=
- =?utf-8?B?dUJCSFJYVXZ5bmNzWGgrWmdrQnZyWWhQQlFOVHQyU1ZKbXN1c2lCWWN4SWlv?=
- =?utf-8?B?RkxOcnNJTStmMzRxTk53S2Jrd1Z4S3VqUHp4Mi9aTlpRSldzV0NCaVdQNnRI?=
- =?utf-8?B?MnR5aVc5alN0cGtpc0lqRlNaRXQydHdhMUR0b0c5OE0zeU9acXlwSW9nZHZU?=
- =?utf-8?B?dkJyeDA3Y08ydi9nWG1vM3NpOFFKY3k3a1Y0UzFOcG1yZUVoYlBTYk1mNUNN?=
- =?utf-8?B?cWdmUC9yZldnV0tPSlZMYno5ZzQ2U0NtRnh3bERHbnBGOWl6bXYrYjJWOEps?=
- =?utf-8?B?TGhaay9DbzU2Tmk3dVRGZzQ3VGlOVUk2YUlVS2w4RlM5bEllQUhoaHdLbGhB?=
- =?utf-8?B?WjRlalhOdzVNRERyd3BEZWUxcHdhRFEyOWtReU9MY3hhOWNpdm1HSDEzVWZX?=
- =?utf-8?B?VWtBbTFWZXlnUU5MNjJzZVNoTUlPa0tZdXg2Qi93bTErZ1NVK3IvbndhbytH?=
- =?utf-8?B?MjNrVFptWlFEYVRlMlM2MEw4bjRXS0ptbUxuZFJTRjE2TzZLVDh0VkRQVXJt?=
- =?utf-8?B?b21QdEhjQklVWHl5NFNGSUZ0cGtYK0VFSmh1QWpZYUwvbDRMNGw3UDBLdXBl?=
- =?utf-8?B?bWl1RjNhSmpKV0Vvbzg2eDZQUnRId1ZXVTdYTVJWdGM5aURHTFN1ZjNPT3lD?=
- =?utf-8?B?cU1zelFjTmZPMHZINFRJS3ZMY0hKSVNqVGt2VVNoamliZkcvVFhYUTVXbm1Q?=
- =?utf-8?B?M1Vobm9EcHkwNlFOK0JacVlsRVlTOGFNSi8wYW91cGJXa1I5L2VrajdwYWY0?=
- =?utf-8?B?T3ZYcVA1dDczbWZ0L25kWDYwakUwYWVIaXRiVFA0LzQycWMrWGdQcHA4SXlX?=
- =?utf-8?B?bmpNdzhzOURuSktSeEJDWlV3bk9IQklQOXFaTnNRTDBCM1h2RkFoN2d6TlZE?=
- =?utf-8?B?OVJvMnhKU2xWOUlBS0krTXp4NDUvVFhEOHM0MU5TYkoxT1RRL1lHQW1XRTJB?=
- =?utf-8?B?Q3lEQUJNRm5Wb1kyQ0NtL2RJcEpSRU1NeVNxOE9ndC9KNFdxLzlTQ2lXaXUv?=
- =?utf-8?B?N2xSYS9xOXM1KzBPeEtTL253cnJsc3RCZ0RHeGcwbFJvR2kzRjlya3k0V0Ew?=
- =?utf-8?B?TitIWmVSMDRMRlJMZGtJclA2NkhZcjdQWEFUMVovZnRIb1BUc2htNUhTSFBV?=
- =?utf-8?B?RjN2RmZnVit3NzdSdXo5TkovRVdUVDBFUFJUTGY0TnRVNlR6N2MrZVpaNmY5?=
- =?utf-8?B?c2hsaWlKbjVQZWwvTnVZV1JQMjRvQlVISFBkc2I4QS9xMnZGWnlWMVNwdVll?=
- =?utf-8?B?SlU4RlNWNW9kaDJFUXdTZmhxWUN6bVl4OUphakdMOWtqZC81SVVGSmF3M1VH?=
- =?utf-8?B?Y0F1VlBrVWtpQXRzaUhiU2pVU2lhekxkQTVJbFgzTXdNWER3WWR1dXVGTGZw?=
- =?utf-8?Q?c4ocVsYQfXd14nlRIb?=
+	=?utf-8?B?dkVuMlZuLzNaVjhsYkMzS255SFJGNzVYT0kxYU9OSnFlaXRZYTdybUZ1RVdU?=
+ =?utf-8?B?dXlNS0NObmt0MEZCSE5YQ3JkeXg4dy9OLy9rVitMcXc2SWpvUy9uaGZNbnJa?=
+ =?utf-8?B?OGtWc1hzQUx3dHdhaUt1Ny8zTDZ1Y0w0bTdvZ2ZJNTdtOEgyRGF5QVJuay9s?=
+ =?utf-8?B?T0MwZGZIZTc0U0VXUUtvazhDUVlwNUVOdGRkTnpnYjY1V1RxUXhJQXlLSTk3?=
+ =?utf-8?B?c1BsY0RqTUxpMmdoakZVODIvZXpLa3Z4bkxmMVlUREQ1U0VmSjJLM0hieFRH?=
+ =?utf-8?B?SURmQmVXa2Ftd0wreXZ3cW5WWnVNaVNwZ0Fmem11RVZ2ZzltTHRMamJ2WVBh?=
+ =?utf-8?B?Z0tXRXNYbWVmRlJ2SnRQa3NJVEQwS1JsU29pT1F2RjBEZktsdGRtbEdWTm5k?=
+ =?utf-8?B?UGNEaTJzanR0RzVvdUhEMTlxSHpOd01XVEU2WHVqbUxCRURjRHlzYjBEME5X?=
+ =?utf-8?B?OWwwdnhNUkxDNUVvTHhpYTFJU3RGc2lHUlJSaEtwREgxMG5md28xN2tzTHlJ?=
+ =?utf-8?B?bjU5elcreFV1SE44YTFaSHdSZGppanp4Qi8vMkw0c0ZsOHBZY1FpYW1ESFQx?=
+ =?utf-8?B?ZFcrVk8zWUxvNU13TlBlMk9DdkUzT0RCZ1BhNU1yUTFwdGlzWm9INW1Bdldy?=
+ =?utf-8?B?bHVERTBUVEpMUExjbjBsbEl0YVBsaVJTM2d5WDBXSWc4eVI2UU1aUmkvc1Yw?=
+ =?utf-8?B?bWhMbEt3WTc2ZFpnQnF4QTVHbXVOdFdGYldra3ZPT0xTZTh2YmRtL0Y0UTNL?=
+ =?utf-8?B?VjNRUzgzRm9FY05sYWtlZEpoa0o5cFhTckx2dGpCdmgxNzFlUGsrYnBkcmZZ?=
+ =?utf-8?B?bnhOZlovTTBucFltVWwwYWxlQ2MvVE5SYjJJTTdVMXJYY0ZpTm9qblpsVHJC?=
+ =?utf-8?B?MVQyTTdGUlVuTWdCaWx5UFB2c1FjeUw4WnBCMlE5aDhmOGlNd0llNExwR2pi?=
+ =?utf-8?B?RDB0SG5HdEJxbU9lTkpVUzdBL29LZWZpSUFidWc1QVJTYTBWOUpHckdBQlhz?=
+ =?utf-8?B?ZSs2RHFyb0tqM3Y1a3ZXUGViM291UVczdC9EL2wzcktFMjhvQkdxRUhmblQw?=
+ =?utf-8?B?OWN1UUxBRzlRS0FuZWNpTzhwbjNSZkFWUVExU1JhTnBJM3RLeTUvclh2ZFBl?=
+ =?utf-8?B?eVhXb2RrSXZsY2lDNjBRQm9yWjZVb2liazRlNmw5eVJ6VS8wbG10R2ZZaGMx?=
+ =?utf-8?B?NW9OSlR0dW15enowa2dKZ0JUOHdURDhCWXJnMlBqeW1ZVDdLZ1JNTHZXWlpw?=
+ =?utf-8?B?c0FMN0JYUHZjdkxTVmVJbWgvWmg2TkgzbG9KdENmNURDTVRHVHVmbERndzB1?=
+ =?utf-8?B?NFB3U2xsRWVrdkJDZDd3dWZPWHNNTjFJcTZiUUZSMDFxaHh6cElaT3FQcUJ3?=
+ =?utf-8?B?Ymh6RnROZjdRTDJkR3U3Nndhb0JWK3pOYkNoUmQrQVpMQk5pTkpvZmIybWY5?=
+ =?utf-8?B?SXA2OGpmZUhhVmJrQUF1R0orOFhJVXU5NFJsNVA3Z01waFdxYUp0amtXamZY?=
+ =?utf-8?B?cGhJbkFuZ0M2eFNzYTZzbHNlc2EyYWRHRVh5bStoTXRIbytDek94MWN3Zlo0?=
+ =?utf-8?B?MzIyVS9MN3lseGxNbHRJNkg5V2ZzamEwUFJLeVhBMlFrV1kzT1ZYdjhkVkJI?=
+ =?utf-8?B?Q1RpMHA4RU1LZVdwVzIrcnl0UWRIbEtvUm1yTkFCcC80U0Q4d09DbnhsLy9a?=
+ =?utf-8?B?QTVEZkdyQS9kN3pBRGt6SEJNMUxsYkZzQjF1QjNuQ3JsbjJlUWErcHBMT0ho?=
+ =?utf-8?B?R3pVL1BNTlV1WUZGZGVKVmtnL0UvRVVIN211bkVLQWZobkNqR2dFaHgxazk5?=
+ =?utf-8?B?L20rY0xjTzQxVjM5OTlJR0hWYzJFbjVxWSs0cWdxbitvUU9lSFBad3U0Nmp0?=
+ =?utf-8?B?MVJNRlNZM2VxTWxRd3V0ZjdDU3lmMUVNbWNNaHp5QXNlT2dpbkhQVTBDWUQ5?=
+ =?utf-8?B?S1pGWUVhRnVRRTljc3BBMEppSmFVSnRqNStHckFTVFhocXR2cjJqWTFrdDFF?=
+ =?utf-8?B?N0xsUG9qdWtDWXRuUkhoZGhNZCsvTGRmem9vL01WMEp2VG9mWDhkT0k5anFm?=
+ =?utf-8?B?dk5PNDRhMWl2VnZ4ZjB2bjlTbkdKTTVaVGU4eHlkdkhtbnB6OUY2aVFZc21x?=
+ =?utf-8?B?bkdzYjk5Sk5UVWxtRVRxRVMwN0ozWUR3SDcwWjlwckpNYmFtMWRSWVlENG80?=
+ =?utf-8?B?M0xYQldLbzZDc1llcXArWjFJdlQzT1BaNkcxbFFndUtTbHZrNXVXc0tmVlRl?=
+ =?utf-8?B?VW5IMHFJbGhWRDlWUnhpK0JJQ3U0dlJ2QkJneTc1YytFN1hXZkZvSDQ4Y3Q4?=
+ =?utf-8?Q?rx3da+Q+Zohirbbh0R?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edec6d19-dc1a-4231-3f17-08df2040ba7a
+X-MS-Exchange-CrossTenant-Network-Message-Id: e74c0ecf-1d38-4d6f-970b-08df2046bef8
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2026 04:50:49.0564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2026 05:33:53.5041
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iG4sm2/PISCxSWXcvjg+58p7DlbJu5me2s3KX23mlnFXFb/I4G6PG0rNtcO52quxSBgmlRh5YgNQgbKvnUhoag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6916
+X-MS-Exchange-CrossTenant-UserPrincipalName: ffHoe4ZtYjYbqr2rURYuh+VN+IIl18+WJcwE7RTghxMgJdupZkKSv1j2e0ldGndshuJahMrG86acTU/ucnTOig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5836
 
 
-On 01/10/2026 23:11, Dave Jiang wrote:
+On 01/10/2026 23:32, Dave Jiang wrote:
 >
 > On 10/1/26 6:20 AM, alucerop@amd.com wrote:
 >> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> A PCI device can present multiple Physical Functions(PFs) but the CXL
->> specs restrict to the first one, PF0, the discovery and management of
->> CXL capabilities accessed through a PF0 BAR. Other non-PF0 PFs need to
->> obtain the CXL.mem range to work with somehow.
+>> Use CXL core accelerator API for linking a non-PF0 PF to the CXL region
+>> its related PF0 CXL memdev is attached to, allowing non-PF0 PF release if
+>> such a CXL region is released itself. This can occur in different
+>> scenarios like PF0 release or CXL memdev release.
 >>
->> Add a device link between the cxl region a PF0 memdev is attached to and
->> the non-PF0 wanting to use the CXL region. A CXL region release will
->> trigger such a PF to be released from its driver first.
+>> Obtain the CXL HPA region to work with and the ioremap based on such
+>> HPA and an offset based on the PF index.
 >>
->> PF0 being unbound from its driver triggers memdev and region release
->> leading to non-PF0s being unbound first keeping the CXL memory use safe.
+>> Refactor CXL initialization with different code paths for PF0 and non
+>> PF0 PFs.
 >>
 >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 >> ---
->>   drivers/cxl/core/memdev.c | 92 +++++++++++++++++++++++++++++++++++++++
->>   include/cxl/cxl.h         |  2 +
->>   2 files changed, 94 insertions(+)
+>>   drivers/net/ethernet/sfc/efx_cxl.c | 100 ++++++++++++++++++++++++++---
+>>   1 file changed, 91 insertions(+), 9 deletions(-)
 >>
->> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->> index b3419df586b9..799cb6e75639 100644
->> --- a/drivers/cxl/core/memdev.c
->> +++ b/drivers/cxl/core/memdev.c
->> @@ -802,6 +802,98 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->>   	return ERR_PTR(rc);
->>   }
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+>> index 348d7404cd7a..f884580cb528 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>> @@ -13,8 +13,69 @@
+>>   #include "efx_cxl.h"
 >>   
->> +static int match_memdev_by_parent_device(struct device *dev, const void *data)
+>>   #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
+>> +#define EFX_CTPIO_BUFFER_PER_PF_SIZE	SZ_8M
+>>   
+>> -int efx_cxl_init(struct efx_probe_data *probe_data)
+>> +static int cxl_map(struct efx_probe_data *probe_data, struct efx_cxl *cxl,
+>> +		   u64 devfn, struct range cxl_pio_range)
 >> +{
->> +	const struct device *pf_dev = data;
->> +	struct cxl_memdev *cxlmd;
+>> +	struct efx_nic *efx = &probe_data->efx;
+>> +	struct pci_dev *pci_dev = efx->pci_dev;
+>> +	u64 cxl_pio_pf_start;
 >> +
->> +	if (!is_cxl_memdev(dev))
->> +		return 0;
+>> +	cxl_pio_pf_start = cxl_pio_range.start +
+>> +			   devfn * EFX_CTPIO_BUFFER_PER_PF_SIZE;
 >> +
->> +	cxlmd = to_cxl_memdev(dev);
->> +	return (cxlmd->cxlds->dev == pf_dev);
-> cxlmd->cxlds can be NULL? How about just do dev->parent == pf_dev instead?
-
-
-Not for a type2 memdev. This function should only used inside the next 
-one. Maybe it is worth a comment.
-
-
+>> +	cxl->ctpio_cxl = ioremap_wc(cxl_pio_pf_start,
+>> +				    EFX_CTPIO_BUFFER_PER_PF_SIZE);
+>> +	if (!cxl->ctpio_cxl) {
+>> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>> +			&cxl_pio_range);
+>> +		return -ENOMEM;
+>> +	}
+>> +	return 0;
 >> +}
 >> +
->> +static int __cxl_get_range_and_link(struct device *pf0, struct device *pfx,
->> +				    struct range *range)
+>> +static int efx_cxl_non_pf0_init(struct efx_probe_data *probe_data)
 >> +{
->> +	struct device *mem_dev __free(put_device) =
->> +		bus_find_device(&cxl_bus_type, NULL, pf0,
->> +				match_memdev_by_parent_device);
->> +	struct cxl_attach_region *attach;
->> +	struct cxl_memdev *cxlmd;
+>> +	struct efx_nic *efx = &probe_data->efx;
+>> +	struct pci_dev *pci_dev = efx->pci_dev;
+>> +	struct range cxl_pio_range;
+>> +	struct efx_cxl *cxl;
+>> +	u64 devfn;
 >> +
->> +	if (!mem_dev)
->> +		return -ENODEV;
+>> +	devfn = PCI_FUNC(pci_dev->devfn);
+> I think you will want to use pci_dev->devfn directly. If you do this, devfn is 2:0 and PCI_SLOT() will evaluate to 0.
+
+
+Uhmmm, I think with the refactoring I'm not using devfn properly here. 
+Let me study this further.
+
+
+> Also, does this device need to handle ARI?
+
+
+Not for sfc devices.
+
+
 >> +
->> +	cxlmd = to_cxl_memdev(mem_dev);
->> +	attach = container_of(cxlmd->attach, struct cxl_attach_region, attach);
-> Probably not likely for a type2 device, but is there any possibility that attach == NULL?
-
-
-As explained in my reply to your patch2 concern,  this can not happen 
-due to the device locking. If the memdev is there, the attach is there. 
-All that happens at PF0 initialization, with the PF0 device locked. With 
-the locking gone, memdev+attach do exist or they do not.
-
+>> +	struct pci_dev *pf0_pci_dev __free(pci_dev_put) =
+>> +		pci_get_slot(pci_dev->bus, PCI_DEVFN(PCI_SLOT(devfn), 0));
 >> +
->> +	/*
->> +	 * The cxlmd object does exist and it can be found in the cxl bus after
->> +	 * creation but before attach probe setting the proper HPA range. If so,
->> +	 * the caller will need to try later.
->> +	 */
->> +	if (attach->hpa_range.end == CXL_RESOURCE_NONE)
->> +		return -EPROBE_DEFER;
->
-> Maybe you'll need something like this below to ensure that the region is valid still. And you can drop the above with the below code.
->
->        scoped_guard(rwsem_read, &cxl_rwsem.region) {
->                cxlr = READ_ONCE(attach->cxlr);
->                if (!cxlr)
->                        return -EPROBE_DEFER;
->                get_device(&cxlr->dev);
->        }
->        struct device *region_dev __free(put_device) = &cxlr->dev;
->
->        /*
->         * Region deletion holds regions_lock across xa_erase() and device_del().
->         * Being in the xarray under regions_lock means the region is still
->         * registered, and a link added now is torn down by its deletion. Drop
->         * cxl_rwsem.region above first: regions_lock nests outside it.
->         */
->        cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->        guard(mutex)(&cxlrd->regions_lock);
->        if (xa_load(&cxlrd->regions, cxlr->id) != cxlr)
->                return -ENODEV;
->
->        /* A decommit releases the region driver after dropping the rwsem */
->        guard(rwsem_read)(&cxl_rwsem.region);
->        if (cxlr->params.state != CXL_CONFIG_COMMIT)
->                return -ENODEV;
+>> +	/* This should not happen! */
+>> +	if (!pf0_pci_dev)
+>> +		return 0;
+>> +
+>> +	/* Is the PF0 device configured with and using CXL? */
+>> +	if (!pcie_is_cxl(pf0_pci_dev))
+>> +		return 0;
+>> +
+>> +	if (!cxl_get_range_and_link(&pf0_pci_dev->dev, &pci_dev->dev,
+>> +				    &cxl_pio_range))
+> Is this error check inverted?
 
 
-Because what I explained before, with the device locking and the region 
-only disappearing at PF0 release  which holds the device lock, I do not 
-think this finer concurrency protection is needed.
+Yes. I'll fix it.
 
 
-Thank you,
-
-Alejandro.
+Thanks!
 
 
 > DJ
 >
+>> +		return  -EPROBE_DEFER;
 >> +
->> +	/*
->> +	 * Create the device link between the region and the consumer device.
->> +	 * AUTOREMOVE_CONSUMER means the link implicitly to be removed if the
->> +	 * consumer unbinds first with no consequences for the supplier.
->> +	 */
->> +	if (!device_link_add(pfx, &attach->cxlr->dev,
->> +			     DL_FLAG_AUTOREMOVE_CONSUMER)) {
->> +		dev_err(pfx, "device link creation failed\n");
->> +		return -ENODEV;
+>> +	cxl = kzalloc_obj(*cxl, GFP_KERNEL);
+>> +	if (!cxl)
+>> +		return -ENOMEM;
+>> +
+>> +	if (cxl_map(probe_data, cxl, (u64)devfn, cxl_pio_range)) {
+>> +		kfree(cxl);
+>> +		return -ENOMEM;
 >> +	}
 >> +
->> +	range->start = attach->hpa_range.start;
->> +	range->end = attach->hpa_range.end;
+>> +	probe_data->cxl = cxl;
+>> +	probe_data->cxl_pio_initialised = true;
 >> +
 >> +	return 0;
 >> +}
 >> +
->> +/**
->> + * cxl_get_range_and_link - register a device link with the region PF0 memdev
->> + * is attached to. The region release will imply the link consumer to be unbound
->> + * from its driver first. Return the cxl region range to work with related to
->> + * PF0 memdev initialization.
->> + *
->> + * @pf0: device to use for finding target memdev and supplier for the link
->> + * @pfx: device to link to PF0's memdev region, the link consumer.
->> + * @range: to be set with the PF0's memdev attach region range.
->> + *
->> + * Return: 0 or error.
->> + */
->> +int cxl_get_range_and_link(struct device *pf0, struct device *pfx,
->> +			   struct range *range)
->> +{
->> +	int rc;
->> +
->> +	if (!pf0 || !pfx)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * PF0 cxl memdev once created and region attached can only be removed
->> +	 * when PF0 unbinds from its driver which implies to obtain the device
->> +	 * lock before the unwinding starts. If this call from other PF races
->> +	 * with such unbinding:
->> +	 *
->> +	 * 1) if this next lock is obtained first, the device link is
->> +	 *    created and the later unwinding will trigger consumer (PF
->> +	 *    calling here) unbinding first.
->> +	 *
->> +	 *  2) if it is the unbinding the one getting the lock first, the
->> +	 *    memdev will not be there aymore.
->> +	 */
->> +	device_lock(pf0);
->> +	rc = __cxl_get_range_and_link(pf0, pfx, range);
->> +	device_unlock(pf0);
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_get_range_and_link, "CXL");
->> +
->>   static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
->>   			       unsigned long arg)
+>> +static int efx_cxl_pf0_init(struct efx_probe_data *probe_data)
 >>   {
->> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->> index 802b143de83d..b28dce1f6f76 100644
->> --- a/include/cxl/cxl.h
->> +++ b/include/cxl/cxl.h
->> @@ -228,4 +228,6 @@ struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
->>   				      struct range *range);
+>>   	struct efx_nic *efx = &probe_data->efx;
+>>   	struct pci_dev *pci_dev = efx->pci_dev;
+>> @@ -80,26 +141,47 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>   		return PTR_ERR(cxl->cxlmd);
+>>   	}
 >>   
->>   int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
->> +int cxl_get_range_and_link(struct device *pf0, struct device *pfx,
->> +			   struct range *range);
->>   #endif /* __CXL_CXL_H__ */
+>> -	cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
+>> -				    range_len(&cxl_pio_range));
+>> -	if (!cxl->ctpio_cxl) {
+>> -		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>> -			&cxl_pio_range);
+>> +	if (cxl_map(probe_data, cxl, 0, cxl_pio_range))
+>>   		return -ENOMEM;
+>> -	}
+>>   
+>> -	probe_data->cxl_pio_initialised = true;
+>>   	probe_data->cxl = cxl;
+>> -
+>> +	probe_data->cxl_pio_initialised = true;
+>>   	return 0;
+>>   }
+>>   
+>> +int efx_cxl_init(struct efx_probe_data *probe_data)
+>> +{
+>> +	struct efx_nic *efx = &probe_data->efx;
+>> +	struct pci_dev *pci_dev = efx->pci_dev;
+>> +	u8 devfn;
+>> +
+>> +	if (efx->type->is_vf)
+>> +		return 0;
+>> +
+>> +	/* are we PF0? */
+>> +	devfn = PCI_FUNC(pci_dev->devfn);
+>> +	if (devfn == 0)
+>> +		return efx_cxl_pf0_init(probe_data);
+>> +	else
+>> +		return efx_cxl_non_pf0_init(probe_data);
+>> +}
+>> +
+>>   void efx_cxl_exit(struct efx_probe_data *probe_data)
+>>   {
+>> +	struct efx_nic *efx = &probe_data->efx;
+>> +	struct pci_dev *pci_dev = efx->pci_dev;
+>> +	u8 devfn;
+>> +
+>>   	if (!probe_data->cxl)
+>>   		return;
+>>   
+>>   	iounmap(probe_data->cxl->ctpio_cxl);
+>> +
+>> +	devfn = PCI_FUNC(pci_dev->devfn);
+>> +	if (devfn == 0)
+>> +		return;
+>> +
+>> +	kfree(probe_data->cxl);
+>>   }
+>>   
+>>   MODULE_IMPORT_NS("CXL");
