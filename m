@@ -1,61 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E7B3C4176;
-	Sun,  4 Oct 2026 16:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E3C41D21E;
+	Sun,  4 Oct 2026 22:09:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791132665; cv=none; b=K06lUp98fp5bi7OwGaysIS+3MQyF9tkVfm1yTRIqfr2/oFFOlQB6p2rmg8ecevYtFULoTZ19VYeEc9U9+2glF52kTHu7NKY3R4GIhUP5ogo89BJXY4PmjMXkIWkeq4C9ktsVKxvug8VIM40fHC8CfwfL47YfRj8Nk+zx3XdDqrM=
+	t=1791151774; cv=none; b=EbnrqJd+e+JkqN6/kFDK6VmJFlOJkkKpL10EciEwWJRL13WiqYceWzbezAhnNWncyTmW94mmsFizqQVUyqFuoyIuVn8g5TP/B914qCvk6123JTLpZLegLeWY/uxJK7Mai3qE+Nmpe7oHk/wkeQbvsygL4rpjjIWnbkEn6dD7pJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791132665; c=relaxed/simple;
-	bh=iFYfvWe/84EtSEUwKbZqg2CzUmS0hAVKY6F6ce74PL0=;
+	s=arc-20240116; t=1791151774; c=relaxed/simple;
+	bh=B8jxocMBeOJgsAxHKr9qwO6fljG0XPiuQ4F0uHFwhf4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KtuliBGQRl3GpHwbmA/1GyA7wkrCsLfO4Yh5R4qBMZLaUXOc8txyvCdkPurvdityub6W10S8bf+aAHkX9JREdMmgwldZHQYxmbZI3Xci9IxsSrVrxutECrCsiT5CmFL34X7seSXIjRcITtkJKwbCrDJ+dpyAtamGgTEXg7pUK0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBx/4WEX; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=tweHmluSnzU4CrtSme6Z2P+Mr+Bpi+NhH+n0MNdkjR+dG9/UoKHPT5CGk3O/h8Gm+7r7zAgAyzVZQhqADZqzqcZn/65I2Y8eh0h766rPsAbnXVuMdaAeG6YWIPGVsZucS5+ssqkVD8fu3JwONQZuZEdwawRNS/5mxi/djNyLWAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFdTWR69; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBx/4WEX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC0A1F0089B;
-	Sun,  4 Oct 2026 16:50:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFdTWR69"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F521F00898;
+	Sun,  4 Oct 2026 22:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791132663;
-	bh=55nP/rLqMARhythDBN1wq7/XRWHuJqh11vtjRhmv9+A=;
+	s=k20260515; t=1791151772;
+	bh=LrX5lgQv29VbsZUj0pN0WYSmr+mTAH9e3Fbayxufbug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MBx/4WEXKcMxf6R5/9sXX0HSxs3JWH+RhmfeFAFe2wVEMuoBiUShUG448gQGx8Jq3
-	 xP/xj0P5FBVV4+ALsBsbt+rreALw2nPMOQwRrGXM/GS+dRkQxqeRPqSXfNGywdsX4S
-	 PL+W4y8KglAPp7WcHkUX/a8x+uvAe6RZWfEUm6qXG8AuyOuioPsVCbCuT/cADEVtkD
-	 rBR1hiOCxQ7CauuJtrrMwNKV5t1DTIabNSU+bSzZlwuYMB/oSSmTlKYAZg+hvsioFo
-	 Ozw34Q11B/EoiCo2zr7k2innJrUuDR7BIpe2uHIDLZoWTdABnE+Ug59s3XBPDQ9IMu
-	 W26mvZNwUpigw==
+	b=hFdTWR69oTe5m8F65d3SSevl6sy1iFJM7cuaOezCaDEDAjqjhsRmX84ljGVzVQLuT
+	 P0LAiGcWA6LgABMW2P5hAdUOQE9HuLkQnq16s1sFVriJLmYdGDaEDv0YLyencuqk/i
+	 cCZS1Gw2c+8EK/8REDV5qgXZGLd4Ikowfk7/XFEC725Sva6gN6wIkwlfeIU+hEfK/v
+	 k0FL4x/77UoWCi2FDeqTC4LGeZwEwtBLuz5H+audTepyCqciHk0VovWcT7Rp+iRYXC
+	 qUwSUXKAmpykG3bDktZIvQehypmd+ZBZ7C+MNcAZlqAAjqKNavkUGeCqh70bCImgXK
+	 3s1hHqrAXGZJQ==
 From: Will Deacon <will@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Nicolin Chen <nicolinc@nvidia.com>
+To: linux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>
 Cc: catalin.marinas@arm.com,
 	mark.rutland@arm.com,
 	kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Pranjal Shrivastava <praan@google.com>,
-	Mostafa Saleh <smostafa@google.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	vsethi@nvidia.com,
-	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v6 00/17] iommu/arm-smmu-v3: Quarantine device upon ATC invalidation timeout
-Date: Sun,  4 Oct 2026 17:50:43 +0100
-Message-ID: <179112990410.2366640.1873231809749459726.b4-ty@kernel.org>
+	jic23@kernel.org,
+	dave@stgolabs.net,
+	robin.murphy@arm.com,
+	icheng@nvidia.com,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [RESEND PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues fixes
+Date: Sun,  4 Oct 2026 23:09:14 +0100
+Message-ID: <179113338601.1493167.6241273025938651423.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1790188510.git.nicolinc@nvidia.com>
-References: <cover.1790188510.git.nicolinc@nvidia.com>
+In-Reply-To: <20260805155911.1304807-1-dave.jiang@intel.com>
+References: <20260805155911.1304807-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,23 +54,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Sep 2026 13:11:19 -0700, Nicolin Chen wrote:
-> This series addresses a critical vulnerability and stability issue where an
-> unresponsive PCIe device failing to process ATC (Address Translation Cache)
-> invalidation requests leads to silent data corruption and continuous SMMU
-> CMDQ error spam.
+On Wed, 05 Aug 2026 08:59:00 -0700, Dave Jiang wrote:
+> [resend, mangled linux-cxl mailing addr]
 > 
-> [ As Jason pointed out, because this series fundamentally introduces a new
->   RAS feature to quarantine and recover from hardware faults and relies on
->   a recently accepted SMMU driver rework, it is not treated as a standard
->   bug fix. Thus, most of the patches here don't carry a "Fixes" tag. ]
+> Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
+> the sashiko raised issues and then continued multiple internal review
+> iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
+> but the fixes look reasonable to me AFAICT.
 > 
 > [...]
 
-Applied SMMU rbtree fix to iommu (arm/smmu/updates), thanks!
+Applied to arm64 (for-next/perf), thanks!
 
-[06/17] iommu/arm-smmu-v3: Don't rb_erase() a never-inserted stream node
-        https://git.kernel.org/iommu/c/2888520bdcbe
+[01/11] perf/cxl: Program the requested event group on configurable counters
+        https://git.kernel.org/arm64/c/b22dcc114298
+[02/11] perf/cxl: Clear stale event fields before reprogramming a counter
+        https://git.kernel.org/arm64/c/7406d6cf76b1
+[03/11] perf/cxl: Fix the counter overflow delta fixup
+        https://git.kernel.org/arm64/c/0326269ed735
+[04/11] perf/cxl: Accept an overflow interrupt on MSI message number 0
+        https://git.kernel.org/arm64/c/af06fba45746
+[05/11] perf/cxl: Split the MSI vector out of info->irq
+        https://git.kernel.org/arm64/c/97fe5d94b7ce
+[06/11] cxl/pci: Add the PMUs after configuring events
+        https://git.kernel.org/arm64/c/28b2b667f48f
+[07/11] perf/cxl: Don't share the overflow interrupt, and keep it pinned
+        https://git.kernel.org/arm64/c/b899fd3487b0
+[08/11] perf/cxl: Unfreeze counters after handling an overflow interrupt
+        https://git.kernel.org/arm64/c/2e4fe234c72d
+[09/11] perf/cxl: Validate the hardware-reported counter width
+        https://git.kernel.org/arm64/c/1c5499e67303
+[10/11] perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+        https://git.kernel.org/arm64/c/984920c893f0
+[11/11] perf/cxl: Clear stale overflow status before using a counter
+        https://git.kernel.org/arm64/c/05d82cf377f7
 
 Cheers,
 -- 
