@@ -1,359 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F14A419FDA;
-	Mon,  5 Oct 2026 21:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB1537F735;
+	Mon,  5 Oct 2026 23:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791236547; cv=none; b=QYd8lrb2TD9V+Iem6ca4dIUbwgJKLs/Nv93Rqz50pET2i1WIUW+ilCDbtH5va1bDDFr1chh8jTil9ox0zarcPvH5RE2vOt9Icnr3r4FvUJKyAtbtibvIU1XdIKcYXWad1dg3eCcWP/TWi/iSYSYRcvQk4Giq8AMDwBjH+45SXts=
+	t=1791243478; cv=none; b=q1wBiKMA2MGunOgg9VQdTsDbZd8A1xEmJj7hS8SxbBNCtote2WCrYGKpkxYrrhFe4yTQZScp0TDddmPb5kjiYqZ0uuWX0y4+4uErpBFM9G4QOihAMCNCtwrYpF9K/Il0Kd9IJ69Zr7o6JTZgvd8+cj0FeDlPtqlI///KmvtkoVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791236547; c=relaxed/simple;
-	bh=TJGYwwxs1o+Ljf1Rslw7l/MAKRm7QDSew5GqbuJ8Ilw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=grlA5P+0feNDefpq9fBd4W0tV4YA5tLtVbdwUOQPtJSenL2uAvKGx+TkaK/YekUmI4yTrgR5aZ1i+xR1l7qBOaldLs886ayfHKOJB296OeyRNYz5aUtoHKOGAssunLk8ncV4qtwfxAiJ4/evefbwCPsrvUR3Hh1JZUlQ+p74FFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l2SEv17h; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l2SEv17h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791236546; x=1822772546;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TJGYwwxs1o+Ljf1Rslw7l/MAKRm7QDSew5GqbuJ8Ilw=;
-  b=l2SEv17h6IFnCQ9xZ8avTUH/oyxc+yZpPY1Bj8/kX7P/lH6rBiT9HTi/
-   t5NIwAM+gwpsslK9Bqfq22zOVcqxWIhzNWUqcFvVLYyd4iED3HCLM1NzZ
-   kWfGfN6BN4ptXVIkxEcROPWHo9hvHMOp9Z5y2pGs9LCOSM4QjqKmSS8L5
-   91b+BS0cgLegNNIwDjmfBFmlywkb5gbm2KYbZadyKRfML54AoXP3MXlHa
-   Ks4rXvGneXiSJoDw2iMfFWvFFE7l65mGGfVRTEENpbT4OnVDpZTH8xa8Q
-   D2oDUS5k44IDAPTzNYfIz9SOkjzBbj7h+Z3O8OZeqhzow6duO9Nnv4OeF
-   Q==;
-X-CSE-ConnectionGUID: FAIZHsPpSbOFqiXpj3PlOQ==
-X-CSE-MsgGUID: j3AN6WOqR6KpoekKReartg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="91054671"
-X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="91054671"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 14:42:25 -0700
-X-CSE-ConnectionGUID: kJce0kABTfGHogVUGQrWOA==
-X-CSE-MsgGUID: 1c+57GCoRGiyp3/K5tjNag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="304870582"
-Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.108.109]) ([10.125.108.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 14:42:23 -0700
-Message-ID: <e55268cc-5b70-4109-b7b4-bbbaca7b13ea@intel.com>
-Date: Mon, 5 Oct 2026 14:42:22 -0700
+	s=arc-20240116; t=1791243478; c=relaxed/simple;
+	bh=9II7e20rC3YRtMC9ZN9hnzcEONlfjBuITelQhDbx2AE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tid6ShMo4KMHTHPGn6IjflIexFafVT1DBYWT924ruxKkPlNHK6Me2gxqktPDRzHbSrjHD2pNARjfD2SUzUgP3uIsXsGhXbrD2eP10R7N/tBT4IBElmm0d4+jFrdZ3FzY1CVsnjSH4NOp0yMjmFGVjWMMniwXQw6e2T9YkLdy+f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3F3E9A04C8;
+	Mon,  5 Oct 2026 23:27:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf17.hostedemail.com (Postfix) with ESMTPA id 7FE9F18;
+	Mon,  5 Oct 2026 23:27:44 +0000 (UTC)
+Date: Mon, 5 Oct 2026 18:27:43 -0500
+From: John Groves <john@groves.net>
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: fuse-devel@lists.linux.dev, Amir Goldstein <amir73il@gmail.com>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	david@kernel.org, willy@infradead.org, brauner@kernel.org
+Subject: Re: [PATCH v2 0/8] fuse: DAX device based extent maps (famfs)
+Message-ID: <asQcBebepPb9CXzS@groves.net>
+References: <20261001150935.655979-1-mszeredi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 06/16] cxl: Move HDM decoder helpers to built-in
- resource code
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20261001092227.3004747-1-smadhavan@nvidia.com>
- <20261001092227.3004747-7-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20261001092227.3004747-7-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261001150935.655979-1-mszeredi@redhat.com>
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: uo6wdaohey8iduce9nknm48zq973gpe6
+X-Rspamd-Queue-Id: 7FE9F18
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1/8NysK9/Gsulo4cuV+NGDnPd91igPQ7DI=
+X-HE-Tag: 1791242864-711983
+X-HE-Meta: U2FsdGVkX1+6uSTZIM+DeWgPC6Kyumy1z9XWtSk2yK1zL1dea3ycghq9QlZAKH+fZaqbZ9E41aYkRCAS16OC3LeULd2i9Yc5Jkr079BLSvFn11qev6T42egEtUcgc6MgVpfgcTB94L6Ak1oPOdAkQQPeX7Mn2eQUhzIc4A4gOaqlt5ZOBe6yZQyEJjZ1VU2pkgJHTQh0bcScVuTUNJZfLBRztfS8yaH03b5ljVq5HXurmtV8GY3NEocGTzXgzIuv7iKlvA0mkPokdwk74M2jHlI0ObQNza3n4HGmlZFoDmG3BrmqsI08QD3kx8gWN6ojIR6TpBLoncu7b3nj2Z3YuCXCx6ur9DrBrFwkckna72eEqOZaov1DUQ==
 
+On 26/10/01 05:07PM, Miklos Szeredi wrote:
+> This is the FUSIfication of the famfs-fuse patchset.
 
+This series (v1) was sent on the day I left on a vacation from which I
+returned at the end of last week.
 
-On 10/1/26 2:22 AM, Srirangan Madhavan wrote:
-> Move the refactored HDM programming helpers and cxl_rwsem from hdm.c to
-> resource.c. Build resource.o under CONFIG_CXL_RESET so the helpers are
-> available to built-in PCI code when CXL_BUS is modular. Export only the
-> symbols used by cxl_core.
+I feel I should acknowledge this and assure everybody that I'm working
+through it. This really runs my famfs/fuse patches through a 
+chipper/shredder, and it is gonna take me some time to review it, 
+understand it and test it.
+
+A few comments below, and specific patch comments should start trickling out.
+
+One very high level quip though: If you're comfortable with this, go ahead 
+and merge it. We can fix bugs and performance problems, if any, in due 
+course. I'm serious about that.
+
 > 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+>  - extent maps are assigned to a backing ID
+> 
+>  - 64 bit backing ID's managed by server
+
+I thought we agreed you weren't gonna do these two, but if it does no harm,
+whatever.
+
+> 
+>  - maps can be linear or cyclic (striped)
+
+Please correct me if any of my analysis below is wrong...
+
+Here what you've done is remove my explicitly interleaved extent lists,
+which have a header containing a chunk size and a set of strip extents (which
+are basically fully self-describing), and replace is with just simple extent 
+lists that have an optional CYCLIC flag in the header. If the flag is set on 
+an extent list, (and let's say the strip extents need to be 1GiB and the 
+chunk size is 2MiB), each CYCLIC extent gets its size set to the chunk size 
+and the kernel trusts that the actual size allocated per stirp is actually 
+sufficient that i_size will not cycle past the end of the *actually* 
+allocated size of each strip extent.
+
+This resembles an idea I considered, to try to make the metadata *look* 
+simpler while still carrying the info that needs to be conveyed. But this 
+implementation feels pretty janky to me, and it should at least be 
+meticulously documented. Better might be to put the chunk_size in the header,
+and then you arguably don't need the CYCLIC flag, since non-zero chunk_size
+means the same thing. But actually, you can accept multiple CYCLIC strip
+lists if you set chunk_size and then set the CYCLIC flag on the first of
+each strip set.
+
+I see the kernel-side rejects these s/size/chunk_size/ strip extents if they
+are not all the same size. Why not put the chunk size in the header and let
+the extents honestly describe the offset and range that they cover? 
+The current design can't test for sufficient strip extent sizes, although 
+it replaces code that did verify this.
+
+> 
+>  - API supports nesting, but not implemented yet (i.e. multiple striped
+>    extents per inode, a-la famfs)
+> 
+> libfuse/famfs trees for testing:
+> 
+>  https://github.com/szmi/libfuse.git#extent-map-v2
+>  https://github.com/szmi/famfs.git#extent-map-v2
+> 
+> This patchset:
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#extent-map-v2
+> 
+> Passes famfs smoke test on emulated dax device.
+
+Thank you for doing that. Prior to this there have been many strong opinions
+but none of the holders of said opinions built or tested famfs.
+
+However, the smoke tests passing isn't fully legit, because the patch to the
+famfs fuse server passes the entire strip size on CYCLIC mappings, meaning
+it just produces a concatenation of ranges - which does not achieve the 
+interleaving goal at all. That case degenerates to simple extents.
+
+If this is the new design for passing cycling maps into the kernel, a test
+will be added to catch this - but it's brand new and didn't get a test added,
+so it wasn't caught automatically.
+
+> 
+> Comments are welcome.
+
+One more... This patch inserts an rbtree lookup into the fault path via the
+very-performance-critical fuse_ext_map_iomap_begin() path. This is 
+performance-critical because it handles TLB/PTE/PMD faults when the memory
+is never sparse (no I/O to amortize over). The code you replaced did several
+things to avoid this sort of chasing:
+
+- With interleaved extent lists, strip and strip-offset can be calculated
+  in order 1 (and then strip overflow can be checked and avoided)
+- Simple extent lists were checked for constant extent sizes; if constant,
+  we can just index into the list (also order 1)
+
+Why do I want to avoid an rbtree lookup or the bpf nonsense in the fault path?
+"Because this is memory and it must run at memory speeds" --yours truly
+
+To be specific: each chase/dereference that results in an L3 cache miss adds
+a stall of (1 * MEMORY_LATENCY) to the fault time. This is the good reason 
+why I didn't do any chasing in the fault path of the famfs code that you're
+replacing.
+
+OK, one more. You're using the rbtree for indexing by file offset, which is
+a zero-based non-sparse range in this case. If this could not be avoided 
+(which I think it can) you should use an xarray or radix tree for that...
+right?
+
+> 
+> Thanks,
+> Miklos
+> 
 > ---
->  drivers/cxl/Kconfig         |   4 ++
->  drivers/cxl/core/Makefile   |   1 +
->  drivers/cxl/core/hdm.c      |  93 -------------------------------
->  drivers/cxl/core/resource.c | 106 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 111 insertions(+), 93 deletions(-)
->  create mode 100644 drivers/cxl/core/resource.c
+> Changes since v1:
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 80aeb0d556bd..0cd704670735 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -6,6 +6,7 @@ menuconfig CXL_BUS
->  	select FW_UPLOAD
->  	select PCI_DOE
->  	select FIRMWARE_TABLE
-> +	select CXL_RESET
->  	select NUMA_KEEP_MEMINFO if NUMA_MEMBLKS
->  	select FWCTL if CXL_FEATURES
->  	help
-> @@ -244,3 +245,6 @@ config CXL_ATL
->  	depends on ACPI_PRMT && AMD_NB
->  
->  endif
-> +
-> +config CXL_RESET
-> +	bool
+>  - moved 3 prep patches to fuse.git#for-next
+>  - introduce FUSE_PASSTHROUGH_V2 (Amir)
+>  - lots of small fixes and cleanups (Amir, Sashiko)
+> 
+> ---
+> John Groves (1):
+>   dax: replace exported dax_dev_get() with non-allocating dax_dev_find()
 
-Can you add a comment here for this and say something like CXL_RESET can't be 'n' when CXL_BUS is active? There are things that should always build in resource.o and later regs.o that will be under the CXL_RESET symbol with this series.
+Golly, it seems like there's more than 1 patch worth of content from me here,
+but the chipper/shredder might meet the letter of copyright law in some 
+jurisdictions...
 
-DJ
+> 
+> Miklos Szeredi (7):
+>   fuse: add helpers for EIO return value with kernel message
+>   fuse: support 64 bit, server allocated backing ID
+>   fuse: support opening 64 bit backing ID
+>   fuse: add support for opening dax device as backing
+>   fuse: add extent map data structure
+>   fuse: add extent map I/O support
+>   fuse: add support for striped backing
+> 
+>  drivers/dax/super.c       |  38 ++++-
+>  fs/fuse/Makefile          |   2 +-
+>  fs/fuse/backing.c         | 292 ++++++++++++++++++++++++++++++-------
+>  fs/fuse/dev.c             |  21 +++
+>  fs/fuse/dev.h             |   3 +
+>  fs/fuse/dir.c             |   3 +-
+>  fs/fuse/ext_map.c         | 299 ++++++++++++++++++++++++++++++++++++++
+>  fs/fuse/file.c            |  16 +-
+>  fs/fuse/fuse_i.h          |  72 +++++++--
+>  fs/fuse/inode.c           |  17 ++-
+>  fs/fuse/iomode.c          | 108 +++++++-------
+>  fs/fuse/notify.c          |  75 ++++++++++
+>  fs/fuse/passthrough.c     |  63 ++++----
+>  include/linux/dax.h       |   6 +-
+>  include/uapi/linux/fuse.h |  53 ++++++-
+>  15 files changed, 904 insertions(+), 164 deletions(-)
+>  create mode 100644 fs/fuse/ext_map.c
+> 
+> -- 
+> 2.54.0
+> 
 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index ce7213818d3c..30470799e059 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> +obj-$(CONFIG_CXL_RESET) += resource.o
->  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
->  
->  ccflags-y += -I$(srctree)/drivers/cxl
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index d3f21dfda146..629e3420ad0b 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -16,11 +16,6 @@
->   * for enumerating these registers and capabilities.
->   */
->  
-> -struct cxl_rwsem cxl_rwsem = {
-> -	.region = __RWSEM_INITIALIZER(cxl_rwsem.region),
-> -	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
-> -};
-> -
->  static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld)
->  {
->  	int rc;
-> @@ -707,35 +702,6 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
->  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
->  }
->  
-> -static void cxld_set_interleave(struct cxl_decoder_config *config, u32 *ctrl)
-> -{
-> -	u16 eig;
-> -	u8 eiw;
-> -
-> -	/*
-> -	 * Input validation ensures these warns never fire, but otherwise
-> -	 * suppress unititalized variable usage warnings.
-> -	 */
-> -	if (WARN_ONCE(ways_to_eiw(config->interleave_ways, &eiw),
-> -		      "invalid interleave_ways: %d\n", config->interleave_ways))
-> -		return;
-> -	if (WARN_ONCE(granularity_to_eig(config->interleave_granularity, &eig),
-> -		      "invalid interleave_granularity: %d\n",
-> -		      config->interleave_granularity))
-> -		return;
-> -
-> -	u32p_replace_bits(ctrl, eig, CXL_HDM_DECODER0_CTRL_IG_MASK);
-> -	u32p_replace_bits(ctrl, eiw, CXL_HDM_DECODER0_CTRL_IW_MASK);
-> -	*ctrl |= CXL_HDM_DECODER0_CTRL_COMMIT;
-> -}
-> -
-> -static void cxld_set_type(struct cxl_decoder_config *config, u32 *ctrl)
-> -{
-> -	u32p_replace_bits(ctrl,
-> -			  !!(config->target_type == CXL_DECODER_HOSTONLYMEM),
-> -			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
-> -}
-> -
->  static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
->  {
->  	struct cxl_dport **t = &cxlsd->target[0];
-> @@ -758,65 +724,6 @@ static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
->  		*tgt |= FIELD_PREP(GENMASK_ULL(63, 56), t[7]->port_id);
->  }
->  
-> -/*
-> - * Per CXL 2.0 8.2.5.12.20 Committing Decoder Programming, hardware must set
-> - * committed or error within 10ms, but just be generous with 20ms to account for
-> - * clock skew and other marginal behavior
-> - */
-> -#define COMMIT_TIMEOUT_MS 20
-> -int cxld_await_commit(void __iomem *hdm, int id)
-> -{
-> -	u32 ctrl;
-> -	int i;
-> -
-> -	for (i = 0; i < COMMIT_TIMEOUT_MS; i++) {
-> -		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMIT_ERROR, ctrl)) {
-> -			ctrl &= ~CXL_HDM_DECODER0_CTRL_COMMIT;
-> -			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> -			return -EIO;
-> -		}
-> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> -			return 0;
-> -		fsleep(1000);
-> -	}
-> -
-> -	return -ETIMEDOUT;
-> -}
-> -
-> -static void setup_hw_decoder(void __iomem *hdm,
-> -			     struct cxl_decoder_settings *settings)
-> -{
-> -	struct cxl_decoder_config *config = &settings->config;
-> -	int id = config->id;
-> -	u64 target_or_skip_reg_val;
-> -	u64 base, size;
-> -	u32 ctrl;
-> -
-> -	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> -	cxld_set_interleave(config, &ctrl);
-> -	cxld_set_type(config, &ctrl);
-> -	base = config->hpa_range.start;
-> -	size = range_len(&config->hpa_range);
-> -	target_or_skip_reg_val = settings->target_or_skip_reg_val;
-> -
-> -	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> -	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> -	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> -	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> -	/* Target-list and endpoint-skip registers alias the same slot. */
-> -	writel(upper_32_bits(target_or_skip_reg_val), hdm + CXL_HDM_DECODER0_TL_HIGH(id));
-> -	writel(lower_32_bits(target_or_skip_reg_val), hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> -
-> -	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> -}
-> -
-> -void cxl_commit_start(void __iomem *hdm, struct cxl_decoder_settings *settings)
-> -{
-> -	lockdep_assert_held(&cxl_rwsem.dpa);
-> -	setup_hw_decoder(hdm, settings);
-> -}
-> -
->  /*
->   * Endpoint skip and switch targets have different owners. Keep that state with
->   * its owning type and flatten it only into a transient register-programming
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> new file mode 100644
-> index 000000000000..ff027cb89e57
-> --- /dev/null
-> +++ b/drivers/cxl/core/resource.c
-> @@ -0,0 +1,106 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
-> +#include <linux/delay.h>
-> +#include <linux/bug.h>
-> +#include <linux/errno.h>
-> +#include <linux/export.h>
-> +#include <linux/kernel.h>
-> +
-> +#include "cxl.h"
-> +#include "core.h"
-> +
-> +struct cxl_rwsem cxl_rwsem = {
-> +	.region = __RWSEM_INITIALIZER(cxl_rwsem.region),
-> +	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
-> +};
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_rwsem, "cxl_core");
-> +
-> +static void cxld_set_interleave(struct cxl_decoder_config *config, u32 *ctrl)
-> +{
-> +	u16 eig;
-> +	u8 eiw;
-> +
-> +	/*
-> +	 * Input validation ensures these warns never fire, but otherwise
-> +	 * suppress unititalized variable usage warnings.
-> +	 */
-> +	if (WARN_ONCE(ways_to_eiw(config->interleave_ways, &eiw),
-> +		      "invalid interleave_ways: %d\n", config->interleave_ways))
-> +		return;
-> +	if (WARN_ONCE(granularity_to_eig(config->interleave_granularity, &eig),
-> +		      "invalid interleave_granularity: %d\n",
-> +		      config->interleave_granularity))
-> +		return;
-> +
-> +	u32p_replace_bits(ctrl, eig, CXL_HDM_DECODER0_CTRL_IG_MASK);
-> +	u32p_replace_bits(ctrl, eiw, CXL_HDM_DECODER0_CTRL_IW_MASK);
-> +	*ctrl |= CXL_HDM_DECODER0_CTRL_COMMIT;
-> +}
-> +
-> +static void cxld_set_type(struct cxl_decoder_config *config, u32 *ctrl)
-> +{
-> +	u32p_replace_bits(ctrl,
-> +			  !!(config->target_type == CXL_DECODER_HOSTONLYMEM),
-> +			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
-> +}
-> +
-> +/*
-> + * Per CXL 2.0 8.2.5.12.20 Committing Decoder Programming, hardware must set
-> + * committed or error within 10ms, but just be generous with 20ms to account for
-> + * clock skew and other marginal behavior
-> + */
-> +#define COMMIT_TIMEOUT_MS 20
-> +int cxld_await_commit(void __iomem *hdm, int id)
-> +{
-> +	u32 ctrl;
-> +	int i;
-> +
-> +	for (i = 0; i < COMMIT_TIMEOUT_MS; i++) {
-> +		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMIT_ERROR, ctrl)) {
-> +			ctrl &= ~CXL_HDM_DECODER0_CTRL_COMMIT;
-> +			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +			return -EIO;
-> +		}
-> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> +			return 0;
-> +		fsleep(1000);
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxld_await_commit, "cxl_core");
-> +
-> +static void setup_hw_decoder(void __iomem *hdm,
-> +			     struct cxl_decoder_settings *settings)
-> +{
-> +	struct cxl_decoder_config *config = &settings->config;
-> +	int id = config->id;
-> +	u64 target_or_skip_reg_val;
-> +	u64 base, size;
-> +	u32 ctrl;
-> +
-> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	cxld_set_interleave(config, &ctrl);
-> +	cxld_set_type(config, &ctrl);
-> +	base = config->hpa_range.start;
-> +	size = range_len(&config->hpa_range);
-> +	target_or_skip_reg_val = settings->target_or_skip_reg_val;
-> +
-> +	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> +	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> +	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +	/* Target-list and endpoint-skip registers alias the same slot. */
-> +	writel(upper_32_bits(target_or_skip_reg_val), hdm + CXL_HDM_DECODER0_TL_HIGH(id));
-> +	writel(lower_32_bits(target_or_skip_reg_val), hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> +
-> +	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +}
-> +
-> +void cxl_commit_start(void __iomem *hdm, struct cxl_decoder_settings *settings)
-> +{
-> +	lockdep_assert_held(&cxl_rwsem.dpa);
-> +	setup_hw_decoder(hdm, settings);
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_commit_start, "cxl_core");
+John
 
