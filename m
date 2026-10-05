@@ -1,147 +1,451 @@
-Received: from mail-qk2-f41.google.com (mail-qk2-f41.google.com [74.125.230.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707A44C658
-	for <linux-cxl@vger.kernel.org>; Mon,  5 Oct 2026 09:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.233
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791193629; cv=pass; b=XsvBzB8ly9XmxHfYRil8Kmutf9wT0QMVdz+ZfRqwvfukueAbmGpbPoRZ6B29zt3H210UEADYYZBxgQ6ZKAjr82z5SJQ2QKk3ElW8D+PUoqPkMEn1Qwwwt4xa2YdNMhHZ5TXLgL46SaDiqNk6pWeBpwTy3ny7CtIdruQK767jyAo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791193629; c=relaxed/simple;
-	bh=t398vXnJkLdtQG+smof72e6y5/ZQ0xhfNFlipmHb3tY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QSmrTaNgrW7pd+nJTXxqNsw4yNXsq//x5Hia5PL6FGjDQe0YnS9KO9Od9/Pl/Y5Xkaw9NGLOi5h4/i3Xoe67xxMlc2/x0qXQesztadqhv+BFGTujKrFo0Ex5juW9RfVn/2DRGfa+ZmN0nOlzNfOcacDwavSIyOodBiHgN0XI3Do=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=crHzQ88/; arc=pass smtp.client-ip=74.125.230.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0C14779AA;
+	Mon,  5 Oct 2026 11:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791199120; cv=none; b=N+ZukQvRO54qWX1RWze2igcO2KcxDEYU/hwgvMHhOQTTqqAXTMVnHmdIfP4BPuod87IU+oPPRLMxWLvomBMOmIEit8d6wuhct5TKxDp4YpwSADLVn5uMXz/5ZguitLUrmsOUWu1yZPmHjdDgGQv4Uf6153vSju0pFNmlww4SdLE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791199120; c=relaxed/simple;
+	bh=8IUrosC6W/xobqKOSM43nQ6GGRlHLOM590t73UTw3kQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=GZKpXgiJmWlnq3kMYg5S95bg76Hr7Bf5MH1W0po0m7hoDdxurnBPNXtG6J93b3YG0/rGOnli+0meiKOiY20pBOy4BHZU3vI0rSiMuP9spVLyrd5YthShrGxlXlpTqkereqaJz7TmHLfVL8HXpC65mMEtnm6OpLCSyu7LXO4yKhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=r9gUI9KX; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=/nyhSE7B; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="crHzQ88/"
-Received: by mail-qk2-f41.google.com with SMTP id d75a77b69052e-534af4d1a37so13934181cf.2
-        for <linux-cxl@vger.kernel.org>; Mon, 05 Oct 2026 02:47:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791193619; cv=none;
-        d=google.com; s=arc-20260327;
-        b=EnmMSVbfJcW2PsPbg6SlAPpw2cmM9i6wRmD8mOuZkhjmm8FqWyxrrAFE5sKCkrPJRk
-         ZXGvHK/YBjguniex/ntCN5udRE1cisBmPqVIj6352+qlgQwG+dCjN/NsgOVTVxpZbZer
-         mEQa2r7drZkIYriXNqjm8BvRIGWzyybssCctn2ewcMfrwu52ylML9bbmdFqRPZY0rGfK
-         CytMqIz/NLrYpMYoO5bLOzJcnd4Qr9oyoROpaDx57C03M9OtWW7/Hf3V7IEoRsdiNe8e
-         8EZQTdP9RvkTnM9CHruFJfXX7smuVlGk3sTnyQw2D9buHxDtiNGUbuEJhImEk2VLU/vS
-         sCiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2x+PPGLVG+ZTg2V6l16xtjRBE7YmaOwtXNyp9L8s3Uo=;
-        fh=q1jQxi8Bx9sNn/+1a0+7iQxMSeIQA01WazXSWFM4ZjE=;
-        b=Pub/7ZHvQ6iEPa3G7WRwJzTDUaXsUxw7tcwH6OL8woBh9Fhq7OZ8QWec1qYVCWUhym
-         TgRDzlJ5jd7meXBiwUa5g+qs4ETFTidKHMDuCZymhCgDn9phu7gbYD8nQtVXBIMJfJ90
-         TmPkfdXgwwEkUF3poYPyMSfZ9ggm1P4GrWbFZcCcOAr0uPOP9G++sEYlmmeMICcjU3Ls
-         Bo41EiI1wt4KXhlRBFA18BcvZIjxYquVw24rTCc03F8yEX6uU1SRu59nNlHiBDqwalhO
-         TW6bfRDrDWy78VruH+zH9jrv7KN/JT/PFz0QzPAXkjY7GEMYIS4TlHLCGsE90ApLx9dW
-         G4Hg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1791193619; x=1791798419; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2x+PPGLVG+ZTg2V6l16xtjRBE7YmaOwtXNyp9L8s3Uo=;
-        b=crHzQ88/ptdiZmXqXRu//UG7sELmHuJUq1z4e7p+A47Kq5avjodvcWruAAiuo3K9y0
-         s+kkQSfaDE9CgaeSXSOWH5p/rDStvGd9eF+2DkegQ+r10I08qxf/Ovtjlsl6bpkTzQ+2
-         32MsczeVAxpZDvXBuNWn2CJCjDJq5Gocep+SA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791193619; x=1791798419;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2x+PPGLVG+ZTg2V6l16xtjRBE7YmaOwtXNyp9L8s3Uo=;
-        b=yBH1sAFrYbTaA5A1RIXaJRicdQdS00md8fsGF4EigwTdOwax6jFkSajz9DpYb2YTW6
-         wgFXziZh2vMpNUGhEhDydkzT/IOuiIprYbMXlkR04OtJaGYWahWlddoURpQ30E7y94dw
-         jUb/C8JXP7j4mtaewJIy/mf+spDNCNlK/HKptgwtGATL9uYeBmsaVk5nEZaZe/1D2dQ5
-         LZuy+IZxRU57zOga3e6T54Ta/Xi+pUjC5Qmcj6+H/5sFZ8YllHpwkKagqt9zfv2up3Ci
-         6Ox7MprVqYvPDUu2nkS+J4ScuvmYlD56DM81RGTgRFwRQDZcJqAeSlHW9YrRc0H9X1WJ
-         B97g==
-X-Forwarded-Encrypted: i=1; AKwUvByc8165vXNk/Bo62o2frEz1bRmGxIQ3FZYeUqVs/SeDUHZyI+zzRpHiISN/MPvmq24+gSbPHRaPGIw=@vger.kernel.org
-X-Gm-Message-State: AFuF++k6P6jyxabUfILdzDd/lLmELXGE/9OKJljfu2JZHfPWiTGv9J5Z
-	AdLxOH+vlvWT81EeCHu1ULVpkBDbm/PKcigODcZgcGZt+Z1UYPX8tzN1GbCJLoumkZP5TuY9oLJ
-	gov0aAHAKayWLaF6uZ+Mlp2jEVptCbYmCl0Mnjq5bwQ==
-X-Gm-Gg: AYBFou1JOjfM799HN4dVR90O9sMeM8MwyMYQHbhzKjBaW6HFe8uC55GkQQ2iCSsLOvV
-	hVL66375kuzW8kSugGUEHx0XxStNMFDRje/B942G43pRKSEpCN2a7+IPCTC0t6lyrxnGENn7Tq1
-	0L3VEnlDfi2n83QtcppuqoI4w+PIYeVncq2ZaJL2AiDSETIQrjt6kWNmnrlGXmDEHQcTFn4E4bz
-	Bbw633B7bSeEXC1gU65yxu++Bxcc6VGZsAZQ5bujrTh5ivD4yl3BC/aMgyuMGJPFNA1T5Yg97nr
-	9lbkpJg242oNDGtXLhLD1VuY7Fv7jt6dQ10Edx5BKGY2L//3u+T5VisuFOuzgq6QqptTrxipBCu
-	lENcydyE37h+/
-X-Received: by 2002:a05:622a:4296:b0:533:3fc2:8b19 with SMTP id
- d75a77b69052e-533cba5b5b6mr179731811cf.20.1791193619134; Mon, 05 Oct 2026
- 02:46:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="r9gUI9KX";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="/nyhSE7B"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1791199069; bh=VG7SijGObD/mat/VETltwvm
+	0Dx4PXid4IbEr+4FUyqI=; b=r9gUI9KX2eL/TJVGF6WsGdcg/iaTiFZHq6ag42CNAbYTvuwXSb
+	TtmgWJjGZCecv1w9c2Uw1BUqno1Eh4J2fWtltVlxw7mxNm2d2uqlorES4BjmWUv5G73nWnn7vkr
+	HWT6VnbBZRCRKJm8tl5V2WpbAiy7W9NkJPtt/pdcYJ4+dqZxFyYddPOcQgAHG8xlFdwCN6fKuKj
+	IRY7W07+jitQhvAgGDYhxd3L95ad119qQzRkwjv0QZ5woKFHdeqh/HZaLZZRTYSicjlO/IpLzxH
+	k/JmYwAllcYOVNeW2xDp/vRF3NtUITF1rnktV+FsySt29tf54/SNYctecDiSoNLDJzg==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1791199069; bh=VG7SijGObD/mat/VETltwvm
+	0Dx4PXid4IbEr+4FUyqI=; b=/nyhSE7B0ZhVRn6DBgUhbKCZMAqNUSBYtdzNE6VHZh7MCJwVwd
+	q9sQUBPwyC5dyO/9G2XhS5wD5LxfPptTtfAQ==;
+Date: Mon, 05 Oct 2026 12:17:49 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: ankita@nvidia.com
+CC: Smita.KoralahalliChannabasappa@amd.com, aik@amd.com,
+ alison.schofield@intel.com, andriy.shevchenko@linux.intel.com,
+ aneesh.kumar@kernel.org, bhelgaas@google.com, dave.jiang@intel.com,
+ dave@stgolabs.net, icheng@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ iweiny@kernel.org, jgg@nvidia.com, jic23@kernel.org,
+ linux-coco@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ ming.li@zohomail.com, smadhavan@nvidia.com, vishal.l.verma@intel.com,
+ yilun.xu@linux.intel.com
+Subject: Re: [RFC PATCH 1/4] PCI/TSM: Create MMIO descriptors via TDISP Report
+In-Reply-To: <20261005070252.84810-2-ankita@nvidia.com>
+Message-ID: <317D506F-8079-4776-8EBC-2BA1A7535BC9@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261001150935.655979-1-mszeredi@redhat.com> <20261001150935.655979-3-mszeredi@redhat.com>
- <CAOQ4uxjQYaFUG=VT1LoKbs3QUTbTeEy3tTY=_FMujMiWGRR_=A@mail.gmail.com>
-In-Reply-To: <CAOQ4uxjQYaFUG=VT1LoKbs3QUTbTeEy3tTY=_FMujMiWGRR_=A@mail.gmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 5 Oct 2026 11:46:47 +0200
-X-Gm-Features: AclHuK_XtJM6zEUYob9rIZaAPpf4JoILbPUmLW2_NodFgyAwj0rWiXxNnekRhk8
-Message-ID: <CAJfpegva+dThGSUf0jEhp_9FTyw6f+ZC-5D0F0R-gPPSxXypYw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] fuse: add helpers for EIO return value with kernel message
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Miklos Szeredi <mszeredi@redhat.com>, fuse-devel@lists.linux.dev, 
-	John Groves <john@groves.net>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 1 Oct 2026 at 18:39, Amir Goldstein <amir73il@gmail.com> wrote:
+On 5 October 2026 08:02:49 BST, Ankit Agrawal <ankita@nvidia.com> wrote:
+>After pci_tsm_bind() and pci_tsm_lock() the low level TSM driver is
+>expected to populate the TDISP GET_DEVICE_INTERFACE_REPORT response
+>payload for the device.
 >
-> On Thu, Oct 1, 2026 at 5:09=E2=80=AFPM Miklos Szeredi <mszeredi@redhat.co=
-m> wrote:
-
-> > @@ -118,11 +111,9 @@ static int fuse_file_uncached_io_open(struct inode=
- *inode,
-> >                                       struct fuse_backing *fb)
-> >  {
-> >         struct fuse_inode *fi =3D get_fuse_inode(inode);
-> > -       int err;
-> >
-> > -       err =3D fuse_inode_uncached_io_start(fi, fb);
-> > -       if (err)
-> > -               return err;
-> > +       if (!fuse_inode_uncached_io_start(fi, fb))
-> > +               return fuse_EIO("failed to start uncached I/O");
+>Add pci_tsm_mmio_alloc()/pci_tsm_mmio_free() to parse that report into
+>a set of encrypted MMIO ranges, and pci_tsm_mmio_setup()/
+>pci_tsm_mmio_teardown() to mark those ranges as encrypted in iomem via
+>a new encrypted_iomem_resource tree (IORES_DESC_ENCRYPTED). With those
+>descriptors the TSM driver can use pci_tsm_mmio_setup() to inform
+>ioremap() how to map the device per the device expectations. The VM
+>is expected to validate the interface with the relying party before
+>accepting the device for operation.
 >
-> Why lose the internal error code?
-> If server implementation is wrong that is a good hint of what went wrong.
-> ETXTBSY is trying to mix cache mode and passthrough mode.
-> EBUSY is trying to passthrough to two different backing inodes.
-
-I'll move the error codes back, and turn them into fuse_EIO with an
-appropriate message in the caller.
-
-> > @@ -234,22 +228,10 @@ int fuse_file_io_open(struct file *file, struct i=
-node *inode)
-> >
-> >         if (ff->open_flags & FOPEN_PASSTHROUGH)
-> >                 err =3D fuse_file_passthrough_open(inode, file);
-> > -       else
-> > -               err =3D fuse_file_cached_io_open(inode, ff);
-> > -       if (err)
-> > -               goto fail;
-> > +       else if (!fuse_file_cached_io_open(inode, ff))
-> > +               err =3D fuse_EIO("conflicting passthrough open");
+>pci_tsm_mmio_alloc() also recovers the obfuscated starting address for
+>each encrypted MMIO range, since the VM is never disclosed the HPA
+>that correlates to the GPA of the device's MMIO. The obfuscated
+>address is BAR aligned.
 >
-> Same here.
-> If we can keep this bit of information and print it - it is helpful IMO,
-> even if we don't go all the way to annotate every error case with
-> a pretty log.
+>Based on an original patch by Aneesh Kumar K.V [1], and cherry-picked
+>from Dan Williams' upstream commit [2]. Major functional differences
+>from Dan's posting is due to the lack of evidence-store infrastructure
+>yet (device_evidence / DEVICE_EVIDENCE_TYPE_REPORT). The
+>pci_tsm_mmio_alloc() takes the raw report bytes directly from the caller
+>instead of pulling them from a device evidence store.
+>
+>Link: https://lore.kernel.org/linux-coco/20251117140007.122062-8-aneesh.kumar@kernel.org/ [1]
+>Link: https://lore.kernel.org/all/20260705220819.2472765-15-djbw@kernel.org/ [2]
 
-There is just one way to fail fuse_file_cached_io_open() so I think
-this is okay.
+LGTM from a kernel/resource.c standpoint:
 
-Thanks,
-Miklos
+Reviewed-by: Bradley Morgan <brads@mainlining.org> # kernel/
+
+
+>
+>Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+>Assisted-by: Claude:sonnet-5
+>---
+> drivers/pci/tsm.c       | 236 ++++++++++++++++++++++++++++++++++++++++
+> include/linux/ioport.h  |   2 +
+> include/linux/pci-tsm.h |  33 ++++++
+> kernel/resource.c       |   8 ++
+> 4 files changed, 279 insertions(+)
+>
+>diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+>index 5fdcd7f2e820..c8cfe89b6224 100644
+>--- a/drivers/pci/tsm.c
+>+++ b/drivers/pci/tsm.c
+>@@ -9,11 +9,16 @@
+> #define dev_fmt(fmt) "PCI/TSM: " fmt
+> 
+> #include <linux/bitfield.h>
+>+#include <linux/overflow.h>
+> #include <linux/pci.h>
+> #include <linux/pci-doe.h>
+> #include <linux/pci-tsm.h>
+>+#include <linux/range.h>
+>+#include <linux/sizes.h>
+>+#include <linux/slab.h>
+> #include <linux/sysfs.h>
+> #include <linux/tsm.h>
+>+#include <linux/unaligned.h>
+> #include <linux/xarray.h>
+> #include "pci.h"
+> 
+>@@ -898,3 +903,234 @@ int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type, const void *req,
+> 		       resp, resp_sz);
+> }
+> EXPORT_SYMBOL_GPL(pci_tsm_doe_transfer);
+>+
+>+static void mmio_teardown(struct pci_tsm_mmio *mmio, int nr)
+>+{
+>+	while (nr--) {
+>+		struct resource *res = pci_tsm_mmio_resource(mmio, nr);
+>+
+>+		/*
+>+		 * Entries past the point where pci_tsm_mmio_setup() stopped
+>+		 * (or that were never run through setup() at all, e.g. a
+>+		 * caller that only wants the resolved range from
+>+		 * pci_tsm_mmio_alloc()) were never insert_resource()'d, so
+>+		 * res->parent is NULL. remove_resource() dereferences
+>+		 * res->parent unconditionally.
+>+		 */
+>+		if (res->parent)
+>+			remove_resource(res);
+>+	}
+>+}
+>+
+>+/**
+>+ * pci_tsm_mmio_setup() - mark device MMIO as encrypted in iomem
+>+ * @pdev: device owner of MMIO resources
+>+ * @mmio: container of an array of resources to mark encrypted
+>+ */
+>+int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>+{
+>+	int i;
+>+
+>+	device_lock_assert(&pdev->dev);
+>+	if (pdev->dev.driver)
+>+		return -EBUSY;
+>+
+>+	for (i = 0; i < mmio->nr; i++) {
+>+		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+>+		int j;
+>+
+>+		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+>+			break;
+>+
+>+		/* Only require the caller to set the range, init remainder */
+>+		*res = DEFINE_RES_NAMED_DESC(res->start, resource_size(res),
+>+					     pci_name(pdev), IORESOURCE_MEM,
+>+					     IORES_DESC_ENCRYPTED);
+>+
+>+		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+>+			if (resource_contains(pci_resource_n(pdev, j), res))
+>+				break;
+>+
+>+		/* Request is outside of device MMIO */
+>+		if (j >= PCI_NUM_RESOURCES)
+>+			break;
+>+
+>+		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+>+			break;
+>+	}
+>+
+>+	if (i >= mmio->nr)
+>+		return 0;
+>+
+>+	mmio_teardown(mmio, i);
+>+
+>+	return -EINVAL;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_tsm_mmio_setup);
+>+
+>+void pci_tsm_mmio_teardown(struct pci_tsm_mmio *mmio)
+>+{
+>+	mmio_teardown(mmio, mmio->nr);
+>+}
+>+EXPORT_SYMBOL_GPL(pci_tsm_mmio_teardown);
+>+
+>+/*
+>+ * PCIe ECN TEE Device Interface Security Protocol (TDISP)
+>+ *
+>+ * Device Interface Report data object layout as defined by PCIe r7.0 section
+>+ * 11.3.11
+>+ */
+>+#define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_MSIX_TABLE BIT(0)
+>+#define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_MSIX_PBA BIT(1)
+>+#define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE BIT(2)
+>+#define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_UPDATABLE BIT(3)
+>+#define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID GENMASK(31, 16)
+>+
+>+/* An interface report 'pfn' is 4K in size */
+>+struct pci_tsm_devif_mmio {
+>+	__le64 phys;
+>+	__le32 nr_pfns;
+>+	__le32 attributes;
+>+};
+>+
+>+struct pci_tsm_devif_report {
+>+	__le16 interface_info;
+>+	__le16 reserved;
+>+	__le16 msi_x_message_control;
+>+	__le16 lnr_control;
+>+	__le32 tph_control;
+>+	__le32 mmio_range_count;
+>+	struct pci_tsm_devif_mmio mmio[];
+>+};
+>+
+>+/**
+>+ * pci_tsm_mmio_alloc() - allocate encrypted MMIO range descriptor
+>+ * @pdev: device owner of MMIO ranges
+>+ * @report: raw TDISP Device Interface Report bytes (PCIe r7.0 section
+>+ *	    11.3.11), e.g. as returned by GET_DEVICE_INTERFACE_REPORT
+>+ * @report_len: length of @report in bytes
+>+ *
+>+ * Return: the encrypted MMIO range descriptor on success, NULL on failure
+>+ *
+>+ * Unlike upstream, @report is supplied directly by the caller rather than
+>+ * pulled from a device evidence store, which this tree does not yet have.
+>+ */
+>+struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>+					const void *report, size_t report_len)
+>+{
+>+	const struct pci_tsm_devif_report *devif_report = report;
+>+	u64 reporting_bar_base, last_reporting_end;
+>+	u32 mmio_range_count;
+>+	int last_bar = -1;
+>+	int i;
+>+
+>+	if (report_len < sizeof(*devif_report))
+>+		return NULL;
+>+
+>+	mmio_range_count = __le32_to_cpu(devif_report->mmio_range_count);
+>+
+>+	/* check that the report is self-consistent on mmio entries */
+>+	if (report_len < struct_size(devif_report, mmio, mmio_range_count))
+>+		return NULL;
+>+
+>+	/* create pci_tsm_mmio descriptors from the report data */
+>+	struct pci_tsm_mmio *mmio __free(kfree) =
+>+		kzalloc_flex(*mmio, mmio, mmio_range_count);
+>+	if (!mmio)
+>+		return NULL;
+>+
+>+	for (i = 0; i < mmio_range_count; i++) {
+>+		u64 range_off;
+>+		struct range range;
+>+		const struct pci_tsm_devif_mmio *mmio_data = &devif_report->mmio[i];
+>+		struct pci_tsm_mmio_entry *entry =
+>+			pci_tsm_mmio_entry(mmio, mmio->nr);
+>+		u64 tsm_offset = __le64_to_cpu(mmio_data->phys);
+>+		u64 size = (u64)__le32_to_cpu(mmio_data->nr_pfns) * SZ_4K;
+>+		u32 attr = __le32_to_cpu(mmio_data->attributes);
+>+		int bar = FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID,
+>+				    attr);
+>+
+>+		if (bar >= PCI_STD_NUM_BARS ||
+>+		    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+>+		    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+>+			pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+>+			return NULL;
+>+		}
+>+
+>+		if (last_bar > bar) {
+>+			pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+>+			return NULL;
+>+		}
+>+
+>+		if (last_bar < bar) {
+>+			resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+>+
+>+			/* Transition to a new bar */
+>+			last_bar = bar;
+>+
+>+			/*
+>+			 * Determine the obfuscated base of the BAR. BAR
+>+			 * offsets are never obfuscated.
+>+			 */
+>+			reporting_bar_base = tsm_offset & ~mask;
+>+		} else if (tsm_offset < last_reporting_end) {
+>+			pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+>+			return NULL;
+>+		}
+>+
+>+		/* Per spec the tsm_offset never results in overflow / underflow */
+>+		last_reporting_end = tsm_offset + size;
+>+		if (last_reporting_end < tsm_offset) {
+>+			pci_dbg(pdev, "Reporting range overflow\n");
+>+			return NULL;
+>+		}
+>+
+>+		range_off = tsm_offset - reporting_bar_base;
+>+		if (pci_resource_len(pdev, bar) < range_off + size) {
+>+			pci_dbg(pdev, "Reporting range larger than BAR size\n");
+>+			return NULL;
+>+		}
+>+
+>+		range.start = pci_resource_start(pdev, bar) + range_off;
+>+		range.end = range.start + size - 1;
+>+
+>+		/* Only record the TEE ranges for later consideration by ioremap() */
+>+		if (FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE,
+>+			      attr)) {
+>+			pci_dbg(pdev, "Skipping non-TEE range, BAR%d %pra\n",
+>+				bar, &range);
+>+			continue;
+>+		}
+>+
+>+		entry->res.start = range.start;
+>+		entry->res.end = range.end;
+>+		entry->res.flags = IORESOURCE_MEM;
+>+		entry->tsm_offset = tsm_offset;
+>+		mmio->nr++;
+>+	}
+>+
+>+	return_ptr(mmio);
+>+}
+>+EXPORT_SYMBOL_GPL(pci_tsm_mmio_alloc);
+>+
+>+/**
+>+ * pci_tsm_mmio_free() - free a pci_tsm_mmio instance
+>+ * @pdev: device owner of MMIO ranges
+>+ * @mmio: instance to free
+>+ *
+>+ * Returns 0 if @mmio was idle on entry, -EBUSY otherwise
+>+ */
+>+int pci_tsm_mmio_free(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>+{
+>+	for (int i = 0; i < mmio->nr; i++) {
+>+		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+>+
+>+		if (dev_WARN_ONCE(&pdev->dev, resource_assigned(res),
+>+				  "MMIO resource still assigned %pr\n", res))
+>+			return -EBUSY;
+>+	}
+>+	kfree(mmio);
+>+	return 0;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_tsm_mmio_free);
+>diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>index f7930b3dfd0a..122f1eefb4b9 100644
+>--- a/include/linux/ioport.h
+>+++ b/include/linux/ioport.h
+>@@ -144,6 +144,7 @@ enum {
+> 	IORES_DESC_RESERVED			= 7,
+> 	IORES_DESC_SOFT_RESERVED		= 8,
+> 	IORES_DESC_CXL				= 9,
+>+	IORES_DESC_ENCRYPTED			= 10,
+> };
+> 
+> /*
+>@@ -240,6 +241,7 @@ struct resource_constraint {
+> extern struct resource ioport_resource;
+> extern struct resource iomem_resource;
+> extern struct resource soft_reserve_resource;
+>+extern struct resource encrypted_iomem_resource;
+> 
+> extern struct resource *request_resource_conflict(struct resource *root,
+> struct resource *new);
+> extern int request_resource(struct resource *root, struct resource *new);
+>diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+>index a6435aba03f9..e54ad057fa8e 100644
+>--- a/include/linux/pci-tsm.h
+>+++ b/include/linux/pci-tsm.h
+>@@ -199,6 +199,34 @@ enum pci_tsm_req_scope {
+> 	PCI_TSM_REQ_DEBUG_WRITE = 3,
+> };
+> 
+>+/**
+>+ * struct pci_tsm_mmio_entry - an encrypted MMIO range
+>+ * @res: MMIO address range (typically Guest Physical Address, GPA)
+>+ * @tsm_offset: Host Physical Address, HPA obfuscation offset added by the TSM.
+>+ *		Translates report addresses to GPA.
+>+ */
+>+struct pci_tsm_mmio_entry {
+>+	struct resource res;
+>+	u64 tsm_offset;
+>+};
+>+
+>+struct pci_tsm_mmio {
+>+	int nr;
+>+	struct pci_tsm_mmio_entry mmio[];
+>+};
+>+
+>+static inline struct pci_tsm_mmio_entry *
+>+pci_tsm_mmio_entry(struct pci_tsm_mmio *mmio, int idx)
+>+{
+>+	return &mmio->mmio[idx];
+>+}
+>+
+>+static inline struct resource *pci_tsm_mmio_resource(struct pci_tsm_mmio *mmio,
+>+						     int idx)
+>+{
+>+	return &mmio->mmio[idx].res;
+>+}
+>+
+> #ifdef CONFIG_PCI_TSM
+> int pci_tsm_register(struct tsm_dev *tsm_dev);
+> void pci_tsm_unregister(struct tsm_dev *tsm_dev);
+>@@ -216,6 +244,11 @@ void pci_tsm_tdi_constructor(struct pci_dev *pdev, struct pci_tdi *tdi,
+> ssize_t pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope
+> scope,
+> 			  sockptr_t req_in, size_t in_len, sockptr_t req_out,
+> 			  size_t out_len, u64 *tsm_code);
+>+int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio);
+>+void pci_tsm_mmio_teardown(struct pci_tsm_mmio *mmio);
+>+struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>+					const void *report, size_t report_len);
+>+int pci_tsm_mmio_free(struct pci_dev *pdev, struct pci_tsm_mmio *mmio);
+> #else
+> static inline int pci_tsm_register(struct tsm_dev *tsm_dev)
+> {
+>diff --git a/kernel/resource.c b/kernel/resource.c
+>index cfc1a00e86aa..5500f7828b2d 100644
+>--- a/kernel/resource.c
+>+++ b/kernel/resource.c
+>@@ -56,6 +56,14 @@ struct resource soft_reserve_resource = {
+> 	.flags	= IORESOURCE_MEM,
+> };
+> 
+>+struct resource encrypted_iomem_resource = {
+>+	.name	= "Encrypted MMIO",
+>+	.start	= 0,
+>+	.end	= -1,
+>+	.desc	= IORES_DESC_ENCRYPTED,
+>+	.flags	= IORESOURCE_MEM,
+>+};
+>+
+> static DEFINE_RWLOCK(resource_lock);
+> 
+> /*
+>
+
+--- Thanks!
+"I'm not a very positive person" - Linus torvalds
