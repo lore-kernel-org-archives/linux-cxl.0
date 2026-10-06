@@ -1,211 +1,545 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB1537F735;
-	Mon,  5 Oct 2026 23:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4A68287E
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Oct 2026 03:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791243478; cv=none; b=q1wBiKMA2MGunOgg9VQdTsDbZd8A1xEmJj7hS8SxbBNCtote2WCrYGKpkxYrrhFe4yTQZScp0TDddmPb5kjiYqZ0uuWX0y4+4uErpBFM9G4QOihAMCNCtwrYpF9K/Il0Kd9IJ69Zr7o6JTZgvd8+cj0FeDlPtqlI///KmvtkoVw=
+	t=1791256159; cv=none; b=DaJUemS5+JXYtmt/hafCOHw0nbgVvfXljw75xrFokV4MQ08IefQzoLmy2e6fXLJzENRitL2BSH3pp34+KeTwcfbj5EzDD/U5sb/zUy/Wo+MAs8bAg72tIOd5KLUr3kx1shX9B5PefpiiJpAm7EHjaxnJU/I86LqKKf+it36Rh9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791243478; c=relaxed/simple;
-	bh=9II7e20rC3YRtMC9ZN9hnzcEONlfjBuITelQhDbx2AE=;
+	s=arc-20240116; t=1791256159; c=relaxed/simple;
+	bh=OVft/xbEqPgCYgTAUo60M/Gr4LyQYSlQ1eFSvv483Bg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tid6ShMo4KMHTHPGn6IjflIexFafVT1DBYWT924ruxKkPlNHK6Me2gxqktPDRzHbSrjHD2pNARjfD2SUzUgP3uIsXsGhXbrD2eP10R7N/tBT4IBElmm0d4+jFrdZ3FzY1CVsnjSH4NOp0yMjmFGVjWMMniwXQw6e2T9YkLdy+f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3F3E9A04C8;
-	Mon,  5 Oct 2026 23:27:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf17.hostedemail.com (Postfix) with ESMTPA id 7FE9F18;
-	Mon,  5 Oct 2026 23:27:44 +0000 (UTC)
-Date: Mon, 5 Oct 2026 18:27:43 -0500
-From: John Groves <john@groves.net>
-To: Miklos Szeredi <mszeredi@redhat.com>
-Cc: fuse-devel@lists.linux.dev, Amir Goldstein <amir73il@gmail.com>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	david@kernel.org, willy@infradead.org, brauner@kernel.org
-Subject: Re: [PATCH v2 0/8] fuse: DAX device based extent maps (famfs)
-Message-ID: <asQcBebepPb9CXzS@groves.net>
-References: <20261001150935.655979-1-mszeredi@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bH3O/9Ao1t7F/RCXczTYlTrVXjLXN+uFajQTeIdS7F4l6mhcEkKbCnZj7VPzaQ/y/qLbL0FibzDjrdsura181lYWrgXzEqSz24PqJCwmI3uxj2/Qv6DWBMpANsaVhuZyVrFEZnp/8KKSk84e5fd7Kpgrsw11orbXc89dmZ/RNYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AHcYh23O; arc=none smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHcYh23O"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-351348eb579so693672eec.0
+        for <linux-cxl@vger.kernel.org>; Mon, 05 Oct 2026 20:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791256156; x=1791860956; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=XcBjTo8k6f4ZxjFF0dkhyrWCRKv8XDO/3DYCWWX3kBk=;
+        b=AHcYh23ObOlgqRqqoa9dtVgq91wyVEZZpNEclhjNnSQMnjzdjSBPF+XAIsa0jft/PE
+         9ylhMznp5SVX/Ru8HITen7JkYco2MIbxaiCdP94JMt1P9taqDh/tOBTK/hDlHevYD3Py
+         yAiX/A8zDtKx54cs2XXOHrX0UmLb/dEzzhaTl+6njVgfgcM2vrm4KJYrAx9kNJIgfnsj
+         HXah6yat4fowPfJnBm705xwP2/zrPKsWlEo70sl4O1rjZgNRNlym6Is6upuipmTwhbQN
+         ku05jZ69lzNXx2gMj+fn36/D9CFxOIEC7/Md4a56LpUmGZO57IT3QiyXS0HoSul8j86N
+         9ymg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791256156; x=1791860956;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XcBjTo8k6f4ZxjFF0dkhyrWCRKv8XDO/3DYCWWX3kBk=;
+        b=w6sj9AbQk57LRPvb8kTuv+DRqPjB0haZmQGq0fZRE7KVvMHYEy0VKJh9aw+gr60fil
+         1pUxkk1hrC8t8Omt3pyWS17/Pq4OYQDSfzZkr3xO4SRdZUi2QZxiDjCVlZeRfu8/0OO7
+         Ba099AmDcAmNChRwI7c5AQMvPjbM8MpLR1KrkIQ57pjONnykwshPcVks9zQoFANF5Lxb
+         W4F1edlvXwGG0O0TtJGryh6orug1GvKDA7d3002n+dc2KrDMej8sfnalr6krd9frz+Si
+         aWJo9hEgfr1/hu85p6bX4nOyqySxLlAHLyHCwgkAPt/Nnp5JqlqQGjh1kQIgDt3UW6MI
+         /Tig==
+X-Gm-Message-State: AFq9FYImnM2GuMldVHpROnpxatkptS1ux6vgkK/EhC7/Fu4KyAAEwNtM
+	6Jf2JKYXbSfXzGn2U/Rm5RmiPtctFi46CuV6gTAHENXq4kXemFIhM05M
+X-Gm-Gg: AYBFou2GRrR+hqXHI2+dYQpVezKB+x2Aq8+yJBAyggeEermSo2z4hyIQYMDzCQFAFdT
+	tEfLL81yh1b+14h+//XBT4K+XZncOO1cK54K01FTKN8sRx4dgiZF+6hQZI9qKsQGp4bt5aQ2vEr
+	wPz0w3lC4wEYFHQgmoXt0DNIC/CZ+ZuiBEQJL4QW3bjJS54yNT8SbXE/5g5cDZDtrNGOGVW/XRy
+	03AxtFOuV6hl7aU8Hcb9M8XIimh3aXSqtJKp6PKxGagVmU98ae9NP2iigMf14PeWU1jioYdhn7K
+	5uSpVPJV0IvNhmoto48sPo4B08oae+i1D8ctxX4pfbE+sdtLBPhk9tlKB10meDEq22Pr4hEqRQz
+	s3+g8orljXk4no8lJiQe8pVMhbhjKTsAAhCTHUBzfWIoUQvSWw0W/jeWmTNhTYxGCHDhLNWEEgr
+	Go8hcwQXi2GQu1pqQKh5uaTVTddGOcazfS1JI6HQRY0+SZrZzyxP8LwCB95NSpMxvgUO+nIO3Bw
+	A==
+X-Received: by 2002:a05:7301:2b5:b0:34e:f619:eeba with SMTP id 5a478bee46e88-3514501ead2mr1709782eec.3.1791256155809;
+        Mon, 05 Oct 2026 20:09:15 -0700 (PDT)
+Received: from localhost ([115.97.153.197])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-351469f7617sm3018821eec.9.2026.10.05.20.09.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 20:09:15 -0700 (PDT)
+Date: Tue, 6 Oct 2026 08:39:12 +0530
+From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dave.jiang@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com
+Subject: Re: [ndctl PATCH] cxl/test: Add ELC MCE alias retirement tests
+Message-ID: <asRmWIC64soVVL4Q@acer-nitro-anv15-41>
+References: <20260906041844.13891-1-shaikhkamal2012@gmail.com>
+ <aqqtlTAh9faQzqCE@acer-nitro-anv15-41>
+ <c60ee4b7-f2b5-4c45-8414-6f7c31462d28@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261001150935.655979-1-mszeredi@redhat.com>
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: uo6wdaohey8iduce9nknm48zq973gpe6
-X-Rspamd-Queue-Id: 7FE9F18
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX1/8NysK9/Gsulo4cuV+NGDnPd91igPQ7DI=
-X-HE-Tag: 1791242864-711983
-X-HE-Meta: U2FsdGVkX1+6uSTZIM+DeWgPC6Kyumy1z9XWtSk2yK1zL1dea3ycghq9QlZAKH+fZaqbZ9E41aYkRCAS16OC3LeULd2i9Yc5Jkr079BLSvFn11qev6T42egEtUcgc6MgVpfgcTB94L6Ak1oPOdAkQQPeX7Mn2eQUhzIc4A4gOaqlt5ZOBe6yZQyEJjZ1VU2pkgJHTQh0bcScVuTUNJZfLBRztfS8yaH03b5ljVq5HXurmtV8GY3NEocGTzXgzIuv7iKlvA0mkPokdwk74M2jHlI0ObQNza3n4HGmlZFoDmG3BrmqsI08QD3kx8gWN6ojIR6TpBLoncu7b3nj2Z3YuCXCx6ur9DrBrFwkckna72eEqOZaov1DUQ==
+In-Reply-To: <c60ee4b7-f2b5-4c45-8414-6f7c31462d28@amd.com>
 
-On 26/10/01 05:07PM, Miklos Szeredi wrote:
-> This is the FUSIfication of the famfs-fuse patchset.
-
-This series (v1) was sent on the day I left on a vacation from which I
-returned at the end of last week.
-
-I feel I should acknowledge this and assure everybody that I'm working
-through it. This really runs my famfs/fuse patches through a 
-chipper/shredder, and it is gonna take me some time to review it, 
-understand it and test it.
-
-A few comments below, and specific patch comments should start trickling out.
-
-One very high level quip though: If you're comfortable with this, go ahead 
-and merge it. We can fix bugs and performance problems, if any, in due 
-course. I'm serious about that.
-
+On Wed, Sep 16, 2026 at 11:40:53AM -0500, Cheatham, Benjamin wrote:
+> Hi Shaikh,
 > 
->  - extent maps are assigned to a backing ID
+> Sorry I've been on vacation for the last week and half and just now starting to get caught up. I don't have time
+> to do more than just a quick glance at the moment, but I'll come back and do a full review in the next few days.
 > 
->  - 64 bit backing ID's managed by server
-
-I thought we agreed you weren't gonna do these two, but if it does no harm,
-whatever.
-
+> On 9/16/2026 9:54 AM, Shaikh Kamaluddin wrote:
+> > Hi Alison and Ben,
+> > 
+> > Gentle ping on this patch. Could you please take a look when you have a
+> > time?
+> > 
+> > Thanks,
+> > Shaikh Kamaluddin
+> > 
+> > On Sun, Sep 06, 2026 at 09:48:44AM +0530, Shaikh Kamaluddin wrote:
+> >> ELC alias retirement depends on the error severity and on whether
 > 
->  - maps can be linear or cyclic (striped)
+> You should spell out ELC on the first usage, helps with context.
 
-Please correct me if any of my analysis below is wrong...
+Hello Ben,
+Sorry for delay reply.
+I will spell out Extended Linear Cache(ELC) on its first use.
 
-Here what you've done is remove my explicitly interleaved extent lists,
-which have a header containing a chunk size and a set of strip extents (which
-are basically fully self-describing), and replace is with just simple extent 
-lists that have an optional CYCLIC flag in the header. If the flag is set on 
-an extent list, (and let's say the strip extents need to be 1GiB and the 
-chunk size is 2MiB), each CYCLIC extent gets its size set to the chunk size 
-and the kernel trusts that the actual size allocated per stirp is actually 
-sufficient that i_size will not cycle past the end of the *actually* 
-allocated size of each strip extent.
-
-This resembles an idea I considered, to try to make the metadata *look* 
-simpler while still carrying the info that needs to be conveyed. But this 
-implementation feels pretty janky to me, and it should at least be 
-meticulously documented. Better might be to put the chunk_size in the header,
-and then you arguably don't need the CYCLIC flag, since non-zero chunk_size
-means the same thing. But actually, you can accept multiple CYCLIC strip
-lists if you set chunk_size and then set the CYCLIC flag on the first of
-each strip set.
-
-I see the kernel-side rejects these s/size/chunk_size/ strip extents if they
-are not all the same size. Why not put the chunk size in the header and let
-the extents honestly describe the offset and range that they cover? 
-The current design can't test for sufficient strip extent sizes, although 
-it replaces code that did verify this.
-
+> >> vendor-specific MCE rules consider the reported address usable. Add
+> >> regression coverage for these decisions to cxl-elc.sh.
+> >>
+> >> Inject MCE records through the mce-inject debugfs interface and verify
+> >> the resulting bank status and alias-offlining messages in dmesg. Test
+> >> corrected and uncorrected errors on Intel, and exercise the poison,
+> >> deferred, and legacy bank-4 cases required by AMD address validation.
+> >>
+> >> Derive the ELC SPA and its alias from cxl-list output, select offline
+> >> test addresses from lsmem, and discover available MCA banks dynamically.
+> >> Use a distinct SPA for each case and clean up modules loaded by the test.
+> >>
+> >> Suggested-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> >> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> >> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> >> ---
+> >> Testing:
+> >> The test was run under virtme-ng with cxl_test configured for Extended
+> >> Linear Cache operation:
+> >>
+> >> Intel, GenuineIntel:
+> >> --------------------
+> >>
+> >> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu Skylake-Server-v4,+mce,+mca -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
+> >>
+> >> 2 . Go to ndctl-main directoy with this patches 
+> >>
+> >> env NDCTL="$PWD/build/ndctl/ndctl" 
+> >> DAXCTL="$PWD/build/daxctl/daxctl" 
+> >> CXL="$PWD/build/cxl/cxl" 
+> >> ./test/cxl-elc.sh
+> >>
+> >> RESULT:
+> >> --------
+> >>
+> >> PASS Intel corrected: alias no
+> >> PASS Intel uncorrected: alias yes
+> >> CXL ELC MCE validation passed for GenuineIntel: 2 cases
+> >> -----------------------------------------------------------------
+> >>
+> >> AMD, AuthenticAMD legacy MCA: 
+> >> -----------------------------
+> >>
+> >> 1. vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu EPYC-Milan -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
 > 
->  - API supports nesting, but not implemented yet (i.e. multiple striped
->    extents per inode, a-la famfs)
+> One thing to note: real Milan hardware doesn't support CXL; CXL 1.1 support was added in the next generation (Genoa). The kernel is also broken on Genoa since the driver is geared towards CXL 2.0+, so I'd
+> recommend a Turin+ machine for hardware testing.
+
+Thanks for clarifying. I used the EPYC-Milan QEMU CPU model under TCG
+only to exercise the legacy AMD MCA path, it was not intended to imply
+CXL support on physical Milan Hardware. The ELC setup was provided by
+cxl_test.
+
+Agreed that Turin would be appropriate platform for any physical AMD
+hardware testing.
 > 
-> libfuse/famfs trees for testing:
+> I don't think this is really applicable though, since I'm 99% sure AMD hardware doesn't have ELC support to begin with. I'll try running the tests on hardware and see what happens, though I think it will just
+> break. There may need to be a check to see what platform the test is running on so we can skip platforms that don't have support (i.e. real AMD hardware).
 > 
->  https://github.com/szmi/libfuse.git#extent-map-v2
->  https://github.com/szmi/famfs.git#extent-map-v2
+> I think it's probably fine to leave the test in place though in the event AMD adds ELC support later on.
 > 
-> This patchset:
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#extent-map-v2
-> 
-> Passes famfs smoke test on emulated dax device.
 
-Thank you for doing that. Prior to this there have been many strong opinions
-but none of the holders of said opinions built or tested famfs.
+That make sense. The AMD cases are intended to exercise the
+vendor-specific MCE address-validation paths against the mock ELC region
+created by cxl_test, rather than claim ELC support on physical AMD
+hardware.
 
-However, the smoke tests passing isn't fully legit, because the patch to the
-famfs fuse server passes the entire strip size on CYCLIC mappings, meaning
-it just produces a concatenation of ranges - which does not achieve the 
-interleaving goal at all. That case degenerates to simple extents.
+I agree that the test should skip cleanly when ELC support is
+unavailable, while retaining the AMD mock coverage for possible future
+hardware support.
 
-If this is the new design for passing cycling maps into the kernel, a test
-will be added to catch this - but it's brand new and didn't get a test added,
-so it wasn't caught automatically.
+Thanks,
+Shaikh Kamal
 
-> 
-> Comments are welcome.
-
-One more... This patch inserts an rbtree lookup into the fault path via the
-very-performance-critical fuse_ext_map_iomap_begin() path. This is 
-performance-critical because it handles TLB/PTE/PMD faults when the memory
-is never sparse (no I/O to amortize over). The code you replaced did several
-things to avoid this sort of chasing:
-
-- With interleaved extent lists, strip and strip-offset can be calculated
-  in order 1 (and then strip overflow can be checked and avoided)
-- Simple extent lists were checked for constant extent sizes; if constant,
-  we can just index into the list (also order 1)
-
-Why do I want to avoid an rbtree lookup or the bpf nonsense in the fault path?
-"Because this is memory and it must run at memory speeds" --yours truly
-
-To be specific: each chase/dereference that results in an L3 cache miss adds
-a stall of (1 * MEMORY_LATENCY) to the fault time. This is the good reason 
-why I didn't do any chasing in the fault path of the famfs code that you're
-replacing.
-
-OK, one more. You're using the rbtree for indexing by file offset, which is
-a zero-based non-sparse range in this case. If this could not be avoided 
-(which I think it can) you should use an xarray or radix tree for that...
-right?
-
-> 
 > Thanks,
-> Miklos
+> Ben
+> >>
+> >> 2. Go to ndctl-main directoy with this patches  
+> >> env NDCTL="$PWD/build/ndctl/ndctl" 
+> >> DAXCTL="$PWD/build/daxctl/daxctl" 
+> >> CXL="$PWD/build/cxl/cxl" 
+> >> ./test/cxl-elc.sh
+> >>
+> >> RESULT:
+> >> ---------
+> >> PASS AMD plain corrected: alias no
+> >> PASS AMD plain uncorrected: alias no
+> >> PASS AMD poison-only (invalid encoding): alias no
+> >> PASS AMD deferred without poison: alias no
+> >> PASS AMD deferred with poison: alias yes
+> >> PASS AMD uncorrected with poison: alias yes
+> >> PASS AMD bank-4 non-memory poison (invalid encoding): alias no
+> >> PASS AMD legacy bank-4 corrected DRAM ECC: alias no
+> >> CXL ELC MCE validation passed for AuthenticAMD: 8 cases
+> >>
+> >>  test/cxl-elc.sh | 313 +++++++++++++++++++++++++++++++++++++++++++++++-
+> >>  1 file changed, 312 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/test/cxl-elc.sh b/test/cxl-elc.sh
+> >> index cfa09cb..bd600b4 100755
+> >> --- a/test/cxl-elc.sh
+> >> +++ b/test/cxl-elc.sh
+> >> @@ -8,6 +8,30 @@ rc=77
+> >>  
+> >>  set -ex
+> >>  
+> >> +mce_inject_loaded=0
+> >> +
+> >> +cleanup()
+> >> +{
+> >> +	local status=$?
+> >> +	local cleanup_status=0
+> >> +
+> >> +	trap - EXIT ERR
+> >> +	set +e
+> >> +
+> >> +	if ((mce_inject_loaded)); then
+> >> +		modprobe -r mce-inject || cleanup_status=1
+> >> +	fi
+> >> +
+> >> +	modprobe -r cxl_test || cleanup_status=1
+> >> +
+> >> +	if ((status == 0 && cleanup_status != 0)); then
+> >> +		status=1
+> >> +	fi
+> >> +
+> >> +	exit "$status"
+> >> +}
+> >> +
+> >> +trap cleanup EXIT
+> >>  trap 'err $LINENO' ERR
+> >>  
+> >>  check_prereq "jq"
+> >> @@ -85,10 +109,297 @@ compare_bases()
+> >>  	((cxlrd_hpa == ep1_hpa - ep1_size)) || err "$LINENO"
+> >>  }
+> >>  
+> >> +mce_skip()
+> >> +{
+> >> +	echo "SKIP CXL ELC MCE subtest: $*"
+> >> +	return 0
+> >> +}
+> >> +
+> >> +dmesg_count()
+> >> +{
+> >> +	dmesg | grep -F -c -- "$1" || true
+> >> +}
+> >> +
+> >> +wait_for_dmesg()
+> >> +{
+> >> +	local pattern="$1"
+> >> +	local previous="$2"
+> >> +	local count
+> >> +
+> >> +	for _ in {1..50}; do
+> >> +		count="$(dmesg_count "$pattern")"
+> >> +		((count > previous)) && return 0
+> >> +		sleep 0.1
+> >> +	done
+> >> +
+> >> +	return 1
+> >> +}
+> >> +
+> >> +address_is_offline()
+> >> +{
+> >> +	local address="$1"
+> >> +	local range start end
+> >> +
+> >> +	while read -r range; do
+> >> +		[[ "$range" == *-* ]] || continue
+> >> +		start=$(( ${range%%-*} ))
+> >> +		end=$(( ${range##*-} ))
+> >> +		((address >= start && address <= end)) && return 0
+> >> +	done < <(echo "$lsmem_json" | jq -r \
+> >> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+> >> +		 .range')
+> >> +
+> >> +	return 1
+> >> +}
+> >> +
+> >> +find_offline_spas()
+> >> +{
+> >> +	local nr_spas="$1"
+> >> +	local range start end low high candidate alias spa_string alias_string
+> >> +	local page_size region_end cache_end i
+> >> +	local stride=0x10000
+> >> +
+> >> +	lsmem_json="$(lsmem --json --bytes --output RANGE,STATE)"
+> >> +	page_size="$(getconf PAGESIZE)"
+> >> +	region_end=$((region_hpa + region_size))
+> >> +	cache_end=$((region_hpa + elc_size))
+> >> +	inject_spas=()
+> >> +	alias_spas=()
+> >> +
+> >> +	while read -r range; do
+> >> +		[[ "$range" == *-* ]] || continue
+> >> +		start=$(( ${range%%-*} ))
+> >> +		end=$(( ${range##*-} ))
+> >> +
+> >> +		low=$start
+> >> +		((low < region_hpa)) && low=$region_hpa
+> >> +		high=$((end + 1))
+> >> +		((high > cache_end)) && high=$cache_end
+> >> +		((low < high)) || continue
+> >> +
+> >> +		# Stay away from the first pages of the hotplugged range.
+> >> +		candidate=$((low + stride))
+> >> +		candidate=$((
+> >> +			(candidate + page_size - 1) / page_size * page_size
+> >> +		))
+> >> +		inject_spas=()
+> >> +		alias_spas=()
+> >> +		for ((i = 0; i < nr_spas; i++)); do
+> >> +			candidate=$((candidate + (i > 0 ? stride : 0)))
+> >> +			alias=$((candidate + elc_size))
+> >> +			((candidate < high && alias < region_end)) || break
+> >> +			address_is_offline "$alias" || break
+> >> +			printf -v spa_string '0x%x' "$candidate"
+> >> +			printf -v alias_string '0x%x' "$alias"
+> >> +			inject_spas+=("$spa_string")
+> >> +			alias_spas+=("$alias_string")
+> >> +		done
+> >> +		((${#inject_spas[@]} == nr_spas)) || continue
+> >> +		return 0
+> >> +	done < <(echo "$lsmem_json" | jq -r \
+> >> +		'.memory[] | select((.state | ascii_downcase) == "offline") |
+> >> +		 .range')
+> >> +
+> >> +	return 1
+> >> +}
+> >> +
+> >> +discover_mca_banks()
+> >> +{
+> >> +	local path name
+> >> +
+> >> +	for path in \
+> >> +		/sys/devices/system/machinecheck/machinecheck0/bank[0-9]*; do
+> >> +		[[ -e "$path" ]] || continue
+> >> +		name="${path##*/}"
+> >> +		printf '%s\n' "${name#bank}"
+> >> +	done | sort -n -u
+> >> +}
+> >> +
+> >> +has_bank()
+> >> +{
+> >> +	local wanted="$1"
+> >> +	local bank
+> >> +
+> >> +	for bank in "${mca_banks[@]}"; do
+> >> +		[[ "$bank" == "$wanted" ]] && return 0
+> >> +	done
+> >> +
+> >> +	return 1
+> >> +}
+> >> +
+> >> +select_mce_parameters()
+> >> +{
+> >> +	local bank
+> >> +
+> >> +	vendor="$(awk '/^vendor_id/{ print $3; exit }' /proc/cpuinfo)"
+> >> +	readarray -t mca_banks < <(discover_mca_banks)
+> >> +	((${#mca_banks[@]})) || return 1
+> >> +
+> >> +	case "$vendor" in
+> >> +	GenuineIntel)
+> >> +		test_bank="${mca_banks[-1]}"
+> >> +		test_case_count=2
+> >> +		;;
+> >> +	AuthenticAMD)
+> >> +		# The usable-address corrected-error case is the legacy bank-4 DRAM
+> >> +		# ECC encoding (XEC 8). It is not valid for an SMCA bank.
+> >> +		grep -qw smca /proc/cpuinfo && return 1
+> >> +		has_bank 4 || return 1
+> >> +		non_b4_bank=
+> >> +		for bank in "${mca_banks[@]}"; do
+> >> +			[[ "$bank" == 4 ]] || non_b4_bank="$bank"
+> >> +		done
+> >> +		[[ -n "$non_b4_bank" ]] || return 1
+> >> +		test_case_count=8
+> >> +		;;
+> >> +	*)
+> >> +		return 1
+> >> +		;;
+> >> +	esac
+> >> +}
+> >> +
+> >> +inject_mce()
+> >> +{
+> >> +	local status="$1"
+> >> +	local bank="$2"
+> >> +	local mce_inject=/sys/kernel/debug/mce-inject
+> >> +
+> >> +	echo sw > "$mce_inject/flags"
+> >> +	echo "$status" > "$mce_inject/status"
+> >> +	echo 0x80 > "$mce_inject/misc"
+> >> +	echo "$inject_spa" > "$mce_inject/addr"
+> >> +	echo "$bank" > "$mce_inject/bank"
+> >> +}
+> >> +
+> >> +run_mce_case()
+> >> +{
+> >> +	local name="$1"
+> >> +	local status="$2"
+> >> +	local bank="$3"
+> >> +	local expect_alias="$4"
+> >> +	local index="$5"
+> >> +	local alias_msg bank_msg status_tag
+> >> +	local alias_before bank_before
+> >> +
+> >> +	inject_spa="${inject_spas[$index]}"
+> >> +	alias_spa="${alias_spas[$index]}"
+> >> +	alias_msg="Offlining aliased SPA address0: $alias_spa"
+> >> +	status_tag="${status#0x}"
+> >> +	bank_msg="Bank $bank: $status_tag"
+> >> +	alias_before="$(dmesg_count "$alias_msg")"
+> >> +	bank_before="$(dmesg_count "$bank_msg")"
+> >> +
+> >> +	inject_mce "$status" "$bank"
+> >> +	wait_for_dmesg "$bank_msg" "$bank_before" || err "$LINENO"
+> >> +
+> >> +	if [[ "$expect_alias" == "yes" ]]; then
+> >> +		wait_for_dmesg "$alias_msg" "$alias_before" || err "$LINENO"
+> >> +	else
+> >> +		(($(dmesg_count "$alias_msg") == alias_before)) || \
+> >> +			err "$LINENO"
+> >> +	fi
+> >> +
+> >> +	echo "PASS $name: SPA $inject_spa, alias $alias_spa, bank $bank, alias $expect_alias"
+> >> +}
+> >> +
+> >> +run_intel_mce_cases()
+> >> +{
+> >> +	run_mce_case "Intel corrected" 0x9c00000000000080 \
+> >> +		"$test_bank" no 0
+> >> +	run_mce_case "Intel uncorrected" 0xbc00000000000080 \
+> >> +		"$test_bank" yes 1
+> >> +}
+> >> +
+> >> +run_amd_mce_cases()
+> >> +{
+> >> +	# Mirror the full AMD matrix documented with the kernel fix. The two
+> >> +	# poison-only records have UC=0 and Deferred=0, so they are not valid
+> >> +	# architectural records. Keep them as software-injection robustness
+> >> +	# coverage and expect the corrected-error filter to reject them.
+> >> +	run_mce_case "AMD plain corrected" 0x9c00000000000080 \
+> >> +		"$non_b4_bank" no 0
+> >> +	run_mce_case "AMD plain uncorrected" 0xbc00000000000080 \
+> >> +		"$non_b4_bank" no 1
+> >> +	run_mce_case "AMD poison-only (invalid encoding)" \
+> >> +		0x9c00080000000080 "$non_b4_bank" no 2
+> >> +	run_mce_case "AMD deferred without poison" 0x9c00100000000080 \
+> >> +		"$non_b4_bank" no 3
+> >> +	run_mce_case "AMD deferred with poison" 0x9c00180000000080 \
+> >> +		"$non_b4_bank" yes 4
+> >> +	run_mce_case "AMD uncorrected with poison" 0xbc00080000000080 \
+> >> +		"$non_b4_bank" yes 5
+> >> +	run_mce_case "AMD bank-4 non-memory poison (invalid encoding)" \
+> >> +		0x9c00080000000080 4 no 6
+> >> +	run_mce_case "AMD legacy bank-4 corrected DRAM ECC" \
+> >> +		0x9c00000000080000 4 no 7
+> >> +}
+> >> +
+> >> +test_mce_alias()
+> >> +{
+> >> +	local region_json
+> >> +
+> >> +	[[ "$(uname -m)" == "x86_64" ]] || {
+> >> +		mce_skip "x86_64 is required"
+> >> +		return 0
+> >> +	}
+> >> +	command -v lsmem >/dev/null 2>&1 || {
+> >> +		mce_skip "lsmem is unavailable"
+> >> +		return 0
+> >> +	}
+> >> +
+> >> +	region_json="$(echo "$json" | jq -c --arg region "$region" \
+> >> +		'.[] | select(.region == $region)')"
+> >> +	region_hpa="$(echo "$region_json" | jq -r '.resource // empty')"
+> >> +	region_size="$(echo "$region_json" | jq -r '.size // empty')"
+> >> +	elc_size="$(echo "$region_json" | jq -r \
+> >> +		'.extended_linear_cache_size // empty')"
+> >> +
+> >> +	[[ "$region_hpa" =~ ^[0-9]+$ ]] || err "$LINENO"
+> >> +	[[ "$region_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+> >> +	[[ "$elc_size" =~ ^[0-9]+$ ]] || err "$LINENO"
+> >> +	((elc_size > 0x10000 && region_size >= elc_size * 2)) || \
+> >> +		err "$LINENO"
+> >> +
+> >> +	select_mce_parameters || {
+> >> +		mce_skip "no supported MCA bank configuration for $vendor"
+> >> +		return 0
+> >> +	}
+> >> +
+> >> +	if [[ ! -d /sys/module/mce_inject ]]; then
+> >> +		modprobe mce-inject || {
+> >> +			mce_skip "mce-inject module is unavailable"
+> >> +			return 0
+> >> +		}
+> >> +		mce_inject_loaded=1
+> >> +	fi
+> >> +	[[ -d /sys/kernel/debug/mce-inject ]] || {
+> >> +		mce_skip "mce-inject debugfs interface is unavailable"
+> >> +		return 0
+> >> +	}
+> >> +
+> >> +	find_offline_spas "$test_case_count" || {
+> >> +		mce_skip "offline lsmem range lacks enough ELC test addresses"
+> >> +		return 0
+> >> +	}
+> >> +
+> >> +	case "$vendor" in
+> >> +	GenuineIntel)
+> >> +		run_intel_mce_cases
+> >> +		;;
+> >> +	AuthenticAMD)
+> >> +		run_amd_mce_cases
+> >> +		;;
+> >> +	esac
+> >> +
+> >> +	echo "CXL ELC MCE validation passed for $vendor: $test_case_count cases"
+> >> +}
+> >> +
+> >>  find_region
+> >>  retrieve_info
+> >>  compare_sizes
+> >>  compare_bases
+> >>  
+> >> +# Check before injecting the expected machine-check messages.
+> >> +check_dmesg "$LINENO"
+> >> +test_mce_alias
+> >>  check_dmesg "$LINENO"
+> >> -modprobe -r cxl_test
+> >>
+> >> base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
+> >> -- 
+> >> 2.43.0
+> >>
 > 
-> ---
-> Changes since v1:
-> 
->  - moved 3 prep patches to fuse.git#for-next
->  - introduce FUSE_PASSTHROUGH_V2 (Amir)
->  - lots of small fixes and cleanups (Amir, Sashiko)
-> 
-> ---
-> John Groves (1):
->   dax: replace exported dax_dev_get() with non-allocating dax_dev_find()
-
-Golly, it seems like there's more than 1 patch worth of content from me here,
-but the chipper/shredder might meet the letter of copyright law in some 
-jurisdictions...
-
-> 
-> Miklos Szeredi (7):
->   fuse: add helpers for EIO return value with kernel message
->   fuse: support 64 bit, server allocated backing ID
->   fuse: support opening 64 bit backing ID
->   fuse: add support for opening dax device as backing
->   fuse: add extent map data structure
->   fuse: add extent map I/O support
->   fuse: add support for striped backing
-> 
->  drivers/dax/super.c       |  38 ++++-
->  fs/fuse/Makefile          |   2 +-
->  fs/fuse/backing.c         | 292 ++++++++++++++++++++++++++++++-------
->  fs/fuse/dev.c             |  21 +++
->  fs/fuse/dev.h             |   3 +
->  fs/fuse/dir.c             |   3 +-
->  fs/fuse/ext_map.c         | 299 ++++++++++++++++++++++++++++++++++++++
->  fs/fuse/file.c            |  16 +-
->  fs/fuse/fuse_i.h          |  72 +++++++--
->  fs/fuse/inode.c           |  17 ++-
->  fs/fuse/iomode.c          | 108 +++++++-------
->  fs/fuse/notify.c          |  75 ++++++++++
->  fs/fuse/passthrough.c     |  63 ++++----
->  include/linux/dax.h       |   6 +-
->  include/uapi/linux/fuse.h |  53 ++++++-
->  15 files changed, 904 insertions(+), 164 deletions(-)
->  create mode 100644 fs/fuse/ext_map.c
-> 
-> -- 
-> 2.54.0
-> 
-
-John
-
