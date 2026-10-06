@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDB53BB695;
-	Tue,  6 Oct 2026 15:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840274A0126;
+	Tue,  6 Oct 2026 16:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791301184; cv=none; b=oxAtkT/VOyjWghnbJ1jxG4TGKxcRqbp3fH3GwCKNzQJ5o2Xf4Vyu8gYJhUjg9T4DvYCR+V6zhilJGCq4iPYTE5vmpg4EiCfD+F84Cg31mjPfTPfW2rPshOydM//aaAB6AFgSfo3avudHHpuqob51agCjx8V6o1F87iW+nZLwS/4=
+	t=1791303238; cv=none; b=rQxS59RBXaBDUDQyEEWi275NkWFDr9t6snPeiiWWljwN6vsO5G7a59bLxWZgWy82q3fs9IZQNMj1XjwqtB76ywdWOg8Cd3+uCSHkERJNd9tJt4TwuvqtnkPdpG8PSgnd63XCF6e+i7cpGAaWl//4y8H+jFYlB0VD8NYloV0hU68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791301184; c=relaxed/simple;
-	bh=EPhs60JXBsZuFBZMagzNxSsOs5aqTpvFF0PPtw4pjI0=;
+	s=arc-20240116; t=1791303238; c=relaxed/simple;
+	bh=ZYIXDLW4Ra+PX0mYATIt872O2Qb5mougQ5QLOr46I/o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=optLaqjdCsgdrl7uPgwQW4GvvQPwT7qHtXZqEWVqspkp3jyqZSlg97qgUiBRfTk73WRhW2eVzLCt6EAdbER8UE09UcC/rMK3CAxMJNYig6ui8hqgH1rhMa+lHNZbUg8fPK0VW6SmYxyMP84TEN5MWtTJsemUUswZT5eCIYs9KXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c4JmHGys; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=SF5Fj/zEDxxStdlO1NYAn7sHbilqSlt5AypWKTqz32eYmW9sYvlkyY6LH+lRbQpQ9Jv/w8W8j/6f398AyRv/fTjECYQPv++/zk+LKXUz5o5cuYbvsLauve/NYvbSkKNpN0K4V7XKiMEz73nor7ikmB/nZJ9MzRez0gKJWR49hS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7cWSmNP; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4JmHGys"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7cWSmNP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791301182; x=1822837182;
+  t=1791303237; x=1822839237;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=EPhs60JXBsZuFBZMagzNxSsOs5aqTpvFF0PPtw4pjI0=;
-  b=c4JmHGysnoM9Lotg5busQrc12lvPqdBaKwmIerrmxf1ozvgbxZvqxOdu
-   0iOZ8CNtSZ/g9MoMv19K2wLz0qlYt01dN8Sg68bearcCmXTkB6wI6A0VH
-   nPoYqN46zMymAG5fZktyDgTJjoz69EhR85+yUNg1uI/hyH92OOfc5oREW
-   RNDh40OPccW/QnWoYOn1ctu8P7o0ZuYeyCJrVzBpAZNSo0qQC1Uhxghkk
-   aRhZ/Bv2ZnRhS2pVFJPULI6vIGtZjXuA7FqLOEhpBHFPGo63iVpySoMso
-   mR/ziSzyy8/jKM2oTfXV1/knEy/D8BbbWrKm9jA6iBVZNniZxq80x6Go6
+  bh=ZYIXDLW4Ra+PX0mYATIt872O2Qb5mougQ5QLOr46I/o=;
+  b=l7cWSmNPD9AqDJQhdn88XKcObsnJ1UD1tZ+JbqAA2GZcmfK6sDFe/lQo
+   icLgXDcfBjxmgmZRF1lsw531iDyQF7yRdMKmLQcowt0zzB1EfN2ui6mgn
+   TojB9Gu2cDmb+ZZoNglXFGhYHKdRdbb7K2l2A+0cQouwat55Pdm140JXF
+   mozXqmDSiB4PoeR6lbyz8+Xzs1imGDcWowhhl2n4zWb39J5TNXsPWQi71
+   KBNHO84yF2uMGKAGZY2ksuIZ0m94DHWLw5TlPFHMSqj98Ty0P0Rjuy9sp
+   0tYtpoDItVoqneZetKu3QI3LfI9yxQ2NzAbsg3+Xu6810dNPlcUKSFB4S
    w==;
-X-CSE-ConnectionGUID: bnhD8dnfRXiijzBoOmMGgw==
-X-CSE-MsgGUID: vdHf15FBQNWMqcD5rfji0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="102666415"
+X-CSE-ConnectionGUID: 7c79lkVYSKyPNTBt9zCQzw==
+X-CSE-MsgGUID: Lfwx8UEeSP2wa7HuZTH/FA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="52727"
 X-IronPort-AV: E=Sophos;i="6.27,143,1787036400"; 
-   d="scan'208";a="102666415"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 08:39:41 -0700
-X-CSE-ConnectionGUID: efyy49/oTQavWPFk5mMQlg==
-X-CSE-MsgGUID: c3S+P4jCQuGKnrNzpRIuSw==
+   d="scan'208";a="52727"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 09:13:56 -0700
+X-CSE-ConnectionGUID: AXqU/1ZIT76ZgrtbZltyUg==
+X-CSE-MsgGUID: H6ErxPe1TvqS3B3WGsal0Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,143,1787036400"; 
-   d="scan'208";a="285278945"
+   d="scan'208";a="275836152"
 Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.108.200]) ([10.125.108.200])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 08:39:39 -0700
-Message-ID: <bcc1d04c-fd5f-4c65-bafd-c17b8bfe5011@intel.com>
-Date: Tue, 6 Oct 2026 08:39:37 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 09:13:54 -0700
+Message-ID: <f5c8a479-5c00-4a4b-8bfc-3f83f3df8c8f@intel.com>
+Date: Tue, 6 Oct 2026 09:13:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,643 +52,362 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 10/16] cxl: Cache endpoint HDM state during PCI
- enumeration
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+Subject: Re: [RFC PATCH 3/4] PCI/TSM: Derive the coherent-range IPA from CXL
+To: Ankit Agrawal <ankita@nvidia.com>, linux-cxl@vger.kernel.org,
  linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20261001092227.3004747-1-smadhavan@nvidia.com>
- <20261001092227.3004747-11-smadhavan@nvidia.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, jgg@nvidia.com, aneesh.kumar@kernel.org,
+ aik@amd.com, yilun.xu@linux.intel.com, iweiny@kernel.org,
+ ming.li@zohomail.com, icheng@nvidia.com, bhelgaas@google.com,
+ smadhavan@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ Smita.KoralahalliChannabasappa@amd.com, andriy.shevchenko@linux.intel.com,
+ linux-coco@lists.linux.dev
+References: <20261005070252.84810-1-ankita@nvidia.com>
+ <20261005070252.84810-4-ankita@nvidia.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20261001092227.3004747-11-smadhavan@nvidia.com>
+In-Reply-To: <20261005070252.84810-4-ankita@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 10/1/26 2:22 AM, Srirangan Madhavan wrote:
-> PCI capability initialization runs before BAR resources are finalized,
-> while driver binding is too late for driver-independent reset support.
-> Create pci_dev->hdm during pci_bus_add_device(), after PCI resource setup
-> and before driver binding.
+On 10/5/26 12:02 AM, Ankit Agrawal wrote:
+> The DevIf report range with range ID 0xffff describes the device's
+> coherent (CXL) memory window and unlike every other reported range
+> carries no BAR number. Recognize
+> PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT and recover that window's
+> address from the CXL side of the device instead of treating it as a
+> BAR-relative offset.
 > 
-> Cache BAR-relative HDM location, global control, decoder settings, and CXL
-> Device DVSEC Control, then publish the completed cache under cxl_rwsem.dpa.
-> Restore PCI_COMMAND after temporary MMIO access and reject decoder-count
-> changes.
+> pci_tsm_coherent_range() resolves the window from pdev->coh_resource[],
+> snapshotted once with the committed CXL HDM decoders range. The
+> range to IPA conversion is applied onto range_base/range_len using
+> pdev->coh_resource[]. The ascending BAR order checks stay on the BAR
+> path only. The coherent range is required to be the last report entry
+> and is not part of the BAR sequence.
 > 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> An HDM decoded window lives in the CXL Fixed Memory Window and is not
+> part of a BAR. So by construction, no pci_dev resource contains it. So
+> the function pci_tsm_coh_resource_contains() validates the range against
+> pdev->coh_resource[] instead; the same known-good snapshot
+> pci_tsm_coherent_range() already trusts.
+> 
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> Assisted-by: Claude:sonnet-5
 > ---
->  drivers/cxl/core/Makefile   |   3 +-
->  drivers/cxl/core/pci.c      |  15 +-
->  drivers/cxl/core/regs.c     |   9 ++
->  drivers/cxl/core/resource.c | 277 ++++++++++++++++++++++++++++++++++++
->  drivers/pci/bus.c           |   2 +
->  drivers/pci/probe.c         |   2 +
->  include/cxl/cxl.h           |  21 +++
->  tools/testing/cxl/Kbuild    |   1 -
->  8 files changed, 326 insertions(+), 4 deletions(-)
+>  drivers/pci/tsm.c       | 192 ++++++++++++++++++++++++++++++++--------
+>  include/linux/pci-tsm.h |   4 +
+>  2 files changed, 160 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 30470799e059..2335059f687a 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> -obj-$(CONFIG_CXL_RESET) += resource.o
-> +obj-$(CONFIG_CXL_RESET) += regs.o resource.o
->  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
->  
->  ccflags-y += -I$(srctree)/drivers/cxl
-> @@ -8,7 +8,6 @@ CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
->  
->  cxl_core-y := port.o
->  cxl_core-y += pmem.o
-> -cxl_core-y += regs.o
->  cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9411694b93b3..5fef673ecd65 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -180,6 +180,16 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
+> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> index c8cfe89b6224..1d736b606a7c 100644
+> --- a/drivers/pci/tsm.c
+> +++ b/drivers/pci/tsm.c
+> @@ -904,6 +904,41 @@ int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type, const void *req,
 >  }
->  EXPORT_SYMBOL_NS_GPL(cxl_await_media_ready, "CXL");
+>  EXPORT_SYMBOL_GPL(pci_tsm_doe_transfer);
 >  
-> +static void cxl_hdm_cache_dvsec_ctrl(struct pci_dev *pdev, u16 ctrl)
-> +{
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	if (!pdev->hdm)
-> +		return;
-> +
-> +	pdev->hdm->dvsec_ctrl = ctrl;
-> +	pdev->hdm->dvsec_ctrl_valid = true;
-> +}
-> +
->  static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  {
->  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> @@ -191,8 +201,10 @@ static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  	if (rc)
->  		return pcibios_err_to_errno(rc);
->  
-> -	if ((ctrl & PCI_DVSEC_CXL_MEM_ENABLE) == val)
-> +	if ((ctrl & PCI_DVSEC_CXL_MEM_ENABLE) == val) {
-> +		cxl_hdm_cache_dvsec_ctrl(pdev, ctrl);
->  		return 1;
-> +	}
->  	ctrl &= ~PCI_DVSEC_CXL_MEM_ENABLE;
->  	ctrl |= val;
->  
-> @@ -200,6 +212,7 @@ static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  	if (rc)
->  		return pcibios_err_to_errno(rc);
->  
-> +	cxl_hdm_cache_dvsec_ctrl(pdev, ctrl);
->  	return 0;
->  }
->  
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 20c2d9fbcfe7..ba1f942d20e1 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -200,6 +200,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
->  
->  int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> @@ -285,6 +286,8 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
->  	}
->  
->  	map->reg_type = reg_type;
-> +	map->bar = bar;
-> +	map->bar_offset = offset;
->  	map->resource = pci_resource_start(pdev, bar) + offset;
->  	map->max_size = pci_resource_len(pdev, bar) - offset;
->  	return true;
-> @@ -309,6 +312,7 @@ static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_ty
->  	*map = (struct cxl_register_map) {
->  		.host = &pdev->dev,
->  		.resource = CXL_RESOURCE_NONE,
-> +		.bar = -1,
->  	};
->  
->  	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> @@ -339,6 +343,8 @@ static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_ty
->  	}
->  
->  	map->resource = CXL_RESOURCE_NONE;
-> +	map->bar = -1;
-> +	map->bar_offset = 0;
->  	if (index == CXL_INSTANCES_COUNT)
->  		return instance;
->  
-> @@ -518,6 +524,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  
->  	return offset;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
->  
->  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
->  {
-> @@ -634,6 +641,7 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  
->  	return component_reg_phys;
->  }
-> +EXPORT_SYMBOL_NS_GPL(__rcrb_to_component, "CXL");
->  
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport)
-> @@ -642,3 +650,4 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  		return CXL_RESOURCE_NONE;
->  	return __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, "CXL");
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index 8d2fbc49a06f..c3f53c1b93fd 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
-> @@ -2,9 +2,17 @@
->  /* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
->  #include <linux/delay.h>
->  #include <linux/bug.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/cleanup.h>
->  #include <linux/errno.h>
->  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
->  #include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +
-> +#include <cxl/pci.h>
->  
->  #include "cxl.h"
->  #include "core.h"
-> @@ -166,3 +174,272 @@ int cxl_hdm_unpack_decoder(struct cxl_decoder_settings *settings, int id,
->  	return 0;
->  }
->  EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_unpack_decoder, "cxl_core");
-> +
-> +static int cxl_pci_hdm_dvsec(struct pci_dev *pdev)
-> +{
-> +	u16 cap;
-> +	int dvsec;
-> +	int rc;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return -ENXIO;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
+> +#ifdef CONFIG_CXL_RESET
 
-Given the number of locations the cxl subsystem requests the dvsec, should we just store this at device init somewhere rather than walking the chain every time? Currently it's cached in cxlds->cxl_dvsec. Maybe this can go to a more common place in 'struct pci_dev'?
+May want to move this to a header. Having KCONFIG ifdefs in .c is typically not preferred.
 
-Also maybe this generic helper function can be shared with cxl_dvsec_rr_decode()?
+Also I do wonder if we want to put this code behind CONFIG_CXL_RESET. There's dependency of being able to run the reset stuff for a type2 device before passthrough to user space. But the attestation code is not part of reset code. Maybe putting it behind a different kconfig symbol with dependency on CONFIG_CXL_RESET?
 
-> +	if (!(cap & PCI_DVSEC_CXL_MEM_CAPABLE) ||
-> +	    !FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT, cap))
-> +		return -ENXIO;
-> +
-> +	return dvsec;
-> +}
-> +
-> +static int cxl_pci_hdm_read_decoder(struct pci_dev *pdev,
 
-cxl_pci_hdm_read_decoder_settings(), given it's retrieving the 'settings'.
-
-> +				    struct cxl_decoder_settings *settings,
-> +				    void __iomem *hdm, int id)
-> +{
-> +	u64 target_or_skip, base, size;
-> +	u32 ctrl;
-> +	int rc;
-> +
-> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	base = ((u64)readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id)) << 32) |
-> +	       readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	size = ((u64)readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id)) << 32) |
-> +	       readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +	target_or_skip =
-> +		((u64)readl(hdm + CXL_HDM_DECODER0_TL_HIGH(id)) << 32) |
-> +		readl(hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> +
-> +	rc = cxl_hdm_unpack_decoder(settings, id, ctrl, base, size,
-> +				    target_or_skip);
-> +	if (rc) {
-> +		pci_err(pdev,
-> +			"CXL HDM decoder %d has invalid configuration: %d\n",
-> +			id, rc);
-> +		return rc;
-> +	}
-> +
-> +	if (!(settings->config.flags & CXL_DECODER_F_ENABLE))
-> +		*settings = (struct cxl_decoder_settings) {
-> +			.config.id = id,
-> +		};
-> +
-> +	return 0;
-> +}
-> +
-> +static void __iomem *cxl_pci_hdm_map_regs(struct pci_dev *pdev,
-> +					  struct cxl_register_map *map,
-> +					  resource_size_t *hdm_offset,
-> +					  int *decoder_count)
-> +{
-> +	struct cxl_reg_map *hdm_map = &map->component_map.hdm_decoder;
-> +	void __iomem *hdm;
-> +	size_t required;
-> +	int rc;
-> +
-> +	/* cxl_setup_regs() populates hdm_map, including its valid bit. */
-> +	rc = cxl_setup_regs(map);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +	if (!hdm_map->valid)
-> +		return ERR_PTR(-ENODEV);
-> +	if (hdm_map->offset > map->max_size ||
-> +	    hdm_map->size > map->max_size - hdm_map->offset)
-> +		return ERR_PTR(-ENXIO);
-> +	if (check_add_overflow(map->bar_offset,
-> +			       (resource_size_t)hdm_map->offset, hdm_offset))
-> +		return ERR_PTR(-EOVERFLOW);
-> +
-> +	hdm = ioremap(map->resource + hdm_map->offset, hdm_map->size);
-> +	if (!hdm)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	*decoder_count =
-> +		cxl_hdm_decoder_count(readl(hdm + CXL_HDM_DECODER_CAP_OFFSET));
-> +	if (*decoder_count < 0) {
-> +		iounmap(hdm);
-> +		return ERR_PTR(*decoder_count);
-> +	}
-> +
-> +	/* The last decoder's target-list high register must fit in the mapping. */
-> +	required = CXL_HDM_DECODER0_TL_HIGH(*decoder_count - 1) + sizeof(u32);
-> +	if (required > hdm_map->size) {
-> +		pci_err(pdev,
-> +			"CXL HDM decoder count exceeds mapped register block\n");
-> +		iounmap(hdm);
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	return hdm;
-> +}
-> +
-> +static struct cxl_hdm_info *__cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +						    struct cxl_register_map *map,
-> +						    int dvsec)
-> +{
-> +	struct cxl_reg_map *hdm_map = &map->component_map.hdm_decoder;
-> +	resource_size_t hdm_offset;
-> +	void __iomem *hdm;
-> +	int decoder_count;
-> +	u16 dvsec_ctrl;
-> +	int rc;
-> +
-> +	hdm = cxl_pci_hdm_map_regs(pdev, map, &hdm_offset, &decoder_count);
-> +	if (IS_ERR(hdm))
-> +		return ERR_CAST(hdm);
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL,
-> +				  &dvsec_ctrl);
-> +	if (rc) {
-> +		rc = pcibios_err_to_errno(rc);
-> +		goto out_unmap;
-> +	}
-> +
-> +	struct cxl_hdm_info *info =
-> +		kzalloc_flex(*info, settings, decoder_count, GFP_KERNEL);
-> +	if (!info) {
-> +		rc = -ENOMEM;
-> +		goto out_unmap;
-> +	}
-> +
-> +	info->decoder_count = decoder_count;
-> +	info->hdm_bar = map->bar;
-> +	info->hdm_offset = hdm_offset;
-> +	info->hdm_size = hdm_map->size;
-> +	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	info->dvsec_ctrl = dvsec_ctrl;
-> +	info->dvsec_ctrl_valid = true;
-> +
-> +	for (int i = 0; i < decoder_count; i++) {
-> +		rc = cxl_pci_hdm_read_decoder(pdev, &info->settings[i], hdm, i);
-> +		if (rc)
-> +			goto out_free;
-> +	}
-> +
-> +	/*
-> +	 * A changed decoder count means the snapshot no longer describes the
-> +	 * complete hardware state. Reject it rather than publish a partial cache.
-> +	 */
-> +	rc = cxl_hdm_decoder_count(readl(hdm + CXL_HDM_DECODER_CAP_OFFSET));
-> +	if (rc != decoder_count) {
-> +		pci_err(pdev, "CXL HDM decoder count changed from %d to %d\n",
-> +			decoder_count, rc);
-> +		rc = -ENXIO;
-> +		goto out_free;
-> +	}
-> +
-> +	iounmap(hdm);
-> +	return info;
-> +
-> +out_free:
-> +	kfree(info);
-> +out_unmap:
-> +	iounmap(hdm);
-> +	return ERR_PTR(rc);
-> +}
-> +
-> +static struct cxl_hdm_info *cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +						  struct cxl_register_map *map,
-> +						  int dvsec)
-> +{
-> +	struct cxl_hdm_info *info;
-> +	u16 command;
-> +	int rc;
-> +
-> +	guard(pci_dev)(pdev);
-> +
-> +	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
-> +	if (rc)
-> +		return ERR_PTR(pcibios_err_to_errno(rc));
-> +
-> +	if (command & PCI_COMMAND_MEMORY)
-> +		return __cxl_pci_hdm_read_info(pdev, map, dvsec);
-> +
-> +	rc = pci_write_config_word(pdev, PCI_COMMAND,
-> +				   command | PCI_COMMAND_MEMORY);
-> +	if (rc)
-> +		return ERR_PTR(pcibios_err_to_errno(rc));
-> +
-> +	info = __cxl_pci_hdm_read_info(pdev, map, dvsec);
-> +	rc = pci_write_config_word(pdev, PCI_COMMAND, command);
-> +	if (!rc)
-> +		return info;
-> +
-> +	if (IS_ERR(info)) {
-> +		pci_err(pdev,
-> +			"failed to restore PCI_COMMAND after CXL HDM cache init: %d\n",
-> +			pcibios_err_to_errno(rc));
-> +		return info;
-> +	}
-> +
-> +	kfree(info);
-> +	return ERR_PTR(pcibios_err_to_errno(rc));
-> +}
-> +
-> +static int __pci_cxl_hdm_cache_init(struct pci_dev *pdev)
-> +{
-> +	struct cxl_register_map map = { };
-> +	struct resource *bar;
-> +	int dvsec;
-> +	int rc;
-> +
-> +	/* Avoid duplicate MMIO reads when the cache is already present. */
-> +	scoped_guard(rwsem_read, &cxl_rwsem.dpa)
-> +		if (pdev->hdm)
-> +			return 0;
-> +
-> +	dvsec = cxl_pci_hdm_dvsec(pdev);
-> +	if (dvsec == -ENXIO)
-> +		return 0;
-> +	if (dvsec < 0)
-> +		return dvsec;
-> +
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		return rc;
-> +	if (map.bar < 0 || map.bar >= PCI_STD_NUM_BARS)
-> +		return -ENODEV;
-> +
-> +	bar = &pdev->resource[map.bar];
-> +	if (!pci_resource_len(pdev, map.bar) ||
-> +	    (bar->flags & (IORESOURCE_UNSET | IORESOURCE_DISABLED)) ||
-> +	    resource_type(bar) != IORESOURCE_MEM || !bar->start || !bar->end)
-> +		return -ENODEV;
-> +
-> +	struct cxl_hdm_info *read_info =
-> +		cxl_pci_hdm_read_info(pdev, &map, dvsec);
-> +	if (IS_ERR(read_info))
-> +		return PTR_ERR(read_info);
-> +
-> +	struct cxl_hdm_info *info __free(kfree) = read_info;
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	/* Another initializer may have published while we read MMIO. */
-> +	if (!pdev->hdm)
-> +		pdev->hdm = no_free_ptr(info);
-> +
-> +	return 0;
-> +}
-> +
-> +void pci_cxl_hdm_cache_init(struct pci_dev *pdev)
-> +{
-> +	int rc;
-> +
-> +	rc = __pci_cxl_hdm_cache_init(pdev);
-> +	if (rc)
-> +		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(pci_cxl_hdm_cache_init, "cxl_core");
-> +
-> +void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
-> +{
-> +	struct cxl_hdm_info *info;
-> +
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	info = pdev->hdm;
-> +	/* Unpublish before freeing so subsequent readers cannot use stale state. */
-> +	pdev->hdm = NULL;
-> +	kfree(info);
-> +}
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 655ed53436d3..d866452222b6 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -18,6 +18,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
-> +#include <cxl/cxl.h>
->  
->  #include "pci.h"
->  
-> @@ -359,6 +360,7 @@ void pci_bus_add_device(struct pci_dev *dev)
->  
->  	/* Save config space for error recoverability */
->  	pci_save_state(dev);
-> +	pci_cxl_hdm_cache_init(dev);
->  
->  	/*
->  	 * Enable runtime PM, which potentially allows the device to
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 27008e2ea5af..752347464a4d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/bitfield.h>
->  #include <trace/events/pci.h>
-> +#include <cxl/cxl.h>
->  #include "pci.h"
->  
->  static struct resource busn_resource = {
-> @@ -2484,6 +2485,7 @@ static void pci_release_dev(struct device *dev)
->  	struct pci_dev *pci_dev;
->  
->  	pci_dev = to_pci_dev(dev);
-> +	pci_cxl_hdm_cache_release(pci_dev);
->  	pci_release_capabilities(pci_dev);
->  	pci_release_of_node(pci_dev);
->  	pcibios_release_device(pci_dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index e200c5c56b92..a1c63e031dd4 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -26,6 +26,7 @@ enum cxl_devtype {
->  };
->  
->  struct cxl_region;
-> +struct pci_dev;
->  
->  enum cxl_decoder_type {
->  	CXL_DECODER_DEVMEM = 2,
-> @@ -92,6 +93,9 @@ struct cxl_decoder_settings {
->   * @dvsec_ctrl: CXL DVSEC control register
->   * @dvsec_ctrl_valid: whether @dvsec_ctrl contains valid state
->   * @settings: per-decoder programming state
+> +/*
+> + * pci_tsm_coh_resource_contains() - check a coherent range against the
+> + * PCI-core coh_resource[] snapshot
+> + * @pdev: device owner of @res
+> + * @res: candidate coherent MMIO range to validate
 > + *
-> + * Publication through pci_dev.hdm and all mutable fields are protected by
-> + * cxl_rwsem.dpa.
->   */
->  struct cxl_hdm_info {
->  	int decoder_count;
-> @@ -177,6 +181,8 @@ struct cxl_pmu_reg_map {
->   * @base: virtual base of the register-block-BAR + @block_offset
->   * @resource: physical resource base of the register block
->   * @max_size: maximum mapping size to perform register search
-> + * @bar: PCI BAR containing the register block
-> + * @bar_offset: register block offset relative to @bar
->   * @reg_type: see enum cxl_regloc_type
->   * @component_map: cxl_reg_map for component registers
->   * @device_map: cxl_reg_maps for device registers
-> @@ -187,6 +193,8 @@ struct cxl_register_map {
->  	void __iomem *base;
->  	resource_size_t resource;
->  	resource_size_t max_size;
-> +	int bar;
-> +	resource_size_t bar_offset;
->  	u8 reg_type;
->  	union {
->  		struct cxl_component_reg_map component_map;
-> @@ -195,6 +203,19 @@ struct cxl_register_map {
->  	};
+> + * The coherent (CXL.mem) range isn't BAR-backed. So pci_resource_n()
+> + * containment doesn't apply. Check against pdev->coh_resource[] instead.
+> + *
+> + * Return: true if @res falls within a populated coh_resource[] entry.
+> + */
+> +static bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
+> +					  const struct resource *res)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
+> +		struct resource *coh_res = &pdev->coh_resource[i];
+> +
+> +		if ((coh_res->flags & IORESOURCE_MEM) &&
+> +		    resource_contains(coh_res, res))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +#else
+> +static bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
+> +					  const struct resource *res)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_CXL_RESET */
+> +
+>  static void mmio_teardown(struct pci_tsm_mmio *mmio, int nr)
+>  {
+>  	while (nr--) {
+> @@ -936,7 +971,9 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>  		return -EBUSY;
+>  
+>  	for (i = 0; i < mmio->nr; i++) {
+> -		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+> +		struct pci_tsm_mmio_entry *entry = pci_tsm_mmio_entry(mmio, i);
+> +		struct resource *res = &entry->res;
+> +		bool coherent = entry->flags & PCI_TSM_MMIO_F_COHERENT;
+>  		int j;
+>  
+>  		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+> @@ -947,13 +984,22 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>  					     pci_name(pdev), IORESOURCE_MEM,
+>  					     IORES_DESC_ENCRYPTED);
+>  
+> -		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+> -			if (resource_contains(pci_resource_n(pdev, j), res))
+> +		/*
+> +		 * The coherent (CXL.mem) range isn't BAR-backed, so check it
+> +		 * against pdev->coh_resource[] instead of pci_resource_n().
+> +		 */
+> +		if (coherent) {
+> +			if (!pci_tsm_coh_resource_contains(pdev, res))
+>  				break;
+> +		} else {
+> +			for (j = 0; j < PCI_NUM_RESOURCES; j++)
+> +				if (resource_contains(pci_resource_n(pdev, j), res))
+> +					break;
+>  
+> -		/* Request is outside of device MMIO */
+> -		if (j >= PCI_NUM_RESOURCES)
+> -			break;
+> +			/* Request is outside of device MMIO */
+> +			if (j >= PCI_NUM_RESOURCES)
+> +				break;
+> +		}
+>  
+>  		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+>  			break;
+> @@ -985,6 +1031,7 @@ EXPORT_SYMBOL_GPL(pci_tsm_mmio_teardown);
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE BIT(2)
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_UPDATABLE BIT(3)
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID GENMASK(31, 16)
+> +#define PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT 0xffff
+>  
+>  /* An interface report 'pfn' is 4K in size */
+>  struct pci_tsm_devif_mmio {
+> @@ -1003,6 +1050,44 @@ struct pci_tsm_devif_report {
+>  	struct pci_tsm_devif_mmio mmio[];
 >  };
 >  
 > +#ifdef CONFIG_CXL_RESET
-> +void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
-> +void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
-> +#else
-> +static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev)
+> +/*
+> + * pci_tsm_coherent_range() - resolve the device's coherent CXL window
+> + * @pdev: device owner of the reported ranges
+> + * @out_base: host physical (guest IPA) base of the coherent window
+> + * @out_size: size of the coherent window
+> + *
+> + * The coherent range carries no BAR number, so its address comes from
+> + * pdev->coh_resource[], a pre-driver-bind snapshot of committed CXL HDM
+> + * decoders.
+> + *
+> + * Return: 0 with *@out_base / *@out_size set from the first populated entry,
+> + * or -ENODEV if no entry is populated.
+> + */
+> +static int pci_tsm_coherent_range(struct pci_dev *pdev, u64 *out_base,
+> +				  u64 *out_size)
+
+pci_tsm_retrieve_coherent_range()? Also, why not just pass in a 'struct range'?
+
+DJ
+
 > +{
-> +}
+> +	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
+> +		struct resource *res = &pdev->coh_resource[i];
 > +
-> +static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
-> +{
+> +		if (!(res->flags & IORESOURCE_MEM))
+> +			continue;
+> +
+> +		*out_base = res->start;
+> +		*out_size = resource_size(res);
+> +		return 0;
+> +	}
+> +
+> +	return -ENODEV;
 > +}
-> +#endif
+> +#else
+> +static int pci_tsm_coherent_range(struct pci_dev *pdev, u64 *out_base,
+> +				  u64 *out_size)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_CXL_RESET */
 > +
 >  /**
->   * struct cxl_dpa_perf - DPA performance property entry
->   * @dpa_range: range for DPA address
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 2be1df80fcc9..e80500f457a9 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -55,7 +55,6 @@ obj-m += cxl_core.o
+>   * pci_tsm_mmio_alloc() - allocate encrypted MMIO range descriptor
+>   * @pdev: device owner of MMIO ranges
+> @@ -1040,7 +1125,7 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		return NULL;
 >  
->  cxl_core-y := $(CXL_CORE_SRC)/port.o
->  cxl_core-y += $(CXL_CORE_SRC)/pmem.o
-> -cxl_core-y += $(CXL_CORE_SRC)/regs.o
->  cxl_core-y += $(CXL_CORE_SRC)/memdev.o
->  cxl_core-y += $(CXL_CORE_SRC)/mbox.o
->  cxl_core-y += $(CXL_CORE_SRC)/pci.o
+>  	for (i = 0; i < mmio_range_count; i++) {
+> -		u64 range_off;
+> +		u64 range_base, range_len, range_off;
+>  		struct range range;
+>  		const struct pci_tsm_devif_mmio *mmio_data = &devif_report->mmio[i];
+>  		struct pci_tsm_mmio_entry *entry =
+> @@ -1050,33 +1135,58 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		u32 attr = __le32_to_cpu(mmio_data->attributes);
+>  		int bar = FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID,
+>  				    attr);
+> +		bool coherent =
+> +			bar == PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT;
+>  
+> -		if (bar >= PCI_STD_NUM_BARS ||
+> -		    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+> -		    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+> -			pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+> -			return NULL;
+> -		}
+> -
+> -		if (last_bar > bar) {
+> -			pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+> -			return NULL;
+> -		}
+> -
+> -		if (last_bar < bar) {
+> -			resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+> -
+> -			/* Transition to a new bar */
+> -			last_bar = bar;
+> +		if (coherent) {
+> +			if (i != mmio_range_count - 1) {
+> +				pci_dbg(pdev, "Coherent reporting range is not last\n");
+> +				return NULL;
+> +			}
+>  
+>  			/*
+> -			 * Determine the obfuscated base of the BAR. BAR
+> -			 * offsets are never obfuscated.
+> +			 * No BAR names the coherent range, so fail closed if
+> +			 * neither a CXL region nor a committed HDM decoder
+> +			 * resolves its address.
+>  			 */
+> -			reporting_bar_base = tsm_offset & ~mask;
+> -		} else if (tsm_offset < last_reporting_end) {
+> -			pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+> -			return NULL;
+> +			if (pci_tsm_coherent_range(pdev, &range_base,
+> +						   &range_len)) {
+> +				pci_dbg(pdev, "No CXL region or committed HDM decoder for coherent reporting range\n");
+> +				return NULL;
+> +			}
+> +
+> +			/* Coherent range is last and not part of the BAR sequence. */
+> +		} else {
+> +			if (bar >= PCI_STD_NUM_BARS ||
+> +			    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+> +			    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+> +				pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+> +				return NULL;
+> +			}
+> +
+> +			if (last_bar > bar) {
+> +				pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+> +				return NULL;
+> +			}
+> +
+> +			if (last_bar < bar) {
+> +				resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+> +
+> +				/* Transition to a new bar */
+> +				last_bar = bar;
+> +
+> +				/*
+> +				 * Determine the obfuscated base of the BAR. BAR
+> +				 * offsets are never obfuscated.
+> +				 */
+> +				reporting_bar_base = tsm_offset & ~mask;
+> +			} else if (tsm_offset < last_reporting_end) {
+> +				pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+> +				return NULL;
+> +			}
+> +
+> +			range_base = pci_resource_start(pdev, bar);
+> +			range_len = pci_resource_len(pdev, bar);
+>  		}
+>  
+>  		/* Per spec the tsm_offset never results in overflow / underflow */
+> @@ -1086,20 +1196,28 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  			return NULL;
+>  		}
+>  
+> -		range_off = tsm_offset - reporting_bar_base;
+> -		if (pci_resource_len(pdev, bar) < range_off + size) {
+> -			pci_dbg(pdev, "Reporting range larger than BAR size\n");
+> +		/*
+> +		 * Use tsm_offset directly for the coherent range instead of
+> +		 * masking: an HDM decoder's size - unlike a BAR's - need not be
+> +		 * a power of two. So masking could wrap an out-of-range
+> +		 * offset back in-bounds. The bounds check below still catches it.
+> +		 */
+> +		range_off = coherent ? tsm_offset :
+> +					tsm_offset - reporting_bar_base;
+> +		if (range_len < range_off + size) {
+> +			pci_dbg(pdev, "Reporting range larger than %s size\n",
+> +				coherent ? "coherent range" : "BAR");
+>  			return NULL;
+>  		}
+>  
+> -		range.start = pci_resource_start(pdev, bar) + range_off;
+> +		range.start = range_base + range_off;
+>  		range.end = range.start + size - 1;
+>  
+>  		/* Only record the TEE ranges for later consideration by ioremap() */
+>  		if (FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE,
+>  			      attr)) {
+> -			pci_dbg(pdev, "Skipping non-TEE range, BAR%d %pra\n",
+> -				bar, &range);
+> +			pci_dbg(pdev, "Skipping non-TEE range, %s %pra\n",
+> +				coherent ? "coherent range" : "BAR", &range);
+>  			continue;
+>  		}
+>  
+> @@ -1107,6 +1225,8 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		entry->res.end = range.end;
+>  		entry->res.flags = IORESOURCE_MEM;
+>  		entry->tsm_offset = tsm_offset;
+> +		if (coherent)
+> +			entry->flags |= PCI_TSM_MMIO_F_COHERENT;
+>  		mmio->nr++;
+>  	}
+>  
+> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> index e54ad057fa8e..90bd8d1dd729 100644
+> --- a/include/linux/pci-tsm.h
+> +++ b/include/linux/pci-tsm.h
+> @@ -1,6 +1,7 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #ifndef __PCI_TSM_H
+>  #define __PCI_TSM_H
+> +#include <linux/bits.h>
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+>  #include <linux/sockptr.h>
+> @@ -204,10 +205,13 @@ enum pci_tsm_req_scope {
+>   * @res: MMIO address range (typically Guest Physical Address, GPA)
+>   * @tsm_offset: Host Physical Address, HPA obfuscation offset added by the TSM.
+>   *		Translates report addresses to GPA.
+> + * @flags: PCI_TSM_MMIO_F_* attributes for the range
+>   */
+> +#define PCI_TSM_MMIO_F_COHERENT BIT(0)
+>  struct pci_tsm_mmio_entry {
+>  	struct resource res;
+>  	u64 tsm_offset;
+> +	u32 flags;
+>  };
+>  
+>  struct pci_tsm_mmio {
 
-
-In general I'm noticing a few functions that takes a 'struct pci_dev' that does not need that in resource.c. In the future, I would like to extend cxl_test to this core code in order to cover most of the functions in resource.c and the reset mechanism. Do you mind taking a look at if things can be reorganized? I did a quick refactor of your series using LLM [1]. See if the shaping of that is acceptable for you. Essentially I had it organize into 3 parts. drivers/cxl/core/hdm_regs.c, drivers/cxl/core/hdm_state.c, and drivers/pci/cxl.c. Feel free to use any or none of the changes.
-
-┌─────┬──────────────────┬───────────────────────────────────────────────┐
-│  #  │      Patch       │                    Change                     │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│ 1-4 │ unchanged        │ Same commit objects, all Reviewed-by tags     │
-│     │                  │ kept                                          │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Introduce        │ target_or_skip_reg_val replaced by an         │
-│ 5   │ reusable HDM     │ endpoint-only settings struct with skip;      │
-│     │ decoder settings │ switch commit takes the target list directly; │
-│     │                  │  endpoints write the DPA Skip registers again │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Move HDM decoder │ New built-in hdm_regs.c, built with           │
-│ 6   │  helpers to      │ obj-$(subst m,y,$(CONFIG_CXL_BUS)), so        │
-│     │ built-in code    │ linking cxl_core no longer depends on         │
-│     │                  │ CONFIG_CXL_RESET                              │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Share HDM        │ Unpacks the common config only; Target List   │
-│ 7   │ decoder register │ and DPA Skip are read where they're used      │
-│     │  unpacking       │ again                                         │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Reject           │                                               │
-│ 8   │ overflowing HDM  │ Rebased only                                  │
-│     │ decoder ranges   │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Refresh cached   │ Endpoint decoders only; CONFIG_CXL_RESET      │
-│ 9   │ PCI HDM decoder  │ introduced here; two bug fixes (below)        │
-│     │ settings         │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Cache endpoint   │ PCI-side code moved to the new                │
-│ 10  │ HDM state during │ drivers/pci/cxl.c; cache and cxl_rwsem in the │
-│     │  enumeration     │  new built-in hdm_state.c                     │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│ 11  │ Add CXL Device   │ Moved to drivers/pci/cxl.c, otherwise         │
-│     │ Reset sequencing │ identical                                     │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Validate and     │                                               │
-│ 12  │ synchronize HDM  │ Region-quiesce API in hdm_state.c, so the PCI │
-│     │ ranges around    │  core never takes cxl_rwsem directly          │
-│     │ reset            │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│ 13, │ Reject unsafe    │                                               │
-│  15 │ scope / Expose   │ Rebased only                                  │
-│     │ CXL Reset        │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Restore CXL      │ Decoder restore split into hdm_regs.c, which  │
-│ 14  │ state after PCI  │ needs no pci_dev                              │
-│     │ reset            │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-│     │ Restore CXL      │                                               │
-│ 16  │ state after CXL  │ Race fix. Found through testing.              │
-│     │ bus reset        │                                               │
-├─────┼──────────────────┼───────────────────────────────────────────────┤
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-type2-reset
