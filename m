@@ -1,64 +1,64 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE1390212
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Oct 2026 20:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA113BB9EB
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Oct 2026 20:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791404320; cv=none; b=Y++8k+SKuoY2eM8yceHT0Ct7wGJJ3YUwlJaLUhi0B3oPkpOBoOL8xkIE/BS3gTU4joEDH9a+gPtqYnEywz/1mAcMGqK6+KXQVXlv8xv44KOX0mjyaQKvkMiz2laI6l3ri02ZzfXWs44etqctCrTMrSBbJGpijCo1xVxARGOvqVA=
+	t=1791404324; cv=none; b=Yv1zI1ULwwcvFiZRd29iE+A1J1HvwVsfwjXsyYv2ibhsw9hK3TyRTcH6j730woETLuUutmTQC9bqdC/Gr1/JeUsfs/DXqJBbnmMCUwD06m38Tux4JKvOAq+Scyw61yx/GwDx6eCzHpMm8w40BNT3w09DcIxAyeC0AQk3v/p6bbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791404320; c=relaxed/simple;
-	bh=+tRv8r+w0l3CHBuasNT/DfsWAX5S+9JYP89iGBigHd0=;
+	s=arc-20240116; t=1791404324; c=relaxed/simple;
+	bh=pwEbm3PvzaQFbJf/np/ByudK9SVPov3eg3RinwJX8Tc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aBYHX+D0iXKxFrVvH2xyMzFuFOGbrV+jg/00YZElzt5Qc27F+CepJtPLMba8HdkDy8wG5J+H4LB2nR7KdNmGKAdc0nfH5Exp23GdfH+mOdatUSjjNcGaQSZ8Vp4+kwkD+Hbxcj4cA6pWKTGk8LVXfaHAhwpTxrkEMKCH1uoi8tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwWduwTv; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version; b=AiUr+MCUSZGFZjL9IZjgiaq/5/lCXKAvTJhkJwiGTKprCniv0mveh1CuMfjAAee3/PQdnJ8nn6RIKerVSoA8G6AbxrI4bPBTdI8AEu8sr5C9qJ4v8tUr9bvmBExr9lwQ7x1hQQ4MytTuZqgox+YfZ9j2fkLXzeKeScJ9eIouGBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDe6gLRX; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwWduwTv"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-ccce967aa8dso1958738a12.1
-        for <linux-cxl@vger.kernel.org>; Wed, 07 Oct 2026 13:18:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDe6gLRX"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3a4a7eb86a4so1711510a91.3
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Oct 2026 13:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791404318; x=1792009118; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791404320; x=1792009120; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Xs0fgo37pLofrmfQ45EqqVh2BpNjioIcMvj7au7UOo0=;
-        b=AwWduwTvc4eI6MDAbKp7YmVee0+jnmikpfoOlfS6Jegr/sgboXrFTI04ANaaij9LD6
-         Q5ZM3Lb645EgW7CkKYTZSCKK8GLnXasvnetcmm9f/CILguf2n5T6jPRYwM9dGQsX2rDc
-         nXsR1k9Ss6csaessIorLOvONNExSUPmXrbGTPjhLLbvkR0iYOW0u/7MzKpchh9cnBYqy
-         or3gVtHUhJR0Y/gc3WJ0cbRwv6MzUwtLmJzF6X2Ch5FpthklPnBNRJhXDryaqts51Fe8
-         X8hlnyP4Yrx2g3Jk0XJGwozJZ+38yblx9bAzLIsi3t8T3HKUHGYP7hbeoXI+3tp8pifX
-         GAng==
+        bh=rUnHJQCqS7BBBgveCrmJY0z9O8Z4+EHJLqKyDmpB12A=;
+        b=NDe6gLRXwaKqL8mC0D9gvq0H4OzDqQPFO/FaNw7fof8ByT4COKKm1M9s4ALeTeS/6E
+         eFtlc3kP2AvSxF0IN3zTpu1aLKGjG+9SBQihRzV8JNN0l4zmGgv7TR5YwqkwElwpXTeU
+         Vo0sUgmQoVb8X4AQ7HnTVGl6Jtm3q6c5M07JMjVik11GVdx0sittSOL9Q+yNr8Ainjwi
+         Q6Q7VkLQGBB+LCxgJiBVJACop61VcfkOUpr8y7NPBNlkW43JZk4sdak1w24Jtyxu/kkE
+         ti0+o4Upw6ZnyT+LTELcsGZygacj0DYfmuTm0hc64mXjsx3xeh/X+Un7Vgq+SX2JZeUR
+         jtbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791404318; x=1792009118;
+        d=1e100.net; s=20260707; t=1791404320; x=1792009120;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Xs0fgo37pLofrmfQ45EqqVh2BpNjioIcMvj7au7UOo0=;
-        b=W2tTyeVevXIiTepgGQnbYxfIQ3azixrubdFtwg8QpQDP/vkXBMnCKjluoxiMCUUM/u
-         FuGm+cEhP5JpUeWm3b2IIpm956CQ1iPRVJ43Kg0r5ajCGm/QvQxqtad/8AiGFQXLkT6o
-         AMGvKOxzWUBWaT+9Gu7iFmugooHT4rGGpTJcgSXiLBADBWaDgTlacQ4xmmYxfcSt6gN0
-         rKyhHwMO4GSOG/loh4uULw5fCJs+o2ALIDbL+EVQ4G/jHYYWxnPAW8vkT9QzwwJVqYpT
-         Mmnog0eSkF1EXLJvhB/WkhZYhV400oM3Yx7aNxKjSDNAqT+kecM1OyP6u6XDzDYsI73N
-         VAnw==
-X-Gm-Message-State: AFq9FYK19B8fpfVlStK7SjzT+zBfqrsetzExR8toCd/sQhsWy+T1+gTh
-	6yTlMuJVYAQdJuE2C6mIgkpV1/1Y41Fj7WzRFl8QRkJGzokxa9IzWBBfAhWw9A==
-X-Gm-Gg: AYBFou1C+IKMG+0zNEVatC6L4GaZQE1S81Wo2DbGZ25MA6YvaW1YsZLZcIYPyG2sJRv
-	Gr3VSRBlLq4HmNw4GxIhzejYQ53BCGiE+glRUk/w5RITlcA4K+Lmrf7U5jQmDM/Ykt8aPLeVnaG
-	wOzH8JJkd3mADN322H5k8O88iIraR/YuO/DEnWOaM9mNPAy3HGw6vq4rsBAhHoPQBcGFLUGxGY1
-	GpDnURi0YrHWkHpTmoePwG8jEh52BorlPBSAYJtex8nUOPqtAOedjpHXZfRlCKli4rp8j1Ha3PG
-	t0Np9M/pboMkMemdxjnd/gbq66eBfQr7C60eFFXwOpkiRP2sy6HSSNq3CZpibRJN4HvGcf1H9hy
-	RfOvMDUNGag/DDlWWe7VeM4alBphftPJ7+GOVdJsz9/2lU3bOYKSsfBsmAqsMOiXm1McNbOqNwg
-	HSPorLazKwjNf5AXgNdiS7IFuPC2DJyD4Bh0lX+GPGqSYa5LrV2yKAFVubPqZh25ujReNPt4pMp
-	SVZCZZ4AhiGUoJyt705Kd40BS3RrB4uR9qY8bvXpmAn6W0v5wZyQ+tJpKoHVCa4Rv3EZH+XxYB8
-	DSfVNRnaGK57cQ==
-X-Received: by 2002:a17:90b:2e4f:b0:3a8:1830:8b9f with SMTP id 98e67ed59e1d1-3a8a1967353mr2892410a91.16.1791404318101;
-        Wed, 07 Oct 2026 13:18:38 -0700 (PDT)
+        bh=rUnHJQCqS7BBBgveCrmJY0z9O8Z4+EHJLqKyDmpB12A=;
+        b=A/IYKE2raOHr0+tjeLGXcjyiQdlj//BdAiDe6Rd/xsJ7vuuARITQzsEKdreZ9cCc7z
+         A8b8pMEqzPBWycMnTnV+ss8Ezsvo68AzSmYHLFn/VTpoWG21ALAVW4G9rBPjiVbZVSGH
+         s/oqfFWG80sgRZxCiobXjPASyAfgrJ4QI+JdA8vC6mMhEHr3BBFNb6ZPXclMiyv2SneH
+         9B4mg/Rm7FSTqZy2oB0NW7PSnyPU9ItlPEIcuNhXdvqt5qgG53eGGyocQ47gRH3oGJtl
+         lX38zbyOpKvvHF0/wIVV6LXuoLGeu6KjSJ/7Lo8CMYeL5XrqtZMX0r8dtoVIQK0v3doa
+         Sscg==
+X-Gm-Message-State: AFq9FYJvrXP11qbrdhmQQ5tR/OjVeWgPX3oKVqS0UfJUUxTslQJueVlV
+	3KyvPZ5W8D4VDu9hgFUsfREX6o1Uxpu+GZjnX9H9VGJouXN8dfeE1M9z0I8gUg==
+X-Gm-Gg: AYBFou3KFpC1pAT5NVjjj1lF1qQ5aQoTquWrZ7Pb5GqGnjFQ51weSxIB9d3ZYj9tjgt
+	cjOKCZ7DWBiMdeDPz31/ks3LqBjsFL6+FGdbuyaKaxvyBCKARaEzcgXsSWARwQoatjF9IDZVOtL
+	B9BagE+MXwVnwvF2/CqP+ymhK3X1MdrVXT3B2qajl/gHzQ4HA5ROeE2c1NZVoJDrKNdWrPxJJru
+	byu7V+QMaPPp6DD4Cr/Dt2C/ljQJxbMk1eKAlwdMz3rvO7/Jg61+nzivOTz46BkwbRyUprcylwe
+	4txVoIVXsyyboGCasK/PTwlR5N4daCCPTdH/QJsGTF3D8uji9aUyiOe31O1Y7rue0okDGC/aSA2
+	AkvzfHQt4CRKE4WN1WSnfjom0hkYZM5/+BenR8eB5Xnv2vbY7IzIIdvYna96vqkEC/GxFATIdcE
+	j3r5DsYgjHXHR2V/j84ZLOfj1WWdA1j1Lwl7+g2AqIU24ifK5uYZ7BqrqYVrqeoU3wAmIZPVZfB
+	3j+EIlx+0Wu85mA1t5s3z47Wn/zK7jvVMvu7Ap0KsARMYe4G9ip5McBlVosNMCjceMCQu7u15ce
+	Qhy8i+cE7ZJkDw==
+X-Received: by 2002:a17:90b:28cc:b0:398:e96a:8999 with SMTP id 98e67ed59e1d1-3a8a1926ff1mr2511272a91.16.1791404319729;
+        Wed, 07 Oct 2026 13:18:39 -0700 (PDT)
 Received: from 4470NRD-ASU.ssi.samsung.com (c-24-19-224-150.hsd1.wa.comcast.net. [24.19.224.150])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a9ff7ab034sm967623a91.4.2026.10.07.13.18.37
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a9ff7ab034sm967623a91.4.2026.10.07.13.18.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2026 13:18:37 -0700 (PDT)
+        Wed, 07 Oct 2026 13:18:39 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -77,9 +77,9 @@ Cc: nvdimm@lists.linux.dev,
 	Gregory Price <gourry@gourry.net>,
 	Richard Cheng <icheng@nvidia.com>,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v15 2/8] cxl/mem: Read dynamic capacity configuration from the device
-Date: Wed,  7 Oct 2026 13:16:35 -0700
-Message-ID: <20261007201828.952-3-anisa.su@samsung.com>
+Subject: [PATCH v15 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
+Date: Wed,  7 Oct 2026 13:16:36 -0700
+Message-ID: <20261007201828.952-4-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261007201828.952-1-anisa.su@samsung.com>
 References: <20261007201828.952-1-anisa.su@samsung.com>
@@ -93,30 +93,19 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <iweiny@kernel.org>
 
-Devices which support Dynamic Capacity (DC) are configured via mailbox
-commands. CXL r4.0 section 9.13.3 describes the use of the Get DC
-Configuration command in order to obtain DCD partition characteristics.
+Additional DCD partition (AKA region) information is contained in the
+DSMAS CDAT tables, including performance, shareable and read-only
+attributes.
 
-Implement the DC mailbox commands as specified in CXL 4.0 section
-8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
-information. Disable DCD if an invalid configuration is found.
+Match DCD partitions with DSMAS tables and store the meta data. A DCD
+shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3), so
+if the CDAT is absent, fails to parse, or has no entry matching the DC
+partition, disable DCD rather than run with unknown attributes.
 
-Initial enablement for Linux only supports one dynamic capacity
-partition. Read all the partitions the device reports but validate
-only the first, and configure it as 'dynamic ram'.
-
-The specification requires that volatile capacity starts at DPA 0 and
-pmem starts at the DPA immediately following it, but DC partitions only
-need to be 256MB aligned according to CXL r4.0 section 8.2.10.9.9.1
-Table 8-347. So a device could leave a gap between ram/pmem (static)
-capacity and its first DC partition, or between one DC partition and
-the next.
-
-However, Linux chooses not to support gaps between static and dynamic
-capacity, and requires the first DC partition to begin at the DPA
-immediately following static capacity.
-
-Based on an original patch by Navneet Singh.
+DSLBIS is optional, but cxl_cdat_endpoint_process() treated zero DSLBIS
+entries as a parse failure, which would now disable DCD on a device with
+a valid DSMAS. Accept an empty DSLBIS, and skip DSMAS entries with no
+DSLBIS coordinates.
 
 Signed-off-by: Ira Weiny <iweiny@kernel.org>
 Co-developed-by: Anisa Su <anisa.su@samsung.com>
@@ -124,500 +113,360 @@ Signed-off-by: Anisa Su <anisa.su@samsung.com>
 
 ---
 Changes:
-1. Partition mode renamed CXL_PARTMODE_DYNAMIC_RAM: the mode says what
-   kind of capacity this is, not which partition. The DC partition's
-   resource name carries its position instead, dynamic_ram_1 for the
-   first, formatted in cxl_dpa_setup().
+1. cdat.c: disable DCD when the DC partition has no valid DSMAS entry:
+   no CDAT, CDAT parse failure, or no entry matching the partition.
+   [Richard, Dave]
+2. cdat.c: DSLBIS is optional. An empty DSLBIS no longer fails the
+   CDAT parse, and cxl_port_perf_data_calculate() skips entries that
+   have no DSLBIS coordinates.
+   [Richard, Dave]
+3. cdat.c: cxl_memdev_apply_dsmas() takes an enum cxl_dsmas_apply
+   instead of a bool so the call sites say what is applied.
+   [Dave]
+4. Also record the DSMAS read-only flag (CDAT 1.04, Flags bit 6) on
+   the partition, alongside shareable.
+   [Jonathan]
 ---
- drivers/cxl/core/hdm.c    |  13 ++-
- drivers/cxl/core/mbox.c   | 237 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/memdev.c |  47 ++++++++
- drivers/cxl/cxlmem.h      |  55 +++++++++
- drivers/cxl/pci.c         |   6 +
- include/cxl/cxl.h         |   3 +-
- 6 files changed, 359 insertions(+), 2 deletions(-)
+ drivers/cxl/core/cdat.c   | 97 ++++++++++++++++++++++++++++++++++-----
+ drivers/cxl/core/hdm.c    |  1 +
+ drivers/cxl/core/mbox.c   |  9 ++++
+ drivers/cxl/core/memdev.c | 17 ++++---
+ drivers/cxl/cxlmem.h      |  2 +
+ include/cxl/cxl.h         |  6 +++
+ 6 files changed, 113 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..5fa2177cefcc 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -446,6 +446,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
- 		return "ram";
- 	case CXL_PARTMODE_PMEM:
- 		return "pmem";
-+	case CXL_PARTMODE_DYNAMIC_RAM:
-+		return "dynamic_ram";
- 	default:
- 		return "";
- 	};
-@@ -455,6 +457,7 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
- int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- {
- 	struct device *dev = cxlds->dev;
-+	int dc_nth = 0;
- 
- 	guard(rwsem_write)(&cxl_rwsem.dpa);
- 
-@@ -471,8 +474,16 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- 
- 	for (int i = 0; i < info->nr_partitions; i++) {
- 		const struct cxl_dpa_part_info *part = &info->part[i];
-+		const char *name = cxl_mode_name(part->mode);
- 		int rc;
- 
-+		if (part->mode == CXL_PARTMODE_DYNAMIC_RAM) {
-+			name = devm_kasprintf(dev, GFP_KERNEL, "%s_%d", name,
-+					      ++dc_nth);
-+			if (!name)
-+				return -ENOMEM;
-+		}
-+
- 		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
- 		cxlds->part[i].mode = part->mode;
- 
-@@ -485,7 +496,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- 		}
- 		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
- 				 part->range.start, range_len(&part->range),
--				 cxl_mode_name(part->mode));
-+				 name);
- 		if (rc)
- 			return rc;
- 		cxlds->nr_partitions++;
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 199bb986d674..72af23ba288e 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1349,6 +1349,243 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	return -EBUSY;
- }
- 
-+/*
-+ * A partition unavailable for Dynamic Capacity reports zeros for decode_length,
-+ * length, and block_size.
-+ */
-+static bool cxl_dc_partition_unavailable(struct cxl_dc_partition *dev_part)
-+{
-+	return !le64_to_cpu(dev_part->decode_length) &&
-+	       !le64_to_cpu(dev_part->length) &&
-+	       !le64_to_cpu(dev_part->block_size);
-+}
-+
-+static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
-+			struct cxl_dc_partition *dev_part)
-+{
-+	u64 decode_len = le64_to_cpu(dev_part->decode_length);
-+	u64 blk_size = le64_to_cpu(dev_part->block_size);
-+	u64 len = le64_to_cpu(dev_part->length);
-+	u64 size;
-+
-+	/*
-+	 * Not an error; leave the entry empty. A partially zeroed partition
-+	 * is rejected by the checks below. CXL r4.0 Table 8-347.
-+	 */
-+	if (cxl_dc_partition_unavailable(dev_part)) {
-+		*part = (struct cxl_dc_partition_info) { };
-+		dev_dbg(dev, "Partition 0 unavailable for DC\n");
-+		return 0;
-+	}
-+
-+	/*
-+	 * Decode length is a count of 256M units, so a device reporting 2^36
-+	 * or more wraps.
-+	 */
-+	if (check_mul_overflow(decode_len, (u64)CXL_CAPACITY_MULTIPLIER, &size)) {
-+		dev_err(dev, "DC partition 0 decode length %#llx overflows\n",
-+			decode_len);
-+		return -EINVAL;
-+	}
-+
-+	*part = (struct cxl_dc_partition_info) {
-+		.start = le64_to_cpu(dev_part->base),
-+		.size = size,
-+	};
-+
-+	/*
-+	 * Block size is a power of 2 and a multiple of 40h. is_power_of_2()
-+	 * takes an unsigned long, which truncates blk_size on 32 bit.
-+	 */
-+	if (blk_size == 0 || (blk_size & (blk_size - 1)) ||
-+	    blk_size % CXL_DCD_BLOCK_LINE_SIZE) {
-+		dev_err(dev, "DC partition 0 invalid block size %#llx\n", blk_size);
-+		return -EINVAL;
-+	}
-+
-+	if (part->size == 0) {
-+		dev_err(dev, "DC partition 0 zero decode length\n");
-+		return -EINVAL;
-+	}
-+
-+	if (len == 0) {
-+		dev_err(dev, "DC partition 0 zero length\n");
-+		return -EINVAL;
-+	}
-+
-+	if (len > part->size) {
-+		dev_err(dev, "DC partition 0 length %#llx exceeds decode length %#llx\n",
-+			len, part->size);
-+		return -EINVAL;
-+	}
-+
-+	if (!IS_ALIGNED(len, blk_size)) {
-+		dev_err(dev, "DC partition 0 length %#llx not a multiple of block size %#llx\n",
-+			len, blk_size);
-+		return -EINVAL;
-+	}
-+
-+	if (!IS_ALIGNED(part->start, SZ_256M)) {
-+		dev_err(dev, "DC partition 0 base %#llx not aligned to 256M\n",
-+			part->start);
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dev, "DC partition 0 start %#llx size %#llx blk_size: %#llx\n",
-+		part->start, part->size, blk_size);
-+
-+	return 0;
-+}
-+
-+/* Returns the number of partitions in dc_resp or -ERRNO */
-+static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
-+			     u8 partition_count,
-+			     struct cxl_mbox_get_dc_config_out *dc_resp,
-+			     size_t dc_resp_size)
-+{
-+	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
-+		.partition_count = partition_count,
-+		.start_partition_index = start_partition,
-+	};
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
-+		.payload_in = &get_dc,
-+		.size_in = sizeof(get_dc),
-+		.size_out = dc_resp_size,
-+		.payload_out = dc_resp,
-+		/* The device must return at least the fixed header */
-+		.min_out = sizeof(*dc_resp),
-+	};
-+	size_t expected_sz;
-+	int rc;
-+
-+	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (dc_resp->partitions_returned > partition_count) {
-+		dev_err(mbox->host, "Device returned %u partitions, requested %u\n",
-+			dc_resp->partitions_returned, partition_count);
-+		return -EIO;
-+	}
-+
-+	/* The trailing extent/tag counts (CXL r4.0 Table 8-346) are not read */
-+	expected_sz = struct_size(dc_resp, partition,
-+				  dc_resp->partitions_returned);
-+
-+	if (mbox_cmd.size_out < expected_sz) {
-+		dev_err(mbox->host,
-+			"Payload size %zu less than expected %zu for %u partitions\n",
-+			mbox_cmd.size_out,
-+			expected_sz,
-+			dc_resp->partitions_returned);
-+		return -EIO;
-+	}
-+
-+	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
-+		dc_resp->partitions_returned, dc_resp->avail_partition_count);
-+	return dc_resp->partitions_returned;
-+}
-+
-+/**
-+ * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
-+ *                         device.
-+ * @mbox: Mailbox to query
-+ * @dc_info: The dynamic partition information to return
-+ *
-+ * Read every partition the device reports, but validate only the first:
-+ * Linux maps partition 0 and nothing else, so a defect in capacity the
-+ * driver never touches is not a reason to refuse the device dynamic
-+ * capacity.  The remaining partitions are read but not recorded.
-+ *
-+ * Return: 0 if identify was executed successfully, -ERRNO on error.
-+ *         On error, @dc_info is left unchanged.
-+ */
-+int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-+			struct cxl_dc_partition_info *dc_info)
-+{
-+	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS] = { };
-+	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) = NULL;
-+	struct device *dev = mbox->host;
-+	u8 avail_partitions = 0;
-+	u8 start_partition;
-+	u8 num_partitions;
-+	u8 partition_count;
-+	size_t dc_resp_size;
-+
-+	/*
-+	 * Bound requested number of partitions by mailbox payload size. The
-+	 * 256 byte spec minimum, verified in cxl_pci_setup_mailbox(), keeps
-+	 * the subtraction below from underflowing.
-+	 */
-+	partition_count = min(CXL_MAX_DC_PARTITIONS,
-+			      (mbox->payload_size - sizeof(*dc_resp) -
-+			       sizeof(struct cxl_mbox_get_dc_config_tail)) /
-+			      sizeof(struct cxl_dc_partition));
-+	dc_resp_size = struct_size(dc_resp, partition, partition_count) +
-+		       sizeof(struct cxl_mbox_get_dc_config_tail);
-+
-+	dc_resp = kmalloc(dc_resp_size, GFP_KERNEL);
-+	if (!dc_resp)
-+		return -ENOMEM;
-+
-+	start_partition = 0;
-+	num_partitions = 0;
-+	do {
-+		int returned, rc;
-+
-+		returned = cxl_get_dc_config(mbox, start_partition,
-+					     partition_count, dc_resp,
-+					     dc_resp_size);
-+		if (returned < 0) {
-+			dev_err(dev, "Failed to get DC config: %d\n", returned);
-+			return returned;
-+		}
-+
-+		if (returned == 0) {
-+			dev_err(dev,
-+				"Device reported %u partitions available but returned none at index %u\n",
-+				dc_resp->avail_partition_count, start_partition);
-+			return -EIO;
-+		}
-+
-+		/* A DCD reports at least one partition (CXL r4.0 Table 8-346) */
-+		if (dc_resp->avail_partition_count == 0) {
-+			dev_err(dev, "Device reported no DC partitions\n");
-+			return -EIO;
-+		}
-+
-+		avail_partitions = min(dc_resp->avail_partition_count,
-+				       CXL_MAX_DC_PARTITIONS);
-+
-+		/*
-+		 * Only partition 0 is mapped, so it is the only one checked.
-+		 * The rest are read to complete the enumeration and dropped.
-+		 */
-+		if (start_partition == 0) {
-+			rc = cxl_dc_check(dev, &partitions[0],
-+					  &dc_resp->partition[0]);
-+			if (rc)
-+				return rc;
-+		}
-+
-+		num_partitions += returned;
-+		start_partition = num_partitions;
-+
-+	} while (num_partitions < avail_partitions);
-+
-+	/* Linux only supports the 1st partition; nothing to do if it is unavailable */
-+	if (partitions[0].size == 0)
-+		return -ENODEV;
-+
-+	*dc_info = partitions[0];
-+	dev_dbg(dev, "Returning partition 0 %#llx size %#llx\n",
-+		dc_info->start, dc_info->size);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
-+
- int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index b3419df586b9..def26c490dfe 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -643,6 +643,53 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
- 
-+int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-+{
-+	struct cxl_dc_partition_info dc_info = { };
-+	struct device *dev = mds->cxlds.dev;
-+	u64 total;
-+	int rc;
-+
-+	if (!mds->cxlds.media_ready)
-+		return 0;
-+
-+	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
-+	if (rc) {
-+		dev_warn(dev,
-+			 "Failed to read Dynamic Capacity config: %d\n", rc);
-+		return rc;
-+	}
-+
-+	if (dc_info.start < info->size) {
-+		dev_err(dev,
-+			"DC partition 0 base %#llx overlaps static capacity ending at %#llx\n",
-+			dc_info.start, info->size);
-+		return -EINVAL;
-+	}
-+
-+	/* A gap between static capacity and the DC partition is not supported */
-+	if (dc_info.start > info->size) {
-+		dev_warn(dev,
-+			 "DC partition 0 base %#llx leaves a gap from static capacity ending at %#llx\n",
-+			 dc_info.start, info->size);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (check_add_overflow(info->size, dc_info.size, &total)) {
-+		dev_err(dev,
-+			"DC partition 0 size %#llx overflows DPA space ending at %#llx\n",
-+			dc_info.size, info->size);
-+		return -EINVAL;
-+	}
-+
-+	info->size = total;
-+	dev_dbg(dev, "Adding dynamic ram partition; %#llx size %#llx\n",
-+		dc_info.start, dc_info.size);
-+	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
- 
- /**
-  * cxl_set_capacity: initialize dpa by a driver without a mailbox.
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 0c8e23276dc6..4fac65dbb808 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -407,6 +407,8 @@ struct cxl_security_state {
- 	struct kernfs_node *sanitize_node;
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index 5c9f07262513..07aedff657d9 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -17,6 +17,8 @@ struct dsmas_entry {
+ 	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+ 	int entries;
+ 	int qos_class;
++	bool shareable;
++	bool read_only;
  };
  
-+#define CXL_MAX_DC_PARTITIONS 8
-+
- static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
- {
- 	/*
-@@ -689,6 +691,39 @@ struct cxl_mbox_set_shutdown_state_in {
- 	u8 state;
- } __packed;
+ static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+@@ -74,6 +76,10 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+ 		return -ENOMEM;
  
-+/* See CXL r4.0 Table 8-345 get dynamic capacity config Input Payload */
-+struct cxl_mbox_get_dc_config_in {
-+	u8 partition_count;
-+	u8 start_partition_index;
-+} __packed;
+ 	dent->handle = dsmas->dsmad_handle;
++	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
++	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
++	/* Read Only is CDAT 1.04 and later, DSMAS Flags bit 6 */
++	dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
+ 	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+ 	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+ 			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+@@ -188,9 +194,10 @@ static int cxl_cdat_endpoint_process(struct cxl_port *port,
+ 	if (rc)
+ 		return rc;
+ 
++	/* DSLBIS is optional; zero entries is not an error */
+ 	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
+ 			      dsmas_xa, port->cdat.table, port->cdat.length);
+-	return cdat_table_parse_output(rc);
++	return rc < 0 ? rc : 0;
+ }
+ 
+ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+@@ -219,6 +226,13 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+ 	xa_for_each(dsmas_xa, index, dent) {
+ 		int qos_class;
+ 
++		/* No DSLBIS for this DSMAS; nothing to hand the QTG _DSM */
++		if (!dent->cdat_coord[ACCESS_COORDINATE_CPU].read_bandwidth &&
++		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].write_bandwidth &&
++		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].read_latency &&
++		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].write_latency)
++			continue;
 +
-+/* See CXL r4.0 Table 8-346 get dynamic capacity config Output Payload */
-+struct cxl_mbox_get_dc_config_out {
-+	u8 avail_partition_count;
-+	u8 partitions_returned;
-+	u8 rsvd[6];
-+	/* See CXL r4.0 Table 8-347 */
-+	struct cxl_dc_partition {
-+		__le64 base;
-+		__le64 decode_length;
-+		__le64 length;
-+		__le64 block_size;
-+		__le32 dsmad_handle;
-+		u8 flags;
-+		u8 rsvd[3];
-+	} __packed partition[] __counted_by(partitions_returned);
-+	/* Trailing extent/tag count fields unused */
-+} __packed;
+ 		cxl_coordinates_combine(dent->coord, dent->cdat_coord, ep_c);
+ 		dent->entries = 1;
+ 		rc = cxl_root->ops.qos_class(cxl_root,
+@@ -255,35 +269,90 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+ 		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
+ }
+ 
+-static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+-				     struct xarray *dsmas_xa)
++/*
++ * A DCD shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3).
++ * Without one the partition's attributes are unknown, so disable DCD.
++ */
++static void cxl_dcd_dsmas_missing(struct cxl_dev_state *cxlds, const char *why)
++{
++	struct cxl_memdev_state *mds;
 +
-+/* Trailing counts; cannot be a member after the flex array above */
-+struct cxl_mbox_get_dc_config_tail {
-+	__le32 num_extents_supported;
-+	__le32 num_extents_available;
-+	__le32 num_tags_supported;
-+	__le32 num_tags_available;
-+} __packed;
-+#define CXL_DCD_BLOCK_LINE_SIZE 0x40
++	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
++		return;
 +
- /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
- struct cxl_mbox_set_timestamp_in {
- 	__le64 timestamp;
-@@ -812,9 +847,18 @@ enum {
- int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 			  struct cxl_mbox_cmd *cmd);
- int cxl_dev_state_identify(struct cxl_memdev_state *mds);
++	mds = to_cxl_memdev_state(cxlds);
++	if (!cxl_dcd_supported(mds) ||
++	    !cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM))
++		return;
 +
-+struct cxl_dc_partition_info {
-+	u64 start;
-+	u64 size;
++	dev_warn(cxlds->dev, "DC partition has no valid DSMAS entry (%s), disabling DCD\n",
++		 why);
++	cxl_disable_dcd(mds);
++}
++
++enum cxl_dsmas_apply {
++	CXL_DSMAS_APPLY_FLAGS,		/* shareable etc.; no QTG data */
++	CXL_DSMAS_APPLY_FLAGS_PERF,	/* perf coordinates and qos_class */
 +};
 +
-+int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-+			struct cxl_dc_partition_info *dc_info);
- int cxl_await_media_ready(struct cxl_dev_state *cxlds);
- int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
- int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-+int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
- struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
- 						 u16 dvsec);
- void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
-@@ -828,6 +872,17 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 			    const uuid_t *uuid, union cxl_event *evt);
- int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
- int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
-+
-+static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
-+{
-+	return mds->dcd_supported;
-+}
-+
-+static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
-+{
-+	mds->dcd_supported = false;
-+}
-+
- int cxl_set_timestamp(struct cxl_memdev_state *mds);
- int cxl_poison_state_init(struct cxl_memdev_state *mds);
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c7c91e8dc51d..2fe9db4b3d86 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -868,6 +868,12 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
++/*
++ * DSMAS flags such as shareable are properties of the CDAT entry and are
++ * applied regardless; perf data is applied only if the QTG lookup produced
++ * recommendations.
++ */
++static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
++				   struct xarray *dsmas_xa,
++				   enum cxl_dsmas_apply attrs)
+ {
+ 	struct device *dev = cxlds->dev;
+ 	struct dsmas_entry *dent;
++	bool dc_matched = false;
+ 	unsigned long index;
  
-+	if (cxl_dcd_supported(mds)) {
-+		rc = cxl_configure_dcd(mds, &range_info);
-+		if (rc)
-+			cxl_disable_dcd(mds);
+ 	xa_for_each(dsmas_xa, index, dent) {
+ 		bool found = false;
+ 
+ 		for (int i = 0; i < cxlds->nr_partitions; i++) {
+-			struct resource *res = &cxlds->part[i].res;
++			struct cxl_dpa_partition *part = &cxlds->part[i];
+ 			struct range range = {
+-				.start = res->start,
+-				.end = res->end,
++				.start = part->res.start,
++				.end = part->res.end,
+ 			};
+ 
+-			if (range_contains(&range, &dent->dpa_range)) {
+-				update_perf_entry(dev, dent,
+-						  &cxlds->part[i].perf);
+-				found = true;
++			if (!range_contains(&range, &dent->dpa_range))
++				continue;
++
++			found = true;
++			/*
++			 * part->handle is from Get DC Config, dent->handle
++			 * from the CDAT DSMAS entry.
++			 */
++			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM &&
++			    dent->handle != part->handle) {
++				dev_warn(dev,
++					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
++					 &range, part->handle,
++					 &dent->dpa_range, dent->handle);
+ 				break;
+ 			}
++
++			if (attrs == CXL_DSMAS_APPLY_FLAGS_PERF)
++				update_perf_entry(dev, dent, &part->perf);
++			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM) {
++				part->shareable = dent->shareable;
++				part->read_only = dent->read_only;
++				dc_matched = true;
++			}
++			break;
+ 		}
+ 
+ 		if (!found)
+ 			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
+ 				&dent->dpa_range);
+ 	}
++
++	if (!dc_matched)
++		cxl_dcd_dsmas_missing(cxlds, "no matching entry");
+ }
+ 
+ static int match_cxlrd_qos_class(struct device *dev, void *data)
+@@ -409,22 +478,26 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+ 	int rc;
+ 
+ 	xa_init(&__dsmas_xa);
+-	if (!port->cdat.table)
++	if (!port->cdat.table) {
++		cxl_dcd_dsmas_missing(cxlds, "no CDAT");
+ 		return;
++	}
+ 
+ 	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+ 	if (rc < 0) {
+ 		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
++		cxl_dcd_dsmas_missing(cxlds, "CDAT parse failed");
+ 		return;
+ 	}
+ 
+ 	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+ 	if (rc) {
+ 		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
++		cxl_memdev_apply_dsmas(cxlds, dsmas_xa, CXL_DSMAS_APPLY_FLAGS);
+ 		return;
+ 	}
+ 
+-	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
++	cxl_memdev_apply_dsmas(cxlds, dsmas_xa, CXL_DSMAS_APPLY_FLAGS_PERF);
+ 	cxl_qos_class_verify(cxlmd);
+ 	cxl_memdev_update_perf(cxlmd);
+ }
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 5fa2177cefcc..379540246333 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -486,6 +486,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+ 
+ 		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+ 		cxlds->part[i].mode = part->mode;
++		cxlds->part[i].handle = part->handle;
+ 
+ 		/* Require ordered + contiguous partitions */
+ 		if (i) {
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 72af23ba288e..12598d329e95 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1366,6 +1366,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+ 	u64 decode_len = le64_to_cpu(dev_part->decode_length);
+ 	u64 blk_size = le64_to_cpu(dev_part->block_size);
+ 	u64 len = le64_to_cpu(dev_part->length);
++	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
+ 	u64 size;
+ 
+ 	/*
+@@ -1378,6 +1379,13 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+ 		return 0;
+ 	}
+ 
++	/* The CDAT DSMAD handle this refers to is 8 bits */
++	if (handle & ~0xFF) {
++		dev_warn(dev, "DSMAD handle 0x%x exceeds the 8 bit CDAT DSMAD handle\n",
++			 handle);
++		return -EINVAL;
 +	}
 +
- 	rc = cxl_dpa_setup(cxlds, &range_info);
- 	if (rc)
+ 	/*
+ 	 * Decode length is a count of 256M units, so a device reporting 2^36
+ 	 * or more wraps.
+@@ -1391,6 +1399,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+ 	*part = (struct cxl_dc_partition_info) {
+ 		.start = le64_to_cpu(dev_part->base),
+ 		.size = size,
++		.handle = handle,
+ 	};
+ 
+ 	/*
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index def26c490dfe..7aa79a1a53e4 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -594,7 +594,8 @@ bool is_cxl_memdev(const struct device *dev)
+ }
+ EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
+ 
+-static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
++static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
++		     enum cxl_partition_mode mode, u8 handle)
+ {
+ 	int i = info->nr_partitions;
+ 
+@@ -606,6 +607,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
+ 		.end = start + size - 1,
+ 	};
+ 	info->part[i].mode = mode;
++	info->part[i].handle = handle;
+ 	info->nr_partitions++;
+ }
+ 
+@@ -623,9 +625,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ 	info->size = mds->total_bytes;
+ 
+ 	if (mds->partition_align_bytes == 0) {
+-		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
++		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
+ 		add_part(info, mds->volatile_only_bytes,
+-			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
++			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
+ 		return 0;
+ 	}
+ 
+@@ -635,9 +637,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
  		return rc;
+ 	}
+ 
+-	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
++	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
+ 	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
+-		 CXL_PARTMODE_PMEM);
++		 CXL_PARTMODE_PMEM, 0);
+ 
+ 	return 0;
+ }
+@@ -685,7 +687,8 @@ int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ 	info->size = total;
+ 	dev_dbg(dev, "Adding dynamic ram partition; %#llx size %#llx\n",
+ 		dc_info.start, dc_info.size);
+-	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM);
++	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM,
++		 dc_info.handle);
+ 
+ 	return 0;
+ }
+@@ -703,7 +706,7 @@ int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
+ 		.size = capacity,
+ 	};
+ 
+-	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
++	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM, 0);
+ 	return cxl_dpa_setup(cxlds, &range_info);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 4fac65dbb808..9fd5af2e41d4 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -140,6 +140,7 @@ struct cxl_dpa_info {
+ 	struct cxl_dpa_part_info {
+ 		struct range range;
+ 		enum cxl_partition_mode mode;
++		u8 handle;
+ 	} part[CXL_NR_PARTITIONS_MAX];
+ 	int nr_partitions;
+ };
+@@ -851,6 +852,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+ struct cxl_dc_partition_info {
+ 	u64 start;
+ 	u64 size;
++	u8 handle;
+ };
+ 
+ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
 diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 802b143de83d..e07360849344 100644
+index e07360849344..728decda57fd 100644
 --- a/include/cxl/cxl.h
 +++ b/include/cxl/cxl.h
-@@ -133,6 +133,7 @@ struct cxl_dpa_perf {
- enum cxl_partition_mode {
- 	CXL_PARTMODE_RAM,
- 	CXL_PARTMODE_PMEM,
-+	CXL_PARTMODE_DYNAMIC_RAM,
- };
- 
- /**
-@@ -147,7 +148,7 @@ struct cxl_dpa_partition {
+@@ -141,11 +141,17 @@ enum cxl_partition_mode {
+  * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+  * @perf: performance attributes of the partition from CDAT
+  * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
++ * @handle: DSMAS handle that represents this partition
++ * @shareable: Is the partition shareable (from its CDAT DSMAS entry)
++ * @read_only: Is the partition read-only (from its CDAT DSMAS entry)
+  */
+ struct cxl_dpa_partition {
+ 	struct resource res;
+ 	struct cxl_dpa_perf perf;
  	enum cxl_partition_mode mode;
++	u8 handle;
++	bool shareable;
++	bool read_only;
  };
  
--#define CXL_NR_PARTITIONS_MAX 2
-+#define CXL_NR_PARTITIONS_MAX 3
- 
- /**
-  * struct cxl_dev_state - The driver device state
+ #define CXL_NR_PARTITIONS_MAX 3
 -- 
 2.43.0
 
