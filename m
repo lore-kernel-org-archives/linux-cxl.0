@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73BA37204C;
-	Thu,  8 Oct 2026 21:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FEA3B14BE;
+	Thu,  8 Oct 2026 21:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791493512; cv=none; b=QSiXxl3EilSeMABi7HYkZRg8rPZs9aiGBJitCTbMCFYAlTV81T1tVgMCPeDLiuXTHXPh9XkfJjfMngmlCMzd3kPRoKUajz2CoYNvCN0HQitL1nOI0UYWC07x0jfbOABpobMe3goLjLpIo7s6C6aUApsk+VNMik5tRkCNvcdQ98A=
+	t=1791494958; cv=none; b=P1vc9/P1e7BelwWsLKqPTenPjCnJfi5LpHn3pY7sC0dUu4HhkFlfuUBsz2nfYfSEqzVcQ28TkLUo07+i1qJEY15xRTPTS81gPc0YempIaMn/xAhj1dzjb442DuCFqG4aDPZekLO0p2LxEkwun4WsWbfWhCRYcC1y1N2D4/p/0AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791493512; c=relaxed/simple;
-	bh=TuVojh4DaVLaPMV5QsmM9zrzY3BDBck5IQ24RL5aS7o=;
+	s=arc-20240116; t=1791494958; c=relaxed/simple;
+	bh=egEJK6fKha3I8UdvOrVak53/xTpWPB3hFQL3gHHXIEU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dYJLZ1DR/BcGlk+NVPXL6YwuaqxFU8WcCPlVU33/K6LM1+gmNbDvSqak2LYd/8G68m6JGjX4gAziwmErcuu1E8PcKmcnqCIHu+GneEKmgs9FqdigrHvOLIuqcohusSLU/3s0Q+jrbzNK+3HU9Thit0oRKWaiGHi8U8ys0Bvjh8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1aWOY6R; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=miYpxSk1cMeBxtSmgwoG/tHDh0jqVwKrZMgET//HjJfobhls3wW6eRCAXjNZLvRMJjEolK1iux3PB52eEoRazTHiJAB0eOHnx8Ize81f0wmaFpNOekGRl9HBi7o/rGkc9RVuXCWUGscAfgrMO0U25pqodjtpH5G7tuuKONK/6cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vn2jepEl; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1aWOY6R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vn2jepEl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791493511; x=1823029511;
+  t=1791494956; x=1823030956;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=TuVojh4DaVLaPMV5QsmM9zrzY3BDBck5IQ24RL5aS7o=;
-  b=Y1aWOY6R+nJ5i4y5+7jHn2FcXk/QxbJQE8uC8CuTN/0T18ggEYb77/iI
-   lZPoeKqo3sg2Uw/VcQKT4ArTvpNXqB/g9GF5jcZVOzuI0RwyBKTh4Ek7R
-   wkX1FUgnuGsiw6KKVdF57ZrUGMpQcKqzZU+Nsy3C2QgSaVQD/iEX5JzxD
-   yV9YsYOdHszuiKy7286E/bP3lFZ//5ju5T2ecC2S35fyqNcJ74fFcuxlS
-   cU4Oj+JsB6wuGJPEwvxVVeoOwYnfCWq7UGlOeKAm6u9G7pGj0B+E+TK+3
-   +TfvNj8QYeIZZJhwxqToc0vf6k2QZQsQYU/Iq9LkJFyActiLU7rybxass
+  bh=egEJK6fKha3I8UdvOrVak53/xTpWPB3hFQL3gHHXIEU=;
+  b=Vn2jepEl3UTp4FkPEtXOc8LM88E/BP6qSu/h9rMJ9F1SKg+0p76GTtXC
+   O8v18ALjhVb+vS6eNFDQguIVCK24NpZsIYhMD0CSHxyt/5kc2dxLJcCco
+   BJGE5eUjlDs/ikYIhmC1VnVa3I+6kpjsL0qmvBGACB1CWg0v/zBiwUvTj
+   X5264K+IW1F+/boUKzTi0+yYymCnvYTWN4q5oxg8uIjHpVDDUz374jXzY
+   EB4zitRP2ojTRTtPtgWYV9hG4B/xgE4J7pImSHAg97lajG0ymt+Lu3vG/
+   TMByK8Ndr2Lzor8AR9NPcMhsuhCjsLk/lQxPu28xaxmh1uQPDghqCwOC2
    w==;
-X-CSE-ConnectionGUID: 8jvHxQmaTaijLjE9Sxwo4w==
-X-CSE-MsgGUID: TIjbQvGVQuiM5C5zOgGxhw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11929"; a="283675"
+X-CSE-ConnectionGUID: wC4d90+fR7apVO6O/n1mqA==
+X-CSE-MsgGUID: IKYyZHxaSvqVKLtBuTU6vg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11929"; a="286918"
 X-IronPort-AV: E=Sophos;i="6.27,147,1787036400"; 
-   d="scan'208";a="283675"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 14:05:11 -0700
-X-CSE-ConnectionGUID: VuIRcOEPQSO67HuKVoja5A==
-X-CSE-MsgGUID: ROwWPS3qSzyPrupSZmyNug==
+   d="scan'208";a="286918"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 14:29:16 -0700
+X-CSE-ConnectionGUID: NFKTfO8mSOOE0re+VbD/lg==
+X-CSE-MsgGUID: onmAeV8bSC2ml9cdTryM3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,147,1787036400"; 
-   d="scan'208";a="1954753"
+   d="scan'208";a="512922"
 Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.109.51]) ([10.125.109.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 14:05:09 -0700
-Message-ID: <3f40d953-2e91-4492-b100-c851fdb143b5@intel.com>
-Date: Thu, 8 Oct 2026 14:05:08 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 14:29:14 -0700
+Message-ID: <dc0fc04c-cc75-4e8d-bbb4-459825c58f20@intel.com>
+Date: Thu, 8 Oct 2026 14:29:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,237 +52,410 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] cxl/region: Add region reference in memdev attach
-To: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>,
- alucerop@amd.com, linux-cxl@vger.kernel.org, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
- rafael@kernel.org
-References: <20261001132023.17032-1-alucerop@amd.com>
- <20261001132023.17032-3-alucerop@amd.com>
- <6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com>
- <8ebaae42-a0c6-4e9c-be1b-ca68a4769ed7@amd.com>
- <bd412198-8a25-436c-b6d6-6b6730e8c28e@intel.com>
- <9114ec71-060f-48ae-a6e5-0b46a881c259@amd.com>
- <40fc791c-c03c-42f0-88be-7a97938ebe1c@intel.com>
- <ba7731fe-f916-4e51-977b-95a0197bf52d@amd.com>
+Subject: Re: [PATCH v15 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
+To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Dan Williams <djbw@kernel.org>, Alison Schofield
+ <alison.schofield@intel.com>, Jonathan Cameron <jic23@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Fan Ni <nifan.cxl@gmail.com>,
+ Li Ming <ming.li@zohomail.com>, Benjamin Cheatham
+ <benjamin.cheatham@amd.com>, Gregory Price <gourry@gourry.net>,
+ Richard Cheng <icheng@nvidia.com>, Anisa Su <anisa.su@samsung.com>
+References: <20261007201828.952-1-anisa.su@samsung.com>
+ <20261007201828.952-4-anisa.su@samsung.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <ba7731fe-f916-4e51-977b-95a0197bf52d@amd.com>
+In-Reply-To: <20261007201828.952-4-anisa.su@samsung.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 10/8/26 11:07 AM, Lucero Palau, Alejandro wrote:
+On 10/7/26 1:16 PM, Anisa Su wrote:
+> From: Ira Weiny <iweiny@kernel.org>
 > 
-> On 08/10/2026 17:18, Dave Jiang wrote:
->>
->> On 10/8/26 6:50 AM, Lucero Palau, Alejandro wrote:
->>> On 02/10/2026 16:52, Dave Jiang wrote:
->>>> On 10/1/26 9:41 PM, Lucero Palau, Alejandro wrote:
->>>>> On 01/10/2026 22:38, Dave Jiang wrote:
->>>>>> On 10/1/26 6:20 AM, alucerop@amd.com wrote:
->>>>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>>>
->>>>>>> Use a new field in cxl_attach_region struct for easily link it with the
->>>>>>> region the memdev is attached to.
->>>>>>>
->>>>>>> This facilitates device links creation where such a region is the supplier
->>>>>>> with non-PF0 physical functions wanting to use the CXL region being the
->>>>>>> consumers.
->>>>>>>
->>>>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>>>>>> ---
->>>>>>>     drivers/cxl/core/region.c | 1 +
->>>>>>>     drivers/cxl/cxlmem.h      | 2 ++
->>>>>>>     2 files changed, 3 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>>>>> index 27e63e6dab7c..78ca7ebc3e55 100644
->>>>>>> --- a/drivers/cxl/core/region.c
->>>>>>> +++ b/drivers/cxl/core/region.c
->>>>>>> @@ -4132,6 +4132,7 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
->>>>>>>         if (rc)
->>>>>>>             return rc;
->>>>>>>     +    attach->cxlr = cxlr;
->>>>>>>         attach->hpa_range = (struct range) {
->>>>>>>             .start = cxlr->params.res->start,
->>>>>>>             .end = cxlr->params.res->end,
->>>>>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->>>>>>> index c401e3a1af06..c598561b8e5f 100644
->>>>>>> --- a/drivers/cxl/cxlmem.h
->>>>>>> +++ b/drivers/cxl/cxlmem.h
->>>>>>> @@ -104,6 +104,7 @@ struct cxl_memdev_attach {
->>>>>>>     /**
->>>>>>>      * struct cxl_attach_region - coordinate mapping a region at memdev registration
->>>>>>>      * @attach: common core attachment descriptor
->>>>>>> + * @cxlr: cxl region the memdev is attached to.
->>>>>>>      * @hpa_range: physical address range of the region
->>>>>>>      *
->>>>>>>      * For the common simple case of a CXL device with private (non-general purpose
->>>>>>> @@ -112,6 +113,7 @@ struct cxl_memdev_attach {
->>>>>>>      */
->>>>>>>     struct cxl_attach_region {
->>>>>>>         struct cxl_memdev_attach attach;
->>>>>>> +    struct cxl_region *cxlr;
->>>>>>>         struct range hpa_range;
->>>>>>>     };
->>>>>>>     
->>>>>> attach->cxlr is never cleared when the region goes away. Unbinding the endpoint port runs endpoint_unregister_region(), which unregisters the region and drops its reference. PF0 stays bound until the detach work runs.
->>>>>>
->>>>>> A non-PF0 probe in that window still finds the memdev and calls device_link_add() on the freed region.
->>>>> I do not think so. This version, see next patch, relies on locking the supplier, PF0, before getting the memdev and potentially using the attach region. Only on PF0 release can such a memdev and region disappear, so I think this is enough.
->>>>>
->>> Hi Dave,
->>>
->>>
->>>> The memdev, yes. It's devm on PF0. The region, no. Unbinding the endpoint port, or cxl_mem from the memdev, runs endpoint_unregister_region() under the endpoint's lock, not PF0's. PF0's release is only queued (schedule_detach() -> detach_memdev()). Until that work runs, PF0 is bound, the memdev is found, hpa_range is valid, and attach->cxlr points at a freed region. Root teardown (kill_regions()) and delete_region also unregister the region without touching PF0.
->>>
->>> You are partially right. The problem is not that async detach_memdev() but the fact the region can be removed without the PF0 being aware ...
->>>
->>>
->>> I was relying on the memdev being unregister first then the related device released later on, with the important part being the memdev being unregister making it unavailable to the other PFs because it can not be found in the cxl bus. I'm pretty sure about that scenario but I was not counting on sysfs unbinds for the endpoint device ...
->>>
->>>
->>> I need to think further about this because I think it is wrong to remove the region in this case without PF0 or the memdev owner and original region consumer still unaware of it. One thing I tried to discuss with Dan was why we have the unbinding options for cxl_mem and cxl_port drivers. What is the point? I know this is standard linux device model, but the unbinding could do nothing if we decide so. Couldn't we? Otherwise, If there is a good reason for having this functionality where the unwinding can happen through different starting points, we should document it.
->>>
->>>
->>> What I'm going to try is to link the region removal to Type2 driver removal as well, not necessarily with device links but through devm_action_or_reset links as we are already doing for other cases. And I think to document the different objects/devices involved and its lifetime depending on the current unwinding supported would be good to have, so I will work on that as well.
->>>
->>>
->> So there are multiple paths a region can go away without PF0 knowing and sysfs is only one of the triggers.
->> 1. endpoint port teardown -> endpoint_unregister_region()
->> 2. root decoder teardown -> kill_regions()
->> 3. userspace delete region
->> 4. some other places calling unregister_region().
->>
->> Using suppress_bind_attrs only hides the sysfs files. There's also device hot-remove and module unload in addition to root decoder action and user action. So doing that is definitely the wrong way to go.
->>
->> The path of PF0 going first is fine. The memdev goes with it. The bug path is region going first. Something needs to deal with the stale attach->cxlr. You need a region-side teardown clearing attach->cxlr under the cxl_rwsem.region before unregistering. And readers need to check under the same lock. The endpoint_detach_attach_region() proposal does close that hole.
+> Additional DCD partition (AKA region) information is contained in the
+> DSMAS CDAT tables, including performance, shareable and read-only
+> attributes.
 > 
+> Match DCD partitions with DSMAS tables and store the meta data. A DCD
+> shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3), so
+> if the CDAT is absent, fails to parse, or has no entry matching the DC
+> partition, disable DCD rather than run with unknown attributes.
 > 
-> I tried to discuss this with Dan unsuccessfully, so I hope I can make my point clear: having so many ways of cxl objects/devices being destroyed is, IMO, wrong. Moreover, some user actions on things created by a Type2 driver should not be so easy accessed, and definitely, having a region unregistered and released with its main consumer and owner completely unaware, should not be happening.
+> DSLBIS is optional, but cxl_cdat_endpoint_process() treated zero DSLBIS
+> entries as a parse failure, which would now disable DCD on a device with
+> a valid DSMAS. Accept an empty DSLBIS, and skip DSMAS entries with no
+> DSLBIS coordinates.
 > 
+> Signed-off-by: Ira Weiny <iweiny@kernel.org>
+> Co-developed-by: Anisa Su <anisa.su@samsung.com>
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
 > 
-> Dan and I addressed some concerns with "these options" but it is worse after realising now port and region can also suffer from unbinding actions. We contemplated memdev unbinding and that is supported, and acpi module removal as well (all the unwinding is hopefully right for sfc driver removal), but the fact is, current Type2 support is unsound. It is likely good enough with current usage expectations but something to improve/fix.
+> ---
+> Changes:
+> 1. cdat.c: disable DCD when the DC partition has no valid DSMAS entry:
+>    no CDAT, CDAT parse failure, or no entry matching the partition.
+>    [Richard, Dave]
+> 2. cdat.c: DSLBIS is optional. An empty DSLBIS no longer fails the
+>    CDAT parse, and cxl_port_perf_data_calculate() skips entries that
+>    have no DSLBIS coordinates.
+>    [Richard, Dave]
+> 3. cdat.c: cxl_memdev_apply_dsmas() takes an enum cxl_dsmas_apply
+>    instead of a bool so the call sites say what is applied.
+>    [Dave]
+> 4. Also record the DSMAS read-only flag (CDAT 1.04, Flags bit 6) on
+>    the partition, alongside shareable.
+>    [Jonathan]
+> ---
+>  drivers/cxl/core/cdat.c   | 97 ++++++++++++++++++++++++++++++++++-----
+>  drivers/cxl/core/hdm.c    |  1 +
+>  drivers/cxl/core/mbox.c   |  9 ++++
+>  drivers/cxl/core/memdev.c | 17 ++++---
+>  drivers/cxl/cxlmem.h      |  2 +
+>  include/cxl/cxl.h         |  6 +++
+>  6 files changed, 113 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index 5c9f07262513..07aedff657d9 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -17,6 +17,8 @@ struct dsmas_entry {
+>  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+>  	int entries;
+>  	int qos_class;
+> +	bool shareable;
+> +	bool read_only;
+>  };
+>  
+>  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+> @@ -74,6 +76,10 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+>  		return -ENOMEM;
+>  
+>  	dent->handle = dsmas->dsmad_handle;
+> +	/* Shareable is CDAT 1.03 and later, DSMAS Flags bit 3 */
+> +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
+> +	/* Read Only is CDAT 1.04 and later, DSMAS Flags bit 6 */
+> +	dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
+>  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+>  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+>  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+> @@ -188,9 +194,10 @@ static int cxl_cdat_endpoint_process(struct cxl_port *port,
+>  	if (rc)
+>  		return rc;
+>  
+> +	/* DSLBIS is optional; zero entries is not an error */
+>  	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
+>  			      dsmas_xa, port->cdat.table, port->cdat.length);
+> -	return cdat_table_parse_output(rc);
+> +	return rc < 0 ? rc : 0;
+>  }
+>  
+>  static int cxl_port_perf_data_calculate(struct cxl_port *port,
+> @@ -219,6 +226,13 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+>  	xa_for_each(dsmas_xa, index, dent) {
+>  		int qos_class;
+>  
+> +		/* No DSLBIS for this DSMAS; nothing to hand the QTG _DSM */
+> +		if (!dent->cdat_coord[ACCESS_COORDINATE_CPU].read_bandwidth &&
+> +		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].write_bandwidth &&
+> +		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].read_latency &&
+> +		    !dent->cdat_coord[ACCESS_COORDINATE_CPU].write_latency)
+> +			continue;
+> +
+>  		cxl_coordinates_combine(dent->coord, dent->cdat_coord, ep_c);
+>  		dent->entries = 1;
+>  		rc = cxl_root->ops.qos_class(cxl_root,
+> @@ -255,35 +269,90 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+>  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
+>  }
+>  
+> -static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+> -				     struct xarray *dsmas_xa)
+> +/*
+> + * A DCD shall describe its DC partition in a DSMAS entry (CXL r4.0 9.13.3).
+> + * Without one the partition's attributes are unknown, so disable DCD.
+> + */
+> +static void cxl_dcd_dsmas_missing(struct cxl_dev_state *cxlds, const char *why)
+> +{
+> +	struct cxl_memdev_state *mds;
+> +
+> +	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
+> +		return;
+> +
+> +	mds = to_cxl_memdev_state(cxlds);
+> +	if (!cxl_dcd_supported(mds) ||
+> +	    !cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM))
+> +		return;
+> +
+> +	dev_warn(cxlds->dev, "DC partition has no valid DSMAS entry (%s), disabling DCD\n",
+> +		 why);
+> +	cxl_disable_dcd(mds);
+> +}
+> +
+> +enum cxl_dsmas_apply {
+> +	CXL_DSMAS_APPLY_FLAGS,		/* shareable etc.; no QTG data */
+> +	CXL_DSMAS_APPLY_FLAGS_PERF,	/* perf coordinates and qos_class */
+> +};
+> +
+> +/*
+> + * DSMAS flags such as shareable are properties of the CDAT entry and are
+> + * applied regardless; perf data is applied only if the QTG lookup produced
+> + * recommendations.
+> + */
+> +static void cxl_memdev_apply_dsmas(struct cxl_dev_state *cxlds,
+> +				   struct xarray *dsmas_xa,
+> +				   enum cxl_dsmas_apply attrs)
+>  {
+>  	struct device *dev = cxlds->dev;
+>  	struct dsmas_entry *dent;
+> +	bool dc_matched = false;
+>  	unsigned long index;
+>  
+>  	xa_for_each(dsmas_xa, index, dent) {
+>  		bool found = false;
+>  
+>  		for (int i = 0; i < cxlds->nr_partitions; i++) {
+> -			struct resource *res = &cxlds->part[i].res;
+> +			struct cxl_dpa_partition *part = &cxlds->part[i];
+>  			struct range range = {
+> -				.start = res->start,
+> -				.end = res->end,
+> +				.start = part->res.start,
+> +				.end = part->res.end,
+>  			};
+>  
+> -			if (range_contains(&range, &dent->dpa_range)) {
+> -				update_perf_entry(dev, dent,
+> -						  &cxlds->part[i].perf);
+> -				found = true;
+> +			if (!range_contains(&range, &dent->dpa_range))
+> +				continue;
+> +
+> +			found = true;
+> +			/*
+> +			 * part->handle is from Get DC Config, dent->handle
+> +			 * from the CDAT DSMAS entry.
+> +			 */
+> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM &&
+> +			    dent->handle != part->handle) {
+> +				dev_warn(dev,
+> +					 "DSMAD handle mismatch: %pra has %u, DSMAS %pra has %u\n",
+> +					 &range, part->handle,
+> +					 &dent->dpa_range, dent->handle);
+>  				break;
+>  			}
+> +
+> +			if (attrs == CXL_DSMAS_APPLY_FLAGS_PERF)
+> +				update_perf_entry(dev, dent, &part->perf);
+> +			if (part->mode == CXL_PARTMODE_DYNAMIC_RAM) {
+> +				part->shareable = dent->shareable;
+> +				part->read_only = dent->read_only;
+> +				dc_matched = true;
 
-Removing the acpi module will also cause the issue I pointed out. So that isn't safe either. The only path that's good right now is sfc driver removal or the device going away.
+Should be able to just return here and avoid the dc_matched flag right?
 
-> 
-> 
-> All this user space potential actions were implemented mainly for testing (I guess you know this). I did ask Dan about it, and I was expecting use cases where HDM decoders and regions are dynamically created, which makes a lot of sense to me, but the fact is all is relying on firmware/BIOS configuration. Richard is working on adding this functionality for Type2 and pmems, and Jonathan considers it theoretically useful as well, but the way is going to be handled requires, IMO, further thinking and maybe a change before someone starts using it (does anyone know about users now?).
-> 
-> 
-> As a summary, if we allow user space actions (at least for Type2) they need to be consistent and somehow protected.
-> 
-> 
-> Finally, you did not answer my question: what is the point user space removing and endpoint port handled by a Type2 driver? What about the cxl region? Maybe I am missing a necessity I can not see here, so please, help me to understand this if that is the case.
 
-Shouldn't does not mean does not exist. Sure I can agree with you that under normal operations, certain things a sane user should avoid doing for type2. But it is possible currently and those issues can be triggered. However you feel about the current CXL architecture, here we are with where it is. You can either consider the smaller changes I suggested to keep the attach->cxlr sane (or with some other means) and make what you need working now with raised the issue addressed, and come back with hashing out the larger grievances later, or keep beating this horse.... "It's silly for users to do that and therefore the issue can be ignored" is not a good enough reason for me look the other way and merge the code.
+> +			}
+> +			break;
+>  		}
+>  
+>  		if (!found)
+>  			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
+>  				&dent->dpa_range);
+>  	}
+> +
+> +	if (!dc_matched)
+> +		cxl_dcd_dsmas_missing(cxlds, "no matching entry");
+>  }
+>  
+>  static int match_cxlrd_qos_class(struct device *dev, void *data)
+> @@ -409,22 +478,26 @@ void cxl_endpoint_parse_cdat(struct cxl_port *port)
+>  	int rc;
+>  
+>  	xa_init(&__dsmas_xa);
+> -	if (!port->cdat.table)
+> +	if (!port->cdat.table) {
+> +		cxl_dcd_dsmas_missing(cxlds, "no CDAT");
+>  		return;
+> +	}
+>  
+>  	rc = cxl_cdat_endpoint_process(port, dsmas_xa);
+>  	if (rc < 0) {
+>  		dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+> +		cxl_dcd_dsmas_missing(cxlds, "CDAT parse failed");
+>  		return;
+>  	}
+>  
+>  	rc = cxl_port_perf_data_calculate(port, dsmas_xa);
+>  	if (rc) {
+>  		dev_dbg(&port->dev, "Failed to do perf coord calculations.\n");
+> +		cxl_memdev_apply_dsmas(cxlds, dsmas_xa, CXL_DSMAS_APPLY_FLAGS);
+>  		return;
+>  	}
+>  
+> -	cxl_memdev_set_qos_class(cxlds, dsmas_xa);
+> +	cxl_memdev_apply_dsmas(cxlds, dsmas_xa, CXL_DSMAS_APPLY_FLAGS_PERF);
+>  	cxl_qos_class_verify(cxlmd);
+>  	cxl_memdev_update_perf(cxlmd);
+>  }
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 5fa2177cefcc..379540246333 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -486,6 +486,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+>  
+>  		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+>  		cxlds->part[i].mode = part->mode;
+> +		cxlds->part[i].handle = part->handle;
+>  
+>  		/* Require ordered + contiguous partitions */
+>  		if (i) {
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 72af23ba288e..12598d329e95 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1366,6 +1366,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>  	u64 decode_len = le64_to_cpu(dev_part->decode_length);
+>  	u64 blk_size = le64_to_cpu(dev_part->block_size);
+>  	u64 len = le64_to_cpu(dev_part->length);
+> +	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
+>  	u64 size;
+>  
+>  	/*
+> @@ -1378,6 +1379,13 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>  		return 0;
+>  	}
+>  
+> +	/* The CDAT DSMAD handle this refers to is 8 bits */
+> +	if (handle & ~0xFF) {
 
-> 
-> 
-> Thanks,
-> 
-> Alejandro.
-> 
-> 
->>
->> DJ
->>
->>> Thank you,
->>>
->>> Alejandro
->>>
->>>
->>>> I attached an LLM generated test kernel module you can use to reproduce the KASAN complaint. Commit log provides instructions.
->>>> BUG: KASAN: slab-use-after-free in device_link_add+0x521/0xa80
->>>>    cxl_get_range_and_link+0xa9/0x120 [cxl_core]
->>>>
->>>> DJ
->>>>
->>>>> I added comments in the exported function, cxl_get_range_and_link() which does the locking before calling the internal function __cxl_get_range_and_link() which looks for the memdev and the attach region. In fact, it should not be possible to obtain the PF0 memdev reference and the attach region not there yet, but the code is still checking that possibility as a sanity check.
->>>>>
->>>>>
->>>>> Thank you,
->>>>>
->>>>> Alejandro.
->>>>>
->>>>>
->>>>>> How about something like this?
->>>>>>
->>>>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>>>> index 27e63e6dab7c..38ca73f12b84 100644
->>>>>> --- a/drivers/cxl/core/region.c
->>>>>> +++ b/drivers/cxl/core/region.c
->>>>>> @@ -4076,6 +4076,23 @@ static int first_mapped_decoder(struct device *dev, const void *data)
->>>>>>         return 0;
->>>>>>     }
->>>>>>     +/*
->>>>>> + * Invalidate @attach before the region goes away so that
->>>>>> + * cxl_get_range_and_link() can not pick up a stale region.
->>>>>> + */
->>>>>> +static void endpoint_detach_attach_region(void *_attach)
->>>>>> +{
->>>>>> +    struct cxl_attach_region *attach = _attach;
->>>>>> +    struct cxl_region *cxlr;
->>>>>> +
->>>>>> +    scoped_guard(rwsem_write, &cxl_rwsem.region) {
->>>>>> +        cxlr = attach->cxlr;
->>>>>> +        WRITE_ONCE(attach->cxlr, NULL);
->>>>>> +        attach->hpa_range = DEFINE_RANGE(0, -1);
->>>>>> +    }
->>>>>> +    endpoint_unregister_region(cxlr);
->>>>>> +}
->>>>>> +
->>>>>>     /*
->>>>>>      * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
->>>>>>      * simple case of single mapped decoder per memdev.
->>>>>> @@ -4127,15 +4144,23 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
->>>>>>           /* Only teardown regions that pass validation, ignore the rest */
->>>>>>         get_device(&cxlr->dev);
->>>>>> -    rc = devm_add_action_or_reset(&endpoint->dev,
->>>>>> -                      endpoint_unregister_region, cxlr);
->>>>>> -    if (rc)
->>>>>> +    /*
->>>>>> +     * Not devm_add_action_or_reset(): the reset path would take
->>>>>> +     * cxl_rwsem.region for write while it is held for read here. The
->>>>>> +     * endpoint lock keeps the action from running before @attach is set.
->>>>>> +     */
->>>>>> +    rc = devm_add_action(&endpoint->dev, endpoint_detach_attach_region,
->>>>>> +                 attach);
->>>>>> +    if (rc) {
->>>>>> +        put_device(&cxlr->dev);
->>>>>>             return rc;
->>>>>> +    }
->>>>>>           attach->hpa_range = (struct range) {
->>>>>>             .start = cxlr->params.res->start,
->>>>>>             .end = cxlr->params.res->end,
->>>>>>         };
->>>>>> +    WRITE_ONCE(attach->cxlr, cxlr);
->>>>>>         return 0;
->>>>>>     }
->>>>>>     EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
->>>>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->>>>>> index c401e3a1af06..7cd3a69cd5f5 100644
->>>>>> --- a/drivers/cxl/cxlmem.h
->>>>>> +++ b/drivers/cxl/cxlmem.h
->>>>>> @@ -104,6 +104,8 @@ struct cxl_memdev_attach {
->>>>>>     /**
->>>>>>      * struct cxl_attach_region - coordinate mapping a region at memdev registration
->>>>>>      * @attach: common core attachment descriptor
->>>>>> + * @cxlr: cxl region the memdev is attached to, cleared under cxl_rwsem.region
->>>>>> + *    before the region is unregistered
->>>>>>      * @hpa_range: physical address range of the region
->>>>>>      *
->>>>>>      * For the common simple case of a CXL device with private (non-general purpose
->>>>>> @@ -112,6 +114,7 @@ struct cxl_memdev_attach {
->>>>>>      */
->>>>>>     struct cxl_attach_region {
->>>>>>         struct cxl_memdev_attach attach;
->>>>>> +    struct cxl_region *cxlr;
->>>>>>         struct range hpa_range;
->>>>>>     };
->>>>>>     
+Define a mask?
+
+DJ
+
+> +		dev_warn(dev, "DSMAD handle 0x%x exceeds the 8 bit CDAT DSMAD handle\n",
+> +			 handle);
+> +		return -EINVAL;
+> +	}
+> +
+>  	/*
+>  	 * Decode length is a count of 256M units, so a device reporting 2^36
+>  	 * or more wraps.
+> @@ -1391,6 +1399,7 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part,
+>  	*part = (struct cxl_dc_partition_info) {
+>  		.start = le64_to_cpu(dev_part->base),
+>  		.size = size,
+> +		.handle = handle,
+>  	};
+>  
+>  	/*
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index def26c490dfe..7aa79a1a53e4 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -594,7 +594,8 @@ bool is_cxl_memdev(const struct device *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
+>  
+> -static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+> +static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
+> +		     enum cxl_partition_mode mode, u8 handle)
+>  {
+>  	int i = info->nr_partitions;
+>  
+> @@ -606,6 +607,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
+>  		.end = start + size - 1,
+>  	};
+>  	info->part[i].mode = mode;
+> +	info->part[i].handle = handle;
+>  	info->nr_partitions++;
+>  }
+>  
+> @@ -623,9 +625,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>  	info->size = mds->total_bytes;
+>  
+>  	if (mds->partition_align_bytes == 0) {
+> -		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
+> +		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
+>  		add_part(info, mds->volatile_only_bytes,
+> -			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
+> +			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
+>  		return 0;
+>  	}
+>  
+> @@ -635,9 +637,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>  		return rc;
+>  	}
+>  
+> -	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
+> +	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
+>  	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
+> -		 CXL_PARTMODE_PMEM);
+> +		 CXL_PARTMODE_PMEM, 0);
+>  
+>  	return 0;
+>  }
+> @@ -685,7 +687,8 @@ int cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>  	info->size = total;
+>  	dev_dbg(dev, "Adding dynamic ram partition; %#llx size %#llx\n",
+>  		dc_info.start, dc_info.size);
+> -	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM);
+> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM,
+> +		 dc_info.handle);
+>  
+>  	return 0;
+>  }
+> @@ -703,7 +706,7 @@ int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
+>  		.size = capacity,
+>  	};
+>  
+> -	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
+> +	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM, 0);
+>  	return cxl_dpa_setup(cxlds, &range_info);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 4fac65dbb808..9fd5af2e41d4 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -140,6 +140,7 @@ struct cxl_dpa_info {
+>  	struct cxl_dpa_part_info {
+>  		struct range range;
+>  		enum cxl_partition_mode mode;
+> +		u8 handle;
+>  	} part[CXL_NR_PARTITIONS_MAX];
+>  	int nr_partitions;
+>  };
+> @@ -851,6 +852,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+>  struct cxl_dc_partition_info {
+>  	u64 start;
+>  	u64 size;
+> +	u8 handle;
+>  };
+>  
+>  int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index e07360849344..728decda57fd 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -141,11 +141,17 @@ enum cxl_partition_mode {
+>   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+>   * @perf: performance attributes of the partition from CDAT
+>   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
+> + * @handle: DSMAS handle that represents this partition
+> + * @shareable: Is the partition shareable (from its CDAT DSMAS entry)
+> + * @read_only: Is the partition read-only (from its CDAT DSMAS entry)
+>   */
+>  struct cxl_dpa_partition {
+>  	struct resource res;
+>  	struct cxl_dpa_perf perf;
+>  	enum cxl_partition_mode mode;
+> +	u8 handle;
+> +	bool shareable;
+> +	bool read_only;
+>  };
+>  
+>  #define CXL_NR_PARTITIONS_MAX 3
 
