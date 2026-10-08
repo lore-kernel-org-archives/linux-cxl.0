@@ -1,115 +1,324 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010061.outbound.protection.outlook.com [52.101.85.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32714455181
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Oct 2026 13:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791465632; cv=none; b=UB9j/viq45rjouZ23+w3KwFWltWKAzoYOdZDIbm26xHfMH9y1HQQ3eG/KxGFHnvpGFOU2oSSCOdo0z9tX+idmrz/rbxMq7VKw3c0jWbgW62WFZsqd3+JU8oE4Aa44h1kQBxQxORKKG6v99/0iGMASVvHX4gIXRKBjgkBrxdIyhY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791465632; c=relaxed/simple;
-	bh=3Wr9/2480/aki5bGWFAs7IixSJIK8jk6h7T+74lKaK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4mVV8PSD3dXffbpB5F/UdNNhrGU06dwnul7oGiviB8rbPz8CJGQrear7af0QAFfTscFLX7MGB3FXdJFiQRchNsV/pJAV6fbTsqClwCCiTOClKI5w4Xj6QnWxpLXzBK8zZRr2vbmlcR/oQWcBUQOt0gmRQM9zwLnPPEJI7Uy/R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Kl9Ziv8t; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D265949E5CE;
+	Thu,  8 Oct 2026 13:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791467469; cv=fail; b=IrsjCUjRoI7FZoRb222WUrEF8WE+ap8c1gCZaZBlrDH2Pn1Bm8s4zHZoN4bSdrmd79tq/eSl1PE4Zq+o+sR0Z/Kgf+Hei6nAoELGHewXCJEUVvLPBjn4KlD3TJBIvJcI0C6256YEOb6ksXC/oYegD3Kwru+iz+rg8KC5w7AJGqk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791467469; c=relaxed/simple;
+	bh=PERV9xtLiZlPyE+8Cxssy2IgRWnJRD6eGsJ0A7tGcjk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=M7ZMB6mC0ROtAYQBBoqMh2fYc0xJ7GNaofTZUSbcqQCA1k5O7pv5rWffKL2XNi8Tw+O00s4/VDjhSMgVS/mpxHG9/x460wiVvY7MDSdT4oL1551vynq9a5MAVWBOMfyDfoeqL5nVPoTrUTmGvu+tUq5IGa1D3JOUTFFkc0U3lqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yJtHfR5H; arc=fail smtp.client-ip=52.101.85.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Kl9Ziv8t"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-48afe75f055so4766208f8f.2
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Oct 2026 06:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1791465628; x=1792070428; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DXt6zdr1dNJCoSR8LDi80DpeRm3wu09nw9+6kVlpfZs=;
-        b=Kl9Ziv8te+TavyCjiutTv/7h7dsaNr2//5WM2Z1VKKyIaPKYTZSWV8wT2NTzCOG946
-         +WEX/NmdkVPXKUgYTr0aWPz+zUFtXWTv24OmRgPHRT400ZyJOPywSx7aVeeOwqybpj6y
-         yGPvoodGyU1/DifVBjizhGAi69e6MUvX2MxYOoNuJwm4v+HNwH77ZMZYqc8clomP5zsL
-         cyBLMo9y+TpwjNYDxWpc1RFfp5PbAOyCtJWTypm1gFva4y0r8IeqsW3HZljMbT9gbyIh
-         i6+J2MI/L5axiHNOJMHd7NNlWNV5U3ylvCwR1oPgJ4YSSeC93brF5ObQMTigIxKOUguB
-         MPGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791465628; x=1792070428;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DXt6zdr1dNJCoSR8LDi80DpeRm3wu09nw9+6kVlpfZs=;
-        b=at11u7wnT0QKa3WeSOLzAK2g+GUwr2OjiHb+PWBBypLZ4Ge7gMizC2S4kMjxQX6x3K
-         Tx3KVwxAMh2fYE2QRH/lVsKq87T/pczvRuNJ64zFPxFQlKsE5Vav8x0x7YGVNvHRWcmI
-         O5x1VPHH9SVpGDXAD1XbdL+YupflcCjZfYEXnGsIbb/4QrNv1ySEYH87MoCIfeJUH1I/
-         dCPYsgzM3rrzkCEIcJr/wSxpOdsWYsEVO8VcXyLv9auSXSqTs12CkKRXuX5xIiEEk6UG
-         0sF/UCTM6ZZUl7YR6thZ+5NQF4LE73IPG+uE8etPpCu4nTtpNptitaBxCuBlRGYJBB4O
-         3k4w==
-X-Forwarded-Encrypted: i=1; AKwUvBwPt2iFI9qg2SYLik935wPpYbkwt6s15AfVKcSxjuUWNuVo5gx8h3w50KaqZkvcEPAod+gKmHwnbYs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ44AMbAtyvUB2vz15a8SKSM9WVeFfdEVhiB6HM3vxJZIav/5oV
-	zautik7rodDAOeUAJPdW0Q8cE/GxRHTtLJ5hmv/MpyfgRStaHg6TuFU83Wb/hxOuy4Y=
-X-Gm-Gg: AYBFou2+8D+NggVJaz6QkkeOHDG6z17lS9BiSorElylpCbcNRJy3hNzGxcGF8SyVsZu
-	534j3U8q3w4onJMHseGjepQ9rahqwia+RnmACw7in7rmvfxki6oG6dXpiU5C4dtnK3IXVmVDAhZ
-	gX43oXOzFssEmlKysq92do9C9Z+Mpi0zpUztzg6VRNWabmYbb3dObfIjDjVthaArXtafq5R6LUj
-	hGUrVo/9HcVAwJbCaEHv8dJAyct05I9qMr5UOCsPfwAZ4MmawqlbyO+dHUnaPUCkYul0IQ2JCre
-	6c9lECa2n3Jz0PhKXzgf6vS6KgIs83WS4d5iB6tn/htU3b6fXH8PmRCyMpOslbF05abzcW3hQ7l
-	7tauldCBDzY8XFZt5VYAkt2oc2QeObLDS4tSZ1z7OJI8gG7WoSzuxj1VmIBjnhIbCu3srdr04yH
-	Q360vG5cS+u5P9f40MKveFQyYeftf5cThxkf9fNyZVzLRslVHsLd/nP8PpRJ4rdp2Tt0kzD1NQX
-	vHJ0mpNVOc=
-X-Received: by 2002:a05:6000:470d:b0:487:c99:9020 with SMTP id ffacd0b85a97d-48c7272887fmr8760021f8f.2.1791465628326;
-        Thu, 08 Oct 2026 06:20:28 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([185.194.184.20])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48c71d31767sm11753893f8f.51.2026.10.08.06.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 06:20:27 -0700 (PDT)
-Date: Thu, 8 Oct 2026 09:20:23 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Miklos Szeredi <mszeredi@redhat.com>
-Cc: fuse-devel@lists.linux.dev, John Groves <john@groves.net>, 
-	Amir Goldstein <amir73il@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 2/9] dax: use READ_ONCE() in dax_holder()
-Message-ID: <aseYiJO0cgEamazq@gourry-fedora-PF4VCD3F>
-References: <20261008112004.1899560-1-mszeredi@redhat.com>
- <20261008112004.1899560-3-mszeredi@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yJtHfR5H"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B7R0hA5sSNOZbICvFNPn2N6axtgL1sezpDJ8bbxA/NAcW/+FP3l61KnJF50XR4TatPIUiCLz1KC2QqH6abtLgZxph9RMeI5JKjD725NcCmpm7a4H5usp4s0Ozv5NsgSArkC59DH5NLBlUQjt4wHGQEEmHAyru4ggAuSrvnXmnax8cjBCVdNsSV6QtHJAejtZ06IFvX3OLODTmb+2B648JsoWZGLVnPECogHrt4nvyeyypxIWEcqxV+77xtNJN6rLALpQAWCKMwrwKNEzSV3k2HODDdgFUGSwN0GUxeiZ8iBWm48OOHKrWoMWqzhZCycDw76IaL6ICjC+LHCifk7CIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jdiy8KxVqUgJPLhpyHtoaAbVKfX9/BEQoaYdZEoiPtM=;
+ b=xtvO2uCe+jStDjH83UHvetofQgk5ZEneHkueaViF0ameKxQB+ESJ5sTtZneVfvaCFCenw23nBdCRTq8EKya+ZK0+zVKdGclekESSQT3Vx6FO68xl+DZCj5/ySjZYzTELudeA1mcR1AAOsygdsw+DuBC4Ly54KN4Jw1fV+8JBrXshOD9mt0Z33dLHjTw02ltAUkEhUPhTK4urU28P9FRSRysuY2CdLxcb4g7vYodJlTMo6ZAhYv9A8Vfc4ewRu52HL1dZKcT4wEyV2zKYR9fHkzyNzzTIUeISnnPd33Aj3ceangttdx+HrGQ4ldfs3kIGDYp/MSVVVcXp1zA6czSigg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jdiy8KxVqUgJPLhpyHtoaAbVKfX9/BEQoaYdZEoiPtM=;
+ b=yJtHfR5Hn1yFJag4FxSlPUYYiIsnuEQU5Ik87LUadHWjoAm0YyeweEEOIjYS79W8uGO6BgE5cpAR0uic8LY5z6htV13YI15S4gJwt5iiedf1WEbGa0yTEdjspEnTPfefMRmPEbOYcY8fiKuLFQhRLp5eYDE8GDu/2I4xlwbqmao=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ IA0PR12MB7699.namprd12.prod.outlook.com (2603:10b6:208:431::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.451.26; Thu, 8 Oct 2026 13:51:02 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%4]) with mapi id 15.21.0472.016; Thu, 8 Oct 2026
+ 13:51:02 +0000
+Message-ID: <9114ec71-060f-48ae-a6e5-0b46a881c259@amd.com>
+Date: Thu, 8 Oct 2026 14:50:52 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] cxl/region: Add region reference in memdev attach
+To: Dave Jiang <dave.jiang@intel.com>, alucerop@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
+ rafael@kernel.org
+References: <20261001132023.17032-1-alucerop@amd.com>
+ <20261001132023.17032-3-alucerop@amd.com>
+ <6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com>
+ <8ebaae42-a0c6-4e9c-be1b-ca68a4769ed7@amd.com>
+ <bd412198-8a25-436c-b6d6-6b6730e8c28e@intel.com>
+Content-Language: en-GB
+From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
+In-Reply-To: <bd412198-8a25-436c-b6d6-6b6730e8c28e@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0324.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:197::23) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261008112004.1899560-3-mszeredi@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|IA0PR12MB7699:EE_
+X-MS-Office365-Filtering-Correlation-Id: ffa699cc-d2e5-4c2f-65bb-08df254330d3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|23010399003|7416014|366016|3023799007|10067099003|56012099006|5023799004|6133799003|11063799006|22082099003|18002099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	LcgkzEILqD6GGcJ+SqwVyEJ4KO3BYXkFQc3GX+OlGPw86fDCMpufF49i7M8k/SE/1iRl+7sHibMeDDjvMjhZMKfIccOrPyZ026WXa1B2GiV7fijbs4wIoH1zVWZjpnI+DDXTS88l1SlA574uMqTMcAkZKlsd6DIGi7dPL8YUIJWKEaCaJnCazSqQPNYko9CgYKGmxdFb3P4jcS04d8tZnmEbC0dpyBBoYBc+ZtjU8Vl20ashl2SSqXbmFptp61+BXdlPHFGoGJGMdbV4f37JNweynP29+t/uHbGlFEOLl/RGX69mLRFwkjBQO6vJEsGBmNimsZryZ14AiMPSEbo6AqeKx0rfJKg0OK3TEFMESC3mMKxw2Ywf3O1TFudZup7BDp4Yqab8R+XjtFlT4sszS4Mms/zmRWcMEL7UbcB0TtD9V9XHh6DzRwiYZ6a5RFSScpmj3G59/Lr8YE51IUXv1VBmMGnBk6VS1xO5E4Hq1znqWMg0ZgnDPhUeXZzrdQTWN0AuKmwOkk7wh0/BvnOI8Ic4T1s82X6Mqw5peNyrr3/qMoKfNXnps6+n4MLLLY+t7ewNXIdqWNZLtRsOhHVc16xQuLy9okr69mmimfhjeVXlirZuHd8L6Xyhkb8Ft8rY3qpw8uPRgMSRa3LcGeAXKYR62X8GTslGb7oxLVJwT1s=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(7416014)(366016)(3023799007)(10067099003)(56012099006)(5023799004)(6133799003)(11063799006)(22082099003)(18002099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MkF4cmVvUWprZGIwZWxUdHMrWHl4Q0dSemM5a3ZmdDNUa3puWWZKejVUTU16?=
+ =?utf-8?B?citjZDBzZG1VeFREZW9XZDZoTkdXY0FvRkthOE9icXR5NTdvcVBFbWNpUTk4?=
+ =?utf-8?B?OFFTbVMvcXowdDlCZUNFNkFNSEwvYSsvMVRBM0hOUXZjNThOTHNpVUFxd1Vz?=
+ =?utf-8?B?Z3BzZnU5d3pPZzFpOEtpUU50UERJb2ZUb3FqQzJqcXcyUGE4UnJkaTJBblla?=
+ =?utf-8?B?enQ2eGoyaTFHOGVIZlg5TXd0RnpTMTFLeEYvOCtSVGxESk8wL0lDckwyc0JD?=
+ =?utf-8?B?R0NXQ2VNcHo0YzdOUnFSL0ROcVgvejUzMnQ0VFQ3TCtBQW55dm83eWhYMHJm?=
+ =?utf-8?B?YVQyaHZxME1yWUdVUjdtY0Y1VzRlb1VTeDZsVlV6UFkrcW9XMzhEWjk0QmNN?=
+ =?utf-8?B?L2R5eTQ1RjRTcnhZd0NjR3Y5cXJTSUVMZVZGeTJLQ0w2aGhVZUYvMGk5ZlVE?=
+ =?utf-8?B?cTBxSm5SK1piMFlwNHEwUDhqeEVrYWx4eE80RmhmZWUwaFdCSVhiVnk4Q043?=
+ =?utf-8?B?UTlSZ1JmTzcvOEgrbHlWSHd6ZHVwZ1FrSHNTTVNsMVpuZ1g1alFEZ2F2YlFQ?=
+ =?utf-8?B?N1QyeTFWMGQyOUNacWVBS0hxSDY4eHpweWRKRk1zZnlEZmgyeTVmK2hRaHAv?=
+ =?utf-8?B?M1BTNXZOclc0cG5zUnZUV3VOa0RQWmgwOVJCV2xmSWZUTmQzMUgxWGVhV0Zh?=
+ =?utf-8?B?ZTVyekJUaU90YmEwS29yencvS09jSmM2dGMwZHV1ZkNPZXBPY2o0UVBJSW9a?=
+ =?utf-8?B?QWZuVThxazFPd3pEVkp2YWZ2SUhoWStTa0ZJanArWUZQVzdiQmU0S2F4cU9P?=
+ =?utf-8?B?eVlpUEV3aEZjVEYwaVRROWx3Q1lKTU12TkNGV29IR2JaeG9TMHJZbDNpL2VE?=
+ =?utf-8?B?Wnprb1RwbndjdXZJRVJqeElTMzFyS0pQZUxKZlZ5R0dQVWtRaGFIN0Y3U1Zw?=
+ =?utf-8?B?UFlqNjBudmtUVllPQUtrdFNYU0szS0pFaGFESXo3Q3kzNHlmbEM0TjhPNlRB?=
+ =?utf-8?B?UFdTemtHOTVSWDFiNDBWSEE2dkVRSVVWU1BNVjFJVHk3S2RqVER4YVI2czd0?=
+ =?utf-8?B?eG1XSnI2dFU2a3BidHJyMHQzUmFTelR5UGFyQzRySVJkTzVKeUlyOE05UHF1?=
+ =?utf-8?B?T3luMEVjRzkwQkhQdkg0aGhoRThSUVRJVEFsVHJuQTQ4eG45NjF4T2grOUZX?=
+ =?utf-8?B?M1lBQ0tzdG93MzJUb25oT29KbUM2VUZxZm5mNmNHT2NvelByOUxaSWJtb1FT?=
+ =?utf-8?B?d3djcTMzQ2Fhdm5tZnJNVCtaU2hwVkhXa0hlcHlEMXl2ZmtBNURuZEdjK054?=
+ =?utf-8?B?NTVOY1FWSTFqdnBCaUp5SE8yempKNXVNTWpRT3ZKUDNLeGNUNzE3QmJZQmMr?=
+ =?utf-8?B?U0E4SlRaNVBicHVZc1c0aExlWmJ2YzlZT1lJd1ZEbG5GNlFPNVlvMDRON0di?=
+ =?utf-8?B?UHRzMlVpbGJ6bHZuSlFaVXlRaTNxMVRLbUE1ekNJdkhsMUgzSmlEQWVpOUQr?=
+ =?utf-8?B?cnkyQVRtUWZvY1JNYzBTV3Y0SmpQMDVtS3I3dHJPOHR3TWcwdXB5Zjc3SFVq?=
+ =?utf-8?B?cFhzS2tmczJkYkVjZms2bWhBSnJxWmNvYzdxeEJpWkYydGdYS2RmNXFqR09y?=
+ =?utf-8?B?UnNJdnZYd0NwM29mV21FcFV5T25kMDkyM0JSeXphbnRoVFRJQ2dudW9ReW5v?=
+ =?utf-8?B?ZHNEcjVybzVJVlQwQmJJZXk1T1VBdFNnTktMTk5nUE1ySVZ4MkF4UXJVVGRS?=
+ =?utf-8?B?UWxjUVl6R3JPa2YzU0pydVZsbWNNZWs0THBMV3pwQnZrNENnU3l3RnFpRFFG?=
+ =?utf-8?B?anFmcWE0bnpXQlBxZnJ0emIrWWtYRUdtbFJCTHRubThtN0htNmdobDJNQVNF?=
+ =?utf-8?B?VldxYUVwdXk1VlVWOXpJRkJJeGt2SVlUa1AvejRqNkRxMXY5bUM1NFJHOGt3?=
+ =?utf-8?B?YUJPWDRRVjZKdFBHd1cwckNOdXhBQzVOekVibWJ3QVFKeFl0eFE5NGNGekdN?=
+ =?utf-8?B?OTlncWtiT3p1Ykl0d1Bmem4vQ0gvdlYwTGUvN2kxdGFXczgvSjJXNjdZV29I?=
+ =?utf-8?B?Q0EyaXp1T1pFWmpSbFJwOW5GSkUwa2dPSk45YUxHbDlvRXhqT0pGNTBHL0Rl?=
+ =?utf-8?B?UkU1V2F0L1ZYWXpHOTkyS0VXNjdEN2Rpais5RzQ2U1k1bHp5TFNRNURwb2xK?=
+ =?utf-8?B?ZzhodUF0T0dkYWF6cjA2QXBXMjlyNERqS3JIZE5PY1BhV1RDbXMyN1crdWZv?=
+ =?utf-8?B?S1RNYlpBd09OMVNkdUp5MjkwdC9xdWNEZ3ZndUZRbHhXdGRTWmZ6c0ZUVERz?=
+ =?utf-8?B?Q1FRajRKWVFjdGVpclN2d1UrY0lsdmlGVU1EMVBhdXdHTm0xWm9Ydz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffa699cc-d2e5-4c2f-65bb-08df254330d3
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2026 13:51:02.3673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mhUxenr0cz9ljpwcKlreC4VZXs2wGjNXwd2fCQyGciJu5r6QCdM9M4L4qEMaDqaVbZHq5uUHB0xm27ryx/t2hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7699
 
-On Thu, Oct 08, 2026 at 01:19:53PM +0200, Miklos Szeredi wrote:
-> A future fuse patch will utilize dax_holder() in RCU context to make sure
-> that the holder can't be freed by a racing fs_put_dax.
-> 
-> This patch just makes sure that dax_holder() works properly in such a
-> context by adding READ_ONCE() (equivalent to rcu_dereference minus sanity
-> checks).
-> 
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+On 02/10/2026 16:52, Dave Jiang wrote:
+>
+> On 10/1/26 9:41 PM, Lucero Palau, Alejandro wrote:
+>> On 01/10/2026 22:38, Dave Jiang wrote:
+>>> On 10/1/26 6:20 AM, alucerop@amd.com wrote:
+>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>
+>>>> Use a new field in cxl_attach_region struct for easily link it with the
+>>>> region the memdev is attached to.
+>>>>
+>>>> This facilitates device links creation where such a region is the supplier
+>>>> with non-PF0 physical functions wanting to use the CXL region being the
+>>>> consumers.
+>>>>
+>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>> ---
+>>>>    drivers/cxl/core/region.c | 1 +
+>>>>    drivers/cxl/cxlmem.h      | 2 ++
+>>>>    2 files changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>>> index 27e63e6dab7c..78ca7ebc3e55 100644
+>>>> --- a/drivers/cxl/core/region.c
+>>>> +++ b/drivers/cxl/core/region.c
+>>>> @@ -4132,6 +4132,7 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
+>>>>        if (rc)
+>>>>            return rc;
+>>>>    +    attach->cxlr = cxlr;
+>>>>        attach->hpa_range = (struct range) {
+>>>>            .start = cxlr->params.res->start,
+>>>>            .end = cxlr->params.res->end,
+>>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>>> index c401e3a1af06..c598561b8e5f 100644
+>>>> --- a/drivers/cxl/cxlmem.h
+>>>> +++ b/drivers/cxl/cxlmem.h
+>>>> @@ -104,6 +104,7 @@ struct cxl_memdev_attach {
+>>>>    /**
+>>>>     * struct cxl_attach_region - coordinate mapping a region at memdev registration
+>>>>     * @attach: common core attachment descriptor
+>>>> + * @cxlr: cxl region the memdev is attached to.
+>>>>     * @hpa_range: physical address range of the region
+>>>>     *
+>>>>     * For the common simple case of a CXL device with private (non-general purpose
+>>>> @@ -112,6 +113,7 @@ struct cxl_memdev_attach {
+>>>>     */
+>>>>    struct cxl_attach_region {
+>>>>        struct cxl_memdev_attach attach;
+>>>> +    struct cxl_region *cxlr;
+>>>>        struct range hpa_range;
+>>>>    };
+>>>>    
+>>> attach->cxlr is never cleared when the region goes away. Unbinding the endpoint port runs endpoint_unregister_region(), which unregisters the region and drops its reference. PF0 stays bound until the detach work runs.
+>>>
+>>> A non-PF0 probe in that window still finds the memdev and calls device_link_add() on the freed region.
+>>
+>> I do not think so. This version, see next patch, relies on locking the supplier, PF0, before getting the memdev and potentially using the attach region. Only on PF0 release can such a memdev and region disappear, so I think this is enough.
+>>
 
-> ---
->  drivers/dax/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 25836f389bde..76e8d3654629 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -642,7 +642,7 @@ EXPORT_SYMBOL_GPL(put_dax);
->   */
->  void *dax_holder(struct dax_device *dax_dev)
->  {
-> -	return dax_dev->holder_data;
-> +	return READ_ONCE(dax_dev->holder_data);
->  }
->  EXPORT_SYMBOL_GPL(dax_holder);
->  
-> -- 
-> 2.54.0
-> 
+Hi Dave,
+
+
+> The memdev, yes. It's devm on PF0. The region, no. Unbinding the endpoint port, or cxl_mem from the memdev, runs endpoint_unregister_region() under the endpoint's lock, not PF0's. PF0's release is only queued (schedule_detach() -> detach_memdev()). Until that work runs, PF0 is bound, the memdev is found, hpa_range is valid, and attach->cxlr points at a freed region. Root teardown (kill_regions()) and delete_region also unregister the region without touching PF0.
+
+
+You are partially right. The problem is not that async detach_memdev() 
+but the fact the region can be removed without the PF0 being aware ...
+
+
+I was relying on the memdev being unregister first then the related 
+device released later on, with the important part being the memdev being 
+unregister making it unavailable to the other PFs because it can not be 
+found in the cxl bus. I'm pretty sure about that scenario but I was not 
+counting on sysfs unbinds for the endpoint device ...
+
+
+I need to think further about this because I think it is wrong to remove 
+the region in this case without PF0 or the memdev owner and original 
+region consumer still unaware of it. One thing I tried to discuss with 
+Dan was why we have the unbinding options for cxl_mem and cxl_port 
+drivers. What is the point? I know this is standard linux device model, 
+but the unbinding could do nothing if we decide so. Couldn't we? 
+Otherwise, If there is a good reason for having this functionality where 
+the unwinding can happen through different starting points, we should 
+document it.
+
+
+What I'm going to try is to link the region removal to Type2 driver 
+removal as well, not necessarily with device links but through 
+devm_action_or_reset links as we are already doing for other cases. And 
+I think to document the different objects/devices involved and its 
+lifetime depending on the current unwinding supported would be good to 
+have, so I will work on that as well.
+
+
+Thank you,
+
+Alejandro
+
+
+>
+> I attached an LLM generated test kernel module you can use to reproduce the KASAN complaint. Commit log provides instructions.
+> BUG: KASAN: slab-use-after-free in device_link_add+0x521/0xa80
+>   cxl_get_range_and_link+0xa9/0x120 [cxl_core]
+>
+> DJ
+>
+>> I added comments in the exported function, cxl_get_range_and_link() which does the locking before calling the internal function __cxl_get_range_and_link() which looks for the memdev and the attach region. In fact, it should not be possible to obtain the PF0 memdev reference and the attach region not there yet, but the code is still checking that possibility as a sanity check.
+>>
+>>
+>> Thank you,
+>>
+>> Alejandro.
+>>
+>>
+>>> How about something like this?
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index 27e63e6dab7c..38ca73f12b84 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -4076,6 +4076,23 @@ static int first_mapped_decoder(struct device *dev, const void *data)
+>>>        return 0;
+>>>    }
+>>>    +/*
+>>> + * Invalidate @attach before the region goes away so that
+>>> + * cxl_get_range_and_link() can not pick up a stale region.
+>>> + */
+>>> +static void endpoint_detach_attach_region(void *_attach)
+>>> +{
+>>> +    struct cxl_attach_region *attach = _attach;
+>>> +    struct cxl_region *cxlr;
+>>> +
+>>> +    scoped_guard(rwsem_write, &cxl_rwsem.region) {
+>>> +        cxlr = attach->cxlr;
+>>> +        WRITE_ONCE(attach->cxlr, NULL);
+>>> +        attach->hpa_range = DEFINE_RANGE(0, -1);
+>>> +    }
+>>> +    endpoint_unregister_region(cxlr);
+>>> +}
+>>> +
+>>>    /*
+>>>     * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
+>>>     * simple case of single mapped decoder per memdev.
+>>> @@ -4127,15 +4144,23 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
+>>>          /* Only teardown regions that pass validation, ignore the rest */
+>>>        get_device(&cxlr->dev);
+>>> -    rc = devm_add_action_or_reset(&endpoint->dev,
+>>> -                      endpoint_unregister_region, cxlr);
+>>> -    if (rc)
+>>> +    /*
+>>> +     * Not devm_add_action_or_reset(): the reset path would take
+>>> +     * cxl_rwsem.region for write while it is held for read here. The
+>>> +     * endpoint lock keeps the action from running before @attach is set.
+>>> +     */
+>>> +    rc = devm_add_action(&endpoint->dev, endpoint_detach_attach_region,
+>>> +                 attach);
+>>> +    if (rc) {
+>>> +        put_device(&cxlr->dev);
+>>>            return rc;
+>>> +    }
+>>>          attach->hpa_range = (struct range) {
+>>>            .start = cxlr->params.res->start,
+>>>            .end = cxlr->params.res->end,
+>>>        };
+>>> +    WRITE_ONCE(attach->cxlr, cxlr);
+>>>        return 0;
+>>>    }
+>>>    EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
+>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>> index c401e3a1af06..7cd3a69cd5f5 100644
+>>> --- a/drivers/cxl/cxlmem.h
+>>> +++ b/drivers/cxl/cxlmem.h
+>>> @@ -104,6 +104,8 @@ struct cxl_memdev_attach {
+>>>    /**
+>>>     * struct cxl_attach_region - coordinate mapping a region at memdev registration
+>>>     * @attach: common core attachment descriptor
+>>> + * @cxlr: cxl region the memdev is attached to, cleared under cxl_rwsem.region
+>>> + *    before the region is unregistered
+>>>     * @hpa_range: physical address range of the region
+>>>     *
+>>>     * For the common simple case of a CXL device with private (non-general purpose
+>>> @@ -112,6 +114,7 @@ struct cxl_memdev_attach {
+>>>     */
+>>>    struct cxl_attach_region {
+>>>        struct cxl_memdev_attach attach;
+>>> +    struct cxl_region *cxlr;
+>>>        struct range hpa_range;
+>>>    };
+>>>    
