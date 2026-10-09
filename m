@@ -1,68 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CE819D074;
-	Fri,  9 Oct 2026 05:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47C51C84DC;
+	Fri,  9 Oct 2026 05:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791522082; cv=none; b=ndY3bpObwt7O0OKmhmPkXMsdu1cljdeRJeizgHp5H9k8HilUEZaLr1LkK1IuBbnglKh7UxdxY7B0pXRTMgOts/ZRXA+9VQLLvhuHRmdzs3Bl/a9iFd/IaziD/uo+IR01UKk6Y6lUkIrIHhStmUpB3K6r7DOMBHM0cPcS2rqO57Y=
+	t=1791522163; cv=none; b=pqEUWabtwe8vMMbBnr3fe6j2XLa7tvL7B7pHXbFkMv/0C5FxBBRr8vkQse8x7ywBn1CvwhvS6eETFT9rNbvUg/Bu11D7khXR4YZv/9A4UjuRa6nHAKQ/zvtZV8AQkxjDKhFYqRK8FsdW9j0sbJpYvzaUdq8pxWosnDepcgDOsM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791522082; c=relaxed/simple;
-	bh=JFeeLK+dzX3pC08ZunTEHkRH2kL+Sukhr2kN5HawWCk=;
+	s=arc-20240116; t=1791522163; c=relaxed/simple;
+	bh=iu5jL9Ayhqjz5X0lco3OYg8rOGYGxCYuCz43MDbSJjA=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=EUOk/HjnoyWeMwgQII29P25rHQrQcxzHyauTOzvIZPHBSaHKb2rJTLWE/E2GID0Cbb0+2ldKaaiNXjHstPZuh0yrqu8gACWiqg7teOZXbVdWHw99eiRPqCQRYLnSj9nBDUDjUvk+wloRzzkYkst4meJfho9grMIg63rY1Y/P1+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuNwEk7+; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Qugj20yBtngkahbPApzssXHxdsvtjY2Mb0gJNeBL08iJGkYMxfZqPHhRcW0QwHwkGmTcS0EaeuIarf+7qKrp5IpqULj0kpVD86XimoKPMaeRw/16k/7uAwdENFQlFyxye3N5iP3aBDAXwXCbHg/9wLy/OMeol7zI2DErn+Crauw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5bGriQF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuNwEk7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7971F000FF;
-	Fri,  9 Oct 2026 05:01:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5bGriQF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1A11F000FF;
+	Fri,  9 Oct 2026 05:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791522081;
-	bh=JFeeLK+dzX3pC08ZunTEHkRH2kL+Sukhr2kN5HawWCk=;
+	s=k20260515; t=1791522162;
+	bh=iu5jL9Ayhqjz5X0lco3OYg8rOGYGxCYuCz43MDbSJjA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NuNwEk7+L+qrUxpyDPCKx+cIc+yKb3Umq2XSKBo7w5RvgaxcaYAUtNeP89KNUcXbu
-	 N/4ouwPto1m4w1xUD2gS6v5fUuuUMC3hn09Qmb5n04uIelUtlanX66RykrgPKxpZrW
-	 5BM+fMV3fjaJLIn9XaKeEO1+YJK6tVhtuCO162e/23XJlUewA5QbvbRPNEtJs7x/J+
-	 acPZcL7KJiLfHK5dYBYM/XbwSYPEhzW1xF4LtGSPpXN6z9la50aTV9RViaQVb2MKbO
-	 Gra5VjdnRTQAecf+tYDQ4ZpMzJwOSX85U/2KscsbFuB51weMnLihFQrvP2EcHYwCEk
-	 MOT/TSHjCnngw==
-Message-ID: <sashiko-outbox-164861@kernel.org>
+	b=K5bGriQFnC4sIvE/tdY3fJL6z86BI8sh3Q9VASBpAQiyJwPNF26Tfm72yDWcVGjDb
+	 7oJHdGjfC3d10YNgsbVX4v/Y3prLQu6g3GUpVvxJTvkM6XP5XmFBcPGGoQISWEYRw5
+	 3Kr8wdJ4MnqhSznzVMsl7arVcoJIyfLO2JTdSTQFWpZi90yR6HLE8uaD7nra3tfFOX
+	 avf0bx1EW80EhS02kQCkrX9l3YrX66+vVHBZV45/SkLJNqAxcMAYyO5ELlGN5Un9M8
+	 ginSRDU/8qdIShLMFl0To1m5R9AfFlUsE/WNTGGdROLYJb7Jw5o6f79SvJcEu9rE92
+	 VGJvyuwzVhYLQ==
+Message-ID: <sashiko-outbox-164863@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] cxl: Account for link width in latency calculation
+Subject: Re: [PATCH 1/3] cxl/port: Convert PCIe link latency to nanoseconds
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Koichiro Den" <den@valinux.co.jp>
 Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20261009045452.1107921-3-den@valinux.co.jp>
+In-Reply-To: <20261009045452.1107921-2-den@valinux.co.jp>
 References: <20261009045452.1107921-1-den@valinux.co.jp>
- <20261009045452.1107921-3-den@valinux.co.jp>
+ <20261009045452.1107921-2-den@valinux.co.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Oct 2026 05:01:20 +0000
+Date: Fri, 09 Oct 2026 05:02:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-> cxl_pci_get_latency() derives bandwidth from the per-lane speed returned
-> by pcie_link_speed_mbps(), ignoring the negotiated link width. This
-> overestimates the FlitLatency contribution for multi-lane links.
-> Sections 2.11.3 and 2.11.4 of the Intel CXL Memory Device Software Guide
-> describe the link bandwidth as the product of the negotiated speed and
-> width.
+> Commit 51293c565cf4 ("cxl: Fix incorrect region perf data calculation")
+> converted CDAT latencies to nanoseconds and removed the conversion in
+> cxl_region_perf_data_calculate(), but left PCIe link latencies in
+> picoseconds.
 >=20
-> Replace pcie_link_speed_mbps() with pcie_link_bandwidth_mbps() and
-> migrate both CXL callers (the only users of the API). The new helper
-> obtains speed and width from a single Link Status read. The CXL
-> bandwidth calculation no longer needs a separate width read and
-> multiplication.
+> This inflates the FlitLatency contribution to region and node latencies
+> by a factor of 1000, exposing incorrect values in sysfs. The resulting
+> abstract distances can incorrectly reverse the memory tier ordering of
+> nodes.
 >=20
-> While at it, make error handling more robust by converting PCI config
-> read errors to negative errno values and checking for zero bandwidth
-> before calculating latency.
+> Convert the FlitLatency contribution to nanoseconds before adding it to
+> the access coordinates, rounding up as cdat_normalize() does.
 >=20
-> Fixes: 4d07a05397c8 ("cxl: Calculate and store PCI link latency for the d=
-ownstream ports")
+> Fixes: 51293c565cf4 ("cxl: Fix incorrect region perf data calculation")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 
@@ -70,5 +65,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261009045452.1107=
-921-1-den@valinux.co.jp?part=3D2
+921-1-den@valinux.co.jp?part=3D1
 
