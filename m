@@ -1,187 +1,339 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012015.outbound.protection.outlook.com [40.93.195.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C493F46EF6A;
-	Fri,  9 Oct 2026 06:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA147C0FA
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 07:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791529151; cv=fail; b=LUzpKP/ZPKesilb0cV3Hl7WlBkBNNwYCC4znO97PC9gNEqwil39IHOk3HnXCxmThwwmAUSJyuW9cKrIg5RcLaTSeN1CXCaKUVjLHZqc/meEWgVPR3pmfs+QdeUxXBUjL9XMvIl4fxFjPft1p5xK6NFtBfFpiRDfYH44SbiHHTN0=
+	t=1791531421; cv=pass; b=d0un0TWWQ5zL9JftirG6iSnM+eiantlyhRYcgJ4Ww73JvUm+4IjuMef20iSzqYqNmu5SK0E//PIJyBWhthwN75eVEMmQLM/Tk7wHfuqxnVtksd/EBfofR4qJ0pn4kvkoGqmr2wNtQUoXnx/Ml52O6YgVMGe9yDAISs922Zr8D0E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791529151; c=relaxed/simple;
-	bh=iMVlpZB9gJc5xHu3sGaozCoLIv0U9r1YBvVeOq9RCIE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NF9lXaoyO3++qaXBZN4Xe0iNs4VvlmqEK3AXNOa6E8HM/71+hPUI2QbTrQb/bwVBtTRC6iEet10QNWKi60l7izO+O3EfHyWVEWznbxc9oMAcPPGoxuTpCDX0iV7PXVkGB0v0UYY40CFBxOwJtuEiLDSrPjfAPU03cFVLSdQdVmc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=n36/a4XF; arc=fail smtp.client-ip=40.93.195.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1791531421; c=relaxed/simple;
+	bh=YMfKNylBb9GzxVIsFKNLxFRCTRDskPy0v9kUA3JZ0Rw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RNeDLse7wlFsdCafvQOC9o2zQdv/G66dSH7DVnog8WVVIF1lroK1DyrqkNcfCd5bCWuu3AJpnX6dY6ApUb3IWm/uVPVFoBYg1e+vD8vWL/r6XpWgBDkD5VXtorvYnNUqjG0j2kIqBaeO5yr26TTPqU/EAWXzAmZ78Vgkti5dn2k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=o8vBkkky; arc=pass smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="n36/a4XF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kQLkhxnkQAo+DUgsRNQ8iFZlIpSmgbcnjLZ7v1Z+ZWo+69Kjdq7IChj7BCyTjY+5UhSRlfbwrxW7VPjUeFJ9h/tadQ0qdDqsP6c0+DgFMgmoVgp4Z1gfnE1dgEbq8K5XNECX2IoOXzEeMcLozHs5jg8xcHe5zVS/GUZ99ZDhn8ZiqJOnB55lEquSYNy5mZgGo5XGd5i4OId2tnNrlDR0R0uo09BTehFR5cwiTLtCKpL9NtFMJH2Ot/0fyicydopYNwHbdIYXHUYBLYipGQh0KC3xijuDucSarShqbEpSHnB5Ew68NDtmuW1uPouYfGvgfsK+Abe2EnefnnE6C367VA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yAFaFMTPIQj8yhm0GObbFR6umZ8PsXERs8zN2S78FPo=;
- b=kQosgn9XnSBizkku2OS1dxJuBwUFiTG+7hI8KqQ3kWh0FWaJ8aLAuP9L9/2F1B6xv1TzqUJrr58VfNu4Dwid1p2TmpVT4+5X/7TA9hLpDp8FCtK/DZ4Q5RqZgHGU8D/GaXQ6kLzfizJOlXh9CqQEQyRURfTf58Z562SpIAyX3zhP8yQ3Wxtx1cDfgoxPHh6KmC26vW9fa5Z0LRJ/wGeko2Zy6oyKOV1UAqaGwIFvoQbOlWK6WN0v8anCJtyVWlEoSValuuHQJw3bwncvkL0Yh5dvMqCouLOsg8cG1syjxkFUJmCyjQIx7JcKh6iaFTTpu3B3ifaiT+3SpUxZW4nWTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yAFaFMTPIQj8yhm0GObbFR6umZ8PsXERs8zN2S78FPo=;
- b=n36/a4XFRJFz5M0f6Hcid83O4ouV42cB2WMpvr8vTK/FnC8BL31CY6eKUqaf1+N03V/YySwt9qg7YhdCihEk5TEuJeMAamvOXH2eK3b7r5xkkINajnp/Ldti2zP5dusrj1SDmZut2gyOO93mVv/QlB3U7zHBp/5ecRxbqGFWIAs=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- PH6PR12MB893224.namprd12.prod.outlook.com (2603:10b6:510:3da::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.17; Fri, 9 Oct
- 2026 06:59:07 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%4]) with mapi id 15.21.0472.016; Fri, 9 Oct 2026
- 06:59:06 +0000
-Message-ID: <61a45ff4-e2f6-408d-a9db-26621bb4b361@amd.com>
-Date: Fri, 9 Oct 2026 07:58:55 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] cxl/region: Add region reference in memdev attach
-To: Dave Jiang <dave.jiang@intel.com>, alucerop@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, ecree.xilinx@gmail.com, icheng@nvidia.com,
- rafael@kernel.org
-References: <20261001132023.17032-1-alucerop@amd.com>
- <20261001132023.17032-3-alucerop@amd.com>
- <6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com>
- <8ebaae42-a0c6-4e9c-be1b-ca68a4769ed7@amd.com>
- <bd412198-8a25-436c-b6d6-6b6730e8c28e@intel.com>
- <9114ec71-060f-48ae-a6e5-0b46a881c259@amd.com>
- <40fc791c-c03c-42f0-88be-7a97938ebe1c@intel.com>
- <ba7731fe-f916-4e51-977b-95a0197bf52d@amd.com>
- <3f40d953-2e91-4492-b100-c851fdb143b5@intel.com>
-Content-Language: en-GB
-From: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-In-Reply-To: <3f40d953-2e91-4492-b100-c851fdb143b5@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PA7P264CA0251.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:371::19) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8vBkkky"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6aa8d04fcddso3779050a12.0
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Oct 2026 00:36:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791531418; cv=none;
+        d=google.com; s=arc-20260327;
+        b=svKSEmxYzTZ1hydxj/PSVnxQz9g60p4OnAPN2izVJtr3Lo4gjj3Yf8rO88aRcl4MGX
+         bvzzCSN2pHIKdjRXE4IJRsC/CJZw9fcqTozSKoL4qXPSp9gMBNYjhjYyE+Z3+BjGcZ74
+         4oyGJa/buWLV4kHvLROCcJLSHjy5s5TBxgLNWEne5rBt6QUVnQe0VWjjO62u9XIFx43u
+         Mj8DWKEJABQIQw/lrM151VqPjzD80eiXDH01n1tWQD+l1KCJAoJgMCS9ML85lXkqdSQt
+         iNXPWyWIn5E6U8BB4lW2DyK6suaewUeAEskHuN41gJsGEgsF4ZGD+cCqIiOp3Vt09Zt4
+         YH/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DhSjNxqbm4HcT9hh0RRIJr4WnJT+XPSewhpuWWrAjrI=;
+        fh=TxzepEQXGkxnK/f9yReQk+78S7vPsScHZ1HNGK8ITmM=;
+        b=TZr/sPZWzhkNAyjAvXMG4wrd2wRxRBk24C8QrHiVyI9uf/wdypMS0WpaMeYpWiapjY
+         ak5ERwIqAPS9Ymhf7HMlChoVek7Gy42ZCsYiMyQNMMUuCY91UkfsCMfASviDrnqpNv8t
+         X3AuwdfjnJwFtCzpVLuWpxidIHGjb9ZEX1Q11XGHX45MMwmTX21rf/EkUZ6WkczaNMZm
+         LzHTSkby4eZNNNAOqcNLZoNGWxvn/vEp92c2hYKk3gJFvi2qt+SAuF6l8OnFFdkTR4dC
+         OtbaFsAJQwdbjBg/lb1mf7aJ7gd270YIT9fqPjy4BIEk69bdu7niOsQ4hbx0YcKZ2t4X
+         yKww==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791531418; x=1792136218; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DhSjNxqbm4HcT9hh0RRIJr4WnJT+XPSewhpuWWrAjrI=;
+        b=o8vBkkkyjjW2weglXNMg6j2n5X33qHNouVKSf00EKGgBamExIAnR5h3rKbxPxqvYQo
+         G1HS0sx/+xj2+e7L2k/gMBcRZHUZJxZ/oZhAjxpayqlQQjEAOJKKnfcsXi+Kmo5xxuK7
+         8Nk+gPvDHNerPdlzmRArnaeO6FHf5qwecrQGbjEbxz2z6/KbKnWFb4SrtZD8OJMDw3ll
+         D85y504IHg9Hmxo5cxQO1MWJb7ujJB7t2cLaVLmS++M/CyF6zhj2v7GuC5SvyU9mFmaI
+         B3foVKnVbFYap+A4LvbSYnI+fSGwDfjZrVdaS3caiacNWgGGqEwjFXxUDfKmb+9IWPTM
+         XRjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791531418; x=1792136218;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DhSjNxqbm4HcT9hh0RRIJr4WnJT+XPSewhpuWWrAjrI=;
+        b=dk9alT83E/aLLLNFtAgU8tvDsH3zjDMp/JOVwFK+lZ+evSjqLKt8heRM/uKDyZV8ju
+         N47zZqBWhYPdfqkeJz7tXtpcyOSB0wcB2FsXkyWFrwmqTUQoueVmtiQrLO/95njheOoR
+         OQKQV/6q40uqhvWIx+xKW4Z1gfKyD4+pp1VBPbGAsx3CdIr5UoAdXwVyayUz/SqOmwr4
+         MNMtZwNsnjheL8E2KZFoRY0LVc2oBtxzGwWOjomKMLKSpOxlTiCxSDgccSTsuXQq5CK5
+         x8f5Q6be6DODDnxxcs7JZewM5OM2rfAdGbtfO3mFISwtiU4I83qa0Q5koZGL60ECzMdE
+         O2+g==
+X-Forwarded-Encrypted: i=1; AKwUvBzWl2VQRPfd3uK77O04lwA8WcNR/OYOgMvmZU3PxgKTtKLazRjBdOp7KORMH7p2cWQG1BamnK9V6ek=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLC5lh0SGNQ1AXnIa9p1O2Bx62EyMI8a9TisgPWL8hl6kVjCVMy
+	7J1JqUFIY8odf4yFastiaxEhlfmY6ozV//jWrwPthPC3BNurSG2QnYeJKjfJYQ/4LVylZaKNmBE
+	LcjTKt37AuqUYSDb1OaXfVd6ZUvFeQWXO5/ubr70IKQ==
+X-Gm-Gg: AYBFou20vbQgQnfTJzMXAmqy/2GjQRR4F742h2Wyn55iCl8Lp6wFyvTyPqk+hU3xLw3
+	dEr5LmjcVko94KicQwFiG7vNBtAkJ7+B+uBZwlX/Ei3JIiZfXBt3XT47W0r/tA4QcDupNhfDHe5
+	SnfMvpRxaFxklJN32bvNdJeLRiJz2ehWneg8rcW8n7hXg8fPPKGRi7CXy2W57pZ87tCmmvC9vhu
+	jN+OaDwVJJYslRV/boj4oslkcqig3/GCGtdQngcdz46JkCRVdJGc3hak4x1TB8MHFsUGaefptH5
+	vgIldJ5q/RVHgeuE5ricPYwP7IvU/Cjtdk8fWkj62UfB81YC9sm146no
+X-Received: by 2002:a05:6402:5c8:b0:6ac:62aa:e3bc with SMTP id
+ 4fb4d7f45d1cf-6b17c2942a5mr781703a12.9.1791531417888; Fri, 09 Oct 2026
+ 00:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|PH6PR12MB893224:EE_
-X-MS-Office365-Filtering-Correlation-Id: e42f5612-3afd-4608-570a-08df25d2cf83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|366016|376014|23010399003|6133799003|10063799003|18002099003|10067099003|22082099003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	ntvM53ZfcxyUVqtF+TnOQTY3g5UpjVHa6xELaLboaoaOps4HTzSkbadKaAUya5726s1u5TCOD5qEJnnhODSoJjNTzZAeQsi1HTQ4G/jzPO8+PYYwdqcXU57GKTP33b/Da9a9/z3fGqE6JbB7S2fcZudUKP2Dy0ym9X9sfW34n1rZKbMSzdhyFy3lY/WWnraSgdu5+xF+aIaSaJp/pG02mCfU1ysS5S0/PDhIeUf9MaoKAS2jU9gA9pUz87m5tlcnCB4162/nE8loSn/6dWqTbiGA76eLTUXjtecZcIyUPOujYT5HiyXlrIMfw6fRP8JS8MgwFZ622ii88LB3/deEeZ8q67x3rayaipvu6PDMbPZ4vihcHI+51dr5qOMQBmXM45icpWZtE4ibDXY3FlX56NkiFbc2EoeY1E/MXBMkv+CB7dgH5AlfXx4A4eIm7l0RPXX9NwrhOYFUG6zh6cc/NGMD4sXXkqIuUt+qrRmSpU+54ttB2EYpmJRylPzSixh1bNWfXNswlCDToLrWgcTo9sVBRdLsxdo0luU89DXe3s5l/M33waJpqqMzHxnzS/NQjAGAp5rqNzR/YHSxtjcT7mdNXlwnYoqrczeP3tUyyT+Y5taGRqVRQvESaEKXd11teIdXgzUikvDuwELEgLfA7nzx/pq8+0PD/0W+Dpvv4oE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(23010399003)(6133799003)(10063799003)(18002099003)(10067099003)(22082099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dWJjdmZiWSs3VFk5bkxmeHphd1BZOEJCRFV5bG5vcytkSDJvTnNQL1dobXNB?=
- =?utf-8?B?K3VWcXNKWlZtdk9zMXRPRkFQNXJ1ZGRXcDBoT0lvRElkMDl2azZ0Mkptb1Vw?=
- =?utf-8?B?U0piclcyMFhBckNWbDJGb1RGbWxJRjI1M0wwWVlWcmErUUVLWnBiUkp3a1ZX?=
- =?utf-8?B?WjRIWFJwZE1RMjl3cGJiVTJuSVBoNGpTRUtLYm1uZWFOSXdlM2pRbVNOZS9S?=
- =?utf-8?B?MnpNVFI0V0xRdmJNY25VN0R4VVE2QlVpWUlISEFWSEk5VnpJK0ExMDJQWkwy?=
- =?utf-8?B?SVBvQjI2VitOR2hmL1Vmb1RwT05VaXdPOFBKbG9qYzd3SlM1U2d0b295NTdm?=
- =?utf-8?B?bEV3cGpEdC96bkJweXYyaTR6Q3dVVEJhWE1QODQ0UnVjdFlTVHlSZmgvNXZw?=
- =?utf-8?B?ZDlsNCswVGFFNUozeTBBNk4yZkYveTloczhTS0wyVTJiaWV0SmwvN0FreWZJ?=
- =?utf-8?B?TFg2RHZmYjhqUnlzQkRoQXMzY3FKdUViNXUxWWhldmhHVnUxRHpnMUdoeW0z?=
- =?utf-8?B?OGVQQUh1YUJBa2hlL3BwT1ZucE50SllNazJoUnExZXFzb1M3YjQzOWhUSnFB?=
- =?utf-8?B?OEZYeE5QWlJUTmdBQzZRblBkWHhqQ2swNnlHQjdGRVZ4U2NPUTl6WmI2RTVZ?=
- =?utf-8?B?ZGV1NjR5dTE3eHpHNVVvdml4a2tPMkR2U1VhU1JrbVkxY3J1Z1ZwWlFMQ1Ft?=
- =?utf-8?B?NHlpcUxRVHppcG9Galgra1JMQ1E3eFprMm9waFJrZzFuVGIwSHFnUlIxOGwy?=
- =?utf-8?B?MXprWFZVbnlZZjZLU094WFR4enhnMUNGb3paOEh5bENvMTY2YlFjUkFUbTJi?=
- =?utf-8?B?T2VpWFdFV1dKMlJjU081TUZxeVltem9FeVEvZXUyRCsvZGRsZWZjWnRSa1RM?=
- =?utf-8?B?QXBydnlJUVB0RGpYYnpFOXBuZ1hXa3M4UXh1K2M5QXNXOU0vVHZGVjNOMmRR?=
- =?utf-8?B?blBkSHl5a1oyazhoSkUxeTYxZVRZTGVkdCtnbWc3dWg3ZVdGMXF3MHYrelN5?=
- =?utf-8?B?UmFJb1ZTWHlMdzU2SGRONHhXR3lqZUNmd1pTa1ZZc2g4SmxZRlhuNHdodVUr?=
- =?utf-8?B?WkVhcDk3bmw2V1RWRGZ2WE96aUpWTGk1dCtjem01d2lOTHRMMFFCTDBIanpx?=
- =?utf-8?B?U2NlcHNrd2dUNUNMNmlSNndkN1k3ZlQyUjdGaXlzeWFZMFhPcjRZNW1BZ0hG?=
- =?utf-8?B?UVV3djRZdjM0R0NhZExxMHZDY1JyQ253dFM2VjAwR05QYnl1NEVtajE1ZkJG?=
- =?utf-8?B?UlErNExqWFo0b1dnNHFZUlk4OWtRSVdveENWeitWV2pJd2FtSEtYQWxyVnF3?=
- =?utf-8?B?Wm5nMmxNRHhFMFdISWtvYURBT1Z3enNmTUJHRjBjT2ZQT3p5Q1hEbjltMHV6?=
- =?utf-8?B?NVZMWVhOdDhva3A3UGY0VTZKQW9nRzB3QVJSVEc2WXB0WnZNb3BkbElVZzc5?=
- =?utf-8?B?UUVGQmhKcFB1KzdUSXo3RXlCNnhOMEJWMVhOeHU0OFBRZE9tRG5mSlVMZDNG?=
- =?utf-8?B?dVJyNDF3OUFZM1JId1labVhZYi93cTBQMExQK3lDZU5KVXF1VjE4UlhFSU8z?=
- =?utf-8?B?V2hKbHdob2x3ZE04UXhwYUdGUkdGc2RBSk9KNmpHSVBuK3A0R1ZnRmU5ZTF5?=
- =?utf-8?B?bnYvejd4NGNGd0MzcjZWYmVpdk54RTFRMk80cUJraEEvVVByR0dhWFpRY3JR?=
- =?utf-8?B?aXgrZ0NnMHpHQld1eG5VS2RVOWRGaks5eVRUYVVuOEQ3RE95WWhZdFlGbjUw?=
- =?utf-8?B?TDc2S3R5dmdBMHdoQ2pDZlUyTGROaVBHSG5PZmlJTWFQUUtkWTN5VU5OZWI1?=
- =?utf-8?B?bUl6eVp2Z1VERTg3S1BHWXZMZFV6aHNBdlNoTFI1YmdpNjk4WU1TM2UrdUxs?=
- =?utf-8?B?cjVkN0tva2IvRmxQVDR2MDYxNE03WmRxNWVKOFhVSjIydy81cDhDRG1idTJL?=
- =?utf-8?B?SmUvUnNoK2NHNTRob1hoVUdRNFpUMFlEZXluRFE5ZG5KMVdwYkx3bjZEbWRx?=
- =?utf-8?B?eXhpSWloSUY0M1pRbElrdjVWd0tuQWU1YTRnZEJucHlPWHVHeVFlczcwakdl?=
- =?utf-8?B?VEtXeENZM3FkQVpUaUhUWWp6QWo3K0FhVUZiaDIyS0kvSzdLMXRidWdFeERs?=
- =?utf-8?B?ME1ZWFhoalkrSE5XUEt1blF2ZGl6d0w5cVFIQzl1UFQ1YklwYVZlNDIzQUVU?=
- =?utf-8?B?amMrSEFUdUZZcURCR3hVcDlTTDRieXF1dGUwWS85Q2RhYTkzdlQ0blFMNHdj?=
- =?utf-8?B?QXZJMlhPOVhILzZuZkpiUXl6Y3NRTWVHak9kdzA4VDdleWorYWtNQ2pSWlN4?=
- =?utf-8?B?b005aE9pZjhLWnM0S2REcEpiZytBTDZYODZ6MlI2dklsMVA4R0JzQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e42f5612-3afd-4608-570a-08df25d2cf83
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2026 06:59:06.6986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vxm48L194seKOLq9X3cTayWOpE67sKVoOvXBSndcAMQZFYuUFxqfBX+uh/dXZK1g1VYThZ5Ng7UU8Tc/dULU+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH6PR12MB893224
+References: <20261008112004.1899560-1-mszeredi@redhat.com> <20261008112004.1899560-5-mszeredi@redhat.com>
+In-Reply-To: <20261008112004.1899560-5-mszeredi@redhat.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 9 Oct 2026 09:36:45 +0200
+X-Gm-Features: AclHuK_71_unbNtN5QAuP7E5DNG3AQphRS8x1gOfZa03ukUeAASAlNMwd4zqZhQ
+Message-ID: <CAOQ4uxi5gLR5xUjmg5v_byPF1SUhzCv=iWT1xzNok3GTy09tZw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/9] fuse: support 64 bit, server allocated backing ID
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: fuse-devel@lists.linux.dev, John Groves <john@groves.net>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 08/10/2026 22:05, Dave Jiang wrote:
+On Thu, Oct 8, 2026 at 1:20=E2=80=AFPM Miklos Szeredi <mszeredi@redhat.com>=
+ wrote:
 >
-> On 10/8/26 11:07 AM, Lucero Palau, Alejandro wrote:
+> Add support for server allocated 64-bit backing IDs alongside the
+> existing kernel allocated 32-bit IDs.
+>
+> Opened with FUSE_DEV_IOC_BACKING_CREATE, the backing ID sent via
+> fuse_backing_create_in.backing_id.
+>
+> Closed with FUSE_NOTIFY_BACKING_REMOVE.  Since close only provides the
+> backing ID, not the file descriptor, it doesn't have to be done with an
+> ioctl.
+>
+> Backing ID can take any 64 bit value other than zero.
+>
+> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+> ---
+>  fs/file.c                 |   1 +
+>  fs/fuse/backing.c         | 178 ++++++++++++++++++++++++++++----------
+>  fs/fuse/dev.c             |  54 +++++++++---
+>  fs/fuse/dev.h             |   3 +
+>  fs/fuse/fuse_i.h          |  21 ++++-
+>  fs/fuse/inode.c           |   8 +-
+>  fs/fuse/notify.c          |  28 ++++++
+>  fs/fuse/passthrough.c     |   3 +
+>  include/uapi/linux/fuse.h |  22 ++++-
+>  9 files changed, 252 insertions(+), 66 deletions(-)
+>
+[...]
 
+>  int fuse_backing_open(struct fuse_conn *fc, struct fuse_backing_map *map=
+);
+>  int fuse_backing_close(struct fuse_conn *fc, int backing_id);
+> +int fuse_backing_open_64(struct fuse_conn *fc, struct fuse_backing_creat=
+e_in *map);
+> +int fuse_backing_close_64(struct fuse_conn *fc, u64 backing_id);
+>
+>  int fuse_copy_one(struct fuse_copy_state *cs, void *val, unsigned size);
+>  int fuse_copy_folio(struct fuse_copy_state *cs, struct folio **foliop,
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index d9ec88028d7b..b1e450f096f6 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -32,6 +32,7 @@
+>  #include <linux/pid_namespace.h>
+>  #include <linux/refcount.h>
+>  #include <linux/user_namespace.h>
+> +#include <linux/rhashtable-types.h>
+>
+>  /** Default max number of pages that can be used in a single read reques=
+t */
+>  #define FUSE_DEFAULT_MAX_PAGES_PER_REQ 32
+> @@ -92,7 +93,8 @@ struct fuse_submount_lookup {
+>  struct fuse_backing {
+>         struct file *file;
+>         const struct cred *cred;
+> -
+> +       u64 backing_id;
+> +       struct rhash_head hash_node;
+>         /* refcount */
+>         refcount_t count;
+>         struct rcu_head rcu;
+> @@ -713,6 +715,9 @@ struct fuse_conn {
+>         /** @passthrough: Passthrough support for read/write IO */
+>         unsigned int passthrough:1;
+>
+> +       /** @backing_id_64: Backing ID is 64 bit and allocated by the ser=
+ver */
+> +       bool backing_id_64:1;
+> +
+>         /** @use_pages_for_kvec_io: Use pages instead of pointer for kern=
+el I/O */
+>         unsigned int use_pages_for_kvec_io:1;
+>
+> @@ -770,8 +775,14 @@ struct fuse_conn {
+>         struct fuse_sync_bucket __rcu *curr_bucket;
+>
+>  #ifdef CONFIG_FUSE_PASSTHROUGH
+> -       /** @backing_files_map: IDR for backing files ids */
+> -       struct idr backing_files_map;
+> +       /* Selected by backing_id_64 */
+> +       union {
+> +               /** @backing_files_map: IDR for backing files ids */
+> +               struct idr backing_files_map;
+> +
+> +               /** @backing_64_ht: 64 bit ID lookup hash table */
+> +               struct rhashtable backing_64_ht;
+> +       };
+>  #endif
+>  };
+>
+> @@ -1270,7 +1281,7 @@ void fuse_file_release(struct inode *inode, struct =
+fuse_file *ff,
+>  /* backing.c */
+>  #ifdef CONFIG_FUSE_PASSTHROUGH
+>  void fuse_backing_put(struct fuse_backing *fb);
+> -struct fuse_backing *fuse_backing_lookup(struct fuse_conn *fc, int backi=
+ng_id);
+> +
+>  #else
+>
+>  static inline void fuse_backing_put(struct fuse_backing *fb)
+> @@ -1278,7 +1289,9 @@ static inline void fuse_backing_put(struct fuse_bac=
+king *fb)
+>  }
+>  #endif
+>
+> +struct fuse_backing *fuse_backing_lookup(struct fuse_conn *fc, u64 backi=
+ng_id);
+>  void fuse_backing_files_init(struct fuse_conn *fc);
+> +void fuse_backing_files_init_64(struct fuse_conn *fc);
+>  void fuse_backing_files_free(struct fuse_conn *fc);
+>
+>  /* passthrough.c */
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index cbb10e19e7e8..b69c95ebb1ad 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -1408,13 +1408,17 @@ static void process_init_reply(struct fuse_args *=
+args, int error)
+>                          * them together.
+>                          */
+>                         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH) &&
+> -                           (flags & FUSE_PASSTHROUGH) &&
+> +                           (flags & (FUSE_PASSTHROUGH | FUSE_PASSTHROUGH=
+_V2)) &&
+>                             arg->max_stack_depth > 0 &&
+>                             arg->max_stack_depth <=3D FILESYSTEM_MAX_STAC=
+K_DEPTH &&
+>                             !(flags & FUSE_WRITEBACK_CACHE))  {
+>                                 fc->passthrough =3D 1;
+>                                 fc->max_stack_depth =3D arg->max_stack_de=
+pth;
+>                                 fm->sb->s_stack_depth =3D arg->max_stack_=
+depth;
+> +                               if (flags & FUSE_PASSTHROUGH_V2) {
+> +                                       fc->backing_id_64 =3D true;
+> +                                       fuse_backing_files_init_64(fc);
+> +                               }
+>                         }
+>                         if (flags & FUSE_NO_EXPORT_SUPPORT)
+>                                 fm->sb->s_export_op =3D &fuse_export_fid_=
+operations;
 
-<snip>
+Much better, but I still think it is somewhat ugly to call
+fuse_backing_files_init_64()
+after fuse_backing_files_init() for an init of a union.
 
->>
->> Dan and I addressed some concerns with "these options" but it is worse after realising now port and region can also suffer from unbinding actions. We contemplated memdev unbinding and that is supported, and acpi module removal as well (all the unwinding is hopefully right for sfc driver removal), but the fact is, current Type2 support is unsound. It is likely good enough with current usage expectations but something to improve/fix.
-> Removing the acpi module will also cause the issue I pointed out. So that isn't safe either. The only path that's good right now is sfc driver removal or the device going away.
+Don't you think this is cleaner?
 
+Thanks,
+Amir.
 
-No. Adding multi PF support brings new problems. I need to look at the 
-other unbinding options I was not contemplating, but acpi module and mem 
-unbinding are safe. Maybe not correct semantically, but safe.
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 330655af3bd0f..9abf6b1afef5d 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -996,9 +996,6 @@ void fuse_conn_init(struct fuse_conn *fc, struct
+fuse_mount *fm,
+        fc->max_pages_limit =3D fuse_max_pages_limit;
+        fc->name_max =3D FUSE_NAME_LOW_MAX;
 
+-       if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+-               fuse_backing_files_init(fc);
+-
+        INIT_LIST_HEAD(&fc->mounts);
+        list_add(&fm->fc_entry, &fc->mounts);
+        fm->fc =3D fc;
+@@ -1424,10 +1421,8 @@ static void process_init_reply(struct fuse_args
+*args, int error)
+                                fc->passthrough =3D 1;
+                                fc->max_stack_depth =3D arg->max_stack_dept=
+h;
+                                fm->sb->s_stack_depth =3D arg->max_stack_de=
+pth;
+-                               if (flags & FUSE_PASSTHROUGH_V2) {
+-                                       fc->backing_id_64 =3D true;
+-                                       fuse_backing_files_init_64(fc);
+-                               }
++                               fc->backing_id_64 =3D !!(flags &
+FUSE_PASSTHROUGH_V2);
++                               fuse_backing_files_init(fc);
+                        }
+                        if (flags & FUSE_NO_EXPORT_SUPPORT)
+                                fm->sb->s_export_op =3D
+&fuse_export_fid_operations;
+diff --git a/fs/fuse/backing.c b/fs/fuse/backing.c
+index c93e4a45dd6f6..6157a18b5d554 100644
+--- a/fs/fuse/backing.c
++++ b/fs/fuse/backing.c
+@@ -46,11 +46,6 @@ void fuse_backing_put(struct fuse_backing *fb)
+                fuse_backing_free(fb);
+ }
 
->>
->> All this user space potential actions were implemented mainly for testing (I guess you know this). I did ask Dan about it, and I was expecting use cases where HDM decoders and regions are dynamically created, which makes a lot of sense to me, but the fact is all is relying on firmware/BIOS configuration. Richard is working on adding this functionality for Type2 and pmems, and Jonathan considers it theoretically useful as well, but the way is going to be handled requires, IMO, further thinking and maybe a change before someone starts using it (does anyone know about users now?).
->>
->>
->> As a summary, if we allow user space actions (at least for Type2) they need to be consistent and somehow protected.
->>
->>
->> Finally, you did not answer my question: what is the point user space removing and endpoint port handled by a Type2 driver? What about the cxl region? Maybe I am missing a necessity I can not see here, so please, help me to understand this if that is the case.
-> Shouldn't does not mean does not exist. Sure I can agree with you that under normal operations, certain things a sane user should avoid doing for type2. But it is possible currently and those issues can be triggered. However you feel about the current CXL architecture, here we are with where it is. You can either consider the smaller changes I suggested to keep the attach->cxlr sane (or with some other means) and make what you need working now with raised the issue addressed, and come back with hashing out the larger grievances later, or keep beating this horse.... "It's silly for users to do that and therefore the issue can be ignored" is not a good enough reason for me look the other way and merge the code.
+-void fuse_backing_files_init(struct fuse_conn *fc)
+-{
+-       idr_init(&fc->backing_files_map);
+-}
+-
+ static int fuse_backing_id_alloc(struct fuse_conn *fc, struct fuse_backing=
+ *fb)
+ {
+        int id;
+@@ -338,6 +333,9 @@ void fuse_backing_files_free(struct fuse_conn *fc)
+        struct rhashtable_iter iter;
+        struct fuse_backing *fb;
 
++       if (!fc->passthrough)
++               return;
++
+        if (!fc->backing_id_64) {
+                idr_for_each(&fc->backing_files_map,
+fuse_backing_idr_free, NULL);
+                idr_destroy(&fc->backing_files_map);
+@@ -369,7 +367,12 @@ void fuse_backing_files_free(struct fuse_conn *fc)
+        rhashtable_free_and_destroy(&fc->backing_64_ht,
+fuse_backing_rht_free, NULL);
+ }
 
-I'm not denying the problem. I just do not want to add some new 
-functionality which comes with these new issues, at least until I can 
-understand it fully. What you propose is, I think, correct, and fixing 
-at least some of the issues. But I think this is a good opportunity for 
-trying to address this sysfs functionality, or at least to discuss it. 
-As I said, also when basic Type2 support upstream effort started, Type2 
-CXL should not be "open" to user space as Type3 (or not by default), 
-although I think this complexity and so many different unwinding paths 
-should be avoided ... or documented the reason behind it.
-
-
-So, I will work on some documentation about all this, with cxl devices 
-lifespan and those different unwinding paths, emphasising the different 
-theoretical needs between Type2 and Type3. Once the unwinding paths are 
-identified and documented, someone  can add the reason/use case behind 
-it, or maybe some problems with them we are not seeing now.
-
-
-
+-void fuse_backing_files_init_64(struct fuse_conn *fc)
++void fuse_backing_files_init(struct fuse_conn *fc)
+ {
++       if (!fc->backing_id_64) {
++               idr_init(&fc->backing_files_map);
++               return;
++       }
++
+        rhashtable_init(&fc->backing_64_ht, &fuse_backing_prm);
+ }
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 064fed459b93c..4235b8fc669b0 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -1324,7 +1324,6 @@ struct fuse_backing *fuse_backing_lookup(struct
+fuse_conn *fc, u64 backing_id);
+ int fuse_backing_add_64(struct fuse_conn *fc, struct fuse_backing *fb);
+ bool fuse_backing_is_dax(struct fuse_backing *fb);
+ void fuse_backing_files_init(struct fuse_conn *fc);
+-void fuse_backing_files_init_64(struct fuse_conn *fc);
+ void fuse_backing_files_free(struct fuse_conn *fc);
