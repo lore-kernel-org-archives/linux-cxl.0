@@ -1,192 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020125.outbound.protection.outlook.com [52.101.228.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4842E4973B0;
-	Thu,  8 Oct 2026 23:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791502516; cv=none; b=ThEhBMLC5qhYCIfqBLKqyhYaqxqK3zxriJRoSma8ShRGIJeVNss4gLDy/4Sf+37S3xqaBMPGtWN6JpZx7KP0n7cS5seo1+1xJvxwrzfO/Pm/d7RoF7evfIdcoOrreHuKtXsoFCeQT8HgOGg0aOkfrkvx9WUiP+I5tmbHr+03QaA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791502516; c=relaxed/simple;
-	bh=lEg+PjTwhD5xviCVG9A8w1iubKfJuo8XFRoNJVu8flw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PpcfNBzGzfjU8urdR9WJcnUAWhFI6q6LkQsCPklBSMc1YpAQgiQVAxbZRuxSTXTGnLZ6Mc1w62rY3JqUg6a2thj3E8GSdf6BXGLM3zjw0GRFFNIu0DLyAHpV05e39C4L9U40FTxL1sz07JdExdlpSbX1e/FWcnx2vSnWJRMPpJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fs9UW5Fd; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C72F2D8DC4;
+	Fri,  9 Oct 2026 04:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791521708; cv=fail; b=tgKFde4gNanAz1TCdZXi336rWjqdU1MfLSggvfp1cfX6NToT6JqxgSud2C3vVZcPcHIxQnVYLVW2YWUvZH/qXMon0e0PWbFW/8f8vg16xldmaz4N4jKUr0dEjMV2J/qCBtPXXnF7MxhM41g6EnwgVnY0MHLqhlphoIuGkE6F1g8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791521708; c=relaxed/simple;
+	bh=kzSbrRzp8w/TaSTjs2Z1iazPo6IDsROYA2M2taeDnJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=V8bXLKrvvMYzcYE86jrMLLhTT7JovN4/25E0+AmBEtRcz0wuu7c5Pt00df2lGkNeohxWIq0m1VodkRrDOm4EyhtUyALweUK22syTn6plT/clBtJJ4JYex15Uolh26N1wWyIzIKxCv4k7a3fRUOkSagKzrs7SRbh7OCPKISthb8g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=canwu3Jn; arc=fail smtp.client-ip=52.101.228.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fs9UW5Fd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C9A31F000FF;
-	Thu,  8 Oct 2026 23:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791502510;
-	bh=RL3M40x5ThXQEXCT5Pub5cNnAN5UlXgdqAFx+FOjV3E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=Fs9UW5FdlQ6qXZ8VLd43QpyyOBDclhOVFcuM3PE9V6uCAv9dENV4R6fYhSn0zaASZ
-	 sr7uQDN6vbJqhG4fwCXlEWIP/ZXWUAgnvl4hkyqPS0AU5RbCVGA2fyKeqeosWtoLuS
-	 APUCZq8zDMWIOtmxp3GsJ8K4r8tnBctW8bpWCvbJyv2mNTgmjH76K8xoaC8/Rr99cc
-	 gf5r8fxfaxnX0KXESCOYz/ixp3SQwTEuvBxx/3HyweOzqk/4pVzvPZOLuybDll1Qbv
-	 zOL62CeIplF1JrpCUvDK+VRRVpYhoNluOFUuU2UbiLV1IADhogPPaImPZhd3jEcYl2
-	 jSwp1Cn8FGPzA==
-Date: Thu, 8 Oct 2026 18:35:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Srirangan Madhavan <smadhavan@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dave Jiang <dave.jiang@intel.com>,
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="canwu3Jn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bVsyi58V1XG4zmAWWEdZCqzLOMtUKofNWxcQN++lBwP37gFocpqrMQ+iCqklla6JlQkuQcf/cJJITFXxu6A0ffLy5ccfpIpNEKZUvWB+70rItY/kLvVyZ5b3bEgckne4Q5yc+r5egdSPykWR+D7vU4RvnYgC9Txn7LEhOvcpMlCeBn9jWOX6yMD+niardHnp/rUawEiMOJIy0PPyQQjosld8R2kS9F22j49mOLcWC4o4RguBUfKoH5o6kyi1oEziV4vAFVQbPOLyIXfGTDQ3tEFJ7UFT1KqtZDcn1VoY/IkS8FOwomsEskhHsdv+Y51q0q35bXyfFP0gXX6bbE05xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0FhGNCxo6ybHz6aq8QMrGPBgFCTI7jamDWsvn45bI9w=;
+ b=dTE7VwK4/BckSMJ4HOYrT1DoDIIQDY70mssEPywfA6TopkHZcqCxY24E1pTnj3ukhQ46mTWRCalm6VRw0P6CGmBVNl4jqssj7eeVz+LvWBYEfJ5SG6EbsuUCPjzar62gS5VEN+1uzEmysVNQHTOcW7Y690y584IWDcOfjMnYF4dNTw1ev6ma1kit91xwetPjj799IFcWwkq88VUdFsbf0UfdNQHzz7VB2QFMGvrhkhkm3EudnO5RWhRbIM+5mvF+nTbnLnphq3scIL3A2+05ZfDM0xvBgLv02sErZZhdu+NHNJY4cgn5JQ2y1u4b/quDUwHZiTa5L4A26d8ZdBtQ3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0FhGNCxo6ybHz6aq8QMrGPBgFCTI7jamDWsvn45bI9w=;
+ b=canwu3JnIdIbhWzBpfsTy90cFwVmQN4bic5jj9/WAJIJiqvdQ8J92GjukO8xoGZ+teNKC5q2R/JqqJ1usdmHZstBg0XQBf7awAxEr9r3rPNyZJ6bu3TY3ZlSsa+QsvJwqr26NUbAI2YYG4m19jIX8CoQ9KTMgRDWoDhYGKox8L0=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:325::11)
+ by TY3P286MB2561.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:222::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.17; Fri, 9 Oct
+ 2026 04:55:03 +0000
+Received: from TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::cce5:2aa8:53f9:dba9]) by TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::cce5:2aa8:53f9:dba9%5]) with mapi id 15.21.0496.015; Fri, 9 Oct 2026
+ 04:55:03 +0000
+From: Koichiro Den <den@valinux.co.jp>
+To: Dave Jiang <dave.jiang@intel.com>,
 	Davidlohr Bueso <dave@stgolabs.net>,
-	Ira Weiny <ira.weiny@intel.com>,
 	Jonathan Cameron <jic23@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
-	alwilliamson@nvidia.com,
-	Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
-	Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
-	Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v14 16/16] PCI/CXL: Restore CXL state after CXL bus reset
-Message-ID: <20261008233508.GA941626@bhelgaas>
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Alejandro Lucero <alucerop@amd.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 0/3] cxl: Fix link latency calculations and QTG latency units
+Date: Fri,  9 Oct 2026 13:54:49 +0900
+Message-ID: <20261009045452.1107921-1-den@valinux.co.jp>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY4P286CA0134.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:37f::6) To TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:325::11)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261001092227.3004747-17-smadhavan@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB6866:EE_|TY3P286MB2561:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4aa4c7be-f88b-47bf-e2f9-08df25c17ac9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|10070799003|366016|18002099003|10067099003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	101Po0BuZ2HSiC5qQuIka+pNz9kcHwsNGuwOP2OcOSaavKBCMi0f+p6Zo+1dpSNEiBd7Xnb4PpaTbbGL9CtK5pDKP4skJGyNw5SxRGvAXOZTYuGipekQHsd36WWkmPxhYnf18/p9HX/FxbEGhiD7KAucgVgH/lxJXuYsxH9bHo2y/hAJSoiTbnsxFlP8+8/i0caYiCe1ZNd17vlCwkubv6UmPOi1siai7NIN5TyM4WoKX7rcHKHgL77xeJE7IYRWKGM9x8+zOLggyxyLX47tMY1NNzgwWZ4TiJ3S2qkLOhWdK2DWbBLkC+sP7lea1PNMwU9ZLzf/CgwIGbTZ9+n4HoRaF3e9/XB/5tuKCz61wb8vHB7isf/j+zDdIL9BKSnEBf8DPc6NVsR5lat+UjQngHZ3BtUUcgsoVm7/rPo3K/WOmcM1Yk85OuFCm97dCNBxsjgAOjTVZGF/Qnxy6AVrriTOH6+c0nepf0OTaDXSULSkT+RxYk+65uyS9nxQC1u/dHKd/1N+LrifufVISTeR7hTbkg1o5z9X3gtVLMOtjfYXmgnxpAw3nLRc/yIVWr8od91ZfSyt/gm5cWO6StmxnMoSxlPFG3KOx8b0NOVIw8jDN46cfwC5/bN8wj6IxOup7q+7uS2UQ53ZRksc+gIZNPAcKdaqtKK4QM2LBQ6AW/0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(10070799003)(366016)(18002099003)(10067099003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dAjhhG79Ia0bDnm2Qfx3ZYf/uMIuyrqMI3JIJecE0IrHrQ8mUcsUTnUZXJnk?=
+ =?us-ascii?Q?Zs6q+gH+KyWj2jSQ9ixAHfLs7Y6RiUToiC598MXASQVkbisFXyXOG1iATnlI?=
+ =?us-ascii?Q?PkLTYXN7uoYw6FXZ36aj6ryO9nLyUg4LXnByUBrbdyp9eqayw7b3+/gjVOLg?=
+ =?us-ascii?Q?sB+6rSUTP59Vxv/QhgRLJgMx+bUes+YxMwp8iGp77VmbTPx3JiHh5Mkxmd/r?=
+ =?us-ascii?Q?L4vHqRA0RQkiDZq9AcggyD/ln5g+yUesDwIKcd4FX2Tf74rjOR0mtJF+VFIh?=
+ =?us-ascii?Q?HgICPLdbzUZSSCg81O0DpnNUyy9F7pDYJ03HncdQwT2AHJbynDQh4M5eTcA/?=
+ =?us-ascii?Q?904o91Z09c09SnUm0XWId+WiqptbYYkOEuc+NaUyXV2WrzTOGAS6dU1JlIMO?=
+ =?us-ascii?Q?xgkbXNmDzGDSqPUWc/kKAByzwOw+kjMRYTDN8iIBDX/apblLQe1neWitrmS4?=
+ =?us-ascii?Q?tNnX+DQl1xrUK9rGKm2U2oE6oSIpm5TW+FK+iExd1ofS/KwQOVjy/moXrlH6?=
+ =?us-ascii?Q?4OUaDWhfGjBjwcEhjr53HXyhG3sDKucDPfTCZ1X2avQF6Z5qBlmAHrwMo2cU?=
+ =?us-ascii?Q?c8t6f5WZmFBmHiccjVal0eSPSQOSpYRRKOJn8EHyN4hG/FGuIq2nfEvreqZq?=
+ =?us-ascii?Q?DGpSBmUqD2fmbxbUT2hyTrJMDDkf3VZAye9KR/SYZGv399N4MHk4mWmVlaSJ?=
+ =?us-ascii?Q?cd6wVx4z5sr0HCid+IaDPS3g2hC1gzP9vQ0kVtPVg4Rw3qQK1pzIAhoU6vKb?=
+ =?us-ascii?Q?JeJPz+X/cZs1QXkXlv9uDzUquqTBMNKBFiU3mGMvC/+erG9eSR5rLMvtyLyH?=
+ =?us-ascii?Q?NRma8qN23Iu6+NAj5SjdVVx41Dyhb4PKA3bx9MwPv2Q9Hm1ybimIkQlhz9iB?=
+ =?us-ascii?Q?Pt69a8SUsqXMN6f+I/SkEQKFVgdrtq7n17uPx6u85JETorce1XRtCiafrf/f?=
+ =?us-ascii?Q?/HesJUXmRZjsMmIncx9Xg5W8iV49Sj/Fx1DCpWZYMBfOhDgCrqSooFWDurVU?=
+ =?us-ascii?Q?T4NGHlPFuBT8Y2xYx5G5zTYTdDYBGQ49GMI6VZ3QVE3Du9jSrXPhA3e/M383?=
+ =?us-ascii?Q?a4NQiyhja+d1ZqMAPr+N9pszZPeMFBchUoAWKflRd4tRYjouwgXX1DJIcEpU?=
+ =?us-ascii?Q?GycBURg4/+FBq9SAmXre1deGeDV1a0ZNbnqlMw7PndqA0n2ozjuyKMSx/Md8?=
+ =?us-ascii?Q?NlCkTPSa6GvPoFD6FLdKNfLODsGWPQivnDsQ/c+8LKrKVS4Pwo7I86fO9O0Q?=
+ =?us-ascii?Q?XcaSo041zJMVhJ+Y7V1oFNBHDTu6+h8dZHeUi76vPHfxRd1IW2jJ7YLK2ZJB?=
+ =?us-ascii?Q?uTBNy+6M8DpXpxSmYexsV0W/2tJutoIVQUizSYUaNRUnB3DQNi8tO90X7wdO?=
+ =?us-ascii?Q?qc+MxNMTwCLy/qzpAnXCPT4iARHjB6d88sZ/j4aq8KAK0thxN00IBg/5QzQK?=
+ =?us-ascii?Q?pHN4QmNzRQ8Z2YEuRY3h4/WcUAspuMlaKHpce+M3HWhuKnq1hMpes4k78eGU?=
+ =?us-ascii?Q?/rzljMT7t+6Pf6UHnVFvlhhVcLPw9NkoIrCfdLtU8x+S+uDdctfGaMORZzWR?=
+ =?us-ascii?Q?wruWtnyuodb0t7GvDdp53rK8GLTTFae05zv9NQXY3P8pLJbsoaZd+Z8Q2taX?=
+ =?us-ascii?Q?jsczxVJZhNAz7g/vH+PTUNWWoaumtCxPlM14M6QGQF0I1JxNZnSHXLMc5vYZ?=
+ =?us-ascii?Q?luOUKP699uSFP0GUNBeAuzSB6VS6xw/TYzsOu353KfrKkw8KN6HG03iHbrMs?=
+ =?us-ascii?Q?RGQ7GYrOoSqAIu3ZyQYoqsutrOlbSIDPftUit5FHU9A6zrcs4Vn3?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4aa4c7be-f88b-47bf-e2f9-08df25c17ac9
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB6866.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2026 04:55:02.9883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a2zh+WJvs8AOguxqFkueYPQIZfm2tnehcTkilA6gdKQo2eLDx3xjVs/GfP2dpDk3+tyGWk1hZrfkTZa1pPShKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3P286MB2561
 
-On Thu, Oct 01, 2026 at 09:22:27AM +0000, Srirangan Madhavan wrote:
-> CXL bus reset can clear HDM decoder programming and CXL Device DVSEC
-> control state. Restore the cached state after a successful cxl_bus reset
-> while IOMMU exclusion remains active.
-> 
-> Restore PCI configuration first so HDM MMIO is accessible, and preserve a
-> disabled state if restoration fails.
-> 
-> Tested-by: Richard Cheng <icheng@nvidia.com>
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+Hi,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci/pci.c
+This small series intends to correct the FlitLatency portion of the link
+latency calculation, as per Intel CXL Type 3 Memory Device Software
+Guide 1.1, and restore picosecond latency units for the QTG _DSM input.
 
-> ---
->  drivers/cxl/core/resource.c | 23 +++++++++++++++++++++--
->  drivers/pci/pci.c           |  8 ++++++++
->  include/cxl/cxl.h           | 17 +++++++++++++++++
->  3 files changed, 46 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index efbab341b30f..3422139ae3ab 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
-> @@ -625,12 +625,12 @@ static int cxl_restore_hdm_decoder(struct pci_dev *pdev, void __iomem *hdm,
->  	return 0;
->  }
->  
-> -static int cxl_snapshot_hdm(struct pci_dev *pdev,
-> -			    struct cxl_hdm_info **snapshot)
-> +int cxl_snapshot_hdm(struct pci_dev *pdev, struct cxl_hdm_info **snapshot)
->  {
->  	struct cxl_hdm_info *info;
->  	size_t size;
->  
-> +	device_lock_assert(&pdev->dev);
->  	guard(rwsem_read)(&cxl_rwsem.dpa);
->  	info = pdev->hdm;
->  	if (!info)
-> @@ -798,6 +798,25 @@ static int cxl_reset_save_restored_state(struct pci_dev *pdev, u16 command)
->  	return rc;
->  }
->  
-> +int cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
-> +				      struct cxl_hdm_info *snapshot)
-> +{
-> +	u16 command;
-> +	int rc;
-> +
-> +	device_lock_assert(&pdev->dev);
-> +	guard(rwsem_write)(&cxl_rwsem.region);
-> +
-> +	cxl_restore_pci_state_for_hdm_restore(pdev, &command);
-> +	rc = cxl_restore_state(pdev, snapshot);
-> +	if (rc) {
-> +		cxl_reset_save_disabled_state(pdev);
-> +		return rc;
-> +	}
-> +
-> +	return cxl_reset_save_restored_state(pdev, command);
-> +}
-> +
->  /*
->   * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
->   * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms after
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index dc57a202c91f..6928c99aa785 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5015,6 +5015,7 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  
->  static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->  {
-> +	struct cxl_hdm_info *snapshot __free(kfree) = NULL;
->  	struct pci_dev *bridge;
->  	u16 dvsec, reg, val;
->  	int rc;
-> @@ -5037,6 +5038,10 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->  	if (rc)
->  		return -ENOTTY;
->  
-> +	rc = cxl_snapshot_hdm(dev, &snapshot);
-> +	if (rc && rc != -ENXIO)
-> +		return rc;
-> +
->  	rc = pci_dev_reset_iommu_prepare(dev);
->  	if (rc) {
->  		pci_err(dev, "failed to stop IOMMU for a PCI reset: %d\n", rc);
-> @@ -5057,6 +5062,9 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->  		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
->  				      reg);
->  
-> +	if (!rc && snapshot)
-> +		rc = cxl_restore_state_after_pci_reset(dev, snapshot);
-> +
->  	pci_dev_reset_iommu_done(dev);
->  	return rc;
->  }
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 9904eaed5af1..b83cfaed618f 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -207,6 +207,9 @@ struct cxl_register_map {
->  #ifdef CONFIG_CXL_RESET
->  void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
->  void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
-> +int cxl_snapshot_hdm(struct pci_dev *pdev, struct cxl_hdm_info **snapshot);
-> +int cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
-> +				      struct cxl_hdm_info *snapshot);
->  int cxl_reset_function(struct pci_dev *pdev, bool probe);
->  #else
->  static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev)
-> @@ -217,6 +220,20 @@ static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
->  {
->  }
->  
-> +static inline int cxl_snapshot_hdm(struct pci_dev *pdev,
-> +				   struct cxl_hdm_info **snapshot)
-> +{
-> +	*snapshot = NULL;
-> +	return -ENXIO;
-> +}
-> +
-> +static inline int
-> +cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
-> +				  struct cxl_hdm_info *snapshot)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  {
->  	return -ENOTTY;
-> -- 
-> 2.43.0
-> 
+The first two issues were found while debugging a QEMU guest. The third
+issue was spotted while looking through the code that uses the coord
+values. I haven't tested it on real hardware.
+
+Best regards,
+Koichiro Den
+
+
+Koichiro Den (3):
+  cxl/port: Convert PCIe link latency to nanoseconds
+  cxl: Account for link width in latency calculation
+  cxl/acpi: Convert QTG _DSM latencies to picoseconds
+
+ drivers/cxl/acpi.c      | 10 ++++++++--
+ drivers/cxl/core/pci.c  | 22 ++++++++--------------
+ drivers/cxl/core/port.c |  3 +++
+ drivers/pci/pci.c       | 23 ++++++++++++++++++-----
+ include/linux/pci.h     |  2 +-
+ 5 files changed, 38 insertions(+), 22 deletions(-)
+
+
+base-commit: 71392a644e88c6bb921cdf12cb2b00adec070fe4
+-- 
+2.51.0
+
