@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1642539934C
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95AB3EC82B
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791583936; cv=none; b=BhpkkR4ZarNPhfYag14DkX2AQOG88uesgmozWQf1R1/GUn1C1HdQaPwZkwL3wRRnzhtXhIJc001HNoqaNGct/nLUSoHrTb2uw3actgT7DogKwiqCxvcGQQcnPzTkp02CbFkx2HSPoxr4s2gWtlJpOPq3KU8yZDeeThn3WQ5m4Fo=
+	t=1791583937; cv=none; b=La6Y5+RZfQtuaO2Mk/Vfwrw6mZCtx5G/CjuFdtv5ICE3xmImhqnLqx2bcwIoOxA4bjirgk38yo44hjN5Qx3f9n5oDfHwNVqkafFinmlmVdMsLBe8V5Rc6TYEKvqF+knsvUlwZ9X+HnBGemmlc/xkd/DBpQcQE4nUdSkKeL6xsrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791583936; c=relaxed/simple;
-	bh=rrpIyVG1FLe46lEKpNlX3s/yn2lrlLN82D5sgHaMZJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ogrfsSOkvD8ihEZXNapWvqo6sU4SonPIDyyk6+NKFZRvnn7qLJ2q2FjVNBzcbEweMey2yAr/9OBTVjoLTz2Gz9C/9GuOzIEEss8KyHc2bG9Ngj7B8g1giWm3hBV7NNW7DGQvTkn235VPR6u/TUaR/ivMeC9iAnmpJjSIxiRF/wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PtrV48G2; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1791583937; c=relaxed/simple;
+	bh=QhWVRaj+D3gYcE+C0btHQ/apNXtyTrFZ+9RW2tXzNDU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cJJWpiOeK2Ck3bnjp1bdWZ36EqJCWJP5OJBWMQJb3yk1RAwoG/uSkLbcp/9XSpEo9EOipOuV644X5WDWfiuDLKpezhpqDYciE5ZigYm7IO7Xdvaw4cQ+R9vmwcUcc7tUlCW2Q1rzX/AbbWhhP3PrmLYcGtTQBsj/nR5Q4PMrdPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpP7qU0N; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PtrV48G2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpP7qU0N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1791583933; x=1823119933;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rrpIyVG1FLe46lEKpNlX3s/yn2lrlLN82D5sgHaMZJs=;
-  b=PtrV48G2HL9B7gPsyMF/bY4OZOWuQjC/Qk7nBdROThCaApFU+YNO1njk
-   peLjOm/ccugngvACKB/wG7lNis19PSGVWiQWifWxcCHNKCJeJXyYSpGJL
-   SYEnlZ5H0CpR+2qQK+8R61OCilOO+tA7K3RvtHGd31Js1+jRYDfaVWYWo
-   Jl4ZzPZQtPboDVRzkrC7pNYXY/HwKU/zFMMYcyW6Wf6BUsX8BW3QTjoV6
-   rG0y8nU5M534CFSC1j8Zbgn+5v/+tQ24Iq8rimD9NAQPINoHjx53/WGve
-   ip0Orfw/b6S3sJrtRnr0J3olHhjgH9czH3unvfd9RJ4H9x8Q3+v3PSIkh
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QhWVRaj+D3gYcE+C0btHQ/apNXtyTrFZ+9RW2tXzNDU=;
+  b=mpP7qU0NJlYRjKzJZvQ6s0pfvP8XlYvdAMff8Wl/W18A2UXLNC+0WIQ5
+   vAYrQ5PwzcssLbQXbDMDbFd03X0WAn09/T6EX5/MhfZFm7mENxeMqb7pl
+   O76zWmYhFHzOtZMCY8ha9o1YRf8Gk8ld+KzVx9ClRuWpw+EsooUBGAWG0
+   9ksdRbB6GHZzhXVSGjEvJPvKTMtd1GSQZkFrmCxXRSIaztYmvEd2o8BoY
+   iNLNz71i9pJkcRUhKDOKrhOqKDzOcUXKhG6YYO8E8jfjd0jVt04Xkeqmx
+   vqNAdrMU/zjL9t0yGbJ4EhmbeDpo8TI98EzZujw09X1KV/KLnBCI28qPa
    w==;
-X-CSE-ConnectionGUID: vvW+Dn89REqh4to599quzg==
-X-CSE-MsgGUID: 03SpetztSdqQNKKiDNN69A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="294819"
+X-CSE-ConnectionGUID: eTF7qxBpQGuZLRJ7VuQFsg==
+X-CSE-MsgGUID: GyHxxPGyTA+FqAe736/KnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="294825"
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="294819"
+   d="scan'208";a="294825"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:31 -0700
-X-CSE-ConnectionGUID: dkTfGXNTR9upm/VkhBlvNw==
-X-CSE-MsgGUID: Y+u42TdiRHOWPtbD4x21TA==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:32 -0700
+X-CSE-ConnectionGUID: aBYZb12hR1qXvZx4Kn/L+g==
+X-CSE-MsgGUID: 2y5ewVcNTEGhJsrAX0LCsQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="505701"
+   d="scan'208";a="505706"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:31 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:32 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -52,10 +53,12 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 0/3] cxl/test: mockfixups and new topology support
-Date: Fri,  9 Oct 2026 15:11:20 -0700
-Message-ID: <cover.1791582353.git.alison.schofield@intel.com>
+Subject: [PATCH v2 1/3] tools/testing/cxl: Preserve DPA skip across mock decoder reset
+Date: Fri,  9 Oct 2026 15:11:21 -0700
+Message-ID: <6885e00e91e676dddf0de71722d16c8ad4dfe52e.1791582353.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <cover.1791582353.git.alison.schofield@intel.com>
+References: <cover.1791582353.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,43 +67,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v2:
-Patch 2: Avoid duplicate look up of auto region window (RichardC)
-CoverLetter: Add link to the ndctl companion series
+Mock decoder reset clears the DPA skip before releasing the decoder's
+resources. This leaks skipped capacity and can cause a later DPA
+allocation to fail with ENOSPC.
 
-While working to enhance the cxl-cli cxl-create-region command to handle
-out-of-order target lists or no user-supplied target list, I ran into some
-basic issues in the existing command that need to be addressed first.
-Developing tests for those fixes exposed two bugs and a topology gap in
-the cxl_test mock module.
+Preserve the skip until the DPA resource is released.
 
-This cxl_test series addresses those issues:
+Assisted-by: LLM
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
+---
+ tools/testing/cxl/test/cxl.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-1/3 fixes a DPA skip leak across mock decoder reset.
-2/3 skips auto-region setup when no volatile window is active.
-3/3 adds two x1 CFMWS windows needed to exercise root decoder selection.
-
-A companion ndctl series[1] fixes the existing cxl-create-region issues
-in cxl-cli, clearing the way for out-of-order or automatically generated
-target lists.
-
-These changes preserve the existing cxl_test unit test behavior while
-enabling new create-region test cases.
-
-[1] https://lore.kernel.org/nvdimm/cover.1790658549.git.alison.schofield@intel.com/
-
-
-Alison Schofield (3):
-  tools/testing/cxl: Preserve DPA skip across mock decoder reset
-  tools/testing/cxl: Skip the auto region when no volatile window is
-    active
-  tools/testing/cxl: Add CFMWS windows for region selection tests
-
- tools/testing/cxl/test/cxl.c | 116 ++++++++++++++++++++++++++---------
- 1 file changed, 87 insertions(+), 29 deletions(-)
-
-
-base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 62bd92b3be45..aa140307e0c3 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -913,15 +913,13 @@ static void __cxld_registry_save(struct cxl_test_decoder *td,
+ 
+ 		cxld_copy(&td->cxled.cxld, cxld);
+ 		td->cxled.state = cxled->state;
+-		td->cxled.skip = cxled->skip;
+ 
+-		if (!(cxld->flags & CXL_DECODER_F_ENABLE)) {
+-			td->dpa_range.start = 0;
+-			td->dpa_range.end = -1;
+-		} else if (cxled->dpa_res) {
++		if ((cxld->flags & CXL_DECODER_F_ENABLE) && cxled->dpa_res) {
++			td->cxled.skip = cxled->skip;
+ 			td->dpa_range.start = cxled->dpa_res->start;
+ 			td->dpa_range.end = cxled->dpa_res->end;
+ 		} else {
++			td->cxled.skip = 0;
+ 			td->dpa_range.start = 0;
+ 			td->dpa_range.end = -1;
+ 		}
+@@ -1001,7 +999,6 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
+ 			to_cxl_endpoint_decoder(&cxld->dev);
+ 
+ 		cxled->state = CXL_DECODER_STATE_MANUAL;
+-		cxled->skip = 0;
+ 	}
+ 	if (decoder_reset_preserve_registry)
+ 		dev_dbg(port->uport_dev, "decoder%d: skip registry update\n",
 -- 
 2.37.3
 
