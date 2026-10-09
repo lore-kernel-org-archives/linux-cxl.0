@@ -1,126 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5E837A822
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC968502579
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791584646; cv=none; b=oh8P3PHwKPfAEpk5M8mbpy0+XIaU40kSscOxO/G83shN9paiUSUpZjGxJsMf3tWL41keYmpSYAjdSV/XaG4QxFAghM3JgtDbMFIwNdHoknX7z8E0qst9T6utjmctkyG1qa569T3Q4PxTvgHZt7Bxf1vRwipzKcOJw22hgF4D94s=
+	t=1791584863; cv=none; b=fPm34tEwtSYwF73yJmYbH2/pPnl/uEqNcr1i2cYF/I+BMNUJxmnUBfKAkuedJEGQaWjoUavxhC+UbyRd0lFfTO+1HKIAZNXnxYJ0eyjzsjYgemG1UL104fIuXpivsyreuQynzgb7vAcR42HvCQXhEd8eMK3FutdGMiNaTGYBjR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791584646; c=relaxed/simple;
-	bh=3W5KPRMEQ2PjssdvYSo1ttIbSgl44NGxSMPg+JjE8OY=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=nK08XHovBsabb1LLAplvlfdSs1dj5e8N6PQA0QkagVgw8nlYRqwUCY5rCc7WSqBYKYe56+hRCAJzHXy5rA8dmoETm9jKHSYULlJnAKXhgBasgbu3lnpuvzPbJ8no8bTQTT0lK9Bfk2aSnfRVLYfnmmcGWXqXc8kNlvELu3GtyDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ebrp1y2x; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791584863; c=relaxed/simple;
+	bh=rcGG7u166esJWXiAbfKRGioY5El1UbHQhd1BRqBh7O0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h/ngYjsWILBJPxJrJ6MPDO/fSmn4RtqUGq4AFvSZKXnVIsXb5pC9ZRaMdaODSqUx5lOSTJ6l5PaEWTEX0gOca49J/0TeM35/BEMRvMySkVmSOWpILTvFZoURwhucsAq2UBtIhuzWjV6arhP+27Db549szZd7MPc7PT8lktmQYI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kJ10NX4t; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ebrp1y2x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66AA51F00893;
-	Fri,  9 Oct 2026 22:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791584644;
-	bh=STRky7WB+8xeOBY5ztCgbjhaxYXwHHMRVNSacvxg3dU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ebrp1y2x33BNCUbDb96wuKz1YFKJjd9mB3qBfZDmoa6/aTjM92CR0F73ZPW0AWste
-	 19Pwq1/Yi8+6EONpaq9XZC07NB0VsoW3T6G//X5MDmG8gRKYAfkoR/IA1UkzJXCbzy
-	 x5GpmOr1Tvab1KjT7Pez0OuRGuDa+hPkTLBanWNpSUYq6PCyx+jpwtGN+SNz7Aag2n
-	 GlLl9mtpFf9/E9e9QtmyaGEuzvCHsuNV8Cm0YhQnZ0FPfXe2BqUo4D6To6BnMKIPKC
-	 vuWqfUEKD9jWuRJHysMdtONGkTmVrzYVodtCWCskcTeP/RUU3f32Y6YsulMWbUkp1y
-	 XiwMRPYKevpSg==
-Message-ID: <sashiko-outbox-166129@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/3] tools/testing/cxl: Skip the auto region when no
- volatile window is active
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alison Schofield" <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <08e082b7f77318f295fe700b2ec917e0e0815c08.1791582353.git.alison.schofield@intel.com>
-References: <cover.1791582353.git.alison.schofield@intel.com>
- <08e082b7f77318f295fe700b2ec917e0e0815c08.1791582353.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Oct 2026 22:24:03 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kJ10NX4t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791584863; x=1823120863;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rcGG7u166esJWXiAbfKRGioY5El1UbHQhd1BRqBh7O0=;
+  b=kJ10NX4tIcha3LqeRkYmwcCnUodUQKJUl+1NHZlFeJVYGoBbDxYmnErw
+   6slrk2uzkS9z1Bu0cnug5oiCJFRLMGGecJb0Xlnh4lQbKdus3XwrhyUbw
+   7lksoOgE7ah3wrnPGP3YdbX9eAIRv5IVrVIOgrbrga1dmfwVb+ptPzAOc
+   j8sgm9H+6j2bZUzasUFLTuD/sxMKcoqzrIaRsBNlrRU53Huc6o8xeulrm
+   mG0hllkrvwLKWNN2bXFAPBncWOeklvY5Khysm0hdSzA973T8OtMQBXKZp
+   Gpm2b7l3vHSzAbqMFoN+nlIqSnf2U7wub5hSV+3Alj9/C3odmcesw0szr
+   g==;
+X-CSE-ConnectionGUID: NkMGzIO1RcSujQ3ArAHEkA==
+X-CSE-MsgGUID: 7BX5KWcJRRickaqDlt8mag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="269729"
+X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
+   d="scan'208";a="269729"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:27:42 -0700
+X-CSE-ConnectionGUID: tVywFzr6SRGkKYOoF4Jfwg==
+X-CSE-MsgGUID: 4n11cw9xSVqmeWGO13F1Kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
+   d="scan'208";a="2217631"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.109.123]) ([10.125.109.123])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:27:41 -0700
+Message-ID: <e63056bb-ded8-42d2-9443-77b379496fcf@intel.com>
+Date: Fri, 9 Oct 2026 15:27:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] cxl/region: Factor out cxl_port_peer_distance()
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org
+References: <cover.1791575481.git.alison.schofield@intel.com>
+ <2a4d99ac07511575950f6cd83df39742d1747861.1791575481.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <2a4d99ac07511575950f6cd83df39742d1747861.1791575481.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] cxl_test: mock HMEM and region APIs still hardcode inactive mock=
-_cfmws[0]
---
 
-commit ab47ae118b5deca13e8e911d3065f4b4d5bbbf01
-Author: Alison Schofield <alison.schofield@intel.com>
 
-tools/testing/cxl: Skip the auto region when no volatile window is active
+On 10/9/26 1:24 PM, Alison Schofield wrote:
+> cxl_port_setup_targets() is nearly 200 lines long and open codes each step
+> of adding an endpoint to a port's decoder. One of those steps calculates
+> the distance between region positions that share a downstream port.
+> 
+> Move that calculation to a new helper, cxl_port_peer_distance().
+> 
+> No functional change.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-This commit updates the mock auto region in the CXL testing infrastructure =
-to
-dynamically locate an active volatile window instead of hardcoding CFMWS0.
-It sets up the auto region only when a volatile window is available, avoidi=
-ng
-issues where endpoint decoders are programmed at HPA 0 during XOR interleave
-tests.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index aa140307e0c3c..46a87633e9621 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -423,6 +423,18 @@ struct acpi_cedt_cxims *mock_cxims[1] =3D {
->  	[0] =3D &mock_cedt.cxims0.cxims,
->  };
-> =20
-> +static struct acpi_cedt_cfmws *mock_auto_region_cfmws(void)
+> ---
+>  drivers/cxl/core/region.c | 50 +++++++++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 1a42753fda48..80c40716c368 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1432,6 +1432,33 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
+>  	return 0;
+>  }
+>  
+> +static int cxl_port_peer_distance(struct cxl_port *port, struct cxl_region *cxlr)
 > +{
-> +	for (int i =3D cfmws_start; i <=3D cfmws_end; i++) {
-> +		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
+> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+> +	struct cxl_region_ref *cxl_rr_iter;
+> +	struct cxl_port *iter = port;
+> +	int distance = 1;
 > +
-> +		if (window->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
-> +			return window;
-> +	}
+> +	/*
+> +	 * The "distance" between peer downstream ports represents which
+> +	 * endpoint positions in the region interleave a given port can
+> +	 * host.
+> +	 *
+> +	 * For example, at the root of a hierarchy the distance is
+> +	 * always 1 as every index targets a different host-bridge. At
+> +	 * each subsequent switch level those ports map every Nth region
+> +	 * position where N is the width of the switch == distance.
+> +	 */
+> +	do {
+> +		cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> +		distance *= cxl_rr_iter->nr_targets;
+> +		iter = to_cxl_port(iter->dev.parent);
+> +	} while (!is_cxl_root(iter));
+> +	distance *= cxlrd->cxlsd.cxld.interleave_ways;
 > +
-> +	return NULL;
+> +	return distance;
 > +}
 > +
+>  static int cxl_port_setup_targets(struct cxl_port *port,
+>  				  struct cxl_region *cxlr,
+>  				  struct cxl_endpoint_decoder *cxled)
+> @@ -1445,7 +1472,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_decoder *cxld = cxl_rr->decoder;
+>  	struct cxl_switch_decoder *cxlsd;
+> -	struct cxl_port *iter = port;
+>  
+>  	/*
+>  	 * While root level decoders support x3, x6, x12, switch level
+> @@ -1460,27 +1486,9 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  
+>  	cxlsd = to_cxl_switch_decoder(&cxld->dev);
+>  	if (cxl_rr->nr_targets_set) {
+> -		int i, distance = 1;
+> -		struct cxl_region_ref *cxl_rr_iter;
+> +		int distance = cxl_port_peer_distance(port, cxlr);
+>  
+> -		/*
+> -		 * The "distance" between peer downstream ports represents which
+> -		 * endpoint positions in the region interleave a given port can
+> -		 * host.
+> -		 *
+> -		 * For example, at the root of a hierarchy the distance is
+> -		 * always 1 as every index targets a different host-bridge. At
+> -		 * each subsequent switch level those ports map every Nth region
+> -		 * position where N is the width of the switch == distance.
+> -		 */
+> -		do {
+> -			cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> -			distance *= cxl_rr_iter->nr_targets;
+> -			iter = to_cxl_port(iter->dev.parent);
+> -		} while (!is_cxl_root(iter));
+> -		distance *= cxlrd->cxlsd.cxld.interleave_ways;
+> -
+> -		for (i = 0; i < cxl_rr->nr_targets_set; i++)
+> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+>  			if (ep->dport == cxlsd->target[i]) {
+>  				rc = check_last_peer(cxled, ep, cxl_rr,
+>  						     distance);
 
-[ ... ]
-
-> @@ -1135,9 +1154,9 @@ static bool mock_decoder_handle_saved(struct cxl_de=
-coder *cxld, struct cxl_test_
->  }
-> =20
->  static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
-> -				      struct cxl_port *port)
-> +				      struct cxl_port *port,
-> +				      struct acpi_cedt_cfmws *window)
->  {
-> -	struct acpi_cedt_cfmws *window =3D mock_cfmws[0];
->  	struct cxl_decoder *cxld =3D &cxled->cxld;
-
-[Severity: Medium]
-With this patch introducing `mock_auto_region_cfmws()` and removing the
-hardcoded `mock_cfmws[0]` here, should the mock HMEM and region APIs also be
-updated to use the dynamic window?
-
-Looking at `mock_walk_hmem_resources()`, `mock_region_intersects()`, and
-`mock_region_intersects_soft_reserve()`, they all still unconditionally
-reference `mock_cfmws[0]`:
-
-tools/testing/cxl/test/cxl.c:mock_walk_hmem_resources() {
-	struct acpi_cedt_cfmws *cfmws =3D mock_cfmws[0];
-	struct resource window =3D
-		DEFINE_RES_MEM(cfmws->base_hpa, cfmws->window_size / 2);
-    ...
-}
-
-If `interleave_arithmetic=3D1` (XOR tests) is active, `mock_cfmws[0]` is in=
-active
-and its HPA base is left as 0. Will these functions falsely report soft-res=
-erved
-memory and CXL intersections at HPA 0 instead of the real volatile window?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791582353.gi=
-t.alison.schofield@intel.com?part=3D2
