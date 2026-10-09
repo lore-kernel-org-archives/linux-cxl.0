@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B193390CA9
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 20:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB09E4FDA78
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 20:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791577482; cv=none; b=pj4/mFYHFqp8NwXvPwTnC8qnCVPpnW/SPNZdcobJd2vtauizbi23myrbghVB3Bn2UvGnLohQJ+F4TEpSYcchAVgFm1CE9gzVot6kg3ssabaqSP4o0wWgU5X9mVxTB0Cw0xALwq2INWHw4VzQ6Kkb3NYjs9xRVriTQpbcRW/PcTg=
+	t=1791577484; cv=none; b=SVVFNpoTUlv8x3W4JgQcX1CpT1LOOIRgnqyvk05DXwTKZNqpXV29J6sPgX0UfGLqygtaEgGJ1ghGoYFrLdyGphqBjuzBIWSXdeLFPQlAnvOsu0ExqhcpzCipl6wECg3L2eKFK0j8XisawbSNwYgOAaXGLeBNN+E6Z8oVQZm9oKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791577482; c=relaxed/simple;
-	bh=imCA5znJDL7wo97eufxTGHJJJq4PhIMZIGb06zKT5K0=;
+	s=arc-20240116; t=1791577484; c=relaxed/simple;
+	bh=Jm7m6qXSiRmY2V81JYHH8e2NMrk759eOTQwuzky+D+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aM2Hk0oHTNxGEiJ8HSCwacJ5XZX/XLsNSfYe13EYnyi/b2Fo4sH6GJlwvJdRLNyAoqUAngJtjhb7Bdx8CyGyXR/Ri2a5fPSyBwm51mHQu/ABxf650mHvDyLApLLidRFxKvhZlddZp8s5QWktK2nJmBzy5MORYQd8TNbG/rH1l5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JIj6jxzA; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=n4uvJhy+ygOUyHSQD3o1RgX7KBuOxhXEdcqnGvOCWFVwOkrZPDd6jxC4cS2rlzCTk1SHFgdzDqE7Acveov65KFxZdJF7CFsh39Mngmi7CtmqXkSdLIxhM589pgUPao82fOkoBE325pWXBejmaoC7F01oqmgASwCugMg/VcslKRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NXwLZV3x; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JIj6jxzA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NXwLZV3x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791577482; x=1823113482;
+  t=1791577484; x=1823113484;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=imCA5znJDL7wo97eufxTGHJJJq4PhIMZIGb06zKT5K0=;
-  b=JIj6jxzAuoMf+ue6EutzX9OvjgtFMs4+jFJP7ppEtfWszWGmsZvUcjx/
-   j/lufyXfqQnbib429arJsrB6xW9SqWWJMFDI9kJr1HedHw8cFkxVYLWY4
-   ir31sWtVaeLDdeD36INQSvS5YRrhWzZ/2p3ArNh2CAJs5yGFDhagytCg3
-   L+DR15q1j6FpqaMkduPlpwsYsn3N73yth3gprKa/J5gG6buuinyQOlOOO
-   BYtavotVWs2oZlFhL3WxSYoYd8YHvivkIv2VuOjjjc9hMqw7RYrPFSWjK
-   DnxRe70/Rjg7T8nVVGRj1MyOAjYk4s7pAr1+im04x6m9O/yNu0070z8Ut
-   g==;
-X-CSE-ConnectionGUID: 28Q69n49TyufP7yozVomUQ==
-X-CSE-MsgGUID: Jzlb/tYoSAqQlM9TP8CuYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="376944"
+  bh=Jm7m6qXSiRmY2V81JYHH8e2NMrk759eOTQwuzky+D+E=;
+  b=NXwLZV3xKdKp3OBAUT2N2b7q7l2EfTKwD42n227Kq+cFjcaEfHPowgXR
+   QUdaO2gz08HFwMQL7uL2Q5g+N2mw4XCv4WSeVTKsphhKPKf0Ye4scdW7+
+   XDyjjfmjPE42jn2d98roLlyQ1Yk+/4jtvNc9Yb0EiNbAO67JEQ36r2ybr
+   Y0drOT6vVXsJJBgVSyMQhEu3EslvmtjPngxep9vF5LH1XT82n3CCcwORM
+   MRdf4Lo5lEopEpjJkl0B4mA0dARzagp65BOhxKSLuNHI593gM2zD9Lqdc
+   av2AxB98J9Il3sIFcMnl85vjoZBlqdKgzZ7KS/dNmfRNZKbVEERo/MOfg
+   Q==;
+X-CSE-ConnectionGUID: d/ZBGQ83SYmLq07BC6GZrw==
+X-CSE-MsgGUID: l7NoL1GtTjOdCrS3kJIqhA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="376958"
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="376944"
+   d="scan'208";a="376958"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 13:24:39 -0700
-X-CSE-ConnectionGUID: yavzPyb4Spa+Q1pIBLAV7g==
-X-CSE-MsgGUID: hgVZuWEUQWWTnyhweaIylA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 13:24:41 -0700
+X-CSE-ConnectionGUID: epjQEA5mRU25IKRkiUmbmQ==
+X-CSE-MsgGUID: NqqNubwMTzyRvOGpRJecRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="743016"
+   d="scan'208";a="743023"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 13:24:38 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 13:24:40 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,11 +53,10 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>,
 	Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH 1/7] cxl: Add interleave encoding validity helpers
-Date: Fri,  9 Oct 2026 13:24:01 -0700
-Message-ID: <3c95aa7ab34dfa267ec5e37f28f890d1b2604713.1791575481.git.alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH 3/7] cxl/region: Factor out cxl_port_peer_distance()
+Date: Fri,  9 Oct 2026 13:24:03 -0700
+Message-ID: <2a4d99ac07511575950f6cd83df39742d1747861.1791575481.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1791575481.git.alison.schofield@intel.com>
 References: <cover.1791575481.git.alison.schofield@intel.com>
@@ -69,178 +68,96 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some callers of ways_to_eiw(), granularity_to_eig(), and
-eig_to_granularity() only need to determine whether an input is valid,
-but must provide storage for a converted value that is then discarded.
-This obscures the purpose of the call and requires unnecessary temporary
-variables.
+cxl_port_setup_targets() is nearly 200 lines long and open codes each step
+of adding an endpoint to a port's decoder. One of those steps calculates
+the distance between region positions that share a downstream port.
 
-Define and use new helpers that provide a validation-only interface for
-those callers.
-
-cxl_port_setup_targets() also encodes and then decodes its calculated
-granularity solely to validate it. Calculate the granularity directly
-and validate it instead, making the calculation explicit and removing
-the encode/decode round trip.
+Move that calculation to a new helper, cxl_port_peer_distance().
 
 No functional change.
 
-Suggested-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Assisted-by: LLM
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/region.c | 49 +++++++++++++--------------------------
- drivers/cxl/cxl.h         | 21 +++++++++++++++++
- 2 files changed, 37 insertions(+), 33 deletions(-)
+ drivers/cxl/core/region.c | 50 +++++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a048bd5c06cb..bc087ca63946 100644
+index 1a42753fda48..80c40716c368 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -493,11 +493,9 @@ static int set_interleave_ways(struct cxl_region *cxlr, int val)
- 	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region_params *p = &cxlr->params;
- 	int save, rc;
--	u8 iw;
- 
--	rc = ways_to_eiw(val, &iw);
--	if (rc)
--		return rc;
-+	if (!ways_valid(val))
-+		return -EINVAL;
- 
- 	/*
- 	 * Even for x3, x6, and x12 interleaves the region interleave must be a
-@@ -566,12 +564,9 @@ static int set_interleave_granularity(struct cxl_region *cxlr, int val)
- 	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region_params *p = &cxlr->params;
--	int rc;
--	u16 ig;
- 
--	rc = granularity_to_eig(val, &ig);
--	if (rc)
--		return rc;
-+	if (!granularity_valid(val))
-+		return -EINVAL;
- 
- 	/*
- 	 * When the host-bridge is interleaved, disallow region granularity !=
-@@ -1451,8 +1446,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	struct cxl_decoder *cxld = cxl_rr->decoder;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *iter = port;
--	u16 eig, peig;
--	u8 eiw, peiw;
- 
- 	/*
- 	 * While root level decoders support x3, x6, x12, switch level
-@@ -1524,48 +1517,38 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		parent_iw = parent_cxld->interleave_ways;
- 	}
- 
--	rc = granularity_to_eig(parent_ig, &peig);
--	if (rc) {
-+	if (!granularity_valid(parent_ig)) {
- 		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
- 			dev_name(parent_port->uport_dev),
- 			dev_name(&parent_port->dev), parent_ig);
--		return rc;
-+		return -EINVAL;
- 	}
- 
--	rc = ways_to_eiw(parent_iw, &peiw);
--	if (rc) {
-+	if (!ways_valid(parent_iw)) {
- 		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
- 			dev_name(parent_port->uport_dev),
- 			dev_name(&parent_port->dev), parent_iw);
--		return rc;
-+		return -EINVAL;
- 	}
- 
- 	iw = cxl_rr->nr_targets;
--	rc = ways_to_eiw(iw, &eiw);
--	if (rc) {
-+	if (!ways_valid(iw)) {
- 		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
- 			dev_name(port->uport_dev), dev_name(&port->dev), iw);
--		return rc;
-+		return -EINVAL;
- 	}
- 
- 	/*
- 	 * Interleave granularity is a multiple of @parent_port granularity.
- 	 * Multiplier is the parent port interleave ways.
- 	 */
--	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
--	if (rc) {
-+	ig = parent_ig * parent_iw;
-+
-+	if (!granularity_valid(ig)) {
- 		dev_dbg(&cxlr->dev,
- 			"%s: invalid granularity calculation (%d * %d)\n",
- 			dev_name(&parent_port->dev), parent_ig, parent_iw);
--		return rc;
--	}
--
--	rc = eig_to_granularity(eig, &ig);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			256 << eig);
--		return rc;
-+		return -EINVAL;
- 	}
- 
- 	if (iw > 8 || iw > cxlsd->nr_targets) {
-@@ -3131,13 +3114,13 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
-  */
- int cxl_validate_translation_params(u8 eiw, u16 eig, int pos)
- {
--	int ways, gran;
-+	int ways;
- 
- 	if (eiw_to_ways(eiw, &ways)) {
- 		pr_debug("%s: invalid eiw=%u\n", __func__, eiw);
- 		return -EINVAL;
- 	}
--	if (eig_to_granularity(eig, &gran)) {
-+	if (!eig_valid(eig)) {
- 		pr_debug("%s: invalid eig=%u\n", __func__, eig);
- 		return -EINVAL;
- 	}
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f03ee0addc45..4c9173e07f1f 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -146,6 +146,27 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+@@ -1432,6 +1432,33 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
  	return 0;
  }
  
-+static inline bool eig_valid(u16 eig)
++static int cxl_port_peer_distance(struct cxl_port *port, struct cxl_region *cxlr)
 +{
-+	int granularity;
++	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
++	struct cxl_region_ref *cxl_rr_iter;
++	struct cxl_port *iter = port;
++	int distance = 1;
 +
-+	return eig_to_granularity(eig, &granularity) == 0;
++	/*
++	 * The "distance" between peer downstream ports represents which
++	 * endpoint positions in the region interleave a given port can
++	 * host.
++	 *
++	 * For example, at the root of a hierarchy the distance is
++	 * always 1 as every index targets a different host-bridge. At
++	 * each subsequent switch level those ports map every Nth region
++	 * position where N is the width of the switch == distance.
++	 */
++	do {
++		cxl_rr_iter = cxl_rr_load(iter, cxlr);
++		distance *= cxl_rr_iter->nr_targets;
++		iter = to_cxl_port(iter->dev.parent);
++	} while (!is_cxl_root(iter));
++	distance *= cxlrd->cxlsd.cxld.interleave_ways;
++
++	return distance;
 +}
 +
-+static inline bool granularity_valid(int granularity)
-+{
-+	u16 eig;
-+
-+	return granularity_to_eig(granularity, &eig) == 0;
-+}
-+
-+static inline bool ways_valid(unsigned int ways)
-+{
-+	u8 eiw;
-+
-+	return ways_to_eiw(ways, &eiw) == 0;
-+}
-+
- /* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
- #define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
- #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+ static int cxl_port_setup_targets(struct cxl_port *port,
+ 				  struct cxl_region *cxlr,
+ 				  struct cxl_endpoint_decoder *cxled)
+@@ -1445,7 +1472,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_decoder *cxld = cxl_rr->decoder;
+ 	struct cxl_switch_decoder *cxlsd;
+-	struct cxl_port *iter = port;
+ 
+ 	/*
+ 	 * While root level decoders support x3, x6, x12, switch level
+@@ -1460,27 +1486,9 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 
+ 	cxlsd = to_cxl_switch_decoder(&cxld->dev);
+ 	if (cxl_rr->nr_targets_set) {
+-		int i, distance = 1;
+-		struct cxl_region_ref *cxl_rr_iter;
++		int distance = cxl_port_peer_distance(port, cxlr);
+ 
+-		/*
+-		 * The "distance" between peer downstream ports represents which
+-		 * endpoint positions in the region interleave a given port can
+-		 * host.
+-		 *
+-		 * For example, at the root of a hierarchy the distance is
+-		 * always 1 as every index targets a different host-bridge. At
+-		 * each subsequent switch level those ports map every Nth region
+-		 * position where N is the width of the switch == distance.
+-		 */
+-		do {
+-			cxl_rr_iter = cxl_rr_load(iter, cxlr);
+-			distance *= cxl_rr_iter->nr_targets;
+-			iter = to_cxl_port(iter->dev.parent);
+-		} while (!is_cxl_root(iter));
+-		distance *= cxlrd->cxlsd.cxld.interleave_ways;
+-
+-		for (i = 0; i < cxl_rr->nr_targets_set; i++)
++		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+ 			if (ep->dport == cxlsd->target[i]) {
+ 				rc = check_last_peer(cxled, ep, cxl_rr,
+ 						     distance);
 -- 
 2.37.3
 
