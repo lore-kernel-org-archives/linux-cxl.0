@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A08925785D;
-	Fri,  9 Oct 2026 17:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA763033E1
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791566165; cv=none; b=Boa2RGQZ5ECzzjxagbeT4JuarvwJKOf1Wl8esH6Ck2oCploqRm6jF15NaE8r336EvClCewYAmi889etrqmZ9G11edNqe4110p6t9s+ge32nJ5pzfp8ph2rl3gU64y7CIVfGtTBi7PHFd8BQHj3JHFU5OEUKwycTRDd3BE+t25nM=
+	t=1791566852; cv=none; b=uMpJ5Yg5A9YIevhMQhfpCSZAu2x5vdsdlMDu1fOhRfdjMH+q+E48KE4NxkmxRqTFkXbaQrGKw59/oAPeMRJjTstqKf0cehG+2IblyM3f7kOOMpLD0NoHw2s5hJsKAPoiUWTdPNv8zE9kvkwW/768Yha8iZ8EPytQE12y1DyxAdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791566165; c=relaxed/simple;
-	bh=UGLjJOR25af7v3izatmL0Eubuh6NBItPWREXP0u9O3w=;
+	s=arc-20240116; t=1791566852; c=relaxed/simple;
+	bh=S0ePV8DesRV2qDCXVsOFPcxSODqUZYZKEZbb3jFK62o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WnSULtN2zaQ2PRJ6T35iKF7zGNTmFIjPpzrfn8Hpqp5kze752hII/OEtaZSS8yM2IULBU8BjMdB9x075RPaF7NdD+hEN6YopuvQ31/wcfYY6JmZnrc3Ay/ZY6pOpnh/RyfUemCUFq2eWhNa9tXa1Sh/fTd2OdLPtf5K3VeHzqLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lOqbHfIy; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:Content-Type; b=k7ujoeyoCWG5CN8uuhEnZVABs07y6zGZOpiJaolWmNqhDA2uSPiQpMXpXvwaZyc1OHftp5UbrIq7XIWxin8tYQlQ28Gy2GXExImKhA0SZks5qlGF/HZvdCNb/Au5N8FQSuYguI2njyHfWLkTm1NIC2FAleHKQ3aAQGoxIO2+Yl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edXqelzI; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lOqbHfIy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edXqelzI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791566164; x=1823102164;
+  t=1791566851; x=1823102851;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=UGLjJOR25af7v3izatmL0Eubuh6NBItPWREXP0u9O3w=;
-  b=lOqbHfIyxuHTGjT1qMvf9Box6Ya81+M354Kwtza90+LrPHjIQrvaMmdl
-   Zx6t38N3x8r52N1TBQgCBycH/HbslpXIK4EqUXqstp2DkTMAr6IigOJY/
-   g3bE6JJFlpuD5zliEqy/vLzZN4gZksa2FVlzAuoAFv/MYjAIihuSimPPD
-   /ln2x6PKNk8GJikY+1tzvzcAjrqkQiY4Mebb/LBp5xKjim9IbDu9YTefn
-   ky179GN1dFBi0VUmI6C9RzcCO5Wx3vN/e9Vk6TSf/Ts+3BNdKVXX2ZEnS
-   Sy0poHo+wfg1fSvo264+eNtWoZ6ovUSAWrHqSE7RWGVWlYwVbQI1IvXMc
-   Q==;
-X-CSE-ConnectionGUID: DVCDkvmSRumrR5wYNPFfKA==
-X-CSE-MsgGUID: ZAHhWyaoRguos+QfezSGqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="256373"
+  bh=S0ePV8DesRV2qDCXVsOFPcxSODqUZYZKEZbb3jFK62o=;
+  b=edXqelzI2jrntYEe/l0oUjjGcuioklTrXYqzMPsRn5unlbVtdPyG9ABd
+   d1IQBBM2w379QkYr/y9G+WbnqstKvWuokSJxors88oRqMQngsYibtxD3+
+   uQjtvXrV8UIw1P6s5MfkZ3uD+1olaiBv9CXxavHvgfJosdHwS0dREfMiw
+   ZnWECKoL7CXThorbb50Qol415LmlksS/I6GBO6imh0Lx5YOcEwlhiB2gw
+   Tvv8OQ9rDXKxtelbX7cj+B3xD2/xYl9SAenxZ0sfaY3kbrp42GBhyY2Vo
+   pq+YCAl51gBgZIHtlUBfVYuGfGjqCbl8pq+ifdZZaQGACLHkw3weSWTHW
+   A==;
+X-CSE-ConnectionGUID: nXUsRX2wR/6ZJQnT26PKaQ==
+X-CSE-MsgGUID: a4s+mS2zRHunxBSvAYOWjw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="253392"
 X-IronPort-AV: E=Sophos;i="6.27,148,1787036400"; 
-   d="scan'208";a="256373"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 10:16:02 -0700
-X-CSE-ConnectionGUID: rFjaDgx/SyWGXwz5mowsSw==
-X-CSE-MsgGUID: J4ndXQm5QqS0vo9UmxdGBw==
+   d="scan'208";a="253392"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 10:27:30 -0700
+X-CSE-ConnectionGUID: aJ4u3I07Tw2iTSB4p6Vrrw==
+X-CSE-MsgGUID: 5wHs8oqaS9uEmbHm1Dcf5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,148,1787036400"; 
-   d="scan'208";a="711441"
+   d="scan'208";a="326800"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.99]) ([10.125.109.99])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 10:16:00 -0700
-Message-ID: <cb76e150-df33-46f9-b69b-bc5513a269bc@intel.com>
-Date: Fri, 9 Oct 2026 10:15:58 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 10:27:29 -0700
+Message-ID: <efcaa39b-2cda-460a-926d-bfe2c2543778@intel.com>
+Date: Fri, 9 Oct 2026 10:27:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,57 +52,56 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] cxl: Fix link latency calculations and QTG latency
- units
-To: Koichiro Den <den@valinux.co.jp>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
+Subject: Re: [PATCH v2 3/3] cxl/pci: Update only the Port GPF timeout fields
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, Terry Bowman <terry.bowman@amd.com>,
- Alejandro Lucero <alucerop@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20261009045452.1107921-1-den@valinux.co.jp>
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20261008034619.28059-1-kanie@linux.alibaba.com>
+ <20261008034619.28059-4-kanie@linux.alibaba.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20261009045452.1107921-1-den@valinux.co.jp>
+In-Reply-To: <20261008034619.28059-4-kanie@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/8/26 9:54 PM, Koichiro Den wrote:
-> Hi,
+On 10/7/26 8:46 PM, Guixin Liu wrote:
+> update_gpf_port_dvsec() rebuilds the phase control register from just
+> the timeout base and scale, so the rest of the register is cleared by
+> the write. The other bits are reserved today and nothing is lost, but
+> the full-register rewrite would clobber any field the spec defines
+> there later.
 > 
-> This small series intends to correct the FlitLatency portion of the link
-> latency calculation, as per Intel CXL Type 3 Memory Device Software
-> Guide 1.1, and restore picosecond latency units for the QTG _DSM input.
+> Read-modify-write the register and change only the two timeout
+> fields.
 > 
-> The first two issues were found while debugging a QEMU guest. The third
-> issue was spotted while looking through the code that uses the coord
-> values. I haven't tested it on real hardware.
-> 
-> Best regards,
-> Koichiro Den
-> 
-> 
-> Koichiro Den (3):
->   cxl/port: Convert PCIe link latency to nanoseconds
->   cxl: Account for link width in latency calculation
->   cxl/acpi: Convert QTG _DSM latencies to picoseconds
-> 
->  drivers/cxl/acpi.c      | 10 ++++++++--
->  drivers/cxl/core/pci.c  | 22 ++++++++--------------
->  drivers/cxl/core/port.c |  3 +++
->  drivers/pci/pci.c       | 23 ++++++++++++++++++-----
->  include/linux/pci.h     |  2 +-
->  5 files changed, 38 insertions(+), 22 deletions(-)
-> 
-> 
-> base-commit: 71392a644e88c6bb921cdf12cb2b00adec070fe4
+> Fixes: a52b6a2c1c99 ("cxl/pci: Support Global Persistent Flush (GPF)")
+> Assisted-by: LLM
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 
-Thanks for the fix!
-For the series:
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/cxl/core/pci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 1f470ab0df3b..edf0b47f39db 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -846,8 +846,8 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+>  	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+>  		return 0;
+>  
+> -	ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
+> -	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+> +	FIELD_MODIFY(base, &ctrl, GPF_TIMEOUT_BASE_MAX);
+> +	FIELD_MODIFY(scale, &ctrl, GPF_TIMEOUT_SCALE_MAX);
+>  
+>  	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
+>  	if (rc) {
 
