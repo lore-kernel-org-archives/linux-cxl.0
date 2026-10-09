@@ -1,197 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D9E3D25CC
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1AE3D25CC
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Oct 2026 22:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791583941; cv=none; b=J8uAaMEj5BZACLst20RL2XCMQlxO3e5STVFZvrVUAesrzd8dNT3N1s7nVAeBra3nxgCdisPfLuKxkXL82isNTMn7QPu+G+g/BZ7tJRc4nqosRvktg31S3qo5iMCH1lMm1o/VGKoGpLsvnDdaIimCu1hbVvGoOd9Irwo3GqD7pOE=
+	t=1791584065; cv=none; b=PxjUUiPKD9bljnmMeI1NyTyGWMfVFpIfa2UC3en3byOS8r/NY0hWZA2iFzGOlZDHsLGzWWXrXgPG3lQlXXAiKvXvGf0h8Bzv7Bz4+kCvxhSqsLS3bd2doLDBIGjasbsJlkh31qdw427A0Qfkdp/mHlhNHSzuJHq5X/evRfL+pyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791583941; c=relaxed/simple;
-	bh=Mg0Hgg3a3ekPOmmfNTFi+s9JFn9Us8FC2wDUUxwpVo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iClbtWmSgNfL3kl3SaKyVxGtipOWua2FCcBgfZHZBpgNC5Llw56/52W8MUHfLTZJ/i/aJIxafTJDZochVVEWz8ABn5O0RcFrhJsRT9MEG8lZ7I9twpV25GwXWbZHF9GSNTpfMd0Bu2DlXSdCiX5UMayOhzerC1aA6pOoN4dd410=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=fail smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P7eWqUCD; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1791584065; c=relaxed/simple;
+	bh=tIq2fO7uRYeEUS7Tv/JgJaH9z/sydq9QSgQ77tlIlrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OywsxnptuDdCLM2gLp6lbZM1x4vtIP6fK104d9PNUCjgLz+XYLZFrYylSe8/eJbf/NT0xvZsFME852epiYr4SS68XPvWF8tX36LkZYBug9guCd7QmnbPBJkV4fj1kTttq0mma2Zh0Q82p7NFkRYIqFFvSjlPDhBtEpg1XSd8kpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijcT/qe9; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P7eWqUCD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijcT/qe9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791583936; x=1823119936;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Mg0Hgg3a3ekPOmmfNTFi+s9JFn9Us8FC2wDUUxwpVo8=;
-  b=P7eWqUCDCa4IP+J2zkjNDQf+hgcrHZ+KoRKEZpl+FplgaPo3hdwuYi2h
-   WzAQsWxBf1VW9kGJrVC2u5nGxwL+c+HaTWm//BSAnfS3TcifRhXplsj/H
-   gojDEEynLmoXNU2Z9gD2sx0iTeWU095+338/Un4DHDECtzD22jXZ2eyH6
-   K9q8c5oxy0bNS9OpevaS2SRrC5BDyuxzFcyDGmQDccLbLjuzGMTIIcbDL
-   XQuWusEcl61VJeZUBuxZnZ4eNR/tRzyfa8BSciIa9pkrfZMdA8yG0eDJa
-   svwSc+3MW2ous6H/YwJzWtJRKwlrHSbPK41XcJszFkd5Zpn5JAmgBqV22
+  t=1791584064; x=1823120064;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tIq2fO7uRYeEUS7Tv/JgJaH9z/sydq9QSgQ77tlIlrQ=;
+  b=ijcT/qe97GMh8hJhSxMfXHSGsQre8A885koUfM5nFE/LfosfziRr8APd
+   En6rSqZ+2UtI02C7/XeRrJggdsy26hlo/zuGw1PXC11PpuYGSpeD0pRMV
+   xo8FfWgN7NlXn/64c5wjrjzMMsFu3RnhV7GswCS3OIknj0uLYuTDtRxAI
+   Qb6XdrAJp6pBtowW2llKZzSjtBUIjhsxh+S0GSWQ0mgQWhmZNyDs4aFNp
+   BXjf3DVMi+pdTM3nTn/RrlFcHpEz0SK4lhrn7MGjtvs8Qa4k7E8y0tz84
+   UBoKcbdt9Nw2MRegW4a8hH2Tzt+tIdn4BgODoP5zR/HIRJm1Mvgmi4XQ4
    A==;
-X-CSE-ConnectionGUID: fLh+SpcBRRODta20IIxwHA==
-X-CSE-MsgGUID: 0LWP8r6zQ5igLXQDtrwJyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="294833"
+X-CSE-ConnectionGUID: TiNEVtjMTu2dB0T0xDZIVw==
+X-CSE-MsgGUID: fiin6SBDSAiOzgynJcQWJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="288700"
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="294833"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:33 -0700
-X-CSE-ConnectionGUID: 9yBO7LWTRWyxoPxeHNnA5Q==
-X-CSE-MsgGUID: AQisahguT2agArfh8dMKgw==
+   d="scan'208";a="288700"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:14:23 -0700
+X-CSE-ConnectionGUID: cQ2jkzqfTaWZjOIhLaA/1w==
+X-CSE-MsgGUID: r4iLEm9yTbeOTX7fi4oOJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="505710"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:11:33 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 2/3] tools/testing/cxl: Skip the auto region when no volatile window is active
-Date: Fri,  9 Oct 2026 15:11:22 -0700
-Message-ID: <08e082b7f77318f295fe700b2ec917e0e0815c08.1791582353.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1791582353.git.alison.schofield@intel.com>
-References: <cover.1791582353.git.alison.schofield@intel.com>
+   d="scan'208";a="399908"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.109.123]) ([10.125.109.123])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 15:14:23 -0700
+Message-ID: <42474778-af6f-4261-805d-a7dffe365e52@intel.com>
+Date: Fri, 9 Oct 2026 15:14:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] cxl: Add interleave encoding validity helpers
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+References: <cover.1791575481.git.alison.schofield@intel.com>
+ <3c95aa7ab34dfa267ec5e37f28f890d1b2604713.1791575481.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <3c95aa7ab34dfa267ec5e37f28f890d1b2604713.1791575481.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The mock auto region always uses CFMWS0. With XOR interleave arithmetic
-that window is inactive, so its HPA base is never assigned and the
-endpoint decoders are programmed at HPA 0.
 
-No root decoder matches that range, leaving DPA allocated to endpoint
-decoders that are not part of a region.
 
-Set up the auto region only when a volatile window is active.
+On 10/9/26 1:24 PM, Alison Schofield wrote:
+> Some callers of ways_to_eiw(), granularity_to_eig(), and
+> eig_to_granularity() only need to determine whether an input is valid,
+> but must provide storage for a converted value that is then discarded.
+> This obscures the purpose of the call and requires unnecessary temporary
+> variables.
+> 
+> Define and use new helpers that provide a validation-only interface for
+> those callers.
+> 
+> cxl_port_setup_targets() also encodes and then decodes its calculated
+> granularity solely to validate it. Calculate the granularity directly
+> and validate it instead, making the calculation explicit and removing
+> the encode/decode round trip.
+> 
+> No functional change.
+> 
+> Suggested-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Assisted-by: LLM
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
-Changes in v2:
-- Avoid duplicate look up of auto region window (RichardC)
----
- tools/testing/cxl/test/cxl.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index aa140307e0c3..46a87633e962 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -423,6 +423,18 @@ struct acpi_cedt_cxims *mock_cxims[1] = {
- 	[0] = &mock_cedt.cxims0.cxims,
- };
- 
-+static struct acpi_cedt_cfmws *mock_auto_region_cfmws(void)
-+{
-+	for (int i = cfmws_start; i <= cfmws_end; i++) {
-+		struct acpi_cedt_cfmws *window = mock_cfmws[i];
-+
-+		if (window->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
-+			return window;
-+	}
-+
-+	return NULL;
-+}
-+
- struct cxl_mock_res {
- 	struct list_head list;
- 	struct range range;
-@@ -1091,7 +1103,8 @@ enum cxld_init_type {
- static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 						 struct platform_device *pdev,
- 						 bool hb0,
--						 struct cxl_test_decoder **td)
-+						 struct cxl_test_decoder **td,
-+						 struct acpi_cedt_cfmws **window)
- {
- 	struct cxl_test_decoder *found_td = cxld_registry_find(cxld);
- 
-@@ -1101,6 +1114,7 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	}
- 
- 	*td = NULL;
-+	*window = NULL;
- 
- 	/*
- 	 * The first decoder on the first 2 devices on the first switch
-@@ -1114,6 +1128,11 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	    pdev->id > 4 || cxld->id > 0)
- 		return MOCK_DECODER_INIT_DEFAULT;
- 
-+	/* XOR windows are all pmem, no window to host the RAM region */
-+	*window = mock_auto_region_cfmws();
-+	if (!*window)
-+		return MOCK_DECODER_INIT_DEFAULT;
-+
- 	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
- 			    MOCK_DECODER_INIT_TYPE3_AUTO;
- }
-@@ -1135,9 +1154,9 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
- }
- 
- static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
--				      struct cxl_port *port)
-+				      struct cxl_port *port,
-+				      struct acpi_cedt_cfmws *window)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
-@@ -1209,9 +1228,9 @@ static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
- static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
- 				      struct cxl_port *port,
- 				      struct platform_device *pdev,
--				      bool hb0)
-+				      bool hb0,
-+				      struct acpi_cedt_cfmws *window)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
-@@ -1326,6 +1345,7 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- {
- 	struct cxl_endpoint_decoder *cxled = NULL;
- 	struct platform_device *pdev = NULL;
-+	struct acpi_cedt_cfmws *window;
- 	struct cxl_test_decoder *td;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_port *port;
-@@ -1354,7 +1374,7 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		port = to_cxl_port(cxld->dev.parent);
- 	}
- 
--	switch (get_decoder_init_type(cxld, pdev, hb0, &td)) {
-+	switch (get_decoder_init_type(cxld, pdev, hb0, &td, &window)) {
- 	case MOCK_DECODER_INIT_SAVED:
- 		if (WARN_ON(!td))
- 			return false;
-@@ -1367,10 +1387,10 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		default_mock_decoder(cxld);
- 		return false;
- 	case MOCK_DECODER_INIT_TYPE3_AUTO:
--		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0);
-+		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0, window);
- 		return false;
- 	case MOCK_DECODER_INIT_TYPE2_AUTO:
--		mock_init_hdm_type2_cxled(cxled, port);
-+		mock_init_hdm_type2_cxled(cxled, port, window);
- 		return false;
- 	default:
- 		return false;
--- 
-2.37.3
+> ---
+>  drivers/cxl/core/region.c | 49 +++++++++++++--------------------------
+>  drivers/cxl/cxl.h         | 21 +++++++++++++++++
+>  2 files changed, 37 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a048bd5c06cb..bc087ca63946 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -493,11 +493,9 @@ static int set_interleave_ways(struct cxl_region *cxlr, int val)
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	int save, rc;
+> -	u8 iw;
+>  
+> -	rc = ways_to_eiw(val, &iw);
+> -	if (rc)
+> -		return rc;
+> +	if (!ways_valid(val))
+> +		return -EINVAL;
+>  
+>  	/*
+>  	 * Even for x3, x6, and x12 interleaves the region interleave must be a
+> @@ -566,12 +564,9 @@ static int set_interleave_granularity(struct cxl_region *cxlr, int val)
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region_params *p = &cxlr->params;
+> -	int rc;
+> -	u16 ig;
+>  
+> -	rc = granularity_to_eig(val, &ig);
+> -	if (rc)
+> -		return rc;
+> +	if (!granularity_valid(val))
+> +		return -EINVAL;
+>  
+>  	/*
+>  	 * When the host-bridge is interleaved, disallow region granularity !=
+> @@ -1451,8 +1446,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  	struct cxl_decoder *cxld = cxl_rr->decoder;
+>  	struct cxl_switch_decoder *cxlsd;
+>  	struct cxl_port *iter = port;
+> -	u16 eig, peig;
+> -	u8 eiw, peiw;
+>  
+>  	/*
+>  	 * While root level decoders support x3, x6, x12, switch level
+> @@ -1524,48 +1517,38 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  		parent_iw = parent_cxld->interleave_ways;
+>  	}
+>  
+> -	rc = granularity_to_eig(parent_ig, &peig);
+> -	if (rc) {
+> +	if (!granularity_valid(parent_ig)) {
+>  		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
+>  			dev_name(parent_port->uport_dev),
+>  			dev_name(&parent_port->dev), parent_ig);
+> -		return rc;
+> +		return -EINVAL;
+>  	}
+>  
+> -	rc = ways_to_eiw(parent_iw, &peiw);
+> -	if (rc) {
+> +	if (!ways_valid(parent_iw)) {
+>  		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
+>  			dev_name(parent_port->uport_dev),
+>  			dev_name(&parent_port->dev), parent_iw);
+> -		return rc;
+> +		return -EINVAL;
+>  	}
+>  
+>  	iw = cxl_rr->nr_targets;
+> -	rc = ways_to_eiw(iw, &eiw);
+> -	if (rc) {
+> +	if (!ways_valid(iw)) {
+>  		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
+>  			dev_name(port->uport_dev), dev_name(&port->dev), iw);
+> -		return rc;
+> +		return -EINVAL;
+>  	}
+>  
+>  	/*
+>  	 * Interleave granularity is a multiple of @parent_port granularity.
+>  	 * Multiplier is the parent port interleave ways.
+>  	 */
+> -	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
+> -	if (rc) {
+> +	ig = parent_ig * parent_iw;
+> +
+> +	if (!granularity_valid(ig)) {
+>  		dev_dbg(&cxlr->dev,
+>  			"%s: invalid granularity calculation (%d * %d)\n",
+>  			dev_name(&parent_port->dev), parent_ig, parent_iw);
+> -		return rc;
+> -	}
+> -
+> -	rc = eig_to_granularity(eig, &ig);
+> -	if (rc) {
+> -		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
+> -			dev_name(port->uport_dev), dev_name(&port->dev),
+> -			256 << eig);
+> -		return rc;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (iw > 8 || iw > cxlsd->nr_targets) {
+> @@ -3131,13 +3114,13 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
+>   */
+>  int cxl_validate_translation_params(u8 eiw, u16 eig, int pos)
+>  {
+> -	int ways, gran;
+> +	int ways;
+>  
+>  	if (eiw_to_ways(eiw, &ways)) {
+>  		pr_debug("%s: invalid eiw=%u\n", __func__, eiw);
+>  		return -EINVAL;
+>  	}
+> -	if (eig_to_granularity(eig, &gran)) {
+> +	if (!eig_valid(eig)) {
+>  		pr_debug("%s: invalid eig=%u\n", __func__, eig);
+>  		return -EINVAL;
+>  	}
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index f03ee0addc45..4c9173e07f1f 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -146,6 +146,27 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  	return 0;
+>  }
+>  
+> +static inline bool eig_valid(u16 eig)
+> +{
+> +	int granularity;
+> +
+> +	return eig_to_granularity(eig, &granularity) == 0;
+> +}
+> +
+> +static inline bool granularity_valid(int granularity)
+> +{
+> +	u16 eig;
+> +
+> +	return granularity_to_eig(granularity, &eig) == 0;
+> +}
+> +
+> +static inline bool ways_valid(unsigned int ways)
+> +{
+> +	u8 eiw;
+> +
+> +	return ways_to_eiw(ways, &eiw) == 0;
+> +}
+> +
+>  /* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
+>  #define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
+>  #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
 
