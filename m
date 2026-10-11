@@ -1,118 +1,91 @@
-Received: from mail-dy2-f6.google.com (mail-dy2-f6.google.com [74.125.229.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E3144A708
-	for <linux-cxl@vger.kernel.org>; Sun, 11 Oct 2026 13:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D65C2D47F1
+	for <linux-cxl@vger.kernel.org>; Sun, 11 Oct 2026 22:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791724825; cv=none; b=ew1QEXMDrkVRgzqI55P6N89UkGr5zHIxSTFaTAFqdNz7yrT56/bQlGAnvMOzvto+zeGtq+UEslSPp5b3Ue7JbRgicx7e640O6Q0yg7ecR8cBO73r2U0WpvG9kwaw6j3HCEdS7Fv9XE41bnRw4+Eyj2PmI5Pql8FmjzfuVotsv9M=
+	t=1791757990; cv=none; b=Qdy01qqsVCPX7WKyiHxpT2KvkZthzzs1nEySfTCXqOqxd9JQijJBhRcKWFrrPo3ZrdeY4cyQ/HkjO4YX/Of20Ll/eGkxQjbhEwONi2n5cUSYtjV3qK1ql15hCqaKbTOWM4FfQ0a0YVf/WXuZ6Trfxif3svhIGP/eWpUBhZwM3CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791724825; c=relaxed/simple;
-	bh=uXYPY6h1yD2YP8cgMDGftsU7ylCzXryuv3bVUW6VD3E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mZ1w/CLjMovVNv0HOFh8trr7GFiUDvs9kHDe5UoGmO0ktG89Z0pEeCJvVjXJlrzlM08Ji3qqt1CdMACsySXT9mXEF9B19Zf7rakyw0vZ+NI1bBKtxYt5vUTlCa1X9h20mQy17z9+NRH9RGjd8kezhIxsnieXfgMw676c2EmrZVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TfcuReCm; arc=none smtp.client-ip=74.125.229.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfcuReCm"
-Received: by mail-dy2-f6.google.com with SMTP id 5a478bee46e88-3599f43e0aeso225958eec.0
-        for <linux-cxl@vger.kernel.org>; Sun, 11 Oct 2026 06:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791724823; x=1792329623; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=RC5wNxG5OvZ7QX4c7CG14p2PybaZXqw3gD9axjHB3VU=;
-        b=TfcuReCmX56ub8M8kJYfuGYnjrNQckolaFjlkti41HYMWrpfm2isNlRR3WOtR2Fslz
-         qKyAVNll1KDkriVLAqh2aTC4qK+Zo87xZJU1GrIhWqtqf6FBwdF+j5P0tgwJAln1mX81
-         OfukIhp6lkPwzD6f6Nl/Omnit+BwxXiC5KKnM0jztkagS63kT1vnb+ABoJJwkQINHhtW
-         iuKZBBPCdVoaOmw534VGPfFi3UBW2H6xjbielNfESIuc8gIazXFLXnD6WaTyTExpeklh
-         M9XOJGnzSFxffNURDE6+EQ0qzSifPeztQg5sg45es6ExaKszO/8Q0ialzC2UOXNynldM
-         +GJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791724823; x=1792329623;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=RC5wNxG5OvZ7QX4c7CG14p2PybaZXqw3gD9axjHB3VU=;
-        b=q7sW8Whb2jB1/eqglUCsjo3IfU2GXVlIH17FNb7cafG1kRqfBhoO5H8DOLmogtIOjs
-         Llr7Pjq7UsnmsQQ8tIhOV8XhoYn+9HBv+WFlo5xZCHsGPRAio8qYZXqjHrykVcr1QLeY
-         ss9oceM6aMTIFqqbIx5MZaOrHHoiUHUyog+uQBGhwOhKjzykO3axjbq4f3zj1UZy35cv
-         SElbs0kMOGzdQWcExRGaJa4teC4z6naaZZEqC22mEGOSkdwdw63vx0w0WGOVAbI2r4XY
-         E5nJBMoQVj73ePJVvoznEZmcCzrX+n3k68kqdbEDHQ56aal47oDhF/EmbrbhkNo6O+WV
-         0jng==
-X-Forwarded-Encrypted: i=1; AKwUvByXP5fEAIDwVxiM8XscV7Je+MJ2q24/5FEq4O3plfSps9fz0feLPdkxg3W3BdLOXvI2LK7ugJg8JkA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJv+pOLtmWU8p0tcw5QE3fmNVD4MT4akUMm9Y691UaFmYsqUIfG
-	bu8rzU7+zrGo9o9ivKOrpHO6UrGZ7kR5eQlBPCT555DHLSlzNqMCXl76
-X-Gm-Gg: AYBFou1iiYYOOBM0UIlCRhgXzzt/5OQxqc6LtWd1Af6nbq7Abd4BpHRgzaPKUMEAEum
-	FgguED715qCWeA/ixZaz9PEbM/4xkgEQeN4kP4ZxeTDA0xz1ew3x7WcRArMQr4yx8ubFdxVRdBC
-	cABerK5dLG/DZeSDkyWubWVz68JV8AkLQq3V72zTI7edmLDZ2d0GMfhhwTs6z5ZLxMsx5SjF0Yc
-	VX7BdjinoPCgVn3lJI+5fr1PSzutMY08ahUNAiyX/lDX1uViWSuifs/5dBA9x6S+J46n4LWHdH0
-	ufOMme4UMtZKgqx+/mQKOIfFYD74joMi+JpJ/dGCVGpK5H8PmSd+1WAH90Ld6A+EhVkcTHdIw+3
-	rB4apEmoW4I22xe9r6sc216bI71wMD4cVsiO03jFef8mq/GTFK3qEfhElkEp2PpRjdedP7xSmof
-	0ATUAWZX/91d4rXdicJYsjNP0UXJ80WdbK8ohpVx+1S0KXg8mm09cLox7+b0wPoCL6/RBxQyY56
-	tGJgy7HS5IaqvvThLbHf4z0752jXvpCXcu5u3M7hPvDgfgG25/EEJOBXd+A5xZURlBEGA==
-X-Received: by 2002:a05:7022:1605:b0:151:94a6:6f5f with SMTP id a92af1059eb24-16a5fc917b4mr10950183c88.10.1791724823038;
-        Sun, 11 Oct 2026 06:20:23 -0700 (PDT)
-Received: from localhost (ec2-18-143-158-86.ap-southeast-1.compute.amazonaws.com. [18.143.158.86])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a1becb11sm20136059c88.4.2026.10.11.06.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Oct 2026 06:20:22 -0700 (PDT)
-From: jianyungao89@gmail.com
-To: linux-kernel@vger.kernel.org
-Cc: Jianyun Gao <jianyungao89@gmail.com>,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev (open list:DEVICE DIRECT ACCESS (DAX)),
-	linux-cxl@vger.kernel.org (open list:DEVICE DIRECT ACCESS (DAX))
-Subject: [PATCH] dax: fix dax_core_init error return code
-Date: Sun, 11 Oct 2026 21:20:17 +0800
-Message-Id: <20261011132017.31131-1-jianyungao89@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1791757990; c=relaxed/simple;
+	bh=vjfhu8l68WW4M5SlFYlgw/AaCJa7ZGCHw1RglsjaPsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUrOqCZpMzBJXRSoWbKgWWPmWH6WBxnSLqRTxmbnNpjXqiCSZBnQWT+cqLVB8wfJXi3cS9acj74DpGwhruS4hrEcMu0CcjobZwWTWAYR6VAoNTBNU6xQCrWGOFYBGPsBHd6QWBpIUic2JhpfVb55ybbVW+bxaHuqdl5O6wOp7Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 7159F1607DA;
+	Sun, 11 Oct 2026 22:33:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf15.hostedemail.com (Postfix) with ESMTPA id 5B1F91A;
+	Sun, 11 Oct 2026 22:32:59 +0000 (UTC)
+Date: Sun, 11 Oct 2026 17:32:58 -0500
+From: John Groves <john@groves.net>
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: fuse-devel@lists.linux.dev, Amir Goldstein <amir73il@gmail.com>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 0/9] fuse: resolve extent maps in O(1) when possible
+Message-ID: <aswN-UprZHx9wU9y@groves.net>
+References: <20261008112004.1899560-1-mszeredi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261008112004.1899560-1-mszeredi@redhat.com>
+X-Stat-Signature: ijefzzk89zw5pojijsffjojg7pfis3t7
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5B1F91A
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX18hBECT34yFbX+3XO0vrSaYGVmeVjD8qWM=
+X-HE-Tag: 1791757979-211104
+X-HE-Meta: U2FsdGVkX1/bsgbwZAZAyt4Ak9dDYjgaMcmMjZhLwYoIBQeUT0kPdN8l+tkd3Lf36Ekauh/vuyt0tAtpr7BM/k9rz83Yn+mgLvLINDVwC5atlG5qDQDGnXcVk6zCF4gw+zWPuGalOsxOqHTiYWLbhJp/Zo+8DIQUuuMmDww10N/VyFGIdUSiup2rjuPvvjWwPJ6UBW0aY+Nen6ecK45Sl23wgH92FkAp2MxpZynqwv676TJA+tKnmQlLLBmpb4+HG/Ia4MQtvK+v1iSa+8xU4H3jZLBfwwK0RvWBo7563kIdp3y1hYzgkWLs8ktpsXPxEdxWU5JyEwe/7hT9wtTUmJTrDZqo0qQgRe1Kswrx3amq+tvS1oj10ktYjN0dh+sJtqZ/TWgqHOdc0oA4h6LZ0A==
 
-From: Jianyun Gao <jianyungao89@gmail.com>
 
-dax_core_init() mistakenly returns 0 on error paths. Change the
-error return to use rc so the actual error code is propagated
-to the caller.
+From 48d28d18ad0ccfc950cf9b3ff71033ae03b3a171 Mon Sep 17 00:00:00 2001
+From: John Groves <john@groves.net>
+Date: Sun, 11 Oct 2026 15:06:48 -0500
+Subject: [PATCH 0/1] fuse: resolve extent maps in O(1) when possible
 
-Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
-Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
----
- drivers/dax/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This patch applies on top of Miklos' v4 "fuse: DAX device based extent
+maps (famfs)" series and replaces the rbtree of extents with a sorted,
+packed array hung off the extmap backing.
 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 45f84b0eb909..0f35f65363ee 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -723,7 +723,7 @@ static int __init dax_core_init(void)
- 
- 	rc = dax_fs_init();
- 	if (rc)
--		return rc;
-+		goto err_fs;
- 
- 	rc = alloc_chrdev_region(&dax_devt, 0, MINORMASK+1, "dax");
- 	if (rc)
-@@ -738,7 +738,8 @@ static int __init dax_core_init(void)
- 	unregister_chrdev_region(dax_devt, MINORMASK+1);
- err_chrdev:
- 	dax_fs_exit();
--	return 0;
-+err_fs:
-+	return rc;
- }
- 
- static void __exit dax_core_exit(void)
+The extent resolver runs on every mapping fault of a DAX extent-mapped
+file and on every chunk of every read/write.  Unlike a conventional
+page fault there is no I/O to amortize it against; the fault only
+installs page table entries for memory that is already there, so each
+rbtree level is a potential LLC miss added to an otherwise cheap fault.
+With a packed, sorted array a uniform map (including every cyclic map)
+resolves with one divide and an array index, and an irregular map
+bisects the array.  famfs always produces uniform maps today.  The
+commit message has the full rationale.
+
+Logically this folds into the last three patches of v4 (extent map data
+structure, extent map I/O support, striped backing).  I'm happy to send
+it pre-split if that is easier than folding it yourself.
+
+With this patch on top of v4 the famfs test suite passes; that tree is
+at [2].  The famfs userspace master branch [1] now works with v4.  If
+the next revision needs further userspace changes, please base them on
+that branch or send them my way so the two don't diverge.
+
+[1] https://github.com/jagalactic/famfs.git master
+[2] https://github.com/jagalactic/linux.git famfs-extmap
+
+John Groves (1):
+  fuse: resolve extent maps in O(1) when possible
+
+ fs/fuse/backing.c |   7 +-
+ fs/fuse/ext_map.c | 219 +++++++++++++++++++++++++++++-----------------
+ fs/fuse/fuse_i.h  |   8 +-
+ 3 files changed, 147 insertions(+), 87 deletions(-)
+
 -- 
-2.34.1
+2.55.0
 
