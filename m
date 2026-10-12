@@ -1,117 +1,96 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274AC49B20C
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 15:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A7249E5FE
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 16:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791818345; cv=none; b=Gbx0TFfMT8QlrgvhbTaXIGLIWQDBezeETEfDRFcGZ5cP0SUtvrt8YjO/nxUNZH6jpI0vdIU5Mg0qA0UmnD7Y54zMyQGebpqxBRv37u4fAHn3nFDAgUwiMSxjaaLQ5c/RFAAJ7/Z7ej1XrQqfWnpY2+K6luvnz04TFPsJ8GkhlWA=
+	t=1791821922; cv=none; b=RVn4dbcbzpzB4y5TE6JlUHmZIGRT5w7LA0RWAWpBklv+9R46lCLUpvgG0qcHQiiR2wSt5rI5gwbDqqICXJLX51k74TPD75aX7m4CRYSLXAU5fgvddMi76igD/E+K6+NSca1mnnPNwAFwDuvMihz5VOnBgjXMKgYVZAvB/GFluMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791818345; c=relaxed/simple;
-	bh=zCThCBQHEg7zoILpu1wZQQI8Pc820V1e/n5FVw5TliA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VK/OlvZhBeixaouYw82cvExp3qmDGncHnsWWNSNJ1oi2FsVk8JtkFTTHjT+EZw6JrWNsrEmWX86jkG74ioOQ4JKs1XzmKrTWKOSrXYgBZj6YDg6lXfZHwtrCzVSpI2JGSFKAD/FuvQzArYHeFPhkJSJKOZtVWk56vnws26vBpHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4Z2jh8w; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791821922; c=relaxed/simple;
+	bh=4YpWVz2t7P3nkCK75u6xOdBsc4nHUlNeMIe6NmdDkAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iv58mEVocDYHQEBIZsRQkSA6/9ZozuL/jz3VJLcmv89q7TjF3O47qttdnrXq0MkTTI6mLGqCXTPBuZXr6Lr79P0HX1IPpoqcecD3abI8cX5/OLJj3M/hZEK19lkE1tKl71+CQo/DnDqpc6AcM9ONpo0QjIe82NOxB4yqQbgoA6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LvvoZaG6; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4Z2jh8w"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-881269371acso1959321b3a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 08:19:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LvvoZaG6"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-93cb9e9405fso96446485a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 09:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791818343; x=1792423143; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Smdsi1BCXFX0leS6t8zLips+J1KQ1pukbcy1pEKTRmY=;
-        b=a4Z2jh8w8IqAYly6Tjkzo55Wf3S/+kjfqshh5BFpINuDnQb6tsjnhZwIwDII8w1qZ7
-         z1bcwgJcFi8Er8D5jji+1PKO0VCeD3GTgKulnkrgOsafJhcM89wY4l4l3EOVdikrh7/E
-         MOHrqUFkpH2w72t2A3j6ucSNoKLIhlN8ip5Yrnu55J4fqPIVFeRaqPobXVqWvu1Wb5+R
-         iXiQSXK0GYIf5mC+Ed9D+C7LO/4C7LUxWJzATDdB79XcbKUEM7BaxcU/J8UsPASb7bhF
-         AmXlI9Hr5gi9ymVzAbWDjv3n1xvV8bAzMyJjnGTVh+mZJv3tvdHOst1jk5A5r3WA/0w0
-         Ih+g==
+        d=gourry.net; s=google; t=1791821919; x=1792426719; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ycCA/46fGP9bMzNSUFEULycpfUfNegmWCSDBNo9iDiA=;
+        b=LvvoZaG6fsq8hB0FOotQh35EMoCepkvvzptzfAzU/s1zJC7dhg5PSKIPvRHtUNIUBP
+         w9gvhZ87eGhXWdTMd4p/TK1h1+ue4Fr7gFP9EBJo7NiJyYTitoai0dUHr0lFLGA30I4P
+         x0LV6t/aKncAdIxJf1RpJN2EUnV8Jc6gOa7sDXczYruPnhnW0AEZTntu47jpBq4qmz65
+         XZ29Cj0zf+pzoYW7+Sqi+LWrGr7lNlQ6BbmCinaNxPHEK+0fy08RT5N9oE+GYxegAK2R
+         c0TFCts30Tzfsr89JZpBW+/suz2o049I6GsqorKmvKbg1H4thRkP3HGJRwS3IdBsjHZn
+         P06w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791818343; x=1792423143;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Smdsi1BCXFX0leS6t8zLips+J1KQ1pukbcy1pEKTRmY=;
-        b=R9JyvnO/gCrd0n/7idHwLWIjI6JR/sXGDfvP5NAIjvdcKnDn4x7z3TjOO0nkbWiHri
-         oIfrtTbWbW7o6h/p0TGh9WThS3E113i40V+ZpeVjEsXE9xAWUMPwghY6mmB3KgXmUJmN
-         5KtOTYB84Hf4O87kt/HY4RgOl8OMz3YF9FM0XUgDQWqx22UJcHOhXljnVK2TU1NUbS0g
-         t9eqzOTK/thmCrPEkcFcLJdaTPDEHbZD1nweJi7yZGWRLWXUBUX1w89ro8NgqUPEloQ6
-         88l/HeumABGs/4fzj88PPnh1YLnlrCyw6pAVJDY7tLUkbEQc26AW+6BSDb8X1MIXzjbI
-         zIjw==
-X-Forwarded-Encrypted: i=1; AKwUvBw2ZSiEKB7UKhIM8m6Um5q4An0xhM/Mu6EoHLER1EVnZ+/kb2lT0rbZ9O0CwCfZVRuwOOyTppAgZRw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIGv/PSegyhdn9j13YK6k0ZkmAmtEDAGjAtTCiyM3Cq9t3hyNuM
-	81ja0SWxtqFJuPE3qLBw7++3LF75dfcUuDcAC2v6+P+19Hcsh8JD3vZ/
-X-Gm-Gg: AYBFou3TWVfLwaehf1Fgn/+G/k92gSuQzD3k5/hDvwUXiQhgAOAjKHHFG0KH7lx8PXU
-	4LDinGU8KMx+h1COPcjqkz9P6z91+liWo9WV6CW1DoZ5KDDlRQmS3mXpqhlDVi4oDQrJYQkBRoh
-	m0lOMTkVCpe935aka9yl7ZJrI6AmbxJDsDFwQuISL7EZsx/3BF2EvcisQis7CAUwqdrvDYaC1UB
-	Uzh2eYIfqoh6Gj50vQtkOCLO9dbzR5A+CBiJQftOsyRJV/BtxWUphoO6nTkZxzeJuuOrW/Ih3K0
-	/Pz9gg1EyCmMbyenqFZnZv/XoxK/v5UdwSS+PUiRuSHVh8wBSaDdjoonvCuGGhcOvV4dK/KpD8l
-	rmw3REdLrTZzkF15g2yq32j/IIU7rRWC40zSvcw1QgUuQQu03EAOUUI+24c0jolhWS7Zj4fixPr
-	o0y1B0UoHNJY6iPS9gILojGdJyrq/uYNf8fa85MZ8rZH+SMD7w912bNLKd3r20Wdi/jISHoR+Xi
-	+DfFi22snsjpfB8mACoSwgmKuesPD4/cmwH0E3rqpA5XHAutFAW25HGxfM=
-X-Received: by 2002:a05:6a00:c08e:b0:898:776e:eed6 with SMTP id d2e1a72fcca58-898776ef151mr3214615b3a.34.1791818343199;
-        Mon, 12 Oct 2026 08:19:03 -0700 (PDT)
-Received: from localhost (ec2-13-231-150-91.ap-northeast-1.compute.amazonaws.com. [13.231.150.91])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-896b68ef2easm4191976b3a.7.2026.10.12.08.19.02
+        d=1e100.net; s=20260707; t=1791821919; x=1792426719;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ycCA/46fGP9bMzNSUFEULycpfUfNegmWCSDBNo9iDiA=;
+        b=PbcLUsoAqz68NSG3BxmypN18xs+u8WfGX7XkMbWhUWWqnUhCvnBOVWVPff2Yi7E/ZJ
+         6s4VYy4j/8+r5EMRbQpw3UHFoWwI++l6eK57vV29yanMVAz007b4t9P5Z2ylW6EUKeGy
+         WCVUGv8ljXC3h7Yx38itxZZFtWZKJS5BT0JXZh9cGPJ9EmIa5r/RM5J9hFFgY3kg61DP
+         M3qB7Vtgoi08mm4wprg/GxKvIWRuyEdB3shNABSvJTyKn6hlN0nQU7gUl4NZAEfZr3Lj
+         CfLbEYqXezFKO3oUiHjOFBmBVfSdUpcaYghaNjmWAYbEGDxiMHLiVyu2SmSz2qObWuvz
+         yYeA==
+X-Forwarded-Encrypted: i=1; AKwUvBxh5idMt6biGWXzLC0j9htxUYzdQp/S3MfM6YPrA1KaqfbJpIZxfdIaZKZmZ+mghJWVeoc3fREQh4U=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLME9zxfGKucjoFI6AYmXhTJ/WpFDGCgKHQCbHasx4VnfqtqRAb
+	+tT6KiAssrFbLVX3/l0FY5uN5gTodnMBnfv/RENIKkSlaS7PFQ6Z1WIrP6Fa7Lo6WhI=
+X-Gm-Gg: AYBFou33DYz/CqTYffkKM7COhrOv8jb+Y2YmO8Q132nNUTedhH8OlnFZivNlyjwAJ0u
+	Wydkqxkw6KhicSSO+Ha0HfmoMdJfB4yx5i9auS0x0/EYrb1+xbEJBoWT+TnI4la9qWS4YqLz4GS
+	qFvt+yXwceKiupq556e9ZLyw4HdUGjVF8F1rKouQMnannD+5VU1hIHdy1v3dv5n6woM1ub9SQFG
+	eSUWrGH8QVFoptDjpMHLucNqD+t4o/DldvOkE4L+eAQW9FH600GsT9YgNOSQIZPAZlWWn5T9vpP
+	uBFn20z8gahq+UinSOrA38c0RsOs5KZq+TuRRGmSswirSkZg44NW30Uzap0vhfHeDl6xKVVvRIP
+	miZpV0IE4J6E7HupB5LbY2Ul2teXu/EKNoOVoCsRmnPnYex5r7cRjfKs/E0z5QTPVarwlYgolzM
+	pxRPq8U4Y2uhR2BvzTofuDSDRy9m4ivELWRZ2zGvdLIk56aEK2M3DPE9cMFMIh8BZW8aiGborGU
+	YG2wdANtPWMcTPKDnF5WkGET0lNyTKuQEFxIX4gRoc/4kigq+OXJ6Q=
+X-Received: by 2002:a05:620a:2981:b0:939:6df7:73f1 with SMTP id af79cd13be357-93ebd27484bmr1635268185a.51.1791821918598;
+        Mon, 12 Oct 2026 09:18:38 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93ef50295a7sm20807785a.23.2026.10.12.09.18.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 08:19:02 -0700 (PDT)
-From: jianyungao89@gmail.com
-To: linux-kernel@vger.kernel.org
-Cc: Jianyun Gao <jianyungao89@gmail.com>,
-	stable@vger.kernel.org,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev (open list:DEVICE DIRECT ACCESS (DAX)),
-	linux-cxl@vger.kernel.org (open list:DEVICE DIRECT ACCESS (DAX))
-Subject: [PATCH v2] dax: fix dax_core_init error return code
-Date: Mon, 12 Oct 2026 23:18:57 +0800
-Message-Id: <20261012151857.22534-1-jianyungao89@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 12 Oct 2026 09:18:38 -0700 (PDT)
+Date: Mon, 12 Oct 2026 12:18:36 -0400
+From: Gregory Price <gourry@gourry.net>
+To: jianyungao89@gmail.com
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	"open list:DEVICE DIRECT ACCESS (DAX)" <nvdimm@lists.linux.dev>, 
+	"open list:DEVICE DIRECT ACCESS (DAX)" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2] dax: fix dax_core_init error return code
+Message-ID: <as0IMU-uIENTAXSW@gourry-fedora-PF4VCD3F>
+References: <20261012151857.22534-1-jianyungao89@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261012151857.22534-1-jianyungao89@gmail.com>
 
-From: Jianyun Gao <jianyungao89@gmail.com>
+On Mon, Oct 12, 2026 at 11:18:57PM +0800, jianyungao89@gmail.com wrote:
+> From: Jianyun Gao <jianyungao89@gmail.com>
+> 
+> dax_core_init() mistakenly returns 0 on error paths. Change the
+> error return to use rc so the actual error code is propagated
+> to the caller.
+> 
+> Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
 
-dax_core_init() mistakenly returns 0 on error paths. Change the
-error return to use rc so the actual error code is propagated
-to the caller.
-
-Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
----
-
-Changes in v2:
-- Drop unnecessary goto label, keep direct return for dax_fs_init() error
-- Add Fixes tag and Cc stable
-
-Link: https://lore.kernel.org/lkml/20261011132017.31131-1-jianyungao89@gmail.com/ # v1
-
- drivers/dax/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 45f84b0eb909..210f4af479f0 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -738,7 +738,7 @@ static int __init dax_core_init(void)
- 	unregister_chrdev_region(dax_devt, MINORMASK+1);
- err_chrdev:
- 	dax_fs_exit();
--	return 0;
-+	return rc;
- }
- 
- static void __exit dax_core_exit(void)
--- 
-2.34.1
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 
