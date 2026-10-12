@@ -1,57 +1,57 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE89850EBFE
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C3C52CCC8
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791913867; cv=none; b=Q2bNFPP53lU8lStH6beCC3bDfqPKXYU6wws/lYydmIw2vBzrObRT9JYlThUcvMM/cTDJQBuKxbLtcfEQLMaJ9R2+WgCC/GdePcG3NR4doxhlfMcNeWQ6Ku97o0ROejNekXrFe9XdYr11iKhR3Oq8oJBi1Ovs52G7gspavrAfEA8=
+	t=1791913871; cv=none; b=HgS+bGOyO9jDboetswLbCAukHOSJL6zXElMEP9o0e74eo8Ja9ytDvjaiRhanj/yeWI5rf2kVzrV009wTgq8oXwcI7UQRWO3dqaCdsvXazTZ2RY/hpIx7lcTtQbjwc6yqHCx3fOmamS9dVQNfQ8rSvi474SZvxGqAsu93J8kemhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791913867; c=relaxed/simple;
-	bh=n72riOFT9zMszPdIbWgnFahKIsx4JheiYt11aqPFJ4U=;
+	s=arc-20240116; t=1791913871; c=relaxed/simple;
+	bh=gMNtK/0YjzbUiWPTlVbcnx+RZMHYxHe3zyVfcHByLZ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qHFNuPy2XlIDYhqqSDMGi8OCAZAOoUcXROCn2VbK2QHP3yipkDaUwG5YHWembEH5ZkL+QgZ8w7wKfGtpoDQ/DuaJsb7br2h3AAYj5Z+LrPy8eidLFNGtXPwMdEpCKYHD8I3jrj+Qb30Xci+OsK01pY4IKtETpcIUUgFdDxqr70U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TzA2a9C6; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a5en31sF; arc=none smtp.client-ip=185.246.85.4
+	 MIME-Version; b=XCFdXE4yreIXaQ5734VXV7Q7cavkCXCSEo3wlxqct9y/WgyOQ8iIiWOt1WMkw6DmnOM+JAfzUu1yszkB/R6y+wYQPftj3PBcCAhpTbmo3/XqoMhj/YjH0g0T+f/H2Qft2Cd2m6NZAJIMHGnRwCpN8d4ObZF96Nh0BdoiD6cEYo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jLor6X9i; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=clnpTkrb; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TzA2a9C6";
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a5en31sF"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jLor6X9i";
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="clnpTkrb"
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 4E9754E4120F
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:03 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id E8E23C653FA
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:52:02 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 231BE60362
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:03 +0000 (UTC)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5448960362
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:07 +0000 (UTC)
 Received: by mail.galae.net (Postcow, from userid 0)
-	id 933B811D7183A; Tue, 13 Oct 2026 19:48:36 +0200 (CEST)
+	id C483511D7183E; Tue, 13 Oct 2026 19:48:48 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1791913862; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1791913867; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=LEz6fW5lydZExsmSIK9gCH0i3AJi/eLpRMeT4JJOYIA=;
-	b=TzA2a9C6M9TfsMDc9kYu3fCXiytH13BN8QiPZ966qa+74oXcc/ZgcxwVRELO145BcWdgRj
-	HaL3sKPCwpU/iDWrZ/l09t2w+F4mm+keq/r4I7QSUyU9orSpCHBKZlsuzcwpUuJSL5hGOL
-	fQZGxC49b/6GdSLI3PeyA7ZQ2EMsaDldu50ZBIP0BPzoxcmLODvbhaufP0a76TE/jU5V0U
-	SnFa5xGS7CH0YIUjvK48Wne8XSsEwZMPZscw8yNthfE5KumMx+9zWhPDISoLa6Uqmr2fB6
-	jfwFfeltt809VwUqQTO6zOJ/3zmQdqZ6SzSoNOK5mIYIR7U5pRqoi1l8l0n25A==
+	bh=+ChnyDkFUv0fqgvepwYYsoR4k2/DprmHV3Gvk8JzTTc=;
+	b=jLor6X9iCK/DYx9T86rqdzcxhn+jMxej9cVOkPFX+sKB/DG9ozgjhwwCHFE0fci21JjoQF
+	bh5m/pp5DGqy3Yf+Askgw8Js7PF66dYKrvhaawwTyslVRy3ptXfm0kI/W4Wt6bvAxM7Eyz
+	AUuNo9smhCYWuZKaNj9cBAQvAcOSJYCXJHRPc5MJbjxlTKylCR0ukbKbpCrCIb4/ICpUFk
+	ZMlBRMFcIrbRTte2uBpkJ/tMjotoqRzfzmEX75N57P8+r6KcMT2DyoureVEl2+s2GBNrgn
+	c/b/KJwdXFB9ffBs/2IO2P/aABOAH5k6u67lHX5eIj4BB5HXHCvgQnNnBdfP+w==
 Authentication-Results: mail.galae.net;
 	none
 Received: from mail.galae.net ([172.22.1.253])
 	by 9e7fea892943 with LMTP
-	id +NfaBL3uzGoYHxEAtaWaaQ
+	id aL93AdDuzGpsHhEAtaWaaQ
 	(envelope-from <herve.codina@bootlin.com>)
-	for <herve.codina@bootlin.com>; Mon, 12 Oct 2026 16:29:17 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9529711D70C51;
-	Mon, 12 Oct 2026 16:29:04 +0200 (CEST)
+	for <herve.codina@bootlin.com>; Mon, 12 Oct 2026 16:29:36 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A812811D70508;
+	Mon, 12 Oct 2026 16:29:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1791815350; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1791815372; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=LEz6fW5lydZExsmSIK9gCH0i3AJi/eLpRMeT4JJOYIA=;
-	b=a5en31sFtY36sewI1cQm/PvxYZivlvd53cCrweL0zm/URMGftFqsV1DZXBfwbuTH0e9ov1
-	r7PABM1Eglkfz6mwnMPnO9o+/DpkMvC3LbHeHcPClWNnMIiZj8aa+XV40SKB47BQ57dyOV
-	lCitia2dwRNb/QGZ4MIEIt3VIzr8uh6U6jbjg+uXVKgic7MDueWfX8yIIZAClED6LwRxhX
-	XrdAW3GIuWrthaSK35MWGD0tGrSna7zEq5Um128Jhces7W9sTMHbf962aFzXmFiYEo3MA+
-	GRT3rAPoMZK6Cg/ZNfa/edlJum6+5VOZrmn/OruFx8Lx0KPBk66Hz0uAZjnhyQ==
+	bh=+ChnyDkFUv0fqgvepwYYsoR4k2/DprmHV3Gvk8JzTTc=;
+	b=clnpTkrb9ux+68cvnotT8l/KdiVYfLjFygknOBdqlfrxUo5yqEZ2Nwrnba7Xxby/Shyqtf
+	n01M7smWgdnfcRbHlJsXvIgJIIFDsAxq5rF7G9YbpXDXiw2khAKxtdBEJ6NppJqswxg6Fn
+	DUt8rhuk0sa6D5Ny5+hRiKvGF5tmv2NZnLak0TjzZ/oRMtH1TZtm+Fpi66UNqkI4pVp2yf
+	ifGpKp/jEPapsegLs101d5LR8Pew1Sk+oE8BBf7yobvm3GKWO09hWcsh9ZU72btcd/c2xG
+	ZA47T6qAvIe23tFTf1cBV9v0F45x9AYzZyOinpBEoqYAaaMJyX2Fgl/6hovMjg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Richard Cheng <icheng@nvidia.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -95,11 +95,11 @@ Cc: driver-core@lists.linux.dev,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v13 02/10] drivers: core: Use fw_devlink_set_device()
-Date: Mon, 12 Oct 2026 16:28:16 +0200
-Message-ID: <20261012142826.159178-3-herve.codina@bootlin.com>
+Subject: [PATCH v13 05/10] cxl/test: Use fw_devlink_set_device()
+Date: Mon, 12 Oct 2026 16:28:19 +0200
+Message-ID: <20261012142826.159178-6-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261012142826.159178-1-herve.codina@bootlin.com>
 References: <20261012142826.159178-1-herve.codina@bootlin.com>
@@ -112,15 +112,15 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 X-Last-TLS-Session-Version: None
-X-Rspamd-Queue-Id: 933B811D7183A
-X-Spamd-Result: default: False [1.40 / 30.00];
-	BAYES_HAM(-1.10)[81.76%];
+X-Rspamd-Queue-Id: C483511D7183E
+X-Spamd-Result: default: False [2.46 / 30.00];
 	DATE_IN_PAST(1.00)[27];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	MIME_GOOD(-0.10)[text/plain];
 	RCVD_NO_TLS_LAST(0.10)[];
-	URIBL_BLOCKED(0.00)[qualcomm.com:email,nvidia.com:email,localhost:rdns,localhost:helo,linaro.org:email,intel.com:email,bootlin.com:mid,bootlin.com:email];
+	BAYES_HAM(-0.04)[53.32%];
+	PREVIOUSLY_DELIVERED(0.00)[herve.codina@bootlin.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	BCC(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
@@ -128,53 +128,45 @@ X-Spamd-Result: default: False [1.40 / 30.00];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[herve.codina@bootlin.com];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	PREVIOUSLY_DELIVERED(0.00)[herve.codina@bootlin.com];
-	DKIM_SIGNED(0.00)[bootlin.com:s=dkim];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[bootlin.com:s=dkim];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	URIBL_BLOCKED(0.00)[fwnode.dev:url,localhost:rdns,localhost:helo,huawei.com:email,nvidia.com:email,qualcomm.com:email,bootlin.com:mid,bootlin.com:email,intel.com:email];
 	FREEMAIL_TO(0.00)[nvidia.com,lunn.ch,kernel.org,linuxfoundation.org,google.com,opensource.cirrus.com,cirrus.com,linux.intel.com,gmail.com,stgolabs.net,intel.com,zohomail.com,bootlin.com,amd.com];
 	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MAILCOW_DOMAIN_HEADER_FROM(0.00)[bootlin.com]
 
-The code set directly fwnode->dev field.
+The code set directly fwnode.dev field.
 
 Use the dedicated fw_devlink_set_device() helper to perform this
 operation.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Reviewed-by: Richard Cheng <icheng@nvidia.com>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/base/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/cxl/test/cxl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4c0c373998a1..3268e9350c86 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3754,7 +3754,7 @@ int device_add(struct device *dev)
- 	 * device and the driver sync_state callback is called for this device.
- 	 */
- 	if (dev->fwnode && !dev->fwnode->dev) {
--		dev->fwnode->dev = dev;
-+		fw_devlink_set_device(dev->fwnode, dev);
- 		fw_devlink_link_device(dev);
- 	}
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 547ebc97bf59..e21e45fe1572 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -1678,7 +1678,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
+ 	device_initialize(&adev->dev);
+ 	fwnode_init(&adev->fwnode, NULL);
+ 	device_set_node(dev, &adev->fwnode);
+-	adev->fwnode.dev = dev;
++	fw_devlink_set_device(&adev->fwnode, dev);
+ }
  
-@@ -3929,7 +3929,7 @@ void device_del(struct device *dev)
- 	device_unlock(dev);
- 
- 	if (dev->fwnode && dev->fwnode->dev == dev)
--		dev->fwnode->dev = NULL;
-+		fw_devlink_set_device(dev->fwnode, NULL);
- 
- 	/* Notify clients of device removal.  This call must come
- 	 * before dpm_sysfs_remove().
+ #ifndef SZ_64G
 -- 
 2.55.0
 
