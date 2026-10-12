@@ -1,155 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82AB449988
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 15:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E7249B1E9;
+	Mon, 12 Oct 2026 15:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791818216; cv=none; b=leUJK9wJuKdwtlj1XQl4EZwcuYhP8K+96fAFOdrZBxSg+dWug+dildiiGYGnoo4Cvhe+SJnIbdNV6qupLJjDhadlTrkfNe6UDXZJ1jLGaTwcl8jhXHFa7CZQ3/RGlPuEvUIPEZgqAVoALJhJmBhXD58RifDTLQKfSQYVsXFY7/4=
+	t=1791818298; cv=none; b=E6q7Ymq8LNLN+TennyItrg2Rl2wc3z57tFuTR+7HhqIMf2CA+vIviquFnTLaKoTW+BKOKZL5Dm9DXptHSr5erHizOUs+Uruz8JgLO7Wi4x8/19Gf7tlvhSWPXsywi6cl2wlMlcmR9chps8UEPyxQqhtBFiAXwUEZwcd55Rao7JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791818216; c=relaxed/simple;
-	bh=aca3ti2jOkRyP5tnKAiu+yLYXRFyJQT/lCrVd+6UqNc=;
+	s=arc-20240116; t=1791818298; c=relaxed/simple;
+	bh=XfWNez3TZElIw3B+tobB5BSrfbaynnFmNqa9anO7WiM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8T1fo/8ko4LpXGvLfxGvCBzsadh2EP7Zb57tPmHZ3MJxu0cYOc8+kRbf4kQh4RPFGn2r+4fqpZjuo7gDfcHFujZ6TSoZcKRj3qQuL1cI28vLJtCDZvVrpuOkWkMW7RJhy7dp8ShNFWwjUkdUwG3N3QXiU8APM7C0tJgtKmKuGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kScBnBXk; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=RWrwsatgSFgriEDRsvDbNuGPhjuAxAudG1cQ7/cG4QpM2Zm+fEA4HtNnOfzfKat6PQ5uGSDpIC6BOfx6a8CyWozNK65MGNOP/b4kcsq1cJ5mIlRim469gk6xN8lKdkqfR5QeNW4UTRkfiBz4C+BcBU4ff+87fb2srvSgcS44k4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NaT5xHHm; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kScBnBXk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7381F0089B;
-	Mon, 12 Oct 2026 15:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791818214;
-	bh=p9pfgVBHo0tQD0rDShowcg1/xXZjhsav3H9AsaHBqOY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kScBnBXkOLAUl8+/yTgMPyamh4caPysusJhk8iv0WluRMvzvZbIu43cHMciCnz6za
-	 Tp24cEO8GUFCX0ciOafUQIRre1wFz01R2LFdQxi77SVQ2H5WEUP1FCgU7N4Blgz79B
-	 BtQYtdFhVJqcSW0ZtI4Z69MSAC96MmigMCNXCiBLRkkWxalrpHMoFlJuEh88sOzcZB
-	 L3VZiJkR9AL9Y8uZ3VFqswVjwre+cTnmOPXMkhkiLrTOMEO7jkBT/gNm8G47o+fmrq
-	 PWiKbBpVd+4dYopMt2FSzNCllXGqdP/3SzgArldPoj0aq6HxRovmyzxQCwUKUpa2Od
-	 JhLDJvGOET4Aw==
-Date: Mon, 12 Oct 2026 16:16:47 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li
- Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>, Robert
- Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 4/8] cxl/region: Factor out cxl_port_peer_distance()
-Message-ID: <20261012161647.4fe1575d@jic23-hlaptop>
-In-Reply-To: <dcbd67bd2059beccba1aaa92ea099ac35dec9026.1791676454.git.alison.schofield@intel.com>
-References: <cover.1791676454.git.alison.schofield@intel.com>
-	<dcbd67bd2059beccba1aaa92ea099ac35dec9026.1791676454.git.alison.schofield@intel.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NaT5xHHm"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 5E6524E411FD;
+	Mon, 12 Oct 2026 15:18:14 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2AAB8601A6;
+	Mon, 12 Oct 2026 15:18:14 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 18BF511D70160;
+	Mon, 12 Oct 2026 17:18:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1791818293; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=eAuhjWIHoJ+lPcsgkZ9ZICB7wFWD1mA0dcHUmJgisnU=;
+	b=NaT5xHHmP2CFGmBmICiFg9ybAxPj/PSjEf+8dyYCGN/bt+MFaZpNChQ0CboqttpSI/6CPT
+	ZqUZOBnQEuTJY29iWGNzquJkKva5xNVZ2r3twYEj+vBDMqkbPGv32Y8Rca4UdwdqE17vLP
+	fAV5uwSFul/8+hsakgDL0nYEwN0L17Rq34e2d8QZ9ZG7+ABclARY2zwmoKaXwcMvsXy+5C
+	mBv0nemTTMII4PqUYlpGhf8x519W6BCLP+u6w5C6jkz6VcnnhK8ujuz6f/KninMGIln++q
+	/ZSzAPXBh8rFFPKhIwWH0g3We/uQIY9+sXWKW5VTElHIZWKOVvpIi2gUkD9iLg==
+Date: Mon, 12 Oct 2026 17:18:11 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, linux-gpio@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v13 08/10] PCI: of: Set fwnode device of newly created
+ PCI device nodes
+Message-ID: <20261012171811.50f6cb9f@bootlin.com>
+In-Reply-To: <sashiko-outbox-168281@kernel.org>
+References: <20261012142826.159178-1-herve.codina@bootlin.com>
+	<20261012142826.159178-9-herve.codina@bootlin.com>
+	<sashiko-outbox-168281@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sat, 10 Oct 2026 17:20:19 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Mon, 12 Oct 2026 14:44:48 +0000
+sashiko-bot@kernel.org wrote:
 
-> cxl_switch_port_setup_targets() is nearly 200 lines long and open codes
-> each step of adding an endpoint to a port's decoder. One of those steps
-> calculates the distance between region positions that share a downstream
-> port.
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] base: TOCTOU data race and UAF on fwnode->dev access
+> --
 > 
-> Move that calculation to a new helper, cxl_port_peer_distance().
+> commit dc94be607770b564614555ac56ea83f070fa3dd4
+> Author: Herve Codina <herve.codina@bootlin.com>
 > 
-> No functional change.
+> PCI: of: Set fwnode device of newly created PCI device nodes
 > 
-> Assisted-by: LLM
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-I wonder if the docs make more sense made function documentation rather
-than inline.  Either way lgtm
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-> ---
->  drivers/cxl/core/region.c | 50 +++++++++++++++++++++++----------------
->  1 file changed, 29 insertions(+), 21 deletions(-)
+> Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
+> nodes are created and filled based on PCI core information but the
+> fwnode device field is not set.
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d564443a1d39..b288421203a9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1432,6 +1432,33 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
->  	return 0;
->  }
->  
-> +static int cxl_port_peer_distance(struct cxl_port *port, struct cxl_region *cxlr)
-> +{
-> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> +	struct cxl_region_ref *cxl_rr_iter;
-> +	struct cxl_port *iter = port;
-> +	int distance = 1;
-> +
-> +	/*
-> +	 * The "distance" between peer downstream ports represents which
-> +	 * endpoint positions in the region interleave a given port can
-> +	 * host.
-> +	 *
-> +	 * For example, at the root of a hierarchy the distance is
-> +	 * always 1 as every index targets a different host-bridge. At
-> +	 * each subsequent switch level those ports map every Nth region
-> +	 * position where N is the width of the switch == distance.
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 29b63a9090ae3..8914bfa25dc11 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -736,6 +736,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
+> >  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> >  		return;
+> >  
+> > +	fw_devlink_set_device(&np->fwnode, NULL);  
+> 
+> [Severity: High]
+> Does this locklessly clear the fwnode device while another traversal might be
+> reading it?
+> 
+> If a PCI device is concurrently removed while a driver is being bound to
+> another device on the same system, of_pci_remove_node() clears fwnode->dev
+> locklessly here.
+> 
+> Concurrently, __fw_devlink_pickup_dangling_consumers() in drivers/base/core.c
+> can traverse the fwnode tree and read it locklessly:
+> 
+> 	if (fwnode->dev && fwnode->dev->bus)
+> 		return;
 
-Maybe promote this to be function documentation now this function is only
-concerned with finding that distance!
+I don't think so.
 
-> +	 */
-> +	do {
-> +		cxl_rr_iter = cxl_rr_load(iter, cxlr);
-> +		distance *= cxl_rr_iter->nr_targets;
-> +		iter = to_cxl_port(iter->dev.parent);
-> +	} while (!is_cxl_root(iter));
-> +	distance *= cxlrd->cxlsd.cxld.interleave_ways;
-> +
-> +	return distance;
-> +}
-> +
->  static int cxl_switch_port_setup_targets(struct cxl_port *port,
->  					 struct cxl_region *cxlr,
->  					 struct cxl_endpoint_decoder *cxled)
-> @@ -1445,7 +1472,6 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port,
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_decoder *cxld = cxl_rr->decoder;
->  	struct cxl_switch_decoder *cxlsd;
-> -	struct cxl_port *iter = port;
->  
->  	/*
->  	 * While root level decoders support x3, x6, x12, switch level
-> @@ -1460,27 +1486,9 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port,
->  
->  	cxlsd = to_cxl_switch_decoder(&cxld->dev);
->  	if (cxl_rr->nr_targets_set) {
-> -		int i, distance = 1;
-> -		struct cxl_region_ref *cxl_rr_iter;
-> +		int distance = cxl_port_peer_distance(port, cxlr);
->  
-> -		/*
-> -		 * The "distance" between peer downstream ports represents which
-> -		 * endpoint positions in the region interleave a given port can
-> -		 * host.
-> -		 *
-> -		 * For example, at the root of a hierarchy the distance is
-> -		 * always 1 as every index targets a different host-bridge. At
-> -		 * each subsequent switch level those ports map every Nth region
-> -		 * position where N is the width of the switch == distance.
-> -		 */
-> -		do {
-> -			cxl_rr_iter = cxl_rr_load(iter, cxlr);
-> -			distance *= cxl_rr_iter->nr_targets;
-> -			iter = to_cxl_port(iter->dev.parent);
-> -		} while (!is_cxl_root(iter));
-> -		distance *= cxlrd->cxlsd.cxld.interleave_ways;
-> -
-> -		for (i = 0; i < cxl_rr->nr_targets_set; i++)
-> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
->  			if (ep->dport == cxlsd->target[i]) {
->  				rc = check_last_peer(cxled, ep, cxl_rr,
->  						     distance);
+__fw_devlink_pickup_dangling_consumers() can look at fwnode->dev but those
+fwnode->dev are not in the same branch in the tree as the one where the fwnode
+being modified is located.
 
+I don't see any cases where __fw_devlink_pickup_dangling_consumers() can
+reach our fwnode.
+
+In other word I don't see any race condition on my side and so I will not try
+to fix that point except if this "potential" issue is confirmed by other people.
+Indeed, I could be wrong in my analysis but without further details, I don't
+think the issue reported here can happen.
+
+Best regards,
+Hervé
