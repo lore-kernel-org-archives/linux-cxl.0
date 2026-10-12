@@ -1,63 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC4E3DEFF1;
-	Mon, 12 Oct 2026 19:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4412A38C423;
+	Mon, 12 Oct 2026 22:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791832910; cv=none; b=ZoAFv59M+Ic5gFEsKWtnRdXKUfbSUlJDvfNZSI+Hfzq5uu+HU1y//pKVT/nFRgkg16gkGwWKwx/NIV7bs3Im7XVox18PZItGtHwz5f4OTM+WHTMoYr8Bo0Yw9512aCnK7/9vP1Z5q34Ec0B53NcWu395FNVmUEH/qr54hjNTruw=
+	t=1791843526; cv=none; b=B+G8+u9waSRARyOqDTKWyebuQm2cGQc0WLxLIDh/pUXbWJwzuKSeZ/7HhNblJrImrXBR968DwxTg79CWd5qT++1NWz/mMRuEeX2ml1v8w+rk9l6c3r6SyVmUQ10xwI/nUAkh/uJpcwk183e2LAcQXry71bOizHOkhH0qAhPYGjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791832910; c=relaxed/simple;
-	bh=6DwsFQ3xewZ6W6NJBGeZH/qAhtWLndOqe4ZccqIyQec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONua0Mo0gxWWh1azyiT4siO0pYW26vPOHym/ZQdxVC8odLILRp+/mgyh/uzMNpYe5lpsiNcsXEEy+xRjEljpYWqyfC9zO+G1SrteDjZKNCZiR+RIWP1YSZfg105cOXFUvhsC8JunQVVCX2/bMWNl/qJ70lgmGqetvX/Iw6c6ffA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hZzhxjo5; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791843526; c=relaxed/simple;
+	bh=6q1dtZ4mFmGnR51E/lgbvW0mQS6LBiXKQ/GO0QIZaYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=bX0l3WjkLUmKHrlhwxgBy7lFAeS/31SFV3Ub20F1jjmA2tcvZsWdR2m8DiGBq/2rMrN22gGXyfIrFsfaBnItjk2wy2xB/UhybKAiVyqojCCy5niZ12NKgha+VjT+99wcSFa7BglIhzxrpXpqzwKC41PVXKpSyFBxIKFeN/ktN3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRzyh2Na; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hZzhxjo5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791832909; x=1823368909;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6DwsFQ3xewZ6W6NJBGeZH/qAhtWLndOqe4ZccqIyQec=;
-  b=hZzhxjo5pI8VxkTUNUo/aozuJl2tZKeCEzP425g1uN+bjkA4Abg4FJhf
-   RQfq5vaYC6dQNtdk+a+1yXSVPfoBOvu0K4GAlHNBKMuw0EUnreMIAqyZi
-   5Q0BfPurBSbSoP8Gy+dAE0lEuL2Dp0r11hPNuMYSvWTfUzKPwTq7MMF25
-   6Yq0PYtGtOTFmHiq0GgMROpMbdcIR14nzgR3SawykDQvt/39F2FDs5pJ1
-   28aLItBSTkVN/mRYY878pkIectcOck+4LZfhVwUo85TOoaV6RxJTjoIBf
-   LDtICjq2g92sakQyjOlmloWoz8FGoOhp/iEPpJfCQrZN6srKUvcjipwoC
-   A==;
-X-CSE-ConnectionGUID: FH8sqrJ9SC+DX4hgckvnHw==
-X-CSE-MsgGUID: xCtYWKtXT06R5GzSphvQ3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="657297"
-X-IronPort-AV: E=Sophos;i="6.27,154,1787036400"; 
-   d="scan'208";a="657297"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 12:21:48 -0700
-X-CSE-ConnectionGUID: txnXQ4HYSPyd0XLg+xqFJw==
-X-CSE-MsgGUID: ixB9ow7+TM+7U4MIpIbK2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,154,1787036400"; 
-   d="scan'208";a="889273"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 12:21:44 -0700
-Date: Mon, 12 Oct 2026 22:21:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ankit Agrawal <ankita@nvidia.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, jgg@nvidia.com, aneesh.kumar@kernel.org,
-	aik@amd.com, yilun.xu@linux.intel.com, iweiny@kernel.org,
-	ming.li@zohomail.com, icheng@nvidia.com, bhelgaas@google.com,
-	smadhavan@nvidia.com, ilpo.jarvinen@linux.intel.com,
-	Smita.KoralahalliChannabasappa@amd.com, linux-coco@lists.linux.dev
-Subject: Re: [RFC PATCH 3/4] PCI/TSM: Derive the coherent-range IPA from CXL
-Message-ID: <as0zRXh5f5kjULVI@ashevche-desk.local>
-References: <20261005070252.84810-1-ankita@nvidia.com>
- <20261005070252.84810-4-ankita@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRzyh2Na"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F2381F0089B;
+	Mon, 12 Oct 2026 22:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791843524;
+	bh=SdztuT0CNnTRxqqFV8Jd29fRStGataYciuWQTe88Lno=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=WRzyh2NaOnyCk+x5vq84UE/CiaqgreCrQ8DcuAFs/hjqCahoZ4AxVCtVbPKnxbnEi
+	 SBXeYwTir5rsEnH8CYXbue+kf8thLFgZNZt0VZqttar8BlzicVrBs5P6se/tdOuAmr
+	 LDyvVM5UK63bLnT2Wd1+CybjUfwJD7CPWdD1SEf166OleHqPvLvMbwdM8rZWHa5Rj8
+	 NI3uwFN0mtNGxrp417pLAUBZHKwn2nWh3Ndckz+eX+n+K97yTbdSnLG2nCHxWlrJTd
+	 JVh6Y8xoPxJebFf0RufXiLajj9ZPnKdzV1HHVvqPjugiLuy2nFyfmUZ2KmzAt2+m+C
+	 v4a8yj+vUCr5Q==
+Date: Mon, 12 Oct 2026 17:18:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Richard Cheng <icheng@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>, Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>, Lizhi Hou <lizhi.hou@amd.com>,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	stable+noautosel@kernel.org
+Subject: Re: [PATCH v13 10/10] PCI: of: Avoid np->data usage for the node
+ changeset
+Message-ID: <20261012221843.GA1409528@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,113 +74,184 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261005070252.84810-4-ankita@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20261012142826.159178-11-herve.codina@bootlin.com>
 
-On Mon, Oct 05, 2026 at 09:02:51AM +0200, Ankit Agrawal wrote:
-> The DevIf report range with range ID 0xffff describes the device's
-> coherent (CXL) memory window and unlike every other reported range
-> carries no BAR number. Recognize
-> PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT and recover that window's
-> address from the CXL side of the device instead of treating it as a
-> BAR-relative offset.
+On Mon, Oct 12, 2026 at 04:28:24PM +0200, Herve Codina wrote:
+> of_pci_remove_node() and of_pci_remove_host_bridge_node() check
+> whether the node is dynamic but not whether it has valid private data.
 > 
-> pci_tsm_coherent_range() resolves the window from pdev->coh_resource[],
-> snapshotted once with the committed CXL HDM decoders range. The
-> range to IPA conversion is applied onto range_base/range_len using
-> pdev->coh_resource[]. The ascending BAR order checks stay on the BAR
-> path only. The coherent range is required to be the last report entry
-> and is not part of the BAR sequence.
+> During the node creation, an OF changeset is used and this changeset is
+> stored in np->data to be available for removal functions.
 > 
-> An HDM decoded window lives in the CXL Fixed Memory Window and is not
-> part of a BAR. So by construction, no pci_dev resource contains it. So
-> the function pci_tsm_coh_resource_contains() validates the range against
-> pdev->coh_resource[] instead; the same known-good snapshot
-> pci_tsm_coherent_range() already trusts.
+> If, for instance, a PCI host bridge is created using a device-tree
+> overlay, the related node will have the dynamic flag set but np->data
+> will be NULL. This leads to NULL pointer dereferences.
+> 
+> Checking for a non-NULL np->data pointer to determine if the node has
+> been created by the PCI node creation process is not enough. Indeed,
+> on some platforms like PowerPC, the OF_RECONFIG_ATTACH_NODE notifier
+> (e.g., in the pci_dn_reconfig_notifier() function) intercepts node
+> additions and populates np->data with its own structure, such as a
+> struct pci_dn. In that case, np->data is not NULL but it is not related
+> to our changeset stored during the PCI node process creation.
+> 
+> Avoid the usage of np->data to store the changeset used during the PCI
+> node creation. Store our changeset in a more relevant structure: either
+> struct pci_dev when the node is created for a PCI device or struct
+> pci_host_bridge when the node is created for the PCI host bridge.
+> 
+> With that done, no ambiguity remains on removal. Indeed, this changeset,
+> if non-NULL, is the one used during PCI node creation. Check and use
+> this changeset on the removal process.
+> 
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
+> Cc: <stable+noautosel@kernel.org> # Issue not triggered but could be a problem
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-> Assisted-by: Claude:sonnet-5
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Assisted-by: LLM
-
-...
-
-> +static bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
-> +					  const struct resource *res)
-> +{
-> +	int i;
+> ---
+>  drivers/pci/of.c    | 32 ++++++++++++++++++++------------
+>  include/linux/pci.h | 11 +++++++++++
+>  2 files changed, 31 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 0a5797652e18..fbed24a244d0 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -732,15 +732,20 @@ void of_pci_remove_node(struct pci_dev *pdev)
+>  {
+>  	struct device_node *np;
+>  
+> +	if (!pdev->cset)
+> +		return;
 > +
-> +	for (i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
-
-	for (int i = 0...)
-
-> +		struct resource *coh_res = &pdev->coh_resource[i];
-
-		pci_resource_n()
-
-> +		if ((coh_res->flags & IORESOURCE_MEM) &&
-> +		    resource_contains(coh_res, res))
-> +			return true;
-> +	}
+>  	np = pci_device_to_OF_node(pdev);
+> -	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> +	if (!np)
+>  		return;
+>  
+>  	fw_devlink_set_device(&np->fwnode, NULL);
+>  	device_remove_of_node(&pdev->dev);
+> -	of_changeset_revert(np->data);
+> -	of_changeset_destroy(np->data);
+> +	of_changeset_revert(pdev->cset);
+> +	of_changeset_destroy(pdev->cset);
+>  	of_node_put(np);
+> +	kfree(pdev->cset);
+> +	pdev->cset = NULL;
+>  }
+>  
+>  void of_pci_make_dev_node(struct pci_dev *pdev)
+> @@ -800,18 +805,17 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>  	if (ret)
+>  		goto out_clear_devlink_dev;
+>  
+> -	np->data = cset;
+> -
+>  	ret = device_add_of_node(&pdev->dev, np);
+>  	if (ret)
+>  		goto out_revert_cset;
+>  
+> +	pdev->cset = cset;
 > +
-> +	return false;
-> +}
-
-...
-
-> +			for (j = 0; j < PCI_NUM_RESOURCES; j++)
-> +				if (resource_contains(pci_resource_n(pdev, j), res))
-> +					break;
-
-pci_dev_for_each_resource()
-
-...
-
-> +static int pci_tsm_coherent_range(struct pci_dev *pdev, u64 *out_base,
-> +				  u64 *out_size)
-
-Instead of the last two you can use struct range.
-
-> +{
-> +	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
-> +		struct resource *res = &pdev->coh_resource[i];
-
-		pci_resource_n()
-
-> +		if (!(res->flags & IORESOURCE_MEM))
-> +			continue;
-
-		resource_type()
-
-> +		*out_base = res->start;
-> +		*out_size = resource_size(res);
-> +		return 0;
-> +	}
+>  	kfree(name);
+>  
+>  	return;
+>  
+>  out_revert_cset:
+> -	np->data = NULL;
+>  	of_changeset_revert(cset);
+>  out_clear_devlink_dev:
+>  	fw_devlink_set_device(&np->fwnode, NULL);
+> @@ -828,16 +832,21 @@ void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
+>  {
+>  	struct device_node *np;
+>  
+> +	if (!bridge->cset)
+> +		return;
 > +
-> +	return -ENODEV;
-> +}
-
-...
-
-> +			if (pci_tsm_coherent_range(pdev, &range_base,
-> +						   &range_len)) {
-
-I would leave it on a single line.
-
-> +				pci_dbg(pdev, "No CXL region or committed HDM decoder for coherent reporting range\n");
-> +				return NULL;
-> +			}
-
-
-...
-
-> +		range_off = coherent ? tsm_offset :
-> +					tsm_offset - reporting_bar_base;
-
-Indentation is broken. I think it's better to read when it's a single line.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  	np = pci_bus_to_OF_node(bridge->bus);
+> -	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> +	if (!np)
+>  		return;
+>  
+>  	fw_devlink_set_device(&np->fwnode, NULL);
+>  	device_remove_of_node(&bridge->bus->dev);
+>  	device_remove_of_node(&bridge->dev);
+> -	of_changeset_revert(np->data);
+> -	of_changeset_destroy(np->data);
+> +	of_changeset_revert(bridge->cset);
+> +	of_changeset_destroy(bridge->cset);
+>  	of_node_put(np);
+> +	kfree(bridge->cset);
+> +	bridge->cset = NULL;
+>  }
+>  
+>  void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> @@ -899,8 +908,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+>  	if (ret)
+>  		goto out_clear_devlink_dev;
+>  
+> -	np->data = cset;
+> -
+>  	/* Add the of_node to host bridge and the root bus */
+>  	ret = device_add_of_node(&bridge->dev, np);
+>  	if (ret)
+> @@ -910,6 +917,8 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+>  	if (ret)
+>  		goto out_remove_bridge_dev_of_node;
+>  
+> +	bridge->cset = cset;
+> +
+>  	kfree(name);
+>  
+>  	return;
+> @@ -917,7 +926,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+>  out_remove_bridge_dev_of_node:
+>  	device_remove_of_node(&bridge->dev);
+>  out_revert_cset:
+> -	np->data = NULL;
+>  	of_changeset_revert(cset);
+>  out_clear_devlink_dev:
+>  	fw_devlink_set_device(&np->fwnode, NULL);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d31a8d107b1e..7b0ba9ec7b5c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -339,6 +339,9 @@ struct pcie_link_state;
+>  struct pci_sriov;
+>  struct pci_p2pdma;
+>  struct rcec_ea;
+> +#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+> +struct of_changeset;
+> +#endif
+>  
+>  /* struct pci_dev - describes a PCI device
+>   *
+> @@ -598,6 +601,10 @@ struct pci_dev {
+>  	u8		tph_mode;	/* TPH mode */
+>  	u8		tph_req_type;	/* TPH requester type */
+>  #endif
+> +
+> +#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+> +	struct of_changeset *cset; /* Changeset used for OF node creation */
+> +#endif
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> @@ -670,6 +677,10 @@ struct pci_host_bridge {
+>  	unsigned int	broken_l1ss_resume:1;	/* Resuming from L1SS during
+>  						   system suspend is broken */
+>  
+> +#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+> +	struct of_changeset *cset; /* Changeset used for OF node creation */
+> +#endif
+> +
+>  	/* Resource alignment requirements */
+>  	resource_size_t (*align_resource)(struct pci_dev *dev,
+>  			const struct resource *res,
+> -- 
+> 2.55.0
+> 
