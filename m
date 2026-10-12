@@ -1,67 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C073C07A;
-	Mon, 12 Oct 2026 14:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9116B34F24E;
+	Mon, 12 Oct 2026 14:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791815854; cv=none; b=f1fLGCqC75s29jLv9LYQRNLKv+DglPNeS1RGAVQD+yC8BD02vWTZJW7lF9OXrvooit6SSHp8uw03DbuHs5vTmH1YMWyMVfBETyr+8FSxFw+E9wbhUlvZ+hP9eYDiH6glmOnAfTSuTcTiEZoryNPQdM5hkGsM0zvuKvNqI0Sgwmw=
+	t=1791816178; cv=none; b=c4MskNz7Y5LtAcLAv4maWkjU9N6sheMBplfsBKEGRQllTFWlq08Jw1NO+j49vvxYkRuUCStwG2fAptn/uGN+eUUsgEoubuT1T6ma+GAV0XKBAydiKjOvAryryxiz41jUfoUqyYDStDQQf6S/WWTiEuhUqpIfSwiob33Jqlq0Teo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791815854; c=relaxed/simple;
-	bh=ltjGmxaGIGT13Wa59fVdC88hLDR21C2Q3xXYg1/ANac=;
+	s=arc-20240116; t=1791816178; c=relaxed/simple;
+	bh=uIw2/nYIL5h9gV0BUNh6m/qmH++OLFfRQZypSauPEnk=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=gg+fyBHqLLYjui43UpqeZr2NAl0RPkfuo/+bdsPuxky01BY5w7z8yAlTfxcQCZJ5JyI312GINfIY95+mPrZC1huEYoNbpqq0yo1gtu1sN80qJCHk95pJHnYnRUVlXXUNAkBaJttvHgrMD6fV+fxFEIKTk0a6gtWDJvQDXf1hJo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0bgycju; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=TF+4QbonWvJ5Ly+vgptNzf7GnxMh+XYtYd+Mvz2Fz8P8lxuXJG+1ee1upA9qf2kCeh1+/sRG8vVYVPfoeAObN0AQ9+bFBEdXpW2sUgDUlVWl3+J4dDa9BHSk3B8c5bxwCnrcgXBWuVgqIhH9G8MAlauGLU3fg8yMfb9gapdFaVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8+NE61s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0bgycju"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C00E01F0089B;
-	Mon, 12 Oct 2026 14:37:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8+NE61s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505091F0089C;
+	Mon, 12 Oct 2026 14:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791815853;
-	bh=FbWHLuIhiVeVC6Iz++nbZRg0RbIczCgKHw6OfUQ4AQ0=;
+	s=k20260515; t=1791816177;
+	bh=tfQui7MmNdg7F1M89hDAOxepZhPPNEMrebr8WuEPalI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=R0bgycjuquD6Kd/k3+91olNBVVusDVR5bzUOsUj1cZY/7Eo9xru+2NNm3fL3oFMam
-	 QQ/DBILtyE/cgAPPdClDGUjTB4rkrUk+lX7QnDCggv2E2XbNDX8RF4rWYB1Gh8U2wK
-	 L5NalfJGUtI/Ju8Zlwuo9XqZuJJiRk5ekRja6g0IyFuJbBhcGQG95gbosAFt6nrGdq
-	 UGHtHTjNCCxhjZEvIkRfNwPmm4RJxqxS2tZQqUdUX0dUeHWQfBa+7jsGOiIDkeyMI6
-	 uvNZulujy5+itnzuAwdxb4gATVbdR583ha15Tr7aN3BVSMdtmWThIn7DaS2qVP5lJM
-	 TsxmxCFPYY7zQ==
-Message-ID: <sashiko-outbox-168273@kernel.org>
+	b=V8+NE61spG14BMJEcp2Fzyiptd/gfKHey7E0JYG3VYqrgpHzLSIDuPhI9sIpkCwFk
+	 ssaETYa9Lyitjre1Gy5rBxmmRvuc7vs+URiL/gdupt1I09hfvdhKN/B00sGwxRGVGS
+	 gmwb7ufebTL+oP9Gp6/xUPdPNt/+4Odge/2OZ9MMb7fs8ITLWYkzDCagsUChKcjIi+
+	 m4hlv91yJsm5AMPL2Ps/f2yGwmYrKRCrU67GIJ8+V+Cj3m93DT0KDCIGnW9zpg4TXt
+	 g/AhPhXrA+JOnCA4ACcolSLJQsplUNNTYqkPAIPfYGHQB+0pLS3NNxITEXP9Bk6SrG
+	 sl92gsNJCoWgw==
+Message-ID: <sashiko-outbox-168278@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 07/10] PCI: of: Clear fwnode->dev during root bridge
- node removal and error path
+Subject: Re: [PATCH v13 09/10] PCI: of: Remove fwnode_dev_initialized() call
+ for a PCI root bridge node
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Herve Codina" <herve.codina@bootlin.com>
-Cc: linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20261012142826.159178-8-herve.codina@bootlin.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20261012142826.159178-10-herve.codina@bootlin.com>
 References: <20261012142826.159178-1-herve.codina@bootlin.com>
- <20261012142826.159178-8-herve.codina@bootlin.com>
+ <20261012142826.159178-10-herve.codina@bootlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 14:37:32 +0000
+Date: Mon, 12 Oct 2026 14:42:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-> During the of_pci_make_host_bridge_node() call, an OF node is created
-> dynamically and its fwnode device (fwnode->dev) is set to the PCI root
-> bridge device using the fw_devlink_set_device(&np->fwnode, &bridge->dev)
-> call.
+> During the instantiation of devices described by a device-tree overlay
+> applied on a PCI device, devlink displays the following kind of debug
+> messages instead of creating the expected links:
+>    'Not linking xxxx - might never become dev'
 >=20
-> On removal, of_pci_remove_host_bridge_node() is called and calls
-> device_remove_of_node() which in turn set to NULL the related
-> dev->fwnode.
+> Without those expected links, the device removal order cannot be
+> correct.
 >=20
-> Later in the removal sequence, device_del() is called and runs its
-> cleanup logic:
+> Those debug traces are printed by fw_devlink_create_devlink(). In our
+> use case, they are all printed because the supplier of the link has at
+> least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+> set.
 >=20
->     if (dev->fwnode && dev->fwnode->dev =3D=3D dev)
->         fw_devlink_set_device(dev->fwnode, NULL);
+> The culprit ancestor is the PCI root bridge.
 >=20
 > [ ... ]
-> error path.
+> are correctly created.
 >=20
 > Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
 > Cc: stable@vger.kernel.org
@@ -71,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012142826.1591=
-78-1-herve.codina@bootlin.com?part=3D7
+78-1-herve.codina@bootlin.com?part=3D9
 
