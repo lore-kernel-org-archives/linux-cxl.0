@@ -1,101 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B490476681;
-	Mon, 12 Oct 2026 14:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F163D8902;
+	Mon, 12 Oct 2026 14:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791816290; cv=none; b=eN8xzrMd+HNeRyeSKv3DFstHE7QO+rchDSl5pWLSQd0ea8LAQ45waNqNR5x17xZ28Eo14VP0hg5mSJyP0OJC0xlnL6YbkZmEb36PXbZqgNqFkfrQg1NAeQ7XVSD8DeokNtrregDZN5h/iAFiSl7WNLfnfXhh40JMuNNLEkKwoRo=
+	t=1791816507; cv=none; b=V9jeSupatnJtCadgDL7ztlRr4zdhYmnDa8VAEMdcWMpSTCfHTdlypT53M+w5f5FHKvfD9FK/SCfS0+uSKupADHNhByAkS4Jn7lbIN6FSvp3UyM/0NF67mKQzfmZXxzqzeY+v5HZJe7e6tQvwwbxiln0KRt0mcIwEvOpWqfAJ5So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791816290; c=relaxed/simple;
-	bh=2uUq+ZtC/cdtddN4JJ6UvSmEoku/xe9QR+7CNt+e1Rg=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=umQPiApELEKBuSeUA2AAkK+jYA8woAV7JUfZtJuOAxtNQZaYpma04g5Mgi2VRddVPtNpnsbuAXdCPRKc7Z/rlbgSMeFZQNWAHBhjx0+vHLgLGhqE4ODkUQy6Xg4ZmRDYGLoxFvHkWq113h/ZvwJBDdLCoOq5OE2HEe73smSMGp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4KeW1gV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791816507; c=relaxed/simple;
+	bh=yIM8lxIM4nwOTva6lIHbyZD4GX0+4++YzhtQHCO8CdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OOUnCHzJzS159BI6I2JpmYxtw27TqBh1BZPA+ViXKwjRYe0cBRJIGktOaqXlcopCvRqkFHwFO4h8ske0cOBMccxWhwCECGb3S9GTmNE5rLVsMye6r6SOL9IfQo/4rWQNDU3O+hxJXSHJxnVA1kFPDSRIhw06SDQb/KPg5wz4RS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgSWFl0L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4KeW1gV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5A31F0089B;
-	Mon, 12 Oct 2026 14:44:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgSWFl0L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB501F0089B;
+	Mon, 12 Oct 2026 14:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791816289;
-	bh=zB2KWp1GkiZ64tse1ghCOBaYf9GFmHZKAMTLzLoUfxw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=a4KeW1gVSaF7qnT5ZCZMuk6r5NYQZD6Z1qRXyX6Wl/V2VCxsHgQt4IqRVfagdjCnO
-	 yf0sKo/teRK4r0ce+BJndC9WECoKtgm8/+3f7UZCoBm7IxeAhnrydHKA1/HmXcgUDe
-	 Pv2XvT7k/ZSgoVltasQEp53utEgoKeVw6akg+9CDYU6YidhLoSaLQeTJ9DviLkLX2r
-	 08cK9TOhH1Qou9BplNzFmt0jPVPA4F1boTjYNv4EDjj3SSJm+7NU/A0vg22o0E2hT8
-	 2Unjh+8UMBkzYToe9tlqvW5dcH8uGg8ar0w+D5Px8EEeuB4pq/JBDSOuP7LTACtZAq
-	 DCeJ46U8hzgDA==
-Message-ID: <sashiko-outbox-168281@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 08/10] PCI: of: Set fwnode device of newly created
- PCI device nodes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Herve Codina" <herve.codina@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20261012142826.159178-9-herve.codina@bootlin.com>
-References: <20261012142826.159178-1-herve.codina@bootlin.com>
- <20261012142826.159178-9-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 14:44:48 +0000
+	s=k20260515; t=1791816506;
+	bh=2JmtNNGsQ6gXthWHmY2GYVjAYE1sxJ8hwkk0A4TdoEw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=LgSWFl0LwEZyyzuM65lG114h7Bpi4nZtr/jB85mElHNJByp9zML/uwC/BSK3kMBC8
+	 OtyFbDv7nDiAdeKYT2BQgeyBHkc0t0AtGZ+m8a2dyn2g+erU3NOzk/J+902OpFMb/4
+	 ZdugfgNuq2bjLJ24aC1MNd/NtJRQJjPcwVm+LiCfSg5tiyMZhCfj+NK76P+hZPR8pM
+	 PeAIXrc3lUo54cVrzgv+JlecebR7xeQakVVPLWz8KpCPL92EQplHC0EC+cr62e9vVL
+	 mYEMd+NlvwfX7ZhgAbjRin1tuAaNaYZ/vTRyUnIZaMkTd9GOyEm7CuCK01SfUYFuNf
+	 XIOlmKwjNVCWg==
+Date: Mon, 12 Oct 2026 15:48:17 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: jianyungao89@gmail.com
+Cc: linux-kernel@vger.kernel.org, Dan Williams <djbw@kernel.org>, Vishal
+ Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev (open
+ list:DEVICE DIRECT ACCESS (DAX)), linux-cxl@vger.kernel.org (open
+ list:DEVICE DIRECT ACCESS (DAX))
+Subject: Re: [PATCH] dax: fix mapping_store() returning 0 instead of error
+ code
+Message-ID: <20261012154817.11c30692@jic23-hlaptop>
+In-Reply-To: <20261011131857.30481-1-jianyungao89@gmail.com>
+References: <20261011131857.30481-1-jianyungao89@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] base: TOCTOU data race and UAF on fwnode->dev access
---
+On Sun, 11 Oct 2026 21:18:57 +0800
+jianyungao89@gmail.com wrote:
 
-commit dc94be607770b564614555ac56ea83f070fa3dd4
-Author: Herve Codina <herve.codina@bootlin.com>
+> From: Jianyun Gao <jianyungao89@gmail.com>
+> 
+> When the region driver is not loaded, mapping_store() returns rc
+> which is 0 at that point, instead of an error code. Set it to
+> -ENXIO to match the equivalent check in size_store().
+> 
+> Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
+> Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
 
-PCI: of: Set fwnode device of newly created PCI device nodes
+Looks correct to me.
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
-Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
-nodes are created and filled based on PCI core information but the
-fwnode device field is not set.
+I'm curious, found by inspection or some tool?
 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 29b63a9090ae3..8914bfa25dc11 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -736,6 +736,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
->  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
->  		return;
-> =20
-> +	fw_devlink_set_device(&np->fwnode, NULL);
+J
 
-[Severity: High]
-Does this locklessly clear the fwnode device while another traversal might =
-be
-reading it?
+> ---
+>  drivers/dax/bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index b809e1a264af..262f97b5e7aa 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -1192,7 +1192,7 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+>  		return rc;
+>  	if (!dax_region->dev->driver) {
+>  		up_write(&dax_region_rwsem);
+> -		return rc;
+> +		return -ENXIO;
+>  	}
+>  	rc = down_write_killable(&dax_dev_rwsem);
+>  	if (rc) {
 
-If a PCI device is concurrently removed while a driver is being bound to
-another device on the same system, of_pci_remove_node() clears fwnode->dev
-locklessly here.
-
-Concurrently, __fw_devlink_pickup_dangling_consumers() in drivers/base/core=
-.c
-can traverse the fwnode tree and read it locklessly:
-
-	if (fwnode->dev && fwnode->dev->bus)
-		return;
-
-Can this lead to a NULL pointer dereference if the compiler emits two loads
-and the pointer is cleared in between?
-
-Can this also cause a use-after-free if the pointer is read, then the device
-is concurrently unregistered and freed before the bus field is accessed, as
-no reference count is held during the lockless read?
-
->  	device_remove_of_node(&pdev->dev);
->  	of_changeset_revert(np->data);
->  	of_changeset_destroy(np->data);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012142826.1591=
-78-1-herve.codina@bootlin.com?part=3D8
