@@ -1,108 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66D6521216;
-	Tue, 13 Oct 2026 17:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D862351B193
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791911417; cv=none; b=i+T8Ej2qkna1Z2q4ORHI2eMJKxs1dTdqHf8IbpSTApy6qCFoekaDQ5L65YcIaRtw1OaXnZwbx+m76ABW0qjdBKjms6FEHgXOA85UhXlg+ikx53ubqAetBS5Stm5xGW/o09IJrcGU5bVtSMWuVPNMZVVBNGc+sjILVme/mT5zXpc=
+	t=1791913830; cv=none; b=Cw/fVxRDcZn12r1pgZ7mCr8VI86MwAS4z6setvpU3701XZbJAThN/J4+R774hWowGOmtLyDa4kyWuqJkNtAMZ4sE3VqgCOMssm27GOvidEAz/AESbzHZJqgRZK+eR8UL/Q+TQB0wDI/GPXp49tTQmNUSKS1g5Pu8x+vcQyyI5hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791911417; c=relaxed/simple;
-	bh=31wSxNICfkmal3vU/eprJthAv0OgifKabJQZRPNxV7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UTsTHRVhSiR1amWX35X3PBC8ONmykEm9y9lDzj3WEF3xjiIdiih+5iReS/QlCa4cJQoyokLfbS8oNeK9UMe+GgNdn+C8Fg5bdQdRof6A60T/UIkVyklThzXAYQViLq2iSaInMCOvnVAH0olAHVPCdKuAZt7N/TJX/Oimi5sN2jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIW2VPXQ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1791913830; c=relaxed/simple;
+	bh=LeDPnBgrM7pNQ8OlNZHsJRQR3r2PXLGLegBZ2Qsqzf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iTPqqa4NXMBlxd8rdlMzrWMILGW1u4wLgbzA3ezcQGWWnGfipMSaW1IyivfsQEKcogOLq6eG6dfCgXIfR7IIClL/UEmOFInbrF7iTOLRQ4Tgwg+AxWKBzXApQwH12kvh4w3dsTswT6s3CSMCaekb/gS+W+9nTR0xlclJzSkw71M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OUMI9hJu; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FjGgQOgH; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIW2VPXQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791911416; x=1823447416;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=31wSxNICfkmal3vU/eprJthAv0OgifKabJQZRPNxV7k=;
-  b=OIW2VPXQwRv0rlDyNyDJNswUyLSy7pd7Q9roc+QyRDCrjSdahYKVD0jN
-   i5lNx8zlq+duIDgVqu/Lx3tvKO+XGaPH1OcBgnqOv0fe6iPmzErs7AfHC
-   PhHv3Y+a4bNLtkZGu1cWk08rnNnPFpxIxr4ohObhKfezia23LMYujb+Pa
-   yr7hsSbLKzCnFkW8nMi/YRVTuXFai3VuX+qD7Q+9JS7xetb7Lef6aPq2+
-   vNFhwKFaioWonVElnSlob5Um6cLNKVvCEPaq0kbh8lfyjx6z/RfD/sNDu
-   Qr4J4s/e6CVw+mcj8W+nydT2/uvG4MAygI6GZpBWR9TvNeEzuRrQRMyAW
-   A==;
-X-CSE-ConnectionGUID: CqCjNvZCS5m5qIKQzQpWXA==
-X-CSE-MsgGUID: mza4WC9ITWOiYhgXaqpb7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="739432"
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="739432"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 10:10:15 -0700
-X-CSE-ConnectionGUID: +uj1hekMSVmlGCrwEtJFgA==
-X-CSE-MsgGUID: cIZRl4ylRMqq5Fv/h+mL0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="1105737"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.235]) ([10.125.109.235])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 10:10:15 -0700
-Message-ID: <e6d4933a-f448-450f-a85f-16d2bb459a50@intel.com>
-Date: Tue, 13 Oct 2026 10:10:13 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OUMI9hJu";
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FjGgQOgH"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 26B08C653FA
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:51:22 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 851C760362
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 17:50:26 +0000 (UTC)
+Received: by mail.galae.net (Postcow, from userid 0)
+	id ECD7911D7183A; Tue, 13 Oct 2026 19:48:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1791913826; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=kAb7NHjVc8QoTRTxUb1OG7thf2F5YhXlem84GhsJqnE=;
+	b=OUMI9hJuswgAtLJiPWWJQoB3sqPt7mAc2HyZd2IYk7QvFHovvRTe7/IQRwJTNmnigLxcm0
+	nK7fmbk8koMicDXzHuGbr5MsVpKo45RzNAl6RSYvYhRu63t0tif3rkiac72LBGpngD4DbR
+	HFx03XoDuNEk0D7kQwL9TsmDT5ehFmtqkhWH0giBcGxVsLGsU9rmO4YLViYXrKr3Jhh0Nd
+	Zq1o/JGO1b7VXK996oHuZrLrZxd9KOFT1nFGh3EubQStnFiO8PDyQeGnby8o0nA+61un/H
+	ldUZ2LdRubsOikUHzTmLUAeAEgMVdlVc2e+z7/XRtxAGH851XvOie1DZCV4xDA==
+Authentication-Results: mail.galae.net;
+	none
+Received: from mail.galae.net ([172.22.1.253])
+	by 9e7fea892943 with LMTP
+	id SKPIALTuzGoYHxEAtaWaaQ
+	(envelope-from <herve.codina@bootlin.com>)
+	for <herve.codina@bootlin.com>; Mon, 12 Oct 2026 16:29:08 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F37FF11D708B4;
+	Mon, 12 Oct 2026 16:28:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1791815339; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=kAb7NHjVc8QoTRTxUb1OG7thf2F5YhXlem84GhsJqnE=;
+	b=FjGgQOgHcTUDDGnIbSuozwmNqeMTRdBQVZaPNnUfhfNiHolctNHx1hOE21Ll6aYc6zsp1v
+	tYfEnkKxdGOOtY680hMNAcNEJaM9GkRVagicVm8ou5DFrd5VuLmwgGbbtWaPBFa0nRcAW7
+	iuGKxtDnIWPKwfwaYZObdeJ9zckNqniI+KLN1vyuvrXhXy0sCRuVe0N2R2v06p+hCVJxzJ
+	Oxu6iH3orqfi6ElTPOegR+Wj2TpZlYb7tN7T2IqKprgAnyueowX5lDSHa/Zsq+QxXiQiAc
+	GNRjXOfG2P+7tWArtGJk8xGwxsp+opS6e8tVRR7Xqp4HXMpqP3lAkPgm74kLIg==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Richard Cheng <icheng@nvidia.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Lizhi Hou <lizhi.hou@amd.com>
+Cc: driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	stable@vger.kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v13 01/10] driver core: fw_devlink: Introduce fw_devlink_set_device()
+Date: Mon, 12 Oct 2026 16:28:15 +0200
+Message-ID: <20261012142826.159178-2-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261012142826.159178-1-herve.codina@bootlin.com>
+References: <20261012142826.159178-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dax: fix dax_core_init error return code
-To: jianyungao89@gmail.com, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org, Dan Williams <djbw@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- "open list:DEVICE DIRECT ACCESS (DAX)" <nvdimm@lists.linux.dev>,
- "open list:DEVICE DIRECT ACCESS (DAX)" <linux-cxl@vger.kernel.org>
-References: <20261012151857.22534-1-jianyungao89@gmail.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20261012151857.22534-1-jianyungao89@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
+X-Last-TLS-Session-Version: None
+X-Rspamd-Queue-Id: ECD7911D7183A
+X-Spamd-Result: default: False [1.77 / 30.00];
+	DATE_IN_PAST(1.00)[27];
+	MID_CONTAINS_FROM(1.00)[];
+	BAYES_HAM(-0.73)[77.64%];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_NO_TLS_LAST(0.10)[];
+	URIBL_BLOCKED(0.00)[localhost:rdns,localhost:helo,bootlin.com:mid,bootlin.com:email,nvidia.com:email,intel.com:email,qualcomm.com:email,cirrus.com:email,linaro.org:email];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	BCC(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[herve.codina@bootlin.com];
+	RCPT_COUNT_TWELVE(0.00)[45];
+	PREVIOUSLY_DELIVERED(0.00)[herve.codina@bootlin.com];
+	DKIM_SIGNED(0.00)[bootlin.com:s=dkim];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[nvidia.com,lunn.ch,kernel.org,linuxfoundation.org,google.com,opensource.cirrus.com,cirrus.com,linux.intel.com,gmail.com,stgolabs.net,intel.com,zohomail.com,bootlin.com,amd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MAILCOW_DOMAIN_HEADER_FROM(0.00)[bootlin.com]
 
+Setting fwnode->dev is specific to fw_devlink.
 
+In order to avoid having a direct 'fwnode->dev = dev;' in several
+place in the kernel, introduce fw_devlink_set_device() helper to perform
+this operation.
 
-On 10/12/26 8:18 AM, jianyungao89@gmail.com wrote:
-> From: Jianyun Gao <jianyungao89@gmail.com>
-> 
-> dax_core_init() mistakenly returns 0 on error paths. Change the
-> error return to use rc so the actual error code is propagated
-> to the caller.
-> 
-> Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
+Having this helper allows to hide the fwnode devlink related stuff
+behind the helper.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+Cc stable because used by other patches with Fixes + Cc stable
+---
+ include/linux/fwnode.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> ---
-> 
-> Changes in v2:
-> - Drop unnecessary goto label, keep direct return for dax_fs_init() error
-> - Add Fixes tag and Cc stable
-> 
-> Link: https://lore.kernel.org/lkml/20261011132017.31131-1-jianyungao89@gmail.com/ # v1
-> 
->  drivers/dax/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 45f84b0eb909..210f4af479f0 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -738,7 +738,7 @@ static int __init dax_core_init(void)
->  	unregister_chrdev_region(dax_devt, MINORMASK+1);
->  err_chrdev:
->  	dax_fs_exit();
-> -	return 0;
-> +	return rc;
->  }
->  
->  static void __exit dax_core_exit(void)
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index a9dcaf7e7076..3ce49575cf82 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -260,4 +260,10 @@ void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+ void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode);
+ bool fw_devlink_is_strict(void);
+ 
++static inline void fw_devlink_set_device(struct fwnode_handle *fwnode,
++					 struct device *dev)
++{
++	fwnode->dev = dev;
++}
++
+ #endif
+-- 
+2.55.0
 
