@@ -1,195 +1,255 @@
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-113.mta0.migadu.com [91.218.175.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7493E37A83D
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 06:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791874552; cv=pass; b=LD0HMCcQK5ts+73I1hKAiqex4xTLBfJtwxXtkLOYAWg4xveenyZfa8JMDIMDDj9w9HG2/XZv2S/mW7CyFLxSVdc2epaVXG2vdSxTTBUABUF8eco45L5OCCnwpIGdjwd5ufYcvFeEgsRC1DRVqN5yy/8x4ZzO0pVuZOqdVHwNlf0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791874552; c=relaxed/simple;
-	bh=b9Zzbm0voiC7MXkEl6faft3QouwNl8ydxTmAAD89NSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eE/nlm9aLVlJKBc5DexH7L1N/37bC9bYdW8BswrLa7qkNGRtc+kDq5k4qdXPgsav/B9yQD/t6qrWsDq1O/gCdsP8NRDngW+CwdH7LG2hKjqFwFmm9BhcKZYan0tfzBZbh/e9yOB1bbSD7YJC4zYp7TZ7S+bqhX1M+qGaCcJyly0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=E/SwXDAg; arc=pass smtp.client-ip=165.173.180.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5672E39A806
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 08:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.113
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791881181; cv=none; b=HCYlUs0DZPKkLVOXHm2b44ak1AvnxEueAF3qi0Me7TbJnD8Y4yZxxrP4hKeDtYup4LWsqmobEV01OGOUsvfMe+utTP5RyA840Kzp+gVN1+2pUfvo8AzyZyf7NafK7x2ICHHrAVaioY+yjInAlRoHKuXj8mjdOEyCBp/wH0us3/8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791881181; c=relaxed/simple;
+	bh=H8lllLIff+92B/hWmTd9yFlU51GFwgtXNyQSmhu85r0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=cvjxyI4m/e0P8H/LEnP73J6o6en1t1hGJUwtAWPJFf4xkwcPadGgC27vsj3nY2639Gj6iRzOl+Eww2ReNZM1pOodgvGT+0ev03Nfp1IEbzj8qYQZAryoA4J3wtxsezmtJiPTzbFLEVkHczqlobuqApnQa6lxGTOmNFhRnR9XTws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eLblAugI; arc=none smtp.client-ip=91.218.175.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="E/SwXDAg"
-ARC-Seal: i=1; a=rsa-sha256; t=1791874544; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fQW0UVUL4gZsOWrECROaYTUeMlKqgRJjRVGDdJp2sBUGBXFL7D87RfhZmqo45vZ34jWdOogdKRHGVpc0Z9z2PQoRparRoCGUCpQK5oUYHq+cti6IhTVkqjYnI0288UJPYbA4/skmtw7pulf/36R5CJEt5AcUiWBYfguxZjIn1PE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791874544; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WyMz92mmGLEVl72nhxfdv9vbKza/NdA4ZFEW/d5KvIM=; 
-	b=XFxUyHpP73jIWCGZhJKhbBGhTQANEExsbCGvkqGh6Q3pDiHw89ehOUTrHHi9pYZT2vjUFrRpa11JX76XG3DYULmwaZblnSNXSrJqoo6LKyarEr+RcyXUdSjbBnYf/jXs4LoMyeMyT3NWpdj5hV12+1iN/YpMTuXvATgN3+Acnrg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791874544;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=WyMz92mmGLEVl72nhxfdv9vbKza/NdA4ZFEW/d5KvIM=;
-	b=E/SwXDAglGDZZaVw2lOVl0hy/9N87o0+H2FJBPDSBg2f28Q3vD+a+KhRbvFkV65z
-	5YropfBbyZIHnhpGN6qv0I6rmkiXcjgOPVIyqzCX5RXRIwUpcqTMnESv4hS+tO1oPvC
-	qYGhcXgNkzGfJnqgxtIJGlkA0I0duNFPGBCW/3lM=
-Received: by smtp.zohomail.com with SMTPS id 1791874543388404.81828891170574;
-	Mon, 12 Oct 2026 23:55:43 -0700 (PDT)
-Message-ID: <8322d18a-19ce-47a3-b926-ac0dcff59c70@zohomail.com>
-Date: Tue, 13 Oct 2026 14:55:39 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eLblAugI"
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=H8lllLIff+92B/hWmTd9yFlU51GFwgtXNyQSmhu85r0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791881177; v=1; x=1792485977;
+ b=eLblAugII24POJZpKCdUXBMbM1wuHxxYb5gjVYuK7hExZIYriB6nqhDu8jRNI11ses6cnNP2
+ nr4Q71jWLhEjU1NdePsKO7JyNxxG0HrAH9KYzmHvRKxg+IGDBgpAd50E3eblhAXREj6ypC8YWLM
+ zuVzfmrDeJJT8MAB3mx+i4oY=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 9fa3813cf037b6ce;
+	Tue, 13 Oct 2026 08:46:17 +0000
+X-Mizu-Trace-ID: 9fa3813cf037b6ce
+X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] cxl/region: Factor out cxl_port_setup_decoder()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-References: <cover.1791860305.git.alison.schofield@intel.com>
- <b518a60cae9a472c6463195f0173800378990d2f.1791860305.git.alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <b518a60cae9a472c6463195f0173800378990d2f.1791860305.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227fcd3245efff7a67b8de6db9a0000aac71da32e5d72928b5d3dee9463f5481658383a6f7fbf5c22:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: [PATCH v3 2/2] dax/bus: fix Device DAX range alignment validation
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <as15T35oOudDM64C@aschofie-mobl2.lan>
+Date: Tue, 13 Oct 2026 16:45:59 +0800
+Cc: Muchun Song <songmuchun@bytedance.com>,
+ Dan Williams <djbw@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Joao Martins <joao.m.martins@oracle.com>,
+ nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BE74CAF6-371A-43DB-835A-65C799C5A7B9@linux.dev>
+References: <20260924025035.1265035-1-songmuchun@bytedance.com>
+ <20260924025035.1265035-3-songmuchun@bytedance.com>
+ <as15T35oOudDM64C@aschofie-mobl2.lan>
+To: Alison Schofield <alison.schofield@intel.com>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
 
-在 2026/10/13 12:26, Alison Schofield 写道:
-> Once cxl_switch_port_setup_targets() has calculated the interleave for a
-> port's decoder, it either checks that interleave against the decoder
-> settings found for an auto region, or checks the decoder's interleave
-> capabilities and programs the decoder for a user created region. Both paths
-> are open coded in cxl_switch_port_setup_targets().
->
-> Move both paths to a new helper, cxl_port_setup_decoder().
->
-> No functional change.
->
-> Assisted-by: LLM
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
 
+> On Oct 13, 2026, at 08:20, Alison Schofield =
+<alison.schofield@intel.com> wrote:
+>=20
+> On Thu, Sep 24, 2026 at 10:50:35AM +0800, Muchun Song wrote:
+>> dev_dax->align describes the page size used by a Device DAX mapping.
+>> Both the start and size of every range must therefore be aligned to =
+it;
+>> otherwise the starting PFN cannot represent a naturally aligned page =
+of
+>> that size.
+>>=20
+>> Only range sizes are currently validated. A dynamic device can =
+therefore
+>> select a large-page alignment and allocate a range whose start is not
+>> naturally aligned to that page size. The device binds successfully, =
+but a
+>> subsequent write to a userspace mapping may trigger a kernel panic.
+>>=20
+>> The automatic resize path can also split a size-aligned request =
+across
+>> arbitrary free gaps. When devices with different alignments fragment =
+a
+>> region, this can extend a range by less than its alignment. A later
+>> allocation then fails, leaving the failed resize partially applied.
+>>=20
+>> Validate both the start and size of allocated and adjusted ranges. =
+Make
+>> the resize path account only for usable aligned space before changing =
+any
+>> ranges, and skip gaps that cannot satisfy the device alignment. =
+Initialize
+>> the device alignment before allocating its initial range so that all
+>> allocations use the same validation. Perform size validation under =
+the
+>> same locks as alignment updates so the alignment cannot change before
+>> resizing begins.
+>>=20
+>> A mapping with an unaligned start is now rejected with -EINVAL, while =
+a
+>> naturally aligned mapping still binds successfully.
+>=20
+> Hi Muchun,
 
-See my comment in patch #7.
+Hi Alison,
 
-> ---
->   drivers/cxl/core/region.c | 88 ++++++++++++++++++++++-----------------
->   1 file changed, 50 insertions(+), 38 deletions(-)
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index ee9e615a9a4c..229372123271 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1561,46 +1561,11 @@ static int cxl_port_calc_interleave(struct cxl_port *port, struct cxl_region *cx
->   	return 0;
->   }
->   
-> -static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_region *cxlr,
-> -					 struct cxl_endpoint_decoder *cxled)
-> +static int cxl_port_setup_decoder(struct cxl_port *port, struct cxl_region *cxlr,
-> +				  struct cxl_decoder *cxld, int iw, int ig)
->   {
-> -	int iw, ig, rc, pos = cxled->pos;
-> -	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-> -	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
->   	struct cxl_region_params *p = &cxlr->params;
-> -	struct cxl_decoder *cxld = cxl_rr->decoder;
-> -	struct cxl_switch_decoder *cxlsd;
-> -
-> -	/*
-> -	 * While root level decoders support x3, x6, x12, switch level
-> -	 * decoders only support powers of 2 up to x16.
-> -	 */
-> -	if (!is_power_of_2(cxl_rr->nr_targets)) {
-> -		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev),
-> -			cxl_rr->nr_targets);
-> -		return -EINVAL;
-> -	}
-> -
-> -	cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> -	if (cxl_rr->nr_targets_set) {
-> -		int distance = cxl_port_peer_distance(port, cxlr);
-> -
-> -		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
-> -			if (ep->dport == cxlsd->target[i]) {
-> -				rc = check_last_peer(cxled, ep, cxl_rr,
-> -						     distance);
-> -				if (rc)
-> -					return rc;
-> -				goto out_target_set;
-> -			}
-> -		goto add_target;
-> -	}
-> -
-> -	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> -	if (rc)
-> -		return rc;
-> +	int rc;
->   
->   	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->   		if (cxld->interleave_ways != iw ||
-> @@ -1639,6 +1604,53 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_regio
->   	}
->   	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport_dev),
->   		dev_name(&port->dev), iw, ig);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_region *cxlr,
-> +					 struct cxl_endpoint_decoder *cxled)
-> +{
-> +	int iw, ig, rc, pos = cxled->pos;
-> +	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-> +	struct cxl_decoder *cxld = cxl_rr->decoder;
-> +	struct cxl_switch_decoder *cxlsd;
-> +
-> +	/*
-> +	 * While root level decoders support x3, x6, x12, switch level
-> +	 * decoders only support powers of 2 up to x16.
-> +	 */
-> +	if (!is_power_of_2(cxl_rr->nr_targets)) {
-> +		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			cxl_rr->nr_targets);
-> +		return -EINVAL;
-> +	}
-> +
-> +	cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> +	if (cxl_rr->nr_targets_set) {
-> +		int distance = cxl_port_peer_distance(port, cxlr);
-> +
-> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
-> +			if (ep->dport == cxlsd->target[i]) {
-> +				rc = check_last_peer(cxled, ep, cxl_rr,
-> +						     distance);
-> +				if (rc)
-> +					return rc;
-> +				goto out_target_set;
-> +			}
-> +		goto add_target;
-> +	}
-> +
-> +	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> +	if (rc)
-> +		return rc;
->   add_target:
->   	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
->   		dev_dbg(&cxlr->dev,
+>=20
+> The commit message could be condensed. I think the two failure =
+scenarios and
+> the changes needed to address them are sufficient.Implementation =
+details
+> are excessive.
+
+Yes, I'll trim the commit message.
+
+>=20
+> But before that, need to address something else, see below-
+>=20
+>>=20
+>> Fixes: 6d82120f4156 ("device-dax: add an 'align' attribute")
+>> Assisted-by: LLM
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>> v3:
+>> - Serialize size alignment validation with alignment updates to avoid =
+a
+>>  partial shrink after a concurrent alignment change (reported by =
+Sashiko)
+>> - Document the size validation serialization in the commit message
+>>=20
+>> v2:
+>> - Keep the alloc_is_aligned() name to avoid unrelated helper renaming
+>>  (suggested by Dave Jiang)
+>> - Move this patch after the mapping error reporting fix for =
+independent
+>>  backports (suggested by Dave Jiang)
+>> ---
+>> drivers/dax/bus.c | 144 =
++++++++++++++++++++++++++++++++++++-----------
+>> 1 file changed, 109 insertions(+), 35 deletions(-)
+>>=20
+>> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+>=20
+> snip
+>=20
+>=20
+>> @@ -1468,6 +1542,7 @@ static struct dev_dax =
+*__devm_create_dev_dax(struct dev_dax_data *data)
+>> 	return ERR_PTR(-ENOMEM);
+>>=20
+>> 	dev_dax->region =3D dax_region;
+>> + 	dev_dax->align =3D dax_region->align;
+>=20
+>=20
+> Moving this assignment means that initial allocations for static
+> pmem regions now go through the new range_is_aligned() check.
+>=20
+> I'm concerned this may reject existing namespaces with 4K alignment.
+> nd_pfn_validate() doesn't require the data offset to be aligned to
+> memremap_compat_align(), and older namespace formats may have offsets
+> that don't meet that requirement.
+>=20
+> Can you check whether an existing namespace with such an offset
+> would still probe successfully after this change?
+
+Good catch.
+
+I reproduced this with a 4K-aligned, map=3Dmem Device DAX namespace
+created by Linux 4.19:
+
+  ndctl create-namespace -f -e namespace0.0 \
+          --mode=3Ddevdax --align=3D4K --map=3Dmem
+
+The namespace has a version 1.2 info block with an alignment of 0x1000
+and a data offset of 0x22000. Its data range therefore starts at
+0x240022000, which is 4K aligned but not 2M aligned.
+
+The namespace probed successfully on Linux 4.19. With the patch as
+posted, however, dax_pmem failed to probe it with -EINVAL and
+/dev/dax0.0 was not created.
+
+>=20
+> I'm also wondering whether the initial range needs to satisfy
+> memremap_compat_align(), or whether checking dev_dax->align is
+> sufficient here.
+
+Checking dev_dax->align is sufficient for a static Device DAX range.
+
+For static Device DAX, libnvdimm supplies a pre-populated pgmap, and
+nd_pfn_validate() already verifies that the start and end of the full
+pgmap satisfy memremap_compat_align(). The dev_dax range is only the
+usable data subset after the namespace metadata, so it only needs to
+satisfy dev_dax->align.
+
+Dynamic Device DAX is different because its pgmap is constructed
+directly from the dev_dax ranges. Those ranges still need to satisfy
+max(dev_dax->align, memremap_compat_align()).
+
+>=20
+> Have you also tested the static pmem Device DAX path, particularly
+> with namespaces created by older kernels? The reproducer described
+> in the cover letter addresses the alignment failure, but I'd like
+> to make sure we aren't introducing a regression for existing
+> namespaces.
+
+Yes. After making the below change, I booted the same persistent
+namespace created by Linux 4.19 without recreating it or modifying its
+info block. It probed successfully, /dev/dax0.0 was restored, and it
+retained its original 4K alignment and size.
+
+I will include the following change in the next revision:
+
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index 8616527656d8..5828ab334084 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -850,15 +850,23 @@ static int devm_register_dax_mapping(struct =
+dev_dax *dev_dax, int range_id)
+
+ static inline unsigned long dev_dax_min_align(struct dev_dax *dev_dax)
+ {
++       /*
++        * A static device has a pre-populated pgmap whose range already
++        * satisfies memremap_compat_align(). Its data range may start =
+after
++        * metadata at dev_dax->align granularity.
++        */
++       if (static_dev_dax(dev_dax))
++               return dev_dax->align;
++
++       /*
++        * The minimum mapping granularity for a dynamic device instance =
+is a
++        * single subsection, unless the arch says otherwise.
++        */
+        return max_t(unsigned long, dev_dax->align, =
+memremap_compat_align());
+ }
+
+ static inline bool alloc_is_aligned(struct dev_dax *dev_dax, =
+resource_size_t size)
+ {
+-       /*
+-        * The minimum mapping granularity for a device instance is a
+-        * single subsection, unless the arch says otherwise.
+-        */
+        return IS_ALIGNED(size, dev_dax_min_align(dev_dax));
+ }
+
+Thanks,
+Muchun
+
+>=20
+> -- Alison
