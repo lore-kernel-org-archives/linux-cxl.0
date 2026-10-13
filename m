@@ -1,300 +1,188 @@
-Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871EE5328B8
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 15:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A201516179;
+	Tue, 13 Oct 2026 16:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791906679; cv=none; b=F92V2EfprVQWg+laNKib7iEki9FjFwOq4v3vxl+ARlGMoWqcq9oFAL3pHTF8ZvuAXBsRhAuckBgd/gr8BmxgFug6yqGJFI28cSyY2D0cz9hBpb0grkKkD7mSXLwYQZN1cNngkm/jmNGxfqJ7BMjdzyTBuy/E4Xyz1ped7o+HiNk=
+	t=1791908284; cv=none; b=iBUaFxJnTAuFvVQo8H2Px4yaVPmx0bRu9YYJdkikkYX9I3ZxP/UiDpHJJ7zJZVVb3IQkzAApUFmobU+ZtVkCBf8C7VvnQhXY9IUrHiDfv6IyKBAg40FknXQUMWxWmZwZEt4oUDomYWKNg0Mn20pHvbunp4x2oeCsKA+pRwpFXPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791906679; c=relaxed/simple;
-	bh=ahMUCuujPAxawFznO+6DQhEJY5jy1Ttnmc9O5oArtig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AlEJDMbkC/sTP7Pgg/FOCg381dmY+F+GhaUhv2YPkCqvr7p4wcfLpg2jYS/TjiJ/ZMq8iyJ8bycaL0oYdpwunwae+mLzIeqzgI7ist4+evbZNtEIKbJOA/pESAdxjPP2MTuTVqeC20Pq/adsaTmTalGtvlR4R36YEBpaM4fbfG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=fJnKWEmw; arc=none smtp.client-ip=23.83.209.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1791908284; c=relaxed/simple;
+	bh=kwmzLEgEOyg6PcRq33bprrnPinvbL4+6gfEHwfl9+i0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i3A4dUvZEg2NRLcWDNnhtl6jAYCjb1vgwxftzk7i1rzcKQScn/WAtldSDZumRIA0wvrQTcX9YCTV7eHcC5ODvgUcTk79C66NVrPwkLU+kMCKTKCpWC+Mc2tQKUSzeZYbbdKwR+qwQX94V4fXiBniKg+i3edR2sVJ6qRlgSQfAns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zhpo/Yfi; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="fJnKWEmw"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D71AC3827D1;
-	Tue, 13 Oct 2026 14:34:25 +0000 (UTC)
-Received: from pdx1-sub0-mail-a248.dreamhost.com (100-100-69-187.trex-nlb.outbound.svc.cluster.local [100.100.69.187])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 6F0D238265B;
-	Tue, 13 Oct 2026 14:34:21 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cooing-Whispering: 247cc30d1f6baed0_1791902065688_3970985056
-X-MC-Loop-Signature: 1791902065688:1831258091
-X-MC-Ingress-Time: 1791902065688
-Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.69.187 (trex/8.0.2);
-	Tue, 13 Oct 2026 14:34:25 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4j3xg05hxvz105F;
-	Tue, 13 Oct 2026 07:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1791902061;
-	bh=0i9AZM8OXSBrpXtm3iRYM2IMIfoJKPPXCYcUeyr6TfA=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=fJnKWEmwHwKBD9fgnMZDaiOkycVdHWVryTaQf+JWsSncieAcYR9mi/LBAwfX5mIHn
-	 5bziKkJXMuIeE+ifODTm0pvDOgOHakDyrUtFTiyRK3Ubc2IpFYHzEplfg50iyoN8Kv
-	 CvPs7uPJVCqseXhQkfmcNTiAjZGbK+INvi70bmtGOKCNDV+ImQeWeBTychvS/hXiBI
-	 fxTIB90J8nI5Br3xYSUmABdVR7GhCqODDkRfNa2EsIFgMUp9ujoy+Mkwpw2DYQNgNS
-	 80OhB1S3bqcIjgXNjZzlqzVtvyxHva/vV5AqCTnnvz1BUmkWJuvhL/8jitNVc51tFt
-	 dtqKQHgTWYh9Q==
-Date: Tue, 13 Oct 2026 07:34:17 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave.jiang@intel.com, jic23@kernel.org, alison.schofield@intel.com,
-	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v9 02/10] cxl/pci: Add BI topology enable/disable
-Message-ID: <20261013143417.ukmry7evjoef3jji@offworld>
-References: <cover.1790103847.git.dave@stgolabs.net>
- <d87ff01d77dacc7c0a0d20aaebb1ce906c968b91.1790103847.git.dave@stgolabs.net>
- <art5JoFbkTv7PT39@MWDK4CY14F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zhpo/Yfi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791908283; x=1823444283;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kwmzLEgEOyg6PcRq33bprrnPinvbL4+6gfEHwfl9+i0=;
+  b=Zhpo/YfiM+irR5I0Q86opA3sHns/aRY5+tegTmtm18NVNOQvmIcZ3M0i
+   TG0DqvSvkukDswjMwmpdQht/oHK+vvTJo4UA1QFvxbVOYVFvmfr4fo2+b
+   d47+U2quQ+I/4/puYcVHZIoxtEbrOIeMJk0seoNTqaL+PH2E6707bCR52
+   RFcDpfqiv5HQxBYIujD+J4CrsY6dXj6f/5AZVt/lVqReICNVW53melSMg
+   2sbMSH9IWbzR17HmK8bjjMm+qckhPb2lnlP1YEbljKRapIpOt9ORF30Bn
+   72fj4vbMss7ydn+rwjVHJ85OtjkEnM+YMnzgj0XhcunUG+DNEv1Alk5+6
+   w==;
+X-CSE-ConnectionGUID: lYeOm+rDTuW+TIDLu/4hKw==
+X-CSE-MsgGUID: 8XO2UgBVTnelRkYHkw7xEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="643868"
+X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
+   d="scan'208";a="643868"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 09:18:03 -0700
+X-CSE-ConnectionGUID: 3m4woNyYQL+NYMiOpLIn3Q==
+X-CSE-MsgGUID: JBOJ20rJQ9e+KOPFoCnAVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
+   d="scan'208";a="1270460"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.235]) ([10.125.109.235])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 09:18:01 -0700
+Message-ID: <38cd2c79-00a9-477d-8595-18e1805a49fe@intel.com>
+Date: Tue, 13 Oct 2026 09:18:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <art5JoFbkTv7PT39@MWDK4CY14F>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 0/8] DCD Prep Series
+To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ira Weiny <iweiny@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
+ Fan Ni <nifan.cxl@gmail.com>, Li Ming <ming.li@zohomail.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ Gregory Price <gourry@gourry.net>, Richard Cheng <icheng@nvidia.com>,
+ Anisa Su <anisa.su@samsung.com>
+References: <20261010225852.10727-1-anisa.su@samsung.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20261010225852.10727-1-anisa.su@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 29 Sep 2026, Richard Cheng wrote:
 
->On Tue, Sep 22, 2026 at 04:38:39PM +0800, Davidlohr Bueso wrote:
->> +/*
->> + * devm teardown on endpoint port destruction. Registered before the
->> + * decoders, so devres runs it after them: regions are detached and
->> + * decoders unregistered by the time BI comes down.
->> + */
->> +static void cxl_bi_dealloc(void *data)
->> +{
->> +	struct cxl_port *endpoint = data;
->> +	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +	struct cxl_dport *dport_iter;
->> +	struct cxl_port *port_iter;
->> +
->> +	cxl_bi_ctrl_endpoint_disable(cxlds);
->> +	cxlds->bi = false;
->> +
->
->
->Is it safe to disable BI unconditionally ?
->
->For a FW-configured HDM-DB region with locked decoders, resetting decoders can
->leave the HW mapping active. If that memory is boot System RAM, it can remain
->in use after driver unbind, while the cleanup here disable BI.
->
->I think one of the scenario is when decoders are boot-programmed and locked.
->FW could configure such a range with BI enabled and expose it
->
->Should we preserve BI when those locked mapping remain active ?
 
-The HDM decoder BI bit is RWL, while the BI Decoder/RT are not locked; which
-makes this a policy decision, afaict.
+On 10/10/26 3:54 PM, Anisa Su wrote:
+> These are the first eight patches of the Dynamic Capacity Device (DCD)
+> series. They set up: DCD enumeration, CDAT handling for DC partitions,
+> the event interrupt plumbing, a preparatory refactor, and
+> documentation of the DPA partition layout. They stand alone and keep DCD
+> disabled. They are not dependent on the rest of the series.
+> Patch 1 detects the 48h command set and then leaves mds->dcd_supported
+> false. The flag is only turned on by the series that adds DCD event
+> handling, so every DCD specific path added here is shut off at runtime:
+> cxl_configure_dcd() never runs, no DC partition is created, no DCD
+> interrupt is armed, and the CXL_PARTMODE_DYNAMIC_RAM paths are
+> unreachable. The intent is to land the enumeration and plumbing while
+> the extent to DAX pipeline is still under review.
+> 
+> Based on v7.3-rc6
+> v15: https://lore.kernel.org/linux-cxl/20261007201828.952-1-anisa.su@samsung.com/
+> 
+> v15 -> v16 Changes:
+> ===================
+> A quick respin:
+> 
+>  - Patch 2: cxl_configure_dcd() took Identify Total Capacity as the end
+>    of static capacity, but Total Capacity is only required to be >=
+>    ram + pmem. The static end now comes from the last static partition's end dpa
+>    +1 instead of info->size. Check that DC starts from there. (Richard).
+> 
+>  - Patch 3: dsmas_entry.qos_class initialized as CXL_QOS_CLASS_INVALID, so a
+>    DSMAS entry that is skipped for lack of DSLBIS, or whose QTG lookup
+>    fails, no longer reaches update_perf_entry() with qos_class 0, which
+>    is a valid class. (Sashiko).
+>    
+>    The DSMAD handle check now checks handle > U8_MAX instead of
+>    handle & ~0xFF (Dave).
+> 
+>  - Patch 6: when the DCD vector cannot be requested, tell the device
+>    not to use the vector: dcd_settings is cleared with
+>    Set Event Interrupt Policy, so a device does not keep signalling a
+>    vector with no handler while the
+>    host considers DCD off.  The Set command is re-factored into a new helper
+>    cxl_event_set_int_policy() (Richard).
+>    
+> All other patches are unchanged.
+> I kept the review tags on patch 3, since the changes are minimal and
+> dropped tags from 2 and 6.
+> 
+> Patch organization
+> ==================
+>  1-3: enumerate DCD command support, read the DC configuration, and pick
+>       up DSMAS data for DC partitions.
+>  4-6: split event msgnum configuration from irq setup, factor out the
+>       interrupt policy check, then configure the DCD event interrupt.
+>    7: preparatory refactor -- enforce partition order while collapsing
+>       the ram/pmem specific partition helpers into one.
+>    8: document the DPA partition layout the previous patches enforce,
+>       and where Linux is stricter than the specification.
+> 
+> Testing
+> =======
+> This series leaves mds->dcd_supported false on purpose, so
+> cxl_configure_dcd(), cxl_dev_dc_identify() and cxl_dc_check() are
+> unreachable at runtime as posted. The tests below are done with the rest
+> of the series on top, otherwise testing would not yield any meaningful
+> results.
+> 
+> HW:
+> Tested add and release of one 2G tagged extent on a DCD with a sharable
+> partition, driven from the system's BMC with FM-API Initiate Dynamic
+> Capacity Add / Release over MCTP, to confirm the DCD interrupt
+> configuration and the DSMAS attributes are read properly. The device
+> is sharable, so an add without a tag and sequence number is refused.
+> 
+> 
+> cxl_test:
+> ndctl cxl test suite
+> 16 of 17 pass, cxl-features.sh skips for lack of FWCTL
+> 
+> Anisa Su (1):
+>   Documentation/cxl: Document DPA partition layout and ordering rules
+> 
+> Ira Weiny (7):
+>   cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+>   cxl/mem: Read dynamic capacity configuration from the device
+>   cxl/cdat: Gather DSMAS data for DCD partitions
+>   cxl/events: Split event msgnum configuration from irq setup
+>   cxl/pci: Factor out interrupt policy check
+>   cxl/mem: Configure dynamic capacity interrupts
+>   cxl/core: Enforce partition order/simplify partition calls
+> 
+>  .../driver-api/cxl/linux/cxl-driver.rst       |  35 +++
+>  Documentation/driver-api/cxl/maturity-map.rst |   4 +
+>  drivers/cxl/core/cdat.c                       |  99 +++++-
+>  drivers/cxl/core/hdm.c                        |  24 +-
+>  drivers/cxl/core/mbox.c                       | 285 ++++++++++++++++++
+>  drivers/cxl/core/memdev.c                     | 100 ++++--
+>  drivers/cxl/cxl.h                             |  14 +-
+>  drivers/cxl/cxlmem.h                          |  88 +++++-
+>  drivers/cxl/mem.c                             |   2 +-
+>  drivers/cxl/pci.c                             | 207 ++++++++++---
+>  include/cxl/cxl.h                             |  29 +-
+>  tools/testing/cxl/test/mem.c                  |   2 +-
+>  12 files changed, 792 insertions(+), 97 deletions(-)
+> 
+> 
+> base-commit: a90ee4305c4a5df72c11b31dacfdc76e00fcf78a
 
-So your example scenario makes sense not to disable the endpoint, but the same
-applies to the dports, essentially making cxl_bi_dealloc() a nop for the locked
-BI enabled HDM decoder. In terms of BI-ID this seems ok as the device is actually
-not dissapearing.
+Applied to cxl/next
+e4478834aa09
+c801107605f3
+9c45dd3684a5
+726ac97330a4
+f9c672229ca8
+a7d2b5e9c4f5
+b5d93fa1b7ac
+13797539ae78
 
-Is this something we want? Should the spec pronounce itself in the cases of
-locked decoders?
-
-Thoughts?
-
-Thanks,
-Davidlohr
-
-----8<-----------------------
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index c57c6474a8a1..77c14801d4d8 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -231,4 +231,6 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-  
-  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
-  					   struct cxl_dport *dport);
-+bool cxl_bi_enabled(struct cxl_port *endpoint);
-+
-  #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 4a504afbf78b..f71f625282b6 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1355,6 +1355,15 @@ static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
-  	return rc;
-  }
-  
-+/* the device's BI Enable as the hardware has it right now */
-+bool cxl_bi_enabled(struct cxl_port *endpoint)
-+{
-+	void __iomem *bi = endpoint->regs.bi_decoder;
-+
-+	return FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE,
-+			 readl(bi + CXL_BI_DECODER_CTRL_OFFSET));
-+}
-+
-  /*
-   * An SBR wipes the device's BI Enable; an FLR leaves it alone.
-   * The check is against the hardware, not decoder state: BI is
-@@ -1366,13 +1375,11 @@ void cxl_bi_reset_detected(struct cxl_port *endpoint)
-  {
-  	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	void __iomem *bi = endpoint->regs.bi_decoder;
-  
-  	if (!cxlds->bi)
-  		return;
-  
--	if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE,
--		      readl(bi + CXL_BI_DECODER_CTRL_OFFSET)))
-+	if (cxl_bi_enabled(endpoint))
-  		return;
-  
-  	dev_warn(cxlds->dev, "BI disabled by reset\n");
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index da83700f81ca..41bba6da5321 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -361,6 +361,23 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
-  		}
-  	}
-  
-+	/* a reset during the commits: only the device can tell */
-+	for (i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+
-+		if (cxlr->type == CXL_DECODER_DEVMEM &&
-+		    cxl_root_decoder_is_bi(cxlr->cxlrd) &&
-+		    !cxl_bi_enabled(cxled_to_port(cxled))) {
-+			dev_err(&cxlr->dev,
-+				"%s:%s BI disabled by reset during commit\n",
-+				dev_name(&cxlmd->dev),
-+				dev_name(&cxled->cxld.dev));
-+			cxl_region_decode_reset(cxlr, p->nr_targets);
-+			return -ENXIO;
-+		}
-+	}
-+
-  	return 0;
-  
-  err:
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 575fcad47a6a..25e73da19402 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -822,6 +824,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
-  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
-  	int id = cxld->id, rc;
-+	u32 ctrl;
-  
-  	if (cxld->flags & CXL_DECODER_F_ENABLE)
-  		return 0;
-@@ -865,6 +868,17 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
-  	port->commit_end++;
-  	cxld->flags |= CXL_DECODER_F_ENABLE;
-  
-+	/* an armed Lock On Commit fires here, not at enumeration */
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-+	if ((ctrl & CXL_HDM_DECODER0_CTRL_LOCK) &&
-+	    (ctrl & CXL_HDM_DECODER0_CTRL_BI) &&
-+	    is_endpoint_decoder(&cxld->dev)) {
-+		struct cxl_endpoint_decoder *cxled =
-+			to_cxl_endpoint_decoder(&cxld->dev);
-+
-+		cxled_to_memdev(cxled)->cxlds->bi_locked = true;
-+	}
-+
-  	return 0;
-  }
-  
-@@ -1057,6 +1071,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-  		cxld->flags |= CXL_DECODER_F_ENABLE;
-  		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
-  			cxld->flags |= CXL_DECODER_F_LOCK;
-+
-+		/* Lock On Commit froze this BI bit set */
-+		if (cxled && (cxld->flags & CXL_DECODER_F_LOCK) &&
-+		    (ctrl & CXL_HDM_DECODER0_CTRL_BI))
-+			cxled_to_memdev(cxled)->cxlds->bi_locked = true;
-+
-  		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
-  			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-  		else
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 2e1a7ebae35c..d099cc5b1c1e 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1305,6 +1305,15 @@ static void cxl_bi_dealloc(void *data)
-  	struct cxl_dport *dport_iter;
-  	struct cxl_port *port_iter;
-  
-+	/*
-+	 * A locked HDM decoder keeps its BI bit set and keeps decoding
-+	 * after this driver lets go, and BI Enable is the device-wide
-+	 * permission behind it, so neither it nor the levels forwarding
-+	 * for it are released.
-+	 */
-+	if (cxlds->bi_locked)
-+		return;
-+
-  	cxl_bi_ctrl_endpoint_disable(cxlds);
-  	cxlds->bi = false;
-  
-@@ -1478,6 +1489,16 @@ int cxl_bi_setup(struct cxl_port *endpoint)
-  	if (!cxlds->bi_capable)
-  		return 0;
-  
-+	/*
-+	 * A locked decoder already has this device's BI-ID routed and no
-+	 * new BI device is being enabled, so nothing below is owed a
-+	 * commit (CXL 4.0 Tables 8-152 and 8-156).
-+	 */
-+	if (cxlds->bi_locked) {
-+		dev_dbg(cxlds->dev, "BI held by a locked decoder\n");
-+		return 0;
-+	}
-+
-  	rc = cxl_bi_enable_path(cxlds, dport->port, dport);
-  	if (rc)
-  		return rc;
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index d0f03f305072..6bdf02e92aa7 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -171,6 +171,7 @@ struct cxl_dpa_partition {
-   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-   * @bi: device is BI (Back-Invalidate) enabled
-   * @bi_capable: device and topology path are BI capable
-+ * @bi_locked: a locked HDM decoder has BI set, so BI outlives each binding
-   * @media_ready: Indicate whether the device media is usable
-   * @dpa_res: Overall DPA resource tree for the device
-   * @part: DPA partition array
-@@ -192,6 +193,7 @@ struct cxl_dev_state {
-  	bool rcd;
-  	bool bi;
-  	bool bi_capable;
-+	bool bi_locked;
-  	bool media_ready;
-  	struct resource dpa_res;
-  	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
