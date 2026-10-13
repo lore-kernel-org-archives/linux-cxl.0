@@ -1,160 +1,95 @@
-Received: from mail-yx2-f1.google.com (mail-yx2-f1.google.com [74.125.224.129])
+Received: from mail-pj2-f1.google.com (mail-pj2-f1.google.com [74.125.227.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DD042640A
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 01:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791856518; cv=pass; b=pB7U4Tqwa1/W+TtzLI54NARzGbkt95KTOJsuvTg8epOSnLpnqYER+vYn3W4RpZQHn2qdFAGCW9uVaqgbrNNFXqkbIOykX3VWBT4NA4xdS5bdtrqae9AVaBi9lkZhtBvYFLGpavzm7R35nmQVAsrZSm+wrqOJ6qwQLb9DdS1OVYs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791856518; c=relaxed/simple;
-	bh=mG265DhJNejB3aQoWJ6qVy75eCz04BYxxJNwPeHfTj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kdKzTvrXvR2CYcTf6y9a2PXVn6JQXbcG68rtOKGHwEimJwmoFq+u6ZIs6VkntR9dOVi/Iz34DJO5iPxdtmoCqnaK4pHazMAMTgnAP4qknzStfzBofds7YLzVPQ/SLXxFf5naavWw+yVrBRM3e3loi6W1j5+AiycXpC0ZtQsNlMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wvn5T5ze; arc=pass smtp.client-ip=74.125.224.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A8C3E1CF8
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 02:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.129
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791858688; cv=none; b=RHo+U/PiGpLzu+DYJIr64rZwvPiEy85TOKGyTif0aIM7JuzUhGTGtTPkebBimWk8579sz5MN60Bq2kRspS6iZpXzoJhBHCPZU/ToYVkyFP6Naxzwn2A3yDy5a5JW7Uj4/K31/kerCzVWgaM3glFZ2roicEWX19tmtGjsGg9DB8w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791858688; c=relaxed/simple;
+	bh=v5tONA2LxrOLSUjqd88pbtiKH2gaZjORspEuhh6aOns=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oyIteaUimHNC+jkChFWmNlgRpZjWyRAtZttElgjHbtwFf+MTHz730veSV47LMqUvYRhgaBTLnqmwHzI8n4PL/mMm2f+zcpJXOhTT+Onp0ub1TedA4wpX/iRy+hiyN7g7+s8fDSGG7nv/Op9/JbzQHgVNI16FRKXytMN17iAUe54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBwdtiT9; arc=none smtp.client-ip=74.125.227.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wvn5T5ze"
-Received: by mail-yx2-f1.google.com with SMTP id 956f58d0204a3-675bcb34141so1056643d50.0
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 18:55:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791856515; cv=none;
-        d=google.com; s=arc-20260327;
-        b=bbb59+uYTRog8mxd0FsUWmR/516S7TB9whcTtWm35Y/J98Vdq1VS/0+uopLwH1bGT3
-         6kIIlkURQnydZKDhKdAAFI6sPM031RquFUmxt3RkxQ1NzCVCGNWPpXY6NkiA5Ot0YPOm
-         q59hummlwTuQnUmcuxwa/GsU05wzhuiOM6NUDjDgT27Jj46tAF0keAm5J+PhVFOLGoxr
-         7i2XW7C24UO+WHYci0//+6y/0qK0ay2cl8R7eN7FhldRpSP0WojAIE1Ndz6GlK4BT566
-         k8Xrt20pVOo4fHvj0Dug9l2M+b5RGupsLWIJtsl+0BiKTuLUb9RvOXlItK3bTgu//U9N
-         YPFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=PZWY1+3DvZQ0StiNShQCtdQAyPVbWkBMdlv0s3OdV3Y=;
-        fh=emYGQDN2D4bSTuJohoeBwa+7cY6c7BgOi8Nv2ZXAxWE=;
-        b=cXvy2Zb6CAWJK4NX8tRq/cAhmTSIfg7OBtq2qjq8T7Yj4ARQ3Ms0of94SOSIVM+mlD
-         +CsuSpSTZmjwVowJoWl/mC00cgPi48oBb7wYkZqEXSCHiXDG2iRHC2QxK3kUM+LM3kC5
-         U3OGph5tJViGjSxYo9JC1AKCzu6qNKTuNA3PdMWD4HFkrVcvyCaI5UXh0GaXJZUB/lzm
-         oo0B5hBBD9fUXTv/kHgV3ktbCZDqgM33DpNvHOO44Puym64qBC2ASpJeuRlZ2b7KFJn+
-         SP23yNi/M5mzC7Ha1zmlcGYbmGloLK4XVgy2s5UVdJzQyUnDGLw/FXpp75B7dV696Tx6
-         kXfw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBwdtiT9"
+Received: by mail-pj2-f1.google.com with SMTP id 98e67ed59e1d1-3ab86ae9b80so984111a91.1
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Oct 2026 19:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791856515; x=1792461315; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PZWY1+3DvZQ0StiNShQCtdQAyPVbWkBMdlv0s3OdV3Y=;
-        b=Wvn5T5zeH6R5qvW8UAxE8l8bgurch7aUZebNHYYc6H49S066y+tWC/1rnEHYsSWbf0
-         cfuZSZUCUUD7bN//VvAFSnfzyIm1GCdpC6ibK5mjfYIipppdyDPMmbol2d4cOjupJgBN
-         RkTKE2HYTJcVuxjosGl94VQmG2blg1X8rZiS0pS7ZrPzyiMpltDpj8zCGgxPe+weEB0U
-         u94imbMvQIji5YbbKR0KEwqjG+mkKWFE9G56eqN9VjidkNnXSK6gtEwPzhW/rCixYO7O
-         o9h8cKWuXCyA8E6CMFpkUKVzvQzqpImXrh4CjKvaLIAThr9g8DohGqo0kPwPzLZPUMVi
-         rj0g==
+        d=gmail.com; s=20251104; t=1791858686; x=1792463486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=v5tONA2LxrOLSUjqd88pbtiKH2gaZjORspEuhh6aOns=;
+        b=WBwdtiT9bnfcR6oU5J9hvGPPsl1VYrtXNfTCfAnjawEHtvD6WikdXXUwNf27v8mMYq
+         i+JF+IDNSKB/6NS/3miLYWZKANDFun1Lvph7k8JKtXrnCCxfTbA9iDUxDOsaB4B8npH9
+         vOR4aYP6p/3DC1/OA0XL/D7QFZjujS70Vf9BM6UoOHLzzLEU6HEMF5yhb1CEJj8ltUMC
+         yoeGE0497bUXj5PzMlrxX/nj+A5ogAgIgEQlrW3ZWVimJ/gBpAqWc44JB43f+jwKOBzN
+         3n10I/tA1Ib2UMbjdZyPb3eeq9fDYHBoxzS5rBgDWWvcg9S7aL54E9E90Osr5utrej75
+         G4eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791856515; x=1792461315;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PZWY1+3DvZQ0StiNShQCtdQAyPVbWkBMdlv0s3OdV3Y=;
-        b=ZjDYQE7QHOnKq7ZkjP1YIwI9fTHjYiRNlru8fzRlgziGLoiQLSimgMenDeUKco/Gmm
-         9UuyPl0+PqRvxUTVNjmMSiqNCChnSuGkiTm8uX8FwQyW0R0aPwdsIb0D3oJK1nYv6tcH
-         JOmEhoPGbJ1PnNqsXdWFVehu1IF8AjFE1d2wLTgZQ+N+AQXmRDgT8+vmq5cGZ8yDQ4Ym
-         1ioBg7q3BubhLTZb4D13lHPzzA5biqo7kJzfZu4ZLD+3rLuQFOCMJ4HjJGtjcAGyXU9k
-         1DCwRQgKVCV9E6n1wbE+Tic6RxBctI2Kr7bLrm3DCbUrI5nF2A3axi9DGU/Ba8ZJCSjr
-         FHkw==
-X-Forwarded-Encrypted: i=1; AKwUvBwlKQ4AVEbvwgm2IdNy9c56dwSGeaqSsxpdBEOP6aR+yGkKw6w4B/wZsmtTjhsrx6vH3DtTsBmVNx4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIhaOyvq82Ua81vW9vXNOIbPmwjUB+Dbra7kBL+uZAqUbg7ExPF
-	v9HBqhPgfgTiLbPC9b4BDRgbXlwIoV0V+gzke/DZ/wclbr/0DxqO3Pg9UNfFcfg7vjuizjKqWQU
-	JH2ndCUV2+r3sCf+AL4fAJtIILzaoWsk=
-X-Gm-Gg: AYBFou009lCpsfLLR3wF3q5DEPa8r5y4AyKx9P5mL+c0VCugSQKcG9BUKNbX7ksAXSz
-	jWmb+/UTbzmZV/NCut6AqnD5X+ojLZKox9wou206b3fiIRSq0mlu2dUpZeGu0kNiTRQgT8aqv5J
-	byfupito0LRF9zRGbKloAPn9bUychOqRTJ4XBJCEf+isa3FAZiPFbn+yjtCyPTeydEIEyPgJBDx
-	XorpswCZ9IShcejs4y7+CwKzeQL8fXsslm7xku9g3WsbIL5SBjAU58VeAazzlAZtZEzbhpNl5VC
-	izvMaHEOF90KD72NrcF7ZIcHIk1IDWwyzYlzj1IJqqpEcH3sMzbUGxG5BOP8698tNoNOQgRyqA4
-	DVK5jiOFZkQp+1JIGpP3u9w/o2g/d4VblKjnZ
-X-Received: by 2002:a05:690e:d0f:b0:677:c1c9:8cad with SMTP id
- 956f58d0204a3-6793630857bmr4065688d50.101.1791856515453; Mon, 12 Oct 2026
- 18:55:15 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791858686; x=1792463486;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=v5tONA2LxrOLSUjqd88pbtiKH2gaZjORspEuhh6aOns=;
+        b=T6fXWOTYdNBtpz2CZK0kSie9yVpQcgeWyE5KfCLf1XlhG3v7vnv+JJz6130lcHco9N
+         YtUI2w62jOHluoAi7s8tGsqK4AJDeQk8tqB2V5yPuW2N37AM9+Ojkg0LkIt23xQvlRkk
+         1LEKQewd93oMVRX1izPuY0t8aeufTbNOEXgPkAyqYi8X2FF4goYhU4e1uWYuqgGJpL/D
+         h9IQaKpA0vLBNu1/s1JOUW2m8fK+AT6MZN3WZE7lXmQy0aomUpzKaSdbscWqpc0kYBNv
+         gUpgdFa77y7UL5jzAL46qCsPbxIfjd7vwYbt4FVB/V3qwr/uzcHL52cI3sA4txoeMIep
+         R7/Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwpmzD9rsoS7nYEnQXNbsT5F0QxY8O8qjKQP4TamfKsDBWwy+mX8Ud+0K6TplOgIGw/Zh7bngOX+sk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJz2OrDUZ96hJIRbwuC72fH7Jq9809ZiLTpV8mTsxxh6Vg74N8U
+	PLwfVRIzvE9hdIyCBgXxcISBi4+cAbGV9y4I0R3y2P7NY0hvmiWerqf2
+X-Gm-Gg: AYBFou1uJTRmSObw+NzH092IcMI2sK8KkxD6PFGSuyQ6q8MEH1bWX6isMbrRCk+JwMw
+	qACM247efpYy3+GWeDLvLd5draA8tE1O9tAaTr2iniciNqke+f/Wpleeg4ZcnZE0dfs1pHu3zHh
+	ApwqfwN6BG9dEF+pdLhk8xES6CPQeFRbAvJl3CNs49rEjAnKoibzbjg0qp2ekJNqOL1/D3qcSih
+	89IMNFXgPFdtTOYl2n9/kyU8aKSZ0uWDj0beThsQr9uCHcfizjMFFDPqwwAxWmq3aq9v9gwuB8v
+	GyHwqTMdBvbMiDHdCZDMLMKvk15oY2Jw2GHFjBZCYdt1qrEzBTp2Z8QuvmdWD30n54VGl4IfSE5
+	137WzsAvCPhY4ioknzLH5mUfKMe/r0m9zjOCYpdMOkpsgE7yIziBU4zuMVFGPFKGgAPZdCZ8BZF
+	4rj6+um7DuuTCiWrppehKMSSR23Sh/q+KcOEdK3kg+6mxk8rjzJTWa2ZGeAdNgrWK72uy/rH98y
+	B8IpJ0WVZ6vWemC1foJJFkIWbI1BnERjIk4Z8oV2FAStzhSfevTTyBRa7vS09d5v0n1uuJMiEvh
+	WLLdTT+Ob7UVuBhTlvd0QQbyq1z0TrjaaULOcaNc
+X-Received: by 2002:a05:6a00:8019:b0:886:84c7:72b3 with SMTP id d2e1a72fcca58-897c78d79d0mr9188887b3a.26.1791858686286;
+        Mon, 12 Oct 2026 19:31:26 -0700 (PDT)
+Received: from localhost (ec2-13-231-150-91.ap-northeast-1.compute.amazonaws.com. [13.231.150.91])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-896c310738dsm4513065b3a.16.2026.10.12.19.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2026 19:31:25 -0700 (PDT)
+From: jianyungao89@gmail.com
+To: songmuchun@bytedance.com
+Cc: akpm@linux-foundation.org,
+	alison.schofield@intel.com,
+	dave.jiang@intel.com,
+	djbw@kernel.org,
+	joao.m.martins@oracle.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	muchun.song@linux.dev,
+	nvdimm@lists.linux.dev,
+	vishal.l.verma@intel.com,
+	Jianyun Gao <jianyungao89@gmail.com>
+Subject: Re: [PATCH v3 1/2] dax/bus: fix mapping attribute error reporting
+Date: Tue, 13 Oct 2026 10:31:21 +0800
+Message-Id: <20261013023121.11036-1-jianyungao89@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260924025035.1265035-2-songmuchun@bytedance.com>
+References: <20260924025035.1265035-2-songmuchun@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261011131857.30481-1-jianyungao89@gmail.com> <as1riZMcDaX5niW9@aschofie-mobl2.lan>
-In-Reply-To: <as1riZMcDaX5niW9@aschofie-mobl2.lan>
+Content-Transfer-Encoding: 8bit
+
 From: Jianyun Gao <jianyungao89@gmail.com>
-Date: Tue, 13 Oct 2026 09:55:05 +0800
-X-Gm-Features: AclHuK-qPrcKDhDkwZ2-LoYX7aqLa6VHDfxw6GQjUohnMboPcDsPQB2ik2549xw
-Message-ID: <CAHP3+4DCsJ4vJWFWfswGj70p+it+KJ2fLA1G8p5iKYJ7fi4TGw@mail.gmail.com>
-Subject: Re: [PATCH] dax: fix mapping_store() returning 0 instead of error code
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-kernel@vger.kernel.org, Dan Williams <djbw@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	"open list:DEVICE DIRECT ACCESS (DAX)" <nvdimm@lists.linux.dev>, 
-	"open list:DEVICE DIRECT ACCESS (DAX)" <linux-cxl@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Alison,
+This patch also fixes the mapping_store() error return issue I reported.
+The fix looks correct to me.
 
-Thank you for pointing this out! I'll drop my patch since Muchun's
-version covers both cases. I'll review Muchun's patch and add my
-Reviewed-by if it looks good.
-
-Best regards,
-Jianyun
-
-On Tue, Oct 13, 2026 at 7:21=E2=80=AFAM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> On Sun, Oct 11, 2026 at 09:18:57PM +0800, jianyungao89@gmail.com wrote:
-> > From: Jianyun Gao <jianyungao89@gmail.com>
-> >
-> > When the region driver is not loaded, mapping_store() returns rc
-> > which is 0 at that point, instead of an error code. Set it to
-> > -ENXIO to match the equivalent check in size_store().
->
->
-> Hi Jianyun,
->
-> The change looks correct, but there is another path in mapping_store() wi=
-th
-> the same problem. When alloc_is_aligned() fails, rc is still zero, so the
-> sysfs write reports success without allocating the requested range.
->
-> Muchun Song already posted a patch addressing both cases.
-> https://lore.kernel.org/nvdimm/20260924025035.1265035-1-songmuchun@byteda=
-nce.com/
->
-> Please take a look and add your reviewed-by tag to Muchun's patchset
-> or comment if it doesn't meet your needs.
->
-> -- Alison
->
-> >
-> > Fixes: 9567da0b408a ("device-dax: Introduce bus + driver model")
-> > Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
-> > ---
-> >  drivers/dax/bus.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> > index b809e1a264af..262f97b5e7aa 100644
-> > --- a/drivers/dax/bus.c
-> > +++ b/drivers/dax/bus.c
-> > @@ -1192,7 +1192,7 @@ static ssize_t mapping_store(struct device *dev, =
-struct device_attribute *attr,
-> >               return rc;
-> >       if (!dax_region->dev->driver) {
-> >               up_write(&dax_region_rwsem);
-> > -             return rc;
-> > +             return -ENXIO;
-> >       }
-> >       rc =3D down_write_killable(&dax_dev_rwsem);
-> >       if (rc) {
-> > --
-> > 2.34.1
-> >
+Reviewed-by: Jianyun Gao <jianyungao89@gmail.com>
