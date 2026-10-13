@@ -1,531 +1,270 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812AF47F2CC
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 04:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791864890; cv=none; b=djGXfugs6PBQ8zwatYzejMLYrqlOxgZ+hIDa3RtktL3YwZfUrA1KQgOf3Z8Ibm9Fg3QlVvlOBdEwIG7hF10ygViqaFFN721jqpanbCx3r0JqnWuofAmEqMaqCG83giY571ahEWIGZcEftXEnP/PoFN9GVKCmh0ylg+3u7W6PpLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791864890; c=relaxed/simple;
-	bh=47ba9XOdkn9UhLeoqMbIDrX4PTa61VtrymYMderthBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TXV24RpC1W+veD8HJE5/NmY14RvTaB/bSggRxLlp6O2KdlF20L5tYmO+1UAP1j8ExZveECuDYHpjzgL/US8t5iD2GlLuyU7KPebpekonYtxe06nVkJ2VrJwvlv4Zot2M2amQkJCdPHBBAfH0+88+kUE1ecPk8t5XpbW19k38hDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8rf7UaZ; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804E374E5A
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 04:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791865407; cv=fail; b=caU+H+7ALWsyNXs2zIFsQ+Ub4frj0n06BvtgDGmj6J4gG+rzVUm321be/XVEJl6ljFRM2a1YaL1xG9y4t6eY+h64HPK9Xhr3MVAPWSp0nFo6b2SfxuT4DUNXwHn0z7y2bkNI62Rr1C4FVzVGtiqjDWthHdSJ9bX61EPT6FVGeo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791865407; c=relaxed/simple;
+	bh=kxmMfnSFlwWW24EOpbGAhm+w0ydS3a8MHCDv8NtIzg0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tcS2nOX2ysyfVBubdP6ozwuEo1ywtL4cU39eRBQN6Wiv4UwJpZlcyb079AG22vjEkKRK2mJxPynZyODHGB1mQgRrxhlf8PxkCLnhNLqXm1KQaxdS490uhv+GNJie7ndqkdMy+GWE1fCJ5L8AAcjXUWY9KpzZoxwv5SgRunQHM0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k6dsCxSR; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8rf7UaZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k6dsCxSR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791864889; x=1823400889;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=47ba9XOdkn9UhLeoqMbIDrX4PTa61VtrymYMderthBw=;
-  b=W8rf7UaZQp4H5/thIJTJ5CUGYS7yo0CJvVN/xEXNq36W5fqiw9wLBOy9
-   iKp6ForybnRqW2raUIpwgHIi6lDepzK3wBYK7og28/or2tnGBsEs2DcMB
-   awmPRYXdc4noJnN2tJpt0nopfEroa6RF/ALyBXp1eQLRPQfH/Cghy7nkB
-   l8XZAMAnbMfHjzPdJXsR/TUVK/tDTlOJVI6d+Avv9giRsTmq62idJhCrH
-   NJPHG5cBtAbTETPKlcUJ7yjIdmjInR6cC3dnbbYIWZKT7Otl3jXUuaGep
-   NfqZ+aX8tKRcvaFbwctWvhllH80oEAgGiN8cUBBmoqP4e8RXu7DkDvRG9
+  t=1791865406; x=1823401406;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=kxmMfnSFlwWW24EOpbGAhm+w0ydS3a8MHCDv8NtIzg0=;
+  b=k6dsCxSRQh7+MYvW7YSHJzug0Jkh8otunY0cSAhzpBTcNnauOj+Ni9Pw
+   equX0FPHuh5huYCmu+EjsC/2n6F3KMLX+KltqQsqof2Vcs65ymt/AqDiB
+   65okqG2yVbhOIz+UAeNto5Vc3J+q9iVQxwCbapIGDXomD+4iqa+2Kn/i6
+   Vi87Q1HmBAJScoN7ta8t92u8ny8zHOsEs6fx2es3jQSD5ObXHU0yKC6k8
+   zQ9cQ7sVG8GFtHGDc+BGc6clAo09yq4zSg1w/EpsiObwt5MTL2WjgZ4Fm
+   5pahGf4nZaA2/YnYPRKOKqWFBY3PBEQQQgM4he0LB6Dom3gMTbef6dn6q
    w==;
-X-CSE-ConnectionGUID: rykA6HJtR9++nbQOX31fkA==
-X-CSE-MsgGUID: 0zqenmFjTT+NWCM4v5TZzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="454887"
+X-CSE-ConnectionGUID: tsbdISOkRYmytUqvzH7GZA==
+X-CSE-MsgGUID: L1ajBbh4SXGhsdJ3JxKe/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="467720"
 X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
-   d="scan'208";a="454887"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 21:14:49 -0700
-X-CSE-ConnectionGUID: B4c/fLkrS0CVCFnjthXNCQ==
-X-CSE-MsgGUID: z3XXCgHsQj+vews2QtGB+Q==
+   d="scan'208";a="467720"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 21:23:26 -0700
+X-CSE-ConnectionGUID: VH4vzRQNRHuj2tk114BbLw==
+X-CSE-MsgGUID: CmVSQl/wQ6qFY/RT6qMieQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
-   d="scan'208";a="1389002"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.102])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 21:14:44 -0700
+   d="scan'208";a="1114529"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 21:23:24 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 12 Oct 2026 21:23:23 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49 via Frontend Transport; Mon, 12 Oct 2026 21:23:23 -0700
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.12) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 12 Oct 2026 21:23:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IILa18lbVYYxxskub6GmodJmtmx7aCvTZx0e+jk7dndjCcX5ydC3x1uJxrHAi0x91EroLuCLg516zY4HQXsKjRWQZhe7fh7+MFWOoY+c2ORxNOG5Xu+pEVDRrn3g8hJfjJAEQoBPVy+OdSEZHdpyY7TFw6OHEVnfI7/d+XJtGsOmjlqK5ces4i+sKuTcu8FCrZvqqOgkiLvU7lnPfRwX0BUlgSr4OJVQOkdC5ZWueFf7/Ziki0no9qi0dQfSDubuQyFW2igUkw2rjcJ7UCY7Z95ivHBY58RDFfBaqcZ6Hp+4hy1JlOjPiP8b1PHOD/cZpW9S3Noabr2oUw+4PCinJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+HP0j5bqd04hwtj2b1Ka8Bd1R6pNKHHF+Bo/b24eXhE=;
+ b=M+4wjOsuicIduXdSu2tSFGlELDDE2JJvoqA5Rl/d2qedreX4m7Vula67M6+7+rmyAmezuyQksh8GNzt2MchlSWbpvS43Ii7bbBTyo3Elg+eiA2jjB1V41sbWgnzTFJUR0pFfvubkNcdBVwPOa9vpA5a3y/8wYF+hje/RKGyB8XUCLPQ8iZhoDdoya63LZTtZ48I5d4Hh3ucGSmtUkO8+puJ5ptoBLK78cLcKI2+JFwbwPun8Y5rXRlvqxOEj9SpmL1T5eSHXGLlXc9K2lAte80h1orISy0JI70M3qmkQwXX1cxVgGWy2mpFUaKWU1CrxAHKDTISuxGexFbnIXvfn7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SA1PR11MB9875.namprd11.prod.outlook.com (2603:10b6:806:4da::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.21; Tue, 13 Oct
+ 2026 04:23:20 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0496.021; Tue, 13 Oct 2026
+ 04:23:19 +0000
+Date: Mon, 12 Oct 2026 21:23:15 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH v3 3/3] test/cxl-region-finer-gran.sh: test region granularity finer than the root
-Date: Mon, 12 Oct 2026 21:14:35 -0700
-Message-ID: <775c275502153a089358a382d4e7afd5efb4bb92.1791863817.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1791863817.git.alison.schofield@intel.com>
-References: <cover.1791863817.git.alison.schofield@intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, "Li
+ Ming" <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>, "Robert
+ Richter" <rrichter@amd.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 4/8] cxl/region: Factor out cxl_port_peer_distance()
+Message-ID: <as2yM8ypmEPaBBV8@aschofie-mobl2.lan>
+References: <cover.1791676454.git.alison.schofield@intel.com>
+ <dcbd67bd2059beccba1aaa92ea099ac35dec9026.1791676454.git.alison.schofield@intel.com>
+ <20261012161647.4fe1575d@jic23-hlaptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20261012161647.4fe1575d@jic23-hlaptop>
+X-ClientProxiedBy: BY3PR10CA0026.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::31) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA1PR11MB9875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04c40765-c024-4282-ff3f-08df28e1b5e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|4143699003|11063799006|56012099006|18002099003|22082099003|10067099003|261009223027099003;
+X-Microsoft-Antispam-Message-Info: ldMQFEDZ7wgQhtKs0SguHOPF2VZMCE4EQZIcsMlkJNUxXGLjsz58Kk1NY20P5uKSNUNz9dXNyrUi+Z4up6CZEHW83fHl36iZI8gu/cdJSusW679YegJub2xuzw2eP69d28wgKA5ZQGUGv396kc0MrblccyrlRqv5lF6+bnhnKcmM+brsHzKCaf+EaxjjxX1Ke9l0zwclStBA22b9OPVZmd92AsRSOWNQwtLUFOktkLOlabPnWO2e4PRB3HfIldGxhMztnYkwgBnYZIF3A8MsJsgKhscCbcZLdu4x3S6BDoFrKZNwdQNoLVTex9wr6KqbOYG/BuFqwP8y5bL3FgrenoHJ8eOUDdJkFYP/YmAqtD/MR9Vu/hrILxAGBmC/ULSPiczyxhjJDOWwVw1T331veHNmjCUJmdBDpNkD5gczxM/FlNhxEdhAA+HlbHbwl22RDgYImQmbC4srGL4CCb0yGqQcq+sFsUHQTOZGNeT+damcWd/40Hgsy06Yn+CYSbTPzUHz44iNZ5SxjG/deWXfg40W34usd6x42vEEDUHhzw3qPOXf8iJ4riQkBCjJi4bj9+H3RUki3bUlhIomt7dFwhaJNvVG+zgFTPQCzn42HBndjt/kgFS98aP2WFlu7ISeJDPNN/giGfpG1Hz7cCJWw6uYFdbwhRAY5Ja2EMtaxts=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(4143699003)(11063799006)(56012099006)(18002099003)(22082099003)(10067099003)(261009223027099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gURP95TmyOSDmkDE2NPbMdNg198q2axIotOSzHsedscnXe1ZVh4YroQjLdDZ?=
+ =?us-ascii?Q?SQjOCbua7iTSBJZzPCdX6hfsdZ+hvrQWrF5PV20agzfqTSoGmOWNZCvnIB0k?=
+ =?us-ascii?Q?ZhBCie8YEovRkfzyoimEI0bVFvy5UretmLnV+wD4mDvjqbhEWBRzxKw76Wlz?=
+ =?us-ascii?Q?bNR8kZv93cbDpXXUIoaVD11UBkDByUQSntQkifVQdB13vLT3FANnPgnMuQ29?=
+ =?us-ascii?Q?UsZhQ7ciowHy/mvNVXgkhFPbiXVlRXaaVE6NkVBphR96jPDD0OvWAfkxeplU?=
+ =?us-ascii?Q?aBF2ktxi7shCanMw3ZKpk0OWqRp6mw+lIXoKKQwV57n2OiofY8vq/FFfrmpM?=
+ =?us-ascii?Q?9WA0/WddiRY5CjvZ4EAKZxNQISnsYgjdMnRPBAQ8esOiaK0baxd/W2UERInq?=
+ =?us-ascii?Q?3CJwNQoHHyCn2DaPoinm3y32W4ujBUUnwcZnGi8GGaiRYPGkdvWg6dH29oXI?=
+ =?us-ascii?Q?DOl4bF+pkG35wR6PXKwyF7DTJASEDq52TbMB789PrF8DVxWh/jJvyGWxgNaR?=
+ =?us-ascii?Q?TTNMxu2JE349Iqf8WKemUavh+S3zkkIb1e/pdz6OzdRRm1pijAntj47Oofj9?=
+ =?us-ascii?Q?befim0ZjYkW4gugbgywuXQdU78wsOekHyIyQA4XKPQYO90dv4Y0ejYONsovG?=
+ =?us-ascii?Q?2aUW2HZ15y7YJaL7AMU5oGfx4fIB33CtfJ8Y1IsCoRmHqLqviI11ApfxPFv9?=
+ =?us-ascii?Q?i5ItYzSKR5yArJAoAgVP7Z1AUtmORiJZsJ6U2Nn1ntWum5VPigdT5CiHw5kl?=
+ =?us-ascii?Q?4doZNuslPoaXRspSw+XnCIvpw9zHUHxD0i/ZnLT9gPU/KODXBY9cmpcgvLUs?=
+ =?us-ascii?Q?I+AzALhm8+Pe3cWki2YW0BvnbpJnX2NxLHV13R+Fds6ZhH4suv9EwynBTrP8?=
+ =?us-ascii?Q?8zCWvzn0/sIA1OrOyku892U5wfkExMZB8zuebT4eXC79ktc41YiJoB91CLwQ?=
+ =?us-ascii?Q?ET8jIXa37BWoH6M94589f7RED6WPdvL6kxgVKXGiiuvxPwtBoGvkuwJXgOe/?=
+ =?us-ascii?Q?VXN4aaXyDAk9m1gNYTEPogVp8UbE1pzwWDa0NZ7XBQ99tgf3Q95ZgTUJdrHJ?=
+ =?us-ascii?Q?tWtSVEvaY7uib5pzo+84I3diZa8juy+TCXc3uXDk3LEv7KSmsMkfirJ7/B8r?=
+ =?us-ascii?Q?IJjT1oM8Zr8zoigwHhm4YVLE+/DDtwPndvwsJkMlX//AjBWT61hQmJz4srbD?=
+ =?us-ascii?Q?j/+Qz/Qs8L0dwa9m2UAVI4T29alxOhmLTPpaWscrbKKxhzWLsjH046B3ttkA?=
+ =?us-ascii?Q?RpX2T0cukeVDcLEV1vsFGDMyOHbp5BwDvzIu/1/8rA/t/jwVJMP3EtXK+M2i?=
+ =?us-ascii?Q?F8kuFQf7AIw4h90drS6w72MUzv9V4pWQiiuwqF3YTE+MLZilTcoUIcO147Z7?=
+ =?us-ascii?Q?nMxO6Ywzy87d9AdWDAvf5fgFIp1w/G2d7vnO2eRk1NVzATDSP0tw28TF+eXl?=
+ =?us-ascii?Q?T+EKoXWnfVr55dklP0BoO651GoKHRmDZ+DGd6dkrq7acF+xCUvEyfpcqyo/x?=
+ =?us-ascii?Q?X4rJ8G1eB4eBAiwypgNk26J4mYsfFNdLZKnflVTYVK+N2SKSxI/rsKzc4dLw?=
+ =?us-ascii?Q?nPWbLxbi/zyenZ2cNNMub8kFGWeJsHTJKqpAHJ1XFsIUjTUvmrQ39Q1W0ZKr?=
+ =?us-ascii?Q?tfCwX/VxcxvwREwrQBtMQpDRY8sanSvc2TfMHAgmRT5p7QC52s1otcVwXf+t?=
+ =?us-ascii?Q?fADkxg5pvUwjBMJE/jMXEOzS8rMTLaWJD710iNnKEdtFVH4E2gp2nRH1b+gg?=
+ =?us-ascii?Q?cqCHI1YJme+q0Kqh6x4lbYvm5bAdVaE=3D?=
+X-Exchange-RoutingPolicyChecked: XvwahfvA9GOy+q9V7bcsW0njmRtED7niE4YyGX/R/4maupRlBoLeKc1s6NZj+NP43w2Yxd65NKvddsTpt+988eYCW4tdQxRnIgDlH43EOE8e6BuCsZLFU7hy6P77f7vyS0Rx5CqAekzEKfj7Di0an0UnfnCvWt8jkab0azztPD7bRzGUPrI7fMMCT8kpf4DSU+l3VyylWNhQ2+YtBV7gRxHId3Jc+vfcX4rNkb/q2klQ0hV59/tDwjU5CuLY7jaW4687TUSdIkPlYoEhFqrf4bvVvlYUiybOCYaW1L62xi1KpaE/2dA51eQOj70YgZcfiO/2j/dn/ITMXjHc/CihEQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04c40765-c024-4282-ff3f-08df28e1b5e5
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2026 04:23:19.8192
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aEmq/dUrprYGYk93MCxUFYxdh1MFohkXyez74HDeXpY88QFiQu0LAyh4Q/+cNJUV8acCmvIPFpNuBBKzxBOfe+cyPyoyv/yEPwlh+9j1I5I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB9875
+X-OriginatorOrg: intel.com
 
-Exercise regions whose granularity is finer than the root granularity
-against the finer_gran_regions=1 cxl_test topology.
+On Mon, Oct 12, 2026 at 04:16:47PM +0100, Jonathan Cameron wrote:
+> On Sat, 10 Oct 2026 17:20:19 -0700
+> Alison Schofield <alison.schofield@intel.com> wrote:
+> 
+> > cxl_switch_port_setup_targets() is nearly 200 lines long and open codes
+> > each step of adding an endpoint to a port's decoder. One of those steps
+> > calculates the distance between region positions that share a downstream
+> > port.
+> > 
+> > Move that calculation to a new helper, cxl_port_peer_distance().
+> > 
+> > No functional change.
+> > 
+> > Assisted-by: LLM
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> I wonder if the docs make more sense made function documentation rather
+> than inline.  Either way lgtm
 
-The finer_gran_regions topology presents three root decoders over a
-12-endpoint pool:
-  - 2-way @ 4KB across 2 host bridges
-  - 3-way @ 512B across 3 host bridges
-  - 3-way @ 1KB across 3 host bridges
+Thanks for the review, and yes that docs make more sense moved, now that
+it's the only thing the helper does.
 
-Positive cases run replay_regions to round-trip through the auto
-create path. The auto path reads decoder values back from the
-topology and runs them through the same position arithmetic the
-user-create path uses. A region that creates successfully but
-fails replay usually indicates a position arithmetic bug, so replay
-coverage is the strongest correctness check we have at this layer.
+I think you are partway thru reviewing (me being hopeful you'll review
+more ;))  and I've posted a v3.  So hoping you continue your review in
+v3!
 
-The test cases are listed near the top of the script.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/cxl-region-finer-gran.sh | 413 ++++++++++++++++++++++++++++++++++
- test/meson.build              |   2 +
- 2 files changed, 415 insertions(+)
- create mode 100644 test/cxl-region-finer-gran.sh
 
-diff --git a/test/cxl-region-finer-gran.sh b/test/cxl-region-finer-gran.sh
-new file mode 100644
-index 000000000000..dae426644d7e
---- /dev/null
-+++ b/test/cxl-region-finer-gran.sh
-@@ -0,0 +1,413 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026 Intel Corporation. All rights reserved.
-+
-+# shellcheck disable=SC1091,SC2034
-+. "$(dirname "$0")"/common
-+rc=77
-+set -ex
-+trap 'err $LINENO' ERR
-+check_prereq "jq"
-+
-+modinfo cxl_test | grep -q '^parm:.*finer_gran_regions' ||
-+	do_skip "cxl_test finer_gran_regions module param not available"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test finer_gran_regions=1
-+
-+# Replay support is exposed by cxl_acpi after cxl_test loads. Without it
-+# replay_regions() would unbind and rebind cxl_acpi anyway and the test
-+# would fail rather than skip.
-+if [ ! -e /sys/bus/platform/devices/cxl_acpi.0/decoder_reset_preserve_registry ]; then
-+	do_skip "test requires decoder registry replay support"
-+fi
-+
-+rc=1
-+
-+expect_fail() {
-+	"$@" || true
-+}
-+
-+# Test region granularities finer than the root
-+#
-+# Topology: modprobe cxl_test finer_gran_regions=1
-+#   Three host bridges, two root ports each, one switch per root port,
-+#   and two endpoints per switch, for twelve endpoints total. A region
-+#   interleaves at the host bridge, at the switch, or at both, depending
-+#   on which endpoints it is built from.
-+#
-+#   Three pmem windows:
-+#     - 2-way @ 4096 across 2 host bridges
-+#     - 3-way @ 512 across 3 host bridges
-+#     - 3-way @ 1024 across 3 host bridges
-+#
-+# Cases (in execution order). Positive cases assert the interleave
-+# programmed into the host bridge and switch decoders below the region,
-+# then replay through the auto-create path to round-trip the
-+# configuration; a region that creates but fails replay indicates a
-+# position bug. Negative cases verify rejection at the first target
-+# write, which is where the kernel applies the span identity.
-+#
-+# Positive:
-+#   1. 3-way same-gran @512, 3-way root, every level below passthrough
-+#   2. 4-way finer-gran @2048, 2-way root, switch interleaves
-+#   3. 4-way finer-gran @2048, 2-way root, host bridge interleaves
-+#   4. 6-way finer-gran @256, 3-way root, CXL 4.0 Table 9-7 row 3
-+#   5. 6-way finer-gran @256, 3-way root, CXL 4.0 Table 9-7 row 2
-+#   6. 8-way finer-gran @1024, 2-way root, both levels interleave
-+#   7. 12-way finer-gran @256, 3-way root, CXL 4.0 Table 9-6 row 7
-+# Negative:
-+#   8. 6-way same-gran on 3-way root
-+#   9. 8-way @512 on 2-way root @4096
-+#  10. region_gran > root_gran rejected at sysfs write
-+#
-+# Table 9-6 row 6 has no case here. It is the one legal composition Linux
-+# does not support, and a user cannot ask for it: each level below the
-+# root takes its parent granularity divided by its own ways, so row 7 is
-+# what gets programmed for a 12-way region on a 3-way root at 4*IGB.
-+
-+create_region() {
-+	[[ $decoder && $ways && $region_ig && $memdevs ]] || err "$LINENO"
-+	region=$($CXL create-region -d "$decoder" -w "$ways" -g "$region_ig" \
-+		-m "$memdevs" | jq -r ".region")
-+	[[ $region ]] || err "$LINENO"
-+}
-+
-+# Locate a pmem root decoder by its ways and granularity.
-+# Usage: find_root <ways> <granularity>
-+find_root() {
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == $1) |
-+		select(.interleave_granularity == $2) |
-+		.decoder")
-+	[[ $decoder ]] || err "$LINENO"
-+}
-+
-+# Return the port device that backs the given target position of a root
-+# decoder. Usage: target_port <decoder> <position>
-+target_port() {
-+	"$CXL" list -T -d "$1" |
-+		jq -r ".[] | .targets | .[] | select(.position == $2) | .target"
-+}
-+
-+# Return the switch ports below a host bridge port. Host bridge ports are
-+# depth 1 and the switches below them are depth 2.
-+# Usage: switch_ports <host_bridge_port>
-+switch_ports() {
-+	"$CXL" list -P -p "$1" |
-+		jq -r '.. | objects | select(.depth == 2) | .host' | sort -V
-+}
-+
-+# Return the memdevs below a port. Usage: port_memdevs <port>
-+port_memdevs() {
-+	"$CXL" list -M -p "$1" | jq -r '.[].memdev' | sort -V
-+}
-+
-+# Build a position-ordered memdev list and set $ways to match.
-+# Usage: select_memdevs <nr_host_bridges> <switches_per_hb> <endpoints_per_switch>
-+#
-+# Walk the root decoder targets in position order, then the switches below
-+# each host bridge, then the endpoints below each switch, taking the
-+# requested count at every level. That walk visits endpoints in region
-+# position order, coarsest level first, which is the order create-region
-+# assigns positions in. Taking fewer than the available count at a level
-+# leaves that level passthrough, which is how a case selects whether the
-+# host bridge or the switch does the interleaving.
-+#
-+# Endpoint selection has to go through the hierarchy: memdev names are
-+# assigned in probe order and say nothing about topology.
-+select_memdevs() {
-+	local nr_hb=$1 nr_sw=$2 nr_ep=$3
-+	local -a mems=()
-+	local hb sw mem
-+	local i nsw nep
-+
-+	# Force each case to restate what it expects below the root
-+	hb_iw='' hb_ig='' sw_iw='' sw_ig=''
-+
-+	for ((i = 0; i < nr_hb; i++)); do
-+		hb=$(target_port "$decoder" "$i")
-+		[[ $hb ]] || err "$LINENO"
-+
-+		nsw=0
-+		while read -r sw; do
-+			[[ $nsw -lt $nr_sw ]] || break
-+
-+			nep=0
-+			while read -r mem; do
-+				[[ $nep -lt $nr_ep ]] || break
-+				mems+=("$mem")
-+				nep=$((nep + 1))
-+			done < <(port_memdevs "$sw")
-+			[[ $nep -eq $nr_ep ]] || err "$LINENO"
-+
-+			nsw=$((nsw + 1))
-+		done < <(switch_ports "$hb")
-+		[[ $nsw -eq $nr_sw ]] || err "$LINENO"
-+	done
-+
-+	memdevs="${mems[*]}"
-+	ways=$((nr_hb * nr_sw * nr_ep))
-+	sel_hb=$nr_hb
-+	sel_sw=$nr_sw
-+}
-+
-+# Return the decoders at @1 that are attached to $region, one per line.
-+# Host bridge ports are depth 1 and the switches below them are depth 2.
-+#
-+# "-d switch" is required, not just tidy: an endpoint's decoders are
-+# reported inside the array of the port above it, so without the filter
-+# a depth 2 switch port hands back its own decoder plus the endpoint
-+# decoders below it.
-+# Usage: region_decoders <depth>
-+region_decoders() {
-+	"$CXL" list -b cxl_test -P -D -d switch | jq -r --argjson depth "$1" \
-+		--arg region "$region" '.. | objects | select(.depth? == $depth) |
-+		to_entries[] | select(.key | startswith("decoders:")) |
-+		.value[] | select(.region? == $region) | .decoder'
-+}
-+
-+# Assert the interleave programmed at one level below the root.
-+# Usage: check_level <depth> <nr_decoders> <ways> <granularity>
-+check_level() {
-+	local depth=$1 nr=$2 exp_iw=$3 exp_ig=$4
-+	local -a decoders=()
-+	local dec iw ig
-+
-+	mapfile -t decoders < <(region_decoders "$depth" | sort -V)
-+	[[ ${#decoders[@]} -eq $nr ]] || {
-+		echo "depth $depth: expected $nr decoders, got ${#decoders[@]}" >&2
-+		err "$LINENO"
-+	}
-+
-+	for dec in "${decoders[@]}"; do
-+		iw=$(cat "/sys/bus/cxl/devices/$dec/interleave_ways")
-+		ig=$(cat "/sys/bus/cxl/devices/$dec/interleave_granularity")
-+		[[ $iw -eq $exp_iw && $ig -eq $exp_ig ]] || {
-+			echo "$dec: expected iw $exp_iw ig $exp_ig, got iw $iw ig $ig" >&2
-+			err "$LINENO"
-+		}
-+	done
-+}
-+
-+# Assert the interleave the region programmed into the host bridge and
-+# switch decoders beneath it.
-+#
-+# The region attributes and the replay signature both describe the region
-+# as a whole, so neither says anything about how the interleave was
-+# divided up on the way down to the endpoints. A divisor that is wrong
-+# the same way everywhere satisfies both. These are the numbers CXL 4.0
-+# Section 9.13.1.1 tabulates, taken from the case comments rather than
-+# recomputed here.
-+check_region_decoders() {
-+	[[ $hb_iw && $hb_ig && $sw_iw && $sw_ig ]] || err "$LINENO"
-+
-+	check_level 1 "$sel_hb" "$hb_iw" "$hb_ig"
-+	check_level 2 "$((sel_hb * sel_sw))" "$sw_iw" "$sw_ig"
-+}
-+
-+# Sanity check on the finer_gran_regions topology.
-+test_mix_gran_topology_sanity() {
-+	local nr_mem hb nr_sw nr_ep
-+
-+	nr_mem=$($CXL list -b cxl_test -M | jq length)
-+	[[ $nr_mem -eq 12 ]] || {
-+		echo "expected 12 memdevs, got $nr_mem" >&2
-+		err "$LINENO"
-+	}
-+
-+	# One root decoder per window
-+	find_root 2 4096
-+	find_root 3 512
-+	find_root 3 1024
-+
-+	# Two switches below each host bridge, two endpoints below each
-+	# switch. Without two switches the host bridge could never
-+	# interleave and cases 3, 5, and 7 would silently test something
-+	# else.
-+	hb=$(target_port "$decoder" 0)
-+	nr_sw=$(switch_ports "$hb" | wc -l)
-+	[[ $nr_sw -eq 2 ]] || {
-+		echo "expected 2 switches below $hb, got $nr_sw" >&2
-+		err "$LINENO"
-+	}
-+	nr_ep=$(port_memdevs "$(switch_ports "$hb" | head -1)" | wc -l)
-+	[[ $nr_ep -eq 2 ]] || {
-+		echo "expected 2 endpoints below the switch, got $nr_ep" >&2
-+		err "$LINENO"
-+	}
-+}
-+
-+# Positive: 3-way same-gran on the 3-way root, every level below
-+# passthrough. One endpoint per host bridge.
-+setup_x3_same_gran_passthrough() {
-+	find_root 3 512
-+	select_memdevs 3 1 1
-+	region_ig=512
-+	hb_iw=1 hb_ig=512
-+	sw_iw=1 sw_ig=512
-+}
-+
-+# Positive: 4-way finer-gran on the 2-way root @4096, switch interleaves.
-+# Both endpoints below one switch per host bridge, so the host bridge
-+# passes through at 4096 and the switch interleaves 2-way at 2048.
-+setup_x4_switch_interleave() {
-+	find_root 2 4096
-+	select_memdevs 2 1 2
-+	region_ig=2048
-+	hb_iw=1 hb_ig=4096
-+	sw_iw=2 sw_ig=2048
-+}
-+
-+# Positive: 4-way finer-gran on the 2-way root @4096, host bridge
-+# interleaves. One endpoint below each of the two switches per host
-+# bridge, so the host bridge interleaves 2-way at 2048 and the switch
-+# passes through.
-+setup_x4_hb_interleave() {
-+	find_root 2 4096
-+	select_memdevs 2 2 1
-+	region_ig=2048
-+	hb_iw=2 hb_ig=2048
-+	sw_iw=1 sw_ig=2048
-+}
-+
-+# Positive: 6-way finer-gran on the 3-way root @512.
-+# CXL 4.0 Section 9.13.1.1 Table 9-7 row 3: host bridge passthrough,
-+# switch 2-way at the region granularity.
-+setup_x6_switch_interleave() {
-+	find_root 3 512
-+	select_memdevs 3 1 2
-+	region_ig=256
-+	hb_iw=1 hb_ig=512
-+	sw_iw=2 sw_ig=256
-+}
-+
-+# Positive: 6-way finer-gran on the 3-way root @512.
-+# CXL 4.0 Section 9.13.1.1 Table 9-7 row 2: host bridge 2-way at the
-+# region granularity, switch passthrough.
-+setup_x6_hb_interleave() {
-+	find_root 3 512
-+	select_memdevs 3 2 1
-+	region_ig=256
-+	hb_iw=2 hb_ig=256
-+	sw_iw=1 sw_ig=256
-+}
-+
-+# Positive: 8-way finer-gran on the 2-way root @4096, interleaving at
-+# every level. Root @4096, host bridge 2-way @2048, switch 2-way @1024.
-+setup_x8_all_levels() {
-+	find_root 2 4096
-+	select_memdevs 2 2 2
-+	region_ig=1024
-+	hb_iw=2 hb_ig=2048
-+	sw_iw=2 sw_ig=1024
-+}
-+
-+# Positive: 12-way finer-gran on the 3-way root @1024, interleaving at
-+# every level. CXL 4.0 Section 9.13.1.1 Table 9-6 row 7: root 3-way
-+# @4*IGB, host bridge 2-way @2*IGB, switch 2-way @IGB. This is the
-+# composition Linux supports in place of the unsupported row 6.
-+setup_x12_row7() {
-+	find_root 3 1024
-+	select_memdevs 3 2 2
-+	region_ig=256
-+	hb_iw=2 hb_ig=512
-+	sw_iw=2 sw_ig=256
-+}
-+
-+# Negative: 6-way same-gran on the 3-way root.
-+# 6*512 != 3*512 — span identity violated
-+setup_x6_same_gran_span_violation() {
-+	find_root 3 512
-+	select_memdevs 3 1 2
-+	region_ig=512
-+}
-+
-+# Negative: 8-way @512 on the 2-way root @4096.
-+# 8*512 != 2*4096 — span identity violated
-+setup_gran_too_small() {
-+	find_root 2 4096
-+	select_memdevs 2 2 2
-+	region_ig=512
-+}
-+
-+# Negative: region_gran > root_gran rejected at sysfs write.
-+# Bypasses CLI to confirm the kernel gate, not the CLI, is the rejector.
-+test_ig_gt_root_rejected() {
-+	find_root 2 4096
-+
-+	root_ig=$(cat "/sys/bus/cxl/devices/$decoder/interleave_granularity")
-+	bad_ig=$((root_ig * 2))
-+
-+	region=$(cat "/sys/bus/cxl/devices/$decoder/create_pmem_region")
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/create_pmem_region"
-+
-+	if echo "$bad_ig" >"/sys/bus/cxl/devices/$region/interleave_granularity" \
-+		2>/dev/null; then
-+		err "$LINENO"
-+	fi
-+
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/delete_region"
-+}
-+
-+# Create, replay, and destroy a region. Usage: run_positive <setup_func>
-+run_positive() {
-+	"$1"
-+	create_region
-+	check_region_decoders
-+	replay_regions || err "$LINENO"
-+	$CXL destroy-region -f -b cxl_test "$region"
-+}
-+
-+# Confirm a configuration is rejected, and that the kernel is what
-+# rejected it. Usage: run_negative <setup_func>
-+#
-+# Exit status alone cannot tell a real rejection from a case that never
-+# reached the kernel. create-region reserves DPA on each endpoint as it
-+# goes and only deletes the region when a target write fails, so the
-+# reservation made for target 0 outlives the case; enough negative cases
-+# sharing an endpoint and create-region starts failing on the size it
-+# cannot determine instead, which looks the same from here. Require the
-+# failure to come from the first target write, and require no region to
-+# be left behind.
-+run_negative() {
-+	local out nr_regions
-+
-+	"$1"
-+	out=$(expect_fail "$CXL" create-region -d "$decoder" -w "$ways" \
-+		-g "$region_ig" -m "$memdevs" 2>&1)
-+	grep -q "failed to set target0" <<<"$out" || {
-+		echo "expected rejection at the first target write, got:" >&2
-+		echo "$out" >&2
-+		err "$LINENO"
-+	}
-+
-+	nr_regions=$($CXL list -b cxl_test -R | jq -r '.[].region' | wc -l)
-+	[[ $nr_regions -eq 0 ]] || {
-+		echo "rejected create left $nr_regions region(s) behind" >&2
-+		err "$LINENO"
-+	}
-+	region=''
-+}
-+
-+# Execution
-+
-+test_mix_gran_topology_sanity
-+
-+run_positive setup_x3_same_gran_passthrough
-+run_positive setup_x4_switch_interleave
-+run_positive setup_x4_hb_interleave
-+run_positive setup_x6_switch_interleave
-+run_positive setup_x6_hb_interleave
-+run_positive setup_x8_all_levels
-+run_positive setup_x12_row7
-+
-+run_negative setup_x6_same_gran_span_violation
-+run_negative setup_gran_too_small
-+
-+test_ig_gt_root_rejected
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl_test
-diff --git a/test/meson.build b/test/meson.build
-index 07c8618cbc6e..2acba9ea512b 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -173,6 +173,7 @@ cxl_elc = find_program('cxl-elc.sh')
- cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
- cxl_region_replay = find_program('cxl-region-replay.sh')
- cxl_type2 = find_program('cxl-type2.sh')
-+cxl_region_finer_gran = find_program('cxl-region-finer-gran.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -211,6 +212,7 @@ tests = [
-   [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
-   [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
-   [ 'cxl-type2.sh',           cxl_type2,          'cxl'   ],
-+  [ 'cxl-region-finer-gran.sh', cxl_region_finer_gran, 'cxl' ],
- ]
- 
- if get_option('destructive').enabled()
--- 
-2.37.3
-
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> 
+> > ---
+> >  drivers/cxl/core/region.c | 50 +++++++++++++++++++++++----------------
+> >  1 file changed, 29 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index d564443a1d39..b288421203a9 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1432,6 +1432,33 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
+> >  	return 0;
+> >  }
+> >  
+> > +static int cxl_port_peer_distance(struct cxl_port *port, struct cxl_region *cxlr)
+> > +{
+> > +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+> > +	struct cxl_region_ref *cxl_rr_iter;
+> > +	struct cxl_port *iter = port;
+> > +	int distance = 1;
+> > +
+> > +	/*
+> > +	 * The "distance" between peer downstream ports represents which
+> > +	 * endpoint positions in the region interleave a given port can
+> > +	 * host.
+> > +	 *
+> > +	 * For example, at the root of a hierarchy the distance is
+> > +	 * always 1 as every index targets a different host-bridge. At
+> > +	 * each subsequent switch level those ports map every Nth region
+> > +	 * position where N is the width of the switch == distance.
+> 
+> Maybe promote this to be function documentation now this function is only
+> concerned with finding that distance!
+> 
+> > +	 */
+> > +	do {
+> > +		cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> > +		distance *= cxl_rr_iter->nr_targets;
+> > +		iter = to_cxl_port(iter->dev.parent);
+> > +	} while (!is_cxl_root(iter));
+> > +	distance *= cxlrd->cxlsd.cxld.interleave_ways;
+> > +
+> > +	return distance;
+> > +}
+> > +
+> >  static int cxl_switch_port_setup_targets(struct cxl_port *port,
+> >  					 struct cxl_region *cxlr,
+> >  					 struct cxl_endpoint_decoder *cxled)
+> > @@ -1445,7 +1472,6 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port,
+> >  	struct cxl_region_params *p = &cxlr->params;
+> >  	struct cxl_decoder *cxld = cxl_rr->decoder;
+> >  	struct cxl_switch_decoder *cxlsd;
+> > -	struct cxl_port *iter = port;
+> >  
+> >  	/*
+> >  	 * While root level decoders support x3, x6, x12, switch level
+> > @@ -1460,27 +1486,9 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port,
+> >  
+> >  	cxlsd = to_cxl_switch_decoder(&cxld->dev);
+> >  	if (cxl_rr->nr_targets_set) {
+> > -		int i, distance = 1;
+> > -		struct cxl_region_ref *cxl_rr_iter;
+> > +		int distance = cxl_port_peer_distance(port, cxlr);
+> >  
+> > -		/*
+> > -		 * The "distance" between peer downstream ports represents which
+> > -		 * endpoint positions in the region interleave a given port can
+> > -		 * host.
+> > -		 *
+> > -		 * For example, at the root of a hierarchy the distance is
+> > -		 * always 1 as every index targets a different host-bridge. At
+> > -		 * each subsequent switch level those ports map every Nth region
+> > -		 * position where N is the width of the switch == distance.
+> > -		 */
+> > -		do {
+> > -			cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> > -			distance *= cxl_rr_iter->nr_targets;
+> > -			iter = to_cxl_port(iter->dev.parent);
+> > -		} while (!is_cxl_root(iter));
+> > -		distance *= cxlrd->cxlsd.cxld.interleave_ways;
+> > -
+> > -		for (i = 0; i < cxl_rr->nr_targets_set; i++)
+> > +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+> >  			if (ep->dport == cxlsd->target[i]) {
+> >  				rc = check_last_peer(cxled, ep, cxl_rr,
+> >  						     distance);
+> 
