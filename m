@@ -1,118 +1,123 @@
-Received: from mail-pj2-f2.google.com (mail-pj2-f2.google.com [74.125.227.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D520330C158
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 01:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C1283CB5;
+	Wed, 14 Oct 2026 01:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791941315; cv=none; b=o4LJpll1bVHVFbPh8VHlQEAnk6o0fWf5XFlDQeJj4cT9VIjkZOFq1N4KPBGzTt8UzK5AdJ7BQ1Jcgmbh+t5eGACrjSrq807/V00RjRxWvlXQf7D9KrNO2J0sxnPCm+mJC+8o4uXnzIS4MnvlWwdH5cxOPOKLt3FPkNbu2OigcyA=
+	t=1791941478; cv=none; b=r7X6Zf6WdgYXcjj4vUydXchNXSxP0qA5VM2B/KYxOCXRRjcaBngS48eaBhUU6SvKavdcSSLxRV8WjTVSBdfvY4CDHvGQT8lbqVzXiSDsasHedF92vBbDQdwC/zlFNr8qtSCz3t3RoOAxqOQpypECwchV+sAhvMwbIqC8J7ay54M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791941315; c=relaxed/simple;
-	bh=gmVQW4zvgK1RdCMOSrjGY3Z/g11AJJIEJYvUSmj2svQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HGgEI7LYxTGg3Hw4XO7OeORUOy9d0ztNMJXs/f6z7dikbVtyMbLP3pmeJltdEHhyx/RB7DDypE4foGeTEXVWJbgh31MieL0zn+nzo9hpFws6i++keqRvZtmSZ4o0zsFduJf/FRGbRIDliumHJevOage3tjcmSG7cdN1btRja24I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9BXdVCw; arc=none smtp.client-ip=74.125.227.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791941478; c=relaxed/simple;
+	bh=65aaMEZ4l4SG+3yai4f3Vmrgy6drxbo3TYpumAF8H+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVIoU/1eE0J1P3W3WgKlK/hSLmT1lyuTrltH2y+N4i2+/J1C1HDFzcTHbZlj41+AaS9TaTyRlxy84p4Y49ktkq2q8pc2mvLQwwBJFrXuzU3EMs+NuemyZNtaOX6S5cCPyl2kBwrFR9DiozjnUNf4uUaQTwbrxF3xuUNQUXY5BQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=gJ81NAJF; arc=none smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9BXdVCw"
-Received: by mail-pj2-f2.google.com with SMTP id 98e67ed59e1d1-3a8c118e711so2029132a91.0
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 18:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791941313; x=1792546113; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xF4abej4dYzWW64tGMfNwkdoR9vBgU7tCntIFYf9jb8=;
-        b=i9BXdVCwLO48JsGMxuGlDT2FwFtBPBYvvi1r/TGzg49xFY0sd8d+I9ViggJSo1Mm5Y
-         PAPD91QegvXMHAkSgorPhNXqYn94Nxb93FNFUfVJn9W33Z8hEHp7w9adfJzG8HQC5O6s
-         sRexmALj2OUy1z+R1BHiC0AmMK/dwUTe9CTcjydBa6p0SYu0FIhVw6ZAbi9El5P3GyRJ
-         Y9BfCCWLi17kk3imwfT1ECTevIHS4XfN4YYgHvXAbeuaWPOraHhPe1s86OIxr2++KGD1
-         Xw9qtI8AkeUgViJQ5/E82NNPBr1CflUZma364cFgnKMzOv+XbMfV/8tIQ5rs/Jf4qlUR
-         Xqww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791941313; x=1792546113;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xF4abej4dYzWW64tGMfNwkdoR9vBgU7tCntIFYf9jb8=;
-        b=AXZC/gDYOHqOfeM1uYqBb1xvrUuauoCVglokisoQ/oLNJIVYVgTHUWiX+aC8R9/GP2
-         IFLOkl/Wgrqxz8i6MKcSFt0v8N7dvTQhfAzmGRW5yUHBXt4MLsSXtcriWrOxKCXpmbBa
-         8aKfJYkMlf9QKyeX0Oj3F4t0H0XCaIh7QUrZG0vMA6KrfFx/tV1Vg9QunpGqtHXqmvqM
-         lzKL2pj4K11rdtC5H2jBo9AY44RQduWPbh9hZtw03bUqMw1BV54nfdtogdaKiRrRNyqI
-         lZi1aIlLgjZUxOBGHtUGShLEK0kRxJK5r1Qv3N6IPXa93tl4OrjsfUFkMI5PYtLUu7K0
-         YJ9g==
-X-Forwarded-Encrypted: i=1; AKwUvBwBy0LAsTYA8Jyx7MrTr3H0aRljFznwOjl7TNV9hG/5yVxEA906PL8YVq6ecNlHh98HKuUir/zNP+c=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLdnFdgnFx3Tt5ppt3hiFG9+elnlQAlCkfYUzkB9EHo8myk8Haa
-	nRDlfx4lH9YuJOc1tLTFgyD4QBgVv+Q5rdNNcbgP+/xyyaP3qAaMVSb5
-X-Gm-Gg: AYBFou1bizKV4MettRPyyiNjz3eMR8zpVfTFtz8GNbERTINnOmkhVJb9OOSWgHvCrEq
-	6nIUhjG9jfDwFrDFndQw8MIjYATzIv1f4g2fcBoMkhcrkGUFh4Fx6PbSb7s3Yorsh1iqGFBboyq
-	H4DiG71FLUlnl1x1MYh/5zTf77R8RqdSmA6XmM6LUzIQaofV4f+tGwJR8Salq3Xm+a2N8/yTBhD
-	ACNyHDnOtnqES42CrcrBCCo8grqCYUtaPBYimDe/yqFJSPBVRb4a6o8OUUYN+aA4V+MqPGNH1i4
-	0vIfpZJPW0TyJzJyeS1aSbkl5eqe4/8CYM7/99/GJSEUSg13mryyaqC3AH8RmeMYLqBXUYUd5nK
-	TNdX6dgqsvICdYWHXu+K1jZYj5HFAJ23rd+9R9jn3SPDfl2bNayXoVfE/C6SlJcqC0tkR48U/hY
-	xg4HBXMbCYkq9fBWLvMQurE+nLp0emkfgHtz3if/Sql1mqaq676PGLTmtZm7Dy/zkQRDiGejuiy
-	myDYGTk84QEAN2Vc0zrYdJMKTbzceYIPAdREF5J2gx9Jt5quU10eZDlOV9fZsrx2lBKrFOD5a9l
-	o3exB9UxMU+PVrgMndkGGlxP3cnCNLZJ6pI=
-X-Received: by 2002:a17:90a:1601:b0:3ab:884b:65b7 with SMTP id 98e67ed59e1d1-3ab884b6b8cmr5867485a91.25.1791941313156;
-        Tue, 13 Oct 2026 18:28:33 -0700 (PDT)
-Received: from localhost (ec2-35-77-45-43.ap-northeast-1.compute.amazonaws.com. [35.77.45.43])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac5f1fb257sm1953670a91.0.2026.10.13.18.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Oct 2026 18:28:32 -0700 (PDT)
-From: jianyungao89@gmail.com
-To: linux-kernel@vger.kernel.org
-Cc: Jianyun Gao <jianyungao89@gmail.com>,
-	stable@vger.kernel.org,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev (open list:DEVICE DIRECT ACCESS (DAX)),
-	linux-cxl@vger.kernel.org (open list:DEVICE DIRECT ACCESS (DAX))
-Subject: [PATCH] dax/bus: fix dev_dax->ranges leak on device_add() failure
-Date: Wed, 14 Oct 2026 09:28:23 +0800
-Message-Id: <20261014012824.31468-1-jianyungao89@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="gJ81NAJF"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id EC40E382008;
+	Wed, 14 Oct 2026 01:13:20 +0000 (UTC)
+Received: from pdx1-sub0-mail-a233.dreamhost.com (100-100-76-207.trex-nlb.outbound.svc.cluster.local [100.100.76.207])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A0DEE380D84;
+	Wed, 14 Oct 2026 01:13:20 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Lettuce-Minister: 55915af466baebd0_1791940400793_1852143453
+X-MC-Loop-Signature: 1791940400793:282171953
+X-MC-Ingress-Time: 1791940400793
+Received: from pdx1-sub0-mail-a233.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.100.76.207 (trex/8.0.2);
+	Wed, 14 Oct 2026 01:13:20 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a233.dreamhost.com (Postfix) with ESMTPSA id 4j4CrH4zBzz103w;
+	Tue, 13 Oct 2026 18:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1791940400;
+	bh=U0C+J4dqdPlm7JgNbcBpdmGMl5igpDbobE/kdwVvjIk=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=gJ81NAJF81cUEMhu9SEOe8DvnVbn7lIFtLHIodYzRe6oOBRC2mB6QDqfaAvLnI1a6
+	 FgOHNiiukirx7LQsG3Bygcjh1WlgqTeBB07C/UWe6BIi3Pjx+iFn9QnORdlgk2WNW4
+	 tS5g/dUmIQsuXES+Nt7FCDMP0CygwJ/dG06xXERH0+U5wqJKCY3Aft3Zy08kCOOSuC
+	 uusa7DS2isF4cOge2YPMbhdGnETTDgGtZjDOePQ3ohnbeHaRUw+hukhckLq1CtMlx1
+	 ws4eRk+BAE1kA+LRqYCuuiDwfRrCRXp3gmebTmUIOo6Sb7Ggu1t9iSrUwsH9AjOd6Y
+	 JUdXdQfGlI6KA==
+Date: Tue, 13 Oct 2026 18:13:16 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: jic23@kernel.org, dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, iweiny@kernel.org, ming.li@zohomail.com,
+	kaihengf@nvidia.com, kobak@nvidia.com, newtonl@nvidia.com,
+	kristinc@nvidia.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v8 4/4] cxl/memdev: Don't overwrite the error from an
+ earlier partition poison query
+Message-ID: <20261014011316.pm3ctf74lzbsogob@offworld>
+References: <20260922101129.52794-1-icheng@nvidia.com>
+ <20260922101129.52794-5-icheng@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260922101129.52794-5-icheng@nvidia.com>
+User-Agent: NeoMutt/20220429
 
-From: Jianyun Gao <jianyungao89@gmail.com>
+On Tue, 22 Sep 2026, Richard Cheng wrote:
 
-In __devm_create_dev_dax(), when device_add() fails, the function calls
-kill_dev_dax() and put_device() but does not free dev_dax->ranges.
-At this point devm_add_action_or_reset() has not been registered yet,
-so unregister_dev_dax() (which calls free_dev_dax_ranges()) will never
-run.  put_device() triggers dev_dax_release() which frees pgmap and
-dev_dax, but not ranges -- leaking the krealloc'd array and also
-leaking the regions reserved via __request_region() in
-alloc_dev_dax_range().
+>cxl_get_poison_by_memdev() queries Get Poison List per partition but
+>never checks the result inside the loop, so a later partition's success
+>overwrites an earlier partition's failure and the whole scan reports
+>success while that partition's poison went unlisted. Before the loop
+>conversion the PMEM query returned early on error. Stop the loop on any
+>error not already tolerated as a RAM -EFAULT.
+>
+>Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+>Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia.com?part=5
+>Signed-off-by: Richard Cheng <icheng@nvidia.com>
 
-Add free_dev_dax_ranges() to the device_add() failure path, matching
-the cleanup already done in the err_pgmap error path.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Fixes: 9567da0b408a2 ("device-dax: Introduce bus + driver model")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
----
- drivers/dax/bus.c | 1 +
- 1 file changed, 1 insertion(+)
+... with a nit below.
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index b809e1a264af..83442430dc01 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1536,6 +1536,7 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- 	rc = device_add(dev);
- 	if (rc) {
- 		kill_dev_dax(dev_dax);
-+		free_dev_dax_ranges(dev_dax);
- 		put_device(dev);
- 		return ERR_PTR(rc);
- 	}
--- 
-2.34.1
+>---
+> drivers/cxl/core/memdev.c | 2 ++
+> 1 file changed, 2 insertions(+)
+>
+>diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>index b3419df586b9..e39b3d13fd56 100644
+>--- a/drivers/cxl/core/memdev.c
+>+++ b/drivers/cxl/core/memdev.c
+>@@ -231,6 +231,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+> 		 */
+> 		if (rc == -EFAULT && cxlds->part[i].mode == CXL_PARTMODE_RAM)
 
+This wants poison_efault_forgiven() - maybe move out of region.c into core.h?
+
+> 			rc = 0;
+>+		if (rc)
+>+			break;
+> 	}
+> 	return rc;
+> }
+>-- 
+>2.43.0
+>
