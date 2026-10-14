@@ -1,132 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574AC2EEE75
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 09:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791970659; cv=none; b=YdHDwsznZBAlW9CaJ/T+IUz6w0qheqOHzz+Hv7XtZxFgpQ80PQJiI61JuLMgx+pcPzuwVt7ATLyJUi/3cTN4g7zgV9YcujLe651jpqrgqBEzXz3oM3B3tBLXz3iDlt5D48wv/sjAEvu/R7dtIGYzkm1NnXO+0jFe7HRHiNFfGak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791970659; c=relaxed/simple;
-	bh=2JqF29mdIDBiDoEAPp3FTW8LA4BFk/t8vIBM6YPijak=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08E54DDB41
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 09:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791970850; cv=pass; b=Q9GWxTCsioA5Ivn3QWqn5Du/VB3L87wIm0IENgV11NSaHKGJdZIHNM+E/Id72byhpaZD42JCRTvzePrYFdCBSkehdi3qLcBMTLCWxfKTqVElA8sWxYqyfLQU633xc5PzOPmO817vuWodW/lNKTLXtpeWLcX5B+pz46FHl2zU7AM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791970850; c=relaxed/simple;
+	bh=9/reRJ/j1yO6b6rjpq4fLoYRPvxibxm3mLaZMWghcMU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqsHLHrm2guoZpUxI8gNfOFZu35gIDBorZuRwqzGwhyCqX5H3YZ/8mprX84lLr70E14Ey95I6HiB5cLueVzDj4Agn9Dy0A+efYZVEVgKn8DjyVlBA+mQ0ocSAu/Qxk1aZDfsxBR8v642AaY8JlKIUYJZWN7a19gPvRBGAOdAFLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bPhw/0am; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=B3xfK9c4X5CvTv0u/gcsGU2PHbMZKfMzbvtKkMR0c5dB84A2Xk2aR1It5Dg3uggC+VIqBR7JvbFsVTu8JG9VSOoynJjlgaIbLnwdRYDvlLCAnU5TLpvB/SzePyajlFrNUyn+2jCDXkBHw5VUkGgz+zBc2U/vqMCz/hfMk1U9EWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=fa1kl3g9; arc=pass smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPhw/0am"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1791970657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DZHWlhTDhL5WqiNRs5JbrYvHrkANNCynzraFMjRCOYs=;
-	b=bPhw/0amEEw+E/S+XSDUL5sTA/02SwYMJxOzHPWE2KdMrjZIFSxGPuJmF3P6zgG3yVh9EN
-	w6fiP2Bj9zpRlKVpbvF4S5n0SLnf/0OUMHhWvFdy7DVdcNpgjSA0lmDWoIybrP38cUEzSW
-	cdXG2oOMTotYGx9kqfD5f98LUJ4YC3Y=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-lxPeYbNOMma9p_hq0cwlpg-1; Wed, 14 Oct 2026 09:37:34 +0000
-X-MC-Unique: lxPeYbNOMma9p_hq0cwlpg-1
-X-Mimecast-MFC-AGG-ID: lxPeYbNOMma9p_hq0cwlpg_1791970653
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-8b0c6e7151cso5839247b3.1
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 02:37:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791970653; x=1792575453;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="fa1kl3g9"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-53394bffe0fso9015361cf.1
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 02:40:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791970847; cv=none;
+        d=google.com; s=arc-20260327;
+        b=GuCBSxCYT/TAOxwzXgyhSJskk2l1FxBDaAEG/ItYTmHIwz8179XGgtYCVISEGSCX+M
+         X7LLn3rxpcYPQHn+nlPlgWU0HXaSiM1Tt9Ym0Gbe9/LsIGLlbdWfAIAVoRZyVEkhj9mm
+         ElcMvVMeZDG1NWTzPUy2y94AM14H290xD1VW2XEBabGzQiDCofQo3gRw6H1+3cS6mv4u
+         6uqUe54pQv/8DsDu3PU1LFm+h5WsdVnP+UtwtU8YRU8XiRqrHHjabVAgBMdRAQ3mrocS
+         TXO17aeqxOsu1YxV6kmM7/BGUySgtRPQLy7VtazIEgQnJHu6kGsWMTyKrgeRDdWLTbtx
+         I7/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=83H04bxF6YUdzZlLQRh4TGz7SNPkoIlEwePAKgXPMOI=;
+        fh=ZyYQKgFata/xWYPUvtQFwJGP5gwaNv1SA4WYBNWo3MY=;
+        b=sZndKYXpBwlCwKh+pdgGa+IxDYyGsb2MvWIfUtBvFvTCCWHcVlWprUKxEmZ9QZ4lKx
+         6FJYLGTtwY2bXbVD5tm2TkUc2VxxwgYVJSjZPLQ2MsyfOdZzkpNyB5rbLXR8s9jnww33
+         yYumddslsR593QEm7xnZixG6Wo0TqLEIVtY5x4iE+nch6xGzFJpJ4vpw5YtVeotA0SkU
+         4QzGICSsCZ+D/XUipa/weqMwsri4kaNb5lfwY7eQ/OWmGI5F89SFBGNWB0M8CTFYDb2g
+         i2vIALlR/uVt8tQypMegZHkTqORTk5zx+e89qKQuGHaPhxFTidN9WoIpf+Mu07nkC2ER
+         zBPQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1791970847; x=1792575647; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DZHWlhTDhL5WqiNRs5JbrYvHrkANNCynzraFMjRCOYs=;
-        b=i7bO51CVdATcGORrYcluTKml5G7K9WZOK2x0vRgb7fbuDc+TYPXRXyJ9wvNn1FaJI6
-         J7ReyaoqzL30siaR3xc4FGbAnWUhKF2nJaH/J7/CgGbtWjBmKM+SDQs2+CpbD/YYSDgM
-         EEzEwQgDi2aqmy6KA2UsSY5yGl138fr6jejZohQ5pJ2j8nMBDCC16GMAB5CoIDcfCb/5
-         DslQWPq4JnwKQXK6HoJuA7iuAsR3FR4c3qI1pn3w/VieeD7Bp0K1yvqQMf12O2YLtByU
-         B7BGuIA6sKh9pbSvUcXvOtk7+5AZaI0iABrBKEQw4d9U5nQHJMW84dl9T1j8/6PZ8Et1
-         AEFg==
-X-Forwarded-Encrypted: i=1; AKwUvBzePDb46dxV1mv9wJTPFyhxvPHj9rsbZqRPdfXfwO8Dvl9DkLPI8p6SUQavTI6hf2oPN7cm6Jhri6E=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK3qop7cFrKSrbI00V5krPwMza10cHb3dOA3Rj16JaZGnFfMXcl
-	CYyKIFn+H9zRuqHwjX1Z0349nqLwD9DR0eoxfu4E6J6Qlr/Ynr/ZQUyfFKiSRgFg4QCvUyBz9oN
-	oU60GyBQCinx8eZmZ5/auHKvsYYlXJ5KMHa7QnjZSTq7g101rKQZ2zpZITzNdt3XHUZUSy2SgjO
-	O2eaXGxRYouCDQWCOSa6dGwQbRmKGxL7ZZ07yC
-X-Gm-Gg: AYBFou3CD2DUQafQvvZ71v+Vu+rxTBRWZ3g0bsyIXfXdDi9hut/FdCWgEZ+7WFIOBiI
-	PAxSRNr/TMxiw1O9VHDrzXaaH1nNX9LCeEIs5FRW2vPI2KGgCfxpsEgrgwNA0TD2dddtOTVhyWf
-	DKZ5rP8Z0wY7PbGzL0pVX0W74dauclq6kPyoyoSTn4QwvT+PRcX//4
-X-Received: by 2002:a05:690e:bcb:b0:679:8e30:440e with SMTP id 956f58d0204a3-6798e304456mr345326d50.158.1791970653460;
-        Wed, 14 Oct 2026 02:37:33 -0700 (PDT)
-X-Received: by 2002:a05:690e:bcb:b0:679:8e30:440e with SMTP id
- 956f58d0204a3-6798e304456mr345307d50.158.1791970652857; Wed, 14 Oct 2026
- 02:37:32 -0700 (PDT)
+        bh=83H04bxF6YUdzZlLQRh4TGz7SNPkoIlEwePAKgXPMOI=;
+        b=fa1kl3g97eTcpvHqBZez3IUpWEPIYRH0gqMgWhAdsafutmaQj4qKemJl8QauaYKwas
+         tbYD3dEQinYRmqKM8qJgSwXzs00bzPRlIUU4ESFSk+gAghWlZ/A6Nslannmdu2jPL/Et
+         MW+XX6fVvLWLjRPJ1mt2AT4CeWeab0oW8uKR8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791970847; x=1792575647;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=83H04bxF6YUdzZlLQRh4TGz7SNPkoIlEwePAKgXPMOI=;
+        b=vnJnW3E4ef4uhJ4Pnx+fAiZvXvpXH5Qje0T0eRceNdm+nNJmTtHRCulI4Ha4ZiSDKT
+         1ZqlsxBtmY4eJk8UZa26Drrw3vBj4EICHJ9NXAr4xXVqzSp7rELzDftLETPMhf2khVvs
+         cySCud6qP0bAqitDQHhV7q0UxzLus7Tks5oF4exsIPLCk6wK4Q0X1KSK8T59eXwAfcNj
+         TvaVsalnyJ2ZxU+XIupGysjvikp00tXiHXhHoBM7x35Kr2o61c86J1bio+JYxehRu1QA
+         lK7hD3Yj+BxnVkTRXnoVxXwmKkbmIFvt2NDZAtQcdu0ct5vTFDRZQsx0Wu+k3KFiyLkG
+         dfoA==
+X-Forwarded-Encrypted: i=1; AKwUvBwU9TRF/Vj2Pd2EhHDp9nbLfEjv/EmqrvryinSE7d3u9PqPVNHqGbcA8ezGcM4CcobVrzUP6xk7gMM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLBb5ILO2NOir2dHBKtjMiBiz2WKsn9UBFUQgRcZhXH59K5Ugdf
+	BwSuQbWdywe1yU+B+YjjNvIwL55b9FqnUpiM+kEGNbl+7fgDjt1Y4d6Wo2p0KsqBFGT8MTvP+mL
+	tMfsIizkCLr3aifnyvgmUwKKfsrqtOK1W+3wSAJ9nf0qUIQhzVI5g
+X-Gm-Gg: AYBFou3cAmik2gAQVLIFnKaWQ3p+6qqsos5g3vh18qZRG57iLTzXkYmRbfiPq1TjtVT
+	hSpfVWyjRsxZi6Nw/NgbLHdES4pE8IbKEuI4K0jzBS3sbkSHaGzniVlzQDdWb+0BEfkxhv1rhWb
+	alZXYv2An91b2Sdt37w2aAcSEsNtTCLvAdBaM+dAOialHj+Cl1KjbyXlel0VfG2zGUrk/Xj5MTo
+	/hTMv1PytRdrMOZlFQXY4Bzg+SGpQjvdy+P7qrdKJ4J3wQSh1spV1WjWYRVPKBwmMqhN7R5OJ7+
+	ymB3pVnE98zZLt9916me3WoyKiw+Yoo083TWG5h/FY1vhjXoozeouJjXPE3whca4K0+E3br2S1S
+	D1lb8174il8jvCo3Fdg==
+X-Received: by 2002:a05:622a:305:b0:535:f20:a051 with SMTP id
+ d75a77b69052e-535a62041b3mr204309621cf.26.1791970847591; Wed, 14 Oct 2026
+ 02:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261008112004.1899560-1-mszeredi@redhat.com> <20261008112004.1899560-9-mszeredi@redhat.com>
- <sashiko-outbox-164097@kernel.org>
-In-Reply-To: <sashiko-outbox-164097@kernel.org>
-From: Miklos Szeredi <mszeredi@redhat.com>
-Date: Wed, 14 Oct 2026 11:37:22 +0200
-X-Gm-Features: AclHuK9oudbuDKSUqa_bJ75j7x9Hwi3mgbzizDj7pqL1HcfMX3cGRTRtlrqqQvI
-Message-ID: <CAOssrKd-ACNEo8uOddmyCaGBsF-GYTNsnOq8PML991Gqq0E4Ag@mail.gmail.com>
-Subject: Re: [PATCH v4 8/9] fuse: add extent map I/O support
+References: <20261008112004.1899560-1-mszeredi@redhat.com> <aswN-UprZHx9wU9y@groves.net>
+In-Reply-To: <aswN-UprZHx9wU9y@groves.net>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 14 Oct 2026 11:40:35 +0200
+X-Gm-Features: AclHuK-4wYzbPDth2dwaMOE-UcJ9Mlv56Q3DJCgmQBZqmD9Im9s183TZ-SA1hxA
+Message-ID: <CAJfpegvDbGaoH5Er78M=XYwA6a7zj6DRqY0+F0cgiD7TfRK_Mg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] fuse: resolve extent maps in O(1) when possible
 To: John Groves <john@groves.net>
-Cc: sashiko-reviews@lists.linux.dev, fuse-devel@lists.linux.dev, 
+Cc: Miklos Szeredi <mszeredi@redhat.com>, fuse-devel@lists.linux.dev, 
 	Amir Goldstein <amir73il@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
 	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, linux-cxl@vger.kernel.org, 
-	nvdimm@lists.linux.dev
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: psTPQ7KZ2yQfwrtMIKIWuGchZ7UAT7cbr_L5qdlhorE_1791970653
-X-Mimecast-Originator: redhat.com
+	Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 8, 2026 at 1:36=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+On Mon, 12 Oct 2026 at 00:33, John Groves <john@groves.net> wrote:
 
-> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > index b5bef7b9e466e..77d7a54066e47 100644
-> > --- a/fs/fuse/file.c
-> > +++ b/fs/fuse/file.c
-> > @@ -551,6 +551,17 @@ static int fuse_fsync(struct file *file, loff_t st=
-art, loff_t end,
-> >       if (fuse_is_bad(inode))
-> >               return -EIO;
-> >
-> > +     if (IS_DAX(inode) && !fuse_inode_vdax(inode)) {
-> > +             /*
-> > +              * Note: the DAX fault path calls this via dax_finish_syn=
-c_fault()
-> > +              * and taking inode lock in that context is prohibited.
-> > +              *
-> > +              * FIXME: need to flush CPU caches for the DAX memory ran=
-ge
-> > +              * FIXME: need to sync metadata to the server
-> > +              */
-> > +             return 0;
->
-> [Severity: High]
-> Can this cause silent data loss on fsync() for DAX extent-mapped files?
->
-> When an application calls fsync() on a FUSE DAX extent-mapped file, this
-> bypasses flushing the CPU caches for the DAX memory range or syncing meta=
-data
-> to the server, while still returning 0 (success).
->
-> Because the operation falsely reports success, applications relying on fs=
-ync()
-> or MAP_SYNC (via dax_finish_sync_fault()) to ensure data durability will =
-not
-> take fallback actions. Could this lead to silent data loss on a power fai=
-lure
-> or crash?
+> With this patch on top of v4 the famfs test suite passes; that tree is
+> at [2].  The famfs userspace master branch [1] now works with v4.  If
+> the next revision needs further userspace changes, please base them on
+> that branch or send them my way so the two don't diverge.
 
-John, what's up with CPU caches on mapped writes?
+Applied, thanks.
+
+Please next time use a new mail thread, because linking to the old one
+confuses b4.
 
 Thanks,
 Miklos
-
