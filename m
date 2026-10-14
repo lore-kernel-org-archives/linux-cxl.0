@@ -1,269 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E928D37A84A
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 05:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791955652; cv=fail; b=MSI/B1+Q2jw2nCBM0zELGXFDU+qVjZEusxXQ4IFOHNoEzv16b7jhe00CEQ7AakS6YEJWj7o6Hiis7Xp2UeuJU3xSKHA/Eh3WMf7R+Zc7gBqrmOOmlpsPjNyosY0ozD5BMHgrWXTOL59ZLBII4y2Fsl2P5EY/mQ70VrlzSvQX2yc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791955652; c=relaxed/simple;
-	bh=IN9pql4LYuyXIFdh0RCwv8ReAJVOYgmomr0ljf8ZPWA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NIMnfdWr0G6Fb6g1OTMChlrhwpGXotVSTKRi9raIsDXLLIfgQfebjE7sugebLSL8aDHTyFj1wlE3ONs7JgS2KS+outYYMmKJDa2d8XJU1EmB51r27H2yHAw926N1JadGL3fy8brL5Nl+SML3VVu2ttJjpoungxaxtcdYWS3dk18=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N9kFXd7p; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4B41DDC38
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 08:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791965452; cv=none; b=chgk6EG06iQvj9OVEbcAHeMULpx7C5MFiSUcGNpeQ577PjzG0sToqNDGXaPksdzysue496tAcd0y4q0VGBxS/JOO1a1CrG0/T1SUXrEgCM1f2xCyqbbkcPZlB0Ds7hznY7g04dakua6HuYUXihfRXtQ0pQFAfwryVMZSWv04BeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791965452; c=relaxed/simple;
+	bh=QJNu+OT13GDuM29oNR8tuTxbQdIK1kGBU0O7VA+asIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eVZDHLvkRW+vCuYbKd2dUo4sQaky7j1/yKEl1HxX6c8cFDLb1GNlE/NGERHOPtoj0SlcUzcB1z6WVFv+IN8kH8cA9sB/+Ity1kBEC+SnqJDUGAof1q7YWvkkN8May27VJ/MDCVShol1TKoiOJGNzAPznqm+68g95LCMDO5HAqAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BXZSGGfg; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N9kFXd7p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BXZSGGfg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791955650; x=1823491650;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=IN9pql4LYuyXIFdh0RCwv8ReAJVOYgmomr0ljf8ZPWA=;
-  b=N9kFXd7pingH+BjtjIKSn03SoSNg46YSZ6ovcMm6c1UQEO71B4Viv6xk
-   0PWoYIbw03ZhCrJ/0hL0bOWqWJyT136azMVJ/cwRT6IKHc7hbk+wNabue
-   DubTDUjMd5IqjmCWAaaXDVeL6GcCQKQD7xDuehLw2Af3IxwzWLoKE0ehV
-   OOZKuF3bQs5PH+DpmftcTODc43f9BgM/aVNKVGFEWwSmEo1Z/mVd7lTbj
-   tqbJ4f/Wte8xYsE2koz8LaUQK/FgI2E06dIdV8PcUVOpPJ/RQ0UWs0lpQ
-   dOYY6HgPM7XXZ6vllUZD5BCI22PfC9lYGZwJZFRpeGB6PXfkzyOVCFIBQ
+  t=1791965451; x=1823501451;
+  h=date:from:to:cc:subject:message-id;
+  bh=QJNu+OT13GDuM29oNR8tuTxbQdIK1kGBU0O7VA+asIQ=;
+  b=BXZSGGfgggY7t76jQBIPvDJNhNjweYdappygHkt8lixuOy556y3PRUfy
+   ASQok6nABBgqoQ/ZJftKgW9POeYnQA8aU13Crig1ehGacFI/E+croPQ/z
+   +UfweLD63GSZRzLVnATOTUlcqunRVo6jHSBAuAIN8voCe07xaFjVKS4Qw
+   Q/9GGS/YJHTe9i6VhSeHTz1FhOfBW0v85TEj3Y9XD2FG70WuBNSmXCZkZ
+   +xyBC7UZ4orRes44nzbvOa/maEAhAKmWXHQTjD0PXFA9xk5IgpA89ewLI
+   hjjTUp4DNMe8RAPwxorSSVfGtWcQL+jSgw5e0EeotkJj39r3Pc0kjrXk1
    Q==;
-X-CSE-ConnectionGUID: XQ5JCR9XTQqkYau5G50TsQ==
-X-CSE-MsgGUID: IRdGwaDOSYqdMxfTeSUALw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="593492"
+X-CSE-ConnectionGUID: VGgrzUrlRq2XHh4czB29bw==
+X-CSE-MsgGUID: O6IpnAz0TEG8NtV1cP3A9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="721720"
 X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="593492"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 22:27:29 -0700
-X-CSE-ConnectionGUID: GYCQ68BrT8OxFVdKsSFhjg==
-X-CSE-MsgGUID: JeaTjn7sQEuAS2aOfxYucQ==
+   d="scan'208";a="721720"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 01:10:50 -0700
+X-CSE-ConnectionGUID: qRQQ+rGNRwWB12zMM5qKlg==
+X-CSE-MsgGUID: DSW+ZQY6SSCxmKgKaJ7etg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="1300305"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 22:27:29 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Tue, 13 Oct 2026 22:27:28 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Tue, 13 Oct 2026 22:27:28 -0700
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.34) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Tue, 13 Oct 2026 22:27:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iQ+UWtKL6LDaP62NoeEt6LJxbjJlWqz1d4wiEDD64jz/BDcaL5wZWEuKjLLoSsEWT9Ij41pfiimnXM+mU7ZkNe2zkWOA68FXce2dqqb5VoMcWaOlvjYflPpFgap/oeYjhlsz9MWYSE6UQV4EmzBYhV4nLsYMXGyNWZtj60b6yAhuLRi0zS06pwx+2aHDEsSO84sEwTsojri+BGp262nCKTzH+aacLEJjiHijfnPJ0b74AdztFHsqVQBHlhKXc9r3opGFZLCsSchELphZET0xAaP6m80ny/60+zDYCvZ10dBtFvvYCgM0/UgPLYdoFPjcSuAtC3Ou6xh+t0HMc26f+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rrA5LtJ+IO0tjqBEZFLDRhsNWJWbjeZ9w0ZZ8A/Q7Hs=;
- b=HgCQRydU7hxOzl1C0GDAZYTtC6kV2sUzYsll54S1vJr8w6jJx93kfDrZAIjr5xrQtC8IwqSrPZr3BsLh6w2yIQcV4fkaM4vP34PQLN9hNmXBY+zI8zdWF9eaBSJSlLNnu+AlVL9gEmnGO5hgvEpTizopN5xNTC1UqH5ehzUeJpNhrTt3r/LXAy0vcVjBITYBRNI2IwR0AI6qKDbaasU99knpsBeKMccBGGqus8bygG74VTyiPwDV3XrpCVtQaSjoYPKIP6+kDhKiC7oPaPHvqTPt79QVDbvcEKPcG1oFcQe+22tTX6hRahbKinj8gOHZcek2gO9KO8bdt47UrEicJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by IA1PR11MB8198.namprd11.prod.outlook.com (2603:10b6:208:453::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Wed, 14 Oct
- 2026 05:27:26 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0522.012; Wed, 14 Oct 2026
- 05:27:25 +0000
-Date: Tue, 13 Oct 2026 22:27:16 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: <sashiko-reviews@lists.linux.dev>
-CC: Richard Cheng <icheng@nvidia.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v8 3/4] cxl/region: Start unmapped poison scan at the
- committed decoder boundary
-Message-ID: <as8StBu5tupammk1@aschofie-mobl2.lan>
-References: <20260922101129.52794-1-icheng@nvidia.com>
- <20260922101129.52794-4-icheng@nvidia.com>
- <20260922103000.88A861F00893@smtp.kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260922103000.88A861F00893@smtp.kernel.org>
-X-ClientProxiedBy: SJ0PR03CA0213.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+   d="scan'208";a="1718264"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Oct 2026 01:10:48 -0700
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xGu4U-00000000EMV-0XqH;
+	Wed, 14 Oct 2026 08:10:46 +0000
+Date: Wed, 14 Oct 2026 16:10:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ d304df5f329302fff4658cd6ed8f93aec4b94d27
+Message-ID: <202610141633.H3bZyEc2-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA1PR11MB8198:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0fbf702-ba7e-43d4-a67e-08df29b3d48d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|56012099006|11063799006|5023799004|4143699003|261009223027099003|10067099003|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info: upPU1Sf91vXiwe4IUNabkLbxgtN0oF9apRtbHhWqjkx90j/7/RPWxaznUH0yNMRg5GoGLzM5D67ZIT5fBVBJ0ErYNYFgIEMvwYrQJZzI9YorBG7UVUTk1DbBG/qbCqPJX5jXxkndhd7XLGcgpt0lv4e5wrHXptuLn0owXdtbgsmHlH9pZZ8ArH2e33iydtMBbsXyI7nRt/H7dw77zCzaGPLXRA7TfvdR/0cnq5ggKJYQNkWe+55WzuLb176TG27c/qw+XRNWcrEZBvFLVtWT3V3Yxq9vn9lddm2Ce0BU5vNX/ErbeFGnHCPO9Nau6Jz4y1KL6JDgb0SmQBeaBQ1UDeSmFjoC1PDoa4sPwHe/AlCQEQM9ve2dz2pYikJfejfbr4aeIwufVJUrknsBwQau9S8GugZcfA0MyikKbDu12eb6Z3xs7RMBxubjiqM3m+MxnDFSw5zuDNLOYvzZhqKGqsRV/f+EVTRz+L0o9yopL0kJSidJL/xWjJ23gx4IeXnugUgYOUwbkbxfQ+O367hI83EnnHHSnRB4DuEdOK6iDIKbZxo1+K1ZMKBr9hmS3vOdihlx3itdzZinDGOTBDlGzRhStOsmHj0HVG7j3oyuOKw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(56012099006)(11063799006)(5023799004)(4143699003)(261009223027099003)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?gXUx1Gg3oCdQ12TM7WBR9hJv3QBn4hmtSUcLzGWqvwBcK/eNssJGhJ+hEC?=
- =?iso-8859-1?Q?XE0lSgp9wEfEQ7+h84jFFTmRrMKB3St660oDjCWwnzbmGhLvkyxbbZie7d?=
- =?iso-8859-1?Q?ee6s/+vWyHe+mDXpkTRD0tB5A0tsoZKclud145S/XM3vX6TE8uYj9bcS7j?=
- =?iso-8859-1?Q?uhuwE2LPgfYn5zgb9AHvCUMJRGHnIKPpQPGHMwcP6p/b+rWx858UKqGlHI?=
- =?iso-8859-1?Q?etyjHAm1HdoEahAKU89qT3hdX1/C9RDqqF53u57F+xTUgBQxkjmOHXQCmT?=
- =?iso-8859-1?Q?ZJsnDKKONOPgV3Fh8y/cyh1233hio8d0uiNN1+wJm9ENJont8GoGsMiQo0?=
- =?iso-8859-1?Q?8oFS7WcQ1JhTciko40RlFtpJ2XgozGgv5UBTFu5m72JSBDDQtyVlagtSgE?=
- =?iso-8859-1?Q?vY8FuuSwtCzHCB0Qy//y1ap1iZ8gmOjsPTuLXSzb/eEKnLcNeScs9ZP8JF?=
- =?iso-8859-1?Q?HzV8f8i4wrL1h7gb3jOjnankwWLg2ZRP4cPLQkbj1aW2NLDd8um+rrAeVt?=
- =?iso-8859-1?Q?M+IYThRv3eT+DefGyt1uRvVIOIExwuxCfL1jFMLieF4hR7fNlvSSxxHUIr?=
- =?iso-8859-1?Q?857i7G6qCzZ+pU4rL24xGCZmeJo+waJKEv5vpGWgBKEOhpVS7GJDDlOuR/?=
- =?iso-8859-1?Q?FCXeGL1CMdwAWPk6v8TsH0ikBcRD1IjG0UcgCP0Cfy5b3drH3IlM4lvQ+2?=
- =?iso-8859-1?Q?T4XkUCjNX/9kfKfG+SBuD+gzgajYDVqQuFwEN8Lwa+Omorw5wl23dgvx8Z?=
- =?iso-8859-1?Q?G+bw41fop4zjQyGy8hNfqbIJCo7PYox+2EzS0KnwMXsg/+jztMt2BLS9cr?=
- =?iso-8859-1?Q?PES5G+SK8/b8/VrdZsWJVXZr3yqoSyQgZgisDDzpV+1yrGXlw6QsGj+8bp?=
- =?iso-8859-1?Q?THxD3BKwB36WkdV0ZSDt1+U75LQ0EwoXg9UNTO1Qmqp0CHfSoKZ9uHbUlB?=
- =?iso-8859-1?Q?Dh8oWIMTft08joWMaBIRGipyb7Wo4WDd/99fsj9I9hFlpVeg3GR/nVJ04u?=
- =?iso-8859-1?Q?7+gSqfzoEdPUjdy4oljaKpuG+eU9gTnd0+IeC06exwazw0tImXiLVdoXqZ?=
- =?iso-8859-1?Q?BDSIo+FVOuZJ/L5sompaklmyg/bdKaStikmaGmSkxHyJ2oAxdxQxOJM2yR?=
- =?iso-8859-1?Q?ZJkCFgmixTv3EUlQ1xHOJgyQflfBCr+NmZR7De9znWA8dvbRJkhnsbd6HK?=
- =?iso-8859-1?Q?lgOJUXPfscVGcnbFCbZpGFq80B/Pn3CfmDQk66+1RS6z/RPMwTFChVBX8Y?=
- =?iso-8859-1?Q?Qa/oOqnVUG2E8fMlSCoV9s70QKBpI0zJ3J6GcSCG6VqjKy1hfBm5rofLvl?=
- =?iso-8859-1?Q?a9pSFWCmZn1iVTdXD9ltu2YGi91B5wuCHXF7ypC8xvxONYbE2v8TgWrPeE?=
- =?iso-8859-1?Q?MQAXValbg3Hr2KiWoJiYdRI+4lrVOq3hDhdeycU90Aur5jXPHgtpWVahfG?=
- =?iso-8859-1?Q?kgpZ/1Utnglyn2A9BvC2wL4+12/ZqJQfj2bMqJBXCnd2zVKBGW4g65VOYQ?=
- =?iso-8859-1?Q?vzcWvl26sG6qAh+XRmBbes6VBFUB7WL/IH8M1C2WB8VEzGagf5uMZSgjwS?=
- =?iso-8859-1?Q?Qp8IHav11q/J/3YyaJte49/O5m59AHQAf37uVA+ec+iHpvROrXrMatoC2d?=
- =?iso-8859-1?Q?p2riMH4qeJsYlXi/i5VeOjmC8lwWyiKAZ+XG0YEdaEFhvbQsi2KVoZ4cEg?=
- =?iso-8859-1?Q?1OV/l4+JO2hFolJnGOHRIVwK4XDh/4AAb8ABEARfqOgk1kId2gZUhl9qeZ?=
- =?iso-8859-1?Q?mUys86i+A0uyqylblS3pWZJWBpgcTW4KgdPHCWOWOjEGpWlrOmq5hkWrfh?=
- =?iso-8859-1?Q?Q4YKRlKklCLPTC8bkuPYOrpGM2tIKj4=3D?=
-X-Exchange-RoutingPolicyChecked: y32PPZj5VLGgA6lRy6Jf5c+oDtcdN1n6UYRXYCj69vkmG3CoaeaJkyNW8dWI8/VV17KJUM3KuRBbz0hDnwcKMLQbxiQQOEeyjkWPtFxwlXo18ngZoqAMlj1sQlGNDUXe/1YIXJJyU1TU6D52JxnEpfUr5cRMLIvHYjJvnsWXpaCz5P5LGWPcX1MaZ7k4IiB6A0LPPLAF16cYNTZUK7vutnN/aiPUvqh2g9KnPloUIXUm20SoVjilckJRKNXfBiuXhGdGd7qE+NE9nlW3iJeSy5IpBw4whGSzEhzgZ0qzXWHEDH9JBcWum6Blda3Jk6+jnIChKVstou3ZjZjFgTKa7w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0fbf702-ba7e-43d4-a67e-08df29b3d48d
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 05:27:25.4561
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OSxzCqgymh9SoUS2EhgCkiU18qmoxcRk9m0eD6zb5q+9vs09XovJBImHy8Ie9ICT2RJGauurMbqrOBok1Bn2+AUe7MQufle8OabXuMkXtTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8198
-X-OriginatorOrg: intel.com
 
-On Tue, Sep 22, 2026 at 10:29:59AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] cxl: integer underflow in cxl_get_poison_unmapped() from unmapped decoder offset
-> --
-> 
-> commit 8602a2ffbae3a910b43392bb444acb65b6b365e7
-> Author: Richard Cheng <icheng@nvidia.com>
-> 
-> cxl/region: Start unmapped poison scan at the committed decoder boundary
-> 
-> poison_by_decoder() stops at the last committed decoder and records the
-> handoff in ctx->offset, but cxl_get_poison_unmapped() ignores it and
-> starts after the highest DPA allocation instead. Allocation exist for
-> uncommitted decoders too, so their DPA is skipped by both phases and
-> poison there is never reported. Resume the scan at ctx->offset, and scan
-> later partitions in full, restoring the pre-rewrite behavior.
-> 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 042356c71ed79..4869cdd6a3d48 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> 
-> [ ... ]
-> 
-> > @@ -2944,10 +2943,8 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
-> >  	 */
-> >  	for (int i = ctx->part; i < cxlds->nr_partitions; i++) {
-> >  		res = &cxlds->part[i].res;
-> > -		for (p = res->child, last = NULL; p; p = p->sibling)
-> > -			last = p;
-> > -		if (last)
-> > -			offset = last->end + 1;
-> > +		if (i == ctx->part)
-> > +			offset = ctx->offset;
-> > +		else
-> > +			offset = res->start;
-> >  		length = res->end - offset + 1;
-> 
-> [Severity: High]
-> Does this code risk an integer underflow if offset is greater than res->end?
-> 
-> If poison_by_decoder() encounters a zero-sized commit_end decoder, it can
-> set ctx->part = -1 and ctx->offset = cxled->dpa_res->end + 1. If that
-> decoder was configured by firmware with a large skip value, ctx->offset can
-> be strictly greater than the end of the first partition (part[0].res.end).
-> 
-> Later, cxl_get_poison_by_endpoint() forces ctx.part = 0 before calling
-> cxl_get_poison_unmapped():
-> 
-> drivers/cxl/core/region.c:cxl_get_poison_by_endpoint() {
->     ...
-> 	if (rc == 1) {
-> 		/* ... */
-> 		if (ctx.part < 0)
-> 			ctx.part = 0;
-> 		rc = cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
-> 					     &ctx);
-> 	}
->     ...
-> }
-> 
-> Because ctx.offset is not reset to part[0].res.start, offset is assigned
-> the out-of-bounds ctx->offset when i == 0. This causes the length
-> calculation to underflow in unsigned 64-bit arithmetic to an enormous
-> positive value.
-> 
-> Could this underflow bypass the !length check and result in sending an
-> invalid mailbox command to the hardware?
-> 
-> A massive out-of-bounds length passed directly to cxl_mem_get_poison() may
-> cause the CXL device to hang, time out, or process out-of-bounds requests,
-> leading to system instability.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: d304df5f329302fff4658cd6ed8f93aec4b94d27  Merge branch 'for-7.4/cxl-dcd' into cxl-for-next
 
-I (with the help of another non-Sashiko AI) looked into this.
-The precondition is not reachable. An empty decoder is assigned the
-partition containing its base, request_skip() fails if the skip extends
-beyond the partitions, so ctx->offset <= res->end + 1.
+elapsed time: 909m
 
-I do think this is worth closing down anyway, to avoid revisiting this
-again and again and again.
+configs tested: 195
+configs skipped: 7
 
-I looked at 2 places to clamp this.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-My second choice is in cxl_mem_get_poison() but all of its callers are in
-the kernel and have worked out the range from the partition layout.
+tested configs:
+alpha                              allnoconfig    gcc-16.1.0
+alpha                             allyesconfig    gcc-16.1.0
+alpha                                defconfig    gcc-16.1.0
+arc                               allmodconfig    gcc-16.1.0
+arc                                allnoconfig    gcc-16.1.0
+arc                               allyesconfig    gcc-16.1.0
+arc                                  defconfig    gcc-16.1.0
+arc                   randconfig-1000-20261014    clang-17
+arc                   randconfig-1000-20261014    gcc-15.2.0
+arc                   randconfig-1001-20261014    clang-17
+arc                   randconfig-1001-20261014    gcc-13.4.0
+arm                                allnoconfig    clang-17
+arm                                allnoconfig    gcc-16.1.0
+arm                               allyesconfig    gcc-16.1.0
+arm                                  defconfig    clang-24
+arm                                  defconfig    gcc-16.1.0
+arm                           pxa168_defconfig    clang-24
+arm                   randconfig-1000-20261014    clang-17
+arm                   randconfig-1001-20261014    clang-17
+arm                   randconfig-1001-20261014    clang-19
+arm                   randconfig-1002-20261014    clang-17
+arm                   randconfig-1003-20261014    clang-17
+arm                     vt8500_v6_v7_defconfig    gcc-16.1.0
+arm64                             allmodconfig    clang-24
+arm64                              allnoconfig    gcc-16.1.0
+arm64                                defconfig    gcc-16.1.0
+arm64                 randconfig-1000-20261014    clang-24
+csky                              allmodconfig    gcc-16.1.0
+csky                               allnoconfig    gcc-16.1.0
+csky                                 defconfig    gcc-16.1.0
+csky                  randconfig-1001-20261014    gcc-9.5.0
+hexagon                           allmodconfig    clang-24
+hexagon                            allnoconfig    clang-24
+hexagon                            allnoconfig    gcc-16.1.0
+hexagon                              defconfig    clang-24
+hexagon                              defconfig    gcc-16.1.0
+hexagon               randconfig-1000-20261014    clang-17
+hexagon               randconfig-1000-20261014    clang-18
+hexagon               randconfig-1001-20261014    clang-18
+i386                              allmodconfig    gcc-14
+i386                               allnoconfig    gcc-14
+i386                               allnoconfig    gcc-16.1.0
+i386                              allyesconfig    gcc-14
+i386                                 defconfig    clang-22
+i386                                 defconfig    gcc-16.1.0
+i386                  randconfig-1000-20261014    clang-22
+i386                  randconfig-1000-20261014    gcc-14
+i386                  randconfig-1001-20261014    clang-22
+i386                  randconfig-1002-20261014    clang-22
+i386                  randconfig-1003-20261014    clang-22
+i386                  randconfig-1003-20261014    gcc-14
+i386                  randconfig-1004-20261014    clang-22
+i386                  randconfig-1004-20261014    gcc-14
+i386                  randconfig-1005-20261014    clang-22
+i386                  randconfig-1006-20261014    clang-22
+loongarch                         allmodconfig    clang-19
+loongarch                          allnoconfig    clang-20
+loongarch                          allnoconfig    gcc-16.1.0
+loongarch                            defconfig    clang-24
+loongarch                 loongson64_defconfig    clang-24
+loongarch             randconfig-1000-20261014    clang-18
+loongarch             randconfig-1000-20261014    gcc-12.5.0
+loongarch             randconfig-1001-20261014    clang-18
+loongarch             randconfig-1001-20261014    gcc-16.1.0
+m68k                              alldefconfig    gcc-16.1.0
+m68k                              allmodconfig    gcc-16.1.0
+m68k                               allnoconfig    gcc-16.1.0
+m68k                              allyesconfig    gcc-16.1.0
+m68k                                 defconfig    clang-24
+m68k                                 defconfig    gcc-16.1.0
+microblaze                         allnoconfig    gcc-16.1.0
+microblaze                        allyesconfig    gcc-16.1.0
+microblaze                           defconfig    clang-24
+microblaze                           defconfig    gcc-16.1.0
+mips                               allnoconfig    gcc-16.1.0
+mips                              allyesconfig    gcc-16.1.0
+mips                           ath79_defconfig    gcc-16.1.0
+nios2                             allmodconfig    gcc-11.5.0
+nios2                              allnoconfig    clang-24
+nios2                              allnoconfig    gcc-11.5.0
+nios2                                defconfig    clang-24
+nios2                                defconfig    gcc-11.5.0
+nios2                 randconfig-1000-20261014    clang-18
+nios2                 randconfig-1000-20261014    gcc-8.5.0
+nios2                 randconfig-1001-20261014    clang-18
+nios2                 randconfig-1001-20261014    gcc-9.5.0
+openrisc                          allmodconfig    gcc-16.1.0
+openrisc                           allnoconfig    clang-24
+openrisc                           allnoconfig    gcc-16.1.0
+openrisc                    de0_nano_defconfig    gcc-16.1.0
+openrisc                             defconfig    gcc-16.1.0
+parisc                            allmodconfig    gcc-16.1.0
+parisc                             allnoconfig    clang-24
+parisc                             allnoconfig    gcc-16.1.0
+parisc                            allyesconfig    gcc-16.1.0
+parisc                               defconfig    gcc-16.1.0
+parisc                randconfig-1000-20261014    clang-22
+parisc                randconfig-1000-20261014    gcc-8.5.0
+parisc                randconfig-1001-20261014    clang-22
+parisc                randconfig-1001-20261014    gcc-15.2.0
+parisc64                          alldefconfig    gcc-16.1.0
+parisc64                             defconfig    clang-24
+parisc64                             defconfig    gcc-16.1.0
+powerpc                            allnoconfig    clang-24
+powerpc                            allnoconfig    gcc-16.1.0
+powerpc                   iss476-smp_defconfig    gcc-16.1.0
+powerpc                       pasemi_defconfig    gcc-16.1.0
+powerpc                       pcm030_defconfig    clang-24
+powerpc               randconfig-1000-20261014    clang-19
+powerpc               randconfig-1000-20261014    clang-22
+powerpc               randconfig-1001-20261014    clang-22
+powerpc64             randconfig-1000-20261014    clang-22
+powerpc64             randconfig-1000-20261014    clang-24
+powerpc64             randconfig-1001-20261014    clang-22
+riscv                             allmodconfig    clang-24
+riscv                              allnoconfig    clang-24
+riscv                              allnoconfig    gcc-16.1.0
+riscv                             allyesconfig    clang-24
+riscv                                defconfig    clang-24
+riscv                 randconfig-1000-20261014    clang-18
+riscv                 randconfig-1001-20261014    clang-17
+s390                               allnoconfig    clang-24
+s390                           debug_defconfig    gcc-16.1.0
+s390                                 defconfig    clang-18
+s390                  randconfig-1000-20261014    gcc-8.5.0
+s390                  randconfig-1001-20261014    clang-24
+sh                                allmodconfig    gcc-16.1.0
+sh                                 allnoconfig    clang-24
+sh                                 allnoconfig    gcc-16.1.0
+sh                                allyesconfig    gcc-16.1.0
+sh                          ap325rxa_defconfig    gcc-16.1.0
+sh                                   defconfig    gcc-16.1.0
+sh                         dreamcast_defconfig    gcc-16.1.0
+sh                    randconfig-1000-20261014    gcc-15.2.0
+sh                    randconfig-1001-20261014    gcc-16.1.0
+sh                            se7619_defconfig    gcc-16.1.0
+sh                             shmin_defconfig    gcc-16.1.0
+sh                           urquell_defconfig    gcc-16.1.0
+sparc                              allnoconfig    clang-24
+sparc                              allnoconfig    gcc-16.1.0
+sparc                                defconfig    gcc-16.1.0
+sparc                 randconfig-1000-20261014    gcc-11.5.0
+sparc                 randconfig-1001-20261014    gcc-16.1.0
+sparc64                           allmodconfig    clang-20
+sparc64                              defconfig    clang-24
+sparc64               randconfig-1000-20261014    clang-22
+sparc64               randconfig-1001-20261014    clang-24
+um                                allmodconfig    clang-17
+um                                 allnoconfig    clang-17
+um                                 allnoconfig    clang-24
+um                                allyesconfig    gcc-14
+um                                   defconfig    clang-24
+um                              i386_defconfig    gcc-14
+um                    randconfig-1000-20261014    gcc-14
+um                    randconfig-1001-20261014    clang-24
+um                            x86_64_defconfig    clang-24
+x86_64                            allmodconfig    clang-22
+x86_64                             allnoconfig    clang-22
+x86_64                             allnoconfig    clang-24
+x86_64                            allyesconfig    clang-22
+x86_64      buildonly-randconfig-1000-20261014    gcc-14
+x86_64      buildonly-randconfig-1001-20261014    clang-22
+x86_64      buildonly-randconfig-1002-20261014    clang-22
+x86_64                               defconfig    gcc-14
+x86_64                                   kexec    clang-22
+x86_64                randconfig-1000-20261014    clang-22
+x86_64                randconfig-1001-20261014    clang-22
+x86_64                randconfig-1002-20261014    gcc-14
+x86_64                randconfig-1003-20261014    clang-22
+x86_64                randconfig-1004-20261014    gcc-14
+x86_64                randconfig-1005-20261014    clang-22
+x86_64                randconfig-1006-20261014    clang-22
+x86_64                randconfig-1007-20261014    gcc-14
+x86_64                randconfig-1008-20261014    gcc-14
+x86_64                randconfig-1009-20261014    clang-22
+x86_64                randconfig-1010-20261014    gcc-14
+x86_64                randconfig-1011-20261014    gcc-14
+x86_64                randconfig-1012-20261014    clang-22
+x86_64                randconfig-1013-20261014    gcc-14
+x86_64                randconfig-1014-20261014    clang-22
+x86_64                randconfig-1015-20261014    gcc-14
+x86_64                randconfig-1016-20261014    clang-22
+x86_64                randconfig-1017-20261014    gcc-14
+x86_64                                rhel-9.4    clang-22
+x86_64                            rhel-9.4-bpf    gcc-14
+x86_64                           rhel-9.4-func    clang-22
+x86_64                     rhel-9.4-kselftests    clang-22
+x86_64                          rhel-9.4-kunit    gcc-14
+x86_64                            rhel-9.4-ltp    gcc-14
+x86_64                           rhel-9.4-rust    clang-22
+xtensa                             allnoconfig    clang-24
+xtensa                             allnoconfig    gcc-16.1.0
+xtensa                            allyesconfig    gcc-16.1.0
+xtensa                randconfig-1000-20261014    gcc-13.4.0
+xtensa                randconfig-1001-20261014    gcc-15.2.0
 
-My first choice is below, right in this patch - 
-
-I wonder if DaveJ will do this upon applying, pretty please :)
-
- --- a/drivers/cxl/core/region.c
-  +++ b/drivers/cxl/core/region.c
-  @@ -3032,8 +3032,10 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
-                   * (every committed decoder is zero-size): scan all
-                   * partitions in full.
-                   */
-  -               if (ctx.part < 0)
-  +               if (ctx.part < 0) {
-                          ctx.part = 0;
-  +                       ctx.offset = 0;
-  +               }
-                  rc = cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
-                                               &ctx);
-          }
-
-
-
--- Alison
-
-
-
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260922101129.52794-1-icheng@nvidia.com?part=3
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
