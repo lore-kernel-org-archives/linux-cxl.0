@@ -1,262 +1,109 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B9C53E308
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 14:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739AA53C3D0
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 14:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791986484; cv=none; b=KBAxkHO98dUVmtU/sQkzKPbfrN8TkBFX0UbgqzUJL6Q+BBSBnfWK62g070VYSOQGTif3hxSQCxUH/zEk7G/NBWGe8ePNZzw9hd+aKEf5paywyJT/bHOfflxVOcKx85h/fuTNR/u/EPLGLV8FiRIbJSdeLClEq/LQkkG9MVOurZo=
+	t=1791987321; cv=none; b=g0/3+w0KKv8OKhPTwAl0p9AdRgDS2na50Aubu7DVO5+BBPZHK8brfK8ejTvgXDZERHbbFwh7xgAQSVPnwnV0iPDPZrmaZyNxmOqARPDcC5VJM2XVxxVL+x63NoGUfTtRh3AtFN5Xtk+f1hcRhm4WIGZiBJpVirx0u3m+maf53og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791986484; c=relaxed/simple;
-	bh=RPKjO7r7COV1kj1mEX8DiND3M9FxBEUt2xywURu28N4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BirlmiJV1YQC3HdEHf14BkBIbG3kFohKpbis7lAVUl4ZUxCfXftwKTyl1a2ClcYL0UukrP2/LtEpOyvdygRfPCjNY/rZabXiRghwI3dayRGZCRN4oWoQk51jPsqZSr/YAMF+K0EtZL4ZCjl6g6565uzxzmkWO3INDK/BGadv83o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e4yUBfWY; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e4yUBfWY"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a018792ab3so34373845e9.0
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 07:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1791986475; x=1792591275; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=Bl4WvKQr9UWYn7bOh5TWEroVL/3JGDO8W7v/2+U1gfA=;
-        b=e4yUBfWYhNXpF0F0HY5ImzmIfKYO+0wQm+IwqLqgo4YdYGxG12ttYr4YmCR/9iXTCl
-         nj5iV6B3xIqeu24mEbWvedNQjVdV8ZEALCEAjbFXZ9g/zdvW6qknxwUbKiCWMqFuiIZB
-         AK2l0d+q2YOFv4VuUv5IdoE9+3LA662uQ9zKawtVpdKuUgjBuWiJqpKWyqlH9hxnCVvC
-         +71LGZYZqFGi0dV6FaEovYpLNsIQNgaRXlyz8VK3NtMnGniEkq/2RY8Cr2aisH3rGU9S
-         t/a5pM3bwhU5lktLAR8eunjQh/OMSwZ8PtQdzevEE4mBWG4VzL9mselHHE20ztoerq/e
-         k1mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791986475; x=1792591275;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Bl4WvKQr9UWYn7bOh5TWEroVL/3JGDO8W7v/2+U1gfA=;
-        b=mr7snHwTfa0yQTcUUQ9/Wk3dvr7t5CSWP0gmi2bOhqyi/OLUJNDSIE4LJuabpVypTe
-         bYlgNfDLnkoJqIaJ7MZgZqZBNRgsyO1iVSwM7wEG8qtXiBp4ZQc/yos60fMGTs2tU31Y
-         KXMXYxT5BykdGmcreyr4mMIE8UFzMwhirBikKiBDBIcVUwr7Tp5yIj9tVu+3l0FnbqBu
-         Qp7STuQaHtD9yj7l8/vBgwML/rWJXJVg7VYo9C7/wIeIBc5gstwSH8xCRr6ahvTM1HUS
-         tRrTD+5lpHg1vFk/kz3zKEGGwN9wQKqqcKj3owFYvJ0cK602Dc6k4/LhAfRY7itRy2KG
-         aPxg==
-X-Forwarded-Encrypted: i=1; AKwUvBwbhji1AkUg2KlXlpO2+SghQDsCWSEP6YXtna+X3RfE+VfkqbXPd4MB8o8okwNaZ47GeJqKMNSfjlA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJRlMfiOBHysXQOOqS3DuIwW0nrlMZsnhhGNGPnSrcN1gYG3nJF
-	UJLWsP2TYKK06RQe2POODst7Pag2GcUhQe4Xool6tc8hsMKo/QAT21v5fS9TlBumn4k=
-X-Gm-Gg: AYBFou3Npp1+OpSZgNVN0d3i+r5kXgZe+KYLbEoKe2ZlBAMoLz7dktLa6CuHPxbvjtJ
-	JPVzu3ydOytDBvUC6yfJp+TkU/HqGm/WWZID2lGD0o1YMr3l1fI+ZBCLDZwq/b4rd0WzfNaZvej
-	mJRij9GUTpU26baSK9cZYQstosNMXB6hTIZ7GmCkFbplLXUhQ084rJTh09s4l90RZBPYxWGxx3L
-	4V22+5vxOGLywBnFSnNGbcgQed4PUSlYjORNijANeGrWxjIA3mBLDnwKT0HA1V+wDOl30OhEB9F
-	rh1zKVPD/ay+b149C9uV17iEP9XAkZm3g/nAo8rgzv7j7xLmUJynnbuiDvGYgbJJU0tPucyPTyu
-	jkfM3QtnrpnoOTU6W5R4FQvR51E93IQ0tOQnwrQ1oypy2U1O68OZKFXytl1X0xdHf2/6fV0Muzk
-	C1EkaveJJx6sAF6QybCsN8iFI3HAsMs8e8LJ6RXBnR9X6Ngc7CEyiLBdAyAQmTp0mYV8aKFisFx
-	e9T9iBIA1ARZFTePwQ9pPg=
-X-Received: by 2002:a05:600c:8184:b0:4a0:1c17:4fb2 with SMTP id 5b1f17b1804b1-4a18e4d854cmr283701345e9.31.1791986474223;
-        Wed, 14 Oct 2026 07:01:14 -0700 (PDT)
-Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [185.218.66.243])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd07c276sm1997515e9.13.2026.10.14.07.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Oct 2026 07:01:10 -0700 (PDT)
-Message-ID: <7605d698-b08c-4fcb-b86b-3f79927fb0d5@suse.com>
-Date: Wed, 14 Oct 2026 17:01:08 +0300
+	s=arc-20240116; t=1791987321; c=relaxed/simple;
+	bh=UU3mFXTLy83MYf/mMEoPutZdlb7NNRuCLxuZHFSIijs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=vDrfSCpLP10RJ//re/XNB/mqax5sioUUpi+LTS45/TLeACX0issifY1gj2B2G4WUe/EJJECFuiets7wYfhyKcYD4zysMLg/E+ss6nSb7hCNjY9c+lGiTSW3tzmEcLa11UXFI/kYz1sqZCe6pMtORz8XDgFp88857dRoN/f/kMGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 27AC340599;
+	Wed, 14 Oct 2026 14:15:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf13.hostedemail.com (Postfix) with ESMTPA id 054AE2000E;
+	Wed, 14 Oct 2026 14:15:14 +0000 (UTC)
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 66C5CF40066;
+	Wed, 14 Oct 2026 10:15:14 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-09.internal (MEProxy); Wed, 14 Oct 2026 10:15:14 -0400
+X-ME-Sender: <xms:co7PalV1fpGDZFSURc_CRtHZJZpihKCG-a-v2Y8qKAjA5M41m2vCvg>
+    <xme:co7PagYnLUz6PByAUo4K_tbhh4Knkgjn6Rnda2zYlkpPaJtwfozvQMQhgt8xBFfT5
+    3nmQ5R0wnJFFDZhSgCbe-kE0q5_o1c1YV6GiVoPg36axSmSSoeKoA>
+X-ME-Proxy-Cause: dmFkZTEd/BP7YPzQpwVymWCLCz5d7z8cPfoYJOKlkSu6IDfRIYKsXnldzG2Zj7V4cHGGaC
+    19beiY+SNOekCX4W9Yc3R6rfa+Z9aOeARhjQo65W5BR03tEOuwoXCSCqBJDgdwEO4mB6qz
+    JoZ8MnGQpveO0a7prAFr1Yk82SUnjkGW786yQSg0655Umc8gVSiLioddv6pK5rKbM7e6VW
+    aXp0CUBbmajRjaTYeoZe1KyWdwCo/EVprduIxftKjZauwiQONAPRRjQeGqk8tihqW/6akH
+    NseT1HnlGiF8F7uTGNFBS6J0vL6DmHEllHvlJ7lk5ZZHThxLG9zXdNVctbsdJgNq2bojfQ
+    vy/U/N07ATXIN1p6Uo+BcjZrU2RK9PKXn1b3uWxb4QkUmZI2YW3BQJvJpx3tiOXWVwZV/z
+    eZZoWBBdmcyPm0vBDe4acrhMicUBS9P7SjUNs3uc+wwnvWuLf+7xA7w/Swo+W3DC6B1atq
+    BKgqf3E4ZWHkHFcLXRxhZdhnx6/9Zss111JykP9LoowAvZhsqV5B9AAnG7/pl6TCkhj2do
+    cnewAxBUAZIc5JVkP+Q2c2WGpoMLXjTjn2tpf0fVuMVpsXYdbbe8tsklqClgm2PkAESnYu
+    YiOMEWQjR4YtU2DnOFtoU3opN8RHaN7iQRoUhOhppVoTsuReOJ0DS2u//WfQ
+X-ME-Proxy: <xmx:co7Pat7CR7wKr05wTgZT6JJB0iDvAjiUgxUm_VZSiAedXCg0WUGdbg>
+    <xmx:co7PajF9u45HMNAPAOQTUosBTZ2F6zmd7EOKq9EuiS0rpt2W75iAbQ>
+    <xmx:co7PagAW9ajh0ecp8pLZW5tgFdiAW3G8fJWavhNuuiAIfxYdiuIRlQ>
+    <xmx:co7PagzklsxtlCKQt72lTFqh4nYWXSu5ic0DbMn2sXMn0fsuhJe_Dw>
+    <xmx:co7Pas4kgEdsQYOD_K0BNkQ-eDZ0u_LBTjFfZh0C8DxcxYSIzRxxXRK2>
+Feedback-ID: i3a164872:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3A34A700065; Wed, 14 Oct 2026 10:15:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/4] PCI/TSM: Create MMIO descriptors via TDISP Report
-To: Ankit Agrawal <ankita@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, jgg@nvidia.com,
- aneesh.kumar@kernel.org, aik@amd.com, yilun.xu@linux.intel.com,
- iweiny@kernel.org, ming.li@zohomail.com, icheng@nvidia.com,
- bhelgaas@google.com, smadhavan@nvidia.com, ilpo.jarvinen@linux.intel.com,
- Smita.KoralahalliChannabasappa@amd.com, andriy.shevchenko@linux.intel.com,
- linux-coco@lists.linux.dev
-References: <20261005070252.84810-1-ankita@nvidia.com>
- <20261005070252.84810-2-ankita@nvidia.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20261005070252.84810-2-ankita@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Date: Wed, 14 Oct 2026 09:14:54 -0500
+From: "John Groves" <john@groves.net>
+To: "Miklos Szeredi" <miklos@szeredi.hu>
+Cc: "Miklos Szeredi" <mszeredi@redhat.com>,
+ "fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Darrick J . Wong" <djwong@kernel.org>,
+ "Vishal Verma" <vishal.l.verma@intel.com>,
+ "Dave Jiang" <dave.jiang@intel.com>,
+ "Alison Schofield" <alison.schofield@intel.com>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Message-Id: <f9bdb2ef-33d7-4601-87fc-354a9e753141@app.fastmail.com>
+In-Reply-To: 
+ <CAJfpegvDbGaoH5Er78M=XYwA6a7zj6DRqY0+F0cgiD7TfRK_Mg@mail.gmail.com>
+References: <20261008112004.1899560-1-mszeredi@redhat.com>
+ <aswN-UprZHx9wU9y@groves.net>
+ <CAJfpegvDbGaoH5Er78M=XYwA6a7zj6DRqY0+F0cgiD7TfRK_Mg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] fuse: resolve extent maps in O(1) when possible
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 054AE2000E
+X-Stat-Signature: 1n6ppyhqociuseudaatqnbcpe44p8ice
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX18/oRjGa/Rn4DQEBtZlEm+EmmatrJ+ZgvU=
+X-HE-Tag: 1791987314-722773
+X-HE-Meta: U2FsdGVkX1+5aVdf5QXr+1pa4v9ZvbCJDt2JPLBRCFmYLCSA2UHI5PaCp8iduF3lYe8EVjodyZNeOvNtjHKFiy873Ov6zosHDlAczBdHbQgQA1ME+uCggeiLP/GuLqMXclyETSGodR9bR9gtSTfRPN04PP6QqxMmhmez/OGcigoFFJVc+AsK89DJUeeI1UDFw1+ns8jSGXML1tll0gH1lLbI2gqJ0LH688kmwdTi9NvmfNTjPFnj80L3ykvF7ANEH9D7lhmR8FtDBVw+nRD2+oEvNdyBeUMMyR8w5RvW6xHX0F1C7eVQvEsUw3OctImmkMZx2pf+h6QjIkFKGNGCJynkyhFbdh2ArAlPv6LqzdfCJU7qxqnP04KHB4e8+WoU
 
 
 
-On 5.10.26 г. 10:02 ч., Ankit Agrawal wrote:
-> After pci_tsm_bind() and pci_tsm_lock() the low level TSM driver is
-> expected to populate the TDISP GET_DEVICE_INTERFACE_REPORT response
-> payload for the device.
+On Wed, Oct 14, 2026, at 4:40 AM, Miklos Szeredi wrote:
+> On Mon, 12 Oct 2026 at 00:33, John Groves <john@groves.net> wrote:
 > 
-> Add pci_tsm_mmio_alloc()/pci_tsm_mmio_free() to parse that report into
-> a set of encrypted MMIO ranges, and pci_tsm_mmio_setup()/
-> pci_tsm_mmio_teardown() to mark those ranges as encrypted in iomem via
-> a new encrypted_iomem_resource tree (IORES_DESC_ENCRYPTED). With those
-> descriptors the TSM driver can use pci_tsm_mmio_setup() to inform
-> ioremap() how to map the device per the device expectations. The VM
-> is expected to validate the interface with the relying party before
-> accepting the device for operation.
+> > With this patch on top of v4 the famfs test suite passes; that tree is
+> > at [2].  The famfs userspace master branch [1] now works with v4.  If
+> > the next revision needs further userspace changes, please base them on
+> > that branch or send them my way so the two don't diverge.
 > 
-> pci_tsm_mmio_alloc() also recovers the obfuscated starting address for
-> each encrypted MMIO range, since the VM is never disclosed the HPA
-> that correlates to the GPA of the device's MMIO. The obfuscated
-> address is BAR aligned.
-> 
-> Based on an original patch by Aneesh Kumar K.V [1], and cherry-picked
-> from Dan Williams' upstream commit [2]. Major functional differences
-> from Dan's posting is due to the lack of evidence-store infrastructure
-> yet (device_evidence / DEVICE_EVIDENCE_TYPE_REPORT). The
-> pci_tsm_mmio_alloc() takes the raw report bytes directly from the caller
-> instead of pulling them from a device evidence store.
-> 
-> Link: https://lore.kernel.org/linux-coco/20251117140007.122062-8-aneesh.kumar@kernel.org/ [1]
-> Link: https://lore.kernel.org/all/20260705220819.2472765-15-djbw@kernel.org/ [2]
-> 
-> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
-> Assisted-by: Claude:sonnet-5
-> ---
->   drivers/pci/tsm.c       | 236 ++++++++++++++++++++++++++++++++++++++++
->   include/linux/ioport.h  |   2 +
->   include/linux/pci-tsm.h |  33 ++++++
->   kernel/resource.c       |   8 ++
->   4 files changed, 279 insertions(+)
-> 
-> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
-> index 5fdcd7f2e820..c8cfe89b6224 100644
-> --- a/drivers/pci/tsm.c
-> +++ b/drivers/pci/tsm.c
-> @@ -9,11 +9,16 @@
->   #define dev_fmt(fmt) "PCI/TSM: " fmt
->   
->   #include <linux/bitfield.h>
-> +#include <linux/overflow.h>
->   #include <linux/pci.h>
->   #include <linux/pci-doe.h>
->   #include <linux/pci-tsm.h>
-> +#include <linux/range.h>
-> +#include <linux/sizes.h>
-> +#include <linux/slab.h>
->   #include <linux/sysfs.h>
->   #include <linux/tsm.h>
-> +#include <linux/unaligned.h>
->   #include <linux/xarray.h>
->   #include "pci.h"
->   
-> @@ -898,3 +903,234 @@ int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type, const void *req,
->   		       resp, resp_sz);
->   }
->   EXPORT_SYMBOL_GPL(pci_tsm_doe_transfer);
-> +
-> +static void mmio_teardown(struct pci_tsm_mmio *mmio, int nr)
-> +{
-> +	while (nr--) {
-> +		struct resource *res = pci_tsm_mmio_resource(mmio, nr);
-> +
-> +		/*
-> +		 * Entries past the point where pci_tsm_mmio_setup() stopped
-> +		 * (or that were never run through setup() at all, e.g. a
-> +		 * caller that only wants the resolved range from
-> +		 * pci_tsm_mmio_alloc()) were never insert_resource()'d, so
-> +		 * res->parent is NULL. remove_resource() dereferences
-> +		 * res->parent unconditionally.
-> +		 */
-> +		if (res->parent)
-> +			remove_resource(res);
-> +	}
-> +}
-> +
-> +/**
-> + * pci_tsm_mmio_setup() - mark device MMIO as encrypted in iomem
-> + * @pdev: device owner of MMIO resources
-> + * @mmio: container of an array of resources to mark encrypted
-> + */
-> +int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
-> +{
-> +	int i;
-> +
-> +	device_lock_assert(&pdev->dev);
-> +	if (pdev->dev.driver)
-> +		return -EBUSY;
-> +
-> +	for (i = 0; i < mmio->nr; i++) {
-> +		struct resource *res = pci_tsm_mmio_resource(mmio, i);
-> +		int j;
-> +
-> +		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
-> +			break;
-> +
-> +		/* Only require the caller to set the range, init remainder */
-> +		*res = DEFINE_RES_NAMED_DESC(res->start, resource_size(res),
-> +					     pci_name(pdev), IORESOURCE_MEM,
-> +					     IORES_DESC_ENCRYPTED);
-> +
-> +		for (j = 0; j < PCI_NUM_RESOURCES; j++)
-> +			if (resource_contains(pci_resource_n(pdev, j), res))
-> +				break;
-> +
-> +		/* Request is outside of device MMIO */
-> +		if (j >= PCI_NUM_RESOURCES)
-> +			break;
-> +
-> +		if (insert_resource(&encrypted_iomem_resource, res) != 0)
-> +			break;
-> +	}
-> +
-> +	if (i >= mmio->nr)
-> +		return 0;
+> Applied, thanks.
 
-Shouldn't this check be if (i == mmio->nr -1 ) i.e all descriptors have 
-been initialized, given the for loop condition i can ever be at most 
-mmio->nr - 1 i.e the actual index of a descriptor?
+Thank you!
 
-<snip>
+> 
+> Please next time use a new mail thread, because linking to the old one
+> confuses b4.
+
+Will do, thanks
+
+> 
+> Thanks,
+> Miklos
+> 
+
+John
