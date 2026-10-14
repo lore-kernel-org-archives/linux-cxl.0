@@ -1,259 +1,262 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010060.outbound.protection.outlook.com [52.101.85.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0AF4DE706
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 09:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791970939; cv=fail; b=LLALGjGpT1w7pFPjSt34/NSlAc6hzaVXfBrMH+1N8myqMqHOZqNPpiyFTp7J10AzTw+EoSgBe9uGeyNNokJBk3k+o9fPtdLl8ix1wrtbkyl2J51SF95Umut256OQL7uU0Gvo7vIwius4C5ksL55noe4PGbFhqA84l5D/8yzWCiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791970939; c=relaxed/simple;
-	bh=Zg2NXtMjar4x94up+ny01fTDqsgLZDEQ3fOpea5gpck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MVST/NzKQGS0iXq7cLPMaXKs6D1avmWV3E2gU0wli8tzR4mQf2Uq0/cukG3Qjf5o+pnVUokdYtFT5H/F0a+nP0JK5Wl8CFFmvz3mQiAmt1D5P4QC0V+KydJE2kVBcN5hbx5Yc/VI2tYtzksedugaIojMxcEC4araBARiOqqcLIk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dcOyhYXw; arc=fail smtp.client-ip=52.101.85.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B9C53E308
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 14:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791986484; cv=none; b=KBAxkHO98dUVmtU/sQkzKPbfrN8TkBFX0UbgqzUJL6Q+BBSBnfWK62g070VYSOQGTif3hxSQCxUH/zEk7G/NBWGe8ePNZzw9hd+aKEf5paywyJT/bHOfflxVOcKx85h/fuTNR/u/EPLGLV8FiRIbJSdeLClEq/LQkkG9MVOurZo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791986484; c=relaxed/simple;
+	bh=RPKjO7r7COV1kj1mEX8DiND3M9FxBEUt2xywURu28N4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BirlmiJV1YQC3HdEHf14BkBIbG3kFohKpbis7lAVUl4ZUxCfXftwKTyl1a2ClcYL0UukrP2/LtEpOyvdygRfPCjNY/rZabXiRghwI3dayRGZCRN4oWoQk51jPsqZSr/YAMF+K0EtZL4ZCjl6g6565uzxzmkWO3INDK/BGadv83o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e4yUBfWY; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dcOyhYXw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IX7S6hcdKZ1hS/ALbDVPGNNQepbCQpFGZyAIDHxma4dYfvCaCE1//9MNuNQzr7Vi8/dgZUkfSq45xAG+I2tYkFWHF0kizpNPzNdqvJGegaLyrRbeVMuZ8o7FNTyINLCoxnIKJEhFGm+qtlF3fmAqeN6DVnZGP0gUi/lZURYOMED1/86SlMOcDHsHymGmAKiQEExcIXShywJb6DUAX5eKPBcES2nZr9mp0cjSNyhzJPclmAui5z8YfHhnNt0aXYfUDLBW2FVO+3hEES4p8PRYQhiEz/YJNOX2kG8H0y/WcZcEkxKgMoYV1R39coYNWg/S8Z4N3TbGUCB0tD3aIFeGMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pyHTqgC3ZBNoTzDhrMmMu9yPemCAkua21v4tte//avE=;
- b=c4tb1+EbdofbWoMTDbalEdrdqkHJozs0YpdtOHTZ7uJYocJCTBJI2luU632O3r3zps6RkOvZeqRkArtXT7Ga8WJhrmVV4/Z/19jvSnGK5Bj/7yEHCVhtG9oB/82wscOASMBY0388Vc10QemlfkMBs01bBpEFvpIP5FcifOcZx+eaUNJ4Hvlg5K3kjVREivygNqgVBWASTMZF7CgncxUty4vap6mWKA6TwYIo+6+DuQNITvrLg+dh6Mn0/+p3L9pbDqAwQeJXLanTF4roobFE1XbcbwMHeqdXfAAhBCk/JnFIjjgTuXDNdrQfJJ3takUlaQx/eUtQ9Jjm/YhVMaVpWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pyHTqgC3ZBNoTzDhrMmMu9yPemCAkua21v4tte//avE=;
- b=dcOyhYXwpYUQ3dn5YuWRRz7CVfdONHVGfADzoY9PY//hBs7HQ/jgosdvqd1fDQtWAbmCgP4MvdLWSXsOeFHRwQMJEElyoxcr8gpWfrCyKiJ+HJ6WKDzKm+PKgO5oh7Qah9NtnOuBM/ZC6JMzZp1qdCIQ/FMW/fZvhSxRAoLIkYbGhHfCfwt8JeRfEuyTB+6flxSFKiCh4Ie7eauPMPcHpt9aPB2vXKXSGk+q8XXxWJ0Eg7ErnMd4TJ/eyoLZnuWF0YEZy3RvhT2bEl+BGo44VVQT+NKIxZbfQ7aKRPf/G7mWu57ynxVFyF94cb0L3duK68eUKXC5S9DT8WtM0iwkzw==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by SJ2PR12MB8926.namprd12.prod.outlook.com (2603:10b6:a03:53b::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Wed, 14 Oct
- 2026 09:42:15 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0496.020; Wed, 14 Oct 2026
- 09:42:08 +0000
-Date: Wed, 14 Oct 2026 17:42:02 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] cxl/region: Factor out
- cxl_switch_port_add_target()
-Message-ID: <as9OWYj1kr1-tWpb@MWDK4CY14F>
-References: <cover.1791860305.git.alison.schofield@intel.com>
- <97c96f804a383b13ff83f81e9e9255f4ea0887ec.1791860305.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97c96f804a383b13ff83f81e9e9255f4ea0887ec.1791860305.git.alison.schofield@intel.com>
-X-ClientProxiedBy: SG2PR01CA0198.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::7) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e4yUBfWY"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a018792ab3so34373845e9.0
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 07:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1791986475; x=1792591275; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Bl4WvKQr9UWYn7bOh5TWEroVL/3JGDO8W7v/2+U1gfA=;
+        b=e4yUBfWYhNXpF0F0HY5ImzmIfKYO+0wQm+IwqLqgo4YdYGxG12ttYr4YmCR/9iXTCl
+         nj5iV6B3xIqeu24mEbWvedNQjVdV8ZEALCEAjbFXZ9g/zdvW6qknxwUbKiCWMqFuiIZB
+         AK2l0d+q2YOFv4VuUv5IdoE9+3LA662uQ9zKawtVpdKuUgjBuWiJqpKWyqlH9hxnCVvC
+         +71LGZYZqFGi0dV6FaEovYpLNsIQNgaRXlyz8VK3NtMnGniEkq/2RY8Cr2aisH3rGU9S
+         t/a5pM3bwhU5lktLAR8eunjQh/OMSwZ8PtQdzevEE4mBWG4VzL9mselHHE20ztoerq/e
+         k1mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791986475; x=1792591275;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Bl4WvKQr9UWYn7bOh5TWEroVL/3JGDO8W7v/2+U1gfA=;
+        b=mr7snHwTfa0yQTcUUQ9/Wk3dvr7t5CSWP0gmi2bOhqyi/OLUJNDSIE4LJuabpVypTe
+         bYlgNfDLnkoJqIaJ7MZgZqZBNRgsyO1iVSwM7wEG8qtXiBp4ZQc/yos60fMGTs2tU31Y
+         KXMXYxT5BykdGmcreyr4mMIE8UFzMwhirBikKiBDBIcVUwr7Tp5yIj9tVu+3l0FnbqBu
+         Qp7STuQaHtD9yj7l8/vBgwML/rWJXJVg7VYo9C7/wIeIBc5gstwSH8xCRr6ahvTM1HUS
+         tRrTD+5lpHg1vFk/kz3zKEGGwN9wQKqqcKj3owFYvJ0cK602Dc6k4/LhAfRY7itRy2KG
+         aPxg==
+X-Forwarded-Encrypted: i=1; AKwUvBwbhji1AkUg2KlXlpO2+SghQDsCWSEP6YXtna+X3RfE+VfkqbXPd4MB8o8okwNaZ47GeJqKMNSfjlA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJRlMfiOBHysXQOOqS3DuIwW0nrlMZsnhhGNGPnSrcN1gYG3nJF
+	UJLWsP2TYKK06RQe2POODst7Pag2GcUhQe4Xool6tc8hsMKo/QAT21v5fS9TlBumn4k=
+X-Gm-Gg: AYBFou3Npp1+OpSZgNVN0d3i+r5kXgZe+KYLbEoKe2ZlBAMoLz7dktLa6CuHPxbvjtJ
+	JPVzu3ydOytDBvUC6yfJp+TkU/HqGm/WWZID2lGD0o1YMr3l1fI+ZBCLDZwq/b4rd0WzfNaZvej
+	mJRij9GUTpU26baSK9cZYQstosNMXB6hTIZ7GmCkFbplLXUhQ084rJTh09s4l90RZBPYxWGxx3L
+	4V22+5vxOGLywBnFSnNGbcgQed4PUSlYjORNijANeGrWxjIA3mBLDnwKT0HA1V+wDOl30OhEB9F
+	rh1zKVPD/ay+b149C9uV17iEP9XAkZm3g/nAo8rgzv7j7xLmUJynnbuiDvGYgbJJU0tPucyPTyu
+	jkfM3QtnrpnoOTU6W5R4FQvR51E93IQ0tOQnwrQ1oypy2U1O68OZKFXytl1X0xdHf2/6fV0Muzk
+	C1EkaveJJx6sAF6QybCsN8iFI3HAsMs8e8LJ6RXBnR9X6Ngc7CEyiLBdAyAQmTp0mYV8aKFisFx
+	e9T9iBIA1ARZFTePwQ9pPg=
+X-Received: by 2002:a05:600c:8184:b0:4a0:1c17:4fb2 with SMTP id 5b1f17b1804b1-4a18e4d854cmr283701345e9.31.1791986474223;
+        Wed, 14 Oct 2026 07:01:14 -0700 (PDT)
+Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [185.218.66.243])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd07c276sm1997515e9.13.2026.10.14.07.01.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Oct 2026 07:01:10 -0700 (PDT)
+Message-ID: <7605d698-b08c-4fcb-b86b-3f79927fb0d5@suse.com>
+Date: Wed, 14 Oct 2026 17:01:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SJ2PR12MB8926:EE_
-X-MS-Office365-Filtering-Correlation-Id: 162b252e-dc42-4e61-6def-08df29d76a00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|56012099006|11063799006|4143699003|261009223027099003|10067099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	bu961PAVhZFAvCrJOIIkUXQmwbV21fet5FBRM1Rqv2Np67G+2bZMX5Ruo0NyTzNHW+m2Dp1FKa5ozqjaYJ2kfcMs75xws+6may9FwVfOLE+x0Ju6DcpmTeUrihHKbzDMzv5tkKcmEGXqSWlvQj7k4ZkR+NidECxYiRQTiOggCgh6DGJNLcF1T3by683gbhugHCmgKYcmuZBfkwIZXgPYusGWBIOejd7W5bxwd/QH7Hosjt59z6fLkljz0KajMvS4S1pGwEPAsBkywVpa0Z+tP/MMyiTTld/H+/h8iqOdSdZQy/opnsFr2s8X7fQJRkLA5ydIVqKTzhKLU9BMfDJIuY7ZCRhUPPM3b8Z4MRvib15vXuLsebOgajy3bA7Wh/AW+2zcFGe5i7L9Bk2ktEHqm+ImXZ59xgunelLBeIPXuiowoEKz9Iz2dDZzw38OKJot4wjxln6wDLNyHQYRkbLJJaoFtDc+Gpf0VEwYFSys+Z1DtPsOoO7D3fkYDC5sjXKj6hUhBcvFakDkaxwsTegznX0pZZaGZqqHIBIvxxXGspv1LFRqp7UgxqZWLNzVdb8tHNuTkJTMQkaiVBVPZYWKKeLGCpZTTr9i7cqx7eeKA6xI1nk3aoB6ygoBp3QfNYcsUZVmbtyVLAH37vLnbV/cbskVz0+qoOD7pb0GCUUyOSQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(56012099006)(11063799006)(4143699003)(261009223027099003)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jA3DX1Y9vM9YVikuYX3YLpoYfss+uzDDQruldM3k6JBPogQV7EZIhep6wZZI?=
- =?us-ascii?Q?ct7o7VqajHMMlbF07q7XeJy5a6hoVxenbvoQIJM+8RJJP36DdQxiNTsANoeI?=
- =?us-ascii?Q?vjK/pMr9+5nN6MbaTpnF9L8gXATA4eoQmO2BzpI10CCmXzZr8ysQJJBSxHJ4?=
- =?us-ascii?Q?YQsa2kunklQ1ungmC/9t6BHtL6TM7EjPqno3MQODk22H3xVS4pgCLyiE08qx?=
- =?us-ascii?Q?uCo5DVpIUg830BiRPjUAnJjcQ1Q1mu+TnQAU/4+bnH9OWhigX1AdcV/a4E6i?=
- =?us-ascii?Q?dtsQ4xK7Fg1Bv5vANHa7CrI2MhneWq2Rs6xgN4CNgD/AJRncdSCW9ZYQrY09?=
- =?us-ascii?Q?WpXT0Cu7qMLfJi8irFzCe4DqB8KWy4Z87akY8r9wwq1bQMQSNu+6tRl4nXil?=
- =?us-ascii?Q?cPLA594ea9h5VymqRenGTcv+FWfPRSgS2HpOW7J17j6DnLkezpDS/87FEZPX?=
- =?us-ascii?Q?YZ6h+1kpzOa+RAf8tfWPqBA+6/1+NbtmJTS+BJ3jsB5gUKi8dbMZNUaB+w/N?=
- =?us-ascii?Q?xzEvt32WADwSobfiz0Zy56JEMLVAMmjptER6J6tqSxCrxzELk/PxBlMqBOMg?=
- =?us-ascii?Q?+n9xAgwjXaL39SUAnY7O0OfHQCvHRaAu9NeASUngJiO5eVcQpUrediBKqwrL?=
- =?us-ascii?Q?h5YTUXY8frui8QCZcN2OV6U5NDZeXi7xUllqpY38mf2qsRirYduzFjyXpGc2?=
- =?us-ascii?Q?WJh1hshDKZIdVb9jssIxOkmL6GFO5z9zE2PZYpmTbRwoQAMeFoHAqhnPORgu?=
- =?us-ascii?Q?Lfaq0lG+9AXBxgO3YaV4bAxPQMJvoMNxTrEG1SpHfUUeSayUmU0wua6Ug0gX?=
- =?us-ascii?Q?sz+3E9SdQ20FQkHGGkLaKY+6dCMDQ7y+Nf54z4pFRQpLo1ChHWMUVbWZrv0I?=
- =?us-ascii?Q?u118YGP6ST17btno1CGBfBrQ1js7457c9D2zzXMH5sIgn77VMseRg0qUZAo/?=
- =?us-ascii?Q?ltdwl8wOSqEej7p0WVWwyWKLMssEzcSbVy0KeyoUY3+jrKq7eLRkBY8ITuDu?=
- =?us-ascii?Q?u1fCFScBc3vcPcBfAN0uL5rJoAynYZF/74BX7QuBXTqpIYiCcSTCifP5aGsv?=
- =?us-ascii?Q?LyDllTQbOSuQUsI5Mx6meIxVJnl76bBf21I4cQ6CI8bIU0aibmFg4iEMzNzp?=
- =?us-ascii?Q?Hk3E+4yew4uKXpFaiow1WLAC/ze6HCOWTnVLeWIZmsJmwoSElxIl1kAgDIBv?=
- =?us-ascii?Q?ZR2+hMW8XvgNQXY4N3REUH+0KJXens3rDRtEIEGpooXSdTYHRKG3HN60csQ4?=
- =?us-ascii?Q?ls3hu81rgQ+oZqETZwS9OPD/H0DQFL6YlJur3k/WXOncaix3YbCMBRZtAG4Z?=
- =?us-ascii?Q?sfdW6iJN2vDhNGBZDEnX9AuQUwcJQWbk3xcBuxnCl0fcyQ9iQxpPqEKi3TWl?=
- =?us-ascii?Q?YnJSTJXJJ1mlrjyNZ0rWS7WRbkQCNwPDq9wOVXLX9Hpf85TVQJEF2H44daoj?=
- =?us-ascii?Q?OuocfKzphizRyJF5qrl0UGrs+TvqWWRleRDqtP7kMg4ATySobU3gkhFjGae9?=
- =?us-ascii?Q?D22ZNxwFLcuShyhgsM/PLCtMrgk2PRdoKiZraOhmmOA7bGUXNbnNNSr5p7Y0?=
- =?us-ascii?Q?akkrAyOlsZACJM7SPrnGwO/eP1NFMAY+JxLGjmIS3MhLgKb4hgm7DWVrFiRL?=
- =?us-ascii?Q?ksSw65cNJm+7j+k76r/j61aPdH2+sdz6NzyQ/WgxaAj6MlqEyB0KiDqwfjsc?=
- =?us-ascii?Q?Wz82yIEppntLSvomiTFdiKV9OawitRHwX7mdYS83TBQO4bjO883uA+plOlUN?=
- =?us-ascii?Q?DU1uivO17Q=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 162b252e-dc42-4e61-6def-08df29d76a00
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 09:42:08.8005
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iAGi+SacYPB9j5XxfpZWZa8xuIWJBmA1+BVh5sh44KX671HvQSy3PW4Z8Vq4aH5t5umvswOjYdpuJ6E/HTsjWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8926
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/4] PCI/TSM: Create MMIO descriptors via TDISP Report
+To: Ankit Agrawal <ankita@nvidia.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, jgg@nvidia.com,
+ aneesh.kumar@kernel.org, aik@amd.com, yilun.xu@linux.intel.com,
+ iweiny@kernel.org, ming.li@zohomail.com, icheng@nvidia.com,
+ bhelgaas@google.com, smadhavan@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ Smita.KoralahalliChannabasappa@amd.com, andriy.shevchenko@linux.intel.com,
+ linux-coco@lists.linux.dev
+References: <20261005070252.84810-1-ankita@nvidia.com>
+ <20261005070252.84810-2-ankita@nvidia.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <20261005070252.84810-2-ankita@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 12, 2026 at 09:26:03PM +0800, Alison Schofield wrote:
-> cxl_switch_port_setup_targets() adds an endpoint's downstream port to a
-> port's decoder target list. For an auto region it checks that the decoder
-> already targets that downstream port at the next position. For a user
-> created region it programs the downstream port at that position. That step
-> is open coded behind an add_target label that the target search jumps to.
-> 
-> Move that step to a new helper, cxl_switch_port_add_target(). The helper
-> takes the switch decoder whose target list it updates, rather than the
-> port, which makes its scope explicit. With the decoder setup and the
-> target add now in helpers, the path for the first endpoint to reach a port
-> becomes an else branch of the target search, so the add_target label is
-> no longer needed.
-> 
-> No functional change.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
 
+On 5.10.26 г. 10:02 ч., Ankit Agrawal wrote:
+> After pci_tsm_bind() and pci_tsm_lock() the low level TSM driver is
+> expected to populate the TDISP GET_DEVICE_INTERFACE_REPORT response
+> payload for the device.
+> 
+> Add pci_tsm_mmio_alloc()/pci_tsm_mmio_free() to parse that report into
+> a set of encrypted MMIO ranges, and pci_tsm_mmio_setup()/
+> pci_tsm_mmio_teardown() to mark those ranges as encrypted in iomem via
+> a new encrypted_iomem_resource tree (IORES_DESC_ENCRYPTED). With those
+> descriptors the TSM driver can use pci_tsm_mmio_setup() to inform
+> ioremap() how to map the device per the device expectations. The VM
+> is expected to validate the interface with the relying party before
+> accepting the device for operation.
+> 
+> pci_tsm_mmio_alloc() also recovers the obfuscated starting address for
+> each encrypted MMIO range, since the VM is never disclosed the HPA
+> that correlates to the GPA of the device's MMIO. The obfuscated
+> address is BAR aligned.
+> 
+> Based on an original patch by Aneesh Kumar K.V [1], and cherry-picked
+> from Dan Williams' upstream commit [2]. Major functional differences
+> from Dan's posting is due to the lack of evidence-store infrastructure
+> yet (device_evidence / DEVICE_EVIDENCE_TYPE_REPORT). The
+> pci_tsm_mmio_alloc() takes the raw report bytes directly from the caller
+> instead of pulling them from a device evidence store.
+> 
+> Link: https://lore.kernel.org/linux-coco/20251117140007.122062-8-aneesh.kumar@kernel.org/ [1]
+> Link: https://lore.kernel.org/all/20260705220819.2472765-15-djbw@kernel.org/ [2]
+> 
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> Assisted-by: Claude:sonnet-5
 > ---
->  drivers/cxl/core/region.c | 80 ++++++++++++++++++++++++---------------
->  1 file changed, 49 insertions(+), 31 deletions(-)
+>   drivers/pci/tsm.c       | 236 ++++++++++++++++++++++++++++++++++++++++
+>   include/linux/ioport.h  |   2 +
+>   include/linux/pci-tsm.h |  33 ++++++
+>   kernel/resource.c       |   8 ++
+>   4 files changed, 279 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 229372123271..50f4830c225d 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1608,15 +1608,50 @@ static int cxl_port_setup_decoder(struct cxl_port *port, struct cxl_region *cxlr
->  	return 0;
->  }
->  
-> +static int cxl_switch_port_add_target(struct cxl_switch_decoder *cxlsd,
-> +				      struct cxl_region *cxlr,
-> +				      struct cxl_region_ref *cxl_rr,
-> +				      struct cxl_endpoint_decoder *cxled,
-> +				      struct cxl_ep *ep)
+> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> index 5fdcd7f2e820..c8cfe89b6224 100644
+> --- a/drivers/pci/tsm.c
+> +++ b/drivers/pci/tsm.c
+> @@ -9,11 +9,16 @@
+>   #define dev_fmt(fmt) "PCI/TSM: " fmt
+>   
+>   #include <linux/bitfield.h>
+> +#include <linux/overflow.h>
+>   #include <linux/pci.h>
+>   #include <linux/pci-doe.h>
+>   #include <linux/pci-tsm.h>
+> +#include <linux/range.h>
+> +#include <linux/sizes.h>
+> +#include <linux/slab.h>
+>   #include <linux/sysfs.h>
+>   #include <linux/tsm.h>
+> +#include <linux/unaligned.h>
+>   #include <linux/xarray.h>
+>   #include "pci.h"
+>   
+> @@ -898,3 +903,234 @@ int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type, const void *req,
+>   		       resp, resp_sz);
+>   }
+>   EXPORT_SYMBOL_GPL(pci_tsm_doe_transfer);
+> +
+> +static void mmio_teardown(struct pci_tsm_mmio *mmio, int nr)
 > +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxl_rr->port;
-> +	int pos = cxled->pos;
+> +	while (nr--) {
+> +		struct resource *res = pci_tsm_mmio_resource(mmio, nr);
 > +
-> +	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: targets full trying to add %s:%s at %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
-> +		return -ENXIO;
+> +		/*
+> +		 * Entries past the point where pci_tsm_mmio_setup() stopped
+> +		 * (or that were never run through setup() at all, e.g. a
+> +		 * caller that only wants the resolved range from
+> +		 * pci_tsm_mmio_alloc()) were never insert_resource()'d, so
+> +		 * res->parent is NULL. remove_resource() dereferences
+> +		 * res->parent unconditionally.
+> +		 */
+> +		if (res->parent)
+> +			remove_resource(res);
 > +	}
-> +	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> +		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
-> +			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
-> +				dev_name(port->uport_dev), dev_name(&port->dev),
-> +				dev_name(&cxlsd->cxld.dev),
-> +				dev_name(ep->dport->dport_dev),
-> +				cxl_rr->nr_targets_set);
-> +			return -ENXIO;
-> +		}
-> +	} else {
-> +		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
-> +		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
-> +	}
-> +	cxl_rr->nr_targets_set++;
-> +
-> +	return 0;
 > +}
 > +
->  static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_region *cxlr,
->  					 struct cxl_endpoint_decoder *cxled)
->  {
-> -	int iw, ig, rc, pos = cxled->pos;
->  	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
->  	struct cxl_decoder *cxld = cxl_rr->decoder;
->  	struct cxl_switch_decoder *cxlsd;
-> +	int rc, pos = cxled->pos;
->  
->  	/*
->  	 * While root level decoders support x3, x6, x12, switch level
-> @@ -1641,38 +1676,21 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_regio
->  					return rc;
->  				goto out_target_set;
->  			}
-> -		goto add_target;
-> -	}
-> -
-> -	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> -	if (rc)
-> -		return rc;
-> -add_target:
-> -	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
-> -		dev_dbg(&cxlr->dev,
-> -			"%s:%s: targets full trying to add %s:%s at %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev),
-> -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
-> -		return -ENXIO;
-> -	}
-> -	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> -		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
-> -			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
-> -				dev_name(port->uport_dev), dev_name(&port->dev),
-> -				dev_name(&cxlsd->cxld.dev),
-> -				dev_name(ep->dport->dport_dev),
-> -				cxl_rr->nr_targets_set);
-> -			return -ENXIO;
-> -		}
->  	} else {
-> -		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
-> -		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
-> +		int iw, ig;
+> +/**
+> + * pci_tsm_mmio_setup() - mark device MMIO as encrypted in iomem
+> + * @pdev: device owner of MMIO resources
+> + * @mmio: container of an array of resources to mark encrypted
+> + */
+> +int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+> +{
+> +	int i;
 > +
-> +		rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> +		if (rc)
-> +			return rc;
+> +	device_lock_assert(&pdev->dev);
+> +	if (pdev->dev.driver)
+> +		return -EBUSY;
 > +
-> +		rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> +		if (rc)
-> +			return rc;
->  	}
-> -	cxl_rr->nr_targets_set++;
+> +	for (i = 0; i < mmio->nr; i++) {
+> +		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+> +		int j;
 > +
-> +	rc = cxl_switch_port_add_target(cxlsd, cxlr, cxl_rr, cxled, ep);
-> +	if (rc)
-> +		return rc;
->  out_target_set:
->  	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
->  		dev_name(port->uport_dev), dev_name(&port->dev),
-> -- 
-> 2.37.3
-> 
+> +		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+> +			break;
+> +
+> +		/* Only require the caller to set the range, init remainder */
+> +		*res = DEFINE_RES_NAMED_DESC(res->start, resource_size(res),
+> +					     pci_name(pdev), IORESOURCE_MEM,
+> +					     IORES_DESC_ENCRYPTED);
+> +
+> +		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+> +			if (resource_contains(pci_resource_n(pdev, j), res))
+> +				break;
+> +
+> +		/* Request is outside of device MMIO */
+> +		if (j >= PCI_NUM_RESOURCES)
+> +			break;
+> +
+> +		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+> +			break;
+> +	}
+> +
+> +	if (i >= mmio->nr)
+> +		return 0;
+
+Shouldn't this check be if (i == mmio->nr -1 ) i.e all descriptors have 
+been initialized, given the for loop condition i can ever be at most 
+mmio->nr - 1 i.e the actual index of a descriptor?
+
+<snip>
