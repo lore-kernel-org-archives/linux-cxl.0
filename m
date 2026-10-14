@@ -1,109 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp23.cstnet.cn [159.226.251.23])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739AA53C3D0
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 14:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5594FD798;
+	Wed, 14 Oct 2026 14:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791987321; cv=none; b=g0/3+w0KKv8OKhPTwAl0p9AdRgDS2na50Aubu7DVO5+BBPZHK8brfK8ejTvgXDZERHbbFwh7xgAQSVPnwnV0iPDPZrmaZyNxmOqARPDcC5VJM2XVxxVL+x63NoGUfTtRh3AtFN5Xtk+f1hcRhm4WIGZiBJpVirx0u3m+maf53og=
+	t=1791989681; cv=none; b=d7j6PQINw38ZqzCFdVqJsjWG3QNy+90zyLt0NUG3tbTG5pATzWszTqJCNokp9Y+uwemTuazlThiqVGT3Z5AwNOE6dRppM/v2f/DpjDA8V2Mzs4rIaKgYhczqbkrcb09+Gi73aoOb0wokyaKyBwlbpQzu4ZJqW/ff5QijZF8LjF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791987321; c=relaxed/simple;
-	bh=UU3mFXTLy83MYf/mMEoPutZdlb7NNRuCLxuZHFSIijs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=vDrfSCpLP10RJ//re/XNB/mqax5sioUUpi+LTS45/TLeACX0issifY1gj2B2G4WUe/EJJECFuiets7wYfhyKcYD4zysMLg/E+ss6nSb7hCNjY9c+lGiTSW3tzmEcLa11UXFI/kYz1sqZCe6pMtORz8XDgFp88857dRoN/f/kMGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 27AC340599;
-	Wed, 14 Oct 2026 14:15:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf13.hostedemail.com (Postfix) with ESMTPA id 054AE2000E;
-	Wed, 14 Oct 2026 14:15:14 +0000 (UTC)
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 66C5CF40066;
-	Wed, 14 Oct 2026 10:15:14 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-09.internal (MEProxy); Wed, 14 Oct 2026 10:15:14 -0400
-X-ME-Sender: <xms:co7PalV1fpGDZFSURc_CRtHZJZpihKCG-a-v2Y8qKAjA5M41m2vCvg>
-    <xme:co7PagYnLUz6PByAUo4K_tbhh4Knkgjn6Rnda2zYlkpPaJtwfozvQMQhgt8xBFfT5
-    3nmQ5R0wnJFFDZhSgCbe-kE0q5_o1c1YV6GiVoPg36axSmSSoeKoA>
-X-ME-Proxy-Cause: dmFkZTEd/BP7YPzQpwVymWCLCz5d7z8cPfoYJOKlkSu6IDfRIYKsXnldzG2Zj7V4cHGGaC
-    19beiY+SNOekCX4W9Yc3R6rfa+Z9aOeARhjQo65W5BR03tEOuwoXCSCqBJDgdwEO4mB6qz
-    JoZ8MnGQpveO0a7prAFr1Yk82SUnjkGW786yQSg0655Umc8gVSiLioddv6pK5rKbM7e6VW
-    aXp0CUBbmajRjaTYeoZe1KyWdwCo/EVprduIxftKjZauwiQONAPRRjQeGqk8tihqW/6akH
-    NseT1HnlGiF8F7uTGNFBS6J0vL6DmHEllHvlJ7lk5ZZHThxLG9zXdNVctbsdJgNq2bojfQ
-    vy/U/N07ATXIN1p6Uo+BcjZrU2RK9PKXn1b3uWxb4QkUmZI2YW3BQJvJpx3tiOXWVwZV/z
-    eZZoWBBdmcyPm0vBDe4acrhMicUBS9P7SjUNs3uc+wwnvWuLf+7xA7w/Swo+W3DC6B1atq
-    BKgqf3E4ZWHkHFcLXRxhZdhnx6/9Zss111JykP9LoowAvZhsqV5B9AAnG7/pl6TCkhj2do
-    cnewAxBUAZIc5JVkP+Q2c2WGpoMLXjTjn2tpf0fVuMVpsXYdbbe8tsklqClgm2PkAESnYu
-    YiOMEWQjR4YtU2DnOFtoU3opN8RHaN7iQRoUhOhppVoTsuReOJ0DS2u//WfQ
-X-ME-Proxy: <xmx:co7Pat7CR7wKr05wTgZT6JJB0iDvAjiUgxUm_VZSiAedXCg0WUGdbg>
-    <xmx:co7PajF9u45HMNAPAOQTUosBTZ2F6zmd7EOKq9EuiS0rpt2W75iAbQ>
-    <xmx:co7PagAW9ajh0ecp8pLZW5tgFdiAW3G8fJWavhNuuiAIfxYdiuIRlQ>
-    <xmx:co7PagzklsxtlCKQt72lTFqh4nYWXSu5ic0DbMn2sXMn0fsuhJe_Dw>
-    <xmx:co7Pas4kgEdsQYOD_K0BNkQ-eDZ0u_LBTjFfZh0C8DxcxYSIzRxxXRK2>
-Feedback-ID: i3a164872:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3A34A700065; Wed, 14 Oct 2026 10:15:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1791989681; c=relaxed/simple;
+	bh=3JfaNEVGkBns1VAswZju3md8BsKJx/Eb8XEER1odfs0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=eCp8reZmXINM2nrQ9gj/V7LDYB8SBK3iO2tA7TwVVYKtQGizID8i5/2cto1Wka9VeywfHW64CWcTU4bqkhoi5/HIE1KaSUbggxtpgkSYcHq0YTG1tyWnWpWcy2q4yJiBInE8eQzWuTwIeC4VheqEVhrkslXFsRXPGE86P/J8iRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn; spf=pass smtp.mailfrom=semi.ac.cn; arc=none smtp.client-ip=159.226.251.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=semi.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semi.ac.cn
+Received: from huanggaobin23$semi.ac.cn ( [159.226.228.16] ) by
+ ajax-webmail-APP-10 (Coremail) ; Wed, 14 Oct 2026 22:48:51 +0800
+ (GMT+08:00)
+Date: Wed, 14 Oct 2026 22:48:51 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?6buE6auY5b2s?= <huanggaobin23@semi.ac.cn>
+To: "Alison Schofield" <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, "Davidlohr Bueso" <dave@stgolabs.net>, 
+	"Jonathan Cameron" <jic23@kernel.org>, 
+	"Dave Jiang" <dave.jiang@intel.com>, 
+	"Vishal Verma" <vishal.l.verma@intel.com>, 
+	"Dan Williams" <djbw@kernel.org>, "Ira Weiny" <iweiny@kernel.org>, 
+	"Li Ming" <ming.li@zohomail.com>, 
+	"Richard Cheng" <icheng@nvidia.com>, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] cxl/mbox: bound the device-supplied command return
+ code
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.1-cmXT5 build
+ 20240627(e6c6db66) Copyright (c) 2002-2026 www.mailtech.cn cnic.cn
+In-Reply-To: <as7cid_6QQS5gBI-@aschofie-mobl2.lan>
+References: <20260929060747.3550005-1-huanggaobin23@semi.ac.cn>
+ <as7cid_6QQS5gBI-@aschofie-mobl2.lan>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 14 Oct 2026 09:14:54 -0500
-From: "John Groves" <john@groves.net>
-To: "Miklos Szeredi" <miklos@szeredi.hu>
-Cc: "Miklos Szeredi" <mszeredi@redhat.com>,
- "fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Darrick J . Wong" <djwong@kernel.org>,
- "Vishal Verma" <vishal.l.verma@intel.com>,
- "Dave Jiang" <dave.jiang@intel.com>,
- "Alison Schofield" <alison.schofield@intel.com>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Message-Id: <f9bdb2ef-33d7-4601-87fc-354a9e753141@app.fastmail.com>
-In-Reply-To: 
- <CAJfpegvDbGaoH5Er78M=XYwA6a7zj6DRqY0+F0cgiD7TfRK_Mg@mail.gmail.com>
-References: <20261008112004.1899560-1-mszeredi@redhat.com>
- <aswN-UprZHx9wU9y@groves.net>
- <CAJfpegvDbGaoH5Er78M=XYwA6a7zj6DRqY0+F0cgiD7TfRK_Mg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] fuse: resolve extent maps in O(1) when possible
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 054AE2000E
-X-Stat-Signature: 1n6ppyhqociuseudaatqnbcpe44p8ice
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX18/oRjGa/Rn4DQEBtZlEm+EmmatrJ+ZgvU=
-X-HE-Tag: 1791987314-722773
-X-HE-Meta: U2FsdGVkX1+5aVdf5QXr+1pa4v9ZvbCJDt2JPLBRCFmYLCSA2UHI5PaCp8iduF3lYe8EVjodyZNeOvNtjHKFiy873Ov6zosHDlAczBdHbQgQA1ME+uCggeiLP/GuLqMXclyETSGodR9bR9gtSTfRPN04PP6QqxMmhmez/OGcigoFFJVc+AsK89DJUeeI1UDFw1+ns8jSGXML1tll0gH1lLbI2gqJ0LH688kmwdTi9NvmfNTjPFnj80L3ykvF7ANEH9D7lhmR8FtDBVw+nRD2+oEvNdyBeUMMyR8w5RvW6xHX0F1C7eVQvEsUw3OctImmkMZx2pf+h6QjIkFKGNGCJynkyhFbdh2ArAlPv6LqzdfCJU7qxqnP04KHB4e8+WoU
+Message-ID: <49ee762d.402bc.1a13ae337d6.Coremail.huanggaobin23@semi.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:tACowAAnLaxTls9q8yYTAA--.30477W
+X-CM-SenderInfo: xkxd0wxjdruxrqstq2xhplhtffof0/1tbiBwcADGrOyBb0pAACsk
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
-
-On Wed, Oct 14, 2026, at 4:40 AM, Miklos Szeredi wrote:
-> On Mon, 12 Oct 2026 at 00:33, John Groves <john@groves.net> wrote:
-> 
-> > With this patch on top of v4 the famfs test suite passes; that tree is
-> > at [2].  The famfs userspace master branch [1] now works with v4.  If
-> > the next revision needs further userspace changes, please base them on
-> > that branch or send them my way so the two don't diverge.
-> 
-> Applied, thanks.
-
-Thank you!
-
-> 
-> Please next time use a new mail thread, because linking to the old one
-> confuses b4.
-
-Will do, thanks
-
-> 
-> Thanks,
-> Miklos
-> 
-
-John
+SGkgQWxpc29uLAoKVGhhbmsgeW91IGZvciBwaWNraW5nIGl0IHVwLCBhbmQgZm9yIHRoZSBjb3Jy
+ZWN0aW9ucy4KCj4gKFNhc2hpa28gaXMgcmlnaHQgaGVyZS4gUEFERFIgYW5kIFBPSVNPTkxNVCBk
+b24ndCBtYXAgdG8gLUVOWElPLCBzbyB0aGUKPiBjb21tZW50IGFuZCBjaGFuZ2Vsb2cgY2xhaW0g
+aXNuJ3QgYWNjdXJhdGUuIC1FTlhJTyBpcyBzdGlsbCB0aGUgcmlnaHQKPiBmYWxsYmFjayBmb3Ig
+YW4gdW5rbm93biBjb2RlLikKCllvdSBhcmUgYm90aCByaWdodDogdGhlIGNsYWltIHNob3VsZCBi
+ZSB0aGF0IGFuIHVua25vd24gY29kZSBpcyBzdGlsbCBhIGZhaWx1cmUKYW5kIHRoYXQgLUVOWElP
+IGtlZXBzIGl0IGluIHRoZSB1c3VhbCBkZXZpY2UtZXJyb3IgY2xhc3MgLS0gbm90IHRoYXQgZXZl
+cnkKbm9uLXN1Y2Nlc3MgZW50cnkgbWFwcyB0byAtRU5YSU8uICBQbGVhc2UgdXNlIHRoYXQgd29y
+ZGluZyBpbiB0aGUgdmVyc2lvbiB5b3UKY2Fycnk7IEkgd2lsbCBub3QgcmVwb3N0IHRoZSBwYXRj
+aCBvbiBpdHMgb3duLgoKPiBJJ20gdGFraW5nIHRoaXMgaW50byBhIHNlcmllcyB0aGF0IGFkZHMg
+Q1hMIEtVbml0IHRlc3RzLCBpbmNsdWRpbmcgYQo+IHJlZ3Jlc3Npb24gdGVzdCBmb3IgdGhpcyB0
+YWJsZS4gWW91J2xsIGdldCBDQydkIHdoZW4gaXQgcG9zdHMgYW5kIEknbGwgbmVlZAo+IHlvdSBB
+Q0sgaXQgc2luY2UgaXQgaGFzIHlvdXIgb3JpZ2luYWwgYXV0aG9yc2hpcCB3aXRoIGNoYW5nZXMg
+ZnJvbSBtZSBhZGRlZC4KClVuZGVyc3Rvb2QgLS0gSSB3aWxsIEFDSyBhcyBzb29uIGFzIGl0IHBv
+c3RzLgoKPiBJdCBsb29rcyBsaWtlIHRoZSByZXR1cm4gY29kZSB5b3Ugc2F3IGlzIHZhbGlkIGZv
+ciBDWEwgNC4wIGFuZCBqdXN0IG5vdCBhZGRlZAo+IHRvIENYTCBkcml2ZXIgeWV0LiAuLi4gQ1hM
+IDQuMCwgVGFibGUgOC0yMDggLi4uIDAwMUZoIGFuZCAwMDIwaAo+IEkgZG9uJ3QgdGhpbmsgYW55
+b25lIGVsc2UgaGFzIHNlbnQgYSBwYXRjaCBmb3IgdGhhdCB5ZXQsIHNvIHlvdSBjYW4gaWYgeW91
+Cj4gbGlrZS4KClR3byB0aGluZ3MgdGhlcmUsIGFuZCBJIHdvdWxkIHJhdGhlciBub3QgY29sbGlk
+ZSB3aXRoIHlvdXIgc2VyaWVzOgoKLSBUaGUgS0FTQU4gcmVwcm9kdWN0aW9uIHVzZWQgMHgxZiwg
+d2hpY2ggc3RvcHMgYmVpbmcgb3V0IG9mIHJhbmdlIG9uY2UgMDAxRmggaXMKICBpbiB0aGUgdGFi
+bGUuICBPdXQgb2YgcmFuZ2UgaXMgYW55IGNvZGUgcGFzdCB0aGUgZW5kIG9mIHRoZSB0YWJsZSwg
+c28gd2l0aAogIDAwMUZoIGFuZCAwMDIwaCBhZGRlZCBpdCBpcyAwMDIxaCB1cHdhcmRzIC0tIHRo
+ZSBib3VuZCBpdHNlbGYgaXMgdW5jaGFuZ2VkLgotIEFkZGluZyB0aGUgdHdvIGVudHJpZXMgaXMg
+YSBzZXBhcmF0ZSBjaGFuZ2UgZnJvbSB0aGUgYm91bmQuICBEbyB5b3Ugd2FudCBpdCBpbgogIHlv
+dXIgc2VyaWVzIG5leHQgdG8gdGhlIEtVbml0IHRlc3QsIHNvIHRoZSBib3VuZGFyeSBhbmQgdGhl
+IHRlc3QgbW92ZQogIHRvZ2V0aGVyLCBvciBhcyBhIHN0YW5kYWxvbmUgcGF0Y2ggZnJvbSBtZSBh
+ZnRlciB5b3Vycz8gIEVpdGhlciBpcyBmaW5lLiAgSWYKICB5b3Ugd291bGQgcmF0aGVyIGhhdmUg
+aXQgZnJvbSBtZSwgSSB3aWxsIHRha2UgdGhlIG5hbWVzIGFuZCBlcnJubyBtYXBwaW5ncwogIGZy
+b20gVGFibGUgOC0yMDggYW5kIHNlbmQgaXQgc2VwYXJhdGVseS4KClRoYW5rcywKR2FvYmlu
