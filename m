@@ -1,118 +1,118 @@
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f2.google.com (mail-pj2-f2.google.com [74.125.227.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B55122AE65;
-	Wed, 14 Oct 2026 01:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D520330C158
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 01:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791940302; cv=none; b=i0DJqgkl7S+hMUCAGbnD+isNRFhaiSWOShNB8FTV6XM6ZjwUnYG/fnpyjByMOM+j62gYSVBprKDS//vgiXL05N4SvFLFpkAam3UJn5Z9HJ0/IeDWh7ewxnJxEUn6b5uIwTsPg/G0xG20qKxQni7g5rxPrMqTWQ4iQ7YdQlK8tiA=
+	t=1791941315; cv=none; b=o4LJpll1bVHVFbPh8VHlQEAnk6o0fWf5XFlDQeJj4cT9VIjkZOFq1N4KPBGzTt8UzK5AdJ7BQ1Jcgmbh+t5eGACrjSrq807/V00RjRxWvlXQf7D9KrNO2J0sxnPCm+mJC+8o4uXnzIS4MnvlWwdH5cxOPOKLt3FPkNbu2OigcyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791940302; c=relaxed/simple;
-	bh=i5T6zbZQc8CGnSnGEjkof+o0c/hFuOWyEOSaskRrlIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZUX+Q1zko21WL+mG7crmhap0gSJGC+TCeKpG63G7Bp41hLhqRR7kSB97jAheAe+WEAZSIeOMLFJiLmYkJeMJkfHLmkBgHwRdph0QOZ12zqu/7MpOq5L47eS1OrSF8J8cD1ovkjBmFbjsIocVb/OMBDPY4tozHlT3J+4EsbcyLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=gFuPvhdS; arc=none smtp.client-ip=23.83.209.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1791941315; c=relaxed/simple;
+	bh=gmVQW4zvgK1RdCMOSrjGY3Z/g11AJJIEJYvUSmj2svQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HGgEI7LYxTGg3Hw4XO7OeORUOy9d0ztNMJXs/f6z7dikbVtyMbLP3pmeJltdEHhyx/RB7DDypE4foGeTEXVWJbgh31MieL0zn+nzo9hpFws6i++keqRvZtmSZ4o0zsFduJf/FRGbRIDliumHJevOage3tjcmSG7cdN1btRja24I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9BXdVCw; arc=none smtp.client-ip=74.125.227.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="gFuPvhdS"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D80AB9420C7;
-	Wed, 14 Oct 2026 01:02:44 +0000 (UTC)
-Received: from pdx1-sub0-mail-a233.dreamhost.com (100-100-60-114.trex-nlb.outbound.svc.cluster.local [100.100.60.114])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 4BB499422A2;
-	Wed, 14 Oct 2026 01:02:40 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Arithmetic: 708ec7fc5bfd1be1_1791939764731_3773700087
-X-MC-Loop-Signature: 1791939764731:273058391
-X-MC-Ingress-Time: 1791939764731
-Received: from pdx1-sub0-mail-a233.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.60.114 (trex/8.0.2);
-	Wed, 14 Oct 2026 01:02:44 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a233.dreamhost.com (Postfix) with ESMTPSA id 4j4Cbz1Ld5z103x;
-	Tue, 13 Oct 2026 18:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1791939760;
-	bh=vVS7mK5iOf6z92nBzk3PjEszJ1HtyAMQLGAesZh3YzY=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=gFuPvhdSPkNMhXx3AoIdRyzHjdmsSfgknyRaEr7B/5XunpK6I7PRCPrgOLLol3uqp
-	 3Wj4xMVjtzerpc+iCu38Fk/5THhypqqGCN4tRQWeAUf3sUsTo4nM7fGmlUl25NSKtQ
-	 XqM1GgPCl1N68F5FMMSFX+kdqdT5JjJk8+azaZRqkqphMJbqQG1pokNUB35n4MRrpv
-	 clCMVH7SmcBQpGDkqtzwykVDaH1uHKBHeAinbuDq6iifaTUc5EcBu0/e698A+kDs3/
-	 k6GzYkhm0B56q0WL0mEyuw+heQ6m2eYV4f9veqJFPlmE6BZ//873vytTjctkqwP7WK
-	 HSf7TRgYm6cVw==
-Date: Tue, 13 Oct 2026 18:02:36 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: jic23@kernel.org, dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, iweiny@kernel.org, ming.li@zohomail.com,
-	kaihengf@nvidia.com, kobak@nvidia.com, newtonl@nvidia.com,
-	kristinc@nvidia.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: Re: [PATCH v8 1/4] cxl/region: Scan all partitions for unmapped
- poison
-Message-ID: <20261014010236.gv53t6tqga4pf2ys@offworld>
-References: <20260922101129.52794-1-icheng@nvidia.com>
- <20260922101129.52794-2-icheng@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9BXdVCw"
+Received: by mail-pj2-f2.google.com with SMTP id 98e67ed59e1d1-3a8c118e711so2029132a91.0
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Oct 2026 18:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791941313; x=1792546113; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xF4abej4dYzWW64tGMfNwkdoR9vBgU7tCntIFYf9jb8=;
+        b=i9BXdVCwLO48JsGMxuGlDT2FwFtBPBYvvi1r/TGzg49xFY0sd8d+I9ViggJSo1Mm5Y
+         PAPD91QegvXMHAkSgorPhNXqYn94Nxb93FNFUfVJn9W33Z8hEHp7w9adfJzG8HQC5O6s
+         sRexmALj2OUy1z+R1BHiC0AmMK/dwUTe9CTcjydBa6p0SYu0FIhVw6ZAbi9El5P3GyRJ
+         Y9BfCCWLi17kk3imwfT1ECTevIHS4XfN4YYgHvXAbeuaWPOraHhPe1s86OIxr2++KGD1
+         Xw9qtI8AkeUgViJQ5/E82NNPBr1CflUZma364cFgnKMzOv+XbMfV/8tIQ5rs/Jf4qlUR
+         Xqww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791941313; x=1792546113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xF4abej4dYzWW64tGMfNwkdoR9vBgU7tCntIFYf9jb8=;
+        b=AXZC/gDYOHqOfeM1uYqBb1xvrUuauoCVglokisoQ/oLNJIVYVgTHUWiX+aC8R9/GP2
+         IFLOkl/Wgrqxz8i6MKcSFt0v8N7dvTQhfAzmGRW5yUHBXt4MLsSXtcriWrOxKCXpmbBa
+         8aKfJYkMlf9QKyeX0Oj3F4t0H0XCaIh7QUrZG0vMA6KrfFx/tV1Vg9QunpGqtHXqmvqM
+         lzKL2pj4K11rdtC5H2jBo9AY44RQduWPbh9hZtw03bUqMw1BV54nfdtogdaKiRrRNyqI
+         lZi1aIlLgjZUxOBGHtUGShLEK0kRxJK5r1Qv3N6IPXa93tl4OrjsfUFkMI5PYtLUu7K0
+         YJ9g==
+X-Forwarded-Encrypted: i=1; AKwUvBwBy0LAsTYA8Jyx7MrTr3H0aRljFznwOjl7TNV9hG/5yVxEA906PL8YVq6ecNlHh98HKuUir/zNP+c=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLdnFdgnFx3Tt5ppt3hiFG9+elnlQAlCkfYUzkB9EHo8myk8Haa
+	nRDlfx4lH9YuJOc1tLTFgyD4QBgVv+Q5rdNNcbgP+/xyyaP3qAaMVSb5
+X-Gm-Gg: AYBFou1bizKV4MettRPyyiNjz3eMR8zpVfTFtz8GNbERTINnOmkhVJb9OOSWgHvCrEq
+	6nIUhjG9jfDwFrDFndQw8MIjYATzIv1f4g2fcBoMkhcrkGUFh4Fx6PbSb7s3Yorsh1iqGFBboyq
+	H4DiG71FLUlnl1x1MYh/5zTf77R8RqdSmA6XmM6LUzIQaofV4f+tGwJR8Salq3Xm+a2N8/yTBhD
+	ACNyHDnOtnqES42CrcrBCCo8grqCYUtaPBYimDe/yqFJSPBVRb4a6o8OUUYN+aA4V+MqPGNH1i4
+	0vIfpZJPW0TyJzJyeS1aSbkl5eqe4/8CYM7/99/GJSEUSg13mryyaqC3AH8RmeMYLqBXUYUd5nK
+	TNdX6dgqsvICdYWHXu+K1jZYj5HFAJ23rd+9R9jn3SPDfl2bNayXoVfE/C6SlJcqC0tkR48U/hY
+	xg4HBXMbCYkq9fBWLvMQurE+nLp0emkfgHtz3if/Sql1mqaq676PGLTmtZm7Dy/zkQRDiGejuiy
+	myDYGTk84QEAN2Vc0zrYdJMKTbzceYIPAdREF5J2gx9Jt5quU10eZDlOV9fZsrx2lBKrFOD5a9l
+	o3exB9UxMU+PVrgMndkGGlxP3cnCNLZJ6pI=
+X-Received: by 2002:a17:90a:1601:b0:3ab:884b:65b7 with SMTP id 98e67ed59e1d1-3ab884b6b8cmr5867485a91.25.1791941313156;
+        Tue, 13 Oct 2026 18:28:33 -0700 (PDT)
+Received: from localhost (ec2-35-77-45-43.ap-northeast-1.compute.amazonaws.com. [35.77.45.43])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac5f1fb257sm1953670a91.0.2026.10.13.18.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 18:28:32 -0700 (PDT)
+From: jianyungao89@gmail.com
+To: linux-kernel@vger.kernel.org
+Cc: Jianyun Gao <jianyungao89@gmail.com>,
+	stable@vger.kernel.org,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev (open list:DEVICE DIRECT ACCESS (DAX)),
+	linux-cxl@vger.kernel.org (open list:DEVICE DIRECT ACCESS (DAX))
+Subject: [PATCH] dax/bus: fix dev_dax->ranges leak on device_add() failure
+Date: Wed, 14 Oct 2026 09:28:23 +0800
+Message-Id: <20261014012824.31468-1-jianyungao89@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260922101129.52794-2-icheng@nvidia.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Sep 2026, Richard Cheng wrote:
+From: Jianyun Gao <jianyungao89@gmail.com>
 
->cxl_get_poison_unmapped() sweeps the unmapped tail of each partition
->from ctx->part onward. A fully-mapped partition has no unmapped tail,
->it's a normal per-partition state, but the loop treated it with break,
->aborting the whole sweep and silently skipping unmapped poison in all
->later partition. Use continue so a fully-mapped partition is skipped and
->later partitions are still scanned.
->
->Fixes: be5cbd0840275 ("cxl: Kill enum cxl_decoder_mode")
->Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
->Tested-by: Alison Schofield <alison.schofield@intel.com>
->Signed-off-by: Richard Cheng <icheng@nvidia.com>
+In __devm_create_dev_dax(), when device_add() fails, the function calls
+kill_dev_dax() and put_device() but does not free dev_dax->ranges.
+At this point devm_add_action_or_reset() has not been registered yet,
+so unregister_dev_dax() (which calls free_dev_dax_ranges()) will never
+run.  put_device() triggers dev_dax_release() which frees pgmap and
+dev_dax, but not ranges -- leaking the krealloc'd array and also
+leaking the regions reserved via __request_region() in
+alloc_dev_dax_range().
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Add free_dev_dax_ranges() to the device_add() failure path, matching
+the cleanup already done in the err_pgmap error path.
 
->---
-> drivers/cxl/core/region.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->index 5ef0ca0694ff..7c7287315d72 100644
->--- a/drivers/cxl/core/region.c
->+++ b/drivers/cxl/core/region.c
->@@ -2952,7 +2952,7 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
-> 			offset = res->start;
-> 		length = res->end - offset + 1;
-> 		if (!length)
->-			break;
->+			continue;
-> 		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> 		if (poison_efault_forgiven(rc, cxlds->part[i].mode))
-> 			continue;
->-- 
->2.43.0
->
+Fixes: 9567da0b408a2 ("device-dax: Introduce bus + driver model")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jianyun Gao <jianyungao89@gmail.com>
+---
+ drivers/dax/bus.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index b809e1a264af..83442430dc01 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -1536,6 +1536,7 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
+ 	rc = device_add(dev);
+ 	if (rc) {
+ 		kill_dev_dax(dev_dax);
++		free_dev_dax_ranges(dev_dax);
+ 		put_device(dev);
+ 		return ERR_PTR(rc);
+ 	}
+-- 
+2.34.1
+
