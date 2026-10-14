@@ -1,64 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F2D41442D
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 04:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BED2868B4
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Oct 2026 04:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791951487; cv=none; b=M8+3ukqxtWhMZeTC2x9eehh0o4MJqudcrke7l5E7SI9ZE80iihv7Wiv0FbjZ4e3pY6CGRNILVPeBdyIKwf/Q8iTon0FZb1WQ9IJ/+M66VRI3PPXfOD4rEas6EP99qpSmL6UgewYehcT8nBEt/iDv8FvV488ujYiPdWsSA6+A+Fw=
+	t=1791952708; cv=none; b=BaPWM7WKsjmOVz4zKObNrNUbIu304taARKDoVm3J5hj1Wknl1QF3NPvLJpHpAScNoKy/KSvvxtg70AVHJ0BR/bAc+ko5RAorZ6knpCUAjqc+a7gpMP3eCyUNuv87qrCf5UK+i9PsxLN8eHQmULYr6w/xe691bZgDqoKQflnW8LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791951487; c=relaxed/simple;
-	bh=pDenK4fQVsShGl6HdhGO4e2WQ8dMmEfi35anl6G1zjM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ihl+3yY+KN2B3Q7kIacrvHxBI31cP4ohHUiaEun8EonoV8oTNN/AfAYu61IiHSQ9vqHLX9JE7SA96i6wf4GdaxfnoMTBb5tnlaIQDyUPrVllBPxmNuNB3MUCAhmdrqjklqpNAjpSt9kjtj1HKVM/gxaWcFJkvheKLQrhZOdgjtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c36QNhtr; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1791952708; c=relaxed/simple;
+	bh=WgO2z21qiQifReUdyWhyJhpNkxL3VqsKvzN87nSwryU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=irWL8HMlX7O2QYe8sh4DiCDYs3C5b+2BIdYrjinUPb5QTADEdpglB2yxwzCoY03muvm0qzeXHjuFZmRuEJ+puG/3pwgayEETCW1f2TcFrB11a3XveBictwE3/ACzs4J4Sbzc6nmENElSCZ4FlEv+nz6HPwuia2tdjvaBNwpoPm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQQTvHWf; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c36QNhtr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQQTvHWf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791951485; x=1823487485;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pDenK4fQVsShGl6HdhGO4e2WQ8dMmEfi35anl6G1zjM=;
-  b=c36QNhtr0F63KYgb2ku7zZhYtdaUOGD/6KzDmk/CuwOlYJB8p7p4qzi8
-   E3TCjD68t85WPRDn1ZAcevksfao+ndLVFLwpDiuicmcrRnzrH884zqUUm
-   H3F594TQH/HBjj0A+eVGTpO8Od9blO7nDqRt1ipuLvkZdk0JX3hpyXp0c
-   hXQS8VDOmmxuTbrw+TE2D3Sm4pVTo+00HbQURP9EUFZo9odAAyIB3zAHb
-   Vs/XNjy8cEO4xFpgpX3fZRciY4xKpHxYL0ZO+p60k90nEaG1EnvMSCiFJ
-   KC3YneVIxMSy5UC4ubeGPnyi3T5SmBxVusX00YfzD/UCnME4xcHFny7fm
-   Q==;
-X-CSE-ConnectionGUID: j/qvzqViREiDOXqItdCkZQ==
-X-CSE-MsgGUID: 7ZHzWSMxQw620xOZcsxiJg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="696261"
+  t=1791952706; x=1823488706;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WgO2z21qiQifReUdyWhyJhpNkxL3VqsKvzN87nSwryU=;
+  b=IQQTvHWf5nd6JLh34sNQSDIrSDmWEkfMIlicKsTKpqdaR+V4A2KAmnYP
+   77qxgW/JHeQtg0v7jsamKQXAcfGuDex7M+0OBdD/3I68bR5jNT8u0AyNm
+   RRozlm50xVSMm8/+mHf3w4DnQS38xxSyUtqp1Heg9BcHCZbYtV1HAl5C7
+   zUApIDX/5+zf9nTFR8pcxrs/moCcwlwxUyrG07Wnm7eDaktkc1pmwA9Ib
+   1EzM+0DM4kb4YfW9b4ibMuuVbkqRAALHFh8ESUafC9XtdrP70nIwCKtEk
+   7NEZc+QSPFoiKP/pEYu44vfER7spX7QNXvEMcJenXh4BecAUFOy3xSuOx
+   A==;
+X-CSE-ConnectionGUID: SYe7yeg9TyS3AAknbpky1Q==
+X-CSE-MsgGUID: 5PYzrFSRSmChJx8UxquHvg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="574097"
 X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="696261"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 21:18:04 -0700
-X-CSE-ConnectionGUID: ISyJKMJ8Rd2Rdvk3g6DWXg==
-X-CSE-MsgGUID: IlOi0+9tRWihMnwMoeN0UA==
+   d="scan'208";a="574097"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 21:38:25 -0700
+X-CSE-ConnectionGUID: PouncQQ3TRK59G2lciQCZw==
+X-CSE-MsgGUID: 8iRqJD9ZQK+FWCyVisrvPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="1783586"
+   d="scan'208";a="1411164"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.192])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 21:18:04 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 21:38:25 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 4/4] cxl/mbox: Add KUnit tests for cxl_internal_send_cmd()
-Date: Tue, 13 Oct 2026 21:17:55 -0700
-Message-ID: <ccb2c0974781ec3500c56e82c61eb3026c73d183.1791949910.git.alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>
+Subject: [ndctl PATCH] test/cxl-kunit.sh: enable running the CXL KUnit tests
+Date: Tue, 13 Oct 2026 21:38:22 -0700
+Message-ID: <20261014043823.295243-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1791949910.git.alison.schofield@intel.com>
-References: <cover.1791949910.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,326 +58,155 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_internal_send_cmd() validates mailbox payload sizes, translates device
-return codes to errnos, and checks returned output sizes. Existing cxl_test
-coverage does not exercise many of its error paths.
+CXL KUnit suites run when their modules are loaded, but the ndctl CXL
+test suite does not load them. As a result, they are not exercised by
+the existing ndctl tests.
 
-Add a KUnit suite that replaces mbox_send() with a stub transport, allowing
-tests to control transport errors, device return codes, and output sizes.
+Add cxl-kunit.sh to discover and load installed CXL KUnit modules, check
+their KTAP results in debugfs, and unload the modules on exit. Test
+failures are reported individually without preventing the remaining suites
+from running.
 
-The suite covers command forwarding, payload size limits, transport errors,
-defined and unknown device return codes, background commands, and fixed
-versus variable output sizes.
+Discover modules by the cxl_*_kunit naming convention so newly added suites
+are included automatically.
 
-The unknown return code cases provide regression coverage for "cxl/mbox:
-Treat unknown device return codes as errors". Without that change, the
-tests fail and KASAN reports a global out-of-bounds read.
-
-The suite uses the existing CONFIG_CXL_KUNIT_TEST option, allowing it to
-run without additional configuration.
+Add CONFIG_KUNIT, CONFIG_KUNIT_DEBUGFS, and CONFIG_CXL_KUNIT_TEST=m to the
+README kernel configuration.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- Documentation/driver-api/cxl/testing.rst |   3 +
- drivers/cxl/core/Makefile                |   1 +
- drivers/cxl/core/tests/Makefile          |   5 +
- drivers/cxl/core/tests/mbox_kunit.c      | 249 +++++++++++++++++++++++
- 4 files changed, 258 insertions(+)
- create mode 100644 drivers/cxl/core/tests/Makefile
- create mode 100644 drivers/cxl/core/tests/mbox_kunit.c
+ README.md         |  3 ++
+ test/cxl-kunit.sh | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build  |  2 ++
+ 3 files changed, 91 insertions(+)
+ create mode 100755 test/cxl-kunit.sh
 
-diff --git a/Documentation/driver-api/cxl/testing.rst b/Documentation/driver-api/cxl/testing.rst
-index e3e2613172a2..8d1eb5722334 100644
---- a/Documentation/driver-api/cxl/testing.rst
-+++ b/Documentation/driver-api/cxl/testing.rst
-@@ -103,6 +103,9 @@ A CXL KUnit test follows these rules:
- 
- - Use exported interfaces where possible, importing the CXL symbol namespace as needed.
- 
-+For an example of testing mailbox command handling with a stub transport, see
-+drivers/cxl/core/tests/mbox_kunit.c.
-+
- When to add a test
- ==================
- 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index ce7213818d3c..b2627933b7fb 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += cxl_core.o
- obj-$(CONFIG_CXL_SUSPEND) += suspend.o
-+obj-$(CONFIG_CXL_KUNIT_TEST) += tests/
- 
- ccflags-y += -I$(srctree)/drivers/cxl
- CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
-diff --git a/drivers/cxl/core/tests/Makefile b/drivers/cxl/core/tests/Makefile
-new file mode 100644
-index 000000000000..08d97303d0d1
+diff --git a/README.md b/README.md
+index a71db28f62fb..83e809a2b325 100644
+--- a/README.md
++++ b/README.md
+@@ -130,6 +130,9 @@ loaded.  To build and install nfit_test.ko:
+    CONFIG_NVDIMM_SECURITY_TEST=y
+    CONFIG_ENCRYPTED_KEYS=y
+    CONFIG_NVDIMM_KEYS=y
++   CONFIG_KUNIT=y
++   CONFIG_KUNIT_DEBUGFS=y
++   CONFIG_CXL_KUNIT_TEST=m
+    ```
+ 1. Install cxl_test and related mock modules.
+    ```
+diff --git a/test/cxl-kunit.sh b/test/cxl-kunit.sh
+new file mode 100755
+index 000000000000..12e94e417cac
 --- /dev/null
-+++ b/drivers/cxl/core/tests/Makefile
-@@ -0,0 +1,5 @@
++++ b/test/cxl-kunit.sh
+@@ -0,0 +1,86 @@
++#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+ccflags-y += -I$(srctree)/drivers/cxl
++# Copyright (C) 2026 Intel Corporation. All rights reserved.
 +
-+obj-$(CONFIG_CXL_KUNIT_TEST) += cxl_core_mbox_kunit.o
-+cxl_core_mbox_kunit-y := mbox_kunit.o
-diff --git a/drivers/cxl/core/tests/mbox_kunit.c b/drivers/cxl/core/tests/mbox_kunit.c
-new file mode 100644
-index 000000000000..68f9fe87d743
---- /dev/null
-+++ b/drivers/cxl/core/tests/mbox_kunit.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KUnit tests for cxl_internal_send_cmd() using a stub mailbox
-+ * transport in place of hardware.
-+ */
-+#include <kunit/test.h>
-+#include <cxl/mailbox.h>
-+#include "cxlmem.h"
++# Run CXL KUnit suites through the ndctl test harness.
++# Discover test modules by name and check their KTAP results in debugfs.
++# See Documentation/driver-api/cxl/testing.rst in the kernel.
 +
-+#define TEST_PAYLOAD_SIZE SZ_4K
++# shellcheck disable=SC1091 # common is sourced from the test directory
++. "$(dirname "$0")"/common
 +
-+/*
-+ * Stub transport state: what the "device" returns, and a record of
-+ * what the core passed down.
-+ */
-+struct mock_mbox {
-+	struct cxl_mailbox cxl_mbox;
-+	int send_rc;
-+	u16 return_code;
-+	size_t size_out;
-+	int calls;
-+	struct cxl_mbox_cmd seen;
-+};
++kunit_debugfs=/sys/kernel/debug/kunit
 +
-+static int mock_mbox_send(struct cxl_mailbox *cxl_mbox,
-+			  struct cxl_mbox_cmd *cmd)
-+{
-+	struct mock_mbox *mock;
++mapfile -t modules < <(find /lib/modules/"$(uname -r)" \
++	-name 'cxl_*_kunit.ko*' -printf '%f\n' | sed 's/\.ko.*$//' | sort)
 +
-+	mock = container_of(cxl_mbox, struct mock_mbox, cxl_mbox);
-+	mock->calls++;
-+	mock->seen = *cmd;
-+	if (mock->send_rc)
-+		return mock->send_rc;
++[ ${#modules[@]} -gt 0 ] ||
++	do_skip "test requires CONFIG_CXL_KUNIT_TEST=m"
 +
-+	cmd->return_code = mock->return_code;
-+	cmd->size_out = mock->size_out;
-+	return 0;
++unload_modules() {
++	local mod
++
++	for mod in "${modules[@]}"; do
++		modprobe -r "$mod" 2>/dev/null || true
++	done
 +}
 +
-+static int cxl_mbox_test_init(struct kunit *test)
-+{
-+	struct mock_mbox *mock;
++trap unload_modules EXIT
++trap 'err $LINENO' ERR
++set -ex
++# shellcheck disable=SC2034 # rc is the exit status used by err()
++rc=1
 +
-+	mock = kunit_kzalloc(test, sizeof(*mock), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, mock);
++# Force test suites to rerun on module load
++unload_modules
 +
-+	mock->cxl_mbox.payload_size = TEST_PAYLOAD_SIZE;
-+	mock->cxl_mbox.mbox_send = mock_mbox_send;
-+	test->priv = mock;
++loaded=()
++summary=()
++nr_failed=0
 +
-+	return 0;
-+}
++for mod in "${modules[@]}"; do
++	if modprobe "$mod"; then
++		loaded+=("$mod")
++	else
++		summary+=("$mod: FAIL, module did not load")
++		nr_failed=$((nr_failed + 1))
++	fi
++done
 +
-+static void send_success(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	u8 in[16], out[64];
-+	struct cxl_mbox_cmd cmd = {
-+		.opcode = CXL_MBOX_OP_IDENTIFY,
-+		.payload_in = in,
-+		.size_in = sizeof(in),
-+		.payload_out = out,
-+		.size_out = sizeof(out),
-+	};
++[ -d "$kunit_debugfs" ] ||
++	do_skip "test requires CONFIG_KUNIT_DEBUGFS=y"
 +
-+	mock->size_out = sizeof(out);
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd), 0);
-+	KUNIT_EXPECT_EQ(test, mock->calls, 1);
++for mod in "${loaded[@]}"; do
++	nr_suites=0
 +
-+	/* The command reaches the transport as the caller built it */
-+	KUNIT_EXPECT_EQ(test, mock->seen.opcode, CXL_MBOX_OP_IDENTIFY);
-+	KUNIT_EXPECT_PTR_EQ(test, mock->seen.payload_in, (void *)in);
-+	KUNIT_EXPECT_EQ(test, mock->seen.size_in, sizeof(in));
-+	KUNIT_EXPECT_PTR_EQ(test, mock->seen.payload_out, (void *)out);
-+	KUNIT_EXPECT_EQ(test, mock->seen.size_out, sizeof(out));
-+}
++	for results in "$kunit_debugfs"/cxl_*/results; do
++		[ -f "$results" ] || continue
++		grep -qE "^[[:space:]]*# module: $mod\$" "$results" || continue
 +
-+static void send_no_output(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {};
++		suite=$(basename "$(dirname "$results")")
++		nr_suites=$((nr_suites + 1))
++		cat "$results"
 +
-+	/* No output was requested, so the returned size is not checked */
-+	mock->size_out = 0;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd), 0);
-+}
++		# Match the suite result, not individual test cases
++		if grep -qE "^ok [0-9]+ $suite\$" "$results"; then
++			summary+=("$mod: suite $suite PASS")
++		else
++			summary+=("$mod: suite $suite FAIL")
++			nr_failed=$((nr_failed + 1))
++		fi
++	done
 +
-+static void send_size_in_too_big(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {
-+		.size_in = TEST_PAYLOAD_SIZE + 1,
-+	};
++	if [ "$nr_suites" -eq 0 ]; then
++		summary+=("$mod: FAIL, no suite results in $kunit_debugfs")
++		nr_failed=$((nr_failed + 1))
++	fi
++done
 +
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd),
-+			-E2BIG);
-+	KUNIT_EXPECT_EQ(test, mock->calls, 0);
-+}
++set +x
++echo "CXL KUnit summary:"
++printf '  %s\n' "${summary[@]}"
++set -x
 +
-+static void send_size_out_too_big(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {
-+		.size_out = TEST_PAYLOAD_SIZE + 1,
-+	};
++[ "$nr_failed" -eq 0 ] || err "$LINENO"
 +
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd),
-+			-E2BIG);
-+	KUNIT_EXPECT_EQ(test, mock->calls, 0);
-+}
-+
-+static void send_full_payload(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {
-+		.size_in = TEST_PAYLOAD_SIZE,
-+		.size_out = TEST_PAYLOAD_SIZE,
-+	};
-+
-+	mock->size_out = TEST_PAYLOAD_SIZE;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd), 0);
-+}
-+
-+static void send_transport_error(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {};
-+
-+	mock->send_rc = -ETIMEDOUT;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd),
-+			-ETIMEDOUT);
-+}
-+
-+static void send_device_error(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+
-+	/* Every defined error code fails the command */
-+	for (u16 code = CXL_MBOX_CMD_RC_INPUT;
-+	     code < ARRAY_SIZE(cxl_mbox_cmd_rctable); code++) {
-+		struct cxl_mbox_cmd cmd = {};
-+		int expect, rc;
-+
-+		switch (code) {
-+		case CXL_MBOX_CMD_RC_PADDR:
-+			expect = -EFAULT;
-+			break;
-+		case CXL_MBOX_CMD_RC_POISONLMT:
-+			expect = -EBUSY;
-+			break;
-+		default:
-+			expect = -ENXIO;
-+			break;
-+		}
-+
-+		mock->return_code = code;
-+		rc = cxl_internal_send_cmd(&mock->cxl_mbox, &cmd);
-+		KUNIT_EXPECT_EQ_MSG(test, rc, expect, "return_code=%#x", code);
-+	}
-+}
-+
-+static void send_unknown_return_code(struct kunit *test)
-+{
-+	static const u16 codes[] = { ARRAY_SIZE(cxl_mbox_cmd_rctable), 0x100,
-+				     0xffff };
-+	struct mock_mbox *mock = test->priv;
-+
-+	/* Codes the driver does not know are still device errors */
-+	for (int i = 0; i < ARRAY_SIZE(codes); i++) {
-+		struct cxl_mbox_cmd cmd = {};
-+		int rc;
-+
-+		mock->return_code = codes[i];
-+		rc = cxl_internal_send_cmd(&mock->cxl_mbox, &cmd);
-+		KUNIT_EXPECT_EQ_MSG(test, rc, -ENXIO, "return_code=%#x",
-+				    codes[i]);
-+		KUNIT_EXPECT_STREQ_MSG(test, cxl_mbox_cmd_rc2str(&cmd),
-+				       "unknown return code", "return_code=%#x",
-+				       codes[i]);
-+	}
-+}
-+
-+static void send_background_started(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {};
-+
-+	/* A background command that started is not an error */
-+	mock->return_code = CXL_MBOX_CMD_RC_BACKGROUND;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd), 0);
-+}
-+
-+static void send_short_fixed_output(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd = {
-+		.size_out = 64,
-+	};
-+
-+	/* Without min_out, the full requested size is required */
-+	mock->size_out = 63;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd),
-+			-EIO);
-+}
-+
-+static void send_variable_output(struct kunit *test)
-+{
-+	struct mock_mbox *mock = test->priv;
-+	struct cxl_mbox_cmd cmd;
-+
-+	/* Output at or above min_out is accepted */
-+	cmd = (struct cxl_mbox_cmd){ .size_out = 64, .min_out = 8 };
-+	mock->size_out = 8;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd), 0);
-+
-+	/* Output below min_out is rejected */
-+	cmd = (struct cxl_mbox_cmd){ .size_out = 64, .min_out = 8 };
-+	mock->size_out = 7;
-+	KUNIT_EXPECT_EQ(test, cxl_internal_send_cmd(&mock->cxl_mbox, &cmd),
-+			-EIO);
-+}
-+
-+static struct kunit_case cxl_core_mbox_cases[] = {
-+	KUNIT_CASE(send_success),
-+	KUNIT_CASE(send_no_output),
-+	KUNIT_CASE(send_size_in_too_big),
-+	KUNIT_CASE(send_size_out_too_big),
-+	KUNIT_CASE(send_full_payload),
-+	KUNIT_CASE(send_transport_error),
-+	KUNIT_CASE(send_device_error),
-+	KUNIT_CASE(send_unknown_return_code),
-+	KUNIT_CASE(send_background_started),
-+	KUNIT_CASE(send_short_fixed_output),
-+	KUNIT_CASE(send_variable_output),
-+	{}
-+};
-+
-+static struct kunit_suite cxl_core_mbox_suite = {
-+	.name = "cxl_core_mbox",
-+	.init = cxl_mbox_test_init,
-+	.test_cases = cxl_core_mbox_cases,
-+};
-+
-+kunit_test_suite(cxl_core_mbox_suite);
-+
-+MODULE_DESCRIPTION("KUnit tests for the CXL mailbox command core");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("CXL");
++echo "CXL KUnit: all suites from ${#modules[@]} modules passed"
+diff --git a/test/meson.build b/test/meson.build
+index 07c8618cbc6e..3b3a634ef25d 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -173,6 +173,7 @@ cxl_elc = find_program('cxl-elc.sh')
+ cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
+ cxl_region_replay = find_program('cxl-region-replay.sh')
+ cxl_type2 = find_program('cxl-type2.sh')
++cxl_kunit = find_program('cxl-kunit.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -211,6 +212,7 @@ tests = [
+   [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
+   [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
+   [ 'cxl-type2.sh',           cxl_type2,          'cxl'   ],
++  [ 'cxl-kunit.sh',           cxl_kunit,          'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
 -- 
 2.37.3
 
