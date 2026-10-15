@@ -1,72 +1,71 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011056.outbound.protection.outlook.com [40.93.194.56])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011039.outbound.protection.outlook.com [52.101.57.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5373E95A0;
-	Thu, 15 Oct 2026 07:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B2A47AF61;
+	Thu, 15 Oct 2026 08:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.39
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792051163; cv=fail; b=qPmAkuOGwP4NcPXls4XIr+f4QSMEJdfw5UQiCaKW7xc2FVTMQzFqok1Kf/ovEafwkpeAjU8S66jfSqk8PM7Ra1NrmDV+9sfGgZeXKKlVeYdnkDdcGEzBBo/8DVgzGKmhVUVojtbHlVpte+hGxhUuM0Sc3EYhkrAAU9YnXZEATCA=
+	t=1792051369; cv=fail; b=Ve9wpyaRRwFiJU40UjB6LtdEJJtJrDmUq9ZGHKu7OC0dsIPkH4wSgMfvf85//eAB2JT4U422xXc0bjCg53Q6x3fpd6lSRpWUypLERRA9ScswNYkMexy4anaK6VdaaCI8DyFjms9U9P4pPrdjztDjfHvOkEBkiXXwScuhBCIkqQQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792051163; c=relaxed/simple;
-	bh=py3fFQDAeX7RTUrswzr+rSXSecknIj9MpJQ3IzvnNog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EFQayp3uLRliJpaH/Ut0rlSwT2tmeklGV0iiBchxYe5H/CBLK6TBQ7wfvjG/KZy2zgXYmaBI2pKWILxd8UeoUk3mvEsUEyB61M9xzYpr6VMv2qVk5xGQrHD6kC2doIuplCcr+qYDckgYZLP3Lj91XEK/PO7kD7O2uHWbrgVVpZ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ejygrzo3; arc=fail smtp.client-ip=40.93.194.56
+	s=arc-20240116; t=1792051369; c=relaxed/simple;
+	bh=8minJOdYvsS1PIpF5/bEHOulAkh6vtCN2uHIshhZDI8=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=GVVt/ZhFRxydkFGyhvflTrwn1bpqvq+ecdXjVDF2yRVRsseLY5aO9oOcn5JMjcnktYGHqJLoLsPmvzVosNRANK2kV6dMPqU8T/r0sTGgKPHjCNAXU3fNqPRvUeTawDnWbo8sp9r03ffCPduIZYhtSw3Nv2htBC/GMvKLVAOaQrc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=G94AkJY4; arc=fail smtp.client-ip=52.101.57.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ejygrzo3"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="G94AkJY4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=psb5x2BeNPlerF6Y4zhSnsBldeBPx3BJ3h4tYXcB/46c+MtD++avy9WV3ozkpu1hsih99Z/Qw1aGC+AbYvPD46/sTapgj2PY6JoqW00o/3ra2hcdYAGCkl98T1zTSV73MuY50TQR7KGFJnn6ikFtKVQOnwv6OTAXTeIOUjG/0yXsKo5S+OFcKW+YJmn3YmLyzwwkJL6NmXm/E2MiUlIqO43tiTxJQ/AUHM3d+8RnUZ8nABA+6rD4/t2Ob329SVdQ+DpFy0xcJ7meNp4fbyOSFWQZUci9INIfCQDmwwFcnLFuOhUoFrGmaO20x3IqUeB1aMyJQx6tn+/rqe/sHc30oA==
+ b=gWXBKYyELH5SWKsigdbxcsyN6oIV5qXTOtiD5vZLSV0fHQIXREGKTIGsSq/Wgmb+ZmJ+HrjwDy5YEUkx/wppCxLpTuNnxqnZu0D0ccc8UkVDSMUZ0U6Fqlstwa+vvC9tcGOM06RYpFHmQSvOKy44XVeVC6VHE+xRHOpy/+IDBGwtgn15LgVDmH30iy+54VbBlHRrkhMzPGgWd3bpB77Lao6cTd/6w5CipmWt1mBnCNkopQpX6fL3d8Sqwcfz0q7HvqMvgj6eV9t3SW5yCOGIYHTaWje8h+9HF+BPZ2P3e6cWSK4f8wcdmz8vrOdeSOfIEoOb6yhj3jg4XxfhoL+Ifw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1LjhI9A+fatS+RC8e+X8W4TZybnwY8MkP0XnG1+bKJA=;
- b=ooxrSPg32tMZIdjluayLWfjUUUjU4YRMrW3kBj7byUpCA0mo/5j7MnyLBRdCyR0P3J0reHG+9LlkwfkltBMDQq7fCkEusN2FBi6VSP+9NYOnKTW1JebpXjZlzlMfugGQade289Zqgp5kh/C1favlG0JrGu8NdxmOq2OvHmcQpVHwWpNPYj5rbx534R9xSwATAwB0G/ww6j1I58XAZRHThx2ObMswzgcM6vUI0L+OPouQZ103+em4u+kgwvv38BFlRWhCKmYLqAF1UlJSyUeVLFbMBCu0Z56xmnNNu8qVMqIPJ9h2k3nK3VV4xZ75xPLGNDrniGfs+nv0b5IgSSYCGQ==
+ bh=8minJOdYvsS1PIpF5/bEHOulAkh6vtCN2uHIshhZDI8=;
+ b=hh+jmDCx5P2VhQIaL11oGAWdfX90zAmOrBzNkqhVREaxTDtihX5aJYFXrWeghRmVbDjZfaBZ9UONZ5psVNSuEJNNazn5chHVI5CcgMvdH7VtYOFxCVWSS5t2JVFTRYKiwMq7emXKfYJhs0rYE1pBe7jPfBwWfxwgNtepnmRxfdeBI5seTmQpUuB51w9HTroVq12Ij6R2RI4ArnoVCh+JFrDG/gvlxpTcfche+Jo5yiv1TGjBCpgSfji6PXK2sSvNjSlFR4wetF+1fs7f9oygxTDad/vdpvHhUgyUo9PGC7zNWJ2AC3VzRH54+HCmSeZW2/ZWVsmeO4LVojvdqm2YWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1LjhI9A+fatS+RC8e+X8W4TZybnwY8MkP0XnG1+bKJA=;
- b=ejygrzo33pvpEDtuKT335XtHTfLlVfHSXsC0+pOoiqLKR0GnJOkKMezhAvDiXmLZLqeXTNLvIiDMsmb3/luHCQHUro+NN1RuPNx2m2mYcerDeK7pAohxkqpTA6iPNuOKBOUG1AZWxEMzd88uEpWNrFieys81oPWLV0mU5PDcPZ5jJyrNSEp2eqyxvjgsOEJoerBIXbwnKvVptsc1rgorO8QAOwhNdsswf1xxEOVqeBkhJEfXIIiytW7qJYUFib/XwGKt0H1TgMS0u4JBG7vjOyKJZ3pfEHlAK6pvumcJmkiAjeb8baHZhcCNTjD9xWhtqKVnBTsWQpbFfrwX/PCF8Q==
+ bh=8minJOdYvsS1PIpF5/bEHOulAkh6vtCN2uHIshhZDI8=;
+ b=G94AkJY4QTeiUMNqGtNKg+pAvDdUMYW7CBrh/fyhXgZdl4lHr6ahEPYV11POPrQ0IpjOLRx5C8j+AaJNV1KJr2ByNr8LD+jaMAbqvxTp4hBzymxztmkcViBcR/YoyDih7MYca/eLuQ3NPUEJwPwjlXeBCMjrnqY2zg2vb7SD3L26fp9UUhnfp7C3xFZkwwsBY1lqOkmMSE4OGkvaVjTD0mAKJHr6Z5487s+K31VjGIWP9TZixusiL0NrFqDwOrnxLZHHQ2piA01S/hsrWIdgUrbrKG7TjAObl01FULd5cOkkAjP70KayOy4HB1VnVClfjSoAYaM5nXjU+JN8FcwEJg==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by BN7PPFB3F5C406F.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e0) with
+Received: from MW4PR12MB6873.namprd12.prod.outlook.com (2603:10b6:303:20c::17)
+ by CYYPR12MB8870.namprd12.prod.outlook.com (2603:10b6:930:bb::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Thu, 15 Oct
- 2026 07:59:18 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0496.020; Thu, 15 Oct 2026
- 07:59:18 +0000
-Date: Thu, 15 Oct 2026 15:59:13 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dan Williams <djbw@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, David Hildenbrand <david@kernel.org>, 
-	Oscar Salvador <osalvador@suse.de>, Kiryl Shutsemau <kas@kernel.org>, Harry Yoo <harry@kernel.org>
-Subject: Re: [RFC PATCH 5/5] cxl/region: Register device poison before
- exposing RAM
-Message-ID: <atCGJHmnk8Ll8pA_@MWDK4CY14F>
-References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
- <20261010162017.62506-6-shaikhkamal2012@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261010162017.62506-6-shaikhkamal2012@gmail.com>
-X-ClientProxiedBy: TP0P295CA0040.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:4::13) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.18; Thu, 15 Oct
+ 2026 08:02:43 +0000
+Received: from MW4PR12MB6873.namprd12.prod.outlook.com
+ ([fe80::a338:bd2c:3a38:ece1]) by MW4PR12MB6873.namprd12.prod.outlook.com
+ ([fe80::a338:bd2c:3a38:ece1%5]) with mapi id 15.21.0522.011; Thu, 15 Oct 2026
+ 08:02:43 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 Oct 2026 17:02:40 +0900
+Message-Id: <DM596TT7E841.1U05OKY9N6I6C@nvidia.com>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, <lukas@wunner.de>,
+ <linux-cxl@vger.kernel.org>, <akpm@linux-foundation.org>,
+ <Jonathan.Cameron@huawei.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <jic23@kernel.org>, <bhelgaas@google.com>,
+ <alistair@alistair23.me>, <djbw@kernel.org>, <linux-pci@vger.kernel.org>,
+ <wilfred.mallawa@wdc.com>, <a.hindborg@kernel.org>,
+ <gregkh@linuxfoundation.org>, <alex.gaynor@gmail.com>,
+ <benno.lossin@proton.me>, <boqun.feng@gmail.com>,
+ <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>, <gary@garyguo.net>,
+ <ojeda@kernel.org>, "Alistair Francis" <alistair.francis@wdc.com>
+Subject: Re: [PATCH v4 00/22] lib: Rust implementation of SPDM
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Alistair Francis" <alistair23@gmail.com>
+References: <20260928011123.450800-1-alistair.francis@wdc.com>
+ <as_r8n7p_wdbChuQ@google.com>
+ <CAKmqyKOkmwompJqaP2k-oJicmXmqHY4E0wuLcrvkHLx+oauQ2Q@mail.gmail.com>
+In-Reply-To: <CAKmqyKOkmwompJqaP2k-oJicmXmqHY4E0wuLcrvkHLx+oauQ2Q@mail.gmail.com>
+X-ClientProxiedBy: TYCP286CA0127.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b6::9) To MW4PR12MB6873.namprd12.prod.outlook.com
+ (2603:10b6:303:20c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,454 +73,147 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BN7PPFB3F5C406F:EE_
-X-MS-Office365-Filtering-Correlation-Id: 783a9167-db5e-45e3-1abc-08df2a9236cf
+X-MS-TrafficTypeDiagnostic: MW4PR12MB6873:EE_|CYYPR12MB8870:EE_
+X-MS-Office365-Filtering-Correlation-Id: e47b8bab-94cf-40b4-ab50-08df2a92b0dd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|23010399003|10067099003|261009223027099003|5023799004|11063799006|56012099006|6133799003|18002099003|22082099003|4143699003;
+	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|10070799003|6133799003|22082099003|3023799007|10067099003|18002099003|11063799006|4143699003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	nL/kEEwkCJ51h1sH7admAidGxLqohRmikiHDg5S1Hiu0T9pcRIHpiUACNz9jv8/8Gk+Al/jj77fs2Ah0OnzXGRpgd2TqZbVr+7EK8w8By2WCtvvw+luZRlq0u728xnIJ+8LinA3CbsloFJpg+mJWeT5IwDgd96HirY9LmDIMg6I2vtcbhWyGj4dElLysBvc6ZBnBYZ/KNd3LWykFWh2Y7eHupK/JDEKuWRZUIoNduJL2A0n/N6nxLtWp2jnseWrq1oBkZOpylJ3paAdFACGetNrhJRxt82dO46hMSsy3Nxnt+ex22Xhs8WqA3WmPEHcqoayZkDX6rJbeQoSjHebB1wQFIWUWw7ZH9KHbrUcpE+L5ByM8T7rHNs3/cikwCLvlroBfImPDuZO6ZGjj4E50M21aUr0JV0SjqCNoMvS1No8v1AL4u2cE8ivYHBieFjMs8zVncrAFwuF/iGoSdDjnRvPYC1fZ9liEPhNFkGEs8K8v84pz6fIy1nYpaWKvnXptPe6mHqFU2GZnCzgLTc4roAZK6NDazCrV38pSZnnPoPZPeMGf9CPh2S2vCy23WrdIEpsuSDN9WwgpoEc4hJuA5jgv1IAfe5RAWblfglrDpKWZ6MlDvxJGyp/Qw1BLcUS4vzR/wmR3mla1SDtkD3u0R6X0Ug0gHh8RTYc+qnMxLGw=
+	xuRrFT6CIRfPU7mW1l7j3Y9sbhBklN5WdzJSsdvkD/EYr0mkPrTrrBWML+kLzzqu9CVQj64OCUH4aofCq3rWFovikriIbiDmDEfc7vi0A+ZZ/gelB2vDTeASdY9k+2jaZpTLtxEucD98x5dvUW9sDVWHyqRAVkoCpD/w9EKJchV0kcoF1pGKWFaHgYNPXakjNwDyUXRdTFfQGPNH3cSPs4XJlg6KHJQif8ZU/WXw5Hof4N5NivwaZyQd0/nKAbyqO0IpFjky1QcYl/CM50DdNMzt4FFCfAZJtS7yTX0GoupBW4dBfZozUjHqGTfShGl4hhzXzYq2d0CF0/LxRbv6Hu05AeNqVTiQkC7t/x6eGnJoxS/qfUhTpMfPysizYkuDEJcS7GIMJNl5gvOuIa8D255ufgFMSe72xtAm4M3s7fh9hng4Nuxva75VcbPoaMYnwXDVxzQrCjmt2RQOfJ2+RHjYFTUwRg1P6bcoCQeFKHAOvmB9PyMfVWNBSW6BQZ48h+d1kvOe0m8UJuNEyUTyWu++1suFCk5YIYzv9McmmbVRlSYOvSY0vVsDfG25VN4Yq4Jh1kiEtt8AkfyaKkojrbRAMPNygkV2nFPIyCHmPmOmkRBrGX4U60bm2zMhTaWhZb6V8vE92r/535GemLpdNb9VvMsgFQdUYo2vsoiuzWA=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(23010399003)(10067099003)(261009223027099003)(5023799004)(11063799006)(56012099006)(6133799003)(18002099003)(22082099003)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB6873.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(10070799003)(6133799003)(22082099003)(3023799007)(10067099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Oem9J2cNBnDabVJLmxRETFp7X2Zv38I5j8SzqLLxI+Q0pcqTYPCDKHTNWNMq?=
- =?us-ascii?Q?awH6mmj+IF6rehD2c1a095NULI4ZfYmsqr/ErNBIInWkesLnUK261KcTrqS2?=
- =?us-ascii?Q?qjx9332hLbGwYG9HLxA3ROX/6eWutOoZ2pxbTcTgJr5Jpu5jo0wftG33NuMY?=
- =?us-ascii?Q?+bnUbcnvE9Hh9q7RbodgumRh5T5/dvzURwYzX2nH4tqxE/k9tBimxt5P2PDi?=
- =?us-ascii?Q?kMEqltrTNX/Q1EmkTl7GMS2pm/BLQiQRhR8+khgqgkq3rJB9Af+FnigR6zKd?=
- =?us-ascii?Q?EIL3NvdH6J0g2h8QHPwldvqVNWKLRsYmgkfr2m+1xK9pwPkBwWQMk/7VLDx5?=
- =?us-ascii?Q?UO3fel+YV7m+BMeUQXEH4SMVLb4xQBrq5Yez4KWe9gBZspuTQGDorY2umbif?=
- =?us-ascii?Q?GEdamomCag/GjJOwgM1zGdb8KfyS1Jt97JP72J75VyLJVGx5n8dGpC7aQm1C?=
- =?us-ascii?Q?/+rEOhnYigNjJEkvYMc48tutZhVwknyda8ei0thnRojnuyfvnB9UGCYOVVO1?=
- =?us-ascii?Q?lUJnzlKE3l1Ezj+2lAEn47TbW4kUQgQ/dZzCeCZlA9epLPOYTOOZSI0N8Slr?=
- =?us-ascii?Q?TOwVtnClqJTCpda4Tl1Rs721+DNzBwabNsbqJU2pgRyzhfWNWHUf8V59t/KQ?=
- =?us-ascii?Q?L3mvfoBaY9dh/PbBvBTI83cGch5OpG3LTMMRKsJiwWKS++q1ZAI2KsamWveD?=
- =?us-ascii?Q?ecjz0HKxI6b+mK773VIkENEbaM/VhAMSNz9SC+IvPpEcAJ02poSrVC/o8EyM?=
- =?us-ascii?Q?w1Bs7QDdX2k2ITO9FjEtF+xQ9nnmel8unQwYM1RURbaEKNAHAcJo38vUdTHj?=
- =?us-ascii?Q?eK1OV8jUsFJUxz5IILHlLO1JIOBA0SYDa4A7Dw/h7/xPog//rCWTBB31czw7?=
- =?us-ascii?Q?BN3XR9ZGG8ADoSRXMTNtR0SzUWnHz32FQEtnWl5C2IjfPq71OFYV5viTSKSh?=
- =?us-ascii?Q?oE6d+KqfcDbN0AF5GUieTOwH9mnEadruU08QuMx6EIKUaaEYqoZ+VFzalX30?=
- =?us-ascii?Q?yVG/+kj4mzBnYr7YMhVIJaNukpP5ShqKPj+INE7UZ1POfV7+sml18FALck0S?=
- =?us-ascii?Q?Dm7CfKde9m2Mgpoup4XGFHFytWaYAJMk0IMW4FIDTyaNs8Zd2fkIMeSlUcwW?=
- =?us-ascii?Q?QlV5FuUr5ymBbeFKBwaDfgezj+dZyO35Z8SmSIwJTq7Pz0k0VX7NH/GtNzSv?=
- =?us-ascii?Q?PPziiGSNOCy8I381IdjerisN42UMnYC0WWx2lOu2ZTR567G+/1L1k/tD5GCw?=
- =?us-ascii?Q?U+fRJjgdeKM+TLDksZjH/gR9SuBwROi/khTD8+xERJxoZj3N8lQ0QX/PDWSt?=
- =?us-ascii?Q?NPKChzdijnrh8n3vIhIO249F4rvDX7ZVXz+XA8m+xKunXB7oOYJMkCxRH6sI?=
- =?us-ascii?Q?1cAG6M1L7GMdeDd9wR47z0hIG1IOhidZB1cAcwQzw9K59RKtSputJSz4T6M9?=
- =?us-ascii?Q?D6KGmg+bZ+2olNtLRQlKctbo7Q40glud3vCWlkCLZTVwKs0dRpFSkachKUxC?=
- =?us-ascii?Q?MW9KKgarJFVctJqUmOAcak8MbHKV+H0ZzhWxE7XuLB3LOOirHp+SuJImKLNy?=
- =?us-ascii?Q?9MRZSgs1RsBEnB4zQPUzgkS4NbaKUGcVLJgvPSHt/5g8//VuZyMPRlR4vNfZ?=
- =?us-ascii?Q?7f5Jzv5p9xfkyf2qHF8MDL9Bq8mQRQMkq6HRTlURuoJtjXNFiWtQ2G1USAKy?=
- =?us-ascii?Q?sqjElEC50fpwID+uK85176buuu2qLiMc3hCKdOAM/xXBamqN?=
+	=?utf-8?B?VUxOdEJ3NFBHK24vcnQzU3BDV2NsMXVhZFdScUJJbTlVQ1NsRE5nK2Z4czR3?=
+ =?utf-8?B?SkZxSWRjZ2lIMFpnaThtSUlFby94Nm1VS3RWRXlzZVFnK1QrN1dzZVJJWFdx?=
+ =?utf-8?B?MjB1bzU5MjlCUVFKZ0JVbTIwUURIaUlMdFRTNFZkYVdwcXJDZUQrdnhGT1JD?=
+ =?utf-8?B?NUlYYmlLSnBud2JvRmdtYTRTK01JTldpMEhCaURRZVcxUVAzYWRSQTAyTlBk?=
+ =?utf-8?B?Z2kzbUhaWGVJZitkNHU0U056S29SVUpSSTJGQ0N2Z2oxSVN5ejNrbHFKdFZP?=
+ =?utf-8?B?WjJYQ001Z1VUTTNHSlNyU055cFg1V2hEQWc3bmF6c09hQkRxV2hVTU1ueklO?=
+ =?utf-8?B?dkV6QXpLQVFaQU15c1h3MkFwcHZXYTVxYUE2eUtoUHhSb01pOGdYRVQ1ZGxL?=
+ =?utf-8?B?WSsvNGRhMjhTYVhlRmt3RjJmOVhTdndnanpuSUZpSHBvZWJIU3BrbmxGSVlP?=
+ =?utf-8?B?MUdxbXJYZGhRV0V2K1ZyZFEzZU1wbUVEbzc4Vml6Mmt1MDhXUUdIdmcydTRh?=
+ =?utf-8?B?azY1UVRFSHBzWjJ3ZFp0TG8zR2xMMTAzKzY2OXpUUkt5V2dNUkZlcC9mN1I0?=
+ =?utf-8?B?eEN1ZkMzaGJwZkdkdU5qc3ZlRmhVSkJrdFdMbmNGVGRHQXlFVWFjNjBVQVh0?=
+ =?utf-8?B?N3ZnOXZkdmoydXIxRGFXYzRJd3V6VWlHWWlYR3o2MjZKV25sa0FQZENOVHdK?=
+ =?utf-8?B?SFJ0NjFLREtBQkZEZUE2U1BzdGNpdTRqRW9EamkwUHdPczNhcGRzdE4zVkI0?=
+ =?utf-8?B?TnFhRUx5allXVkNEMEMxNHRvMGlyakk0UGZmQkJpL0NGenE3c0d6bXoycmta?=
+ =?utf-8?B?di9BTzYwU1c0ZG1QVENiM3JaSXgyVmRab2NaNDBtNXVkWWxPOGFmYUp0Qmtu?=
+ =?utf-8?B?RzBMVFhaKzB2VU9pcnpzcWJsTWpjRnJ1Q0lDaDZhRUhCbnpCM3FFY0RVb0xI?=
+ =?utf-8?B?T1hDbDdHYzBFTksramxwbnlGSHlRd3hER3ExRlMyYjlXajcwZ3hhTUREN2hr?=
+ =?utf-8?B?SFpaTnRqRTNQRGQyMEpIVElNaVFKUzF5alR5Q0w3MkhqOVZYZ1lJa290dkJi?=
+ =?utf-8?B?cSs0SlpsMGhBTXdIRnZpUS9DTHA3UnYwQ0Q1aXpkNGw0TG81OWthTTg2MmFy?=
+ =?utf-8?B?cStoMjVLMXNBV21qRW1saTAwTlo4bGNmNVk4NHFFMjRFck9jUzJXSWFRSzEw?=
+ =?utf-8?B?ZzR4Q0RVbXdjZVdNeHRRMjhlWGhWRFlEV2JsYUFTRGdPMWl5ZnhxRlFmWWdY?=
+ =?utf-8?B?cU40NE5nRjNKS1g2c1g2UFFBblNSM3lDaElpRGlwcS9EelljWjZESm5oMU1R?=
+ =?utf-8?B?RzhOTGZlM3ljdU9lckhTQVlIYUJxNDQyOG1BZU45QzYzTFJCWTZXVDdHZkFt?=
+ =?utf-8?B?NUR3bmpVbDBBRGowbU5VdHVrdmw1TnhueW5pOFJJVkVQNVdoajdwaE5TT1Ba?=
+ =?utf-8?B?U1l2RE9pUHp2NVY4ZDF5NmFORVVOYmx4dXNmUGZOeVFCL25ESE5oSDIrRHZZ?=
+ =?utf-8?B?cU5weTJkY0M0ckdSOXNudDRzZUIvWERya1ZnT2VkWVNBRFVROUx4aGdNVlRP?=
+ =?utf-8?B?d1k1MURUdzY3SjkzSTNxU0ZtTkp1Y1BvbFMzMi9ORE5qM0IwZU0wSGhCR1RW?=
+ =?utf-8?B?cElsRjNhY0N2Tm1GM1lvZUNwdG44czhoOThLcjNrRWhmNEg1QjNJaHVxUHNO?=
+ =?utf-8?B?eFc0Ulk4UktUNkU5QjBocUpCUlFtbFlJV1hUVjdLRWd5b3dmMVB0WWVrOVBY?=
+ =?utf-8?B?enpMRVB1NXRBOUk4NkMwNTBrdGF6VmQ4ZlI2U04rcXE0QVpXeXdIcCt4SE5k?=
+ =?utf-8?B?Y2h4aGcrYUZ0a0NKSVM4WmhVTVFNMDFBNFkrOW5Kc2VVUllXYS82eE5nMEVx?=
+ =?utf-8?B?NEwwb2F4STFPclM3bk5XaTZtMVdweUx6aWl0V1puNHVjTFphK3V5cVk0d3N0?=
+ =?utf-8?B?SjU5ekFQN0M3SWJPWkc2T29ralRXUjBvUGtGSVRVU2JaUHovZSszSURzc2Zk?=
+ =?utf-8?B?SEFUL1BPNlRDSE03Smdkc0RpR0diVElzWXJ1QU0vNHBhVS9pS0JrUHJEdk1h?=
+ =?utf-8?B?UVRTdUhpY3JNWG5DUjVad2Nrd3dsV1Y5NjNJU1drUEZndWZaZ3ZCYlRQVEpM?=
+ =?utf-8?B?Rk43Yy9TcUN5eHhsTC9XQURVS2dXbWNHeHFOQmQ2NXdZeXlSTUltQk84WHYz?=
+ =?utf-8?B?MWd5V1piRGsvOC9JSEdnT1V6WTd4Y0F2L285eFdlSTVqU1JYVDFoMG4xam4z?=
+ =?utf-8?B?WmxVd3ViV3N2S2d5TElWR2Q3bDd2azlQL1BoN25qbE54MEw1d01PWERVRC9q?=
+ =?utf-8?B?K2xvcXhwbExIZlRDSzBSeHQ3UG1UNFhoUU83ZjA3N3p4UUwvVmhJZTdqODkz?=
+ =?utf-8?Q?/qhMAkbAs88dIYrEgJdOsYQhf39HLWc+51vPnosWHZ15/?=
+X-MS-Exchange-AntiSpam-MessageData-1: ovZRbiyw6EgBng==
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 783a9167-db5e-45e3-1abc-08df2a9236cf
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e47b8bab-94cf-40b4-ab50-08df2a92b0dd
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB6873.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 07:59:18.4260
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 08:02:43.2450
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: noG01ic9F8rZrCe/ZXUTHIXdrHNR+/P84DNacKUmsxauKUGhsTgGgpLHYvE+HxAPYOWWm2i6ekJvXI1nAbeRCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFB3F5C406F
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6A1c93L/hRAanpANKDUVvitWCw0Mo7FxPmLheUhxFgQr+2sLZmZT6QatHGOBhlCVuqOFD2Z0VHLzqFDyYpIQAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8870
 
-On Sat, Oct 10, 2026 at 09:50:13PM +0800, Shaikh Kamaluddin wrote:
-> The trigger_poison_list interface may retrieve poison after CXL memory
-> is already online, which is too late to prevent known-bad frames from
-> entering the page allocator.
-> 
-> During RAM-region probe, retrieve a poison-list snapshot for each
-> participating endpoint decoder. Validate each record against the
-> decoder's assigned DPA range, translate its poisoned DPA units to HPA
-> and PFN, and collect the affected PFNs in an xarray. Coalesce consecutive
-> PFNs and register the resulting ranges with the pre-online hwpoison
-> registry before creating the DAX region.
-> 
-> When Get Poison List is supported, abort region probe if the list is
-> incomplete, malformed, or cannot be translated. If volatile poison-list
-> retrieval is unsupported, preserve the existing behavior and warn that
-> poison cannot be withheld before memory onlining.
-> 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> ---
->  drivers/cxl/core/region.c | 322 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 322 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c72524923b38..e3ffa77927df 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -14,6 +14,7 @@
->  #include <linux/string_choices.h>
->  #include <cxlmem.h>
->  #include <cxl.h>
-> +#include <linux/memory-failure.h>
->  #include "core.h"
->  #include "mce.h"
->  
-> @@ -3038,6 +3039,323 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
->  	return rc;
->  }
->  
-> +/*
-> + * Device-reported poison is gathered at RAM-region probe, before the range
-> + * reaches dax/kmem, and registered with the pre-online registry so the
-> + * frames it covers are withheld when the memory is onlined.
-> + */
-> +static int cxl_poison_store_pfn(struct xarray *pfns, u64 hpa)
-> +{
-> +	return xa_err(xa_store(pfns, PHYS_PFN(hpa), xa_mk_value(1),
-> +			GFP_KERNEL));
-> +}
-> +
-> +static int cxl_poison_store_hpa(struct cxl_region *cxlr, struct xarray *pfns,
-> +				u64 hpa)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	int rc;
-> +
-> +	/* Outside this region: not ours to withhold. */
-> +	if (!cxl_resource_contains_addr(p->res, hpa))
-> +		return -ERANGE;
-> +
-> +	rc = cxl_poison_store_pfn(pfns, hpa);
-> +	if (rc || !p->cache_size)
-> +		return rc;
-> +
-> +	/*
-> +	 * An extended linear cache makes the same DPA visible a second time
-> +	 * at hpa - cache_size. Match the translation used by the
-> +	 * cxl_general_media and cxl_dram trace events.
-> +	 */
-> +	if (WARN_ON_ONCE(hpa < p->res->start + p->cache_size))
-> +		return -ERANGE;
-> +
-> +	return cxl_poison_store_pfn(pfns, hpa - p->cache_size);
-> +}
-> +
-> +static int cxl_poison_record_to_pfns(struct cxl_region *cxlr,
-> +				     struct cxl_memdev *cxlmd,
-> +				     const struct cxl_poison_record *record,
-> +				     struct xarray *pfns)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	u64 raw = le64_to_cpu(record->address);
-> +	u64 units = le32_to_cpu(record->length);
-> +	u64 dpa = raw & CXL_POISON_START_MASK;
-> +	u8 source = raw & CXL_POISON_SOURCE_MASK;
-> +	u64 length, end, step, cur;
-> +
-> +	if (!units ||
-> +	    check_mul_overflow(units, (u64)CXL_POISON_LEN_MULT, &length) ||
-> +	    check_add_overflow(dpa, length, &end))
-> +		return -EPROTO;
-> +
-> +	/*
-> +	 * A corrected error never reaches the poison list, so every record
-> +	 * is uncorrectable. Only a failure of the device's own media is
-> +	 * withheld: External poison was written by the host into healthy
-> +	 * media and a rewrite or Clear Poison recovers it, and Injected
-> +	 * poison is a test artifact. Withholding either would make a
-> +	 * recoverable state permanent.
-> +	 */
-> +	if (source != CXL_POISON_SOURCE_INTERNAL) {
-> +		dev_dbg(&cxlr->dev, "%s: dpa %#llx source %u not withheld\n",
-> +			dev_name(&cxlmd->dev), dpa, source);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Translate once per unit of HPA contiguity rather than per 64
-> +	 * bytes. Consecutive DPAs within an interleave granule map to
-> +	 * consecutive HPAs, and a granule no larger than a page lies within
-> +	 * one page, so stepping by min(granule, PAGE_SIZE) from an aligned
-> +	 * start reaches every page the record covers.
-> +	 */
-> +	step = clamp_t(u64, p->interleave_granularity, CXL_POISON_LEN_MULT,
-> +		       PAGE_SIZE);
-> +
-> +	for (cur = ALIGN_DOWN(dpa, step); cur < end; cur += step) {
-> +		u64 hpa = cxl_dpa_to_hpa(cxlr, cxlmd, max(cur, dpa));
-> +		int rc;
-> +
-> +		/* Not mapped by this region; nothing here to withhold. */
-> +		if (hpa == ULLONG_MAX)
-> +			continue;
-> +
-> +		rc = cxl_poison_store_hpa(cxlr, pfns, hpa);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_region_collect_decoder_poison(struct cxl_region *cxlr,
-> +					     struct cxl_endpoint_decoder *cxled,
-> +					     struct xarray *pfns)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_poison_snapshot snapshot;
-> +	int rc;
-> +
-> +	rc = cxl_poison_snapshot_init(cxlmd, &snapshot);
-> +	if (rc == -EOPNOTSUPP) {
-> +		dev_info(&cxlr->dev,
-> +			 "%s: no Get Poison List support, nothing withheld\n",
-> +			 dev_name(&cxlmd->dev));
-> +		return 0;
-> +	}
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_get_poison_by_decoder(cxled, &snapshot,
-> +				       CXL_POISON_QUERY_PREONLINE);
-> +	if (rc == -EFAULT) {
-> +		/*
-> +		 * The device keeps no poison list for volatile ranges, which
-> +		 * CXL r3.2 8.2.9.8.4.1 permits. Online the region as today.
-> +		 */
-> +		dev_info(&cxlr->dev,
-> +			 "%s: no volatile poison list, nothing withheld\n",
-> +			 dev_name(&cxlmd->dev));
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +	if (rc)
-> +		goto out;
-> +
-> +	/*
-> +	 * Withholding from a partial list would online the region on the
-> +	 * belief that every bad frame had been named.
-> +	 */
-> +	if (snapshot.truncated ||
-> +	    (snapshot.device_flags & CXL_POISON_FLAG_OVERFLOW)) {
-> +		dev_err(&cxlr->dev, "%s: poison list incomplete\n",
-> +			dev_name(&cxlmd->dev));
-> +		rc = -EOVERFLOW;
-> +		goto out;
-> +	}
-> +	if (snapshot.device_flags & CXL_POISON_FLAG_SCANNING) {
-> +		dev_err(&cxlr->dev, "%s: media scan in progress\n",
-> +			dev_name(&cxlmd->dev));
-> +		rc = -EBUSY;
-> +		goto out;
-> +	}
-> +
-> +	for (u32 i = 0; i < snapshot.nr_records; i++) {
-> +		rc = cxl_poison_record_to_pfns(cxlr, cxlmd,
-> +					       &snapshot.records[i], pfns);
-> +		if (rc)
-> +			break;
-> +	}
-> +out:
-> +	cxl_poison_snapshot_destroy(&snapshot);
-> +	return rc;
-> +}
-> +
-> +static unsigned int cxl_count_poison_ranges(struct xarray *pfns)
-> +{
-> +	unsigned long index, previous = 0;
-> +	unsigned int nr = 0;
-> +	void *entry;
-> +	bool first = true;
-> +
-> +	xa_for_each(pfns, index, entry) {
-> +		if (first || index != previous + 1)
-> +			nr++;
-> +		first = false;
-> +		previous = index;
-> +	}
-> +	return nr;
-> +}
-> +
-> +/*
-> + * The xarray holds each PFN once and xa_for_each() walks them in ascending
-> + * order, so runs of consecutive indices are exactly the sorted,
-> + * nonoverlapping ranges preonline_hwpoison_register() requires.
-> + */
-> +static int cxl_pfns_to_ranges(struct xarray *pfns,
-> +			      struct preonline_hwpoison_range **ranges_out,
-> +			      unsigned int *nr_ranges_out)
-> +{
-> +	struct preonline_hwpoison_range *ranges;
-> +	unsigned long index, previous = 0, run_start = 0;
-> +	unsigned int nr_ranges, nr = 0;
-> +	void *entry;
-> +	bool first = true;
-> +
-> +	nr_ranges = cxl_count_poison_ranges(pfns);
-> +	if (!nr_ranges) {
-> +		*ranges_out = NULL;
-> +		*nr_ranges_out = 0;
-> +		return 0;
-> +	}
-> +
-> +	ranges = kvmalloc_array(nr_ranges, sizeof(*ranges), GFP_KERNEL);
-> +	if (!ranges)
-> +		return -ENOMEM;
-> +
-> +	xa_for_each(pfns, index, entry) {
-> +		if (first) {
-> +			run_start = index;
-> +			previous = index;
-> +			first = false;
-> +			continue;
-> +		}
-> +		if (index == previous + 1) {
-> +			previous = index;
-> +			continue;
-> +		}
-> +		ranges[nr++] = (struct preonline_hwpoison_range) {
-> +			.start_pfn = run_start,
-> +			.nr_pages = previous - run_start + 1,
-> +		};
-> +		run_start = index;
-> +		previous = index;
-> +	}
-> +	ranges[nr++] = (struct preonline_hwpoison_range){
-> +		.start_pfn = run_start,
-> +		.nr_pages = previous - run_start + 1,
-> +	};
-> +
-> +	WARN_ON_ONCE(nr != nr_ranges);
-> +	*ranges_out = ranges;
-> +	*nr_ranges_out = nr;
-> +	return 0;
-> +}
-> +
-> +static void cxl_unregister_device_poison(void *data)
-> +{
-> +	preonline_hwpoison_unregister(data);
-> +}
-> +
-> +static int cxl_region_register_device_poison(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	struct preonline_hwpoison_range *ranges = NULL;
-> +	struct preonline_hwpoison *handle;
-> +	unsigned int nr_ranges = 0;
-> +	unsigned long nr_frames = 0;
-> +	struct xarray pfns;
-> +	int rc = 0;
-> +
-> +	lockdep_assert_held(&cxl_rwsem.region);
-> +	lockdep_assert_held(&cxl_rwsem.dpa);
-> +
-> +	/* The region may have been decommitted while the lock was dropped. */
-> +	if (p->state < CXL_CONFIG_COMMIT)
-> +		return -ENXIO;
-> +
-> +	if (test_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags)) {
-> +		dev_info(&cxlr->dev,
-> +			 "normalized addressing, poison not translated\n");
-> +		return 0;
-> +	}
-> +
-> +	xa_init(&pfns);
-> +
-> +	for (int i = 0; i < p->nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
-> +
-> +		if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-> +			continue;
-> +		rc = cxl_region_collect_decoder_poison(cxlr, cxled, &pfns);
-> +		if (rc)
-> +			goto out;
-> +	}
-> +
-> +	if (xa_empty(&pfns))
-> +		goto out;
-> +
-> +	rc = cxl_pfns_to_ranges(&pfns, &ranges, &nr_ranges);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = preonline_hwpoison_register(ranges, nr_ranges, &handle);
-> +	if (rc == -EOPNOTSUPP) {
-> +		/* No poison tracking in this kernel; nothing to withhold. */
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +	if (rc)
-> +		goto out;
-> +
-> +	for (unsigned int i = 0; i < nr_ranges; i++)
-> +		nr_frames += ranges[i].nr_pages;
-> +	dev_warn(&cxlr->dev,
-> +		 "withholding %lu frame(s) reported poisoned by the device\n",
-> +		 nr_frames);
-> +
-> +	rc = devm_add_action_or_reset(&cxlr->dev, cxl_unregister_device_poison,
-> +				      handle);
+On Thu Oct 15, 2026 at 2:23 PM JST, Alistair Francis wrote:
+> On Thu, Oct 15, 2026 at 6:54=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+>>
+>> On Mon, Sep 28, 2026 at 11:11:01AM +1000, alistair23@gmail.com wrote:
+>> > From: Alistair Francis <alistair.francis@wdc.com>
+>> >
+>> > Security Protocols and Data Models (SPDM) [1] is used for authenticati=
+on,
+>> > attestation and key exchange. SPDM is generally used over a range of
+>> > transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
+>> >
+>> > From the kernels perspective SPDM is used to authenticate and attest d=
+evices.
+>> > In this threat model a device is considered untrusted until it can be =
+verified
+>> > by the kernel and userspace using SPDM. As such SPDM data is untrusted=
+ data
+>> > that can be mallicious.
+>> >
+>> > The SPDM specification is also complex, with the 1.2.1 spec being almo=
+st 200
+>> > pages and the 1.3.0 spec being almost 250 pages long.
+>> >
+>> > As such we have the kernel parsing untrusted responses from a complex
+>> > specification, which sounds like a possible exploit vector. This is th=
+e type
+>> > of place where Rust excels!
+>> >
+>> > This series implements a SPDM requester in Rust.
+>>
+>> So I looked a bit at this, and here are some comments. I will not repeat
+>> what Alexandre has already said.
+>>
+>> First, I'd like to say that it's good to see that all wire-format
+>> parsing in lib/rspdm/validator.rs is written in completely safe Rust.
+>> That's exactly what we want to see for parsing in Rust. We want the code
+>> to have basically no unsafe code whatsoever so that we really get to
+>> rely on the bullet-proof guarantees about bugs being caught at compile
+>> time, or at least at runtime.
+>>
+>> Unfortunately it looks like the same cannot be said for the state
+>> machine in lib/rspdm/state.rs, which has way too much unsafe code in its
+>> interaction with the rest of the kernel. There needs to be more
+>> intermediate Rust abstractions here. This file should not have *any*
+>> unsafe code, except maybe 1-2 blocks for using the C transport and
+>> validate function pointers.
+>
+> Yeah, it's the crypto functions. There are currently no bindings, so
+> it's just directly calling the C functions.
+>
+> Without the crypto functions it's just a single unsafe call to
+> `transport_function()` in `state.rs` and a few in `lib.rs` to handl
+> the C <-> FFI boundy.
+>
+> I was trying to avoid adding crypto and X.509 bindings in this series,
+> as that's a few more subsystems this ends up touching. We need to add
+> PQC as well, so crypto bindings are next on the todo list once this is
+> merged.
+>
+> Is this going to stall on adding crypto bindings?
 
-Hi Shaikh,
+So without going all the way to fully-fledged crypto bindings, you will
+spare yourself and your reviewers quite a bit of pain if you at least
+implement a safe and lightweight crypto wrapper that is local to SPDM
+and could eventually grow into official crypto bindings as a future
+effort. As it is the code is very hard to review: for instance
+`crypto_free_shash` is always called after `free_desc`, and looks like
+it could/should be part of it, but that's hard to assess as the crypto
+code is mixed with the rest and called here and there. I just cannot
+tell whether all these unsafe blocks are safe of not, which is a problem
+since the goal of writing this in Rust is to prevent exploits.
 
-I think you are trying to propose the architecture as the following ?
-- CXL region driver collects the device's poison info and owns the registration
-- MM use the registration to keep poisoned pages out of the page allocator
-  when memory is onlined
-- DAX/kmem adds and removes the corresponding system RAM
-
-The registration belongs to the driver, but the memory that needs it can
-outlive the driver binding.
-
-Unbinding the driver doesn't necessarily remove the memory. If some mem blocks
-are still online, removal of the range can fail.
-When driver cleanup removes the registration, MM loses poison info of those
-memory blocks as well.
-
-I don't have a good idea how we should re-design the ownership here, maybe
-we can discuss about it.
-
-Best regards,
-Richard Cheng.
-
-
-
-
-> +out:
-> +	kvfree(ranges);
-> +	xa_destroy(&pfns);
-> +	return rc;
-> +}
-> +
-> +static int cxl_region_scan_device_poison(struct cxl_region *cxlr)
-> +{
-> +	int rc;
-> +
-> +	/* Nothing would consume the result. */
-> +	if (!IS_ENABLED(CONFIG_MEMORY_FAILURE))
-> +		return 0;
-> +
-> +	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-> +	rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem);
-> +	if (rc)
-> +		return rc;
-> +	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-> +	rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_region_register_device_poison(cxlr);
-> +}
-> +
->  struct cxl_dpa_to_region_context {
->  	struct cxl_region *cxlr;
->  	u64 dpa;
-> @@ -4262,6 +4580,10 @@ static int cxl_region_probe(struct device *dev)
->  					p->res->start, p->res->end, cxlr,
->  					is_system_ram) > 0)
->  			return 0;
-> +		rc = cxl_region_scan_device_poison(cxlr);
-> +		if (rc)
-> +			return rc;
-> +
->  		return devm_cxl_add_dax_region(cxlr);
->  	default:
->  		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
-> -- 
-> 2.43.0
-> 
+A self-contained crypto module exposing a safe interface would remove
+that burden, reduce the number of `unsafe` blocks, and make the series
+easier to review globally while not necessarily resulting in more code.
+You just need to store the relevant pointers into a new data structure,
+enforce the required invariants at construction time, and codify the
+actions that SPDM is already doing in the form of methods.
