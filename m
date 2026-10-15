@@ -1,72 +1,72 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010046.outbound.protection.outlook.com [52.101.61.46])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011056.outbound.protection.outlook.com [40.93.194.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12292480357;
-	Thu, 15 Oct 2026 07:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5373E95A0;
+	Thu, 15 Oct 2026 07:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792049430; cv=fail; b=rKeKweae6gVYnox4JpriCP7CjmDm2uYi/dgydrG7YzpcHOWifzBuubyeuvRG89qzRroGgRv46+ar5t8C4HGPcVicfeaPE7iewrtIg//uaL6SI866HAi19LoslOV+xqLwZuf/vv0yHwZFAWkL2xvZBSoyKZv1Ck2rEjqllz+VaQc=
+	t=1792051163; cv=fail; b=qPmAkuOGwP4NcPXls4XIr+f4QSMEJdfw5UQiCaKW7xc2FVTMQzFqok1Kf/ovEafwkpeAjU8S66jfSqk8PM7Ra1NrmDV+9sfGgZeXKKlVeYdnkDdcGEzBBo/8DVgzGKmhVUVojtbHlVpte+hGxhUuM0Sc3EYhkrAAU9YnXZEATCA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792049430; c=relaxed/simple;
-	bh=WHFYA26PdBO4rxCLMX9ZPJ2GpyyrMXOYuP8NBacAlFI=;
-	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
-	 In-Reply-To:MIME-Version; b=SHP4ReMkzab9R3rrscYS1auAv7ohUG5NUQilnHKPeXdM4FWg4PGmyC/3dHnxknllIffYCjVjedQoRj+XvrSbbITkmt6lwlfRdBSFScph71LTJh+hfSjGpNr8AVipTfSlgtfyAqbyrkGr5vfF6LQmw5SEh5L7n90sIVtgp1DtiXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QuJwfzR9; arc=fail smtp.client-ip=52.101.61.46
+	s=arc-20240116; t=1792051163; c=relaxed/simple;
+	bh=py3fFQDAeX7RTUrswzr+rSXSecknIj9MpJQ3IzvnNog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EFQayp3uLRliJpaH/Ut0rlSwT2tmeklGV0iiBchxYe5H/CBLK6TBQ7wfvjG/KZy2zgXYmaBI2pKWILxd8UeoUk3mvEsUEyB61M9xzYpr6VMv2qVk5xGQrHD6kC2doIuplCcr+qYDckgYZLP3Lj91XEK/PO7kD7O2uHWbrgVVpZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ejygrzo3; arc=fail smtp.client-ip=40.93.194.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QuJwfzR9"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ejygrzo3"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OcPVWQ2yTEQ9XCifH0b/wuz3tQjGB0qijlVWlg/LhCks6rMK+gTIsjWED6oojfpTJw10ncFzkMDqD64wWdO0OWBXUbYWSE9FbkpEQp7wyb5IuFGVPzuF24B/6S8jh9BLowyAh7dPAFCoiW7JSgLnviFcY71jO87MkYeK+WF0QmbLg/utVmkPXcYtNHwEIz1iZw4ztIAn72of4boKcOSpk/LAyHjNgeCFcpyVftacmoGLFK0iYLFcfuTdSAd8Myaty2piL4FTB8yF7/UtX8lIaUMSWf97OouK9Y9Fmu/JVY5hlbaEWo4BZXKwfETsFPHCcqQajOWfGcclJZ2uUGcjNw==
+ b=psb5x2BeNPlerF6Y4zhSnsBldeBPx3BJ3h4tYXcB/46c+MtD++avy9WV3ozkpu1hsih99Z/Qw1aGC+AbYvPD46/sTapgj2PY6JoqW00o/3ra2hcdYAGCkl98T1zTSV73MuY50TQR7KGFJnn6ikFtKVQOnwv6OTAXTeIOUjG/0yXsKo5S+OFcKW+YJmn3YmLyzwwkJL6NmXm/E2MiUlIqO43tiTxJQ/AUHM3d+8RnUZ8nABA+6rD4/t2Ob329SVdQ+DpFy0xcJ7meNp4fbyOSFWQZUci9INIfCQDmwwFcnLFuOhUoFrGmaO20x3IqUeB1aMyJQx6tn+/rqe/sHc30oA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dgLy7FZ7WJYLJTgnNpR6bZfZHSS1LFJQbVTXmR5d8LI=;
- b=pWgTlYjbA1ZYh1YY1HeMbhS/NDBolrwxWvNz540mcFPFXjAe3QmKYRjx6o/hAPlmWwtLw/XZr3YfIIJRMh0cqDUsMxgulhlde/Y5MNOifZey4nFgtTrQQhJ9HW1BISqT7s1CqFuPRkUPQk0Xxgg2sr/lKX5RYi80M1Rz906qE8WPPn8gLD+8md44y1mHMjn3aDu+PL/T3ANkpCTmPVedvd0X39Qd0FGDVe9WfkPIb9dDHT0DTxIO9jGoJSqVIJw28Wz4yqwVZ8wClf3AxmjGJkNUyJF2spaFa9PNExqO5FlrAQCfUQ9KAz/KkcDDPizax9O35K/spQj8I+yR/5zGHA==
+ bh=1LjhI9A+fatS+RC8e+X8W4TZybnwY8MkP0XnG1+bKJA=;
+ b=ooxrSPg32tMZIdjluayLWfjUUUjU4YRMrW3kBj7byUpCA0mo/5j7MnyLBRdCyR0P3J0reHG+9LlkwfkltBMDQq7fCkEusN2FBi6VSP+9NYOnKTW1JebpXjZlzlMfugGQade289Zqgp5kh/C1favlG0JrGu8NdxmOq2OvHmcQpVHwWpNPYj5rbx534R9xSwATAwB0G/ww6j1I58XAZRHThx2ObMswzgcM6vUI0L+OPouQZ103+em4u+kgwvv38BFlRWhCKmYLqAF1UlJSyUeVLFbMBCu0Z56xmnNNu8qVMqIPJ9h2k3nK3VV4xZ75xPLGNDrniGfs+nv0b5IgSSYCGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dgLy7FZ7WJYLJTgnNpR6bZfZHSS1LFJQbVTXmR5d8LI=;
- b=QuJwfzR9H2ia0YB7SDW8pfeD//BTJ++jVgENJqNRUnmmWlU8CwrGiidfPOxpAT4zUNkHzV1ZfrH24Mgwg1lr8zzzAAp3hg2YWaT536yh7qFuJpmKzu4HI6rZQ5IaW+X7CsWsWYGq2QfI9FUJ6sWOeKPq7+U1U5o9trRWfL12tXR2rsDvlv0Ddu4CdiouBCRLJnNW2LQSm55l+8XZUq1/gew8TlH8mJ/ZupKwpEN3kix2B26CxmG7A0POHcrUFewZre0uulgvQOS3iwXjFuRplBHYgM4gI+7v2IdxiRQACQ7qzjGbkpdKgbzBUK4KweNO+/avawMt2m1m8Yr0hzpI5A==
+ bh=1LjhI9A+fatS+RC8e+X8W4TZybnwY8MkP0XnG1+bKJA=;
+ b=ejygrzo33pvpEDtuKT335XtHTfLlVfHSXsC0+pOoiqLKR0GnJOkKMezhAvDiXmLZLqeXTNLvIiDMsmb3/luHCQHUro+NN1RuPNx2m2mYcerDeK7pAohxkqpTA6iPNuOKBOUG1AZWxEMzd88uEpWNrFieys81oPWLV0mU5PDcPZ5jJyrNSEp2eqyxvjgsOEJoerBIXbwnKvVptsc1rgorO8QAOwhNdsswf1xxEOVqeBkhJEfXIIiytW7qJYUFib/XwGKt0H1TgMS0u4JBG7vjOyKJZ3pfEHlAK6pvumcJmkiAjeb8baHZhcCNTjD9xWhtqKVnBTsWQpbFfrwX/PCF8Q==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW4PR12MB6873.namprd12.prod.outlook.com (2603:10b6:303:20c::17)
- by CHAPR12MB999225.namprd12.prod.outlook.com (2603:10b6:610:2fe::11) with
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by BN7PPFB3F5C406F.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e0) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Thu, 15 Oct
- 2026 07:29:58 +0000
-Received: from MW4PR12MB6873.namprd12.prod.outlook.com
- ([fe80::a338:bd2c:3a38:ece1]) by MW4PR12MB6873.namprd12.prod.outlook.com
- ([fe80::a338:bd2c:3a38:ece1%5]) with mapi id 15.21.0522.011; Thu, 15 Oct 2026
- 07:29:58 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 15 Oct 2026 16:29:55 +0900
-Message-Id: <DM58HRC3DHSS.1YC0E53ZXANT4@nvidia.com>
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Alistair Francis" <alistair23@gmail.com>
-Cc: <lukas@wunner.de>, <linux-cxl@vger.kernel.org>,
- <akpm@linux-foundation.org>, <Jonathan.Cameron@huawei.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <jic23@kernel.org>, <bhelgaas@google.com>, <alistair@alistair23.me>,
- <djbw@kernel.org>, <linux-pci@vger.kernel.org>, <wilfred.mallawa@wdc.com>,
- <a.hindborg@kernel.org>, <gregkh@linuxfoundation.org>,
- <alex.gaynor@gmail.com>, <aliceryhl@google.com>, <benno.lossin@proton.me>,
- <boqun.feng@gmail.com>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
- <gary@garyguo.net>, <ojeda@kernel.org>, "Jonathan Cameron"
- <jonathan.cameron@oss.qualcomm.com>
-Subject: Re: [PATCH v4 10/22] lib: rspdm: Initial commit of Rust SPDM
-References: <20260928011123.450800-1-alistair.francis@wdc.com>
- <20260928011123.450800-11-alistair.francis@wdc.com>
- <DM4NT7TFX4X9.1GFI128LI5ZQ4@nvidia.com>
- <CAKmqyKNEup=x+bwmPD_8x0s4ssPkqFnQtSGqJ_82z9oDP=A6cA@mail.gmail.com>
-In-Reply-To: <CAKmqyKNEup=x+bwmPD_8x0s4ssPkqFnQtSGqJ_82z9oDP=A6cA@mail.gmail.com>
-X-ClientProxiedBy: TY6PR01CA0011.jpnprd01.prod.outlook.com
- (2603:1096:405:3bc::18) To MW4PR12MB6873.namprd12.prod.outlook.com
- (2603:10b6:303:20c::17)
+ 2026 07:59:18 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0496.020; Thu, 15 Oct 2026
+ 07:59:18 +0000
+Date: Thu, 15 Oct 2026 15:59:13 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dan Williams <djbw@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Breno Leitao <leitao@debian.org>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, David Hildenbrand <david@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, Kiryl Shutsemau <kas@kernel.org>, Harry Yoo <harry@kernel.org>
+Subject: Re: [RFC PATCH 5/5] cxl/region: Register device poison before
+ exposing RAM
+Message-ID: <atCGJHmnk8Ll8pA_@MWDK4CY14F>
+References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
+ <20261010162017.62506-6-shaikhkamal2012@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261010162017.62506-6-shaikhkamal2012@gmail.com>
+X-ClientProxiedBy: TP0P295CA0040.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::13) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,211 +74,454 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB6873:EE_|CHAPR12MB999225:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1923a2d-c8cc-4e7a-27ea-08df2a8e1dd2
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BN7PPFB3F5C406F:EE_
+X-MS-Office365-Filtering-Correlation-Id: 783a9167-db5e-45e3-1abc-08df2a9236cf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|7416014|366016|10070799003|376014|6133799003|18002099003|10067099003|22082099003|5023799004|11063799006|261009223027099003|4143699003|56012099006;
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|23010399003|10067099003|261009223027099003|5023799004|11063799006|56012099006|6133799003|18002099003|22082099003|4143699003;
 X-Microsoft-Antispam-Message-Info:
-	/z0J1ntoJFxh83ayabCfBpBWzKnZdOcSGa4R76M4TWBvoXpLDnvAvjf8BIBBEq7Ea8H9riOqcZt1qgnUzFyo2rjkA2o/8HZcxo/ALNgRKSX9Mp0h3/45hgBrxjQpnm/N3H9EVavIBTPGtyJLWkT+KEivRigZ7GFU/127eOR6RGYWv2lI2wViTwMWQhfBr89W/NrNeWu6HyUn9djcBfp0EmEWsj+KvoYnkfGTpyX+zbjCA8wBCedyyn1D46RCL37d3hkl27uXVyPbQA/w7cWwauC04IxAtdPMU5e/Bh2w+2WfsG8hY4nDImb/KMyp+72DdJiSmOhuXCxfLEOwhZtqpDT6CB1oP1QGF4lBLCDwbnqTcDO7ZadNE4piLrNCKE35fi8mTMCHnIUy2vo72lHmSU/nM/z995B5Nqz0bwoi4gXWapZiXCNALU4cRFMXAc6MZ6t4mByXrFCRKUA/WQQz2PgPKL5Qggk8xLtztRFS+W+4k2K4NDrKaNlM51ZPXrqv7YZFZKb2xFDWg5RlSdgLBKQtdN2fLOPnm9k3AjkGTttuCt4HFpCpGTQ4xi1RLCeDm4EdkmpoQSPjNjtboT1fyRBbNCW3mVIO7cyK14WSygDvyfiGGWY0JRSm0Oo1n3aRqpyPN9kX7qLo9APhQphO4sHZjTf4LYS/llDaRTP4b0Q=
+	nL/kEEwkCJ51h1sH7admAidGxLqohRmikiHDg5S1Hiu0T9pcRIHpiUACNz9jv8/8Gk+Al/jj77fs2Ah0OnzXGRpgd2TqZbVr+7EK8w8By2WCtvvw+luZRlq0u728xnIJ+8LinA3CbsloFJpg+mJWeT5IwDgd96HirY9LmDIMg6I2vtcbhWyGj4dElLysBvc6ZBnBYZ/KNd3LWykFWh2Y7eHupK/JDEKuWRZUIoNduJL2A0n/N6nxLtWp2jnseWrq1oBkZOpylJ3paAdFACGetNrhJRxt82dO46hMSsy3Nxnt+ex22Xhs8WqA3WmPEHcqoayZkDX6rJbeQoSjHebB1wQFIWUWw7ZH9KHbrUcpE+L5ByM8T7rHNs3/cikwCLvlroBfImPDuZO6ZGjj4E50M21aUr0JV0SjqCNoMvS1No8v1AL4u2cE8ivYHBieFjMs8zVncrAFwuF/iGoSdDjnRvPYC1fZ9liEPhNFkGEs8K8v84pz6fIy1nYpaWKvnXptPe6mHqFU2GZnCzgLTc4roAZK6NDazCrV38pSZnnPoPZPeMGf9CPh2S2vCy23WrdIEpsuSDN9WwgpoEc4hJuA5jgv1IAfe5RAWblfglrDpKWZ6MlDvxJGyp/Qw1BLcUS4vzR/wmR3mla1SDtkD3u0R6X0Ug0gHh8RTYc+qnMxLGw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB6873.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(7416014)(366016)(10070799003)(376014)(6133799003)(18002099003)(10067099003)(22082099003)(5023799004)(11063799006)(261009223027099003)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(23010399003)(10067099003)(261009223027099003)(5023799004)(11063799006)(56012099006)(6133799003)(18002099003)(22082099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T3VaUHl3L2h1YllaTTBWREZPTENRVnVZQmRKNGZRY0h5UnhyWGF2S3RHSmFt?=
- =?utf-8?B?Y2s1VWRhTVlRNXJ4RTZndWNXbGdYOEozb2tUbHlNYjVWQUZiK1B0bHdRQkR3?=
- =?utf-8?B?UytKMDZvdXg1QUNMQ3VFamNZdFR1ampiSW5zT2s5eTZNUEw5R2tEWStWd1dp?=
- =?utf-8?B?aWdKeDlxOTBIYzRyeVArM2NKeWVDMUtKMFhzSFFRbm5xRDlnNVN2S0VhMVpu?=
- =?utf-8?B?NmRYODFOb2pFQ0hOeHFnSEx6cHpSbFdod2N2VG5qdjBXYW1WVjJJdHptazJQ?=
- =?utf-8?B?Rk1OS1RxT2h0RlRJQndMYUdpYnZ0b0xFMGdUbVdidk1JaXhPSzJtbndnL3Jx?=
- =?utf-8?B?Wkx0TlpnakJHYmtVem9WMCtCV3diQS8xZmtITjRwc3F0enN6K1pBb2dGaVJN?=
- =?utf-8?B?U256UXhQM2NxazlZeThtUndVaExGYUxVZGtobFkyK3B5UU92Z2xnNTJQOFNZ?=
- =?utf-8?B?dkMyazRPaUlPTzFBd0JZSUtWZ3pDWWlDM3VFai9YVGtuNGNiMURhUVNuLzF5?=
- =?utf-8?B?U3plYmZTcDZ0bWhyQnRTMHB3WG45MEw3YzJFL2liYlh0SW50d0krQzRNQmRr?=
- =?utf-8?B?N3JqSUJNWDRvTTJBRXluMUpNdlpVY21uRlRzYnp4OUtVdFdhU1R3dUhaSkhG?=
- =?utf-8?B?ZVJXRjQvY2N4bTFWZUVZTGJXTERNV0FVMWY1WTJWQ29NYzFibXkxVU1oQlY4?=
- =?utf-8?B?Zy9DeHFwTVJhVDhiNFBlYWVubENXNWVzWDZuL0QxT0QyR2xJS3c2ZUlHQ094?=
- =?utf-8?B?cGVsSUNDTk5yV01KY2IyQXcrYmpoUm01K3doc1o3RER2YmlIV1Uxd0R1YTZB?=
- =?utf-8?B?eTRaWjZMN2tTSEJJZ1ZWR0UvczlwMXU3ZTJtVVVMVlA2ejBldUlTU0dHZkpG?=
- =?utf-8?B?U1lRcFIzSVhQeXoyVzBTQXRUSFBkalJaNGZUQWljTXdPUHc5N3FsUmZaQi9a?=
- =?utf-8?B?SnVMUkV6Y3p5dThuMElsN1k1L01tajJxQ3gxZXpqK0NnVXRudktUSDlNQXNv?=
- =?utf-8?B?VEFSd1h0ai8xaTVhUlBoM3E1b3Rkb0c4RnB1NGQxb2NDQzZXd1Mzd085bEV2?=
- =?utf-8?B?UTA2bWdBdDNPK0V3QXBtS2RqV1N1R1U5TW14NUdXZDdjN01qUHRlRG1qN29M?=
- =?utf-8?B?KzlJbzQwRDh2aDhTZk9UVk8ySms5MTBtRlhhVkhQMEVZMzFJSVNwQjVBdHhD?=
- =?utf-8?B?Lyt2MW1saVpXdlRmQkNoZk45a0JOQmkxZUR6ZExMWUNrUzdZOGhHVFNqNGh4?=
- =?utf-8?B?SjlPTUhybTdRcHVCV0ovYWluOENTU0xpaytmNmJYVThPUGphSXF0dWFrUGRw?=
- =?utf-8?B?RlFOMWtzNVRTV01McTdtUU5UUUJOajY5UUtNQlAzV25EZm15N0Vnbm1Gemky?=
- =?utf-8?B?WjlnL203eHRiNzNzWGxWUDFWTUhSNkFhMXlLZ3dtaDN5V1M2ZHNnd2F6UnhP?=
- =?utf-8?B?OG9ZNVp0K0Z2QndCNDl6K3VSM29FNU9NLzFnVFo2UTBuY2wxVmdFZG0zeTdQ?=
- =?utf-8?B?cm9Xc2VCM1l0NFo1MnZEODI5S01BRmluUHhMZU5JOHovVWs2am94Q1BxY1Y2?=
- =?utf-8?B?bEtnS2R5UTEvWFo3ZEZVaFV4UUNHWW12S0VMREZaYVBkMlZhZC9XbkFsT3hI?=
- =?utf-8?B?QnM5aXlNbzhKdjYzMU1LMkx6d1RwZ1E3YzRLRU9QY1ZIeFBYS21HU2NEMW92?=
- =?utf-8?B?M01HMjFxeGhoeDlsa3ZRN1k1OGFtN1JNVG1jeW1qeWtpNHRqbFZmSWRscmk1?=
- =?utf-8?B?VHNDNHdoY2ltd3U2N0tYbDlmTWlVSUVyMGoya0JLeE1UbDVpc2t5bTJkbHZm?=
- =?utf-8?B?U0VsMFlUaDVWTmtVM1BuNnpjWUNma2RTWTRQYndPTGNtT2ZDemE1YnZLWUx6?=
- =?utf-8?B?UVY1WWZrTWlzTC9KMk0xWk1ISUJTelEwTFU2UHhVT0dGRldYUi9Oc210eDRQ?=
- =?utf-8?B?a0QwYjFjeTc5V0RudytkMXlzMzhsaEt5bzZhdllRQmFmZDRSa01weHNhK1lp?=
- =?utf-8?B?Qk1aUFJHUWo4OGNhNDU1Q2tnL0VtdlFmSkEzblkzUVlyK0QvN2JQMmNrZmVV?=
- =?utf-8?B?Ym1hVjhvVXBlSjlWNG1rQTczVFJqVjVWZVc5TElyckQvUENMRXZOanJBYnJn?=
- =?utf-8?B?cHE4SjNJNVYwN3RlZ1Y5TzBKckswUk05WS80cjE1N0RiWjJyOFpPb3dQL0pp?=
- =?utf-8?B?RmMwWmlOU2pLSWJyZE5EcmJ4WGhGNE04Ujlvd2FEMkdyNWhMVm5VU2RzaUEx?=
- =?utf-8?B?czY5aG9VQzJPSFJtSWw5Z01zQW0vRnhsUEVBUnNnSlhrckd5SGlodDZHOExn?=
- =?utf-8?B?bkx1RnpDWHBjZU1RNUhVM0w2cFJueDMyNy9QRjloTS9rVk9Zdm1oVEdKZzlw?=
- =?utf-8?Q?EUktAXRuNtnhV8Yoq7oAtIlPXpu2IlJHTIaukpOXl8xCR?=
-X-MS-Exchange-AntiSpam-MessageData-1: cjbgwN6BjPBboA==
+	=?us-ascii?Q?Oem9J2cNBnDabVJLmxRETFp7X2Zv38I5j8SzqLLxI+Q0pcqTYPCDKHTNWNMq?=
+ =?us-ascii?Q?awH6mmj+IF6rehD2c1a095NULI4ZfYmsqr/ErNBIInWkesLnUK261KcTrqS2?=
+ =?us-ascii?Q?qjx9332hLbGwYG9HLxA3ROX/6eWutOoZ2pxbTcTgJr5Jpu5jo0wftG33NuMY?=
+ =?us-ascii?Q?+bnUbcnvE9Hh9q7RbodgumRh5T5/dvzURwYzX2nH4tqxE/k9tBimxt5P2PDi?=
+ =?us-ascii?Q?kMEqltrTNX/Q1EmkTl7GMS2pm/BLQiQRhR8+khgqgkq3rJB9Af+FnigR6zKd?=
+ =?us-ascii?Q?EIL3NvdH6J0g2h8QHPwldvqVNWKLRsYmgkfr2m+1xK9pwPkBwWQMk/7VLDx5?=
+ =?us-ascii?Q?UO3fel+YV7m+BMeUQXEH4SMVLb4xQBrq5Yez4KWe9gBZspuTQGDorY2umbif?=
+ =?us-ascii?Q?GEdamomCag/GjJOwgM1zGdb8KfyS1Jt97JP72J75VyLJVGx5n8dGpC7aQm1C?=
+ =?us-ascii?Q?/+rEOhnYigNjJEkvYMc48tutZhVwknyda8ei0thnRojnuyfvnB9UGCYOVVO1?=
+ =?us-ascii?Q?lUJnzlKE3l1Ezj+2lAEn47TbW4kUQgQ/dZzCeCZlA9epLPOYTOOZSI0N8Slr?=
+ =?us-ascii?Q?TOwVtnClqJTCpda4Tl1Rs721+DNzBwabNsbqJU2pgRyzhfWNWHUf8V59t/KQ?=
+ =?us-ascii?Q?L3mvfoBaY9dh/PbBvBTI83cGch5OpG3LTMMRKsJiwWKS++q1ZAI2KsamWveD?=
+ =?us-ascii?Q?ecjz0HKxI6b+mK773VIkENEbaM/VhAMSNz9SC+IvPpEcAJ02poSrVC/o8EyM?=
+ =?us-ascii?Q?w1Bs7QDdX2k2ITO9FjEtF+xQ9nnmel8unQwYM1RURbaEKNAHAcJo38vUdTHj?=
+ =?us-ascii?Q?eK1OV8jUsFJUxz5IILHlLO1JIOBA0SYDa4A7Dw/h7/xPog//rCWTBB31czw7?=
+ =?us-ascii?Q?BN3XR9ZGG8ADoSRXMTNtR0SzUWnHz32FQEtnWl5C2IjfPq71OFYV5viTSKSh?=
+ =?us-ascii?Q?oE6d+KqfcDbN0AF5GUieTOwH9mnEadruU08QuMx6EIKUaaEYqoZ+VFzalX30?=
+ =?us-ascii?Q?yVG/+kj4mzBnYr7YMhVIJaNukpP5ShqKPj+INE7UZ1POfV7+sml18FALck0S?=
+ =?us-ascii?Q?Dm7CfKde9m2Mgpoup4XGFHFytWaYAJMk0IMW4FIDTyaNs8Zd2fkIMeSlUcwW?=
+ =?us-ascii?Q?QlV5FuUr5ymBbeFKBwaDfgezj+dZyO35Z8SmSIwJTq7Pz0k0VX7NH/GtNzSv?=
+ =?us-ascii?Q?PPziiGSNOCy8I381IdjerisN42UMnYC0WWx2lOu2ZTR567G+/1L1k/tD5GCw?=
+ =?us-ascii?Q?U+fRJjgdeKM+TLDksZjH/gR9SuBwROi/khTD8+xERJxoZj3N8lQ0QX/PDWSt?=
+ =?us-ascii?Q?NPKChzdijnrh8n3vIhIO249F4rvDX7ZVXz+XA8m+xKunXB7oOYJMkCxRH6sI?=
+ =?us-ascii?Q?1cAG6M1L7GMdeDd9wR47z0hIG1IOhidZB1cAcwQzw9K59RKtSputJSz4T6M9?=
+ =?us-ascii?Q?D6KGmg+bZ+2olNtLRQlKctbo7Q40glud3vCWlkCLZTVwKs0dRpFSkachKUxC?=
+ =?us-ascii?Q?MW9KKgarJFVctJqUmOAcak8MbHKV+H0ZzhWxE7XuLB3LOOirHp+SuJImKLNy?=
+ =?us-ascii?Q?9MRZSgs1RsBEnB4zQPUzgkS4NbaKUGcVLJgvPSHt/5g8//VuZyMPRlR4vNfZ?=
+ =?us-ascii?Q?7f5Jzv5p9xfkyf2qHF8MDL9Bq8mQRQMkq6HRTlURuoJtjXNFiWtQ2G1USAKy?=
+ =?us-ascii?Q?sqjElEC50fpwID+uK85176buuu2qLiMc3hCKdOAM/xXBamqN?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1923a2d-c8cc-4e7a-27ea-08df2a8e1dd2
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB6873.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 783a9167-db5e-45e3-1abc-08df2a9236cf
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 07:29:58.5376
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 07:59:18.4260
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: plz4JJos9oB4DEtRTH3ya4plMfIRhtSvKHaH4xaPnmdeVgrDWHy0Uiew82dNgPDqSuCdYNjsjt2UV/+ZpYAitw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CHAPR12MB999225
+X-MS-Exchange-CrossTenant-UserPrincipalName: noG01ic9F8rZrCe/ZXUTHIXdrHNR+/P84DNacKUmsxauKUGhsTgGgpLHYvE+HxAPYOWWm2i6ekJvXI1nAbeRCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFB3F5C406F
 
-On Thu Oct 15, 2026 at 12:06 PM JST, Alistair Francis wrote:
-<...>
->> > +/// The current SPDM session state for a device.
->> > +///
->> > +/// Concurrent access is serialised by wrapping the whole struct in a
->> > +/// `Mutex<SpdmState>` at the FFI boundary, so `spdm_authenticate()` =
-callers
->> > +/// run one at a time and the locked `&mut SpdmState` is the only way=
- to
->> > +/// reach the inner fields.
->> > +///
->> > +/// `dev`: Responder device.  Used for error reporting and passed to =
-@transport.
->> > +/// `transport`: Transport function to perform one message exchange.
->> > +/// `transport_priv`: Transport private data.
->> > +/// `transport_sz`: Maximum message size the transport is capable of =
-(in bytes).
->> > +///  Used as DataTransferSize in GET_CAPABILITIES exchange.
->> > +/// `validate`: Function to validate additional leaf certificate requ=
-irements.
->> > +///
->> > +/// `version`: Maximum common supported version of requester and resp=
-onder.
->> > +///  Negotiated during GET_VERSION exchange.
->>
->> Field documentation should be their own doccomments before each
->> individual field (see [1] for an example and general good practices when
->> writing Rust doccomments).
->>
->> [1] https://doc.rust-lang.org/rust-by-example/meta/doc.html
->>
->> > +#[expect(dead_code)]
->> > +pub(crate) struct SpdmState {
->> > +    pub(crate) dev: *mut bindings::device,
->>
->> This makes me very nervous. I see this is passed to C callbacks. We need
->> to maintain the guarantee that the device still exists, so an
->> `ARef<Device>`, from which you obtain a pointer to pass to the C
->> callbacks, should be the minimum here. Does the device also need to be
->> bound? Looking at `drivers/pci/cma.c` it seems to be. Then this needs to
->> be a `&Device<Bound>`, with a lifetime to `SpdmState` so callers only
->> use it while the device is bound.
->
-> Good point, I have converted this to use a `&Device<Bound>`
+On Sat, Oct 10, 2026 at 09:50:13PM +0800, Shaikh Kamaluddin wrote:
+> The trigger_poison_list interface may retrieve poison after CXL memory
+> is already online, which is too late to prevent known-bad frames from
+> entering the page allocator.
+> 
+> During RAM-region probe, retrieve a poison-list snapshot for each
+> participating endpoint decoder. Validate each record against the
+> decoder's assigned DPA range, translate its poisoned DPA units to HPA
+> and PFN, and collect the affected PFNs in an xarray. Coalesce consecutive
+> PFNs and register the resulting ranges with the pre-online hwpoison
+> registry before creating the DAX region.
+> 
+> When Get Poison List is supported, abort region probe if the list is
+> incomplete, malformed, or cannot be translated. If volatile poison-list
+> retrieval is unsupported, preserve the existing behavior and warn that
+> poison cannot be withheld before memory onlining.
+> 
+> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> ---
+>  drivers/cxl/core/region.c | 322 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 322 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index c72524923b38..e3ffa77927df 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/string_choices.h>
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+> +#include <linux/memory-failure.h>
+>  #include "core.h"
+>  #include "mce.h"
+>  
+> @@ -3038,6 +3039,323 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
+>  	return rc;
+>  }
+>  
+> +/*
+> + * Device-reported poison is gathered at RAM-region probe, before the range
+> + * reaches dax/kmem, and registered with the pre-online registry so the
+> + * frames it covers are withheld when the memory is onlined.
+> + */
+> +static int cxl_poison_store_pfn(struct xarray *pfns, u64 hpa)
+> +{
+> +	return xa_err(xa_store(pfns, PHYS_PFN(hpa), xa_mk_value(1),
+> +			GFP_KERNEL));
+> +}
+> +
+> +static int cxl_poison_store_hpa(struct cxl_region *cxlr, struct xarray *pfns,
+> +				u64 hpa)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int rc;
+> +
+> +	/* Outside this region: not ours to withhold. */
+> +	if (!cxl_resource_contains_addr(p->res, hpa))
+> +		return -ERANGE;
+> +
+> +	rc = cxl_poison_store_pfn(pfns, hpa);
+> +	if (rc || !p->cache_size)
+> +		return rc;
+> +
+> +	/*
+> +	 * An extended linear cache makes the same DPA visible a second time
+> +	 * at hpa - cache_size. Match the translation used by the
+> +	 * cxl_general_media and cxl_dram trace events.
+> +	 */
+> +	if (WARN_ON_ONCE(hpa < p->res->start + p->cache_size))
+> +		return -ERANGE;
+> +
+> +	return cxl_poison_store_pfn(pfns, hpa - p->cache_size);
+> +}
+> +
+> +static int cxl_poison_record_to_pfns(struct cxl_region *cxlr,
+> +				     struct cxl_memdev *cxlmd,
+> +				     const struct cxl_poison_record *record,
+> +				     struct xarray *pfns)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	u64 raw = le64_to_cpu(record->address);
+> +	u64 units = le32_to_cpu(record->length);
+> +	u64 dpa = raw & CXL_POISON_START_MASK;
+> +	u8 source = raw & CXL_POISON_SOURCE_MASK;
+> +	u64 length, end, step, cur;
+> +
+> +	if (!units ||
+> +	    check_mul_overflow(units, (u64)CXL_POISON_LEN_MULT, &length) ||
+> +	    check_add_overflow(dpa, length, &end))
+> +		return -EPROTO;
+> +
+> +	/*
+> +	 * A corrected error never reaches the poison list, so every record
+> +	 * is uncorrectable. Only a failure of the device's own media is
+> +	 * withheld: External poison was written by the host into healthy
+> +	 * media and a rewrite or Clear Poison recovers it, and Injected
+> +	 * poison is a test artifact. Withholding either would make a
+> +	 * recoverable state permanent.
+> +	 */
+> +	if (source != CXL_POISON_SOURCE_INTERNAL) {
+> +		dev_dbg(&cxlr->dev, "%s: dpa %#llx source %u not withheld\n",
+> +			dev_name(&cxlmd->dev), dpa, source);
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Translate once per unit of HPA contiguity rather than per 64
+> +	 * bytes. Consecutive DPAs within an interleave granule map to
+> +	 * consecutive HPAs, and a granule no larger than a page lies within
+> +	 * one page, so stepping by min(granule, PAGE_SIZE) from an aligned
+> +	 * start reaches every page the record covers.
+> +	 */
+> +	step = clamp_t(u64, p->interleave_granularity, CXL_POISON_LEN_MULT,
+> +		       PAGE_SIZE);
+> +
+> +	for (cur = ALIGN_DOWN(dpa, step); cur < end; cur += step) {
+> +		u64 hpa = cxl_dpa_to_hpa(cxlr, cxlmd, max(cur, dpa));
+> +		int rc;
+> +
+> +		/* Not mapped by this region; nothing here to withhold. */
+> +		if (hpa == ULLONG_MAX)
+> +			continue;
+> +
+> +		rc = cxl_poison_store_hpa(cxlr, pfns, hpa);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_region_collect_decoder_poison(struct cxl_region *cxlr,
+> +					     struct cxl_endpoint_decoder *cxled,
+> +					     struct xarray *pfns)
+> +{
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_poison_snapshot snapshot;
+> +	int rc;
+> +
+> +	rc = cxl_poison_snapshot_init(cxlmd, &snapshot);
+> +	if (rc == -EOPNOTSUPP) {
+> +		dev_info(&cxlr->dev,
+> +			 "%s: no Get Poison List support, nothing withheld\n",
+> +			 dev_name(&cxlmd->dev));
+> +		return 0;
+> +	}
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_get_poison_by_decoder(cxled, &snapshot,
+> +				       CXL_POISON_QUERY_PREONLINE);
+> +	if (rc == -EFAULT) {
+> +		/*
+> +		 * The device keeps no poison list for volatile ranges, which
+> +		 * CXL r3.2 8.2.9.8.4.1 permits. Online the region as today.
+> +		 */
+> +		dev_info(&cxlr->dev,
+> +			 "%s: no volatile poison list, nothing withheld\n",
+> +			 dev_name(&cxlmd->dev));
+> +		rc = 0;
+> +		goto out;
+> +	}
+> +	if (rc)
+> +		goto out;
+> +
+> +	/*
+> +	 * Withholding from a partial list would online the region on the
+> +	 * belief that every bad frame had been named.
+> +	 */
+> +	if (snapshot.truncated ||
+> +	    (snapshot.device_flags & CXL_POISON_FLAG_OVERFLOW)) {
+> +		dev_err(&cxlr->dev, "%s: poison list incomplete\n",
+> +			dev_name(&cxlmd->dev));
+> +		rc = -EOVERFLOW;
+> +		goto out;
+> +	}
+> +	if (snapshot.device_flags & CXL_POISON_FLAG_SCANNING) {
+> +		dev_err(&cxlr->dev, "%s: media scan in progress\n",
+> +			dev_name(&cxlmd->dev));
+> +		rc = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	for (u32 i = 0; i < snapshot.nr_records; i++) {
+> +		rc = cxl_poison_record_to_pfns(cxlr, cxlmd,
+> +					       &snapshot.records[i], pfns);
+> +		if (rc)
+> +			break;
+> +	}
+> +out:
+> +	cxl_poison_snapshot_destroy(&snapshot);
+> +	return rc;
+> +}
+> +
+> +static unsigned int cxl_count_poison_ranges(struct xarray *pfns)
+> +{
+> +	unsigned long index, previous = 0;
+> +	unsigned int nr = 0;
+> +	void *entry;
+> +	bool first = true;
+> +
+> +	xa_for_each(pfns, index, entry) {
+> +		if (first || index != previous + 1)
+> +			nr++;
+> +		first = false;
+> +		previous = index;
+> +	}
+> +	return nr;
+> +}
+> +
+> +/*
+> + * The xarray holds each PFN once and xa_for_each() walks them in ascending
+> + * order, so runs of consecutive indices are exactly the sorted,
+> + * nonoverlapping ranges preonline_hwpoison_register() requires.
+> + */
+> +static int cxl_pfns_to_ranges(struct xarray *pfns,
+> +			      struct preonline_hwpoison_range **ranges_out,
+> +			      unsigned int *nr_ranges_out)
+> +{
+> +	struct preonline_hwpoison_range *ranges;
+> +	unsigned long index, previous = 0, run_start = 0;
+> +	unsigned int nr_ranges, nr = 0;
+> +	void *entry;
+> +	bool first = true;
+> +
+> +	nr_ranges = cxl_count_poison_ranges(pfns);
+> +	if (!nr_ranges) {
+> +		*ranges_out = NULL;
+> +		*nr_ranges_out = 0;
+> +		return 0;
+> +	}
+> +
+> +	ranges = kvmalloc_array(nr_ranges, sizeof(*ranges), GFP_KERNEL);
+> +	if (!ranges)
+> +		return -ENOMEM;
+> +
+> +	xa_for_each(pfns, index, entry) {
+> +		if (first) {
+> +			run_start = index;
+> +			previous = index;
+> +			first = false;
+> +			continue;
+> +		}
+> +		if (index == previous + 1) {
+> +			previous = index;
+> +			continue;
+> +		}
+> +		ranges[nr++] = (struct preonline_hwpoison_range) {
+> +			.start_pfn = run_start,
+> +			.nr_pages = previous - run_start + 1,
+> +		};
+> +		run_start = index;
+> +		previous = index;
+> +	}
+> +	ranges[nr++] = (struct preonline_hwpoison_range){
+> +		.start_pfn = run_start,
+> +		.nr_pages = previous - run_start + 1,
+> +	};
+> +
+> +	WARN_ON_ONCE(nr != nr_ranges);
+> +	*ranges_out = ranges;
+> +	*nr_ranges_out = nr;
+> +	return 0;
+> +}
+> +
+> +static void cxl_unregister_device_poison(void *data)
+> +{
+> +	preonline_hwpoison_unregister(data);
+> +}
+> +
+> +static int cxl_region_register_device_poison(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct preonline_hwpoison_range *ranges = NULL;
+> +	struct preonline_hwpoison *handle;
+> +	unsigned int nr_ranges = 0;
+> +	unsigned long nr_frames = 0;
+> +	struct xarray pfns;
+> +	int rc = 0;
+> +
+> +	lockdep_assert_held(&cxl_rwsem.region);
+> +	lockdep_assert_held(&cxl_rwsem.dpa);
+> +
+> +	/* The region may have been decommitted while the lock was dropped. */
+> +	if (p->state < CXL_CONFIG_COMMIT)
+> +		return -ENXIO;
+> +
+> +	if (test_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags)) {
+> +		dev_info(&cxlr->dev,
+> +			 "normalized addressing, poison not translated\n");
+> +		return 0;
+> +	}
+> +
+> +	xa_init(&pfns);
+> +
+> +	for (int i = 0; i < p->nr_targets; i++) {
+> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> +
+> +		if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+> +			continue;
+> +		rc = cxl_region_collect_decoder_poison(cxlr, cxled, &pfns);
+> +		if (rc)
+> +			goto out;
+> +	}
+> +
+> +	if (xa_empty(&pfns))
+> +		goto out;
+> +
+> +	rc = cxl_pfns_to_ranges(&pfns, &ranges, &nr_ranges);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = preonline_hwpoison_register(ranges, nr_ranges, &handle);
+> +	if (rc == -EOPNOTSUPP) {
+> +		/* No poison tracking in this kernel; nothing to withhold. */
+> +		rc = 0;
+> +		goto out;
+> +	}
+> +	if (rc)
+> +		goto out;
+> +
+> +	for (unsigned int i = 0; i < nr_ranges; i++)
+> +		nr_frames += ranges[i].nr_pages;
+> +	dev_warn(&cxlr->dev,
+> +		 "withholding %lu frame(s) reported poisoned by the device\n",
+> +		 nr_frames);
+> +
+> +	rc = devm_add_action_or_reset(&cxlr->dev, cxl_unregister_device_poison,
+> +				      handle);
 
-Another related point of feedback is that this code seems to be
-designed to interact with C drivers exclusively - i.e. I don't see a
-publicly exported Rust API.
+Hi Shaikh,
 
-That's probably what has guided the current design of storing pointers,
-as that's what the C functions expect; and the C side is also
-responsible for taking care of lifetime and bound device status, so in
-that context using a `&Device<Bound>` will be of little help as it will
-need to be forged by trusting that the calling C code knows what it is
-doing.
+I think you are trying to propose the architecture as the following ?
+- CXL region driver collects the device's poison info and owns the registration
+- MM use the registration to keep poisoned pages out of the page allocator
+  when memory is onlined
+- DAX/kmem adds and removes the corresponding system RAM
 
-I think it would be helpful on the contrary to design things around a
-Rust API, on top of which the C FFI is built. That way you would have to
-work with properly bound references, and have a proof that the model is
-viable before exposing it to C. Also I guess Rust drivers will want to
-use this at some point, so better design with that in mind from the
-get-go.
+The registration belongs to the driver, but the memory that needs it can
+outlive the driver binding.
 
-Also related, what is the reason for having this code in `lib`? Why not
-make this a regular kernel module?
+Unbinding the driver doesn't necessarily remove the memory. If some mem blocks
+are still online, removal of the range can fail.
+When driver cleanup removes the registration, MM loses poison info of those
+memory blocks as well.
 
->
->>
->> Just storing a C pointer and passing it whenever a function needs it
->> cancels the purpose of using Rust and make the safety requirements of
->> the callback you pass it to impossible to guarantee, as nothing enforces
->> that the device still exists or is in a valid state when they are
->> invoked.
->>
->> > +    pub(crate) transport: bindings::spdm_transport,
->> > +    pub(crate) transport_priv: *mut c_void,
->>
->> Here I also suspect we want to define some kind of ownership model for
->> the private data instead of hoping that the pointer is still valid when
->> we use it.
->
-> Any ideas here? It's just a pointer that we pass back to C when
-> calling the `transport_function()`, I'm not clear on what we could do
-> to ensure it's still valid.
+I don't have a good idea how we should re-design the ownership here, maybe
+we can discuss about it.
 
-I suspect something close to what `fwctl` does? Basically `SpdmState`
-would store a reference to a generic type, which outlives the SPDM
-driver bound time. That's also why having the Rust API first is helpful,
-as it will provide the lifetime that needs to be outlived.
+Best regards,
+Richard Cheng.
 
-Looking at the example in `cma.c`, the private data appears to be
-`host.doe_mb`, which exists before `spdm_create` is called and is still
-there after `spdm_destroy`, so that seems to be the correct model, i.e.
-there should be no need to transfer full ownership of the private data
-to the SPDM driver - a reference should be sufficient.
 
-Actually thinking some more about it seems like the `fwctl` Rust
-bindings could be a good model to follow. They are simple and adopt a
-similar pattern of a sub-component of a larger driver that never
-outlives its parent.
 
-<...>
->>
->> > +impl<'a, 'c> Validate<'c, Untrusted<&'a [u8]>> for SpdmHeader {
->> > +    type Err =3D Error;
->> > +
->> > +    type Context =3D &'c SpdmState;
->> > +
->> > +    fn validate(unvalidated: &[u8], _context: &'c SpdmState) -> Resul=
-t<Self, Self::Err> {
->> > +        Ok(SpdmHeader {
->> > +            version: *unvalidated.get(0).ok_or(EIO)?,
->> > +            code: *unvalidated.get(1).ok_or(EIO)?,
->> > +            param1: *unvalidated.get(2).ok_or(EIO)?,
->> > +            param2: *unvalidated.get(3).ok_or(EIO)?,
->> > +        })
->>
->> Here you will definitely want to leverage zerocopy's `FromBytes` trait.
->
-> I was hoping not too actually.
->
-> The SPDM responses are a bit complex. For example NegotiateAlgsRsp has
-> multiple dynamically sized arrays, and the fields change based on the
-> version.
->
-> Using zerocopy means we need packed structs and even then I'm not
-> clear on how we can handle the KVec<u32> or even the
-> KVec<RespAlgStruct> nicley.
->
-> The current approach has the obvious downside of copying the data, but
-> as the data is pretty small in the scheme of things and not part of a
-> hot path, I think the tradeoff of copying the data with much cleaner
-> and easier to understand code is worth it.
->
-> Maybe in the future zerocopy could be a performance improvement, but I
-> think right now it's a large complexity overhead in this case.
->
-> Note that obviously SpdmHeader is not complex, but I think they should
-> all follow the same pattern.
 
-For more complex structures sure, but in the case of `SpdmHeader`
-zerocopy looks like it would work nicely? It also supports performing a
-copy (see `read_from_bytes` and `read_from_prefix`).
+> +out:
+> +	kvfree(ranges);
+> +	xa_destroy(&pfns);
+> +	return rc;
+> +}
+> +
+> +static int cxl_region_scan_device_poison(struct cxl_region *cxlr)
+> +{
+> +	int rc;
+> +
+> +	/* Nothing would consume the result. */
+> +	if (!IS_ENABLED(CONFIG_MEMORY_FAILURE))
+> +		return 0;
+> +
+> +	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+> +	rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem);
+> +	if (rc)
+> +		return rc;
+> +	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
+> +	rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return cxl_region_register_device_poison(cxlr);
+> +}
+> +
+>  struct cxl_dpa_to_region_context {
+>  	struct cxl_region *cxlr;
+>  	u64 dpa;
+> @@ -4262,6 +4580,10 @@ static int cxl_region_probe(struct device *dev)
+>  					p->res->start, p->res->end, cxlr,
+>  					is_system_ram) > 0)
+>  			return 0;
+> +		rc = cxl_region_scan_device_poison(cxlr);
+> +		if (rc)
+> +			return rc;
+> +
+>  		return devm_cxl_add_dax_region(cxlr);
+>  	default:
+>  		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
+> -- 
+> 2.43.0
+> 
