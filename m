@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F0D1EB1AA
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 22:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945E1D432D;
+	Fri, 16 Oct 2026 22:41:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792190267; cv=none; b=Yb29sMHziIPoTd0A3QtUioMUxLLL4w1qzineLNpVFnm/nMiRrcfbMKEqC4IHnDOM0vewBhBwuEwloX/17jl1ig26mJLk8+d+I5UBUO2mdlZNyPGfl3Rch4m3ahXB9ssUlMQpOE6hhduo9+aLRyvlrCdNNjwlecBEMh+We3yz7+I=
+	t=1792190486; cv=none; b=P8ZDqn7tmgBT31idzEp57oDG72PfLv6sKjKGQsXy6L8t6L2n0zrH9uuUzDv2v9+4oXDNt/IcBVwyqwg9lhKCxg4C6T2JuwFrxoGeoVFjaFhXJE0UL/dmEfzVQ3JYrLOgNJ1HjW7bYd4k7KsU6dag88Z9Pt1T2O83Dab1qiqUsoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792190267; c=relaxed/simple;
-	bh=qQMmiIH4VmdKSm//z99ZgNl0pBLYYDS7rPdpu5vj+OM=;
+	s=arc-20240116; t=1792190486; c=relaxed/simple;
+	bh=nOmlBcRzNKtRPQ4eEUsj+/2m3286iFfddMj78Z+R054=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=im2pvc+vt77t58SBP1ibjrzt4yW/vfVpyiPl9cx4cux81SkxlDClWhqUo3NKPMR+HbfLVDtxjLwHwDOhI8m6+3lhFmp5jOUQa9FUYTw0+OBGxUgk09hjkpqeNXHNPiaJTAE/RSUffserwxH3ksXRhmLz8WdqFA2s+wQ+oocredc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W78Uzt0Y; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=imalEvjoguz2Vja9R8/pvSxmNsi+av8GOw2IZ1iRCsbSK2ZgulJnb4j7apjNci6MS9igvuIVwY439k6yDRF0gGjbwd8T3EsNPEZYa16Iy3utmoBQQ9fh5T0p/jmrpvw1SrCf1EQuW4NICD1+NiWJ+3I42IfO0/A3y7+QDL/the4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH71egwH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W78Uzt0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA741F000C4;
-	Fri, 16 Oct 2026 22:37:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH71egwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B801F000C4;
+	Fri, 16 Oct 2026 22:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792190266;
-	bh=Z5xdCuM3eNL/g/vbxTan5KEpsbq4JXepoLB8ReMQ22Y=;
+	s=k20260515; t=1792190485;
+	bh=wlqZJKJYIhaeE0t+tvS/zxiZ9grWXt674kx1cECAGCM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=W78Uzt0YXPpJoGD8xh1De7p0YF8WLTSVvH1U8TrdZJxbHh8ySUKznbg6HZ1hA2RSp
-	 Zx93OCvcIGsBLCJItTUYkGcCtQOnd6LNGrA2mchf93b6dMD4tRXINg6MPuTa6KPfgm
-	 Vbl4aVhilRyNj4wfeilRb5QJVzCmQZqQw6YRAQm5CTnCUBxNEsoa52VAzafNx8guIA
-	 1hu9OsKf7VUfbcwlhCKKq4vLRHOeF6x7Y1bCqPkk06vhsJl9+ryML5VLLWxJl9wjL1
-	 gru2JE1eyhXJ2yeIfe/f5UTtRdcO4G1X7cj3S5E0b/CZqtyNtzbs180Fq3zpj27P0Y
-	 rU1uBSm7tIq8A==
-Date: Fri, 16 Oct 2026 23:37:40 +0100
+	b=hH71egwHYq9vWkbUXDiJA2QB7ySa4Da0tZ3L8qH+Zx70I9dvyd3tvxyOhOOy2zUPw
+	 nIYzx/JCugdltAn/0Xza23DF4+AfZ3MW+gM6Q79ynl5/3JZ4LUTi7tnfmi2mRBeP2a
+	 F50Uuzio+26S2WjZGFYXoQm7N6wX35FGf81LayX5errbMnOSIBJOqBrokBw53cUlYs
+	 3T+23U+vKIxm4ZRyCn1r/Lbb1S1ZJSSDHp5MMo0PfXR6fYWiXElfKHy0Ejdv/rFVji
+	 fXl1yfrlLWwxa8SXSEU6bzmDNgoNQgcSNSTOSfbhWceLNi2h5QSUDHbOxfkBu3zFaR
+	 eZ39RiLw2w32g==
+Date: Fri, 16 Oct 2026 23:41:18 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Richard Cheng
- <icheng@nvidia.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] tools/testing/cxl: Add CFMWS windows for region
- selection tests
-Message-ID: <20261016233740.02d7af65@jic23-hlaptop>
-In-Reply-To: <af1c9e18-4563-4c3a-abcd-219ec57da7f4@intel.com>
-References: <cover.1791582353.git.alison.schofield@intel.com>
-	<74ce1a0d09b6bab2f93d905a49dca681ac3b4648.1791582353.git.alison.schofield@intel.com>
-	<af1c9e18-4563-4c3a-abcd-219ec57da7f4@intel.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Ira Weiny <iweiny@kernel.org>, Li Ming
+ <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>, Terry Bowman
+ <terry.bowman@amd.com>, Alejandro Lucero <alucerop@amd.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/3] cxl: Account for link width in latency calculation
+Message-ID: <20261016234118.20f6a7e1@jic23-hlaptop>
+In-Reply-To: <20261009045452.1107921-3-den@valinux.co.jp>
+References: <20261009045452.1107921-1-den@valinux.co.jp>
+	<20261009045452.1107921-3-den@valinux.co.jp>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,21 +52,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 9 Oct 2026 16:03:25 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Fri,  9 Oct 2026 13:54:51 +0900
+Koichiro Den <den@valinux.co.jp> wrote:
 
-> On 10/9/26 3:11 PM, Alison Schofield wrote:
-> > Region selection needs topologies where multiple root decoders can
-> > satisfy a request and where a decoder supports both RAM and PMEM. The
-> > mock topology provides neither.
-> > 
-> > Add two x1 windows, one PMEM only and one supporting both RAM and PMEM,
-> > while preserving the existing modulo decoder identities.
-> > 
-> > Assisted-by: LLM
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>  
+> cxl_pci_get_latency() derives bandwidth from the per-lane speed returned
+> by pcie_link_speed_mbps(), ignoring the negotiated link width. This
+> overestimates the FlitLatency contribution for multi-lane links.
+> Sections 2.11.3 and 2.11.4 of the Intel CXL Memory Device Software Guide
+> describe the link bandwidth as the product of the negotiated speed and
+> width.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Replace pcie_link_speed_mbps() with pcie_link_bandwidth_mbps() and
+> migrate both CXL callers (the only users of the API). The new helper
+> obtains speed and width from a single Link Status read. The CXL
+> bandwidth calculation no longer needs a separate width read and
+> multiplication.
+> 
+> While at it, make error handling more robust by converting PCI config
+> read errors to negative errno values and checking for zero bandwidth
+> before calculating latency.
+> 
+> Fixes: 4d07a05397c8 ("cxl: Calculate and store PCI link latency for the downstream ports")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
 
