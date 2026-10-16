@@ -1,73 +1,73 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D735212564
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 21:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B90341A57D
+	for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792186979; cv=none; b=obZipYzpF6HTWcLev/mmwnNEK7kCUaM3nEJ783jo8Ct5swAzWuATjHBUbBxzCH9p8s2jmzICK/e/YazzTTGQ1PkjO9Vk7tEjnBX5BCAK5CtFJXW04JNEYkjvsecT25fDs4KZ8WVF96Khi/GqGHrJVFrkXL2k5d/D0vKyQeldtek=
+	t=1792186980; cv=none; b=fBoY3OJc5HaQyZTgLuD8VuJoLpiJCA7wFL9cYxDEFQe5XuwQOgns+YsNsMaq4/0zIRRb250Xqa5EVa07gu0ZAdw1TTxn6xjemgiKIwyywC/Q8sxGI9J1fgjelMZ6sUu+JiVLOmS3py85azOWCfXgWtJ3Grq7ozyj8PqWEWH7r5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792186979; c=relaxed/simple;
-	bh=epZ+Tv4twj9omcUdqFjy3579cWwXC1i6LoOmmF+11f4=;
+	s=arc-20240116; t=1792186980; c=relaxed/simple;
+	bh=MaJyLKfEFkwt0tCY+isqmy8S4HZq1gBm/vsuIioFA0E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jhCqG6QvpLo4BMu/hQg+EugvzIKzLL2Hx3mgTSc71r4+llUkGsee2Z+qoPj2qkC/7UR+jQ8nrOWLhzt1WNJVNpPyqFj+Fu86OEmOEoZCY26la7Is6lHY6XfeyMCtj+5Z636q4Pydo1L7X+vL6lf6/x7p41QYXsqReQPOv+BuFrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CakjjopG; arc=none smtp.client-ip=209.85.222.171
+	 MIME-Version; b=X3uaZeRnabp+OYkjba4yhPluU8aJGbjIVW2+BItQbPdhKiQFVmIUjQ8xjWYkyEmc2RdIF8LYkI5m5/3YGmouYp+Dru2fMoGsS3SndDFbGD/AYVgUCdEC9HOcddrbMgCOe8vxVA1KELDkAfXNT/Xw4b4JkycnagD+BLUgsU0hvM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gPXLBhD8; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CakjjopG"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-93f1e5d7450so33422085a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 14:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gPXLBhD8"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-93f269e335eso43637385a.3
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 14:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792186977; x=1792791777; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1792186978; x=1792791778; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=uzNpaewaJctA3/hnc9N3XOje4ftRWEwGxLiESyBnTyo=;
-        b=CakjjopGe11ivlsEaUDgM5fCzw0e8dcui9gtNeBw3XUnim8cbItlJaGAAgfWJHwpRo
-         jKlgcPeFgOY/+MN9+EDPJMFpFm9b10UBYFtUhG67eEhcIR6Jv+gVXRimH6ch+PKrZyad
-         G1qlj2INu2NkhGKLfT2VEfJFhV9bySUxTWln2S84MmyIRVgkMeke2vyWg2kv1kMOx3z8
-         GnX7x3cnl7Vm6+jOnoaFaxKOMGNER8qkyBUZhidOEtQbW9/1Y821fAb/W7Klnpju7Ebq
-         Zif2A/Z3giigZp8l12iSXFZMfUZDQoAJY8NBkI5Uiux+TIawDs5YTDzcCZtAljsjcGSS
-         p8FA==
+        bh=7MJLgBfxx+DZnWh1hc6BeLSdrKP2xfVHQ/GKNMuuDIE=;
+        b=gPXLBhD8nG7Q8OUgP9GgI0tmuNcALziVvYAgeq0LhsBjyXl/0L1XqHPfR+VYAlcpZ6
+         tx3ZugCjeaNRnZh6d6UnpcySagr42jX//KfzrJ7Per51edh0AIa1qYb9i1Qmccwb5LyC
+         +q1JJRJqBT8lpuOjcXD+Q2LxO2MnE6MJrXzsIE/5zvyZaxbnT57G1eLwD8TEKlDY38S3
+         s1aQiILwBiFa/XxH0cdZyw/EoYeg1chi/0oLDpoRrP8ml37wyJ++b4E85pZAwVYrbFsK
+         UPJh0KvcEAdEY9upexqiedIL54UAu9TGMDrt2FYKPtSGC4wFsgf7xBJJSEXRELfOOPmZ
+         Q7tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792186977; x=1792791777;
+        d=1e100.net; s=20260707; t=1792186978; x=1792791778;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=uzNpaewaJctA3/hnc9N3XOje4ftRWEwGxLiESyBnTyo=;
-        b=W8Ud2kZ6wMnsHiDG19dE+ZP5DAJQeYGhGDO3OovGkYv03d1wgkKrCvzDrzUnY0Nhig
-         eUeaPLA+mg/UAKVTKH6+UpIhkl78I7MmAWXOKFrCVV0HTgpi2MdCBKS7rQD3tj8tj8wc
-         KxDhuFUD8lhAJkzcuiBwj/YZ/gZUGnKiYlFxGAXN29Qc7B6M4yGfHJZH2ifywdaYmBgF
-         8Stoe2kALKR4WycN+evGi9BDmFUJnE6ugwxzh9z2Mp3WJ8DyPVk7LCFggqpnLq5VSUKZ
-         UB+7/w42iVk6muBpQpBAwHLeU5cRIXkIuUpUAiHenQ3QXed6v8SUSJyMxyHkWUqPH+9Y
-         rkHw==
-X-Forwarded-Encrypted: i=1; AKwUvBzLEP+CR2ipeglOycaAtDHntc71RfLbfCPjsL+SBMqNzCk+ARV5wLlAkTi6HuXAfF7ZqqLAZaXtlxM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKpPU6bbUHFP4Win2tcdvbzTLX90pxYjyGnWnGXXjDyw4JnqmY4
-	CmsVg9JnrMvAjjl6tvlykd5oNX4o2LFmoL1cSpkF0xXaVK6xwICb9pFP6Pl3v3C1sVUaoSff1oY
-	2jlEsCGE=
-X-Gm-Gg: AYBFou0FexytK87bVzVlhEky6n0z9UNkPdbBWo3SqxuMDqBsXymJwVHGVTezJK3qCPt
-	ERHzS2YZxinXONqZvrwI5J47+hTG4soXm8nKMYbmglddgeBss/kaVI0bAFAAt7I2sbV+7mcQxjE
-	rIdY6cyVUkJBbqvU2hFqHJBc8XsJe+2tDcXJpLGpOvuHRbtjfHNzoEWSPa1+8cQZpF+Rbp+SMS0
-	tMI+E7AHLpvKpW4Ne/XdXdW5CLf86fLwlqY7rBd5TtNe36fAqFtE6ARY1KDutu2J7807j/icMWf
-	b7Q0BEwPCuVKf/CmSjE+pzPW/Z7GJVH3jBvf8GsWEup43OSOvTv1ITOaZhca0QBeJTH+GnzscfS
-	ZPN4RTml3GIMP7Lo7Y2m7Nw5kDbWHR1myd1r6M+2fdrXBY0wec+42DBoqgiotcEt0I5mB8vst42
-	59f0OAOj7zlqLy9/jbNpBnEEs9WaID+GBx3h4ZSGIyA+2v46qvK4g8DQ2ngxZab1Xk9bWL8Yrtk
-	BsBZvvpu+HFiZpJvtxGx2d3PypwITArvLGVA2S/MsXBcn0yYnLCVqGfHzqb
-X-Received: by 2002:a05:620a:2715:b0:93e:62a4:be72 with SMTP id af79cd13be357-93f29cc952cmr209031185a.24.1792186977019;
-        Fri, 16 Oct 2026 14:42:57 -0700 (PDT)
+        bh=7MJLgBfxx+DZnWh1hc6BeLSdrKP2xfVHQ/GKNMuuDIE=;
+        b=QrCFMGbRlV3rkL46p0Rwna+OackGxx5/1zGfNbhrdJyvfM9Nmj80wI8hqty8t2n+YL
+         qW/V8G1zgErtCUNFhwlOl6CmjmP2/0tH8OIXhmfE00qLhb2vP1xpoUipNa0QGdUm9QDl
+         ZY/NxKnedmHQPYqRiSqfRd0pJFKHAFV2PcLf43HMBu+F957nIX2Vecwvij724VAhidZ7
+         gLew7Nc2+JNTqxIs+hdW5pjYgb9aQA4JgW1LjMqoMpmIm92zT4NfVZ6Nu6kEHcP+GNWL
+         OWSu6TmUs6s5hHrUx/d9fWlN6Vi+TuWJrvY7+0lWEcaC8bJh44j8IE9HDeu3NrxZtegK
+         BdDA==
+X-Forwarded-Encrypted: i=1; AKwUvBxc7YCbv17WZ2RBvbGx+p3gZVuzRxxgIFazYpGWciA9RmS+ztBtaMZare0LhjLbEeILP6BqybDZNjo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJfWvxvuWe8Mv/Y8NhlXzzCsH7uDSBXl4lWWDwHmrO76QCm0SOf
+	3DHae4LGmgKskiJNEEaVKArxmnfLfedbpcSBMwvMNFHd1SbU7fT5dEdwVtx4aGLNMFkVht6iSdz
+	o6HeP5kY=
+X-Gm-Gg: AYBFou3B77n0Nx86x6wl13BqDPYxHcjlnmVWFfNaOoBCIw+KuD98n4+HY5mSFuYKE69
+	gU6Piq4wy0bqaZr5iNKima81SzzIEcJ0HHQZG47rtXmNYY9jA7GgpIiVxii+qB65RDSZeI+9BdU
+	Tbvsf9Q3wGZN28WdJHfJsq+0HZDGjtE2nTMK0uxHE+v5qQNrQSsolVNNHaYD7bKjYYyneglMD+/
+	/4o8uV06ul2infWPl/sFmjqOJx6Or3kt2g/ckQKFz/Yg1g5vS/BvKZjUX7WJknoepbU86FrW1Yc
+	4nsjtSODE6qsTNSJDz9hpaLJRHochI2DuC6JpICSm9A4xWBHDKkyh5LIp09TgiY4KtBIQxKhcFH
+	1WH5rkANA8nVvkZX6nMVksM/6LFjsMbeAhIdEhBrwvHs05/vU8uMzQa7G6A0JApcqeMXdY1P5w/
+	6gxnfBLgrbOiItlXVqzwhoucWVlyM4CqKZ7DHYKHBkBNzMSzB+la5ooF9MUtCYGPgTRO2o+k8l7
+	vIRr6Vc+tmxM7x5+6U0NxEbzu2wHPooQunsgg4vMT9Go+1cAn9lJ9CFzElf
+X-Received: by 2002:a05:620a:7018:b0:93e:4d60:d389 with SMTP id af79cd13be357-93f29cccec2mr230239585a.25.1792186978398;
+        Fri, 16 Oct 2026 14:42:58 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f1a1a8ee1sm312622985a.34.2026.10.16.14.42.56
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f1a1a8ee1sm312622985a.34.2026.10.16.14.42.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2026 14:42:56 -0700 (PDT)
+        Fri, 16 Oct 2026 14:42:58 -0700 (PDT)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
 Cc: alison.schofield@intel.com,
 	Gregory Price <gourry@gourry.net>
-Subject: [PATCH 2/6] daxctl: online whole-device memory atomically when available
-Date: Fri, 16 Oct 2026 17:42:44 -0400
-Message-ID: <20261016214248.443247-3-gourry@gourry.net>
+Subject: [PATCH 3/6] daxctl: offline whole-device memory via atomic unplug when available
+Date: Fri, 16 Oct 2026 17:42:45 -0400
+Message-ID: <20261016214248.443247-4-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016214248.443247-1-gourry@gourry.net>
 References: <20261016214248.443247-1-gourry@gourry.net>
@@ -81,160 +81,151 @@ Content-Transfer-Encoding: 8bit
 
 From: Gregory Price <gourry@gourry.net>
 
-When the kernel provides daxX.Y/state, online a fully offline device
-by writing the online policy to it rather than onlining each block.
-This avoids racing other agents (udev, auto-online) that online blocks
-as they appear. The kernel only onlines from 'unplugged', so a device
-in 'offline' is unplugged first; if that fails (e.g. no memory
-hotremove support), the device is unchanged and is onlined per-block.
+When the kernel provides daxX.Y/state, offline by writing 'unplugged'.
+The kernel offlines and removes the whole device atomically, so no
+agent can online blocks before a later unbind. On failure the device
+is left unchanged.
 
-Memory onlined by another agent is left alone: the 'offline' case
-re-checks that no block is online before unplugging, and losing a
-racing online falls back to the per-block path. A small window remains
-between that check and the unplug.
+The memory blocks are removed rather than left offline, including
+when they are all offline already; 'daxctl online-memory' restores
+them. If they are all offline and the unplug fails (e.g. no memory
+hotremove support), this remains a no-op.
 
-The per-block path now fails when the device has no memory blocks,
-rather than reporting zero sections already online.
+Unplugging a node's last memory removes its sysfs directory, so treat
+a missing node directory as zero blocks when the device is unplugged.
+'daxctl list' likewise omits 'movable' for a device with no blocks.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- daxctl/device.c | 105 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ daxctl/device.c        | 51 +++++++++++++++++++++++++++++++++++++++---
+ daxctl/json.c          |  6 ++++-
+ daxctl/lib/libdaxctl.c | 12 ++++++++--
+ 3 files changed, 63 insertions(+), 6 deletions(-)
 
 diff --git a/daxctl/device.c b/daxctl/device.c
-index 47942f1..fd84799 100644
+index fd84799..99c0d96 100644
 --- a/daxctl/device.c
 +++ b/daxctl/device.c
-@@ -510,10 +510,99 @@ static const char *parse_device_options(int argc, const char **argv,
- 	return device;
- }
+@@ -694,7 +694,8 @@ static int dev_offline_memory(struct daxctl_dev *dev)
+ {
+ 	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+ 	const char *devname = daxctl_dev_get_devname(dev);
+-	int num_sections, num_on, num_off, rc;
++	int num_sections, num_on, num_off, rc, unplug;
++	enum daxctl_kmem_state state;
  
-+static int dev_online_memory_atomic(struct daxctl_dev *dev,
-+		struct daxctl_memory *mem, enum daxctl_kmem_state state)
-+{
-+	const char *devname = daxctl_dev_get_devname(dev);
-+	enum daxctl_kmem_state target;
-+	int num_sections, num_on, rc;
+ 	if (!mem) {
+ 		fprintf(stderr, "%s: failed to get the memory object\n",
+@@ -717,17 +718,61 @@ static int dev_offline_memory(struct daxctl_dev *dev)
+ 		return num_on;
+ 	}
+ 
++	/*
++	 * Unplug atomically where supported, even if already offline, so
++	 * no agent can online blocks before a later unbind.
++	 */
++	state = daxctl_dev_get_kmem_state(dev);
++	unplug = state != DAXCTL_KMEM_UNKNOWN && state != DAXCTL_KMEM_UNPLUGGED;
 +
-+	if (param.no_movable)
-+		target = DAXCTL_KMEM_ONLINE;
-+	else
-+		target = DAXCTL_KMEM_ONLINE_MOVABLE;
+ 	num_off = num_sections - num_on;
+-	if (num_off == num_sections) {
++	if (num_off == num_sections && !unplug) {
+ 		fprintf(stderr, "%s: all memory sections (%d) already offline\n",
+ 			devname, num_off);
+ 		return 1;
+ 	}
+-	if (num_off)
++	if (num_off && num_on)
+ 		fprintf(stderr, "%s: %d memory section%s already offline\n",
+ 			devname, num_off,
+ 			num_off == 1 ? "" : "s");
+ 
++	if (unplug) {
++		rc = daxctl_dev_set_kmem_state(dev, DAXCTL_KMEM_UNPLUGGED);
++		if (rc < 0 && num_on == 0) {
++			/* already offline, unplug is best effort */
++			if (param.verbose)
++				fprintf(stderr, "%s: unplug failed: %s\n",
++					devname, strerror(-rc));
++			fprintf(stderr, "%s: all memory sections (%d) already offline\n",
++				devname, num_off);
++			return 1;
++		}
++		if (rc < 0) {
++			fprintf(stderr, "%s: failed to offline memory: %s\n",
++				devname, strerror(-rc));
++			return rc;
++		}
++		if (param.verbose)
++			fprintf(stderr, "%s: %d memory section%s unplugged\n",
++				devname, num_sections,
++				num_sections == 1 ? "" : "s");
 +
-+	if (state == DAXCTL_KMEM_OFFLINE) {
-+		/*
-+		 * Onlining requires 'unplugged'. Don't unplug memory another
-+		 * agent onlined meanwhile (a small window remains).
-+		 */
++		/* blocks are removed, none should remain online */
 +		num_on = daxctl_memory_is_online(mem);
 +		if (num_on < 0) {
 +			fprintf(stderr, "%s: failed to determine online state: %s\n",
 +				devname, strerror(-num_on));
 +			return num_on;
 +		}
-+		if (num_on > 0)
-+			return -EAGAIN;
-+		rc = daxctl_dev_set_kmem_state(dev, DAXCTL_KMEM_UNPLUGGED);
-+		if (rc < 0) {
-+			/* unchanged (e.g. no hotremove support); go per-block */
-+			if (param.verbose)
-+				fprintf(stderr, "%s: unplug failed: %s\n",
-+					devname, strerror(-rc));
-+			return -EAGAIN;
++		if (num_on) {
++			fprintf(stderr, "%s: failed to offline %d memory sections\n",
++				devname, num_on);
++			return -ENXIO;
 +		}
++
++		return 0;
 +	}
 +
-+	rc = daxctl_dev_set_kmem_state(dev, target);
-+	if (rc == -EBUSY) {
-+		/* back off only if another writer onlined it */
-+		switch (daxctl_dev_get_kmem_state(dev)) {
-+		case DAXCTL_KMEM_ONLINE:
-+		case DAXCTL_KMEM_ONLINE_KERNEL:
-+		case DAXCTL_KMEM_ONLINE_MOVABLE:
-+			return -EAGAIN;
-+		default:
-+			break;
+ 	/* offline the remaining sections */
+ 	rc = daxctl_memory_offline(mem);
+ 	if (rc < 0) {
+diff --git a/daxctl/json.c b/daxctl/json.c
+index 8da91b1..cf81fe6 100644
+--- a/daxctl/json.c
++++ b/daxctl/json.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (C) 2015-2020 Intel Corporation. All rights reserved.
++#include <errno.h>
+ #include <limits.h>
+ #include <string.h>
+ #include <util/json.h>
+@@ -79,7 +80,10 @@ struct json_object *util_daxctl_dev_to_json(struct daxctl_dev *dev,
+ 		if (jobj)
+ 			json_object_object_add(jdev, "total_memblocks", jobj);
+ 
+-		movable = daxctl_memory_is_movable(mem);
++		/* an unplugged device has no zone */
++		movable = -ENXIO;
++		if (num_sections > 0)
++			movable = daxctl_memory_is_movable(mem);
+ 		if (movable == 1)
+ 			jobj = json_object_new_boolean(true);
+ 		else if (movable == 0)
+diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+index cbb42e3..eedf4dd 100644
+--- a/daxctl/lib/libdaxctl.c
++++ b/daxctl/lib/libdaxctl.c
+@@ -1644,8 +1644,16 @@ static int daxctl_memory_op(struct daxctl_memory *mem, enum memory_op op)
+ 	}
+ 
+ 	node_dir = opendir(node_path);
+-	if (!node_dir)
+-		return -errno;
++	if (!node_dir) {
++		rc = -errno;
++		/* unplugging a node's last memory removes its directory */
++		if (rc == -ENOENT &&
++		    daxctl_dev_get_kmem_state(dev) == DAXCTL_KMEM_UNPLUGGED) {
++			dbg(ctx, "%s: unplugged, no blocks to count\n", devname);
++			return 0;
 +		}
-+	}
-+	if (rc < 0) {
-+		fprintf(stderr, "%s: failed to online memory: %s\n",
-+			devname, strerror(-rc));
-+		if (state == DAXCTL_KMEM_OFFLINE)
-+			fprintf(stderr,
-+				"%s: device left unplugged; retry to recover\n",
-+				devname);
 +		return rc;
 +	}
-+
-+	/* all sections should now be online */
-+	num_sections = daxctl_memory_num_sections(mem);
-+	if (num_sections < 0) {
-+		fprintf(stderr, "%s: failed to get number of memory sections\n",
-+			devname);
-+		return num_sections;
-+	}
-+	if (num_sections == 0) {
-+		fprintf(stderr, "%s: no memory sections present after online\n",
-+			devname);
-+		return -ENXIO;
-+	}
-+
-+	num_on = daxctl_memory_is_online(mem);
-+	if (num_on < 0) {
-+		fprintf(stderr, "%s: failed to determine online state: %s\n",
-+			devname, strerror(-num_on));
-+		return num_on;
-+	}
-+	if (num_on < num_sections) {
-+		fprintf(stderr, "%s: failed to online %d memory sections\n",
-+			devname, num_sections - num_on);
-+		return -ENXIO;
-+	}
-+	if (param.verbose)
-+		fprintf(stderr, "%s: %d memory section%s onlined\n", devname,
-+			num_on, num_on == 1 ? "" : "s");
-+
-+	return 0;
-+}
-+
- static int dev_online_memory(struct daxctl_dev *dev)
- {
- 	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
- 	const char *devname = daxctl_dev_get_devname(dev);
-+	enum daxctl_kmem_state state;
- 	int num_sections, num_on, rc;
  
- 	if (!mem) {
-@@ -522,6 +611,18 @@ static int dev_online_memory(struct daxctl_dev *dev)
- 		return -ENXIO;
- 	}
- 
-+	/*
-+	 * Online a fully offline device atomically where supported.
-+	 * -EAGAIN means another agent onlined memory, or the device
-+	 * could not be unplugged first; go per-block.
-+	 */
-+	state = daxctl_dev_get_kmem_state(dev);
-+	if (state == DAXCTL_KMEM_UNPLUGGED || state == DAXCTL_KMEM_OFFLINE) {
-+		rc = dev_online_memory_atomic(dev, mem, state);
-+		if (rc != -EAGAIN)
-+			return rc;
-+	}
-+
- 	/* get total number of sections and sections already online */
- 	num_sections = daxctl_memory_num_sections(mem);
- 	if (num_sections < 0) {
-@@ -529,6 +630,10 @@ static int dev_online_memory(struct daxctl_dev *dev)
- 			devname);
- 		return num_sections;
- 	}
-+	if (num_sections == 0) {
-+		fprintf(stderr, "%s: no memory sections present\n", devname);
-+		return -ENXIO;
-+	}
- 
- 	num_on = daxctl_memory_is_online(mem);
- 	if (num_on < 0) {
+ 	errno = 0;
+ 	while ((de = readdir(node_dir)) != NULL) {
 -- 
 2.53.0-Meta
 
