@@ -1,105 +1,178 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785CD30216D
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 15:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792164516; cv=none; b=IXkI8U4ozYglfkDPj8o+IxcEQLBOnZbnuRWc88cNLde+LLpbSba+eerqoQO73HHqA78xTYef/i1DEuhZP52omV5yxkD4V9tfqC8MZVZtqgrQsQgTtPzhfiC/X6BW64T9VyBPXS/8N2h7UOs6Ob7d6m873KYACa21ZSeGCF5YVHI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792164516; c=relaxed/simple;
-	bh=45LS1UdziFdH9/L28pE18LpNfUOLryxMUFQxNA+kup4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyfRQxkaooM513WMxmgx5kQBZd8yk/6a4fsm/eW5xB+pCOhTwW0GcwseUE4Q2JdXfEzo2YQ63UlOte/hQINW0ngFgiru/bOJDl9CbwiP9LqaCN+B1I946pQx8eUtSEBzTdcPx8cPm18mEzaHl2hcinUZ4SCyCXXxGiKd5Is85zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CKlng73v; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42ABB4F55BC
+	for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 16:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792166659; cv=pass; b=UdnaraKmetbYtGgGKWZKQdxYex9iaLn6MLxjUxryv4AWt/Wma3CJesuaX5EocIlQDVw5SILfKRkr7Z+kr+oROYzBlu68T9B3kfV75WL/5+4vgJ5lJHhM/RQPQVpF7q55yQmM5KSO9nIJSDk+8FMshiYXTsOWB8DY7kZZ+sdFqSE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792166659; c=relaxed/simple;
+	bh=9lv8y/8boJJYeoN6PZYJjxSqtNYDKsLSBds0Xi+bxrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aMmRRsWdqzOPFM9iyjs8qJWopoDWgqWIQJ6S6H6UUsrh/GkBUX+AQR5nD1N6Fd4O3Nomcqk54y8458yH0mUhFpXyKgq8yCFmhw35ZjHunmwZccHuGsizSaIXcKn9QwT8QlhQlmjbBi0E/Sc9WYoNYvhM1BaFDH2+aH51c4NSL7c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZ0smH90; arc=pass smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CKlng73v"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5339199d8c3so221001cf.0
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 08:28:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ0smH90"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6b1a86c0316so24550a12.0
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Oct 2026 09:04:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792166652; cv=none;
+        d=google.com; s=arc-20260327;
+        b=UgMaEmoc6f81912TP3fxWcW5RChU7gKfoMEeZTytS7AX3ieAhZEQDrzigqkcL42MTR
+         vu1QmWsoEBzdrslropZrniYDCh5Dfm5sKvDHTxmWlZPq2SsesadXuO4BGeAkoJHi7B7s
+         Ru+aXwN41sqp1IaJGGGsu9oujWYUuX19lsJeOa26uk54lNnLX/HKd+BP8b28YKqK/+eV
+         7srx18hHCFcAhS3AUrOD+1VJiNJKgwW42SeZInkHkfM2e0UBtU5jXcdpBSe48J4vONgl
+         YcULdf3IaT7XZ+b7vddM6+/J+PiLFt2KLJHC12Otg5Pp4AR+TV36Ky3OJrBuJPAuRies
+         pVEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=0XT9gf6Lc+1fX8Xrkj2lJ0FO4HQTQ65QLq9M5IgaTRo=;
+        fh=/gU4YfpmAXqUIzD0EVIiu/ijGrHr2DPHmvBdFVsD6Ps=;
+        b=MmzcDNxrYcdVPk04drSOKXhVbFcxm0Wg+3THBN/sBzZT9JTL/QpL/B0pdgieyECVYU
+         7b0+J6e4eLhOeCC0wlKDq7aVjcZBUa4iTZs1E9boMjeqZIYD3oAfXE9YQXyRDdEFmOBH
+         mOLmSLFfBCELGVjJh9x4EWXV1ZxmyvQOXonkGXbNvgn4stflgvclAl3Dhwlj/LtljvX0
+         BzWVMZApkKH145GonkZmjppF94h+xJPxmErOqnF5OaV4ooMSsPXRkaOQOVLFek4Z1MCq
+         Hxqv9364zfGxDGISrRQg7F1shCc5z8lCM/cJ9T30D1yHVLOxpjpPYkfOTKrfGjSUoTnz
+         mEgA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792164514; x=1792769314; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1792166652; x=1792771452; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=P2YR4vuawodUu/XM3aGdAaeSVvyprcEIWQFxlPCqAas=;
-        b=CKlng73vYaOuWSTK0SjYYKzbDBx7cVk8tvVSDmP4NliGT2foQCJ1bhxBANzLAXgr3R
-         NHTgdvoe+egsyaAyM/W2RWUe5XN2GZq/D+4jDanilyxXiyjAhU3WlUW6YfjxbayBg0//
-         qpG1qlBEwqJJdFmdK8R4wEy7HNLv5D5/JSRDCU+Ve9v2EKRf5bepqesG6n1xbiq8/Uwf
-         E4/LIm/He2vUj7KcIzkLAGyhEGoxHv4s21HPRLOPZTbPlsBePWVJVdqncBNz2Cv6wNOD
-         rP4NiiCedfKQjK3d6stLPwO++ZMzviU49B4Q8z7utIugQTnkLkliGhl4aXX4PaaqWge5
-         MkfQ==
+        bh=0XT9gf6Lc+1fX8Xrkj2lJ0FO4HQTQ65QLq9M5IgaTRo=;
+        b=nZ0smH90O2BcJQEHiLGS9+qTMSQvGKRPBudRMNJgFmbiO1irM2c38CQ8mh1Bjnb6/S
+         gsLIEygi47TzqyloVfrJKzPzHVd8fR90b39H9xwlPxsRHksQoq2smDIVyHoymS0wPbOz
+         dDCgEIBeO8x4I2dNMRKijOWTxECJkhIg8VKUyTNoO30kBsH9vQrw96OgEZZf/LffdmP2
+         4ItL28QNdYvOO6fvYG6iI0ALfK3Dj3OuN8p4KVG10VQH5vER/3aRLgShcPdE5c3jg8b7
+         TFbAaI2q8unGeogUh/Y6Pei9ESMK4OeJqHHWjW4Tp2OZAWdz1qnYLfaoT5KGEGVxROrX
+         9nzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792164514; x=1792769314;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1792166652; x=1792771452;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=P2YR4vuawodUu/XM3aGdAaeSVvyprcEIWQFxlPCqAas=;
-        b=H76d0Qi1tsa8RqpuDcnI+p7w/WCkxmc+OxEzljVPputbVgJId3Ai/YJrYnmnMIwX2j
-         JXAmFHecmQ9FU54D0pTDAzhWSvU80SNFHDPgg21vaxvSIklM3SOvtj+MMIKfvywwwHVU
-         IXDclIwzFAMP3L0C9f0hVHQfql49DY2yQiyZlaZbpbMsr/9CNeMR2njV3uX08APaSMA8
-         qM45kd8Hz/Y4/c5tyZMr99lWflbE7ygSt7m8eOSKS97Wg0nkhka1vOMpCISKOzz6PffI
-         jVAIuvWktLb1LM90UjUaOX1p7M6aOF0GUzWCRPL7zdfdtJqJTxhokMinqj+crSZqfBbe
-         VVXQ==
-X-Forwarded-Encrypted: i=1; AKwUvByoSunj1jYFpz0zR632tAV77BnPJ38BxRfbtkQA7WzAXseOsm0o3wLcYOuzJUjwl/dJUBfvuBRMG0M=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJqOCCWJFDSxuqIvJvErP9FmNTZE0vsE+S5yC2Mq78djLfZQPfQ
-	sxwB/pMEAPnKwny/SnamGQxcoNKZufFuhkW740+78LgNNM8s9GNDJVtAZioIYw0O5hBd7Q5mI+j
-	1KCfPUyk=
-X-Gm-Gg: AYBFou0YGmEVHmOzHVz0nXz8OMolS6JLyh/jPvk1RCoXrkwGjYYWcz/djw8fS1N2eTp
-	RPoy+Ejq7gPno7K/fNedBAOSjHWAwIJ692YEI0ohvjO6spWW8NB8LE4QSr8TLUy/sPD9OH1GM/d
-	CaiOp6TXGVMI1EJsPXhcbUnyO54cKQqVSQebN+mghGAgyD7DKrF9R2kjgu4nrF+CW6zqGXQxvva
-	buYKHdQEn5CDvkK+aivt1KacyBzbjttHQinCuk9zaJEvvcIHcoyJeGSMNZ6iAvkqgiVj7MwRdGt
-	72mw3+nQtzCplj8JMtoDQlpKsngvpYl8SXk+pkMxXzFv9fceyQcYrycHCSGQkihPwkL90bShhwe
-	JuQHyBfy5eyAZxKEqxTl4umxGEuTAyKmfzSde90RbJhXCyykpAiIWzMBJTieGE1kOvikCJrX4mj
-	dJr1ptT7Kwj4VIBcWBk6nrZslLrYNJh50AXcyBpVFptYo3aBO9+j9HbAd8ChdTIvmgUrLBrZ0Sn
-	tyTK3vwOVp9yzuKdg3wWcMcbCnCmPv1cc2B5fs6GbySDzoPyqs18sY=
-X-Received: by 2002:ac8:5ad4:0:b0:534:b7b2:6353 with SMTP id d75a77b69052e-53629a699c9mr49329901cf.56.1792164514309;
-        Fri, 16 Oct 2026 08:28:34 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5362aa19fefsm25018821cf.23.2026.10.16.08.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2026 08:28:31 -0700 (PDT)
-Date: Fri, 16 Oct 2026 11:28:29 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Miklos Szeredi <mszeredi@redhat.com>
-Cc: fuse-devel@lists.linux.dev, John Groves <John@groves.net>, 
-	Amir Goldstein <amir73il@gmail.com>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5 01/10] dax: add fsdev_dax_from_file()
-Message-ID: <atJCherUxpYkRFa7@gourry-fedora-PF4VCD3F>
-References: <20261016151638.2962413-1-mszeredi@redhat.com>
- <20261016151638.2962413-2-mszeredi@redhat.com>
+        bh=0XT9gf6Lc+1fX8Xrkj2lJ0FO4HQTQ65QLq9M5IgaTRo=;
+        b=lbohENMcRIVzoYSY+ahiuBXpcCxyiKrYxjlWyibplmx8r199PzWBosTzOiw2okQSnc
+         1+zarcqgxfCioR+rpUVUBQBmFn+MTJK9f5gdmE7l72P/EFrQ3q/6eDuH7rtze5xCjtmF
+         VMPU0+DhYRRs/neftEXXo3lpG3EOhy94rVw6cqwtfOZBbLFNV1/kJX2/prNR8+BEjAvZ
+         OUp5UBvcaMOROJN5EE3OjL6nZ/yI37NzxaO8hjZFrVkgKHvn9lmKHtRuWkqNALdS0Pj0
+         4FZk1S8enlzr3O+sPGlQuCGygYKCEgbOSTkiyZoNuRpRjgz5pBOR3OKU17xgtbQS5AJQ
+         7R8w==
+X-Forwarded-Encrypted: i=1; AKwUvBz1PJh2niItbP6wJnA+Y0k9EeNlQWZGVIo+UsEo0PIAvV/gYdhaWJsETAuuPrCpfq2OVzKIgeECAOM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK6bTS/TKOPdsOqaZFca2LBvINxDG6ELA4twk0PO2yQxCE++rBQ
+	vASkze7foJTkWwbQ+CIuWCgfaidUy5wxlzWY/hzxV8P1IS0a/oV1hwwZ6OxZmi903I9/YyMubCR
+	QNiZpFn2YDaJ1EfCteu29g1ukbNZEODEESCgrhoY=
+X-Gm-Gg: AYBFou0K86OWvVp//pWfeQq45XCXoBhdSBCUbfArNC4rWOOGcMRemvtt8GRWd4xzZc7
+	CnsBPRmNzK9pLlMUp2hJqL+cJUiKxRmu+LL3I3Xm1bOQrwRHKpalAQwBS+r8DjQZWEclAlc5BSp
+	OLVpYxKkMLBAUAAdO8Uv27B2z4yBjHGBW7isrTc895C9DnNarlrQinYJ/nm5lSee0yGjxHPsxcn
+	godzSNRj8t6D+YCzh1tWIj31KpiZWW43OkmpyF0JtQzV3ZjBda8bCv3G/bmb1CIbCaKXVUQ8FqY
+	2p/sEs1rqjU4NDLswkauJnO9/3KFkKYa9rEGHjAiblvAGtzIQRqii3qd
+X-Received: by 2002:a05:6402:4402:b0:6b1:c299:b3f8 with SMTP id
+ 4fb4d7f45d1cf-6b1c299b53dmr13158335a12.33.1792166651834; Fri, 16 Oct 2026
+ 09:04:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261016151638.2962413-2-mszeredi@redhat.com>
+References: <20261008112004.1899560-1-mszeredi@redhat.com> <20261008112004.1899560-9-mszeredi@redhat.com>
+ <sashiko-outbox-164097@kernel.org> <CAOssrKeEOMUHz_Esfi6L0tu0rbd+aMbb9+fi9fzFYu5NWczOZA@mail.gmail.com>
+In-Reply-To: <CAOssrKeEOMUHz_Esfi6L0tu0rbd+aMbb9+fi9fzFYu5NWczOZA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 16 Oct 2026 18:03:59 +0200
+X-Gm-Features: AclHuK-Evug5KGDMq7YW7UlXb9Ln9FrCYT22ooxxec4w9tRZ6QLvbe-ThSbMDYI
+Message-ID: <CAOQ4uxhgFM=SN_WKGp8PXGpHJhk=vr9ADS0OU-UeEv8Mrba-XQ@mail.gmail.com>
+Subject: Re: [PATCH v4 8/9] fuse: add extent map I/O support
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: fuse-devel@lists.linux.dev, John Groves <john@groves.net>, 
+	sashiko-reviews@lists.linux.dev, "Darrick J . Wong" <djwong@kernel.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, linux-cxl@vger.kernel.org, 
+	nvdimm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 16, 2026 at 05:16:28PM +0200, Miklos Szeredi wrote:
-> From: John Groves <John@Groves.net>
-> 
-> If the file is a fsdev_dax open, take the dax_dev from the device inode's
-> i_cdev.  Return with a reference grabbed on the private dax inode.
-> 
-> Make dax_dev_get() static again (internal to super.c for alloc_dax), export
-> fsdev_dax_from_file() instead.
-> 
-> This fix is in response to a Sashiko review, and some subsequent analysis.
-> 
-> About the 'fixes' tag: this removes the export of dax_dev_get(), which was
-> flawed, and replaces it with fsdev_dax_from_file(). It feels like the fixes
-> tag makes sense for correcting an ABI error.
-> 
-> Fixes: 2ae624d5a555d ("dax: export dax_dev_get()")
-> Originally-by: John Groves <john@groves.net>
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+On Wed, Oct 14, 2026 at 11:26=E2=80=AFAM Miklos Szeredi <mszeredi@redhat.co=
+m> wrote:
+>
+> [Restored Cc list]
+>
+> On Thu, Oct 8, 2026 at 1:36=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+>
+> > > diff --git a/fs/fuse/passthrough.c b/fs/fuse/passthrough.c
+> > > index e9ab1aea34e27..040817ad76e94 100644
+> > > --- a/fs/fuse/passthrough.c
+> > > +++ b/fs/fuse/passthrough.c
+> > [ ... ]
+> > > @@ -74,10 +73,13 @@ ssize_t fuse_passthrough_write_iter(struct kiocb =
+*iocb,
+> > >       if (!count)
+> > >               return 0;
+> > >
+> > > -     inode_lock(inode);
+> > > +     guard(rwsem_write)(&inode->i_rwsem);
+> > > +
+> > > +     if (!backing_file)
+> > > +             return fuse_ext_map_write_iter(iocb, iter);
+> >
+> > [Severity: High]
+> > Does this introduce an ABBA deadlock between pipe_lock and the inode lo=
+ck?
+> >
+> > For normal passthrough, fuse_passthrough_splice_write() acquires the in=
+ode
+> > lock first, and then calls backing_file_splice_write(), which ultimatel=
+y
+> > acquires pipe_lock() via the backing file's splice_write callback.
+> >
+> > However, the EXTMAP DAX path added below for splice_write() directly ca=
+lls
+> > iter_file_splice_write(), which acquires pipe_lock() first. That functi=
+on then
+> > invokes fuse_passthrough_write_iter() where the inode lock is acquired =
+here
+> > via guard(rwsem_write).
+>
+> Brute force fix would be to prevent mixing plain and ext-map
+> passthrough.   Might be a good idea anyway.
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+You mean not mix on the same fs?
+Make sense. So another init flag?
 
+>
+> However I'm thinking about why fuse_passthrough_splice_write() needs
+> to lock the fuse inode.
+>
+> Tracing back through git history that inode lock really originates
+> from commit 2a92e07edc5e ("ovl: add ovl_write_iter()"), which added
+> stacked writes.  That was copied into ovl_splice_write() by commit
+> 9b91b6b019fd ("ovl: fix deadlock in splice write").   Which was then
+> added to fuse_passthrough_splice_write() by commit 5ca73468612d
+> ("fuse: implement splice read/write passthrough").
+>
+> Even for the original ovl code, I don't see an explanation for the
+> inode lock, but I'm probably missing something.
+>
+> Amir, any thoughts about why that inode_lock() could be necessary?
+>
+
+It is my understanding that the inode lock is used to synchronize the
+copy of size/mtime from the backing inode to the ovl inode by
+ovl_file_end_write().
+
+We don't have this model in fuse passthrough (yet).
+I think that fuse_passthrough_end_write() do not need to be synchronized
+so could probably lose the inode lock in fuse passthrough.
+If we even implement the inode passthrough mode where the
+backing inode attributes are the source of truth, it will surely be
+a mode that does not mix ext-map.
+
+Thanks,
+Amir.
