@@ -1,98 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5995325483
-	for <linux-cxl@vger.kernel.org>; Sat, 17 Oct 2026 00:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B1154779
+	for <linux-cxl@vger.kernel.org>; Sat, 17 Oct 2026 00:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792198671; cv=fail; b=rtr0xcx+rrK8UEvovnC14ZU0stI2SpOMbCmYCXSJ/FzJs9Me7Ok8PPDMeMAsoYON3i7MBQP7ylYJuV6zsVUGLkuPdUOa6bL27oyl1/EhjKW29KAGkaLtMw/QLj2DvvKMSDTX5DctcO645prQ+RYHIxnI19QWqaqSJDuuWKuC9AQ=
+	t=1792198774; cv=fail; b=RZCwgyxRCb23EgTZosO5OVHh5oGo2d/ThzGleBIr1edjIsKxHae7ipXpWeFg/9SYPcHEmZFxL6dlHL5cuthk4VQvlJ0XGnxqxObY8CRPtCd84GksmLQDAaacXd7Y4Es7aBt7pBZVn/0L0L3N/5ejPjXSUvakli8Y+r2inNYMOPs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792198671; c=relaxed/simple;
-	bh=cP1AzFwLVGyqn0cPRS6bCU400iAYEujmpLHb+psJp8I=;
+	s=arc-20240116; t=1792198774; c=relaxed/simple;
+	bh=JSfUW8yqv+C3DZgKXuav7VWSmU/DUy4DFUuF6cKqYPA=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GL7NmOjm1G30hJDBwjm1Nqq96rjPorZdefWqxBp/z5zjeHWgw97vtGRSrTnm6mRkI6jHvbtrgCjxMbDHYmYn/cDO5JDn06lgkAuNRF5COXPUF+Mg7HNTi9tQ7O96SQGi9TDxVmPODDKyU5lvxgqtNFxye9ZAjiezM7U2HAqDQ5I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WLwtKa2k; arc=fail smtp.client-ip=198.175.65.17
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o9cx9qzZgGTeZtcyh3TJnvhSKchRqlViprCtK9tx62+zxVWf4a2KC+qX6BlXE+pewInMbrwVMEcYpoq0rgesqgeAfXTlw+vv69ggCI5qyakLQAWb2pJSQbc+7sInZYjoDIumvjTHw5b6uf6czuKQ/8C7d8r7BR2NeYK71JB9KQs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I+UlWIbB; arc=fail smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WLwtKa2k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I+UlWIbB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792198669; x=1823734669;
+  t=1792198773; x=1823734773;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=cP1AzFwLVGyqn0cPRS6bCU400iAYEujmpLHb+psJp8I=;
-  b=WLwtKa2kN6jz6IoaLyJOjYQZ9k7qMXP8EobFFDsQrDdtTsYV2ke0+kaT
-   xJ86ljRVrIUnBZxF3Ttku0VmIvu7/aITWVO4gBs8TM/IYIzrZ40F80Iqw
-   PQ0L6eq9Lw2o1Z4njyaT69SkkEECN04vsmWt19+Owltbhib3UPt/Rmygr
-   b6aflfZ6RbcrVa7Rt1leub7fGG3jAa/FlkXS80sF40yxsG4fmhfHwCp8i
-   jV+4Z7R0V0qKOKpeuCxVzx5vIRya0uY6MncQU/NxtQsW/vVw52Op/jQVX
-   WvRWksbhiatDYojySu1ArLG3KpAxWV7U+wC+m8FGE9fPckGmOpshiDvdd
-   Q==;
-X-CSE-ConnectionGUID: vhgSNynwQyetMZIzUFb2ag==
-X-CSE-MsgGUID: yAVnA6GURrS66uiGJDSleg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11937"; a="999217"
+  bh=JSfUW8yqv+C3DZgKXuav7VWSmU/DUy4DFUuF6cKqYPA=;
+  b=I+UlWIbBPzl66UXIke6Rfhs+xkSux2xR2CEu7ye1hEmSBf4T2Q/yb2yU
+   JBFptynM+86uJ/SqnaIKFPIUZMf4qmqfWgGX+XW6pbPAojxTLvggpQz/U
+   djJ0yyTQ3+mJNCpRgGpKa3ghhus24C+GM924Nhdon2fURjug3T1iJoS/h
+   /jXNtxWHA2u4KxSKjUams+v7NX1LJimxN9grU5BnlefRJJgBbiPM7oTC7
+   Kf+oYBpXMpczUrOVcVAtUkCRvu+/JkLRuZrLaENPu/W/vRvAAuzSx4Bue
+   /yEUrOlxsw/gOBSNHESJRXeVQz47gn/Jf9QnzocltCwAvvBo6gsvNpjVC
+   w==;
+X-CSE-ConnectionGUID: fYgzwzN6Taec3UpF3e8oWw==
+X-CSE-MsgGUID: /tbrRXPVQri/jbuLA+6uJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11937"; a="1006719"
 X-IronPort-AV: E=Sophos;i="6.27,162,1787036400"; 
-   d="scan'208";a="999217"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 17:57:48 -0700
-X-CSE-ConnectionGUID: Iy7ZZF4SRUej4QLi4+S3zw==
-X-CSE-MsgGUID: 2GFPVKBOQtS2UDhKP9LrBA==
+   d="scan'208";a="1006719"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 17:59:32 -0700
+X-CSE-ConnectionGUID: dfoJcsMPT2SDGrCTs4ed6w==
+X-CSE-MsgGUID: hTV3NbyDTSu5o2LIS7X4jw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,162,1787036400"; 
-   d="scan'208";a="2542892"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 17:57:48 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+   d="scan'208";a="2147420"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 17:59:31 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Fri, 16 Oct 2026 17:57:47 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.2.2562.49; Fri, 16 Oct 2026 17:59:30 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Fri, 16 Oct 2026 17:57:47 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.6) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ 15.2.2562.49 via Frontend Transport; Fri, 16 Oct 2026 17:59:30 -0700
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (52.101.43.69) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Fri, 16 Oct 2026 17:57:46 -0700
+ 15.2.2562.49; Fri, 16 Oct 2026 17:59:30 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yy87F+Uky3y1adpbrQi5jO0BbF9Hu9+Yg3i6LP9vB4cVPtrVMGVWKffExOzCtXzxYG/SeXNIIdAJlneJEoBFv0FFfLYlyA+SKm8rt9Vh4Lf3H/VnIKoHyGr2f8uwwKvFLiM0pH3wrCV1isIT2HVkT0suQc5smXDqiZVVMIioKLcf5oOkDig0vyyAacmcEME/6cLYPdpRV8PqBRZhDwDGTPE69Mlo2MC3wPaVKIpcbk67B4YHTyTjZTol+wE1j+achuRa0HF03qnW7I1BTXVY896nzPqdIuAdrC5khJjWxp8IisZxFHGdTT6RJsAzRJzASoN4OZTDq0ikduGH6vva0Q==
+ b=bUpLV6TNHeJx5a7rjVBRgqRv5Xy6nxPM8vUlJGYKk5lF3ioIaal7dnswsrkBUY9jAwSYdqVdXs1INJAA4NYuPLifW1nxxTUZc7KRow3cCeU2O4L8yUqMSKtBo2GqOxIM0PDhcVFI4p54aHfkNlKAZNEzoh7fb2shwf3Yb4P0Ebe6Ny2BoFkSRBSgRPhR5FaCfQIUN0EAVke2ovz96VliHF2uWujBzFFZ8jbDf2bNOIFI2Av/prLtPCXxwY1auWHmqkrc22s60WS7EugsqhzkeTYq1GTUJZKBk6bkvWzlde54kgmSDU1d0Ld7D9gpPM3N4YExujVvQae7QRz0t049uQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Qt74MPSAderEnJ8t6JrXXJlN39P9tkOBwPmPxuVfBA=;
- b=X1/KglxGYEOTm90JR+dgKzLxR+ck513MFnd0UrJSmixBAgak6Qnpby4xt0Pe4HzSNMeLWh+bSGk7rdIeHN9U+WotGu0k+7sTTKp6zn+JYRgStVgcOoi+VFJUz8/13P5rGc0wnLxFslt8CcxZ5pHXrlmpjvKiDthPZnCV3K8vRv2/QCTDWD0x96jY7yJS8q2nYmfY70YdOOPG5X2jNeL97ftemPKDaK3VlowKv3n0T8kK8Qx09/0+N/c0qAYmXq7aHnZcTXxjfBk/rP5UvlJKoliRbBhIP9J73quBsw3s2/lzQv3XSPZn+b7pyu45IaEWsf1gW4PmUmqDe5STG37z4Q==
+ bh=KmjqxBCgfAPxeqtavxKoh7YyvA+JZceXtTwElahfKOo=;
+ b=V06cPTV2CHMwIuYDKLl9fmkOCST9zDzoSbMt8UPyiaxMMcappVf+fgGwde4/JOzJd4/2O/LfSE8+ysODiaEWV3OxjpDo8cyojdVr12OqPDjVJSZhMP07R6APGu0mcFOLZ7Tc9fdK467VSfKLvCp8eXNFuwfCe3e83MHCfAPuuEIl+N5iTLERcwi6op266X3gsu/yS2t7MNR2gHkQgrbuSoy6hTdqIl/c/ErHlnueF2LsV7j3C8XU9ohcDz1H9qo82tv9QP96/maL2O+YcLBqNLerMg6zygMP/xb8BLyDZ3Ba0E62mVnhHk2wpd4WMgv0fknETMwUyflFCjBy8mpzsg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DM3PPFD83941681.namprd11.prod.outlook.com (2603:10b6:f:fc00::f55) with
+ by CC6PR11MB964443.namprd11.prod.outlook.com (2603:10b6:170:20b::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.14; Sat, 17 Oct
- 2026 00:57:39 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.17; Sat, 17 Oct
+ 2026 00:59:28 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0522.013; Sat, 17 Oct 2026
- 00:57:39 +0000
-Date: Fri, 16 Oct 2026 17:57:35 -0700
+ 00:59:27 +0000
+Date: Fri, 16 Oct 2026 17:59:24 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Jonathan Cameron <jic23@kernel.org>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, "Li
  Ming" <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
 	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 6/7] cxl/region: Factor out cxl_port_setup_decoder()
-Message-ID: <atLH_zfYMgoleIp8@aschofie-mobl2.lan>
+Subject: Re: [PATCH v3 7/7] cxl/region: Factor out
+ cxl_switch_port_add_target()
+Message-ID: <atLIbOE7kKmriBXj@aschofie-mobl2.lan>
 References: <cover.1791860305.git.alison.schofield@intel.com>
- <b518a60cae9a472c6463195f0173800378990d2f.1791860305.git.alison.schofield@intel.com>
- <20261016195317.00b2c5b5@jic23-hlaptop>
+ <97c96f804a383b13ff83f81e9e9255f4ea0887ec.1791860305.git.alison.schofield@intel.com>
+ <20261016195623.59453de1@jic23-hlaptop>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20261016195317.00b2c5b5@jic23-hlaptop>
-X-ClientProxiedBy: MW4P221CA0006.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::11) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <20261016195623.59453de1@jic23-hlaptop>
+X-ClientProxiedBy: MW4P220CA0014.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::19) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -101,155 +102,211 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM3PPFD83941681:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f2ee523-9a40-4895-e3d2-08df2be9a449
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CC6PR11MB964443:EE_
+X-MS-Office365-Filtering-Correlation-Id: d065d494-2d38-4c09-43ab-08df2be9e4d3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|6133799003|10067099003|22082099003|18002099003|4143699003|261009223027099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info: j2SfRmmfLfmlKI4tdQxP9xxB9vnHXGL7xG8HI45FnCu04rKcvUJk04MKoJT0e7yAxPjZnRcybk8ePgBuPjTg5J9VEU3UROpyVZ4YfqGTjSCHx0v2SRnJxGrvGpWP5NXmjTMeTKwQfoNsGME/He4b0ntaCHxdzQ7wQNyvtPnmLpFBgBDPYbyh363N4M6nREflgGjpJU19SXbXWm+BkRv/AZRoRPRk35Dl8omXyt2H/oXcTMghQLdbg4VwWiC2cEhmC0/j+e8g/nPQiL6JZO+cI19juw09hunXjOR8UzfgXtuzRxht0WzrbxsCPXJQCEaziwsO0OxS3ijDJF89EkfWjiyXiZ7RUOcNciYmZvzW2d1mmtRfmL5Lh2Dh3oRp79ndgklTh6wUw0sMa9X9xVT4X3oCHWjY4FrE9Hi8ozkilySA4NPoJgrvhp5Jb2uQW/Rb5qkIeX8exwJ3zmZQ+wV+DbNWBH3uBl9zM0sKG90Ydn8dReSsAD6nrm14gNmHc9hccHo/iYP3/DeB6AxpnXtapvv1AYkkQfItzimIcI7D/y5X3LKlQ8Lh2X611D4xbGIOBW9gdmJC1h3vmJBCRfvOdHsKtEHrB5HdmkHeOsROA8lUTizVbd2SeD2nZcAqf3uVLfuoy985K7y4LF0xk49NxC/R5n3mhDyamZIhQ0QLcLo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(6133799003)(10067099003)(22082099003)(18002099003)(4143699003)(261009223027099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|22082099003|18002099003|10067099003|11063799006|261009223027099003|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info: hwF7RCM66cyq/jV0skqiSXmjZVNsZaym2/EWWNo2XrjubjCnBKRBP2h/tH4VlmQvczXjYX8x4Wpsi+AuOdnLRiSxIvdq4WWmk4vcvR3wha/v3jQmLOE/uw6hvX6P0zdO7rnaQyO6FRT9qr18vIaygFBx6hHnVDjjvIb3hv8VVwqWDukSdBxp7+w0aeqE+zjIyGGGKsZ4QjNzT29MBkg7jaAPwZOrT2WSlJHFUD08HNIyb4Om4wGgKbEz6oPHR5MA0jYxcKvsbIujRWFvMHK0MNE065rFidoQHpA5SWWtrarvhqTAHbbondyX25gG+ECAqUZEBE/fbLZI04zwWcoOV1qrxLBYtuPjQI+ubK/VJul7MIVgxRRroLfELqy1nHvOUssCPv+O2CIqSaSKRvmkREsgm7C8UM6KsCPVTh+hjuappJzuJ1AsWEzD6aHY2SJDIWqwS/XFe6ngduUecIftlERiYhLRARX+vqEdtLZzrhquTJ0BZTCBJmMro7fTKKNyelQAbdhTmCjCQMRcUtIw4oNtqoJVeo/9svwstGl6q+8Mj3z7iItymqNvOEy9f2QjFsWOyOKVqCowO5n+pzJqRAS6GKfUzL3z6+1ME4Zl0QfsflrV9aTZeZ64PSoQ6Ccn90UF4Rn6vbp5RBHT/NhRNzo6bZmjMTOcjWnF/X7Pb+Q=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(22082099003)(18002099003)(10067099003)(11063799006)(261009223027099003)(4143699003)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2DG4aDOggIOCfzgowCwiwI6HQ2SwxMXjJFr83XED2E1oIJ8Kz/KSMUeBgstX?=
- =?us-ascii?Q?0mDUyYiqr4Z7POG4zZBdY4pIesHbGD8jmOp87+R66Bf/aiwtXQU9FlJqRhpA?=
- =?us-ascii?Q?CsxJed8ekPUMMiUtNfWEuCY79UzPjy9Zq71aJySQCQHn+yNb7goZNO5vKggY?=
- =?us-ascii?Q?7U/2RpTbW3cz7ZbCcr9lkNBIElN6FV1or1eOY0r+riLnSFr5JfoTDslKid5o?=
- =?us-ascii?Q?5wIavuwFVH+kXl73Kicxu9EKAm7DUhG2aBbqtnmk/K5LEka5maKfitydIyT3?=
- =?us-ascii?Q?bWPzDPTZZGQOOy0vEl0ga/3Cg4vNbJQYSgNRHJkbwheEGOBbdBuW1vPUABMV?=
- =?us-ascii?Q?bQyyjIyZsnwSr+AhzWV3tjfz/KPbrzay4KD49L0NLCGCZqFMgzoQL7XJMfn/?=
- =?us-ascii?Q?JwS+XKHwiUe73LXlhEJM/FnGAasZE5dwIsgxP2t/VwoQ298t6wF+YEEW3WxJ?=
- =?us-ascii?Q?L21N3yPkPDfyQHl1Nc4ixwrfQ8KkN6Fr2wJz+oSCIwMA+YM90kvu1UoYVlL5?=
- =?us-ascii?Q?8TNCzj1PM8qCxKHTNv/a/vDurMCXDgLLW5OeTpMFfcq55NjNjCeRdQGRkiiq?=
- =?us-ascii?Q?kJj/NDMhinPiAJ6XYBV5UPPRTo1AfaOUb6CaT/x+gxFkd5mxfbsmEwN/CFaG?=
- =?us-ascii?Q?/Hjg7RdKH2T2rOxq5ZGGLTCvwOKsnV0jqczDXpW6KCHRuYhCbfoOxVler7Vl?=
- =?us-ascii?Q?k/LfW7aaht/hNyudZT1TiVw6usT2Nz030I9Iz0aSn7mEw5n5Xw8YMUU8WjJX?=
- =?us-ascii?Q?LhgrLmXzgt37j/lZuPNBQla8MdWIh5VsNVugD35iKzt128ZqfIEvVfCm1ZOr?=
- =?us-ascii?Q?U3ik8tyGy161RDVfjRJaIzUlyldm/zYT2OLc330TBCFyJMAguTpDyAFKZQPa?=
- =?us-ascii?Q?/tNTAtEcB11XO7O1SK/JJBqlbze8M+YunqYmIGki4apmdCSu5YwVIOCriGuo?=
- =?us-ascii?Q?mpi6q6K6ftnqCmMriQHcLGHaKO+WJ1I9Jgtv7oaSzvEy/flmQ6QLVLdgpU7T?=
- =?us-ascii?Q?w6npz8YF/39owSKsGRZJxOZoRXAUsqfNhw7HSqyZgkLYHJjWC7OcLYxowOMb?=
- =?us-ascii?Q?NvUNewxBd81UuUHqF+KvwquoljUu88xOtji/WLGrEpfK2ljFIeGITgLzwJ1b?=
- =?us-ascii?Q?FsZwI+uxjorhRJ0ofR7M+Kc62GNJikNhhqNs9CaCNmM7dPh1AcQ5RqZcjXYW?=
- =?us-ascii?Q?xhL1MgtDrj3W5fzFDdCOX43Pqu1BJxJlGDcirEQY6IEHQCH5WjRSxfA6Kza2?=
- =?us-ascii?Q?d2x5OqmGpxl8kS5iFT2eel6F1zwg1wiQS+u3EgDHDuHhiawTAMPknlN2nYQE?=
- =?us-ascii?Q?OjbwhuCEnB36mJt5YVDVPuL0fSj+awCmIw/d725xk0c0cLxM+Urjkt9O3nF9?=
- =?us-ascii?Q?YCt005dJDisLd8/uv+akcK8H9sygGNseiukHp2LbtbnAnQLy9ptReqmAWj8H?=
- =?us-ascii?Q?J0HQx4qpWDiPT3sPqFNXlV4aM5L0tK2IPaqqky2kWggnmUy7zywfgs7SMuTU?=
- =?us-ascii?Q?dOaMVh8ykFFOGyxjEvn5JHJVnYF6jJK0CO3rT7naIosvRCPWa+1wa/ZhxWCJ?=
- =?us-ascii?Q?ZvBhFCcbXrcT3Sog1atMLu5eFHox2ms2cLfa0uzEYiOnCHNCWOI9NB5GZ4aW?=
- =?us-ascii?Q?Q1D1hNhwopTH0iVuep7i0QabIcHXbABeGFMh5W/dd3H8Ik/+SktHLUQAil8c?=
- =?us-ascii?Q?p/rXjIXiHOZ55TgL1EM9PZL28PuYVdd+tQBFUxaeJ00CTusgiGPYCJFKdAuc?=
- =?us-ascii?Q?xPDkcc4zeugoOP41MlPLnxccN2FJJX8=3D?=
-X-Exchange-RoutingPolicyChecked: XvxmqO1jYrpYbDvVpn0nQj/S+1BGVgnt2GEQ7TQpuJofzXOp4YIV6XT/f237EMX4bu6bxXApcvln5V/7iZ4/UHDnglIYAKloGhAMb/K0PvXdt/0YMVPdnNTl3N+2tPAKlVB8XOZf49uhvRN72cnd78q6fh0lx5TmbVmMu5aTod/RE9hNg2OZI7k2qSA597ch7CoUuWsvqQFzGX7uIL1KhrA8DlD2W8m+TTiX9Ds6F6geVSX/OzGmEK8C08zoSu1il+X+iHyruwCnO8clkzqkzUMbdT/8cXC6YhXGA9UfeSpv4ws8IMdBmpy2FtFc+iHtUyNP+8Mf89rjspum6zINtg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f2ee523-9a40-4895-e3d2-08df2be9a449
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7dLvbIMlF06k94KKxoUjvS37LutSWqCztUXy5xg9j7D60HZb/WSyh4Dd3TMw?=
+ =?us-ascii?Q?sdJkQYLmuoDFtTbkvNuBYURBpcW/VV3gz9f8NwTMvIjHp+FHMgS2XOV3FmkT?=
+ =?us-ascii?Q?aEnyEwW2AmaNVeovuwefEqY8vc8j9CeutzaR0/TGizJjbQT7RFkUn/hx3qFb?=
+ =?us-ascii?Q?j4NqCmd95EXK/qUtCjKUwN5F3G4mPsYV5qmuE2axKfdALNtC1BpqXaeGbuoS?=
+ =?us-ascii?Q?1/ZdNTuvdEbAAlb+BiGA0bY+Z3wLheDOTEv5mG0Rs9cT0s5oQxdfYosuGU/k?=
+ =?us-ascii?Q?epvK4DjaJcQ32++eO9cmmzc4fEwRD7Fi41JpcjEQEet1zSanLSPaf0gJV5Gi?=
+ =?us-ascii?Q?8OVKVJ5LKqrqL7pX45y2zXVRCoFWISdLFuBmiOpni2XjzUEPTmOssUoNQ0GG?=
+ =?us-ascii?Q?6DCP4H1FKZ6U0Aujyaz9C5MvIQpjfME3vMuiXX0p6fX+EcKkPnk29eNivxVZ?=
+ =?us-ascii?Q?G33w5xXBy0RBN6O/0GwYj/A2D/KW/xbExfbqBF889h6JihlK42uB1vbMNWlH?=
+ =?us-ascii?Q?w7FYX2DGdHASfyy0Lc7Z22RpBUgHub7ml+JDnxYrqPIXV46hddYBqQMDWKZ0?=
+ =?us-ascii?Q?ANxArDinrQwPMWl/be82ZKIZ5o92JEzYLVP1+wx/4rV1WTaAGtZ8ROfzl2sY?=
+ =?us-ascii?Q?2kTcCX+4+55k+ZRo21TnsrUkfVnLuq3UdWMD+oeIzx+Sum+mNlsSBesS/Vjd?=
+ =?us-ascii?Q?B5YjOC8lnkL12WgIwuBwrxCP5KIFo76O+g1mW5jEXUxF/xdzXSPr2K+nutMO?=
+ =?us-ascii?Q?XwLIGEqTvVPtLBSPvYKSJg0ahkGc+z9y1ev21pUdgHElEG/zWz8EpXooxTdr?=
+ =?us-ascii?Q?8qBw5iTwRtF7bDTzlhNZaZ4n35UTtK2gRraENVa89hVV01SwjEhcyLk/gD/z?=
+ =?us-ascii?Q?fepL1sf7BlfFssEm38QaLw4ijdDrvWKK2n//S9fMPDP0KbhtJbKrjmQ77HgF?=
+ =?us-ascii?Q?C6SnPkJWbCP+4ndUKhV+LOZgK1yVlxsryw3KgMnObLpi3vXa18kp48CnR1SX?=
+ =?us-ascii?Q?ccaZbnXSTZdyE+uUCuiBlAeHnKMxLuzVkTN2C8pmLb+YvGKjiXYFMzb7RZ57?=
+ =?us-ascii?Q?6EQ9xyHBT/vCDWAZoyRDZO2u3//MGpx/d4xcDWy77l1x5vSsgjZzUlwVK0uB?=
+ =?us-ascii?Q?vL9jMyyvyqSvlojt6/F+ivIzEVU8N99SjWKAA6tbPgo6ytR+5AfqtUWwlzBA?=
+ =?us-ascii?Q?hXDNEEiMXNNSiamSSweJU+HmIMQHn/EU1LKixxQmQzldvzLrWyRSM07Y19my?=
+ =?us-ascii?Q?JotUFDzIaCJRvuxFP45Z7XJk0OsBk+yY3nTRGnUyIYKEF0IHHKbFUCQX8wO+?=
+ =?us-ascii?Q?0U98YI4eBB4fNbnGGPKKheHUFPYwHLTvZ9HDJULN411QE9EwoJkTlJe+U/tv?=
+ =?us-ascii?Q?OVUXdXwpS8Mh2afpxF0Ndf0WV8Y6VOgtj7AIvsgQ3ggSPbo1XzsNHneWd2K/?=
+ =?us-ascii?Q?LQAzuqywk1iESRLjbw8dDaLswXqDextGrru/vcy5xEJanS475MVV4ghYH2rP?=
+ =?us-ascii?Q?VtjgSVl9pH/72KHI+QyROxCByaPZro3/RCU5dSwEnAlSrFhCKfVqFMgFeg+w?=
+ =?us-ascii?Q?LtBz9vgEnbxuFFqiye7M7WKaZ67n1kI8XxWAhSv74XcDEFBLPr+Gg+5P4tIb?=
+ =?us-ascii?Q?gUu8Q7c07XtQIdRZMdue5J1F97ZhZhL33db3oPcrcQQ5K+dZwjs8SaFtR/oz?=
+ =?us-ascii?Q?SpzxhKT39eHVxqrX0Rmw0O5RiDKo1C7LpCcfxPh8Zizt2yrLfv3BM1wfIWZu?=
+ =?us-ascii?Q?6+V9/5Eptj7bKogOG6+xwoJdad0yneE=3D?=
+X-Exchange-RoutingPolicyChecked: IOeooszzpjiF3tj4Y/JvyRh+wgstkIuljtZXRBWsAXNX0oGn/QPAgtjkhoU3XQIKAdN8RPuTUVnc67pD0uicM3W0GW4QdgP2KeTspt60riwHC6AsK6uz8vhuyeiD+0OWxB2wYMLraiAlhMoeuEtx0ZmEcBjIW0ZDRWaTOHM1e/mcD5MSiPds0UI7sX/6PdxSO7v1aIgOMMMj4vGoDQUoPVcmCUOSn7N4YGnaQapdINeLPI1V6nkfwQmElseCsQ7BOaSmUDL4plKmc750oxr35d0SkHjRU92zrFL8AkmrR9A72PJV+cx1IWrEgIncK/GWPpZu4bCFWD7CjrwJ4UgAPQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d065d494-2d38-4c09-43ab-08df2be9e4d3
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2026 00:57:39.5315
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2026 00:59:27.7745
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3cAmDnikyZO8skA/xejPu4l3U1gFYnpShJZU1iaL0jWnOjgwQ3XG6jEjPxLDraGTkS7co3Hh8d8wMvL4LRgwCrCFHfMhcb4iIgvSDNl9RVM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFD83941681
+X-MS-Exchange-CrossTenant-UserPrincipalName: JpRJh4SmglfrDdRpOsOE3V2Sh10PiVF9VWXVIkAAVMMwoJMpjpvo1xu6XqTAIf9D41hQpO4KYYqCtocgdQ1QXTm24V+xSB8KI1poZxngUFc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CC6PR11MB964443
 X-OriginatorOrg: intel.com
 
-On Fri, Oct 16, 2026 at 07:53:17PM +0100, Jonathan Cameron wrote:
-> On Mon, 12 Oct 2026 21:26:02 -0700
+On Fri, Oct 16, 2026 at 07:56:23PM +0100, Jonathan Cameron wrote:
+> On Mon, 12 Oct 2026 21:26:03 -0700
 > Alison Schofield <alison.schofield@intel.com> wrote:
 > 
-> > Once cxl_switch_port_setup_targets() has calculated the interleave for a
-> > port's decoder, it either checks that interleave against the decoder
-> > settings found for an auto region, or checks the decoder's interleave
-> > capabilities and programs the decoder for a user created region. Both paths
-> > are open coded in cxl_switch_port_setup_targets().
+> > cxl_switch_port_setup_targets() adds an endpoint's downstream port to a
+> > port's decoder target list. For an auto region it checks that the decoder
+> > already targets that downstream port at the next position. For a user
+> > created region it programs the downstream port at that position. That step
+> > is open coded behind an add_target label that the target search jumps to.
 > > 
-> > Move both paths to a new helper, cxl_port_setup_decoder().
+> > Move that step to a new helper, cxl_switch_port_add_target(). The helper
+> > takes the switch decoder whose target list it updates, rather than the
+> > port, which makes its scope explicit. With the decoder setup and the
+> > target add now in helpers, the path for the first endpoint to reach a port
+> > becomes an else branch of the target search, so the add_target label is
+> > no longer needed.
+> 
+> That else doesn't really have much to do with the helper I think?  It is
+> an unrelated change wrt to the helper added in this patch.
+> 
+> Maybe I am missing something but to me looks like you should split
+> that bit out.
+> 
+> Otherwise, LGTM
 > > 
 > > No functional change.
 > > 
 > > Assisted-by: LLM
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > 
-> Maybe some further opportunities in here to improve readability
-> (using Ming and Richard's suggestions)
-> 
-> >  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> >  		if (cxld->interleave_ways != iw ||
-> > @@ -1639,6 +1604,53 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_regio
-> >  	}
-> >  	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport_dev),
-> >  		dev_name(&port->dev), iw, ig);
+> > ---
+> >  drivers/cxl/core/region.c | 80 ++++++++++++++++++++++++---------------
+> >  1 file changed, 49 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 229372123271..50f4830c225d 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1608,15 +1608,50 @@ static int cxl_port_setup_decoder(struct cxl_port *port, struct cxl_region *cxlr
+> >  	return 0;
+> >  }
+> >  
+> > +static int cxl_switch_port_add_target(struct cxl_switch_decoder *cxlsd,
+> > +				      struct cxl_region *cxlr,
+> > +				      struct cxl_region_ref *cxl_rr,
+> > +				      struct cxl_endpoint_decoder *cxled,
+> > +				      struct cxl_ep *ep)
+> > +{
+> > +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> > +	struct cxl_port *port = cxl_rr->port;
+> > +	int pos = cxled->pos;
+> > +
+> > +	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
+> > +		dev_dbg(&cxlr->dev,
+> > +			"%s:%s: targets full trying to add %s:%s at %d\n",
+> > +			dev_name(port->uport_dev), dev_name(&port->dev),
+> > +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
+> > +		return -ENXIO;
+> > +	}
+> > +	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+> > +		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
+> > +			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
+> > +				dev_name(port->uport_dev), dev_name(&port->dev),
+> > +				dev_name(&cxlsd->cxld.dev),
+> > +				dev_name(ep->dport->dport_dev),
+> > +				cxl_rr->nr_targets_set);
+> > +			return -ENXIO;
+> > +		}
+> > +	} else {
+> > +		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
+> > +		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
+> > +	}
+> > +	cxl_rr->nr_targets_set++;
 > > +
 > > +	return 0;
 > > +}
 > > +
-> > +static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_region *cxlr,
-> > +					 struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	int iw, ig, rc, pos = cxled->pos;
-> > +	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-> > +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > +	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-> > +	struct cxl_decoder *cxld = cxl_rr->decoder;
-> > +	struct cxl_switch_decoder *cxlsd;
+> >  static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_region *cxlr,
+> >  					 struct cxl_endpoint_decoder *cxled)
+> >  {
+> > -	int iw, ig, rc, pos = cxled->pos;
+> >  	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
+> >  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> >  	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+> >  	struct cxl_decoder *cxld = cxl_rr->decoder;
+> >  	struct cxl_switch_decoder *cxlsd;
+> > +	int rc, pos = cxled->pos;
+> >  
+> >  	/*
+> >  	 * While root level decoders support x3, x6, x12, switch level
+> > @@ -1641,38 +1676,21 @@ static int cxl_switch_port_setup_targets(struct cxl_port *port, struct cxl_regio
+> >  					return rc;
+> >  				goto out_target_set;
+> >  			}
+> > -		goto add_target;
+> > -	}
+> > -
+> > -	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+> > -	if (rc)
+> > -		return rc;
+> > -
+> > -	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
+> > -	if (rc)
+> > -		return rc;
+> > -add_target:
+> > -	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
+> > -		dev_dbg(&cxlr->dev,
+> > -			"%s:%s: targets full trying to add %s:%s at %d\n",
+> > -			dev_name(port->uport_dev), dev_name(&port->dev),
+> > -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
+> > -		return -ENXIO;
+> > -	}
+> > -	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+> > -		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
+> > -			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
+> > -				dev_name(port->uport_dev), dev_name(&port->dev),
+> > -				dev_name(&cxlsd->cxld.dev),
+> > -				dev_name(ep->dport->dport_dev),
+> > -				cxl_rr->nr_targets_set);
+> > -			return -ENXIO;
+> > -		}
+> >  	} else {
+> > -		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
+> > -		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
+> > +		int iw, ig;
 > > +
-> > +	/*
-> > +	 * While root level decoders support x3, x6, x12, switch level
-> > +	 * decoders only support powers of 2 up to x16.
-> > +	 */
-> > +	if (!is_power_of_2(cxl_rr->nr_targets)) {
-> > +		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
-> > +			dev_name(port->uport_dev), dev_name(&port->dev),
-> > +			cxl_rr->nr_targets);
-> > +		return -EINVAL;
-> > +	}
+> > +		rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+> > +		if (rc)
+> > +			return rc;
 > > +
-> > +	cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> > +	if (cxl_rr->nr_targets_set) {
-> > +		int distance = cxl_port_peer_distance(port, cxlr);
-> > +
-> > +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
-> I wonder if it is worth taking opportunity to flip things:
+> > +		rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
+> > +		if (rc)
+> > +			return rc;
+> >  	}
 > 
-> 		for (int i = 0; i < cxl_rr_nr_targets_set; i++) {
-> 			if (ep->dport != cxlsd->target[i])
-> 				continue;
-> 
-> 			distance = cxl_port_peer_distance(port, cxlr);
-> 			return check_last_peer(cxled, ep, cxl_rr,
-> 					       cxl_port_peer_distance(port, cxlr));
-> 			// Ming's comment and Richard's patch rolled in
-> 			// The local variable ended up ugly hence inline unlike
-> 			// Richard's suggestion.
-> 		}
-> 		goto add_target;
-> 			
+> Smells like two patches to me.   First one does this else bit rather
+> than the goto, second adds the cxl_switch_port_add_target()
+> helper.
 
 Hi Jonathan,
 
-Thanks for the reviews and this suggestion. This change landed in a new v4 patch
-'Simplify switch port target setup control flow. 
+Agreed. Split that way in v4.
 
 -- Alison
 
-> > +			if (ep->dport == cxlsd->target[i]) {
-> > +				rc = check_last_peer(cxled, ep, cxl_rr,
-> > +						     distance);
-> > +				if (rc)
-> > +					return rc;
-> > +				goto out_target_set;
-> > +			}
-> > +		goto add_target;
-> > +	}
+
+> 
+> 
+> > -	cxl_rr->nr_targets_set++;
 > > +
-> > +	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+> > +	rc = cxl_switch_port_add_target(cxlsd, cxlr, cxl_rr, cxled, ep);
 > > +	if (rc)
 > > +		return rc;
-> > +
-> > +	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> > +	if (rc)
-> > +		return rc;
-> >  add_target:
-> >  	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
-> >  		dev_dbg(&cxlr->dev,
+> >  out_target_set:
+> >  	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
+> >  		dev_name(port->uport_dev), dev_name(&port->dev),
 > 
