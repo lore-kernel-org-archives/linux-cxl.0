@@ -1,328 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1413B3884;
-	Sat, 17 Oct 2026 18:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC94234A3BF
+	for <linux-cxl@vger.kernel.org>; Sat, 17 Oct 2026 19:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792263093; cv=none; b=tpzPp49j1Ga3eMNb6MDbYOgmqvT/IFHrSfthBd6izqkxztY9oMVXdLnDzAEIiC8dCuwwUIoYFzymNfXeN5+kMr5vMudqIaqrHAU08TmbE9zVBrwechyxxhAaXHtOL9UeQjaRwuBr+3Xy4MdndPIK/FsSsHqA0Pts4ctn887rpkA=
+	t=1792264806; cv=none; b=EXE6qB95QRtMzoI/Oxlt8rsGY78+SmnRPydcLQL3DsYOgQgjz9gAtRopqyzWYdIYXyJeRLe2/lCHlCDOqP2k8WBpp5dAj+RhnSydWyvTcjEKpQMnZuZZY9UH1SusdI5HwVX5WsrYShpn1W3GkyYKOSPUrdz9U3eNThe9v+njlDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792263093; c=relaxed/simple;
-	bh=L7PD3v8+SgPTWkYrVWTjrzPmX7JzY5jEkdoEBrZ9vD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bNv5HkmIiV9vPAcrzTPmqwde6GTXiDKd/Lfc85FdVjIJ+pN20CuB/bE4Bri0Ki9kUPYFQPeFUXbUJD6jMQ33VtLCMdaf/VrbLLi+Rf7q8C0fAbo0cYxmet8UrXEXGOFpvJ/rKP9ap3PKyQ4pZazqjORdCI7ciib5chv8BhHAtEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jm+M18Hk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792264806; c=relaxed/simple;
+	bh=e4CiKAiXUZ1tKAS275evTHdTCIz7fAeaISEuTqTrkUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQV8ZYJ2G5yFqZT/+TReeTxiqQ9y0cdNQ+lLXro0hn6s/xUE4PW3WCN0wZqX7qtBaQGO4vy5bi7TpmOhOp0v+Rj5mFll9PhY4Zl2zE2lK+wOTvDBHR9/nfyxznclm0KaZHSxfKuFpU9z84b7QZz3zHUMPqS6CTQv1AVWgc6Y3SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVNnNwCk; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jm+M18Hk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD12E1F000C4;
-	Sat, 17 Oct 2026 18:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792263092;
-	bh=7p2v8cd8Piqf2r8JBIYxKwNid9G5UEqcxbvv8thHaUg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Jm+M18HkZppQqg/RREcrWCrGXHylE+GKhzJrKgu4eSkw+4c31hXYZ2PhX+qwGC8xc
-	 eqm2gtYAO8klRIZE95rlvV4LHqITWTVKQFF2hP/Uv5XHKIe5OyQf1Ia3KVA0Kh5hwb
-	 Hhp6QGzws/nXpRj2gMUj2yEseWibGecmuURxzTyTV0UU+TFroIQDwwZivTcpcrnAeR
-	 5+CpOfbPN1RJ+CIZg1O9ffWRS1dRCImzvmeoIe6nNeDLTnDDfqq1GHbgwBfNe+Ir5p
-	 rqWGQIEPfXlgMciqlPdovRGsyLC8NoXW0fWwli9l3JPhBrzl2hg/pzcFamxmP5LXUg
-	 DEtpYO7DKUb2Q==
-Date: Fri, 16 Oct 2026 23:18:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Miaohe Lin
- <linmiaohe@huawei.com>, Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@kernel.org>, Breno Leitao <leitao@debian.org>, Ira
- Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Richard Cheng
- <icheng@nvidia.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Brendan
- Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, David Hildenbrand
- <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, Kiryl Shutsemau
- <kas@kernel.org>, Harry Yoo <harry@kernel.org>
-Subject: Re: [RFC PATCH 1/5] cxl/mbox: Add Get Poison List snapshot support
-Message-ID: <20261016231827.074e0326@jic23-hlaptop>
-In-Reply-To: <20261010162017.62506-2-shaikhkamal2012@gmail.com>
-References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
-	<20261010162017.62506-2-shaikhkamal2012@gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVNnNwCk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792264804; x=1823800804;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=e4CiKAiXUZ1tKAS275evTHdTCIz7fAeaISEuTqTrkUU=;
+  b=QVNnNwCklT8bjWcdKKf/l8v7ORxS4OXIWo12jLSva4e/NO3LdJ2x+pHo
+   Jmows1vrLth7ETqAUaD6fQMhwcdnB1Kx6/6AqfnJmlzAMvCziv7IP9NqO
+   iwqx9jw2I3Hvta9sKlxdGSdef82YCHUKng5Qn1R3A3qVDjQAx94f4Zzn3
+   cqF/dCcf28YRHRekp4o66jBy80x78zs2MbRQgHWFWVoxx4rJnmDOAw8I2
+   1eGQVISSt27WahzGP9rm4X/I3+HcG6euWIitYhGbpXNzd434qkgvof0MH
+   okEO5zdLf3OQD8rQL0yISKhFWbMrMoAf+DgqpcMReHPe49w3MVmwg2Elt
+   Q==;
+X-CSE-ConnectionGUID: 9MvZiIxsSH6YENiN5sNM5w==
+X-CSE-MsgGUID: jCm08PuKRU2XQ2Z8ZcuDsQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11938"; a="1034657"
+X-IronPort-AV: E=Sophos;i="6.27,163,1787036400"; 
+   d="scan'208";a="1034657"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2026 12:20:04 -0700
+X-CSE-ConnectionGUID: zzVH0sXgTgSK9K1jeiROcg==
+X-CSE-MsgGUID: CcLYnzpBS0esmNRumll6mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,163,1787036400"; 
+   d="scan'208";a="2282191"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.223])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2026 12:20:04 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v4 0/9] cxl/region: Refactor cxl_port_setup_targets()
+Date: Sat, 17 Oct 2026 12:19:45 -0700
+Message-ID: <cover.1792263750.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 10 Oct 2026 21:50:09 +0530
-Shaikh Kamaluddin <shaikhkamal2012@gmail.com> wrote:
+Changes in v4:
+- Pass cxlsd to cxl_switch_port_setup_targets() (DaveJ)
+- New Patch 4 from Richard, only calc peer distance on target reuse (RichardC)
+- Add function comment to cxl_port_parent_interleave() (RichardC)
+- New Patch 8 simplifies control flow (MingL, JonathanC)
+- Remove claim in cover letter of a strictly mechanical refactor
+- Drop LLM tags per latest guidance
+v3: https://lore.kernel.org/linux-cxl/cover.1791860305.git.alison.schofield@intel.com/
 
-> cxl_mem_get_poison() uses a device-owned output buffer for each Get
-> Poison List response. It traces the records before issuing the next
-> command, which overwrites that buffer when the device sets the More
-> Media Error Records flag. A caller therefore cannot inspect the complete
-> set of collected records after the function returns.
-> 
-> Add a caller-owned snapshot and copy each validated mailbox response
-> into it. Preserve device overflow and scan-in-progress status, and
-> indicate when the host stops collection before retrieving all available
-> records.
-> 
-> Keep cxl_mem_get_poison() as the existing trace-only wrapper so its
-> current callers, including trigger_poison_list, retain their behavior.
-> 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> ---
->  drivers/cxl/core/mbox.c | 137 ++++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/cxlmem.h    |  25 ++++++++
->  2 files changed, 156 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 55828a836c01..2752b46ffee2 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1376,14 +1376,91 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, "CXL");
->  
-> -int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> -		       struct cxl_region *cxlr)
-> +int cxl_poison_snapshot_init(struct cxl_memdev *cxlmd,
-> +			     struct cxl_poison_snapshot *snapshot)
-> +{
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +	u32 capacity = mds->poison.max_errors;
-> +
-> +	if (!snapshot)
+Changes in v3:
+- Drop patch "cxl/region: Name the interleave locals in cxl_port_setup_targets()".
+- Move the distance comment above cxl_port_peer_distance() (Jonathan)
+- Name the out-params out_iw/out_ig.
+- Minor reverse fir and alignment cleanups
+- Reorder the cxl_port_calc_interleave() declarations
+v2: https://lore.kernel.org/linux-cxl/cover.1791676454.git.alison.schofield@intel.com/
 
-That seems like a buggy use of the interface, so not sure we need
-that defence.
+Changes in v2:
+- New patch 3 adds 'switch' to cxl_port_setup_targets() name (DaveJ)
+- Add 'switch' to cxl_port_add_target() name (DaveJ)
+- Pass the switch decoder to cxl_switch_port_add_target (DaveJ)
+- Minor commit message updates based on function renamings
+v1: https://lore.kernel.org/linux-cxl/cover.1791575481.git.alison.schofield@intel.com/
 
-> +		return -EINVAL;
-> +	memset(snapshot, 0, sizeof(*snapshot));
-> +
-> +	if (!test_bit(CXL_POISON_ENABLED_LIST, mds->poison.enabled_cmds))
-> +		return -EOPNOTSUPP;
-> +
-> +	if (!capacity)
-> +		return -EPROTO;
-> +
-> +	snapshot->records = kvmalloc_array(mds->poison.max_errors,
-> +					   sizeof(*snapshot->records),
-> +					   GFP_KERNEL);
 
-kvmalloc_objs()?
+Begin Cover Letter:
+cxl_port_setup_targets() has grown to nearly 200 lines. It open codes each
+step of adding an endpoint to a port's decoder: finding the distance
+between peer positions, reading the parent interleave, calculating and
+validating the port's interleave, setting up the decoder, and adding the
+target.
 
-> +	if (!snapshot->records)
-> +		return -ENOMEM;
-> +
-> +	snapshot->capacity = capacity;
-> +
-> +	return 0;
-> +}
-> +
-> +void cxl_poison_snapshot_destroy(struct cxl_poison_snapshot *snapshot)
-> +{
-> +	if (!snapshot)
-> +		return;
-> +
-> +	kvfree(snapshot->records);
-> +	memset(snapshot, 0, sizeof(*snapshot));
-> +}
-> +
-> +static int cxl_poison_snapshot_append(struct cxl_poison_snapshot *snapshot,
-> +				      struct cxl_poison_record *records,
-> +				      u32 count)
-> +{
-> +	u32 available;
-> +
-> +	/*
-> +	 * Existing cxl_mem_get_poison() callers request tracing only and
-> +	 * pass no snapshot.
-> +	 */
-> +
-> +	if (!snapshot)
-> +		return 0;
-> +
-> +	if (!snapshot->records)
-> +		return -EINVAL;
-> +
-> +	if (snapshot->nr_records > snapshot->capacity)
-> +		return -EOVERFLOW;
-> +
-> +	if (!count)
-> +		return 0;
-> +
-> +	if (!records)
-> +		return -EINVAL;
-> +
-> +	available = snapshot->capacity - snapshot->nr_records;
-> +	if (count > available) {
-> +		snapshot->truncated = true;
-> +		return -ENOSPC;
-> +	}
-> +
-> +	memcpy(&snapshot->records[snapshot->nr_records], records,
-> +	       count * sizeof(*records));
-> +	snapshot->nr_records += count;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_get_poison_common(struct cxl_memdev *cxlmd, u64 offset,
-> +				     u64 len, struct cxl_region *cxlr,
-> +				     struct cxl_poison_snapshot *snapshot)
->  {
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
->  	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->  	struct cxl_mbox_poison_out *po;
->  	struct cxl_mbox_poison_in pi;
-> -	int nr_records = 0;
-> +	u32 nr_records = 0;
-> +	u32 count;
->  	int rc;
->  
->  	ACQUIRE(mutex_intr, lock)(&mds->poison.mutex);
-> @@ -1408,29 +1485,77 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		if (rc)
->  			break;
->  
-> -		if (!le16_to_cpu(po->count)) {
-> +		count = le16_to_cpu(po->count);
-> +		if (!count) {
->  			dev_dbg(&cxlmd->dev, "Poison empty payload!\n");
-> +
-> +			if (po->flags & CXL_POISON_FLAG_MORE) {
-> +				if (snapshot)
-> +					snapshot->truncated = true;
+This set is inspired by review feedback from Robert Richter on the series
+that adds mixed-granularity region support [1]. That series needs to change
+how this function calculates interleaves and Robert asked for that new code
+to be moved into a helper. Rather than tidy only the new code, this set
+splits up the whole function first.
 
-Count of zero and yet more? How would that happen? This smells like
-a hardware bug.  Maybe we defend against it, but that's a separate
-question from the rest of this patch.
+Patch 1 prepares the code that moves. It is a suggestion Jonathan offered
+on the mixed gran series.
 
-> +				rc = -EPROTO;
-> +			}
-> +
-> +			break;
-> +		}
-> +
-> +		if (struct_size(po, record, count) > mbox_cmd.size_out) {
-> +			dev_err(&cxlmd->dev,
-> +				"invalid poison record count: %u\n", count);
+Patch 2 renames the function to cxl_switch_port_setup_targets(), since it
+configures switch decoder targets, and changes its parameter to accept a
+switch decoder rather than a port, both DaveJ suggestions.
 
-Also looks like broken hardware. I don't necessarily mind that sort
-of defense, but not in a patch doing anything else.
+Patches 3-9 extract the individual steps into helpers and add two new patches:
+RichardC's patch 4 avoids calculating peer distance when an endpoint adds a
+new target, and patch 8, suggested by Ming and Jonathan, removes the goto paths
+before the final helper is extracted.
 
-> +			rc = -EPROTO;
->  			break;
->  		}
->  
-> -		for (int i = 0; i < le16_to_cpu(po->count); i++)
-> +		for (u32 i = 0; i < count; i++)
->  			trace_cxl_poison(cxlmd, cxlr, &po->record[i],
->  					 po->flags, po->overflow_ts,
->  					 CXL_POISON_TRACE_LIST);
->  
-> +		if (snapshot && (po->flags & CXL_POISON_FLAG_OVERFLOW)) {
-> +			snapshot->device_flags |= CXL_POISON_FLAG_OVERFLOW;
-> +			snapshot->overflow_ts = le64_to_cpu(po->overflow_ts);
-> +		}
+The result reduces cxl_switch_port_setup_targets() to 53 lines.
 
-I'm curious. What use is the overflow_ts in your scheme?  Lets keep things
-minimal unless there is a reason to add data to the snapshot.
+That base commit is cxl/next as that seems closest to 7.4-rc1 where I expect
+to rebase and resend.
 
-> +
-> +		if (snapshot && (po->flags & CXL_POISON_FLAG_SCANNING))
-> +			snapshot->device_flags |= CXL_POISON_FLAG_SCANNING;
-> +
-> +		rc = cxl_poison_snapshot_append(snapshot, po->record, count);
-> +		if (rc)
-> +			break;
-> +
->  		/* Protect against an uncleared _FLAG_MORE */
-> -		nr_records = nr_records + le16_to_cpu(po->count);
-> +		nr_records += count;
->  		if (nr_records >= mds->poison.max_errors) {
->  			dev_dbg(&cxlmd->dev, "Max Error Records reached: %d\n",
->  				nr_records);
-> +			if (snapshot && (po->flags & CXL_POISON_FLAG_MORE))
-> +				snapshot->truncated = true;
-> +
->  			break;
->  		}
->  	} while (po->flags & CXL_POISON_FLAG_MORE);
->  
->  	return rc;
->  }
-> +
-> +int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> +		       struct cxl_region *cxlr)
-> +{
-> +	return cxl_mem_get_poison_common(cxlmd, offset, len, cxlr, NULL);
-> +}
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, "CXL");
->  
-> +int cxl_mem_get_poison_snapshot(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> +				struct cxl_region *cxlr,
-> +				struct cxl_poison_snapshot *snapshot)
-> +{
-> +	if (!snapshot || !snapshot->records || !snapshot->capacity)
-> +		return -EINVAL;
-> +
-> +	if (snapshot->nr_records > snapshot->capacity)
-> +		return -EOVERFLOW;
-> +
-> +	return cxl_mem_get_poison_common(cxlmd, offset, len, cxlr, snapshot);
-> +}
+[1] https://lore.kernel.org/linux-cxl/cover.1788475206.git.alison.schofield@intel.com/
 
-Blank line here
 
->  static void free_poison_buf(void *buf)
->  {
->  	kvfree(buf);
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index c401e3a1af06..1d6f8d958bd2 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -812,6 +812,31 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		       struct cxl_region *cxlr);
-> +
-> +/**
-> + * struct cxl_poison_snapshot - Aggregate Get Poison List result
-> + * @records: Copied Media Error Records from all mailbox responses
-> + * @nr_records: Number of valid records stored in @records
-> + * @capacity: Maximum number of records that @records can hold
-> + * @overflow_ts: Timestamp associated with a reported device overflow
-> + * @device_flags: Persistent device status observed during collection
-> + * @truncated: Host stopped before collecting all available records
-> + */
-> +struct cxl_poison_snapshot {
-> +	struct cxl_poison_record *records;
+Alison Schofield (8):
+  cxl: Add interleave encoding validity helpers
+  cxl/region: Rename cxl_port_setup_targets() to
+    cxl_switch_port_setup_targets()
+  cxl/region: Factor out cxl_port_peer_distance()
+  cxl/region: Factor out cxl_port_parent_interleave()
+  cxl/region: Factor out cxl_port_calc_interleave()
+  cxl/region: Factor out cxl_port_setup_decoder()
+  cxl/region: Simplify switch port target setup control flow
+  cxl/region: Factor out cxl_switch_port_add_target()
 
-__counted_by_ptr() seems likely to apply here.
- 
-> +	u32 nr_records;
-> +	u32 capacity;
-> +	u64 overflow_ts;
+Richard Cheng (1):
+  cxl/region: Calculate peer distance only for reused targets
 
-As above. I'd like to ensure this only stashes what we actually need.
+ drivers/cxl/core/region.c | 243 +++++++++++++++++++++++---------------
+ drivers/cxl/cxl.h         |  21 ++++
+ 2 files changed, 172 insertions(+), 92 deletions(-)
 
-> +	u8 device_flags;
-> +	bool truncated;
-> +};
-> +
-> +int cxl_poison_snapshot_init(struct cxl_memdev *cxlmd,
-> +			     struct cxl_poison_snapshot *snapshot);
-> +void cxl_poison_snapshot_destroy(struct cxl_poison_snapshot *snapshot);
-> +int cxl_mem_get_poison_snapshot(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> +				struct cxl_region *cxlr,
-> +				struct cxl_poison_snapshot *snapshot);
->  int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
->  int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
->  int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
+
+base-commit: cf15f9f2361dd4002203716b7b878393c0eee4bf
+-- 
+2.37.3
 
