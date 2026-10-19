@@ -1,68 +1,131 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792440038;
-	b=YQCgnu+UyVm1uFfymP1tEwBk57lnElvidjhOQEJOy5kiaF4MZfBBaqce62IX95cP4lXo
-	 2wgbFE4KUppAWcB89BxVyWGPGh+jyiGmZiRpncw0tjY8BamKXmewzeDXwtpzUcrLTOu5S
-	 0HWzZtVshEShZniRnK5jH+SSV7fjemDJ+6YmE3QslmAZzGH026A88agy+HJ/BoPk8ghDs
-	 VKFf7n09xhoQSWB911fEMo7sGXTsyEQ5OQ5rdWtCWvFsA3PAqLlFWzewwm+d3A+fnnWTj
-	 3/qUYOAQVQBegzgKQ21WpmZQjNcvj38vpOUkgyQiT9GnImCQmyhjnMxPQ/y0z3JMl6g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792440038;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=198.175.65.17
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1792442369;
+	b=WTLS2MqL0MdLYPXHwpxsQtiFPOeqVZTMbsb6I97IIdGfehwQGEh2ZFhrdbdkMcegWzcl
+	 JNLdisRrZzaOvmlwUPPxBaDVJ+AZJsslXWnp7fyNW2xds3N2Qrcn2DqYkIge5lUCDebL3
+	 Cry2PvrJpr8VttzG8r3RJ74vk44O9UtPqF6yeiwKM478YxVNSpItmnBTnSz5sxvppEJ8G
+	 lNlfYFbxYiHgAY9klylDAI42H9V0DUYBIlGE2oJ5kE7dekxUIzRFD4lrqeYWAMWeMz6XE
+	 Jn6kmQuCKuiZV/2cKwXLkj6HDQGemCQJwjt2s7vbA91dVMG9o7J0ZnGzOD2Tds+Rxhw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792442369;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Ux87Or6H1qG//7PVLz/zBWhaIEX1urIy5837nD8GIWI=;
-	b=XI/d9Pe3sKsuPxqsR91s/sqaEmzTye3G40ij3iG5YD1VMFpDZBMS2Yj2MQxspfnJqJTQ
-	 yn78lzsf7ybHx1dj1VMf3G9NfUI3HNL+XBOias+1i8w3dgUwYHmUFdkjbJV3s09chOsls
-	 0hp0+nWfffMae64kNfqm6b7gWKnyz63SH4gmzEDXw9xuqsuiEO+tRnv26Obb0ii020PnC
-	 HRdrqtMNUOyjrp0r3pRTDT4j5FqNpWNteU669l6bu2jCd+MaEpTSVvglzajpPjL0FGXS5
-	 RJ2kkpZne9akCmyDQppbPJv8NJijQYA3okppT6OR1PS1VlUtNYxYxd1bbkd2djOv+lA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
+	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
+	 References:Content-Type:Content-Disposition:In-Reply-To:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=vaDkPogIZLQdy9PJ7lRa+s/VcUE2/4J6yONQjZkmbNI=;
+	b=wCiTGq+PwkO3kW5/3cePy73D5eTTl5cB5ZvomcP+Y8Ufx7L+ZX0W1koSyh2WSAd3D4e9
+	 VQuRqjT10nsxBkN+HWtHnNXlf3GGgjSiFY8jTfMwlagvn8G+VlNdiTu7FpIpQzW3u40xA
+	 NPqbksGdmCzwgzwJO4ErdldPqu+bKISlXvbO2vFtzFVc9qJ7c3P7u/0r5R52AG6XIb6Vz
+	 pY/R+Ks7ASdQJViSfI++OzBkzNc4GtHxoQ5dBtKxVH5fETmqn4QJTvaWqFLCMmggu0QT5
+	 z/iuZegUwZx1kJh3U4CTqDTL++j3vbarto+PGtzd3OH5AXLRf+BEwuTueFQMHSlOVhA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XSJ7dFQt;
-	arc=none smtp.remote-ip=192.198.163.11
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fwjrfuOd;
+	arc=fail smtp.remote-ip=198.175.65.17
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E70606A320;
-	Mon, 19 Oct 2026 20:00:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 73E70606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E04606A31B
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Oct 2026 20:39:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06E04606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XSJ7dFQt
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fwjrfuOd
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792440038; x=1823976038;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vF6bNVA+qNH7VHEXonZQinzjh9XzXcyQM1oQrXK6c7E=;
-  b=XSJ7dFQt45XPReX5Lpp4qpdiXUPgZuSqmMv/4XCAZV3KNFatGk2On5df
-   Yo1EnXdKXhRxgXc6/Oo/Y5v9R6+1PVhbedm8ouApKQfBlhLigLXO9BdHB
-   uKLAM0wW84RHH9n3kaMQXbeUAslTqEBqLaGF1grSYnpAB7F0YsNIuSOp9
-   1CH2qlerjeeO3J+tRgk5j/bowcUwRZYKGGL1+opcn1dK6PU67J1rQZcDI
-   2EO9cEE+5vw5gzBakU1Ny2dbcwu6jEzOXsCH+JZHx0Pir2M7+GuS6qvRv
-   jCKATtJBoktV4vqXBJgA9fxQZHwqMu0mdal6syQn/vmdl4cD45fToVv3h
+  t=1792442367; x=1823978367;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=bThwSiJZ6AFyJeijad1zi8jyqfuXXGplbgL6UwTaz/Y=;
+  b=fwjrfuOdYf0xI5J5IB9QZJXXQT6KO3x1ogUqCYfgtXZyFf6/rR75VqK+
+   z7K1Sj9GKwrghmHCroPmS2xFwBJIYPQggN1Xfue4+ojQIUqJJXcVCuvBD
+   mQboa03psFgUjBxiqANHYC4WAe1i+jPUmuWDJW6c9m7bSlQ5g6jMDu+bb
+   BMD34RkwnUOp7XbDLekVI4h4T6vVvLa37vioFsi0BNXCpzMBQDSR70krU
+   0rBJrhNFKomXUmXT18J7LV0KW+CiORz97lAM5Ra2JbWjjpIUQHeufKfrm
+   AGfWCYpcEnmy6u+egCsY/HKwUJz7z23jv9zXk6IF6FYL5xkZgb0Ixv17Z
    g==;
-X-CSE-ConnectionGUID: ECVWlTRkRsOMJ92dyEO0BA==
-X-CSE-MsgGUID: sXRnzNrjSBeV6nwj44DNCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="1038557"
-X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="1038557"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 13:00:37 -0700
-X-CSE-ConnectionGUID: JmMnBhH0Q/Wbj77Ebm42pQ==
-X-CSE-MsgGUID: 3zBaHN3KTyqiAj1KbEZ9AQ==
+X-CSE-ConnectionGUID: Mctg8MZZRRy9suSUw7M4Cw==
+X-CSE-MsgGUID: 55zy87ZVS7eUnEAfMCV7Pg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="1154232"
+X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
+   d="scan'208";a="1154232"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 13:39:24 -0700
+X-CSE-ConnectionGUID: HgYlnDdOQhap4VjZ5+gUKw==
+X-CSE-MsgGUID: jvFNQ7L5QoWgdKSs6NoehQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="2586766"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.28]) ([10.125.111.28])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 13:00:35 -0700
-Message-ID: <893aaa95-5663-4a22-9c3a-1b9cf97e3dfe@intel.com>
-Date: Mon, 19 Oct 2026 13:00:33 -0700
+X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
+   d="scan'208";a="2629651"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 13:39:24 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 19 Oct 2026 13:39:23 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49 via Frontend Transport; Mon, 19 Oct 2026 13:39:23 -0700
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.47)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 19 Oct 2026 13:39:23 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VhU10Tkz8L4Ytvtacu9ebmz7srUsenT1tIfE9OK3idYGb0zK3APsP55Qi3bC82LJad/+FzldiLhPmVepYssgODmVTlVN4VXoDXENPlEjCMwI+6/QfDKkEmnPOcTJTjQb0bfxCtk4kbLyuOLQjDeCTKYiqWWjxVEJ9GmXJhY/c8e3h2VA783jF+EznKOeOhguZJ85+ux/Tsr9zlCRuOOpDMON39NgbqTCbJ2zu83oK8zySU7fEt7VYfD5Ex6C4u8tYdUtcfNYgAXyfPWZ9EaW6cyZXyZpegtRr/XoW+xWJzuufmF6iQQpO/g1GelUrUzZJ2lj7AThnli/qzcb0fOozQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vaDkPogIZLQdy9PJ7lRa+s/VcUE2/4J6yONQjZkmbNI=;
+ b=jMSUTPuINH989Epl78ZLb40XcbTMDf7GkOoS2CLW9hD64IEEmEpYuOWckv04kSYJLjP+OxX/3xuXUQ3AlD5lSES+m8v4eWt7SMU99CuLWFbGlOcpjsV1Kt/V42EhKRQ4k0jgaYfXxn9k/CgkO79K1XdE/g6EEF471AoG/gAN9GQfWPALEM7YkPyzQnP9nMoFbMRjrvWGKqDs4U31hkoXO34+vOSRqQjLA9TMRq/VVo46q/CNpRXrpPU9+MRkv7Tt2yHzjqY73h2YtAnb4cv2/8CR9ksuWIyQuL7BmMMa8NTc0B5BXXSpYcw2kldcD/FZSPaR/JdqwnnlmVmXqSalJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH8PR11MB9533.namprd11.prod.outlook.com (2603:10b6:510:39f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Mon, 19 Oct
+ 2026 20:39:17 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0522.017; Mon, 19 Oct 2026
+ 20:39:15 +0000
+Date: Mon, 19 Oct 2026 13:39:11 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Anisa Su <anisa.su887@gmail.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Richard Cheng
+	<icheng@nvidia.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/4] Documentation/driver-api/cxl: Add a testing page
+Message-ID: <atZ_75-jlBACRvb0@aschofie-mobl2.lan>
+References: <cover.1791949910.git.alison.schofield@intel.com>
+ <7af9e1341a24928799d88adaa6144c1ca82091f7.1791949910.git.alison.schofield@intel.com>
+ <atKqrRww5GlgzRlA@cxlqual>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <atKqrRww5GlgzRlA@cxlqual>
+X-ClientProxiedBy: MW4PR03CA0273.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -72,388 +135,108 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 5/5] cxl/region: Register device poison before
- exposing RAM
-To: Richard Cheng <icheng@nvidia.com>,
- Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>,
- Breno Leitao <leitao@debian.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Kiryl Shutsemau <kas@kernel.org>, Harry Yoo <harry@kernel.org>
-References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
- <20261010162017.62506-6-shaikhkamal2012@gmail.com>
- <atCGJHmnk8Ll8pA_@MWDK4CY14F>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <atCGJHmnk8Ll8pA_@MWDK4CY14F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH8PR11MB9533:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e5b2bf0-7c00-4387-8b89-08df2e210a24
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|23010399003|366016|56012099006|5023799004|11063799006|4143699003|261009223027099003|10067099003|22082099003|18002099003|6133799003;
+X-Microsoft-Antispam-Message-Info: ndWtYrNTUhfK3Rylvs+saQ5mwxnufIGvf/Atbs5RTMUyJP2nh5X9ZO87vEarsgKDaybeBm8MVvps3CV3zKhrEDlPLDe/o15AZRvIiN+pckLjTBVzd5hKI3dnW3OGafiiG/WhQxG5XcWekMuXJztqwXfezOUuzAQqXcBEJsVwVWIbK6Cjc8RKxk6PbOvPhTK9n9OUmzkXPFbMLAW1LXV0ZQpJEidv/wzfyniD5weZqsBHAS2X3WCB0jmqYdFrC40oAqqsZvRpWSOGUJfvTOeqb+i+EA+ovaGMfqcmTMP6H0yW5vP2iAeqEoPlzWB6SPw+MoDRMmdcKUMeHL0gy7Yb3zilNywk9A3/7ImiowT5gPClWqPRSD53SPMUdU0D+Cuj29h0+m3GQ24bWpeq5phyArSC8q1NUK8JlZUpQUMZ0JpstDuicAagWbQ4Fe3GdGp7BVTlw0U0pVFa4OYV4YLVHW3Ez6cXbxy/4gWnzKcXvPn3QPEAdVX8j0ubJpCqxprxZ96da2rZxlAD+CRmvnnvbydm72GQQGuhGHkO0ewLP0Iu9XYvuy/Y++TLr0+fz5qSgR9CEN9HFOuHTniK2Y1Ne50ezAR5nwa0P5NFvcyoqSEjrdZhUl9ywhn1e0onvfkZgkxAtI83MT1nZIrHE3eja//Fs5f8VNHHy3XNO1swfxI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(366016)(56012099006)(5023799004)(11063799006)(4143699003)(261009223027099003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LR5I1eT6nHZKTo/pTaBaGHbEA2bMYYLeaa49HMfs+EobeYuC5E8mb5X2Wocx?=
+ =?us-ascii?Q?csQka+5nCeOKOx0iY9ymj49WEa3OMaGCrW6IrC9/JvsT123mQ0sNPET/Bpeh?=
+ =?us-ascii?Q?dV9nrQ8w8VqfPYpAU1qsplz8xRlqokqKw5qIdSKUQ55+czXWF3blG3OhHUyS?=
+ =?us-ascii?Q?TDLjZsebIQCr5YbXOzqbl4HEVGMChAFKvYtP1i1JfGVTymozWcXpTASFls2i?=
+ =?us-ascii?Q?CNOA+Rto84ciiOGK870l8qeZShvSpl3DQuLWP9IGNuZ6PQRed/un7g4wGPJN?=
+ =?us-ascii?Q?RrPZRvtw//vLpLMruGQKzVQHXVkOJ5kVTmMhxteDn9hRQ2Tv+fj/oWLPXteS?=
+ =?us-ascii?Q?IBGMcIy0FNGse9d8vqCGQJSz4CoHuA4ytq3CWK3iIJwuJzRf2tEKcADuKg37?=
+ =?us-ascii?Q?zd6j2MOWFq7Tm18pABBrd3zi71U4aknfE4tAMC7Xj+cybuZNjszab1mm0pvn?=
+ =?us-ascii?Q?PWca5kpr1IcgBSeXKJ/5/vevsS/61sR+GIXEL4nePS5fyWTNnw+bd5eOQ14o?=
+ =?us-ascii?Q?nikAnHSKkIr0xmdpiX659VZA/RS0s9B9+a4zytlSjxOe6xDxz101FBjZPuUq?=
+ =?us-ascii?Q?s18DWREn62FehCaD8ThIDYOo1ND9PwyXAOBXwH7iDUNRfmWUDOYslgQcnGDn?=
+ =?us-ascii?Q?c6F88oeeTTXTKXAD/1cP6wsoibdMvjAqra4RoTLwm71B/caOChCbv5JWIZ4d?=
+ =?us-ascii?Q?oX1cAv8Dff6qIQA5MMQkEDxKg+0HkOPLvCOX62CaIYbQ+vt7A6Kv2+eX0RWO?=
+ =?us-ascii?Q?y5qn/caBmw+XhP9DBJfB8QEpOfe48cE2t13VU1LQVNB5ycEtgOtS2pUnhrFQ?=
+ =?us-ascii?Q?iNU7SIBeoeVwbjrroPRrwNlJp+6KlMZXh8GZZVJAxnNJcMu9736jYVGbEHcw?=
+ =?us-ascii?Q?nzVVyeEnl/jTMHaI2NZeHi1dXao02E6ipYqjpaOmNS3uAcpT2gidRawUdAUw?=
+ =?us-ascii?Q?i96XZLt+xM2YqeW+LT0BOQc4m9D/Bpt5ni1XJGq1FC8xSgVzFALuhIpOAu8S?=
+ =?us-ascii?Q?9o3gH0aRDYE5Z3uvU1lZNgrk7t29ofq3jQdiuWUCV8SXMB3MMq9avTVbc6BB?=
+ =?us-ascii?Q?1+MgY1Qgq+D+Y8oDLPL5UwA1spO14ti/JGwfLxUjLilyYgsM/rVm58WRkBRH?=
+ =?us-ascii?Q?alr3+s8c4CTUIhBKRTquv9JblKkqzv4zb7rfjQjUULcBJsfh24s2Z/qlK6Nb?=
+ =?us-ascii?Q?DvfstF57MjiibRVxNCfyrJnJuft/2vvACvaSWUkVim0kApFt3zy+uNJA7IuF?=
+ =?us-ascii?Q?E7dZAXbPVbgDf+aEFVAFQVDkjWsAsqe1sv0r+AqsqPbUM7G5iJX+NlBPinFs?=
+ =?us-ascii?Q?xwXNf9v15v3jSQVpHuJKzhDuHmdsXnOnNtLIvq9H+pP95MbPLxV0t9N9m+iF?=
+ =?us-ascii?Q?NycnzxEOreiZHxu4jHBTGf8NsuKEZbTgABU4qWISmk++WdCjdv4klTKaPLMP?=
+ =?us-ascii?Q?2l+952jp2h7Kn/vh2KW2xWtJdutiRX7WBMuq6i42K945KhTAJT7TjWesJGD3?=
+ =?us-ascii?Q?lVkqcWyAOEQTKyNt8kV1AhxuYlbeUxvBeZyLwVyS7cQdn2sm2abmF4aZM7OC?=
+ =?us-ascii?Q?dkWZBzeOuSZZ2u4lLv5n67NZhzE7PmIj7G2Ed7J+vFjhnVoDzUIwme9jKvU6?=
+ =?us-ascii?Q?XCuLxi4DMj87ZzHbZJzVktlEYFnFhkTQxFy0k7tCGoKcg2CEmcJI4GVM0nAg?=
+ =?us-ascii?Q?k42aH5aNgRHtez5J24KIsyhXntE4++a1OXU7jbEBlX+NmbdK11LIOhLvXNZQ?=
+ =?us-ascii?Q?UgbiPFD/sdpEermJ4AjuFDApk6uS9Z0=3D?=
+X-Exchange-RoutingPolicyChecked: qinY5zfQl+ExJCZ2j8SoH38KyeY8P3aiM9eQnraqlYxmijQ8neWhyS0aoqFPxgMfism8TujRoROLRRCndVNPMd5WqTstCEXXpqS8Wp7l3MqW0pYpooMdqKg1ZPXwY1xDSjaYfZxkbcqODhI5PI0gVAyqK7Sp1Nmqh6+jlZA69xg2uVtaLIRtetHWTPuz/cgaTwK/CVaO59OC40kDZZ2abrO0VZvM9lxBN+OqVAsWFeIXPvgvgvK9rdsuY8uPnPteElJQ5fYYGOQIJeQfHP6oaqcWVBdEbIDPznMcIbuu/wjYpWCWcnN0T/Le0+/YN9uv2ExNPwVIm9QAI4hTVoY5UQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5b2bf0-7c00-4387-8b89-08df2e210a24
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2026 20:39:15.5661
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3y4IXLPowEKfIvJx9S+cJ0LFqeYo2ivPOi34F8TE9zDpDvW3GRon9IT/e1UMHYzgYmogu/1pFz94PU+CNji4p+gl1ViuYexJ4WbopcxRzHs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB9533
+X-OriginatorOrg: intel.com
 
+On Sat, Oct 17, 2026 at 07:52:29AM +0900, Anisa Su wrote:
+> On Tue, Oct 13, 2026 at 09:17:52PM -0700, Alison Schofield wrote:
+> > The CXL documentation does not describe the subsystem's testing
+> > infrastructure or provide guidance on choosing between cxl_test
+> > and KUnit.
+> > 
+> > Add a testing page that describes when to use each framework, how
+> > to run the tests, and how to add a CXL KUnit test.
+> > 
+> > Suggested-by: Dave Jiang <dave.jiang@intel.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  Documentation/driver-api/cxl/index.rst   |   1 +
+> >  Documentation/driver-api/cxl/testing.rst | 117 +++++++++++++++++++++++
+> >  2 files changed, 118 insertions(+)
 
+snip
 
-On 10/15/26 12:59 AM, Richard Cheng wrote:
-> On Sat, Oct 10, 2026 at 09:50:13PM +0800, Shaikh Kamaluddin wrote:
->> The trigger_poison_list interface may retrieve poison after CXL memory
->> is already online, which is too late to prevent known-bad frames from
->> entering the page allocator.
->>
->> During RAM-region probe, retrieve a poison-list snapshot for each
->> participating endpoint decoder. Validate each record against the
->> decoder's assigned DPA range, translate its poisoned DPA units to HPA
->> and PFN, and collect the affected PFNs in an xarray. Coalesce consecutive
->> PFNs and register the resulting ranges with the pre-online hwpoison
->> registry before creating the DAX region.
->>
->> When Get Poison List is supported, abort region probe if the list is
->> incomplete, malformed, or cannot be translated. If volatile poison-list
->> retrieval is unsupported, preserve the existing behavior and warn that
->> poison cannot be withheld before memory onlining.
->>
->> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
->> ---
->>  drivers/cxl/core/region.c | 322 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 322 insertions(+)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index c72524923b38..e3ffa77927df 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/string_choices.h>
->>  #include <cxlmem.h>
->>  #include <cxl.h>
->> +#include <linux/memory-failure.h>
->>  #include "core.h"
->>  #include "mce.h"
->>  
->> @@ -3038,6 +3039,323 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
->>  	return rc;
->>  }
->>  
->> +/*
->> + * Device-reported poison is gathered at RAM-region probe, before the range
->> + * reaches dax/kmem, and registered with the pre-online registry so the
->> + * frames it covers are withheld when the memory is onlined.
->> + */
->> +static int cxl_poison_store_pfn(struct xarray *pfns, u64 hpa)
->> +{
->> +	return xa_err(xa_store(pfns, PHYS_PFN(hpa), xa_mk_value(1),
->> +			GFP_KERNEL));
->> +}
->> +
->> +static int cxl_poison_store_hpa(struct cxl_region *cxlr, struct xarray *pfns,
->> +				u64 hpa)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	int rc;
->> +
->> +	/* Outside this region: not ours to withhold. */
->> +	if (!cxl_resource_contains_addr(p->res, hpa))
->> +		return -ERANGE;
->> +
->> +	rc = cxl_poison_store_pfn(pfns, hpa);
->> +	if (rc || !p->cache_size)
->> +		return rc;
->> +
->> +	/*
->> +	 * An extended linear cache makes the same DPA visible a second time
->> +	 * at hpa - cache_size. Match the translation used by the
->> +	 * cxl_general_media and cxl_dram trace events.
->> +	 */
->> +	if (WARN_ON_ONCE(hpa < p->res->start + p->cache_size))
->> +		return -ERANGE;
->> +
->> +	return cxl_poison_store_pfn(pfns, hpa - p->cache_size);
->> +}
->> +
->> +static int cxl_poison_record_to_pfns(struct cxl_region *cxlr,
->> +				     struct cxl_memdev *cxlmd,
->> +				     const struct cxl_poison_record *record,
->> +				     struct xarray *pfns)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	u64 raw = le64_to_cpu(record->address);
->> +	u64 units = le32_to_cpu(record->length);
->> +	u64 dpa = raw & CXL_POISON_START_MASK;
->> +	u8 source = raw & CXL_POISON_SOURCE_MASK;
->> +	u64 length, end, step, cur;
->> +
->> +	if (!units ||
->> +	    check_mul_overflow(units, (u64)CXL_POISON_LEN_MULT, &length) ||
->> +	    check_add_overflow(dpa, length, &end))
->> +		return -EPROTO;
->> +
->> +	/*
->> +	 * A corrected error never reaches the poison list, so every record
->> +	 * is uncorrectable. Only a failure of the device's own media is
->> +	 * withheld: External poison was written by the host into healthy
->> +	 * media and a rewrite or Clear Poison recovers it, and Injected
->> +	 * poison is a test artifact. Withholding either would make a
->> +	 * recoverable state permanent.
->> +	 */
->> +	if (source != CXL_POISON_SOURCE_INTERNAL) {
->> +		dev_dbg(&cxlr->dev, "%s: dpa %#llx source %u not withheld\n",
->> +			dev_name(&cxlmd->dev), dpa, source);
->> +		return 0;
->> +	}
->> +
->> +	/*
->> +	 * Translate once per unit of HPA contiguity rather than per 64
->> +	 * bytes. Consecutive DPAs within an interleave granule map to
->> +	 * consecutive HPAs, and a granule no larger than a page lies within
->> +	 * one page, so stepping by min(granule, PAGE_SIZE) from an aligned
->> +	 * start reaches every page the record covers.
->> +	 */
->> +	step = clamp_t(u64, p->interleave_granularity, CXL_POISON_LEN_MULT,
->> +		       PAGE_SIZE);
->> +
->> +	for (cur = ALIGN_DOWN(dpa, step); cur < end; cur += step) {
->> +		u64 hpa = cxl_dpa_to_hpa(cxlr, cxlmd, max(cur, dpa));
->> +		int rc;
->> +
->> +		/* Not mapped by this region; nothing here to withhold. */
->> +		if (hpa == ULLONG_MAX)
->> +			continue;
->> +
->> +		rc = cxl_poison_store_hpa(cxlr, pfns, hpa);
->> +		if (rc)
->> +			return rc;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int cxl_region_collect_decoder_poison(struct cxl_region *cxlr,
->> +					     struct cxl_endpoint_decoder *cxled,
->> +					     struct xarray *pfns)
->> +{
->> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->> +	struct cxl_poison_snapshot snapshot;
->> +	int rc;
->> +
->> +	rc = cxl_poison_snapshot_init(cxlmd, &snapshot);
->> +	if (rc == -EOPNOTSUPP) {
->> +		dev_info(&cxlr->dev,
->> +			 "%s: no Get Poison List support, nothing withheld\n",
->> +			 dev_name(&cxlmd->dev));
->> +		return 0;
->> +	}
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = cxl_get_poison_by_decoder(cxled, &snapshot,
->> +				       CXL_POISON_QUERY_PREONLINE);
->> +	if (rc == -EFAULT) {
->> +		/*
->> +		 * The device keeps no poison list for volatile ranges, which
->> +		 * CXL r3.2 8.2.9.8.4.1 permits. Online the region as today.
->> +		 */
->> +		dev_info(&cxlr->dev,
->> +			 "%s: no volatile poison list, nothing withheld\n",
->> +			 dev_name(&cxlmd->dev));
->> +		rc = 0;
->> +		goto out;
->> +	}
->> +	if (rc)
->> +		goto out;
->> +
->> +	/*
->> +	 * Withholding from a partial list would online the region on the
->> +	 * belief that every bad frame had been named.
->> +	 */
->> +	if (snapshot.truncated ||
->> +	    (snapshot.device_flags & CXL_POISON_FLAG_OVERFLOW)) {
->> +		dev_err(&cxlr->dev, "%s: poison list incomplete\n",
->> +			dev_name(&cxlmd->dev));
->> +		rc = -EOVERFLOW;
->> +		goto out;
->> +	}
->> +	if (snapshot.device_flags & CXL_POISON_FLAG_SCANNING) {
->> +		dev_err(&cxlr->dev, "%s: media scan in progress\n",
->> +			dev_name(&cxlmd->dev));
->> +		rc = -EBUSY;
->> +		goto out;
->> +	}
->> +
->> +	for (u32 i = 0; i < snapshot.nr_records; i++) {
->> +		rc = cxl_poison_record_to_pfns(cxlr, cxlmd,
->> +					       &snapshot.records[i], pfns);
->> +		if (rc)
->> +			break;
->> +	}
->> +out:
->> +	cxl_poison_snapshot_destroy(&snapshot);
->> +	return rc;
->> +}
->> +
->> +static unsigned int cxl_count_poison_ranges(struct xarray *pfns)
->> +{
->> +	unsigned long index, previous = 0;
->> +	unsigned int nr = 0;
->> +	void *entry;
->> +	bool first = true;
->> +
->> +	xa_for_each(pfns, index, entry) {
->> +		if (first || index != previous + 1)
->> +			nr++;
->> +		first = false;
->> +		previous = index;
->> +	}
->> +	return nr;
->> +}
->> +
->> +/*
->> + * The xarray holds each PFN once and xa_for_each() walks them in ascending
->> + * order, so runs of consecutive indices are exactly the sorted,
->> + * nonoverlapping ranges preonline_hwpoison_register() requires.
->> + */
->> +static int cxl_pfns_to_ranges(struct xarray *pfns,
->> +			      struct preonline_hwpoison_range **ranges_out,
->> +			      unsigned int *nr_ranges_out)
->> +{
->> +	struct preonline_hwpoison_range *ranges;
->> +	unsigned long index, previous = 0, run_start = 0;
->> +	unsigned int nr_ranges, nr = 0;
->> +	void *entry;
->> +	bool first = true;
->> +
->> +	nr_ranges = cxl_count_poison_ranges(pfns);
->> +	if (!nr_ranges) {
->> +		*ranges_out = NULL;
->> +		*nr_ranges_out = 0;
->> +		return 0;
->> +	}
->> +
->> +	ranges = kvmalloc_array(nr_ranges, sizeof(*ranges), GFP_KERNEL);
->> +	if (!ranges)
->> +		return -ENOMEM;
->> +
->> +	xa_for_each(pfns, index, entry) {
->> +		if (first) {
->> +			run_start = index;
->> +			previous = index;
->> +			first = false;
->> +			continue;
->> +		}
->> +		if (index == previous + 1) {
->> +			previous = index;
->> +			continue;
->> +		}
->> +		ranges[nr++] = (struct preonline_hwpoison_range) {
->> +			.start_pfn = run_start,
->> +			.nr_pages = previous - run_start + 1,
->> +		};
->> +		run_start = index;
->> +		previous = index;
->> +	}
->> +	ranges[nr++] = (struct preonline_hwpoison_range){
->> +		.start_pfn = run_start,
->> +		.nr_pages = previous - run_start + 1,
->> +	};
->> +
->> +	WARN_ON_ONCE(nr != nr_ranges);
->> +	*ranges_out = ranges;
->> +	*nr_ranges_out = nr;
->> +	return 0;
->> +}
->> +
->> +static void cxl_unregister_device_poison(void *data)
->> +{
->> +	preonline_hwpoison_unregister(data);
->> +}
->> +
->> +static int cxl_region_register_device_poison(struct cxl_region *cxlr)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	struct preonline_hwpoison_range *ranges = NULL;
->> +	struct preonline_hwpoison *handle;
->> +	unsigned int nr_ranges = 0;
->> +	unsigned long nr_frames = 0;
->> +	struct xarray pfns;
->> +	int rc = 0;
->> +
->> +	lockdep_assert_held(&cxl_rwsem.region);
->> +	lockdep_assert_held(&cxl_rwsem.dpa);
->> +
->> +	/* The region may have been decommitted while the lock was dropped. */
->> +	if (p->state < CXL_CONFIG_COMMIT)
->> +		return -ENXIO;
->> +
->> +	if (test_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags)) {
->> +		dev_info(&cxlr->dev,
->> +			 "normalized addressing, poison not translated\n");
->> +		return 0;
->> +	}
->> +
->> +	xa_init(&pfns);
->> +
->> +	for (int i = 0; i < p->nr_targets; i++) {
->> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
->> +
->> +		if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
->> +			continue;
->> +		rc = cxl_region_collect_decoder_poison(cxlr, cxled, &pfns);
->> +		if (rc)
->> +			goto out;
->> +	}
->> +
->> +	if (xa_empty(&pfns))
->> +		goto out;
->> +
->> +	rc = cxl_pfns_to_ranges(&pfns, &ranges, &nr_ranges);
->> +	if (rc)
->> +		goto out;
->> +
->> +	rc = preonline_hwpoison_register(ranges, nr_ranges, &handle);
->> +	if (rc == -EOPNOTSUPP) {
->> +		/* No poison tracking in this kernel; nothing to withhold. */
->> +		rc = 0;
->> +		goto out;
->> +	}
->> +	if (rc)
->> +		goto out;
->> +
->> +	for (unsigned int i = 0; i < nr_ranges; i++)
->> +		nr_frames += ranges[i].nr_pages;
->> +	dev_warn(&cxlr->dev,
->> +		 "withholding %lu frame(s) reported poisoned by the device\n",
->> +		 nr_frames);
->> +
->> +	rc = devm_add_action_or_reset(&cxlr->dev, cxl_unregister_device_poison,
->> +				      handle);
+> > +KUnit
+> > +=====
+> > +
+> > +KUnit tests run self-contained logic in the kernel without any CXL topology.
+> > +KUnit is suited to logic that can be exercised with controlled test inputs,
+> > +including encode/decode helpers, address translation and interleave calculations,
+> > +parsers of device- or firmware-supplied data, and mailbox command handling
+> > +through a stub transport.
+> > +
+> > +To run all of the CXL KUnit tests, from the top of the kernel tree::
+> > +
+> > +  ./tools/testing/kunit/kunit.py run --kunitconfig=drivers/cxl
+> > +
+> > +This builds a test kernel in .kunit/ using drivers/cxl/.kunitconfig and runs it
+> > +under User Mode Linux (UML). The running kernel is not modified, and no
+> > +installation is required. The test kernel runs the tests, reports the results,
+> > +and exits.
+> > +
+> > +Add --arch=x86_64 to run the tests under QEMU instead.
+> > +
+> Add --arch=<arch> ...
+> Maybe also point at "--arch=help"
 > 
-> Hi Shaikh,
-> 
-> I think you are trying to propose the architecture as the following ?
-> - CXL region driver collects the device's poison info and owns the registration
-> - MM use the registration to keep poisoned pages out of the page allocator
->   when memory is onlined
-> - DAX/kmem adds and removes the corresponding system RAM
-> 
-> The registration belongs to the driver, but the memory that needs it can
-> outlive the driver binding.
-> 
-> Unbinding the driver doesn't necessarily remove the memory. If some mem blocks
-> are still online, removal of the range can fail.
-> When driver cleanup removes the registration, MM loses poison info of those
-> memory blocks as well.
-> 
-> I don't have a good idea how we should re-design the ownership here, maybe
-> we can discuss about it.
+> Reviewed-by: Anisa Su <anisa.su@samsung.com>
 
-Maybe MM should own the registry and keyed by physical range. Then the lifetime of the poison would match the region being put into MM? The CXL driver would only need to add entries. 
+Thanks for the review Anisa.
 
-> 
-> Best regards,
-> Richard Cheng.
-> 
+I have this prep'd for v2:
+
+-Add --arch=x86_64 to run the tests under QEMU instead.
++Use --arch=<arch> to run the tests under QEMU instead.
++Use --arch=help to list supported architectures.
+
+-- Alison
+
