@@ -1,70 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493529;
-	b=xn9ycZMGIEPtuEqmqwC2cEIIHpdVnTvxGLfm1sTWzP69w8cYLRXlgH8EpeFdo5p7K+Xg
-	 0JYhH0THCrBUOu8KRFnrbM/i8wfs8Z+v/97u7kS0/1iBmrlQ9EnBv2ly19fk/8FP2fcne
-	 p5XyV30LbZTqH6oVWhO31S34dw5eLz1FIsLuFJsZ8afyNMBS4q20szekn1tTRnn+/nzTy
-	 AwtuFgVbI9jMjdR387sKNnxmkVoguePsVNFCCzrLAf+UTyDixL1uT04RusgEBL0h5hMs0
-	 o3CGCT3mm+x1Xukki6xNhOaPdtBTq9/izJr14VUhxtlC4JjWuL838UlZE18CZZaMqGw==
+	t=1792493532;
+	b=cko69zK6PbNqSq2Cbz+Qhiu2XBiv45X22eRnIjNiYo27L2r2MGNfTZGNiww6J435a6Gv
+	 I62vy2Nl2KtEuTH9LvGUm48RBmCsw4kQbaREQ98gYz0l32/4p0crvk7FKdl3vGsYctREN
+	 c7rg3t7sTTE49DzxyCHvHmzkUfAoe4DVm9aVmxnuDmqWMH941OFUHpyzSfqOxI3545D3Q
+	 14viUax4tPaWJYM8hWikMJE8hHks/uYSfivR2vknhuNtuphGwyLmId8Afj4MlX2wyURV/
+	 kJ+lWc8fVbMfbX7CSzrssf74cXI748x2t4qoldyqROa4tP6BdunL/pe18fZHRKNJOpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493529;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493532;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=edIbxy8j0ZeLmK0JPM910tAFzYTrVmN4a79XoyzsTPs=;
-	b=zlFwdKzlmX13URQqT50LDUHVf5TJLIKreakRqF8cXw7OuHS9YK5+hL1LGdRObinYRcqC
-	 aeYeuqI5n8OPR0L3QSHnagKltWOThuP73f/Vyudxdmr9mNxrqJSr4XGMd0dmqOJ5AZpBr
-	 rD4BvZ/SOmkt51bee53OPwUhG4YDUtsnnFC6gw18E8mhiHuIUTOWUozNt60PcUS1Wxvqi
-	 n4ebp/KVMEqZjY+NlxxzHL0PDnbiVx3ozuMxLhj+OGywibUXBZsivy5Ec9tYTmNAtekTR
-	 Wu6vR28ygevS7iLKVGSyFDggsAQRchk5EsYKfsoZe+rj1/+EYTLeKkifJwARpW5Zr5g==
+	bh=Cht00yUtxWZgYYGvkiDrdQx2K2tPqKneM6BMi8EBSe8=;
+	b=rZPnvetX8z2iLCZNL3qL1iRDmU0ITlMNc8WVYu3UzvR25fxlafHXN6iOUxOd8PnbcL9D
+	 BbZY/kwsixUTTePaAGrwAQwoNkFnnsxmzidLZ3+0mddGx/ho/MQyeMdqWRR6Wq9wL9gW4
+	 6vgkYwJjUGAcjQXOGyJh1dAeaxGnr2CkKfuijGzPPuceHDyvZ+bErjL8hMgnfsM2hl+x7
+	 7RnX1C5KH1rs53dSSrOtjKgR4kcY/B73WSCFJuy8+X20EOhLuAfriQbmDabUMMYS7BkO5
+	 +NzlAy+dYTf43om6/LCV4+/nsdDl/4gutmQxlYWTRy5HhiuW4SN5wlEzVk0gZBlYA7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="gtrex/bk";
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hhe+ozmx;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A372606A325
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:52:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A372606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09EC606A319
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:52:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F09EC606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=gtrex/bk
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hhe+ozmx
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493527;
+	s=mimecast20190719; t=1792493531;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=edIbxy8j0ZeLmK0JPM910tAFzYTrVmN4a79XoyzsTPs=;
-	b=gtrex/bk4a3BDRkhwzdqL75JTJcGOQBe0iwSCNU6/M06K6S6k/iZDrYlf0pTa67UHiWAJL
-	Jg+BZeFQ4P7Fk+GLFhb1n/p89BRH6c23pFa9krtXpRuPXBilshpUagsIluGvWve4Ogf5x2
-	VjvFeXuV1l0lpyyelIwHdqmkOmWEkgc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Cht00yUtxWZgYYGvkiDrdQx2K2tPqKneM6BMi8EBSe8=;
+	b=hhe+ozmxUXoUA0HBCrhH2UqF89atTEsT+OtwRkMAIott77yciQF/LLDbIO8Bv2rW3uIzZP
+	DOy4wsSsg1j9VsWXotTO7am31wgOrzaaBNJa58fLcWsq4W0wY2B5ip/Cxd/BuiFCPunQoW
+	MHMu2eMKEVWySta4Zm/OKzuK/xV8ZSc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-UkF2cxSIP0KFpD-x2kfPug-1; Tue,
- 20 Oct 2026 10:52:03 +0000
-X-MC-Unique: UkF2cxSIP0KFpD-x2kfPug-1
-X-Mimecast-MFC-AGG-ID: UkF2cxSIP0KFpD-x2kfPug_1792493519
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-7pgMjRlDPJm6ek2MrAPphA-1; Tue,
+ 20 Oct 2026 10:52:08 +0000
+X-MC-Unique: 7pgMjRlDPJm6ek2MrAPphA-1
+X-Mimecast-MFC-AGG-ID: 7pgMjRlDPJm6ek2MrAPphA_1792493524
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 171B41955DE8;
-	Tue, 20 Oct 2026 10:51:59 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A12B1954ACE;
+	Tue, 20 Oct 2026 10:52:04 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D26A65BC;
-	Tue, 20 Oct 2026 10:51:55 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 81B4630000E7;
+	Tue, 20 Oct 2026 10:52:01 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:46:21 +0400
-Subject: [PATCH v7 64/65] qom: use QAPITypeInfo in object_property_get_enum
+Date: Tue, 20 Oct 2026 14:46:22 +0400
+Subject: [PATCH v7 65/65] tests/qmp-cmd-test: assert qapi-type resolves in
+ query-qmp-schema
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-64-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-65-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,143 +150,131 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4777;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3522;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=btPOLigegMrUtE/H8gDPhCCZC+0Be3DpIj2amZiGpeM=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZdBPk60N5wT01axiLdb48ZwuPjCejnM2ZCc
- 8PglQD+RAWJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXQAKCRDa6OEJdZac
- 5SPyEAC5HRZ0r0eZqxI5kzCsHrclz4H0Z1qTSRRBggURJDWP1KPYcglKwzX4001DDcIq+3FTVpq
- uqL6jJTS5vpJyJyR897eCp/+/txzLU8tlhsslIoDbOhlREexjvA38cJU7R22vQlvcx+DpICRHE3
- a5XvP5h0s1/Pyiwdap+iMevEvuEEcbH/jRuSHep2d8iVv7Koi8q0iUC8zZ9PuwSKBiXi/oILGfy
- aiMrs8f/RgP9W/MoV3ZQRoFzC+PDRjFuTVfcaA60kq0BkbXlZZqC8u7Z+II9Xx+mxD8jpqF0dvl
- YdxYl9iXw3cbjdx662K6DNPPTjQqlqch+lUyD9IDKGSOxwMVRZODMwFtKF8oOvp/VlJSjSI2dYp
- n/X+gSwpl4DPtL64HznEe7j1fcGEq0YFRHnDbDHbwuxtIa57jCuK6wDAdaarfxUiuLtPfX7zXKA
- 1mhzw7Xk53JCYfVRtyhDDwz68cwocztkSeDoHbr+rWIMtJWAgR3K0ZgRcwpuhUoaQpp7LtkUpd6
- SttTn4wc4MNuYc4Awpzamcf3DaIFaC+EQhFDU5i9gl+OPJb5rstVcuwsDzcleSXgUaDrqgSpCQo
- Bgm5lkNrnrlf7BG0h6WM3CgbBEadCmph3q1159HTgqfLA36QI7zt946mDEQrtiXWNDke3TZA+Wo
- l6wkFmd77J6ABag==
+ bh=d0AC/pqR2xkFHzouOcdpk0rfewmoRKNngAyjCDgTMl8=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZdBKSnHJPBpmcmbmASu7qOtoUGXTowk7yNX
+ g+tgxS9nNCJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXQAKCRDa6OEJdZac
+ 5YaTD/9vG9jkAEkIZLFzUN64FilSwr9riDSC6dE2d/cUhX4cjMjxDVeEJE3fOoiBKvDHuHP6Fam
+ eLESfFQfsqJcKbQZcC7fZwpUyYgAah0Te7HBf1dTcZEFTRvKN74njWw41ZqG0c7tTwK2RvnjIsK
+ 8fHHImBlQjy3IQpEa+tkvQUC4iH8rw0sZLyrCG2YcdoTu7W+WXDLexUk2cOs0ruBPuwoKzJNY0h
+ kfSjtPXCqWAYW/CLE/XAxTIg0npoHuOEJsdHN2vFua1QGpata7fM9WvmMdkxxN/mTWXE368BfaR
+ SefydRBG8ysGItK2Wa42Jka1iFQCJauQfgYfzHLKFuwYgNDhmVGREedy/FHX4FKrmlFt+/DTCBT
+ WQqkUunveY9WHZTah8Oyc6HQu217yOg1Pu1mzdUOKA7L5efOGeeF2VXLU4xx8F0cI3x9n1w2m9S
+ ZjD8AIg2GEOQSHZTOHmvLShHGgZeqbIHmzkuVPwP9Uu0Xvd4oFkSUdsv018jZzRlsuC1WZ19WVs
+ HwVfX09lvPTKCeCW/MnPJHOy4Jz9YIZOrueZvIMglgwQcZOoG8zo20m3HJUDkc4M1fhIN0xN5GX
+ +pxjl6niKchvnstVDhaDerpY/9nebfmNnSTV8sMRAPUBnvklXn1847TNA0iuqTN+Qp24h+XOk0a
+ iSGRIgq7QkVJWcA==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: TNIwI78YsyLZV1_vRpWRTqy-eLB_IWhtkLlR6DGBRiw_1792493519
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: ZeeOXOMUb1-Gvf2nd6YxxnWudKRsO43r8-XsSXrcMKM_1792493524
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The typename parameter becomes a QAPITypeInfo pointer, and the
-validation compares prop->qapi_type against it instead of matching
-prop->type strings.
+For every QOM type returned by qom-list-types, call qom-list-properties
+and verify that each property's qapi-type value (when present) maps to
+a valid entry in the query-qmp-schema introspection output.
+
+The test is gated behind g_test_slow() since it iterates all registered
+QOM types.
 
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/core/machine-qmp-cmds.c      | 4 +++-
- include/qom/object.h            | 4 ++--
- qom/object.c                    | 8 ++++----
- tests/unit/check-qom-proplist.c | 6 +++---
- 4 files changed, 12 insertions(+), 10 deletions(-)
+ tests/qtest/qmp-cmd-test.c | 55 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
 
-diff --git a/hw/core/machine-qmp-cmds.c b/hw/core/machine-qmp-cmds.c
-index 3fee45d568da..6b425baeb2da 100644
---- a/hw/core/machine-qmp-cmds.c
-+++ b/hw/core/machine-qmp-cmds.c
-@@ -18,6 +18,7 @@
- #include "qapi/qapi-commands-accelerator.h"
- #include "qapi/qapi-commands-machine.h"
- #include "qobject/qobject.h"
-+#include "qapi/qapi-type-infos-common.h"
+diff --git a/tests/qtest/qmp-cmd-test.c b/tests/qtest/qmp-cmd-test.c
+index 279a8f5614e9..acb7b0dd6a9f 100644
+--- a/tests/qtest/qmp-cmd-test.c
++++ b/tests/qtest/qmp-cmd-test.c
+@@ -15,6 +15,7 @@
+ #include "qapi/error.h"
+ #include "qapi/qapi-visit-introspect.h"
+ #include "qobject/qdict.h"
++#include "qobject/qlist.h"
  #include "qapi/qobject-input-visitor.h"
- #include "qapi/type-helpers.h"
- #include "qemu/uuid.h"
-@@ -252,7 +253,8 @@ static int query_memdev(Object *obj, void *opaque)
-         } else {
-             m->has_reserve = true;
-         }
--        m->policy = object_property_get_enum(obj, "policy", "HostMemPolicy",
-+        m->policy = object_property_get_enum(obj, "policy",
-+                                             &HostMemPolicy_type_info,
-                                              &error_abort);
-         host_nodes = object_property_get_qobject(obj,
-                                                  "host-nodes",
-diff --git a/include/qom/object.h b/include/qom/object.h
-index a9bbc44cfcc9..9f937e30dae5 100644
---- a/include/qom/object.h
-+++ b/include/qom/object.h
-@@ -1566,7 +1566,7 @@ uint64_t object_property_get_uint(Object *obj, const char *name,
-  * object_property_get_enum:
-  * @obj: the object
-  * @name: the name of the property
-- * @typename: the name of the enum data type
-+ * @type_info: the QAPITypeInfo of the enum
-  * @errp: returns an error if this function fails
-  *
-  * Returns: the value of the property, converted to an integer (which
-@@ -1574,7 +1574,7 @@ uint64_t object_property_get_uint(Object *obj, const char *name,
-  * value is not an enum).
-  */
- int object_property_get_enum(Object *obj, const char *name,
--                             const char *typename, Error **errp);
-+                             const QAPITypeInfo *type_info, Error **errp);
  
- /**
-  * object_property_set:
-diff --git a/qom/object.c b/qom/object.c
-index 791d981dc689..40b569d4d574 100644
---- a/qom/object.c
-+++ b/qom/object.c
-@@ -1775,7 +1775,7 @@ uint64_t object_property_get_uint(Object *obj, const char *name,
+ const char common_args[] = "-nodefaults -machine none";
+@@ -131,6 +132,8 @@ typedef struct {
+     GHashTable *hash;
+ } QmpSchema;
+ 
++static QmpSchema schema;
++
+ static void qmp_schema_init(QmpSchema *schema)
+ {
+     QDict *resp;
+@@ -343,9 +346,56 @@ static void test_object_add_failure_modes(void)
+     qtest_quit(qts);
  }
  
- int object_property_get_enum(Object *obj, const char *name,
--                             const char *typename, Error **errp)
-+                             const QAPITypeInfo *type_info, Error **errp)
++static void test_qapi_type(void)
++{
++    QTestState *qts;
++    g_autoptr(QDict) resp = NULL;
++    QList *types;
++    QListEntry *type_entry, *prop_entry;
++
++    qts = qtest_init(common_args);
++
++    resp = qtest_qmp(qts,
++                     "{ 'execute': 'qom-list-types',"
++                     "  'arguments': { 'abstract': true } }");
++    g_assert(qdict_haskey(resp, "return"));
++    types = qdict_get_qlist(resp, "return");
++
++    QLIST_FOREACH_ENTRY(types, type_entry) {
++        QDict *type = qobject_to(QDict, qlist_entry_obj(type_entry));
++        const char *name = qdict_get_str(type, "name");
++        g_autoptr(QDict) props_resp = NULL;
++        QList *props;
++
++        props_resp = qtest_qmp(qts,
++                               "{ 'execute': 'qom-list-properties',"
++                               "  'arguments': { 'typename': %s } }",
++                               name);
++        if (!qdict_haskey(props_resp, "return")) {
++            continue;
++        }
++        props = qdict_get_qlist(props_resp, "return");
++
++        QLIST_FOREACH_ENTRY(props, prop_entry) {
++            QDict *prop = qobject_to(QDict, qlist_entry_obj(prop_entry));
++            const char *qapi_type = qdict_get_try_str(prop, "qapi-type");
++            const char *propname = qdict_get_str(prop, "name");
++            const char *ty = qdict_get_str(prop, "type");
++
++            if (qapi_type) {
++                g_assert_nonnull(qmp_schema_lookup(&schema, qapi_type));
++            } else if (!g_str_has_prefix(ty, "child<") &&
++                       !g_str_has_prefix(ty, "link<")) {
++                g_test_message("%s.%s %s has no associated qapi-type",
++                               name, propname, ty);
++            }
++        }
++    }
++    qtest_quit(qts);
++}
++
+ int main(int argc, char *argv[])
  {
-     char *str;
+-    QmpSchema schema;
      int ret;
-@@ -1785,10 +1785,10 @@ int object_property_get_enum(Object *obj, const char *name,
-         return -1;
-     }
  
--    if (!g_str_equal(prop->type, typename)) {
-+    if (prop->qapi_type != type_info) {
-         error_setg(errp, "Property %s on %s is not '%s' enum type",
--                   name, object_class_get_name(
--                       object_get_class(obj)), typename);
-+                   name, object_class_get_name(object_get_class(obj)),
-+                   type_info->name);
-         return -1;
-     }
+     g_test_init(&argc, &argv, NULL);
+@@ -355,6 +405,9 @@ int main(int argc, char *argv[])
  
-diff --git a/tests/unit/check-qom-proplist.c b/tests/unit/check-qom-proplist.c
-index 69155e720751..1cb48c7490ef 100644
---- a/tests/unit/check-qom-proplist.c
-+++ b/tests/unit/check-qom-proplist.c
-@@ -582,14 +582,14 @@ static void test_dummy_getenum(void)
+     qtest_add_func("qmp/object-add-failure-modes",
+                    test_object_add_failure_modes);
++    if (g_test_slow()) {
++        qtest_add_func("qmp/qapi-type", test_qapi_type);
++    }
  
-     val = object_property_get_enum(OBJECT(dobj),
-                                    "av",
--                                   "DummyAnimal",
-+                                   &dummy_animal_qapi_type_info,
-                                    &error_abort);
-     g_assert(val == DUMMY_PLATYPUS);
+     ret = g_test_run();
  
-     /* A bad enum type name */
-     val = object_property_get_enum(OBJECT(dobj),
-                                    "av",
--                                   "BadAnimal",
-+                                   &dummy_str_qapi_type_info,
-                                    &err);
-     g_assert(val == -1);
-     error_free_or_abort(&err);
-@@ -597,7 +597,7 @@ static void test_dummy_getenum(void)
-     /* A non-enum property name */
-     val = object_property_get_enum(OBJECT(dobj),
-                                    "iv",
--                                   "DummyAnimal",
-+                                   &dummy_animal_qapi_type_info,
-                                    &err);
-     g_assert(val == -1);
-     error_free_or_abort(&err);
 
 -- 
 2.56.0.116.g6de20f6092dc
