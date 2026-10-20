@@ -1,70 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493203;
-	b=WXDQGbg2g9cF519kLJJ59/kyeFxT2avcTLh5TgfNger5CZLSR1MPLqlgkY9eqAzTDMo3
-	 3tdxiT+MdeWHOV+AldmBn83mw5mI3LpF468MTPqtzpHSAq8vHJTNDDxZjCW7jUqtE1BW/
-	 PDD4dXHEi4FsUun5ay0bmfAKOxJA0tjpi4TaYHP8a/WgGM2eTNden2+hntT47K+dOFhxn
-	 I2Yih/n3ztU8z0MumWyYI1bByeRWjN8/l/NOfnj56iDQiREs78Y1nZJfWWjsDS4xQCaSI
-	 W/AR02tfITZBVaHdSfm5xHExkVGmyij3TngsrCbM3RGLJd6ew/y6IR1mUbIJqCjziyQ==
+	t=1792493210;
+	b=3RgFidGI8VB0fI1Gg57DNnqRo1bvHiqPM/l6dF+wpK1HMWnBCepqflpTB3M9fptEWh0Q
+	 tA78UFxzHtjTdMlfLjzYNJOhLsE+8LLScq/ztbko6qsHbTACLWOrKXhq6jzoAfQHIdycU
+	 8xItwRH7DT03PwdWMda46ATlmmRzl0YOHX9SWJhil1DByxHfPihShW+4w6lsjDLaaEHnX
+	 4lmgSdXGUASuVKVby0oYImp2ahQk9eJ9Wh88XLPLoupFTJUCDau83eFlcbyMEm+KplGqv
+	 K3Amh6rkryQkMjLEdukMg2XqswRMztN29iNyLBB7T0CrDwKpGHX64pESpl2yaVZnbcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493203;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493210;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=W4iwz5jM7eZNLXaBc15ajfHMaIvbcteyV5+hzYG/iP8=;
-	b=Ig+8WbNrUW0NW7hbCcvW8XJ2UnOBiR4O2/Cd5HIvSqYEtZ8+hOzTsvZ4l7buP/xkUb3m
-	 zieQ5KSFqYdKymioGXhVv7bBf0JIyZXNpwsyZIAbWjOKmOkMJd/Hys1EvtjlsgP8YxfAt
-	 SwPdwntGgVWEWgN5aidJQSsX2SE8Cv4j2Ea0mSYAr/yBWzk4l4Zf26XJemqgBvIKQyncr
-	 zA5z+xGJQsD85cw6BvuuOj5lbS8KPV6UZkYahOU+tBQ+6R4kwD1MOcWgbxKXX1w57Wtxp
-	 K2hP+wNk7JYE8cAydbymjJAYrAPjtk7EKZp3KGtdlQ/nD8dV3MKSEvQJCjBFdYo9riA==
+	bh=xG2OGo4lx2YCSH10YJfMac8tHdMtlMp6mBUYGSWviZ4=;
+	b=gfSgZpt3rwIPymRRm7jVDGwcg9YW/SW4hwpcQkHeiNn4EGGmERzgIDfWgzcFnOWhfBPV
+	 I/lMZgGpBpVb4Bdj2/vN5NwMAbIeZEP8/beZA8fSQ+DiDTvNdetSJWmzZc4sAotNI51/E
+	 gCWOv488Fdd+LUpxdgL8nZjWm7AimxmcKUW9Re+Gl6o1qP7U1TX24csogWIpWVnSVz9LE
+	 la9j/9JGUHoLTnvrUKHZvSHx6PUHEa6RfENlMH+QSLRoIYPjxTN/4wA1ydIrqG1uvK70G
+	 lG0B3C98hqWDlsPTXUtPgJEhmSDQn+B9rkQ9VBKcF9s8SJtZE2eahN7mEvnkZH2kP0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RYpTwtrg;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="Wi/LmWHg";
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E2D606A323
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:46:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14E2D606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4961606A319
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:46:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4961606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RYpTwtrg
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Wi/LmWHg
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493202;
+	s=mimecast20190719; t=1792493209;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W4iwz5jM7eZNLXaBc15ajfHMaIvbcteyV5+hzYG/iP8=;
-	b=RYpTwtrgQV9LDr6PPPWCGIvUefmfFMfa4QnuHfFNKR6T1J7fKes+R3z0I8KtXFn2z8ykPI
-	TZ7/jE9z0T4CMAosoU0dpsH8Uv9STFnF7A4I68YlGjP78SI/xiEZaifjpFv1LL4NUWuaQ4
-	F93txUTVYjzk5Hi8WiKhD6jhIZqNuKo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=xG2OGo4lx2YCSH10YJfMac8tHdMtlMp6mBUYGSWviZ4=;
+	b=Wi/LmWHgVQr37I7HM3dRB37hrGFBOQn+POAjUGkCspzb/xs7B/45HyRdqnnjjAqGsoculR
+	Fm0PDKk0n7c/JKrKi9uVpx6BgkLIqXQ90msn/Cyu4HP2SsrypUrJhjFP4XISBKYm9L7B+z
+	ErL74X8unniWmR4TO8fyEFMpBsEj8f8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-300-zY61osTGPTaA1pnSKnNHFQ-1; Tue,
- 20 Oct 2026 10:46:38 +0000
-X-MC-Unique: zY61osTGPTaA1pnSKnNHFQ-1
-X-Mimecast-MFC-AGG-ID: zY61osTGPTaA1pnSKnNHFQ_1792493194
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-681-dv92ItMdM9G_nQvMyXZAiA-1; Tue,
+ 20 Oct 2026 10:46:44 +0000
+X-MC-Unique: dv92ItMdM9G_nQvMyXZAiA-1
+X-Mimecast-MFC-AGG-ID: dv92ItMdM9G_nQvMyXZAiA_1792493201
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CC261955D69;
-	Tue, 20 Oct 2026 10:46:33 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0CCE818005B9;
+	Tue, 20 Oct 2026 10:46:40 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 14CBF30000E7;
-	Tue, 20 Oct 2026 10:46:29 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 26AF11800643;
+	Tue, 20 Oct 2026 10:46:35 +0000 (UTC)
 From: marcandre.lureau@redhat.com
-Date: Tue, 20 Oct 2026 14:45:21 +0400
-Subject: [PATCH v7 04/65] qapi/introspect: Don't elide types
+Date: Tue, 20 Oct 2026 14:45:22 +0400
+Subject: [PATCH v7 05/65] qapi: QAPISchemaVisitor.visit_needed() is now
+ unused, drop
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-4-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-5-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,158 +150,63 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5331;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1193;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=mh48JZUSGfIpAp1DsQ/GZxfBrxYDTkjYALDPFWkE2w0=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZXTj6BLvZgq0XBaDnDR415+cGHcMUxi/2dk
- ZicZ3/0CO+JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGVwAKCRDa6OEJdZac
- 5cNFEACs0g3nYzOw9mcOrDPnlJXKJuNeci0n6VbAEXZsFCZ1u4JNtS1ifs+0pHvISJaoZta0my6
- lvkGupWdwq079dv7nvmOoT5lGQxsx41FDbzeMAh2AqGRiaoTGIR34hQFf3sOLgmZraxp30Lt33v
- I9FftBFuBgNH1cHh44kywesPPVrmlfX1fGV1hURBsBolTEkpUT+VNW3Si1XrztZk2PXf1zupIB1
- 6v4kYskKQkdj6v95qbfwBDHaMsgyUWRuc4dE9BsDkCCULJcdcOw0jQy+xkShVjgbTzRG/spQtdm
- OJgHTTwkqlLpLSzKkiZiWk130rNvNbU9ZPZZ7pWrSjD87w4sUoVTVlLNx7btfbj6VpkVI/lsNHX
- eXEv52qGqAcZCZptkK8oP/CIE6nCQvMdxcZ31fqe3HxosbVA5tVjhnoeC/tQyiJZuiyExxkFiJ7
- 0ZbpjT/AIjGFffTJ3IYXzUgPfgdB1arCF3YD86a2cQEZgHpGQtJ675JNQAPfC7Gbgpu/znK2Txl
- QskafbOYE8+L5oukgyV+eYRWnqzZsRIXJeUrRhCXcOW2+NOIDZyh5yfQvEaIefITC4ILWuwtEEF
- F1kFYI7xr5ozlv5mmkOq6tEUPt+N9cLcy/vZVW0O4PEQCCt0FJuN5TvgfUPN9YjLObVm6vjQw9L
- JjRCn7EZx7/9Trw==
+ bh=yBAs+PsGI+mRRHuSXNI42xoWI9p0TSDsh65vQW8BRrc=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZX3wnVoTG1DT7PkibN0fixZC+3g4HczKxre
+ WlR6XwfjdSJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGVwAKCRDa6OEJdZac
+ 5XW2D/45KfzoQQ844pW9wPBstfoA4zhpxgYbXZdFhd1B3tDYs+gd0ydHZpM8roMnIC6sUz2UZVw
+ IXLD2jiHt7yLZuphP/QVxipCVGpGWDePAo2x1ibRtN36V7QF2kYhmxqri0MMwpjy6AJMTGCUuMB
+ xpRJlv+RypwgdJZTss3IDeLAh6amwIn5KwnKxa+VhAa1TweG97haA2x1DkLDE1BBaEBWerNMIhY
+ XkU4aw+JMmBUEmqAu5AXPH7DXgINM5RHn/JzyiI3T7yLfmL0zAUjrq4eWRwG1HVPMGONTO7JfNE
+ 0o0E+ULXqwLnQTgbGmZcyCHeOER/LovvzMIKrdz4xytDwyhERlt04lMyYKta/VQamfyHHL2eqte
+ BmWKR4GrxysyQvF6+XvxLYIUbvcW/GEmZ2K3JOVgeh6yRY/mnANaUpqMzl5nZ1WZij3x49QanrG
+ auTI+YKu1G7+pXQipQNg7LGtWo8+sBXCM44evsO6d6zedjLoJkpGbTJ2q1EbcCLvk12mjFkkh4A
+ KdfC5MVpqO+KN0XR8txFvJs/K3UkRZlxM97ff+6aW7nGxBCmH5iL8yB/dAH2yravcO9bYYO+LQC
+ Gs61agHa3hpCya2FC5c0KTXMLzmROHlqfLGqWdmgsZLg8hrozGFp5ahu+m+OGcL5QZ746vJi74E
+ ghKphqYO93tyqXA==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: 7DHdlt2W7caeguyjrZsjwZ5Ue41Adt9FdELNZhldpIs_1792493194
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: 0JI8C5PWsyMt5IjLqBS9LwKon-6XlC5_br4nrVjBaCA_1792493201
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Markus Armbruster <armbru@redhat.com>
 
-query-qmp-schema elides types not reachable from commands and events.
-It currently emits 1251 out of 1385 definitions, and elides 134 types.
-Whether that's worthwhile is debatable.
-
-Marc-André Lureau would like to make QOM introspection (qom-list &
-friends) refer to QAPI types.  We additionally need types reachable
-from QOM properties.
-
-Unfortunately, the QAPI generator knows nothing about QOM properties.
-
-We could manually mark the QAPI types to elide, or the QAPI types not
-to elide even though they are not reachable from commands and events.
-Feels very much not worthwhile to me.
-
-We could conservatively approximate "reachable from QOM properties" by
-"available for use with QOM properties".  These are the built-in and
-user-defined types, and their arrays.  With that, we'd elide just 38
-out of 1385 definitions.  Too few to be worthwhile.
-
-Simply emit everything.
-
-Output of query-qmp-schema grows from 247KiB to 274KiB for me.
-
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Reviewed-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- docs/devel/qapi-code-gen.rst |  2 --
- scripts/qapi/introspect.py   | 31 ++++---------------------------
- 2 files changed, 4 insertions(+), 29 deletions(-)
+ scripts/qapi/schema.py | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/docs/devel/qapi-code-gen.rst b/docs/devel/qapi-code-gen.rst
-index b1cc5b5f0db1..77f08bb68cac 100644
---- a/docs/devel/qapi-code-gen.rst
-+++ b/docs/devel/qapi-code-gen.rst
-@@ -1250,8 +1250,6 @@ JSON array of strings.
- To examine a type, start with a command or event using it, then follow
- references by name.
+diff --git a/scripts/qapi/schema.py b/scripts/qapi/schema.py
+index 11f3accec873..9e2152fa419b 100644
+--- a/scripts/qapi/schema.py
++++ b/scripts/qapi/schema.py
+@@ -179,11 +179,6 @@ def visit_end(self) -> None:
+     def visit_module(self, name: str) -> None:
+         pass
  
--QAPI schema definitions not reachable that way are omitted.
--
- The SchemaInfo for a command has meta-type "command", and variant
- members "arg-type", "ret-type" and "allow-oob".  On the wire, the
- "arguments" member of a client's "execute" command must conform to the
-diff --git a/scripts/qapi/introspect.py b/scripts/qapi/introspect.py
-index 49d1ed2897e8..15302ecf155a 100644
---- a/scripts/qapi/introspect.py
-+++ b/scripts/qapi/introspect.py
-@@ -28,9 +28,7 @@
- from .schema import (
-     QAPISchema,
-     QAPISchemaAlternatives,
--    QAPISchemaArrayType,
-     QAPISchemaBranches,
--    QAPISchemaEntity,
-     QAPISchemaEnumMember,
-     QAPISchemaFeature,
-     QAPISchemaIfCond,
-@@ -175,7 +173,6 @@ def __init__(self, prefix: str, unmask: bool):
-         self._unmask = unmask
-         self._schema: Optional[QAPISchema] = None
-         self._trees: List[Annotated[SchemaInfo]] = []
--        self._used_types: List[QAPISchemaType] = []
-         self._genc.add(mcgen('''
- #include "qemu/osdep.h"
- #include "%(prefix)sqapi-introspect.h"
-@@ -187,10 +184,6 @@ def visit_begin(self, schema: QAPISchema) -> None:
-         self._schema = schema
- 
-     def visit_end(self) -> None:
--        # visit the types that are actually used
--        for typ in self._used_types:
--            typ.visit(self)
--        # generate C
-         name = c_name(self._prefix, protect=False) + 'qmp_schema_qlit'
-         self._genh.add(mcgen('''
- #include "qobject/qlit.h"
-@@ -205,32 +198,12 @@ def visit_end(self) -> None:
-                              c_string=_tree_to_qlit(self._trees)))
-         self._schema = None
-         self._trees = []
--        self._used_types = []
--
 -    def visit_needed(self, entity: QAPISchemaEntity) -> bool:
--        # Ignore types on first pass; visit_end() will pick up used types
--        return not isinstance(entity, QAPISchemaType)
- 
-     def _name(self, name: str) -> str:
-         assert self._schema
-         return self._schema.definition_introspection_name(name, self._unmask)
- 
-     def _use_type(self, typ: QAPISchemaType) -> str:
--        assert self._schema is not None
+-        # pylint: disable=unused-argument
+-        # Default to visiting everything
+-        return True
 -
--        # Map the various integer types to plain int
--        if typ.json_type() == 'int':
--            type_int = self._schema.lookup_type('int')
--            assert type_int
--            typ = type_int
--        elif (isinstance(typ, QAPISchemaArrayType) and
--              typ.element_type.json_type() == 'int'):
--            type_intlist = self._schema.lookup_type('intList')
--            assert type_intlist
--            typ = type_intlist
--        # Add type to work queue if new
--        if typ not in self._used_types:
--            self._used_types.append(typ)
-         return self._name(typ.name)
+     def visit_include(self, name: str, info: Optional[QAPISourceInfo]) -> None:
+         pass
  
-     @staticmethod
-@@ -295,6 +268,8 @@ def _gen_variant(self, variant: QAPISchemaVariant
+@@ -315,8 +310,7 @@ def add_entity(self, ent: QAPISchemaEntity) -> None:
+     def visit(self, visitor: QAPISchemaVisitor) -> None:
+         visitor.visit_module(self.name)
+         for entity in self._entity_list:
+-            if visitor.visit_needed(entity):
+-                entity.visit(visitor)
++            entity.visit(visitor)
  
-     def visit_builtin_type(self, name: str, info: Optional[QAPISourceInfo],
-                            json_type: str) -> None:
-+        if json_type == 'int' and name != 'int':
-+            return
-         self._gen_tree(name, 'builtin', {'json-type': json_type})
  
-     def visit_enum_type(self, name: str, info: Optional[QAPISourceInfo],
-@@ -312,6 +287,8 @@ def visit_enum_type(self, name: str, info: Optional[QAPISourceInfo],
-     def visit_array_type(self, name: str, info: Optional[QAPISourceInfo],
-                          ifcond: QAPISchemaIfCond,
-                          element_type: QAPISchemaType) -> None:
-+        if element_type.json_type() == 'int' and name != 'intList':
-+            return
-         element = self._use_type(element_type)
-         self._gen_tree(name, 'array', {'element-type': element}, ifcond)
- 
+ class QAPISchemaInclude(QAPISchemaEntity):
 
 -- 
 2.56.0.116.g6de20f6092dc
