@@ -1,71 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493229;
-	b=Ec7K5WmwOYSqmzfvZRUtsw3/tZ/yYuWSQoRUj7O5W3JgR0iUM2wosfxoBF2jtlMEFikc
-	 bvF3nVAYVXJtq2nzKbmWZX6/PrxeCJI3ZqlTK33LvsAHMiEo2WF+F9wEZZlQlPMyJfpBH
-	 y6JXrJDslGvGfVaVfNaFaJpfAd9nZ16eAtzp/GWSujRKcc5jhuAxyEIdSJaIIVmSGFDpM
-	 sKmCtJ8SC6hqH1y5wikZSSDKULikkiLM4wn77eYtC9jnI4vPi5QQb/JSYbSv1mDTAGPZq
-	 n2kqIixf5ugiUkCDo9+NTSr1P0xi3cGTAke/+CFkqHpNyn24CkkMXhEsvTAbBWUKJAQ==
+	t=1792493230;
+	b=PSbO+QFND8+RDjwSz2VUujXP3WICpgc0jW1RTe/V8ZmBmbphvH4dvpp/xywFOH3vC05w
+	 TsNHedAZGp1J7bllhTSqFXHdkbkGWedbvfGoh2DlUjKj5X6DMXJgeO8+WJ9FTe4R3jP3k
+	 /ilJ6VUD/LRH9NlLhUHouV2aQ3umYie3r6RlOD1POftNbzCrdztDXfCns2EMMS8VA+t7i
+	 LhnF52HTEEJgpoA7uCo+C8Ra4M+borQKCdUERZLV0jghBFz45xLZY22ckfqbEQPQLGzrb
+	 byv0tinCaTjE0bjqF6LVKJn0sqYpwBMmm2/ZQ68BH40Xokb5jqcTwftclRNix4TQfTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493229;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493230;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ABGJlqhjTzuYRZnmPc116ozStZtH+NrxbC+tSxh9ams=;
-	b=pWbjJdicHceaz2Rj3VD1r2LxnX4AHeHPdR1edHiJhpgAfJnizcmXk1ke1x8FuZiLQw+3
-	 rpw827XFNC9JyQ6s5taAzn76hV4tURGSmPavAbz/sdSfKoq0WMHLrDCRhtrf0wJXO/YBJ
-	 G71UxR4kGh5S5A9aDsk2XfTfq0lw8bVm/2FYWTvOKzGbJY4fkvTZdn8CrUWDAQuXbJijs
-	 SshsT7d4cjZv3oIaqFHm/ZcQyRya5W7iGNXkxNKAImhkTeDBqJGZj2z2A+AjBJJLKSiFu
-	 8aZheJ3fEucLliV1M0B4Nj+9jbVbw9xMPQLiCLOJMEYzdVRWPujVPbsAaEUFMQOAZSw==
+	bh=T4Uxxm/AUYAlgWDMQDpSo2oDR3RYBjxEx/nUKW/pClc=;
+	b=e+9r4BTlsjqTPdkdHMdGui6mFuKYLlodj5TXF9Z8QLrJhrPYJGDfICgaaTMnRSrTJCWz
+	 ynjw07dR9aCm43BzJ713T9OgWOC69/Ph9FNhLQNnY3+IfQrGlpl8+Pk8pAG7wPsnEREqo
+	 /abCoFGtZTCUPLrQlaPzF17cpKL4E8GWoI6JvCiaDg9Sf2IqoOFVW/XMJTPvH9E/Jmj8t
+	 2CCOOUyPDo9Pk++HUyyRCdfWTKKIAHfGyLSIDLfk0eDzr1O4IEs/uwlvvhhKsWWlgtA03
+	 5xPl7XASW3/8FR1SCzjNCkMYRZEyR1epQcr3y2JRqPm+rGqfLHOVpiANqZNA6sIoO2g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="SBvx/YLK";
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=E2K2radM;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB73606A321
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCB73606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5AC606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC5AC606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SBvx/YLK
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=E2K2radM
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493227;
+	s=mimecast20190719; t=1792493229;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ABGJlqhjTzuYRZnmPc116ozStZtH+NrxbC+tSxh9ams=;
-	b=SBvx/YLKSO6I5YWCcQNXg1x5p2qegTbB1B8pmD5VbPiBXFI2HwpaKWvWnZi7J/A245pf65
-	ueRclmFcQMY4y35MOCwELAimycIKARX2pkfx0et+xfT+EhDGf6OppfGR+znOUnVUgAPc8b
-	k2AVvUzMRsjwEnPm9vN6C3u9J5XRiV0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=T4Uxxm/AUYAlgWDMQDpSo2oDR3RYBjxEx/nUKW/pClc=;
+	b=E2K2radMdsPv/z5GuiUEacMLRQoFsy5QmnWbthuXZ0n750dz3TFMAedfzKGMnNSRjpPgAW
+	AnKvUmnIUzisbHGnH3jWfxQVBxyuiWFhyeUJsgV2At+pcHWUXzQQWBywC/LAibKbd99pRv
+	ZTTW1RtdOKuzzARm6TKQYLirxhpIuh8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-225-c5deni3IOC2wghL_mDuwjA-1; Tue,
- 20 Oct 2026 10:47:02 +0000
-X-MC-Unique: c5deni3IOC2wghL_mDuwjA-1
-X-Mimecast-MFC-AGG-ID: c5deni3IOC2wghL_mDuwjA_1792493219
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-Q9FEb42bMfer0z7ZaConTg-1; Tue,
+ 20 Oct 2026 10:46:57 +0000
+X-MC-Unique: Q9FEb42bMfer0z7ZaConTg-1
+X-Mimecast-MFC-AGG-ID: Q9FEb42bMfer0z7ZaConTg_1792493213
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2CAE1800BD4;
-	Tue, 20 Oct 2026 10:46:58 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9809D1954B20;
+	Tue, 20 Oct 2026 10:46:52 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 66E731956088;
-	Tue, 20 Oct 2026 10:46:55 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2267C1800444;
+	Tue, 20 Oct 2026 10:46:49 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:25 +0400
-Subject: [PATCH v7 08/65] qapi/gen: fix _module_basename for multi-dash
- 'what' parameters
+Date: Tue, 20 Oct 2026 14:45:24 +0400
+Subject: [PATCH v7 07/65] qapi: add QAPITypeInfo struct definition
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -75,7 +74,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-8-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-7-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,55 +149,79 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1135;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1828;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=OXQAJj92qnLHVy/ekT2tV/E7DqxlrqwyneXLdAaw748=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZYkpNZTiTu/0NKP25uG6QN+n4wrDZMxyVQO
- X1gFQ2YGniJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWAAKCRDa6OEJdZac
- 5Tm3EACDRom1wjYZ0S5SCUsfw8t+j56evvGukUBRwQKN2w3Du6uYAw4nS9RuGSZhu8Qnd+u5pMZ
- RR4HP3oxzkczsRTA8h9qgVMNqhnT0wlElBiABH9tCI3YJUEmCvZ6BcLxuFPzfBeyc9GxW13b1zO
- eFJpHhMeM/R3jK04zRuRqksv4/8kXnR6/wpqoTWxFKiLIHlDVBwA/CTfIs4nGprg3ZGZmRlb33o
- EmNs25MODVt3L329BQIU0WG7OwYkXsYoGUdf4ZEbcr9CZywiZ8S0Rvx9fyqeYkVfaSlmqy1IM8D
- gBphVT/878S1qnGZqgmJs2Mb/btw8aPl7PQPV5lHDeMKBfwNHCoePHXNHb7C36F9khg3w29QQGl
- cKkIx32v/w3/L0dR1CWVI+YkbZ7xfh8oZJabF87gg5+jzpgm0AhaVUIgHU33CwJpYm2u62IUU6O
- GUxREslEK8bfz4pPnfxyzQVd8JIjSZoz7J2ip2+0PYyI8mftsOWTAFnUU8jnITGf2UjSAGRfXtR
- DTXKPDqAwHdk7bX3rSvoybxG2RnFNFluw+yjjhDEyY/RhYpOJItxVCbcr+e3/wkbhBjbIiHOO14
- e3pUpNugRf71Qh75I/eHU/GjXdHLvK/PibBXQ7ZxPFfUTuBYAVOQILNa2K4bAzoDOqwVFf9OOq/
- UAbLSh+VqcTxYTw==
+ bh=ncAoduk+W++XsQQC6jhXGd6nHnXr1eyWDznZbZI1kq8=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZYgCKdk47hapDm+FojdwVHdZciBcCELJvB+
+ Yw7agAaZi2JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWAAKCRDa6OEJdZac
+ 5T9oD/9GpeJFOttXk8RI55B118B4xUvL1oaf8Lo8kCm7RluwGbnLkgkEWk3zfL95zz4jtUJwnKQ
+ LkI/5HSvCywgfyFPEHSeLsTL1fdJsoyRVHSZu5kn7dXrnfwQt03BqXsZoGPyzgJ4O6dtOX+WHQ/
+ p6v8cw5FjgYcyrcGkoZL25m8291Qj+cifHCodAv8D8Pwc/O0TMY9tcXyBGixECq8bhC05GlyiFL
+ 1HahUKZPfY5wzXAb1ZpI5IG4ebak9SIACrEGavNNow/2pr7YKP9Dv4SiziC+P1lhVrmELQbxRok
+ HGAL/k9Se+GdzyvbmuU0S5/R4GZNAkxqR3Zt8oy+8jyDYnlw8M9s/RPqgkS98TF1jpcFKlp/7EA
+ YNW4QBcSGFwWOBrSYO2580wx+fB01GWAv5Oxz3vyKBSQyKgmF04H7rB9l2vKNMWnxKRzNqjbmXt
+ 8EvxF5m5VzSm7Pv1Y7jp9cZ/hGY7hDy84syz2Amn5jd7IFzuDgcyRV5G0EZQisXAao1ed7uWeCA
+ rdKBAJUAVv0WyiAVn5qgDoZcqgLGp/vBung/13PF3FFVyJdvO3llipzkXBwaLeKpimriCvSA0ag
+ eO9DfBCSkrhnJUIyeTawq6BHzOMEOc9xWB+Mubdj/bUzMsWXWGu7MXSGR9kP+1Nkw0P1SbqEYCO
+ SE+11f2XzLE52rQ==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: 0Z4aqgEVHz_W97CA5e1JHTUcoB3LeD9wp-EfVCFJhEw_1792493219
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: kljEEH07WBL_doePhkvxIM8brOuHQSBrtp8qrc4dZuU_1792493213
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The re.sub() call replaces every hyphen in 'what' with the system module
-infix. This produces broken filenames for multi-hyphen names (e.g.
-'qapi-type-infos' becomes 'qapi-builtin-type-builtin-infos').
+Introduce a minimal struct that pairs a QAPI type's internal name with
+its "masked" introspection name. Generated constants of this type will
+let QOM property registration carry a reliable reference to the QAPI
+schema and possibly other associated data.
 
-Add count=1 so only the first hyphen is replaced.
+The fields are populated in following commits.
 
-Reviewed-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- scripts/qapi/gen.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/qapi/qapi-type-info.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/scripts/qapi/gen.py b/scripts/qapi/gen.py
-index 0c9b8db3b024..690187d4280d 100644
---- a/scripts/qapi/gen.py
-+++ b/scripts/qapi/gen.py
-@@ -300,7 +300,7 @@ def _module_basename(self, what: str, name: str) -> str:
-                 ret += '-' + os.path.splitext(basename)[0]
-         else:
-             assert QAPISchemaModule.is_system_module(name)
--            ret += re.sub(r'-', '-' + name[2:] + '-', what)
-+            ret += re.sub(r'-', '-' + name[2:] + '-', what, count=1)
-         return ret
- 
-     def _module_filename(self, what: str, name: str) -> str:
+diff --git a/include/qapi/qapi-type-info.h b/include/qapi/qapi-type-info.h
+new file mode 100644
+index 000000000000..6a6355568325
+--- /dev/null
++++ b/include/qapi/qapi-type-info.h
+@@ -0,0 +1,31 @@
++/*
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#ifndef QAPI_TYPE_INFO_H
++#define QAPI_TYPE_INFO_H
++
++#include "qapi/util.h"
++
++/**
++ * QAPITypeInfo - QAPI type metadata
++ *
++ * @name: QAPI type name (e.g. "str", "OnOffAuto", "int32List").
++ *        QOM uses this as the property type string.
++ * @masked_name: Name of the type in the QAPI introspection schema, assigned by
++ *        scripts/qapi code generator (e.g. "368").
++ * @lookup: QEnumLookup for this type, or NULL for non-enum types.
++ *        visit_type_enum(), qapi_enum_parse(), and qapi_enum_lookup()
++ *        all rely on it.
++ * @list: The list-type counterpart, or NULL if none exists.
++ *        str_type_info.list points to strList_type_info.  qdev array
++ *        properties follow this to find the list type for their element.
++ */
++typedef struct QAPITypeInfo {
++    const char *name;
++    const char *masked_name;
++    const QEnumLookup *lookup;
++    const struct QAPITypeInfo *list;
++} QAPITypeInfo;
++
++#endif /* QAPI_TYPE_INFO_H */
 
 -- 
 2.56.0.116.g6de20f6092dc
