@@ -1,61 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792463360;
-	b=O9Ki1MzZyB/goNybOVKvmyVE09EyO9alWJ/KAORK2XCBW4hAmisLX1IXy6uRVqw2I81H
-	 9AgrAn9eNxLVlp9Fx83BoT+IzH5WbBCBbV5FNaYaPD16UQ0Oe+K0WfR4jxd8BjBLVZYXW
-	 h5ki7Nm3AbHUDE0Lr1RjzeEQXBkA85c+VfZAEK/qJjS7txZBjZk33n8LmpqYQtdQjxzE0
-	 xh94P1jz8ULZrTCFmZD1xCoSv4Db8p1qkeM2A6ehlOuKteoRPc15BHC8AE9R3Paj1ZfLW
-	 htdQX7Rl1uqPVyBsFjngqqgIXeb1nWJjpltM/ePw2E2aNClGBKkQVFL3hS8DJqrmHLQ==
+	t=1792463622;
+	b=4xDiXVyhKUFK+yQiiLcFkHs9AXV9g4yMJ10nHhpoWzEMsBIbzjNDaQ4cBQsDBuKzY5ke
+	 K3phxvP6yvRSFarUKNhfu3Gl/wMEGhYsSHoJ36nj96z3g2sCduqKXBfKEJy/0bV2GQToQ
+	 IxRQ6ek0WA2oXI3t6Tk5WRg8x2Ax2P3OKT+iOgY8f2j9vJmefl7a6bHAD4edvqVmhR74/
+	 6VBpf6lRAq8TLCgMWyhlx7XqvxGbtRRoY0nvDTux8u2X7sK1Qiyk/r6SRghequ7jsgT9L
+	 xlbEUUruvs7sIwPCCCRBn2U8HSbdPtD3fik1oRneBrriwNe4H2QV1ZDcohDh+J3kWmw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792463360;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792463622;
 	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
 	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
 	 X-ZohoMailClient;
-	bh=M43+0GqaEg8FdX4LkHIw7KQT/9DQrnnQEVrZl63JIOY=;
-	b=0Ek1u5kdzgTMy8oxzsnHUzkUwzzVHOR+Qn6/5M/ka86nYmHXXg+reWi3c3U7yCvNq7dD
-	 R/INrTxNg9h15jkccZsYKgIMauncK0IU0twgZT9k9M098uepfdjmVWW7f7NycffRPeds4
-	 SggzEvNEwUIMLTZvBsiigj67gHrRoec0lHoOiBBBYvG9JQlTcAzNRyGWUgeW2kRhm4CDU
-	 OYsoAKftU38XAJa6yRbV5YD6tCMEFnGzJvg8ZdoBqIaz518Ba9rraYFzKklFpPx2dMMjO
-	 uWZgzhzZFXqqAcG8GwA8uiy3IU9V9kOhZyFsgfaFTQWsjKfEZVFyEsh459kchUtEAwQ==
+	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=;
+	b=KQmz1k6cD579WprPUmFGpDBcRjVTzSp959Ca137oNSb0wIqNXFuPpgjHPpj9UTaemdwe
+	 jJD4xBjTFXCM9HK5Q9f7NudQnNjxEH7fARyVdVZNv+AbLyPJwlxRZZfU1V/kkcrczqWYu
+	 JdcN+JrfYgS2N2iKBGZpPuIKSgPoM64YAbAcNpa3BHWx4yXt94/ux37Yp63Sic+3wEc64
+	 zpevk36t/i8D5vDqHzfT3j9oj9pRM8ptfx/h6GyEhqlt1i43v7DZXn/ZY7GmMXv+ySeIu
+	 43J466HXPl3ILCiHvWY5roP1Iq02mZuKIfDeaOj0iT5YqPVlcUSceVwUCnjx30KW3Cg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=zohomail.com;
 	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=cyDMyb4Q;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
-Received: from sender5-pp-o94.zoho.com (sender5-pp-o94.zoho.com [165.173.182.94])
+	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=FbOaSioi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D52606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 02:29:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 67D52606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA597606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 02:33:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA597606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=cyDMyb4Q
-ARC-Seal: i=1; a=rsa-sha256; t=1792463352; cv=none; 
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=FbOaSioi
+ARC-Seal: i=1; a=rsa-sha256; t=1792463612; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=IQdzM/xI45lq9bizfbbzlqVzkZStmhFskvF5KiD/dkZRdkbHVL9eLSECJwvRZXgXlSiYq07A1i7TOjzO2RwXhvFsKLLpCYlh+PC83kPOsw4oiEevcIcB3Yi4swatZiRcN0SJupKmtiGokdribb3ECC76Epm3ICNyA3SKyIG9lpk=
+	b=oCzUVdex1euwnn4yNUMld69jkhAGChFuoaAKBSIbaMdbclQLmuSJakgBpTSOyw2xlwcxXAW+069ig5PVSVMz9Tv8Xunm2brjG4g66RJgZVAk7Fi8Vcqs6M6+7LS/MzuU6IVGQxzUuDhIx+0auWY8RDHIWTZ06q2eIGyCbGwIP7U=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792463352; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=M43+0GqaEg8FdX4LkHIw7KQT/9DQrnnQEVrZl63JIOY=; 
-	b=GoNyDtgcW39PpPQlcx5mqdrfrKLsMrYvf8IpUji5an3jin5e1GN3bRbE00AMx9MzxT5D+EhasQXkfeNztSfnZi00n1ekiablyUF3mQAi2YWYni0R5s+1FVx/zpseVs9c5sN5Edg5AOgQaW35dkh22O7gROKngpc7CyuOHn4Lz04=
+	t=1792463612; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=; 
+	b=il4rX4YjAzIuNUwmwS27EuXAdSs5Gi8znA0MfLC4lsp2XquR+qZbR0+TigFcn0KA6G04KHArO3ZgvCjfnmXDgyzoTZdvn7Xn4oi7Op/LDNuXBuBLliYeusPmmzh307KryKyeKZP3n/ODO/xatlzv8hyBzJXTBsRiVplZh446CFM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792463352;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792463612;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=M43+0GqaEg8FdX4LkHIw7KQT/9DQrnnQEVrZl63JIOY=;
-	b=cyDMyb4QhouHi2Cn3yeHhQ8igyic2/3KvzRdj14RjPJC/dx8NxPlmSWwLZuQPYud
-	aFEYO3uyQLhmdIxLPHJPpV7za29K2PUN3M8MbaqxguiX2OitLq56SV06/CsnQfPnjdp
-	X2c2OEqA6Bpqmma3wsojj/jmuT3G9x1VG0gJlAJg=
-Received: by smtp.zohomail.com with SMTPS id 1792463350962965.9304124170185;
-	Mon, 19 Oct 2026 19:29:10 -0700 (PDT)
-Message-ID: <896f59e7-6907-4662-b8c9-eed7a5e89d8b@zohomail.com>
-Date: Tue, 20 Oct 2026 10:29:07 +0800
+	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=;
+	b=FbOaSioiH1P0vjps/CwTDiEiZvaqBDdjz/5/QNIxtgJq/1aCRTm04Vs52ivDOLPh
+	IQUof/m6QU5VJo8GUpVTBkfwIs1PKn3uX8IxebbeUa5krYTplNC69275XmaPRtChkPe
+	IYxFKJGjIhvFF4XiaQS9RGEKPHrawsDme511jxzk=
+Received: by smtp.zohomail.com with SMTPS id 1792463610752681.4978932634922;
+	Mon, 19 Oct 2026 19:33:30 -0700 (PDT)
+Message-ID: <7128116f-aa75-42d9-b71a-2999a26a702c@zohomail.com>
+Date: Tue, 20 Oct 2026 10:33:27 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -66,58 +66,100 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/9] cxl/region: Calculate peer distance only for
- reused targets
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 8/9] cxl/region: Simplify switch port target setup
+ control flow
+To: Alison Schofield <alison.schofield@intel.com>, dave@stgolabs.net,
+ jic23@kernel.org, dave.jiang@intel.com, vishal.l.verma@intel.com,
+ iweiny@kernel.org, icheng@nvidia.com
+Cc: linux-cxl@vger.kernel.org,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 References: <cover.1792263750.git.alison.schofield@intel.com>
- <6ac7f8fae75f7cd29b5d530a552aec2b6c6169b5.1792263750.git.alison.schofield@intel.com>
+ <4a6a854c35234131279dbcdf1cf8c2cece709200.1792263750.git.alison.schofield@intel.com>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <6ac7f8fae75f7cd29b5d530a552aec2b6c6169b5.1792263750.git.alison.schofield@intel.com>
+In-Reply-To: <4a6a854c35234131279dbcdf1cf8c2cece709200.1792263750.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227c8273e9654994aae3a5586e000005071244a5a29b8c7d8ffbba745a3a5358ae74e96021236b510:ZohoMail
+Feedback-ID: zu0801122773c28454c403e0ad76918fcb0000002237e3d30998711981583c0734795cb57d8f3152c15172ac:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
 
-在 2026/10/18 03:19, Alison Schofield 写道:
-> From: Richard Cheng <icheng@nvidia.com>
+在 2026/10/18 03:28, Alison Schofield 写道:
+> cxl_switch_port_setup_targets() searches the decoder's existing targets
+> for the endpoint's downstream port. On a match it checks the peer position
+> and jumps to an out_target_set label to log the target. Otherwise it jumps
+> to an add_target label, skipping the interleave calculation and decoder
+> setup that only the first endpoint to reach a port needs.
 >
-> cxl_switch_port_setup_targets() calculates peer distance before
-> searching the existing targets. When the endpoint needs a new target,
-> the calculated distance is never used.
+> Return the peer check result directly when the downstream port is already
+> a target, and make the first endpoint's decoder setup the else branch of
+> the target search. Both labels go away.
 >
-> Move cxl_port_peer_distance() into the matching-target branch,
-> immediately before check_last_peer(). This avoids unnecessary ancestor
-> walks and per-port region lookups when adding distinct targets.
+> Returning directly after peer validation also removes a misleading debug
+> message that reported a reused target as a new assignment, with a bad
+> index.
 >
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> Tested-by: Alison Schofield <alison.schofield@intel.com>
+> Suggested-by: Li Ming <ming.li@zohomail.com>
+> Suggested-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
 
 > ---
->   drivers/cxl/core/region.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>   drivers/cxl/core/region.c | 34 +++++++++++++++-------------------
+>   1 file changed, 15 insertions(+), 19 deletions(-)
 >
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 4ab5a1d025a9..8bfebe3e1025 100644
+> index 025cf21adfa9..2a64ecf656b7 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1485,10 +1485,10 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
+> @@ -1635,27 +1635,23 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
 >   	}
 >   
 >   	if (cxl_rr->nr_targets_set) {
-> -		int distance = cxl_port_peer_distance(port, cxlr);
-> -
->   		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
->   			if (ep->dport == cxlsd->target[i]) {
-> +				int distance = cxl_port_peer_distance(port, cxlr);
+> -		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+> -			if (ep->dport == cxlsd->target[i]) {
+> -				int distance = cxl_port_peer_distance(port, cxlr);
+> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++) {
+> +			if (ep->dport != cxlsd->target[i])
+> +				continue;
+>   
+> -				rc = check_last_peer(cxled, ep, cxl_rr,
+> -						     distance);
+> -				if (rc)
+> -					return rc;
+> -				goto out_target_set;
+> -			}
+> -		goto add_target;
+> +			return check_last_peer(cxled, ep, cxl_rr,
+> +					       cxl_port_peer_distance(port, cxlr));
+> +		}
+> +	} else {
+> +		rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+> +		if (rc)
+> +			return rc;
 > +
->   				rc = check_last_peer(cxled, ep, cxl_rr,
->   						     distance);
->   				if (rc)
+> +		rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
+> +		if (rc)
+> +			return rc;
+>   	}
+>   
+> -	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+> -	if (rc)
+> -		return rc;
+> -
+> -	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
+> -	if (rc)
+> -		return rc;
+> -add_target:
+>   	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
+>   		dev_dbg(&cxlr->dev,
+>   			"%s:%s: targets full trying to add %s:%s at %d\n",
+> @@ -1677,7 +1673,7 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
+>   		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
+>   	}
+>   	cxl_rr->nr_targets_set++;
+> -out_target_set:
+> +
+>   	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
+>   		dev_name(port->uport_dev), dev_name(&port->dev),
+>   		cxl_rr->nr_targets_set - 1, dev_name(ep->dport->dport_dev),
