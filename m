@@ -1,70 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493414;
-	b=hjXfGNN8NHfxR6Xv7s1+pKUrksND4Ppndv4kCVC2iPsyNsEOWDdKCHs7Q6g5NAqGtPjp
-	 T6aV5OeoctuOn1VrnnteSzFH2i53enD9HDq/zBE9NyYOvPaUCLXFR4JtWzFinhsmbsMhU
-	 2DM57HFy4iyunX6Y5CgEMpyYNSPOLXR9NfGRFZN/cRpk3RM8Vem2TnoZiG4j0Wr/+JcDm
-	 uSssQOqWYIYXifdPTPJJmOA7GPdNetxH7t35iMcSDMq1/mbwnm+G5s+++gESY5QhnSbJs
-	 RdIKVCf8FIjL6plZhhFaS/q0zEd6s/T055umTg13AdKgm5D64h6g1AQWtmzBJ9d9HQQ==
+	t=1792493417;
+	b=urR3LiTTUzAWhAozLTdkv/Kan2fWCsxvGdb9svLKwheG4vous0ho/OWu2UAVh79oMDyQ
+	 Qr/N6/l9ZcexKKk5Ikh55GPG4ht7qM5Ou8j3PQ5dSPCTz1RFxqm0p3R9J9YYw9Rvgd0EL
+	 FfssW5pp04gq+CxD3zDFpoIEAe6BqaZZHIY8LePNDlo9gkOtbvLxBYZypc4fEypyjBZpg
+	 qbkEADTfWdbS6ddudB4BcdVUQrt06oyQ6vRpaWeLCyvLnp1eLFiuh5GVId/nMiX1ThRvV
+	 ygmTOh3RO7QlKGBVHyt7Kj1gm5uCxqrdkMwJ/SG05ujC5WO+/TdLHPndqPh3aDq9KMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493414;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493417;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=EljyyKpOaP+UVHeVMtiabRjWia9m5EXPj7DEMxHLTqI=;
-	b=tqL8SKxumak/bnkWLc2LBRDZKabdWUh7tLd5yxdXnbisjz2nvuprryIXIGZnZCLXjZAx
-	 VIWseaSMBSMnv0NnK8UP0oHcgIGuMrRtcUjKA6iK07RqF3dhg9lI38Mo+T5pWnqCKnEaQ
-	 XxmG+y6HG1IpVBsADnmJG0dEcfy1n8mnmlz2FPYCbTDv2i619hKzzvdj97ytZsYoCIPXr
-	 GnM980+BnxbUEF8D9zjViSqorrTlKAXtfzkRE2qU4bjY2QMYw/c4MaaBPg4I61t1ggqrA
-	 Ok0KbT8bpvkH1yBo4ZUbZB9LpVYKvEP6+XPRTNEpjTUsDlDHzt0Wqjla93THnYX2v7Q==
+	bh=Itw7ntZ95b3QcknDaSfuTChM6ZY/eyyVFOmmM9NldCA=;
+	b=gwsF7HA57I03bmFdHCCBa0Ok8cGYq71yYzNvIfmdxzdtjmZ5zm3a/+aE93V5j+pRTluq
+	 weCF4K00YzU+WxH1iqpz8zPyGxgz8m66Msds+J4auUOFZLxXP9ggvZ+gEW+hYCgF37Zn5
+	 lHv/+9EjOdssl6HNh+679XpGIwuS1+OewWNCY5yFNydblOmFDb2nzqSyBZy6uyeBmeBmG
+	 DWNB++wwO6bPiUklN2+Tz12N0nGZklmaiiaeVBJe73Vbgwt3M5TtvngzJkksqREx0mErI
+	 IwOJkiQvvOeC6McXIHjF95qZ92UXP+Ne5xWSg0/lUaRlxAGRJo5PI7ahkImeNVNq1sg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QMWsi5VV;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="cqU7I/M2";
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD63B606A320
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:50:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DD63B606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750C4606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:50:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 750C4606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QMWsi5VV
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=cqU7I/M2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493412;
+	s=mimecast20190719; t=1792493415;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EljyyKpOaP+UVHeVMtiabRjWia9m5EXPj7DEMxHLTqI=;
-	b=QMWsi5VVcviMK0s0SHV+TgMQk21CviSjtawjS/R8q89kZClam+7WG56cyle89XmhkpEnMp
-	9JMXCTEeMD61s7Ip6tjq2YTSPsDcHoc0fea4kdHHaI3V0ZcykzlXQ/yoMvpxa8DQuLr5za
-	0MvGekwskWGDTwuoBBqy1OmjO3Zc8Zo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Itw7ntZ95b3QcknDaSfuTChM6ZY/eyyVFOmmM9NldCA=;
+	b=cqU7I/M25Gyzg0uMQhdJWzOInH8Xv5obTJ5bVsb+rS9/C18Jbffk23PMKxEm5/VxbEissu
+	iebfpjpfdIPqdGGWymVPx58QrZYMkSy+b8634NRx6OY+KXudj7dClpXEDfV6a5OVXmiWCX
+	+DWw9/2e/I+EBfzEu5OjEzP7PoNHdT8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-_7Frlu4AM46-pYvhF0dpvA-1; Tue,
- 20 Oct 2026 10:50:08 +0000
-X-MC-Unique: _7Frlu4AM46-pYvhF0dpvA-1
-X-Mimecast-MFC-AGG-ID: _7Frlu4AM46-pYvhF0dpvA_1792493403
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-dvXahRDTM9ep7v5fxtgUQQ-1; Tue,
+ 20 Oct 2026 10:50:13 +0000
+X-MC-Unique: dvXahRDTM9ep7v5fxtgUQQ-1
+X-Mimecast-MFC-AGG-ID: dvXahRDTM9ep7v5fxtgUQQ_1792493409
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7188D1956076;
-	Tue, 20 Oct 2026 10:50:03 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 250A01954B17;
+	Tue, 20 Oct 2026 10:50:09 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC7271800586;
-	Tue, 20 Oct 2026 10:50:00 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D408F1800643;
+	Tue, 20 Oct 2026 10:50:05 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:59 +0400
-Subject: [PATCH v7 42/65] virtio-balloon: convert guest-stats property to
+Date: Tue, 20 Oct 2026 14:46:00 +0400
+Subject: [PATCH v7 43/65] qom: replace object_property_add_tm with StructTm
  QAPI type
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-42-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-43-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,297 +150,322 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10182;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10126;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=0g8PFfs3LJuc0BLWv6rMvjXCCHAbNtdnRJuucBbysso=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZbJgd7s8Bcgu4jJ87MBVuZ+yAsGD3uZV7Ld
- ZOdhpMi4vyJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWwAKCRDa6OEJdZac
- 5a+iD/9O1qwWl2Gco4J1mBvanY/rwFGr7NPb9pyAfuwVDpozMDdvXhMl7hahB1Ds96uxJ/rE4qX
- SBiL4gdjh3V17vwq4s8eVGAy4vXzmKarp9JFyYGBdIYBMyaD/l/nF9JpCvzHBfeoJVaJiT1PQQt
- xYL67ZSgUBNuzxP6nOe8i/6molK+XMubhLA3Kq2QQXlkYO/VdfQtO/IJhzrmXxbG01aPW1rlCzK
- dpH2Pg86MU+st3pFO6V2u2mWPT4iBrhRvldHPguFEFz3XzWBP4mk0lC6FjZzlsEbsug2La+TE/A
- Cssx+kRcv3yHPtzgrG0dTA8JSlBWJMGi6Mj+MpceHoDoFYuX3fYpide5R/fVlg+SeNqlorDtHuk
- novEDfzkqUfPInZeNVGWeblx5V2CWdPPHGjJiTexE+gYnW0dCzCdm7huVbeMNcwx115bEnARo3K
- 3p5W5EaVBokC/qsklxmPmHMpC8HOC11c6bky6ZydQ9R0CXbJaooGegZUHMl8BQVojw9uT4HuIEf
- zhvHk7DKGkyT1aTa3Oe+Ey83EQ7NDIygPh75uIZjWT6gzgVMLebNYJMiE9wdeb8EdXuAg/JFEnW
- F8wmPQVW1QH9o6VSbwih+m8LfSoBGJO4URR1+cnKCLSUdPeyYFJmFz5ZccsUYDyKK8i/VtQMyW0
- 2U8t9WP1qP4jaPg==
+ bh=8en+VmzcHhkOLZUQUh0YjN1piPKoLpt2OiF/08xyjt4=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZbnN7eBjTOgKWdRnn37M96n/vY+BRbUyYzY
+ fpY6OFY4GyJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWwAKCRDa6OEJdZac
+ 5YVUD/9onwAEiHq4pCCkbty5UAKselNdSCAGMHXx5SISVLS2Kwi85In4t9/kLGEyHrqHeZQuERb
+ /DrZ3NA7govycT07do1BCxp0bJ9Tsl1z7uJ4Kjoa862ewDpOD825V9s/3o8StmpPJoOtYthPSyK
+ gPvECR0A34F5byFx68WIF0RiEx5+zxT3cIWaS2BQ/n9aN+iP9nslNRRyVURbpSu/HLWg9PJ2RCo
+ 6D4EIrnn+ct6phJy5oEmDmD8fuchqDjTRI5Uf+Of+uf/KkSFwFilkUS2gt3DtjU/dI/ngzQnQjM
+ A4togvItM9aalAiU32Ccxvck2JsYA21Y4SU9yNvXyW3wGemfbFApSEM8JyNq3pc8zPpEjN5pwf3
+ pD1Me0RXjz5Hm8AMvVw4bQ9NruvfmbUxftEfh04ryFlAqRLb3zqC2EYQvIa57Lu637taVwqYF38
+ ChZGbQKAD9tG7noF8pinzh5OCw/N0JHhIMkXcugBD6Ib31pA8zY/ByWYHO+Vgsr53dLJGgHpYPT
+ jN6RFE1SokU1E6XU978tXDwQMOmYbzZifj1e8yyZVjvS/7ewgYLNx4oszXrh2Ez++ApJnBhsfss
+ aQUwz1FeO06KT5e6USlZd8/B5+Yq1ppDR7geKaJQU6y6wnWs2H4dE61Y+jbOF1Ck6NK8ECMGVBo
+ 8wUA5cr0hid+yZw==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: wThPxp8a-OSreUFtGHzI4J65NqMGYHR5mIqX3Ux7S78_1792493403
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: v6siWj9x1vgdklaRx2yyTM2GpaV4T3n-6T6vFlLOKlE_1792493409
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Define VirtioBalloonStats and VirtioBalloonGuestStats QAPI struct types
-in the schema, replacing the hand-rolled visitor in balloon_stats_get_all()
-with a generated visit_type_VirtioBalloonGuestStats() call.
+Define a StructTm QAPI struct in common.json matching the existing
+"struct tm" property wire format (tm_year, tm_mon, tm_mday, tm_hour,
+tm_min, tm_sec as int32).
 
-The wire format is preserved: the JSON output from qom-get is identical
-to the previous hand-rolled visitor output.
+Convert the two callers (mc146818rtc and spapr_rtc) to use
+object_property_add_qapi() with a standard ObjectPropertyAccessor
+that populates a StructTm and calls the generated visitor.
 
+Remove object_property_add_tm(), object_class_property_add_tm(),
+the TMProperty type, and the property_get_tm() helper from
+qom/object.c, along with their declarations in object.h.
+
+Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- docs/interop/virtio-balloon-stats.rst | 22 +--------
- hw/virtio/virtio-balloon.c            | 84 ++++++++++++--------------------
- qapi/machine.json                     | 92 +++++++++++++++++++++++++++++++++++
- 3 files changed, 123 insertions(+), 75 deletions(-)
+ hw/ppc/spapr_rtc.c   | 24 +++++++++++++++---
+ hw/rtc/mc146818rtc.c | 22 ++++++++++++++---
+ include/qom/object.h | 29 ----------------------
+ qapi/common.json     | 28 +++++++++++++++++++++
+ qapi/pragma.json     |  1 +
+ qom/object.c         | 69 ----------------------------------------------------
+ 6 files changed, 69 insertions(+), 104 deletions(-)
 
-diff --git a/docs/interop/virtio-balloon-stats.rst b/docs/interop/virtio-balloon-stats.rst
-index b9a6a6edb229..88d3271bbb02 100644
---- a/docs/interop/virtio-balloon-stats.rst
-+++ b/docs/interop/virtio-balloon-stats.rst
-@@ -22,27 +22,7 @@ polling the guest's balloon driver for new stats in the specified time
- interval.
- 
- To retrieve those stats, clients have to query the guest-stats property,
--which will return a dictionary containing:
--
--  * A key named 'stats', containing all available stats. If the guest
--    doesn't support a particular stat, or if it couldn't be retrieved,
--    its value will be -1. Currently, the following stats are supported:
--
--      - stat-swap-in
--      - stat-swap-out
--      - stat-major-faults
--      - stat-minor-faults
--      - stat-free-memory
--      - stat-total-memory
--      - stat-available-memory
--      - stat-disk-caches
--      - stat-htlb-pgalloc
--      - stat-htlb-pgfail
--
--  * A key named last-update, which contains the last stats update
--    timestamp in seconds. Since this timestamp is generated by the host,
--    a buggy guest can't influence its value. The value is 0 if the guest
--    has not updated the stats (yet).
-+which will return a VirtioBalloonGuestStats (see QAPI documentation).
- 
- It's also important to note the following:
- 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 7ffbe48e5134..bfc75f5dfc72 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -29,6 +29,8 @@
+diff --git a/hw/ppc/spapr_rtc.c b/hw/ppc/spapr_rtc.c
+index 1f7d2d8f898b..5105cf538f64 100644
+--- a/hw/ppc/spapr_rtc.c
++++ b/hw/ppc/spapr_rtc.c
+@@ -33,6 +33,9 @@
+ #include "migration/vmstate.h"
  #include "qapi/error.h"
- #include "qapi/qapi-builtin-type-infos.h"
- #include "qapi/qapi-events-machine.h"
-+#include "qapi/qapi-type-infos-machine.h"
-+#include "qapi/qapi-visit-machine.h"
- #include "qapi/visitor.h"
- #include "trace.h"
- #include "qemu/error-report.h"
-@@ -170,33 +172,8 @@ static void balloon_deflate_page(VirtIOBalloon *balloon,
-     }
+ #include "qapi/qapi-events-misc.h"
++#include "qapi/qapi-type-infos-common.h"
++#include "qapi/qapi-visit-common.h"
++#include "qapi/visitor.h"
+ #include "qemu/cutils.h"
+ #include "qemu/module.h"
+ 
+@@ -131,9 +134,23 @@ static void rtas_set_time_of_day(PowerPCCPU *cpu, SpaprMachineState *spapr,
+     rtas_st(rets, 0, RTAS_OUT_SUCCESS);
  }
  
--/*
-- * All stats upto VIRTIO_BALLOON_S_NR /must/ have a
-- * non-NULL name declared here, since these are used
-- * as keys for populating the QDict with stats
-- */
--static const char *balloon_stat_names[] = {
--   [VIRTIO_BALLOON_S_SWAP_IN] = "stat-swap-in",
--   [VIRTIO_BALLOON_S_SWAP_OUT] = "stat-swap-out",
--   [VIRTIO_BALLOON_S_MAJFLT] = "stat-major-faults",
--   [VIRTIO_BALLOON_S_MINFLT] = "stat-minor-faults",
--   [VIRTIO_BALLOON_S_MEMFREE] = "stat-free-memory",
--
--   [VIRTIO_BALLOON_S_MEMTOT] = "stat-total-memory",
--   [VIRTIO_BALLOON_S_AVAIL] = "stat-available-memory",
--   [VIRTIO_BALLOON_S_CACHES] = "stat-disk-caches",
--   [VIRTIO_BALLOON_S_HTLB_PGALLOC] = "stat-htlb-pgalloc",
--   [VIRTIO_BALLOON_S_HTLB_PGFAIL] = "stat-htlb-pgfail",
--
--   [VIRTIO_BALLOON_S_OOM_KILL] = "stat-oom-kills",
--   [VIRTIO_BALLOON_S_ALLOC_STALL] = "stat-alloc-stalls",
--   [VIRTIO_BALLOON_S_ASYNC_SCAN] = "stat-async-scans",
--   [VIRTIO_BALLOON_S_DIRECT_SCAN] = "stat-direct-scans",
--   [VIRTIO_BALLOON_S_ASYNC_RECLAIM] = "stat-async-reclaims",
--
--   [VIRTIO_BALLOON_S_DIRECT_RECLAIM] = "stat-direct-reclaims",
--};
--G_STATIC_ASSERT(G_N_ELEMENTS(balloon_stat_names) == VIRTIO_BALLOON_S_NR);
-+/* Update VirtioBalloonStats QAPI type when new stats are added */
-+G_STATIC_ASSERT(VIRTIO_BALLOON_S_NR == 16);
- 
- /*
-  * reset_stats - Mark all items in the stats array as unset
-@@ -258,33 +235,31 @@ static void balloon_stats_get_all(Object *obj, Visitor *v, const char *name,
-                                   void *opaque, Error **errp)
+-static void spapr_rtc_qom_date(Object *obj, struct tm *current_tm, Error **errp)
++static void spapr_rtc_qom_date(Object *obj, Visitor *v, const char *name,
++                               void *opaque, Error **errp)
  {
-     VirtIOBalloon *s = VIRTIO_BALLOON(obj);
--    bool ok = false;
--    int i;
-+    VirtioBalloonStats stats = {
-+        .stat_swap_in = s->stats[VIRTIO_BALLOON_S_SWAP_IN],
-+        .stat_swap_out = s->stats[VIRTIO_BALLOON_S_SWAP_OUT],
-+        .stat_major_faults = s->stats[VIRTIO_BALLOON_S_MAJFLT],
-+        .stat_minor_faults = s->stats[VIRTIO_BALLOON_S_MINFLT],
-+        .stat_free_memory = s->stats[VIRTIO_BALLOON_S_MEMFREE],
-+        .stat_total_memory = s->stats[VIRTIO_BALLOON_S_MEMTOT],
-+        .stat_available_memory = s->stats[VIRTIO_BALLOON_S_AVAIL],
-+        .stat_disk_caches = s->stats[VIRTIO_BALLOON_S_CACHES],
-+        .stat_htlb_pgalloc = s->stats[VIRTIO_BALLOON_S_HTLB_PGALLOC],
-+        .stat_htlb_pgfail = s->stats[VIRTIO_BALLOON_S_HTLB_PGFAIL],
-+        .stat_oom_kills = s->stats[VIRTIO_BALLOON_S_OOM_KILL],
-+        .stat_alloc_stalls = s->stats[VIRTIO_BALLOON_S_ALLOC_STALL],
-+        .stat_async_scans = s->stats[VIRTIO_BALLOON_S_ASYNC_SCAN],
-+        .stat_direct_scans = s->stats[VIRTIO_BALLOON_S_DIRECT_SCAN],
-+        .stat_async_reclaims = s->stats[VIRTIO_BALLOON_S_ASYNC_RECLAIM],
-+        .stat_direct_reclaims = s->stats[VIRTIO_BALLOON_S_DIRECT_RECLAIM],
+-    spapr_rtc_read(SPAPR_RTC(obj), current_tm, NULL);
++    struct tm value;
++    StructTm tm, *tmp = &tm;
++
++    spapr_rtc_read(SPAPR_RTC(obj), &value, NULL);
++
++    tm = (StructTm) {
++        .tm_year = value.tm_year,
++        .tm_mon = value.tm_mon,
++        .tm_mday = value.tm_mday,
++        .tm_hour = value.tm_hour,
++        .tm_min = value.tm_min,
++        .tm_sec = value.tm_sec,
 +    };
-+    VirtioBalloonGuestStats guest_stats = {
-+        .last_update = s->stats_last_update,
-+        .stats = &stats,
-+    };
-+    VirtioBalloonGuestStats *argp = &guest_stats;
++    visit_type_StructTm(v, name, &tmp, errp);
+ }
  
+ static void spapr_rtc_realize(DeviceState *dev, Error **errp)
+@@ -150,7 +167,8 @@ static void spapr_rtc_realize(DeviceState *dev, Error **errp)
+     rtc_ns = qemu_clock_get_ns(rtc_clock);
+     rtc->ns_offset = host_s * NANOSECONDS_PER_SECOND - rtc_ns;
+ 
+-    object_property_add_tm(OBJECT(rtc), "date", spapr_rtc_qom_date);
++    object_property_add_qapi(OBJECT(rtc), "date", &StructTm_type_info,
++                             spapr_rtc_qom_date, NULL, NULL, NULL);
+ }
+ 
+ static const VMStateDescription vmstate_spapr_rtc = {
+diff --git a/hw/rtc/mc146818rtc.c b/hw/rtc/mc146818rtc.c
+index ba396435d1af..6010f8587ce0 100644
+--- a/hw/rtc/mc146818rtc.c
++++ b/hw/rtc/mc146818rtc.c
+@@ -42,6 +42,8 @@
+ #include "migration/vmstate.h"
+ #include "qapi/error.h"
+ #include "qapi/qapi-events-misc.h"
++#include "qapi/qapi-type-infos-common.h"
++#include "qapi/qapi-visit-common.h"
+ #include "qapi/visitor.h"
+ #include "trace.h"
+ 
+@@ -854,12 +856,25 @@ static const MemoryRegionOps cmos_ops = {
+     .endianness = DEVICE_LITTLE_ENDIAN,
+ };
+ 
+-static void rtc_get_date(Object *obj, struct tm *current_tm, Error **errp)
++static void rtc_get_date(Object *obj, Visitor *v, const char *name,
++                         void *opaque, Error **errp)
+ {
+     MC146818RtcState *s = MC146818_RTC(obj);
++    struct tm value;
++    StructTm tm, *tmp = &tm;
+ 
+     rtc_update_time(s);
+-    rtc_get_time(s, current_tm);
++    rtc_get_time(s, &value);
++
++    tm = (StructTm) {
++        .tm_year = value.tm_year,
++        .tm_mon = value.tm_mon,
++        .tm_mday = value.tm_mday,
++        .tm_hour = value.tm_hour,
++        .tm_min = value.tm_min,
++        .tm_sec = value.tm_sec,
++    };
++    visit_type_StructTm(v, name, &tmp, errp);
+ }
+ 
+ static void rtc_realizefn(DeviceState *dev, Error **errp)
+@@ -1019,7 +1034,8 @@ static void rtc_class_initfn(ObjectClass *klass, const void *data)
+     device_class_set_props(dc, mc146818rtc_properties);
+     set_bit(DEVICE_CATEGORY_MISC, dc->categories);
+ 
+-    object_class_property_add_tm(klass, "date", rtc_get_date);
++    object_class_property_add_qapi(klass, "date", &StructTm_type_info,
++                                   rtc_get_date, NULL, NULL, NULL);
+ }
+ 
+ static const TypeInfo mc146818rtc_info = {
+diff --git a/include/qom/object.h b/include/qom/object.h
+index e04be4caed57..29cbd84b8d03 100644
+--- a/include/qom/object.h
++++ b/include/qom/object.h
+@@ -2156,35 +2156,6 @@ object_class_property_add_qapi(ObjectClass *klass,
+                                ObjectPropertyRelease *release,
+                                void *opaque);
+ 
+-/**
+- * object_property_add_tm:
+- * @obj: the object to add a property to
+- * @name: the name of the property
+- * @get: the getter or NULL if the property is write-only.
+- *
+- * Add a read-only struct tm valued property using a getter function.
+- * This function will add a property of type 'struct tm'.
+- *
+- * Returns: The newly added property on success, or %NULL on failure.
+- */
+-ObjectProperty *object_property_add_tm(Object *obj, const char *name,
+-                            void (*get)(Object *, struct tm *, Error **));
+-
+-/**
+- * object_class_property_add_tm:
+- * @klass: the object class to add a property to
+- * @name: the name of the property
+- * @get: the getter or NULL if the property is write-only.
+- *
+- * Add a read-only struct tm valued property using a getter function.
+- * This function will add a property of type 'struct tm'.
+- *
+- * Returns: The newly added property on success, or %NULL on failure.
+- */
+-ObjectProperty *object_class_property_add_tm(ObjectClass *klass,
+-                            const char *name,
+-                            void (*get)(Object *, struct tm *, Error **));
+-
+ typedef enum {
+     /* Automatically add a getter to the property */
+     OBJ_PROP_FLAG_READ = 1 << 0,
+diff --git a/qapi/common.json b/qapi/common.json
+index 1352e664b23e..222037ea0b32 100644
+--- a/qapi/common.json
++++ b/qapi/common.json
+@@ -218,3 +218,31 @@
+ ##
+ { 'enum': 'EndianMode',
+   'data': [ 'unspecified', 'little', 'big' ] }
++
++##
++# @StructTm:
++#
++# Broken-down time.  Field semantics match C ``struct tm``.
++#
++# @tm_year: years since 1900
++#
++# @tm_mon: months since January (0-11)
++#
++# @tm_mday: day of the month (1-31)
++#
++# @tm_hour: hours since midnight (0-23)
++#
++# @tm_min: minutes after the hour (0-59)
++#
++# @tm_sec: seconds after the minute (0-59, 60-61 for leap seconds)
++#
++# Since: 11.2
++##
++{ 'struct': 'StructTm',
++  'data': {
++    'tm_year': 'int32',
++    'tm_mon': 'int32',
++    'tm_mday': 'int32',
++    'tm_hour': 'int32',
++    'tm_min': 'int32',
++    'tm_sec': 'int32' } }
+diff --git a/qapi/pragma.json b/qapi/pragma.json
+index 342cedc42e76..9be2819a46bd 100644
+--- a/qapi/pragma.json
++++ b/qapi/pragma.json
+@@ -109,6 +109,7 @@
+         'QKeyCode',                 # send-key, input-sent-event
+         'QapiErrorClass',           # QMP error replies
+         'SshHostKeyCheckMode',      # blockdev-add, -blockdev
++        'StructTm',                 # qom-get of RTC date property
+         'SysEmuTarget',             # query-cpu-fast, query-target
+         'UuidInfo',                 # query-uuid
+         'VncClientInfo',            # query-vnc, query-vnc-servers, ...
+diff --git a/qom/object.c b/qom/object.c
+index 9f9a2abfa08d..cf18880c6c0c 100644
+--- a/qom/object.c
++++ b/qom/object.c
+@@ -2721,75 +2721,6 @@ object_class_property_add_qapi(ObjectClass *klass, const char *name,
+     return prop;
+ }
+ 
+-typedef struct TMProperty {
+-    void (*get)(Object *, struct tm *, Error **);
+-} TMProperty;
+-
+-static void property_get_tm(Object *obj, Visitor *v, const char *name,
+-                            void *opaque, Error **errp)
+-{
+-    TMProperty *prop = opaque;
+-    Error *err = NULL;
+-    struct tm value;
+-
+-    prop->get(obj, &value, &err);
+-    if (err) {
+-        error_propagate(errp, err);
+-        return;
+-    }
+-
 -    if (!visit_start_struct(v, name, NULL, 0, errp)) {
 -        return;
 -    }
--    if (!visit_type_int(v, "last-update", &s->stats_last_update, errp)) {
+-    if (!visit_type_int32(v, "tm_year", &value.tm_year, errp)) {
 -        goto out_end;
 -    }
--
--    if (!visit_start_struct(v, "stats", NULL, 0, errp)) {
+-    if (!visit_type_int32(v, "tm_mon", &value.tm_mon, errp)) {
 -        goto out_end;
 -    }
--    for (i = 0; i < VIRTIO_BALLOON_S_NR; i++) {
--        if (!visit_type_uint64(v, balloon_stat_names[i], &s->stats[i], errp)) {
--            goto out_nested;
--        }
+-    if (!visit_type_int32(v, "tm_mday", &value.tm_mday, errp)) {
+-        goto out_end;
 -    }
--    ok = visit_check_struct(v, errp);
--out_nested:
--    visit_end_struct(v, NULL);
--
--    if (ok) {
--        visit_check_struct(v, errp);
+-    if (!visit_type_int32(v, "tm_hour", &value.tm_hour, errp)) {
+-        goto out_end;
 -    }
+-    if (!visit_type_int32(v, "tm_min", &value.tm_min, errp)) {
+-        goto out_end;
+-    }
+-    if (!visit_type_int32(v, "tm_sec", &value.tm_sec, errp)) {
+-        goto out_end;
+-    }
+-    visit_check_struct(v, errp);
 -out_end:
 -    visit_end_struct(v, NULL);
-+    visit_type_VirtioBalloonGuestStats(v, name, &argp, errp);
- }
+-}
+-
+-ObjectProperty *
+-object_property_add_tm(Object *obj, const char *name,
+-                       void (*get)(Object *, struct tm *, Error **))
+-{
+-    TMProperty *prop = g_malloc0(sizeof(*prop));
+-
+-    prop->get = get;
+-
+-    return object_property_add(obj, name, "struct tm",
+-                               get ? property_get_tm : NULL, NULL,
+-                               property_release_data,
+-                               prop);
+-}
+-
+-ObjectProperty *
+-object_class_property_add_tm(ObjectClass *klass, const char *name,
+-                             void (*get)(Object *, struct tm *, Error **))
+-{
+-    TMProperty *prop = g_malloc0(sizeof(*prop));
+-
+-    prop->get = get;
+-
+-    return object_class_property_add(klass, name, "struct tm",
+-                                     get ? property_get_tm : NULL,
+-                                     NULL, NULL, prop);
+-}
  
- static void balloon_stats_get_poll_interval(Object *obj, Visitor *v,
-@@ -1037,7 +1012,8 @@ static void virtio_balloon_instance_init(Object *obj)
-     s->free_page_hint_cmd_id = VIRTIO_BALLOON_FREE_PAGE_HINT_CMD_ID_MIN;
-     s->free_page_hint_notify.notify = virtio_balloon_free_page_hint_notify;
- 
--    object_property_add(obj, "guest-stats", "guest statistics",
-+    object_property_add_qapi(obj, "guest-stats",
-+                        &VirtioBalloonGuestStats_type_info,
-                         balloon_stats_get_all, NULL, NULL, NULL);
- 
-     object_property_add_qapi(obj, "guest-stats-polling-interval", &int_type_info,
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 9b145c635baf..34be3156270c 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -1126,6 +1126,98 @@
- ##
- { 'struct': 'BalloonInfo', 'data': {'actual': 'int' } }
- 
-+##
-+# @VirtioBalloonStats:
-+#
-+# VirtIO balloon device guest memory statistics.
-+#
-+# If the guest doesn't support a particular stat, or if it couldn't
-+# be retrieved, its value will be -1.
-+#
-+# @stat-swap-in: The amount of memory that has been
-+#     swapped in (in bytes).
-+#
-+# @stat-swap-out: The amount of memory that has been
-+#     swapped out to disk (in bytes).
-+#
-+# @stat-major-faults: The number of major page faults
-+#     that have occurred.
-+#
-+# @stat-minor-faults: The number of minor page faults
-+#     that have occurred.
-+#
-+# @stat-free-memory: The amount of memory not being used
-+#     for any purpose (in bytes).
-+#
-+# @stat-total-memory: The total amount of memory available
-+#     (in bytes).
-+#
-+# @stat-available-memory: An estimate of how much memory is available
-+#     (in bytes) for starting new applications, without pushing the
-+#     system to swap.
-+#
-+# @stat-disk-caches: The amount of memory, in bytes, that can be
-+#     quickly reclaimed without additional I/O.  Typically these pages
-+#     are used for caching files from disk.
-+#
-+# @stat-htlb-pgalloc: The number of successful hugetlb page
-+#     allocations
-+#
-+# @stat-htlb-pgfail: The number of failed hugetlb page
-+#     allocations
-+#
-+# @stat-oom-kills: The number of OOM killer invocations
-+#
-+# @stat-alloc-stalls: The number of memory allocation stalls
-+#
-+# @stat-async-scans: The number of memory scanned asynchronously
-+#
-+# @stat-direct-scans: The number of memory scanned directly
-+#
-+# @stat-async-reclaims: The number of memory reclaimed asynchronously
-+#
-+# @stat-direct-reclaims: The number of memory reclaimed directly
-+#
-+# Since: 11.2
-+##
-+{ 'struct': 'VirtioBalloonStats',
-+  'data': {
-+    'stat-swap-in': 'uint64',
-+    'stat-swap-out': 'uint64',
-+    'stat-major-faults': 'uint64',
-+    'stat-minor-faults': 'uint64',
-+    'stat-free-memory': 'uint64',
-+    'stat-total-memory': 'uint64',
-+    'stat-available-memory': 'uint64',
-+    'stat-disk-caches': 'uint64',
-+    'stat-htlb-pgalloc': 'uint64',
-+    'stat-htlb-pgfail': 'uint64',
-+    'stat-oom-kills': 'uint64',
-+    'stat-alloc-stalls': 'uint64',
-+    'stat-async-scans': 'uint64',
-+    'stat-direct-scans': 'uint64',
-+    'stat-async-reclaims': 'uint64',
-+    'stat-direct-reclaims': 'uint64' } }
-+
-+##
-+# @VirtioBalloonGuestStats:
-+#
-+# Guest statistics from the VirtIO balloon device.
-+#
-+# @last-update: timestamp in seconds of the last stats
-+#     update from the guest (since this timestamp is generated
-+#     by the host, a buggy guest can't influence its value),
-+#     or 0 if no update has been received yet.
-+#
-+# @stats: balloon memory statistics
-+#
-+# Since: 11.2
-+##
-+{ 'struct': 'VirtioBalloonGuestStats',
-+  'data': {
-+    'last-update': 'int',
-+    'stats': 'VirtioBalloonStats' } }
-+
- ##
- # @query-balloon:
- #     Return information about the balloon device.
+ static char *object_get_type(Object *obj, Error **errp)
+ {
 
 -- 
 2.56.0.116.g6de20f6092dc
