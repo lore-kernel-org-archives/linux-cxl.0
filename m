@@ -1,70 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493273;
-	b=n9jc9ZxdrX6SRF5+YHPUZEVthu09Nt71+HG8a16lHDaEjyO+IwUmFMoEcsoaHPsdRS/u
-	 GYXTZrODdG26LqjosOH++hXoFv+CnMtJRV5IcSYbdvDb18DX/GDvnbZlBiAO3iyExaqa8
-	 oE76lkTRDhcoMBxcGiGsqkIIyOAg1+GHZrlp82yhaAfTwRWhaR9qIPxS8pOAd7idUaYX6
-	 3SR0iTcPJ1pXmd1oT71MhsrMoeXJ0dK8c5SMoEhY+IQF/m/LoNPPgxOxxCakutsfp8R+N
-	 f8YOsBueOGMUGaA5GdH8pxrbv4OKQ9D6EAprcAZTtsRc5LMlWtH15S6x7ydKmY8rmQA==
+	t=1792493279;
+	b=pWnqXiAlja7aLhW5OIZY2H+Fp3WHpCC6F8tiymzfDkXDMEQS36d3lbGG4Pqh36HOjOg+
+	 NSfk+5MXbmsWW101XQAM3gagC2rPoWx3g42vG3HkXpaWrYVPeuinD5iOSWlkO9WtAH5wa
+	 nx53Yi6Z/2k4LC7NAPAaC0E9z/EKctC3Z/JiZGRjUZdnfbI5WEsf429caU+loa5Li3MKi
+	 yqklocOhdU96NSqTpgjg8EBeYa0EGtzJusSKeOkw9Sx3n9GAwV8LG6ire1728Cl/lLgpb
+	 j7aozX/3d1PwbBrG9bNdpy3tHFiE0bYUkzeFn+SAXvawVyHc3bnCEs7h8IIM3BZWBkQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493273;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493279;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=w3CoU0QuGNI+p7I3jy6WGQ0mlfEWpp4sXXt2/m2QXAI=;
-	b=0JdvrQ690jDw3JIBNgBQG9Li5QPZTYsPYU0ACAB/owwnFUjJxUPRdAxQP+66xlqMohcp
-	 Mpp/SjnzhvbHjhBUn8/tZPWOTJnxuLzIZPE/cso78ozndg5XMyVDaaV4SHhMY3FLI2xot
-	 OKuuVhJ7ZFEsWFmR2FbLULgTz3YdVrtkvIoPupBSU6XlpEb2biPleLXT3t8LS6X40l7SS
-	 n1H9EYGz4ue6Q6+KNt/UV1I4iPdMJeXXQL0P0fmajPBSMrbJynA/fDYPrqc6VXnLDNTGM
-	 35bBdFh7xxYeWOhpGVMg7mj966UnogNCgIOMGL8Cyhk7717+d18ByVpfLaiiiNkNu4Q==
+	bh=VkXUlwrEvWdaFT7ZgPzD9XegjPTV54S9i+Wt7fwK38w=;
+	b=qSfW29jD8flshpDyAOcCoweA+8YxeKK4nbuCR+lA1HjVAj6l+XRCb0CMCM1SnBo2ncwl
+	 7MIMAQVISwj2Oz029Pj7mrIF7ad6MSnRig9A+JdIiKON2bSnSCFnQdO05uSSYHWNLR6Gz
+	 OSVyN35xoCB9XqFbzsu0e2cn/SX5AbafeFzaYbQwjVD2fqBXWPu2TVm/mCZY5G9JFJEEd
+	 dQc4ZbgbDciBbDHVUiqoALgL1FQLAJSEjCvg++fH/TChuKalKFGRz2vN48Hw7F0l98OCs
+	 YzAwl114miiFaGtinv6wQjKdR3eXMHejC/vATUL3IGK2nHYxBk0ye6X8JHKWIH/v87A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h6QbXwHw;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=INNtbXku;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1023E606A326
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1023E606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14347606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14347606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h6QbXwHw
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=INNtbXku
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493271;
+	s=mimecast20190719; t=1792493278;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w3CoU0QuGNI+p7I3jy6WGQ0mlfEWpp4sXXt2/m2QXAI=;
-	b=h6QbXwHwhTdcxDOPamD9S1CDMKpTWtwbROt/SmEJXK+jcB5jYO648i9gQ1Asn9F7a11lki
-	nnmHftL01bnAdZHW3Eh1R0MGpwa0jqMEaDsL42A+j+8jcZsZoP2oDBWNFkBTfD7D1XnJP2
-	LlqmPwZzbNeL9gJZlwKBR9LUq4MZaDc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=VkXUlwrEvWdaFT7ZgPzD9XegjPTV54S9i+Wt7fwK38w=;
+	b=INNtbXkuyJVdnAyft3dYOsgDSWFhLZHr3UlU3vDj3Ajlierj9plW1xe6WmyQvfm8mBuBaH
+	TKkPDIzHeaDfiV4FeksxjdE4ILqm9d6iIp+mU4C7BjMtR5t/P13yzvtCjhTRpx0o8eMSkA
+	ca7dyKqV0vPrlkr8OLnj6vbte5gAZII=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-378-qnN94N6QPK2vA93ceMbHjQ-1; Tue,
- 20 Oct 2026 10:47:46 +0000
-X-MC-Unique: qnN94N6QPK2vA93ceMbHjQ-1
-X-Mimecast-MFC-AGG-ID: qnN94N6QPK2vA93ceMbHjQ_1792493261
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-ofM9Jc0cNLCC9EhH-k12SQ-1; Tue,
+ 20 Oct 2026 10:47:51 +0000
+X-MC-Unique: ofM9Jc0cNLCC9EhH-k12SQ-1
+X-Mimecast-MFC-AGG-ID: ofM9Jc0cNLCC9EhH-k12SQ_1792493267
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9161F1955F02;
-	Tue, 20 Oct 2026 10:47:41 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10F8B19560B6;
+	Tue, 20 Oct 2026 10:47:47 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15EC75BC;
-	Tue, 20 Oct 2026 10:47:39 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 05BB51800444;
+	Tue, 20 Oct 2026 10:47:44 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:33 +0400
-Subject: [PATCH v7 16/65] qom: add object_{class_}property_add_qapi
+Date: Tue, 20 Oct 2026 14:45:34 +0400
+Subject: [PATCH v7 17/65] qom: add object_{class_}property_add_qapi_enum
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +74,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-16-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-17-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,25 +149,25 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4847;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7651;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=Kq06N3iO6F8AhEf3w27s03u+jnvcQuJjGRRe4Zmd+Hw=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZYIBdWrkS5tz+9/UTddwYES8EXuUjGwwr7o
- DY/JyPpfPaJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWAAKCRDa6OEJdZac
- 5YwTEACxwwoxioLPKJmAISYmT8CzcjaWz6/mg9O/RdNTtr/Qe5SgKfnNgHmYpowIFXzfKxXxVk0
- B1ORjczYVaJ2+0sEYatt98MR4cL6Hv6jxJmuNPVhuZm/dGP4xT8zjDnqPWrzyhuGDnRW314fM0G
- cs/+K/C+Nwe2hpLMybC8gw/whDhlPfHu8KTvLEBX5v7tKzgP6D7PedIBYWNwqFSmpuO0PlQuMHR
- vN33ahh98LvZbfbEhdgO2kdICQMa0DUZEF3ng3OASLe7+t8JVNn+KdmUEBihcL1bJKaAVpj30Xa
- akndT9MZhwYvZw095fcPoxfNhNpNXbRLhzvdGBMkE2j3b8DxfYnc+JFviLUfeaEL/RnpAHO/io7
- w903ZGKDrm8kPlKsMwWsMLrWGdPLR5Kc5NsiK0+s+/lExqWl6WXGAKpJ1XWiI9SvSRFr+pT8sRG
- YQnTqX+5yjvMZjHUf8jZ5kJOLYZxU/73vOGIBhxLDvlVywwQz+b5C3azNqGdFSLYqf+PbAJiruh
- g7uaTSrEABrr0xm+UN5VZL/yxAJEyP0wzq4K8tg3ZRfb9EeYCKYxoaRTQnBz5hWjPVnJbnUqt4X
- lIR0HJed6Cwk5m/Qb1NAZshRIkE3JTkSJUbwmlB1M99oPiceyZi0qG1emOPy0nq/lenfk9B+FRX
- AIGs9zGqOul8NUQ==
+ bh=6wd/SoQY2q+EMLwTd/AeIQErpXbBILREXSh6bn43Lqo=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZZB/jExQFvbdi+wU3hKVxpaaPc1XbpmkIhP
+ WMqxmJ0I1aJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWQAKCRDa6OEJdZac
+ 5dBmD/9iljR90PsVPSEMouwGTqd5u0I3uFFVeGE6aj8If5dMfAJeES/9tbvs9mRjLcapLLGllYU
+ TQNIPpVo9+5Q6yWoXDup+0bZugqArDJn+E+oR5GWaIn14K0W/lTsFVa1fdorL5FJzcZt9nLwPbs
+ qBkK2X0Tow/JAOq9beFe0nqvt9e3h8csBkY2OzylCKV8xgUUa/N7/jUd9n3xMAaklrEguKhws7p
+ RB2EmxgN94MyEQXZtZhqjVrWq/vsUKgCcwLJ7z6Xyu8ikQIh00qHstMPJONSLnW5X32860y2JUn
+ RdI6UxJof0RAZu18Ge3d8Qgv+eKmoIfivMtXvHmI0YJtHLFqrI6rXfocRQLrZTDmpURYQ6U9u1U
+ 9yB9eLpPbMa9W1bghYaq4IAEJtvVsjv1kKDYGVAIPSlYH4dCgI/2TzssabsosxuEN1Phkx1epKW
+ nBgKSEf8pt2cQsFq4SKILCVz/lUAkaZIcqrcLdVjN41qVK33dbV9SETzfNzbcypT0qn3Uvh31bB
+ cekeBayXn2khLf+x2Dyym0EbRSJPRvIWIuFiabEG6a8kpeAZgLkNy8ux2Hrid+xaEV/Q2NlRSrc
+ gxaEBZ3gRSWWWvkLE9xRhqAlVrj2m9egPJPQhy1zP1+3Zkc94/+TwXdjvCND2ByqbflBsfGVWJ7
+ eokXUJapDD7zDZg==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: 7cx6RzZYHvt6BAnqv_NEP8XDZCy7QywUuXeXt56doaI_1792493261
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: PVO_cRXyb3gsm4xe_-WwiM1PlN1bhkZYcLs0peUCR9I_1792493267
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -175,119 +175,222 @@ Content-Transfer-Encoding: 8bit
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- include/qom/object.h | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- qom/object.c         | 32 ++++++++++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+ include/qom/object.h | 74 ++++++++++++++++++++++++++++++++++++++++++
+ qom/object.c         | 90 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 159 insertions(+), 5 deletions(-)
 
 diff --git a/include/qom/object.h b/include/qom/object.h
-index 2a5723c555e9..eb61d8842b80 100644
+index eb61d8842b80..e04be4caed57 100644
 --- a/include/qom/object.h
 +++ b/include/qom/object.h
-@@ -2027,6 +2027,61 @@ ObjectProperty *object_class_property_add_enum(ObjectClass *klass,
+@@ -2027,6 +2027,80 @@ ObjectProperty *object_class_property_add_enum(ObjectClass *klass,
                                      int (*get)(Object *, Error **),
                                      void (*set)(Object *, int, Error **));
  
 +/**
-+ * object_property_add_qapi:
-+ * @obj: the object to add a property to
-+ * @name: the name of the property
-+ * @qapi_type: QAPI type info descriptor
-+ * @get: The getter to be called to read a property.  If this is NULL, then
-+ *   the property cannot be read.
-+ * @set: the setter to be called to write a property.  If this is NULL,
-+ *   then the property cannot be written.
-+ * @release: called when the property is removed from the object.  This is
-+ *   meant to allow a property to free its opaque upon object
-+ *   destruction.  This may be NULL.
-+ * @opaque: an opaque pointer to pass to the callbacks for the property
++ * struct QapiEnumProp: Descriptor for a property backed by a QAPI enum type
 + *
-+ * Add a property with a QAPI type association. The property type name
-+ * is derived from @qapi_type->name.
++ * Binds a QOM object property to a QAPI enum, providing automatic
++ * string<->int conversion through QAPI visitors and optional
++ * default-value initialization during object instance init.
 + *
-+ * Returns: The newly added property on success, or %NULL on failure.
++ * Use the QAPI_ENUM_PROP() macro to construct instances inline.
++ *
++ * @name: property name exposed on the QOM object
++ * @description: human-readable description (shown in ``-device help``, etc.)
++ * @default_value: initial enum value applied via @set during instance init,
++ *                 or -1 (the QAPI_ENUM_PROP default) to skip initialization
++ * @qapi_type: pointer to the generated QAPITypeInfo for the enum
++ *             (provides the string<->int lookup table)
++ * @get: getter that returns the current enum value as int, or -1 on error
++ * @set: setter that receives the enum value as int; %NULL for read-only props
 + */
-+ObjectProperty *
-+object_property_add_qapi(Object *obj, const char *name,
-+                         const QAPITypeInfo *qapi_type,
-+                         ObjectPropertyAccessor *get,
-+                         ObjectPropertyAccessor *set,
-+                         ObjectPropertyRelease *release,
-+                         void *opaque);
++typedef struct QapiEnumProp {
++    const char *name;
++    const char *description;
++    const int default_value;
++    const QAPITypeInfo *qapi_type;
++    int (*get)(Object *, Error **);
++    void (*set)(Object *, int, Error **);
++} QapiEnumProp;
++
++#define QAPI_ENUM_PROP(...) ({                                           \
++    static const QapiEnumProp _prop = {                                  \
++        .default_value = -1, __VA_ARGS__                                 \
++    };                                                                   \
++    &_prop; })
 +
 +/**
-+ * object_class_property_add_qapi:
-+ * @klass: the object class to add a property to
-+ * @name: the name of the property
-+ * @qapi_type: QAPI type info descriptor
-+ * @get: The getter to be called to read a property.  If this is NULL, then
-+ *   the property cannot be read.
-+ * @set: the setter to be called to write a property.  If this is NULL,
-+ *   then the property cannot be written.
-+ * @release: called when the property is removed from the object.  This is
-+ *   meant to allow a property to free its opaque upon object
-+ *   destruction.  This may be NULL.
-+ * @opaque: an opaque pointer to pass to the callbacks for the property
++ * object_property_add_qapi_enum:
++ * @obj: the object to add a property to
++ * @prop: property descriptor
 + *
-+ * Add a property with a QAPI type association. The property type name
-+ * is derived from @qapi_type->name.
++ * Add an enum property with QAPI type association.
 + *
 + * Returns: The newly added property on success, or %NULL on failure.
 + */
 +ObjectProperty *
-+object_class_property_add_qapi(ObjectClass *klass,
-+                               const char *name,
-+                               const QAPITypeInfo *qapi_type,
-+                               ObjectPropertyAccessor *get,
-+                               ObjectPropertyAccessor *set,
-+                               ObjectPropertyRelease *release,
-+                               void *opaque);
++object_property_add_qapi_enum(Object *obj, const QapiEnumProp *prop);
++
++/**
++ * object_class_property_add_qapi_enum:
++ * @klass: the class object to add a property to
++ * @prop: property descriptor
++ *
++ * Add an enum property with QAPI type association.
++ *
++ * Use the QAPI_ENUM_PROP() macro to construct the property descriptor
++ * inline. If .default_value is not set, the property is not initialized
++ * (default_value is -1). Otherwise, the setter is called with
++ * default_value during object instance init.
++ *
++ * Example::
++ *
++ *   object_class_property_add_qapi_enum(oc, QAPI_ENUM_PROP(
++ *       .name = "policy",
++ *       .description = "Set the NUMA policy",
++ *       .default_value = HOST_MEM_POLICY_DEFAULT,
++ *       .qapi_type = &HostMemPolicy_type_info,
++ *       .get = my_get_policy,
++ *       .set = my_set_policy,
++ *   ));
++ *
++ * Returns: The newly added property on success, or %NULL on failure.
++ */
++ObjectProperty *
++object_class_property_add_qapi_enum(ObjectClass *klass,
++                                    const QapiEnumProp *prop);
 +
  /**
-  * object_property_add_tm:
+  * object_property_add_qapi:
   * @obj: the object to add a property to
 diff --git a/qom/object.c b/qom/object.c
-index 1d09315b328b..bebbfc43556d 100644
+index bebbfc43556d..cc113c0810e7 100644
 --- a/qom/object.c
 +++ b/qom/object.c
-@@ -2609,6 +2609,38 @@ object_class_property_add_enum(ObjectClass *klass, const char *name,
+@@ -1219,7 +1219,7 @@ static void object_class_foreach_tramp(gpointer key, gpointer value,
+         return;
+     }
+ 
+-    if (data->implements_type && 
++    if (data->implements_type &&
+         !object_class_dynamic_cast(k, data->implements_type)) {
+         return;
+     }
+@@ -1786,7 +1786,6 @@ int object_property_get_enum(Object *obj, const char *name,
+     char *str;
+     int ret;
+     ObjectProperty *prop = object_property_find_err(obj, name, errp);
+-    EnumProperty *enumprop;
+ 
+     if (prop == NULL) {
+         return -1;
+@@ -1799,14 +1798,17 @@ int object_property_get_enum(Object *obj, const char *name,
+         return -1;
+     }
+ 
+-    enumprop = prop->opaque;
+-
+     str = object_property_get_str(obj, name, errp);
+     if (!str) {
+         return -1;
+     }
+ 
+-    ret = qapi_enum_parse(enumprop->lookup, str, -1, errp);
++    if (prop->qapi_type) {
++        ret = qapi_enum_parse(prop->qapi_type->lookup, str, -1, errp);
++    } else {
++        EnumProperty *enumprop = prop->opaque;
++        ret = qapi_enum_parse(enumprop->lookup, str, -1, errp);
++    }
+     g_free(str);
+ 
+     return ret;
+@@ -2609,6 +2611,84 @@ object_class_property_add_enum(ObjectClass *klass, const char *name,
                                       prop);
  }
  
++static void get_qapi_enum(Object *obj, Visitor *v, const char *name,
++                          void *opaque, Error **errp)
++{
++    const QapiEnumProp *prop = opaque;
++    int value;
++    Error *err = NULL;
++
++    value = prop->get(obj, &err);
++    assert(value >= 0 || err);
++    if (err) {
++        error_propagate(errp, err);
++        return;
++    }
++
++    visit_type_enum(v, name, &value, prop->qapi_type->lookup, errp);
++}
++
++static void set_qapi_enum(Object *obj, Visitor *v, const char *name,
++                          void *opaque, Error **errp)
++{
++    const QapiEnumProp *prop = opaque;
++    int value;
++
++    if (!visit_type_enum(v, name, &value, prop->qapi_type->lookup, errp)) {
++        return;
++    }
++    prop->set(obj, value, errp);
++}
++
++static void init_qapi_enum(Object *obj, ObjectProperty *prop)
++{
++    const QapiEnumProp *e = prop->opaque;
++
++    if (e->set && e->default_value >= 0) {
++        e->set(obj, e->default_value, &error_abort);
++    }
++}
++
 +ObjectProperty *
-+object_property_add_qapi(Object *obj, const char *name,
-+                         const QAPITypeInfo *qapi_type,
-+                         ObjectPropertyAccessor *get,
-+                         ObjectPropertyAccessor *set,
-+                         ObjectPropertyRelease *release,
-+                         void *opaque)
++object_property_add_qapi_enum(Object *obj, const QapiEnumProp *e)
 +{
 +    ObjectProperty *prop;
 +
-+    prop = object_property_add(obj, name, qapi_type->name,
-+                               get, set, release, opaque);
-+    prop->qapi_type = qapi_type;
++    assert(e && e->qapi_type && e->qapi_type->lookup);
++
++    prop = object_property_add_qapi(obj, e->name, e->qapi_type,
++                                    e->get ? get_qapi_enum : NULL,
++                                    e->set ? set_qapi_enum : NULL,
++                                    NULL,
++                                    (void *)e);
++    prop->description = g_strdup(e->description);
++    if (e->default_value >= 0) {
++        prop->init = init_qapi_enum;
++    }
++
 +    return prop;
 +}
 +
 +ObjectProperty *
-+object_class_property_add_qapi(ObjectClass *klass, const char *name,
-+                               const QAPITypeInfo *qapi_type,
-+                               ObjectPropertyAccessor *get,
-+                               ObjectPropertyAccessor *set,
-+                               ObjectPropertyRelease *release,
-+                               void *opaque)
++object_class_property_add_qapi_enum(ObjectClass *klass, const QapiEnumProp *e)
 +{
 +    ObjectProperty *prop;
 +
-+    prop = object_class_property_add(klass, name, qapi_type->name,
-+                                     get, set, release, opaque);
-+    prop->qapi_type = qapi_type;
++    assert(e && e->qapi_type && e->qapi_type->lookup);
++
++    prop = object_class_property_add_qapi(klass, e->name, e->qapi_type,
++                                          e->get ? get_qapi_enum : NULL,
++                                          e->set ? set_qapi_enum : NULL,
++                                          NULL,
++                                          (void *)e);
++    prop->description = g_strdup(e->description);
++    if (e->default_value >= 0) {
++        prop->init = init_qapi_enum;
++    }
++
 +    return prop;
 +}
 +
- typedef struct TMProperty {
-     void (*get)(Object *, struct tm *, Error **);
- } TMProperty;
+ ObjectProperty *
+ object_property_add_qapi(Object *obj, const char *name,
+                          const QAPITypeInfo *qapi_type,
 
 -- 
 2.56.0.116.g6de20f6092dc
