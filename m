@@ -1,70 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493255;
-	b=oMu8uSeRZ0zhRhVmrTm8YWFpE7V6kiQxVgHNy97bzZdWTfVoayYetAgxzXB10k56SAXw
-	 3H3VZJScJKBbbbWntPiZMitFdZ6qaJgmkMyopjEXSHpbCNbRIkWkCKPvZiFcuwGNtylPf
-	 sn4wFS90lxQR13L2jizNzH9FU4Q+2EDwU04QlxoN2iVReoWGQYlHejHh28xjQyCN61Y83
-	 ZqFRpuXdru4uvhJ1h6aFbGs8cU4/mdiLPdUtPAjU2NSCm+x18jZjfP+fxTYHVHzN2rPi/
-	 ejPUmqaYu1X064DMhpzkA2xT9N+iJ24GD75+UfksYOahiw567rwK88wMrxaXlbNmNow==
+	t=1792493262;
+	b=wD3BCMhivdx/oK66awqpw6lAMF1Grb2f1o6JWFtcNBSE3YsEOIzu0eCNUoahVnzpugqj
+	 i7HrMPva5Q7tuDFMYk0aDKeu8L98AoNQKy68s4V/Ebi16W+OYxgpzWXgcDE/9J5jJ9+Kx
+	 I2EJCEKKGwBz1Xn38V398U11GtcwdJQoBlg9Jvnff5Sa2xjPNelFRBX3mbdHLe1ivCgjl
+	 WbUMriDyPSv9EC9XoOPZ1wAwXsPy6GGbTvPr0ZH6mR34BYI8kHBb8mEgP2IN/EDahdb1o
+	 gp5LczGMvuR6V+CfOQmA2z39HRCWCPZWGpqlkr1vBEDud8gSQQ5VIrzt8rHD5AB8V3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493255;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493262;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=PVXTIIpNbgnr5AJ+/yIbBcdA8eA5b8YMHg0i2cYvT44=;
-	b=hvDrAhAjQv0hnf9Z3vltQizsq/+hL0RdezHJkdxLwsDBKWKQcYDqd8S3vXltsRiMFZdI
-	 4ahIyUCqsMdoQu3xQs9rQASwYbCYVUiBCeDQYT40Fr30s0nhfToQ9SQkFq/MMVZUVTZT3
-	 6f/2CwrX2S+pqk5cz8NtcVx0VtLk8VAV6VZYDCPIkZRE2L+aLEnctcVyZmx1fsWHR5KXq
-	 RsCqMNazRTVNxsUiZRRSqUi9t9F8KKHCJkzqgGKOWP2ejb7WWDLvHvUeT+MRiG8uI/G+1
-	 QdIF5GqAZYxiQBo/J2quTxkEWISSicsoIRsA9gLEcu7Wm2HQnrabiriDw2Cn43aw6aw==
+	bh=xIOxZR09tVRL3LoeQ2VRl9bxdzxaCKN+MMqdzDBpGyw=;
+	b=rbSaumqaeh8zPh4iEN0kfJR4vfRihvRnIA0S0O5bHlJLnJgkNmomi0Ll6M2JR9uvx2OA
+	 /XWux1X/PcinZ9evFyco9jmFqptrMPSxXOovM1sV+HvVINwSiuQVELg9dEjFxJ3vRWiOT
+	 eQ8WIxuX6LOL25lRjFE1PdV+KQlgcxVEcH80q8IRMACUS7PTDDRm9MOsia4v/Z3/gs/5A
+	 Ow5cPTj5h8AhYiRheu4v+4D4v2dnPh+KLn3d5FY+0K2FPD20F3dRTILXQiu3L4Wzpb/b/
+	 2YoDODXB7ssJpotzMBBiQH9eoq+1JZDgSjwM+M16fROPMZnNxyyCIV7Zw2fyRzm3B8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bfRz6xW2;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Nqpux2kp;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA53606A31F
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFA53606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FA5606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:47:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75FA5606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bfRz6xW2
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Nqpux2kp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493254;
+	s=mimecast20190719; t=1792493260;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PVXTIIpNbgnr5AJ+/yIbBcdA8eA5b8YMHg0i2cYvT44=;
-	b=bfRz6xW2zwnHONGOa4IXU0k+aTAGHPvJk9VglT/XM2rFUaP11H953AC+XqHMLR2WBqoIns
-	eQl0pk+Qne/h5xPV7Pz//i/uD/03go+xSU1SLyb6HjlwhmqJtWJB9TfQ9AwVX0lTRpBWzE
-	VXgxXd7QbkmaetTL3FMWGcsvX4A2+r0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=xIOxZR09tVRL3LoeQ2VRl9bxdzxaCKN+MMqdzDBpGyw=;
+	b=Nqpux2kpS03yMCCBpdmXkNo+L7YZowmm1957oBXP8uS4zWvl7XFabJyOclV13Tdoq2x7gy
+	ULvT75aynkCgAIK+CnhUpxpRJ982xNvp3gmwPMmzG7tLnToWK1Jwx9pvYUnKlCvKfcVxpu
+	wYzUuS0G+nPongi1ecI5on6T7mJ4SPM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-QIWQbiQEOjKXo9XLY2S_-Q-1; Tue,
- 20 Oct 2026 10:47:30 +0000
-X-MC-Unique: QIWQbiQEOjKXo9XLY2S_-Q-1
-X-Mimecast-MFC-AGG-ID: QIWQbiQEOjKXo9XLY2S_-Q_1792493246
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-ofFqrjFmNVuI0_Rhk-bdPQ-1; Tue,
+ 20 Oct 2026 10:47:36 +0000
+X-MC-Unique: ofFqrjFmNVuI0_Rhk-bdPQ-1
+X-Mimecast-MFC-AGG-ID: ofFqrjFmNVuI0_Rhk-bdPQ_1792493252
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A06391800846;
-	Tue, 20 Oct 2026 10:47:26 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6E151955F2B;
+	Tue, 20 Oct 2026 10:47:31 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 26A6630000E7;
-	Tue, 20 Oct 2026 10:47:24 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B32B31956089;
+	Tue, 20 Oct 2026 10:47:28 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:30 +0400
-Subject: [PATCH v7 13/65] qom/qmp: populate qapi-type in QMP handlers
+Date: Tue, 20 Oct 2026 14:45:31 +0400
+Subject: [PATCH v7 14/65] qom/qmp: populate description & default-value in
+ qom_property_info()
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-13-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-14-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,123 +150,90 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3535;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2485;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=i+4aNg1CWaC9FuQwQPBmrQeBSkYvF4PheLxhenOOFfo=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZYDWzReLBw3m81dGDIXbwzl9a7/x3QA+lLt
- YiL2TIXOxiJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWAAKCRDa6OEJdZac
- 5SUfD/wJNBGKtLromvCCVRWVjPvxR5grgFUIPYxITDg41xmOLrKqK6tkYNGmFOZFpRXvHXGYvRQ
- TdQmUahRaSDpeuJbFcaYT73xbCCqya8tVq8EmWAT5UeRvgtVrubv+XmDarrnryY02yLXvkIPllC
- xD258e/Sa+caea6AEZbydm8puSKag8kjyvK+G/zuYF1znKnI8eJxFrc3NH2jpHB6n9mLR5rzuys
- KpmuOkIz/+997QlgvghfOc9I5oUvG09YZbw98d4FxVxtx5ARqn/Vp/by4sa4tu2Tu0k6JWoMyR2
- FLbIEl5NmPd/Vzzo8e0e2s7lkcsZEaa6+6GDVtgr3zcY0ceNHCAlZDAcuV2JumnHEjgGHaGDC3j
- m73n3AS2hBEShtU728GRRbYOuf5ZVmV0IHuJrD2XWVTkdWBtjjOKsTKqGgmguNhjUQn/iZ1XRs6
- AwFiABH4kHoVozldkVrlbvXe7p5VFD4ze0fzu1PCDur+7/Ays4XczNXKWN1fQ5u2ZNLW5LYbfg+
- ljEVnbaU+fg2V7agpnwf/IswI8Aw7S6ja3o33R2iu3N6LeX5VdqV5qtUy9mRVydHeEJii8A9+vl
- Yd8aU3wBZlxTyloC0tuExCV6B9nUqFz84SN6C4Bl11QPGw0u4G9nKK1ivmRDCOq3WPxaOAUae2j
- TUSTCHbBFtRj1ig==
+ bh=uHhhGddxQUOPXHn3kN1zjJ5emGyO+zAsacCmEIp7fMU=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZYLHL/+jjl6D3jfhu6YY8r0v/h+oK3dZuqT
+ ezvQZmL6dCJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWAAKCRDa6OEJdZac
+ 5aAaD/48dANrC6kyut3XOROjrQRxjwUIv0i0xWNW1n7ucgCFOO9+fWLOIuRBmElFO8tK1LUW7VK
+ /cncnMEOpfNGGxBqlK4/E7MLLWxcEJ5PONbxrrynUEl5/6iktSG9+p0FbZ+69Ig8sBSWsaKMfX/
+ TjixcX9RrpcR4kM6W9+KDi3doDCw2opXnVXJs1dfbDHber2cptUgcPZg2klCeonD69YCtbh4E9V
+ frLj2F6fhDEwXovHE9dmaAYXrx4MUlWNnWXF7Ghho/OQ4AT803/e68yxS2d9vGvR6oW5buPzIu1
+ mlrM9vteISWAcBit+HYHv2uAYbAEKeadp5Ifyen2Y9sH0dNkfWUPOKHL3vno7uRTfS18hxD4e86
+ 26PatMtqKUJup7iwHq5V9QigizN31NfbU5AoBe12vGQ+E4qUTFiii1meZ1Syaz0HEsBut5DlGZB
+ jKTxA5YXNzKXzh2gMr+EtfsPvTLms/u/oHjnzmZgwDvCIzLlT/lSl87AwFbhpHDBguQjcfTQ0Mg
+ K1VhLdp03W/CZAUX9UALGzwbqu8DJbYjRo9rTfwd+PDdexNm4+dmZiWa48aQpfFwu3KSXV4xnXK
+ BbNdAPMgYnoyiVVLq2Hy2zHqhvba3qJkOIDNjbbdfwMBrbGOpIDzaSUIS939LVbTmE62eCGjZ/p
+ HPrxdrpQOIPKiOQ==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: wYukrzTsvzZ-dqWBWbBnjaLrXJCh4i2QtskE8-CTLDw_1792493246
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: gZspJiObh8ZtvTm603ZrfPWkZ1tvZAZAObFwiqQyODM_1792493252
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Wire up the new qapi-type field in all four QMP handlers that return
-ObjectPropertyInfo or ObjectPropertyValue: qom-list, qom-list-get,
-device-list-properties, and qom-list-properties.
+Move description and default_value population from the individual QMP
+handlers into qom_property_info(), so all callers get them.
 
-When an ObjectProperty has a qapi_type set, the masked QAPI type name
-is copied into the response, allowing clients to cross-reference with
-query-qmp-schema.
+This also adds description and default-value to qom-list responses,
+which previously only returned name and type. The handler doesn't care.
 
-No property has it yet, the following changes will populate it.
-
-Reviewed-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- qom/qom-qmp-cmds.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ qom/qom-qmp-cmds.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
 diff --git a/qom/qom-qmp-cmds.c b/qom/qom-qmp-cmds.c
-index f17389c7305c..47bf3bf2937a 100644
+index 47bf3bf2937a..84a295905148 100644
 --- a/qom/qom-qmp-cmds.c
 +++ b/qom/qom-qmp-cmds.c
-@@ -25,9 +25,23 @@
- #include "qapi/qobject-input-visitor.h"
- #include "qapi/qobject-output-visitor.h"
- #include "qemu/cutils.h"
-+#include "qapi/qapi-type-info.h"
- #include "qom/object_interfaces.h"
- #include "qom/qom-qobject.h"
+@@ -35,6 +35,8 @@ static ObjectPropertyInfo *qom_property_info(ObjectProperty *prop)
  
-+static ObjectPropertyInfo *qom_property_info(ObjectProperty *prop)
-+{
-+    ObjectPropertyInfo *info = g_new0(ObjectPropertyInfo, 1);
-+
-+    info->name = g_strdup(prop->name);
-+    info->type = g_strdup(prop->type);
-+    if (prop->qapi_type) {
-+        assert(prop->qapi_type->masked_name);
-+        info->qapi_type = g_strdup(prop->qapi_type->masked_name);
-+    }
-+    return info;
-+}
-+
- static Object *qom_resolve_path(const char *path, Error **errp)
- {
-     bool ambiguous = false;
-@@ -58,12 +72,7 @@ ObjectPropertyInfoList *qmp_qom_list(const char *path, Error **errp)
+     info->name = g_strdup(prop->name);
+     info->type = g_strdup(prop->type);
++    info->description = g_strdup(prop->description);
++    info->default_value = qobject_ref(prop->defval);
+     if (prop->qapi_type) {
+         assert(prop->qapi_type->masked_name);
+         info->qapi_type = g_strdup(prop->qapi_type->masked_name);
+@@ -243,8 +245,6 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
  
      object_property_iter_init(&iter, obj);
      while ((prop = object_property_iter_next(&iter))) {
--        ObjectPropertyInfo *value = g_new0(ObjectPropertyInfo, 1);
+-        ObjectPropertyInfo *info;
 -
--        QAPI_LIST_PREPEND(props, value);
--
--        value->name = g_strdup(prop->name);
--        value->type = g_strdup(prop->type);
-+        QAPI_LIST_PREPEND(props, qom_property_info(prop));
-     }
- 
-     return props;
-@@ -78,6 +87,10 @@ static void qom_list_add_property_value(Object *obj, ObjectProperty *prop,
- 
-     item->name = g_strdup(prop->name);
-     item->type = g_strdup(prop->type);
-+    if (prop->qapi_type) {
-+        assert(prop->qapi_type->masked_name);
-+        item->qapi_type = g_strdup(prop->qapi_type->masked_name);
-+    }
-     item->value = object_property_get_qobject(obj, prop->name, NULL);
- }
- 
-@@ -241,9 +254,7 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
+         /* Skip Object and DeviceState properties */
+         if (strcmp(prop->name, "type") == 0 ||
+             strcmp(prop->name, "realized") == 0 ||
+@@ -254,11 +254,7 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
              continue;
          }
  
--        info = g_new0(ObjectPropertyInfo, 1);
--        info->name = g_strdup(prop->name);
--        info->type = g_strdup(prop->type);
-+        info = qom_property_info(prop);
-         info->description = g_strdup(prop->description);
-         info->default_value = qobject_ref(prop->defval);
+-        info = qom_property_info(prop);
+-        info->description = g_strdup(prop->description);
+-        info->default_value = qobject_ref(prop->defval);
+-
+-        QAPI_LIST_PREPEND(prop_list, info);
++        QAPI_LIST_PREPEND(prop_list, qom_property_info(prop));
+     }
  
-@@ -284,11 +295,8 @@ ObjectPropertyInfoList *qmp_qom_list_properties(const char *typename,
+     object_unref(obj);
+@@ -295,12 +291,7 @@ ObjectPropertyInfoList *qmp_qom_list_properties(const char *typename,
          object_property_iter_init(&iter, obj);
      }
      while ((prop = object_property_iter_next(&iter))) {
--        ObjectPropertyInfo *info;
-+        ObjectPropertyInfo *info = qom_property_info(prop);
+-        ObjectPropertyInfo *info = qom_property_info(prop);
+-
+-        info->description = g_strdup(prop->description);
+-        info->default_value = qobject_ref(prop->defval);
+-
+-        QAPI_LIST_PREPEND(prop_list, info);
++        QAPI_LIST_PREPEND(prop_list, qom_property_info(prop));
+     }
  
--        info = g_malloc0(sizeof(*info));
--        info->name = g_strdup(prop->name);
--        info->type = g_strdup(prop->type);
-         info->description = g_strdup(prop->description);
-         info->default_value = qobject_ref(prop->defval);
- 
+     object_unref(obj);
 
 -- 
 2.56.0.116.g6de20f6092dc
