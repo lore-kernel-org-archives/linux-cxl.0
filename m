@@ -1,61 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792463622;
-	b=4xDiXVyhKUFK+yQiiLcFkHs9AXV9g4yMJ10nHhpoWzEMsBIbzjNDaQ4cBQsDBuKzY5ke
-	 K3phxvP6yvRSFarUKNhfu3Gl/wMEGhYsSHoJ36nj96z3g2sCduqKXBfKEJy/0bV2GQToQ
-	 IxRQ6ek0WA2oXI3t6Tk5WRg8x2Ax2P3OKT+iOgY8f2j9vJmefl7a6bHAD4edvqVmhR74/
-	 6VBpf6lRAq8TLCgMWyhlx7XqvxGbtRRoY0nvDTux8u2X7sK1Qiyk/r6SRghequ7jsgT9L
-	 xlbEUUruvs7sIwPCCCRBn2U8HSbdPtD3fik1oRneBrriwNe4H2QV1ZDcohDh+J3kWmw==
+	t=1792463693;
+	b=C0BzCVnqX4rZlwDJw7QIBi6lPELLWkJ/9CtBRzaZIZJLVR5iG3W3hKMucvLuh4daOuTS
+	 B2kos38RNSsBPJFwgSy8vP3cbNOWrqh8DTRDJ8cN2EwmQ0zNE/eTh4Tdsv+abssDTJg/f
+	 0ryn7PvSsQMXOl7hWg9SJyfKAR6HTDHO3SfsZT0Asi0fWjUzyY1CMcX7upMlJ9sqwtk4H
+	 E0id9/j0Fq4SiSvpH5K1ksLxlADhsfbcOTN+XbU2DHbxUug9/EU0na8CSIu1AX61B1mjh
+	 IUMWJVgUk2ItX342pV11L7riqbGbyR3ZyK4SaMgySsWGyyA4RnNuVoHFz88H6bhM+gA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792463622;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792463693;
 	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
 	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
 	 X-ZohoMailClient;
-	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=;
-	b=KQmz1k6cD579WprPUmFGpDBcRjVTzSp959Ca137oNSb0wIqNXFuPpgjHPpj9UTaemdwe
-	 jJD4xBjTFXCM9HK5Q9f7NudQnNjxEH7fARyVdVZNv+AbLyPJwlxRZZfU1V/kkcrczqWYu
-	 JdcN+JrfYgS2N2iKBGZpPuIKSgPoM64YAbAcNpa3BHWx4yXt94/ux37Yp63Sic+3wEc64
-	 zpevk36t/i8D5vDqHzfT3j9oj9pRM8ptfx/h6GyEhqlt1i43v7DZXn/ZY7GmMXv+ySeIu
-	 43J466HXPl3ILCiHvWY5roP1Iq02mZuKIfDeaOj0iT5YqPVlcUSceVwUCnjx30KW3Cg==
+	bh=3psP1VwAmHfiXNeg/RcdyEOIUAjAmF1YmK/0fkI5OTY=;
+	b=zzUl2ZLSqSRwbpVYKzO8ClmjkJ/lcPDyD/qTDk1kAEjA7rrkSfWI46xUKK/mwJyfvdNz
+	 5T42aqJK85m4TnA6NK5IF5nE5pN11RfvafG4RAtUxiBLzKbGv8vpAPm192atbqKdTnkSr
+	 /scw9mj54agQJY9UHvknb/y0OCsAPYPXCn7k/uMzGT5yW6wEGh8oEn4kwY85w25BCbuSF
+	 OFOixAndOVUCr7Dd9D7S9A8apBgUNY36qIlB0XGquCXEUU6voWdXJdMr/w+l4v3IXALSC
+	 o4wWZn6o9qAqOpjUmylyleGdLJlYC9EeRRqlznGzvX/TDlTzlUuUJflJKjUSEqbEz6w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=zohomail.com;
 	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=FbOaSioi;
+	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=HIBFpTzX;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
 Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA597606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 02:33:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA597606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C330D606A319
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 02:34:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C330D606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=FbOaSioi
-ARC-Seal: i=1; a=rsa-sha256; t=1792463612; cv=none; 
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=HIBFpTzX
+ARC-Seal: i=1; a=rsa-sha256; t=1792463686; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=oCzUVdex1euwnn4yNUMld69jkhAGChFuoaAKBSIbaMdbclQLmuSJakgBpTSOyw2xlwcxXAW+069ig5PVSVMz9Tv8Xunm2brjG4g66RJgZVAk7Fi8Vcqs6M6+7LS/MzuU6IVGQxzUuDhIx+0auWY8RDHIWTZ06q2eIGyCbGwIP7U=
+	b=nOIeHQnGSekV4cOQTtcjAPbh0xIfDOmhrjHQBIai6RzwhvA2tsKAryWa1OQxcxM4gBoehP2/YQlDreE3qfz1iIF28/ihTkniBWer3mPrAbXBl8oS5W1cRf5M7qm8dO127sjI81yUqGad2o5LqLzkiqnMrd0PtvFb7gWGv3zA8tQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792463612; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=; 
-	b=il4rX4YjAzIuNUwmwS27EuXAdSs5Gi8znA0MfLC4lsp2XquR+qZbR0+TigFcn0KA6G04KHArO3ZgvCjfnmXDgyzoTZdvn7Xn4oi7Op/LDNuXBuBLliYeusPmmzh307KryKyeKZP3n/ODO/xatlzv8hyBzJXTBsRiVplZh446CFM=
+	t=1792463686; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3psP1VwAmHfiXNeg/RcdyEOIUAjAmF1YmK/0fkI5OTY=; 
+	b=j924e9m82SrYfjWtjE4KCOzVj+KqHrJ9+KJelU9rsvF4qIB4mLKkDHX+fVjAmv6v7ayRFk5fDFwRVsU+MIYynAgyUCZpNRIxYvvvuU2CiTv6Ws2p1yPFVV8I8RZvBBB23Y1FISi3JyUiQJ72GkOBuUyutDV2RgTAbD6QRIwbxGw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792463612;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792463686;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=MZkVxH5PoQkw/VeTyTnWuYKCx4Mn7OQYLdwxoiN1HFI=;
-	b=FbOaSioiH1P0vjps/CwTDiEiZvaqBDdjz/5/QNIxtgJq/1aCRTm04Vs52ivDOLPh
-	IQUof/m6QU5VJo8GUpVTBkfwIs1PKn3uX8IxebbeUa5krYTplNC69275XmaPRtChkPe
-	IYxFKJGjIhvFF4XiaQS9RGEKPHrawsDme511jxzk=
-Received: by smtp.zohomail.com with SMTPS id 1792463610752681.4978932634922;
-	Mon, 19 Oct 2026 19:33:30 -0700 (PDT)
-Message-ID: <7128116f-aa75-42d9-b71a-2999a26a702c@zohomail.com>
-Date: Tue, 20 Oct 2026 10:33:27 +0800
+	bh=3psP1VwAmHfiXNeg/RcdyEOIUAjAmF1YmK/0fkI5OTY=;
+	b=HIBFpTzX1aIpuOpvsNu/b8l41JkkxsuD5antKt7/EcwYHbawi8Kelwm0rHnRnkGb
+	UBsJPiMGhp0Ifk3vdS/xSJ3srLwA2GYDQhMmkTPyNXdBypY/kkNj3QtvrgcO980+9ut
+	VsyO7RYSS2FH5krJFwQsrjjXptiZB7YsKeLu+EDg=
+Received: by smtp.zohomail.com with SMTPS id 1792463684693796.3815344482545;
+	Mon, 19 Oct 2026 19:34:44 -0700 (PDT)
+Message-ID: <0a9ae8ff-3d37-4305-814e-d1dd2759865d@zohomail.com>
+Date: Tue, 20 Oct 2026 10:34:40 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -66,100 +66,115 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 8/9] cxl/region: Simplify switch port target setup
- control flow
-To: Alison Schofield <alison.schofield@intel.com>, dave@stgolabs.net,
- jic23@kernel.org, dave.jiang@intel.com, vishal.l.verma@intel.com,
- iweiny@kernel.org, icheng@nvidia.com
-Cc: linux-cxl@vger.kernel.org,
- Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-References: <cover.1792263750.git.alison.schofield@intel.com>
- <4a6a854c35234131279dbcdf1cf8c2cece709200.1792263750.git.alison.schofield@intel.com>
+Subject: Re: [PATCH 4/4] cxl/mbox: Add KUnit tests for cxl_internal_send_cmd()
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>,
+ linux-cxl@vger.kernel.org
+References: <cover.1791949910.git.alison.schofield@intel.com>
+ <ccb2c0974781ec3500c56e82c61eb3026c73d183.1791949910.git.alison.schofield@intel.com>
+ <4e79ef12-5873-43ef-a763-47fb062dc77a@zohomail.com>
+ <ataJ_b397PDR6YwP@aschofie-mobl2.lan>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <4a6a854c35234131279dbcdf1cf8c2cece709200.1792263750.git.alison.schofield@intel.com>
+In-Reply-To: <ataJ_b397PDR6YwP@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu0801122773c28454c403e0ad76918fcb0000002237e3d30998711981583c0734795cb57d8f3152c15172ac:ZohoMail
+Feedback-ID: zu08011227516da26248fabfa37d210f090000dc97e2604a53f5a762d53bd0562e6e8a90d0df2bed21b4bde5:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
 
-在 2026/10/18 03:28, Alison Schofield 写道:
-> cxl_switch_port_setup_targets() searches the decoder's existing targets
-> for the endpoint's downstream port. On a match it checks the peer position
-> and jumps to an out_target_set label to log the target. Otherwise it jumps
-> to an add_target label, skipping the interleave calculation and decoder
-> setup that only the first endpoint to reach a port needs.
+在 2026/10/20 05:22, Alison Schofield 写道:
+> On Thu, Oct 15, 2026 at 05:37:26PM +0800, Li Ming wrote:
+>> 在 2026/10/14 12:17, Alison Schofield 写道:
+>>> cxl_internal_send_cmd() validates mailbox payload sizes, translates device
+>>> return codes to errnos, and checks returned output sizes. Existing cxl_test
+>>> coverage does not exercise many of its error paths.
+>>>
+>>> Add a KUnit suite that replaces mbox_send() with a stub transport, allowing
+>>> tests to control transport errors, device return codes, and output sizes.
+>>>
+>>> The suite covers command forwarding, payload size limits, transport errors,
+>>> defined and unknown device return codes, background commands, and fixed
+>>> versus variable output sizes.
+>>>
+>>> The unknown return code cases provide regression coverage for "cxl/mbox:
+>>> Treat unknown device return codes as errors". Without that change, the
+>>> tests fail and KASAN reports a global out-of-bounds read.
+>>>
+>>> The suite uses the existing CONFIG_CXL_KUNIT_TEST option, allowing it to
+>>> run without additional configuration.
+>>>
+>>> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>>> ---
+>>>    Documentation/driver-api/cxl/testing.rst |   3 +
+>>>    drivers/cxl/core/Makefile                |   1 +
+>>>    drivers/cxl/core/tests/Makefile          |   5 +
+>>>    drivers/cxl/core/tests/mbox_kunit.c      | 249 +++++++++++++++++++++++
+>>>    4 files changed, 258 insertions(+)
+>>>    create mode 100644 drivers/cxl/core/tests/Makefile
+>>>    create mode 100644 drivers/cxl/core/tests/mbox_kunit.c
+>>>
+> snip
 >
-> Return the peer check result directly when the downstream port is already
-> a target, and make the first endpoint's decoder setup the else branch of
-> the target search. Both labels go away.
 >
-> Returning directly after peer validation also removes a misleading debug
-> message that reported a reused target as a new assignment, with a bad
-> index.
+>>> +static int cxl_mbox_test_init(struct kunit *test)
+>>> +{
+>>> +	struct mock_mbox *mock;
+>>> +
+>>> +	mock = kunit_kzalloc(test, sizeof(*mock), GFP_KERNEL);
+>>> +	KUNIT_ASSERT_NOT_NULL(test, mock);
+>>> +
+>>> +	mock->cxl_mbox.payload_size = TEST_PAYLOAD_SIZE;
+>>> +	mock->cxl_mbox.mbox_send = mock_mbox_send;
+> 	mock->return_code = CXL_MBOX_CMD_RC_SUCCESS;
 >
-> Suggested-by: Li Ming <ming.li@zohomail.com>
-> Suggested-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+>
+>>> +	test->priv = mock;
+>> How about adding a line "mock->return_code = CXL_MBOX_CMD_RC_SUCCESS" here
+>> to explicitly initialize mock->return_code? It makes easier for readers to
+>> see the default return_code is SUCCESS.
+>>
+> Thanks and agree. Done like above in v2.
+>
+>
+> snip more below...
+>>> +
+>>> +static void send_unknown_return_code(struct kunit *test)
+>>> +{
+>>> +	static const u16 codes[] = { ARRAY_SIZE(cxl_mbox_cmd_rctable), 0x100,
+>>> +				     0xffff };
+>>> +	struct mock_mbox *mock = test->priv;
+>>> +
+>>> +	/* Codes the driver does not know are still device errors */
+>>> +	for (int i = 0; i < ARRAY_SIZE(codes); i++) {
+>>> +		struct cxl_mbox_cmd cmd = {};
+>>> +		int rc;
+>>> +
+>>> +		mock->return_code = codes[i];
+>>> +		rc = cxl_internal_send_cmd(&mock->cxl_mbox, &cmd);
+>>> +		KUNIT_EXPECT_EQ_MSG(test, rc, -ENXIO, "return_code=%#x",
+>>> +				    codes[i]);
+>>> +		KUNIT_EXPECT_STREQ_MSG(test, cxl_mbox_cmd_rc2str(&cmd),
+>>> +				       "unknown return code", "return_code=%#x",
+>>> +				       codes[i]);
+>>> +	}
+>>> +}
+>> Since we already have cxl_mbox_cmd_rctable here, should we also cover the
+>> existing return_codes that we know?
+>
+> The known return codes are covered by send_device_error(). That iterates
+> thru the rc table and checks the expected errno for each entry. SUCCESS
+> and BACKGROUND are covered by their own tests.
+>
+> The unknown return code test exercises the new out-of-range handling, so
+> I think we have the coverage we need here.
 
-> ---
->   drivers/cxl/core/region.c | 34 +++++++++++++++-------------------
->   1 file changed, 15 insertions(+), 19 deletions(-)
+Yes, you are right, I missed this part, sorry for that.
+
+
+Ming
+
 >
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 025cf21adfa9..2a64ecf656b7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1635,27 +1635,23 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
->   	}
->   
->   	if (cxl_rr->nr_targets_set) {
-> -		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
-> -			if (ep->dport == cxlsd->target[i]) {
-> -				int distance = cxl_port_peer_distance(port, cxlr);
-> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++) {
-> +			if (ep->dport != cxlsd->target[i])
-> +				continue;
->   
-> -				rc = check_last_peer(cxled, ep, cxl_rr,
-> -						     distance);
-> -				if (rc)
-> -					return rc;
-> -				goto out_target_set;
-> -			}
-> -		goto add_target;
-> +			return check_last_peer(cxled, ep, cxl_rr,
-> +					       cxl_port_peer_distance(port, cxlr));
-> +		}
-> +	} else {
-> +		rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> +		if (rc)
-> +			return rc;
-> +
-> +		rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> +		if (rc)
-> +			return rc;
->   	}
->   
-> -	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
-> -	if (rc)
-> -		return rc;
-> -add_target:
->   	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
->   		dev_dbg(&cxlr->dev,
->   			"%s:%s: targets full trying to add %s:%s at %d\n",
-> @@ -1677,7 +1673,7 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
->   		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
->   	}
->   	cxl_rr->nr_targets_set++;
-> -out_target_set:
-> +
->   	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
->   		dev_name(port->uport_dev), dev_name(&port->dev),
->   		cxl_rr->nr_targets_set - 1, dev_name(ep->dport->dport_dev),
+> -- Alison
