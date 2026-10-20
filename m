@@ -1,70 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493307;
-	b=1kXM1gmkmmpQxXvVZpVIkTBvyezYNbvReC4Q63IccuZ+HQdwp0Mq5r/N4ix+r9sWUWsX
-	 /HICfD69HkxNtCX0UKRCbMNBlcZB9KtDjNk4vQ5NkDWj+cyOdM6O6LUTjOoBZad6ryK53
-	 fCaCvUnrt4ZESAEvDlyRTY4/Yddn09uH3GujStZPF2/Fb8/Gzv9XiNDGsE/+UdqdKGIs/
-	 S7P7qJ/KPmywIfILeykn9rLpA1UBJMb3iq3e8tyffQNI/Z/rHx/D2CCtkx/xnbmcEHwa6
-	 sNe3ZAwdI2PFhbON1o35zE/J/9t5w7EbU3OZCiZWlWApSK40VaQtYI59Lzt5ELCqnvQ==
+	t=1792493318;
+	b=y5MSzb9OrAfYZWhjnnPFzbf3LuKz0EL2qvLMzfXPxfw1x/ZRJ5xkKxrd4uJMv1qvIzq1
+	 AmH2accKTpNu1yYgTAkbPh9t8XURGY5BgkF+sv2R7uYq7UDd+8wsxAmpduDT66OrZErOw
+	 Hn3wXNRNkCR7JTZchBLiAKCVPL0w1iiHzHo/NO/QmMhECaY5Kz6fkK3ZSNla4gbdp8flm
+	 1iRXHUbS5huLMTfhwwQlC3i6ZYbnK8fndd/dRSRuE0p64IaBAco/eXZc4Vv1FbiNOYyUI
+	 dNjfIosHWigwtArpGqE4ZSXgFpIyhdTFrxIW5aSg9ZwnYLvwhJeShiGYhyEaHiqK41g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493307;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493318;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=eMqswUiLM19ojZ+xv5E964KFYfmL1usSS/p/S7HX9Dw=;
-	b=hHBPtrQ8W4KdBJbuvdjfRFxUWJCfb5QnmOIjvVjCrVLTBl4SKnEl2aJc6msphyBAHpJ+
-	 RJMAYhYT9/3FtEH3mdkBooBStRQTRezY24yWDApw++LwktuHoMfOcQjmvUNB8Ru0v7doN
-	 nLzWJa1Bk3zWRYd+4dDIV4408Z5gv5fZl4ukyhgBPFy9hHkv3LZpQebz7LTsviUUo8z9G
-	 OR01k2lBtnt7rbpbHxJbGxyERDnJB7Vi2uVG/QDqm9hN0b+hXdBFqcTgZB4WEOQkiAaF2
-	 jKvG1goM3Sn6RELjnZ5MHdo3cH1fOwS7oNURrbIe4UrIbbA4CnQ0xoT7eWoGVgBAalw==
+	bh=jKM88emaTtDD8hNN+EMLi80BeL2n1f7ZRXAzTgl+JrI=;
+	b=sKvGTOuMwFDtkdPMWIUCSTb36Be20c7FYOHXLrJLc3WGr9fztTunVOFDY9EJM6xTC3zg
+	 g87CTPj1JrfxfQ02YEVqY9q6WMhpeQfxAn8l91h6nxnOJ3dOKBErHfSbhv9OdmktWm3WC
+	 fUjLSioIrXKPX8fPteOxjrXpJo+wlLzPMHAGBi5Y/XYJIb31ZOvRJ8I/EdkpEyqtKyHH1
+	 sJ0caIEUGz5XleMmogAu7GsRhd/Ko9mfMEGSjJaUh/kn7Qq+qLB19QSDH8F3CV+CQErRh
+	 cK0MUAakNu627KdodlWZeG66F+bIljI14GDt1tM55AOkT7dh8BWGu2asWlytTG8lKbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TJoTGumr;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NThG8jZb;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A11A60A261F
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:48:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A11A60A261F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5683606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:48:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5683606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TJoTGumr
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NThG8jZb
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493306;
+	s=mimecast20190719; t=1792493316;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eMqswUiLM19ojZ+xv5E964KFYfmL1usSS/p/S7HX9Dw=;
-	b=TJoTGumrXFWQZIEeUXM8mOvVVdei2OyjKQbtFhDOA1uDG3peUc/mNDOAhW/LxjJKHWZg9c
-	4vtJqqSBYAz75ZVFT2lQRSZUD7/xfK9XPnb5fyv7WvUfgaW2w9TZedomzXMNdJzw+Yl3be
-	e4JIp5PMgUVoIR5Z/+BkPQEpEV32Y4Y=
+	bh=jKM88emaTtDD8hNN+EMLi80BeL2n1f7ZRXAzTgl+JrI=;
+	b=NThG8jZbdpvvVGuTXNCY/SQLMWS8mC838QC/+H34HnDkKHr359I5ENKfjUt/vvIrzkRfED
+	CF6JYytea4pbI/UoGnUHMAw/G28miz6dg0ITucxPMtwAxwZBxFZlA8gmShsZjeyywTA//I
+	eoQbrhXtg9aPn8VCR1GimSaCUe/SYeg=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-510-cVbzbvoGOKiXjaCIGIacxQ-1; Tue,
- 20 Oct 2026 10:48:22 +0000
-X-MC-Unique: cVbzbvoGOKiXjaCIGIacxQ-1
-X-Mimecast-MFC-AGG-ID: cVbzbvoGOKiXjaCIGIacxQ_1792493298
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-EQKPMv8wMpawhrKwHK50cA-1; Tue,
+ 20 Oct 2026 10:48:33 +0000
+X-MC-Unique: EQKPMv8wMpawhrKwHK50cA-1
+X-Mimecast-MFC-AGG-ID: EQKPMv8wMpawhrKwHK50cA_1792493308
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F35FD1956050;
-	Tue, 20 Oct 2026 10:48:17 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57756195604D;
+	Tue, 20 Oct 2026 10:48:28 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7FEA65BC;
-	Tue, 20 Oct 2026 10:48:15 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F5DC1956095;
+	Tue, 20 Oct 2026 10:48:25 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:40 +0400
-Subject: [PATCH v7 23/65] pc: convert OnOffAuto vmport property to
+Date: Tue, 20 Oct 2026 14:45:42 +0400
+Subject: [PATCH v7 25/65] riscv/virt: convert OnOffAuto properties to
  QAPI-aware registration
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-23-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-25-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,95 +150,136 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2552;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3989;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=rT4IlVA3K6hhZkzIFOmf7AHwvtTZzfc1DRg/HWfKdY4=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZZM5/OPYpgkFOCrz7lC/8MWagOdQlNe9HMu
- Ryp6VHtccaJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWQAKCRDa6OEJdZac
- 5SEYD/9QUk3mMyoHypSwCfk0l9cp7LpdZdLAE2EvzjA5uGZIIAqBUxJDWAuzNGzj6S+fvUJlWdC
- EAhsGdZYLWEH7ASWHHvy7QL+I4sYO8Xg73A6bzHJwEOXw/X9WMYP92+xT4V4aCVSuSlgPw0vTW0
- iDGOxiKxLpni8ZM7f9KyKZ7A07apImgWr/PvLmtbAQVMyGBFVMAlRVQNHiAVAYdPfO4SqPGDtEL
- FSBHcAGWwReG+sJQLCw41zKiUg19IRx+HFFvZizprongoFMpDaugaNynZ5796k7gt/kq32gooTW
- K1HtncPs4zo3o0RQhly74rTNpbStacdnJYfkbYDra1gDQX4eyKiFqN0SjV67VE/VvdnJQ8LJ+8E
- Io6ab5QTARFKwxykGzqjoPPlbjW5eZ6GbWMq2hOGAKs7EJU3OZb880jYHppuGtTKMeUpX/uuFJ5
- eN4Qb9D4OSHbiB0FCPwmlld/4ccrph+UXo3QxiUbsq3bq2b/jfEoZkiNrexjwcvm0VgnTwhUzxZ
- 8vLXrwQhyrorPwXLyf2OJODHc3WMrHl2l0U2HAnthI2rPwYhMyYDc0jK0pwPULBUOsnDcOp0HmV
- s84v32DlNvvS1/ARhP+gJq6EJ073Rob14KhIt2ElZfOtp3GUn5BAYDx7P4sYVuaJp2x6H2r0frC
- taKgfMicnsq1l+w==
+ bh=HRo91rA2atLaPMjCcy77uoSJBv27Cj9pfW470LYlxds=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZZn3Inx2fUnnD+uy0noJtEswlqC284ZfNax
+ CJpcQgVj++JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWQAKCRDa6OEJdZac
+ 5YyTD/sHV9okzYNJc6MkoRYx/8TowxhPLBhPsWuj+Z23OSrNnkhKkHnDExMsk5HmnvTa0ulRg4b
+ LYQKIHIadpWN/XU7ugrsNMWvt2vE1M6WMh1J6VHifxNwfktdLDiRJbe0FDZnfd37CWdaQUUl2J8
+ avTewGpI6EMGes/ro4NKDvyC4R0266xA2ma3nkF4giv5r4D9u10PkgS0JY1La1JPmg8jSCrBWSG
+ h5SRiJTRRB838tgMyKtlieM2qvFkwYs6vxZta8mwMLWRCJ2qlrDou4X+w0mQmWe22ZDxnnKShlS
+ 862qoPEe5fd+gL0bJwae3XjbgOWdIFsVxVAp8CGayp+xYpvHin9d0m0LqMai3fWlbmhL7Cfg1s1
+ rydrYSQTeUYAMErEqGvu2WCnqBtBZtQFmwr15x6v5/bqPorKv4DQHwiVwdKURNyFdW+Nx3KFAfq
+ AscOzqRwse2gfkIaC1/3VfU4l2KUfFX5H7n6u7Qmir7AEKGBJmV21sGsvEGiLanNfn6G5Mhk3t3
+ rOWtlDBNgJ7TPddfv1DlKc4E1knF6kuaAYaQ0h/fdvNK4/n+iTgK2yAcTj5LqixHVyRzDDDdAX3
+ AjXEd1EQ7S0ak0D07LG6vcNpzqsFF0hV1CHcYiqXo8BniMFmPKjS8rc/4CkqczHYdJv0WAwtWHl
+ AkxiOqO7ZuvqssQ==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: pdTaVQxNZc6INwHPX_C1rAnoaMmMfRjXwqKyOxD4Zmo_1792493298
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: u-Q4-j34rRRIa2pw09pi2ETefudjaR9ZV7GFRy4iWR0_1792493308
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Convert the vmport OnOffAuto property from manual visitor-based
-callbacks to property_add_qapi_enum().
+Convert the acpi and iommu-sys OnOffAuto properties from manual
+visitor-based callbacks to property_add_qapi_enum().
 
+Acked-by: Alistair Francis <alistair.francis@wdc.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/i386/pc.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ hw/riscv/virt.c | 52 +++++++++++++++++++++++-----------------------------
+ 1 file changed, 23 insertions(+), 29 deletions(-)
 
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index 2d8c87b0e34c..12de020adfbf 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -46,6 +46,7 @@
- #include "kvm/kvm_i386.h"
- #include "kvm/tdx.h"
- #include "hw/xen/xen.h"
+diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+index d4b501802f60..c33a279f1e5c 100644
+--- a/hw/riscv/virt.c
++++ b/hw/riscv/virt.c
+@@ -57,7 +57,7 @@
+ #include "hw/pci-host/gpex.h"
+ #include "hw/display/ramfb.h"
+ #include "hw/acpi/aml-build.h"
+-#include "qapi/qapi-visit-common.h"
 +#include "qapi/qapi-type-infos-common.h"
- #include "qobject/qlist.h"
- #include "qemu/error-report.h"
- #include "hw/acpi/acpi.h"
-@@ -1417,21 +1418,16 @@ static const HotplugHandler *pc_get_hotplug_handler(MachineState *machine,
-     return NULL;
+ #include "hw/virtio/virtio-iommu.h"
+ #include "hw/uefi/var-service-api.h"
+ 
+@@ -1049,21 +1049,16 @@ bool virt_is_iommu_sys_enabled(RISCVVirtState *s)
+     return s->iommu_sys == ON_OFF_AUTO_ON;
  }
  
--static void pc_machine_get_vmport(Object *obj, Visitor *v, const char *name,
--                                  void *opaque, Error **errp)
-+static int pc_machine_get_vmport(Object *obj, Error **errp)
+-static void virt_get_iommu_sys(Object *obj, Visitor *v, const char *name,
+-                               void *opaque, Error **errp)
++static int virt_get_iommu_sys(Object *obj, Error **errp)
  {
-     PCMachineState *pcms = PC_MACHINE(obj);
--    OnOffAuto vmport = pcms->vmport;
+     RISCVVirtState *s = RISCV_VIRT_MACHINE(obj);
+-    OnOffAuto iommu_sys = s->iommu_sys;
 -
--    visit_type_OnOffAuto(v, name, &vmport, errp);
-+    return pcms->vmport;
+-    visit_type_OnOffAuto(v, name, &iommu_sys, errp);
++    return s->iommu_sys;
  }
  
--static void pc_machine_set_vmport(Object *obj, Visitor *v, const char *name,
--                                  void *opaque, Error **errp)
-+static void pc_machine_set_vmport(Object *obj, int value, Error **errp)
+-static void virt_set_iommu_sys(Object *obj, Visitor *v, const char *name,
+-                               void *opaque, Error **errp)
++static void virt_set_iommu_sys(Object *obj, int value, Error **errp)
  {
-     PCMachineState *pcms = PC_MACHINE(obj);
+     RISCVVirtState *s = RISCV_VIRT_MACHINE(obj);
 -
--    visit_type_OnOffAuto(v, name, &pcms->vmport, errp);
-+    pcms->vmport = value;
+-    visit_type_OnOffAuto(v, name, &s->iommu_sys, errp);
++    s->iommu_sys = value;
  }
  
- static bool pc_machine_get_fd_bootchk(Object *obj, Error **errp)
-@@ -1728,11 +1724,13 @@ static void pc_machine_class_init(ObjectClass *oc, const void *data)
-     object_class_property_set_description(oc, PC_MACHINE_MAX_RAM_BELOW_4G,
-         "Maximum ram below the 4G boundary (32bit boundary)");
+ bool virt_is_acpi_enabled(RISCVVirtState *s)
+@@ -1071,21 +1066,16 @@ bool virt_is_acpi_enabled(RISCVVirtState *s)
+     return s->acpi != ON_OFF_AUTO_OFF;
+ }
  
--    object_class_property_add(oc, PC_MACHINE_VMPORT, "OnOffAuto",
--        pc_machine_get_vmport, pc_machine_set_vmport,
--        NULL, NULL);
--    object_class_property_set_description(oc, PC_MACHINE_VMPORT,
--        "Enable vmport (pc & q35)");
+-static void virt_get_acpi(Object *obj, Visitor *v, const char *name,
+-                          void *opaque, Error **errp)
++static int virt_get_acpi(Object *obj, Error **errp)
+ {
+     RISCVVirtState *s = RISCV_VIRT_MACHINE(obj);
+-    OnOffAuto acpi = s->acpi;
+-
+-    visit_type_OnOffAuto(v, name, &acpi, errp);
++    return s->acpi;
+ }
+ 
+-static void virt_set_acpi(Object *obj, Visitor *v, const char *name,
+-                          void *opaque, Error **errp)
++static void virt_set_acpi(Object *obj, int value, Error **errp)
+ {
+     RISCVVirtState *s = RISCV_VIRT_MACHINE(obj);
+-
+-    visit_type_OnOffAuto(v, name, &s->acpi, errp);
++    s->acpi = value;
+ }
+ 
+ static const HotplugHandler *
+@@ -1183,17 +1173,21 @@ static void virt_machine_class_init(ObjectClass *oc, const void *data)
+         object_class_property_set_description(oc, "aia-guests", str);
+     }
+ 
+-    object_class_property_add(oc, "acpi", "OnOffAuto",
+-                              virt_get_acpi, virt_set_acpi,
+-                              NULL, NULL);
+-    object_class_property_set_description(oc, "acpi",
+-                                          "Enable ACPI");
 +    object_class_property_add_qapi_enum(oc, QAPI_ENUM_PROP(
-+        .name = PC_MACHINE_VMPORT,
-+        .description = "Enable vmport (pc & q35)",
++        .name = "acpi",
++        .description = "Enable ACPI",
 +        .qapi_type = &OnOffAuto_type_info,
-+        .get = pc_machine_get_vmport,
-+        .set = pc_machine_set_vmport,
++        .get = virt_get_acpi,
++        .set = virt_set_acpi,
 +    ));
  
-     object_class_property_add_bool(oc, PC_MACHINE_SMBUS,
-         pc_machine_get_smbus, pc_machine_set_smbus);
+-    object_class_property_add(oc, "iommu-sys", "OnOffAuto",
+-                              virt_get_iommu_sys, virt_set_iommu_sys,
+-                              NULL, NULL);
+-    object_class_property_set_description(oc, "iommu-sys",
+-                                          "Enable IOMMU platform device");
++    object_class_property_add_qapi_enum(oc, QAPI_ENUM_PROP(
++        .name = "iommu-sys",
++        .description = "Enable IOMMU platform device",
++        .qapi_type = &OnOffAuto_type_info,
++        .get = virt_get_iommu_sys,
++        .set = virt_set_iommu_sys,
++    ));
+ }
+ 
+ static const TypeInfo virt_machine_typeinfo = {
 
 -- 
 2.56.0.116.g6de20f6092dc
