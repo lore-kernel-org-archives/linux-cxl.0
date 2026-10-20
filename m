@@ -1,71 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493487;
-	b=hCZhoJWZ2wcqoNyUa9tqxsU97G1JVa8o49ngkXmN/V31k0kBdL3utso2x7fJjUlEWC3G
-	 6NXxca5B2vco28xQev+8aB2VGaXS5pecfUeKBgTCnbo/qUSnTQtUwmi8MyW3NxRg72d9c
-	 sif4mOj8iq8AW+IsERRwpp4JDoV4wyqdm5xTNpp6cEqkDON9v/CS8SrI+z4/+2Y0MmbdD
-	 14XtDFzvZuGBrxzHbMGOCdxWAaL3kefnk1kPdDavpEqWo+66wQBJfCGImRkOL1sXFoiWa
-	 fORoJE6wDQRxWVANbiFUXIOEZFbUP15smWrNHNWnpxFDjL8mQfHKvAWaxUhtf3+fFBQ==
+	t=1792493491;
+	b=fEBBxNd4tUstii/2G3hp2/B21xoaWJPCX4gMjrz8jUdvE6wwHW8qeaBqNllwHByoXft1
+	 pzBr+P7ImhZl0srFA2Tp8UF8J/6XX1hOHBB+aQ6kztzrr3j9sw2ATrRAdXx3QBvc1Hgp6
+	 7/FGcSqGSb89H2pSLa4zrgVnKd42fSJXcp2tCbK5G5QbudVgP1KvMBwfuJxtUiNPlTl3Q
+	 k/eSVHdY7sB4q85Da6vz2/Kkk3/6WDjTJ9DqY1OOIwlWQCdhjlzQYIVLUdIoOcZdt/rfJ
+	 9pCsj/yzPYr2JEIvybpuUz9RFG2JVk3G5k2tuoGGVoGoeO1XwM8oqLM7imnIGvSDIpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493487;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493491;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=1eBYCbo62pybnrvd2zJR+X4E8rHf2MlZgP3d6Su31eo=;
-	b=srcYiFen8hIXo0gMuw212TZ4oRCCc3dGcWqeKipxEKJjrcbe5pwlT/SO62oRFXqYEBwQ
-	 A3umWBhS0zZ0rzKA367EjWpDA9hg2EjPEJoYrODQc4fq3jf0/JwcXaT0Yh7hkDJh7mMNv
-	 12KBfsRHuvD39af6UjQXPBd/iCMwnmJB8EOghl3O5m/gHvlHC5AP5X0EGrrULr6cykeNI
-	 mO+GRBTsu/QyyxrUlIt+cxiJx5Cd2ERyThJFdddxzUnzWgLnUYfBt09HTzq1VH1uQuTLF
-	 M5Kwwpo2R3RJuhdggWTxdHCizrkUbAAKhuqYYGvaxYNmyWNWAB0xB7zjNV2iCtEUK1w==
+	bh=0exBW/XllTPTbSwFohqKA2w8apHuJMdvUCko9RJ056E=;
+	b=ImNgXI9cZFNphRqWgXlpal3qChL4NR1Rk3zJV/L8dSQsJ/z2bXuiP8uxrx2Gck9dgiqW
+	 eCmsWESgXxUVAM3jIzP0ocapAxqqDM5ykEblhFgU/q6zJMosadyope9C6/vAcOf3BDFd3
+	 a+cdI6/s/oBjtWVY3XdmiVn0tu0au+6pGvGKaEsYPKfd7WNYFbX7Nj/1ylmsYpb9cbUz0
+	 HmPqgIcKcaJoiwEAxa+wlzTUJBkL5yXw6mVVS2JQapb4SWxKwwXhWKzTv5UdzTgR2WCMQ
+	 3v1ExsH0JPByCwHvpwQmp8WvAOmy5XKlx49StEHdJBQno747NjPI5ZgkDBscZCeIygA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B5BTHB2z;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Pma88dWq;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E7D606A327
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:51:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39E7D606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A731606A335
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:51:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A731606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B5BTHB2z
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Pma88dWq
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493485;
+	s=mimecast20190719; t=1792493490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1eBYCbo62pybnrvd2zJR+X4E8rHf2MlZgP3d6Su31eo=;
-	b=B5BTHB2zdGsiYb36C/7V5s1tj6j776NLHQIAysWTvKqVwxHdmR2nE2rq/6jrMaFjqTtR0I
-	hePnLysUxSFu7/Mh0lIzoylI8cAef7lYjHk/EvxAY9Cfp339NA2fWb0vp7zougiOAdJ8RB
-	nGCrXqNa6ENmH2AYVYgTeXQ1DOCKEHo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=0exBW/XllTPTbSwFohqKA2w8apHuJMdvUCko9RJ056E=;
+	b=Pma88dWqnTmc4FPmMNkYkgNUTRvQZ2HY3kR7RsYoRLUoQJ0FXkp8KgmATBtb+RTbDvRM9N
+	ZZCVCo/bsC3Uv1XcTFzW+AOuAEAKgb2gt+q+ZXtf5Re27G4KejpIzMnvk+z20sPWf/v5z7
+	wUVcfzqLGrrEepRyA6SU4O6Oq3itDdA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-LD3Q4rjXMEKqjPFqN7WD9w-1; Tue,
- 20 Oct 2026 10:51:21 +0000
-X-MC-Unique: LD3Q4rjXMEKqjPFqN7WD9w-1
-X-Mimecast-MFC-AGG-ID: LD3Q4rjXMEKqjPFqN7WD9w_1792493477
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-365-se9LWCHqPrS8GDVKoZHxeg-1; Tue,
+ 20 Oct 2026 10:51:26 +0000
+X-MC-Unique: se9LWCHqPrS8GDVKoZHxeg-1
+X-Mimecast-MFC-AGG-ID: se9LWCHqPrS8GDVKoZHxeg_1792493482
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D8291955BD4;
-	Tue, 20 Oct 2026 10:51:17 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E2BF1800878;
+	Tue, 20 Oct 2026 10:51:22 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ABCAE1956089;
-	Tue, 20 Oct 2026 10:51:14 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3CCCA18005B3;
+	Tue, 20 Oct 2026 10:51:19 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:46:13 +0400
-Subject: [PATCH v7 56/65] hw: convert device-local PropertyInfo definitions
- to use qapi_type
+Date: Tue, 20 Oct 2026 14:46:14 +0400
+Subject: [PATCH v7 57/65] target/riscv: convert PropertyInfo definitions to
+ use qapi_type
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-56-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-57-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,290 +150,187 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8815;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5488;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=IuCBdKGBPF8OB+y7s4jio7rdRTdD0humb0BIR918jzY=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZcQxqX6eOMSpfYs+pLT9Ow0Na9hEzQjJ0+w
- S7czDd2tmOJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXAAKCRDa6OEJdZac
- 5Ss8D/9u4K3F7gThG/+rssznoV4GJ740Eb7vM34SO7kM+CMcAz0SmichYUKsY043yCHop4AuZHC
- LCq264K5jqI6bLVK5pUhsy42PlJ5ABe9K2vKHMUqJp8pSnncy2C74LHZmXSwl/61sE/J3BLrH7h
- nYIupz1f2RXz2Kseg4wCVaJb/12YUegn0C4BbAn1osYrlQC1CpAPskw/O4gjHHg19dANxc0iuOl
- kP/04E9U9V5/Qv3sg7Gma0B2LGOdkqB3UDFV+ya/UgRaGAzYW/FGRfCX3zHJjg/sFdqnVmmeQST
- Bd1Tu7ZeRf5mznPPYqaQXSiRpnQZWF8j/f9MZkFOJprVi9JKsVO0NzFxbG0wPemso49Okgkzmq0
- tdFxFZlrsEPQ2lI/7l83w3+2xaA2aV+uqDCdxukgn+J2CNR9CNo80p75nJpZDjhncVjJGd1M8Yo
- msm+r+wrIQSoNQ9OrNQYvJ9I2AH5VOpdkqnrBqH+/c0d1BcIg+M/xYRpFfF6xcNX/t2hVaRZjjX
- 5tEZTIjyloiOSYCAqN2wriWOfN+tmlUocDn/0o53+Th53eTDQl6slDt39kqP+VURUXmsyer4GF8
- Mic7qD4Dg11IPqUhCiVLNiuH+iTqs3LsM0IQqHPrhsl2ZPqybHUGY2vDA565zimKYuU3A1kLKNc
- 4eR+F+9z6aMxDww==
+ bh=XKjrfhJ2Z/vpJVDltF2KXqS9w+wUXXQdOLcco6lHE08=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10Zc82i8KNdsFK3/pKeHfVnxA4m/fOSulmH97
+ UqyLuCWFoWJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXAAKCRDa6OEJdZac
+ 5Z6cD/40rHcZVYX8wDxKQt8xTbOSbGFHhrkGBp+FJMr/D3qXf1CzfRM/zrW7BsamxNoTKamLgia
+ vG/IF1pMis4auL226bPWZSNCw1wM64OiZLp34N3g6ajQDAnS4jfnerIAq7txzCCJUbSjDZABnY+
+ O/X/WwsFuXapBnFcvD2GRf7OtzeasFepDj3L1mQI9qlcIH41qkSHstkXLXEuCxStBNzaQuJ+1nT
+ f8elVasH3Qez1yhQlVLkdcseJ+WxT9culB/RhJzlcYMOY3ijoorNNWBmNMniKWqUHM380+dg4mi
+ s5Xym63nleHU9QrcqKokpmXEO6nqQXGl5BVpG/+GI8J37DOJEBt7FopbJ8Qa/Prf2L0HVZ2F4Ri
+ v52x6jhQ2cVDf52+6cx4EEUH1NulOv3VMoE+O/9QeuJjD6NvDl0kfVkgV83mliwEwc7vahuvnT6
+ MZHRXzDT5gm/k1ueiE/SDcCEv9mGmfnj3XnZ7GWpLcbscFJebhqv5NagTK8eB75QcE5f7Li5RfK
+ wc2VMbA5H3KXsbPLwfv0Bwcz8Ok9gFGyw0cb4nah/uS/gLpuvZSH3RlnyRCw3dHiiNOvmw9ktLa
+ bEN7ShgjTnPCfdQW49hOPBZARpkjinKmx6OFPDecrZiaNqDlQaduXgMnp5B749lfM7OBJ8Ch+S8
+ 7b7viGC9MASEqng==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: 2TJ1MN_oHwhZCmuXsNGnCsveS4nWB2itwaUIHkvJSW0_1792493477
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: isZYwFDmO_1om5AZjc7YyyAMp6oaUfpuHgtJYneair8_1792493482
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Mechanical conversion of PropertyInfo definitions in device-specific
-files, replacing .type string with .qapi_type pointer to the
-corresponding QAPITypeInfo. Except "display_mode" for apple-gfx, which
-is a string of a specific format.
+Mechanical conversion of all local PropertyInfo definitions in
+target/riscv/cpu.c
 
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
+Reviewed-by: Alistair Francis <alistair.francis@wdc.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/block/xen-block.c       | 3 ++-
- hw/display/apple-gfx.m     | 3 ++-
- hw/misc/xlnx-versal-trng.c | 3 ++-
- hw/nvme/nguid.c            | 3 ++-
- hw/nvram/xlnx-bbram.c      | 3 ++-
- hw/nvram/xlnx-efuse.c      | 3 ++-
- hw/pci/pci.c               | 3 ++-
- hw/s390x/ccw-device.c      | 3 ++-
- hw/s390x/css.c             | 5 +++--
- hw/s390x/s390-pci-bus.c    | 3 ++-
- hw/vfio/pci-quirks.c       | 3 ++-
- 11 files changed, 23 insertions(+), 12 deletions(-)
+ target/riscv/cpu.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/hw/block/xen-block.c b/hw/block/xen-block.c
-index 474c12fe4ac8..d9721c565c5f 100644
---- a/hw/block/xen-block.c
-+++ b/hw/block/xen-block.c
-@@ -29,6 +29,7 @@
- #include "dataplane/xen-block.h"
- #include "hw/xen/interface/io/xs_wire.h"
- #include "trace.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #define XVDA_MAJOR 202
- #define XVDQ_MAJOR (1 << 20)
-@@ -663,7 +664,7 @@ invalid:
-  * https://xenbits.xen.org/docs/unstable/man/xen-vbd-interface.7.html
-  */
- static const PropertyInfo xen_block_prop_vdev = {
--    .type  = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Virtual Disk specifier (d*p*/xvd*/hd*/sd*)",
-     .get = xen_block_get_vdev,
-     .set = xen_block_set_vdev,
-diff --git a/hw/display/apple-gfx.m b/hw/display/apple-gfx.m
-index be0061b9db25..77c420b30006 100644
---- a/hw/display/apple-gfx.m
-+++ b/hw/display/apple-gfx.m
-@@ -15,6 +15,7 @@
- #include "qemu/lockable.h"
- #include "qemu/cutils.h"
- #include "qemu/log.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- #include "qapi/visitor.h"
- #include "qapi/error.h"
- #include "qemu/aio-wait.h"
-@@ -871,7 +872,7 @@ static void apple_gfx_set_display_mode(Object *obj, Visitor *v,
+diff --git a/target/riscv/cpu.c b/target/riscv/cpu.c
+index 664c1a767950..28bfcb36ecb7 100644
+--- a/target/riscv/cpu.c
++++ b/target/riscv/cpu.c
+@@ -1704,7 +1704,7 @@ static void prop_pmu_num_get(Object *obj, Visitor *v, const char *name,
  }
  
- const PropertyInfo qdev_prop_apple_gfx_display_mode = {
--    .type  = "display_mode",
-+    .qapi_type = &str_type_info,
-     .description =
-         "Display mode in pixels and Hertz, as <width>x<height>@<refresh-rate> "
-         "Example: 3840x2160@60",
-diff --git a/hw/misc/xlnx-versal-trng.c b/hw/misc/xlnx-versal-trng.c
-index 0584ee089e3c..97bd3c3f8475 100644
---- a/hw/misc/xlnx-versal-trng.c
-+++ b/hw/misc/xlnx-versal-trng.c
-@@ -36,6 +36,7 @@
- #include "qapi/visitor.h"
- #include "migration/vmstate.h"
- #include "hw/core/qdev-properties.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #ifndef XLNX_VERSAL_TRNG_ERR_DEBUG
- #define XLNX_VERSAL_TRNG_ERR_DEBUG 0
-@@ -662,7 +663,7 @@ static void trng_prop_fault_event_get(Object *obj, Visitor *v,
- }
- 
- static const PropertyInfo trng_prop_fault_events = {
--    .type = "uint32",
-+    .qapi_type = &uint32_type_info,
-     .description = "Set to trigger TRNG fault events",
-     .set = trng_prop_fault_event_set,
-     .get = trng_prop_fault_event_get,
-diff --git a/hw/nvme/nguid.c b/hw/nvme/nguid.c
-index 4cd6fad6ac9b..6eaf90fca88e 100644
---- a/hw/nvme/nguid.c
-+++ b/hw/nvme/nguid.c
-@@ -18,6 +18,7 @@
- #include "qapi/visitor.h"
- #include "qemu/ctype.h"
- #include "nvme.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #define NGUID_SEPARATOR '-'
- 
-@@ -179,7 +180,7 @@ static void set_nguid(Object *obj, Visitor *v, const char *name, void *opaque,
- }
- 
- const PropertyInfo qdev_prop_nguid = {
--    .type  = "str",
-+    .qapi_type = &str_type_info,
-     .description =
-         "NGUID or \"" NGUID_VALUE_AUTO "\" for random value",
-     .get   = get_nguid,
-diff --git a/hw/nvram/xlnx-bbram.c b/hw/nvram/xlnx-bbram.c
-index e336874bdef4..eb032ab8b9c8 100644
---- a/hw/nvram/xlnx-bbram.c
-+++ b/hw/nvram/xlnx-bbram.c
-@@ -34,6 +34,7 @@
- #include "hw/core/qdev-properties.h"
- #include "hw/core/qdev-properties-system.h"
- #include "hw/nvram/xlnx-efuse.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #ifndef XLNX_BBRAM_ERR_DEBUG
- #define XLNX_BBRAM_ERR_DEBUG 0
-@@ -486,7 +487,7 @@ static void bbram_prop_release_drive(Object *obj, const char *name,
- }
- 
- static const PropertyInfo bbram_prop_drive = {
--    .type  = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Node name or ID of a block device to use as BBRAM backend",
-     .realized_set_allowed = true,
-     .get = bbram_prop_get_drive,
-diff --git a/hw/nvram/xlnx-efuse.c b/hw/nvram/xlnx-efuse.c
-index 03c9fbc0d076..b1c9ee4980a0 100644
---- a/hw/nvram/xlnx-efuse.c
-+++ b/hw/nvram/xlnx-efuse.c
-@@ -34,6 +34,7 @@
- #include "system/blockdev.h"
- #include "hw/core/qdev-properties.h"
- #include "hw/core/qdev-properties-system.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #define TBIT0_OFFSET     28
- #define TBIT1_OFFSET     29
-@@ -251,7 +252,7 @@ static void efuse_prop_release_drive(Object *obj, const char *name,
- }
- 
- static const PropertyInfo efuse_prop_drive = {
--    .type  = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Node name or ID of a block device to use as eFUSE backend",
-     .realized_set_allowed = true,
-     .get = efuse_prop_get_drive,
-diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-index 6edc702776ab..1b22c8d112f3 100644
---- a/hw/pci/pci.c
-+++ b/hw/pci/pci.c
-@@ -53,6 +53,7 @@
- #include "qapi/error.h"
- #include "qemu/cutils.h"
- #include "pci-internal.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- #include "hw/xen/xen.h"
- #include "hw/i386/kvm/xen_evtchn.h"
-@@ -80,7 +81,7 @@ static void prop_pci_busnr_get(Object *obj, Visitor *v, const char *name,
- }
- 
- static const PropertyInfo prop_pci_busnr = {
+ static const PropertyInfo prop_pmu_num = {
 -    .type = "uint8",
 +    .qapi_type = &uint8_type_info,
-     .get = prop_pci_busnr_get,
- };
- 
-diff --git a/hw/s390x/ccw-device.c b/hw/s390x/ccw-device.c
-index 25c427327957..fd21a4346522 100644
---- a/hw/s390x/ccw-device.c
-+++ b/hw/s390x/ccw-device.c
-@@ -17,6 +17,7 @@
- #include "qapi/visitor.h"
- #include "qemu/ctype.h"
- #include "qapi/error.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- static void ccw_device_refill_ids(CcwDevice *dev)
- {
-@@ -74,7 +75,7 @@ static void ccw_device_set_loadparm(Object *obj, Visitor *v,
+     .description = "pmu-num",
+     .get = prop_pmu_num_get,
+     .set = prop_pmu_num_set,
+@@ -1746,7 +1746,7 @@ static void prop_pmu_mask_get(Object *obj, Visitor *v, const char *name,
  }
  
- const PropertyInfo ccw_loadparm = {
--    .type  = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Up to 8 chars in set of [A-Za-z0-9. ] to select"
-             " a guest kernel",
-     .get = ccw_device_get_loadparm,
-diff --git a/hw/s390x/css.c b/hw/s390x/css.c
-index 65341c68c3bf..50d14ab855f7 100644
---- a/hw/s390x/css.c
-+++ b/hw/s390x/css.c
-@@ -24,6 +24,7 @@
- #include "hw/s390x/s390-virtio-ccw.h"
- #include "hw/s390x/s390-ccw.h"
- #include "exec/cpu-common.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- typedef struct CrwContainer {
-     CRW crw;
-@@ -2530,7 +2531,7 @@ out:
- }
- 
- const PropertyInfo css_devid_propinfo = {
--    .type = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Identifier of an I/O device in the channel "
-                    "subsystem, example: fe.1.23ab",
-     .get = get_css_devid,
-@@ -2538,7 +2539,7 @@ const PropertyInfo css_devid_propinfo = {
- };
- 
- const PropertyInfo css_devid_ro_propinfo = {
--    .type = "str",
-+    .qapi_type = &str_type_info,
-     .description = "Read-only identifier of an I/O device in the channel "
-                    "subsystem, example: fe.1.23ab",
-     .get = get_css_devid,
-diff --git a/hw/s390x/s390-pci-bus.c b/hw/s390x/s390-pci-bus.c
-index 2724b27ec2a1..96603bfdb8a9 100644
---- a/hw/s390x/s390-pci-bus.c
-+++ b/hw/s390x/s390-pci-bus.c
-@@ -35,6 +35,7 @@
- #include "system/runstate.h"
- 
- #include "trace.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- S390pciState *s390_get_phb(void)
- {
-@@ -1843,7 +1844,7 @@ static void s390_pci_set_fid(Object *obj, Visitor *v, const char *name,
- }
- 
- static const PropertyInfo s390_pci_fid_propinfo = {
+ static const PropertyInfo prop_pmu_mask = {
 -    .type = "uint32",
 +    .qapi_type = &uint32_type_info,
-     .description = "zpci_fid",
-     .get = s390_pci_get_fid,
-     .set = s390_pci_set_fid,
-diff --git a/hw/vfio/pci-quirks.c b/hw/vfio/pci-quirks.c
-index c5b4f9091d49..4a3fd374a211 100644
---- a/hw/vfio/pci-quirks.c
-+++ b/hw/vfio/pci-quirks.c
-@@ -26,6 +26,7 @@
- #include "pci.h"
- #include "pci-quirks.h"
- #include "trace.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- 
- /*
-  * List of device ids/vendor ids for which to disable
-@@ -1436,7 +1437,7 @@ static void set_nv_gpudirect_clique_id(Object *obj, Visitor *v,
+     .description = "pmu-mask",
+     .get = prop_pmu_mask_get,
+     .set = prop_pmu_mask_set,
+@@ -1778,7 +1778,7 @@ static void prop_mmu_get(Object *obj, Visitor *v, const char *name,
  }
  
- const PropertyInfo qdev_prop_nv_gpudirect_clique = {
+ static const PropertyInfo prop_mmu = {
+-    .type = "bool",
++    .qapi_type = &bool_type_info,
+     .description = "mmu",
+     .get = prop_mmu_get,
+     .set = prop_mmu_set,
+@@ -1811,7 +1811,7 @@ static void prop_pmp_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_pmp = {
+-    .type = "bool",
++    .qapi_type = &bool_type_info,
+     .description = "pmp",
+     .get = prop_pmp_get,
+     .set = prop_pmp_set,
+@@ -1851,7 +1851,7 @@ static void prop_num_pmp_regions_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_num_pmp_regions = {
 -    .type = "uint8",
 +    .qapi_type = &uint8_type_info,
-     .description = "NVIDIA GPUDirect Clique ID (0 - 15)",
-     .get = get_nv_gpudirect_clique_id,
-     .set = set_nv_gpudirect_clique_id,
+     .description = "num-pmp-regions",
+     .get = prop_num_pmp_regions_get,
+     .set = prop_num_pmp_regions_set,
+@@ -1889,7 +1889,7 @@ static void prop_pmp_granularity_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_pmp_granularity = {
+-    .type = "uint32",
++    .qapi_type = &uint32_type_info,
+     .description = "pmp-granularity",
+     .get = prop_pmp_granularity_get,
+     .set = prop_pmp_granularity_set,
+@@ -1965,7 +1965,7 @@ static void prop_priv_spec_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_priv_spec = {
+-    .type = "str",
++    .qapi_type = &str_type_info,
+     .description = "priv_spec",
+     /* FIXME enum? */
+     .get = prop_priv_spec_get,
+@@ -1998,7 +1998,7 @@ static void prop_vext_spec_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_vext_spec = {
+-    .type = "str",
++    .qapi_type = &str_type_info,
+     .description = "vext_spec",
+     /* FIXME enum? */
+     .get = prop_vext_spec_get,
+@@ -2041,7 +2041,7 @@ static void prop_vlen_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_vlen = {
+-    .type = "uint16",
++    .qapi_type = &uint16_type_info,
+     .description = "vlen",
+     .get = prop_vlen_get,
+     .set = prop_vlen_set,
+@@ -2082,7 +2082,7 @@ static void prop_elen_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_elen = {
+-    .type = "uint16",
++    .qapi_type = &uint16_type_info,
+     .description = "elen",
+     .get = prop_elen_get,
+     .set = prop_elen_set,
+@@ -2118,7 +2118,7 @@ static void prop_cbom_blksize_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_cbom_blksize = {
+-    .type = "uint16",
++    .qapi_type = &uint16_type_info,
+     .description = "cbom_blocksize",
+     .get = prop_cbom_blksize_get,
+     .set = prop_cbom_blksize_set,
+@@ -2154,7 +2154,7 @@ static void prop_cbop_blksize_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_cbop_blksize = {
+-    .type = "uint16",
++    .qapi_type = &uint16_type_info,
+     .description = "cbop_blocksize",
+     .get = prop_cbop_blksize_get,
+     .set = prop_cbop_blksize_set,
+@@ -2190,7 +2190,7 @@ static void prop_cboz_blksize_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_cboz_blksize = {
+-    .type = "uint16",
++    .qapi_type = &uint16_type_info,
+     .description = "cboz_blocksize",
+     .get = prop_cboz_blksize_get,
+     .set = prop_cboz_blksize_set,
+@@ -2226,7 +2226,7 @@ static void prop_mvendorid_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_mvendorid = {
+-    .type = "uint32",
++    .qapi_type = &uint32_type_info,
+     .description = "mvendorid",
+     .get = prop_mvendorid_get,
+     .set = prop_mvendorid_set,
+@@ -2262,7 +2262,7 @@ static void prop_mimpid_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_mimpid = {
+-    .type = "uint64",
++    .qapi_type = &uint64_type_info,
+     .description = "mimpid",
+     .get = prop_mimpid_get,
+     .set = prop_mimpid_set,
+@@ -2319,7 +2319,7 @@ static void prop_marchid_get(Object *obj, Visitor *v, const char *name,
+ }
+ 
+ static const PropertyInfo prop_marchid = {
+-    .type = "uint64",
++    .qapi_type = &uint64_type_info,
+     .description = "marchid",
+     .get = prop_marchid_get,
+     .set = prop_marchid_set,
 
 -- 
 2.56.0.116.g6de20f6092dc
