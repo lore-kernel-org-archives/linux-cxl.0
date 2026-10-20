@@ -1,70 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493362;
-	b=mdFvCUU/1mna2f4x/iICBfzpWOaY+ox/sgmYVYpAcc7KiqCWXhkKDOWRdJsCvZuSB7Y8
-	 +piQtpjS4H2ia2XQJWHTYPITSVLuLB7kB+yeiPCPxK9lHjy6Q3zNTOyPt36oTUZZNNR26
-	 CreYEYpwTZcjuDOeJ0gbit2JulJvh20JUoCdfmWrZMhtQmmhvNaVrzZ/00B8lL3al/4MP
-	 JIN6BJZKx5iWPdhQwDlTT3nkALPeItDcjOCsjbmPLPeJifq4DB8wudBklR7IZ94K/FUAd
-	 w7Q3qE0W7LhZOxO/UjfCFHwCD/ZuBRoGdLNpJ95TN/3W6SAAY7aObC48wVoKnNu+Cbg==
+	t=1792493369;
+	b=V/ysGUoUoqetsnA88v3ZGXGlw6ov34VxPsVueA4UU3e862Ci0Lt+1vwh6XQNJyEISUVt
+	 qvWUXWlLE8gYGHUtgWJfPRazfMkejmAecG9vfbV1fkbiOZnIa6tefAl+Lk4TvdIcgEViv
+	 CwqHljYBeQ+XJddkIv1KlPTQYbRdmWemUbY09LFc+mD3iWcROsNHYG/cMnLJTjyAz3Rn3
+	 JmT3gtlASSxB9tcJwuxsipLy9Oh1GgktVPPPyTTCkUXN6SF8DyfgaNeEz2CWC2wMDNvp/
+	 rSY//sL16H5sDwX9HsS3w2Xbs4WqTmrEfS/UL3TGZ7/zt2WsMmGNmdDBeA2JDt88vlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493362;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493369;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=R8vVLHsjEWyiM3GyLmHOx9f7QvIPqbFYRpW6VNEtrF4=;
-	b=XQEOkAuscNjMGcVOI4Eo6Y2cLFiq+4+5UNslU3LC+OGK6M4CD+3pSM8pQQhk5na0oXOL
-	 AsuAWGZf125QIIynEsylBtniFbEpYfG2dcbBY1tmTpCkPdZb0nDpdy05yaX1IaFeHObMc
-	 US91z2QFaGxiyUiMX/5bXGY5jiLHVfhQznFtN6Mto1XSJpGHFTENgky04LBcA0t8HMzCR
-	 CfXTOIJtpIIZSY92cWyEOaQrfx1iVqBbNKfvvOCSPGPZssvuQC/9fMM7nO+E8JFbUl0pX
-	 p4R8fkcMa7EgDbUUFjwmdJfzD+lRCZgvyCVm4n+pmWkOSi6rklUfBu/sxBRS0H9wBRA==
+	bh=G0tJqQA4vjH1OewDrlPPbV755lqj6OJV4iLGYLxe1dQ=;
+	b=fsVDFNKn9+IGuQ5+85Cl8a5XaCfDwro/ULzKzyyHc7jNXO5azoVjsinAnyp3MHzmtFcc
+	 Q759jx8GXbWIZRxpw+2LhABeN7/g+ZmMZfzj6wzwqeRkj/uPLvZBVE85HWr6LJR5+1gQE
+	 OjlqgyJmXCOM3xs9w8uVfaoIOuPceQZ6uwig2mJT4Fb1jGWz80RMz71H6gXWwNqrH564n
+	 +j7MXPreVJ6L7WPNcAZ0nrGvcMmIKw+Lc2iuv1yCvciLMwdXgM6ecAAC84YXnWyPJRf18
+	 3Zdtl1LSfFu0jwJXpg/NlG8N4FzjgYFccB0TnMd8cVEWRuX5rdPz5O7AJt6Oy7sC7zQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYuBF6jL;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QC8YQnI+;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBE7606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:49:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CBE7606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301960A2601
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:49:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F301960A2601
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYuBF6jL
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QC8YQnI+
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493361;
+	s=mimecast20190719; t=1792493368;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R8vVLHsjEWyiM3GyLmHOx9f7QvIPqbFYRpW6VNEtrF4=;
-	b=ZYuBF6jLQTCgDm/JDMLrUU84MFlL1Kx+qq1MilsNbxiaFF5YO70+Xqb6bsWfg38M0LXFia
-	cKq6lPwZykHdKAEUrQfyMT/Tlewn/jTk9QQcDnjhAOKS+0DTZVpqSwE9Y4xsEoA2YtlEl4
-	X+USeZqNLgR8vtoOpsKZC5iw5x66S20=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=G0tJqQA4vjH1OewDrlPPbV755lqj6OJV4iLGYLxe1dQ=;
+	b=QC8YQnI+rwTo5TVIyAHdJ0suxxgCt8Q1ye5bGlBv5zTRgtaO6Cir+PBOQBXEHDe5v5QDrS
+	6cQZrQMfKyAy+qLH+j0ubZraRFfRixdwhJ1LgNKWApv4qlm5STLX6y3u5hJCtoPAmf9QSb
+	faqlSua5Y7Q61RQ0yHgUX5lRc5y1/2U=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-443-LCXPFJilNDyc21HBnDLkMg-1; Tue,
- 20 Oct 2026 10:49:15 +0000
-X-MC-Unique: LCXPFJilNDyc21HBnDLkMg-1
-X-Mimecast-MFC-AGG-ID: LCXPFJilNDyc21HBnDLkMg_1792493351
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-532-AU63UEb8PQ-MadFO--Yndg-1; Tue,
+ 20 Oct 2026 10:49:20 +0000
+X-MC-Unique: AU63UEb8PQ-MadFO--Yndg-1
+X-Mimecast-MFC-AGG-ID: AU63UEb8PQ-MadFO--Yndg_1792493356
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E0361955BD4;
-	Tue, 20 Oct 2026 10:49:11 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8EE4D1955DE9;
+	Tue, 20 Oct 2026 10:49:16 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51BBB18002B1;
-	Tue, 20 Oct 2026 10:49:08 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1701A418;
+	Tue, 20 Oct 2026 10:49:14 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:50 +0400
-Subject: [PATCH v7 33/65] hw/ppc/spapr_caps: fix property type name
+Date: Tue, 20 Oct 2026 14:45:51 +0400
+Subject: [PATCH v7 34/65] ppc/spapr-caps: convert to QAPI-aware property
+ registration
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-33-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-34-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,51 +150,209 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=878;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6963;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=Qq7OSQxtuwlCseGf35wegvnM5f+EnUrGWd4RRhnAzxw=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZaWeTAuqQ+RlnWisH2RQ0zLCOkC+4rdcGXQ
- QZYeC6VHiyJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
- 5SEMD/9w84ouUqqiCZ64ZylCbaeUJxtrtqWrrPUGFcC4JDbVpUU7Nct7HZK5iaBsDnqrZURBNr/
- 8RtOPyRuf3Q4/lguHW+RKtJ6Jw6sS9784J67RNrbD/EUHDIUOt7QzUVNwflsohDZNJOI9y+5Jnm
- kQo6SsduyW19qi63LcidGWcAlV/Xhkp7CQCbfFhhsWCCOZImzdzQNYXU5o48Xw0oHdXg8nKkp8o
- CHqOboRWcyM8r62/Gw1pH4wfJ4FTNQ6cZE+4d9Vig+z5pqWha7vzQllfk7aMxXAmqkXS/vARQoM
- UXUUZp/aZHyRnnikACNHPNcdFMpXi+1ZumV++RqFqAMt4YSox+qwQ7UscrjDUjEIb5XAOUktB5B
- VPkm6qZmiK9o23zlZPnbrcOd6Cc/oVEoxtzF/5aGWNPq4xUErMRaj6oZ1O0g3E2Sp17WjDScFl+
- 0lzVm3f2Q6znwnFis+4sg7ZlVUeCQv4+0yNa6+YCuJUlOi9rSfQRe9bHmQZvOvqRYdxKhXzWeUP
- px5zlcXZSRP9vaSQKS4s9yZuJXZyk9Fm+4Tp9UD7LAkNEdD0HnXM4AvsfFojISVCJV9Kog3R+f0
- PepoSJr4XZ308R58TgTJ4NL5LlAsuYnr0Pwm+XPXvg1N8aoTb4MS7gKitj+utet5HHJ0ws1tClu
- dh4Iln1OvPNjzpQ==
+ bh=h0OiLsI4rZp+v/Mhu46aHZ2MeGUSC4RGBbFRwR/fgso=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZafzwZrCef0nnjKmQFgGHI7d1DU4j3tcKg8
+ rfJ8YYSxbiJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
+ 5ZNiD/9uJkrnfIq0f1AAFb55zRGcmM6E9/bY9PjcQwic7qZwiIF30FoVEyW+LS1V4LBV8lFxJNS
+ PQU7j6R+CB6v9HoMI64E1PyApDwdLlnaHAJlXcyEPUzd2BVafhj1hHbaYhLxkEy1FKLnJgXjLkJ
+ gdIwysLCQIt8EXWXa5PEr9we5qawBjwypQ0Lag+ls7M/dEH/0Kh1uzOi9w8a2krYIDQZcarZN7i
+ E4LtOP390qyqqA6YnMhP59VMT+qvfxHzc/ZQswUOQyZJDTsWt5bsBXzpOFFpbBXuTXpDT9AtofO
+ ID8iow8Lpz1Tszo5kP/m/Lm4S8UWRsm6FmK1PFXmwtWWlyXJh+CUFxiKOxoxpS5FTXbRJGSv05O
+ ZMYDLHTHu8+gadlaJjYgyFbJVyKlNsrAGTmFvM/RU3rpVkTt06dMhmHo8K8rWEYHAwUYB4Ks35l
+ E6S+GJ02O0X284mnQwikHn+fLhcivRrqM+9mynA/bGmrsWZIK4DhT6Cp8zFSPLW47Oshjun/E64
+ G1PIDvecXY/KRp7V24XZJYFMStRWq10r6lNpi654+g4kT2EsUxLVHwoqsQTcV+XoNk/+hsNx570
+ AStfbHcS7MyUnY6GxM7Pl2zFwIbukx86j8jruO3yrSjE+v6CcaPGGLJ2oigWATENvOZrnqpgn3Y
+ yk4mypdVxiZikCA==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: PaGujfkdNUF4g-8YBORyHqZ25Hs_b5Xolw56c75mhAU_1792493351
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: maBKrrmlMF5-AXziJBRWSvvJ15QKsf8b5pgHc1RWfU8_1792493356
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The getter/setter use visit_type_size(). Fix the type name mismatch.
+Replace the type string in SpaprCapabilityInfo with a QAPITypeInfo
+pointer and switch spapr_caps_add_properties() from
+object_class_property_add() to object_class_property_add_qapi().
 
 Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/ppc/spapr_caps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ hw/ppc/spapr_caps.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
 diff --git a/hw/ppc/spapr_caps.c b/hw/ppc/spapr_caps.c
-index 0d659e9b0251..103b17364feb 100644
+index 103b17364feb..e622c79eb52a 100644
 --- a/hw/ppc/spapr_caps.c
 +++ b/hw/ppc/spapr_caps.c
-@@ -784,7 +784,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+@@ -24,6 +24,7 @@
+ 
+ #include "qemu/osdep.h"
+ #include "qemu/error-report.h"
++#include "qapi/qapi-builtin-type-infos.h"
+ #include "qapi/error.h"
+ #include "qapi/visitor.h"
+ #include "system/hw_accel.h"
+@@ -59,7 +60,7 @@ typedef struct SpaprCapabilityInfo {
+     /* Getter and Setter Function Pointers */
+     ObjectPropertyAccessor *get;
+     ObjectPropertyAccessor *set;
+-    const char *type;
++    const QAPITypeInfo *type;
+     /* Possible values if this is a custom string type */
+     SpaprCapPossible *possible;
+     /* Make sure the virtual hardware can support this capability */
+@@ -725,7 +726,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_HTM,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_htm_apply,
+     },
+     [SPAPR_CAP_VSX] = {
+@@ -734,7 +735,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_VSX,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_vsx_apply,
+     },
+     [SPAPR_CAP_DFP] = {
+@@ -743,7 +744,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_DFP,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_dfp_apply,
+     },
+     [SPAPR_CAP_CFPC] = {
+@@ -752,7 +753,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_CFPC,
+         .get = spapr_cap_get_string,
+         .set = spapr_cap_set_string,
+-        .type = "string",
++        .type = &str_type_info,
+         .possible = &cap_cfpc_possible,
+         .apply = cap_safe_cache_apply,
+     },
+@@ -762,7 +763,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_SBBC,
+         .get = spapr_cap_get_string,
+         .set = spapr_cap_set_string,
+-        .type = "string",
++        .type = &str_type_info,
+         .possible = &cap_sbbc_possible,
+         .apply = cap_safe_bounds_check_apply,
+     },
+@@ -774,7 +775,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_IBS,
+         .get = spapr_cap_get_string,
+         .set = spapr_cap_set_string,
+-        .type = "string",
++        .type = &str_type_info,
+         .possible = &cap_ibs_possible,
+         .apply = cap_safe_indirect_branch_apply,
+     },
+@@ -784,7 +785,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
          .index = SPAPR_CAP_HPT_MAXPAGESIZE,
          .get = spapr_cap_get_pagesize,
          .set = spapr_cap_set_pagesize,
--        .type = "int",
-+        .type = "size",
+-        .type = "size",
++        .type = &size_type_info,
          .apply = cap_hpt_maxpagesize_apply,
          .cpu_apply = cap_hpt_maxpagesize_cpu_apply,
      },
+@@ -794,7 +795,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_NESTED_KVM_HV,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_nested_kvm_hv_apply,
+     },
+     [SPAPR_CAP_NESTED_PAPR] = {
+@@ -803,7 +804,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_NESTED_PAPR,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_nested_papr_apply,
+     },
+     [SPAPR_CAP_LARGE_DECREMENTER] = {
+@@ -812,7 +813,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_LARGE_DECREMENTER,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_large_decr_apply,
+         .cpu_apply = cap_large_decr_cpu_apply,
+     },
+@@ -822,7 +823,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_CCF_ASSIST,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_ccf_assist_apply,
+     },
+     [SPAPR_CAP_FWNMI] = {
+@@ -831,7 +832,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_FWNMI,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_fwnmi_apply,
+     },
+     [SPAPR_CAP_RPT_INVALIDATE] = {
+@@ -840,7 +841,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_RPT_INVALIDATE,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_rpt_invalidate_apply,
+     },
+     [SPAPR_CAP_AIL_MODE_3] = {
+@@ -849,7 +850,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_AIL_MODE_3,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_ail_mode_3_apply,
+     },
+     [SPAPR_CAP_DAWR1] = {
+@@ -858,7 +859,7 @@ SpaprCapabilityInfo capability_table[SPAPR_CAP_NUM] = {
+         .index = SPAPR_CAP_DAWR1,
+         .get = spapr_cap_get_bool,
+         .set = spapr_cap_set_bool,
+-        .type = "bool",
++        .type = &bool_type_info,
+         .apply = cap_dawr1_apply,
+     },
+ };
+@@ -1069,9 +1070,9 @@ void spapr_caps_add_properties(SpaprMachineClass *smc)
+         g_autofree char *name = g_strdup_printf("cap-%s", cap->name);
+         g_autofree char *desc = g_strdup(cap->description);
+ 
+-        object_class_property_add(klass, name, cap->type,
+-                                  cap->get, cap->set,
+-                                  NULL, cap);
++        object_class_property_add_qapi(klass, name, cap->type,
++                                       cap->get, cap->set,
++                                       NULL, cap);
+ 
+         object_class_property_set_description(klass, name, desc);
+     }
 
 -- 
 2.56.0.116.g6de20f6092dc
