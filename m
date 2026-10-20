@@ -1,70 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493430;
-	b=QJ7kbRqv+MeQKObkp7gpgKs0/nprK+gwUr3HiWXaW0t7dcCeT334FBds/Nf+7yuUGSoq
-	 WU/txzuq9ZGMuIbKWEePIbRXrBDsk1etIDuORvVbR4ts9JEkz7vTV6Ecywdp4P5xoed4W
-	 gnZNzivWcOFKW1L8pR7XuA2LWnwBZYDM9ZZRapY1qVzI+pjzFupeH+hlAqQ+nPRSGeiqc
-	 AvTsc5DBnnBhEsgU+DLb0da5OKTa0idoV7MAz32kk6i41R/vui81Kv2oYJBUA5v5WDQkU
-	 COQoJoTBK+hlamry0FFS5mx3a32Qz8DIff3Cv5h17oHqdxMp+UN9idbEHZZG/KkJvtQ==
+	t=1792493437;
+	b=BqbPZUNdFVBfY7QIYsD2oFdvwPYXsnYYIpOBkAn5oHE7BaSupcFi9FUqP/dR0GLo6gJl
+	 dUXEj9YHodTMAejG8HMYaLt0L/1Xd5gxzOifIpBqX3HCdrzcxYa2mBVkeYM+nRFOibsnd
+	 jJlsm+UnK7uWTmh6YQlv7fj+TaK1goZ2UFfuERrO/2X1mmZPEqLiX3ib5/PAIBsGR/KwR
+	 +nspO06fs2hkwKWJdDHAQAoE6Of+0+J1TIM7mnV69D3YRFb/z1rD/xBEhQTO3sG9TJLk5
+	 2F/cVyCNlc0WYZLhvrcdW5sVY9SoJGTEYYFalOYKnIb1kltQ/ZQDnFuHeFK7i17h8ng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493430;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493437;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=cjstbMWmXOAnQJ0vRg4/TV0UxKxkDAMv9/7iDMdvYXk=;
-	b=ZPojh+yOHSL/XDW3My14iWqd8N4jCTmDRrztnMl3R1BqgF27D1x0t9VTHV3dqiiwCH1/
-	 RhU2SITP2gk9+kIXBk+2pWVNbCbxYi+VzF7UqsbFree3VjQTO0B9+pHmr8J19fdKfLXrJ
-	 l+/O6UN3ElIx8Y8Ge+irrt5MAxmGFR2mm2FvHqpq3wW+gD82Dcd5SMj8NvZrV7jdAU8WA
-	 W6l7a98o+2qptpeCmFceXSOyMiEf9w7T12ax9JWUY65wH6Rfr3yl57v+XdDwQTIPGPZTl
-	 lcfwHIKQxWIwJXkUtYNRZcYzy3v3/QMGT2d5nsr9YOKVzgzH8V+eJtOv1r1jdOYheWQ==
+	bh=stj/oklFy5XE7Ux6UVzd34CG7YO8zlEFRRZGNs4BwjQ=;
+	b=Iu17zOdJwd3Qyhd5IE3eKlhab19ZLux22m5Sc0zvbtnl2CTbhC9OVYg+DBQat1ja4zb1
+	 QX4i8wPVU7oc7GUjPxAHIiMgLH0H65uasJ5quxlA4ehjAjOoVyNG7Sfx96I+nrIPsEjFq
+	 TisiXBtgGzT9SN0SF/fw56pb3EBVdih5jFVSO64JtAwtETJbmaf25H3uROfW+8aMeZTXF
+	 dBnrAFzl4LcAIymlaHO0aQCiLVmHNLkrvpzNfNIiUPnr/RlRKF2Vjot7LQQ04eKe86zfC
+	 tFQcEKV28hTGTWMQW0LcDfVrXLW+Z0IYp/UIKTSG6ERnfemxxbazHGsUioremLjfMhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSffY2IV;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="YdlT/+0K";
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD3660A2607
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:50:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CFD3660A2607
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600DB60A261C
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:50:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 600DB60A261C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSffY2IV
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=YdlT/+0K
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493428;
+	s=mimecast20190719; t=1792493436;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cjstbMWmXOAnQJ0vRg4/TV0UxKxkDAMv9/7iDMdvYXk=;
-	b=XSffY2IVRgKgqakC6JFT2BMyHFj54TJXSMa5xU8QBEIRxg5dsbGsaWvi+/pHaj3+eRokW0
-	qn1zCMaRbLDwnuJ94IPUwSpWYP8YhZiu1/RaIzLsTmOvRrL0Qjj7FQBlojsaIcts423yVY
-	cE9YQQJd2SiIeiKrPZB49vwaau/9VhQ=
+	bh=stj/oklFy5XE7Ux6UVzd34CG7YO8zlEFRRZGNs4BwjQ=;
+	b=YdlT/+0Ka/E6Ekvl0qD1j4Qldxkr9N+8f9ZX2CZTOJnljSb3tCMvI0rqAh05LtReHzqBzv
+	J4SJ4BpppnV/bWDqVkcEvlXmVI459J+Jd6s+oQzAGE9X+QspqvNBzQN+2d49AYjD4HnFwS
+	YCZC+endFZuMR0xGkqhMuHiVkAyJtr4=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-142-LEtBYtaXNhep3HOST1h5pg-1; Tue,
- 20 Oct 2026 06:50:24 -0400
-X-MC-Unique: LEtBYtaXNhep3HOST1h5pg-1
-X-Mimecast-MFC-AGG-ID: LEtBYtaXNhep3HOST1h5pg_1792493420
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-656-Cd5iFrsSPFiy_O9eCidOaQ-1; Tue,
+ 20 Oct 2026 10:50:30 +0000
+X-MC-Unique: Cd5iFrsSPFiy_O9eCidOaQ-1
+X-Mimecast-MFC-AGG-ID: Cd5iFrsSPFiy_O9eCidOaQ_1792493424
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C61F61955DA5;
-	Tue, 20 Oct 2026 10:50:19 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C16C31955DE8;
+	Tue, 20 Oct 2026 10:50:24 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 854725BC;
-	Tue, 20 Oct 2026 10:50:16 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4304D1956095;
+	Tue, 20 Oct 2026 10:50:22 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:46:02 +0400
-Subject: [PATCH v7 45/65] hw/s390-virtio-ccw: convert loadparm property to
+Date: Tue, 20 Oct 2026 14:46:03 +0400
+Subject: [PATCH v7 46/65] hw/ppc/spapr_drc: convert fdt property to
  QAPI-aware registration
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-45-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-46-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,60 +150,53 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1438;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1126;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=kUpPGFy4418k+1NoT02grj7G7ylnBF+ugRFLSNuQ/I8=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZbZ381/sBWM1azZ53D7cfjK2vNDIyCM5jiw
- Xz8ukfeXYKJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWwAKCRDa6OEJdZac
- 5WE7EACcNb6WUPAXGp4swEqKgOrI7mRkcimuGMJxDQptX6voqKSzXDGgbjpNbOpCSvTsAUBzqkf
- VmQ+u1XXdOcMUFOXV12h+uVIagNkH/FDk+vj6EhW+7Kv+xUWHQwihzevCBsOe5YRu7AoC5JFL7e
- 0gnAXgwlHoUc7rofc1b2A696Xi73B0BOxB5zdDwbfJPmC+zNLT3hs1Td4Kz/nHF5mI2tkY38zor
- J9Gu+Zngb8i7tCVWNN4rxMRTflUnEleoTBaZ/MzpgKLm6BMGvNB/RklxuTW9RaHm5c7Hn2tOkUX
- BjBeCAlN8BDg+4cPXlsrKBOZG04cS8ma9QO+ZFcTJJ0v6YXzwA+GsHW4fPIoGszFa+UyJOoyFyZ
- JjxorHFP+v58GJcIr421M6yCPKqLa70RxTrPsVBPMAHrP0TejWLeOs0hIrNkRiE5+2601BD6apI
- rZkqEk8rXGc2YmuOolkjrs6b6PIw2R6sibjUwbIPFEHNu7HbC/WLZG6sxGdbaHB5xKhjg7Yo0Hf
- sljEdE+S9n89L1t8za9aF28F5ivQkNlw/vJ2npjoxGF9L6HCdk+EiYF61ps7MRQR9ViFVustynh
- PdOoORH0IHDSPitjUdZoIvZb6i6CW8KZCeXn1ZUTNMv/w8f9vbbxVroo3zzRSKiilj8k+2MxLjs
- N6G+newXEeukaug==
+ bh=tzAtw2N/GmjCt5f2xymcXMco6tXqwvWNy/tFAoovn48=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZbrmMIXAAgbwi3HHXAfckNSBqoT7PupXMdX
+ jNNL1pkTe6JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWwAKCRDa6OEJdZac
+ 5ZtBD/9HzJq3j9NRTh8cC/IrlGiBUn7R8G3aWpPmmvNkh3x2f+rQGtv+c4/4fZ5SVY8vIMlozLI
+ LUxj6qGBu0GxrQWT8fSd91RvbaYDeiByrDclv6ElUBKkE+tgleBEJUKwQJfK3M0e39H0MbjtzRg
+ dxzN4rNG0OtE8h6qgxhP29CFH3AITnPK6JfYp3BIuQLwbsy/HZwgwge9j97HT9lCQ3XaWTtwWEp
+ mj+SjQmSYNj3MWpB5O71V5XG20mItYobMA5CEVyvnwge7sN5eyuap4ds31caHAW78QyHPlOFVoC
+ mLdbsQcFaIesAIo6kEnisNkqHnb8yVLFTI6dZfqTwCKl2twuRgOyGq3sME35mvXwpXYnk7ngkNm
+ 4Wv7Qk3oqp9AjkpD2TpcMxKOiMI/qMeCTzwBE3Ul8FypE56v856BMn24Tr0BYUM36SttPitGe8O
+ y06nmXFiwC88uT5JL/gPnfbVYmjDD8CwTftjlcRo66wdO/Uj1cC4+wc1ynGvOspelolj6z9kjry
+ bcWiTwBgrkt3gSwktkytTSDlZ5MqNlPDv0mE82BFtszFNBtxOhfX0w97OQzXtVLle5h+YKHfgdn
+ N5d4ugnLs5FJL1SrpPAd+tbg85sl64x/ZW1OdnyMEQL9XhQtUEDzjmQBCxiIyHOFat+aC63mV0H
+ gQWNLU0ZIgJd7oA==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: OJZ2iqDgCuUKZQvvnXqfhyZLc2BH3MxJzf-3doQcvlY_1792493420
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: 4R2zrsllruZnbiliiNVOORuLBeQGUVbFJJmTd99HOZE_1792493424
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The QAPI type is actually a string. Here also, if we had typedef support
-we could expose a more specific type.
+Use object_property_add_qapi() with any_type_info for the "fdt"
+property, since the FDT structure is dynamically shaped at runtime and
+cannot be represented as a static QAPI type.
 
+Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/s390x/s390-virtio-ccw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ hw/ppc/spapr_drc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/s390x/s390-virtio-ccw.c b/hw/s390x/s390-virtio-ccw.c
-index fda5ecc9ad3c..3ed425b16c3e 100644
---- a/hw/s390x/s390-virtio-ccw.c
-+++ b/hw/s390x/s390-virtio-ccw.c
-@@ -43,6 +43,7 @@
- #include "system/hostmem.h"
- #include "target/s390x/kvm/pv.h"
- #include "migration/blocker.h"
-+#include "qapi/qapi-builtin-type-infos.h"
- #include "qapi/visitor.h"
- #include "qapi/qapi-visit-machine-s390x.h"
- #include "hw/s390x/cpu-topology.h"
-@@ -908,7 +909,8 @@ static void ccw_machine_class_init(ObjectClass *oc, const void *data)
-     object_class_property_set_description(oc, "dea-key-wrap",
-             "enable/disable DEA key wrapping using the CPACF wrapping key");
- 
--    object_class_property_add(oc, "loadparm", "loadparm",
-+    /* if QAPI learns to typedef str, we could expose a more specific type */
-+    object_class_property_add_qapi(oc, "loadparm", &str_type_info,
-                               machine_get_loadparm, machine_set_loadparm,
-                               NULL, NULL);
-     object_class_property_set_description(oc, "loadparm",
+diff --git a/hw/ppc/spapr_drc.c b/hw/ppc/spapr_drc.c
+index 64f9ca29b02e..740149ffdf3e 100644
+--- a/hw/ppc/spapr_drc.c
++++ b/hw/ppc/spapr_drc.c
+@@ -587,7 +587,7 @@ static void spapr_dr_connector_instance_init(Object *obj)
+     object_property_add_uint32_ptr(obj, "id", &drc->id, OBJ_PROP_FLAG_READ);
+     object_property_add_qapi(obj, "index", &uint32_type_info, prop_get_index,
+                         NULL, NULL, NULL);
+-    object_property_add(obj, "fdt", "struct", prop_get_fdt,
++    object_property_add_qapi(obj, "fdt", &any_type_info, prop_get_fdt,
+                         NULL, NULL, NULL);
+     drc->state = drck->empty_state;
+ }
 
 -- 
 2.56.0.116.g6de20f6092dc
