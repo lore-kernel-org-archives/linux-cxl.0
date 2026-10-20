@@ -1,70 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493517;
-	b=wrkDRDGKIuY9DZ7gUts+nb6Qlpt0WIAvQzYAVtbkt2g2o/5L7Rfo/pIzcLf86DbrY8Og
-	 33Y0cs0EWY3k43Bamnn1nX8YErBdITOLrgE5awNvQZI7IUh91L1pFt9JrRz8mePXbda7d
-	 s0QZcZutdmdGEK/6OwrGRk24/goAghR2mqptCZSAoSwB/61V3whVCuJbayRnqnn7cjc3y
-	 YR6EIgOfbe0fEXNlrsgrMZ3ihdbfD2P6LgwG4px55MfzuBBRFb8EK0wMIBYGIDY5MPk29
-	 LZVmjaMI7sJOk5XSZRbWNzqVsaT6j5aDY+yrrYJTOqovjmVULkoeHDE+1arRgxoSRLg==
+	t=1792493524;
+	b=ZDE4UE+erE22etYOwK8xfkACO/mF4MSLh22IgEm9Q0u3gFr0Sqx+KfAXKgJK5+QObnd3
+	 3JAALlir1C1z5jmNivg/fe+Zm5MaD+TPaiXGJHSIap4ntuT5orgM5jOEyfv/8q6vCr6wR
+	 9EjxgnB2p5Oe5WBLiv5NwoXq6qq8N+q5O15ofAXypbQOtohuOs6QN+sh6oMNrEsL+/l3W
+	 4TjFNsWI5q7ulxrhZEC67WlTV8i5W9WS1swfawRAZKmdsIFFiSqL1idR1U4Tf2GexjijI
+	 hLRMMNzuDE3PodjmTiyXX6h/BLjVxIXKhReyN8NZ259BLOh7g900KpQS6evxJLdl6Tg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493517;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493524;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=th1JKpfzAzi8+0DyZvMgIumhc4CFEiTeW47qkGiYHs4=;
-	b=TsLDPTeyU6ECFFJi0P7LnaC76nxAsEeFPrmmRaplSQOHB9vs7Pgzg5kRVsOfQyeizBlr
-	 PgMoryRxSvZy9B39S6p9bVwVT21oSib2M/I98WFbvJ5HyeL3lWNfoeCgUFVU65fx0Unbd
-	 5EKstiFqGf1SBxz29osQVDqZR0Zn7rKctD3cDs/PrKswPTFg8fl56j4w9KfU1twayLxiQ
-	 QDMOjrCtTA8DEVtUA2G7Jo14uvSHNKfwplVEIR4F7abhO/Akyg/Og7wZlBW7wN6/BNhpt
-	 O4rcYiljpA/qK1lTKbP9g/UJTs8xu0e6ZWNTh3+t0adpLAE0Zjwio0+9JcwCvGgdzxQ==
+	bh=ccOsUIeVtpZ4LAvRKvLPIKBLjfW8xoZv/G7l+9bsArM=;
+	b=EmzpWeRn/7c5QrWsZndHc/ot+sxg4xalHZiIyuW3wGuvMwDEm3FvPR/zEH57+tznVCy9
+	 /S1q+IO3XU83bNqsgXx4ws/CnWCYcG81i2GQqd7iAaNlpJI0yHMPB7AkGq3RN2e5nWDzJ
+	 lSEg6mTp8IFjXN7TmtOiTB10CvTeAqXx4daFA+yKDOLC24mXGN6ovIKazV9DypSBDyyJC
+	 u07OwZoKeXWWAuABiWQhQpKYeFK0f1EKw4okWHVZ1sGgiO4bwblXdkTCAFAdhLc23FryZ
+	 qybQy+wh50mhJnHhtNSiLhKk1GCncJLyEpoa1zC6jcAh53BkJOhMTC/1ofLVVQYiJ8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="EsuFvIr/";
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=K9WCtTdV;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20B260A381A
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:51:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F20B260A381A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FCE60A261C
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:52:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86FCE60A261C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EsuFvIr/
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=K9WCtTdV
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493516;
+	s=mimecast20190719; t=1792493522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=th1JKpfzAzi8+0DyZvMgIumhc4CFEiTeW47qkGiYHs4=;
-	b=EsuFvIr/Opo2dpcrc92u4DQgS/+C9k3yD9tfXf7sXD5fCVOUI96+5ochFzdcbM/CWCUHuc
-	MmyoNxtDKTJbk0+Cn510+GFzt8qiLaDmw44nuRVmKLCituWLRy4c/f3f/iSSdPc4wxS5n2
-	lPgNOjuco4s0d7NbAiKg9x207QCFZH8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ccOsUIeVtpZ4LAvRKvLPIKBLjfW8xoZv/G7l+9bsArM=;
+	b=K9WCtTdV7r+EwLaE5aExv1tr5fJoh2XluabdFEhxfEp9wMxhw2+AQrv4f2IVNopJDnm/9r
+	bp7AhES0I5qEEOrdIJVTuVBNAOqM6niBB7I/mQNquYYGkGUcOdMlzSnnPykL7d4sXR3sXi
+	+20y5Lzn3wqgIeRJbsmw9RoZQeTdkos=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-228-MDo8sez-NcyGAOl5_G0YjQ-1; Tue,
- 20 Oct 2026 10:51:52 +0000
-X-MC-Unique: MDo8sez-NcyGAOl5_G0YjQ-1
-X-Mimecast-MFC-AGG-ID: MDo8sez-NcyGAOl5_G0YjQ_1792493508
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-LUDw3GgDOriOUgUPMvJZCA-1; Tue,
+ 20 Oct 2026 10:51:57 +0000
+X-MC-Unique: LUDw3GgDOriOUgUPMvJZCA-1
+X-Mimecast-MFC-AGG-ID: LUDw3GgDOriOUgUPMvJZCA_1792493513
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E077E1955DD1;
-	Tue, 20 Oct 2026 10:51:47 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 55CF01955BD4;
+	Tue, 20 Oct 2026 10:51:53 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9E9F31800677;
-	Tue, 20 Oct 2026 10:51:44 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7054130000E7;
+	Tue, 20 Oct 2026 10:51:50 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:46:19 +0400
-Subject: [PATCH v7 62/65] hw/i386: convert PCSouthBridgeOption to QAPI enum
+Date: Tue, 20 Oct 2026 14:46:20 +0400
+Subject: [PATCH v7 63/65] qom: remove old enum property registration API
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -74,7 +74,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-62-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-63-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -149,215 +149,218 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6526;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7342;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=jr+R1XEAXGqEfl6dzBqQchDTHMoMaEnbkkCJTWPjK7M=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZdHAMFgnhAvWl4qCaozSGC8ZoljjEYi6VBP
- 70IoZTx452JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXQAKCRDa6OEJdZac
- 5bQgEACXrVy4PI0RHLf3EYbpFdgeh/G/qw9Szqqn90QJFXbDyFtQmp3c6wFtAFWSP3ffrhRIGOr
- RcUHeYkCVoyizAcDDgjI8OyPrmHVEnG3PwXeWRtGK0kH1my0bbmCJx/osVW8rApSvdzvYpi9s0Y
- 6bnxKKjw0JzliwdtFqTmFt0nn1S7YQOKfUDqhPgAWAHg8bwDPi1N1201GaF9lvKcJLYtaT4uNPx
- duB+KEvf23TePBMMCkwNlGjW5qm6S0gf5Ryxjb7UDLk0DAMDD6sOLYbUwrlEcS2bJu7T+7pz3Pk
- KIUx9WJmwNr8hA510xbEUM7U+qI4jtLtBszuvBioYQI3kVmqBqcaNtqPICXlIwOy+0b4xnL1Gkk
- eA26OvbARkhRxfm9CnY4bEgdMJQoeQnDOu1qzkbjiH5164V7Vey/w6iyXw5kqW/vm1Sq08RW2k9
- ICd329fnCbR+neChTSaunOu2wlSsKfBfb8AHGJDPC9l+G08VUaWeDhOHfuAgrke7NLVPatk+RPO
- Idq2+9q621/0Y/k95lzrzNRBGYp6P2uo1GlxLYcHglKAYZo/Cej2Jt8gBe7Gw+Qz351rWqwXcvm
- 8YX+kB6Z2Q3knEFy4SolR3NudeuK7WGfrFsryom7DUjqSDf2dGK5/LD4kxH5aflGMGZmB0moZnG
- LnhWzV1mrbEwmtw==
+ bh=4DUVOH2Il1uXarwapsGNw4Sqxi5JL+XRDYj5v/DxTXw=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZdSCtnqLwFsuDwikbI6gRflGPZtD05w5lEa
+ CvQaDVyJvKJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGXQAKCRDa6OEJdZac
+ 5VbJEACAn2E9Fh4lFMReVrd4NHuC3naIFHBUIw5ZLoxN7mbcaqivG69WFWxx7ZOrTDRmg/G7yWj
+ fDJpczz3Mb0e0IfqafD0Zo52HRprrS3vQqsPJaRNSQkXu2fm6LC1O8aSPWSYAU1eanghk9OhXWy
+ YrwTj+hC9ewJZHcH2F93rQKIhbccNRiQPCGgJPy4Lrq/uTwsScJ1VwIlavz58EMOc8D5pLsrqcC
+ yq0g6DK4SrNPSK30qRc1DYPDZzDv6UP/6SYl4MOl80b/lEg9HtMa3nOcPYat73Xrz4lJ34zsyq2
+ DaiEjhshxRzeWlxSRKFBlCtFXeclBqDgqyY/wXjt1O7g+q+UUKYGqmFXdH3HZHF2a0DzqVUoNpl
+ 4FKV2A5wr9Y9wmy+YIR0Lnw3Te8+UkuWx8TJu4UGPD64J7Am8Zdr+5lc4k63v3MIxbJ3V6i3/gx
+ xcPgIxzQ2tjUAC413GKGiKMZihOU5ca3wMMcT+SurJ4f6AckLphRseXIw6lV64r07VMlIt2v/on
+ t/KCYg7F6sIRLgxf7Q8rsFrDB/0o+lW42EJjrEKIKBVNwdsoxM+4Tc7BWJ7ciCx3ovDWcgc+b9G
+ Z8i3KE57kVIhAV2xKZSycVzEGQWVUjJagDqkIlSLS/+8A/FeLV/wYW0PQJQEo9s4t45BXPSFjoI
+ Q65g0nQz/0Olqvw==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: __HC9uTxv6-85_yFIBHBNqsM7aghQZaUGS7fqYy0tqM_1792493508
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: jQ28Azco3qem1TQmHex8t3a1p6EHFMfq60iTrmJr4-w_1792493513
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Move PCSouthBridgeOption from a hand-rolled C enum to a proper QAPI
-enum in qapi/machine.json.
+Now that all callers use object_class_property_add_qapi_enum(), remove
+the legacy object_property_add_enum() and object_class_property_add_enum()
+functions along with their EnumProperty struct and property_get_enum /
+property_set_enum helpers.
 
-This gives the x-south-bridge property a generated type_info with a
-valid masked_name, so it appears in query-qmp-schema introspection and
-the qapi-type field of qom-list-properties output.
-
-The south_bridge/default_south_bridge fields change from const char *
-to PCSouthBridgeOption, with an explicit mapping table from enum value
-to QOM device type name.
-
-Enum values are changed: "PIIX3"->"ppix3", "piix4-isa"->"piix4", this
-is under a x-property, so shouldn't be a breaking change.
+Simplify object_property_get_enum() to assert on qapi_type rather than
+falling back to the old EnumProperty opaque data.
 
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/i386/pc_piix.c    | 61 ++++++++++++++++------------------------------------
- include/hw/i386/pc.h |  4 ++--
- qapi/machine.json    | 14 ++++++++++++
- 3 files changed, 34 insertions(+), 45 deletions(-)
+ include/qom/object.h | 45 ++--------------------------
+ qom/object.c         | 82 ++--------------------------------------------------
+ 2 files changed, 4 insertions(+), 123 deletions(-)
 
-diff --git a/hw/i386/pc_piix.c b/hw/i386/pc_piix.c
-index 63c4667ea372..5a94a34166d8 100644
---- a/hw/i386/pc_piix.c
-+++ b/hw/i386/pc_piix.c
-@@ -47,6 +47,7 @@
- #include "hw/acpi/acpi.h"
- #include "hw/vfio/types.h"
- #include "qapi/error.h"
-+#include "qapi/qapi-type-infos-machine.h"
- #include "qemu/error-report.h"
- #include "system/xen.h"
- #ifdef CONFIG_XEN
-@@ -75,6 +76,11 @@ static GlobalProperty pc_piix_compat_defaults[] = {
- static const size_t pc_piix_compat_defaults_len =
-     G_N_ELEMENTS(pc_piix_compat_defaults);
+diff --git a/include/qom/object.h b/include/qom/object.h
+index 29cbd84b8d03..a9bbc44cfcc9 100644
+--- a/include/qom/object.h
++++ b/include/qom/object.h
+@@ -1697,12 +1697,12 @@ char *object_get_canonical_path(const Object *obj);
+  *   because it was ambiguous, or %NULL. Set to %false on success.
+  *
+  * There are two types of supported paths--absolute paths and partial paths.
+- * 
++ *
+  * Absolute paths are derived from the root object and can follow child<> or
+  * link<> properties.  Since they can follow link<> properties, they can be
+  * arbitrarily long.  Absolute paths look like absolute filenames and are
+  * prefixed with a leading slash.
+- * 
++ *
+  * Partial paths look like relative filenames.  They do not begin with a
+  * prefix.  The matching rules for partial paths are subtle but designed to make
+  * specifying objects easy.  At each level of the composition tree, the partial
+@@ -1986,47 +1986,6 @@ ObjectProperty *object_class_property_add_bool(ObjectClass *klass,
+                                     bool (*get)(Object *, Error **),
+                                     void (*set)(Object *, bool, Error **));
  
-+static const char *pc_south_bridge_type[] = {
-+    [PC_SOUTH_BRIDGE_OPTION_PIIX3] = TYPE_PIIX3_DEVICE,
-+    [PC_SOUTH_BRIDGE_OPTION_PIIX4] = TYPE_PIIX4_PCI_DEVICE,
-+};
-+
- /*
-  * Return the global irq number corresponding to a given device irq
-  * pin. We could also use the bus number to have a more precise mapping.
-@@ -236,7 +242,8 @@ static void pc_init1(MachineState *machine, const char *pci_type)
+-/**
+- * object_property_add_enum:
+- * @obj: the object to add a property to
+- * @name: the name of the property
+- * @typename: the name of the enum data type
+- * @lookup: enum value namelookup table
+- * @get: the getter or %NULL if the property is write-only.
+- * @set: the setter or %NULL if the property is read-only
+- *
+- * Add an enum property using getters/setters.  This function will add a
+- * property of type '@typename'.
+- *
+- * Returns: The newly added property on success, or %NULL on failure.
+- */
+-ObjectProperty *object_property_add_enum(Object *obj, const char *name,
+-                              const char *typename,
+-                              const QEnumLookup *lookup,
+-                              int (*get)(Object *, Error **),
+-                              void (*set)(Object *, int, Error **));
+-
+-/**
+- * object_class_property_add_enum:
+- * @klass: the object class to add a property to
+- * @name: the name of the property
+- * @typename: the name of the enum data type
+- * @lookup: enum value namelookup table
+- * @get: the getter or %NULL if the property is write-only.
+- * @set: the setter or %NULL if the property is read-only
+- *
+- * Add an enum property using getters/setters.  This function will add a
+- * property of type '@typename'.
+- *
+- * Returns: The newly added property on success, or %NULL on failure.
+- */
+-ObjectProperty *object_class_property_add_enum(ObjectClass *klass,
+-                                    const char *name,
+-                                    const char *typename,
+-                                    const QEnumLookup *lookup,
+-                                    int (*get)(Object *, Error **),
+-                                    void (*set)(Object *, int, Error **));
+-
+ /**
+  * struct QapiEnumProp: Descriptor for a property backed by a QAPI enum type
+  *
+diff --git a/qom/object.c b/qom/object.c
+index cf18880c6c0c..791d981dc689 100644
+--- a/qom/object.c
++++ b/qom/object.c
+@@ -1774,12 +1774,6 @@ uint64_t object_property_get_uint(Object *obj, const char *name,
+     return retval;
+ }
  
-     gsi_state = pc_gsi_create(&x86ms->gsi, true);
- 
--    pci_dev = pci_new_multifunction(-1, pcms->south_bridge);
-+    pci_dev = pci_new_multifunction(-1,
-+                                    pc_south_bridge_type[pcms->south_bridge]);
-     object_property_set_bool(OBJECT(pci_dev), "has-usb",
-                              machine_usb(machine), &error_abort);
-     object_property_set_bool(OBJECT(pci_dev), "has-acpi",
-@@ -317,51 +324,18 @@ static void pc_init1(MachineState *machine, const char *pci_type)
+-typedef struct EnumProperty {
+-    const QEnumLookup *lookup;
+-    int (*get)(Object *, Error **);
+-    void (*set)(Object *, int, Error **);
+-} EnumProperty;
+-
+ int object_property_get_enum(Object *obj, const char *name,
+                              const char *typename, Error **errp)
+ {
+@@ -1803,12 +1797,8 @@ int object_property_get_enum(Object *obj, const char *name,
+         return -1;
      }
- }
  
--typedef enum PCSouthBridgeOption {
--    PC_SOUTH_BRIDGE_OPTION_PIIX3,
--    PC_SOUTH_BRIDGE_OPTION_PIIX4,
--    PC_SOUTH_BRIDGE_OPTION_MAX,
--} PCSouthBridgeOption;
--
--static const QEnumLookup PCSouthBridgeOption_lookup = {
--    .array = (const char *const[]) {
--        [PC_SOUTH_BRIDGE_OPTION_PIIX3] = TYPE_PIIX3_DEVICE,
--        [PC_SOUTH_BRIDGE_OPTION_PIIX4] = TYPE_PIIX4_PCI_DEVICE,
--    },
--    .size = PC_SOUTH_BRIDGE_OPTION_MAX
--};
--
- static int pc_get_south_bridge(Object *obj, Error **errp)
- {
-     PCMachineState *pcms = PC_MACHINE(obj);
--    int i;
- 
--    for (i = 0; i < PCSouthBridgeOption_lookup.size; i++) {
--        if (g_strcmp0(PCSouthBridgeOption_lookup.array[i],
--                      pcms->south_bridge) == 0) {
--            return i;
--        }
+-    if (prop->qapi_type) {
+-        ret = qapi_enum_parse(prop->qapi_type->lookup, str, -1, errp);
+-    } else {
+-        EnumProperty *enumprop = prop->opaque;
+-        ret = qapi_enum_parse(enumprop->lookup, str, -1, errp);
 -    }
--
--    error_setg(errp, "Invalid south bridge value set");
--    return 0;
-+    return pcms->south_bridge;
++    assert(prop->qapi_type);
++    ret = qapi_enum_parse(prop->qapi_type->lookup, str, -1, errp);
+     g_free(str);
+ 
+     return ret;
+@@ -2543,74 +2533,6 @@ object_class_property_add_bool(ObjectClass *klass, const char *name,
+                                      prop);
  }
  
- static void pc_set_south_bridge(Object *obj, int value, Error **errp)
- {
-     PCMachineState *pcms = PC_MACHINE(obj);
- 
--    if (value < 0) {
--        error_setg(errp, "Value can't be negative");
+-static void property_get_enum(Object *obj, Visitor *v, const char *name,
+-                              void *opaque, Error **errp)
+-{
+-    EnumProperty *prop = opaque;
+-    int value;
+-    Error *err = NULL;
+-
+-    value = prop->get(obj, &err);
+-    if (err) {
+-        error_propagate(errp, err);
 -        return;
 -    }
 -
--    if (value >= PCSouthBridgeOption_lookup.size) {
--        error_setg(errp, "Value too big");
+-    visit_type_enum(v, name, &value, prop->lookup, errp);
+-}
+-
+-static void property_set_enum(Object *obj, Visitor *v, const char *name,
+-                              void *opaque, Error **errp)
+-{
+-    EnumProperty *prop = opaque;
+-    int value;
+-
+-    if (!visit_type_enum(v, name, &value, prop->lookup, errp)) {
 -        return;
 -    }
+-    prop->set(obj, value, errp);
+-}
 -
--    pcms->south_bridge = PCSouthBridgeOption_lookup.array[value];
-+    pcms->south_bridge = value;
- }
- 
- #ifdef CONFIG_XEN
-@@ -398,7 +372,7 @@ static void pc_i440fx_machine_options(MachineClass *m)
+-ObjectProperty *
+-object_property_add_enum(Object *obj, const char *name,
+-                         const char *typename,
+-                         const QEnumLookup *lookup,
+-                         int (*get)(Object *, Error **),
+-                         void (*set)(Object *, int, Error **))
+-{
+-    EnumProperty *prop = g_malloc(sizeof(*prop));
+-
+-    prop->lookup = lookup;
+-    prop->get = get;
+-    prop->set = set;
+-
+-    return object_property_add(obj, name, typename,
+-                               get ? property_get_enum : NULL,
+-                               set ? property_set_enum : NULL,
+-                               property_release_data,
+-                               prop);
+-}
+-
+-ObjectProperty *
+-object_class_property_add_enum(ObjectClass *klass, const char *name,
+-                                    const char *typename,
+-                                    const QEnumLookup *lookup,
+-                                    int (*get)(Object *, Error **),
+-                                    void (*set)(Object *, int, Error **))
+-{
+-    EnumProperty *prop = g_malloc(sizeof(*prop));
+-
+-    prop->lookup = lookup;
+-    prop->get = get;
+-    prop->set = set;
+-
+-    return object_class_property_add(klass, name, typename,
+-                                     get ? property_get_enum : NULL,
+-                                     set ? property_set_enum : NULL,
+-                                     NULL,
+-                                     prop);
+-}
+-
+ static void get_qapi_enum(Object *obj, Visitor *v, const char *name,
+                           void *opaque, Error **errp)
  {
-     PCMachineClass *pcmc = PC_MACHINE_CLASS(m);
-     ObjectClass *oc = OBJECT_CLASS(m);
--    pcmc->default_south_bridge = TYPE_PIIX3_DEVICE;
-+    pcmc->default_south_bridge = PC_SOUTH_BRIDGE_OPTION_PIIX3;
-     pcmc->pci_root_uid = 0;
-     pcmc->default_cpu_version = 1;
- 
-@@ -413,12 +387,13 @@ static void pc_i440fx_machine_options(MachineClass *m)
-     machine_class_allow_dynamic_sysbus_dev(m, TYPE_VMBUS_BRIDGE);
-     machine_class_allow_dynamic_sysbus_dev(m, TYPE_UEFI_VARS_X64);
- 
--    object_class_property_add_enum(oc, "x-south-bridge", "PCSouthBridgeOption",
--                                   &PCSouthBridgeOption_lookup,
--                                   pc_get_south_bridge,
--                                   pc_set_south_bridge);
--    object_class_property_set_description(oc, "x-south-bridge",
--                                     "Use a different south bridge than PIIX3");
-+    object_class_property_add_qapi_enum(oc, QAPI_ENUM_PROP(
-+        .name = "x-south-bridge",
-+        .description = "Use a different south bridge than PIIX3",
-+        .qapi_type = &PCSouthBridgeOption_type_info,
-+        .get = pc_get_south_bridge,
-+        .set = pc_set_south_bridge,
-+    ));
-     compat_props_add(m->compat_props,
-                      pc_piix_compat_defaults, pc_piix_compat_defaults_len);
- }
-diff --git a/include/hw/i386/pc.h b/include/hw/i386/pc.h
-index 8edec62a1af2..3afd376116b1 100644
---- a/include/hw/i386/pc.h
-+++ b/include/hw/i386/pc.h
-@@ -47,7 +47,7 @@ typedef struct PCMachineState {
-     uint64_t max_ram_below_4g;
-     OnOffAuto vmport;
-     SmbiosEntryPointType smbios_entry_point_type;
--    const char *south_bridge;
-+    PCSouthBridgeOption south_bridge;
- 
-     bool acpi_build_enabled;
-     bool wdat_enabled;
-@@ -94,7 +94,7 @@ struct PCMachineClass {
- 
-     /* Device configuration: */
-     bool pci_enabled;
--    const char *default_south_bridge;
-+    PCSouthBridgeOption default_south_bridge;
- 
-     /* Compat options: */
- 
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 46b6935ab0b8..cc028e890ae5 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -462,6 +462,20 @@
- { 'enum': 'Pca9554PinState',
-   'data': ['low', 'high'] }
- 
-+##
-+# @PCSouthBridgeOption:
-+#
-+# South bridge chipset option for PC i440FX machines.
-+#
-+# @piix3: Intel PIIX3 (default)
-+#
-+# @piix4: Intel PIIX4
-+#
-+# Since: 11.2
-+##
-+{ 'enum': 'PCSouthBridgeOption',
-+  'data': ['piix3', 'piix4'] }
-+
- ##
- # @inject-nmi:
- #     Injects a Non-Maskable Interrupt (machine specific: for example
 
 -- 
 2.56.0.116.g6de20f6092dc
