@@ -1,70 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493333;
-	b=K/9kV3aomqEfv4DWXUy/StCuAsVL3TFNpra9G8b+1pgMkiu25d9Oa3B2+H5bfU/bk/Qp
-	 HG6sE0qFQ6E5UQLLdMtsFXfNhXU+zIdcungKmnsPvVck8pbztZIm45Gxz/SvqOsVKsTKj
-	 UdpoUoBXq9kRdLeKw/xKlAgNDlXDp9N+fk4bYja4LHfp041pxRh6fk7Uwa4LclJQdL+LZ
-	 L/41Zmh+Kvj4SrFbbD2gDLaXsQV2CJaSBhYlowv8UWBEn2g9GOLggggLKYeca3nXs2dJB
-	 9y76XVIc7mP8ety4NLZ61uw6ln0Q5TvPUlVhMW1uaIX5rZ2XP2FRKFpy5QR0HrQVsPg==
+	t=1792493338;
+	b=hyoKPvjcSfzJVL+RiFLRE5ao3d7Hv/0zoaiBnO/N2q0aH3hL4HizlCAhC10INvvFvwUM
+	 ihsMzUfzGmltjpE7/+e2Fw/XZU1mMCcbBf66WnfbBZLl3m4GBOyHttfuDzYwsK4uHzBPS
+	 31/fAtTRkSYkrJ/fdYjbjdt+88bEwUUcTbUWCdTC7GskRPTPdw937KSt3zJaDW1y7TFQr
+	 Ph5NnEosSwAn0iR2nlxK7A9XC+XKDrI3H7wNfemKUJBcEgcnSYXP2oWBpoD4RJGHhCs2M
+	 gBEjnD7pxLsx6IqNE8z+dsUA0MI+tBggqdcXWd/amkbhX7KHELjuhBA0YlY5I8dv7Sw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493333;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493338;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ITZAmzqb42SOieKlyK1KvmCdBEM4ZFKVGJMc/HmGp5k=;
-	b=zImFGBpoM4v6ChZF1peoGTmzXjqVz8/MoQkMkS/VZicbdN1Aoh9gcIRnGNuhg1M3Ocbt
-	 DwBDgFWNLTwibNz6soc58H5gMFyngAvB3NCwO/ZfZ87+cixUz39bQFcVTc+BFR8hPAa/S
-	 uKJpTuyMuCZwv0SaPegQeAj25lVvc/0uwB2IDndIKMO/l852H7P2tkcef1WAWS3ig7LxJ
-	 +aF2+r9+z3YzxadgbTiABSbYZCCRg2VXYVf85JV0POPShLdug6xEP7g+u/6nwtIlbWsyK
-	 MXsa9fbTUJ7Sl7FnIjNcjRys+8iDzkFvl8jEeOqyOFkPXcG4g88qrqzJqQKJFSOup6g==
+	bh=neSxnRoG/OmCl+kteGebRHQJWP0OZxqFcRCZ8c/QA3c=;
+	b=aEZUJfQM4saTCFTYuTHSVvB2xhzt8Ma5GlbLzNckVQZk63H/Rz0Y8OHYpkWhqvCzJhMZ
+	 0sI6u/rQehs/bZUvpEKY7oOcxd4llFBj3M+SxIlS3L++jRZKhLGbSKrPUu3BoZyPMp0Vk
+	 6cByI1iht4oEfVcJrypTrRHCZOEQE/m+aO/m740AFdD0Ny6ZvekLdaFfKTdKAvuSp4peI
+	 xqwOPtpUZGMtcOa+xez7sX4dVxdfbT+/RZti/2zxlLcQFGHar8Gs7/BjG0iIo20isbJs1
+	 zoG7pBQuI7xeyGV+Y1inHaGPOxG7tWIPqDqLYuTlLDuGYtdwqA5lMkDFbSVd0qRtPnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="JCJit/yy";
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=D+56EUPz;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD412606A338
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:48:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD412606A338
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CB7606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:48:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32CB7606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JCJit/yy
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=D+56EUPz
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493332;
+	s=mimecast20190719; t=1792493337;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ITZAmzqb42SOieKlyK1KvmCdBEM4ZFKVGJMc/HmGp5k=;
-	b=JCJit/yyp+w4uCtBxlQ7FlBWBWcri0e09WOjyciMVunktBf1haZiXW+tk5/w9dHzd6xpKl
-	TWdowu2f70FRV+VNgDP7JMl/Z2j4DNhNqRNQh1drKDLxHvCM6/RqL1nePonbuTiaJr12Xc
-	i5F+Af30OT0T9wlb8XK/b39QLf6R3Ms=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=neSxnRoG/OmCl+kteGebRHQJWP0OZxqFcRCZ8c/QA3c=;
+	b=D+56EUPzRbElijTdR0D6J/jyH4jZohB3dtoXFhLIWoEnYwVOMRgaQWuc9dqtd3oQfJ5GT5
+	Geigx0td7O0X+r6vQTCdsWYiY5AMB9y1NAkyZo4y0gQST/VefdjlbqM383/ElXdM4Eht20
+	peNKeG+hhHE1P5UZ8wciIvGIw+nIf/o=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-491-PGS6jTcAOfWke_074JgvdA-1; Tue,
- 20 Oct 2026 10:48:48 +0000
-X-MC-Unique: PGS6jTcAOfWke_074JgvdA-1
-X-Mimecast-MFC-AGG-ID: PGS6jTcAOfWke_074JgvdA_1792493324
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-561--SDF1wKINiCajNC4XN8nVg-1; Tue,
+ 20 Oct 2026 10:48:53 +0000
+X-MC-Unique: -SDF1wKINiCajNC4XN8nVg-1
+X-Mimecast-MFC-AGG-ID: -SDF1wKINiCajNC4XN8nVg_1792493329
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 607CC1955DCB;
-	Tue, 20 Oct 2026 10:48:44 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C281219560AD;
+	Tue, 20 Oct 2026 10:48:49 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3C7E018002B1;
-	Tue, 20 Oct 2026 10:48:41 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CC00130000E7;
+	Tue, 20 Oct 2026 10:48:46 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:45 +0400
-Subject: [PATCH v7 28/65] sev: convert OnOffAuto legacy-vm-type property to
+Date: Tue, 20 Oct 2026 14:45:46 +0400
+Subject: [PATCH v7 29/65] whpx: convert OnOffAuto hyperv property to
  QAPI-aware registration
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-28-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-29-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,98 +150,102 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2932;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2624;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=e2zxmMhmJGF0dwc0SRzZuUR5qMnfM/36nnJtEEhS5HU=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZaPCLOl/jTkrNhGvjvoErUEYn1j7um/aMo0
- ZI7dyqyzT6JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
- 5bBPD/9YSzBj8rYL1VR6mIizfqkgB0/PpThetAFKK6VOJ5UwsrSCvay3ut/gvIfOk0yHdhdHVWq
- Uz2ZKUkj9DO9sRX39BQCuKmjIsfoY3siZbaDChTtbShjPxhuFraX/nC2nvPuqd3vJJCy6AOeiCN
- 0ihLqhJPkeYoPKVqVd8jLDAt24/RSLOtUiuCXK3ZjSyXPiQCI7Q+c4ObrWUqfFSKoZuD/WjUmpI
- Ydb1AYXzIDBSx6VHn33zxDswViVybQV5ahY7osUUBE7KAI28mVSFrxFOCGWT58Hpz/xomG0JKq8
- 9VXoJNH+E5shv0v0VhMSnm+pvNmz0id2LZty8354Pi1CZ+KdmxSwz7Kxqdc0NCFER77a7+xn7J6
- x0S9Zu85aLRNnCRSOJ5auSHQgryCGQvKSOlqFFL+SCOVftpsiiUH4bd8CAKJCIPeqw7j7beCCGY
- KNB6BsQL6TDT7zaAQmMPNVZur/l87U4iJmPZjBF6c3RiM/10WKCnxRb3MWcocawkttpcuS9FLxg
- B9ud9eSGegnwhA1PxzXyburB+4c8MbRt5hdLKQvae+gUTUK0Z3BG3jbmybChBhoNKRREWEUepvd
- LkDhvCIHcfCmtyY2QCNu5qT/nkPIDzUZOqpHc0Oq8GA49cI/MvabenocOgTLTS9BEKBuQDZRWKY
- jeq3wdMr+xiPpNg==
+ bh=fGCiDH3DKuAcB7LiCAkFXJHjeu1egNzKD2fVY9nF9O8=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZaOCCAg3rKTDCUl37+MgI4Ayhi8dunIN41j
+ jugR4kjAkCJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
+ 5b6WEACNN5lLKAUjdYB4zCcQJTY9b/clU3Ul2ZqrNT8WzHUQ+fqxHO7sMKEnV/KpehWqsAYB7Wa
+ TcTcGvlU8B+Rp77AddGo/jHP3KiihUrvHM5s2QNpNKBTkpdE/FtNtDGvtY7Rl7BnE0I4ur8xacz
+ HXMHNM++tzb2u4VkpDDbgWl8A7MUiCYAu2iAC93LMBoFtVGYq/tjz4PQr2gFfLvNxJ8hh8g+2iu
+ smVuhJO5UxVs/qkZoh6kIe0LZ6WvLafLB9/AU4a+YYPl0g7G3gvQV+Pzb64VIcibMzpV8qJ8b8M
+ t+/BnO1YoRZPZ11BLDzxA83zKDcZQWNwtNYWZCCxAgLA9Evb3RKKpX3ezykZW625hA11ml8/USP
+ Ng9IwZx3DS+SVp66cPB3YD4Vblja8jaJLVCuGSQnNstkM9jWJ41xW1pTt/RQn1TsRK/t7qyBtO1
+ kHBG4Xp7bkht89XuKnLvIPrFH/W85g9KGuerywfZYfz/FobiX2GdtR3qPJiq0+oIJa2vLvqAjID
+ 3M72ERKY7E2DdWkQ/qN6y7zsbhicNq980YAI7vae2/ht1mYnRZYyo4tF62m7MjopLEjAufj+RHB
+ jZQHwA8CL5TVxFAQmJ8wDFE+5CAwj4qru7MbpAYn1njH780Iqg5frmuGfrB2B5bUXeimrR8uppN
+ FX/dQnG4r/dU1+A==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: ZvY6p0bOCOrG-6-nZ-j09XJzfW-0FG8M7QHMcIWtgms_1792493324
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: VOjpayx1Qj2SEqE3GYnggFh2ptymwi93jUMzL77TOAo_1792493329
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy-vm-type OnOffAuto property from manual
-visitor-based callbacks to property_add_qapi_enum().
+Convert the hyperv OnOffAuto property from manual visitor-based
+callbacks to property_add_qapi_enum().
 
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- target/i386/sev.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ accel/whpx/whpx-common.c | 29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
 
-diff --git a/target/i386/sev.c b/target/i386/sev.c
-index cc16c6b07123..b2c7260c80a4 100644
---- a/target/i386/sev.c
-+++ b/target/i386/sev.c
-@@ -20,6 +20,7 @@
- #include <sys/ioctl.h>
- 
+diff --git a/accel/whpx/whpx-common.c b/accel/whpx/whpx-common.c
+index 247e12db8128..187938c02b51 100644
+--- a/accel/whpx/whpx-common.c
++++ b/accel/whpx/whpx-common.c
+@@ -22,6 +22,7 @@
+ #include "qemu/error-report.h"
  #include "qapi/error.h"
+ #include "qapi/qapi-types-common.h"
 +#include "qapi/qapi-type-infos-common.h"
- #include "qom/object_interfaces.h"
- #include "qemu/base64.h"
- #include "qemu/module.h"
-@@ -2939,23 +2940,16 @@ sev_guest_set_session_file(Object *obj, const char *value, Error **errp)
-     SEV_GUEST(obj)->session_file = g_strdup(value);
+ #include "qapi/qapi-visit-common.h"
+ #include "migration/blocker.h"
+ #include "accel/accel-cpu-target.h"
+@@ -470,18 +471,11 @@ static void whpx_set_kernel_irqchip(Object *obj, Visitor *v,
+     }
  }
  
--static void sev_guest_get_legacy_vm_type(Object *obj, Visitor *v,
--                                         const char *name, void *opaque,
--                                         Error **errp)
-+static int sev_guest_get_legacy_vm_type(Object *obj, Error **errp)
+-static void whpx_set_hyperv(Object *obj, Visitor *v,
+-                                   const char *name, void *opaque,
+-                                   Error **errp)
++static void whpx_set_hyperv(Object *obj, int value, Error **errp)
  {
-     SevGuestState *sev_guest = SEV_GUEST(obj);
--    OnOffAuto legacy_vm_type = sev_guest->legacy_vm_type;
+     struct whpx_state *whpx = &whpx_global;
+-    OnOffAuto mode;
+ 
+-    if (!visit_type_OnOffAuto(v, name, &mode, errp)) {
+-        return;
+-    }
 -
--    visit_type_OnOffAuto(v, name, &legacy_vm_type, errp);
-+    return sev_guest->legacy_vm_type;
+-    switch (mode) {
++    switch (value) {
+     case ON_OFF_AUTO_ON:
+         whpx->hyperv_enlightenments_allowed = true;
+         whpx->hyperv_enlightenments_required = true;
+@@ -497,11 +491,7 @@ static void whpx_set_hyperv(Object *obj, Visitor *v,
+         whpx->hyperv_enlightenments_required = false;
+         break;
+     default:
+-        /*
+-         * The value was checked in visit_type_OnOffAuto() above. If
+-         * we get here, then something is wrong in QEMU.
+-         */
+-        abort();
++        g_assert_not_reached();
+     }
  }
  
--static void sev_guest_set_legacy_vm_type(Object *obj, Visitor *v,
--                                         const char *name, void *opaque,
--                                         Error **errp)
-+static void sev_guest_set_legacy_vm_type(Object *obj, int value, Error **errp)
- {
-     SevGuestState *sev_guest = SEV_GUEST(obj);
--
--    visit_type_OnOffAuto(v, name, &sev_guest->legacy_vm_type, errp);
-+    sev_guest->legacy_vm_type = value;
- }
- 
- static void
-@@ -2981,11 +2975,14 @@ sev_guest_class_init(ObjectClass *oc, const void *data)
-                                   sev_guest_set_session_file);
-     object_class_property_set_description(oc, "session-file",
-             "guest owners session parameters (encoded with base64)");
--    object_class_property_add(oc, "legacy-vm-type", "OnOffAuto",
--                              sev_guest_get_legacy_vm_type,
--                              sev_guest_set_legacy_vm_type, NULL, NULL);
--    object_class_property_set_description(oc, "legacy-vm-type",
--            "use legacy VM type to maintain measurement compatibility with older QEMU or kernel versions.");
+@@ -533,11 +523,12 @@ static void whpx_accel_class_init(ObjectClass *oc, const void *data)
+         NULL, NULL);
+     object_class_property_set_description(oc, "kernel-irqchip",
+         "Configure WHPX in-kernel irqchip");
+-    object_class_property_add(oc, "hyperv", "OnOffAuto",
+-        NULL, whpx_set_hyperv,
+-        NULL, NULL);
+-    object_class_property_set_description(oc, "hyperv",
+-        "Configure Hyper-V enlightenments");
 +    object_class_property_add_qapi_enum(oc, QAPI_ENUM_PROP(
-+        .name = "legacy-vm-type",
-+        .description = "use legacy VM type to maintain measurement "
-+                       "compatibility with older QEMU or kernel versions.",
++        .name = "hyperv",
++        .description = "Configure Hyper-V enlightenments",
 +        .qapi_type = &OnOffAuto_type_info,
-+        .get = sev_guest_get_legacy_vm_type,
-+        .set = sev_guest_set_legacy_vm_type,
++        .set = whpx_set_hyperv,
 +    ));
- }
  
- static void
+     whpx_arch_accel_class_init(oc);
+ }
 
 -- 
 2.56.0.116.g6de20f6092dc
