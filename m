@@ -1,70 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493375;
-	b=H6wyteZoT0xj95fuVcS1cjD6plvZYoUaXPz3MIWlnPiqf1bX+JDX0oiBOccGWW5SJ1Bc
-	 ci+U3lQl1P8ZxkwN7Ftr9aBFm+nOnIkHcR/TR3Y7RiNVsfwGLEmKPaMPfzywOf3uWAOd3
-	 qIraXN1qq+O+vBfLUKEfbiL14eB/udig6FqgDf+3Uukbw7+O8Zlf5cwpgYo5Ts5MYAEpX
-	 MKEMzIo74UaY7PMWIviCE7vYT29i3i37+Cv3W7IIKovqeauqlJpGjloUtAC4CkL+Ob3PN
-	 LgRM6NOZNOUdmGORmkDT7orOPRkaFVLacFfqCcAZN4BE5KVZUQ7ahbgw6DhuNHDHdsQ==
+	t=1792493376;
+	b=lPz65mBBJQKtBICtlHfum1co/3RKM0O2bA3jSzvxs6q02KBLLTzqqbcWt+lSWruEoFoU
+	 vNz41Vg7YyF/PPHXmr9gSMh0MGmWB7WOw/pAoaqDSdztVBN4nmOSoR8yJTilNCrMQ/C9K
+	 3l98YmbsxDtjBojEwanEwK6hdz7P95fJ4YFMR8wzsXMEDY/rd9hDZdNxMW98L2FapksNS
+	 Qiy64nW4/xUS2IQ8o3YJKakNwMxOJR6Zkkw+cZQRdxgMdiFHnDp8W72KwpAu5n6kx1vdZ
+	 a+9QU57Q+sRKhDk3Zh6NNaPBeUdPMbTZWgArTRWAOpVY+Q6uBvk3ValQS6il5qSF9og==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493375;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493376;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:Date:Subject:
 	 MIME-Version:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Developer-Signature:X-Developer-Key:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=563WFmKiLO7dqjDqTC7WMPfEiXr6apTsp1OZACEim0s=;
-	b=T7vdsFJoFTnjMVAn167Bb7pxUkhb0OpLGeOHWBN2LcgQJGnzhAiHrgC6KhMw7IlqTTfH
-	 Q8HwIKOX7IAF5l544sKIwkxwSCCSuOVFB/cbvg0PJ0RJ2Fvcu/nd6+8WzXdGs1EmD8/MY
-	 Qisc5IUuJmTDJGHeET4oAUCywSvfUzRDaYZl8qjLIAPd3nsTwcUiB++feLjvGNTYmkVgq
-	 m9YpJrAgkfyqg6as1i3d8WwCD8DUy7ZDUA6hb2k9JatASiJKC09cPF8VLCF1T5yWdMOSJ
-	 ZWx5LNy0PIRZORhqMRY6WHK1G5cmSRBRfwyt+ABY5A2wtm1d/pa/zLgbIao/2Pj1yYg==
+	bh=0IAJt0UD2BHY2aeJtNI3vxcEoKPgyvku96KOQdFfo40=;
+	b=HBkQy9DsnIDlosYQz8/aE76CbMHtTTrKTjQmd4n27KPBCEogSRWBWN5Js7UpNY5yw3rB
+	 1b3eaXUJ2dCHE/RHk7c5z98rr5GGVjv69SFhAW3rwy2/MRHlai5vElgJogN1/dCcGjDEh
+	 gEw7sigscs3++PEIBBVauDRTXhy+cP+tQRbiZIMDBlf1vKy3PYf+RX7K0/BeGf5Rz7oWE
+	 9cMk3M3JUrqyj69favOhbmgFNd5a5LPxO159ndjRc2Wsv4oehU3eoNwLZSiAZBzZ/Npoa
+	 WAail7Jioy4Lq95bdCYl5185yxwjUDTr/0okPRnSgLLgIQ66DgUlxn4/GVx0CcK9TPA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MZ60Pwfo;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HkBitlja;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E07460A2607
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:49:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E07460A2607
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593D160A2607
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 10:49:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 593D160A2607
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MZ60Pwfo
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HkBitlja
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792493374;
+	s=mimecast20190719; t=1792493375;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=563WFmKiLO7dqjDqTC7WMPfEiXr6apTsp1OZACEim0s=;
-	b=MZ60PwfoFUQRo0sYhqz+yUOSWKawGJDWWfUFEeKz8RqdaHK2gXIh5ieoFHBiRoNSLk1qdC
-	fTmtVImODR1Jj9Wm23zCj2hVR4uW3ACcXa/a2jP8adGSFhmGIYjiioSekGYvganSDg2ydb
-	ecZN/Mju2iLo/2+lEBBPhXcUtM+LzHE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=0IAJt0UD2BHY2aeJtNI3vxcEoKPgyvku96KOQdFfo40=;
+	b=HkBitljaZA2PPJR7U2pjSHskYpRnj1Nj+Fh7Q+ZUzeOkErECze/r/WB7uBS03UD7qckBSA
+	WhEYBo9I3gJaMiOeaqjb20AkPYLRvRFWTUQ2+n4sUJGnqWqvxtqRURBz1G+0w/K3jEIKTY
+	XSRl6X2hdmvwZC32PgCB+aPKO0JFc/s=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-31-cMjt34M1M1KDozVQqfp4-Q-1; Tue,
- 20 Oct 2026 06:49:25 -0400
-X-MC-Unique: cMjt34M1M1KDozVQqfp4-Q-1
-X-Mimecast-MFC-AGG-ID: cMjt34M1M1KDozVQqfp4-Q_1792493361
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-692-f6pkGtb9O-GKxmFhJLnr0g-1; Tue,
+ 20 Oct 2026 10:49:33 +0000
+X-MC-Unique: f6pkGtb9O-GKxmFhJLnr0g-1
+X-Mimecast-MFC-AGG-ID: f6pkGtb9O-GKxmFhJLnr0g_1792493369
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DEAB18005BC;
-	Tue, 20 Oct 2026 10:49:21 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 96BF018011E7;
+	Tue, 20 Oct 2026 10:49:29 +0000 (UTC)
 Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 88FC91956088;
-	Tue, 20 Oct 2026 10:49:18 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 07CCA418;
+	Tue, 20 Oct 2026 10:49:24 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Tue, 20 Oct 2026 14:45:52 +0400
-Subject: [PATCH v7 35/65] net/colo-compare: fix compare_timeout setter
+Date: Tue, 20 Oct 2026 14:45:53 +0400
+Subject: [PATCH v7 36/65] net/colo-compare: fix max_queue_size setter
  visitor type
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <20261020-qom-qapi-v7-35-431a86b02b58@redhat.com>
+Message-Id: <20261020-qom-qapi-v7-36-431a86b02b58@redhat.com>
 References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
 To: qemu-devel@nongnu.org
@@ -150,31 +150,32 @@ Cc: Markus Armbruster <armbru@redhat.com>,
  Yoshinori Sato <yoshinori.sato@nifty.com>, Jiri Pirko <jiri@resnulli.us>, 
  Eric Auger <eric.auger@redhat.com>, Laurent Vivier <lvivier@redhat.com>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=986;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1019;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=ut4iYtgZkRe9PHyTHqoA5Y4P74BD/xuE+aYJ9SkZgtQ=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZaypTQuRSc2e46naq5h2E43TS8QqJ3WLD4A
- vhN/XcoCWiJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
- 5d7uEACx86dNfBKT5U/pKovqIeXYBLYQ//vmgkwdkrPTI4ndp54y3HdcyZ5HRfCgtKdveLHg+jd
- X+w+YSqBLl5VEUHjm/meu5m+OH+47NHQTNS2OKFtIjrxy/gNQNKipDooyWUZscVjYX1UGThUBNN
- dVl9HT3PRymM5GJv6gQ6PTVcRkeH0Kxu4oI+1CFyViK6e+5yw9DJwVb5QoOpVeThfgWhFpg3pjL
- sceKJT9j8XZXVzHbmihcdoYAT3+D7EKFVk1qo0UyOLGA9/8KZOP1HdXhWDgb2qZfH53dKb7Ko8e
- uEwVXLIXLPEvUgi9lAaQyLh7T+FyJcBCnEEs6xCFzJqne3xq63RvlAKDFKOu/ILq50B/wHxRXFw
- AjBbG/L64r+z+dli7dfrYX/QYWxXTLKaMrudDjRReACkngn9oQQ6QeuvsTH+PK6E0IORyfozZwd
- PZX89gASbZR1oNofjZBZlHjuYS4yeBsThEwa4eD7jAxHw81oB1ubcKmEIPILuJUom2AZbAZfx2j
- +6EZUzt+UOWlN5WSLgBSX4ZnOSrhDJo1RQmsu4JsKh0Pe4hsWUb+I+nUCfKE6aydG/D+MwmW2qS
- ddEbgTIu+25MUoFBllzZJOwwYkCEgScY2rLSf628Aspu5Mgqq5QEpvfYnAis/PeOgKgX88neUhv
- FwqeHEUL+SZt/vA==
+ bh=2Ht6gW7AXC+9m2hyIj3XjReAS0cmbqbO/nhhR3s10ik=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBq10ZaBju/eY1bBbqeZbyaaIna3yDT1YO5S2ZfK
+ Dk+TjopPr+JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCatdGWgAKCRDa6OEJdZac
+ 5dQZD/9+OPsZ+9wdTvZlJAHJ8LdZ+1IrTm8SRc4WfgMoVaUgmxvUmArgHB8hI32zhhT+Ba88j5h
+ KVa4ATUp8pq0eFWpUQQliSGEcG8IcvbDzwCdXHlbCyx1nenDacuX0x1Xzy6lOPsZkDaLW4sd1av
+ aslU4lzEjPo+woZOS+f31o8bS96Uj4DK9zSO/2jZS60JmsZVWU2RuRFsQ4ynCztQC5WVe561WiF
+ Neo8iP9N1N6jRWQ/W9lDjOjhSLPfoogGEELTAUdypajGDPuGgyGOUNHGrXgAoT6RZ9LSPkaXi9M
+ YVb+sG/RbGXWjlrdd/CFkcXWKmRvs4HZYOoCxI3XLPjngyKh4mXKogIvBPZkZyD1Mc01f37OWJJ
+ Z601T1TKyOwOevdMSa3zjfTSInCHXtBGcfygNJ1EHaIfbfspA5GBA6TYOD34MkYVQ7Xo0EMeDYd
+ ZIRp02UPolMQALQO0ANg3mVOP62D3BNsyhxHxlfjumfHsGoGYZ6mHjkjkO/PzHDEye+BfFcPcE1
+ op8EVu1uAVHHecAerzTbPZ2xi8hfaVgovOLMJe0DIozxp7l06V9c+bbZegHgr1qr0kr+5Z1dy+b
+ cGCIdsvGHbP8dorXb8/DNE5clHvwjDTMX8mVMgxx/XbT5GQClDJRTRj2mTFy/Cr8znwahtft6UL
+ 2RCiOOUs4aDYIGg==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: uC7AwErNKhXujLtcIB8N8nlgWnz621AZpxQptYbW4v0_1792493361
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: ep8aiSe9XlkrOkrinJ5FY-4Hz8y9_erZDzvIYbyHpTs_1792493369
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The setter was using visit_type_uint32, truncating the value, while the
-getter and typename use uint64. Use visit_type_uint64 consistently.
+The setter was using visit_type_uint64, accepting values wider than
+the uint32_t field. Use visit_type_uint32 to match the getter, field,
+and typename.
 
 Fixes: 0c4266ef2690 ("net/colo-compare.c: Fix compare_timeout format issue")
 Signed-off-by: Markus Armbruster <armbru@redhat.com>
@@ -184,18 +185,18 @@ Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/net/colo-compare.c b/net/colo-compare.c
-index 5986fb1e8800..948a2f7f9e4b 100644
+index 948a2f7f9e4b..a6910de869ff 100644
 --- a/net/colo-compare.c
 +++ b/net/colo-compare.c
-@@ -1075,9 +1075,9 @@ static void compare_set_timeout(Object *obj, Visitor *v,
-                                 Error **errp)
+@@ -1129,9 +1129,9 @@ static void set_max_queue_size(Object *obj, Visitor *v,
+                                const char *name, void *opaque,
+                                Error **errp)
  {
-     CompareState *s = COLO_COMPARE(obj);
--    uint32_t value;
-+    uint64_t value;
+-    uint64_t value;
++    uint32_t value;
  
--    if (!visit_type_uint32(v, name, &value, errp)) {
-+    if (!visit_type_uint64(v, name, &value, errp)) {
+-    if (!visit_type_uint64(v, name, &value, errp)) {
++    if (!visit_type_uint32(v, name, &value, errp)) {
          return;
      }
      if (!value) {
