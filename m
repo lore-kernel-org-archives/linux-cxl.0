@@ -1,51 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.218.252
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792515052;
-	b=RDCfrJxVO+4lGJhcGM1ewt8x6bxN+b4kKWUiRYwYSVCYfkVSUS7kuW0AsMhnS/d6zXbm
-	 Wp2PRHkAuTHM7/xrWR00iJOMye6DLXnxBa2BIGpvQ+RCic8CBc9nBkH3me4rDxiORaUff
-	 RMYuVpsBimwHnhX8ySqajqIrdGheBluv2qHuXoe3CCq+0qVbB84waCeaZ8ZDx9UyyqOKf
-	 GbJz4U7+9e+OA6UbA4A/coeWzi7D5XjyEMxqhMi/rw/PznUYvStUzCM73+5z1iXZAx+pA
-	 WGG2lVd4yX0MGGaMxkpZhuXzmISoj8t7xBjx7x+UWlcQ/1ufvoxk5Ut5NtlmD3JvMfg==
+	t=1792526159;
+	b=k2bmN47wZKfLwksy92ApebuBXsFyWo11bMKsy8EqocEFR2ivoGkgcA+G2YEzErsU2ppW
+	 4rbNbc2C6brW2/TbNKTcmAQ8KFQY48JaeNfm50RKnNx7PmUCbP5Q9yHnN0KrpjqVytUZ8
+	 pdcwHIvJrclB/T3zoIlI/96vzy8XOCvooXnDfdQ3w9fij5+0KdK6id8IOMDiFCsWgf5ED
+	 4YTEoZTn1WtavVzZ7vU34vvrpvIhEMWhTu2icZOeE3edBmU3ORmsGdkayf5zBi47olMME
+	 5jUeL9vaM00VGU/P4grFuvy8VQcEMOLeODW7PtAwiy4CL2KSZXkV1ugE+Vu6FN8IVhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792515052;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
-	 X-Session-Marker:X-Session-ID:X-HE-Tag:X-HE-Meta;
-	bh=PnmvAioouzOwQoC09Cdmt1tpBbxHXn0G8J4x1674Zv4=;
-	b=k2xG+NW4mePaYPBlMvnfZaiLo7WNsjSs0PNUZYykqafd3Uo+Ay2qU1bWF7a5XbuLoxGR
-	 USBihVTDIJPhrMKBdgLbey7T+qzJzacJwxo39wPA+bRE7TXPHT5zGL4DpvviRe4YqzdC9
-	 FS8sUWeCl0T/Sqy/baPpyD9p79p1BDgOIhaI4eSLhw5G6okDZePkkZ4mpWCTLwuGSrj7f
-	 MBwl3QJWyHhVI1LRAYtRKHO4X37+NJBfqC2gIu7QD3n1p/lfIO5Q2f9vFS5NeTV0K/9OG
-	 Z60pLBT1Nvx9Os7Asa3EUkYWV1Q18B9UpR67STAd96Vuzooav2Imk547ZYUOf0MQqpA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792526159;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Desert-Gusty:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=8sd+b5bR7hKdNZR0sXMGAFb1B9DZaeO+KmzbylTg4nQ=;
+	b=Vs/COdI7S77C+5G5S+Ycl98gyg/Uj0OXs0ECmkq6qePLVfVDCo0D0Z0YFJjwqr8d16ST
+	 HiDH37Y4hn0F/B/qYuDwNacAbPptme97sbPL/DgTrwGj9ysrnQyIhSOjhvVonbFpxLOn8
+	 8oFbgtTAfr0RD7ByDpoxh8/nXYL7Ume6EwR8cm0zNZmML53yynxdG9z4IWCNKgzfKPGDS
+	 5jlsC+yGPa46eL0TL+yo9g9kiOzByRDnyAC6zT1ITL3eoubU7yKt83duuAlok+humIB/b
+	 rKJFA/cEVnr5LW5aup5gL9YnmiC4JI3cTbry8h4l6wcTJXapGMuoFNvKzr2e/keaEvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=groves.net;
-	spf=pass smtp.mailfrom=groves.net;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=W6YRFrC4;
+	arc=none smtp.remote-ip=23.83.218.252
+Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3004160A262F
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 16:50:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3004160A262F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 48BCD80110;
-	Tue, 20 Oct 2026 16:50:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf07.hostedemail.com (Postfix) with ESMTPA id 027852002C;
-	Tue, 20 Oct 2026 16:50:46 +0000 (UTC)
-Date: Tue, 20 Oct 2026 11:50:45 -0500
-From: John Groves <john@groves.net>
-To: Miklos Szeredi <mszeredi@redhat.com>
-Cc: fuse-devel@lists.linux.dev, Amir Goldstein <amir73il@gmail.com>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5 00/10] fuse: DAX device based extent maps (famfs)
-Message-ID: <atebTqE6E7qrEmqI@groves.net>
-References: <20261016151638.2962413-1-mszeredi@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45D6606A319
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 19:55:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D45D6606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=W6YRFrC4
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7E853722723;
+	Tue, 20 Oct 2026 19:55:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a226.dreamhost.com (100-96-2-229.trex-nlb.outbound.svc.cluster.local [100.96.2.229])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2C3D7722650;
+	Tue, 20 Oct 2026 19:55:52 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Desert-Gusty: 268982b2502f6776_1792526152324_3039649911
+X-MC-Loop-Signature: 1792526152324:3277151387
+X-MC-Ingress-Time: 1792526152324
+Received: from pdx1-sub0-mail-a226.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.2.229 (trex/8.0.2);
+	Tue, 20 Oct 2026 19:55:52 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a226.dreamhost.com (Postfix) with ESMTPSA id 4j8NSl3XN2z2l;
+	Tue, 20 Oct 2026 12:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1792526152;
+	bh=8sd+b5bR7hKdNZR0sXMGAFb1B9DZaeO+KmzbylTg4nQ=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=W6YRFrC4h37INMqkqWMDlXpVVOLBDhTWLBLBYtiak0oglcviL15khTtJgNatKx1Y2
+	 f1RRIoIZVOY9J4/80RjphOP3pklzO/YAYtEZbY7FRvU3bJ6LP7FtFkap3wUqbYClwu
+	 vJVgFoUrgf0MkZupeCGsm6kIt8g6E6ZjqhPbdr3orI89g2OaekU/7VXxvm3Zr+8qw1
+	 OMlfrynbn4/K9rYB09VAuwT8FOEjIVGPT1waAYIOC5on/NlcuK31U/aL3/dFHzNEvL
+	 gIraohH4xEEnJtbnYcellocLxwc1EGW/5cA5rrb+hQdYKN+hYEv3YydKQ/co5EZh52
+	 FVECc7iPPwdwA==
+Date: Tue, 20 Oct 2026 12:55:47 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
+	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v9 04/10] cxl: Add HDM-DB region creation
+Message-ID: <20261020175606.eeeiuszbclq55uwg@offworld>
+References: <cover.1790103847.git.dave@stgolabs.net>
+ <4a85b58e026256ea66b2d5f71c73cc6e03620330.1790103847.git.dave@stgolabs.net>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -55,112 +92,35 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20261016151638.2962413-1-mszeredi@redhat.com>
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 027852002C
-X-Stat-Signature: ryu1ic3iufidkbatut4ng4go3zkhny4h
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX19iLIuEpncD+kVsCkM1rZtglGsU8PhfIBc=
-X-HE-Tag: 1792515046-62564
-X-HE-Meta: U2FsdGVkX1/zQocfxwA9/b8bi2d+5RkHAHVE6Os6e2LjiNkInITgGXoZEe/6J2a6vqfWw4TbOlVsAfSLvfQmZXXzVrfgX2Qcbh0EvVXlLdVh0/2FE9MyWzx7J2o1UBrAeEvsHQWVAvZ9uQLHmGQzjDDhFrU+eT5NrNTb9ecro8um6vfr7f6wkKt2xbuE030FDcCRJ+G7n3LsxYOgqJmC87G3Ow5xo8q1RzFvcTkI0yFzX0V67CYHf3r3poexxE7o5eW8p7N4Q5xrEpfSGAwQ4q1U2S6sk561wiw9rAGczxocB+OhyaZmMDk5wl+RWzN4/ikjwePSGssdf0gj+bBlFP9ToYTNwhqL1lptx07tY3qskVDQEjq+yxbF1aZSUSBxKAjx4LEfrXs8AwDV9R1sFTQp8aIODveQe+nS4F1kckw=
+In-Reply-To: <4a85b58e026256ea66b2d5f71c73cc6e03620330.1790103847.git.dave@stgolabs.net>
+User-Agent: NeoMutt/20220429
 
-On 26/10/16 05:16PM, Miklos Szeredi wrote:
-> This is the FUSIfication of the famfs-fuse patchset.
-> 
->  - extent maps are assigned to a backing ID
-> 
->  - 64 bit backing ID's managed by server
-> 
->  - maps can be linear or cyclic (striped)
-> 
->  - API supports nesting, but not implemented yet (i.e. multiple striped
->    extents per inode, a-la famfs)
-> 
-> libfuse/famfs trees for testing:
-> 
->  https://github.com/szmi/libfuse.git#extent-map-v3
->  https://github.com/jagalactic/famfs.git#master
-> 
-> This patchset:
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
-> 
-> Passes famfs smoke test on emulated dax device.
-> 
-> Comments are welcome.
-> 
-> Thanks,
-> Miklos
-> 
-> ---
-> Changes since v4:
-> 
->  - extent array (John)
->  - error out on truncate/hole punch on a dax backed file (Sashiko)
->  - small fix (Sashiko)
-> 
-> Changes since v3:
-> 
->  - redid the first patch (prompted by sashiko: passing dev_t is racy)
->  - more fixes (John, Amir Sashiko)
-> 
-> Changes since v2:
-> 
->  - add a trivial prep patch modifying drivers/dax/super.c
->  - reserve zero value for 64 bit backing ID (Amir)
->  - add Originally-by: tag to acknowledge John's work
->  - more fixes and cleanups (Amir, Sashiko)
-> 
-> Changes since v1:
-> 
->  - moved 3 prep patches to fuse.git#for-next
->  - introduce FUSE_PASSTHROUGH_V2 (Amir)
->  - lots of small fixes and cleanups (Amir, Sashiko)
-> 
-> ---
-> John Groves (2):
->   dax: add fsdev_dax_from_file()
->   fuse: resolve extent maps in O(1) when possible
-> 
-> Miklos Szeredi (8):
->   dax: use READ_ONCE() in dax_holder()
->   fuse: add helpers for EIO return value with kernel message
->   fuse: support 64 bit, server allocated backing ID
->   fuse: support opening 64 bit backing ID
->   fuse: add support for opening dax device as backing
->   fuse: add extent map data structure
->   fuse: add extent map I/O support
->   fuse: add support for striped backing
-> 
->  drivers/dax/fsdev.c       |  23 +++
->  drivers/dax/super.c       |   5 +-
->  fs/file.c                 |   1 +
->  fs/fuse/Makefile          |   2 +-
->  fs/fuse/backing.c         | 302 ++++++++++++++++++++++++------
->  fs/fuse/dev.c             |  54 ++++--
->  fs/fuse/dev.h             |   3 +
->  fs/fuse/dir.c             |   6 +-
->  fs/fuse/ext_map.c         | 376 ++++++++++++++++++++++++++++++++++++++
->  fs/fuse/file.c            |  33 +++-
->  fs/fuse/fuse_i.h          |  79 +++++++-
->  fs/fuse/inode.c           |  25 ++-
->  fs/fuse/iomode.c          | 116 ++++++------
->  fs/fuse/notify.c          |  75 ++++++++
->  fs/fuse/passthrough.c     |  66 +++----
->  include/linux/dax.h       |   3 +-
->  include/uapi/linux/fuse.h |  53 +++++-
->  17 files changed, 1044 insertions(+), 178 deletions(-)
->  create mode 100644 fs/fuse/ext_map.c
-> 
-> -- 
-> 2.54.0
-> 
+On Tue, 22 Sep 2026, Davidlohr Bueso wrote:
 
-For the series:
+> static void cxld_set_type(struct cxl_decoder *cxld, u32 *ctrl)
+> {
+>+	bool bi = cxld->target_type == CXL_DECODER_DEVMEM &&
+>+		  cxld->region && cxl_root_decoder_is_bi(cxld->region->cxlrd);
+>+
+> 	u32p_replace_bits(ctrl,
+> 			  !!(cxld->target_type == CXL_DECODER_HOSTONLYMEM),
+> 			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
+>+	u32p_replace_bits(ctrl, bi, CXL_HDM_DECODER0_CTRL_BI);
 
-Reviewed-by: John Groves <john@groves.net>
-Tested-by: John Groves <john@groves.net>
+For the record, this should be conditional:
 
++       /* BI is reserved unless the component is BI capable */
++       if (bi || FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, *ctrl))
++               u32p_replace_bits(ctrl, bi, CXL_HDM_DECODER0_CTRL_BI);
 
+>+
+>+	if (bi && is_endpoint_decoder(&cxld->dev)) {
+>+		struct cxl_endpoint_decoder *cxled =
+>+			to_cxl_endpoint_decoder(&cxld->dev);
+>+
+>+		u32p_replace_bits(ctrl, cxled->pos,
+>+				  CXL_HDM_DECODER0_CTRL_ISP_MASK);
+>+	}
+> }
