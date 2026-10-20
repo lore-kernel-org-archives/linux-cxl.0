@@ -1,143 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.222.36
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792502754;
-	b=vK9OhTO4X4ZBZiKlx7YGPrCCGdbD0cIzKpy/gGvBfJD5tVcRps7/jT9aIgJPZTP4GIGG
-	 AclZCic3tyDKBXuARkfTZRr4cmg7/JFa1wha2ALDdwIvbOZjaEgNU7rshsNpf78+/wKcF
-	 VAKRZ1oyCJNx1PuWHmG2oDDVGYAuFcJCokx5mmMiQOmHalOvMKZAtZkoxESSejm3LM4p4
-	 QUuPghTxU1F6jwftj7v2IFA1/2bMi98Xsd1Q0Zv/yxqWG1D0h6Hrx+fo5Isbl+BawoxZb
-	 BCYUx5oM4MyhVlmNM9/fiAFGJYAJ5zh9CtdwbqZzPflPqUm40R3wlmj878FjXSDSEkw==
+	t=1792507164;
+	b=WIMTuKNl10VX+JQ6MDnlop6abfk/e1frLWQfdH2RyFOqYkGK47dxs2+UK5VMB59HNmZ4
+	 WAZoaVjunRVG3SstqKJlH4nr6U5SYU/sXiKZx1ZL09Dr/Vxj5UTPG8M7u6+wiEeJdcaKO
+	 32J96KfIe+5fdNJ0+Rfp4VyFwSd+NzLU5I0scwhDpk6eULrH4ZJBxL4GnSfH9o55oW+Im
+	 7tRxiH7SbZ6VvBwqAoZ2HDuKBCyNeOjAZXFtoE8SQ6GYalf41lgD50rON5ogSYp/5/1dA
+	 oQp5WikZoetJpfUrdNISjTL5/GzsKXsHmsw80GIrWG2Pj34+AkRqqqd9Og6sLngnDNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792502754;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:From:To:Cc:Subject:
-	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
-	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=A/2pHd+aS8DA34XJvVp3LyaeljRYqqdyzYtr5T0L1kw=;
-	b=FM8p/u7dv8zP6HJXxzwdOBGHECzt9xbegfPK67DtAWbtZKFLd7MIg1f+U2SNP1cLZLxM
-	 WpC/7hPu6JAy5cq06+hPHeVWB35XjIysg+6d+FXP5ujRwU6Jtmrwj3SMb6+cqmnTRNBDY
-	 jmcZBWqFfJOLuXIKomwSDB9TNQI+XYo4UJHBDf7vHBL8/RU6lO5xKVIi0s4Hsty8FfsB6
-	 uN+o1pBRA/m4IIKKOtoYvLnvqYfYEGATZdouhyvvcSYCAXhEedM8JEUvZtasc7MPCdG27
-	 MHbRWPVCpwAdmmbbL/l82b/PQgsDnTJJ2KpfhvSV6zStbi1H4B16oO9sljNKF9DPB7w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792507164;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Irritate-Print:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=F0iQ13EGLTQI5kyo2tmyN9DpTgiYHlNMjaPo9MBxLzA=;
+	b=Pdkaky7s3kBCJjV+rfGi8MIyJah2T/r3FOWU70qYUY2PW9wpOiLvq4abS95zhPb0OUeE
+	 Dpbe1zLXo9B72r6UWJV2sIgqUuCtFdYPcDXBTyPy6FtDZlJtGGFO4ri6XiDMsmrUofXwb
+	 MAIPkzvaM9qyURc6tCjhJTN29hUEYvec0eoW+X9W+RC7IjR5vCZHnaWEanaa54MV0ihso
+	 fcwF1FwZhtE7isbwE0fukdndlcXPCs/eO+7Oy99zA9aPwlchBExODHQtfQtJ0MVZ/zRvz
+	 CPZ184CMVZXCKXJPRPal1ZFCUweDFpM15gEUDVQq97Q42wqJuS2l4lRL3MmKICH2tgw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fSteO5Or;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=Av325PyH;
+	arc=none smtp.remote-ip=23.83.222.36
+Received: from cichlid.ash.relay.mailchannels.net (cichlid.ash.relay.mailchannels.net [23.83.222.36])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE0606A31C
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 13:25:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6AFE0606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3DD606A31C
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Oct 2026 14:39:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A3DD606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fSteO5Or
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792502752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A/2pHd+aS8DA34XJvVp3LyaeljRYqqdyzYtr5T0L1kw=;
-	b=fSteO5OrNQGSr1L/KcMV7UVSWlOCKoKszGwqU+UZiqTV/dJ8aHH3IeNJZCya/uimfyW3Zn
-	LO4MFt2ykOaColkIh0rnZzFoYz5Ig9hL2ArkULxMrBYP4E0DjGMNi1B8Joq+Mi6LJ5sKgh
-	YEjA4vhvKMQ4H8knPY1CMUcmSMGbfP8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-GpgImfhOMWa0lumUFG9c1g-1; Tue,
- 20 Oct 2026 13:25:47 +0000
-X-MC-Unique: GpgImfhOMWa0lumUFG9c1g-1
-X-Mimecast-MFC-AGG-ID: GpgImfhOMWa0lumUFG9c1g_1792502743
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=Av325PyH
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 18E184C2801;
+	Tue, 20 Oct 2026 14:39:16 +0000 (UTC)
+Received: from pdx1-sub0-mail-a246.dreamhost.com (trex-green-6.trex.outbound.svc.cluster.local [100.96.2.151])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9A9F04C2469;
+	Tue, 20 Oct 2026 14:39:15 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Irritate-Print: 6513ff5f174ab094_1792507156005_2331947423
+X-MC-Loop-Signature: 1792507156005:1314674617
+X-MC-Ingress-Time: 1792507156005
+Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.2.151 (trex/8.0.2);
+	Tue, 20 Oct 2026 14:39:16 +0000
+Received: from offworld (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D737F1800BDD;
-	Tue, 20 Oct 2026 13:25:39 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA9B818005B3;
-	Tue, 20 Oct 2026 13:25:35 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 71D8121E6A04; Tue, 20 Oct 2026 15:25:33 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>
-Cc: qemu-devel@nongnu.org,  Michael Roth <michael.roth@amd.com>,  John Snow
- <jsnow@redhat.com>,  Peter Maydell <peter.maydell@linaro.org>,  Mauro
- Carvalho Chehab <mchehab+huawei@kernel.org>,  Pierrick Bouvier
- <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
-  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
- Kostiuk
- <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
- <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
- Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
-  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
- Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
- <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@oss.qualcomm.com>,
-  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
-  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
-  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
- <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
- Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
- <clg@redhat.com>,
-  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
-  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
- <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
-  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
-  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
- Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
- <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
-  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
- <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
- <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
-  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
- <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
- <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
-  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
- <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
- Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
- <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
- Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
-  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
- <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
- <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
- Lin
- <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
- Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
- Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
- Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
- <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
- <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
- Dooley <conor@kernel.org>,  Sebastian Huber
- <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
-  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
- <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
- Stabellini <sstabellini@kernel.org>,  Anthony PERARD
- <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
- <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
-  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
-  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
-  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
-  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
- Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
- <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
- Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
- Vivier <lvivier@redhat.com>
-Subject: Re: [PATCH v7 43/65] qom: replace object_property_add_tm with
- StructTm QAPI type
-In-Reply-To: <20261020-qom-qapi-v7-43-431a86b02b58@redhat.com>
- (=?utf-8?Q?=22Marc-Andr=C3=A9?=
-	Lureau"'s message of "Tue, 20 Oct 2026 14:46:00 +0400")
-References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
-	<20261020-qom-qapi-v7-43-431a86b02b58@redhat.com>
-Date: Tue, 20 Oct 2026 15:25:33 +0200
-Message-ID: <874iegpkqa.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4j8FRQ6zDXz105h;
+	Tue, 20 Oct 2026 07:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1792507155;
+	bh=F0iQ13EGLTQI5kyo2tmyN9DpTgiYHlNMjaPo9MBxLzA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Av325PyH4kSAYLM7gp85dn/xtBETjppl135CERXOLDyxUm0PIdNS7PVjtdoONZXHe
+	 ys2OFuzmeRRV72Fca7wtJDsDIm//RbEOvHDZR36GGG08uGwcseM0MVIzk5q0bpSYH2
+	 smNmh0WXMBBP36AsMUbJZF91pRDzL7zeIGu2L9/Y+0YsoVeJiypiD1bFvmTlpRP5Wq
+	 nyr4VtHI+tsqNn55LBNvTPnOO2EKFt7rAabSNFYgM9vcp4sobXmvIO2iEjeLZ0aW8l
+	 dtC44EtQ5IkYpKHDAvdGcS0eSHAl7CwNwYSJEVy+gb1k1HOhtBXK6jlDHQf9SB/B77
+	 tD/rEiEExtRYQ==
+Date: Tue, 20 Oct 2026 07:39:11 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave.jiang@intel.com, jic23@kernel.org, icheng@nvidia.com,
+	ming.li@zohomail.com, benjamin.cheatham@amd.com, alucerop@amd.com,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v9 08/10] cxl: Allow auto-committed BI hdm decoders
+Message-ID: <20261020143911.arsz5nojzeepndla@offworld>
+References: <cover.1790103847.git.dave@stgolabs.net>
+ <60fe8a8a0f66a9535905092e1dee604c1f7ae48c.1790103847.git.dave@stgolabs.net>
+ <ar3YZtnQbE-n13qz@aschofie-mobl2.lan>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -147,258 +93,390 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: hawp9PtkTF8m9ailPa8PeUvOde1ZAOLJFwPo0WMSIgk_1792502743
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ar3YZtnQbE-n13qz@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20220429
 
-Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com> writes:
+On Wed, 30 Sep 2026, Alison Schofield wrote:
 
-> Define a StructTm QAPI struct in common.json matching the existing
-> "struct tm" property wire format (tm_year, tm_mon, tm_mday, tm_hour,
-> tm_min, tm_sec as int32).
+>On Tue, Sep 22, 2026 at 04:38:45PM -0700, Davidlohr Bueso wrote:
 >
-> Convert the two callers (mc146818rtc and spapr_rtc) to use
-> object_property_add_qapi() with a standard ObjectPropertyAccessor
-> that populates a StructTm and calls the generated visitor.
 >
-> Remove object_property_add_tm(), object_class_property_add_tm(),
-> the TMProperty type, and the property_get_tm() helper from
-> qom/object.c, along with their declarations in object.h.
+>The cover letter says the series could be picked up with or without this
+>patch. I'm guessing that is a stale statement. Today a committed BI decoder
+>is enumerated like any other. After patch 3 it fails port enumeration,
+>and this patch is what fixes that.  So not really optional?
+
+You are correct about the fully auto committed BI topology case,
+the problem today is that bogus topologies can still be onlined.
+
+I will rephrase the cover letter for patch 8, drop the refusal in
+patch 3, and have patch 2 adopt a device firmware already enabled, so
+that through patch 7 the auto-committed semantics are identical to
+upstream and patch 8 refuses only what cannot route BISnp.
+
 >
-> Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> Signed-off-by: Markus Armbruster <armbru@redhat.com>
-> Signed-off-by: Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com>
-> ---
->  hw/ppc/spapr_rtc.c   | 24 +++++++++++++++---
->  hw/rtc/mc146818rtc.c | 22 ++++++++++++++---
->  include/qom/object.h | 29 ----------------------
->  qapi/common.json     | 28 +++++++++++++++++++++
->  qapi/pragma.json     |  1 +
->  qom/object.c         | 69 ----------------------------------------------=
-------
->  6 files changed, 69 insertions(+), 104 deletions(-)
+>> An HDM decoder that firmware committed with the BI bit set was
+>> refused outright. Accept it, and refuse only what is broken - BI
+>> paired with a host-only target range type, or for an endpoint
+>> decoder BI on a path that cannot route BISnp.
+>>
+>> Taking over such a path must not re-program what firmware already
+>> did, and a dport's committed state does not say which device it was
+>> committed for, only that firmware committed for something below it.
+>> Two endpoints sharing a level show why that is not enough to go on.
+>>
+>>                         RP      Forward set, but for mem0
+>>                         |
+>>                        USP
+>>                        /  \
+>>                    DSP0    DSP1
+>>                      |       |
+>>                   mem0      mem1
+>>                BI Enable   BI Enable
+>>                   set       clear
+>>
+>> Adoption is therefore seeded from the endpoint's own BI Enable, since
+>> only a device firmware itself enabled can have had its BI-ID
+>> accounted for above, and carried up the walk. A level is taken as
+>> found, with no register write and no commit, when nothing this driver
+>> routed sits below it, the value this driver would write is already
+>> there, and both the decoder and the switch's route table are
+>> committed - the table carries a commit of its own that firmware may
+>> not have performed. The first level to fall short ends adoption, and
+>> from it up the driver programs and commits as for any other device.
+>>
+>>                     RP    Forward, written but never committed
+>>                     |
+>>                   USP0    route table committed by the driver
+>>                     |
+>>                   DSP0    Forward, written and committed
+>>                     |     ..... adoption ended here .....
+>>                   USP1    route table already committed
+>>                     |
+>>                   DSP1    Enable, taken as found
+>>                     |
+>>                   mem0    BI Enable already set by firmware
+>>
+>> An adopted level owes no commit either way. Table 8-152 and Table
+>> 8-156 owe one per new BI device enabled below the port, and an
+>> adopted level is not seeing one.
+>>
+>> The endpoint is adopted the same way. BI Enable already set was an
+>> error before, since only this driver set it; it is now kept and
+>> cxlds->bi taken up without a write.
+>>
+>> On failure the walk unwinds only the levels it did not adopt. Since
+>> adoption is a prefix, the unwind drops the refcount below the first
+>> non-adopted level and leaves those registers alone. Teardown is
+>> unchanged and still deallocates every level.
+>>
+>> A committed decoder is refused when its coherency model does not fit
+>> where it lands. The window must permit it, and unlike a decoder this
+>> driver programs it cannot inherit a region's model, so its committed
+>> Target Range Type and BI bit must already match. Assembly never
+>> validated these bits, so setting them wrongly costs a platform the
+>> auto-assembly of the affected decoders.
 >
-> diff --git a/hw/ppc/spapr_rtc.c b/hw/ppc/spapr_rtc.c
-> index 1f7d2d8f898b..5105cf538f64 100644
-> --- a/hw/ppc/spapr_rtc.c
-> +++ b/hw/ppc/spapr_rtc.c
-> @@ -33,6 +33,9 @@
->  #include "migration/vmstate.h"
->  #include "qapi/error.h"
->  #include "qapi/qapi-events-misc.h"
-> +#include "qapi/qapi-type-infos-common.h"
-> +#include "qapi/qapi-visit-common.h"
-> +#include "qapi/visitor.h"
->  #include "qemu/cutils.h"
->  #include "qemu/module.h"
-> =20
-> @@ -131,9 +134,23 @@ static void rtas_set_time_of_day(PowerPCCPU *cpu, Sp=
-aprMachineState *spapr,
->      rtas_st(rets, 0, RTAS_OUT_SUCCESS);
->  }
-> =20
-> -static void spapr_rtc_qom_date(Object *obj, struct tm *current_tm, Error=
- **errp)
-> +static void spapr_rtc_qom_date(Object *obj, Visitor *v, const char *name=
-,
-> +                               void *opaque, Error **errp)
->  {
-> -    spapr_rtc_read(SPAPR_RTC(obj), current_tm, NULL);
-> +    struct tm value;
-> +    StructTm tm, *tmp =3D &tm;
-> +
-> +    spapr_rtc_read(SPAPR_RTC(obj), &value, NULL);
-> +
-> +    tm =3D (StructTm) {
-> +        .tm_year =3D value.tm_year,
-> +        .tm_mon =3D value.tm_mon,
-> +        .tm_mday =3D value.tm_mday,
-> +        .tm_hour =3D value.tm_hour,
-> +        .tm_min =3D value.tm_min,
-> +        .tm_sec =3D value.tm_sec,
-> +    };
-> +    visit_type_StructTm(v, name, &tmp, errp);
->  }
-> =20
->  static void spapr_rtc_realize(DeviceState *dev, Error **errp)
-> @@ -150,7 +167,8 @@ static void spapr_rtc_realize(DeviceState *dev, Error=
- **errp)
->      rtc_ns =3D qemu_clock_get_ns(rtc_clock);
->      rtc->ns_offset =3D host_s * NANOSECONDS_PER_SECOND - rtc_ns;
-> =20
-> -    object_property_add_tm(OBJECT(rtc), "date", spapr_rtc_qom_date);
-> +    object_property_add_qapi(OBJECT(rtc), "date", &StructTm_type_info,
-> +                             spapr_rtc_qom_date, NULL, NULL, NULL);
+>
+>Assembly did validate Target Range Type until patch 4.
+>cxl_region_attach() refused a decoder whose type differed from the
+>region's. The window check this adds also refuses non-BI auto regions
+>that assemble today.  More inline at construct_region()...
+>
+>
+>
+>snip
+>
+>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index 9bf05820c142..f83f5d1d8255 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -1087,6 +1087,29 @@ static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
+>>  				    scale, base);
+>>  }
+>>
+>> +/* Committed, or no explicit commit required */
+>> +static bool cxl_bi_decoder_committed(void __iomem *bi)
+>> +{
+>> +	u32 caps = readl(bi + CXL_BI_DECODER_CAPS_OFFSET);
+>> +	u32 sts = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
+>> +
+>> +	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ, caps))
+>> +		return true;
+>> +
+>> +	return FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMITTED, sts);
+>> +}
+>> +
+>> +static bool cxl_bi_rt_committed(void __iomem *bi)
+>> +{
+>> +	u32 caps = readl(bi + CXL_BI_RT_CAPS_OFFSET);
+>> +	u32 sts = readl(bi + CXL_BI_RT_STATUS_OFFSET);
+>> +
+>> +	if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ, caps))
+>> +		return true;
+>> +
+>> +	return FIELD_GET(CXL_BI_RT_STATUS_BI_COMMITTED, sts);
+>> +}
+>> +
+>
+>
+>Above 2 helpers differ only in register offsets and masks, and repeat
+>the EXPLICIT_COMMIT_REQ caps test already in __cxl_bi_commit_rt() and
+>__cxl_bi_commit_decoder().
+>
+>Could they be one helper taking offsets and masks, like __cxl_bi_wait_commit()
+>does?
 
-The @type reported by qom-list & friends changes from "struct tm"
-(visible at the end of this patch) to to "StuctTm".  Such changes can be
-compatibility breaks.
+I went ahead with the following, which I'm not sure is particularly better,
+but at least abstracts the core logic:
 
-Same "this is okay" argument as for the previous patch, and same
-request: please note the change in the commit message.
+/* Committed, or no explicit commit required */
+static bool __cxl_bi_committed(void __iomem *caps_reg, void __iomem *status_reg,
+                                u32 req_bit, u32 committed_bit)
+{
+       if (!(readl(caps_reg) & req_bit))
+               return true;   
+   
+       return readl(status_reg) & committed_bit;
+}             
+         
+static bool cxl_bi_rt_committed(void __iomem *bi)
+{             
+       return __cxl_bi_committed(bi + CXL_BI_RT_CAPS_OFFSET,
+                                 bi + CXL_BI_RT_STATUS_OFFSET,
+                                 CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
+                                 CXL_BI_RT_STATUS_BI_COMMITTED);
+}                               
+                                  
+static bool cxl_bi_decoder_committed(void __iomem *bi)
+{                               
+       return __cxl_bi_committed(bi + CXL_BI_DECODER_CAPS_OFFSET,
+                                 bi + CXL_BI_DECODER_STATUS_OFFSET,
+                                 CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
+                                 CXL_BI_DECODER_STATUS_BI_COMMITTED);
+}                               
 
->  }
-> =20
->  static const VMStateDescription vmstate_spapr_rtc =3D {
-> diff --git a/hw/rtc/mc146818rtc.c b/hw/rtc/mc146818rtc.c
-> index ba396435d1af..6010f8587ce0 100644
-> --- a/hw/rtc/mc146818rtc.c
-> +++ b/hw/rtc/mc146818rtc.c
-> @@ -42,6 +42,8 @@
->  #include "migration/vmstate.h"
->  #include "qapi/error.h"
->  #include "qapi/qapi-events-misc.h"
-> +#include "qapi/qapi-type-infos-common.h"
-> +#include "qapi/qapi-visit-common.h"
->  #include "qapi/visitor.h"
->  #include "trace.h"
-> =20
-> @@ -854,12 +856,25 @@ static const MemoryRegionOps cmos_ops =3D {
->      .endianness =3D DEVICE_LITTLE_ENDIAN,
->  };
-> =20
-> -static void rtc_get_date(Object *obj, struct tm *current_tm, Error **err=
-p)
-> +static void rtc_get_date(Object *obj, Visitor *v, const char *name,
-> +                         void *opaque, Error **errp)
->  {
->      MC146818RtcState *s =3D MC146818_RTC(obj);
-> +    struct tm value;
-> +    StructTm tm, *tmp =3D &tm;
-> =20
->      rtc_update_time(s);
-> -    rtc_get_time(s, current_tm);
-> +    rtc_get_time(s, &value);
-> +
-> +    tm =3D (StructTm) {
-> +        .tm_year =3D value.tm_year,
-> +        .tm_mon =3D value.tm_mon,
-> +        .tm_mday =3D value.tm_mday,
-> +        .tm_hour =3D value.tm_hour,
-> +        .tm_min =3D value.tm_min,
-> +        .tm_sec =3D value.tm_sec,
-> +    };
-> +    visit_type_StructTm(v, name, &tmp, errp);
->  }
-> =20
->  static void rtc_realizefn(DeviceState *dev, Error **errp)
-> @@ -1019,7 +1034,8 @@ static void rtc_class_initfn(ObjectClass *klass, co=
-nst void *data)
->      device_class_set_props(dc, mc146818rtc_properties);
->      set_bit(DEVICE_CATEGORY_MISC, dc->categories);
-> =20
-> -    object_class_property_add_tm(klass, "date", rtc_get_date);
-> +    object_class_property_add_qapi(klass, "date", &StructTm_type_info,
-> +                                   rtc_get_date, NULL, NULL, NULL);
->  }
-> =20
->  static const TypeInfo mc146818rtc_info =3D {
-> diff --git a/include/qom/object.h b/include/qom/object.h
-> index e04be4caed57..29cbd84b8d03 100644
-> --- a/include/qom/object.h
-> +++ b/include/qom/object.h
-> @@ -2156,35 +2156,6 @@ object_class_property_add_qapi(ObjectClass *klass,
->                                 ObjectPropertyRelease *release,
->                                 void *opaque);
-> =20
-> -/**
-> - * object_property_add_tm:
-> - * @obj: the object to add a property to
-> - * @name: the name of the property
-> - * @get: the getter or NULL if the property is write-only.
-> - *
-> - * Add a read-only struct tm valued property using a getter function.
-> - * This function will add a property of type 'struct tm'.
-> - *
-> - * Returns: The newly added property on success, or %NULL on failure.
-> - */
-> -ObjectProperty *object_property_add_tm(Object *obj, const char *name,
-> -                            void (*get)(Object *, struct tm *, Error **)=
-);
-> -
-> -/**
-> - * object_class_property_add_tm:
-> - * @klass: the object class to add a property to
-> - * @name: the name of the property
-> - * @get: the getter or NULL if the property is write-only.
-> - *
-> - * Add a read-only struct tm valued property using a getter function.
-> - * This function will add a property of type 'struct tm'.
-> - *
-> - * Returns: The newly added property on success, or %NULL on failure.
-> - */
-> -ObjectProperty *object_class_property_add_tm(ObjectClass *klass,
-> -                            const char *name,
-> -                            void (*get)(Object *, struct tm *, Error **)=
-);
-> -
->  typedef enum {
->      /* Automatically add a getter to the property */
->      OBJ_PROP_FLAG_READ =3D 1 << 0,
-> diff --git a/qapi/common.json b/qapi/common.json
-> index 1352e664b23e..222037ea0b32 100644
-> --- a/qapi/common.json
-> +++ b/qapi/common.json
-> @@ -218,3 +218,31 @@
->  ##
->  { 'enum': 'EndianMode',
->    'data': [ 'unspecified', 'little', 'big' ] }
-> +
-> +##
-> +# @StructTm:
-> +#
-> +# Broken-down time.  Field semantics match C ``struct tm``.
+>
+>
+>snip
+>
+>>  static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
+>>  			      struct cxl_port *port, struct cxl_dport *dport)
+>>  {
+>> -	struct cxl_dport *dport_iter, *failed;
+>> +	struct cxl_dport *dport_iter, *failed, *programmed = NULL;
+>> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
+>>  	struct cxl_port *port_iter;
+>> +	bool adopt, clear;
+>>  	int rc;
+>>
+>> +	/*
+>> +	 * Adoption is a path property, not a per-dport one: only when
+>> +	 * firmware enabled the device itself does a dport's committed
+>> +	 * state cover this device's BI-ID.
+>> +	 */
+>> +	adopt = FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE,
+>> +			  readl(endpoint->regs.bi_decoder +
+>> +				CXL_BI_DECODER_CTRL_OFFSET));
+>> +
+>
+>
+>Is this cxl_bi_decoder_enabled(endpoint) from core.h?
 
-Again, please use the revised syntax for introductions.
+It is, will update.
 
-> +#
-> +# @tm_year: years since 1900
-> +#
-> +# @tm_mon: months since January (0-11)
-> +#
-> +# @tm_mday: day of the month (1-31)
-> +#
-> +# @tm_hour: hours since midnight (0-23)
-> +#
-> +# @tm_min: minutes after the hour (0-59)
-> +#
-> +# @tm_sec: seconds after the minute (0-59, 60-61 for leap seconds)
-> +#
-> +# Since: 11.2
+>
+>
+>
+>>  	port_iter = port;
+>>  	dport_iter = dport;
+>>  	while (!is_cxl_root(port_iter)) {
+>> -		rc = cxl_bi_ctrl_dport_enable(dport_iter, dport_iter == dport);
+>> +		rc = cxl_bi_ctrl_dport_enable(dport_iter, dport_iter == dport,
+>> +					      &adopt);
+>>  		if (rc)
+>>  			goto err_rollback;
+>>
+>> +		/* adoption is a prefix: this is the first level not adopted */
+>> +		if (!adopt && !programmed)
+>> +			programmed = dport_iter;
+>> +
+>>  		dport_iter = port_iter->parent_dport;
+>>  		port_iter = dport_iter->port;
+>>  	}
+>> @@ -1301,8 +1360,11 @@ static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
+>>  	failed = dport_iter;
+>>  	dport_iter = dport;
+>>  	port_iter = port;
+>> +	clear = false;
+>>  	while (!is_cxl_root(port_iter) && dport_iter != failed) {
+>> -		cxl_bi_ctrl_dport_disable(dport_iter);
+>> +		if (dport_iter == programmed)
+>> +			clear = true;
+>> +		cxl_bi_ctrl_dport_disable(dport_iter, clear);
+>>  		dport_iter = port_iter->parent_dport;
+>>  		port_iter = dport_iter->port;
+>>  	}
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index f322a8a4a66d..0e3ba7c79a75 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -1861,6 +1861,20 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
+>>  	return rc;
+>>  }
+>>
+>> +static bool cxled_committed_bi(struct cxl_endpoint_decoder *cxled)
+>> +{
+>> +	struct cxl_port *port = cxled_to_port(cxled);
+>> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+>> +	u32 ctrl;
+>> +
+>> +	if (!cxlhdm || !cxlhdm->regs.hdm_decoder)
+>> +		return false;
+>> +
+>> +	ctrl = readl(cxlhdm->regs.hdm_decoder +
+>> +		     CXL_HDM_DECODER0_CTRL_OFFSET(cxled->cxld.id));
+>
+>
+>I'm having some deja vu here. I may have asked and you answered this on
+>an earlier version, but now that I see Patch 9 it makes me ask again.
+>Patch 9 wouldn't need to mock this if we stored it as committed BI
+>state instead. Maybe in cxld->flags using CXL_DECODE_F_BI.
+>
 
-Same "do we care?" as for the previous patch.
+Ok.
 
-> +##
-> +{ 'struct': 'StructTm',
-> +  'data': {
-> +    'tm_year': 'int32',
-> +    'tm_mon': 'int32',
-> +    'tm_mday': 'int32',
-> +    'tm_hour': 'int32',
-> +    'tm_min': 'int32',
-> +    'tm_sec': 'int32' } }
-> diff --git a/qapi/pragma.json b/qapi/pragma.json
-> index 342cedc42e76..9be2819a46bd 100644
-> --- a/qapi/pragma.json
-> +++ b/qapi/pragma.json
-> @@ -109,6 +109,7 @@
-       # Externally visible types whose member names may use uppercase
+>
+>
+>> +	return FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl);
+>> +}
+>> +
+>>  static const char *cxl_coherency_name(enum cxl_decoder_type type, bool bi)
+>>  {
+>>  	if (type == CXL_DECODER_HOSTONLYMEM)
+>> @@ -2179,6 +2193,24 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>>  		return -ENXIO;
+>>  	}
+>>
+>> +	/* a committed decoder cannot inherit the region's flavor */
+>> +	if (cxled->state == CXL_DECODER_STATE_AUTO) {
+>> +		bool bi = cxled_committed_bi(cxled);
+>> +		const char *have, *want;
+>> +
+>> +		have = cxl_coherency_name(cxled->cxld.target_type, bi);
+>> +		want = cxl_coherency_name(cxlr->type,
+>> +					  cxl_root_decoder_is_bi(cxlrd));
+>> +		if (cxled->cxld.target_type != cxlr->type ||
+>> +		    bi != cxl_root_decoder_is_bi(cxlrd)) {
+>
+>
+>Looks like only need have and want computed when mismatch is detected.
+>cxl_root_decoder_is_bi could also be cached once.
 
-Not this patch's fault, but here goes anyway: the comment should be "may
-use uppercase or '_'".  I'll fix it.
+Yep, I've cleaned these up as such:
 
-       'member-name-exceptions': [     # visible in:
-           'ACPISlotType',             # query-acpi-ospm-status
-           [...]
->          'QKeyCode',                 # send-key, input-sent-event
->          'QapiErrorClass',           # QMP error replies
->          'SshHostKeyCheckMode',      # blockdev-add, -blockdev
-> +        'StructTm',                 # qom-get of RTC date property
->          'SysEmuTarget',             # query-cpu-fast, query-target
->          'UuidInfo',                 # query-uuid
->          'VncClientInfo',            # query-vnc, query-vnc-servers, ...
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3b42ecd4c34f..8edbfecb3950 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2133,6 +2133,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+         struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+         struct cxl_dev_state *cxlds = cxlmd->cxlds;
+         struct cxl_region_params *p = &cxlr->params;
++       bool root_bi = cxl_root_decoder_is_bi(cxlrd);
+         struct cxl_port *ep_port, *root_port;
+         struct cxl_dport *dport;
+         struct cxl_hdm *cxlhdm;
+@@ -2190,8 +2191,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+          * proceeding. The endpoint decoder's target_type is then inherited
+          * from cxlr->type later in cxl_rr_assign_decoder().
+          */
+-       if (cxlr->type == CXL_DECODER_DEVMEM &&
+-           cxl_root_decoder_is_bi(cxlrd) && !cxlds->bi) {
++       if (cxlr->type == CXL_DECODER_DEVMEM && root_bi && !cxlds->bi) {
+                 dev_dbg(&cxlr->dev, "%s:%s BI not enabled on device\n",
+                         dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+                 return -ENXIO;
+@@ -2224,17 +2224,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+         /* a committed decoder cannot inherit the region's flavor */
+         if (cxled->state == CXL_DECODER_STATE_AUTO) {
+                 bool bi = cxled_committed_bi(cxled);
+-               const char *have, *want;
+  
+-               have = cxl_coherency_name(cxled->cxld.target_type, bi);
+-               want = cxl_coherency_name(cxlr->type,
+-                                         cxl_root_decoder_is_bi(cxlrd));
+-               if (cxled->cxld.target_type != cxlr->type ||
+-                   bi != cxl_root_decoder_is_bi(cxlrd)) {
++               if (cxled->cxld.target_type != cxlr->type || bi != root_bi) {
+                         dev_err(&cxlr->dev,
+                                 "%s:%s coherency model mismatch: %s vs %s\n",
+                                 dev_name(&cxlmd->dev),
+-                               dev_name(&cxled->cxld.dev), have, want);
++                               dev_name(&cxled->cxld.dev),
++                               cxl_coherency_name(cxled->cxld.target_type, bi),
++                               cxl_coherency_name(cxlr->type, root_bi));
+                         return -ENXIO;
+                 }
+         }
 
-[...]
+>
+>
+>> +			dev_err(&cxlr->dev,
+>> +				"%s:%s coherency model mismatch: %s vs %s\n",
+>> +				dev_name(&cxlmd->dev),
+>> +				dev_name(&cxled->cxld.dev), have, want);
+>> +			return -ENXIO;
+>> +		}
+>> +	}
+>> +
+>>  	if (!cxled->dpa_res) {
+>>  		dev_dbg(&cxlr->dev, "%s:%s: missing DPA allocation.\n",
+>>  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+>> @@ -3838,10 +3870,26 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>>  	int rc, part = READ_ONCE(cxled->part);
+>>  	struct cxl_region *cxlr;
+>> +	unsigned long need;
+>>
+>>  	if (part < 0)
+>>  		return ERR_PTR(-EBUSY);
+>>
+>> +	/*
+>> +	 * A committed decoder defines the region built from it, so no
+>> +	 * attach check can find its coherency model wrong. Only the
+>> +	 * window's restrictions can, on the BI and range type axes.
+>> +	 */
+>> +	need = cxled->cxld.target_type == CXL_DECODER_DEVMEM ?
+>> +	       CXL_DECODER_F_DEVMEM : CXL_DECODER_F_HOSTONLY;
+>> +	if (cxled_committed_bi(cxled) != cxl_root_decoder_is_bi(cxlrd) ||
+>> +	    !(cxlrd->cxlsd.cxld.flags & need)) {
+>
+>
+>This refuses non BI auto regions that assemble before this patch.
+>Why is this in a patch called 'Allow auto-committed BI hdm decoders'.
 
+The range type half belongs in patch 4 with the other coherency checks,
+and I will move it there. The BI half is this patch's.
+
+Thanks,
+Davidlohr
+
+>
+>
+>
+>> +		dev_err(&cxlrd->cxlsd.cxld.dev,
+>> +			"%s:%s coherency model not permitted by the window\n",
+>> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+>> +		return ERR_PTR(-ENXIO);
+>> +	}
+>> +
+>>  	do {
+>>  		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
+>>  				       atomic_read(&cxlrd->region_id),
+>> --
+>> 2.39.5
+>>
