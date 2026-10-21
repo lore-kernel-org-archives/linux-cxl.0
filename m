@@ -1,130 +1,139 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.7
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1792598346;
-	b=NxzkeXjihAl+VJ+pePMX9xHDojfEtW2EOx1JoMpYUQxe0JiEpQK4sklz3MTGrNdn1CJH
-	 lwpqdaOUip3dgvU5iclfI83rJA/EqoDkN38U69hd/nVFxcVeNBzdWHbdhO0Jdf2VNZu+u
-	 3lb6eH6hcOj/uh69lgxqfk4IvZEbBG51INjAkMTLGMu2GPphQ5EsS0rTLYdp65cJ30TKn
-	 2rvNNnk/iROG7Jttitfd/FrAtd6F1RUeomI+oivkcWqEMR2uLeCTyXPfpnEstCsE2uAtz
-	 EY2YbZ+qAdRqpxYfjBV95SPo1VsL/pYSSAJA1F39SwxY10NCvhIoP7KUb2IUhU3KAIw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792598346;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=YCN6koUvd7q4EG4JmLHOcoHiHJehXecRg22R+BC1KYk=;
-	b=s3SORkbumYZGL8m96ocAHmMF5L2Oe4iqhZnJi4QHJMjLWa+CHn2BRXFXxYPTGASjTuqz
-	 9tRvqCzzKO/h+DkQIWpOWU+jl9zJI7+WOv+zZbti2ItCMQWuf9LN2sjL3oKcCaKkIA+A2
-	 7BATOcVfp7Q9BmEBnqtjxpgwb1DlfcfonihKDVRA9DzdwFsZf6w9ij/8HACe3biPCzHey
-	 GK8KCmQh/45/YnsBN0yBe749WMK5FFoTek5jyIBeaHAR8WLZ1Sj7hTp6gr3UrvhjDhEzL
-	 agVgPhpa76oHYkl4k1sLuk95p+ywU5wanD5f4MCdc5Bp8USc1GNn8J54T5VhB2XsCwQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=alOdfHDH;
-	arc=fail smtp.remote-ip=192.198.163.7
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792600204;
+	b=W6cD2UtrrqEFRCg1op4r7WhFE+Sdmt7n6EczIlVA0bKUEWXX7bWrW/LffsriiRz/Hp2v
+	 Bo1xCnv/IFi49CB6JhQJShxF/zzTOF6siZ8lukXTXtz+lK861Zp+2TS0AQkVC5nrrmtkt
+	 x5FRftkUSaqoUm2WC30sCgCPSrl338GC6KGMpv4bg3ya/Ydnv4jjUuzkWzMvDszC4sBKG
+	 47KbkS2YYJ89hzYzo6++jfZQxB3p9mCANC0s607DRKGGtueZTDR42yc6PFDUTIYH1HaRo
+	 ePajWsWRrpkk7lkXYgYJ/E6tS/BCzzCqnt4ZLTpqAaN8NmHqRPiaFXtC0LsEgMtGN2A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792600204;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
+	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
+	 Content-Type;
+	bh=gZqi5d3mOF1KjfwoAQKfIbSpBBQZDfbhPtfOzYqQUmI=;
+	b=jr41MwmhS3J2t92JH1O8MTnx6wvJBxUoHN4GQQe9tVNDKpU/wq2xeJuL1E5MSUI7SP67
+	 Lg81Rw6LuSWXwki2nEWnqrcOBmlR9ugZV/QackpVWGqumGW03tP9/eCfH0EGT0ActCclc
+	 g9uKKJ+LwUYO36pe/4aOiLntWOejjHO6iZ215Fsr/R795k5UQRzsgVegZZpkL7lFkr72X
+	 BWMhI4nK8SdTXCUJ4Kg+Pn2IYCDCJtKx2Li5sW1moEbRBW491+BnReIMdzzJa/ws5hvvB
+	 iLiwzXiA/Da/HHxqco9lZ1Sv3DDchU1l6oKBka+d4IzKiNcMzO9JW0+K/U2CY8Z5sew==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IVpoXcVS;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC913606A31A;
-	Wed, 21 Oct 2026 15:59:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC913606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AE3606A31B
+	for <linux-cxl@vger.kernel.org>; Wed, 21 Oct 2026 16:30:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23AE3606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=alOdfHDH
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792598346; x=1824134346;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=o4MXPTjaXWRVCh3nvLKj01wtuOxwbwHqa8C0hEBCuZM=;
-  b=alOdfHDHmj5QxkjRyE7dXDIeP510entovNurmCcD0V4UyifQv1aSAf7v
-   WalG60bNNFu7M1bo4fhNixLN1OB2KFLbXbIf3BFOPhdjiWhIFqMS2Sowi
-   faPMq48J1Fpf6avLL3OniKTdO7bK01Tu0qpGmSO+HF1DUPjZzwsIXitRg
-   66jj8Nh3zER9P8o6DMIOZNJ11jnNhiVNYFKgBNTu9X9Ftye0AQvuHsJ2U
-   74RohPzzJgD3Cq4751H/OWCPp2pRuP9amenqf4oAX3Wnsu82WGUhGjeNz
-   eq/Y9Sumn8D8ZmB8n622fjQ058R1WhoCmpC4RWyJwfgQl3Kq7j9uowE3H
-   A==;
-X-CSE-ConnectionGUID: xVsSkZueSzGXkV+VMQV8gw==
-X-CSE-MsgGUID: 2z567XQSSbObY2SAtSZ43g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11942"; a="1229717"
-X-IronPort-AV: E=Sophos;i="6.27,170,1787036400"; 
-   d="scan'208";a="1229717"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 08:59:05 -0700
-X-CSE-ConnectionGUID: E3bQGCWZTV+pg7x0SFbxTA==
-X-CSE-MsgGUID: bPg11uQ6Tq+tdYu6E1X38g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,170,1787036400"; 
-   d="scan'208";a="3112278"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 08:59:05 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Wed, 21 Oct 2026 08:59:04 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Wed, 21 Oct 2026 08:59:04 -0700
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.5) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Wed, 21 Oct 2026 08:59:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QzYqc5KYnyqiRL+rCTYoNRhk1scMvjzpOrmap/whsNRh/7L6Tl0Ah3CHhdNzOzfjWydnXBu/7CmBK1iBgQB4sWTlR17wcWI/NUsl99G87RG3rA73pJG7QawDVj9GeGIYc9/icurE+0ynbv+sA+rVmjzclVNekgZmejfvt10FrfoUEPqEOPlob/qKuddjB3VqkXlXrA0bZUY7GkjePXqpOjRmK3xgceSZWrvRv6xF9agCnrPFX+zXrIQ/sza2zT/N+HZcOPej9zaCCFobiC+Gzp5nuk20H82FeIKE6z/jAfUVSwSpJ+OYy9ISRylPgJuegJ+lZVgCDO91wFeusHC35Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YCN6koUvd7q4EG4JmLHOcoHiHJehXecRg22R+BC1KYk=;
- b=V0axrbtv+1oqrDBKam7wVsZa6q15wyWgc6U2eP4lHmaLvtU/+JtqLebYiJj81jlCnYZ0qIAZM68QTpYvAgW6m/Q1YiL9gHkJ7e3vTBbpdfsp3kyE5o4k3X1vgWMR0fEf0Ryi4kdArh7WQzVpdw38T3P1X89Z71ERxn+9pyKN0AaVPA3i/3cUn2j/3ACIypSGjJkZqgK/4XwnPYmsQ90YGsYphcQ6omDaYyXR9XEsVXP7eI78UcB8ESRvqeXAmVmucKFOOJO5/BPAZ9LVQOihNFFLn7jRWFgEOn3LAh3l/wRj3JihaVQTcF5aGO1yqfHVWOfh+mN+7O2RgYnc5uTQeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH0PR11MB4888.namprd11.prod.outlook.com (2603:10b6:510:32::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.15; Wed, 21 Oct
- 2026 15:59:00 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0546.012; Wed, 21 Oct 2026
- 15:59:00 +0000
-Date: Wed, 21 Oct 2026 08:58:57 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Yili Zhang <zhangyili01@baidu.com>
-CC: <linux-cxl@vger.kernel.org>, <djbw@kernel.org>, <dave.jiang@intel.com>,
-	<dave@stgolabs.net>, <jic23@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<shiju.jose@huawei.com>, <vishal.l.verma@intel.com>
-Subject: Re: [PATCH v2] cxl/edac: Fail ECS threshold read for reserved
- encodings
-Message-ID: <atjhQTk4k6On7Fcm@aschofie-mobl2.lan>
-References: <20260928073553.85669-1-zhangyili01@baidu.com>
- <20260930095627.32616-1-zhangyili01@baidu.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260930095627.32616-1-zhangyili01@baidu.com>
-X-ClientProxiedBy: MW3PR06CA0022.namprd06.prod.outlook.com
- (2603:10b6:303:2a::27) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IVpoXcVS
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792600203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gZqi5d3mOF1KjfwoAQKfIbSpBBQZDfbhPtfOzYqQUmI=;
+	b=IVpoXcVS5nRf6ndwi0P3A8JbkHJFaAAk1xPNA+q2IUAlMjXBIkzN7WgYkt1QXjbpskdSde
+	BaU7/gKrPSIi5l5OizqT4j3Jo262T89Mox/CVR/7+f3Njc8BrOYWzenRJlj5FurvRjPUtd
+	Ax5C2lTSiFXxWwKh+kg9oftpShqvhc0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-uVm7wy9uPnqna-YWwQgM4A-1; Wed,
+ 21 Oct 2026 12:30:00 -0400
+X-MC-Unique: uVm7wy9uPnqna-YWwQgM4A-1
+X-Mimecast-MFC-AGG-ID: uVm7wy9uPnqna-YWwQgM4A_1792600194
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8BB8C195396C;
+	Wed, 21 Oct 2026 16:29:46 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE23F18005B7;
+	Wed, 21 Oct 2026 16:29:42 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 6C44321E6A04; Wed, 21 Oct 2026 18:29:40 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: marcandre.lureau@redhat.com
+Cc: qemu-devel@nongnu.org,  Michael Roth <michael.roth@amd.com>,  John Snow
+ <jsnow@redhat.com>,  Peter Maydell <peter.maydell@linaro.org>,  Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>,  Pierrick Bouvier
+ <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
+  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
+ Kostiuk
+ <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
+ <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
+ Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
+  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
+ Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
+ <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
+ <philmd@oss.qualcomm.com>,
+  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
+  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
+  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
+ <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
+ Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
+ <clg@redhat.com>,
+  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
+  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
+  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
+  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
+ Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
+  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
+ <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
+ <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
+  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
+ <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
+  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
+ <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
+ Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
+ <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
+ Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
+ <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
+ <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
+ Lin
+ <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
+ Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
+ Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
+ Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
+ <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
+ <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
+ Dooley <conor@kernel.org>,  Sebastian Huber
+ <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
+ <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
+ Stabellini <sstabellini@kernel.org>,  Anthony PERARD
+ <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
+ <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
+  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
+  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
+  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
+  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
+ <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
+ Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
+ <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
+ Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
+ Vivier <lvivier@redhat.com>
+Subject: Property types changed in this series (was: [PATCH v7 00/65] Hi)
+In-Reply-To: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com> (marcandre
+	lureau's message of "Tue, 20 Oct 2026 14:45:17 +0400")
+References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
+Date: Wed, 21 Oct 2026 18:29:40 +0200
+Message-ID: <87tsmfkoej.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -134,157 +143,85 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB4888:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6f2720e-3511-4632-89a3-08df2f8c38c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|261009223027099003|10067099003|56012099006|22082099003|18002099003|3023799007|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info: Tf3vh7Kks+Gb4/Si/1unykA1AAYPqxldXV/ISEUkF5VCGb+RkUtypUB8D5LVgYz8LEka32Sb+YQHbmnNz1bPaUcSuPt625UjTUJ3jRWhaxoAZa0+M0ZTiwxzD6moJQXuc43xVcpmjx3HzJbR/Nj981Fom+fbLF3GcJeB9ukBgDhW9MtF+0dFzqDwTMTvJTLQUAopkE0Q21wdtnxic+WHOPih/PwX/huk0AqRjMPRLrP0u2dNaU1s1mmicPbWdHUHiVY3pKymO6qhmwAjNIea+pnsIhrJMD0cuL/ExamAsspgUBeSH28Xf5XhKy3a9BBBgYx7Su5mAoVpdRGo0HlNXJuOeJJ4eSez5JaMVZK93OM4oMW6qjmYY1r6TlnO/AE318YWeEZk6RxXTsksXPo/clMzp2pNyMAWNt8IcMHmTWt727MESdwW3ARhsihIGbzKEGC7fzOKEDH98pNkvZpy5BG6GLjnRNH1qQPX7UGP4RuvoQYfhrLhvNc51HdUrOjqTNc5BksN3pBbY5MhudCaC/rK1lR/s8zAmvhgiFi406OUNkwyU+QCuvX0UnX8N19X7UL1ap014n9LB2awctSgIhNAPh7Z2OoNyTD1WU6fJjB2fGIPtAl4dVnoo1EtxbEElERyanWNJYNh8uH5yX0hWyHZHrdCxyLeJoH1oLaEAng=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(261009223027099003)(10067099003)(56012099006)(22082099003)(18002099003)(3023799007)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jf0w8BOUm4vDsQlFhwztir//KDhyifTSaO1ljq9PJ7JeSNGQFcDAXPXrCVNR?=
- =?us-ascii?Q?MKtkZaeQvZup4gKdNlQ9wfQK3DHnmvMuQeRRj1UMnNMoGWORsCf3tR943f9S?=
- =?us-ascii?Q?JJrH/gp7IQ8S5dNWexTIOtnJjD/hoSf0LbV4MMj2NQWVuG24zUcNBooj/lHR?=
- =?us-ascii?Q?O0u7cQrZd2m3vlMgmQX0SGsDYIhAZ2Wf4UmExn/piJTZBKWPocQD+xkEP9bm?=
- =?us-ascii?Q?DhUMkxB4qBMZTVi3v0bCUSErLYGakt2/1LlYqPqmLqUbcbKYg4XY0q0DyAsn?=
- =?us-ascii?Q?4z4Cy9CJbAB9ombo9IYnKC79DdwLqDvajTxizZ0SasTS8GA3+bhIwtp/jlEy?=
- =?us-ascii?Q?u1C4L14iM/dwvJjbKRna0qazAQFVjtEASwAry8bnkypJ304/ukS+El6/Dn6K?=
- =?us-ascii?Q?7W8epil6Mcs6TqDw9sNuDTZGO1isDjuKudVr82CMIrcd+ZoSDREF/kre98EB?=
- =?us-ascii?Q?XZH8D4d9mO7Og+xaz5c9PNwIeMcLWFESOwWDvOJw/4yFzqmDgKKrt8xN/Jgb?=
- =?us-ascii?Q?GR2fo7Bdt7B8xCx/UFELqJLw5IsWM5KlHydCJA4WeBdMBI0/ET+ZVZFOVBzt?=
- =?us-ascii?Q?6myCVV0RTReyisbDRWbxrYET+vH5VnvEf6t7ZOQBqTJo5S7VvRuprdssLxFO?=
- =?us-ascii?Q?T52vlyqVgF+Zg14pMJQs9sUF8dkczzZQxs7n9+2dUpaVCCW3dZyeWvWhMMnz?=
- =?us-ascii?Q?3Pupokzgunn0hyOwGQ19C82Atp443cinMX2W1Zxw333bxAp5S8Av8+W7lBqf?=
- =?us-ascii?Q?lZAORR3bumlSdgPuz4Y9vzNU0I67djeOSL3B3mMBvdTpU65UNRqgvCAkqjF+?=
- =?us-ascii?Q?5yYICRepGGNgqZTF7f9B+zL7Yd6pi13bB+dL6NQQVBKizWYCgByFyVDMHtOm?=
- =?us-ascii?Q?vn81QL48zqH/K5eLV9nbfxUGSgW5bsqVihqdRnST0Zi9yUWwEKP479IMdthA?=
- =?us-ascii?Q?hN2c09n+2U9sDmxiEWcfY2I0hL1dAz9gdxVBSeswDecsDVM6DtQwT/CBhAJ2?=
- =?us-ascii?Q?ycidjpbUPijjLMOmVeBYrBhuE0UCcde5iZzsq8DYm/Q+wNV5rC0UiV7MLlJh?=
- =?us-ascii?Q?WKXVN0sfSa2qBeO7RWaxq1ZYeTWxyzR1Z4uecWqBKwa3/JUwnzIwglMknjBE?=
- =?us-ascii?Q?xHNSwF3IPXSVr5zf8pO7vMLDwlElWuFn/dwDWUUHxPSZfngd1yKW8LqrYg+o?=
- =?us-ascii?Q?6xa74YCrP+IqrwpVpRqGiLPlYMQnENxVMEL7s1mYHb8sLb02Z/JOJ01+STRp?=
- =?us-ascii?Q?YcgZRir4zi3h5hNR/4r2qDOL5pWCO4wVg7zBqOoR8MxrPbMOJqt9f78soHgv?=
- =?us-ascii?Q?RsPMUV0KrI8lmYaYXkNaF86xxvriX8VW+JMQXGivZcAKLM9KO7pvKUDpUlH0?=
- =?us-ascii?Q?BlocA+pxAULpUVvRogLaU0gCAXc/CGoYPkUzpeKt4OGnVSDPEblafRPMRdZ1?=
- =?us-ascii?Q?s80nPJb32lAY7P93xatt6Qk58fTmQTXsEMyAk88AAU79dZ6Y7RXOcsGydhr6?=
- =?us-ascii?Q?X43uKuF/NIDSbzPjwmmmexA5Wdp4teEbuhBw2iJBCDFkPeDKmXmCECPO4nuG?=
- =?us-ascii?Q?R5dE2aXRfPSdAmrVhLSz4tqIq1VbgmP6hUARi4LqQzfS0i/Ia0T8fD8yQYM8?=
- =?us-ascii?Q?Pv441Wapiz28Tj9fLb1yPXdWf7uFsNcamdn65fyYggwQgt6jN7gdVF3H76r6?=
- =?us-ascii?Q?wKXFoM18cZueZZErxH3+r+P8zmEba8RUXLnufoVme7euEBMZQsayTwEFNe1d?=
- =?us-ascii?Q?F1LeObHaqUVc733ltKcQCqkWzdgRMHY=3D?=
-X-Exchange-RoutingPolicyChecked: Zpp7XkEIZf/XvpvYXavoiyrs6sUE/i8XaDsdG6fyIrZ4gpZr1n03QO734VwnGIVrHjHGG5GPqAdVVYRCsyuWxxVeRpDh1TKiak+8L26FHRnWwxOtMmFJasWrMJgiEr45BVKfuJ6Q7n77LRlu6x+pgZeE7mzHYa8QvsBAxH+zsimxqC3GLGtDVVg35d2dna5TgGPVN+Rgulc7KQlD944rMGrWDxXq/UXraWLfJJn5N+XqM+2p6qI/cHOrzIDJLP2mXPtm6MClHmP/6aGBGu+gBOydmFNgIWgNVV4O0mVwJMqbOwKSjm1DbEMvIX6gmxTqiE0bj+BaYcX/f37ENo8YVQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6f2720e-3511-4632-89a3-08df2f8c38c6
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2026 15:59:00.5922
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4XdhV5ULHh0LbSDLgO7IPfnU/dr2A9+QnEI2BCqDx3ywN1xcMAEqip3+6bS+vpHraK1iNLh5zH+qd4hc8qcRgQ+tWoVdHJtglQmpOqQ2dUY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4888
-X-OriginatorOrg: intel.com
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: H7BQBYRMD2SVnRTOOrEGcmLQtwjkfPNrARZCN7emo2Q_1792600194
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Wed, Sep 30, 2026 at 05:56:27PM +0800, Yili Zhang wrote:
-> cxl_get_ecs_threshold() extracts a 3-bit index (0-7) from the
-> device-supplied ECS config word and uses it to index
-> ecs_supp_threshold[], which only has 6 elements. A device reporting
-> index 6 or 7 causes an out-of-bounds read of adjacent .rodata, whose
-> value is then returned to userspace via the EDAC 'threshold' sysfs
-> attribute (small info leak and wrong reported threshold).
-> 
-> The threshold count field also has reserved encodings 0-2, which
-> currently read as 0 from the sparse lookup table. That behavior is
-> not intentional; it is just an artifact of the array's implicit
-> zero-fill. The ABI documentation only lists 256, 1024 and 4096 as
-> supported values, so rather than documenting 0 as well, make the
-> read fail for all reserved encodings and only ever report the
-> documented values.
-> 
-> Convert the cxl_get_ecs_*() helpers to return an int and write the
-> attribute value through an output parameter (u32 * to match the
-> macro), so that errors propagate through the shared
-> CXL_ECS_GET_ATTR() macro to the sysfs read.
-> 
-> Fixes: 85fb6a16ad14 ("cxl/edac: Add CXL memory device ECS control feature")
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Yili Zhang <zhangyili01@baidu.com>
+I used qom-list-types and qom-list-properties to list all properties and
+their types, then looked for changes.  This can miss changes in
+dynamically created properties; see the note on qom-list-properties in
+qapi/qom.json.  Moreover, I ran into a few QOM types where
+qom-list-properties is broken.
 
-Hi Yili,
+1. Close misses of QAPI type names change to actual QAPI type names
 
-Thanks for the updates from v1.
+    old property type           new property type
+    ---------------------------------------------
+    string                      str
+    uint64_t                    uint64
+    uint64_t                    size
+    int32_t                     int32
+    int                         size
+    uint32_t                    uint32
+    [uint16]                    uint16List
+    NotifyVMexitOption          NotifyVmexitOption
+    CXLFixedMemoryWindow        CXLFixedMemoryWindowOptionsList
 
-Just a couple of process things for v3. Drop my Suggested-by tag.
-That is usually reserved for folks who suggest the actual patch,
-not folks who suggest changes on v1, like I did. And, send v3 as
-a new email thread, not in reply to this thread, as you did here.
+2. Incorrect QAPI type names change to correct ones
 
--- Alison
+    old property type           new property type
+    ---------------------------------------------
+    SgxEPC                      SgxEPCList
+    QAuthZListRule              QAuthZListRuleList
+    X86CPUFeatureWordInfo       X86CPUFeatureWordInfoList
+    bool                        Pca9552LedState
 
+3. Less than useful QAPI type names change to more useful ones
 
-> ---
-> v2: Per review feedback, fail the read with -EINVAL for all reserved
-> encodings instead of returning 0, converting the cxl_get_ecs_*()
-> getters to an int return with an output parameter so the error
-> reaches the sysfs read.
-> ---
->  drivers/cxl/core/edac.c | 26 +++++++++++++++++---------
->  1 file changed, 17 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-> index b321971fef58..fd6612dde7f1 100644
-> --- a/drivers/cxl/core/edac.c
-> +++ b/drivers/cxl/core/edac.c
-> @@ -624,21 +624,31 @@ static int cxl_mem_ecs_set_attrbs(struct device *dev,
->  			       0, NULL);
->  }
->  
-> -static u8 cxl_get_ecs_log_entry_type(u8 log_cap, u16 config)
-> +static int cxl_get_ecs_log_entry_type(u8 log_cap, u16 config, u32 *val)
->  {
-> -	return FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
-> +	*val = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
-> +
-> +	return 0;
->  }
->  
-> -static u16 cxl_get_ecs_threshold(u8 log_cap, u16 config)
-> +static int cxl_get_ecs_threshold(u8 log_cap, u16 config, u32 *val)
->  {
->  	u8 index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK, config);
->  
-> -	return ecs_supp_threshold[index];
-> +	if (index >= ARRAY_SIZE(ecs_supp_threshold) ||
-> +	    !ecs_supp_threshold[index])
-> +		return -EINVAL;
-> +
-> +	*val = ecs_supp_threshold[index];
-> +
-> +	return 0;
->  }
->  
-> -static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
-> +static int cxl_get_ecs_count_mode(u8 log_cap, u16 config, u32 *val)
->  {
-> -	return FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
-> +	*val = FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
-> +
-> +	return 0;
->  }
->  
->  #define CXL_ECS_GET_ATTR(attrb)						    \
-> @@ -655,9 +665,7 @@ static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
->  		if (ret)						    \
->  			return ret;					    \
->  									    \
-> -		*val = cxl_get_ecs_##attrb(log_cap, config);		    \
-> -									    \
-> -		return 0;						    \
-> +		return cxl_get_ecs_##attrb(log_cap, config, val);	    \
->  	}
->  
->  CXL_ECS_GET_ATTR(log_entry_type)
-> -- 
-> 2.27.0
-> 
+    old property type           new property type
+    ---------------------------------------------
+    str                         Pca9552PinState
+    str                         Pca9554PinState
+
+4. Lazy crap
+ 
+    old property type           new property type
+    ---------------------------------------------
+    list                        link<arm-cpu>List
+    list                        strList
+    list                        uint16List
+    list                        uint32List
+    list                        uint64List
+    list                        uint8List
+    struct                      any
+
+    I'm not sure the first one is what it should be.
+
+    I need to have a closer look at the last one.
+
+5. Inventive crap
+  
+    old property type           new property type
+    ---------------------------------------------
+    busnr                       uint8
+    guest statistics            VirtioBalloonGuestStats
+    loadparm                    str
+    on|off|split                OnOffSplit
+    struct tm                   StructTm
+
+6. An odd duck
+
+    old property type           new property type
+    ---------------------------------------------
+    str                         int32
+
+    This is pci-device property addr.  See PATCH 54.
+
+On the way, I noted properties with anti-social names:
+
+    QOM type name       property name
+    ---------------------------------
+    acpi-ged            memhp container[0]
+    e500-spin           e500 spin pv device[0]
+
