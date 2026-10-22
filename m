@@ -1,100 +1,142 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.47
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792643642;
-	b=ZXm0PjEXT24PN0ZnQuNGRlxYisqGP1f+wDe82JSvqUo521b/Q9xfPSboNr+sJJtPgyJW
-	 KU9wz32VXYXSqvZ9NerJon/NdeKrWSCWNsUbHMpKpyFIcz/JrFEiA8bDUh2xxzMVUanVU
-	 JHTrDo57DA7pqDge9fj0UHkaeViJiMozHVYFHqbsWY+miCChke67wLq/f+15VSBmzjEFq
-	 pj2b69fsVb1st514lKQvqWLV37m0kLmjq+GtRiRn/D0ui0od3kzxlhyN+hemLu57D3t29
-	 ZAVrE5urfuK4Z6qXD9sa1usFAkj/mRR9QtarI5FAVzhNg1tQslMOinfyHD5gmowU7+A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792643642;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
-	b=bxj9Cf48hNM0JvWMrDRSnXIQMep+1NfVxqpu+jdP1oY4YmC3IsqPLWfMymMSFjoDXipz
-	 Qi+mtV9w5fhRFO8S+q/LpKCI+KZy3cLVyjm8Rz2Z2Hdd8NyYpzKvqUrbO81yAtfLI04SC
-	 UMi1bp4KWNzZilnsDUYdFswYb9I8/QQ+6GYthE5HAQkBk9u1J+ScqRKxJDG/as4CDko6z
-	 BNexzTIuyTcJMAT0WqaFk41Cgonid+TE8rMIDHOtuT5mItzz4oImbZa346iYSmjTtk+xC
-	 DDynQMjoiVsNrSbKyBigul/7EJSKGlST1OCkc0rQ9oWupjGuOpJYurNh/+BekvEn1Cg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kh4Kj3yO;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.47
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792651772;
+	b=PTqjpLYSGaHqYBVE6HL8G1qmlOG4rRQu1QsSdcq8b3WnnPHQfnBj8FiCKCQDfLpaPQ2K
+	 bT59SumEfW7EhN1iaDlXK1YE1hdd1ab5QFiGEJaLNfh8zskALQyCPnyM5htouHVsb2s1H
+	 ca5s4zSussInkaE8TNLtF+XSF6RANqaHmTG0eXiQfTycM5BWV7pwSbwNOEfSaEWIN/yNk
+	 5yWz7HFDFiOJCfzr22801LWqvv2bPtit2jYgvkvBGuCjCKFWpAXb7zhVsEV5aurRYAble
+	 91XZtXQPcLdLRtBSHeQte+262vMImQC4JkUATFgZIDVV/7xUV6QcPPSDBJo3wItVErg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792651772;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
+	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=JADHWg0Jlsj3MBmuPMLUMpANIVwK+0qeu0X1mxgI0Mk=;
+	b=Vl6b3PvzZrKo5ex2q1Tmbchr2/1xYkpW2xaKayitopp0GQtX0yF1XqSJCppeI1YlIZhp
+	 Rzty8cpyCaKwC76PhrEQ9jLZ6ow1GvinVeVZztJZqWMTqdbezQmDBAHY8TEEt5IjeXsxc
+	 WgsaAfoLAwF5faXWBJvrHisbxtD+VHpYa2UHdLtXfExHIgSnp0uGSDOLLT6g9iUYP8a+l
+	 Ey2Vl8blvz9IMh0a3IC3vWMovnHeIgec4LLn0q43ZKd0bd+DWanb00xrmbBOEJxt6Jyy/
+	 q2n72q7yuVDBNx0Hzt1lGY2+OwaFgD8b1ierEkvWnm4ent+kyudGLn5Kjdj951XKGKw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="ffV77D/0";
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D571606A31B
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 04:34:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D571606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C153606A324
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 06:49:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C153606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kh4Kj3yO
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6b3dd83e779so2439512a12.1
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Oct 2026 21:34:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792643641; cv=none;
-        d=google.com; s=arc-20260327;
-        b=MyYwLyp27NqBCFDk3BmzcCyYRCg1ZiP4wW8+HrFzoLtBlmYvs8q1AHT/MlTszYO0Ok
-         9caaWrivEZA6TBf+l0NJJqB7gwl9v4N4ykmktpvRzj3sAMRAbHkNZeVYbXZI8DQXkwu2
-         EVcdksWYvS9d82tY1D8AbDAZecxRXgGBSJLA1PsEOwo2SAztwiRiymcFGsUW8BHHY0+x
-         wv0J0L2ISgNb5RSDjfZCmh9dc3nE2pqmGoHSm/CgQce8KX5gH25wmy0a4foo17oMA2Ee
-         HWbbV9K36pK6XWcjswVM65KHUWic98aPKT7VYE7aGFyK/gJSaPm2zEug3zyKfCcdkzzK
-         /GJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
-        fh=LQ5LWUPnEVOGlo/hoWuSqEh6TAHhpmPDlXswXSJoY3c=;
-        b=SwgThMN8imkBOT54XC016/heSxXurio8hQIfXyYjjAm0WzFHnFCkRt3IT0uGkmpL2m
-         moW53aw14IDWIcd6KEyTJHCz3aWdKz7j+dNuW1/SD8xTUeGwrd5yYEX7h5ohrSjrjhq5
-         y3IacttqrIvgH+g32JjOTQlxhsAhrXoNxOM7/Fk/cR/nzPZNUYltVrYWj75t4DdsP316
-         zYSiV3T6bkECuAclaBPV7+ysjOfNLqkSnt6JPIEyXMuxPhak/CHms7Tqqhs9/mMGGiM+
-         evb5IQZOfgTKEVUYAIXCEBjTbUQz7NvYGAnQT6VkODGNI8HhcSMBDoMd7/tPTPGuDzLe
-         wp+g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792643641; x=1793248441; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
-        b=kh4Kj3yOXXV8CiQcn4iFy1A+6FMPrhHZk30T8qITp+G7TmFL8FUg5YYRobXac7PDFA
-         TkiaFKqL4mhd4RHCf6FQzEACq2KAHTf1cnH712Uc1wB4agR0mDXXIn9WwajVCJT/8So2
-         83dfzqfRpe7qzMyB2ArFshwYf/YrDWzzXjvi7pK5/yh0J5EqiP1yud4QYRjixuGuHuk7
-         mBpYQYJfrR5N8gnJiyCkq+Bx3KaTlhvG2YSGeTuiKrZYfUH1vYXO7chff65aeu4YKhgL
-         XKmsG318gDwJ3ALdCKg+YSBvDnFnleja+tZ20vdl3JkBUJxXgw2vaU9JfSF7AaGLqhxu
-         kDSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792643641; x=1793248441;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
-        b=aFzjl0pZ9qTUhqEB2F+hvB3QaTixeGBWkp05gCTrITbbth1NP/YDXugaHlDmhLc0Yp
-         aPmS379eujVkNNQx+wmpeKVJ+/6X5euaXKDYOCgbc4ZOCgj0mojcbN6G2G82/XhhiZfw
-         7Mb8oNanOCaAPqo0TDRCYYdp/Jy39vQz+aiYtathRzNXcpQ3QRRgW7eJP7EvtWuHo0C9
-         pOip9KfWQLrQomc9cEPF0XxXKvuZ8vh1XvGKjcsBJMR4lUh4JUALlRrWQ/CCwQcGvFzC
-         lorFrNkRrRH5qmRRKv79s6nMZLLVPLTtoANrApxJ0wJFo2RxyaKfLbR4V4QDDDdWWiL8
-         nujg==
-X-Forwarded-Encrypted: i=1; AKwUvByvKBZkTSjoEa6N71X3e4d5iz16SjSHoULCMFVoaFhTqi390OBhAO0WNfzFNjwakURjDrQXPNz0DNg=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJcPwa+DD5/QKkCsPYrA6AuXudwVBipojHkly7IB8GNrUsqJK2e
-	qmOl7V1VJXwUV7Rvm0iw6A3Zrcs0divbJwdCf5QVvwHP9NJGHGiFedV09sIIkS2ytJnvyUEAHP1
-	i1cKEqsk357sCpNbXeJ/oWyB1z7NV6do=
-X-Gm-Gg: AYBFou0nbXuDkqS2ugGTDgL+c/v9RZu22k8zH0n9IClAANEpQ+mhIHmglqJhgKtKjv/
-	rEqpZ8LDspZxCZsmc5meJymmB8p1HQMpbLN1eMnjhi4OMqrQXEMYdOZCbRhz8TsFy7Vo0nPk2ds
-	g8/Gdi5mtxY0eGD3JrcLY4okDMLUEepQsIPzy4fvrnGS4BkS3gJ+CECG9BZe1jUJQj8V5KzOEMD
-	M85NZg6EA6j+GEd2YDktJ4TD55FhrDyBaazWW4jiz28Y7C7855OsSMReRh675njSK90p7Q1b5fp
-	aoxGsLPRghXw5BMIqzMq2PPhlDnigsupVRQpsVFtr+kJMLbgK5rWtXE3Z343dlUvO1DTew3sOkA
-	8qRJ2Obc79UNQ5pD4SodS9kSIlhQCFxSIuIJnIQpHyE/id4Nx4umvCEROLl7YXM08B7c=
-X-Received: by 2002:a05:6402:28c8:b0:6ac:bd53:d29a with SMTP id
- 4fb4d7f45d1cf-6b408dcd1femr2989972a12.3.1792643640365; Wed, 21 Oct 2026
- 21:34:00 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ffV77D/0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792651770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JADHWg0Jlsj3MBmuPMLUMpANIVwK+0qeu0X1mxgI0Mk=;
+	b=ffV77D/0ReZDC2F4Zs2LkCXWakwzWO8FeMGwsFvj/L9lpSHqSI3lxP9aUl/RpSl2o6T2Ya
+	hpQYzmHEeT1/p1K0V11YN8Hyo9lovmGf1WXspxItAQ+iwSlWqTRqHItUl3YjAgGxw28SqT
+	omm60soW5Lfsstv1f+TN3erzAT3RegI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-9wIN8bqtNjm5ZsV_6-4TKQ-1; Thu,
+ 22 Oct 2026 06:49:26 +0000
+X-MC-Unique: 9wIN8bqtNjm5ZsV_6-4TKQ-1
+X-Mimecast-MFC-AGG-ID: 9wIN8bqtNjm5ZsV_6-4TKQ_1792651761
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E93719560B2;
+	Thu, 22 Oct 2026 06:49:18 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 725C81803A48;
+	Thu, 22 Oct 2026 06:49:14 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 1B3A121E6A04; Thu, 22 Oct 2026 08:49:12 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: devel@lists.libvirt.org
+Cc: marcandre.lureau@redhat.com, qemu-devel@nongnu.org,  Michael Roth
+ <michael.roth@amd.com>,  John Snow <jsnow@redhat.com>,  Peter Maydell
+ <peter.maydell@linaro.org>,  Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>,  Pierrick Bouvier
+ <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
+  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
+ Kostiuk
+ <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
+ <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
+ Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
+  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
+ Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
+ <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
+ <philmd@oss.qualcomm.com>,
+  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
+  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
+  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
+ <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
+ Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
+ <clg@redhat.com>,
+  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
+  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
+  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
+  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
+ Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
+  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
+ <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
+ <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
+  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
+ <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
+  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
+ <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
+ Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
+ <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
+ Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
+ <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
+ <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
+ Lin
+ <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
+ Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
+ Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
+ Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
+ <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
+ <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
+ Dooley <conor@kernel.org>,  Sebastian Huber
+ <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
+ <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
+ Stabellini <sstabellini@kernel.org>,  Anthony PERARD
+ <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
+ <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
+  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
+  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
+  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
+  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
+ <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
+ Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
+ <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
+ Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
+ Vivier <lvivier@redhat.com>
+Subject: Re: Property types changed in this series
+In-Reply-To: <87tsmfkoej.fsf@pond.sub.org> (Markus Armbruster's message of
+	"Wed, 21 Oct 2026 18:29:40 +0200")
+References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
+	<87tsmfkoej.fsf@pond.sub.org>
+Date: Thu, 22 Oct 2026 08:49:12 +0200
+Message-ID: <878q3qkz6f.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -104,116 +146,99 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260928011123.450800-1-alistair.francis@wdc.com>
- <as_r8n7p_wdbChuQ@google.com> <CAKmqyKOkmwompJqaP2k-oJicmXmqHY4E0wuLcrvkHLx+oauQ2Q@mail.gmail.com>
- <DM596TT7E841.1U05OKY9N6I6C@nvidia.com>
-In-Reply-To: <DM596TT7E841.1U05OKY9N6I6C@nvidia.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Thu, 22 Oct 2026 14:33:34 +1000
-X-Gm-Features: AclHuK9U67i3MHCSs1fpGty_QgfHHhn6FdMHJ0fAOkjnn4XpsrsbQBC3WfRL_pw
-Message-ID: <CAKmqyKMbs_N6C8MAKGUU11DW1y5nJRWPqnUcrVZoyi0SDjsv3g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/22] lib: Rust implementation of SPDM
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, lukas@wunner.de, linux-cxl@vger.kernel.org, 
-	akpm@linux-foundation.org, Jonathan.Cameron@huawei.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jic23@kernel.org, bhelgaas@google.com, alistair@alistair23.me, 
-	djbw@kernel.org, linux-pci@vger.kernel.org, wilfred.mallawa@wdc.com, 
-	a.hindborg@kernel.org, gregkh@linuxfoundation.org, alex.gaynor@gmail.com, 
-	benno.lossin@proton.me, boqun.feng@gmail.com, bjorn3_gh@protonmail.com, 
-	tmgross@umich.edu, gary@garyguo.net, ojeda@kernel.org, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: gFVYNdGtH-zKTxjG81yNHc7lF5aS0rHMYvaGSCJoh9s_1792651761
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 15, 2026 at 6:02=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> On Thu Oct 15, 2026 at 2:23 PM JST, Alistair Francis wrote:
-> > On Thu, Oct 15, 2026 at 6:54=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
-m> wrote:
-> >>
-> >> On Mon, Sep 28, 2026 at 11:11:01AM +1000, alistair23@gmail.com wrote:
-> >> > From: Alistair Francis <alistair.francis@wdc.com>
-> >> >
-> >> > Security Protocols and Data Models (SPDM) [1] is used for authentica=
-tion,
-> >> > attestation and key exchange. SPDM is generally used over a range of
-> >> > transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
-> >> >
-> >> > From the kernels perspective SPDM is used to authenticate and attest=
- devices.
-> >> > In this threat model a device is considered untrusted until it can b=
-e verified
-> >> > by the kernel and userspace using SPDM. As such SPDM data is untrust=
-ed data
-> >> > that can be mallicious.
-> >> >
-> >> > The SPDM specification is also complex, with the 1.2.1 spec being al=
-most 200
-> >> > pages and the 1.3.0 spec being almost 250 pages long.
-> >> >
-> >> > As such we have the kernel parsing untrusted responses from a comple=
-x
-> >> > specification, which sounds like a possible exploit vector. This is =
-the type
-> >> > of place where Rust excels!
-> >> >
-> >> > This series implements a SPDM requester in Rust.
-> >>
-> >> So I looked a bit at this, and here are some comments. I will not repe=
-at
-> >> what Alexandre has already said.
-> >>
-> >> First, I'd like to say that it's good to see that all wire-format
-> >> parsing in lib/rspdm/validator.rs is written in completely safe Rust.
-> >> That's exactly what we want to see for parsing in Rust. We want the co=
-de
-> >> to have basically no unsafe code whatsoever so that we really get to
-> >> rely on the bullet-proof guarantees about bugs being caught at compile
-> >> time, or at least at runtime.
-> >>
-> >> Unfortunately it looks like the same cannot be said for the state
-> >> machine in lib/rspdm/state.rs, which has way too much unsafe code in i=
-ts
-> >> interaction with the rest of the kernel. There needs to be more
-> >> intermediate Rust abstractions here. This file should not have *any*
-> >> unsafe code, except maybe 1-2 blocks for using the C transport and
-> >> validate function pointers.
-> >
-> > Yeah, it's the crypto functions. There are currently no bindings, so
-> > it's just directly calling the C functions.
-> >
-> > Without the crypto functions it's just a single unsafe call to
-> > `transport_function()` in `state.rs` and a few in `lib.rs` to handl
-> > the C <-> FFI boundy.
-> >
-> > I was trying to avoid adding crypto and X.509 bindings in this series,
-> > as that's a few more subsystems this ends up touching. We need to add
-> > PQC as well, so crypto bindings are next on the todo list once this is
-> > merged.
-> >
-> > Is this going to stall on adding crypto bindings?
->
-> So without going all the way to fully-fledged crypto bindings, you will
-> spare yourself and your reviewers quite a bit of pain if you at least
-> implement a safe and lightweight crypto wrapper that is local to SPDM
-> and could eventually grow into official crypto bindings as a future
-> effort. As it is the code is very hard to review: for instance
-> `crypto_free_shash` is always called after `free_desc`, and looks like
-> it could/should be part of it, but that's hard to assess as the crypto
-> code is mixed with the rest and called here and there. I just cannot
-> tell whether all these unsafe blocks are safe of not, which is a problem
-> since the goal of writing this in Rust is to prevent exploits.
->
-> A self-contained crypto module exposing a safe interface would remove
-> that burden, reduce the number of `unsafe` blocks, and make the series
-> easier to review globally while not necessarily resulting in more code.
-> You just need to store the relevant pointers into a new data structure,
-> enforce the required invariants at construction time, and codify the
-> actions that SPDM is already doing in the form of methods.
+Libvirt developers: does libvirt use member @type of the reply of
+qom-list, qom-list-properties, qom-list-get?
 
-Oh! That is a great idea. I have added that locally and it's pretty
-nice. I'll tidy it up a bit more and then send a v5
+I'm asking because Marc-Andr=C3=A9's work changes many values to add a more
+useful replacement.  I think we should deprecate @type.  I'd like to
+find out whether we need to preserve the values for the deprecation
+grace period.
 
-Alistair
+Markus Armbruster <armbru@redhat.com> writes:
+
+> I used qom-list-types and qom-list-properties to list all properties and
+> their types, then looked for changes.  This can miss changes in
+> dynamically created properties; see the note on qom-list-properties in
+> qapi/qom.json.  Moreover, I ran into a few QOM types where
+> qom-list-properties is broken.
+
+These are ast2700-a1, ast2700-a2, and several riscv CPUs.  A fix for the
+latter has been queued.
+
+> 1. Close misses of QAPI type names change to actual QAPI type names
+>
+>     old property type           new property type
+>     ---------------------------------------------
+>     string                      str
+>     uint64_t                    uint64
+>     uint64_t                    size
+>     int32_t                     int32
+>     int                         size
+>     uint32_t                    uint32
+>     [uint16]                    uint16List
+>     NotifyVMexitOption          NotifyVmexitOption
+>     CXLFixedMemoryWindow        CXLFixedMemoryWindowOptionsList
+>
+> 2. Incorrect QAPI type names change to correct ones
+>
+>     old property type           new property type
+>     ---------------------------------------------
+>     SgxEPC                      SgxEPCList
+>     QAuthZListRule              QAuthZListRuleList
+>     X86CPUFeatureWordInfo       X86CPUFeatureWordInfoList
+>     bool                        Pca9552LedState
+>
+> 3. Less than useful QAPI type names change to more useful ones
+>
+>     old property type           new property type
+>     ---------------------------------------------
+>     str                         Pca9552PinState
+>     str                         Pca9554PinState
+>
+> 4. Lazy crap
+> =20
+>     old property type           new property type
+>     ---------------------------------------------
+>     list                        link<arm-cpu>List
+>     list                        strList
+>     list                        uint16List
+>     list                        uint32List
+>     list                        uint64List
+>     list                        uint8List
+>     struct                      any
+>
+>     I'm not sure the first one is what it should be.
+>
+>     I need to have a closer look at the last one.
+>
+> 5. Inventive crap
+>  =20
+>     old property type           new property type
+>     ---------------------------------------------
+>     busnr                       uint8
+>     guest statistics            VirtioBalloonGuestStats
+>     loadparm                    str
+>     on|off|split                OnOffSplit
+>     struct tm                   StructTm
+>
+> 6. An odd duck
+>
+>     old property type           new property type
+>     ---------------------------------------------
+>     str                         int32
+>
+>     This is pci-device property addr.  See PATCH 54.
+>
+> On the way, I noted properties with anti-social names:
+>
+>     QOM type name       property name
+>     ---------------------------------
+>     acpi-ged            memhp container[0]
+>     e500-spin           e500 spin pv device[0]
+
