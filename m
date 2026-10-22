@@ -1,88 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.42
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792642839;
-	b=LBnHXVT2WkY8tU6x9bZFZIjsSggZ4OoP288O8yL5kS3Sa5Jm55IqvM8W69DT9s/19qXq
-	 ntLkF7PTFJPCXWvI6ejzStLa/RykXrPrKGnSUn2YQCjiNU+Iz+NXUn4oxjGU7hCSS7nmu
-	 dTOhoXUg4uzYoApUgLruLWBzNF382FPMWadnp9Dbu7sTqTQblH4pi7gsMjmWTfpHlYNAL
-	 8bG9dWMeoAT25iBuVCGbNwm+eNbZp/3UWE/5TvAOwXkDyoh3gIgpU3XjISLIrY1vS0kmg
-	 Q/alWG/3gC9VVtAL+jOJOaswN25avIJ3/u0TrtDQOe4JzQkBZkNZQ4O6tPmtR3xpd2Q==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792642839;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.47
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792643642;
+	b=ZXm0PjEXT24PN0ZnQuNGRlxYisqGP1f+wDe82JSvqUo521b/Q9xfPSboNr+sJJtPgyJW
+	 KU9wz32VXYXSqvZ9NerJon/NdeKrWSCWNsUbHMpKpyFIcz/JrFEiA8bDUh2xxzMVUanVU
+	 JHTrDo57DA7pqDge9fj0UHkaeViJiMozHVYFHqbsWY+miCChke67wLq/f+15VSBmzjEFq
+	 pj2b69fsVb1st514lKQvqWLV37m0kLmjq+GtRiRn/D0ui0od3kzxlhyN+hemLu57D3t29
+	 ZAVrE5urfuK4Z6qXD9sa1usFAkj/mRR9QtarI5FAVzhNg1tQslMOinfyHD5gmowU7+A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792643642;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References;
-	bh=IYGqe8uHdvMKTGNalGzso/Hav7cwh06URO2tg9hCsgA=;
-	b=JkimI0Xu3zlG+wF1ep51eAqH0o6vyJPwh/JdJta9dK4oL4P3H+/949E1PoB1RsP0YQOP
-	 hJMG+j2GvWhfB2SVmEaBOBCer6oRWWRO8HguFEapzfTDaSZNSn1uNn4vdvPOTokxVzDEw
-	 CF80dN70RT6sP11CNnc8hRhs2k38SbvPuf5PwgpLR5wTpgoHqfuG9MUXuL/+wiYbGc5iH
-	 5i3uNzc4p+F+uaMcvd+e+ZLtahOYJfVhAjKqKXvR+F0tmdYxiDZ0QqWsULXLLH2inI8Sz
-	 ah3rRovaQTPTUW++poumyGNP/OThgTvmhav1uf0+bV5QfJ7VyYYr0rDgnJHpOOYJpqA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
+	b=bxj9Cf48hNM0JvWMrDRSnXIQMep+1NfVxqpu+jdP1oY4YmC3IsqPLWfMymMSFjoDXipz
+	 Qi+mtV9w5fhRFO8S+q/LpKCI+KZy3cLVyjm8Rz2Z2Hdd8NyYpzKvqUrbO81yAtfLI04SC
+	 UMi1bp4KWNzZilnsDUYdFswYb9I8/QQ+6GYthE5HAQkBk9u1J+ScqRKxJDG/as4CDko6z
+	 BNexzTIuyTcJMAT0WqaFk41Cgonid+TE8rMIDHOtuT5mItzz4oImbZa346iYSmjTtk+xC
+	 DDynQMjoiVsNrSbKyBigul/7EJSKGlST1OCkc0rQ9oWupjGuOpJYurNh/+BekvEn1Cg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EKm3EM+6;
-	arc=none smtp.remote-ip=74.125.82.42
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kh4Kj3yO;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.47
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B59F606A31B
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 04:20:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B59F606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D571606A31B
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 04:34:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D571606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EKm3EM+6
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-16079d54c17so2666264c88.0
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Oct 2026 21:20:39 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kh4Kj3yO
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6b3dd83e779so2439512a12.1
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Oct 2026 21:34:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792643641; cv=none;
+        d=google.com; s=arc-20260327;
+        b=MyYwLyp27NqBCFDk3BmzcCyYRCg1ZiP4wW8+HrFzoLtBlmYvs8q1AHT/MlTszYO0Ok
+         9caaWrivEZA6TBf+l0NJJqB7gwl9v4N4ykmktpvRzj3sAMRAbHkNZeVYbXZI8DQXkwu2
+         EVcdksWYvS9d82tY1D8AbDAZecxRXgGBSJLA1PsEOwo2SAztwiRiymcFGsUW8BHHY0+x
+         wv0J0L2ISgNb5RSDjfZCmh9dc3nE2pqmGoHSm/CgQce8KX5gH25wmy0a4foo17oMA2Ee
+         HWbbV9K36pK6XWcjswVM65KHUWic98aPKT7VYE7aGFyK/gJSaPm2zEug3zyKfCcdkzzK
+         /GJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
+        fh=LQ5LWUPnEVOGlo/hoWuSqEh6TAHhpmPDlXswXSJoY3c=;
+        b=SwgThMN8imkBOT54XC016/heSxXurio8hQIfXyYjjAm0WzFHnFCkRt3IT0uGkmpL2m
+         moW53aw14IDWIcd6KEyTJHCz3aWdKz7j+dNuW1/SD8xTUeGwrd5yYEX7h5ohrSjrjhq5
+         y3IacttqrIvgH+g32JjOTQlxhsAhrXoNxOM7/Fk/cR/nzPZNUYltVrYWj75t4DdsP316
+         zYSiV3T6bkECuAclaBPV7+ysjOfNLqkSnt6JPIEyXMuxPhak/CHms7Tqqhs9/mMGGiM+
+         evb5IQZOfgTKEVUYAIXCEBjTbUQz7NvYGAnQT6VkODGNI8HhcSMBDoMd7/tPTPGuDzLe
+         wp+g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792642839; x=1793247639; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=IYGqe8uHdvMKTGNalGzso/Hav7cwh06URO2tg9hCsgA=;
-        b=EKm3EM+6auetdY/kjeEEjNANFJh0VAqa37m9SgxUmEVA/Z/nM0sskQ32739FoiM13L
-         ubOlxIckCxXZN6YAGUobJ7BkDZJ0MkN7Y+odVP5HlSWT5YxIComCKEbW8QrA/NlO1E5u
-         PZPIQs/3mcKkDgOYcUw/fEjcegXoLAV/j5lScc0Ggv/seHYB9cdvifl7E8tb8b3ojcva
-         PISqgBZxAsU3ySrboUuKyADL4lqplo708r26YhSxHUsssxvpJWpJnLV5u3Pk2C0UqKZi
-         vpIxKOYwlbkAkVMlGi6bZltbYeOoFxosElQhbLvB6hZ778ROFc+131N3lzjDYwGo53dE
-         qHdA==
+        d=gmail.com; s=20251104; t=1792643641; x=1793248441; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
+        b=kh4Kj3yOXXV8CiQcn4iFy1A+6FMPrhHZk30T8qITp+G7TmFL8FUg5YYRobXac7PDFA
+         TkiaFKqL4mhd4RHCf6FQzEACq2KAHTf1cnH712Uc1wB4agR0mDXXIn9WwajVCJT/8So2
+         83dfzqfRpe7qzMyB2ArFshwYf/YrDWzzXjvi7pK5/yh0J5EqiP1yud4QYRjixuGuHuk7
+         mBpYQYJfrR5N8gnJiyCkq+Bx3KaTlhvG2YSGeTuiKrZYfUH1vYXO7chff65aeu4YKhgL
+         XKmsG318gDwJ3ALdCKg+YSBvDnFnleja+tZ20vdl3JkBUJxXgw2vaU9JfSF7AaGLqhxu
+         kDSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792642839; x=1793247639;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1792643641; x=1793248441;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IYGqe8uHdvMKTGNalGzso/Hav7cwh06URO2tg9hCsgA=;
-        b=nckfrlO/swqcnRhrILuYX7a+zSXbDTo2caxh6d0KL69uZ9mF0Mr5GIFnSGwI4eFwMt
-         LyGh/ogPp4oMdQZCbYIzyKFxk73x49D/ZBHPRYKQNls4yu7s6J70X9plfNHQhpIaAdBW
-         csk/+gRH5/s3STxpYOb83Ow9tXJf7ElGvH/sUZfGEdg2Rhw1riV1Fvqtjim+PH4wMM3L
-         szrR7t9nc91FJpT6obXicc0IM6G3FdQ4h5aazG03BHmAy9Z0EQir8bRkkFHXhMn2BEVP
-         HVoc/Z6+OHsMMLbqPTwCSqczP9/XgeauHx3yBcx+XlY5Sw4dEMqsI5PMFD9tTkAu5C+L
-         SVLg==
-X-Forwarded-Encrypted: i=1; AKwUvByGlUUvsvM+oPclRlxfYn5CR6p0naQz5l0SUthy7dVipCXT+HbyuwzC2YJXsMjpDG1+I8a3F2dp90s=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK7jKIxhW4TJgHKOEB2LrvNX+GCT1Jn7fUs8OIzaLgmtflS0/A6
-	4fIsXUDm1QXpcy2Etn+wPYv3f/BvdIPat5yoajZ+7GOAOI+RTbBsVqJP
-X-Gm-Gg: AYBFou1fsPnyUE5N7OaGzkbqF5DlnN9BRyn5ZMkz1EnsDZlHxaAheO6hdUIYvJVPGLj
-	vpOZCq/NyD4G7Ydv01IJwM5tv+pcwj+gK4n7dflgJXe4L2ui9DQSMvflp9NyJ38zZAjVkobIUHN
-	OHlVEIN/QzrAZpakh2CrcMg1hfzkcs6C6jxdpti30FPIYJxQl8LZiSyV0ijpGu2jLyr57ykmIKF
-	dRTAaor9n5H4tc9AEdEh7KhNsQjdDp4gST3ONiuzZmsvx23o/FgVJDVcCbl9Flx0Ujryz9SQniX
-	bhQqUGDXl82x7enJCywJpx0MxDpdMDwIrBbGTAJXUXiPMW9LK6+ebHIHG+1ONIkzsAEXMA6ib1t
-	h7ASMpIAS8HQ3xPK8xz1WhxWowxWKuiymLmfHtePjrCoipU6wGeYsOVqeJX5lcvTJMIoawucJdY
-	FRMQtgWS1Z5zX0dQoHXAY5rmkxau5abOWjJpbtDnt1nCOSc+EOIfv8/wZwd9aTg6sJkCFcb5Zaf
-	FjBOSDh+HU1AB93vNI0SxI6+rKUW7lPQ2rBuoYw11PA3NgdK32F5w==
-X-Received: by 2002:a05:7022:628a:b0:144:c12b:dfc6 with SMTP id a92af1059eb24-190a80ee9a2mr7469795c88.44.1792642838435;
-        Wed, 21 Oct 2026 21:20:38 -0700 (PDT)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1903ca044d4sm11690981c88.17.2026.10.21.21.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 21:20:37 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Muchun Song <songmuchun@bytedance.com>, Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Joao Martins <joao.m.martins@oracle.com>, Muchun Song <muchun.song@linux.dev>, stable@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>
-Subject: Re: [PATCH] dax/pmem: fix unaligned compound devmap initialization
-In-Reply-To: <20261016054914.2601510-1-songmuchun@bytedance.com>
-Date: Thu, 22 Oct 2026 09:07:21 +0530
-Message-ID: <jyna5rta.ritesh.list@gmail.com>
-References: <20261016054914.2601510-1-songmuchun@bytedance.com>
+        bh=FX6Mu1YeIXFmXkKYuzzN3WwkU16Ko5e6ASCr8EcCtu0=;
+        b=aFzjl0pZ9qTUhqEB2F+hvB3QaTixeGBWkp05gCTrITbbth1NP/YDXugaHlDmhLc0Yp
+         aPmS379eujVkNNQx+wmpeKVJ+/6X5euaXKDYOCgbc4ZOCgj0mojcbN6G2G82/XhhiZfw
+         7Mb8oNanOCaAPqo0TDRCYYdp/Jy39vQz+aiYtathRzNXcpQ3QRRgW7eJP7EvtWuHo0C9
+         pOip9KfWQLrQomc9cEPF0XxXKvuZ8vh1XvGKjcsBJMR4lUh4JUALlRrWQ/CCwQcGvFzC
+         lorFrNkRrRH5qmRRKv79s6nMZLLVPLTtoANrApxJ0wJFo2RxyaKfLbR4V4QDDDdWWiL8
+         nujg==
+X-Forwarded-Encrypted: i=1; AKwUvByvKBZkTSjoEa6N71X3e4d5iz16SjSHoULCMFVoaFhTqi390OBhAO0WNfzFNjwakURjDrQXPNz0DNg=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJcPwa+DD5/QKkCsPYrA6AuXudwVBipojHkly7IB8GNrUsqJK2e
+	qmOl7V1VJXwUV7Rvm0iw6A3Zrcs0divbJwdCf5QVvwHP9NJGHGiFedV09sIIkS2ytJnvyUEAHP1
+	i1cKEqsk357sCpNbXeJ/oWyB1z7NV6do=
+X-Gm-Gg: AYBFou0nbXuDkqS2ugGTDgL+c/v9RZu22k8zH0n9IClAANEpQ+mhIHmglqJhgKtKjv/
+	rEqpZ8LDspZxCZsmc5meJymmB8p1HQMpbLN1eMnjhi4OMqrQXEMYdOZCbRhz8TsFy7Vo0nPk2ds
+	g8/Gdi5mtxY0eGD3JrcLY4okDMLUEepQsIPzy4fvrnGS4BkS3gJ+CECG9BZe1jUJQj8V5KzOEMD
+	M85NZg6EA6j+GEd2YDktJ4TD55FhrDyBaazWW4jiz28Y7C7855OsSMReRh675njSK90p7Q1b5fp
+	aoxGsLPRghXw5BMIqzMq2PPhlDnigsupVRQpsVFtr+kJMLbgK5rWtXE3Z343dlUvO1DTew3sOkA
+	8qRJ2Obc79UNQ5pD4SodS9kSIlhQCFxSIuIJnIQpHyE/id4Nx4umvCEROLl7YXM08B7c=
+X-Received: by 2002:a05:6402:28c8:b0:6ac:bd53:d29a with SMTP id
+ 4fb4d7f45d1cf-6b408dcd1femr2989972a12.3.1792643640365; Wed, 21 Oct 2026
+ 21:34:00 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,141 +103,117 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20260928011123.450800-1-alistair.francis@wdc.com>
+ <as_r8n7p_wdbChuQ@google.com> <CAKmqyKOkmwompJqaP2k-oJicmXmqHY4E0wuLcrvkHLx+oauQ2Q@mail.gmail.com>
+ <DM596TT7E841.1U05OKY9N6I6C@nvidia.com>
+In-Reply-To: <DM596TT7E841.1U05OKY9N6I6C@nvidia.com>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Thu, 22 Oct 2026 14:33:34 +1000
+X-Gm-Features: AclHuK9U67i3MHCSs1fpGty_QgfHHhn6FdMHJ0fAOkjnn4XpsrsbQBC3WfRL_pw
+Message-ID: <CAKmqyKMbs_N6C8MAKGUU11DW1y5nJRWPqnUcrVZoyi0SDjsv3g@mail.gmail.com>
+Subject: Re: [PATCH v4 00/22] lib: Rust implementation of SPDM
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, lukas@wunner.de, linux-cxl@vger.kernel.org, 
+	akpm@linux-foundation.org, Jonathan.Cameron@huawei.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jic23@kernel.org, bhelgaas@google.com, alistair@alistair23.me, 
+	djbw@kernel.org, linux-pci@vger.kernel.org, wilfred.mallawa@wdc.com, 
+	a.hindborg@kernel.org, gregkh@linuxfoundation.org, alex.gaynor@gmail.com, 
+	benno.lossin@proton.me, boqun.feng@gmail.com, bjorn3_gh@protonmail.com, 
+	tmgross@umich.edu, gary@garyguo.net, ojeda@kernel.org, 
+	Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-+ linuxppc-dev (for awareness, since I also faced the same issue on
-Power too, although this one is not related to PPC alone)
-
-Muchun Song <songmuchun@bytedance.com> writes:
-
-> Static pmem Device DAX namespaces reserve space for namespace metadata
-> before the user-visible data range, and may also include padding needed
-> to satisfy the Device DAX alignment. __dax_pmem_probe() adjusts the
-> dax_region range to start at the data range, but the dev_pagemap range
-> still starts at the beginning of the namespace.
+On Thu, Oct 15, 2026 at 6:02=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
+com> wrote:
 >
-> That is not valid for compound devmap mappings whose memmap is stored in
-> system RAM. Compound page initialization requires the start PFN to be
-> naturally aligned to the compound page size, because the head and tail
-> struct pages are initialized according to that geometry. If the pgmap
-> starts before the aligned data range, memmap_init_zone_device() can build
-> compound page metadata from an unaligned PFN.
+> On Thu Oct 15, 2026 at 2:23 PM JST, Alistair Francis wrote:
+> > On Thu, Oct 15, 2026 at 6:54=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
+m> wrote:
+> >>
+> >> On Mon, Sep 28, 2026 at 11:11:01AM +1000, alistair23@gmail.com wrote:
+> >> > From: Alistair Francis <alistair.francis@wdc.com>
+> >> >
+> >> > Security Protocols and Data Models (SPDM) [1] is used for authentica=
+tion,
+> >> > attestation and key exchange. SPDM is generally used over a range of
+> >> > transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
+> >> >
+> >> > From the kernels perspective SPDM is used to authenticate and attest=
+ devices.
+> >> > In this threat model a device is considered untrusted until it can b=
+e verified
+> >> > by the kernel and userspace using SPDM. As such SPDM data is untrust=
+ed data
+> >> > that can be mallicious.
+> >> >
+> >> > The SPDM specification is also complex, with the 1.2.1 spec being al=
+most 200
+> >> > pages and the 1.3.0 spec being almost 250 pages long.
+> >> >
+> >> > As such we have the kernel parsing untrusted responses from a comple=
+x
+> >> > specification, which sounds like a possible exploit vector. This is =
+the type
+> >> > of place where Rust excels!
+> >> >
+> >> > This series implements a SPDM requester in Rust.
+> >>
+> >> So I looked a bit at this, and here are some comments. I will not repe=
+at
+> >> what Alexandre has already said.
+> >>
+> >> First, I'd like to say that it's good to see that all wire-format
+> >> parsing in lib/rspdm/validator.rs is written in completely safe Rust.
+> >> That's exactly what we want to see for parsing in Rust. We want the co=
+de
+> >> to have basically no unsafe code whatsoever so that we really get to
+> >> rely on the bullet-proof guarantees about bugs being caught at compile
+> >> time, or at least at runtime.
+> >>
+> >> Unfortunately it looks like the same cannot be said for the state
+> >> machine in lib/rspdm/state.rs, which has way too much unsafe code in i=
+ts
+> >> interaction with the rest of the kernel. There needs to be more
+> >> intermediate Rust abstractions here. This file should not have *any*
+> >> unsafe code, except maybe 1-2 blocks for using the C transport and
+> >> validate function pointers.
+> >
+> > Yeah, it's the crypto functions. There are currently no bindings, so
+> > it's just directly calling the C functions.
+> >
+> > Without the crypto functions it's just a single unsafe call to
+> > `transport_function()` in `state.rs` and a few in `lib.rs` to handl
+> > the C <-> FFI boundy.
+> >
+> > I was trying to avoid adding crypto and X.509 bindings in this series,
+> > as that's a few more subsystems this ends up touching. We need to add
+> > PQC as well, so crypto bindings are next on the todo list once this is
+> > merged.
+> >
+> > Is this going to stall on adding crypto bindings?
 >
-> The resulting struct page layout is inconsistent with the Device DAX
-> mapping. A later mmap fault can then resolve the user-visible PFN through
-> invalid compound page metadata and hit a kernel panic while inserting the
-> DAX folio.
+> So without going all the way to fully-fledged crypto bindings, you will
+> spare yourself and your reviewers quite a bit of pain if you at least
+> implement a safe and lightweight crypto wrapper that is local to SPDM
+> and could eventually grow into official crypto bindings as a future
+> effort. As it is the code is very hard to review: for instance
+> `crypto_free_shash` is always called after `free_desc`, and looks like
+> it could/should be part of it, but that's hard to assess as the crypto
+> code is mixed with the rest and called here and there. I just cannot
+> tell whether all these unsafe blocks are safe of not, which is a problem
+> since the goal of writing this in Rust is to prevent exploits.
 >
-> Fix this by advancing the pgmap start to the aligned Device DAX data
-> range for non-altmap compound mappings. Leave base-page namespaces
-> unchanged, and leave the altmap path unchanged because
-> memmap_init_zone_device() already skips the altmap reservation itself.
->
-> Fixes: 14606001efb4 ("device-dax: compound devmap support")
-> Cc: <stable@vger.kernel.org>
-> Reported-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> A self-contained crypto module exposing a safe interface would remove
+> that burden, reduce the number of `unsafe` blocks, and make the series
+> easier to review globally while not necessarily resulting in more code.
+> You just need to store the relevant pointers into a new data structure,
+> enforce the required invariants at construction time, and codify the
+> actions that SPDM is already doing in the form of methods.
 
-Thanks Muchun for fixing this. With this patch I am no more seeing the
-following crash (tested on both Power and x86 kvm)
+Oh! That is a great idea. I have added that locally and it's pretty
+nice. I'll tidy it up a bit more and then send a v5
 
-Feel free to add for this patch. 
-Tested-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-
-
-[    4.675578] page dumped because: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
-[    4.675613] ------------[ cut here ]------------
-[    4.675615] kernel BUG at mm/page_alloc.c:373!
-[    4.675626] Oops: invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-[    4.678213] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7.3.0-rc5-xfstests-01065-g45f4c1453cbe #33 PREEMPT(full)
-[    4.678213] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-[    4.678213] RIP: 0010:__set_pfnblock_flags_mask.constprop.0+0xef/0x110
-<...>
-[    4.678213] Call Trace:
-[    4.678213]  <TASK>
-[    4.678213]  pageblock_migratetype_init_range.constprop.0+0x50/0x90
-[    4.678213]  memmap_init_zone_device+0x2fb/0x380
-[    4.678213]  pagemap_range+0x272/0x590
-[    4.678213]  memremap_pages+0x125/0x210
-[    4.678213]  ? lockdep_hardirqs_on+0x7d/0x100
-[    4.678213]  devm_memremap_pages+0x21/0x70
-[    4.678213]  dev_dax_probe+0x1db/0x300
-[    4.678213]  dax_bus_probe+0x6f/0xa0
-[    4.678213]  call_driver_probe+0x24/0xf0
-[    4.678213]  really_probe+0xb6/0x310
-[    4.678213]  ? __pfx___device_attach_driver+0x10/0x10
-[    4.678213]  __driver_probe_device+0x87/0x190
-[    4.678213]  ? __pfx___device_attach_driver+0x10/0x10
-[    4.678213]  driver_probe_device+0x1f/0x90
-[    4.678213]  __device_attach_driver+0x89/0x130
-[    4.678213]  bus_for_each_drv+0x86/0xe0
-[    4.678213]  __device_attach+0xb6/0x1d0
-[    4.678213]  device_initial_probe+0x40/0x60
-[    4.678213]  bus_probe_device+0x3d/0xa0
-[    4.678213]  device_add+0x4f0/0x6c0
-[    4.678213]  __devm_create_dev_dax+0x18b/0x3f0
-[    4.678213]  devm_create_dev_dax+0x21/0x40
-[    4.678213]  __dax_pmem_probe+0x1c3/0x200
-[    4.678213]  dax_pmem_probe+0xe/0x20
-[    4.678213]  nvdimm_bus_probe+0x89/0x250
-[    4.678213]  call_driver_probe+0x24/0xf0
-[    4.678213]  really_probe+0xb6/0x310
-[    4.678213]  ? __pfx___driver_attach+0x10/0x10
-[    4.678213]  __driver_probe_device+0x87/0x190
-[    4.678213]  ? __pfx___driver_attach+0x10/0x10
-[    4.678213]  driver_probe_device+0x1f/0x90
-[    4.678213]  __driver_attach+0xd7/0x200
-[    4.678213]  bus_for_each_dev+0x79/0xc0
-[    4.678213]  bus_add_driver+0x127/0x250
-[    4.678213]  driver_register+0x59/0x100
-[    4.678213]  ? __pfx_dax_pmem_init+0x10/0x10
-[    4.678213]  do_one_initcall+0x59/0x3a0
-[    4.678213]  do_initcalls+0xdd/0x1b0
-[    4.678213]  kernel_init_freeable+0x16f/0x2b0
-[    4.678213]  ? __pfx_kernel_init+0x10/0x10
-[    4.678213]  kernel_init+0x1f/0x1d0
-[    4.678213]  ret_from_fork+0x244/0x280
-[    4.678213]  ? __pfx_kernel_init+0x10/0x10
-[    4.678213]  ret_from_fork_asm+0x1a/0x30
-[    4.678213]  </TASK>
-
-
-> Closes: https://lore.kernel.org/r/wlrkqqvg.ritesh.list@gmail.com
-> Assisted-by: LLM
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  drivers/dax/pmem.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-> index bee93066a849..d3a9b85107b0 100644
-> --- a/drivers/dax/pmem.c
-> +++ b/drivers/dax/pmem.c
-> @@ -51,6 +51,13 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
->  	/* adjust the dax_region range to the start of data */
->  	range = pgmap.range;
->  	range.start += offset;
-> +	/*
-> +	 * When the memmap is stored in RAM, exclude metadata and alignment
-> +	 * padding from compound page initialization.  Otherwise, the pgmap
-> +	 * may start before the naturally aligned Device DAX data range.
-> +	 */
-> +	if (!pgmap_altmap(&pgmap) && le32_to_cpu(pfn_sb->align) > PAGE_SIZE)
-
-BTW, this check "le32_to_cpu(pfn_sb->align) > PAGE_SIZE" - Is that needed here?
-
-I am trying to understand this better - so that I can add more such
-testcases internally. For the test I mentioned earlier [1] - even w/o
-that align check, the test passes.
-
-[1]: https://lore.kernel.org/r/wlrkqqvg.ritesh.list@gmail.com
-
--ritesh
-
-> +		pgmap.range.start = range.start;
->  	dax_region = alloc_dax_region(dev, region_id, &range,
->  			nd_region->target_node, le32_to_cpu(pfn_sb->align),
->  			IORESOURCE_DAX_STATIC);
->
-> base-commit: 0fcb05b72344f40806cbe810de8872f1698bf053
-> -- 
-> 2.54.0
+Alistair
