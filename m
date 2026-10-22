@@ -1,85 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.174
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792687754;
-	b=ugkov2B7FExy4YR5kNXvdsAP7gLJyawKt7w9r7afs0vL7hogLzTnn1h8a+aqgerTQtJq
-	 oSqaD0Cu/MZ2NvSfYETFXIHb8Wdne5fmPWLwFbKme0+bbjL2IbdZ5+vpcRjA13hyFigon
-	 VMMSgZuf1gCSIYoIgAomW5rK7IvdK+VZ+3pzrtqTSktIz7vtC3fnqIw7eqsnDj5IySI3D
-	 PsysCQF4PMJlFw+/HUDJekRMCdEVTYfMkpRmPlxNM3gfJZF9jYejLeE9Urr9LHr6BwlRS
-	 TImoXnuoGmdVba/sDs574+pUp9PqslHH3MBa0d1M0/Ox1qyRpYidXclPSBrXsWRAdGA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792687754;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=awSiD3BNPmvugsib7uxM0TSdgkvyo47qanCTaG8r0Rc=;
-	b=e/okZvGVDoKLSOMpgFTYNz0qp5Ych4Z5uyor0/3TF7OM28S79KEJcHwtodCtEQsrpqJ/
-	 z0bJm2me8mqOf2ZQ7k/LJM8s+2UyJ7TkPiOouE/Z8XPmaeT3wpaANW26V8fMu2m40Dbs3
-	 9bS3b83jxIMAvjAtIR4d3gEnn+xCxPSp0rCgzo/KMsYal4pug7g9CIkgobj7MFfbn3SLC
-	 ikws0j9zDEkB98/XH8utXg4QgUPQw9YHy6BCfVCWvfdiSViGfAe0yit4CzpQ4RHar2uYE
-	 lsF5v9HdfPpCRnI4h6NxNrXHqmkm9h0iycmu4g8LtzBKYuWe7/MuZ8X5TJ11Vnxo1mQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=AZN37U6f;
-	arc=none smtp.remote-ip=209.85.222.174
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.196.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792697256;
+	b=DnBzAwB4N4pHa29tVuuoxrnxXsyZJSc7Xn0MjHaltGvpRN1tYtcVLyRw0jVkPbCePKuk
+	 WtTwlVNrbjB42THA3W/cdW7U2Tz8C9WYXt1XtdhANdKkHIWk6VwxK64kLij3jkn4qpXal
+	 IAUXxJWnZowQsKOUIZb0V+X0DlKCUbPDMsAqDHv9INQ1ZzNRfqNEiFb6odkps4arV6m8+
+	 JOPX9kb/RWIJVyTyvIpB39+r7OU8mKe1dhnw8mFxocmUwkegwNSuBACzLw41orGVyqYYF
+	 oGNEm2avTkN6AKVev/ZjOgVg4QYUwR4fBTKCsI6eCztAe6aZ+MAioSMec/PyyJNCaXA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792697256;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:Content-Type:Content-Disposition:X-ClientProxiedBy:
+	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=Up5uQ3ILeExQnU2UyI8DUcBUfkx4KaoUUAZ+tqiYalo=;
+	b=3Iq17B1Tp3rcOgSvD82ZexIuPK/0AxjRvg+3+1Nx0nlioYTPQ28b95EyIvmmK9SOZNh7
+	 GKKtnd66OPelGnS5IZbiVDqaoahQ8o9PD4qmb4TE7BS9hsR9EvuyCc0A+21ali3yB23Cs
+	 DQnYGDitDE/xsXFMbm9IKqPtpXG5+rjzBdt+VIK2dRKFQYXSDKcwlcMYiHg5Lz6KsaWws
+	 VOC7p49VywBmqup9aYar1kFwlGZ7++Wtqe4oKivw50sdaLDf22+7lkz4PSf0WrdFpW5J4
+	 bdYQDVJbTVLklErbukQSPvhGQVLyDOBgApdLB0KkicXiU4KuWNoOUHXEluXtRST8IMQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=tH5qFCIS;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.196.49
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013049.outbound.protection.outlook.com [40.93.196.49])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CB3606A319
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 16:49:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1CB3606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F437606A319;
+	Thu, 22 Oct 2026 19:27:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F437606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=AZN37U6f
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-93f259cdc86so196717485a.3
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 09:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792687753; x=1793292553; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=awSiD3BNPmvugsib7uxM0TSdgkvyo47qanCTaG8r0Rc=;
-        b=AZN37U6fQcydxSjG+mrW7XCUA5Aq/ABJtte/SOw3ipA7PAQjjgP3WdcT+mBQoanmsv
-         sunjrTZhkagh/bmLocuj6yBqZ0vXhvqmOipq5+9hAKq06UUd8eMRJa9wyyUoYRjhgwAl
-         wMSUgRDtbskGl000WBUvZRRm3ozh+v+op9IZFF2TdyYe5jRFBC49Bk6n2wmBdBeLLssC
-         opQvWDTyR8MNkZqqxvvqjiB/q5FrIAXPN9GW/CRkmpj9oDAbDxkAwgrflW2JBmx9Cblg
-         P/jWoBoXvCwdOg2M8ehD8ZeTrf8mJOR/8l32FHwpFjq3zNuP6+Peh7Nkf1pVBy4lmNS8
-         8wCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792687753; x=1793292553;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=awSiD3BNPmvugsib7uxM0TSdgkvyo47qanCTaG8r0Rc=;
-        b=0++PhuY4TVmsebXJCGU7Hk9EsOmcn0cvlY8uGjUZSkZg7N0mm/EWVJwTYoRKOtdM8A
-         NUP/IfDKYO3zL/WX/VQ7iZC17wUGIubQfkeGnNI80XrMhvyKF7u4idyVFlUuNwCS9/W0
-         608HBO30fJ1rt3CbnXENykJuUvjNlXYl2cruiVaggEPAs3qv2M6v/YUR/4EZUKkXDasx
-         IXCPR1nWfqUwGSBqzDlvkcEpmKpImSe8Gkcxsz3AF5fydq3LcaeP23NGrGH2cZLTXNTO
-         NKqXFI7gONITgRO8XHdN+7wPT2o6T1sV8CxcVao+fBk60nrphfhVIIkBZeTC2pLByQcw
-         Zz0w==
-X-Forwarded-Encrypted: i=1; AKwUvByAK+93MBGkjGqv3bR1AU3H/05CYqITmrUVj/2KDwEpYGnpxSPSYuDQVTnWcYaTDqeAvj3oIRERbeE=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJwfMPBQcAxE5Pau34143rTDYJmUhOvUfuJqNjyJj1expTzWVDk
-	rMlAcF+r5Y+Mic1NUL1zjD6UIgonW1/9jtkCsQoqEGg72SHTDXRiZmIuEWQLYyF4aCCUvQWvWuM
-	bwtAs
-X-Gm-Gg: AYBFou2a73Fy4Z0CXaFQWlMVBGlZB/sUrEoK2i+wtlbRFWUDPzKWRpiNm6plSDTjxC4
-	4oh1ike/OFVz5PErgVzsfmwwB+NNaIymY9jZXmbt+jQyq3OeBWgQ/Z4gnketpDFrt0i++yEhkZv
-	aBZiTV0F3FYUVcxgLS9+ZKpu+vIOv3/pf4lGHOlKBvML8qH2XVtqogHQZFRKc0k9w/gq1xAwSki
-	zTbQuo/1FKHvDLEsn5uJs8/oqAUinVtmYC6OIdsbeDsXaKM8Xfml8z3bBD1e8AUjpc3O45Etb60
-	+kfskLoBgZ1LeP67t7yVdzv51Gi1wTjeZhthyjsaKkRZpPGOQrICSEu8GfUswVCPcT1WpqzAbcU
-	II81R8JcZZbe1l+DXwFF/Im7A0lvoLNOghaUtmC6YMiHNMmgZ9v57nahD0LCZyqvR87VYI2PIxx
-	GU+5811CwWPopfhHY/89sPYYHbN7QxMzU7z4lcmiasgL9nei3Pj+kfHSLJRpcibgDpjTz2QuQmP
-	DMznlAWEtArwTFBYjd7NAH81IqurgrwLJuJkHSs9aeK/rO3Jor0uX0NAtWmRcK15Rf+oBc/qAJQ
-	7QOPsLQ5IAtHJMSl61B/H6UWTpk=
-X-Received: by 2002:a05:620a:450b:b0:93f:1823:308f with SMTP id af79cd13be357-93f6f87bdffmr2749585a.81.1792687752774;
-        Thu, 22 Oct 2026 09:49:12 -0700 (PDT)
-Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f56e0b402sm560253585a.33.2026.10.22.09.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 09:49:12 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=tH5qFCIS
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ObBn8464wEOy4tdIpnbG90hXPRyL1QA+01iqR3HaBfSBVY+zy+dpnfJYNI5MRdmfRdNweTdPX/CFa8qfAQEB3DDW+trOOkc1vhFbyaBq/UDlM/uDOj5IymnoJIyvGBO7npW4fBtJV3Fhrn/W9mvkkmYwS4ucCn7CEbbus2mHUTvcnmjoQSinhVT2uwJwkhU2lTHoDAONXcD1bzRm/ej13HXJqJhqC8HbY8Qb25OEodwMKieTnQTZj1I80ZO8HRDlfE+5lHn6wN3GwF5vg1BSMq8gszdNeX45Vpi5ls2jF2J0XFifHysJvEkRb13ZDsULe7Enw0M3sh/MECAWS/F2qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Up5uQ3ILeExQnU2UyI8DUcBUfkx4KaoUUAZ+tqiYalo=;
+ b=MOZkZxuMJz02ottmZqMaYLkr4FpNQWH1gAHVE700t+PzFLwrNcQLUTfTJZbg+PS/g1pPnWi1MvEz5l/fb7sdTRTq1bYPpDSEr984vKUVPK48RWo/GpmjGFarmWwFaEw0j8tsuCjMENfA3d/KRAVt4Qt47gOezc8iZ7RiXwANHEGhfv/+SEoiEacPs2TAejG+1n5Pk58UGYvqgl0W/hf+5c0rv+8XxVYB2yD8R3vrnc+PJJ6ZHG8g2YoFWBHIZY89joD6Z0P38at+3OG408V9FhCSi0vqMlX20LWGkwxxMVZ6XA35psR20y5Sa8IUKNK1P4LWHiv5qqwOvkLE5JYxgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Up5uQ3ILeExQnU2UyI8DUcBUfkx4KaoUUAZ+tqiYalo=;
+ b=tH5qFCIS1ZPqYsX5y4udXE7z013nMi4RSuLwfJxqWOd6RLKpn1EFNtdCaaLXkCTlbQblQoy8CiSGLZuXdU5wUIO0kPF53tO+C7IRLlmNSnujGL4w/yRoj3WeS8EO7i/Y/5QbvZLbQE7sA4n5fcaprjz081KZ7ok6HcB/RSnnk7kzOiilpeN3md+1SzZc8tZfuaL1OTQn7ZZ0vXvasDZWE9Sl6/IKhhoVP+hRlxc878f1zb6cMi65xbGLWPxiWr0PgR3MZbMEIG6Rr2159FbArnsKhtoLXKW2TVpTcv6zRofiX1+QDjLH0+TmMk4kFToJzLv14MVbcxsBhuSIPKyybw==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by CH3PR12MB8509.namprd12.prod.outlook.com
+ (2603:10b6:610:157::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.18; Thu, 22 Oct
+ 2026 19:27:28 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0546.016; Thu, 22 Oct 2026
+ 19:27:27 +0000
+Date: Thu, 22 Oct 2026 16:27:26 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-rdma@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>
+Subject: [GIT PULL] Please pull FWCTL subsystem changes
+Message-ID: <20261022192726.GA3758618@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6A/oRGRXX8K9i5yy"
+Content-Disposition: inline
+X-ClientProxiedBy: BL1PR13CA0203.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::28) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -89,100 +94,111 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 6/6] test/daxctl-devices.sh: cycle offline/online to
- cover unplug and replug
-From: "Gregory Price (Meta)" <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: "Gregory Price (Meta)" <gourry@gourry.net>, nvdimm@lists.linux.dev, 
- linux-cxl@vger.kernel.org
-In-Reply-To: <atl2HyXaNB6-6j8f@aschofie-mobl2.lan>
-References: <20261016214248.443247-1-gourry@gourry.net>
- <20261016214248.443247-7-gourry@gourry.net>
- <atl2HyXaNB6-6j8f@aschofie-mobl2.lan>
-Date: Thu, 22 Oct 2026 12:49:11 -0400
-Message-Id: <179268775162.4072493.12508126317533540624.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|CH3PR12MB8509:EE_
+X-MS-Office365-Filtering-Correlation-Id: e45b01bd-4772-43e9-9f65-08df307281de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|18002099003|3023799007|11063799006|261021123027099003|261009223027099003|261021121427099003|10067099003|261022105027099003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	4uScPcEGMdL6fHh+2Hso2foO0wB2T5LbLwtFGwKqn3lvJv+z73NNX3MUdA+HtpJid4T7yqJ5Ej5Z7F80GIg4Jp+5Y3HTCquDfHcEa4FPcMLNZ3d91tUGeM69RioY3qzpXDnXC0o+V4D7P8d/PkIae54nWvyjgUD5tWI7Rdit2rOepxnK22x5iMMcAHfzQfcJFY9+zWWqwmbcNny5XP/j7JvnoxV5IhB9AAzk9mVJPf3r/s/oZt5hg5fk94yHRvkkaPGrPBB658BjcbSFXUQWXI6r7sThJEFQkd8ZWV5rnIJlQcSldGJaxFWvU+a8/Vw5QIhKL+6uCTfuECHVvMGZMTh4K4FNzPiAELmh7ILg5x7lgUeUjnh4lgh4Re3sQnxagzzZpaPHWTXpg6xXgkbdDhACLzgm1G96i0d0SiP39IAdD7s0jqTl3jxb08OwcO83lH3ykTQc4oRSQ4VQtTvr27uKd9XSaEONJD4Br0ToWHGW/4UgNeIIajrHb6GQ6zE48p/UAfx5Oh1LNQWoC/QSAzRXxY98IKKe+YaUWf7cKb0AiarQERs12Tp5zd3n1PgTD5dpHHfS+cH5cGX9I5DHpyQMD/R6UbwzeCc45oAgYds1WsJm27q9xqC+bJgQ7+VzDTRQQaXmi8o4K2D4GHiZuNh797qX8xIfBaOQoeG7qSE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(18002099003)(3023799007)(11063799006)(261021123027099003)(261009223027099003)(261021121427099003)(10067099003)(261022105027099003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eXhrqJQXhpjDLa0JmMTiu+0pY7r9xwhnJqLMY8zv+aCYlWm3ZblCIjEwVV6o?=
+ =?us-ascii?Q?UQb8HIdAqylmOSCrD+mO88lV2gYf6oHbz8ebUD49ubLTYhzZcl0Ve7MUUSD8?=
+ =?us-ascii?Q?GU/CpJRYJ1WgnlaTP8QxL2qSww3BYnwJT1Fd2ZJaj2YScYv8ZrrkGC8rsYKl?=
+ =?us-ascii?Q?jv+mkYwBzsAhqh6feXUWH9CuMte0eyjHdF2fTv4REHq4mll4+yL7BLzUd2dg?=
+ =?us-ascii?Q?eF0wTPtLExftbCYBivn5APupoDyvxyeUC2Z8EB+NBKM+QQZsMHRD5YAYW3pS?=
+ =?us-ascii?Q?OENcyXuJ5UuGTO+huRxv8NaGTB8tLq/xlAb+UlnfJ38Q490K+MevGArsChgt?=
+ =?us-ascii?Q?Xrmil7Zmy1ns2X4Zy7ebyJfMHACr+IH3hugRsVA2QVUtjSxRXxOxqdOqedYJ?=
+ =?us-ascii?Q?s18519l3Y36Hs5euFNaQeOOpfHHLoDEfbf2hIU1J9o0vUHHsjxfnuWKIfT1N?=
+ =?us-ascii?Q?o0RZfSELmHTHXX5UoVdA3r4Dpx1kyTONAUoGSyOs5V0ODZ0khxNfTqIXDTNP?=
+ =?us-ascii?Q?EHSVM7OJIqUiXRSeGYnBlZC4wFXjVsfO8W9LkUrUg4fD6N9oBUHcTgHWmW3v?=
+ =?us-ascii?Q?Vykc+iZqv2Za+lzYt4XgbKL49ScJ9Yf4jzHXMN0kjAD+ak8M6LZWqMACKzgj?=
+ =?us-ascii?Q?vFXS25bGuxXY5W60XM34QaCFEID+uYmPiMRM693v1O31/3aI5PAiupK4FWW1?=
+ =?us-ascii?Q?Jebwq/OdRKZ7qmpstsCYJytLxfAxkZkBiobDtiJkOJP0uHjMuw1yitBqIs6M?=
+ =?us-ascii?Q?kWhD/TTy3uuvQeH09nwyPUFmBPno9sNnpN5DLwn8cxIIS+4nuKfn3pnAcpfG?=
+ =?us-ascii?Q?STH82+TadFPQdW331AhfrJT2AZd8Bs0MElYCU6WXjC07iaV/FTTAcAFRlxM1?=
+ =?us-ascii?Q?z9YBBOLgDFa7WcD+QgemJNHzBbcC/lJiNBQCRPRTb3ZjtRbLp5Lq6Qpb33Rx?=
+ =?us-ascii?Q?qm8br5Q1zJNS530/lwdbWV70F6kqR78d9h6TafOdFtuCf0l9q7dgwuB39IGs?=
+ =?us-ascii?Q?pWpvjbzPfmZUNEpqv6HYfkdgkHNOtok5/xy9dRHAYqS/lf9cy1jBzNrdV8IW?=
+ =?us-ascii?Q?Y05rus/C+DypmdhkUQ8ygZhW9lB65qiPQF90FVt8XvW/yE4MN85pWiMh4vsO?=
+ =?us-ascii?Q?Z1hgBN/80GWcbYDM28wAdz6QI8MDn6F2TtCvmjLI7JWg19eBmrwJTAjaM/Lt?=
+ =?us-ascii?Q?NIFnv/HcdC54GlQm8aNuDfPp5ZHxNFHZES6shLnev7JjpUsM59Cq3tBtGKSe?=
+ =?us-ascii?Q?6zjn9wR4Wgv7XM9pq+p/Hg/YhoAoIWkOVrmYzqFAb7VPvul9ej6LYjzXlBH/?=
+ =?us-ascii?Q?77qwZwxiNU4bl2zEiRMpQpxhtr0qA6iQ60eU8DuHiaynfYdsjxqBm/Rb1YyS?=
+ =?us-ascii?Q?WZLwurIDfDPKXq4Vq7Hs2c6sKrd6Y37twPiVnI1irqNQS300a+I3ICrw552Y?=
+ =?us-ascii?Q?vD5/vA/AF8joLVklUA0Mfh02FSj1LlTrtEazTMOQ9VSUssFv7HQsCmXPdvYa?=
+ =?us-ascii?Q?Kh2QqIPz58a9H8lSgb9vrsROp850KIuVpZ/2WbbRaEHDoW5wH4ilAZHL1IRg?=
+ =?us-ascii?Q?2zSV43Og6DDQ6VBQ0/V8atxVoVOQrSOwpSszbqSIntM4JPvqaxLvUreZyo2E?=
+ =?us-ascii?Q?NerAYRo9KryADB2xK6pyUt5Ly0MIFlnndRnoAt2GDKOiDrbi5TNa4RcCXggx?=
+ =?us-ascii?Q?Ldnr88BmmATojM8tBJ8fsM29693Ag+V7hhCVo9wkrHRaMUN1?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e45b01bd-4772-43e9-9f65-08df307281de
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2026 19:27:27.3937
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +LGk248HtMIyU+IN2fxQ++16r0V1K5J2VLGiSsCOy5zEtBg7S8LoobRu8vaWUkRy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8509
 
-On 2026-10-21 19:34 -0700, Alison Schofield wrote:
-> On Fri, Oct 16, 2026 at 05:42:48PM -0400, Gregory Price (Meta) wrote:
-> > From: Gregory Price <gourry@gourry.net>
-> > 
-> > Repeat the online/offline pair to cover onlining from 'unplugged', and
-> > check that offline-memory unplugs an already offline device. After each
-> > step, check block counts and, where present, daxX.Y/state and the
-> > 'hotplug_state' reported by 'daxctl list'.
-> 
-> Hi Greg,
-> 
-> Please change how the tests handle the absence of the new sysfs attribute.
-> If a test expects the new interface, a missing attribute should cause
-> the test to fail, with a clear error message. We have had problems in
-> the past with tests silently not executing letting defects go undetected.
-> 
+--6A/oRGRXX8K9i5yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ack
+Hi Linus,
 
-> Note that we don't require backward compatibility for the unit tests.
-> The utilities must continue working with older kernels, but tests for new
-> functionality should fail loudly when that functionality is missing.
-> (I'm aware that not all tests follow that guideline, and they need fixing.)
-> 
+Single patch for a Rust CFI issue.
 
-this is slightly confusing, but noted.  I would have expected the tests
-to test backward compatibility.  But ack.
+Thanks,
+Jason
 
-> Please also leave the existing test cases as they were and run the new
-> state-dependent cases last.
-> 
+The following changes since commit c03c1a14507dfaf8b856c2608f9ac216021fc222:
 
-ack.
+  Linux 7.3 (2026-10-18 13:14:58 -1000)
 
-> A few stale state cases would exercise daxctl behavior that the kernel
-> selftest can't cover - 
-> 
->   - Offline one memory block out-of-band, verify that daxctl list
->     reports hotplug_state "inconsistent", then verify that
->     offline-memory still leaves the device unplugged with its blocks
->     removed.
-> 
->   - Offline all blocks out-of-band, then verify that
->     "reconfigure-device -m devdax" succeeds and the blocks are removed.
-> 
->   - With all blocks offline but the device state still reporting
->     online, verify that online-memory falls back to the per-block path
->     and brings everything online.
-> 
+are available in the Git repository at:
 
-good idea.
+  git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-li=
+nus-fwctl
 
-> For "blocks removed", please check that the device's memory blocks
-> are gone from /sys/devices/system/memory.  ie verify in sysfs directly
-> independent of the libdaxctl code being tested.
-> 
+for you to fetch changes up to bc6f2a284c63313e789d8cd294531e1cc2dc8c99:
 
-ack
+  rust: fwctl: declare cfi_encoding for fwctl_rpc_scope (2026-10-21 13:59:4=
+7 -0300)
 
-> About multi-range devices-
-> 
-> I found that libdaxctl undercounts memory blocks on multi-range devices.
-> I'm posting a separate fix and test for that. Nothing in this series needs
-> to change. I'll cc you for review.
-> 
+----------------------------------------------------------------
+fwctl 7.4 pull request
 
-ack
+- One bug fix for a CFI issue in the Rust bindings
 
-> Our ndctl emulation can't exercise multi-range hotplug, but the kernel
-> selftest can run against a real multi-range device. Could you add coverage
-> there, including the partial-add case where the kernel reports success
-> even though not all ranges were added?
-> 
+----------------------------------------------------------------
+Alice Ryhl (1):
+      rust: fwctl: declare cfi_encoding for fwctl_rpc_scope
 
-ack.
+ rust/bindgen_parameters |  2 ++
+ rust/kernel/fwctl.rs    | 12 ++++++------
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Thanks Alison!
+--=20
+Jason
 
--- 
-~Gregory
+--6A/oRGRXX8K9i5yy
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCatpjnQAKCRCFwuHvBreF
+Yd1BAP9lrVD8LGI55ILFK7l85G1PRhX4TgpRxTIBFlHONBu4DwEAq3/Ee5u4qIPK
+nSWt24NDNzzYm0zCybrkNCedq7OtWAo=
+=Z6sX
+-----END PGP SIGNATURE-----
+
+--6A/oRGRXX8K9i5yy--
