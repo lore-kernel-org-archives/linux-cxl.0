@@ -1,142 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792651772;
-	b=PTqjpLYSGaHqYBVE6HL8G1qmlOG4rRQu1QsSdcq8b3WnnPHQfnBj8FiCKCQDfLpaPQ2K
-	 bT59SumEfW7EhN1iaDlXK1YE1hdd1ab5QFiGEJaLNfh8zskALQyCPnyM5htouHVsb2s1H
-	 ca5s4zSussInkaE8TNLtF+XSF6RANqaHmTG0eXiQfTycM5BWV7pwSbwNOEfSaEWIN/yNk
-	 5yWz7HFDFiOJCfzr22801LWqvv2bPtit2jYgvkvBGuCjCKFWpAXb7zhVsEV5aurRYAble
-	 91XZtXQPcLdLRtBSHeQte+262vMImQC4JkUATFgZIDVV/7xUV6QcPPSDBJo3wItVErg==
+	t=1792653739;
+	b=Go4aLiRsTkTdMMoBarDrkpfqlFuk6Ci4/f/s6IjLrVIBlkRKW6PgObfovhOQWfTO+m81
+	 i7M+fiR+7UedvMkkV+J5ApchESv0af8fw2dnA6+egRsSz9gx4RubVOgSq7E1+1e4ponj2
+	 2WwhAa1eaZaqF38vx3mx5HAOHHJyR9/o6k65Qp8Lz3CdA0fyw3bd2fN9f9J0mzZ1gKzNm
+	 FSisHmY3DQbY0WGpl4yEKl767jNk1upQ1c/VhT+K9N2W8k2sHJQQc0j+BX0LyRr4A9cZf
+	 KnM7Ovzmn6qQnoRYjTIHkKaBJu/dX+J/VG4z616u2AX6S1EuIK7I3w9rTIJDo8tlDfA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792651772;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:From:To:Cc:Subject:
-	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
-	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=JADHWg0Jlsj3MBmuPMLUMpANIVwK+0qeu0X1mxgI0Mk=;
-	b=Vl6b3PvzZrKo5ex2q1Tmbchr2/1xYkpW2xaKayitopp0GQtX0yF1XqSJCppeI1YlIZhp
-	 Rzty8cpyCaKwC76PhrEQ9jLZ6ow1GvinVeVZztJZqWMTqdbezQmDBAHY8TEEt5IjeXsxc
-	 WgsaAfoLAwF5faXWBJvrHisbxtD+VHpYa2UHdLtXfExHIgSnp0uGSDOLLT6g9iUYP8a+l
-	 Ey2Vl8blvz9IMh0a3IC3vWMovnHeIgec4LLn0q43ZKd0bd+DWanb00xrmbBOEJxt6Jyy/
-	 q2n72q7yuVDBNx0Hzt1lGY2+OwaFgD8b1ierEkvWnm4ent+kyudGLn5Kjdj951XKGKw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792653739;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
+	 To:X-Mailer;
+	bh=jf8P4XWcRz7X5zcfgDmz4Vg0q6xkZPNYQ/rfn5t3fNA=;
+	b=OVfQ299ynE9EsxuI5Ytar9TwG7EzwK82HWGbiiR5rzhmzcVKe8PU7rJfT7Zheay8TtcJ
+	 3A8fw/qf3zSav8vqhunEcnr+2OIF3SAOBLA5/E9UadaHZ/EFjQMqryT/cKSb981FEtDhK
+	 2Cn6GisIWRxJsZknPGYMMiZfkmDqyHV74uAct/xNcbP8fJrTR4YtPWuMfoUkFjoq0IXTi
+	 tsSx+ulyJcJ2dsINwtJu/uC4HGI3RLNzQGC1MVGf5Mt4V0FdTflm0k0pGO/pPzuAllSA3
+	 fwgUhPL5ASekmYXGryZ85bFSKNE8mMu59ZjIE1geXlG2nCUUJ4vSe1PH0YXwmpKRiGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="ffV77D/0";
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ps9IzAoM;
+	arc=none smtp.remote-ip=91.218.175.11
+Received: from mta0.migadu.com (out-11.mta0.migadu.com [91.218.175.11])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C153606A324
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 06:49:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C153606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7F8606A31A
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 07:22:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A7F8606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ffV77D/0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792651770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JADHWg0Jlsj3MBmuPMLUMpANIVwK+0qeu0X1mxgI0Mk=;
-	b=ffV77D/0ReZDC2F4Zs2LkCXWakwzWO8FeMGwsFvj/L9lpSHqSI3lxP9aUl/RpSl2o6T2Ya
-	hpQYzmHEeT1/p1K0V11YN8Hyo9lovmGf1WXspxItAQ+iwSlWqTRqHItUl3YjAgGxw28SqT
-	omm60soW5Lfsstv1f+TN3erzAT3RegI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-9wIN8bqtNjm5ZsV_6-4TKQ-1; Thu,
- 22 Oct 2026 06:49:26 +0000
-X-MC-Unique: 9wIN8bqtNjm5ZsV_6-4TKQ-1
-X-Mimecast-MFC-AGG-ID: 9wIN8bqtNjm5ZsV_6-4TKQ_1792651761
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E93719560B2;
-	Thu, 22 Oct 2026 06:49:18 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 725C81803A48;
-	Thu, 22 Oct 2026 06:49:14 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 1B3A121E6A04; Thu, 22 Oct 2026 08:49:12 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: devel@lists.libvirt.org
-Cc: marcandre.lureau@redhat.com, qemu-devel@nongnu.org,  Michael Roth
- <michael.roth@amd.com>,  John Snow <jsnow@redhat.com>,  Peter Maydell
- <peter.maydell@linaro.org>,  Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>,  Pierrick Bouvier
- <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
-  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
- Kostiuk
- <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
- <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
- Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
-  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
- Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
- <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@oss.qualcomm.com>,
-  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
-  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
-  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
- <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
- Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
- <clg@redhat.com>,
-  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
-  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
- <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
-  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
-  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
- Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
- <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
-  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
- <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
- <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
-  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
- <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
- <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
-  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
- <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
- Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
- <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
- Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
-  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
- <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
- <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
- Lin
- <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
- Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
- Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
- Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
- <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
- <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
- Dooley <conor@kernel.org>,  Sebastian Huber
- <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
-  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
- <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
- Stabellini <sstabellini@kernel.org>,  Anthony PERARD
- <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
- <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
-  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
-  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
-  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
-  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
- Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
- <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
- Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
- Vivier <lvivier@redhat.com>
-Subject: Re: Property types changed in this series
-In-Reply-To: <87tsmfkoej.fsf@pond.sub.org> (Markus Armbruster's message of
-	"Wed, 21 Oct 2026 18:29:40 +0200")
-References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
-	<87tsmfkoej.fsf@pond.sub.org>
-Date: Thu, 22 Oct 2026 08:49:12 +0200
-Message-ID: <878q3qkz6f.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ps9IzAoM
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=lzEFVhQM3QVgAV/3EhVwgnWBENJztj7KAzIQybNKK7Y=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792653735; v=1; x=1793258535;
+ b=ps9IzAoMAsRzz2hnOqfn8thFNvBflcznXyMscL7j+LjHDiyXgBNsJcaxr/3bBYMvieOIKJyr
+ UeR8cNGIZlASr5hHSMEs9JEYjOIbGe3f8Qm+q+5n7Skow2+kBtH/wJZB0brIeYzxqdoETe/yQwp
+ Ln7oY7WuLcULUPtwE3O9zOxI=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by mta10.migadu.com with ESMTPS id f70173cbeb29589e;
+	Thu, 22 Oct 2026 07:22:15 +0000
+X-Mizu-Trace-ID: f70173cbeb29589e
+X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -145,100 +57,219 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: gFVYNdGtH-zKTxjG81yNHc7lF5aS0rHMYvaGSCJoh9s_1792651761
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: [PATCH] dax/pmem: fix unaligned compound devmap initialization
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <jyna5rta.ritesh.list@gmail.com>
+Date: Thu, 22 Oct 2026 15:21:55 +0800
+Cc: Muchun Song <songmuchun@bytedance.com>,
+ Dan Williams <djbw@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Joao Martins <joao.m.martins@oracle.com>,
+ stable@vger.kernel.org,
+ nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <60551F0C-D330-417A-AC8E-30E9BB00EA94@linux.dev>
+References: <20261016054914.2601510-1-songmuchun@bytedance.com>
+ <jyna5rta.ritesh.list@gmail.com>
+To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
-Libvirt developers: does libvirt use member @type of the reply of
-qom-list, qom-list-properties, qom-list-get?
 
-I'm asking because Marc-Andr=C3=A9's work changes many values to add a more
-useful replacement.  I think we should deprecate @type.  I'd like to
-find out whether we need to preserve the values for the deprecation
-grace period.
 
-Markus Armbruster <armbru@redhat.com> writes:
+> On Oct 22, 2026, at 11:37, Ritesh Harjani (IBM) =
+<ritesh.list@gmail.com> wrote:
+>=20
+>=20
+> + linuxppc-dev (for awareness, since I also faced the same issue on
+> Power too, although this one is not related to PPC alone)
+>=20
+> Muchun Song <songmuchun@bytedance.com> writes:
+>=20
+>> Static pmem Device DAX namespaces reserve space for namespace =
+metadata
+>> before the user-visible data range, and may also include padding =
+needed
+>> to satisfy the Device DAX alignment. __dax_pmem_probe() adjusts the
+>> dax_region range to start at the data range, but the dev_pagemap =
+range
+>> still starts at the beginning of the namespace.
+>>=20
+>> That is not valid for compound devmap mappings whose memmap is stored =
+in
+>> system RAM. Compound page initialization requires the start PFN to be
+>> naturally aligned to the compound page size, because the head and =
+tail
+>> struct pages are initialized according to that geometry. If the pgmap
+>> starts before the aligned data range, memmap_init_zone_device() can =
+build
+>> compound page metadata from an unaligned PFN.
+>>=20
+>> The resulting struct page layout is inconsistent with the Device DAX
+>> mapping. A later mmap fault can then resolve the user-visible PFN =
+through
+>> invalid compound page metadata and hit a kernel panic while inserting =
+the
+>> DAX folio.
+>>=20
+>> Fix this by advancing the pgmap start to the aligned Device DAX data
+>> range for non-altmap compound mappings. Leave base-page namespaces
+>> unchanged, and leave the altmap path unchanged because
+>> memmap_init_zone_device() already skips the altmap reservation =
+itself.
+>>=20
+>> Fixes: 14606001efb4 ("device-dax: compound devmap support")
+>> Cc: <stable@vger.kernel.org>
+>> Reported-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+>=20
+> Thanks Muchun for fixing this. With this patch I am no more seeing the
+> following crash (tested on both Power and x86 kvm)
+>=20
+> Feel free to add for this patch.=20
+> Tested-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
 
-> I used qom-list-types and qom-list-properties to list all properties and
-> their types, then looked for changes.  This can miss changes in
-> dynamically created properties; see the note on qom-list-properties in
-> qapi/qom.json.  Moreover, I ran into a few QOM types where
-> qom-list-properties is broken.
+Thanks for your testing.
 
-These are ast2700-a1, ast2700-a2, and several riscv CPUs.  A fix for the
-latter has been queued.
+>=20
+>=20
+> [    4.675578] page dumped because: =
+VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
+> [    4.675613] ------------[ cut here ]------------
+> [    4.675615] kernel BUG at mm/page_alloc.c:373!
+> [    4.675626] Oops: invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+> [    4.678213] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted =
+7.3.0-rc5-xfstests-01065-g45f4c1453cbe #33 PREEMPT(full)
+> [    4.678213] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), =
+BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+> [    4.678213] RIP: =
+0010:__set_pfnblock_flags_mask.constprop.0+0xef/0x110
+> <...>
+> [    4.678213] Call Trace:
+> [    4.678213]  <TASK>
+> [    4.678213]  pageblock_migratetype_init_range.constprop.0+0x50/0x90
+> [    4.678213]  memmap_init_zone_device+0x2fb/0x380
+> [    4.678213]  pagemap_range+0x272/0x590
+> [    4.678213]  memremap_pages+0x125/0x210
+> [    4.678213]  ? lockdep_hardirqs_on+0x7d/0x100
+> [    4.678213]  devm_memremap_pages+0x21/0x70
+> [    4.678213]  dev_dax_probe+0x1db/0x300
+> [    4.678213]  dax_bus_probe+0x6f/0xa0
+> [    4.678213]  call_driver_probe+0x24/0xf0
+> [    4.678213]  really_probe+0xb6/0x310
+> [    4.678213]  ? __pfx___device_attach_driver+0x10/0x10
+> [    4.678213]  __driver_probe_device+0x87/0x190
+> [    4.678213]  ? __pfx___device_attach_driver+0x10/0x10
+> [    4.678213]  driver_probe_device+0x1f/0x90
+> [    4.678213]  __device_attach_driver+0x89/0x130
+> [    4.678213]  bus_for_each_drv+0x86/0xe0
+> [    4.678213]  __device_attach+0xb6/0x1d0
+> [    4.678213]  device_initial_probe+0x40/0x60
+> [    4.678213]  bus_probe_device+0x3d/0xa0
+> [    4.678213]  device_add+0x4f0/0x6c0
+> [    4.678213]  __devm_create_dev_dax+0x18b/0x3f0
+> [    4.678213]  devm_create_dev_dax+0x21/0x40
+> [    4.678213]  __dax_pmem_probe+0x1c3/0x200
+> [    4.678213]  dax_pmem_probe+0xe/0x20
+> [    4.678213]  nvdimm_bus_probe+0x89/0x250
+> [    4.678213]  call_driver_probe+0x24/0xf0
+> [    4.678213]  really_probe+0xb6/0x310
+> [    4.678213]  ? __pfx___driver_attach+0x10/0x10
+> [    4.678213]  __driver_probe_device+0x87/0x190
+> [    4.678213]  ? __pfx___driver_attach+0x10/0x10
+> [    4.678213]  driver_probe_device+0x1f/0x90
+> [    4.678213]  __driver_attach+0xd7/0x200
+> [    4.678213]  bus_for_each_dev+0x79/0xc0
+> [    4.678213]  bus_add_driver+0x127/0x250
+> [    4.678213]  driver_register+0x59/0x100
+> [    4.678213]  ? __pfx_dax_pmem_init+0x10/0x10
+> [    4.678213]  do_one_initcall+0x59/0x3a0
+> [    4.678213]  do_initcalls+0xdd/0x1b0
+> [    4.678213]  kernel_init_freeable+0x16f/0x2b0
+> [    4.678213]  ? __pfx_kernel_init+0x10/0x10
+> [    4.678213]  kernel_init+0x1f/0x1d0
+> [    4.678213]  ret_from_fork+0x244/0x280
+> [    4.678213]  ? __pfx_kernel_init+0x10/0x10
+> [    4.678213]  ret_from_fork_asm+0x1a/0x30
+> [    4.678213]  </TASK>
+>=20
+>=20
+>> Closes: https://lore.kernel.org/r/wlrkqqvg.ritesh.list@gmail.com
+>> Assisted-by: LLM
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>> drivers/dax/pmem.c | 7 +++++++
+>> 1 file changed, 7 insertions(+)
+>>=20
+>> diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
+>> index bee93066a849..d3a9b85107b0 100644
+>> --- a/drivers/dax/pmem.c
+>> +++ b/drivers/dax/pmem.c
+>> @@ -51,6 +51,13 @@ static struct dev_dax *__dax_pmem_probe(struct =
+device *dev)
+>> /* adjust the dax_region range to the start of data */
+>> 	range =3D pgmap.range;
+>> 	range.start +=3D offset;
+>> + 	/*
+>> + 	 * When the memmap is stored in RAM, exclude metadata and =
+alignment
+>> + 	 * padding from compound page initialization.  Otherwise, the =
+pgmap
+>> + 	 * may start before the naturally aligned Device DAX data range.
+>> + 	 */
+>> + 	if (!pgmap_altmap(&pgmap) && le32_to_cpu(pfn_sb->align) > =
+PAGE_SIZE)
+>=20
+> BTW, this check "le32_to_cpu(pfn_sb->align) > PAGE_SIZE" - Is that =
+needed here?
 
-> 1. Close misses of QAPI type names change to actual QAPI type names
->
->     old property type           new property type
->     ---------------------------------------------
->     string                      str
->     uint64_t                    uint64
->     uint64_t                    size
->     int32_t                     int32
->     int                         size
->     uint32_t                    uint32
->     [uint16]                    uint16List
->     NotifyVMexitOption          NotifyVmexitOption
->     CXLFixedMemoryWindow        CXLFixedMemoryWindowOptionsList
->
-> 2. Incorrect QAPI type names change to correct ones
->
->     old property type           new property type
->     ---------------------------------------------
->     SgxEPC                      SgxEPCList
->     QAuthZListRule              QAuthZListRuleList
->     X86CPUFeatureWordInfo       X86CPUFeatureWordInfoList
->     bool                        Pca9552LedState
->
-> 3. Less than useful QAPI type names change to more useful ones
->
->     old property type           new property type
->     ---------------------------------------------
->     str                         Pca9552PinState
->     str                         Pca9554PinState
->
-> 4. Lazy crap
-> =20
->     old property type           new property type
->     ---------------------------------------------
->     list                        link<arm-cpu>List
->     list                        strList
->     list                        uint16List
->     list                        uint32List
->     list                        uint64List
->     list                        uint8List
->     struct                      any
->
->     I'm not sure the first one is what it should be.
->
->     I need to have a closer look at the last one.
->
-> 5. Inventive crap
->  =20
->     old property type           new property type
->     ---------------------------------------------
->     busnr                       uint8
->     guest statistics            VirtioBalloonGuestStats
->     loadparm                    str
->     on|off|split                OnOffSplit
->     struct tm                   StructTm
->
-> 6. An odd duck
->
->     old property type           new property type
->     ---------------------------------------------
->     str                         int32
->
->     This is pci-device property addr.  See PATCH 54.
->
-> On the way, I noted properties with anti-social names:
->
->     QOM type name       property name
->     ---------------------------------
->     acpi-ged            memhp container[0]
->     e500-spin           e500 spin pv device[0]
+Making pgmap.range.start consistently match the Device DAX
+data range initially looked reasonable, but I think the
+align > PAGE_SIZE condition is still needed for backward
+compatibility.
+
+Before commit a3619190d62e ("libnvdimm/pfn: stop padding
+pmem namespaces to section alignment"), a RAM-backed
+namespace calculated dataoff from the 8 KiB info block using
+the namespace's requested alignment. On a system with 4 KiB
+pages and align =3D=3D PAGE_SIZE, this could produce an 8 KiB
+dataoff, which is not subsection-aligned.
+
+Newly created namespaces now use at least subsection
+alignment, but existing superblocks with the older layout
+remain supported. nd_pfn_validate() requires the original
+pgmap boundaries to satisfy memremap_compat_align(), while
+dataoff itself only needs to be page-aligned.
+
+Therefore, unconditionally advancing pgmap.range.start by
+dataoff can make the pgmap start and length subsection-
+unaligned. check_pfn_span() will then reject the range during
+memremap_pages(), causing the Device DAX device to fail
+probing with -EINVAL.
+
+Thanks,
+Muchun
+
+>=20
+> I am trying to understand this better - so that I can add more such
+> testcases internally. For the test I mentioned earlier [1] - even w/o
+> that align check, the test passes.
+>=20
+> [1]: https://lore.kernel.org/r/wlrkqqvg.ritesh.list@gmail.com
+>=20
+> -ritesh
+>=20
+>> + pgmap.range.start =3D range.start;
+>> dax_region =3D alloc_dax_region(dev, region_id, &range,
+>> nd_region->target_node, le32_to_cpu(pfn_sb->align),
+>> IORESOURCE_DAX_STATIC);
+>>=20
+>> base-commit: 0fcb05b72344f40806cbe810de8872f1698bf053
+>> --=20
+>> 2.54.0
+
 
