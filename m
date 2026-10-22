@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792687231;
-	b=Cewu2xrEgGA18r72G5cq/pFxYg9t3D0fAJdEhnyBdhBq/JlRuRzDGW/QmYsk3oNN2eRw
-	 JHiDR34D/Wog2VVkjhtGu2fwqJ/8FXKU8nyCTLdmesddaEr936QjzjDFC8XQq1H8NTFMO
-	 8hcoFLC1Zpe3W3j+Xv10nPvmqA8jDbXw1Ps4fda8EI9zugA4Cs3gcU07Qd/R9UlMAmv8X
-	 5ytN5kjrCPEbDqk/5YIAQ4yV887Sd6GDjglM6SsHENy39YgNSW5b9oZBI4zGCJuqknzFe
-	 5tf5Tc9w7NqSsrfF1b8KY5vh9hU1y1vg7aapvCtO9IYoVQ95Bn0LWrf9U6lslh6XDIA==
+	t=1792687603;
+	b=V7ztEUIhJxNR/H5MSzVIwiFJeyvtHcY1gCPbhDRqBpmWAWPwJHclnlI7RdCJ9s8OwSNl
+	 1ly8uA+ZAKQJTMlOnJew2brGXXKveSg9Wvhe5BJ6WPL+6xnq7S/+nVOWjp/MtIZlk5xlE
+	 7EVgczRm/zTQ2+iZyQOT7OwS7qNkLr2ttArdto1WTvboCnPV3SWt4lX9StvoOHA6joBDI
+	 Jkb8vxByjQ7c5Z7emfdGc4x2XUwdhAWsOAe9BC4QopkPYouFerBv+3mtwDJWxbdYTuRHI
+	 RU1MyfhtJpXO7OoZ/t16oaY3PS4RdOfjQs10jxqh3xaelvrLBrq7rA6p59/iEuEITGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792687231;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792687603;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=pBCWQ7jscdfKZcHIgslgXKhcbj8ko2Frw+3Y69vYvjU=;
-	b=DtShdnBCX1Z2mkO9Xap7YIV21FKU33GzSVAye3KO/VNKzM+E6PpNvpXvXXM9VQ6FaYsv
-	 kIiQBnCcIbPw7yOdrCPrY9Cm+TnkL1vaWZrOqmHl98JR71usZzM7k07WVTf9lhiDKp3sY
-	 Qn83WyGJEVCto6BbMFoasAstQx1oidn29sd9Ef7piI3bIErvylihPfN7HiQotd91sm5gj
-	 sXiDtwZt93isb9HpR8Jx1Qokzl+kQkYoTtNA1/0ePpE5naKM7HxtmYbdGKbdCheJBqQGH
-	 4Z2EG88Imm+RUjghOtHbzVc1dk7nw/tqhwm5r4fYN/WGxizYONcEXp2El5ukNm+iy6Q==
+	bh=yBrOxbFSFCvT+f6YwccRu0+NATw9eg/EBC16z8r25jk=;
+	b=YXwaiSVqH57JoACfvIhS0r1hKMNSjqR1B/UraOe0TVIeme4vrrJmYhYSY6xasXp6t5/6
+	 dsaG7+a6UmdMDClP7Jx9czdfaolePi4Jx0ve7ra3hqSwi3ZcCmHxhOwDWqLysY9LvM6vR
+	 wdb/U2x833wRld2hZ8HF4dZ1vXtewJI0oPF7pKi2Qh4XI4J2Tbe91AePwZFTlld8hbDOx
+	 txT2nfGrTBYfT4uikdCRhuQZAd+SvKBunu0EOjvQHaxx9MV1Oavo0SHIVnb5UdP5EHZUT
+	 kSesdb3Sj4b3gIwrYu4coo5g+c44QUbVRaPFJmCLDqRQfSss59tjRdN/jaqg5c18PFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=jAT0T3jb;
-	arc=none smtp.remote-ip=209.85.222.171
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=n8hoAo+C;
+	arc=none smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC1D606A31B
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 16:40:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DC1D606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8021606A32D
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 16:46:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B8021606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=jAT0T3jb
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-93e4c00d71aso220549185a.3
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 09:40:31 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=n8hoAo+C
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5366463571cso22210821cf.3
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 09:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792687230; x=1793292030; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1792687602; x=1793292402; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=pBCWQ7jscdfKZcHIgslgXKhcbj8ko2Frw+3Y69vYvjU=;
-        b=jAT0T3jbrY+4q8F+V6rIRrgFs+wEAK/kxFUjg4VMXiR8FrEqqBoFQFhxhMWKr+YPiL
-         myzlKAmHJPL8N0q5qaVLeC4ef4bzaTJXgSXgjnpjrC+yDJuBn9g6R23Sa0m9h+Wqs65Y
-         Q18dEzwzC/VqutGQVoH9wlsDq1d3wTdVzQ8MWIa7y05Upf+BtC67AHH7qWavQqRYlqIV
-         6MjvEFWmF51gMLYXNWuoJsnak73Gc3T8zvztwcrbcJF/nVIaB0s/LSt0MYcNA+j5h9R3
-         GxmGsUypfwzTM6FrLO18UtYaQthsXREwmsdS9Vrqq9eeB4pwn2iXkxHaLEfB0m341t5z
-         fmDg==
+        bh=yBrOxbFSFCvT+f6YwccRu0+NATw9eg/EBC16z8r25jk=;
+        b=n8hoAo+CxFauy6i7/WcNoAFjNgIEG0mAmL0g8lLDlpSzlUApelASfcNQdlOJMPXptK
+         R/govxDtflumQfuKsarXH9RZTgktNL/BPWuU8k63zVwOK5e8GHGWXlIoc6L2rUpZAOUP
+         UGBOCx/pJZ7ivbbNnfbO/DStxcUFCbagB1pYXRRR1N97nEeswVXCXSmDRFz9DqGFju5/
+         12xLLAYoupr/q57CIIKuRWyfe1VVtgZrb+UqTRp1Z0yjW50l/67IuuceEYMnDy0Hna2T
+         YLDD4mqrTV12VJzqGPOK2tuPE4IUzdL+tF+YVQwFJboeBgeZIdBSLXty5MlKrR5mg39X
+         kxfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792687230; x=1793292030;
+        d=1e100.net; s=20260707; t=1792687602; x=1793292402;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pBCWQ7jscdfKZcHIgslgXKhcbj8ko2Frw+3Y69vYvjU=;
-        b=y2AyOThLkcz3giU2qBMrF0Xc3QiqyMjc9SOilSXBAszUuIH2DT1/1dpI6uDmUOsS7V
-         x2z6qhu37TgN6DrOgaSUNhixfZkHCUcBMrgTtsl8z3Qg8Mu+ikVzh+bAO2pwtLd27Ul/
-         Y9i99MOZiYXhxFUwX7dz6x6OptX4GGYz6VogDANqAT70wc04IAuND+Et0hf+ESuNnQh7
-         J3UkU5Nb7DF2e02+/JanaA/9lupz4ETEtFGxVmW3JASbPImtKG2Oqstowu7ovpiXEeM+
-         p6EkXBeJ8HfGnJS/0FXAo0agmfhAOfltA1gYaja2w3NwX/6TL9ldHAZY8MHwpsMVi/N4
-         Btaw==
-X-Forwarded-Encrypted: i=1; AKwUvBwhMnRoHsnI+lIFWlQP+4i7Nqvwh83qzddJ2TugZ0SY20qGCv3r3GS6w/OI62u3Xhrp55vWy2knEuo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJX3NzatiEdwqPWGUnHhlPdN8iabbA9edj6Qy/8mE5z75PTeShu
-	jtZX4kL//bymdrIIzZHEu17812lXdGUd4D6n7yQtDS9MavfnwoYDh+XmAfqQ7cT8X9Mpj0W8co6
-	O9r1j
-X-Gm-Gg: AYBFou3aDE0jHH6emkFKDall4VoGoXn5FTlTWzkf5/NjDFvjJ9CvHFmZ6bpCdsUXECF
-	vHotv2X+ovkwGoz/pkwHoSCJRdmk3XukeM4xdoz9/WSXe9Bc3FJ1m1wiTOJT/bIuqxcElJK7Knc
-	u98k0ljqguB07npYN9PPmwZkssVdGDsFgk5YSbadm4aOhm/XGK1oA9UmLI3QGaw7GvMhwD7nVOb
-	V8kXVY3lklsEeHyBTZMva4TS8cEkSIIzt2W/i54wMNKj0rCojVYq7ZVQ4lYxmzhceDrFfqOWwrQ
-	e5OyZzqJXC1vTSOD0ZDsmJNbkW7S7mY4ZSqnVVmcKZjbeVluqbLlp9UzOm/T0gdUqR8j1V6veV+
-	a/aNsNgE2PZDxdw2R/7tnp7pjqKdMEZKwRhuejX523eQvRw6wlttC9KjYpoMUDyNB/Df4pQyx0n
-	7AInc+4k6pW5woR3ydaA/sFcyXbvHGZyOIpxrl+l8BWE6iJ74VosiOMcIMFW68HM9UKWsJAkeGQ
-	LlKoYx7uD4roqnv47ZR9IXbxNzYgoVNrI0tg+uRZANgm1IDwy/+Np8x+qkZKPtfMfzHM/XmtMuT
-	FqSjoBhhmnB1uvJEgGMaee1sb8w=
-X-Received: by 2002:a05:620a:4394:b0:93f:38ee:68b9 with SMTP id af79cd13be357-93f6f657640mr3328385a.28.1792687230176;
-        Thu, 22 Oct 2026 09:40:30 -0700 (PDT)
+        bh=yBrOxbFSFCvT+f6YwccRu0+NATw9eg/EBC16z8r25jk=;
+        b=t+J/X9tuRLYLFuWQHCO3aWb+doDFj1p16b67I7sstui6zFbXj33k75iO9Hjtl0EQz/
+         q6QaGeBaQAOhPxNQ2v2HwY/JZWttkgopW8/EyKDHQrdU/yS/yduzJDTlHvK1HSsCz9Pq
+         pWi+Q7eCKX9t9OldZlT49j07k7jfwoZIcAYq5eeKIHzxCYhQEm0LtcTYW2mYgNcXM1J0
+         zMAlDpFb7Ce3pr16NbF1XEYzYTHtYo8Z3KhUJQaTYPDE36AP78MYvB3Hp2fltBB+m8Fo
+         YF9xcUMLUSvUPFQX0gcDoC8kYocpLRKR2CSxZc9/Nh5VeWi/GbWBA+X7uyGCqUYKMnRe
+         VEqg==
+X-Forwarded-Encrypted: i=1; AKwUvBx4JFIXU5YIZXlBDwZzaaQp0dgLNWybHb4cNtGYpBnH3mLbh15/GRGrPmczR1e9WSBmLdM+a8pcoo0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKRBdFKwrXDLy7Q4GR6KzXDWed4X/9/xgub8L5bc7xXZwUzbAjd
+	/qgn1eE4yug/ZuHsG8xmmednKHLN1vDeCMQ/+G3h/vnE7wWoFE5+IYyfjXyBhcg26M5zCToeqyp
+	COtqZ
+X-Gm-Gg: AYBFou3uQ1rM8zY4vjCF7XKTno3pWE13X+0gdSeHrGFId/d+y6Gql4tyhPNZ/rFwF7H
+	aqnDtSI6StkOlrs0S7+MaDMaDoU1WHxSlnMsScab2DIU56xtmJnGvgU9Phz+rPiKYRqiN19R6BV
+	9OWQtQV3EAO+EUYvAVtovqCRquCM1cF16Y5EfXGbv0UszrBS0PRM97mWTjiRp0Bspua817eH+G3
+	swdu7eJ83HRx0ZKvHnZYxwI07i4kP31ECfrn1ocgPjR0ROGRgLho2zs2taM4Ikt0UowDUMK37vQ
+	fO5ZiTo4RolR7WqiWgHhg3deZ/CoSI6ZHozO30oPf8Dzo+xExgk5OpxFCee6MgKUFQzfdQ0A6lC
+	l92jTDv1NpXHezC2c5ZU6YG7aNtHhuvLs4lQoDmwCm8lpp5Ek8LVeU+WjG3GSyPmvmIVHOzVCnR
+	xKUHalRspBgPH4soJX8051165aeCCzD8PoOMKNdMGAsZCKoGVoAjUsinIPyC5mzW+nW7aC1rkMa
+	dn8AnPee/YdiwUznQhtPJAJRKhlVfx/mw5DHkUJd12yCAenJk9xQtyUek5oZyY1dWvH3FZ1sN1K
+	9iWERQYGyQYdZZexe0cKPxUSIcE7Bqwo7yEQxvm6uUqkaX1A
+X-Received: by 2002:a05:622a:e197:20b0:533:3228:74ad with SMTP id d75a77b69052e-5369b8112famr65415051cf.34.1792687601560;
+        Thu, 22 Oct 2026 09:46:41 -0700 (PDT)
 Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f56e1db54sm552080985a.36.2026.10.22.09.40.29
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-536ab6cd0dcsm31216581cf.6.2026.10.22.09.46.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 09:40:29 -0700 (PDT)
+        Thu, 22 Oct 2026 09:46:41 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,75 +91,71 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 2/6] daxctl: online whole-device memory atomically when
- available
+Subject: Re: [PATCH 3/6] daxctl: offline whole-device memory via atomic
+ unplug when available
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: "Gregory Price (Meta)" <gourry@gourry.net>, nvdimm@lists.linux.dev, 
  linux-cxl@vger.kernel.org
-In-Reply-To: <atlxIz7uZhH9y_ac@aschofie-mobl2.lan>
+In-Reply-To: <atly9gd-Rsf-AoqB@aschofie-mobl2.lan>
 References: <20261016214248.443247-1-gourry@gourry.net>
- <20261016214248.443247-3-gourry@gourry.net>
- <atlxIz7uZhH9y_ac@aschofie-mobl2.lan>
-Date: Thu, 22 Oct 2026 12:40:28 -0400
-Message-Id: <179268722868.4072493.14547635108872148543.b4-reply@b4>
+ <20261016214248.443247-4-gourry@gourry.net>
+ <atly9gd-Rsf-AoqB@aschofie-mobl2.lan>
+Date: Thu, 22 Oct 2026 12:46:40 -0400
+Message-Id: <179268760050.4072493.10054383256417425305.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
-On 2026-10-21 19:12 -0700, Alison Schofield wrote:
-> On Fri, Oct 16, 2026 at 05:42:44PM -0400, Gregory Price (Meta) wrote:
-> > From: Gregory Price <gourry@gourry.net>
-> > +	if (param.no_movable)
-> > +		target = DAXCTL_KMEM_ONLINE;
-> > +	else
-> > +		target = DAXCTL_KMEM_ONLINE_MOVABLE;
+On 2026-10-21 19:20 -0700, Alison Schofield wrote:
+> On Fri, Oct 16, 2026 at 05:42:45PM -0400, Gregory Price (Meta) wrote:
+> > +	/*
+> > +	 * Unplug atomically where supported, even if already offline, so
+> > +	 * no agent can online blocks before a later unbind.
+> > +	 */
+> > +	state = daxctl_dev_get_kmem_state(dev);
+> > +	unplug = state != DAXCTL_KMEM_UNKNOWN && state != DAXCTL_KMEM_UNPLUGGED;
 > > +
 > 
-> Hi Greg, 
+> Hi Greg,
 > 
-> A couple of things here...
+> I see you called this out in the cover letter, and that the kernel is
+> deliberately combining offlining and removing memory to avoid the race
+> before unbind.
 > 
-> The atomic --no-movable path uses DAXCTL_KMEM_ONLINE, leaving zone selection
-> to the kernel. With memory_hotplug.online_policy=auto-movable, IIUC this could
-> place memory in ZONE_MOVABLE despite --no-movable.
+> But, this does change the behavior of the command "daxctl offline-memory".
+> Previously it left memory blocks present but offline and now it removes
+> them entirely.
 > 
-> The per-block path checks the resulting zone and fails if it isn't ZONE_NORMAL,
-> but the atomic path skips that check.
-> 
-> Should this use DAXCTL_KMEM_ONLINE_KERNEL instead, or retain DAXCTL_KMEM_ONLINE
-> and add the same zone check?
+> Should offline-memory keep its existing behavior of leaving memory blocks
+> offline, and use atomic unplug only when reconfiguring the device?
 >
 
-I think you are right, let me go test.
+The kernel explicitly does not allow `echo offline > dax/state` because
+this just creates the race we're trying to resolve.
 
+I suppose my pushback is: why does it matter that daxctl offline-memory
+changes in this way? If daxctl supports the atomic interface, it all just
+works. It's a bit more work (additional hot-unplug) but if the memory is
+already offline that's not that expensive.
+
+The only scenario I could come up with is having two versions of daxctl
+fight with each other (old - no awareness of dax/state, new - uses
+dax/state) but is this a real concern?
+
+> > +	if (unplug) {
+> > +		rc = daxctl_dev_set_kmem_state(dev, DAXCTL_KMEM_UNPLUGGED);
+> > +		if (rc < 0 && num_on == 0) {
+> > +			/* already offline, unplug is best effort */
 > 
-> > +	if (state == DAXCTL_KMEM_OFFLINE) {
-> > +		/*
-> > +		 * Onlining requires 'unplugged'. Don't unplug memory another
-> > +		 * agent onlined meanwhile (a small window remains).
-> > +		 */
+> When num_on == 0, another agent could online a block between the earlier
+> check and the unplug and that memory would then be removed.
 > 
-> With this, a "reconfigure-device -m system-ram" may add the memory twice.
-> First kmem adds it offline at probe and then daxctl unplugs it and adds it
-> back online. If that re-add fails, the device is left unplugged rather than
-> offline.
->
-
-This was the intended behavior because otherwise a concurrent
-block/state change would end up making the blocks unrecoverable.
-
-> I get that falling back to per-block onlining would reopen the race this
-> series is addressing. Could the kernel interface support transitioning
-> directly from offline to an online state instead? It seems that would avoid
-> both the extra hotplug work and the left-unplugged failure case.
+> I see this noted in the commit message. Is that worth documenting for
+> users?
 > 
 
-This is an unfortunate wart for backward compatibility sake.  It would
-have been preferable to create the dax device without auto-hotplugging
-the kmem region (hotplug but offline), but that would break userspace.
+Yes that's intended, and yeah should probably update the docs.
 
-I can take another look whether i can get offline->online to work
-internally, but this may still require the hotplug work you're concerned
-about.
+~Gregory
 
 -- 
 ~Gregory
