@@ -1,84 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.167
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792720576;
-	b=wriXRgp8Ot7zR+QKkhzzRw51tzzAp7SoCI1EHWtPAavHKdnUSZa9ymBuXAJ2clbw+2By
-	 lONs7O+OV0LJKLFJeoc5GSGobNELfktIJzlN5q8DCoJZWAqBxT5Gekz6c6XmWY/R6GAw8
-	 TVdemEncAeM753FYI7U1z+rN/sxqZziyG2c+e4Jum9AFtkGbpjgVR2LBp5VnBcjiNQGOE
-	 wUeHYdrRoP5eIZBxlVP9GGDoQrj6tBOQyd1RHYlvMFqfISJygVR+gDnFxMLePiMhd5m3K
-	 9FgtHfYGP2+vp89MSG+dHSHZo99Nnmh4JWqQfHZlBCNNrylT7W8OWw9348Hak7M2aOw==
+	t=1792727205;
+	b=0X6sSyQrNawGYkY//KvVBLSUpjRUXqt0cfkcx9ENmKxl433leDmyAiKH6m53EZUpx4Cf
+	 Ecb9dWPaLi2TMS7lErA8hVh35XzKOoL/EoF/0sZQTPb+jBb7wu9DQBaVJocwkRTs4b3cD
+	 NWpraOzeUEhmKDisLVl4eXup4oAbA7016E8FHG/BDnClrJdbEAjAXjbKoZy+j4l4BCRSm
+	 K4bATuNEkjhmehIfYSXoFyoW+Cr6Op9FdunAY129XXrksLG1Rwg/1Vlo9nIB3ajpYPtGz
+	 Xe0PBJdzp1IH6vgKBlQJkWXLBOIgd/ki2iW0rHE85ls0pM6J5UfHsZ+px6RyMexIx8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792720576;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=qSBKQkoV/2gEOYXQ7dyktjSocPAeCSzJyj2oztarUE4=;
-	b=igDz0XKVHZoq+wMqIrKYxVbHjVcKEhHt3xA+/71M14N7J9x6sq6dulR95rmKCJZ14+Kj
-	 KKQMVo5BAGpf3WN3oPutAY45fv9mhSh489btwqnXbgKeabw8AHOzovhZwt4v0O3aVh7zW
-	 ALjPu2sDHKtb5OKHIyvUXUuTONDFa4vREYwoSkTdJmAHjR4pSJvhXbjtZb0MJnfWajfG6
-	 AmuSgA8LTf6cN+YCo6PTC3VcvUSVetoAJOaKvA8kPlMVPCcT+GV3p4n5RVjzG4PXbzwkB
-	 DAUIKCzesooCLPvxL7iIpqaOL/PQ5IZdKj0oDMQx7q6l5jRt0NkcqQbUpIqsu1SfQvA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792727205;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=ttIYp9SKvrIeTjMeme1a7v/1DuKF5crN8WKfQ1/zVqQ=;
+	b=YcWMB7eityFyleNhd/sv6MnbxSkrv4eeHio5LlIBEp2L+Tc4X3FOFqWE0ut1j6m94KSO
+	 UaE3/BTKq3UEfWuziNogHASbY0TWpP/5rzqywUFNWtLnuEi+5sandJp3qxv58o/kLXYma
+	 Si+dY/Sl7uePpVANiJcQ1bP4gWln1SZKPt51qVaRYAoBrgL4xghdVulKdXI9fLdgwfv9I
+	 +qfwssXVhH1KwjbkCVZaSF/pyAanRzRdD3MHNqVTKBWlQQOD2n0X8Q4z0DTS8SLuFwFAA
+	 mu11DtFSGUSwl3HaPSuHhM3Tir8XAHMcBeGPr9+ekSGQnRRxjz5x781Fgg1kNFY7Ydw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=KsG6Gnke;
-	arc=none smtp.remote-ip=209.85.219.50
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=V9SxOFsb;
+	arc=none smtp.remote-ip=95.215.58.167
+Received: from mta1.migadu.com (out-167.mta1.migadu.com [95.215.58.167])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE06D606A319
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 01:56:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AE06D606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3A1606A31A
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 03:46:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F3A1606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=KsG6Gnke
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-917a04338c1so3238076d6.0
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Oct 2026 18:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792720575; x=1793325375; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=qSBKQkoV/2gEOYXQ7dyktjSocPAeCSzJyj2oztarUE4=;
-        b=KsG6Gnke8+uOe0OPFEJ3cUB9Hn8wPgXYMSekDEEMnKqIgcPj5m4iWSQN7KH4xE/TrY
-         kVovdH3tkBv8poJ0MPxsuVNNpNxH0zh8EnjjNOPJPdV1Zkcyr2EyOwPZYnlENtruQV2r
-         Gjq1bSOcu1blsuHhurQ0N93i3XUeFCcHklxU60JfvQm2XZsOI2+XL9wxAEej0tmfOxyX
-         xXj0iR2HzqsrMqXqY7HbUPF75hYc40kcWLyCcxtmFjVK/goQC3dMKH8/RHxZkEx6R3tE
-         OaTI7B/2uZZzylO9MKU211VmhCyjF+nYyF0MjtHpr0KQtUtjsq0qsc8m5C+MUNsHA4qA
-         F44w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792720575; x=1793325375;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qSBKQkoV/2gEOYXQ7dyktjSocPAeCSzJyj2oztarUE4=;
-        b=ERI7zMSpyYgSUglZfNlxD/70XASv+eko0I9TMI5sOizg6aSY0g/+x43PMEYCbUGbO0
-         XLBRiasaT+z3mlIn1SHcd13COsIrpx30iJAi7zU0LZktPziQMbce/NcFM5nmshP3Rz7g
-         0hGyrQvBMv5CYZTWYpvZcFG0Zi+sBHAewBBend1L1DiXu/INDW/2R2p4U0P+yP4jXhut
-         2urjXtrWAgHOBm48kCV7mPghKwabFGFLGtFor4+1ZMliPlSXP0kR63Ep3wN1ZKaAmKjg
-         NoQvoHNvGQhGkr8h6BJ1ZYRMPj9kBc3qSXcm/oS88SQKLPtsaPqojkjQDNZwTsy3ufNn
-         b9iw==
-X-Forwarded-Encrypted: i=1; AKwUvBy2gSiBu/X8SKeBuvwl4tRr5NOicHG209Zr3zKqbZNS8wvfV+rRWJ8NmX1qe5NiaJ3SQzGXjW5F+I0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKe1bAgVjDmSB4fYYh/E6FMP1PEiFiHr0t2HYrTRiABJ6WbcjjL
-	T8nyAJSxV8RwbLdcVChBw/THe+CcZbgDzdB4F0R8CjY3HMhd839XjpyMKyHFiifRZEA=
-X-Gm-Gg: AYBFou0QDeJZWj3uizoX0p6qksfcTag/eFO1bvpuWLEyVsWFgJvNdKVNVU2cIxQAZSf
-	pOwlXm2IkdwQftrBtIx+FmUqYrxCHnJDo+6ajukea0Wdwi4OVwxshDUiCaGeHVXG9N5/qyTfK2g
-	KXJQAQsP2/TCQylGZ4jEmOAeMzet3ph8oJYaGyWuqDPGl0VAoYfBxBqTeu2lzUX6ehMH3hrozcK
-	Bwe/D0oqadzVprQ6ioihOsQdB8FJ1zh8eHewTutTMY1i38gfF5o5o4Orareju96703w73+fHezd
-	FbaeMm7Mqsud64T/xOKmfYVccMIZrgTEL6ag90SdH8pD/L1PQExXILxY6XscO3OTdNvpg/qSHCM
-	CWSmQ8XN5lxdJyzyWbz4f3obpFujYxIe8Imx8DEYeYt7ctZOTlzMX8b5SiqhRkCvInwq9twvPZb
-	WcT2Afk4G4P9I4rGVve8NiA9tzaKSpHo8DwsofqFW5xY1ly8EKtnzJfJnJSP2E9F+dBUzriNptM
-	F1Mzsfw0BS1CCe14RZJevBCY+2GVz6ytPYEnfOx+JkVRQDH6MXYtEg5nQHFIZ1thsG6CKQv9Dga
-	U1jq/J8fH78d5UlapPb8brzQZ64=
-X-Received: by 2002:a05:6214:c4d:b0:917:84c2:67ba with SMTP id 6a1803df08f44-91c3a9d6ec0mr9891546d6.34.1792720574666;
-        Thu, 22 Oct 2026 18:56:14 -0700 (PDT)
-Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c396af371sm7558586d6.7.2026.10.22.18.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 18:56:14 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=V9SxOFsb
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=Hm72Xfl6pvbKv+hg7yoR4S7LNRVKFxz7eQHzNV7biQo=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792727201; v=1; x=1793332001;
+ b=V9SxOFsbi2u9Uu+fiTkvQf06afGaagMarU08jGszLxPu/I6Na+u6nAq40izPufIN91vd04Dw
+ IFzE0t9wZSNARZlpsgISwjRMup02OGVKwqkBP/JkA+CYQ8gjn6ts7vwq/9CNsbcG4MPSrShDpns
+ II31xlaPTyn+qGAfS/TnnPc0=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id c34def1092b89765;
+	Fri, 23 Oct 2026 03:46:41 +0000
+X-Mizu-Trace-ID: c34def1092b89765
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <a3601418-7fac-4f8e-82b1-3aa9e731c822@linux.dev>
+Date: Fri, 23 Oct 2026 11:46:36 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -88,35 +58,282 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] dax/bus: fix Device DAX range alignment validation
+To: Alison Schofield <alison.schofield@intel.com>,
+ Muchun Song <songmuchun@bytedance.com>
+Cc: Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Joao Martins <joao.m.martins@oracle.com>,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261016053944.2579541-1-songmuchun@bytedance.com>
+ <atqk4GgaII0KQQnW@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <atqk4GgaII0KQQnW@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/6] daxctl: offline whole-device memory via atomic
- unplug when available
-From: "Gregory Price (Meta)" <gourry@gourry.net>
-To: "Gregory Price (Meta)" <gourry@gourry.net>
-Cc: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev, 
- linux-cxl@vger.kernel.org
-In-Reply-To: <179272009864.802238.3707618429496053322.b4-reply@b4>
-References: <20261016214248.443247-1-gourry@gourry.net>
- <20261016214248.443247-4-gourry@gourry.net>
- <atly9gd-Rsf-AoqB@aschofie-mobl2.lan>
- <179268760050.4072493.10054383256417425305.b4-reply@b4>
- <atqHe2AK6Tka4t6f@aschofie-mobl2.lan>
- <179272009864.802238.3707618429496053322.b4-reply@b4>
-Date: Thu, 22 Oct 2026 21:56:13 -0400
-Message-Id: <179272057300.1197960.3345278232450834067.b4-reply@b4>
-X-Mailer: b4 0.17-dev
 
-On 2026-10-22 21:48 -0400, Gregory Price (Meta) wrote:
-> The intent here was to try to get drivers creating dax/kmem to actively
-> set a default and effectively deprecate the global hotplug auto-online
-> setting (because a single auto-online setting for all devices does not
-> make much sense).
-> 
 
-there may be a path here to allow offline->online to keep userland
-clean, let me propose something before i iterate this series further.
 
--- 
-~Gregory
+On 2026/10/23 08:05, Alison Schofield wrote:
+> On Fri, Oct 16, 2026 at 01:39:44PM +0800, Muchun Song wrote:
+>> Only range sizes are currently validated against dev_dax->align. A
+>> dynamic device can therefore select a large-page alignment and allocate a
+>> range whose start is not naturally aligned. The device binds successfully,
+>> but a later write to a userspace mapping may trigger a kernel panic.
+>>
+>> The automatic resize path can also split a size-aligned request across
+>> arbitrary free gaps. When devices with different alignments fragment a
+>> region, this can extend a range by less than the device alignment. A later
+>> allocation then fails, leaving the failed resize partially applied.
+>>
+>> Initialize the device alignment before its first allocation. Validate both
+>> the start and size of allocated and adjusted ranges, account only for
+>> aligned free space before changing ranges, skip unusable gaps, and
+>> serialize size validation with alignment updates.
+>>
+>> Static Device DAX already has a pre-populated pgmap whose full range was
+>> validated against memremap_compat_align(). Its usable data range may begin
+>> after namespace metadata, so require only dev_dax->align for static
+>> devices. Dynamic Device DAX builds its pgmap from the allocated ranges and
+>> must continue to satisfy both alignments.
+> Hi Muchun,
+
+Hi,
+
+>
+> One commit message comment:
+>
+> Now that this is a standalone patch, some useful context from the original
+> cover letter would be useful in this commit message.
+
+OK, I'll add those info to commit message.
+
+>
+> The cover letter explained that Sashiko identified a path where
+> `memmap_init_zone_device()` could initialize struct pages with a large-page
+> order for a physical range that wasn't naturally aligned. You also mentioned
+> that you reproduced the resulting kernel panic.
+>
+> That gives us both the failure mechanism and confirmation that this is a
+> reproduced bug, rather than just a potential problem. Those details are worth
+> keeping in the commit message.
+>
+> So I happened to hit this and the mapping_store() issue that was in the
+> original patch 1/2. Both these fixes solved my problems.
+>
+> Below I do have some style and simplification feedback, and am also wondering
+> about the gap handling logic.
+>
+>
+>> Fixes: 6d82120f4156 ("device-dax: add an 'align' attribute")
+>> Assisted-by: LLM
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>> v4:
+>> - Use dev_dax->align alone for static Device DAX ranges to preserve
+>>    older 4K namespaces (reported by Alison Schofield)
+>> - Condense the commit message to the failure scenarios and required fixes
+>>    (suggested by Alison Schofield)
+>>
+>> v3:
+>> - Serialize size alignment validation with alignment updates to avoid a
+>>    partial shrink after a concurrent alignment change (reported by Sashiko)
+>> - Document the size validation serialization in the commit message
+>>
+>> v2:
+>> - Keep the alloc_is_aligned() name to avoid unrelated helper renaming
+>>    (suggested by Dave Jiang)
+>> - Move this patch after the mapping error reporting fix for independent
+>>    backports (suggested by Dave Jiang)
+>> ---
+>>   drivers/dax/bus.c | 152 +++++++++++++++++++++++++++++++++++-----------
+>>   1 file changed, 117 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+>> index b809e1a264af..b2c83a0e4ec5 100644
+>> --- a/drivers/dax/bus.c
+>> +++ b/drivers/dax/bus.c
+>> @@ -848,6 +848,52 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
+>>   	return 0;
+>>   }
+>>   
+>> +static inline unsigned long dev_dax_min_align(struct dev_dax *dev_dax)
+> Why the static inline here and also why below do you change
+> alloc_is_aligned() to static inline?
+
+I thought it is a one-line code, inline is better, I usually do
+this in MM area.
+
+>
+> coding-style.rst is against it in .c files and we don't do it in any
+> other drivers/dax/*.c code.
+
+Seems it is not a convention in DAX. I am not an expert in DAX.
+
+>
+>> +{
+>> +	/*
+>> +	 * A static device has a pre-populated pgmap whose range already
+>> +	 * satisfies memremap_compat_align(). Its data range may start after
+>> +	 * metadata at dev_dax->align granularity.
+>> +	 */
+>> +	if (static_dev_dax(dev_dax))
+>> +		return dev_dax->align;
+>> +
+>> +	/*
+>> +	 * The minimum mapping granularity for a dynamic device instance is a
+>> +	 * single subsection, unless the arch says otherwise.
+>> +	 */
+>> +	return max_t(unsigned long, dev_dax->align, memremap_compat_align());
+>> +}
+>> +
+>> +static inline bool alloc_is_aligned(struct dev_dax *dev_dax, resource_size_t size)
+>> +{
+>> +	return IS_ALIGNED(size, dev_dax_min_align(dev_dax));
+>> +}
+>> +
+>> +static inline bool range_is_aligned(struct dev_dax *dev_dax, u64 start,
+>> +				    resource_size_t size)
+>> +{
+>> +	return IS_ALIGNED(start | size, dev_dax_min_align(dev_dax));
+>> +}
+>> +
+>> +static resource_size_t
+>> +aligned_gap_size(struct dev_dax *dev_dax, resource_size_t *start,
+>> +		 resource_size_t end)
+>
+> Please keep the return type on the same line as the function name, like
+> rest of this file.
+>
+> Also a function comment like:
+> /* Return usable aligned gap size and update *aligned_start */
+>
+> and a rename of *start to *aligned_start would make the contract clearer.
+
+Will do.
+
+>
+>
+>> +{
+>> +	resource_size_t aligned_start = ALIGN(*start, dev_dax_min_align(dev_dax));
+>> +	resource_size_t size;
+>
+> How about calculating dev_dax_min_align() once and keep it in a local variable?
+> We use the same value again for ALIGN_DOWN().
+
+Make sense.
+
+>
+>
+>> +
+>> +	if (aligned_start < *start || aligned_start > end)
+>> +		return 0;
+>> +
+>> +	size = ALIGN_DOWN(end - aligned_start + 1, dev_dax_min_align(dev_dax));
+>> +	if (!size)
+>> +		return 0;
+> The above early return looks needless given how callers use the result
+
+Oh, yes.
+
+>> +
+>> +	*start = aligned_start;
+>> +	return size;
+>> +}
+>> +
+> snip
+>
+>>   
+>> +static resource_size_t
+>> +dax_region_aligned_avail_size(struct dax_region *dax_region,
+>> +			      struct dev_dax *dev_dax)
+> Same as previous, keep return type on the same line here.
+>
+> The dax_region argument looks needless as we can get it from
+> dev-dax->region.
+
+Right. My oversight.
+
+>
+>
+> snip
+>
+>
+>> @@ -1062,37 +1130,51 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
+>>   	 */
+>>   retry:
+>>   	first = region_res->child;
+>> -	if (!first)
+>> -		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc);
+>> +	if (!first) {
+>> +		resource_size_t start = region_res->start;
+>> +
+>> +		alloc = aligned_gap_size(dev_dax, &start, region_res->end);
+>> +		return alloc_dev_dax_range(dev_dax, start, min(alloc, to_alloc));
+>> +	}
+>>   
+>>   	rc = -ENOSPC;
+>>   	for (res = first; res; res = res->sibling) {
+>>   		struct resource *next = res->sibling;
+>> +		resource_size_t start, end;
+>>   
+>>   		/* space at the beginning of the region */
+>>   		if (res == first && res->start > dax_region->res.start) {
+>> -			alloc = min(res->start - dax_region->res.start, to_alloc);
+>> -			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc);
+>> -			break;
+>> +			start = dax_region->res.start;
+>> +			end = res->start - 1;
+>> +			alloc = min(aligned_gap_size(dev_dax, &start, end), to_alloc);
+>> +			if (alloc) {
+>> +				rc = alloc_dev_dax_range(dev_dax, start, alloc);
+>> +				break;
+>> +			}
+>>   		}
+>>   
+>> -		alloc = 0;
+>>   		/* space between allocations */
+>> -		if (next && next->start > res->end + 1)
+>> -			alloc = min(next->start - (res->end + 1), to_alloc);
+>> -
+>> -		/* space at the end of the region */
+>> -		if (!alloc && !next && res->end < region_res->end)
+>> -			alloc = min(region_res->end - res->end, to_alloc);
+>> +		if (next) {
+>> +			if (next->start <= res->end + 1)
+>> +				continue;
+>> +			end = next->start - 1;
+>> +		} else {
+>> +			/* space at the end of the region */
+>> +			if (res->end >= region_res->end)
+>> +				continue;
+>> +			end = region_res->end;
+>> +		}
+>>   
+>> +		start = res->end + 1;
+>> +		alloc = min(aligned_gap_size(dev_dax, &start, end), to_alloc);
+> We're walking the free gaps twice now. Once in dax_region_aligned_avail_size()
+> and again here. It seems the 2 walks need to agree about which gaps
+> are usable so that the pre check doesn't succeed and then the allocation
+> loop cannot satify the request...which would get us right back to a
+> partially applied resize.
+>
+> Please look at sharing the gap traversal.
+
+Good point. I will factor the gap traversal into a common iterator used
+by both the pre-check and the allocation path, so they share the same
+gap selection rules. I will include this in the next revision.
+
+Thanks for your review.
+
+Thanks,
+Muchun
+
+>
+> -- Alison
+>
+> snip
 
