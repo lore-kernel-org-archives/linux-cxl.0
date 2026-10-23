@@ -1,64 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792714173;
-	b=jlOFJ//NJGD2MOA/KqSt5wo/UDqUIe9/wHqWV7RJaBR04hVEGkBC2NkRFow3ANhUAVzx
-	 KRpiluHOMIyQrxUdPbWQgRDDFqQ9Y4MO7Fj6ea3wmubV5UfiILTNPmIwWOVFGX+qXlvS3
-	 WmrKFw+VXJCtZY7tPkA3j+F4NfgGWRAyYDp1GPxoga29gCIIFj70mwW9rkGWhhx6MJzgg
-	 24siEPM1Ic89jkqsMH1Nw4sxWPB8gnM9wC0TFtFyIcGk9NxWCFb1J5LwbtwK78UPehDid
-	 +L1Soz4IVev4MqjR1rABIQQlQYHMou/EZxbmL9SBHD7kYdatDGrxlqB+o3j9pxsW05g==
+	t=1792718017;
+	b=vbaCbTA7nLHD5z204uIoeFFKdxl0+APD1TOB83EQYFDj6gqEibHqHof9AftflLsb3QQJ
+	 eWHZKnZOJiIZtCWUqC+k8J85XAoWshFS63p23J1l6L3psmHPi7i15cpO9HJTJ/oBHkCwh
+	 BOOGVfL08qmgiph69znji25PRRjPlIEdVx1assgHQn7xMuclAVym8+e9u5vBIFglKfxNk
+	 XPI+pQBDzwDgX2O3Jo5kZIEuAyqM5ZZE6jlkT6p9pTQWa5UQpgzUQeqk9ag5/eRlLJCUh
+	 yQzZK5yzTK3V2C3r950rVBQVqopgPkMmh8OeO39N4ABRHKHWe9eJjAATcgVmosesAig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792714173;
-	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:References:
-	 X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:X-PR-Tracked-Remote:
-	 X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:X-PR-Merge-Refname:
-	 X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc;
-	bh=u3pWT9Dm2E/AE7Ukvgc6YgoDvQyfUGCmdxDhCpXBDPs=;
-	b=gtzndlgRj3EtT3wkZINfh/95C8P9IVP+VF+ypmQGeg8MNJyEYT82QMriYEve004fBFaa
-	 6OABI3RFlhK0lQJ3bUi8b9dZUARACPIyBMyaYcUodCsdM8GM52nPZzaN4CE7IC4FSF9TZ
-	 IUFUQY6g1dXvatg3Iyg05QYrcWxbo78P6yLKvw40jKNWytCOeJwj/55wHppoe7weFxxlB
-	 bzvgSLWx5jSQ6B4LShgzBK9uq9GMlHhtlUPa/V8ouIpq+O+nhYi/cD1unO0nq1r3do4sh
-	 nu/sSDeB8/xiPBE0kOayfvAY/4apl5cPAb1to75ujO7tyoOgJubLJgjYGOYmnADWK2A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792718017;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=QoKFEBA4K8oBYh2Jeop9c8wTpH9mJnf2zlarsAMrB90=;
+	b=3PaBhwv4N4sUpi0lYKXOwxFTOdhxhmK8Bgt5VyV1M2ElV7hMc58fQ6oiFS58Ga2o6X6b
+	 EOcbg5HDfA1n8/df27s//EnKSgirey32/LHcfmbAQbjQ3dTMUSEdkoQcCC4sTxSYaCKQW
+	 /e2yxO3VOUzCkOodscG3sJd2O28l28jvKvRjZVYvmltqqj4CziPDAyRGLqSsb0tkuOevS
+	 us3L4+Bft2oWePFMyWikbndx2jXjHbEu3CGBSajMS+L9lRZDZxncWq3SSiu+cqRO4PXrW
+	 aS9dRuAHd/xhnmc2MY8eIW91Jr8G4tfd62h6I/aAOhHBKkBvqNtFP/J62yFExG/lztQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BFLEqXk9;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ayWL35qR;
+	arc=none smtp.remote-ip=198.175.65.11
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA10A606A321;
-	Fri, 23 Oct 2026 00:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352E9606A319
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 01:13:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 352E9606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BFLEqXk9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1AE1F01828;
-	Fri, 23 Oct 2026 00:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792714172;
-	bh=u3pWT9Dm2E/AE7Ukvgc6YgoDvQyfUGCmdxDhCpXBDPs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=BFLEqXk9L/V89hnROiksc7D0GfoxtPEIrXQ/dGLaOatIRA3476GPEdoa8wpQOYGMN
-	 vvXZENnN3DbbxJ/6wAwQQatWCaGnFX3HqTwt5Q7yfuPbqF0rO43t2J+evGquI4Qjfk
-	 lI1cuWUFkg8SsAEyNJ0DCO+m+zfxBFglEtaAWrFHTilZmk5rPDEYBIC7Z750MXYXKr
-	 1Y3uxEtJmMM1F+MS4qVCj5cKJDTQZFNBSgGLVoy1YYyUrz3qjfd/6XVVRaBGE6oWx1
-	 un0cyHdkfzgU1p0yay7tPOZ62J43dkTaiI06ho8KuZnLIjSwdeC89JYNDNBtt+5vGc
-	 NV9eO/LVY44XA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 814E7380822E;
-	Fri, 23 Oct 2026 00:09:32 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull FWCTL subsystem changes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20261022192726.GA3758618@nvidia.com>
-References: <20261022192726.GA3758618@nvidia.com>
-X-PR-Tracked-List-Id: <linux-rdma.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20261022192726.GA3758618@nvidia.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-linus-fwctl
-X-PR-Tracked-Commit-Id: bc6f2a284c63313e789d8cd294531e1cc2dc8c99
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3ac032ef6ca8e47bb06d1e189dfcf88fa0a09c75
-Message-Id: <179271417115.261177.11379581765354994499.pr-tracker-bot@kernel.org>
-Date: Fri, 23 Oct 2026 00:09:31 +0000
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-rdma@vger.kernel.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>, Saeed Mahameed <saeedm@nvidia.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ayWL35qR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792718017; x=1824254017;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mNdF50t5QjFib2eqHwHOz6t64iEoMeJBc0zOVgh4+Ro=;
+  b=ayWL35qR6U2kkW+KQ7ri7ga1bjkLWgkzdhq3QsAF/P2efNKPJVHSzXx4
+   ZBZUJb7V0fQBzWttJhG9ZB6wWW7eeJAyp304CMDOlXCkcEcNPOsHPW+Fo
+   VzIdhP/ZwJEt43BAIBhitSR0MNhVw1bKRTKHw9sEAtkEpX0iOc1jeJydx
+   uGDZqH962O+ZlYFrXFBuQ7QcCDHTRy2gXqMnnzKdFuFZTOKZmMIlz8MV/
+   0f+Gkx18CoAbAfoFV74L6U9l7q8SNawJL3SXt4Y6XeNbZpZIDD3oUjSF2
+   wNIU02HILVASXyIYkbUGoFLOnd2HyBXLyeP0tfnq3l6ZHCjylPLHZr+yb
+   w==;
+X-CSE-ConnectionGUID: 3s0H6vfCTGiduITrOQvExQ==
+X-CSE-MsgGUID: p3Lm8XtPQTKigI6aWRAjWA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11943"; a="1365000"
+X-IronPort-AV: E=Sophos;i="6.27,173,1787036400"; 
+   d="scan'208";a="1365000"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 18:13:35 -0700
+X-CSE-ConnectionGUID: p20tMUUsQWOXFeIKFkClCg==
+X-CSE-MsgGUID: PibckpNjSouzwFhfUNSuMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,173,1787036400"; 
+   d="scan'208";a="3384942"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.111.215])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 18:13:34 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/list: handle missing debugfs when reporting protocol injection
+Date: Thu, 22 Oct 2026 18:13:32 -0700
+Message-ID: <20261023011333.522080-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -67,16 +77,88 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Thu, 22 Oct 2026 16:27:26 -0300:
+When debugfs is not mounted or CONFIG_DEBUG_FS is disabled, 'cxl list -v'
+crashes while generating the protocol_injectable attribute for downstream
+ports.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-linus-fwctl
+The crash occurs because cxl_dport_get_einj_path() passes a NULL debugfs
+path to strlen().
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3ac032ef6ca8e47bb06d1e189dfcf88fa0a09c75
+Return NULL from cxl_dport_get_einj_path() when debugfs is unavailable,
+and omit protocol_injectable from the JSON output, consistent with other
+debugfs-dependent attributes. Update the documentation to match.
 
-Thank you!
+Thanks to Christopher Kim who reported and provided the fixup.
 
+Originally-by: Christopher Kim
+Fixes: 5d596866f8c5 ("cxl/list: add injectable errors in output")
+Closes: https://github.com/pmem/ndctl/issues/300
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ Documentation/cxl/cxl-inject-protocol-error.txt |  5 ++---
+ cxl/json.c                                      | 15 +++++++++------
+ cxl/lib/libcxl.c                                |  3 +++
+ 3 files changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/cxl/cxl-inject-protocol-error.txt b/Documentation/cxl/cxl-inject-protocol-error.txt
+index 196b6f6af7e3..179066ff7111 100644
+--- a/Documentation/cxl/cxl-inject-protocol-error.txt
++++ b/Documentation/cxl/cxl-inject-protocol-error.txt
+@@ -81,9 +81,8 @@ must be enabled. For more information, view the Linux kernel documentation on EI
+ 
+ This command depends on the CXL debug filesystem (normally mounted at
+ "/sys/kernel/debug/cxl") to inject protocol errors. If the CXL debugfs is not
+-accessible the "protocol_injectable" attribute of dports will always be
+-set to false, and the "injectable_protocol_errors" attribute of CXL busses
+-will always be empty.
++accessible, the "protocol_injectable" attribute of dports and the
++"injectable_protocol_errors" attribute of CXL buses are omitted.
+ 
+ OPTIONS
+ -------
+diff --git a/cxl/json.c b/cxl/json.c
+index a92548828582..0caa3a87b61d 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -746,12 +746,15 @@ void util_cxl_dports_append_json(struct json_object *jport,
+ 		if (jobj)
+ 			json_object_object_add(jdport, "id", jobj);
+ 
+-		einj_path = cxl_dport_get_einj_path(dport);
+-		jobj = json_object_new_boolean(einj_path != NULL);
+-		if (jobj)
+-			json_object_object_add(jdport, "protocol_injectable",
+-					       jobj);
+-		free(einj_path);
++		if (cxl_debugfs_exists(cxl_port_get_ctx(port))) {
++			einj_path = cxl_dport_get_einj_path(dport);
++			jobj = json_object_new_boolean(einj_path != NULL);
++			if (jobj)
++				json_object_object_add(jdport,
++						       "protocol_injectable",
++						       jobj);
++			free(einj_path);
++		}
+ 
+ 		json_object_array_add(jdports, jdport);
+ 		json_object_set_userdata(jdport, dport, NULL);
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index e55a7b41d77a..16348783e3de 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -3589,6 +3589,9 @@ CXL_EXPORT char *cxl_dport_get_einj_path(struct cxl_dport *dport)
+ 	char *path;
+ 	int rc;
+ 
++	if (!ctx->cxl_debugfs)
++		return NULL;
++
+ 	path_len = strlen(ctx->cxl_debugfs) + 100;
+ 	path = calloc(path_len, sizeof(char));
+ 	if (!path)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.37.3
+
