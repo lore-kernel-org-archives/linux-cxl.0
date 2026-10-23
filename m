@@ -1,54 +1,142 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.167
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792727205;
-	b=0X6sSyQrNawGYkY//KvVBLSUpjRUXqt0cfkcx9ENmKxl433leDmyAiKH6m53EZUpx4Cf
-	 Ecb9dWPaLi2TMS7lErA8hVh35XzKOoL/EoF/0sZQTPb+jBb7wu9DQBaVJocwkRTs4b3cD
-	 NWpraOzeUEhmKDisLVl4eXup4oAbA7016E8FHG/BDnClrJdbEAjAXjbKoZy+j4l4BCRSm
-	 K4bATuNEkjhmehIfYSXoFyoW+Cr6Op9FdunAY129XXrksLG1Rwg/1Vlo9nIB3ajpYPtGz
-	 Xe0PBJdzp1IH6vgKBlQJkWXLBOIgd/ki2iW0rHE85ls0pM6J5UfHsZ+px6RyMexIx8A==
+	t=1792744809;
+	b=yZK8hWEemfrQzrLcPHinfO6gb2mLBX7rsayjJETePhhMxdYe3a5ijzREr0XG9PvCVXzx
+	 12TUto9WKPhdb9sEllYNfDFggIBzT4J6zYLvJ23CCHRSvPxRJm7cDT9HN2N7pl4Wy07kN
+	 fc8epM1iamdH1Qoam+6HSj2hJGPGi9dLcx2wvnSqz0/CKi4I+fKFhhtRDlKXT5qtI8QPm
+	 90aiR6Hiy5qfZ+lV/gYYIizws7/6DS7kkqqvbcKWwEGpIQgS6VdQCZv7CRcF/ywCAjGM7
+	 85u/aeepcimNr/a5hEvmS5UlXWwE6jvgHdZWNOu/FXouUpZKAScA4qOwEAJmOTAdrrg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792727205;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1792744809;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
+	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=ttIYp9SKvrIeTjMeme1a7v/1DuKF5crN8WKfQ1/zVqQ=;
-	b=YcWMB7eityFyleNhd/sv6MnbxSkrv4eeHio5LlIBEp2L+Tc4X3FOFqWE0ut1j6m94KSO
-	 UaE3/BTKq3UEfWuziNogHASbY0TWpP/5rzqywUFNWtLnuEi+5sandJp3qxv58o/kLXYma
-	 Si+dY/Sl7uePpVANiJcQ1bP4gWln1SZKPt51qVaRYAoBrgL4xghdVulKdXI9fLdgwfv9I
-	 +qfwssXVhH1KwjbkCVZaSF/pyAanRzRdD3MHNqVTKBWlQQOD2n0X8Q4z0DTS8SLuFwFAA
-	 mu11DtFSGUSwl3HaPSuHhM3Tir8XAHMcBeGPr9+ekSGQnRRxjz5x781Fgg1kNFY7Ydw==
+	bh=0Pj6QyZW/xESjev5XVWjzENx6fIcmKFZWXFYVSlbY78=;
+	b=kzIQSXIks1tXDxI94VlSjm1BJz5+LGuDymy3O1+vb+SEX7f0r8hayg7Bp/5sWh2GmseU
+	 ygkwludMyZ7oQUO2Mdqy8fPImwN0tquiz8Nygi8t/Ji6W51OiyExH2bcvhOiyAxMicwZd
+	 FR/aAEmJlqN+Y7Ad7x2w5hlfNDtfnS5msECi5W/Rr3/KkCVrE8iQj1vW8eFoQFeEBC8ED
+	 oIo8wqwRxCDEMbmlSQIqGca0l03f2GRY6vSyrQxReikAzp3QaAWDTyy13he0I8vYMPvwu
+	 0UEsbbyDwFKxYB8TOE6WMPp/ibwdcG4HrUt/odP/sEf+gHBjnCQTDeEiP1acXFpWE5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=V9SxOFsb;
-	arc=none smtp.remote-ip=95.215.58.167
-Received: from mta1.migadu.com (out-167.mta1.migadu.com [95.215.58.167])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="aX/caL/4";
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3A1606A31A
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 03:46:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F3A1606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F90F606A31B
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 08:40:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3F90F606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=V9SxOFsb
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Hm72Xfl6pvbKv+hg7yoR4S7LNRVKFxz7eQHzNV7biQo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792727201; v=1; x=1793332001;
- b=V9SxOFsbi2u9Uu+fiTkvQf06afGaagMarU08jGszLxPu/I6Na+u6nAq40izPufIN91vd04Dw
- IFzE0t9wZSNARZlpsgISwjRMup02OGVKwqkBP/JkA+CYQ8gjn6ts7vwq/9CNsbcG4MPSrShDpns
- II31xlaPTyn+qGAfS/TnnPc0=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id c34def1092b89765;
-	Fri, 23 Oct 2026 03:46:41 +0000
-X-Mizu-Trace-ID: c34def1092b89765
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <a3601418-7fac-4f8e-82b1-3aa9e731c822@linux.dev>
-Date: Fri, 23 Oct 2026 11:46:36 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=aX/caL/4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792744808;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0Pj6QyZW/xESjev5XVWjzENx6fIcmKFZWXFYVSlbY78=;
+	b=aX/caL/4MlOr6+bM0G0qQrGbentxYkftDnn3af/dSX19E/HdLh7ijH3djqQWPd80DXd70T
+	RDuciemX7AE0vqFQz741RMBjPxAuSFcGSktowBokGN8J++acqUpW7rBjPFYh6XBuJHnb9G
+	Qmm0XdJtQb/S4t/Xek950/OD5Rivmjc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-gEH36swhMSWp1ifHI3FC6w-1; Fri,
+ 23 Oct 2026 04:40:06 -0400
+X-MC-Unique: gEH36swhMSWp1ifHI3FC6w-1
+X-Mimecast-MFC-AGG-ID: gEH36swhMSWp1ifHI3FC6w_1792744801
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A187518005AB;
+	Fri, 23 Oct 2026 08:39:58 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.5])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2BC4018001CA;
+	Fri, 23 Oct 2026 08:39:54 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id D776D21E6A04; Fri, 23 Oct 2026 10:39:51 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>
+Cc: qemu-devel@nongnu.org,  Michael Roth <michael.roth@amd.com>,  John Snow
+ <jsnow@redhat.com>,  Peter Maydell <peter.maydell@linaro.org>,  Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>,  Pierrick Bouvier
+ <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
+  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
+ Kostiuk
+ <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
+ <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
+ Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
+  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
+ Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
+ <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
+ <philmd@oss.qualcomm.com>,
+  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
+  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
+  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
+ <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
+ Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
+ <clg@redhat.com>,
+  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
+  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
+  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
+  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
+ Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
+  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
+ <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
+ <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
+  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
+ <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
+  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
+ <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
+ Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
+ <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
+ Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
+ <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
+ <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
+ Lin
+ <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
+ Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
+ Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
+ Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
+ <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
+ <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
+ Dooley <conor@kernel.org>,  Sebastian Huber
+ <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
+ <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
+ Stabellini <sstabellini@kernel.org>,  Anthony PERARD
+ <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
+ <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
+  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
+  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
+  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
+  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
+ <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
+ Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
+ <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
+ Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
+ Vivier <lvivier@redhat.com>
+Subject: Re: [PATCH v7 07/65] qapi: add QAPITypeInfo struct definition
+In-Reply-To: <20261020-qom-qapi-v7-7-431a86b02b58@redhat.com>
+ (=?utf-8?Q?=22Marc-Andr=C3=A9?=
+	Lureau"'s message of "Tue, 20 Oct 2026 14:45:24 +0400")
+References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
+	<20261020-qom-qapi-v7-7-431a86b02b58@redhat.com>
+Date: Fri, 23 Oct 2026 10:39:51 +0200
+Message-ID: <875wyshktk.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -58,282 +146,125 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] dax/bus: fix Device DAX range alignment validation
-To: Alison Schofield <alison.schofield@intel.com>,
- Muchun Song <songmuchun@bytedance.com>
-Cc: Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Andrew Morton
- <akpm@linux-foundation.org>, Joao Martins <joao.m.martins@oracle.com>,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261016053944.2579541-1-songmuchun@bytedance.com>
- <atqk4GgaII0KQQnW@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <atqk4GgaII0KQQnW@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: 7DGLQt96RuSzRmn5dpWG_WwBg9arD3EEyVwwCMtJorU_1792744801
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com> writes:
+
+> Introduce a minimal struct that pairs a QAPI type's internal name with
+> its "masked" introspection name. Generated constants of this type will
+> let QOM property registration carry a reliable reference to the QAPI
+> schema and possibly other associated data.
+>
+> The fields are populated in following commits.
+>
+> Signed-off-by: Markus Armbruster <armbru@redhat.com>
+> Signed-off-by: Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com>
+> ---
+>  include/qapi/qapi-type-info.h | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/include/qapi/qapi-type-info.h b/include/qapi/qapi-type-info.=
+h
+> new file mode 100644
+> index 000000000000..6a6355568325
+> --- /dev/null
+> +++ b/include/qapi/qapi-type-info.h
+> @@ -0,0 +1,31 @@
+> +/*
+> + * SPDX-License-Identifier: GPL-2.0-or-later
+> + */
+> +
+> +#ifndef QAPI_TYPE_INFO_H
+> +#define QAPI_TYPE_INFO_H
+> +
+> +#include "qapi/util.h"
+> +
+> +/**
+> + * QAPITypeInfo - QAPI type metadata
+> + *
+> + * @name: QAPI type name (e.g. "str", "OnOffAuto", "int32List").
+> + *        QOM uses this as the property type string.
+> + * @masked_name: Name of the type in the QAPI introspection schema, assi=
+gned by
+> + *        scripts/qapi code generator (e.g. "368").
+
+I figure "in the output of query-qmp-schema" would be clearer.
+
+> + * @lookup: QEnumLookup for this type, or NULL for non-enum types.
+> + *        visit_type_enum(), qapi_enum_parse(), and qapi_enum_lookup()
+> + *        all rely on it.
+
+"It" is ambiguous and easily misunderstod.
+
+Correct interpretation: the QEnumLookup.
+
+Incorrect interpretation: QAPITypeInfo member @lookup.
+
+QAPITypeInfo member @lookup is actually used by QOM property stuff in
+object.c.  Or rather will be: PATCH 15+17.
+
+Do we need the second sentence?
+
+> + * @list: The list-type counterpart, or NULL if none exists.
+> + *        str_type_info.list points to strList_type_info.  qdev array
+> + *        properties follow this to find the list type for their element=
+.
+
+This alludes to
+
+    static const QAPITypeInfo *qdev_prop_qapi_type(const Property *prop)
+    {
+        if (prop->info->qapi_type) {
+            return prop->info->qapi_type;
+        }
+        if (prop->info->element_info) {
+            assert(prop->info->element_info->qapi_type);
+            assert(prop->info->element_info->qapi_type->list);
+            return prop->info->element_info->qapi_type->list;
+        }
+        return NULL;
+    }
+
+These array properties don't have prop->info->qapi_type set, and instead
+retrieve it from their element type [PATCH 59].
+
+Maybe something like "qdev array properties lack a QAPITypeInfo, and
+instead use their element QAPITypeInfo's @list to find it."
+
+Except all that isn't true at this point in the series.  Consider adding
+it only when it is true.
+
+Ignorant question: could we set their prop->info->qapi_type at creation
+time?  No need for qdev_prop_qapi_type() then.  Hmm, I guess not, the
+obvious patch (appended) fails with "initializer element is not
+constant".
+
+> + */
+> +typedef struct QAPITypeInfo {
+> +    const char *name;
+> +    const char *masked_name;
+> +    const QEnumLookup *lookup;
+> +    const struct QAPITypeInfo *list;
+> +} QAPITypeInfo;
+> +
+> +#endif /* QAPI_TYPE_INFO_H */
 
 
-
-On 2026/10/23 08:05, Alison Schofield wrote:
-> On Fri, Oct 16, 2026 at 01:39:44PM +0800, Muchun Song wrote:
->> Only range sizes are currently validated against dev_dax->align. A
->> dynamic device can therefore select a large-page alignment and allocate a
->> range whose start is not naturally aligned. The device binds successfully,
->> but a later write to a userspace mapping may trigger a kernel panic.
->>
->> The automatic resize path can also split a size-aligned request across
->> arbitrary free gaps. When devices with different alignments fragment a
->> region, this can extend a range by less than the device alignment. A later
->> allocation then fails, leaving the failed resize partially applied.
->>
->> Initialize the device alignment before its first allocation. Validate both
->> the start and size of allocated and adjusted ranges, account only for
->> aligned free space before changing ranges, skip unusable gaps, and
->> serialize size validation with alignment updates.
->>
->> Static Device DAX already has a pre-populated pgmap whose full range was
->> validated against memremap_compat_align(). Its usable data range may begin
->> after namespace metadata, so require only dev_dax->align for static
->> devices. Dynamic Device DAX builds its pgmap from the allocated ranges and
->> must continue to satisfy both alignments.
-> Hi Muchun,
-
-Hi,
-
->
-> One commit message comment:
->
-> Now that this is a standalone patch, some useful context from the original
-> cover letter would be useful in this commit message.
-
-OK, I'll add those info to commit message.
-
->
-> The cover letter explained that Sashiko identified a path where
-> `memmap_init_zone_device()` could initialize struct pages with a large-page
-> order for a physical range that wasn't naturally aligned. You also mentioned
-> that you reproduced the resulting kernel panic.
->
-> That gives us both the failure mechanism and confirmation that this is a
-> reproduced bug, rather than just a potential problem. Those details are worth
-> keeping in the commit message.
->
-> So I happened to hit this and the mapping_store() issue that was in the
-> original patch 1/2. Both these fixes solved my problems.
->
-> Below I do have some style and simplification feedback, and am also wondering
-> about the gap handling logic.
->
->
->> Fixes: 6d82120f4156 ("device-dax: add an 'align' attribute")
->> Assisted-by: LLM
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> ---
->> v4:
->> - Use dev_dax->align alone for static Device DAX ranges to preserve
->>    older 4K namespaces (reported by Alison Schofield)
->> - Condense the commit message to the failure scenarios and required fixes
->>    (suggested by Alison Schofield)
->>
->> v3:
->> - Serialize size alignment validation with alignment updates to avoid a
->>    partial shrink after a concurrent alignment change (reported by Sashiko)
->> - Document the size validation serialization in the commit message
->>
->> v2:
->> - Keep the alloc_is_aligned() name to avoid unrelated helper renaming
->>    (suggested by Dave Jiang)
->> - Move this patch after the mapping error reporting fix for independent
->>    backports (suggested by Dave Jiang)
->> ---
->>   drivers/dax/bus.c | 152 +++++++++++++++++++++++++++++++++++-----------
->>   1 file changed, 117 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
->> index b809e1a264af..b2c83a0e4ec5 100644
->> --- a/drivers/dax/bus.c
->> +++ b/drivers/dax/bus.c
->> @@ -848,6 +848,52 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
->>   	return 0;
->>   }
->>   
->> +static inline unsigned long dev_dax_min_align(struct dev_dax *dev_dax)
-> Why the static inline here and also why below do you change
-> alloc_is_aligned() to static inline?
-
-I thought it is a one-line code, inline is better, I usually do
-this in MM area.
-
->
-> coding-style.rst is against it in .c files and we don't do it in any
-> other drivers/dax/*.c code.
-
-Seems it is not a convention in DAX. I am not an expert in DAX.
-
->
->> +{
->> +	/*
->> +	 * A static device has a pre-populated pgmap whose range already
->> +	 * satisfies memremap_compat_align(). Its data range may start after
->> +	 * metadata at dev_dax->align granularity.
->> +	 */
->> +	if (static_dev_dax(dev_dax))
->> +		return dev_dax->align;
->> +
->> +	/*
->> +	 * The minimum mapping granularity for a dynamic device instance is a
->> +	 * single subsection, unless the arch says otherwise.
->> +	 */
->> +	return max_t(unsigned long, dev_dax->align, memremap_compat_align());
->> +}
->> +
->> +static inline bool alloc_is_aligned(struct dev_dax *dev_dax, resource_size_t size)
->> +{
->> +	return IS_ALIGNED(size, dev_dax_min_align(dev_dax));
->> +}
->> +
->> +static inline bool range_is_aligned(struct dev_dax *dev_dax, u64 start,
->> +				    resource_size_t size)
->> +{
->> +	return IS_ALIGNED(start | size, dev_dax_min_align(dev_dax));
->> +}
->> +
->> +static resource_size_t
->> +aligned_gap_size(struct dev_dax *dev_dax, resource_size_t *start,
->> +		 resource_size_t end)
->
-> Please keep the return type on the same line as the function name, like
-> rest of this file.
->
-> Also a function comment like:
-> /* Return usable aligned gap size and update *aligned_start */
->
-> and a rename of *start to *aligned_start would make the contract clearer.
-
-Will do.
-
->
->
->> +{
->> +	resource_size_t aligned_start = ALIGN(*start, dev_dax_min_align(dev_dax));
->> +	resource_size_t size;
->
-> How about calculating dev_dax_min_align() once and keep it in a local variable?
-> We use the same value again for ALIGN_DOWN().
-
-Make sense.
-
->
->
->> +
->> +	if (aligned_start < *start || aligned_start > end)
->> +		return 0;
->> +
->> +	size = ALIGN_DOWN(end - aligned_start + 1, dev_dax_min_align(dev_dax));
->> +	if (!size)
->> +		return 0;
-> The above early return looks needless given how callers use the result
-
-Oh, yes.
-
->> +
->> +	*start = aligned_start;
->> +	return size;
->> +}
->> +
-> snip
->
->>   
->> +static resource_size_t
->> +dax_region_aligned_avail_size(struct dax_region *dax_region,
->> +			      struct dev_dax *dev_dax)
-> Same as previous, keep return type on the same line here.
->
-> The dax_region argument looks needless as we can get it from
-> dev-dax->region.
-
-Right. My oversight.
-
->
->
-> snip
->
->
->> @@ -1062,37 +1130,51 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
->>   	 */
->>   retry:
->>   	first = region_res->child;
->> -	if (!first)
->> -		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc);
->> +	if (!first) {
->> +		resource_size_t start = region_res->start;
->> +
->> +		alloc = aligned_gap_size(dev_dax, &start, region_res->end);
->> +		return alloc_dev_dax_range(dev_dax, start, min(alloc, to_alloc));
->> +	}
->>   
->>   	rc = -ENOSPC;
->>   	for (res = first; res; res = res->sibling) {
->>   		struct resource *next = res->sibling;
->> +		resource_size_t start, end;
->>   
->>   		/* space at the beginning of the region */
->>   		if (res == first && res->start > dax_region->res.start) {
->> -			alloc = min(res->start - dax_region->res.start, to_alloc);
->> -			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc);
->> -			break;
->> +			start = dax_region->res.start;
->> +			end = res->start - 1;
->> +			alloc = min(aligned_gap_size(dev_dax, &start, end), to_alloc);
->> +			if (alloc) {
->> +				rc = alloc_dev_dax_range(dev_dax, start, alloc);
->> +				break;
->> +			}
->>   		}
->>   
->> -		alloc = 0;
->>   		/* space between allocations */
->> -		if (next && next->start > res->end + 1)
->> -			alloc = min(next->start - (res->end + 1), to_alloc);
->> -
->> -		/* space at the end of the region */
->> -		if (!alloc && !next && res->end < region_res->end)
->> -			alloc = min(region_res->end - res->end, to_alloc);
->> +		if (next) {
->> +			if (next->start <= res->end + 1)
->> +				continue;
->> +			end = next->start - 1;
->> +		} else {
->> +			/* space at the end of the region */
->> +			if (res->end >= region_res->end)
->> +				continue;
->> +			end = region_res->end;
->> +		}
->>   
->> +		start = res->end + 1;
->> +		alloc = min(aligned_gap_size(dev_dax, &start, end), to_alloc);
-> We're walking the free gaps twice now. Once in dax_region_aligned_avail_size()
-> and again here. It seems the 2 walks need to agree about which gaps
-> are usable so that the pre check doesn't succeed and then the allocation
-> loop cannot satify the request...which would get us right back to a
-> partially applied resize.
->
-> Please look at sharing the gap traversal.
-
-Good point. I will factor the gap traversal into a common iterator used
-by both the pre-check and the allocation path, so they share the same
-gap selection rules. I will include this in the next revision.
-
-Thanks for your review.
-
-Thanks,
-Muchun
-
->
-> -- Alison
->
-> snip
+diff --git a/hw/core/qdev-prop-internal.h b/hw/core/qdev-prop-internal.h
+index 40fa4bc63f..18d982a212 100644
+--- a/hw/core/qdev-prop-internal.h
++++ b/hw/core/qdev-prop-internal.h
+@@ -40,6 +40,7 @@ void default_prop_array(ObjectProperty *op, const Propert=
+y *prop);
+  */
+ #define DEFINE_PROP_ARRAY_INFO(_elem_prop_info, _elem_type) \
+     {                                                       \
++        .qapi_type =3D _elem_prop_info.qapi_type->list,       \
+         .element_info =3D &(_elem_prop_info),                 \
+         .element_size =3D sizeof(_elem_type),                 \
+         .get =3D get_prop_array,                              \
 
