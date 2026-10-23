@@ -1,179 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792757091;
-	b=on0PqeyZGSCmK3P/JWFdtnWZ9FDgjy9bPW1nJMpMOLtTcRYS5AGqR3EklZdS4feHMgd4
-	 /Xw4doe/CXX0H6aTHZ0ybM5aykrpVVGGru0qsv6uBAX4D7BZDWS1IRxK1VDNF826V/qKs
-	 YViyiCflbobXOqMSZSaun7y5vWyNTnMlC3RezmtKk8hNXjytpysRjFTsEX/Hi7puX+pVS
-	 Ber4Fw5LBGkZkMkLvrZPMkKnhp7nYQoGoxTG5NeYcGsKB+oiTRATi6l4xAqPLdKJAQnEC
-	 WtZbbA2WQ7ZtMQdtMhcAel2w2xe+rfyEEvoad01viBOomva2tYcWT12EjJGgxa0DH3w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792757091;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:In-Reply-To:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding;
-	bh=ktFG9S7cIu86S66z6woz0uEJeRaYlQD7UfoTSNONZWI=;
-	b=L0szaZ4sFQs0yaRetI/mLAi36NC2rKmucHeZSnXVeuAmUth+jrVs3BitObSviWrtUaG/
-	 XS+NLUM1z01UrhmhEZ5DQSYZ7U7gkgMTi5uCmGhWCv3b6VePDU/0o4oq88MLNLqg9VzSf
-	 qP2+4AyjFeoAmGBV8et21NSbhqzB/lWLhIIQdZemKX9FRJsEEXRn/DGii9zLmko8YZt4E
-	 QG6gMoUbVrfKQSwXwMDQBrXM/GdGjSZxY8BoNge1JHegZ0FXKnO1o2dG8kGwIfFBM7ivp
-	 WxF20tzYYzHSyuoGCWlm3dT9klqze5Ls7Xo/FIpyCtwUx08bFMHQwMuAGcnDqIMAhNg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=S2kPSjLf;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.48
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792762628;
+	b=ohsEAWXlPCG/89wEGNqUbk4FVwvyBNoK60+WUiwHr31hCljHSl76eJs7MD2YzAhaNC+V
+	 6MjrtvmkzKuyVjabvLNgEaUDUTRpeMQrqmz/F3YJVAK59NYcPNk4CkBF5JlGh0g4lPL0d
+	 JqDrNhjnthmkq+7oSUhcCO8xnIXldMadXAyOdQdxIFPrFYPtrfuWtUlksQPQa+0WAchgy
+	 VdZAkd7CYC9EpIXQCRoVIEAH/1xAma9kF/E+TuhKfovh8toAhoEsp0Yx/y5vqEBgWchMK
+	 xqJzF1qUg0ik/sZmpvUhSTbWEn34gq+FgDPY5fdumVpM1ax8cP8uhd9Di2z943rvkew==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792762628;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
+	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=eYY72LqcWyDES/89Str2pGYwi8OVgpy+OM4+oC5cNHw=;
+	b=3xq7QxAi20VdApVPYBpBOewyQu3RNI4TrRcEN8Zfr44FC2HcKrJLBUWfDMkoGk96DdGm
+	 Bf+LwPkevhSGnGzjOCiK+EUBr2+SaB5d7VFFEtaLvh95AG6FKlV5uUMPFlfTKtCPklf5I
+	 UwmjgtiWG5RdjhfcyGlZq/hjHZeG1ASYgCulX4nNYE1B3xZMmMyDkf46nim2IVxpx7Tqd
+	 oF4LpZdr98eLG+hYGtcsaj9oPhh8P9KHAsr+X25jIK3kUPgDPSDDcb5xmtdnmh2vM2nnd
+	 WvhLsYILibXwDRUrH8ux+hv7rOQGdw4tS2x6YjAcGnMqSo7DvlJHnTTljYsEAu3FHPg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=DfiGJSD8;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.48
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010048.outbound.protection.outlook.com [52.101.46.48])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3015606A320
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 12:04:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3015606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F60606A31D
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 13:37:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 68F60606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=S2kPSjLf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792757090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ktFG9S7cIu86S66z6woz0uEJeRaYlQD7UfoTSNONZWI=;
-	b=S2kPSjLfswkW3Ui3xIO+tGRdKjde7UuboyKe4nd9SiW3pwvCp+DmA+bPsGEQxQvMX+lXgm
-	51hDMNY3Sw0Ikl2ujEMg3cosUeHuTxlVRo8XrNvYPSDbRd04ZQ6qHxRItUFTQXCRx/nd9a
-	3lw1bbqGLdOu4BHQgojdUARnmCRmZzU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-Whbz8MVfM3q9d4_kfv2eNQ-1; Fri, 23 Oct 2026 08:04:48 -0400
-X-MC-Unique: Whbz8MVfM3q9d4_kfv2eNQ-1
-X-Mimecast-MFC-AGG-ID: Whbz8MVfM3q9d4_kfv2eNQ_1792757087
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48c7fe9736eso680638f8f.0
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 05:04:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792757087; x=1793361887;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ktFG9S7cIu86S66z6woz0uEJeRaYlQD7UfoTSNONZWI=;
-        b=Kc6GeZLp6eGQ/xqeCa/dyTB1cQ1Ajdkc/2VBasWp/y3HHXnG4x1VPZtVT8OUFZUE7D
-         RxLK/kvl60853iB5VcDkuZvDhecM1ymnJniBegOWNDSIIVRJEUpsN1Ix9iypxKk4B0dz
-         6aMB1WEoQgG4OBxpmYsbthNEcsaVHkB9e9j5ClxzLCv92rISaLcrvDzK+R+FkfwUggr3
-         z+EAeUPpGCUWynTdY21WfODK5acZhwM0Cp8xgMxeVo56gvKfw+StCS6/FgQnaSatGxne
-         a0bk1UZlDe7dqE19KDDMl+LDU5rVJYDTBlIeen351+csg+DYBIKLFiHUtlvjXILPY7CO
-         OjxQ==
-X-Forwarded-Encrypted: i=1; AKwUvByKXUoh8fox0Y+p4rz+UqTaRpHvQ344BKjEXpe1yOc7Gy36BDgqLTICD5t+AamM5hLhAEEpqSLvPV4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKM7bm7Lz7i3D4fwFj0FArAI8jRLR/2d3tFoAzWTnpKo9118eNf
-	dNyi7RdjwlhI21D83JyjxBxFvDEX+OxyZteKC3705fmm7ywANzj/SSE0oh3xKMM5nEo6hRCdAxw
-	r86QloSWExMJmaE2HMzv9PBff5Bihj59IEr21HnVSFBeXtUeB126B3az4r3g6ew==
-X-Gm-Gg: AYBFou1YMmmbZp9n7Wr6RRsiQB+vFju+LMyOOQVGzQh0l2eVg6Gtr0xxryd+ckTypeW
-	4EXHKXXlH8kkSbhnHsc36iH8ryXW1ctasz1D1+kHTqS5yVZ4rrZHt5R06BnEC+RKjGDQv4etpfh
-	OZnwaDVtgNYSS4s08KekqcoJ0Day9wrpPVOgAkfvzbK5atBc9sVTjTuF9b6148ppPGTgrAbZAzz
-	NlETX7ZJugMKte6G/mVFKSN8HSXlLdAXAhbLeYvsro1xKN1BQeYtGJkvKXv0rgZujohkTtNgs0e
-	r/hLzS84tR3jc0CNjHs2i8BRNH7Ml2y85fy2ZoirX+8HL9RgmlyzujHS33JV+I8oCHm7AJ8=
-X-Received: by 2002:a05:6000:4a0a:b0:48e:1299:663f with SMTP id ffacd0b85a97d-48e385b0d95mr3400660f8f.56.1792757086690;
-        Fri, 23 Oct 2026 05:04:46 -0700 (PDT)
-X-Received: by 2002:a05:6000:4a0a:b0:48e:1299:663f with SMTP id ffacd0b85a97d-48e385b0d95mr3400583f8f.56.1792757085931;
-        Fri, 23 Oct 2026 05:04:45 -0700 (PDT)
-Received: from redhat.com ([2a06:c701:73f6:2400:30a8:9e33:7d82:c035])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e37edce4fsm5022761f8f.6.2026.10.23.05.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2026 05:04:45 -0700 (PDT)
-Date: Fri, 23 Oct 2026 08:04:36 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: =?iso-8859-1?Q?Marc-Andr=E9?= Lureau <marcandre.lureau@redhat.com>
-Cc: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
-	qemu-devel@nongnu.org, Markus Armbruster <armbru@redhat.com>,
-	Michael Roth <michael.roth@amd.com>, John Snow <jsnow@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Kostiantyn Kostiuk <kkostiuk@redhat.com>,
-	Eric Blake <eblake@redhat.com>,
-	David Hildenbrand <david@kernel.org>,
-	Igor Mammedov <imammedo@redhat.com>,
-	"Edgar E. Iglesias" <edgar.iglesias@gmail.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org,
-	Alberto Garcia <berto@igalia.com>, Kevin Wolf <kwolf@redhat.com>,
-	Hanna Reitz <hreitz@redhat.com>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@oss.qualcomm.com>,
-	Zhao Liu <zhao1.liu@intel.com>, Jonathan Cameron <jic23@kernel.org>,
-	Junjie Cao <junjie.cao@intel.com>, Anisa Su <anisa.su@samsung.com>,
-	Elena Ufimtseva <elena.ufimtseva@oracle.com>,
-	Jagannathan Raman <jag.raman@oracle.com>,
-	John Levon <john.levon@nutanix.com>,
-	Thanos Makatos <thanos.makatos@nutanix.com>,
-	=?iso-8859-1?Q?C=E9dric?= Le Goater <clg@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>, qemu-block@nongnu.org,
-	linux-cxl@vger.kernel.org, qemu-s390x@nongnu.org,
-	Sergio Lopez <slp@redhat.com>, qemu-arm@nongnu.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Weiwei Li <liwei1518@gmail.com>,
-	Daniel Henrique Barboza <daniel.barboza@oss.qualcomm.com>,
-	Liu Zhiwei <zhiwei_liu@linux.alibaba.com>,
-	Chao Liu <chao.liu@processmission.com>, qemu-riscv@nongnu.org,
-	Song Gao <17746591750@163.com>, Bibo Mao <maobibo@loongson.cn>,
-	Xianglai Li <lixianglai@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Pedro Barbuda <pbarbuda@microsoft.com>,
-	Mohamed Mediouni <mohamed@unpredictable.fr>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Harsh Prateek Bora <harshpb@linux.ibm.com>,
-	Amit Machhiwal <amachhiw@linux.ibm.com>, qemu-ppc@nongnu.org,
-	Zhang Chen <zhangckid@gmail.com>,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	Alistair Francis <alistair@alistair23.me>,
-	Alexander Graf <graf@amazon.com>,
-	"Gonglei (Arei)" <arei.gonglei@huawei.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>, Ani Sinha <anisinha@redhat.com>,
-	Luc Michel <luc@lmichel.fr>,
-	=?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-	Jamin Lin <jamin_lin@aspeedtech.com>,
-	Kane Chen <kane_chen@aspeedtech.com>,
-	Samuel Tardieu <sam@rfc1149.net>, "Denis V. Lunev" <den@openvz.org>,
-	FangSheng Huang <FangSheng.Huang@amd.com>,
-	Tyrone Ting <kfting@nuvoton.com>, Hao Wu <wuhaotsh@google.com>,
-	Keith Busch <kbusch@kernel.org>, Klaus Jensen <its@irrelevant.dk>,
-	Jesper Devantier <foss@defmacro.it>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Glenn Miles <milesg@linux.ibm.com>, Conor Dooley <conor@kernel.org>,
-	Sebastian Huber <sebastian.huber@embedded-brains.de>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Jason Herne <jjherne@linux.ibm.com>,
-	Titus Rwantare <titusr@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Anthony PERARD <anthony@xenproject.org>,
-	Peter Xu <peterx@redhat.com>, Chinmay Rath <rathc@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	xen-devel@lists.xenproject.org,
-	Roman Bolshakov <rbolshakov@ddn.com>,
-	Phil Dennis-Jordan <phil@philjordan.eu>, Fam Zheng <fam@euphon.net>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Tao Tang <tangtao1634@phytium.com.cn>,
-	Stefan Berger <stefanb@linux.vnet.ibm.com>,
-	Fabiano Rosas <farosas@suse.de>,
-	Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Subject: Re: [PATCH v7 54/65] qdev: adjust PciDevfn declared type
-Message-ID: <20261023072206-mutt-send-email-mst@kernel.org>
-References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
- <20261020-qom-qapi-v7-54-431a86b02b58@redhat.com>
- <atsxLV5YZo8dr-8G@redhat.com>
- <CAMxuvazd7G_NBOM_c6BxZn5PFSw=XQUHueHqBoQQfpzPPgi9qA@mail.gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=DfiGJSD8
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XZuvWHuIkQ03PKWzInHEcxIntQ/tQIyUVa5MaA0EVj+XKYO8OWFJXm56u8YFSlJpKOeMR5YQ+EE0ql2UCK+q2BHSLwAuXy6KlF4ncPFuPk2sfFBzYIIhuE5lyf48+Eo7p8Czl80Pp1Yf2tcwPGW+mz6yfLtklYd5CL0DIyH1Wq8R6SNd2+LQAPctivcOnLAB7L+FinUkANqSLtV/7NMckTD+iKZoP3dQflpgSCtsReY0ydyqgDd/vmYks4IdDdW0pvmg5+7t9zrFV3jBbBZhjWVuG7/AQkRNo/SLfe5vlIZdG7nnyLrGtyv1xuKgR6wecukZvK6JXnnTd/UMXoM/9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eYY72LqcWyDES/89Str2pGYwi8OVgpy+OM4+oC5cNHw=;
+ b=gEgMBsDeGZ6y7APP2PpmuMBlzpySYbx2mr68jJpAfWDheU2KElU+moaRzzjt+4Edzp0taokRSIhCjpgcJ0BsyYgXHxA0X0rb5iRZeypsmkd0hNcU7XokfcEcpBZlt1TQXWALoLeIJ4IbkInTzg/Cx5DNEnKSlJwZv5urgwld81Qieoe7Km/FpmjScn1hxoU68+iy9rVgWBdbp0H07a9CjigvOlxtNMPRsfii4xBxD8KUhlqUSqgtyLMyEDUSGYYnXPhF7qj0QKEQepg8oHBvuagf+o5SWU5bbVRe5INQsquqTBa8T4bt6wftZUp8njZHF2jWTtEF3VFo33riqxVGOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eYY72LqcWyDES/89Str2pGYwi8OVgpy+OM4+oC5cNHw=;
+ b=DfiGJSD8Bk7izyP9/dWf4ozn4BKOYXalCegsj/Zv+w0FNKY67fygZ1RUnfmoeGKsE/cirehq3sg/iKOW/L8D015aK6kRnKj8PGSg4y3Qg/JjA+vyulljDlV8J7mlXza9SNH+3FAGLWr1WrUwfUHTE8DMXshijHsp0hd1ZzoNeJ0=
+Received: from CH5P222CA0010.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::28)
+ by DS4PR12MB508551.namprd12.prod.outlook.com (2603:10b6:8:50e::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.19; Fri, 23 Oct
+ 2026 13:37:05 +0000
+Received: from CH3PEPF0002457B.namprd04.prod.outlook.com
+ (2603:10b6:610:1ee:cafe::2f) by CH5P222CA0010.outlook.office365.com
+ (2603:10b6:610:1ee::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.19 via Frontend Transport; Fri,
+ 23 Oct 2026 13:37:05 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH3PEPF0002457B.mail.protection.outlook.com (10.167.252.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.569.4 via Frontend Transport; Fri, 23 Oct 2026 13:37:05 +0000
+Received: from [192.168.86.102] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Fri, 23 Oct
+ 2026 08:37:04 -0500
+Message-ID: <b4678429-f12b-4cdc-b189-4a1c67e1a93c@amd.com>
+Date: Fri, 23 Oct 2026 08:37:04 -0500
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -183,90 +99,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <CAMxuvazd7G_NBOM_c6BxZn5PFSw=XQUHueHqBoQQfpzPPgi9qA@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: arCbQqE8lRG_GSFz4m6Ep9kUDumaUHg-wlSSemfOpuM_1792757087
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] cxl/list: handle missing debugfs when reporting
+ protocol injection
+To: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>
+References: <20261023011333.522080-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <20261023011333.522080-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0002457B:EE_|DS4PR12MB508551:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4ca0e56-a428-44c5-3f98-08df310aba4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700016|23010399003|56012099006|11063799006|261021121427099003|261022105027099003|261009223027099003|10067099003|18002099003|22082099003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	kVSq+EshsUd/kRjI+FicJapauMv6hEdaQ5Otm9dBtb9XNY2nOT1xnsOJ8oY+DvqITZEDMBZZc7qT3/FTxdL0H1c8BNag38yOep0Nh5RMb2N2f+b/2UtUsESl+uecz59G5yq+EIOhNXRZ0TJYSfSmABhlq+jMNklnVuZBaFB4wF3nhFeeqL0Ulq+m4nrWIO3z81w6RRfG3uyq1PLdTjOw+1+jT4BNinXLU8EPbWDCFtqT2LTJ9IFbAG++0eopNeG7DiptpOTOk7/vqCZ5MNEb4+oiah6fcYYN/iI1uh1yv1VlAvaXo2dtgCBkkUq40YLV5Hk5unB2c5UES0IvblPXPYRKSujKBrBBsvg2Lfp51XU3tmyCUb6tRqN02+i7zua8Zh7rcTbSzpxGkE7rfiqRLR+8q815HfnGOJNTCj6sDb0jBLPyLVt4+gAbpsW61p/tViuSuG43kIjkDy7eqIJ92NWRHayKj8gTZoBBeOGJ/Qb1IreMwvsA2/U87f42yp6E1YuXQAeeBPVd4DwH4DGK5V8rDdfoITe3ply8tG1vBT1ax4ZeF6e+qII5NUH91C05miKn7x8tMvtLzHCmVeuwhAeaHn+6U89lYJOinsGXKOMLCCf7HX5Fr31ejUXlu3PugWse4A1SAenV8OYfkclQV9lf48H5tPMM1+xwrhXpTXcXi2T8nYCV8mkmdO+ONRwx7wAKN4Dq5Q1vaQ9UQm1jRQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700016)(23010399003)(56012099006)(11063799006)(261021121427099003)(261022105027099003)(261009223027099003)(10067099003)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	lC+3fKuQPFBSX5T/hr1X24DmzkAWlr9AyS/wJ2f9V+YRSRoZ4+DtMjgI2u7Wur1CkOYpHQfruZ+2vrcKCzsPyL88t0GJX1DxsxAYuRIP++CQG6nWeMOARBAyUD4X8SEklTr0sQEWJ4Ko+O5QNOtrW9e6MReiG3Kax5LdJrXu5YoioJRVejwYFKDCg4qnKD8Tfl7fC3tntX6ZG702UgABrGaNJhMi60buajq2lzVH4aODZACM6y77uy9Gi4mMmqnbEChX97Lmn7rov9AQ1IC1ZtPc+Dcw5HmT13Z7Nofwt+0PGIP5l2+LbzEKVzcIGmEzwNraKE6/AxRz+UxY/V21kqnXZ9vzprYAPIrR27BCerbXaPNy905R76/cXiIhQNV6fPXSeZPcCO0QLhGfIkhAdb/NKvXAdMrE3rTzQPUDTVEWh6CPXOMq9DSJLhRIGvZN
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2026 13:37:05.4439
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4ca0e56-a428-44c5-3f98-08df310aba4c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0002457B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB508551
 
-On Fri, Oct 23, 2026 at 03:39:22PM +0400, Marc-André Lureau wrote:
-> Hi
+On 10/22/2026 8:13 PM, Alison Schofield wrote:
+> When debugfs is not mounted or CONFIG_DEBUG_FS is disabled, 'cxl list -v'
+> crashes while generating the protocol_injectable attribute for downstream
+> ports.
 > 
-> On Fri, Oct 23, 2026 at 2:04 PM Daniel P. Berrangé <berrange@redhat.com> wrote:
-> >
-> > On Tue, Oct 20, 2026 at 02:46:11PM +0400, Marc-André Lureau wrote:
-> > > PciDevfn is a bit special, since it accepts integer and string as
-> > > setter, but only output integer as getter.
-> > >
-> > > Unfortunately, we can't declare an alternate str|int QAPI type for it,
-> > > since: branch 'string' can't be distinguished from 'integer'
-> > >
-> > > Rather than declaring it as "str", use the common type instead.
-> > >
-> > > Signed-off-by: Markus Armbruster <armbru@redhat.com>
-> > > Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
-> > > ---
-> > >  hw/core/qdev-properties-system.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/hw/core/qdev-properties-system.c b/hw/core/qdev-properties-system.c
-> > > index 5bfdfe1ab9d9..3381de1144d6 100644
-> > > --- a/hw/core/qdev-properties-system.c
-> > > +++ b/hw/core/qdev-properties-system.c
-> > > @@ -904,7 +904,8 @@ static char *print_pci_devfn(Object *obj, const Property *prop)
-> > >  }
-> > >
-> > >  const PropertyInfo qdev_prop_pci_devfn = {
-> > > -    .type  = "str",
-> > > +    /* The formatted string accepted by the setter is a CLI convenience. */
-> >
-> > IIUC, this is not limited to the CLI, it will work anywhere the JSON
-> > syntax is permitted which is both CLI and QMP.
-> >
-> > libvirt uses this string syntax:
-> >
-> >   -device '{"driver":"pcie-root-port","port":9,"chassis":2,"id":"pci.2","bus":"pcie.0","multifunction":true,"addr":"0x1.0x1"}' \
-> >
-> > > +    .type  = "int32",
-> > >      .description = "Slot and optional function number, example: 06.0 or 06",
-> >
-> >
-> > Changing the type to 'int32', where 99% of usage is input only
-> > and string based, is pretty unpleasant. Even more so that the
-> > description doesn't even mention encoding dev+function as an
-> > integer.
+> The crash occurs because cxl_dport_get_einj_path() passes a NULL debugfs
+> path to strlen().
 > 
-> This is purely a metadata change, the setter still accepts both str &
-> int, so I don't think this change blocks this series. But I agree we
-> could do better.
+> Return NULL from cxl_dport_get_einj_path() when debugfs is unavailable,
+> and omit protocol_injectable from the JSON output, consistent with other
+> debugfs-dependent attributes. Update the documentation to match.
 > 
-> There are multiple options. We could keep declaring the property as
-> str instead. In this case, the getter should probably return a string
-> for consistency and correctness. This might surprise some existing
-> users though.
+> Thanks to Christopher Kim who reported and provided the fixup.
 > 
-> We could introduce new properties like `devfn-str` and `devfn-int`
-> that alias the same value.
-> 
-> We could also introduce a new structured QAPI type.
-> 
-> Markus, what's your take?
-> 
-> thanks
+> Originally-by: Christopher Kim
+> Fixes: 5d596866f8c5 ("cxl/list: add injectable errors in output")
+> Closes: https://github.com/pmem/ndctl/issues/300
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-I like the idea of a structured type. Will be handy for other things.
+LGTM,
 
-> >
-> > >      .print = print_pci_devfn,
-> > >      .get   = qdev_propinfo_get_int32,
-> >
-> > With regards,
-> > Daniel
-> > --
-> > |: https://berrange.com       ~~        https://hachyderm.io/@berrange :|
-> > |: https://libvirt.org          ~~          https://entangle-photo.org :|
-> > |: https://pixelfed.art/berrange   ~~    https://fstop138.berrange.com :|
-> >
-
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
