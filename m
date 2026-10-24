@@ -1,127 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=198.175.65.15
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1792793594;
-	b=zBXHZmrwVq5JcvvJF9mBNnGO58v4pNdrOjzjY+QlGt2T77jUDds4W5/1ZyKZXBBjmzxH
-	 C+uQMUBdDKkgv9+2+dtlUHjtYDdFXnMYu7KOR5s2bF0KoG5CS+OagEMCfUVqdCfuq6W/w
-	 v76Ce/cfqgKfmGkSwJ35SdHxl4BOT97u19QHGBaOCg25kIgQYPkZStHqDPCVTDFPKXROK
-	 gqhb0JuvpbN38ZExrRAJyxQP+gWgbhaLtGLMITutQX0/yJaJx7f51jkI61ZyTzxjP7BQQ
-	 pyXckgqp9PLu/8LkMfLbNeUT2QSrZ0MqjGtQA0FoLbR66vD0qIScstFXeSSPZisDGKA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792793594;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792804631;
+	b=yOYjUtpR8oKzg4b+WIuO3SYrR6OIlHnEEmUxScOq9ZpwE4e3t5mVdOs2Hn+wwUwkPHHu
+	 5NwPvjo9MkvMCyaSewI6Zx1k2CIi65RgVIcv/YC5soDDEqGWhpUlXjMUtNPu5CEY2FY5i
+	 0Py94m+mz7VLJmyZ6GOlUMHuMueTgUWsm8OsE5unZWVoPXm1x2lW8Mqbsj0Me7owXztOQ
+	 V4nMzAvaZD7GACnxN3TEL2EwoEUOb8LQWqwndGdNR45Bsu40DB1VRjJVgiLyT6tL6ZMRk
+	 Pj5KcVFObeKeCnfmHUDPhLdhZVdbLf/PgBrZlrSfd3xp0UMIY5dlAuM3Q0wm6KPgQeQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792804631;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=v4bSrRSm16Lp4VPAV5ltVMsaPdpJlD6s8bbWSdbcsr8=;
-	b=KsUxkAsYmeNKZP5QNzf2bkiC8M1J7UeHuBmLLonh2KNUv5PEWUmN/7fj4rshPd5KhILV
-	 Ki3uNsuc89lEVaEec0QDamUZZ3RLYLPNmzTUttrh9KLaIikhm4/6anQ0WKGvFRCFxSakT
-	 ve2r2EdrpI4IFvpAAdnPxF6RXqouoEcKPAGjIwLY3ebZfBWd5etMQriKqNO9zZ+y4MsZg
-	 006GlUWwS9mIpDrcI/SFHT22UHiBkecuNmZO3bau5l3G+rmtSe8xlwVrbNPd/ZDE8HrUP
-	 04xguPCPA5irj8r9VA3FTbgWOPj5PcWc5MumL54mr/MXibFwC4QifbWOvsQ+U6fBXqg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=627EKtFKjJ1ob7JXuHRdT1b7yKCwoUtCJw/WrwqF3CQ=;
+	b=ey9pLoGPFXmhtwkVDHgAja06A//0QkyUBGJFDUkoQ2bxb09z3DSCR2HewXRsp5fxsGEH
+	 CR6AjbH0J2tGGsUJ4veIKtI+d5qyC8ECgidNj/tQTC4XOgDxYxU9q/LYq+6HwwVN43cy0
+	 wvx03hUtM2Ei95V0lwvLX3enwzURm0LN5rs3pDSvUxzuNSOtiiTlnAqrCZmPGOzLAERi9
+	 jKQBvvJVkilFbqpkD9O0YQV60nFgdPHhNu0Zt3/EZeE/X2KTFFhcSzk7giB5qduM7/6Ps
+	 foRkE59BcmnmJ38ghOW2fVcGpginFvvyZhC0atizUF/j0HqbK+G5e4p4Ann3jjBkg7g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VRg4rVzC;
-	arc=fail smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jxT5V0oe;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9454D606A31A
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Oct 2026 22:13:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9454D606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAF9606A31B
+	for <linux-cxl@vger.kernel.org>; Sat, 24 Oct 2026 01:17:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EAF9606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VRg4rVzC
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jxT5V0oe
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792793589; x=1824329589;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=YbFVKihCY6FLj4az9gDqzcILAb+qsVRxGveemJjdlbM=;
-  b=VRg4rVzCUNl4/EwrjsihJf2+EJe5kYyq+49HBIXCyOdCxnRD4JMQGY0k
-   YyaWS9cDQp6Zd2z4JjN6SmQ+ffWeP9NkVo1mqautVTpSEXpvvhMt+O36U
-   /fi2gVGlrjU2RVxCRs5OjjTM1IcvHTHyxDc60DlpJ0ivWwheJyKtf5rmP
-   iMAroyyv7jUiAgOT8laS7ELQ52xWfcHtV7O3nG6gMjaO3tXuLlryrjgy2
-   Rbr0Lv6iT5OpDTwucC/MGO7RzQZOHmrLVW9IcshUOexHXHzNaP2ZQKlXG
-   IfDPwRKnIK6Wh6IKL5bdgJkqgE0TOGSOWK3R/9jSq5U3nfpDe7JzevlYe
-   Q==;
-X-CSE-ConnectionGUID: g23Vil/mSIOYO9uNmwJzpA==
-X-CSE-MsgGUID: qfhq48nDSGi/XjrmIRFu5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11944"; a="1561811"
+  t=1792804629; x=1824340629;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ztsxDUNTV+bpt4NodmqEgp6WhvAF8YLCLODDiB2Cz5A=;
+  b=jxT5V0oeyUz8qBuBqRyFeEwrJ9WNz2uBS3BOpg54QHUc8g0VGosiKhGf
+   r/UkW1v3XxbLiDiaYX8SOkz5xZtYURTpTuAyApyrkFbBo022N1iNWr2ui
+   5VEOOuxcVAB3xglr2Hj7t5UW2D2a4TspdAVxIOYavLAyygnCUk89Y8nrN
+   pRa7AjZmC04ZGyH7MgTk04YBBX1hjZEb6nVkuZMcbQpRDNVxq5/xNrQd5
+   Qy1xXowrRwm3FoZHQfSB5cbj3Fn1qq+TI1kdzxyyPxslpfJsRiogQBMWl
+   4PbnB3xLGjJG0hHEE8VlkbjOB1H/WENXTqunnXIPPnSIem7wlUt5fziLJ
+   g==;
+X-CSE-ConnectionGUID: lq99jtKxQ4+6ajrbOr/vDA==
+X-CSE-MsgGUID: ilxWjBp4TFOU0CTnmXAtzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11944"; a="1452119"
 X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
-   d="scan'208";a="1561811"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 15:13:08 -0700
-X-CSE-ConnectionGUID: o5m/bjKuSPSvRteR8+ejTA==
-X-CSE-MsgGUID: 65zWzoPpQoesA2mkEvVQOQ==
+   d="scan'208";a="1452119"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 18:17:08 -0700
+X-CSE-ConnectionGUID: YOsDBa8VSXyGRMCgvWzfAQ==
+X-CSE-MsgGUID: TU3w0rm1RfqqHf6HwYq5JA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,175,1787036400"; 
-   d="scan'208";a="3760635"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 15:13:07 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Fri, 23 Oct 2026 15:13:07 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Fri, 23 Oct 2026 15:13:07 -0700
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.18) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Fri, 23 Oct 2026 15:13:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NPXubRunaYZTuJTASv/uN+19cfffXUhytv6ug/03e+RF4qSg/zZA1C5RrwY9l3lrAVSPEdZSMhxhdc2zVhOaroJP2wZGmFQMRXHu1QOz2yEco8EM4yacfnkrXHg4rk8fkTLk7vLHwWzKOstTPfNSBKvBFyw+0Yl8efDJ4u49xw5dVabmJVzL2bU0HCEmUAuScz6CWtR7yVJMwihhT6HuQoJenyaL6jr5Q0srSOX9COx3oeMdVRr6HzPJO5HqGqyzcWLWt861suqbG6AGDazJTpGPEm9ssJwuBhzprFwlIeiovyhwezlgvxv9L0YNkXMpJws3Y/Xc2JaZRlda8aO7bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v4bSrRSm16Lp4VPAV5ltVMsaPdpJlD6s8bbWSdbcsr8=;
- b=c+EnIg4+W+BeJRZYmooxg92QKORqqQnz63lAP6vHWe/v8kw0J+kH7kW5mjZP2dL5GBNG40BFBHyHuBR4fTVewSIjAPUDg2GuWA8xCpfgfGKqTIWlwHljMP8Fh2sbE6ZuOwxRfx7SIXd6G44cdTdWHVkA4gcbGMBlPL96ZI/U4eha7XTEsPomMhgQ6aRxShVwNbHtYYqXtM1ZgXqG2bbBKi/EvB+epqzmiQdD7XX94hi0t80d9ncvmHdX13cDqbun7+1oTpoPdCKSXEIvChJ7Rtuhx9uCZ6gAllcfd1ibUGOJMHzXpPMtm7gByynXi67wO1M7gdYEa+FlQZHxJcrYxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH0PR11MB7616.namprd11.prod.outlook.com (2603:10b6:510:26d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.19; Fri, 23 Oct
- 2026 22:13:02 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0546.017; Fri, 23 Oct 2026
- 22:13:02 +0000
-Date: Fri, 23 Oct 2026 15:12:59 -0700
+   d="scan'208";a="3738450"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.17])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2026 18:17:08 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: <nvdimm@lists.linux.dev>, Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH] cxl/list: handle missing debugfs when reporting
- protocol injection
-Message-ID: <atvb60hJotejiLNG@aschofie-mobl2.lan>
-References: <20261023011333.522080-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20261023011333.522080-1-alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR04CA0200.namprd04.prod.outlook.com
- (2603:10b6:303:86::25) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+To: nvdimm@lists.linux.dev
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] Documentation/ndctl-load-keys: document CXL passphrase key recovery
+Date: Fri, 23 Oct 2026 18:17:05 -0700
+Message-ID: <20261024011706.552346-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -131,76 +77,130 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB7616:EE_
-X-MS-Office365-Filtering-Correlation-Id: e04eb722-2cd4-4d39-48eb-08df3152cdf4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|261009223027099003|11063799006|56012099006|261022105027099003|261021121427099003|10067099003|18002099003|22082099003|3023799007;
-X-Microsoft-Antispam-Message-Info: vBKctNaV58jb8WLD5L2WVm7WciOyh39l/AhLVUsr6Q8F7RepI6H1foyqn99jIXXYGYhgBopqtVMOv90nGZ8zbZytI7abjpKRRtGX1X/daEJSI8Hw/nKOmfaKMECAzsE4Bj6wCS4gGIFMseSJ5FbCIi2M31R6AQHKjXn9ZKl2Fx4jgXtAClX8CrnJZ2AEFpw6HzrK5+QafcchB5VWfXuwquqKdKEQKz6A9BJpiupQow8c7mYLx4MW4lJbHSJ4aNQw8k6NoPNz12d+KqeBiL8cppC4LS2m+vOvjWbu2ipUtm3Mdmf428q1lGcKXPCXpso9ytgXeNJvGMvspMxWuafV6FA1M8ttIZai+lTmi5lUC/Fjvl71IMeLc2P39Odbr/XYYGscFqmW5KVg3ZSrnIrDD7gyLGBKtW796xK/mUuOk5bL4lqVe8r9AsX9t7pQGe0PSGZWEW2zWIDvmNp6BSifNG2hvk/tQ2p/07kOTx87lOihUzL0hD/uEf/GdWIxMuU0Tw8hymFJ0TnrEInF4aQst5cqa6F1knDmZQleV/r+0ZmsFaMfy/FRM0qQinB3fLDWoqRhnRhcZR0af+pMSLGsAwogrODQzcfvm9d/YMUhT+EmNPZUCrXEWpv2FOq1HMKR1swA4jDRgWySF1lojzSU01x8Z/fpig8+0smKXlz+1Yk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(261009223027099003)(11063799006)(56012099006)(261022105027099003)(261021121427099003)(10067099003)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?J/sCbZ4odyfmulZBFltBa1ACtzAgmItDo5uAas3o4HaB3Y2iYqPMI1TfNTQf?=
- =?us-ascii?Q?Cs3DHh/SF3h0m9k6AIoskmUiVOb1oc5/0D4OPxy600Ed88WIYsN+ZhwgyGd5?=
- =?us-ascii?Q?CyLQHObKkuGdeo/+JE7mdcs8VJHKVmnNoLLdEmHa/Sr8JJ5fBy6aSRGAmzkw?=
- =?us-ascii?Q?kIQsTEmdL0xc1VoU1hmCcaSc8yX0uJiE9HKMjD+eaopHjh2U3GAXCGVem/a2?=
- =?us-ascii?Q?6/SbLVpt746D3mNXrrfEcAh+7EL6sxJfjNsOzsNj3WQHEk6kfSgkOybyBVVr?=
- =?us-ascii?Q?/okY4+a73iTq3sPf0yZb0OZNi2zFbyJacmLiHk90UciLKUTnpx4V0PDUTaJd?=
- =?us-ascii?Q?OCEQ2NeucnR27aXm9hvMd6jylQsllDSUvyI2Iod19Ll7eUp2m7hVtAUvbcMw?=
- =?us-ascii?Q?TqevIsYgI0MM2TrVBH76M0CHcseTHzSn5KtrHBpn6tuYi/g9CIhuk/O2r9h/?=
- =?us-ascii?Q?m4fJUNrcH4L9Pslm8QW3BVcZwgpy83RVKurHetwy98R883+AZBHiY/GZBL4y?=
- =?us-ascii?Q?w6LTVU2itjVC3q1hqfOG9bENCjaOsVAL1dtWmODpSawJe0XK7P8V3DMQ6RBq?=
- =?us-ascii?Q?AtK3Zzpah+8OLBxP0N+vC5qIOstdsYJQyAJ5tNRs1CM8PNnG/QdQ6N5rI233?=
- =?us-ascii?Q?hudD3iNfpM6HHMM3hpHRJCJoYCQFbp0hfeRIEr8ALSUnz9eeWcZHvA9bSe+z?=
- =?us-ascii?Q?ZeLOmEvy75czb7+3+vs2C4pirg7u5n/O+NKZspMzXRHAfOxw6lZY/Ik12kU2?=
- =?us-ascii?Q?jJSzj/GC6//Vgj35lSQRSIh+HA31CkelNzFVYxD5RhI50MmbeCZI+SaVWBTt?=
- =?us-ascii?Q?soW01lyU9ooM49BjijZfkoszymWUTZ53+COj/O+bJcMQUwPEpBORjOuQ/xiv?=
- =?us-ascii?Q?ylbf4adCicsr9Y2OWunyvq6RHtomV2Y6OorqWpl93hwM982GPmaBQ9rkbcBx?=
- =?us-ascii?Q?SU6t2KPiExL5suGJJ3I47gPNj/OV4b4T9fnvwC677EVOdcyyM1n3xoPuk734?=
- =?us-ascii?Q?Sd2YU5mN6hzAK1n4LtZHRY/DIKlTkEJ9bNTSrBh7vQFUyzKRYmhtdaGOzhKd?=
- =?us-ascii?Q?BTFtP0WXKM0ix/ES32Pp9gF0T4twFnroxAlw/gGncykUpGk6Fe2PqAC5C/km?=
- =?us-ascii?Q?UNQqhhDGslpi5tUAfh2g1Ud01iplbY/vyarKUWNkDx28RaT+455JNz46q6hW?=
- =?us-ascii?Q?fu74q6EEcM2U6ziHB5smYoTsBMfblkMRmZjgp0RayPjg0CofpSryPUkKZWe/?=
- =?us-ascii?Q?cVEGODUE1wOB+TvHfmRnTzt7b6y1Yqqpf18hhZpogdz9BLnUZnjiiuDi6Pcb?=
- =?us-ascii?Q?QgZ19uL5TaCNMwuU5J5oc6VKC1vqnVlj01g8kmtX7vVfhwKEXMqJIO6DjOKN?=
- =?us-ascii?Q?pGxW5LfWM8soKC3VYA4sw6WRy4ni5/a3P+kW1/kYq3tDiwbY7qSkmnY82O9Y?=
- =?us-ascii?Q?xvdIemcVtVZVN3sG139aU6NTVZg/s1wdIoPwUDzW8Ul2/KVicX8/pfxuwpu1?=
- =?us-ascii?Q?PUXP7Uel8USEyNAYpSM3kmhkUEvOtlwj9OB1u6TpaStUBIDIOW0q0BVmP4R8?=
- =?us-ascii?Q?GhYPW3o1X84mVaa+iwd+cKGVfBZmsTyaYCfsx7juyVSKgXI1WuEO/i7FgD4r?=
- =?us-ascii?Q?fqLLVPMqQcpXu0vjlaSkXfUrXoKJa5H7jpO4shA5/W1RIfUDcDNsBWlBweET?=
- =?us-ascii?Q?XrXUGHRuYf+zpSzpZkRgoygoqWlEkCr/mCoek9PAzN+bhat74i0fGXqMIgHV?=
- =?us-ascii?Q?x841RDUAXAs+LzkP0W1x/MkySzt+O1Y=3D?=
-X-Exchange-RoutingPolicyChecked: 5CGR/Zz+6eBcKEHlioMg0EeHpq16RrTd6xd0a+yJFFVVI2mRO9yHh+TQ2rDoxDgfBY271RH50k+Um00bk+mU/rdg9DrdiLug+1er4O+1beE0bbQ23gFI4YMD+gOWBHPwXC8lrRJMlIfpiAphkX5XuYNa/eVcV5O4WRjtG3uW4mrOAfX3v906BY7EiJw959Y82S1OXH28mM/whyI/ztApbmHSEIH7YQeskPgxiEjKGMHIanSLo36ssucrIXnaj1ZyP75AHO9psRPvKHiMqDSqbP9JfpqfbfUvq8Il6rk8D9903KwxY/Zsk92hx1Dls+aW62McwOTsOh2tMg/9LfmBoQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: e04eb722-2cd4-4d39-48eb-08df3152cdf4
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2026 22:13:02.3476
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CPGF5phZncFHLNLzzLOQrWQDJprydojtWD1ZNUL2I3udWZcMw/GASPTJlOTbKO131wmH2X1V0mWUab6FDiTFYxOG8z9PG88Qf5Bg+RDbuVc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7616
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 22, 2026 at 06:13:32PM -0700, Alison Schofield wrote:
-> When debugfs is not mounted or CONFIG_DEBUG_FS is disabled, 'cxl list -v'
-> crashes while generating the protocol_injectable attribute for downstream
-> ports.
-> 
-> The crash occurs because cxl_dport_get_einj_path() passes a NULL debugfs
-> path to strlen().
-> 
-> Return NULL from cxl_dport_get_einj_path() when debugfs is unavailable,
-> and omit protocol_injectable from the JSON output, consistent with other
-> debugfs-dependent attributes. Update the documentation to match.
-> 
-> Thanks to Christopher Kim who reported and provided the fixup.
-> 
-> Originally-by: Christopher Kim
-> Fixes: 5d596866f8c5 ("cxl/list: add injectable errors in output")
-> Closes: https://github.com/pmem/ndctl/issues/300
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Kernels prior to Linux 7.3 use a different serial number format
+than ndctl when looking up CXL nvdimm passphrase keys, preventing
+auto-unlock after reboot.
 
-Applied to pending for NDCTL v86
-https://github.com/pmem/ndctl/commit/1b126bf930c5
+Document how to recover affected devices on unfixed kernels and
+migrate existing keys after upgrading to a fixed kernel.
+
+Kernel commit in v7.3: https://git.kernel.org/linus/8a80d3d65cd0
+
+Closes: https://github.com/pmem/ndctl/issues/299
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ Documentation/ndctl/ndctl-load-keys.txt | 96 +++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+
+diff --git a/Documentation/ndctl/ndctl-load-keys.txt b/Documentation/ndctl/ndctl-load-keys.txt
+index 70db57441820..ddb324830e05 100644
+--- a/Documentation/ndctl/ndctl-load-keys.txt
++++ b/Documentation/ndctl/ndctl-load-keys.txt
+@@ -43,6 +43,102 @@ OPTIONS
+ 	then this option will override (but not overwrite) anything that is
+ 	in the file.
+ 
++CXL SERIAL NUMBER KEY MISMATCH
++------------------------------
++This section applies to passphrase-protected CXL NVDIMMs that fail to
++auto-unlock after reboot on kernels without commit 8a80d3d65cd0, or that
++fail to auto-unlock after upgrading to a kernel with that fix. It does
++not apply to NVDIMMs without a passphrase or devices that unlock
++normally.
++
++Kernels without the fix look up passphrase keys using hexadecimal serial
++numbers, while ndctl names them using decimal. The mismatch affects
++serial numbers of 10 or greater. The fix, included in Linux 7.3 and some
++stable kernels, uses unsigned decimal for both. Devices with serial
++number bit 63 set may need their saved keys migrated after upgrading.
++
++The examples below use nmem0 for the affected nvdimm and the default
++key path:
++[subs="attributes"]
++----
++# keydir={ndctl_keysdir}
++----
++
++=== Recovery on a kernel without the fix
++
++Confirm that the device is locked:
++----
++# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
++locked
++----
++
++If it reports 'disabled', the device has no passphrase enrolled and this
++is a different problem. If it reports 'unlocked', there is nothing to
++recover.
++
++Check whether the device is affected by the serial number mismatch.
++Show the decimal 'id' that ndctl uses to name the key, and the
++hexadecimal serial number of the CXL memdev that backs nmem0:
++----
++# id=$(cat /sys/bus/nd/devices/nmem0/cxl/id)
++# prov=$(cat /sys/bus/nd/devices/nmem0/cxl/provider)
++# serial=$(cat /sys/bus/cxl/devices/${prov}/../serial)
++# echo "$id $serial"
++----
++
++If the 'id' is 10 or greater, or is negative, the device is affected.
++Confirm that the key blob ndctl saved exists:
++----
++# ls "${keydir}/nvdimm_${id}_$(hostname).blob"
++----
++
++If the blob is missing, this recovery procedure does not apply. Check
++that the correct key directory and hostname are being used.
++
++Copy the blob to a name that uses the hexadecimal serial number,
++without its 0x prefix, so that 'load-keys' also installs the key the
++kernel requests:
++----
++# hexid=${serial#0x}
++# cp "${keydir}/nvdimm_${id}_$(hostname).blob" \
++     "${keydir}/nvdimm_${hexid}_$(hostname).blob"
++----
++
++Reload the keys and enable the dimm. 'load-keys' names each key after
++its blob file, so the copy is installed as the key the kernel requests:
++----
++# ndctl load-keys
++# ndctl enable-dimm nmem0
++# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
++unlocked
++----
++
++=== Migration after upgrading to a fixed kernel
++
++Only serial numbers with bit 63 set need to be migrated. Their blob is
++named by the negative 'id' that the previous kernel reported, while the
++fixed kernel requests the key by the unsigned decimal serial number.
++Other serial numbers require no migration. A hexadecimal copy made by
++the recovery procedure above is no longer used and may be removed.
++
++Copy the blob from the previous negative 'id' to the current 'id'.
++Shell arithmetic cannot portably represent these values, so compute the
++previous 'id' with bc(1), which must be installed:
++----
++# id=$(cat /sys/bus/nd/devices/nmem0/cxl/id)
++# oldid=$(echo "$id - 2^64" | bc)
++# cp "${keydir}/nvdimm_${oldid}_$(hostname).blob" \
++     "${keydir}/nvdimm_${id}_$(hostname).blob"
++----
++
++Reload the keys and enable the dimm:
++----
++# ndctl load-keys
++# ndctl enable-dimm nmem0
++# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
++unlocked
++----
++
+ include::intel-nvdimm-security.txt[]
+ 
+ include::../copyright.txt[]
+-- 
+2.37.3
+
