@@ -1,73 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793031862;
-	b=QzecmtUkdHYUnXbh1GMkheUIAbSdPoo+1FNFr7p9v6Ie9u2YlpjCd2Sz2Dt+Wzq4UcBe
-	 1ELAOgYNHYgthzTAh0dB5D21eZ41QIc4flmxPzu1bi3ahJL8dIYivsGOwqEVyDGSqEXom
-	 Om+D7dlx2u2MV2ihXTJNbhv/uSs66MNUXXw4QgtblW/6TVDD6DTjh5DLFg6bM64pOwXoS
-	 YKzcMP1yK0ZWv/GORpJmk1EJxsJwXC12HsF6Ooqbwrw+nU8PEZKP7N0OAB+8gFQYKxmEx
-	 pbw7WzP0mzv/fPrRmdUKhs7HIDyQhUaIeAYoVynYmsK6m95O5GIEVpFjfpvzrzYzPmw==
+	t=1793035493;
+	b=EcfKXJbKW5vPRum0pTAaZRscwq+mWgBlZ7IHKujOkFYPUHnpNktrfqPv175uJxUp7Uhp
+	 PqlviRAwyJikgcg7ogXchB+att/WLQKVXM/a1sS7tUMC80Im/RyeuDY2/TgXCy/1UT7gq
+	 5eydgs5FFBms4+D+vb9zp+x2yVLSlLUehQNHrfZSB3YhItrXY3x3FXDIRPuqrGdKrHwr8
+	 TKAONPv/7x3WO+AMYz/pUj4UtRe3EGrhUG6D06dxYqTiwin5xs3tJ2I7Ul7cppjWp/Iux
+	 lyzBzQc1J83qYJ4zzZ7wgG14L9szO9CDntURLJfRGTbBnJQMU+zvt7wkq+n7bv+tkMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793031862;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=5V9UwxxZ4kckRzYn76Rc4XXuNi2LlKGF/bbYQhhXomw=;
-	b=voDNCup7FCZw96CPTIpVDJyJsp9os2+J+OgZ26P27LrpWdkY0I6brtTkAuQz0+Nwwjoc
-	 d6x4/hj0zZLI1PttKYrVNeyRctkbKNeGMEHXAjiaL7MWlaN7tT04yjqN9mPA3B/iFHkmB
-	 55ogGQHvs8vKTv+rNWr1fpdaEY+BkR20ZLsGggF+jwpuCEvOKt8zCb5FoIQ1g6U9D40Ur
-	 mRp3ZEWsevEmZ7X6EZlZ8NtuNwOn2k8Zz6B2sfdTytPY9iRNopoL4GNMg9dbBE7cqVm6d
-	 VubHDEJNx8OCuWVlpFDHdJ/7QhbAHke5E0FJcUnBH/OorSKyBYEjWYbFOG1LhR7qNag==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793035493;
+	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:References:
+	 X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:X-PR-Tracked-Remote:
+	 X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:X-PR-Merge-Refname:
+	 X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc;
+	bh=u/DbbleB1yxzNOmb95ORYrmAuG4KvpZHlkEZVirEP1o=;
+	b=zpwkuMbTpo7qB126MlAO3SxjyY46VSqjvLYyKhJx7TyiYjfCTJCmDqVfAbiaGWlkVj/K
+	 a+wbi5wUDVa1WsnlQ8MPnYSrYnfZhnn2LyjGDDWkSBdp6iqMrQ0lk/vT97eelQmnTPcHF
+	 ZnGd98f9ejDaI1h4bFm0Iyj9GtBjKqVRzAL9Q5JrwbAsVlAvUDWoDJx1QjyaqFt5CfFEK
+	 5Gep0o6LYDFOIy5LmRJ1+XUbJCZcvgchipQl3uccpoD7ndoD+mJBe2FDIrL54EsqhWkVy
+	 +wHGbmkqNWh0B9N0ooNKUm8FLiOm5w7aAt6qopG+LgWA20SFH37A+tx4+5SVimoVSmQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AFfzC079;
-	arc=none smtp.remote-ip=192.198.163.7
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D5thMcXt;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7082D606A31A
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 16:24:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7082D606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE490606A31E;
+	Mon, 26 Oct 2026 17:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AFfzC079
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793031862; x=1824567862;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=914L6Ehbzc010nX11Vf6AM1dCqaluy0uqbO7c7en+xI=;
-  b=AFfzC0796fYO397em1yMEJtDOgVXK2QugQtVg37Q0YGrmS05wlFnLrI5
-   obaYIWsZ4V1JBp52saXqRWQSqDqlA3bT0FGYm7UT4yE+gM2mKIlt7cFvZ
-   gm8d0XxMWutLyohxzbaFvaSSMvCZmBGnhuY3blYBAEy+gaf1ZTZQvCrnZ
-   ye+2E3gETMXdhNJH0MeA65xGmwXMkXeOAsxmvwJL6CE8JGUE7o+CFS0++
-   RGR02QIxiVpF7NPZrpms9/ThJTc7X7atP9/5Y3UHuJJPwzbsRPxZ4y4cW
-   TjRSsTMG9jiy4yP0QzLxSuIB1q/4oMXXI2efGeag4+l+SJ/JZZue4S2bo
-   Q==;
-X-CSE-ConnectionGUID: BLwyvh/eSa2LSTfFNruFOA==
-X-CSE-MsgGUID: ia/2JG8vTFiSxmcnx573SQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1602001"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1602001"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:24:21 -0700
-X-CSE-ConnectionGUID: atopQ1p9RUq0kj7YpG5vVw==
-X-CSE-MsgGUID: GDKb+3zNQBGP+dGca93yYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4316020"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:24:21 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: nvdimm@lists.linux.dev
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v2] test/cxl-region-sysfs.sh: test a repeat write of a region target
-Date: Mon, 26 Oct 2026 09:24:15 -0700
-Message-ID: <20261026162419.584201-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D5thMcXt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71F71F01825;
+	Mon, 26 Oct 2026 17:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793035492;
+	bh=u/DbbleB1yxzNOmb95ORYrmAuG4KvpZHlkEZVirEP1o=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=D5thMcXtOJmluOYsp6g9oQHFshxESYr+Wtgj3162rQ3bFN2ko+IGGY5b9bpxK3osp
+	 BeH5vM3B8/HrNp/wWm2s4OPXDtZMAT03mmVdJATbg03TUYj9RRNIzR4KS+Zv+TRd/G
+	 qtP81mykgKEDxjK5Zy5Pvzqy8uA/GnD8b4yNUrt3xtrAbrdRhsTWlCFD6t25qfBKNJ
+	 /aWmu/7hw3kPHIGjXGdsUEkVROWx7aEayEr5U7oWmsVubjn5+pv826m//Q1H7I3LL9
+	 hg0I81GVa5QJwWOESYe1lfmRRUnE9x/WxGag65YXpCiEDhM6GyalN3CK3h+AIqNygJ
+	 fObmqA8N7xrsw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BE6063AA58BF;
+	Mon, 26 Oct 2026 17:24:52 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) for 7.4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <038679a4-e6c7-495a-8283-c3d0670ac191@intel.com>
+References: <038679a4-e6c7-495a-8283-c3d0670ac191@intel.com>
+X-PR-Tracked-List-Id: <linux-cxl.vger.kernel.org>
+X-PR-Tracked-Message-Id: <038679a4-e6c7-495a-8283-c3d0670ac191@intel.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.4
+X-PR-Tracked-Commit-Id: cf15f9f2361dd4002203716b7b878393c0eee4bf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d6bbdb67a4b9f2366debd8b5b05b1822490982ef
+Message-Id: <179303549140.3291751.13917106703381824376.pr-tracker-bot@kernel.org>
+Date: Mon, 26 Oct 2026 17:24:51 +0000
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Vishal Verma <vishal.l.verma@intel.com>, Alison Schofield <alison.schofield@intel.com>, Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>, Li Ming <ming.li@zohomail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -76,58 +67,16 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-A CXL driver fix making its way upstream[1], makes a repeat write of an
-endpoint decoder to the region targetN attribute that already holds it
-succeed without changing the region. Without the fix, that write fails,
-leaves the region half detached from the endpoint's ports, and a later
-write can crash the kernel.
+The pull request you sent on Thu, 22 Oct 2026 08:35:10 -0700:
 
-Add a test case to backstop that fix. Write target0 twice on a partially
-populated region and check that the second write succeeds and leaves the
-region's decoders attached.
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.4
 
-[1] https://lore.kernel.org/linux-cxl/920d80735a449f93a1f17a8bca4c25e4b302cb42.1792989098.git.alison.schofield@intel.com/ 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d6bbdb67a4b9f2366debd8b5b05b1822490982ef
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
+Thank you!
 
-Changes since v1:
-- Expect a repeat write to succeed, as the v2 kernel fix makes it a no-op
-
-
- test/cxl-region-sysfs.sh | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
-index db1a163efb30..cb5e6ba53e71 100644
---- a/test/cxl-region-sysfs.sh
-+++ b/test/cxl-region-sysfs.sh
-@@ -87,9 +87,19 @@ do
- 						     select(.mode == \"pmem\") | .decoder")
- done
- 
--# attach all endpoint decoders to the region
--pos=0
--for i in ${endpoint[@]}
-+# a repeat write of an attached endpoint decoder must succeed and leave
-+# every decoder between it and the root attached
-+echo "${endpoint[0]}" > "/sys/bus/cxl/devices/$region/target0"
-+nr_attached=$(cat /sys/bus/cxl/devices/decoder*/region | grep -cx "$region")
-+if ! echo "${endpoint[0]}" > "/sys/bus/cxl/devices/$region/target0"; then
-+	err "$LINENO: repeat write of ${endpoint[0]} to target0 failed"
-+fi
-+nr=$(cat /sys/bus/cxl/devices/decoder*/region | grep -cx "$region")
-+[ "$nr" -ne "$nr_attached" ] && err "$LINENO: $nr of $nr_attached decoders still attached"
-+
-+# attach the remaining endpoint decoders to the region
-+pos=1
-+for i in ${endpoint[@]:1}
- do
- 	echo $i > /sys/bus/cxl/devices/$region/target$pos
- 	pos=$((pos+1))
 -- 
-2.37.3
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
