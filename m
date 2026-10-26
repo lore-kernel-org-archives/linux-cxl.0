@@ -1,68 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793055381;
-	b=JgE0zo9lXApUN19RbRYS+rUrPmic4gYJKv+A/Pfu0Y9YjBNFrv8alrWkHzt5URqTR4qy
-	 K/TvdTiAxJA3bxCeReV6iEkrBRzF+qwzKpluvn0Zp7UujIcve+gBuJM+kjcbfPOF+yzWi
-	 /bvgyNSHHYsk3Rt4pgNUm9f7c91kUm8O+E5UZMlW9XT5+WE1YcgRGpVkc1QiyMvAmJJMR
-	 eIu9L2vqBpczN2Ii8ZG0UENp6DIDmfoWtYIVAEFB/NKniVkQYrLfXl/lE2GXoK60oUxw6
-	 q3BnF52H/YQ2HAYgsp2S4eW/BKuv+RnLnTJ+0fIRgIOk4HZ7lRgk8CujtzvJ05rTd8w==
+	t=1793056680;
+	b=0ZxoPQhEOpyHsnGSEDmJjgdEzFGtGxByVY9LRSG0/415ioY9hjHFOvBTIOi6oFqyPy/T
+	 AKHdYKSVp++7pssxQSCiNkm0L3wFQqKHOTCX1SrAoFWxpKRE2XaQTHfqib83NfqVnAvVg
+	 9dIvGhUsOVrCYCsiOOerlfkankAqTB3irGykFAPAYZ9IrIQbn3vD78lmyN55w1y3CWYFQ
+	 GlOey1NIEBBtseF25VDuNQvunKsRkJQu6qRgw9deUhBymVQ/TONdxij/PTrTDGyOO3KOs
+	 0eRgxfsYEI+S3F8VFhXDXSaGdLVWbs7+4oSVYkiaYIpoXv2np5D2U42K8erVG7kUEGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793055381;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=5KXWNpM3l7eZ2uuYNviWQ+utc8EtZYeR0hwdFT7B3zw=;
-	b=nLTTEHe0jza0EJE9HmI0M1zBzM9whJevRSfs6HU6SxBeixQLuz9AbGPvOQnAFuuEZPMG
-	 2IXg6J3OrfPUIL4YWGbrGk9n5EjGO7ho+LYMQmTTiBSgtGuDFS7A6iOweVxG83/lHymrI
-	 I+JGaEzUgMhvY90zJuzVRuGp+Bq6yQFySgbP+T7LfVxejVbweL7McFUoIdMl2k8Ruux64
-	 YdXU18nFQWcNediq6+TFbgXZEIMoU5kHAvTT2jLJCRIGTkXC+2VIo2MpEgaTYZM5R/Xz0
-	 yUbN94YHUi+YJOb5G9bMG+am+NYdoQG/cLRfYC7TllcLfkM19x3T3yxJpkKdINHCZZg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793056680;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=ayLTO25mv8hsmSbKJI2pgTaDpBZ/HN5CAIFHS8ZziNk=;
+	b=yMRbsVUjJ5EnZVLa4xtc3xN3EH4UvnU/SPNVPgyMeY8u9GWEZOMbhfWcWpn0NLq8QJK0
+	 Es3ivmOopfylVu6HUqF6tmgh/YfuZjHFNfRHzXFA0We08U81Z8EkAQ6gjWH0EYG+8aSQy
+	 +nn+UnQK/9vkThvWTl5Pjgd3kvbz77X0+gONBcz7cku/b2cqBmUJNGJIQ+aEicG4bahk9
+	 2veOUQx9V0uFwhr49WNX4dsJh0GzOs2A/sncn9AAx7cNoQTAlY6Wdk6ivXbWuP3xA1jDA
+	 wCjDXQ8Xwe5F22ixWz1x6sQx1JsYqipmKgwTS5CacwhX0RvAML5clTNbEHIzVfA2vog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gdIm4kfc;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c0btN4RF;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C34606A32E;
-	Mon, 26 Oct 2026 22:56:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5C34606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BE8606A31D;
+	Mon, 26 Oct 2026 23:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gdIm4kfc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793055380; x=1824591380;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=apTiQPMdtSAB4IiLfrFTkXgfQZZauBljipfkSL7Abtg=;
-  b=gdIm4kfcJvJzqAH0PVLO2fqIN6hDHJ2viAERhHd8uzaL+YI9qijHb/ai
-   KZCqeQHcpYGQM9PN8BtcDqRBzlkYKc2oBre9u1FXdZc86+Fpi32XBp0PO
-   V/ZejUe1ClwzgoIoC9fP7HMiQTPbfFZG9sbxayfCmtBkW55CTof0rrKyd
-   Ft9AinrMiScc3DvAPepPy5JKwwMJLlHQH81OKCX0dtLTkKT8OBU1fLR0h
-   51aLIMMJChqrEXxReDsm8bn5N4aPrehdLbWXA20QeA2z/+ZTCP6DphrCR
-   tDIBVHznmNLgVkyWztPKgr4DeqrifKHlI4a/K9EjWEPhMQBJLP3lZziGl
-   w==;
-X-CSE-ConnectionGUID: j/HSNaLdTzGiOT15YPxA/g==
-X-CSE-MsgGUID: JIAnUqjaSTaiV+iZB9fw+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1618040"
-X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
-   d="scan'208";a="1618040"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 15:56:19 -0700
-X-CSE-ConnectionGUID: RuzZhOdOTYC81FUNd8B7jw==
-X-CSE-MsgGUID: +xBgjqEhSImIh2fNbmnBdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
-   d="scan'208";a="6218976"
-Received: from smithj1-mobl2.amr.corp.intel.com (HELO [10.125.108.112]) ([10.125.108.112])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 15:56:18 -0700
-Message-ID: <db212bda-9642-4b78-9bb0-c75aa60df401@intel.com>
-Date: Mon, 26 Oct 2026 15:56:16 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c0btN4RF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7691F01825;
+	Mon, 26 Oct 2026 23:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793056679;
+	bh=ayLTO25mv8hsmSbKJI2pgTaDpBZ/HN5CAIFHS8ZziNk=;
+	h=From:Subject:Date:To:Cc;
+	b=c0btN4RFNd+JK9rkuoTETc7VF6swnFyYz0/L+oSt8CLgeMxb0G2BDek2IJa55YHgH
+	 jxflLIlpQ2WjGfXinmpmDcTPwOBNahVU3Fpt2SewilRmN+LtujcaoK9avQFbHhbqJn
+	 AToCFd3ZAWENyki274UuV7Hrzyj3mkZx+lZBHJAgQM7sMTU2YygJXf/22VO7LBayGo
+	 z1SiNI6qekyGCy9Qj3o0FBTBaCDVIkViGvV5TMESpQllEDQfyei0P9tTKvJQ0Me/gK
+	 wyAA7x7FGyfUCmcqmTS1uQLx7441jdglWG11IvyD9a9d/vtZG2IIN5UFht4h5Bdhmc
+	 BcrYLm+fhg8gw==
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: [PATCH 00/46] mm: various (urgent?) fixes
+Date: Tue, 27 Oct 2026 00:17:20 +0100
+Message-Id: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -72,355 +53,191 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 08/16] cxl: Refresh cached PCI HDM decoder settings
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20261011021422.3428136-1-smadhavan@nvidia.com>
- <20261011021422.3428136-9-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20261011021422.3428136-9-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIHf32oC/yXM3wpAMBQH4FfRubbapiSvIsnmjOMCnYOU9u6Gy
+ 6/fnxsEmVCgzm5gPEloXRJMnoGf+mVERUMyWG1Lo61RgS6Uzq+Myg2hLKrQB20LSION8UtTv2l
+ /y+Fm9Pv7ADE+TOnff24AAAA=
+X-Change-ID: 20261021-fixes_core-bdf638faf023
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
+ "David Hildenbrand (Arm)" <david@kernel.org>, 
+ Chris Mason <mason@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6096; i=david@kernel.org;
+ h=from:subject:message-id; bh=M759dBMTTuWvoyATaey2hLe92rKyKdXXWLH+ZXFHlx8=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLu358o8+hoapKLufs0q+lpn12ZBLcv/3an4MwBsxfcD
+ JVLS+V0OkpZGMQ4GGTFFFmCgu8bvHy5rrbajY8ZZg4rE8gQBi5OAZhI7S6Gf7r9S3UXX2XVt/qw
+ JKtmldaMlmu2mzm5VXc2e62fdZhNyJrhn9WBe3v8/NPeHmqUd+L4lrf/+qQda2pP1TYyKv7KKbp
+ 1jA8A
+X-Developer-Key: i=david@kernel.org; a=openpgp;
+ fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
+Another set of fixes from the current batch that focuses on all core-mm
+things that won't be sent out separately by others. I decided to bundle
+these together as they are all over the place.
 
+I have some hugetlb stuff in the works which is pretty horrible
+(code wise ;) ), that I will send out once ready. Plus some
+low-prio migrate_device oddities + two core-mm things that need more
+thought.
 
-On 10/10/26 7:14 PM, Srirangan Madhavan wrote:
-> Early PCI discovery creates the HDM cache, while later CXL enumeration and
-> decoder operations provide updated programming state.
-> 
-> Refresh the PCI snapshot when decoders are enumerated, committed, or reset
-> so reset recovery need not walk the CXL topology. Ignore updates when no
-> cache exists and reject decoder-count mismatches.
-> 
-> Use CXL_RESET for the PCI HDM cache. Shared HDM register helpers do not
-> require it.
-> 
-> Skip cache checks and updates for DVSEC-emulated decoders, which do not
-> use HDM registers. Keep cached global control when MMIO reads return all
-> ones.
-> 
-> Skip non-PCI mock ports to avoid test wrappers and a circular dependency
-> between cxl_core and cxl_mock.
+This is the biggest set of patches coming from me, so don't be
+scared ;)
 
-Maybe consider saying:
-Non-PCI mock ports have no upstream PCI device, so the cache helpers ignore them. This avoids test wrappers and a circular dependency between cxl_core and cxl_mock.
+Once more, some of the stuff is more urgent than others. No fixes are
+crazy big and most are easy to review.
 
-> 
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=50a88f5194e5df38590d413f925d8d5afa8a8488
-> Suggested-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> Assisted-by: LLM
+The majority are again fixes from Anthropic that I cleaned up or reworked.
+While doing that, I found a bunch of other issues and tried to fix them
+somewhat cleanly.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+I gave it at least some basic testing on x86-64; more testing will be
+highly appreciated.
 
-> ---
->  drivers/cxl/Kconfig     |  5 +++
->  drivers/cxl/core/core.h |  3 ++
->  drivers/cxl/core/hdm.c  | 55 +++++++++++++++++++++++++++++++-
->  drivers/cxl/core/pci.c  | 70 +++++++++++++++++++++++++++++++++++++++++
->  include/cxl/cxl.h       |  1 +
->  include/cxl/hdm.h       | 25 +++++++++++++++
->  include/linux/pci.h     |  6 ++++
->  7 files changed, 164 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 80aeb0d556bd..8b08bfdc4982 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -6,6 +6,7 @@ menuconfig CXL_BUS
->  	select FW_UPLOAD
->  	select PCI_DOE
->  	select FIRMWARE_TABLE
-> +	select CXL_RESET
->  	select NUMA_KEEP_MEMINFO if NUMA_MEMBLKS
->  	select FWCTL if CXL_FEATURES
->  	help
-> @@ -244,3 +245,7 @@ config CXL_ATL
->  	depends on ACPI_PRMT && AMD_NB
->  
->  endif
-> +
-> +# CXL_BUS requires the PCI HDM cache and built-in state helpers, even when modular.
-> +config CXL_RESET
-> +	bool
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index d69864b25656..77bc4f7d2e99 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -222,6 +222,9 @@ static inline void devm_cxl_dport_ras_setup(struct cxl_dport *dport) { }
->  int cxl_gpf_port_setup(struct cxl_dport *dport);
->  
->  struct cxl_hdm;
-> +/* Hold cxl_rwsem.dpa for write while using the returned cache. */
-> +struct cxl_hdm_info *cxl_hdm_get_cached_info(struct cxl_hdm *cxlhdm, int id);
-> +int cxl_hdm_check_decoder_count(struct cxl_hdm *cxlhdm);
->  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->  			struct cxl_endpoint_dvsec_info *info);
->  int cxl_port_get_possible_dports(struct cxl_port *port);
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 1a19078e6c6c..b57257efbf4e 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -730,6 +730,47 @@ static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
->  		*tgt |= FIELD_PREP(GENMASK_ULL(63, 56), t[7]->port_id);
->  }
->  
-> +static void cxl_hdm_refresh_decoder(struct cxl_hdm *cxlhdm,
-> +				    struct cxl_decoder *cxld)
-> +{
-> +	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
-> +	struct cxl_endpoint_decoder_settings *settings;
-> +	struct cxl_hdm_info *info;
-> +	u32 global_ctrl;
-> +
-> +	if (!hdm)
-> +		return;
-> +	if (!is_endpoint_decoder(&cxld->dev))
-> +		return;
-> +
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	info = cxl_hdm_get_cached_info(cxlhdm, cxld->config.id);
-> +	if (!info)
-> +		return;
-> +
-> +	/* Preserve the last good value when the device does not respond. */
-> +	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	if (global_ctrl != U32_MAX)
-> +		info->global_ctrl = global_ctrl;
-> +	settings = &info->settings[cxld->config.id];
-> +
-> +	/*
-> +	 * A disabled decoder's software object may retain its old range and
-> +	 * skip state. Leave only the decoder id in the cached settings so stale
-> +	 * state is not restored as an enabled decode.
-> +	 */
-> +	*settings = (struct cxl_endpoint_decoder_settings) {
-> +		.config.id = cxld->config.id,
-> +	};
-> +	if (cxld->config.flags & CXL_DECODER_F_ENABLE) {
-> +		struct cxl_endpoint_decoder *cxled =
-> +			to_cxl_endpoint_decoder(&cxld->dev);
-> +
-> +		settings->config = cxld->config;
-> +		settings->skip = cxled->skip;
-> +	}
-> +}
-> +
->  static void
->  cxl_endpoint_decoder_snapshot(struct cxl_endpoint_decoder *cxled,
->  			      struct cxl_endpoint_decoder_settings *settings)
-> @@ -811,6 +852,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
->  	}
->  	port->commit_end++;
->  	cxld->config.flags |= CXL_DECODER_F_ENABLE;
-> +	cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  
->  	return 0;
->  }
-> @@ -883,6 +925,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
->  	writel(0, hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
->  
->  	cxld->config.flags &= ~CXL_DECODER_F_ENABLE;
-> +	cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  
->  	/* Userspace is now responsible for reconfiguring this decoder */
->  	if (is_endpoint_decoder(&cxld->dev)) {
-> @@ -1090,9 +1133,17 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  {
->  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
->  	struct cxl_port *port = cxlhdm->port;
-> -	int i;
-> +	/* DVSEC-emulated decoders do not describe the cached HDM registers. */
-> +	bool emulated = should_emulate_decoders(info);
-> +	int check_rc, i;
->  	u64 dpa_base = 0;
->  
-> +	if (is_cxl_endpoint(port) && hdm && !emulated) {
-> +		check_rc = cxl_hdm_check_decoder_count(cxlhdm);
-> +		if (check_rc)
-> +			return check_rc;
-> +	}
-> +
->  	cxl_settle_decoders(cxlhdm);
->  
->  	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> @@ -1131,6 +1182,8 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  			put_device(&cxld->dev);
->  			return rc;
->  		}
-> +		if (!emulated)
-> +			cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  		rc = add_hdm_decoder(port, cxld);
->  		if (rc) {
->  			dev_warn(&port->dev,
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 33b21c8dcb21..2acddb472103 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -6,6 +6,7 @@
->  #include <linux/delay.h>
->  #include <linux/pci.h>
->  #include <linux/pci-doe.h>
-> +#include <cxl/hdm.h>
->  #include <cxl/pci.h>
->  #include <linux/aer.h>
->  #include <cxlpci.h>
-> @@ -180,6 +181,75 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_await_media_ready, "CXL");
->  
-> +/**
-> + * cxl_hdm_get_cached_info() - get the PCI-owned HDM cache for a decoder
-> + * @cxlhdm: HDM capability whose port identifies the upstream PCI device
-> + * @id: decoder ID to validate against the cached decoder count
-> + *
-> + * The caller must hold cxl_rwsem.dpa for write throughout this call and
-> + * all access through the returned pointer. The pointer refers to the live
-> + * cache; ownership remains with the PCI device.
-> + *
-> + * Return: the cache containing @id, or NULL if no upstream PCI device or
-> + * cache exists, or @id is outside the cached decoder count.
-> + */
-> +struct cxl_hdm_info *cxl_hdm_get_cached_info(struct cxl_hdm *cxlhdm, int id)
-> +{
-> +	struct cxl_hdm_info *info;
-> +
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
-> +
-> +	if (!pdev)
-> +		return NULL;
-> +
-> +	lockdep_assert_held_write(&cxl_rwsem.dpa);
-> +	info = pdev->hdm;
-> +	if (!info)
-> +		return NULL;
-> +
-> +	if (id < 0 || id >= info->decoder_count) {
-> +		pci_warn(pdev, "CXL HDM decoder %d exceeds cached count %d\n",
-> +			 id, info->decoder_count);
-> +		return NULL;
-> +	}
-> +
-> +	return info;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_hdm_get_cached_info, "CXL");
-> +
-> +/**
-> + * cxl_hdm_check_decoder_count() - check enumeration against the PCI HDM cache
-> + * @cxlhdm: HDM capability containing the decoder count to check
-> + *
-> + * Take cxl_rwsem.dpa for read while comparing the cached count. Call only
-> + * for hardware HDM decoders, since DVSEC-emulated ranges do not describe
-> + * the HDM registers represented by the cache.
-> + *
-> + * Return: 0 if the counts match or no upstream PCI device or cache exists,
-> + * or -ENXIO if the cached and enumerated decoder counts differ.
-> + */
-> +int cxl_hdm_check_decoder_count(struct cxl_hdm *cxlhdm)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
-> +
-> +	if (!pdev)
-> +		return 0;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	if (pdev->hdm &&
-> +	    pdev->hdm->decoder_count != cxlhdm->decoder_count) {
-> +		pci_warn(pdev,
-> +			 "CXL HDM cache decoder count mismatch: cached=%d hdm=%d\n",
-> +			 pdev->hdm->decoder_count, cxlhdm->decoder_count);
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_hdm_check_decoder_count, "CXL");
-> +
->  static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  {
->  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 9af01e1f45ba..b29374b34cfa 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -26,6 +26,7 @@ enum cxl_devtype {
->  };
->  
->  struct cxl_region;
-> +struct cxl_hdm_info;
->  
->  enum cxl_decoder_type {
->  	CXL_DECODER_DEVMEM = 2,
-> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
-> index 219b9bb67440..d5e7efd2ffc0 100644
-> --- a/include/cxl/hdm.h
-> +++ b/include/cxl/hdm.h
-> @@ -16,4 +16,29 @@ struct cxl_endpoint_decoder_settings {
->  	u64 skip;
->  };
->  
-> +/**
-> + * struct cxl_hdm_info - cached CXL HDM state for a PCI device
-> + * @decoder_count: number of entries in @settings
-> + * @hdm_bar: PCI BAR containing the HDM decoder capability
-> + * @hdm_offset: offset of the HDM decoder capability in @hdm_bar
-> + * @hdm_size: size of the HDM decoder register block
-> + * @global_ctrl: HDM decoder global control register
-> + * @dvsec_ctrl: CXL DVSEC control register
-> + * @dvsec_ctrl_valid: whether @dvsec_ctrl contains valid state
-> + * @settings: per-endpoint-decoder programming state
-> + *
-> + * Publication through pci_dev.hdm and all mutable fields are protected by
-> + * cxl_rwsem.dpa.
-> + */
-> +struct cxl_hdm_info {
-> +	int decoder_count;
-> +	int hdm_bar;
-> +	resource_size_t hdm_offset;
-> +	resource_size_t hdm_size;
-> +	u32 global_ctrl;
-> +	u16 dvsec_ctrl;
-> +	bool dvsec_ctrl_valid;
-> +	struct cxl_endpoint_decoder_settings settings[] __counted_by(decoder_count);
-> +};
-> +
->  #endif /* __CXL_HDM_H__ */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d31a8d107b1e..7bb37fcb556d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -339,6 +339,9 @@ struct pcie_link_state;
->  struct pci_sriov;
->  struct pci_p2pdma;
->  struct rcec_ea;
-> +#ifdef CONFIG_CXL_RESET
-> +struct cxl_hdm_info;
-> +#endif
->  
->  /* struct pci_dev - describes a PCI device
->   *
-> @@ -566,6 +569,9 @@ struct pci_dev {
->  #ifdef CONFIG_PCI_DOE
->  	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
->  #endif
-> +#ifdef CONFIG_CXL_RESET
-> +	struct cxl_hdm_info *hdm;	/* CXL HDM decoder state */
-> +#endif
->  #ifdef CONFIG_PCI_NPEM
->  	struct npem	*npem;		/* Native PCIe Enclosure Management */
->  #endif
+This is based on akpm/mm-stable.
+
+As with the shmem fixes, please prioritize review of these fixes, I want
+to get fixes for the issues in a timely manner upstream.
+
+Thanks to everyone helping out with moving the flood of fixes forward :)
+
+---
+Chris Mason (11):
+      mm/huge_memory: fix truncate racing with PMD zapping
+      mm/huge_memory: fix zapping migration entries for device-private THPs
+      mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
+      mm/gup: fix clearing folios in memfd_pin_folios()
+      mm/gup: fix out-of-bounds write for nr_pages == 0 in GUP-fast
+      mm/mmu_notifier: set ->mm only after mmgrab()
+      mm/memory: reject remote COW faults on PFN mappings
+      mm: fix unkillable fault loop on MAP_DROPPABLE memory
+      mm: fix deadlock of mremap() against UFFDIO_MOVE
+      mm/ksm: check large swap-cache folios before mapping them
+      mm/vma: call ->may_split() before a partial merge
+
+David Hildenbrand (Arm) (20):
+      fork: take mmap_lock before copying mm_struct
+      mm/memfd: check for real shmem inodes before accessing shmem state
+      mm/truncate: look again if a folio left the mapping
+      mm/filemap: finish fault cleanup before dropping the fault lock
+      mm/rmap: handle device-exclusive entries in folio_referenced_one()
+      mm/huge_memory: fix list corruption when deferred_split_scan() races with deferred_split_folio()
+      mm/huge_memory: properly handle refcounted PUD mappings on fork
+      mm/khugepaged: check if PTE table is empty in try_collapse_pte_mapped_thp()
+      mm/gup: recheck the PUD under PTL in follow_pud_mask()
+      mm/gup: check for overflow when converting nr_pages to bytes in GUP-fast
+      mm/userfaultfd: write-lock the VMA before waking waiters when unregistering
+      mm/userfaultfd: wake waiters when registration modes are removed
+      mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
+      mm/mremap: recheck PUDs under the page table lock
+      mm/madvise: fix data loss from MADV_FREE on a KSM page
+      mm/ksm: reset the unstable trees of all nodes
+      mm/ksm: fix use of a freed anon_vma at swap-in
+      mm/huge_memory: split huge PUDs when adjusting VMA boundaries
+      mm/vma: don't leak the charge for stack growth
+      mm/memory-tiers: unregister empty tiers outside memory_tier_lock
+
+Josef Bacik (14):
+      mm/mglru: don't use stack pointers when walking PUD and PMD tables
+      mm/memfd: make f_pos accesses atomic
+      mm/filemap: read mapping->a_ops->free_folio under i_lock
+      mm/filemap: don't lose a folio lock wakeup to a signal
+      mm/huge_memory: fix livelock on device private folio
+      mm/khugepaged: always recheck the pmd in try_collapse_pte_mapped_thp()
+      mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
+      mm/userfaultfd: wake all waiters on unregister
+      mm/mmu_gather: fix flushing ranges with 4 GiB or larger
+      mm/mmu_notifier: finish non-blocking interval invalidation on error
+      mm/mremap: fix moving PUD leaves
+      mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
+      mm: fix unmap_mapping_range() beyond 4 GiB on 32-bit
+      fs/proc/task_mmu: refuse addresses beyond 32 bits on 32bit
+
+Rik van Riel (1):
+      mm/cma: don't release CMA pages still in use
+
+ fs/proc/task_mmu.c            |   6 ++
+ include/asm-generic/tlb.h     |   3 +-
+ include/linux/huge_mm.h       |   5 +-
+ include/linux/ksm.h           |   6 +-
+ include/linux/memremap.h      |   6 ++
+ include/linux/mmu_notifier.h  |   3 +-
+ include/linux/shmem_fs.h      |   6 ++
+ include/linux/userfaultfd_k.h |   2 -
+ kernel/fork.c                 |  20 ++++--
+ mm/cma.c                      |  10 ++-
+ mm/filemap.c                  |  88 ++++++++++++-------------
+ mm/gup.c                      |  53 ++++++++++-----
+ mm/huge_memory.c              | 149 ++++++++++++++++++++++++++++++------------
+ mm/hugetlb.c                  |  14 +---
+ mm/internal.h                 |  28 ++++++++
+ mm/khugepaged.c               |  77 +++++++++++-----------
+ mm/ksm.c                      |  56 ++++++++++++----
+ mm/madvise.c                  |   9 +++
+ mm/memfd.c                    |  10 ++-
+ mm/memfd_luo.c                |   2 +-
+ mm/memory-tiers.c             |  29 ++++----
+ mm/memory.c                   |  30 ++++++---
+ mm/memory_hotplug.c           |  13 ++--
+ mm/memremap.c                 |  13 ++++
+ mm/mmap.c                     |   8 +--
+ mm/mmu_notifier.c             |  24 +++++--
+ mm/mremap.c                   | 103 +++++++++++++----------------
+ mm/nommu.c                    |   2 +-
+ mm/rmap.c                     |  23 +++++--
+ mm/shmem.c                    |   5 ++
+ mm/swapfile.c                 |   3 +-
+ mm/truncate.c                 |  17 ++++-
+ mm/userfaultfd.c              |  72 ++++++++++----------
+ mm/util.c                     |  13 ++++
+ mm/vma.c                      |  24 +++++--
+ mm/vmscan.c                   |   4 +-
+ 36 files changed, 588 insertions(+), 348 deletions(-)
+
+---
+
+base-commit: 183895979c441e52dbd651b388553b09eaa35cfa
+
+change-id: 20261021-fixes_core-bdf638faf023
+
+--
+
+Cheers,
+
+David
 
