@@ -1,84 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=139.138.61.252
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.90.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793008458;
-	b=ZHFi/o2N1A/rKUuR786iVRLVwOYYGjicQye/GodtwRIpJkDHSSzfc5cacu+ThMj3fwn3
-	 04L63CyCTcOJJxT7Nd5+YmNE1LUwjUy4K1C/W03Hl/Bt4mU012WffB0Ji5j90oi8olAHd
-	 lpEztAVEKN4TJjxvSM32Zmb0NHPwwFZrPq4i1NbNGJWBy/jOQW/t4L092bmRXdFPkNzgo
-	 pOzPieGe8t2oPlg7ecFdHrbsZuhv7slJkdx4zfDYfwrTxSrexrwjwLBX2NOSGaEexMUhW
-	 8Kyasut5+/+AWVIloEuV8qjRdNbAfFzat8/a71wh8v2vxtRdMPFkLTfrI/4o7CbPdOA==
+	t=1793008459;
+	b=vSTwxkK78rOBVjRB+UUaV0a9RWIH+BAhMUzLHdr98/qXS84FoyEpVjd3E7w8ZcoNHwcs
+	 MZ1xQHKKEg+6HxC4kMQXQIbZJZzfX+EmS8L64lnMUThY8pIXaDSinV2ypReZuUbO82kob
+	 5zRJZTR70ligoLxBdR5N3a1uWwGw5eOaT7jwO/TJR7FLZsOEgt7QZ5i5fJ6BEO1Ll5EtT
+	 fRZ35VIymkv/vJWK3VUy0wai4vu+0kFaYutE0nEogakVfpu7a7soidsJPDkkJcwNyZw/m
+	 bHShpN0Ykdzf9aTRloLsR3k6t7HAJSAWAd5O103kKf13ws1GAiSk5+GV79WnSfOlp0w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793008458;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793008459;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:From:
 	 To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=5/PjjFpHJMQNFkm0jVvsAlbbMUQRzR9dvMRBcBXQjOw=;
-	b=4X5O5Lt1aYKKdKRtW7ub3KtEuquazl5fmESYGlfGPIYiO2RXuQ2RwaYRMiEq6clfNjm5
-	 R+2AzA3jvUissfCSoVponpDlhkL0+9o/z+T8FECGxTMLKTpc9LTHk7ozf7nopUGS9YND1
-	 XDqEnvwvgsC8iYaaN/kdG1kLRJ8m09E4OaTWE2Ul2gtVRYy8iAH9Jl4dtnp5qCXQ/PQ4q
-	 6B7R3SttvAq4WUiLlAcY2+IAx0nE14jgmormvqGlgGiQb79lDZz4SxSLYVDHsUNVMHRnH
-	 C3AIQkLYZFWGucehR7GYh8MV8kvGQzbXR5oBQ/ZuHQKoYmazB75zlmSDQ6k7SUCJDJg==
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=ekbeFNQZH2lTXrOWvMGo8eYksN7lsrG6Xfp33htCj7Q=;
+	b=KFNNq3DGX/qR/HOuoBT0JHVhyYBvn/Yk6JwQb/QJmanhYrTIIq3TufcJ5ny2OOOHypPo
+	 VEabeQ8/TMeQqzH0hHT2YGLoheaV2kXvy5d4gP8AZKHgfsRrE4B00v62BmhuVf95gzoCo
+	 tWp2MhU5Q2a/bqJAAVHb8C+x0JynUAQ+GhAuqJW37G74dI+z75dY4MGotMAqiqXHt4cGA
+	 mmIgdUjuhgw+XgcIP2wc4NjWHYG47W6OOMYAWexqBy+I3gQSmujlknRHDBppZqyTJLggx
+	 3BXXinHTw/sBxFL1DfS/n0ThtbEgWqh/W7q1I94lojUKO3poikawQjAMm3maIGviytw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fujitsu.com;
 	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=WfL1XzR6;
-	arc=none smtp.remote-ip=139.138.61.252
-Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
+	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=WLIvpVWR;
+	arc=none smtp.remote-ip=207.54.90.49
+Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A31606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1622A606A31D
 	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 82A31606A31F
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1622A606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=WfL1XzR6
+	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=WLIvpVWR
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1793008457; x=1824544457;
+  t=1793008459; x=1824544459;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Zq89hgzs7m9+iM8Br2P62CYeN5DC4Ml4L5UACTlprZ4=;
-  b=WfL1XzR6iK86suijatCt9ow5buiq3tXgSvNUbh1cQaV7wvratzy0PLUG
-   v51GMiXl65nAONSMtTjOmAcTtmUSaBNEr1ibs3YGSOrB6RJCfxHjru6aq
-   29D0+Ucpf9LFlxemBRXiLUCcwirRQ4WfyYFsa55PB15ra63APlJTL1hJW
-   czCUfUI4oZhjjf+RxzkmRftMnXOcGnD22MuBSNQB0yUyxMcahgpzWbI05
-   6nE5aY9o48HHl9HDKXItZRBnYGFvstDFjqueY83aoVoA7Wxioav1Kc7GP
-   yM5JFzfXgAErdOMxqOmXXQu6JBzZsWyIJnXfr86vObayv1reuOm/9hx4b
-   w==;
-X-CSE-ConnectionGUID: L/GiH4T/RCuEVWtcai2vUA==
-X-CSE-MsgGUID: 5TjHIPKNSmipMSk8xoJfzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="238359881"
+  bh=6z8lEk1AeWECdTspXda6U7FgVtrO8TNGfV5ZPDt7sUE=;
+  b=WLIvpVWRoHzVPxS8BcvJ2SScucChBzlOBmGePzZLNzWiHDenJ0Cl1m8Q
+   3gCF3LF4eF28b5C6SU0lrgDaXJXeQN4e9Pi5DXukXxnis3BJvQY2z/HuG
+   dz8R3Ef35PwsqiK4UtWglZADb86wGaGVMWF5rUCCru78rL+C0Wp41FTFJ
+   x8zuRwNKAOlYiYBJtARL9k3UMxAOYDy89h6tUk4e/eREgjB+Latn8DND6
+   Noki+MmLpDXllMDH//bhjWu1ATNDJSigQRiP9DOn1Ky+sV7Ivo0E4Yulj
+   c+dguuz/cZwZeCdsW84zwiZ797LLYKcxo3cG2qu9RcjAOwTLDHGXlH8nh
+   Q==;
+X-CSE-ConnectionGUID: HtrGT7kgQcWqu6XwdXWXRw==
+X-CSE-MsgGUID: Z8SUpMRlRvW8NI2IXE5x4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="259392325"
 X-IronPort-AV: E=Sophos;i="6.27,179,1786978800"; 
-   d="scan'208";a="238359881"
-Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 18:54:09 +0900
-Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
+   d="scan'208";a="259392325"
+Received: from gmgwnl01.global.fujitsu.com ([52.143.17.124])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 18:54:17 +0900
+Received: from az2nlsmgm1.o.css.fujitsu.com (unknown [10.150.26.203])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id AB0181002B87
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:09 +0000 (UTC)
+	by gmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 4641842A325
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:16 +0000 (UTC)
 Received: from m3003.s.css.fujitsu.com (unknown [10.128.233.114])
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTP id 2571A14003A8
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:09 +0000 (UTC)
+	by az2nlsmgm1.o.css.fujitsu.com (Postfix) with ESMTP id B23B8C013C4
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:15 +0000 (UTC)
 Received: from tanjiro.soft.fujitsu.com (unknown [10.118.236.61])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id E8F7A202EBDE;
-	Mon, 26 Oct 2026 18:54:07 +0900 (JST)
+	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 61058202EBDE;
+	Mon, 26 Oct 2026 18:54:14 +0900 (JST)
 From: Yukiya Takaki <fj2110jc@fujitsu.com>
 To: qemu-devel@nongnu.org
 Cc: Yukiya Takaki <fj2110jc@fujitsu.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
 	Anisa Su <anisa.su@samsung.com>,
 	Jonathan Cameron <jic23@kernel.org>,
 	Junjie Cao <junjie.cao@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
 	linux-cxl@vger.kernel.org,
+	qemu-arm@nongnu.org,
 	"Wolski, Tomasz" <tomasz.wolski@fujitsu.com>,
 	lizhijian@fujitsu.com,
 	y-goto@fujitsu.com,
 	yukiya.takaki@gmail.com
-Subject: [PATCH RFC 2/7] QEMU/hw/cxl:add HPA offset tracking for CXL Type 3 devices
-Date: Mon, 26 Oct 2026 19:03:23 +0900
-Message-ID: <6172d168ed84f0b968661e7bf41dad01526d9d0a.1793003983.git.fj2110jc@fujitsu.com>
+Subject: [PATCH RFC 5/7] QEMU/hw/cxl: expose CXL Type 3 ranges as E820_SOFT_RESERVED on x86
+Date: Mon, 26 Oct 2026 19:03:26 +0900
+Message-ID: <06c1447e554c2b353c029d0e0c0ef6dd38c46e41.1793003983.git.fj2110jc@fujitsu.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1793003983.git.fj2110jc@fujitsu.com>
 References: <cover.1793003983.git.fj2110jc@fujitsu.com>
@@ -91,111 +96,155 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-E820, SRAT and HDM decoder programming in this series all need per‑device
-host physical address (HPA) information for CXL Type 3 memory. Today,
-CXLType3Dev does not expose this in a convenient way.
+On real systems, CXL Type 3 memory is exposed to the OS via the E820
+table as E820_SOFT_RESERVED, so the kernel can treat it as a dedicated
+reserved range rather than normal RAM.
 
-This patch adds minimal state to CXLHost and CXLType3Dev, plus a helper
-to walk from a Type 3 device back to its host, so that each CXL Type 3
-device can be assigned a stable HPA offset within the CFMW window and an
-index that later code can rely on when building firmware tables and
-regions.
+This patch adds a small helper and a recursive walker so that, on x86,
+the HPA ranges assigned to CXL Type 3 devices are added to the E820 table
+as E820_SOFT_RESERVED when `program_hdm_decoder` is enabled. An ARM stub
+is also added as a placeholder for future support.
 
-Co-developed-by: Li Zhijian <lizhijian@fujitsu.com>
 Signed-off-by: Yukiya Takaki <fj2110jc@fujitsu.com>
 ---
- hw/mem/cxl_type3.c          | 37 +++++++++++++++++++++++++++++++++++++
- include/hw/cxl/cxl.h        |  2 ++
- include/hw/cxl/cxl_device.h |  2 ++
- 3 files changed, 41 insertions(+)
+ hw/arm/cxl.c              | 10 ++++++++++
+ hw/arm/meson.build        |  2 ++
+ hw/cxl/cxl-host.c         | 25 +++++++++++++++++++++++++
+ hw/i386/cxl.c             | 11 +++++++++++
+ hw/i386/meson.build       |  1 +
+ hw/i386/pc.c              |  1 +
+ include/hw/cxl/cxl_host.h |  2 ++
+ 7 files changed, 52 insertions(+)
+ create mode 100644 hw/arm/cxl.c
+ create mode 100644 hw/i386/cxl.c
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index b65ddd264d..d08a4255c9 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -732,9 +732,39 @@ static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
-     }
+diff --git a/hw/arm/cxl.c b/hw/arm/cxl.c
+new file mode 100644
+index 0000000000..1cbcf2d8e5
+--- /dev/null
++++ b/hw/arm/cxl.c
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#include "qemu/osdep.h"
++#include "exec/hwaddr.h"
++#include "hw/cxl/cxl_host.h"
++
++void cxl_c3_add_memory_map(hwaddr base, hwaddr size)
++{
++    /* TODO: Implement memory map addition for CXL Type 3 on ARM */
++}
+diff --git a/hw/arm/meson.build b/hw/arm/meson.build
+index bcc068de04..2a4f09fbef 100644
+--- a/hw/arm/meson.build
++++ b/hw/arm/meson.build
+@@ -116,6 +116,8 @@ arm_common_ss.add(when: ['CONFIG_AXIADO_EVK', 'TARGET_AARCH64'], if_true: files(
+   'ax3000-boards.c',
+   'ax3000-evk.c'))
+ 
++arm_common_ss.add(when: 'CONFIG_CXL', if_true: files('cxl.c'))
++
+ arm_common_ss.add(files('boot.c'))
+ 
+ hw_common_arch += {'arm': arm_common_ss}
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index e279ce5fe3..1967c9a9c3 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -689,12 +689,37 @@ static int cxl_fmws_mmio_map(Object *obj, void *opaque)
+     return 0;
  }
  
-+
-+static CXLHost *ct3d_to_cxl_pxb(DeviceState *dev)
++static int cxl_c3_mmio_map(Object *obj, void *opaque)
 +{
-+    BusState *bus = dev->parent_bus;
++    uint64_t base, size;
++    CXLType3Dev *c3d;
 +
-+    DeviceState *cxl_rp_dev = NULL;
-+    if (bus && bus->parent) {
-+        cxl_rp_dev = bus->parent;
++    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
++        return 0;
 +    }
-+    assert(cxl_rp_dev);
++    c3d = CXL_TYPE3(obj);
 +
-+    DeviceState *cxl_host_dev = NULL;
-+    if (cxl_rp_dev) {
-+        BusState *rp_bus = cxl_rp_dev->parent_bus;
-+        if (rp_bus && rp_bus->parent) {
-+            cxl_host_dev = rp_bus->parent;
-+        }
-+    }
-+    assert(cxl_host_dev);
-+
-+    if (cxl_host_dev &&
-+        object_dynamic_cast(OBJECT(cxl_host_dev), TYPE_PXB_CXL_HOST)) {
-+        CXLHost *host = PXB_CXL_HOST(cxl_host_dev);
-+        return host;
++    if (!c3d->program_hdm_decoder) {
++        return 0;
 +    }
 +
-+    return NULL;
++    ct3_type3_get_hpm_range(c3d, &base, &size);
++    cxl_c3_add_memory_map(base, size);
++
++    return 0;
 +}
 +
- static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+ void cxl_fmws_update_mmio(void)
  {
-     DeviceState *ds = DEVICE(ct3d);
-+    CXLHost *host = ct3d_to_cxl_pxb(ds);
+     /* Ordering is not required for this */
+     object_child_foreach_recursive(object_get_root(), cxl_fmws_mmio_map, NULL);
+ }
  
-     if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem
-         && !ct3d->dc.num_regions) {
-@@ -816,6 +846,13 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-         g_free(p_name);
++void cxl_c3_update_mmio(void)
++{
++    object_child_foreach_recursive(object_get_root(), cxl_c3_mmio_map, NULL);
++}
++
+ hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr)
+ {
+     GSList *cfmws_list, *iter;
+diff --git a/hw/i386/cxl.c b/hw/i386/cxl.c
+new file mode 100644
+index 0000000000..02dbe4d3f0
+--- /dev/null
++++ b/hw/i386/cxl.c
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#include "qemu/osdep.h"
++#include "exec/hwaddr.h"
++#include "hw/cxl/cxl_host.h"
++#include "hw/i386/e820_memory_layout.h"
++
++void cxl_c3_add_memory_map(hwaddr base, hwaddr size)
++{
++    e820_add_entry(base, size, E820_SOFT_RESERVED);
++}
+diff --git a/hw/i386/meson.build b/hw/i386/meson.build
+index e16930c431..b212b3f6fa 100644
+--- a/hw/i386/meson.build
++++ b/hw/i386/meson.build
+@@ -24,6 +24,7 @@ i386_ss.add(when: 'CONFIG_VTD', if_true: files('intel_iommu.c'))
+ i386_ss.add(when: 'CONFIG_VTD_ACCEL', if_true: files('intel_iommu_accel.c'))
+ i386_ss.add(when: 'CONFIG_SGX', if_true: files('sgx-epc.c','sgx.c'),
+                                 if_false: files('sgx-stub.c'))
++i386_ss.add(when: 'CONFIG_CXL', if_true: files('cxl.c'))
+ if have_hmp
+   stub_ss.add(files('sgx-hmp-stub.c'))
+ endif
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index 2d8c87b0e3..f843629543 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -534,6 +534,7 @@ void pc_machine_done(Notifier *notifier, void *data)
+ 
+     if (pcms->cxl_devices_state.is_enabled) {
+         cxl_fmws_link_targets(&error_fatal);
++        cxl_c3_update_mmio();
      }
  
-+    if (ct3d->program_hdm_decoder) {
-+        ct3d->hpa_offset = host->unused_hpa_offset;
-+        ct3d->idx = host->unused_dev_num;
-+        host->unused_hpa_offset += ct3d->cxl_dstate.static_mem_size;
-+        host->unused_dev_num++;
-+    }
-+
-     ct3d->dc.total_capacity = 0;
-     if (ct3d->dc.num_regions > 0) {
-         MemoryRegion *dc_mr;
-diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-index 7cf3dc622c..b8b3071f81 100644
---- a/include/hw/cxl/cxl.h
-+++ b/include/hw/cxl/cxl.h
-@@ -67,6 +67,8 @@ struct CXLHost {
+     /* set the number of CPUs */
+diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
+index 21619bb748..6c142a5b89 100644
+--- a/include/hw/cxl/cxl_host.h
++++ b/include/hw/cxl/cxl_host.h
+@@ -18,6 +18,8 @@ void cxl_fmws_link_targets(Error **errp);
+ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
+ hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr);
+ void cxl_fmws_update_mmio(void);
++void cxl_c3_update_mmio(void);
++void cxl_c3_add_memory_map(hwaddr base, hwaddr size);
+ GSList *cxl_fmws_get_all_sorted(void);
  
-     CXLComponentState cxl_cstate;
-     bool passthrough;
-+    hwaddr unused_hpa_offset;
-+    int unused_dev_num;
- };
- 
- #define TYPE_PXB_CXL_HOST "pxb-cxl-host"
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index a2c830d181..c3a729f8c5 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -778,6 +778,8 @@ struct CXLType3Dev {
-     bool hdmdb;
- 
-     bool program_hdm_decoder;
-+    hwaddr hpa_offset;
-+    int idx;
- 
-     struct dynamic_capacity {
-         HostMemoryBackend *host_dc;
+ extern const MemoryRegionOps cfmws_ops;
 -- 
 2.52.0
 
