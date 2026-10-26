@@ -1,90 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.90.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793008467;
-	b=JObGuqSTxUDdNJRsOkyb6xOW/iugBh4pgmVqGnqqC7saCfYffNGKq2A1C/jlVUrBpNNk
-	 M0wtDNLsDAQGa46SaaylG3u+yjwWGP0xYFWn12Z6MhBSqLukOvGFLItpeEkDnoJCgzWkV
-	 RJ+nybN0SZxHuSYFoc4xjLS3kSn9HuFfdBk99xtEO7i4++zfYH0hGvzq4FyaENwGMKvzw
-	 WhQlA9NBVMyRB6g/W8ws2tUdpnTDvrZurq4lEFgeSywFc73rtuLL6GEdrJYR0SIBPYq3/
-	 CCPMRUH+SmO4ufayTMNkogeqrUJbyJJ6AV5a3hpGoATEfuCYE5OMOGiBlHXE5KC8KKw==
+	t=1793031417;
+	b=Ofs70/gg/coXk8b6oj/ypX8SxvoMRfTrlR+BW9O0z7pwVx4Gn9jSh/7wLWlSIxIRXwbA
+	 uhYhVdayV3kLMrus/VfbRHiimkFDErycQgpqsdIq0MoXki0pGK1wuM6nTcyOKZVBhNURe
+	 0YDGC6NEb5e1E9fB4FGbsVpQrIPDguLVnEeApgCY5VJb2tTpvsYbw9s98DCBMRVip/7at
+	 M/fQKefaYomz6xQx3uERLIBEPx6NfGsOBT0Q9gToq8Ox1aogAoHH2U1OHDkePbiOOfdBI
+	 VV45xfkKpVf+d2etLbHe/JidcMXQDM67jp2Knx0I7pV0+J1RfaGzanEQ/B/qEAzk6kQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793008467;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793031417;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=lmVQfXYIzgB6L0ACcyKETNWaJF23xJdhHwPP0NjJAVw=;
-	b=GjD7uFLxEQ1kbqwiU4x+W/iicyB+XrzBOynO51EoqtSRWszXGOEaEBv3+85+jTn60v3G
-	 vrfZ5FZcbtaQrXyXZkOP2KHgEhV6fF00jIUHaC7dn1reSFPIMwxc7YCSf2V9+29n5PF1j
-	 KMd86pdZGMDsIREQFrQXh5aAoDXYeIUKlRId/N5xNxIqpEOQVyupRHRknRp+zeppzO5zS
-	 X1Z10IeOnQ/DrlewZaJNwBrwDMiOdbCbT8hAtZM//3zlyc07mZFKUOc4vQ4pkJrlBSeqF
-	 8wehvy63V3HC1oEBwNhDYZ6XbYLBbL4+OF4DKGf/wQXNcoie/XXGm5Dgv2AaEZWasOw==
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=arpjRbxdnmmxb/aan486N0H/jPdeO6nnzh8vWm2YbyQ=;
+	b=Mv/vK0U6H88lHrP36emHmoRbLXOVvLAki0nV5H6q5SR2cZMcR5NgmoFgg/ieGjR8AS0D
+	 s8jhHAYn/HOygKyQ2a0ni34IScGO7YVxNhPPdfSWYlTV99JqAT81VOkB7dJHBcbSIdrao
+	 Xb8lbbcP6yZfPQiBt3vdax3DysOt+pV0ArGdiVwxsCV3/xNtA40KiWHKI1bba5ejmbRXf
+	 RPd8atrh+fcOjeacdzz1n9xWYBrE8rly2l2y4ERE5KSapBkX5MI3VLJouGilx2D8XinNZ
+	 I8GJyc1s2tqIPU35dLW+s9S1R/QDtWZZcUjhgKIDkpDielTgjYzEkjMzvvyxP1sxMcg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fujitsu.com;
-	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=cwMoebts;
-	arc=none smtp.remote-ip=207.54.90.47
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HVYMMTfY;
+	arc=none smtp.remote-ip=192.198.163.18
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABE0606A32E
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9ABE0606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5D2606A31A
+	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 16:16:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D5D2606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=cwMoebts
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1793008466; x=1824544466;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zik1LQCP4muzbLl4LIyGNKML35lWt8i7n3q+ukChy+c=;
-  b=cwMoebtsP3dPuDPUp5fc5NSEz8LU4uUBHRUYTgd/eb2lM2YSV7EOIIXK
-   Ag5wO00NbW+EwYWC6IoAbJ3CWzn93hgWsSmfBUCfOj+KsD9/CxszOgjx/
-   P4fhni4d5tXyHnpwgEpJxFRSyR7b+v+kz4kiCcGEw//mB9FIAVF8uYIuo
-   KYIyr9h5bpzqpfbH1o1zIesloYAEScWBgc3rfS/+JuhNVuGrtPkdIqhHB
-   NrekuleQ+5MLUORJxs5WF+x3LPYtVa02qt1XaM2jJufS7CygxCtz7oUzJ
-   gSYFtHHkWgVumHaeuhNPnQIFiBF8sk8k9Cl/gFvQKuKb4NB+2aGPPqzfv
-   w==;
-X-CSE-ConnectionGUID: vOH+iPLhSIqh8mVEMrTvIQ==
-X-CSE-MsgGUID: oBXWMusvQiCfTAioikbOsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="259465459"
-X-IronPort-AV: E=Sophos;i="6.27,179,1786978800"; 
-   d="scan'208";a="259465459"
-Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 18:54:18 +0900
-Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 5412FC00408
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:18 +0000 (UTC)
-Received: from m3003.s.css.fujitsu.com (unknown [10.128.233.114])
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTP id BBA7D14003E1
-	for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 09:54:17 +0000 (UTC)
-Received: from tanjiro.soft.fujitsu.com (unknown [10.118.236.61])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 78101202EBDE;
-	Mon, 26 Oct 2026 18:54:16 +0900 (JST)
-From: Yukiya Takaki <fj2110jc@fujitsu.com>
-To: qemu-devel@nongnu.org
-Cc: Yukiya Takaki <fj2110jc@fujitsu.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Anisa Su <anisa.su@samsung.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HVYMMTfY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793031416; x=1824567416;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UtBbY8D2koZwy0cAGZputCtYn1WcSNPO33gCintjFY8=;
+  b=HVYMMTfYVMwsWlz82b7/PZ7A5lRb4PRjppumJAEQy7zrhYDYlxveSXir
+   vUWiWp/o5q+WS5870CouwKLTsDytKWV1nlrsk7ODdaWV+Jkve0e4tO631
+   iCf5003xktRyaz9X3ropFdZK1ROnUUnoquje3vq+FACXW08DCzWkFdRYx
+   iHPg+dgojPJF9rzgLUsHxwbga9fAfYwl9hwkkuRIGcOC+vbq00I8su1Xg
+   /kbKF5kf0VBZGH3KQDpR2tdk3DoQtB/Nd8eGGYE7+JSJDXSO6yvcgmcFF
+   vHsPALViq3VnF+bSVeBAPLtg6WtiGJ2R5lg9OI/A5HbMgYVtplKs10o5w
+   A==;
+X-CSE-ConnectionGUID: S0R0+DE+QZ6tTWYWmZg7sA==
+X-CSE-MsgGUID: e1720PzpRPyUNlUHx8dnEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1739125"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1739125"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:16:55 -0700
+X-CSE-ConnectionGUID: N6lymEtiSgaYHhNnqU+tRg==
+X-CSE-MsgGUID: TZzw6ggiQoWtNOjS16frtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4214805"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.117])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:16:54 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
-	Junjie Cao <junjie.cao@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	linux-cxl@vger.kernel.org,
-	"Wolski, Tomasz" <tomasz.wolski@fujitsu.com>,
-	lizhijian@fujitsu.com,
-	y-goto@fujitsu.com,
-	yukiya.takaki@gmail.com
-Subject: [PATCH RFC 6/7] QEMU/hw/cxl: Create NUMA nodes for CXL Type 3 memory
-Date: Mon, 26 Oct 2026 19:03:27 +0900
-Message-ID: <a6789d2cbcbc7a4543ee7781173e189171199b91.1793003983.git.fj2110jc@fujitsu.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1793003983.git.fj2110jc@fujitsu.com>
-References: <cover.1793003983.git.fj2110jc@fujitsu.com>
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v2 1/2] cxl/region: Make repeated targetN writes no-ops
+Date: Mon, 26 Oct 2026 09:16:49 -0700
+Message-ID: <920d80735a449f93a1f17a8bca4c25e4b302cb42.1792989098.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -96,105 +85,74 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the actual hardware, CXL memory is exposed to the OS as a "Memory Only Node."
-This allows the OS to recognize that accessing CXL memory takes time.
-As a preliminary step, a function was created to automatically add a NUMA node for each instance of CXL memory.
-This function generates one NUMA node per instance of CXL memory.
-This function is executed when program_hdm_decoder is set.
+Writing an endpoint decoder to a region targetN attribute that already
+holds it returns -EBUSY, but leaves the partially populated region in an
+inconsistent state. The targetN attribute still names the decoder, so the
+failed write gives no indication that the region was damaged.
 
-Signed-off-by: Yukiya Takaki <fj2110jc@fujitsu.com>
+Filling the remaining target positions can then trigger a NULL pointer
+dereference in cxl_region_setup_targets(). This can be reproduced through
+sysfs:
+
+    echo $decoder > /sys/bus/cxl/devices/region0/target0
+    echo $decoder > /sys/bus/cxl/devices/region0/target0
+    echo $other_decoder > /sys/bus/cxl/devices/region0/target1
+
+An existing check recognizes when the decoder already occupies the
+requested position, but does not prevent the attachment from proceeding
+and modifying region state.
+
+Move the check ahead of the attachment work, so a repeat write succeeds
+as a no-op without modifying region state.
+
+Fixes: 9995576cef48 ("cxl/region: Move region-position validation to a helper")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- hw/cxl/cxl-host.c           | 38 +++++++++++++++++++++++++++++++++++++
- hw/i386/pc.c                |  1 +
- include/hw/cxl/cxl_device.h |  1 +
- include/hw/cxl/cxl_host.h   |  1 +
- 4 files changed, 41 insertions(+)
 
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index 1967c9a9c3..ba321841dc 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -720,6 +720,44 @@ void cxl_c3_update_mmio(void)
-     object_child_foreach_recursive(object_get_root(), cxl_c3_mmio_map, NULL);
- }
+Note: cxl_region_perf_data_calculate() currently updates region performance
+data before attachment validation completes. This is a pre-existing issue
+that will be addressed separately. This patch places the repeated-write
+no-op check before that call, so the issue does not affect this fix.
+
+Changes in v2:
+- New Subject line. v1 as 'Reject a repeat write of an ...'
+  v2 does not reject, it treats as no-op and protects region state
+- Keep repeat write as a no-op instead of failing with -EBUSY (JonathanC)
+- Check before the decoder's bandwidth is added to the region
+- Correct the Fixes tag
+
+v1: https://lore.kernel.org/linux-cxl/94e9157aac2e99df1251d733769d539b914fdefc.1790829690.git.alison.schofield@intel.com/
+---
+ drivers/cxl/core/region.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 27e63e6dab7c..c8dbd9b29899 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1762,9 +1762,6 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
+ 		return -ENXIO;
+ 	}
  
-+static int setup_cxl_numa_node_inner(Object *obj, void *opaque)
-+{
-+    MachineState *machine = opaque;
-+    DeviceState *dev;
-+    CXLType3Dev *c3d;
-+    int node_id;
-+
-+    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+        return 0;
-+    }
-+
-+    dev = DEVICE(obj);
-+    c3d = CXL_TYPE3(dev);
-+    node_id = machine->numa_state->num_nodes;
-+
-+    if (!c3d->program_hdm_decoder) {
-+        return 0;
-+    }
-+
-+    NumaOptions option = {
-+        .type = NUMA_OPTIONS_TYPE_NODE,
-+        .u.node = {
-+            .has_nodeid = true,
-+            .nodeid = node_id,
-+        },
-+    };
-+
-+    set_numa_options(machine, &option, &error_fatal);
-+    c3d->node = node_id;
-+    return 0;
-+}
-+
-+void setup_cxl_numa_node(MachineState *machine)
-+{
-+    object_child_foreach_recursive(object_get_root(),
-+                                   setup_cxl_numa_node_inner, machine);
-+}
-+
- hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr)
- {
-     GSList *cfmws_list, *iter;
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index f843629543..b1d1f03468 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -534,6 +534,7 @@ void pc_machine_done(Notifier *notifier, void *data)
+-	if (p->targets[pos] == cxled)
+-		return 0;
+-
+ 	if (p->targets[pos]) {
+ 		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
+ 		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
+@@ -2128,6 +2125,10 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		return -EINVAL;
+ 	}
  
-     if (pcms->cxl_devices_state.is_enabled) {
-         cxl_fmws_link_targets(&error_fatal);
-+        setup_cxl_numa_node(MACHINE(pcms));
-         cxl_c3_update_mmio();
-     }
++	/* Already at @pos: succeed before changing any region state */
++	if (pos >= 0 && pos < p->interleave_ways && p->targets[pos] == cxled)
++		return 0;
++
+ 	cxl_region_perf_data_calculate(cxlr, cxled);
  
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 07654f4b62..9001aacf0e 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -780,6 +780,7 @@ struct CXLType3Dev {
-     bool program_hdm_decoder;
-     hwaddr hpa_offset;
-     int idx;
-+    int node;
- 
-     struct dynamic_capacity {
-         HostMemoryBackend *host_dc;
-diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
-index 6c142a5b89..70285328c4 100644
---- a/include/hw/cxl/cxl_host.h
-+++ b/include/hw/cxl/cxl_host.h
-@@ -19,6 +19,7 @@ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
- hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr);
- void cxl_fmws_update_mmio(void);
- void cxl_c3_update_mmio(void);
-+void setup_cxl_numa_node(MachineState *machine);
- void cxl_c3_add_memory_map(hwaddr base, hwaddr size);
- GSList *cxl_fmws_get_all_sorted(void);
- 
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+
+base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
 -- 
-2.52.0
+2.37.3
 
