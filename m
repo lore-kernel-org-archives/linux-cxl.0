@@ -1,100 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.50
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793074744;
-	b=UXseWpu8049nSK3osXx+WxQMZ9u9glW8oZsnfO8hWkkEFqm01O3bc4Mgit5kww+pDYpl
-	 qKZZE0NdOX1HSTNTPX1KQPjMpPB5TSdpsyrgCLSU0Q5xJChAw997B88VeNj29ZRYalH3r
-	 Llx0Ontz6mrNfan54WuaqF+TFtYAX6TwnrLJD4ztTg5IIimgYOfTFJAnoGtWaIEYvz1qN
-	 wBpGmxFZHwcsISRrpgCcoTk6FIpIkwP6omKf2mFjKtxD97d0fK/rn3jSRY8z+Say8lMWq
-	 UBRQD/9iLM7diM70Cg80Lt8h1kygb8EtKxOIQCC/mlnJNMNCUr3KYvSxcQ1l0U2NzIQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793074744;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.48
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793074937;
+	b=CR40LGLJi/MK/g1ervXIuB25qJ793ZjEAZiZBr7B78PsM7hmcn4D/zosSoSzLRaEGzkP
+	 cqOIwnnf4akt/7x+z+9UbkVtoVpzKXNeEoRFvaXwpfARq1GAW3mgMmGOjxUtXh+MjKq9U
+	 qeNzZuw/NoCUBjnzTZ25zL5eI0Btr0bfEtCtyMqjlAoM6DjyUgodlJ7OEqVGE15i+bzkt
+	 HrH2ykbfsoySlazGuCo1Y4sK0b6Bcc+6Au8aYn9wZkai/TfLtFZ8ZNJjGYhf3bCHb3qb+
+	 Awq8MzF+XS2mzd3P+515BQFr9ssduTXAOa4ohTNu3gAKNbDdbgqE+kL9UiDv0ycSLnw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793074937;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=MH5XYS106b3lSl3L27DgUDXZlCujEg9uq4RcFrsglas=;
-	b=vTyUPevTz59jH6Q/MyKJVI3DJi/3CJXT9MH8oXMZ+fzZoZ6wOV28nJGabqncSLW2gb1L
-	 vxfX+PfV0TQpOudwNlFzR7M0D0GjNh40UU7ZCURTYSHmjV67OrS1TN6Pizvt/QRkSlURs
-	 +FEEK2IaS1Swm1H+tNNe7FjxDOTMM+8OzvVzLC7AKtRpPID4fGZ9FMgg57aqYHgq3xDzL
-	 RRzEtN6f1YrIW/JyW3rNK8H+Gh24G8WF8bQhsnnYPXBUuO2WaC0dFO+0DLBf53sRTZbFw
-	 iIpGRIQ81FjrChsb6yYz5XMvJ/r1/+LZ2t1k6aCVP2fEPw8/yL0KA7xMzWMBQAmOEUA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oz7fdmug;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.50
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=CfcYGaJ4tkbNnhjQHfn5dtEgiZ6cd5xAnQKhOyf0Ms4=;
+	b=XxcH1HXVZjem0EPl7vPXp9+4LYcYpCJd9WkFICK9BKKksb5JuPkgQcznmM3a5snVWjl/
+	 c5HyKLNKE6StgGQ9QMC9SB6/datXkUyhVuIx0M/XIQSxnMlTtitIOgk+BFJfezEYZZpug
+	 QIB9f9OCymmQ9hIvfpsn8mNtni9al/orRfC6KjGPccZu5w7w9rplERvJPkj5cOYp26Y4m
+	 6UjdNs7vxKXW15VwWLLaoQOJCy+2KSKGCwTmiV3nFW2KcHcTo7RstjeCYBmeQxmHeiamP
+	 IOX1OmFvSmsiyYt3iaTNZJ7PaDPplSWE4lmXZaBj2G22hyAdL/Q/Yzkub5L7BstdBQA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Y3gLtDpB;
+	arc=none smtp.remote-ip=209.85.219.48
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7E6606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:19:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C7E6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239F606A321
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D239F606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oz7fdmug
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6b1ec41d8e9so3856481a12.0
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:19:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793074742; cv=none;
-        d=google.com; s=arc-20260327;
-        b=YCNBDvfXTTfHIN7HnI0nDMAxNJD/+j9RKG4nB2QDdW7tr+8n9JMIgsLSOOKdIoypjQ
-         awpQwqZCNk9rSS75eIAMoDJ9XTcT4KWlOKgKHjzn8TOMMSn4ilmBtuFi+df03Sy4AKHo
-         fCXh+1N9JSjllJLZJYG1DHB7trLzB7pj436FYx1/NzBQRg5RppCl1JudwUuegF1/L3JD
-         YKiawdUwzDT9BXz2JyBCWQsyMlFoS92ugJuv+e0t2YjrGYx4Nf0/BxvZaicYgScMhHmA
-         5Swzj+CbiTMxHXVps78duPtoywUbrkSEj2hKqldt+j89eUZsO0yQKhNi0RHa+ScvWesr
-         hG8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MH5XYS106b3lSl3L27DgUDXZlCujEg9uq4RcFrsglas=;
-        fh=GhVowCekP8uETkBBEL8AL9ogpKBit4Jg8aEdCRymysA=;
-        b=D46heemvjTkLdBunoII262EaWyjMdcFpgMDIqk80Xq3BoRbM5cgOqkQhI6wwp2iFTT
-         JYZiqSTdxekhN+O61DYDxqsvTsZxj1i3YJEn5LGTM0gOG5o8P1CQgDpGojsuN/hwhIkD
-         Ac4Q57tahS/3V2+0D7BMtp0f1LEhu0Cb1TCf4swh97FVlxgm+T655Q7NiIYSWwVZG4Ce
-         tq4qe2rGZ3B67EmamnR/T3YwqfXXp8EJ5VPzm+UaCXAtbeuVllo8jZWsE290MeRJjiFR
-         p/GyFMy8JkVHt5RFKh/JN2oquJar8Nf2q8rsbI0d6b+/p4feqJzPkeZx90QB6jBQ9Jl4
-         VDvQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Y3gLtDpB
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-91c11468b5fso39619066d6.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793074742; x=1793679542; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=MH5XYS106b3lSl3L27DgUDXZlCujEg9uq4RcFrsglas=;
-        b=oz7fdmug9OP/2VPGT1VPsgaqZPpunImrM5jvoi8W9bcA1kUfcsojB62hytWV1r/+H3
-         +zLffk2uZBaCPjLFPy2OnY/iq82L/ALlib+SUg0U4vuVteT2LKVjIdnX5wMC2sXA1Q9O
-         UQH9kue+MvVF/dToU7QKEyY4tp3FvCOsZEdgCYEK6215ok5HRENUitfOGa1uNnMaBqN2
-         S2JejfXICDShwLAy5+QBTebZOCNumyhHE8YD2hic9v/aKyhz3vBZQtB7NdEOYvWnEEIt
-         meFjS386QdRFHWFqP+Nqvwx0t7ZZMhVlBr6bqJCL5lK/PVTU4qOktdNoc+W+tS5CWPXz
-         BFZA==
+        d=gourry.net; s=google; t=1793074936; x=1793679736; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CfcYGaJ4tkbNnhjQHfn5dtEgiZ6cd5xAnQKhOyf0Ms4=;
+        b=Y3gLtDpBr+M2FDm5quUn5gPRwaJ+fyy+Qctp/Xqq2lMD6UiJWzbPv9MlofyBKVv900
+         6m1NdCDxkTiDqwSgh9vEt4LVmKHniUPhnAjTPT4WVA1CzqHelc6fFBfKcz8hxsUiltpc
+         kBEpn5xRR4grlCDKkY+ZibHGqnK4DTxcLe0VUNj/Y4ouJt17aSmtj685hXExRr4cTTb+
+         pA551bJ7Xbm+xIjMutL6A1H+BngA2tatnAWOsBrSpbdiGnD8ifrhMQFrTdHePnu7KOZ+
+         iWTdzua/H0lxYN4pk1j6so712OOLxxT2AcP22qgzQXUHqvdIMVlLUq14b59nPsSYrClv
+         2RVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793074742; x=1793679542;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MH5XYS106b3lSl3L27DgUDXZlCujEg9uq4RcFrsglas=;
-        b=axyY1lDDQXPuHLbET6fXKIizsdTP2su3WcZJplfXq30LOmSemOyBKVuMePCwCtTzLO
-         f5Am5XnYm+2i0lyCx1QcKEPxWn9zXokUhuip+0aTdyu6U7yrwW1WBU55Mt1Ehy8kWdxk
-         /ULg7ggyv4teCJTjCNJfcvz4eDu/k0LrIlqjWjBH79n/hK49jC0b7TFHdQcvHp1aoTbo
-         peaOK9rvsVXwwfDIIKLQhUIj7hbLu0U7JOSdAuKjBlJYl0vMb6ayjEKt6mKqeeDmeww1
-         2R4cFcjQVKIiEgYEXeJnhhCTpDXjoMC3rbD++UiAwj0n9e9MJIucNyxs+Q13KAxdjC/B
-         CO/A==
-X-Forwarded-Encrypted: i=1; AKwUvBxNY5LBWqcyD4LQ+jOCXEXbBVORBJSqqqu7l2ymkxjNQ6EZ2gOpXFFCt6LgPxa186VcVqowFBamiyM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIWxW5ewarC2/eDmfnVVsvtzg99a0jlMc5EeO9M5FQv3kDVNcdJ
-	8OCFfq9zR1yOCAjBg/nTj3gNd4XD2uP8/J3w2o99c2mmp3mIqdQP3c34IGAp0J3OxOMYib+/TiS
-	X2DxqRnAGcIAzFS+FB/ZEqBrNAnywCmI=
-X-Gm-Gg: AYBFou0KfwxfVxPAVFbkrTs3MxAiLYK6Pm7/OoQIwnDg4X40/J9iYQWiTs02t5MxGZf
-	UU/28Zk35l5nKcG4wkbx9NA7d+ZoJSKzg6UtLE4191VLa6bdwsRAtVhlgNH5uyJzR6Ihcu26uSS
-	aOygre6fZuMSLlA43YTR/hvj54Mx91TXWWlQJLtdfWDwnCxT/0/4SCAUfnBiEmirLNp2gTgbdkZ
-	PS7aGunmOmCufZUfXLmEGDt27HSgsj7RhtEvlaw8BkfP7nkAF9yHmFT9JXvou5e7WXegojq2OIw
-	iwIgKs78zNRyuQurteCTHtNCxdStNdpoduYx8cQJrwZZRH9EVVcqA7toIuu7cIq97gHIJdF4wpe
-	fNiWSx7Vc+OAIfpazdwcaPkh9x1CGMMdHZzE3ubGNAnf5cjvEqJ7y7pdyY6Swf/eupBM=
-X-Received: by 2002:a05:6402:4144:b0:6af:a64f:bd44 with SMTP id
- 4fb4d7f45d1cf-6b443116103mr8562370a12.45.1793074742014; Mon, 26 Oct 2026
- 21:19:02 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1793074936; x=1793679736;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CfcYGaJ4tkbNnhjQHfn5dtEgiZ6cd5xAnQKhOyf0Ms4=;
+        b=J7dDL6fRxfAQUM9Shdf86prhwo2Lv4U3pqdfADAWZFeIJebSuuuSs9tdxxeHIQSMfh
+         IshkFAKcuEOVPInoOD6Ci31QXRX6iVdTO35EkyUV39uPOoYSO1crcqvxmdnNIePnUw11
+         BG6BSZ+FUbTDPw5YOXgRuUG4+MSU8JWrY6bYoS6NMtE61k9JMhCcEKMo/OK9C5FUH/88
+         AQ6+kYiCQZtJid4pJ+PNuIjM08Rp0fkTBjz30HDZCOBKzS4EGIj/cmcoZKQ7ZnxC52aa
+         sR05I8ZDR8ZMe+JxfGmQr7LzV6xyJ8wLq7PJW/eG8rJB30eeVH5BMh67a7DfVNcTuoLp
+         eI2Q==
+X-Forwarded-Encrypted: i=1; AKwUvByMEAqxjuAYbdZvuH9cXaTlO1O2gUb0gRh+yUROZW5AY4/Z/auG/Eyz3EVhdJYzrsR7pvFRidE2S6k=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ6xqsHlqpWNjz1BDk56heUzuS5qwL6cf9Bke/ZQNsmSGXBCScY
+	jgAI9bl+wJPomoyRZG78GeLjzKO/KVTEjw2DBH+Ys2f+8aQGEAKuV3lo9cNhHiWPSrk=
+X-Gm-Gg: AYBFou0ghjzephah9HWQ2lwN5CVlykTGGPwoae37ZyoH3w9RY9zTFvCUVBOrCvcWDpY
+	y03V1qd4gZkImBw0Qo2x9tCqa8KxIBtiQHQo1eB3+aG0uxpeZJ0n+4a4LOONrHmbVL/XwdPXYPk
+	i2wgrVKJUf9KxsZYCi2Y8e+r7NqQs+t5nNmV+Wj1OObvxkUMomtj4ow/3hYNW+28WJ+ut7XjWWx
+	1n4K6ZYm+nHWEgS7p89UzaP3EZ7bs/ntGSrToSNBa373klIrMCcnRt1RCkqT/vK5+Dyw05IbyS5
+	LciBiTEO5kBmTV8phUboR3hgMV8KGUpvLClyQ2S4pMLv9RG0wiGgSf3LQGcoQDBRUAQcb9Kt6gY
+	9ZRHJZ8hCoKUCVOC/igXAXEBbcg1hGsNcPcQ2rBUzhlvvKUxyCsrXOxCgPRg2kqPJ9mwSQ8gXS0
+	sP4YAp1JkvxIpS/oV7gJU3A8pUp0FZePhasDDc1QNb0RwbBdO6wo638VZaNJ4ZWo7T4m9v/vod1
+	lmmtA3RP2kaxPxHxlY177vFIvVgp9Jb/TPiy1/ckGmHerdAx9y+eIIk6rwKBvPsVmHpqw1E70mR
+	zq5qv6LxsEc3cf4zxo4OmUOiT00ki0wOUnoHMjw0gA==
+X-Received: by 2002:ad4:5c8d:0:b0:917:92c7:ce45 with SMTP id 6a1803df08f44-91c48e5705dmr159481776d6.37.1793074935786;
+        Mon, 26 Oct 2026 21:22:15 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 21:22:13 -0700 (PDT)
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	kernel-team@meta.com,
+	akpm@linux-foundation.org,
+	vbabka@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	brendan.jackman@linux.dev,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	rppt@kernel.org,
+	osalvador@suse.de,
+	muchun.song@linux.dev,
+	iamjoonsoo.kim@lge.com,
+	anshuman.khandual@arm.com,
+	stable@vger.kernel.org
+Subject: [PATCH 1/6] mm/compaction: wait for pfn walkers before poisoning offlined memmap
+Date: Tue, 27 Oct 2026 00:21:59 -0400
+Message-ID: <20261027042204.3741307-2-gourry@gourry.net>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261027042204.3741307-1-gourry@gourry.net>
+References: <20261027042204.3741307-1-gourry@gourry.net>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -104,208 +116,245 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260928011123.450800-1-alistair.francis@wdc.com>
- <20260928011123.450800-11-alistair.francis@wdc.com> <DM4NT7TFX4X9.1GFI128LI5ZQ4@nvidia.com>
- <CAKmqyKNEup=x+bwmPD_8x0s4ssPkqFnQtSGqJ_82z9oDP=A6cA@mail.gmail.com> <DM58HRC3DHSS.1YC0E53ZXANT4@nvidia.com>
-In-Reply-To: <DM58HRC3DHSS.1YC0E53ZXANT4@nvidia.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 27 Oct 2026 14:18:35 +1000
-X-Gm-Features: AclHuK9kjsCjDqeZn6m7ZYE5QD1xRJb3Onc684I95UaVij7BIqpZYDqDTzrRMkQ
-Message-ID: <CAKmqyKPwirjmeBQvXgheY8Lh-M-RRq5pdbv=5mB4duhw9aCbGA@mail.gmail.com>
-Subject: Re: [PATCH v4 10/22] lib: rspdm: Initial commit of Rust SPDM
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: lukas@wunner.de, linux-cxl@vger.kernel.org, akpm@linux-foundation.org, 
-	Jonathan.Cameron@huawei.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jic23@kernel.org, bhelgaas@google.com, 
-	alistair@alistair23.me, djbw@kernel.org, linux-pci@vger.kernel.org, 
-	wilfred.mallawa@wdc.com, a.hindborg@kernel.org, gregkh@linuxfoundation.org, 
-	alex.gaynor@gmail.com, aliceryhl@google.com, benno.lossin@proton.me, 
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, tmgross@umich.edu, 
-	gary@garyguo.net, ojeda@kernel.org, 
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 15, 2026 at 5:30=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> On Thu Oct 15, 2026 at 12:06 PM JST, Alistair Francis wrote:
-> <...>
-> >> > +/// The current SPDM session state for a device.
-> >> > +///
-> >> > +/// Concurrent access is serialised by wrapping the whole struct in=
- a
-> >> > +/// `Mutex<SpdmState>` at the FFI boundary, so `spdm_authenticate()=
-` callers
-> >> > +/// run one at a time and the locked `&mut SpdmState` is the only w=
-ay to
-> >> > +/// reach the inner fields.
-> >> > +///
-> >> > +/// `dev`: Responder device.  Used for error reporting and passed t=
-o @transport.
-> >> > +/// `transport`: Transport function to perform one message exchange=
-.
-> >> > +/// `transport_priv`: Transport private data.
-> >> > +/// `transport_sz`: Maximum message size the transport is capable o=
-f (in bytes).
-> >> > +///  Used as DataTransferSize in GET_CAPABILITIES exchange.
-> >> > +/// `validate`: Function to validate additional leaf certificate re=
-quirements.
-> >> > +///
-> >> > +/// `version`: Maximum common supported version of requester and re=
-sponder.
-> >> > +///  Negotiated during GET_VERSION exchange.
-> >>
-> >> Field documentation should be their own doccomments before each
-> >> individual field (see [1] for an example and general good practices wh=
-en
-> >> writing Rust doccomments).
-> >>
-> >> [1] https://doc.rust-lang.org/rust-by-example/meta/doc.html
-> >>
-> >> > +#[expect(dead_code)]
-> >> > +pub(crate) struct SpdmState {
-> >> > +    pub(crate) dev: *mut bindings::device,
-> >>
-> >> This makes me very nervous. I see this is passed to C callbacks. We ne=
-ed
-> >> to maintain the guarantee that the device still exists, so an
-> >> `ARef<Device>`, from which you obtain a pointer to pass to the C
-> >> callbacks, should be the minimum here. Does the device also need to be
-> >> bound? Looking at `drivers/pci/cma.c` it seems to be. Then this needs =
-to
-> >> be a `&Device<Bound>`, with a lifetime to `SpdmState` so callers only
-> >> use it while the device is bound.
-> >
-> > Good point, I have converted this to use a `&Device<Bound>`
->
-> Another related point of feedback is that this code seems to be
-> designed to interact with C drivers exclusively - i.e. I don't see a
-> publicly exported Rust API.
+Compaction checks that a pageblock is online, then uses its pages across
+lock drops and sleeps.  If offline poisons the memmap meanwhile, a
+DEBUG_VM kernel faults:
 
-There isn't a public Rust API, but `SpdmState` and its functions are
-more or less the Rust API.
+  CPU 1 (compaction)                  CPU 2 (offline_pages)
+  pageblock_pfn_to_page()
+    block is online
+  isolate_migratepages_block()
+    cond_resched()
+                                      offline_mem_sections()
+                                      remove_pfn_range_from_zone()
+                                        page_init_poison()
+    set_pageblock_skip(valid_page)
+      reads the zone of a poisoned page
 
->
-> That's probably what has guided the current design of storing pointers,
-> as that's what the C functions expect; and the C side is also
-> responsible for taking care of lifetime and bound device status, so in
-> that context using a `&Device<Bound>` will be of little help as it will
-> need to be forged by trusting that the calling C code knows what it is
-> doing.
->
-> I think it would be helpful on the contrary to design things around a
-> Rust API, on top of which the C FFI is built. That way you would have to
-> work with properly bound references, and have a proof that the model is
-> viable before exposing it to C. Also I guess Rust drivers will want to
-> use this at some point, so better design with that in mind from the
-> get-go.
+  Oops: general protection fault, probably for non-canonical address 0xdffffc00000006a2
+  RIP: 0010:set_pfnblock_bit+0xa6/0x2b0
+   isolate_migratepages_block+0x2456/0x3c80
+   compact_zone+0x1638/0x3900
+   compact_node+0x12a/0x1f0
+   sysctl_compaction_handler+0xec/0x160
 
-That was kind of the goal with `SpdmState`. The issue is all of the
-drivers calling this (PCIe, NVMe, SATA and SCSI) are C drivers and
-won't be Rust for the foreseeable future. So there aren't any Rust
-users.
+The free scanner faults the same way.  A contiguous zone skips the
+online check, since offline clears zone->contiguous only after
+poisoning.
 
-I have improved things a lot with v5, let me know if you still want a
-Rust API. It just feels a bit silly to add one that will probably
-never be used.
+Hold an SRCU-fast read section (pfn_walk) from the block check to the
+last use of its pages, and make remove_pfn_range_from_zone() clear
+zone->contiguous and wait for it before poisoning.  Offline pays one
+grace period per range.
 
->
-> Also related, what is the reason for having this code in `lib`? Why not
-> make this a regular kernel module?
+Scanner positions outlive the section, and offline can shrink the zone
+meanwhile, so take the contiguous fast path only inside the current
+span, publish zone->contiguous with release, and keep the migrate
+scanner inside the zone.
 
-That's just where the C implementation was as well, so I followed
-that. It felt right, as it's a helper library. But I'm happy to move
-it if that's prefered?
+With a kprobe parking the migrate scanner across the offline, base
+faults in 3 of 3 runs and this patch in none.  Unforced offline/online
+cycling under compaction faults in 8 of 24 runs on base and 0 of 12 with
+this patch.
 
+Fixes: d33695b16a9f ("mm/memory_hotplug: poison memmap in remove_pfn_range_from_zone()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+---
+ mm/compaction.c     |  8 ++++++++
+ mm/internal.h       | 41 +++++++++++++++++++++++++++++++++++++++++
+ mm/memory_hotplug.c | 14 ++++++++++++--
+ mm/mm_init.c        |  4 ++--
+ mm/page_alloc.h     |  7 ++++++-
+ 5 files changed, 69 insertions(+), 5 deletions(-)
 
->
-> >
-> >>
-> >> Just storing a C pointer and passing it whenever a function needs it
-> >> cancels the purpose of using Rust and make the safety requirements of
-> >> the callback you pass it to impossible to guarantee, as nothing enforc=
-es
-> >> that the device still exists or is in a valid state when they are
-> >> invoked.
-> >>
-> >> > +    pub(crate) transport: bindings::spdm_transport,
-> >> > +    pub(crate) transport_priv: *mut c_void,
-> >>
-> >> Here I also suspect we want to define some kind of ownership model for
-> >> the private data instead of hoping that the pointer is still valid whe=
-n
-> >> we use it.
-> >
-> > Any ideas here? It's just a pointer that we pass back to C when
-> > calling the `transport_function()`, I'm not clear on what we could do
-> > to ensure it's still valid.
->
-> I suspect something close to what `fwctl` does? Basically `SpdmState`
-> would store a reference to a generic type, which outlives the SPDM
-> driver bound time. That's also why having the Rust API first is helpful,
-> as it will provide the lifetime that needs to be outlived.
->
-> Looking at the example in `cma.c`, the private data appears to be
-> `host.doe_mb`, which exists before `spdm_create` is called and is still
-> there after `spdm_destroy`, so that seems to be the correct model, i.e.
-> there should be no need to transfer full ownership of the private data
-> to the SPDM driver - a reference should be sufficient.
->
-> Actually thinking some more about it seems like the `fwctl` Rust
-> bindings could be a good model to follow. They are simple and adopt a
-> similar pattern of a sub-component of a larger driver that never
-> outlives its parent.
+diff --git a/mm/compaction.c b/mm/compaction.c
+index f1b2060eb2016..2aeb18b6d54dd 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -360,6 +360,7 @@ static void __reset_isolation_suitable(struct zone *zone)
+ 	if (!zone->compact_blockskip_flush)
+ 		return;
+ 
++	guard(pfn_walk)();
+ 	zone->compact_blockskip_flush = false;
+ 
+ 	/*
+@@ -716,6 +717,7 @@ isolate_freepages_range(struct compact_control *cc,
+ 	unsigned long isolated, pfn, block_start_pfn, block_end_pfn;
+ 	int order;
+ 
++	guard(pfn_walk)();
+ 	for (order = 0; order < NR_PAGE_ORDERS; order++)
+ 		INIT_LIST_HEAD(&cc->freepages[order]);
+ 
+@@ -1340,6 +1342,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
+ 	unsigned long pfn, block_start_pfn, block_end_pfn;
+ 	int ret = 0;
+ 
++	guard(pfn_walk)();
+ 	/* Scan block by block. First and last block may be incomplete */
+ 	pfn = start_pfn;
+ 	block_start_pfn = pageblock_start_pfn(pfn);
+@@ -1732,6 +1735,7 @@ static void isolate_freepages(struct compact_control *cc)
+ 	unsigned long low_pfn;	     /* lowest pfn scanner is able to scan */
+ 	unsigned int stride;
+ 
++	guard(pfn_walk)();
+ 	/* Try a small search of the free lists for a candidate */
+ 	fast_isolate_freepages(cc);
+ 	if (cc->nr_freepages)
+@@ -2099,6 +2103,7 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ 		(cc->mode != MIGRATE_SYNC ? ISOLATE_ASYNC_MIGRATE : 0);
+ 	bool fast_find_block;
+ 
++	guard(pfn_walk)();
+ 	/*
+ 	 * Start at where we last stopped, or beginning of the zone as
+ 	 * initialized by compact_zone(). The first failure will use
+@@ -2116,6 +2121,9 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ 	 */
+ 	fast_find_block = low_pfn != cc->migrate_pfn && !cc->fast_search_fail;
+ 
++	/* Offline may have shrunk the zone start past an old migrate_pfn */
++	low_pfn = max(low_pfn, block_start_pfn);
++
+ 	/* Only scan within a pageblock boundary */
+ 	block_end_pfn = pageblock_end_pfn(low_pfn);
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index d497c35ee7833..8a2faa74403b5 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -18,6 +18,7 @@
+ #include <linux/rmap.h>
+ #include <linux/swap.h>
+ #include <linux/leafops.h>
++#include <linux/srcu.h>
+ #include <linux/tracepoint-defs.h>
+ 
+ /* Internal core VMA manipulation functions. */
+@@ -1206,6 +1207,46 @@ struct tlbflush_unmap_batch;
+  */
+ extern struct workqueue_struct *mm_percpu_wq;
+ 
++/*
++ * Compaction checks that a pageblock is online and then uses its pages,
++ * possibly across sleeps.  remove_pfn_range_from_zone() waits for these
++ * readers before it poisons the memmap of a range taken offline.
++ */
++#ifdef CONFIG_MEMORY_HOTREMOVE
++extern struct srcu_struct pfn_walk_srcu;
++
++static inline struct srcu_ctr __percpu *pfn_walk_lock(void)
++{
++	return srcu_read_lock_fast(&pfn_walk_srcu);
++}
++
++static inline void pfn_walk_unlock(struct srcu_ctr __percpu *scp)
++{
++	srcu_read_unlock_fast(&pfn_walk_srcu, scp);
++}
++
++static inline void pfn_walk_synchronize(void)
++{
++	synchronize_srcu(&pfn_walk_srcu);
++}
++#else
++static inline struct srcu_ctr __percpu *pfn_walk_lock(void)
++{
++	return NULL;
++}
++
++static inline void pfn_walk_unlock(struct srcu_ctr __percpu *scp)
++{
++}
++
++static inline void pfn_walk_synchronize(void)
++{
++}
++#endif
++
++DEFINE_LOCK_GUARD_0(pfn_walk, _T->scp = pfn_walk_lock(),
++		    pfn_walk_unlock(_T->scp), struct srcu_ctr __percpu *scp)
++
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ void try_to_unmap_flush(void);
+ void try_to_unmap_flush_dirty(void);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 796af1028ee23..b5d9e367b893d 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -543,6 +543,16 @@ void remove_pfn_range_from_zone(struct zone *zone,
+ 	struct pglist_data *pgdat = zone->zone_pgdat;
+ 	unsigned long pfn, cur_nr_pages;
+ 
++	/*
++	 * The range is offline, but compaction may still use pages it found
++	 * online.  Make new scans check the online state instead of trusting
++	 * zone->contiguous, and wait for the old ones before poisoning.
++	 */
++	if (!zone_is_zone_device(zone)) {
++		clear_zone_contiguous(zone);
++		pfn_walk_synchronize();
++	}
++
+ 	/* Poison struct pages because they are now uninitialized again. */
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn += cur_nr_pages) {
+ 		cond_resched();
+@@ -563,8 +573,6 @@ void remove_pfn_range_from_zone(struct zone *zone,
+ 	if (zone_is_zone_device(zone))
+ 		return;
+ 
+-	clear_zone_contiguous(zone);
+-
+ 	shrink_zone_span(zone, start_pfn, start_pfn + nr_pages);
+ 	update_pgdat_span(pgdat);
+ 
+@@ -1783,6 +1791,8 @@ bool mhp_range_allowed(u64 start, u64 size, bool need_mapping)
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ 
++DEFINE_SRCU_FAST(pfn_walk_srcu);
++
+ static int check_no_memblock_for_node_cb(struct memory_block *mem, void *arg)
+ {
+ 	int nid = *(int *)arg;
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 01ced0553ce9b..db610ddc37398 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2270,8 +2270,8 @@ void set_zone_contiguous(struct zone *zone)
+ 		cond_resched();
+ 	}
+ 
+-	/* We confirm that there is no hole */
+-	zone->contiguous = true;
++	/* We confirm that there is no hole; pairs with pageblock_pfn_to_page() */
++	smp_store_release(&zone->contiguous, true);
+ }
+ 
+ /*
+diff --git a/mm/page_alloc.h b/mm/page_alloc.h
+index 53df6b8a0c00a..7e185326b80ab 100644
+--- a/mm/page_alloc.h
++++ b/mm/page_alloc.h
+@@ -216,7 +216,12 @@ extern struct page *__pageblock_pfn_to_page(unsigned long start_pfn,
+ static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
+ 				unsigned long end_pfn, struct zone *zone)
+ {
+-	if (zone->contiguous)
++	/*
++	 * Offline can shrink the zone under a caller's old pfns and then set
++	 * zone->contiguous again, so only trust it inside the current span.
++	 */
++	if (smp_load_acquire(&zone->contiguous) &&
++	    zone_spans_pfn(zone, start_pfn) && zone_spans_pfn(zone, end_pfn - 1))
+ 		return pfn_to_page(start_pfn);
+ 
+ 	return __pageblock_pfn_to_page(start_pfn, end_pfn, zone);
+-- 
+2.53.0-Meta
 
-Ok, I think I have done something along the lines of this in v5
-
->
-> <...>
-> >>
-> >> > +impl<'a, 'c> Validate<'c, Untrusted<&'a [u8]>> for SpdmHeader {
-> >> > +    type Err =3D Error;
-> >> > +
-> >> > +    type Context =3D &'c SpdmState;
-> >> > +
-> >> > +    fn validate(unvalidated: &[u8], _context: &'c SpdmState) -> Res=
-ult<Self, Self::Err> {
-> >> > +        Ok(SpdmHeader {
-> >> > +            version: *unvalidated.get(0).ok_or(EIO)?,
-> >> > +            code: *unvalidated.get(1).ok_or(EIO)?,
-> >> > +            param1: *unvalidated.get(2).ok_or(EIO)?,
-> >> > +            param2: *unvalidated.get(3).ok_or(EIO)?,
-> >> > +        })
-> >>
-> >> Here you will definitely want to leverage zerocopy's `FromBytes` trait=
-.
-> >
-> > I was hoping not too actually.
-> >
-> > The SPDM responses are a bit complex. For example NegotiateAlgsRsp has
-> > multiple dynamically sized arrays, and the fields change based on the
-> > version.
-> >
-> > Using zerocopy means we need packed structs and even then I'm not
-> > clear on how we can handle the KVec<u32> or even the
-> > KVec<RespAlgStruct> nicley.
-> >
-> > The current approach has the obvious downside of copying the data, but
-> > as the data is pretty small in the scheme of things and not part of a
-> > hot path, I think the tradeoff of copying the data with much cleaner
-> > and easier to understand code is worth it.
-> >
-> > Maybe in the future zerocopy could be a performance improvement, but I
-> > think right now it's a large complexity overhead in this case.
-> >
-> > Note that obviously SpdmHeader is not complex, but I think they should
-> > all follow the same pattern.
->
-> For more complex structures sure, but in the case of `SpdmHeader`
-> zerocopy looks like it would work nicely? It also supports performing a
-> copy (see `read_from_bytes` and `read_from_prefix`).
-
-You convinced me :)
-
-Fixed in v5
-
-Alistair
