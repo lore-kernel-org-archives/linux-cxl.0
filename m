@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793108231;
-	b=qYUBHX7xP2i0uKdcOb439K2jzbIY/+MAAoN12DL2wvCCdyBZq1Ocr3dviMSbyWLb3toR
-	 TxJV3QcDGrw4+KLvn8XXfIwwySQEK/saGLTiYzSerA0iMZwvkIFiaTsI3qbSX37cIPAUv
-	 0AEFIzanaWnhg+mqRdlt1F8pOeUp5i6weC04Bh9HkEmqgtgk4rwYdXYQobigKNuKdJCLX
-	 zpj/9G/S+Bw278XE1qGIZrZAn+Jdvh1HZRvqO80lpYAt50S2YBgMYurjT0ZFiM0SL6wiz
-	 siMvfOOjgFTl1cs3HwB+b2NgBLDOMA2Aa6q7PexKm5z2aDGCzVW80NAgdHIZJnrrGGg==
+	t=1793108339;
+	b=oLye96jcIrXQeOyZnUaPzpsaTrehQnYvhm/QVs0sH605VUQ6O+CqL0WTUAbclvhCKpqY
+	 0Q8ii0E2jYm8dkmhQ3Jj+BkK3+pGiPI7yhbJMz8Yi0eWVso4m9XNNRha0ITNxPoS8eyiJ
+	 waySh4keLBUQmL3tLlRdcf74M5XshUr4Ryqw0wTmUqAY+GxE1ndTYangU46oJgDstoysy
+	 S9nbQPRQ8+TmIS93kmpBZarVcYznFzPrDeCkpLozWVdn4FlTiALZBcz/TQokw3v1pbP56
+	 dBrjQ3XwZCwY9ENiWuKEbhIqYOEkGAglx2jGRMosuxAROZAqp5/ciCVl90fDcG44z/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793108231;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793108339;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=xeh0h8/al9334KMAYnmna8mlBpnyruhKQ6eKh9bOxag=;
-	b=C8KLQamTsP1SnZ7t+doXu9X1vTjNrrWhMSNnDn6Ama+GNtInQ2ozUvnbBPXzZvF14SNY
-	 TSJBIYbweUutzgt6//txnrwtcG764VclRnxyTRuAEakiMw+nSIdzHBqMYnnjL5p4pYgoc
-	 21azI5+uvvQNe4ylwoIRjPpplmH/GL4+seZxzJsibFjbUVDpS2YlJac9mCSXxeDDR9XwN
-	 c4AOfZGLmodcV2QLrhtoLJ9ndHPwEKSza2glSzbYh5RxVUwZkT9ipzu/tziEjdMng7MAb
-	 FOJtAd2DWfau93Uy6juPGCtR36PoRFpIREZRNr4k+YbUsB/lmC5ZjEcR0sqZTJu052A==
+	bh=eP/VlP5fifIOIsGnDSJCoqWaClRY4R6jN0i/F3KlPYo=;
+	b=Y1otL8EH7ti2mZB4rKuXLA+5o6JVHFin1J/qtINsjpsGuBuALiffmy4ua96vKIG7WmZ/
+	 LR7QQvxIt7W51FK+kZ3EfXHZ4e9ixbxriXdzrW4WwLsqaZnbf6dIMmuRJPwnv5gqUcdtJ
+	 BorSzqjI3MHrKsU6C6LqTWvgJYnV7l1d873xIn46BTgAsstevZDyVEVBn7jlzQQxweKHj
+	 rO37sMfLngA15D9tCKCgu1ovZPx8qAhdbMIE3zrHDlu45LwMi7+hsBzlrgBi5pFpPBFYX
+	 lnZMzikYoyfeWmHecxCvBkFKFM9KzZNvAoZQIyM8FeKC3GsKT+iyaEzNiHnBJ7pIR4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BNoPTNH2;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="VASw8a7/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ECA606A31B;
-	Tue, 27 Oct 2026 13:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E55E606A31A;
+	Tue, 27 Oct 2026 13:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BNoPTNH2
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBAB21F01825;
-	Tue, 27 Oct 2026 13:37:04 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VASw8a7/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 489891F01829;
+	Tue, 27 Oct 2026 13:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793108230;
-	bh=xeh0h8/al9334KMAYnmna8mlBpnyruhKQ6eKh9bOxag=;
+	s=k20260515; t=1793108339;
+	bh=eP/VlP5fifIOIsGnDSJCoqWaClRY4R6jN0i/F3KlPYo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BNoPTNH2mY6hAGlBSJMX1nCiPi/BoGcEcnnfFq6+h+wDjw1G0y3hs+ebQAtAiOELD
-	 yJgwrrd+Ds0GpFEn8jauqMs8Ehpf+VQDtoj4/b6jGVizI7Ad9DgH0pv2uuAGGif266
-	 OEHVIx4AvTC1axwF8GssWq1nVxDxxYHCzUnB9V7JIgH/pNrP9bqVUhtnJW/Ac4lRbX
-	 fIDxYERC1b21qEqhiEx+KpoEDgSx9BuagIKuqrxTN4GJvtB90vSRNFLEQgrldSHxxm
-	 LsT5zfRiRhFmJ0HPZLYF4fdDqnqwgIEqAH7zIVU2uyHIUGvEyYpQ3IINiIuWcUgelT
-	 o6ASz9eiq/Z3w==
-Message-ID: <a4fc92b5-7d99-49f4-94ac-89fdee699042@kernel.org>
-Date: Tue, 27 Oct 2026 14:37:01 +0100
+	b=VASw8a7/5jcGyFhoJScT9XjbHReklX5yiUSfTG4A2q4yod4g6QT9/IUaeEs7b5JS2
+	 lgFRQ0HhNb1tSz1cBuWVp9r92zhDA+IMGXGaljVYz1J4gmODMiI/WOp/Azxo7F584B
+	 qU93QNYU4SfItBznQ2/Hvf2Top2U0zb/ea1S3Q/4hJesAcm+5NDslrgUh4rhQanbhx
+	 2pMKsbR+x1oWldIOxLGxZQI5JeVxDgZkZlsaIRF1jNjwoGlJ8B0MCIIe88vHIqb82g
+	 ZNyYTy4oBoxw82vv3tGkS8+x7Tld+Gf4XBps3FkzwZv/XBp4T0ifteuiC1qct41yBr
+	 ZMK7s0iMp/vEA==
+Message-ID: <f4fa7ecb-f4aa-4412-bf1e-049c5761407c@kernel.org>
+Date: Tue, 27 Oct 2026 14:38:50 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -52,8 +52,8 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] mm/page_alloc: don't undo another isolation in
- alloc_contig_range
+Subject: Re: [PATCH 1/6] mm/compaction: wait for pfn walkers before poisoning
+ offlined memmap
 To: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
  kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org,
@@ -63,7 +63,7 @@ Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
  rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev,
  iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com, stable@vger.kernel.org
 References: <20261027042204.3741307-1-gourry@gourry.net>
- <20261027042204.3741307-5-gourry@gourry.net>
+ <20261027042204.3741307-2-gourry@gourry.net>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -110,51 +110,67 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261027042204.3741307-5-gourry@gourry.net>
+In-Reply-To: <20261027042204.3741307-2-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/27/26 05:22, Gregory Price (Meta) wrote:
-> An alloc_contig_range() that overlaps a block going offline can leave
-> the offline spinning until it gets a signal, holding the device hotplug
-> lock.  When isolation fails, alloc_contig_frozen_range() undoes it over
-> the whole range, clearing the offline's MIGRATE_ISOLATE too:
+On 10/27/26 05:21, Gregory Price (Meta) wrote:
+> Compaction checks that a pageblock is online, then uses its pages across
+> lock drops and sleeps.  If offline poisons the memmap meanwhile, a
+> DEBUG_VM kernel faults:
 > 
->   CPU 1 (offline_pages)               CPU 2 (alloc_contig_range)
->   start_isolate_page_range()
->     blocks are MIGRATE_ISOLATE
->                                       start_isolate_page_range()
->                                         -EBUSY on CPU 1's blocks
->                                       undo_isolate_page_range()
->                                         blocks are MIGRATE_MOVABLE
->   test_pages_isolated()
->     never succeeds again
+>   CPU 1 (compaction)                  CPU 2 (offline_pages)
+>   pageblock_pfn_to_page()
+>     block is online
+>   isolate_migratepages_block()
+>     cond_resched()
+>                                       offline_mem_sections()
+>                                       remove_pfn_range_from_zone()
+>                                         page_init_poison()
+>     set_pageblock_skip(valid_page)
+>       reads the zone of a poisoned page
 > 
-> start_isolate_page_range() fails only on a block someone else isolated,
-> after undoing its own, so this undo only ever clears another caller's.
-> Return directly, as before alloc_contig_range() went pageblock granular.
+>   Oops: general protection fault, probably for non-canonical address 0xdffffc00000006a2
+>   RIP: 0010:set_pfnblock_bit+0xa6/0x2b0
+>    isolate_migratepages_block+0x2456/0x3c80
+>    compact_zone+0x1638/0x3900
+>    compact_node+0x12a/0x1f0
+>    sysctl_compaction_handler+0xec/0x160
 > 
-> With offline_pages() parked after isolating a DIMM block and a 1G
-> hugetlb allocation made over it, the offline on base still loops 30s
-> later in 4 of 4 runs:
+> The free scanner faults the same way.  A contiguous zone skips the
+> online check, since offline clears zone->contiguous only after
+> poisoning.
 > 
->   offline_pages+0x5b2/0x1570
->   memory_subsys_offline+0x17e/0x470
->   device_offline+0x250/0x340
->   state_store+0x88/0x110
+> Hold an SRCU-fast read section (pfn_walk) from the block check to the
+> last use of its pages, and make remove_pfn_range_from_zone() clear
+> zone->contiguous and wait for it before poisoning.  Offline pays one
+> grace period per range.
 > 
-> With this patch the allocation still fails, and the offline completes in
-> 3 of 3 runs.
+> Scanner positions outlive the section, and offline can shrink the zone
+> meanwhile, so take the contiguous fast path only inside the current
+> span, publish zone->contiguous with release, and keep the migrate
+> scanner inside the zone.
 > 
-> Fixes: b2c9e2fbba32 ("mm: make alloc_contig_range work at pageblock granularity")
+> With a kprobe parking the migrate scanner across the offline, base
+> faults in 3 of 3 runs and this patch in none.  Unforced offline/online
+> cycling under compaction faults in 8 of 24 runs on base and 0 of 12 with
+> this patch.
+> 
+> Fixes: d33695b16a9f ("mm/memory_hotplug: poison memmap in remove_pfn_range_from_zone()")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 > ---
 
-We have an existing AI fix for that as well already handled by Vlasta.
+BTW, the order of these patches is all wrong.
 
-I think we'll have to establish some model of "ask David first before posting"
-because otherwise we just create duplicate work for everyone.
+There are much more important fixes hiding in this series. And this change here
+would certainly not be the first thing we'd backport.
+
+Please create a proper series that only addresses the pfn_to_online_page()
+situation, without different, more urgent fixes.
+
+Because there is no way we will fast track anything like this here into stable
+kernels.
 
 -- 
 Cheers,
