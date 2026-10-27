@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793074945;
-	b=F5wJ+pRh85sW/rjL9V7RPZsIyR3WhMFa71HjNCh2VI9jovFGVdTfd4GP1s5UGMeh9P3v
-	 AnKtK7gk4pe/FDW8+KFLm7f1fw+AWr62Zn1fyYf+luTXHZXhhjtLzDPIxHsrODb4VhM9A
-	 TQE/33vMoJWgN3aBl+Q/fO88eoXErK0cwWkMvB4Lv/gBd531IIW6nuO79cdbDvJMThQ18
-	 PAvvSiF4C4dH4LyW98l3lIwgBOk47Jdg7yqenC6fJzkz5dMsRQ/0z+gdS5uiCcNU3lfhS
-	 BOysLQetfAbfJS50sRm64Im8xOF1BPJjM1RsD0TFdIqaTNlRuCj5bOv/a9cSe49FJRg==
+	t=1793074948;
+	b=NqjD3GUxCHF8lzVF+qZW4bfOHnA407gSv6HNKVWxggFqiRLCKhVNWXBxN5YIthDdpWEL
+	 g72OKS1NEWXlQ2SfNtzsUZHPtzeCWSRM4Q+bWkbjXMrsVsTa/FX+6HQHB0IxQwY/2Ggdo
+	 b8VJTHzHGZngwKM8R8YgkX5DVGVU3SNM8/Deu/+vz3t4njloFB7duuwcEKkqN4K1cAZQ2
+	 Y2lWh69OlEuYHMOxualgetPSyQunHeWsuEzkIMLZGtKO/mHgCUPHZ3PIPzxmvDsHd60Yj
+	 OOEmjNC/VmMWpgt0QDxJ4Ga9BHgTLKvWq2lmwl1XQ851vQNJmsXwxbj7le5t4NuGSRw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793074945;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793074948;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
-	b=J0BFzTNiQxoG3pjep4IlO3A0YEeN8ThtrWbq9abRjJLhk+PIh+wMyMP5qQfO5P9I5oc3
-	 QpH2jlEumkdpWpjncri1W/h5kTTwlsACrS1SS+jHCFygUVJrnj5c/hSPz33R5PkKk5g42
-	 YM+HMmEcBCwKO0mJx/e3eup/SGUgw1eGuSBTch6DXxQNjuupyyh57+e0xBRcdheoj325/
-	 c371xDlatuXxn7Wct5egj9YP7Ho2fAUfggNadhDRtKRovZJHcixKzuz58hQHnb7e2MjlE
-	 vvrcGK/qTnLCT7Ya5MF9En+NkH3az4ZE13DUYOjtpAcde/Kotza+y7gueh3jy3PHGtg==
+	bh=Fgx0S8/0sycDsnMopzoyCblR7NpYYIVN3Htks6C0yAA=;
+	b=OIMmRzK8TcuNqsgRwpyUyUYzF74BKrEvG86XUMKii3uLFsBnA2QnOA6OuwZ4xwncubp9
+	 2u452ZtC6b7v9Gu6paLJbPtYt9MygQ5YvgCf9wHdL1enUQB4SNF+pVZ8lj03N/VBThE45
+	 BmFCSLkG8TFOnuG0rs54HaBgk6uKaRWxYQm1gohMZpH7vChxYnhN7g1Jz7FheK4vfaqeZ
+	 GBKbUZFaKcHO4AHEZMCvQCQKl8B1+9fNHPPhvCKmF92/FVlRc7+l59lU/2H53k4Tn/uvW
+	 OCvr7f9FK+NH6qM0s8jGvr7G/Uzz3/RHrznScKwTxpGl4iRahHvcAITBrYLIhlewKuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Uh1dDRxG;
-	arc=none smtp.remote-ip=209.85.219.49
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=ZNfbJNjS;
+	arc=none smtp.remote-ip=209.85.160.178
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF86606A32E
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FF86606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8833A60A260E
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8833A60A260E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Uh1dDRxG
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-91b89c6caffso29635736d6.2
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:24 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=ZNfbJNjS
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-53e1d40628eso5799511cf.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793074944; x=1793679744; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1793074946; x=1793679746; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
-        b=Uh1dDRxG255t8FsdHTDn6DBOQan/CFITNS+SJISOlJdP3PwYjGv3T8ELkvvXQqFNGl
-         xnHyMYbjZ6K+jnitvhsJoeGAbAT3fzxUgjR+gVXxz7uBoEYQi78NHoXaFlWZJIC5+ntl
-         AGRIr/A6FGmmCBDilwfZ9rn8hCkAXnsmtoHnZ4Tfmw/e231yLueV38JEGEi892tHROMY
-         AcLHbdyRJ7MBMSEWYiYmU0fRZs8UvG8+24vw9eLjyYth0iQAeBptkJochELEdv/7Nnki
-         CkWWBOU+GiTtCb7wc341KP45BJwnYweMQKBAH2lSkGS0Bf9sONRg6PIQ1WNgNercipnk
-         hBtA==
+        bh=Fgx0S8/0sycDsnMopzoyCblR7NpYYIVN3Htks6C0yAA=;
+        b=ZNfbJNjSwh4iuFBugs28Lgd2LQudZPCl8nsuNLBP8R2y4RjjjVdHq9uS6qMTNhgqaE
+         H0Gvav/Ed1apakX5n1rlwq5Tn4GoBP/ckAi4y8FupjLgzrj5z0UC+hMLG4KvzQjP7fut
+         1EdrIhPRQ/m17bNkHNewaJAFlZAF8WDtocpswbDloJCK23NRZj4VSpTPuLsORmH1TbmB
+         tVMEndigGJ7sqWmjqcfk+TQHLlG45PL3MmQnFtxLyX15O0WZ8RmKOaw44/Zn8i/m8ho/
+         PH6GY3IMJRlxrjT6yINoZcusYiV+U00dEMakQ4LgqeWtiCy7bX8ZTL5gX9aqKxXyt+JW
+         WmEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793074944; x=1793679744;
+        d=1e100.net; s=20260707; t=1793074946; x=1793679746;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
-        b=m46OZmBdFyVZd/edTgfXtzxZnjAs198k5cO6SevRJ95wfB7wNJqhEgkSxeWpIVoJHA
-         ysQ4r6+IW9NJAglrPxmrfAV6KFvHq6X4i5nTCh4x9PGztL6Vy0LlZdANJqfktIDr4IC/
-         XUt6K0NA6DFSzVck6ihZ7puXWbiDH6QON1yG1Tyzpd2HjXBGYvh7RB5m4f/E4L35w1W8
-         HFi+4k1BNC9EoRjNREyftD2L5ZQ7wiJ7RRb2dyvRXw+5Izi9D7T8GmmYEg03BVH9bhSi
-         v5kcJb0ZQEeWY2i4LnLXruUhLqHynOB38rJYWsf3tkSmpLmmj33ajLtpKhpaW7bvdK7/
-         4VWQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzOE6HglmGMNCT/B93rM9FXvdXIofsBPr2U5HA4mPdhyTvJbdV14OCu1M0AogTPGjC//ygvvXVQvNk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLS+4pFkWwDyFYvTv9dX/Y5C5Z2qDZGjV3zThlYnJ4YHO+g24BV
-	ep7l8KGqFpO8uwjToURlVbL8tXONtfhoQNwDE81/xfBM/XNWvYMdZ2/EGq9sDgn2sZryYxvTORg
-	mRoJGDyc=
-X-Gm-Gg: AYBFou2xdtp3D6e/CAYxEWSyGiqh1xlxnn1XdVkFk+L6y9zsTH9gREJFkjFSWm/vff3
-	3AlZBoMmsAs/Bk+qPJfpDpNmbhAAKA1Q0Pb3M5dECl+BAmbqE4TzGSjDFFzgRPLlgt+sK+9uk7s
-	4HVgB+EIS6UDlEyMX2BgZWL1haOt1zg3jiCpNKdRh3FW0UNCZ2JZVwPBEBb82zfDt22t3l5M1qp
-	0D95nlKzgZXETHZpTWuaM57XjnC4bQmYe4VZt+yHmzNWBYRJ2tlJxvW2aOKWwbzOXS6HpnFJjFB
-	qY1qqCQGV6nsqY/vxPBlBxkvjkaV79KlLVbuHKA4jjfAVAa1YvbbhjI1IHExmlUbgolEPx08irw
-	INRPVOhWzHcAqiS12BA/Zun9cR8Wyv1eNarju2dYchsJh1j8ivem39eOuT2wSbQVJwUguR1Irrs
-	H5ZXGmgWih94UH0AO2lNRwdCIBE3E2zLt0VEHYK5AnrGrN8lIV7+JBlo/z0JiwxhFMvObSE4/ZQ
-	LQd+qT8rRIMZZjV7zRXhyXWMeYmqgGsV9gjXc2rFN2kv2s+vek5Aw/2kHqH1IiVDLjgPQXL1vwn
-	Fd9kDsTOGV3M4Zn915M5rzWNi8fwJHr+8xxG3PAPXg==
-X-Received: by 2002:a05:6214:800a:b0:91c:60e8:a8aa with SMTP id 6a1803df08f44-91c60e8a8c1mr69350086d6.49.1793074944062;
-        Mon, 26 Oct 2026 21:22:24 -0700 (PDT)
+        bh=Fgx0S8/0sycDsnMopzoyCblR7NpYYIVN3Htks6C0yAA=;
+        b=s+QLburM4k2MSyWNth5kNo64lnccpxDYZ4XOEqkIbGrJfMrbBnfVJjBrkq4HGJemxi
+         eS+LrmQpNerbJWYiZaQfQPO0bHaRAhfS0/aRdVK/ZaZo07I0n5DK95iIKgW5cHXDRySm
+         s4dRXnbiYHtGumf7ffJLOvHR53zdkTzq6d7ISEwmeIWjb+25EMA+uFRppZnObxuxySzj
+         Pc0kmTyaJFJ8Fm1A0pTqJBc8zQw2yNEhPAmguNx5ae4tEcqn5TRHNh9YpiojCWMIFBlK
+         mQ8Mii/2pcZWJtjchNXklOUfyzDMvZYQC5Tss8iUgsXnVMHyzta3E2mz5ThyzLyuOLb+
+         Aimw==
+X-Forwarded-Encrypted: i=1; AKwUvBypuBub2oSQdsmHCk5SsAmzUwn+BI0UqugJJaknolQyq+JkAD3AxLlfp8iJ3FbOy7t/UuSu4q6L+T8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLcYlQKB4F/qyCCtC6Yjx9i0DvV4IPkozpP1xZJtk+0aMO9GArd
+	KGIB2A5Ry+jnkMQH9JnbMYDWxfq1duk8+sXWIuxLOh55wZfTQMTMZOQXYC0/x7oeCgs=
+X-Gm-Gg: AYBFou0bHwy2nqTzX+Jbaw/5/c6ZfMJAdRcyLQVUmLgGsOZ2D+ulvWRdrSS/NFBfIKE
+	bL3NAZz/oVWG2QiCTPhIMkDvK2qcHTVm8VFNglJaylDxG0X3dfH+NrIUXKJmhy4NYpsNfbleAC9
+	p4kcQzXSbv2cKCmUAaaeIChbD1ircpbWFH0sZS41HYOQ4xB+drFPn1CC/QEac5cYiXD5zfvCT5w
+	t1OITWPP+9Vy1n4DTDma8FwOfob38SNUE3VgscfB4jr2fVVLYmcEwDKuZVKgTaymWJsUh+CbADC
+	w0IAeA7EZUmmxsepxNIfjGGdQvW6vZ+olwzl7/9jMB/FkS68MXfWOFbi54r16mS0+l7fNY2xDTh
+	3k62I5NgIDyL7teF8zLSmp52uXSEt4Kj2UPDpdjUhs1Y1o09IFvpmYqM99X9itf97p0D1e0Fl7p
+	OJMjDk75iEkImBk8T9Ee5ck3wN0U00YHKJHGIj/qEQOYDuRV+1PX0UPdGrLNThPrBg0s2MBQKr7
+	7mV4XkRtiO+VCLcDcn//zNxN5b21CgPkMKuFY8nMJW0ecm85cQP439/MeCOtExRLY4qdjuv/0ii
+	SDvKcfIk89cwT5PPVLWiq2AEf0s9HDWeD29vON/hHA==
+X-Received: by 2002:ac8:5ad5:0:b0:536:723f:5de7 with SMTP id d75a77b69052e-53e3bd81b50mr32491021cf.4.1793074946632;
+        Mon, 26 Oct 2026 21:22:26 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.22
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 21:22:22 -0700 (PDT)
+        Mon, 26 Oct 2026 21:22:25 -0700 (PDT)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -102,9 +101,9 @@ Cc: linux-kernel@vger.kernel.org,
 	iamjoonsoo.kim@lge.com,
 	anshuman.khandual@arm.com,
 	stable@vger.kernel.org
-Subject: [PATCH 4/6] mm/page_alloc: don't undo another isolation in alloc_contig_range
-Date: Tue, 27 Oct 2026 00:22:02 -0400
-Message-ID: <20261027042204.3741307-5-gourry@gourry.net>
+Subject: [PATCH 5/6] mm/page_alloc: keep the range online while alloc_contig isolates it
+Date: Tue, 27 Oct 2026 00:22:03 -0400
+Message-ID: <20261027042204.3741307-6-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261027042204.3741307-1-gourry@gourry.net>
 References: <20261027042204.3741307-1-gourry@gourry.net>
@@ -119,63 +118,111 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-An alloc_contig_range() that overlaps a block going offline can leave
-the offline spinning until it gets a signal, holding the device hotplug
-lock.  When isolation fails, alloc_contig_frozen_range() undoes it over
-the whole range, clearing the offline's MIGRATE_ISOLATE too:
+A gigantic hugetlb allocation racing with memory offline can crash.
+alloc_contig_pages() checks that a range is online under zone->lock,
+drops the lock, and alloc_contig_range() then reads the zone of its
+pages.  If the range goes offline in between, a DEBUG_VM kernel faults
+on the poisoned memmap, and removal frees it on any kernel:
 
-  CPU 1 (offline_pages)               CPU 2 (alloc_contig_range)
-  start_isolate_page_range()
-    blocks are MIGRATE_ISOLATE
-                                      start_isolate_page_range()
-                                        -EBUSY on CPU 1's blocks
-                                      undo_isolate_page_range()
-                                        blocks are MIGRATE_MOVABLE
-  test_pages_isolated()
-    never succeeds again
+  CPU 1 (alloc_contig_pages)          CPU 2 (offline_pages)
+  pfn_range_valid_contig()
+    range is online
+  spin_unlock(&zone->lock)
+                                      offline_mem_sections()
+                                      remove_pfn_range_from_zone()
+                                        page_init_poison()
+  alloc_contig_range()
+    start_isolate_page_range()
+      isolate_single_pageblock()
+        zone of a poisoned page
 
-start_isolate_page_range() fails only on a block someone else isolated,
-after undoing its own, so this undo only ever clears another caller's.
-Return directly, as before alloc_contig_range() went pageblock granular.
+  Oops: general protection fault, probably for non-canonical address 0xdffffc00000006a2: 0000 [#1] SMP KASAN
+  RIP: 0010:isolate_single_pageblock+0xe5/0x820
+   start_isolate_page_range+0x74/0x1a0
+   alloc_contig_frozen_range_noprof+0x21c/0xcc0
+   alloc_contig_frozen_pages_noprof+0x4cf/0x700
 
-With offline_pages() parked after isolating a DIMM block and a 1G
-hugetlb allocation made over it, the offline on base still loops 30s
-later in 4 of 4 runs:
+A range that goes offline during isolation is no better, since
+start_isolate_page_range() skips offline blocks.
 
-  offline_pages+0x5b2/0x1570
-  memory_subsys_offline+0x17e/0x470
-  device_offline+0x250/0x340
-  state_store+0x88/0x110
+Check that the range is online, isolate it and check again under
+pfn_walk, and look up the zone only then; an isolated range cannot go
+offline.  This adds one online lookup per pageblock on each side of
+isolation.
 
-With this patch the allocation still fails, and the offline completes in
-3 of 3 runs.
+With a kprobe holding a 1G allocation at start_isolate_page_range()
+across the offline, base faults in 3 of 3 runs.  With this patch the
+offline waits for the allocation in 6 of 6, and both finish.
 
-Fixes: b2c9e2fbba32 ("mm: make alloc_contig_range work at pageblock granularity")
+Fixes: 5e27a2df03b8 ("mm/page_alloc: add alloc_contig_pages()")
 Cc: stable@vger.kernel.org
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/page_alloc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/page_alloc.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 55d3fc4b307f5..bb3c7e95f2ed4 100644
+index bb3c7e95f2ed4..82f35816a0711 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -7396,9 +7396,13 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
- 	 * put back to page allocator so that buddy can use them.
+@@ -7319,6 +7319,16 @@ static void __free_contig_frozen_range(unsigned long pfn, unsigned long nr_pages
+ 	__free_contig_range_common(pfn, nr_pages, /* is_frozen= */ true);
+ }
+ 
++static bool pfn_range_online(unsigned long start, unsigned long end)
++{
++	unsigned long pfn;
++
++	for (pfn = start; pfn < end; pfn += pageblock_nr_pages)
++		if (!pfn_to_online_page(pfn))
++			return false;
++	return true;
++}
++
+ /**
+  * alloc_contig_frozen_range() -- tries to allocate given range of frozen pages
+  * @start:	start PFN to allocate
+@@ -7352,7 +7362,6 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
+ 	struct compact_control cc = {
+ 		.nr_migratepages = 0,
+ 		.order = -1,
+-		.zone = page_zone(pfn_to_page(start)),
+ 		.mode = MIGRATE_SYNC,
+ 		.ignore_skip_hint = true,
+ 		.no_set_skip_hint = true,
+@@ -7397,13 +7406,29 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
  	 */
  
-+	/*
-+	 * On failure this has undone its own isolation, and any other
-+	 * isolated blocks in the range belong to someone else, e.g. offline.
-+	 */
- 	ret = start_isolate_page_range(start, end, mode);
+ 	/*
+-	 * On failure this has undone its own isolation, and any other
+-	 * isolated blocks in the range belong to someone else, e.g. offline.
++	 * Part of the range may go offline under us.  Offline cannot poison
++	 * the memmap while we hold pfn_walk, but isolation silently skips
++	 * blocks that are already offline, so check before and after.  On
++	 * failure, start_isolate_page_range() has undone its own isolation,
++	 * and any other isolated blocks belong to someone else, e.g. offline.
+ 	 */
+-	ret = start_isolate_page_range(start, end, mode);
++	scoped_guard(pfn_walk) {
++		unsigned long first = pageblock_start_pfn(start);
++		unsigned long last = pageblock_align(end);
++
++		if (!pfn_range_online(first, last))
++			return -EBUSY;
++		ret = start_isolate_page_range(start, end, mode);
++		if (!ret && !pfn_range_online(first, last)) {
++			/* Every online isolated block in the range is ours */
++			undo_isolate_page_range(start, end);
++			ret = -EBUSY;
++		}
++	}
  	if (ret)
--		goto done;
-+		return ret;
+ 		return ret;
  
++	cc.zone = page_zone(pfn_to_page(start));
  	drain_all_pages(cc.zone);
  
+ 	/*
 -- 
 2.53.0-Meta
 
