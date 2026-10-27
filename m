@@ -1,132 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793097575;
-	b=WLoXKj1Bs1/TPrhXKWJkX9dM3X8i2tZFS6udg4UZNe5gpHOA7nMkcAVsmXUSl2wlIx7F
-	 zBlkJAHwsDfVKJpYP/9CRoRmlyXba2R8yOXEDLTKJkeYplzOC3mB+qp3tnh5iG2xwfdDX
-	 EDDb72u0n4SzgzEJ+PfJnrS/ECYQIMAVmfyijpYApHJn23+kujVj65iHKirXBt0RGNNcE
-	 4FIXyhtl9jTK4xGcBcg8J2qaPUBqiCVq1z/irqWaXbEXphKSOnDDfs3JEsAEYnkIbFq3D
-	 jTZDbfr1GDZQ13QaLN2rHpQ8uDwM1WCPIXW4Wly7iz1Q4QpsJSiDMYGihL01Rn4VuOA==
+	t=1793100727;
+	b=aVIoVP6u/x6aAjv+sWHyg1O17bX4Q5hLjQlmNRTQ0hD3OlwGXesV/GXw/tJmJIVUSzP0
+	 51z32e6n4GxqjtfTacMI4Svf2DLakI2m8wuxzCt2sWAwiHGdPm3rEvJDB1HGcjfBdUdUH
+	 LcD0YCkG8GkHD6NtrszH4Quf1gNduY+v07t5GjCBEy6anW6brl7NHmL3sCENlr0uQOvPX
+	 kFIoqZ45aLOebvEd5I3Y2iq5EV4nyk6WX57elcONoHqc7VDeLAFzir2OLMJ080jdwhZtx
+	 owR0SI6/sZjHktqi9soyK5yeoHvpnDvh+JocXlkerrO6bDNRN2OU96VLhmrH2O4leuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793097575;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Rspamd-Queue-Id:X-Spam-Level:X-Rspamd-Server:X-Rspamd-Action:
-	 X-Spam-Flag:X-Spamd-Result:X-Spam-Score;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=pMHkOD489P1l6O96x+se+l+KL24+iRfdU9gls0+aIFsGTfYBvjm1U+T+rShXH4SA9BWz
-	 TfxveVojZMkttE/NEm9cPmKc+0DXkaStwO1ksD5CnzY+oEjlATomSz8dvFKnT0yAsYjhS
-	 WuB1VKCtc4RsFFYqgzZ/3SjnuW4jkhCf2MOEnQpjU3Nsqgq4uapnoagj+cszS4B1dDpuu
-	 73UkNmri4k5g/KLwrWfnVCEhGx0ep4M5CoskKbVk2bdtoGOkF5thjBvVAT4HpJTmzLqJl
-	 GCxdQtTN4f0vFDgLWsWez6FdAjyWQr2qS3FeMSmpZ2UCF1gg5JqVG0s8WltMpoE8wbA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793100727;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
+	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
+	bh=RdtQZXTbTiwwiCOERJQ/97tzbS8/zwPttXhgydj9WAE=;
+	b=3nM3387U/rM8LNZAKtei/3iizg9GhcVqOA3hpFObGZKNfSkvPs9QbihvslH7eqhhonrm
+	 67BgPQx1udh8RjsFzVAfWJfxlrVgiRFcOXUUZRTMAgVdEE6uYGToZIlr4Qrt2XnTba/MW
+	 MP2m08/T6Q5i3sfNFbvHNNYd/mEzkZyqx37d+NkXgsyFjBdq99oVv7VOhT5dpB+BPLtUf
+	 z1lwqAZOJObbFV6glXDG6McJwHlQCypIoGcK7opwax6sERWhhf9w1YurqKmQkycFQE3xs
+	 6Uge+WVX5zM9RlZJBZKBAahwZNhArLgFX+GkEvieA3nvrOtzO5QD3qQIG+TZJUTmwuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="ThWU3S/l";
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="ThWU3S/l";
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	arc=none smtp.remote-ip=209.85.219.54
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD38606A31B;
-	Tue, 27 Oct 2026 10:39:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CD38606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ThWU3S/l;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ThWU3S/l
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 06B761F7CE;
-	Tue, 27 Oct 2026 10:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793097573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=jMAe2coBUlccty3WHc8e5eFbxGa/FQ2n05z85wuM0uaTiaKhJdl7ZM93Izvk+dMu+SIVP7
-	SuAVTUjb87RyCHK0ewstc6yfcUCkiry0A71eE1ZaAONOd+4FRscZSDEBSmxEttk4iK9uBP
-	BFGgiIC9hZRc75BpwrdNUNGp5cR5iSE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793097573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=ThWU3S/ly60GNL1To5OVEGzTl7xGFF0ft9/lW1WdUqqvby+qiJh4XfliFTrN0TZPcLVbcA
-	00sIFGt5kj9La7Cw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=jMAe2coB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="ThWU3S/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793097573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=jMAe2coBUlccty3WHc8e5eFbxGa/FQ2n05z85wuM0uaTiaKhJdl7ZM93Izvk+dMu+SIVP7
-	SuAVTUjb87RyCHK0ewstc6yfcUCkiry0A71eE1ZaAONOd+4FRscZSDEBSmxEttk4iK9uBP
-	BFGgiIC9hZRc75BpwrdNUNGp5cR5iSE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793097573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHXfa6R9kyvi48QCk+MS91fHFKbn6ETqPD7CVuiGV4E=;
-	b=ThWU3S/ly60GNL1To5OVEGzTl7xGFF0ft9/lW1WdUqqvby+qiJh4XfliFTrN0TZPcLVbcA
-	00sIFGt5kj9La7Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 588A81321C;
-	Tue, 27 Oct 2026 10:39:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wIn6B19/4GprGgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 27 Oct 2026 10:39:27 +0000
-Date: Tue, 27 Oct 2026 10:39:25 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh Dickins <hughd@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auB_QkUwsP6sRfYS@pedro-suse.tail5790ac.ts.net>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB52F606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 11:32:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB52F606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-91c6ce60697so12243936d6.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1793100720; x=1793705520; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=RdtQZXTbTiwwiCOERJQ/97tzbS8/zwPttXhgydj9WAE=;
+        b=cgfTCbTQmgi08aq2EjQsJm84RLxzKfeSrSncAhWv2NxWX34D7zUPtFtjWMQCiG2lNz
+         LKRkbYTvkqDwivjWQebhYClwp7BfdOjYotfdcAe6tniOWVw7k8fAg56bQNOsgF4gx94X
+         d20jgGsA1d70pT/ktkr62L7A74iYyBwby2/bfs2tSvCH7mY2QTawa74oI6voEYGqV6OI
+         8rSdwqhWgQiasbfVzvgo63SYfMT1NbHhQ1/PQ2nfhliNkl+kZRl82vbFKj+E1JeWrKIt
+         IUeSRgq08JEj6mGtd8VckmSE/yaCQU0ZLGmJidqLDHnSJmfljMnUOv+RvWlnqtDMjqhj
+         GSIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793100720; x=1793705520;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RdtQZXTbTiwwiCOERJQ/97tzbS8/zwPttXhgydj9WAE=;
+        b=I0UXZtLG3BZK2CMNgalvYqGQru6VcMDNTZf4W0e4IO3h0/wIjyiDqy4V28KDsP0/7j
+         c7dqI35Y8q1RdJykJEcftSOExfZPkVfm9Z+6dVkiS1LH2tARpTg094aaZphqTU5aRBTN
+         mZFprSW+1XSL2Mg56TpWGEwtJd6wlAb9AL5Orpt0hu9ye5FaTnbeOy0WC0+RsZ9J8pKs
+         1qzr4Z57Q/w32zDaicJcYso6F23QuhDYOp9EbxfcjuMTNnV6frARXE6L470OonBt8gCR
+         yJD71tHAKCUBCS4rsxhRTxF60lHpZfctM1Ko1isYwoSs+gbNpHQwqvpYPDIbdcCo5GCm
+         kT/g==
+X-Forwarded-Encrypted: i=1; AKwUvBx/KVU7pBWZjRTa39aSbb8VCShdToetiX4pOg3QqvI0fDy2QKgjGP720ICCEI3B1xc8kbiii0LK/fg=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJIWBCesZGVsFrjGeEST496qTc71re8sFqb/LgXI60iZytR1eyG
+	6heWGKfesJuFEgF1kKisBsyVGTq/qzDtz39ktGRvVnFXKkbzFWkj9NvAOSzcwgN0xbs=
+X-Gm-Gg: AYBFou06uB8eyl4Nt5xpICKlLaXGwoPriPYfeCID5GbMwHog0lRgtCvgTHfZ9l/fYK3
+	LdoT/TfKW86j5TUPefqNbCe5DA/l1JN2sx1WSyurqSrfgpPR91O7WY4Q3Q4p7SpKNzBUVPq9J3y
+	bPNqU6NrfrLszzl/MiKj4a+A4U29Lmy4i7o3JlW7u8uDnGdAPeSD4i+NSF/WSlSc+uxF0uIIPw/
+	cRMdMngfHzjonrZnWPERFM7tWFKvt10O6ZWi6tff6qDvtaG6BvvqpRGA1uEUlTV+v60aNVwDOU4
+	DU5z+lSWiZbEQfW6LSu/lzJ/rj9BR39+gKMrXOWvkPIO/czHS3qPlQPM7WSgicN6siVBSDqcoWH
+	wnqZiPSrVfUBjXeZXGLfsYwcJdmmTDcz5Vavmy23cWHwB0/r6Ef4ClivnvEciGnAZRtL/8+6Sof
+	gWP+Zi9q4LMFwK0MCaSmLU+J9BQEc3EcqBqG3vbWSwDeK3x6aEulaAeobbCWWsm3yIUZICq7+l6
+	emWHvmVCTlBJuXUY/ngA0FRFWW5UQiGDVjs2Agt4VUl4iOrg0P48SIRcAYj7YymkNbh76x7M52w
+	21IPu4/KzUCKR9tKv/7iNpZ8IlCJ8FhHcJciZe31JBdGva77
+X-Received: by 2002:a05:620a:4556:b0:93e:5cf8:e5aa with SMTP id af79cd13be357-940ef9380d4mr1524401485a.61.1793100720515;
+        Tue, 27 Oct 2026 04:32:00 -0700 (PDT)
+Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47a6d598sm99588996d6.3.2026.10.27.04.31.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 04:32:00 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -136,83 +85,69 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
-X-Rspamd-Queue-Id: 06B761F7CE
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-12.01 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org,toxicpanda.com];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_GT_50(0.00)[65];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[toxicpanda.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -12.01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 0/6] mm: fix pfn walker races with memory offline
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org, 
+ surenb@google.com, mhocko@suse.com, brendan.jackman@linux.dev, 
+ hannes@cmpxchg.org, ziy@nvidia.com, linmiaohe@huawei.com, 
+ nao.horiguchi@gmail.com, ljs@kernel.org, liam@infradead.org, 
+ rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev, 
+ iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com
+In-Reply-To: <01d7d54d-0047-4eb6-a1d2-5b3f113f26cf@kernel.org>
+References: <20261027042204.3741307-1-gourry@gourry.net>
+ <01d7d54d-0047-4eb6-a1d2-5b3f113f26cf@kernel.org>
+Date: Tue, 27 Oct 2026 07:31:59 -0400
+Message-Id: <179310071902.664110.12994053710961856591.b4-reply@b4>
+X-Mailer: b4 0.17-dev
 
-On Tue, Oct 27, 2026 at 12:17:24AM +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+On 2026-10-27 09:57 +0100, David Hildenbrand (Arm) wrote:
+> On 10/27/26 05:21, Gregory Price (Meta) wrote:
+> > Several pfn walkers check that a struct page is online, then use it
+> > after memory offline has poisoned it (CONFIG_DEBUG_VM) or removal has
+> > freed the vmemmap.  Five of the races crash the kernel; the sixth leaves
+> > an offline spinning with the device hotplug lock held.
 > 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> I have roughly the exact same list of AI garbage fixes here from a certain company.
 > 
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
+> And I consider this all extremely low priority.
 > 
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
+> So this is something to discuss throughout the next months and do it properly.
 > 
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
-> 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de> 
+I actually have a reason for these fixes other than "bot said bad".
+
+We leverage ballooning and hotplugging as VM memory overcommit tools
+and are finding that some of these race conditions crash them with
+large MTBF.
+
+While most of these are insanely narrow, they are not as unlikely to
+happen as you think. A vCPU can take a vmexit in these windows much
+more easily than a host can take an NMI or other interrupt.
+
+Thankfully none of these (or the other series) appear to be obvious
+security issues, but they are stability issues.
+
+I have a reproducer for every single one of these (and the other
+series) - but a handful are unreachable due to a 2-statement read
+being emitted as a single read by the compiler (which can be undone
+by a targeted compiler flag). Those were included for completeness.
+
+--
+
+On properly - I have a follow up series that fixes the zonelist walks
+structurally, but it uses SRCU-fast on the fast path. The catch is that
+PowerPC (and i think others?) don't SRCU-fast without atomics, so they
+take a performance hit.  (It also doesn't help us for backports)
+
+I've been weighing that solution over never freeing and/or prepopulating
+zones - but this also results in performance impacts (leaving dead zones
+in the list forces the allocator to walk them for no value).
 
 -- 
-Pedro
+~Gregory
+
