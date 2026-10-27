@@ -1,163 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793113780;
-	b=08wvu+uI0J4WVpq1YuecO9A6SD80J5eBcYenwpQruk9DQHQtJSbOKohkSktBoWEP98m7
-	 6ra27tLb9BgpRWILtHePqH5zwXRwwesJNhiSReLJifROfVReYKo186r6z3KFyX3mI14IX
-	 o6qQY/4z9szzDotOVphs3khAQARiI+j/3wDuQc2BdAMO+fMM0cRxtOsybd06YMaP2YCmX
-	 UKR29sLysM/CGooOpIeD/Qa4m3ib5FkY3xu4DT3gFEYVfQIgSgv8LKdn5THf1tAb2QkUK
-	 tORTB9TbMM97Cm2RQqMPjUs6vemvG53l8IL0iVIoYb1Xhp5ltCXDSjEotxIe8dhWCSw==
+	t=1793114168;
+	b=M+31VfqWXGZg5CnzKA28esLeFvwfSSkE6PUXxiHTSmH+ufCA+t8ZFV/B8AnCQFV/2xJh
+	 3H0n+cqsFgugh6OUL0RTKiglS/JWMyXfumR+XLuCNAjRCf4VSyiWW6n0pUQ+qgn2ZLf9t
+	 We02Z7YI9+IwduhPb0ZzFHxiFiVz3/wFVTg6aCEEg7V2c00eDAGDSRI+ST6SAx9uvxNEe
+	 ba7BwSMoHKAWzTfUJbN/T0x5VW1xogRRV3Yu7/tBMboqHLBcQRco8WG/CqmTToPbFayzf
+	 SzCna/mdJoDGvPiyjWSkarDtB8e66/QX3CEzKEqEDHz8l4CMMJZla65yhgHmwouIjYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793113780;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:Reply-To:References:MIME-Version:In-Reply-To:User-Agent:
-	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Type:Content-Disposition:Content-Transfer-Encoding;
-	bh=YxsqXTT/2SkHCopDBU3zcdHUWKG0aEgc5S4iUgZigFw=;
-	b=tr1VUCWWSAceIeAZMWENW3yJhsTRxp1FOlqAVk+VwAF2eNzJPXJtr+Ohkl2DaEElWOxx
-	 GX43VbwxKMLXWMUjKrdsl1zDuII9DsOwr+iBTnwK8AnoPI0bkubvZs/VGPHWYTK6aE0a6
-	 WCek4GKG+b1X1rQnzvtxUGi3EYUAMSPtN4IkAlSa1UN3mqyJF1ECrNajImJ/rHYq2Oplj
-	 njkZW0ymQ6ITNNBOVf5et0CHojELSeviqy65R8syT/QeR/H57ux7COKuwXnr0g6smk+70
-	 3qLHiuWNhdVljY2rX+rrSOwldPkpPvDzRtxTSnjQp8eJrvCp0TRokBW/DhLqLrgpMPg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793114168;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=WyoOBEMd5hZXCT3U6GbGErLU5iMuF52Y0APEdOL8vu8=;
+	b=LuHII0Yn+58D2zWAC89wiU0zMHuMkrbWxJJIlftTS322CZMpcR189EMHucgLCIGrHNLI
+	 /2QwrYSoYquK0MkKtK952oxcWVojDRcI1Z7BvAAk/yUKCaC63hVXLrffaIxz6qHhC6Nhf
+	 tPXvsPtNLx4bjt5ppksvMV7fHQf/f37YU3t7rlPe0j4IKBRvidSekM9JswE4XXBJuL8Uv
+	 ESTXN2uYAjha2x3PalM84c5JYkDw/ePn5P90081qF86pzMSLNQf+dW9F37qY6l28cPlUf
+	 Sr7n11WkOgFu5A2/1XdXc64EZvS2pR2e26yNxayzbpPkf/7gvfZ+fUsrLpB2ITFH55w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EMLjalLG;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BuxeSr53;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E548606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 15:09:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E548606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99D6606A31A;
+	Tue, 27 Oct 2026 15:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EMLjalLG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793113779;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YxsqXTT/2SkHCopDBU3zcdHUWKG0aEgc5S4iUgZigFw=;
-	b=EMLjalLGTYrNlCmGo2atTSKdh+ic+WcxN8E92twoOTqF6Og6d7Ro1qC5G68B9x+KITzduw
-	qiYY1++St98785pl7l2SO/CwiUAv/+7ZqPLTHo6xDN2dpBAexTzzjZeL5IPdb2fNqv7OC5
-	4yce7LK74VH32Pa60OAsm6URxDJgQqY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-7XFlFRhPPtuZJx-cX-8Sxg-1; Tue,
- 27 Oct 2026 11:09:34 -0400
-X-MC-Unique: 7XFlFRhPPtuZJx-cX-8Sxg-1
-X-Mimecast-MFC-AGG-ID: 7XFlFRhPPtuZJx-cX-8Sxg_1793113770
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 46A391954B0B;
-	Tue, 27 Oct 2026 15:09:28 +0000 (UTC)
-Received: from redhat.com (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E918918002B1;
-	Tue, 27 Oct 2026 15:09:01 +0000 (UTC)
-Date: Tue, 27 Oct 2026 15:08:58 +0000
-From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-To: Markus Armbruster <armbru@redhat.com>
-Cc: =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
-	qemu-devel@nongnu.org, Michael Roth <michael.roth@amd.com>,
-	John Snow <jsnow@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Kostiantyn Kostiuk <kkostiuk@redhat.com>,
-	Eric Blake <eblake@redhat.com>,
-	David Hildenbrand <david@kernel.org>,
-	Igor Mammedov <imammedo@redhat.com>,
-	"Edgar E. Iglesias" <edgar.iglesias@gmail.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org,
-	Alberto Garcia <berto@igalia.com>, Kevin Wolf <kwolf@redhat.com>,
-	Hanna Reitz <hreitz@redhat.com>,
-	Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>,
-	Zhao Liu <zhao1.liu@intel.com>, Jonathan Cameron <jic23@kernel.org>,
-	Junjie Cao <junjie.cao@intel.com>, Anisa Su <anisa.su@samsung.com>,
-	Elena Ufimtseva <elena.ufimtseva@oracle.com>,
-	Jagannathan Raman <jag.raman@oracle.com>,
-	John Levon <john.levon@nutanix.com>,
-	Thanos Makatos <thanos.makatos@nutanix.com>,
-	=?utf-8?Q?C=C3=A9dric?= Le Goater <clg@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>, qemu-block@nongnu.org,
-	linux-cxl@vger.kernel.org, qemu-s390x@nongnu.org,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Sergio Lopez <slp@redhat.com>, qemu-arm@nongnu.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Weiwei Li <liwei1518@gmail.com>,
-	Daniel Henrique Barboza <daniel.barboza@oss.qualcomm.com>,
-	Liu Zhiwei <zhiwei_liu@linux.alibaba.com>,
-	Chao Liu <chao.liu@processmission.com>, qemu-riscv@nongnu.org,
-	Song Gao <17746591750@163.com>, Bibo Mao <maobibo@loongson.cn>,
-	Xianglai Li <lixianglai@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Pedro Barbuda <pbarbuda@microsoft.com>,
-	Mohamed Mediouni <mohamed@unpredictable.fr>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Harsh Prateek Bora <harshpb@linux.ibm.com>,
-	Amit Machhiwal <amachhiw@linux.ibm.com>, qemu-ppc@nongnu.org,
-	Zhang Chen <zhangckid@gmail.com>,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	Alistair Francis <alistair@alistair23.me>,
-	Alexander Graf <graf@amazon.com>,
-	"Gonglei (Arei)" <arei.gonglei@huawei.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>, Ani Sinha <anisinha@redhat.com>,
-	Luc Michel <luc@lmichel.fr>,
-	=?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-	Jamin Lin <jamin_lin@aspeedtech.com>,
-	Kane Chen <kane_chen@aspeedtech.com>,
-	Samuel Tardieu <sam@rfc1149.net>, "Denis V. Lunev" <den@openvz.org>,
-	FangSheng Huang <FangSheng.Huang@amd.com>,
-	Tyrone Ting <kfting@nuvoton.com>, Hao Wu <wuhaotsh@google.com>,
-	Keith Busch <kbusch@kernel.org>, Klaus Jensen <its@irrelevant.dk>,
-	Jesper Devantier <foss@defmacro.it>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Glenn Miles <milesg@linux.ibm.com>, Conor Dooley <conor@kernel.org>,
-	Sebastian Huber <sebastian.huber@embedded-brains.de>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Jason Herne <jjherne@linux.ibm.com>,
-	Titus Rwantare <titusr@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Anthony PERARD <anthony@xenproject.org>,
-	Peter Xu <peterx@redhat.com>, Chinmay Rath <rathc@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	xen-devel@lists.xenproject.org,
-	Roman Bolshakov <rbolshakov@ddn.com>,
-	Phil Dennis-Jordan <phil@philjordan.eu>, Fam Zheng <fam@euphon.net>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Tao Tang <tangtao1634@phytium.com.cn>,
-	Stefan Berger <stefanb@linux.vnet.ibm.com>,
-	Fabiano Rosas <farosas@suse.de>,
-	Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-	Artyom Tarasenko <atar4qemu@gmail.com>,
-	Yoshinori Sato <yoshinori.sato@nifty.com>,
-	Jiri Pirko <jiri@resnulli.us>, Eric Auger <eric.auger@redhat.com>,
-	Laurent Vivier <lvivier@redhat.com>
-Subject: Re: [PATCH v7 54/65] qdev: adjust PciDevfn declared type
-Message-ID: <auC-ilqUJq27neSR@redhat.com>
-Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
- <20261020-qom-qapi-v7-54-431a86b02b58@redhat.com>
- <atsxLV5YZo8dr-8G@redhat.com>
- <CAMxuvazd7G_NBOM_c6BxZn5PFSw=XQUHueHqBoQQfpzPPgi9qA@mail.gmail.com>
- <87zevz5h4k.fsf@pond.sub.org>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BuxeSr53
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B361F031E1;
+	Tue, 27 Oct 2026 15:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793114167;
+	bh=WyoOBEMd5hZXCT3U6GbGErLU5iMuF52Y0APEdOL8vu8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=BuxeSr53N6HezVPXpkTBwQAyxXiQXQMGirT/jWdAIMpopdRAYo1tvjPz9Mj4TZHOA
+	 kCKNMi0nV3dg0g3jZfLVdgzt3vZSG9lLq4AlcR0a+e3VBnedC3bymzXL9oG1SO4iWE
+	 fJACOUUU87ggc+1eu6u1/KKjtn7CLcF6A2wbcLzhoj+dB1tLXLa4KYbKieq7i748iY
+	 o2gmuzLNkgoyi0AYn+LoxhMR9H3ei2rAbSx/PGsiegdwDvsYnH1pr2f40NOC0DMtB9
+	 f87YgVhTqm0YPh9Nk+7DlZiCPK/LFgzZC/NqNbunFZp6vNHVfwUP/noI2x1kVbeQS1
+	 xgersgMKHm9Ew==
+Message-ID: <5d431bf7-8813-4e2c-a40d-b45d4ff39a5b@kernel.org>
+Date: Tue, 27 Oct 2026 16:15:48 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -167,79 +51,154 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <87zevz5h4k.fsf@pond.sub.org>
-User-Agent: Mutt/2.4.2 (2026-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: fjzfORxYFBkFzgX43DRviptXnJaWXazpOPzxc-ZmWOQ_1793113770
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/46] mm/huge_memory: fix list corruption when
+ deferred_split_scan() races with deferred_split_folio()
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
+ <auCw2-_yjh1_RjiO@cmpxchg.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <auCw2-_yjh1_RjiO@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 27, 2026 at 03:54:03PM +0100, Markus Armbruster wrote:
-> Marc-André Lureau <marcandre.lureau@redhat.com> writes:
+On 10/27/26 15:10, Johannes Weiner wrote:
+> On Tue, Oct 27, 2026 at 12:17:30AM +0100, David Hildenbrand (Arm) wrote:
+>> Since the deferred split queue became a list_lru, the isolate callback
+>> moves the folios it took a reference on to an on-stack list, linked
+>> through folio->_deferred_list, and deferred_split_scan() takes them off
+>> that list with list_del_init() without holding the list_lru lock.
+>>
+>> deferred_split_folio() does not know about the on-stack list. It only
+>> holds the list_lru lock when it looks at the same list_head, and it can
+>> run for such a folio: a THP is queued when it is mapped, as a candidate
+>> for the underused check, and is queued "again" when a part of it gets
+>> unmapped:
+>>
+>>   CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
+>>   list_del_init(&folio->_deferred_list)
+>>     next->prev = prev
+>>     prev->next = next
+>>     entry->next = entry
+>>                                       list_lru_lock_irqsave()
+>>                                       folio_set_partially_mapped()
+>>                                       __list_lru_add()
+>>                                         list_empty(item)  -> true
+>>                                         list_add_tail(item, &l->list)
+>>                                           item->next = &l->list
+>>                                           item->prev = tail
+>>     entry->prev = entry
+>>
+>> The folio now sits on the list_lru with ->prev pointing to itself. The
+>> next removal leaves the neighbours pointing to it, and they still do so
+>> after the folio has been freed. With CONFIG_DEBUG_LIST:
+>>
+>>   list_del corruption. prev->next should be ffd4000000270090, but was
+>>   ffd4000000278090. (prev=ffd4000000270090)
+>>
+>> Fix it by grabbing the lock around list_del_init() so
+>> deferred_split_folio() cannot race with it.
+>>
+>> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Josef Bacik <josef@toxicpanda.com>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> > Hi
-> >
-> > On Fri, Oct 23, 2026 at 2:04 PM Daniel P. Berrangé <berrange@redhat.com> wrote:
-> >>
-> >> On Tue, Oct 20, 2026 at 02:46:11PM +0400, Marc-André Lureau wrote:
-> >> > PciDevfn is a bit special, since it accepts integer and string as
-> >> > setter, but only output integer as getter.
+> Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
 
-snip
+While I have your attention: This variant works, a different proposal used
 
-> >                                                       But I agree we
-> > could do better.
-> >
-> > There are multiple options. We could keep declaring the property as
-> > str instead. In this case, the getter should probably return a string
-> > for consistency and correctness. This might surprise some existing
-> > users though.
-> 
-> I.e. ditch numeric suppport for numeric addresses, right?
-> 
-> Incompatible change.  Do we care?
-> 
-> If we don't, we should be honest about it and mark qom-get unstable.
-> 
-> > We could introduce new properties like `devfn-str` and `devfn-int`
-> > that alias the same value.
-> 
-> Compatibility break.  If breaking compatibility is okay, I'd rather use
-> the opportunity to get rid of cleverness, and go with your first option.
-> 
-> > We could also introduce a new structured QAPI type.
-> 
-> What kind of type do you have in mind?
+list_del_init_careful()
 
-IMHO the root cause design flaw here was to overload 'addr' as a
-way to set both the slot number and function number, as using
-one property for two pieces of data is a well known anti-pattern
-we caution against.
+instead. However, that is documented to require list_empty_careful().
 
-IOW, we should have had 'slot' and 'function' as separate properties
-from the start.
-
-From a CLI POV, we could easily change 'addr' to mean only the slot
-number, since it is always parsed in string format without the
-magic (slot << 4) | function encoding. Then add a 'function' prop
-
-The challenge is the impact on QMP with strict typing, as ideally
-int format would soley represent the slot number, but today the
-int format is encoded (slot << 4) | function.  So anyone relying
-on int format in QMP would silently have a semantic change if we
-altered what 'addr' means. 
-
-Deprecating 'addr' entirely and adding brand new 'slot' and
-'function' properties would be a significant disruption to
-a syntax which has been documented for years (decades).
+Do you think it's worth looking into?
 
 
-With regards,
-Daniel
+https://lore.kernel.org/all/20261026-thpsplit-careful-v1-1-d357d70fd6f4@columbia.edu/
+
 -- 
-|: https://berrange.com       ~~        https://hachyderm.io/@berrange :|
-|: https://libvirt.org          ~~          https://entangle-photo.org :|
-|: https://pixelfed.art/berrange   ~~    https://fstop138.berrange.com :|
+Cheers,
 
+David
