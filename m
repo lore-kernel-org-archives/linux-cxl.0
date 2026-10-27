@@ -1,47 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793108578;
-	b=NjliNRCCYA5EFtj/GdHai4lCf/47TNspaaBLZkasqEVfe4n6iwuOaCT8w3LzZg4CMYeI
-	 1+kVEIobpmVPnhAZSBhe4QhdLmY6z+QYyvEOdETPPA4VPz5J61pfqg8d3l4v90DkvMi2/
-	 iazt4sQTf9Cb0Epf8M/JfjIu510dwGdGvbPWdMgyFVAZ67VVPiaB3/xqr1TzozgxOj8Da
-	 bxQ94KFofVqD5VUsvuRW1d1Fm6idYke/HBA6cizryWqeu2vw8Wz32GuGr7Tt/SR1pwFBg
-	 c5ssYMD8fqYiDurEW5xyxb+o0YdMI1eQqgAT7hWX3sIZqXmx0RdohaOhe+9tOxqJHig==
+	t=1793108961;
+	b=oegKX1fOhd9lIZc2krOOCf2b4LtoRd6QMG/7gLc+xAgY4n2fpGpxHZvFFLdC6EtLJYQ+
+	 TBazr6yFCb8gYRWbeYK+aZj64aXCOg3E6UnMtianvgbQ7EjmnirJLyRmv2WIPmEcQjta7
+	 xiOeUx2RuOxwJiNevM/cBbPv7B+jZcOn2ghR9CULcnRalWtyKqkFEEgjFXdZPdclsSwxZ
+	 Jkm03n36ryjg0J8ipphCHZ9VfZ7nWuXl9qedSUl6mv6QkPdDxobDGCPkus8toUZYVdk2Y
+	 ZVRVVNOnUpEcmKQCzB1zPDDNaDzRgFH9cJNCOVlpmJA0Z95Pod2vAkQR5tVn76X+Dpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793108578;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=0+f6IJooHiQbF9wAyC4ax/+y1Gmk+/E4quNL5EJAkoQ=;
-	b=UmsMlh+nwZ61GDhMYH5tDmC77xyLkgoNSmn73Jz9c6+D6xoSk5K8KVm5M3ffnzrXfUkH
-	 qRYa5jhX2qV7gGqOk7kXI4GPkUKzpMg3jLZ1P4eLE3KmUx4yIK3R8NY5sN7JLF52tdfmW
-	 oVULAciIcbbi8e/n4QZzHyh/yqPbh9uLIJ6tQJs9nXdsSBCxRmdBZL0nMbS0/v3Gqdqdk
-	 PzixwuRYqzOFsG23GIHRLtRsqITw5HLCMBO/eTMH93QbO7QEzgyPtXZT3/oeJ2D83TfmN
-	 i3bSX9dWEo/Ds35452efVH1tYvAnr+A4O6c/8qXoq9OacafDiM72u3RYBd4BVXH6wZA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793108961;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
+	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
+	bh=XomX6DB6D1/SIO93qU+NvqAlwsKLsAk/d0xRuNeXAOk=;
+	b=xq8+oMUAZ3fPbUWgWhwk2D0yxL464MgPBb1PhK7c7GI5TvgTlR+8ZE0tbWro50vDjUeO
+	 UsGDqK+aG6gM4J6Y31n6m93vPq2vvvzrXcs3ZV6H3XY89Pa0AJxNE6TAhFPRsKdUyL6ob
+	 zuR1m6CxsnL7e1JyCYKNQ4qWBUw3w8jcXKI82FhBsIBo0p8QFb1ssRoBNX4YvUxTv1sYR
+	 wPG4hHIEKXwOqT+DJbFj9hPO1GrbI9xUjP3ZHuvhr61SGukqGmcXQnDjcWD8hk5JWnkvv
+	 5oMNnzY2S8tgCUZ9msyYdYNB+8Cths91iUOvITx03zGGx8wV5dIxTTa4kUy1g8lbcNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="O/cT7rN4";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=QirECd2g;
+	arc=none smtp.remote-ip=209.85.160.172
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8429E606A31B;
-	Tue, 27 Oct 2026 13:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E4F606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 13:49:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41E4F606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O/cT7rN4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234691F01825;
-	Tue, 27 Oct 2026 13:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793108578;
-	bh=0+f6IJooHiQbF9wAyC4ax/+y1Gmk+/E4quNL5EJAkoQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=O/cT7rN4J4QJA9+qKjooI/EO5er0turCIeVkTDeBg9nmgtchbI+fpxO9S6+r+oBWY
-	 LwmatZaw1QbMHP8ScOJ6R+l2fGSrhmt7f6UUvC43uiHkIJGDGGCW0OQjZcEIUQEPa2
-	 w142oOqbY6kYvnslUnzMN4PB88SswCTWpes66yGol6fQLmBbkQaxbQK69GdBHy5hRV
-	 glBMz2eRymovbjCzKL0DCgcuiVWEYF4wIngi0eCG9PplngO81D5jwjFqaadaqIhz3C
-	 3l+I0Do+I4H43SEQfhyQdeFO3NHr7grqnLgvsjGY/hUxovAgKOJx9ptbOi6w43lJzE
-	 qaE/Jiu8PIH2w==
-Message-ID: <38491041-d167-4ea1-8813-e75bd11cd10f@kernel.org>
-Date: Tue, 27 Oct 2026 14:42:38 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=QirECd2g
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-536c8f958d7so30673791cf.1
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 06:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1793108954; x=1793713754; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XomX6DB6D1/SIO93qU+NvqAlwsKLsAk/d0xRuNeXAOk=;
+        b=QirECd2ghwJmRxFJOo7gQFoS9QwNcRuzit5+GxNaO2qtQ+wt8h38/bJwNtvPVkzpvs
+         uBKiKsScICwdQfoim073GAnQEIVbJHBo9jXXyitttfpOjHA+RUzshYmhJah2wsfiGeiL
+         quU+CXY6kF1//9a51cB6/Ld44ufTmvwrx9FHP4o/SOeQEzHybxBMr5nkIL1LY5F47hgn
+         NOUhG2kwUKeQOOVvId/Q2+PdYC4gdULgfWWMzo1gkaBatU8cmxuxgAeWtgwCBJxZejMb
+         H/SSVcSUMG6rpkrI803+iGPyss26YF5EI2j0KKoKWo9uQjHkad4gHNpMATKcxlKytRwr
+         12sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793108954; x=1793713754;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XomX6DB6D1/SIO93qU+NvqAlwsKLsAk/d0xRuNeXAOk=;
+        b=AYFrD3o2FuxZEyoffUlNDS4nob5n0+K7zLaRjIDSG0dkL4BT3MPK8dkrGUXLw90XWH
+         V04MgErUoLspePl4oD0Tshhq2Z5lt/XkIJCWCJwd3B8ozFEDDn1xFVwlpGkRJuXdcQnb
+         dJ1NNGD6f6QicILUAW1PJaMVcmpZxpZPq72ei5EjrcSqoID2lIZD5jvFtOqBbXC8laki
+         6hXUAL/4osBTM3aPHVU1dpS/DJr8dKMmxKpw5QtQTyOzP3uyfM20NVgANp0rY9hqyTfr
+         NQRUc1iHBmltCix85qfeVfVO3CPUz/XCm4fmSUhWBMg1bl6JJh/JenTg0dXpP4PxcVOE
+         07DQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz0vlWe9tsHE+LIcApNK5uviGMtHCv0egWhjaTq0UDSqJ52WnGPR2eh9G3LrPx2F8PYSume1udZKYE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK5tlfXd1V+squ37UX6hGxMTwofaW/T/XnaaSmx6zCy0JIbAptR
+	HNGYZOdtQLcYgKeWKFiOhxvcKlruyReEqdNV/T2+eJj5OFR/fm1/s6wQU67WMSVMjnw=
+X-Gm-Gg: AYBFou2xmuAnTrphT5NZOdEy6sgHsThxveiwYu2tCR8yn7fX8va4ztGguKsj4KR886O
+	5JDysv1ON3Pfya2SVBawZSRMZNBreXP1w27glta9k7VLI9d4KmmECXt/YPYBEDyj2I5l/o7Hw+E
+	HxUSsi7Mkz2ixoi40/qe3PVacpY2/OZnDl0/ZE5uzNaCfCHLcngg92bzOinrgTmIvrPxBAyOwgu
+	ZGVEXQzGQKybjTKReCyzxWvADIoTpSj1dMRWsOmMBK4sJXV/yVrZ4JLKuRVcL4ehev5THS1L4Am
+	4dF+bPEgHMoDZpWzlbOpU+grb23MJkXCZIaAnjgLdX3f528f19RllqCgfWigWojTMeY282r+Ih8
+	xyaF3WuiifoxaB5/xQbNmNMheMHeoF1A32wQJYEu71OyVPvT1olelvG8iq+dO5IfpTa5SpTQe3N
+	bTE+Va8MAsdL37bC3z6nsl0aWV8vb0z0bzMKu86Nk8zq/nIrO8+3ltDk3eglpCUDqiYORuSVogJ
+	3ZsNClGbq4EWrecXRCN0qnqAACX80iMLsGp7qJnk1P7o38ovPhLx8FsVZoEQIqxBTLgrxOqhgvw
+	6Jx0NAv7Npftz6MIthXRKDP5UdQ=
+X-Received: by 2002:a05:622a:1b10:b0:532:f0a2:ef4 with SMTP id d75a77b69052e-5383b4caaa3mr156684351cf.26.1793108953988;
+        Tue, 27 Oct 2026 06:49:13 -0700 (PDT)
+Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-53839709ed6sm79085531cf.16.2026.10.27.06.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 06:49:13 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -51,145 +88,190 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
- accessing shmem state
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org, stable@vger.kernel.org,
- Chris Mason <mason@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
- <auBdPOKXJpE-lX8d@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
- ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
- AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
- 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
- g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
- ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
- 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
- /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
- jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
- DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
- HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
- 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
- LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <auBdPOKXJpE-lX8d@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 0/6] mm: fix pfn walker races with memory offline
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org, 
+ surenb@google.com, mhocko@suse.com, brendan.jackman@linux.dev, 
+ hannes@cmpxchg.org, ziy@nvidia.com, linmiaohe@huawei.com, 
+ nao.horiguchi@gmail.com, ljs@kernel.org, liam@infradead.org, 
+ rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev, 
+ iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com
+In-Reply-To: <9051ac3d-60b9-4ed2-b781-b7191898bc83@kernel.org>
+References: <20261027042204.3741307-1-gourry@gourry.net>
+ <01d7d54d-0047-4eb6-a1d2-5b3f113f26cf@kernel.org>
+ <179310071902.664110.12994053710961856591.b4-reply@b4>
+ <9051ac3d-60b9-4ed2-b781-b7191898bc83@kernel.org>
+Date: Tue, 27 Oct 2026 09:49:12 -0400
+Message-Id: <179310895201.1491991.14362391061932133491.b4-reply@b4>
+X-Mailer: b4 0.17-dev
 
-On 10/27/26 09:13, Mike Rapoport wrote:
-> On Tue, Oct 27, 2026 at 12:17:23AM +0100, David Hildenbrand (Arm) wrote:
->> shmem_file() only checks a file's backing mapping. That mapping can belong
->> to another file, as with a Coda file backed by a tmpfs container after
->> mmap(). It does not establish that file_inode(file) is a shmem inode.
->>
->> Seal handling and memfd preservation use this check before accessing
->> shmem inode state, so they can access an inode of the wrong type.
->>
->> Add file_inode_is_shmem() to check the inode's file operations in both
->> paths. This identifies regular shmem inodes, including those used by
->> memfds and ordinary tmpfs files, independently of wrapper file operations.
->>
->> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
->> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
->> Cc: stable@vger.kernel.org
->> Reported-by: Chris Mason <mason@kernel.org>
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+On 2026-10-27 13:51 +0100, David Hildenbrand (Arm) wrote:
+> On 10/27/26 12:31, Gregory Price (Meta) wrote:
+> > On 2026-10-27 09:57 +0100, David Hildenbrand (Arm) wrote:
+> > 
+> > I actually have a reason for these fixes other than "bot said bad".
 > 
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> So you found them on production kernels?
 > 
-> With a small nit below
+> We did not have a single real report of that for probably a decade or
+> even longer in production.
 > 
->> ---
->>  include/linux/shmem_fs.h | 6 ++++++
->>  mm/memfd.c               | 8 +++++---
->>  mm/memfd_luo.c           | 2 +-
->>  mm/shmem.c               | 5 +++++
->>  4 files changed, 17 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
->> index a7c7a96a7cbf9..2ceca7993e4f5 100644
->> --- a/include/linux/shmem_fs.h
->> +++ b/include/linux/shmem_fs.h
->> @@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
->>  		unsigned long len, unsigned long pgoff, unsigned long flags);
->>  extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
->>  #ifdef CONFIG_SHMEM
->> +bool file_inode_is_shmem(const struct inode *inode);
+> Recently, we had the single first report about the compaction case from a
+> stress test (no production):
 > 
-> Do we really need the file_ prefix in this name?
+> https://lore.kernel.org/all/20260903095543.3752338-1-yuan1.liu@intel.com/
+> 
+> "We are not sure whether this race is reachable under realistic
+> workloads or only under this synthetic stress test."
+> 
+> Where I motivated that we need something clean.
+> 
 
-Good point, I intuitively added it. Can drop.
+tl;dr:
 
-Thanks!
+while these are ai-generated, I'm not posting untested, unreviewed
+schlopp for the sake of getting patches upstream.
+
+I actually care about this issue.
+
+---
+
+Some of these don't show up as crashes but instead as hung offline
+attempts (GFP_KERNEL landing on movable).  That shows up as our
+hypervisor just failing to overcommit / guests hanging.
+
+The compaction/alloc_contig bug is one I've seen in production.
+
+I've seen a handful of NULL derefs in production i suspect are the
+zonelist derefs, but it's hard to say (they're rare enough that we
+lose the dumps before someone has a thought to pull them).
+
+I expect this will scale up as we increase the number of VMs and
+the amount of hotplug we're doing.
+
+For clarity, we use ballooning + hotplug as a combo:
+ - ballooning to do cooperative overcommit
+ - hotplug to defend host stability when the overcommit ratio is extreme
+   (basically deflate_on_oom because a host stability issue)
+
+We're pretty aggressive about ballooning guests to squeeze them and
+dropping the balloon to hot-unplug that memory when a guest is cold.
+
+
+skippable side note on virtio-balloon/mem:
+
+I have some improvements to virtio-balloon and virtio-mem that allow for
+handoff from balloon directly to mem for hot-unplug without having to
+drop the balloon, but I haven't posted those (and we don't run those in
+production, so this is not the nexus of crashes).
+
+Similarly I have another extension that lets the host set a "NO_ALLOC"
+bit on the zone so a balloon-only system can provide the host a way to
+defend against mass deflate_on_oom events (we prefer guests to OOM and
+have the host to kill them due to PSI, rather than threaten host
+stability). Also not in production and not posted, but there have been
+a lot of experiments on overcommit here.
+
+> The thing is that the race between offlining and actual memory removal
+> is extremely long. Poisoning is just a mechanism to find these theoretical
+> issues that could cause issues faster.
+> 
+> And with all the other things going on, this has lower priority, and I
+> wanted to get back to the AI patches I have once the other thing is sorted.
+> 
+
+Sure, I realize I'm pushing this out during the merge window, but I
+felt it reasonable to get some thoughts on whether these fixes are
+worth considering for the window.
+
+If the answer is no just put em on the back burner. We can carry
+fixes as-needed.
+
+> > 
+> > I have a reproducer for every single one of these (and the other
+> > series) - but a handful are unreachable due to a 2-statement read
+> > being emitted as a single read by the compiler (which can be undone
+> > by a targeted compiler flag). Those were included for completeness.
+> 
+> 
+> In general, I think we want something that will protect all
+> pfn_to_online_page() + zone->contig thingies, not just selected ones.
+> We discussed in the past using some sort of rcu for that.
+>
+> get_online_mems is usually the wrong approach.
+> 
+
+Agreed, although the PFN walks seem genuinely harder to wrangle into an
+good rcu shape.
+
+get_online_mems seems like the backportable solution, but i can see not
+wanting to have to go clean it back up later.
+
+> protecting individual pfn_to_online_page is just whack a mole. Likely we want a
+> way to check whether pfn_to_online_page() is called from the wrong context, and
+> maybe we need a variant that can be called from "wrong context" for a good reason.
+> 
+
+Agreed.  Although I fear the structural fix for this will have uglier
+performance issue than we think.  Then again, maybe it doesn't matter
+(if you're doing a PFN walk, then you're likely already doing something
+stupidly expensive).
+
+Where i'm largely concerned is the page allocator and the
+compaction/contig code not taking a regression.
+
+For zonelists i've ended up with something like this:
+
+@@ -1461,7 +1466,7 @@ typedef struct pglist_data {
+         * Generally the first zones will be references to this node's
+         * node_zones.
+         */
+-       struct zonelist node_zonelists[MAX_ZONELISTS];
++       struct zonelist __rcu *node_zonelists[MAX_ZONELISTS];
+
+...
+
+static inline struct srcu_ctr __percpu *zonelist_read_lock(void)
+{
+       return srcu_read_lock_fast(&zonelist_srcu);
+}
+
+static inline void zonelist_read_unlock(struct srcu_ctr __percpu *scp)
+{
+       srcu_read_unlock_fast(&zonelist_srcu, scp);
+}
+
+DEFINE_LOCK_GUARD_0(zonelist_read, _T->scp = zonelist_read_lock(),
+                   zonelist_read_unlock(_T->scp),
+                   struct srcu_ctr __percpu *scp)
+
+static inline struct zonelist *pgdat_zonelist(pg_data_t *pgdat, int type)
+{
+       return zonelist_dereference(pgdat->node_zonelists[type]);
+}
+
+With this the zonelist cookie checks evaporate, but you still end up
+with guard() at every walk location - not great, but better i suppose.
+
+I was hoping this could be sunken into the zonelist walk macros, but
+I haven't seen that pan out.  I've been spending a lot of time auditing
+that code for private nodes as well.
+
+
+On performance:
+
+I've been hammering this with will-it-scale and a bunch of workload
+tests on a variety of hosts and have not seen any obvious regressions
+outside of powerpc (which i can't test directly, but SRCU-fast requires
+atomics for powerpc from what i can tell - so it will eat overhead
+without a fallback... if there is actually any hotplug ppc hardware out
+there to care about?)
 
 -- 
-Cheers,
+~Gregory
 
-David
