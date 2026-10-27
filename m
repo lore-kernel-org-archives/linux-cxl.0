@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.135
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793094065;
-	b=pwBk4P61wu6v+uScqXX/RoI4kN7eSBIe23HyqJn2pENOmc1RBIXZgNPLMlFC/DYF/Oaw
-	 ss1/5azSNhO62rePE1/TwwiHEymM9C7lupUB7Toc9goVRh/iCzXo7Xed+s8ahliwZDjsS
-	 WASG//8xWR2eDcD3pPWtemil+rjghawnDynbwgjeJm9dVVHw8kvA3dJqbCqh9ZaifzedW
-	 XYkJwFm8/MNnxkchVtED2FIV9+nU/KaZRRYAm0B95HkaHOw9rJPIBPn5v95aza8rSEjfV
-	 3/8S1aOt4SZo8c24ll3Z0nfX3qnfulA8WsJq0oXgRiih1HCBFfEZxd8yPUovKeyKd/Q==
+	t=1793094281;
+	b=hmU2YtegsrP6fTDK9DviWao0QeRanHfssS0Fae6fp0AVDrI7tqiEBByND6gR4w4zQN0d
+	 VxNzB5kZWnDKFQ5xfIU4hHCl3iZnKo572kP0HlpdbV5o0sNcP9Uh96t+lnKEgZOY+5IF9
+	 J43rUcqtXtxMYxdyslvuOvgJEEU1p414iUM3Rl2bU8IaCL7Y5EHoCnJuinXUXpGcwFeQF
+	 xJGup7j9Fm0xyG14uD5c1P5dZScOsqJaDLLnYIHh3psUZPeRuvC4ty5WbyfG0HVvQ0D/N
+	 FQorxoXhlo9rS3ApUHzZSlFaj5wZpJNHujwsLoC7XkPUzt3I5ByQrO28T2ZbL7yII4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793094065;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793094281;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
 	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
 	 To:X-Mailer;
-	bh=SFKyeuO1JPOzpTH1nQSbh9oibxPGA9YOhGPCshroXxs=;
-	b=Cw3NlnjVQx+RFXIoEYAATy7nndg/YUL0oULl4cMaIC2Nkpk7ahuywDsxaQq5h4D4o6jE
-	 /EtGU8ArJilO1/AU6F+J6U/v+YLg7CUZ9fImO/0PI+sJUX1R9s8eef100mnidOR5HhV6C
-	 0/Y1S7ncknSD62fMxkDjOfVp1B7S13FF31VLlDxMaTbQGvqzInrBTyuNWtXF1ZCuh1/Cz
-	 DF672NJIjzldSyIHZZD0fTH/arXqRMmqs9I5twOKEIzA3v3fnc6mMk3CLUy58RmM2U49F
-	 qngaZofjO8J3Hh4yuMUBiLEOt+LcEar+6EgaDPTnmdtjmiqK13NRgiOsUhLVpcJLP/w==
+	bh=+gg4vR3fmVnG5maxAfXCLUk2K7fJTSLOiXsuwQyP13c=;
+	b=UF4/WA3GZ2CzfuLUZ/2ruHTv9D+Gb0vJkhnyFrkSkIWu8mmPjkvV5/SOF8W3mrf/tbMI
+	 YbdhuSmaQYnXwlmqsjJub05x23F/fczsG//fTaMdj3c++k1TPlMwd3h2rwXtNh4L3OGms
+	 e3B/O4iZ9/+xu/lA7zxMkCJzfsu5TsWnCBRbodMu9zi8XgmA3QljyPS/IPXctZYv6bmX3
+	 Ue72O/K3UqsTPQvTDwEEwnL6su3mto8STQVivT3ivGsD7xRBCHlRiBKonWJ8R3N+hpTCr
+	 YNuje81+Sif2XOVsTLMb/QfN5lmsmRdmxTxym+YycDjGCvZjolkDPbLYumiQjGDCSnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Wy8rVp9D;
-	arc=none smtp.remote-ip=91.218.175.13
-Received: from mta0.migadu.com (out-13.mta0.migadu.com [91.218.175.13])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gNzLclvd;
+	arc=none smtp.remote-ip=95.215.58.135
+Received: from mta1.migadu.com (out-135.mta1.migadu.com [95.215.58.135])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F018D606A33F
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:41:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F018D606A33F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A1B606A32D
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:44:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35A1B606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Wy8rVp9D
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gNzLclvd
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=SFKyeuO1JPOzpTH1nQSbh9oibxPGA9YOhGPCshroXxs=;
+DKIM-Signature: a=rsa-sha256; bh=+gg4vR3fmVnG5maxAfXCLUk2K7fJTSLOiXsuwQyP13c=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793094062; v=1; x=1793698862;
- b=Wy8rVp9DDbUKlyVz5wuK1Feezur9xae+q/Z6Hz9yNW58v47WUH5wcaD9Hrg3xWbyvhu39BqI
- ExWkcwZHN1517KLsoJWC0uj/l5WpUULFpWzYP0SvVGopmxnWl4TptAwsG4qqUQ92vI72Mtsn8k9
- 0zb7+9ocVTbtmM6u1o472cEA=
+ t=1793094279; v=1; x=1793699079;
+ b=gNzLclvdu9m1gyvv0pSAmIjLpny2p0E4lbCIgdharCug0gruLgksOqUPZHjJjYvzCRrMZEqZ
+ BhMKbq2Tt5gWy1KtiCZ7kwh9wWR1Po4osGjY8vUU/f1n8v2J0dH2J2mW12ceWGdmUh6+8ngwqDK
+ /m6YU/MKq9hmnUlKgC7g+22I=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta12.migadu.com with ESMTPS id caa1b482120fcdcd;
-	Tue, 27 Oct 2026 09:41:01 +0000
-X-Mizu-Trace-ID: caa1b482120fcdcd
+Received: by mta12.migadu.com with ESMTPS id d06deef23f08d73b;
+	Tue, 27 Oct 2026 09:44:38 +0000
+X-Mizu-Trace-ID: d06deef23f08d73b
 X-Migadu-Flow: FLOW_OUT
 Content-Type: text/plain;
 	charset=us-ascii
@@ -58,11 +58,11 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [PATCH 21/46] mm/gup: fix out-of-bounds write for nr_pages == 0
- in GUP-fast
+Subject: Re: [PATCH 22/46] mm/gup: check for overflow when converting nr_pages
+ to bytes in GUP-fast
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20261027-fixes_core-v1-21-6f74bec9a5bb@kernel.org>
-Date: Tue, 27 Oct 2026 17:40:31 +0800
+In-Reply-To: <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
+Date: Tue, 27 Oct 2026 17:44:07 +0800
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>,
  Michal Hocko <mhocko@kernel.org>,
@@ -125,12 +125,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-fsdevel@vger.kernel.org,
  linux-arch@vger.kernel.org,
  linux-cxl@vger.kernel.org,
- Chris Mason <mason@kernel.org>,
  stable@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <31275548-1D1D-46D7-A0FE-36D16C03384F@linux.dev>
+Message-Id: <DD785D08-2054-4DED-9EC2-A7464BAAAFE0@linux.dev>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-21-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
@@ -139,26 +138,19 @@ X-Mailer: Apple Mail (2.3901.100.1.1.12)
 > On Oct 27, 2026, at 07:17, David Hildenbrand (Arm) <david@kernel.org> =
 wrote:
 >=20
-> From: Chris Mason <mason@kernel.org>
+> The overflow check in gup_fast_fallback() only covers the addition to
+> start. The preceding nr_pages << PAGE_SHIFT can already have truncated
+> the length on 32bit.
 >=20
-> With nr_pages =3D=3D 0, GUP-fast still enters its page table walk and =
-can
-> write past the caller's page array. The old end <=3D start check =
-caught
-> empty ranges, but was replaced with an overflow check.
+> Users such as RapidIO's rio_dma_transfer() can derive such page counts
+> from a 64-bit userspace length.
 >=20
-> Users such as OrangeFS can pass a zero page count derived from a
-> userspace-supplied length. So let's return zero for nr_pages =3D=3D 0 =
-before
-> starting the walk, just like GUP-slow.
->=20
-> Fix generated by an LLM and sent by Chris Mason in private.
+> Let's just check_shl_overflow() to reject any such overflow with
+> -EOVERFLOW early.
 >=20
 > Fixes: c28b1fc70390 ("mm/gup: reorganize =
 internal_get_user_pages_fast()")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Acked-by: Muchun Song <muchun.song@linux.dev>
