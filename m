@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793079267;
-	b=oe/01eGRgVJtfU5ZpAHks57waH1OqtbyH+xfTk5Db0ABrDxHaDQ+iIMuc1WaJNrxoZUP
-	 LoyI6u9dB9Q2dRapAYXZFEeQXBXOy7bVgv8I68KqV4zXGjNNFqIxPZJ+zqY3qwodfihkD
-	 ZVXaNzfOu1q4JWWe7aFKeSKTLdjdMyM4E6ButERPKT7zkpH5+ApSdBunWmIcxtd70NoDh
-	 LrUfpGUIr4iIZwgZ5yt5QlMkdkryMOIXBDA1g73x0jHDf3ojw6XjdeOfhByPh+bIGq3qj
-	 vLWdi3fIg3CYEV28FUlVyvvK3wMfH840o01Ula+ZynvAP37XMsrLKf5fKWMyBR5g4lA==
+	t=1793079390;
+	b=blaBKUi9w3nfy16hJjNZ0WlMWIoTZUksYRpj5g8b6jgPDgpdiqcUhlttmQqbhzmYYld0
+	 N4Q3iLTQ66Ex1JHDQwIuUfHe1DTBUIxlO6k8VToCMN9mN2QJ8l2xM/klI8zfZLzb67nry
+	 fq9J7cptSn9mWEqTHUwJgnqieI8VV5n9TnN6AzlbcAXlZmFiQc6SnLDSvRLHBphQc0ZeY
+	 iqqdrvUcFTUrYlRJMbdi6YFYpMe+U/flQTnU+mmhl8MYOVlQ+rm1eMHXsyGpMDs+gi6Cm
+	 V+DxrZCwy9j27iX3e9aG59Dh4RaEEDJulDylgVh/eGoTk2LjWof472JhwjWjvY/3ogg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793079267;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793079390;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yY5LP8ICr1JF2g7v9NnKIHypc3U29cN0UuFVz/ueM4Y=;
-	b=aJCd7W4XsdxKHvji5GGiBOG8o1QCEpygfPGmUEPstT/IYeRwbYLohX81kVl76zFOAAGy
-	 Qa/zZASR2BltYje4gmNPJ0DcKL8Qlfwq200irD/ai26d5IHZsr/va+9pn7rWUKyWTV6jp
-	 aDuEX43ZcjT0n+dSjxsrwB3ldzZvm587Xaurf8FNIEZmovzzVzHYM4Vr9Wq5o/ltu7/YE
-	 yIamEV5YorO4/w3JnDMJpQ3eVurHaSFwHXCEnTCx7M9LU0gmmY4hAK5CrQw82T8pLlhgO
-	 x81dx8cBieirKph2TRDUnz8V0hy9RGVZhX89+kB7ciCv7uhFDzIN0yJf1hB2gu4JQzg==
+	bh=ZlSgyiaIikxOqBZqlIcKgQhcApT6f8eziJntfB3/9n4=;
+	b=HWB3TLv7psyr6ZbEVAABTwOuUEBzJ4WTCrSDEmclEJJPl3YIs8YR7Na7mvEpUCXmPJkJ
+	 863MeUq8Bjxir2jeegwOgivmUks7y0nxA6p+6V58Z5SM+0MXlXqaw0DBBfxIG6f7g9BvF
+	 1qynYxgzNjjhbKaGdr7+Cc/02aMRsGsMNoT1aI7N+AZGHOR4TjK11/t6UavYrBgnMSzSO
+	 YlBwQI0ma9sqSZmu+pJDbZAsIRwmJIlXsH0bbyXxTibeRoVypnAdDD1u2Idg0hLdqUZR0
+	 p2Gz9piWlg+yiwZ/7cONEwGUYY6JIAMe5oD6AaJligAXEHL36vX2EIzPa+s/qwVuuZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hLUs34fc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="cK/fesEe";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B75D606A31D;
-	Tue, 27 Oct 2026 05:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DCF606A31A;
+	Tue, 27 Oct 2026 05:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hLUs34fc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED07C1F01825;
-	Tue, 27 Oct 2026 05:34:26 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cK/fesEe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BCA1F01825;
+	Tue, 27 Oct 2026 05:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793079267;
-	bh=yY5LP8ICr1JF2g7v9NnKIHypc3U29cN0UuFVz/ueM4Y=;
+	s=k20260515; t=1793079390;
+	bh=ZlSgyiaIikxOqBZqlIcKgQhcApT6f8eziJntfB3/9n4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hLUs34fc/902ITXB31PAbg4PZ4/JcjJ4VHF46IPQTHz5khvL6FkOjBc3o/faJ3WEz
-	 2vkZ7AaBydc2/14rTpHjOrFm65/P256OO8ZFQ8tMj1Fhvaad07SZwaqJA2220lPOLV
-	 zRaZXxKDQi5yEaCO1DSg/n0xxDMsyP9hnMQVZjEM+4WDJEk8PlV1cChEBnZ5mw8wR9
-	 IUfZif0nQfAy96JPKHWXIBTC+I7DKwb28KWDwYf559fn5WtU4+lAsOTNezOIyYL9wA
-	 62Qf5YY+Bi6QQ9PrNIrwwXcyRDzRkWbMGd7ug0ZpxzjphCjbRI4t/VEQi2iRL4ZPAo
-	 NE7RKeZuc61kw==
-Message-ID: <sashiko-outbox-186124@kernel.org>
+	b=cK/fesEeqlP+4LATLhYgxlodPJH8tsc2uoRlJowtohxtTOjtrOSUoJB+0g9tYybN0
+	 4XFJn5ojQ4wgh1ESTgB1gJc+umQ1icgkNgLsbwcwJ/oYSpx1foQVSC4+Qir/9ZNYxU
+	 pe6Fe2IXVvYli99LwwGcdnF7fY+glNB2jYAa32mosEUw+0j0buMBpXABcTjysCtWWU
+	 Rj5YONNPjqgMyITlfxtWpyA+Nz8QuHaCQZipRbvzlHV5TqNQv/C84ztH82mZMgszrp
+	 AFZnKktzd826tMGgFjEixv+Fuxqe9X1curAFgYkre2btb/HWtiTMuM3Df3tjdVjT6S
+	 6eHms0ryWleZw==
+Message-ID: <sashiko-outbox-186127@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 08/23] rust: device: Expose Device from_raw()
- publically
+Subject: Re: [PATCH v5 15/23] lib: rspdm: Support SPDM get_capabilities
 Reply-To: sashiko-reviews@lists.linux.dev
 To: alistair23@gmail.com, linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
 Cc: ojeda@kernel.org, gary@garyguo.net
-In-Reply-To: <20261027052536.1722081-9-alistair.francis@wdc.com>
+In-Reply-To: <20261027052536.1722081-16-alistair.francis@wdc.com>
 References: <20261027052536.1722081-1-alistair.francis@wdc.com>
- <20261027052536.1722081-9-alistair.francis@wdc.com>
+ <20261027052536.1722081-16-alistair.francis@wdc.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 05:34:26 +0000
+Date: Tue, 27 Oct 2026 05:36:29 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -61,64 +60,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] rust: device: commit message claims to expose from_raw() instead=
- of as_raw()
-- [Low] rust: device: missing #[inline] annotation on public Device::as_raw=
-()
+- [High] rspdm: swapped fixed and extended alg_count nibbles in from_bytes()
 --
 
-commit 4612538f4ce0b7f345e904370c4f1a9efe8adc51
+commit 9a97b825dcf3405e60a1e8252ec1b1e885dfcb08
 Author: Alistair Francis <alistair.francis@wdc.com>
 
-rust: device: Expose Device from_raw() publically
+lib: rspdm: Support SPDM get_capabilities
 
-This commit changes the visibility of Device::as_raw() in
-rust/kernel/device.rs from pub(crate) to pub so it can be called from outsi=
-de
-the kernel crate.
+Add support for the SPDM GET_CAPABILITIES command and response validation,
+including parsing the SPDM 1.3+ SupportedAlgorithms block.
 
->     rust: device: Expose Device from_raw() publically
->    =20
->     We are going to call the from_raw() function later as part of the SPDM
->     library, so expose it publically.
->    =20
->     Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
+> index 98922638a228b..080c2f2c49376 100644
+> --- a/lib/rspdm/validator.rs
+> +++ b/lib/rspdm/validator.rs
 
-[Severity: Medium]
-Should the commit subject and message refer to Device::as_raw() instead of
-from_raw(), and fix the typo "publically" to "publicly"?
+[ ... ]
 
-In rust/kernel/device.rs, Device::from_raw() was already public prior to th=
-is
-patch:
+> @@ -176,3 +184,312 @@ fn validate(unvalidated: KVec<u8>, context: &'c Spd=
+mState<'c, T>) -> Result<Self
+>          })
+>      }
+>  }
 
-    pub unsafe fn from_raw<'a>(ptr: *mut bindings::device) -> &'a Self {
-        // SAFETY: Guaranteed by the safety requirements of the function.
-        unsafe { &*ptr.cast() }
-    }
+[ ... ]
 
-Whereas the diff below actually exposes Device::as_raw() publicly so that
-callers in lib/rspdm/lib.rs and lib/rspdm/state.rs can pass the raw device
-pointer to C callbacks.
+> +impl SupportedAlgorithms {
+> +    #[allow(clippy::get_first)]
+> +    fn from_bytes(buf: &[u8]) -> Result<Self, Error> {
 
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 2291d85b6849e..a355ac9803410 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -262,7 +262,7 @@ pub unsafe fn drvdata_borrow<T>(&self) -> Pin<&T> {
-> =20
->  impl<Ctx: DeviceContext> Device<Ctx> {
->      /// Obtain the raw `struct device *`.
-> -    pub(crate) fn as_raw(&self) -> *mut bindings::device {
-> +    pub fn as_raw(&self) -> *mut bindings::device {
+[ ... ]
 
-[Severity: Low]
-This isn't a bug, but since Device::as_raw() in rust/kernel/device.rs is a
-small one-line accessor in the kernel crate now exposed across crate
-boundaries, should it be annotated with #[inline]?
+> +        let mut alg_struct =3D KVec::new();
+> +        for _ in 0..alg_struct_count {
+> +            let alg_type =3D *buf.get(offset).ok_or(EPROTO)?;
+> +            let alg_count =3D *buf.get(offset + 1).ok_or(EPROTO)?;
+> +
+> +            let fixed_alg_count =3D (alg_count & 0xf) as usize;
+> +            let ext_alg_count =3D (alg_count >> 4) as usize;
+
+[Severity: High]
+Are the high and low nibbles of alg_count swapped here in
+SupportedAlgorithms::from_bytes()?
+
+Per DSP0274, the AlgCount field in an AlgStructure entry encodes
+FixedAlgCount in bits [7:4] (alg_count >> 4) and ExtAlgCount in bits [3:0]
+(alg_count & 0xf).
+
+When an SPDM 1.3+ responder sets SPDM_CAP_SUPPORTED_ALGORITHMS in
+header.param1 and includes AlgStructure entries in the CAPABILITIES
+response, spdm_authenticate() -> SpdmState::get_capabilities() ->
+GetCapabilitiesRsp::validate() -> SupportedAlgorithms::from_bytes() will
+compute the wrong sizes for alg_supported and alg_external (for example,
+treating a standard alg_count of 0x20 as 0 fixed bytes and 2 extended
+32-bit algorithms instead of 2 fixed bytes and 0 extended algorithms),
+causing offset validation to fail with EPROTO.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027052536.1722=
-081-1-alistair.francis@wdc.com?part=3D8
+081-1-alistair.francis@wdc.com?part=3D15
