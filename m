@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793136189;
-	b=ZhTIhEzlwr91cNmUJBB50sHXoN7zcBNFdDtiugBuVoeBLSJC3KqHJfDSCPuOsrBoqlt7
-	 KHaY/0IgJQrVrufbzCPnrxADEk+cx+NzYU5CpPTBH0RIRS5PswLlGOe4Pj1OkfHffBSRi
-	 fpSR8P3vs6eh/9f5Vw+77Kzs+f4/Kdws2fC7g4L2fuAY1XjGYayARBDI2UL9VEUD35cPJ
-	 IHsifgG6dvUHoQCitcKtLZPnMti8heU3i/skQ0aD47pqj1/snZ0XZpmSkiogSVuK4Fis3
-	 iXwlcVDNyTWdWeCwKqVqfwkUAmIRXwxSLLZ0FAvxFw3spvCg1SzyUboEorZP6BdwyBA==
+	t=1793136726;
+	b=VXBJM3ENFC1mAVydD9xSZOGQhHJ5n9uveWypSVJLbmUB9z3sUFeaN/7RZINH0tYMU4ve
+	 BDmKg9pFjk+0kFBnVOLl1fnxgIKmpMtx6bdN+rfw0BgvdSBpF9arFI2s/4tBbTBJZvV3I
+	 /XydqKMwWjMFRtLwR3Jsp30d0PelScM25H5MgzHAo2l5PvGQ5ILmIV1iQzwragpjwVilW
+	 x9t9ANEAaPYOXA4OBZqpSw8TjaXleapePI48zFuRYortFSwNdFJcMowxuEIwbX/Er7bhw
+	 pYRl8paxIz6LyRkiQNr6maVfQeN+3ILvizXHQvjh2D+uQXW+iI3flmZiQGjhSyh35qw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793136189;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793136726;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=9d3CjGk4IyINuQoAlcYK4HfriQfpoCwO3FN0Jov9T4c=;
-	b=tL7VuJFGDdtbJ/smk57HEYhGOlogPAi8fflw8zQxLnjqGOafwKQys0fuJ1lsDnwd2/y0
-	 dBwKsFi+tO8KtC4L9gOhiat8byFPgveSf4v8xu4jOD95J6YtGAt91FoM+uORcYDo9oIy+
-	 nqBL9MuhXnXMHpTpvnihmUQRAnWvFpM6SMo89ZJeX/0q1VI9xp2Ha0TFQ5i9foxWPG454
-	 zPSTevdAn+rzcVUyRA2lTMTla/cwMfTIovd0tFaIDui1Jmoko2sapOhirMZgvw7sTjtuu
-	 1RSm5x5Frie/VfsbltdtTd7Lvc0SadiQNwMVjYJW0uV9oQMWXNHtVcW9QfLZnXVRQpA==
+	bh=S908WbS6sl8a+ccaT1hu8oFrTY/8mXQRTyc6SNjkEfE=;
+	b=L2rBLgAzUtrYxeOjGTjuZ4RAtAxXY7id4jUN3ooxbeGeNb2GeEi3Z1F6r3LLHbyKfE/V
+	 +R23rtXUcxtr0aIbkZTBjMxYfbai/06Ucv0INY8uxwowVsMDClDrF9rTOTlZneEOCRLXf
+	 Xy0GTCUEJP0wy2/OeNW1Sg42xrzNY1jMwkHEh0Ed5+OMmBvOvzGbEEG1m+IBjGR+uDMGy
+	 HQMGyzlrdb3Ydwe0yVfMRKRoZVSmW65/hOSUBzCMNUjYMjINpX9tCw31t4YGd0fF03H/V
+	 taire7C/Mkyh1VW+RyXt2xA6pGGzKWRmVZvI8fIA+J/+BS0UXYKXfo3cCZ8D7mMAAmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R6z+kAm0;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EGI8e3OM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB630606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 21:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C779606A321
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 21:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R6z+kAm0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493D31F031EF
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 21:23:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EGI8e3OM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61C71F031F4
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 21:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793136188;
-	bh=9d3CjGk4IyINuQoAlcYK4HfriQfpoCwO3FN0Jov9T4c=;
+	s=k20260515; t=1793136725;
+	bh=S908WbS6sl8a+ccaT1hu8oFrTY/8mXQRTyc6SNjkEfE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=R6z+kAm0PuJyWoP1wDpeDsMLfxEdKmvEBBNq9ncNVSENbCX0QB2ik5uDEOmNLgJ2P
-	 VjQn8CTRH1BrUxIyQVAonsw5zEoLGAz9Mo+1iV1QE4yWhK65BlHE2meFhE3PxIgA8g
-	 /w44e+ZyxOFykN7XZDiFYDvmvxGU4dH81q/05iLJklEIVVEHQ1lomD5FIRAh3Mz+zg
-	 L+keYsUOFf+gHec1Kcsndv1zeAUtqDN7WkbVKUcnNs52DNFvLoGFNR87W2E5YFEqGp
-	 YGLXO/1Xh5JYSqvvFMXmATv4ECYgilcVloUirDQAQjuUbZ4s0DrO6SctrHKceD5mJV
-	 XmNhaeI0DoOGg==
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-93f2f2edb19so22677485a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 14:23:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBw5lDNyAsU6mRj7euzqdPBHiqopBWbP1v/PO2+0RZfID6zG8qF4psJU9qRLQ4jdszQOzVYg+qi8OIU=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLOGVlfxNQFgefrTWKv+32Mi3fQv3Zq340d1GbOqyhzGOeh7QIg
-	DIKpouaTrBQCFP5smbt70v+I3Et9alazchpBrs8GbS9Xc/oxehq5ILw3wfRDOnTHq5tILDoR7/5
-	dF6/eLfyDE04rNAdMGCiyeTuNLm8Gf9g=
-X-Received: by 2002:a05:620a:17a9:b0:93e:9934:d179 with SMTP id
- af79cd13be357-94408cf6b61mr29933485a.56.1793136187480; Tue, 27 Oct 2026
- 14:23:07 -0700 (PDT)
+	b=EGI8e3OMSj8oudPsWvxnIieFF6gTtab2PYp1pWyo2hMoHwm9k9vSCCBUrRG6xC8MH
+	 0KGkcd0cCIQIKtaEwW9h9u/ChT04cEjChqjY1CDO6ZnF5ZAGMZXsI/3+Hd+Q5LXBkS
+	 tstKAH5wHNK3/OGFItDDgQcCGMMsJehCZKVi5x688GOJAnc5FMB9Yl2vm4YMrbJS8z
+	 GH6396g8Z26BXcomQK7YLP1JeyvPWoPTLaXD4wMHyikZsuZfVkFw4ACyB8DThiSEpJ
+	 8mEUpcgXD7tk/pPGlMJZHaXf0LVXktt2gvyJsjPwxg15Yv9qrjFy1MJTjCjDoHGfaX
+	 kdeNE1WPuUlqw==
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-93a40a9a01aso169860885a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 14:32:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxUEPAa/tSfv0X7nA/EX3YfjnpYLcoVAAIyVOroPE2zdpV2WNnxkQUikfEvJiz/w/JyahPr0k5ROGo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ1S5euKX1sf/mD4OP0yTxAsZzYvLVHbTl2O98O89w2/Y76YXzJ
+	nfffld2ePsCqyN1ZskXs1YdHd0Oe3FULz1Xcc16AAkCXD8vFZLwSXIUQKf8tK67l2Y4tkslzH3s
+	uedDd5xjk0x4LlO548DHcEAeU7l6f8ps=
+X-Received: by 2002:a05:620a:6013:b0:93e:7156:f814 with SMTP id
+ af79cd13be357-94408a65be4mr32182585a.11.1793136724949; Tue, 27 Oct 2026
+ 14:32:04 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,14 +59,15 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
 From: Barry Song <baohua@kernel.org>
-Date: Wed, 28 Oct 2026 05:22:56 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xy0mbje=iWGNkaGKOS9BzZdu=oEhZK6zokUV5=5-sANg@mail.gmail.com>
-X-Gm-Features: AclHuK-0yMwUgshVkFS8VwS5_y6OqXYnXUcZ3OjIhbezUk0HJVn0mGZCE7K7epg
-Message-ID: <CAGsJ_4xy0mbje=iWGNkaGKOS9BzZdu=oEhZK6zokUV5=5-sANg@mail.gmail.com>
-Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in folio_referenced_one()
+Date: Wed, 28 Oct 2026 05:31:53 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4wPwBz8OB5opbuKsVh-ceKqyqi4d1aB8Emx4ChqDe4qzQ@mail.gmail.com>
+X-Gm-Features: AclHuK_Qzkd3NBrrAvAlcTVmJZ8ovWd4rfeoh503KU3yWFCYVC_zuTNZmwxW4A4
+Message-ID: <CAGsJ_4wPwBz8OB5opbuKsVh-ceKqyqi4d1aB8Emx4ChqDe4qzQ@mail.gmail.com>
+Subject: Re: [PATCH 22/46] mm/gup: check for overflow when converting nr_pages
+ to bytes in GUP-fast
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
 	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
@@ -96,76 +97,26 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.o
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
 	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
+	linux-cxl@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 27, 2026 at 7:20=E2=80=AFAM David Hildenbrand (Arm)
+On Tue, Oct 27, 2026 at 7:24=E2=80=AFAM David Hildenbrand (Arm)
 <david@kernel.org> wrote:
 >
-> page_vma_mapped_walk() can return non-present device-exclusive entries,
-> but folio_referenced_one() passes them to PTE young-bit accessors that
-> require present PTEs.
+> The overflow check in gup_fast_fallback() only covers the addition to
+> start. The preceding nr_pages << PAGE_SHIFT can already have truncated
+> the length on 32bit.
 >
-> We must neither call clear_flush_young_ptes_notify() nor
-> folio_pte_batch() with non-present entries. For example, clearing the
-> young bit on non-present PTEs can corrupt the entry: on arm64
-> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-> entry into an ordinary swap entry.
+> Users such as RapidIO's rio_dma_transfer() can derive such page counts
+> from a 64-bit userspace length.
 >
-> folio_pte_batch() will VM_WARN_ON_FOLIO.
+> Let's just check_shl_overflow() to reject any such overflow with
+> -EOVERFLOW early.
 >
-> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold()=
-:
-> treat these entries as old from the CPU's perspective and obtain their
-> young state through the MMU notifier.
->
-> Skip PTE batching and MGLRU look-around for non-present entries, and
-> don't modify non-present PTEs.
->
-> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Fixes: c28b1fc70390 ("mm/gup: reorganize internal_get_user_pages_fast()")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
 
 Reviewed-by: Barry Song <baohua@kernel.org>
-
-[...]
-> -               if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte=
-) {
-> +               if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte=
- &&
-> +                   pte_present(pteval)) {
->                         if (lru_gen_look_around(&pvmw, nr))
-
-I was also a little concerned about the internals of
-lru_gen_look_around(), since it visits a few neighboring
-PTEs. But after checking, I found it is fine, by checking
-get_pte_pfn() =3D=3D -1:
-
-bool lru_gen_look_around(struct page_vma_mapped_walk *pvmw, unsigned int nr=
-)
-{
-        ...
-        for (i =3D 0, addr =3D start; addr !=3D end;
-             i +=3D nr, pte +=3D nr, addr +=3D nr * PAGE_SIZE) {
-                unsigned long pfn;
-                pte_t ptent =3D ptep_get(pte);
-
-                nr =3D 1;
-                pfn =3D get_pte_pfn(ptent, vma, addr, pgdat);
-                if (pfn =3D=3D -1)
-                        continue;
-                ...
-                if (!test_and_clear_young_ptes_notify(vma, addr, pte, nr))
-                        continue;
-                ...
-        }
-        ...
-}
-
-Thanks
-Barry
