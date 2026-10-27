@@ -1,55 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.32
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793094363;
-	b=seO4C7h0vWe2i4ZluDO7bP78u6KeTQa36N7l0BbmrW1ghrxgwATo3EcYKqZxYukR+9xZ
-	 z3K6S8VXcm71/lU8VyfJyUxOWh9wRAjmIzM7MYoPbnb1t71NDKqQLhdfP6byqlHhkEP8/
-	 /stFCys//k2EcJlQRpDztMcdaOo71fEpLUaLJ07Ba+voRH9X7OT8EOzksF26NH9N3ILxN
-	 s0cCI7JdNQF7lLYPhIhKBkDsjzpYFP61PqUDf338me4LfBc4a3P2GUKIoJnlVfc6xpVhI
-	 44dAvl2L8us9oQpDkfEiq3VrPevg3+MaC1/0epfmXnc8OAwCkKHCmbpN3oLcxfsXHDQ==
+	t=1793094448;
+	b=RAZbBrRKPCe7zxOlwn7gUhRIrJLOwWsdn/AklJ+BAU5kDLx51086fJXzW5ac7eYjW2E4
+	 BaKrTTZOK6Fv455HsprnlPRybAQQMLV9bgVziVjSEnTU7MILtR7hweeq5lwIq6KO8SbGF
+	 9XbDcZMrRvYNllvQeBHjQs4nFe4bbDT0u4PQEPhoMjkSOb12IWzLdqyM1SAvqPWnxZSYG
+	 XdPC3Qw0Ck5WVQLMAI6B6cPBl9gl1eaPqP56q41pjABO72tvowGktRjUpPZtxsOypY0Bm
+	 p6gyW+n646zuKolxnwcYDYDtTVErrRzWyoLMyuMX6wsBJEXfgshaOB5jBdEwnAMD3tg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793094363;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=+T9dXJtHkajTuMxj33xJNknQApvv9iNPJoMhnaDiDss=;
-	b=QoI2LD2pMwmNPvbu0jBDi/Ol4nmez44Q+QbFqZSAPzePSyQX/pzM9bIG/PAfrv1Ebpem
-	 1QeTBAImfZ1k54vFOWEcmS+mLQyEggvTAhyrf/KTQyWWb/worBWz36URDgntrDHYA3VrJ
-	 u0Nax5iORzmkJvHcOh8J9n2OOOcwxutJ5tchju9h1oGgQnL7dqK8Gu6j7QDrJsKxnUA43
-	 HyKpppktjoocMTgVvY2iOWpY9ahJ+gqc/YOAvg4NUxMwSnmKjJFlU95+bT4N0qUMxEuen
-	 N8ef7S3HOrzipDxc/710Z/2PrH5U79xxTQDo71GIzqhaaNSvpXDzVBbE5A8BUszgnmA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793094448;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
+	 To:X-Mailer;
+	bh=vkRbVEYH/IpHfx5799qbaRy/Rz2dM/B52EsX44m71XA=;
+	b=ZYfE3nX+bcWa0kxm1w32BktWKTaSjJphF86Z8Q8xXcYdLVk5zBdQUkD2spOEo1vCkUMD
+	 tNRA5Iiwol9ODeaTi2S63TJqPvbSsvZLcL2PhkYy82nGJvuK3VTMywbxg9XTM0iya8BtQ
+	 HgeYZn4u/A4hoYRHdXIuzTQiq5ZDi0IqlDnEI4gkj0qY6uFf8F+Nk7oaAbhjGcPzVCqA2
+	 61FagKjcsLTeYjZojDLv83rmtFMx29g//sH7kQavpFPLyJAUAxbW2JTc0Rc5FqTjMr1ss
+	 +TeAokBKhDoY7piSuWySq5+ANDdVNfFRnYvfAiJfbF3QDO8tcGpExn/JN++w4KYqKNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RoZqLVAo;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="ayiRgza/";
+	arc=none smtp.remote-ip=95.215.58.32
+Received: from mta1.migadu.com (out-32.mta1.migadu.com [95.215.58.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8AF606A325
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:46:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06728606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:47:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06728606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RoZqLVAo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A921F031EA
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793094362;
-	bh=+T9dXJtHkajTuMxj33xJNknQApvv9iNPJoMhnaDiDss=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=RoZqLVAoSWSAEmjBUgu9YU78srb1gwKkbdA8lS4bEtzWIHsPLUJiW2B2E75h9GBjH
-	 q66Fr+bjISn9zM6oSv1d64uWVfBv/+RLraP0X/pjl02RwSPrHcdBk3hvtQqxYdwuBc
-	 +zEMxmdaTBeJJUtCPTjAxwb+P/eDQ1F4FbYendLcPCdMKu1xX1w6DtspI/0b8kQV/7
-	 4y7lTNNgU0gz8paDIJCy/8loVjufVEc/415q6oRf+J19aXUnnCk3siDIYBURTGytRB
-	 Ltzmc8Mz+4aWfeVTkMDBHpcjxlVK5xE47kPG/UVvsiPikUMZydmcyo+aDG8nGcblVK
-	 hUgqTpADSTHGA==
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-93ead211f14so79153985a.1
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 02:46:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzXnr7gwOHqiXPyaK2l9oGyCIwKvzqI7VFXF5LZdJTLt57ktDnbBYNRCY62Hyaxlw4OkmfOsQxtiPo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK3JvjayVqrQjCqoxFUn2ClO8gAP6nFst0JBatQYZzBRTPKUxIU
-	UZzTWM54SxDwMrDBXaxoN/h2dVArbLAV19qZrNCIIiaeHl7TWSi8y+sOC25CYpmdYWMa+/v99bJ
-	NtlSsTsiucjJYkocZOzWlEH3HAaB4p5w=
-X-Received: by 2002:a05:620a:1793:b0:93f:1fa0:9f27 with SMTP id
- af79cd13be357-943f4ad5cb9mr379876485a.29.1793094361679; Tue, 27 Oct 2026
- 02:46:01 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ayiRgza/
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=cPhbwrLxrBeT9JsGny5RJdPlGOD/1Ehjle0H8Uiu/2w=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793094445; v=1; x=1793699245;
+ b=ayiRgza/GxxmiVI9rgFsykUvChZWAtRADU5um6RBV71Km8e1c4L5jy/cPURegap7ZDCx6IFM
+ bX37cSFeF5CycBHA7SWLRaiZAOMH3jO6XedepEVuCZJjsKpGXjjrmoB32a0QwIDJDb6RMbWFhbi
+ OUBk4/abpc9TguYGICF4Oc9k=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by mta12.migadu.com with ESMTPS id 4eebca5cdaffa06c;
+	Tue, 27 Oct 2026 09:47:24 +0000
+X-Mizu-Trace-ID: 4eebca5cdaffa06c
+X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -58,77 +57,118 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 27 Oct 2026 17:45:49 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xh2BXe_e+8oJS3ZbzoLi=7r7-+90SHPy1+OwcPNdGUxQ@mail.gmail.com>
-X-Gm-Features: AclHuK_Q0tGAJYZBBe8Ofc91w4jrj3Ei9mVOmmElYzvOyxGV38djS-jM8bZnzBM
-Message-ID: <CAGsJ_4xh2BXe_e+8oJS3ZbzoLi=7r7-+90SHPy1+OwcPNdGUxQ@mail.gmail.com>
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: [PATCH 37/46] mm: fix deadlock of mremap() against UFFDIO_MOVE
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20261027-fixes_core-v1-37-6f74bec9a5bb@kernel.org>
+Date: Tue, 27 Oct 2026 17:46:54 +0800
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>,
+ Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>,
+ Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>,
+ Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>,
+ John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>,
+ Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>,
+ Xu Xin <xu.xin@linux.dev>,
+ Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>,
+ Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>,
+ Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ Chris Mason <mason@kernel.org>,
+ stable@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <EE612F16-A900-4E5C-8F9F-523F1CA690E6@linux.dev>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-37-6f74bec9a5bb@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
-On Tue, Oct 27, 2026 at 7:18=E2=80=AFAM David Hildenbrand (Arm)
-<david@kernel.org> wrote:
->
-> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
-> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
-> and newer heap mappings, causing later brk() requests to fail.
->
-> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarl=
-y
-> cause inconsistencies.
->
-> As a simple and robust fix, grab the parent's mmap_lock earlier. This
-> way we don't need to update individual mm fields in dup_mmap() and
-> keep missing ones. Stop updating the 4 existing members (total_vm, data_v=
-m,
-> exec_vm, stack_vm), as that is now no longer required.
->
-> Keep releasing the parent's mmap_lock in dup_mmap(), before
-> userfaultfd completion, to avoid moving the userfaultfd handling into the
-> caller. This should get cleaned up later.
->
-> Move uprobe_start_dup_mmap() to preserve the lock ordering.
->
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+
+
+> On Oct 27, 2026, at 07:17, David Hildenbrand (Arm) <david@kernel.org> =
+wrote:
+>=20
+> From: Chris Mason <mason@kernel.org>
+>=20
+> With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
+> on different VMAs in the same mm. Those VMAs can share page tables, so
+> both operations can acquire the same pair of page-table locks.
+>=20
+> UFFDIO_MOVE orders the locks by address, while mremap() takes the =
+source
+> lock first. These conflicting orders can deadlock; mremap() holding
+> mmap_lock for writing no longer helps.
+>=20
+> Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
+> them for all page-table moves in mremap(). Preserve the source entry
+> checks after acquiring both locks. Remove the comments claiming that
+> exclusive mmap_lock makes lock ordering irrelevant.
+>=20
+> In move_ptes(), make sure to just recheck source and destination PMD
+> after taking the locks and drop the overly-long comment.
+>=20
+> Fix generated by an LLM and sent by Chris Mason in private.
+>=20
+> Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd =
+operations")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: use new helpers consistently; simplify description and =
+comments;
+>         move_ptes() fixup ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
 
-Reviewed-by: Barry Song <baohua@kernel.org>
+Acked-by: Muchun Song <muchun.song@linux.dev>
+
+Thanks.
+
