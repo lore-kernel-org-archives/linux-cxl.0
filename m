@@ -1,124 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793138644;
-	b=GkYf9MsFGRcswpcflzQV040fFm22FyrI4z0lrbr30ajaq12jHlivXATBmX7NpuWx9iJ3
-	 /ycMgeSIaVE9XfIF0p1aK6nirNxsQPzZyf4XfC5f5L8DXtiY90v5Z+EUhX0QoONsHiUak
-	 as1Skn8XCMSGX4JLZRseK0e40tvshRzkW/KlwFWeNVoZMt+CzniVcCU2ZeXMoEdWZDWS8
-	 x5eqf1dKohUtIpnhoQATDGtE9CB3ER6+MLs3F4RDS9ksi1uujgCZDnE1A7Wcbd64l7sWk
-	 V1CIcCoXxfDNa7BB2FNv74TjLwM1rl0sTWrg/KLYsfG6XwF1IhHFcholZFV+ZE3yP4Q==
+	t=1793143746;
+	b=o64bwbzQhoFawLFFPJpb0pJRUSjBqZgOLLOfZCURnqomF9f0lHvSoWek6pDhRHb1uuI6
+	 Ok7AXB2Ly69VbEohAxvNUXdsaga6Xrooe5wQ4ylDdncLZswqD4+hnJvqIBDAEKgnrpIOT
+	 DoB/E54eYCfOE1bHAaK7KJDxRdPBmkuZnfuRxrnRhTqLaJrUgCGbPZ4jrC2ds3bn74j2S
+	 1EFTwewDK0LwEWhC6lbIZTHvYl7fPSEcoQJ6OJCubhEUee1uT36z7AizYr1XqYF2gCPN+
+	 qN2ayZ7wARNeZqPQjr/vjq9qmBKluI6O1GHq698q+ZpAj+92JegC1xHVylK4euMhUzQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793138644;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 Date:In-Reply-To:References:Autocrypt:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version;
-	bh=Ra19lD8Crx8QohBcrsGmDVBKOcqDjMmSrSzcQ18M9zg=;
-	b=jHAtlaP10eEgUx3K720MkNkyiTgXqmmKGAC96KG6rWZP5/EH++EZtpmMa/7wqTHDe2SD
-	 81mLXOWEqfjGnp+clXbdvm50/0/KPliwOxO2MWiz25o0gAdhqcig5gZOx5vwv3ikiH1cd
-	 hiArzipB36EGfT7TFqaM4+qH1X6zJaxsKjh0/bqsXpkAsgxq7X36942fvr+UQzJMFNrQB
-	 ZFHGfH7EYlXnJrtbwTVYDVF4QjT2QIO5uPLF5o/gBV7y/61cSXK8A7c0iJ6QXRdC8SOf9
-	 XdLhiwa0cuMFQQRpA3/NcvyFqJt/niqNZpMKS3psakz5Zp47BWR313+R//tU2TmE8Zg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793143746;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
+	b=NzX9j17cwEaJ3urPRCYfiREirtj1awXsEy52ZGfct7YVaylb8zHVrZPDM3k2e/4Q8EtX
+	 jikdMd0kEi7MV82XO7BbajiH0vOtb/hpwmDK0njgb2bv37ALICfgvZ5ilw2PUvzdBv6xT
+	 vM46ovusGL+AUcwl6D925io0s3mAPifzn2fJKzUzP89dPBaWM6cphuIRJe8h/+5npDbNS
+	 KXUJjiur7EgC/JBlf2Re1PmD/1NdxEmDKWAqdWXbUCYW0MTp5Mj/k3FdbeaRpAFrTEpn9
+	 lSxyY0kFkKNURUFRgo9J17gt8DK+BJbfCx0S00KexLMT32oGt1stfeSUa6pfi7lihgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=surriel.com;
-	spf=pass smtp.mailfrom=surriel.com;
-	dkim=pass header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=djmhDBOu;
-	arc=none smtp.remote-ip=96.67.55.147
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WQHrj7OM;
+	arc=none smtp.remote-ip=209.85.210.182
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D9A606A31A;
-	Tue, 27 Oct 2026 22:04:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0D9A606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0F606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 23:29:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFB0F606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=surriel.com header.i=@surriel.com header.a=rsa-sha256 header.s=mail header.b=djmhDBOu
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID; bh=Ra19lD8Crx8QohBcrsGmDVBKOcqDjMmSrSzcQ18M9zg=; b=djmhDB
-	OubPpTf9NhqXyoYINRrSPKiGvPUJ4NX+Hk8yVeI2HGGWmUlWyeHrj6vg4Y7v33xaIi+4+aZoIHNus
-	B5oUcCzCkFPc8N75CXJuNLV2ZeZvoMRWNlVLb1DVwfC7EqGYeYZjZaEYORE7EFoXy8jhyyNxaXuE0
-	dK6YKElLoKxfXNY7Rr3S8e01wCPNO30tunYNiVc9JNgy9uS6vf15q5Lpbh654jnbBz+pziF9n3lV5
-	RZJlwgzoO5f8pMWJDeUnJEXZNkAxXRkAxsnJ0FK8Q+WfHVWuH0NvM0bQ7h0qOqgG+Z9KwHNwDSCxv
-	uCk6byi3jwKieKYfnOkXolBr5qSQ==;
-Received: from [2601:18c:8100:a0e0:2541:b86e:2586:d219]
-	by shelob.surriel.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.5)
-	(envelope-from <riel@surriel.com>)
-	id 1xLpFA-0000000010l-1L8i;
-	Tue, 27 Oct 2026 22:02:08 +0000
-Message-ID: <8131011db0b4753a1e3b02ac70abe1b1cded6faa.camel@surriel.com>
-Subject: Re: [PATCH 07/46] mm/filemap: don't lose a folio lock wakeup to a
- signal
-From: Rik van Riel <riel@surriel.com>
-To: Pedro Falcato <pfalcato@suse.de>, "David Hildenbrand (Arm)"
-	 <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner	
- <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng	
- <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo
- Stoakes	 <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, Barry Song
- <baohua@kernel.org>,  Axel Rasmussen <axelrasmussen@google.com>, Yuanchu
- Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,  Baoquan He
- <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam
- R. Howlett"	 <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport	 <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko	 <mhocko@suse.com>, Kees Cook <kees@kernel.org>, Peter
- Zijlstra	 <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh
- Dickins	 <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav	 <pratyush@kernel.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>,
- Lance Yang <lance.yang@linux.dev>, Harry Yoo	 <harry@kernel.org>, Alistair
- Popple <apopple@nvidia.com>, Nico Pache	 <nico.pache@linux.dev>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain	 <dev.jain@arm.com>, Usama Arif
- <usama.arif@linux.dev>, Kiryl Shutsemau	 <kas@kernel.org>, Matthew Brost
- <matthew.brost@intel.com>, John Hubbard	 <jhubbard@nvidia.com>, Peter Xu
- <peterx@redhat.com>, Will Deacon <will@kernel.org>,  "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Oscar Salvador
- <osalvador@suse.de>,  Minchan Kim <minchan@kernel.org>, Muchun Song
- <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>,  Chengming Zhou
- <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, Kemeng Shi
- <shikemeng@huaweicloud.com>,  Nhat Pham <nphamcs@gmail.com>, Youngjun Park
- <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>,  Joshua Hahn
- <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Ying Huang	
- <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, 	linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, 	linux-cxl@vger.kernel.org, Josef Bacik
- <josef@toxicpanda.com>, 	stable@vger.kernel.org
-Date: Tue, 27 Oct 2026 18:02:08 -0400
-In-Reply-To: <auDM5mvsb5ilIdsg@pedro-suse.lan>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
-	 <20261027-fixes_core-v1-7-6f74bec9a5bb@kernel.org>
-	 <auDM5mvsb5ilIdsg@pedro-suse.lan>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WQHrj7OM
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-89ff475a152so188818b3a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 16:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793143745; x=1793748545; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
+        b=WQHrj7OM5yRaRkGeTrggC5Jhxy5tOOVJj7jEXN/Hvplk0kPwW7Pev0atIgOFxcxpS+
+         EEsVKGR+r4K0aroU1MCxSBLtcahvIz7kTdikMOPuw/WWzB23HjNmHikWboIRlF40k0AD
+         RmZZ6Vo1Q1d749KBGgZD7xiebCrh8eIgQI49JmCdZTxfo9uWHY78v7WhIHde2BbUYRTI
+         tmSIyIbuZQSnJMCN4HZ/sBhttosWAzM5TjCZUocPV+UezLbJG+o/hKetAcKaE0C8C0uV
+         7rkGfk/ns/7fn1ybFddTOZq4umBqUEZ8qSvGplYmcPtVroi0SIXnoxH2GPPnjnm6S7xP
+         dvfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793143745; x=1793748545;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
+        b=r569Sr7owjL5VBCt+i6pJoQ6JG7eQGS5V3i/UlQkcSqOKLFCci0sRQMLCZ222TOOuS
+         L/pYyKBzskKx0x8v7ekR/KhNe9hCW7bop+isBXLWpIAXxMJ/NY/SBMDKfyu8XLBcDfVj
+         l+mG7+ZwrdtCeeJzLvpeXEVL1AboqOfI3Eqyj4hzmdiCc9vL0TwLQk98dfGz/olpt6Xe
+         ifgRZZT7Yyv/nd+qVCwgzWTr4GwsjLLBRaDfwRGwNPH4C5D1bsFAKWeGx2hfuIdX+yUN
+         2Q6uTL3dhnLurcjFE6k+4wveVuUFRsDAGtr7xmNsKo7lCtQxZzQznua4xiZlg+U9YLoN
+         To3A==
+X-Forwarded-Encrypted: i=1; AKwUvBx56uy7m0NdWpZFYEm0LrVWmAttqa3Qkldvl0mMg3WMxGcMCp9rB5pbc38DjaL6Hx2hTDGcd5xqMq4=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJRbrd3S139Q5T78vLqwQuF0UO7nSNQiAHIk2kyVqsYGUoCntbJ
+	wF/XTsk0sOtKLq0NtO2cwza0sH2fdcWlmPhRxu/dv8s4tIntfFpYSU9R
+X-Gm-Gg: AYBFou2kf6mzkf0JHu5sg956w2xvXhWpOBoKoiyNLCpVoIdc10TTbGxpNST2uamKSLc
+	izFiuYbxPeC/2A03+Cv4pYK7gehaEMt1TNsollzD1SzTY8lA1Tgi6+ybq8vrxXqZPSCKyq63owZ
+	KYEfAC/m04PB2VrQxsRBeQte6YKO4gu55vuDHCz6AIIfJ8Q91JqcS4ps8pQc3rrqrQzSZWQsgnM
+	Op74/PITr/b59iK4S7gCMy/JqqTF24hhQHgnwtIlXYIanzmsKSU6R1f1GAyElNyvbkxNaVKWKSp
+	3e1T2gMdexy0uLHSHfRh3UDb9ATJYFQGUYAk87ym00ITdK4VV1WrgS6BI543vI6/3Ol4ydrgrsS
+	SH0gjS+uT/TULv2tDg1gcWO8qOnRzsl6ysAJgUQPag3ItDceeW/IsnTWBEbrOFRHOBn+KwI4GSW
+	WTuG4On4TlaQrsQw/5rJ7NAuvyXrPhjsfBUARnpP6O/AfN62onhKH3SOCoUm/uK9VT46vYWcNuh
+	Q/FgeJhL8SFusSY4ZLgrL0moJtYS//s1/M6OjayPG1MmUgUOvc=
+X-Received: by 2002:a05:6a20:4327:b0:3e2:89c3:2fb0 with SMTP id adf61e73a8af0-3e902107ceamr548447637.7.1793143745236;
+        Tue, 27 Oct 2026 16:29:05 -0700 (PDT)
+Received: from cxlqual ([220.120.90.131])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6c2485703sm352437b3a.49.2026.10.27.16.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 16:29:04 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 28 Oct 2026 08:30:32 +0900
+To: Richard Cheng <icheng@nvidia.com>
+Cc: jic23@kernel.org, junjie.cao@intel.com, linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org
+Subject: Re: [RFC PATCH] hw/cxl: Align mailbox payload backing storage
+Message-ID: <auE0GKAvRSufpJuZ@cxlqual>
+References: <20261027102227.4976-1-icheng@nvidia.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -128,44 +96,116 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261027102227.4976-1-icheng@nvidia.com>
 
-On Tue, 2026-10-27 at 16:10 +0000, Pedro Falcato wrote:
-> On Tue, Oct 27, 2026 at 12:17:27AM +0100, David Hildenbrand (Arm)
-> wrote:
-> > From: Josef Bacik <josef@toxicpanda.com>
-> >=20
-> > An exclusive waiter in folio_wait_bit_common() can leave the wait
-> > loop
-> > because of a fatal signal, then be woken by folio_unlock() before
-> > finish_wait(). If the waker did not hand over the lock, the waiter
-> > returns
-> > -EINTR without trying to acquire it.
-> >=20
-> > folio_wake_bit() stops after waking the first exclusive waiter, so
-> > this
-> > loses the wakeup and can leave other waiters asleep indefinitely on
-> > an
-> > unlocked folio.
-> >=20
-> > After finish_wait(), let a waiter woken without a lock handoff try
-> > once
-> > more to acquire the lock. If successful, return success so the
-> > caller's
-> > eventual unlock wakes the next waiter. Otherwise, the current lock
-> > owner
-> > will do so.
->=20
-> Has this been reproduced? I feel like this would've been found out by
-> now?
->=20
-I have seen stuck waiters, on a fleet of millions
-of systems, but I have never tracked one down when
-the root cause was transitory, and no longer
-visible after things got stuck.
+On Tue, Oct 27, 2026 at 06:22:27PM +0800, Richard Cheng wrote:
+> The Get Supported Features handler treats payload_out as a 16-byte
+> aligned structure. However, the mailbox register is aligned to 8 bytes.
+> Since the payload starts at A_CXL_DEV_CMD_PAYLOAD, a misaligned union
+> will produce a misaligned payload pointer.
+> 
+> The bug can be triggered when QEMU built with UBSAN:
+> 
+>   hw/cxl/cxl-mailbox-utils.c:1571:39: runtime error:
+>   member access within misaligned address 0xff7772f3d628 for type
+>   'struct <unknown>', which requires 16 byte alignment
+> 
+> QEMU aborts while handling GET_SUPPORTED_FEATURES
+> 
+> Didn't see a strong evidence why QEMU would treat it as 16-byte aligned,
+> so I want to raise the RFC and see what's the actual corrected fix,
+> rather than dropping the aligned tag directly.
+> 
+> Align the mailbox backing union to 16 bytes. Since the payload offset is
+> 0x20, payload_out now satisfies the handlers' existing alignment
+> requirement.
+> 
+Hello Richard,
 
-There's no way to tell whether or not this was
-the root cause, though the symptoms match.
+It looks like Jonathan already has this commit in his tree:
+
+https://github.com/qualcomm/qemu/commit/271340b769bdf4b2614fcff76455a813f154d77b
+
+I'm not really sure why the features handlers require QEMU_ALIGNED(16). I don't
+see anything in the spec that requires the 16B alignment. And the Get Supported
+Features input payload is padded from 8B to 16B because of QEMU_ALIGNED(16),
+which seems not right?
+
+The commit message from 271340b7 says:
+
+"hw/cxl: Ensure the register space for the mailbox registers is 16 byte aligned.
+
+Given there are some carefully aligned UUIDs in the registers,
+enforce the alignment to solve ubscan issue..."
+
+but if that refers to the UUID of output->feature_entries[x]:
+the output payload has an 8B header, so the UUID of any feature entries
+won't start at a 16B-aligned address anyway?
+
+/*
+ * Get Supported Features Supported Feature Entry
+ * CXL r3.1 section 8.2.9.6.1 Table 8-97
+ */
+typedef struct CXLSupportedFeatureEntry {
+    QemuUUID uuid;
+    uint16_t feat_index;
+    uint16_t get_feat_size;
+    uint16_t set_feat_size;
+    uint32_t attr_flags;
+    uint8_t get_feat_version;
+    uint8_t set_feat_version;
+    uint16_t set_feat_effects;
+    uint8_t rsvd[18];
+} QEMU_PACKED CXLSupportedFeatureEntry;
+
+struct {
+        CXLSupportedFeatureHeader hdr; <--- 8B
+        CXLSupportedFeatureEntry feat_entries[];
+    }
 
 
---=20
-All Rights Reversed.
+If QEMU_ALIGNED(16) is not needed for Get Supported Features, then I think it should also
+be dropped from the other Features handlers, and Get Log (Opcode 0401h).
+I don't see anything in specification that requires 16B alignment for those
+commands.
+
+Thanks,
+Anisa
+
+> Fixes: d80378943a6b ("hw/cxl/cxl-mailbox-utils: Add support for feature commands (8.2.9.6)")
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+> Reproduce with:
+> 
+>     1. Configure QEMU with --enable-ubsan.
+>     2. Start QEMU with UBSAN_OPTIONS=halt_on_error=1 and a cxl-type3
+>        device.
+>     3. Boot a guest with CONFIG_CXL_FEATURES=y, or reprobe the endpoint:
+> 
+>        # echo <type3-bdf> > /sys/bus/pci/drivers/cxl_pci/unbind
+>        # echo <type3-bdf> > /sys/bus/pci/drivers/cxl_pci/bind
+> 
+> Best regards,
+> Richard Cheng.
+> ---
+>  include/hw/cxl/cxl_device.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index ba551fa..2191b7c 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -248,7 +248,7 @@ typedef struct cxl_device_state {
+>              uint16_t mbox_reg_state16[CXL_MAILBOX_REGISTERS_LENGTH / 2];
+>              uint32_t mbox_reg_state32[CXL_MAILBOX_REGISTERS_LENGTH / 4];
+>              uint64_t mbox_reg_state64[CXL_MAILBOX_REGISTERS_LENGTH / 8];
+> -        };
+> +        } QEMU_ALIGNED(16);
+>      };
+>  
+>      /* Stash the memory device status value */
+> -- 
+> 2.43.0
+> 
