@@ -1,47 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793105497;
-	b=vUxyD76fzN0hdCQZfqq+fmYCBBrIojRO0Ku3oRUD8PkUlxTF5bYAIy7D1pSpJri9E8Qv
-	 ELKTP35c1sN19jgbauQxxZzkyR+Y5eZpLYeHaq9IP6tDjlt6s4WIET/WhsnG2h2nw2M4u
-	 bj9ApFdg6dRJft3xgslpL/TDI+xAeWXEnl4vRwfWU2I4U1mwti23XPRJuaEz5SJwNNXtp
-	 ptowssyeNjpcBR84OX0qW0Fj1y5eUfxz3lipGfNNCKEap4NBkyOi5MsYkQ/6drFMGCUgy
-	 Z9fpjNFuC4NgxL1O299COZxBkKhNmbHDNoN99JMAn47gk7djQKRZuY2bjblgwqUJtLQ==
+	t=1793107027;
+	b=XK948DPpob1obNT6WzjgO9NJEe14TwUeNQSMPsQVz91/E+wdXeYuSkrWkuElqdeVkM8n
+	 lP/qbd6a8RomuObTOASuZQZbcCDZS98QJhJZBDHv90u9inMCpS5xJmsJ0Aaxkz2FvHDjv
+	 UCsEW0bvAE56zchVFRCkpAVksY+r+ieIKy7NvGyrrYphuVXB/ljvBNtvb6mrAQLCLN6sj
+	 jCXZPlGxYDxIZbR1TUe6MF0xArCgXHX8Vn4lY+QbWKM9X1UzAFchOelaK6+u1ZYjxOddi
+	 Y1KK6YO8mmL8Ds0t7m+JNJ/YFAo4BgLh2HwgJ7XABLjF5YC+AFP3SxTJohN9ghW55qg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793105497;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=8+uXv1eTUrQghL/izDMabbpVY73PTdHTwOJoJlIUerY=;
-	b=sGLUNOSqAZdLg/BWK4AjNme70VsSGBYciJ2VX49S95uie7ntDRxjoJ/Dm2q1WiH0ptnt
-	 E6xylJufzo+IOo6rIiy0NLM+wZ9tUpx9lqIa1t9FHi1MRZsJ2jEvizcUfz2QKHtwPvmqb
-	 Av3SwyLAZl/wJW5bP1W61otmxVg4MvEk0XfAGPhb2jl4bPmqSF7FWAv+wN8tV/1zKWBjb
-	 qulxXR/8jhm/BCB5lCnWHQoy0O8CCSGR1vOa6Pz/BMkgZA8GcBE4GVD3kcIoOpwC4Yl7F
-	 lQOaeLhno5wg4g88E9oNgorNmL1dNAObU5M0+dfrbymGD1G5/FBUgozH3ASjsNhGJgw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793107027;
+	h=Received:DKIM-Signature:Mime-Version:Content-Transfer-Encoding:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:X-Mailer:References:
+	 In-Reply-To;
+	bh=j4p5rqYKys+I1GBjxylvCjNQbtDMtwcx0aS4fbc0x60=;
+	b=v4k6HLZcjW/1brD/nQULTDkVYO0vuxYYTVAHXcx2GmqDAZSyVBJ5MntFGJkjRuPKPduy
+	 xe1Cs9BPPGlThHnzfiJlkcLa6DYxaBMuJ21zfow4HMReRjQjr4ASFjafT16LXVhppJBwo
+	 LDWmg7vNcHgAxJlNXVMiCnolgyei+xFavtY5TYFffIl+ohRYJDoExUMBNwyjE8kRml4De
+	 volj+kcs0paff812R/DOGs5wkiJ6BfNlpffopryD7wRvK9BCKXzIyF6xzRNh68C/hBFpA
+	 /RT1ivvhyHfaxp5FNkOBAKMWkqndghnbyCNyxS5ix7enOs+pzpSN1NcTxZ65tDe+OLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RhL4d8Zu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOaIBhBY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69A7606A31D;
-	Tue, 27 Oct 2026 12:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0993E606A321;
+	Tue, 27 Oct 2026 13:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RhL4d8Zu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC36D1F01825;
-	Tue, 27 Oct 2026 12:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOaIBhBY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6D21F01828;
+	Tue, 27 Oct 2026 13:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793105496;
-	bh=8+uXv1eTUrQghL/izDMabbpVY73PTdHTwOJoJlIUerY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RhL4d8Zu1trOGOtBxu31hp1z9kcJI8StIU9PdApiow/lWbyJJBgk7hPgSOjQi+nAE
-	 AKRePsFov/ULoC1TkpsBYIh6pWvxp8cze0hi1b2Wj8sLc9y3xwHg8T0wDhk0ansqEn
-	 xFcuEFexIhMX1R7GeGxuEMbA0gzNR2uL86P4NnOrvqPqGKbhNY533fFW5lgDp3HMkO
-	 504rU/EFttXr0YSzHwfQbLXRy4PfREzzWOw4vyCXu8y4Crjzx/Lypni7HK9LVH3BLR
-	 jeWfadnld7ZEOg5OWEy6erd+YZ29bgw202P1j9QdjZ/At4MBlPey/BdaPcmJfXSfIR
-	 LjesHhmkVS7rQ==
-Message-ID: <9051ac3d-60b9-4ed2-b781-b7191898bc83@kernel.org>
-Date: Tue, 27 Oct 2026 13:51:28 +0100
+	s=k20260515; t=1793107026;
+	bh=j4p5rqYKys+I1GBjxylvCjNQbtDMtwcx0aS4fbc0x60=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To;
+	b=gOaIBhBYPYwmzoXXxLnFmKjLNrZm1xthPdlhLedgJo8veM24q4xSarTjZOd0DyZqb
+	 9ZIfZkGLZUfnaqflEE+Ml3XZqhf9Fji3LCbewut0zxQXnFkYtGj1juBwQ9PyGxER9N
+	 WBtOytqRMI3wQa7QOmmkyOkm+CeKYTkIWteiWdcLg753SUj1mHowUet5Z9IyeSrHp/
+	 HJ0Cd71mjtTKdFu6E/VV4h0W3zSA8S4JRiarN4bDcQmR/8Q3rwjLJVjoExnyUiU8zn
+	 mSsgPd13dyVrwhGzN24N/T3Tfp+4vJ7TCjUIM19hWuZcnSOzDMfd2DhU67aYmf+sJ/
+	 3K/Awj/t+5OAA==
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -50,251 +48,97 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] mm: fix pfn walker races with memory offline
-To: "Gregory Price (Meta)" <gourry@gourry.net>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, kernel-team@meta.com, akpm@linux-foundation.org,
- vbabka@kernel.org, surenb@google.com, mhocko@suse.com,
- brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com,
- linmiaohe@huawei.com, nao.horiguchi@gmail.com, ljs@kernel.org,
- liam@infradead.org, rppt@kernel.org, osalvador@suse.de,
- muchun.song@linux.dev, iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com
-References: <20261027042204.3741307-1-gourry@gourry.net>
- <01d7d54d-0047-4eb6-a1d2-5b3f113f26cf@kernel.org>
- <179310071902.664110.12994053710961856591.b4-reply@b4>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <179310071902.664110.12994053710961856591.b4-reply@b4>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Tue, 27 Oct 2026 13:17:03 +0000
+Message-Id: <DMFNE2OD18PH.27J64IS0GAJLF@kernel.org>
+Cc: <ojeda@kernel.org>, <gary@garyguo.net>
+Subject: Re: [PATCH v5 02/23] rust: create basic untrusted data API
+From: "Benno Lossin" <lossin@kernel.org>
+To: <sashiko-reviews@lists.linux.dev>, <alistair23@gmail.com>,
+ <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20261027052536.1722081-1-alistair.francis@wdc.com>
+ <20261027052536.1722081-3-alistair.francis@wdc.com>
+ <sashiko-outbox-186123@kernel.org>
+In-Reply-To: <sashiko-outbox-186123@kernel.org>
 
-On 10/27/26 12:31, Gregory Price (Meta) wrote:
-> On 2026-10-27 09:57 +0100, David Hildenbrand (Arm) wrote:
->> On 10/27/26 05:21, Gregory Price (Meta) wrote:
->>> Several pfn walkers check that a struct page is online, then use it
->>> after memory offline has poisoned it (CONFIG_DEBUG_VM) or removal has
->>> freed the vmemmap.  Five of the races crash the kernel; the sixth leaves
->>> an offline spinning with the device hotplug lock held.
->>
->> I have roughly the exact same list of AI garbage fixes here from a certain company.
->>
->> And I consider this all extremely low priority.
->>
->> So this is something to discuss throughout the next months and do it properly.
->>
-> 
-> I actually have a reason for these fixes other than "bot said bad".
+On Tue Oct 27, 2026 at 5:34 AM GMT, sashiko-bot wrote:
+>> +impl<T> Untrusted<T> {
+>> +    /// Marks the data behind the given reference as untrusted.
+>> +    ///
+>> +    /// Unlike [`Untrusted::new`], this does not require moving the val=
+ue.
+>> +    #[inline]
+>> +    pub const fn from_ref(value: &T) -> &Self {
+>> +        // SAFETY: `Untrusted<T>` transparently wraps `T`. The cast
+>> +        // does not introduce interior mutability, as `Untrusted<T>`
+>> +        // has interior mutability if and only if `T` has.
+>> +        unsafe { &*from_ref(value).cast::<Self>() }
+>> +    }
+>> +
+>> +    /// Marks the data behind the given mutable reference as untrusted.
+>> +    ///
+>> +    /// Unlike [`Untrusted::new`], this does not require moving the val=
+ue.
+>> +    #[inline]
+>> +    pub const fn from_mut(value: &mut T) -> &mut Self {
+>> +        // SAFETY: Same reasoning as `from_ref()`.
+>> +        unsafe { &mut *from_mut(value).cast::<Self>() }
+>> +    }
+>> +
+>> +    /// Marks the given slice of data as untrusted.
+>> +    #[inline]
+>> +    pub const fn from_slice(value: &[T]) -> &[Self] {
+>> +        // SAFETY: `Untrusted<T>` transparently wraps `T`. The cast
+>> +        // does not introduce interior mutability either, as `Untrusted=
+<T>`
+>> +        // has interior mutability if and only if `T` has.
+>> +        unsafe { slice::from_raw_parts(value.as_ptr().cast::<Self>(), v=
+alue.len()) }
+>> +    }
+>> +
+>> +    /// Marks the given mutable slice of data as untrusted.
+>> +    #[inline]
+>> +    pub const fn from_mut_slice(value: &mut [T]) -> &mut [Self] {
+>> +        // SAFETY: Same reasoning as `from_slice()`.
+>> +        unsafe { slice::from_raw_parts_mut(value.as_mut_ptr().cast::<Se=
+lf>(), value.len()) }
+>> +    }
+>> +}
+>
+> [Severity: Medium]
+> Do public Untrusted::from_mut() and Untrusted::from_mut_slice() allow saf=
+e
+> code to bypass the opacity guarantee of Untrusted<T>?
+>
+> Because mutable references are invariant in T, converting &mut T into
+> &mut Untrusted<T> (or &mut [T] into &mut [Untrusted<T>]) allows callers t=
+o
+> write unvalidated Untrusted<T> values directly into a plain, trusted T or=
+ [T]
+> variable without validation:
+>
+>     let mut trusted: u8 =3D 0;
+>     *Untrusted::from_mut(&mut trusted) =3D untrusted_byte;
+>
+> Similarly, a caller with a plain mutable slice buf: &mut [u8] can pass
+> Untrusted::from_mut_slice(buf) to a function expecting &mut [Untrusted<u8=
+>]
+> (such as the read_from_userspace(buf: &mut [Untrusted<u8>]) pattern shown=
+ in
+> the documentation) and then read the unvalidated bytes directly from buf
+> after the call returns.
+>
+> Since DerefMut on Untrusted<[T]> and Untrusted<Vec<T, A>> only converts a=
+n
+> already-untrusted container into &mut [Untrusted<T>], should from_mut_sli=
+ce()
+> be private and from_mut() be removed or kept private?
 
-So you found them on production kernels?
+this is correct. we should remove `from_mut_slice`. but we can provide
+`Vec::from_trusted: fn(Vec<T>) -> Vec<Untrusted<T>>`.
 
-We did not have a single real report of that for probably a decade or
-even longer in production.
-
-Recently, we had the single first report about the compaction case from a
-stress test (no production):
-
-https://lore.kernel.org/all/20260903095543.3752338-1-yuan1.liu@intel.com/
-
-"We are not sure whether this race is reachable under realistic
-workloads or only under this synthetic stress test."
-
-Where I motivated that we need something clean.
-
-> 
-> We leverage ballooning and hotplugging as VM memory overcommit tools
-> and are finding that some of these race conditions crash them with
-> large MTBF.
-
-yeah, that makes sense.
-
-> 
-> While most of these are insanely narrow, they are not as unlikely to
-> happen as you think. A vCPU can take a vmexit in these windows much
-> more easily than a host can take an NMI or other interrupt.
-
-Jup, that's what I would expect.
-
-> 
-> Thankfully none of these (or the other series) appear to be obvious
-> security issues, but they are stability issues.
-
-Right. And DEBUG_VM reports are irrelevant in production.
-
-The thing is that the race between offlining and actual memory removal
-is extremely long. Poisoning is just a mechanism to find these theoretical
-issues that could cause issues faster.
-
-And with all the other things going on, this has lower priority, and I
-wanted to get back to the AI patches I have once the other thing is sorted.
-
-> 
-> I have a reproducer for every single one of these (and the other
-> series) - but a handful are unreachable due to a 2-statement read
-> being emitted as a single read by the compiler (which can be undone
-> by a targeted compiler flag). Those were included for completeness.
-
-
-In general, I think we want something that will protect all
-pfn_to_online_page() + zone->contig thingies, not just selected ones.
-We discussed in the past using some sort of rcu for that.
-
-get_online_mems is usually the wrong approach.
-
-The infrastructure for that should be added in a clean separate patch, not
-mangled into a patch that fixes a DEBUG_VM splat.
-
-This is nothing to rush in or to schlop around.
-
-The AI patch for compaction I have here does something similar to your first
-patch, with a bit less churn, and converts a handful more users.
-
-E.g.,
-
-
-+/*
-+ * Nothing keeps a section online once pfn_to_online_page() has returned. A pfn
-+ * walker that holds no reference to the page does the check and looks at the
-+ * memmap under this guard: remove_pfn_range_from_zone() waits for it before the
-+ * memmap is poisoned and can be freed. That wait cannot be interrupted, and
-+ * whatever a walker sleeps on under the guard, memory offlining waits for as
-+ * well: leave the guard before copying to user space. mem_hotplug_lock is held
-+ * during the wait: never take it under the guard.
-+ */
-+extern struct srcu_struct memmap_srcu;
-+#define memmap_walk_guard()    guard(srcu)(&memmap_srcu)
-
-
-and then
-
-
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 260772b20bd99..c5f6d7fe12d9a 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -58,13 +58,39 @@ static u64 get_kpage_count(const struct page *page)
-        return ret;
- }
-
-+static u64 kpage_info(unsigned long pfn, enum kpage_operation op)
-+{
-+       struct page *page;
-+
-+       /* The page is not ours: keep its memmap until we are done with it. */
-+       memmap_walk_guard();
-+
-+       /*
-+        * TODO: ZONE_DEVICE support requires to identify
-+        * memmaps that were actually initialized.
-+        */
-+       page = pfn_to_online_page(pfn);
-+       if (!page)
-+               return 0;
-+
-+       switch (op) {
-+       case KPAGE_FLAGS:
-+               return stable_page_flags(page);
-+       case KPAGE_COUNT:
-+               return get_kpage_count(page);
-+       case KPAGE_CGROUP:
-+               return page_cgroup_ino(page);
-+       default:
-+               return 0;
-+       }
-+}
-+
- static ssize_t kpage_read(struct file *file, char __user *buf,
-                size_t count, loff_t *ppos,
-                enum kpage_operation op)
- {
-        const unsigned long max_dump_pfn = get_max_dump_pfn();
-        u64 __user *out = (u64 __user *)buf;
--       struct page *page;
-        unsigned long src = *ppos;
-        unsigned long pfn;
-        ssize_t ret = 0;
-@@ -78,29 +104,7 @@ static ssize_t kpage_read(struct file *file, char __user *buf,
-        count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
-
-        while (count > 0) {
--               /*
--                * TODO: ZONE_DEVICE support requires to identify
--                * memmaps that were actually initialized.
--                */
--               page = pfn_to_online_page(pfn);
--
--               if (page) {
--                       switch (op) {
--                       case KPAGE_FLAGS:
--                               info = stable_page_flags(page);
--                               break;
--                       case KPAGE_COUNT:
--                               info = get_kpage_count(page);
--                               break;
--                       case KPAGE_CGROUP:
--                               info = page_cgroup_ino(page);
--                               break;
--                       default:
--                               info = 0;
--                               break;
--                       }
--               } else
--                       info = 0;
-+               info = kpage_info(pfn, op);
-
-                if (put_user(info, out)) {
-
-
-protecting individual pfn_to_online_page is just whack a mole. Likely we want a
-way to check whether pfn_to_online_page() is called from the wrong context, and
-maybe we need a variant that can be called from "wrong context" for a good reason.
-
--- 
-Cheers,
-
-David
+best,
+Benno
