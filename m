@@ -1,82 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793074933;
-	b=sFYheqAFG/8Q3poqXR80Yq3m9mmnRRlQ9GKF9G6WJKFot+NFnkWW6FwcE+JFgJE3Yufe
-	 sjfdR+k3RTuJA2qQMsQLRkdlaGfN+Tdy7PHAzUI0okYl2FSLVDsXKZrl1SeO3nOXW10Oq
-	 AJrxumkOYRv76V8uRxzOyqYesKo+RlH/PzQrMjQRr4QIBZtbyHiZA9TJsl2SXJ49g3yNp
-	 7VB1qDSqVGoJzx1+f7rwRhFt53mvDGjgn9r+No4xlTOHb/cL9plCx8CQ2TjNcXvYV0vMN
-	 yiZNb4HCs0TzwG67eRxFzyNMIebF8OyT5UmpeFesN025h+19Kzr479gvJTWotjbEwLQ==
+	t=1793074939;
+	b=igef6YR2GQEeMPUz/5cnHtmCHO7R0XGdTRZ+GWwVWKq1PP6obE8N9mFhqZ1EaIzCNoHh
+	 BXo/FZMQL8ZPPHM0nhoB42u3mI/P2oUuL+zLNDpWeVhTnEraepeJLoShCq7e4QJCzvYE+
+	 oPmw1u/AFCFrFMswo2CtXmZUeoXaaBrmYSzSVN42o0234t1ftLlp6DnEP0vdohrz24JVn
+	 YOnzcbkpI2LkLVO7QNll+cSP9Tw/fN+GSMk9RnQrLJa5wqnp6/SFkKlnsZuo3C8rpaw+E
+	 wBPeEP+2JbsalG5EXJzL4TGgK8B1m75tfe3PXjH6YIWCsw312nR9bJL+pookh7VcSLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793074933;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793074939;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=fubOaxOgmofN/3iFYwSrZzfn2/O9nYxlfixW+9HNaRE=;
-	b=MD23f7Lz40MCNFfNQfpKCMpmnO1uL2q97vQO+2iKO38rqgqAclOAkB2/XbL58Mb53LsQ
-	 Sgfct1sl7TnMIiEq/7AsxKwAhsQua/5/c1GRvirF1hWVvWJs3fV85r5hK/3RiN6JPa5WC
-	 TB/Syha6NhH7teUHGUlJiNVVdAWDowGxLFyM/h08cFrry/EWep8hF0QXwQSsF3OwE/+8J
-	 37d7nBAb4kOMHgTFAlWo5si+GoetHisf/RJp4I9cnWppAyj8zTYj0TTSfj74oWbXoxdCl
-	 N/sOHZnqkjbiCEJZOHE/0Ukg64wxXO0AP2/xmMFLB78k9l7hw9l//1Vje+Jkor6+N4w==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=YK5LaBMFpVaVrqLIEsL57jG1VfZYq1+Fawu+FzQQ2vo=;
+	b=CCPEu5D4MvXrVd20/uUQlUnQ1f4RNz7aDzO+WVgfMKLhvQGU4W4fuAcaf/rWnOYJubEe
+	 fY1N9Ys70lFIJ5rSEisZiV10Oky+Xxo2BWFrlABzusRiRsR7vUZ7vDvmXQ1V8p87yLsmd
+	 O44es8lJNPvKxtq6nLmTSgWIs/RbdOypln7jQp0PXUJY0h0kGac8c2YeDlmKvpWBxs0wJ
+	 ABGf0Zz7c0Fw4vH9gAmZoCVuJ/zNQShnWUBLKM4Rk827tQfcjNUBsN89JzmWdLLj1J3IG
+	 JgxJBwUr3JZOnj6PcsJbiRPI1lTaqxv7ohOpqfAW1fgcpoIbhixRStoyLVHvUnOlBHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=GMv5hpEW;
-	arc=none smtp.remote-ip=209.85.219.43
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=GPE8+0kF;
+	arc=none smtp.remote-ip=209.85.222.172
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2E2606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A2E2606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3B8606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A3B8606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=GMv5hpEW
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-91986c5cb75so37222976d6.0
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:13 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=GPE8+0kF
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-93e64d52949so296037985a.1
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793074932; x=1793679732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fubOaxOgmofN/3iFYwSrZzfn2/O9nYxlfixW+9HNaRE=;
-        b=GMv5hpEWLffJj9XNe0rwhZUg80o07hoik0Uc+bdjO8vwxOQnXkUSF2+8mMCp1rmSGt
-         422HUdWwtLS1VB4wScEs1vP49yWF/b/QIcZxcCvLGxpzxfdkG/QO4ChVjpkFxuKC50av
-         6oet7ESWbw7JYI0zgNc+S3eHXRo19L931xfvoz5yHwgtnffWGdvqjFpmhI5R8RXOk1h8
-         0QkNJnQBTryIkwOvq8GkKCIoMwQgtoiUncL6CeJHYrfyrJOlDrurfXyQUbvTS6lnsRWJ
-         ZSvfU9OVAQxYd/F/o7A7Mx0OejzztF3cokITVw5wmyN2qP8i+PKMkKIgvSpomA/S4/Mz
-         xU7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793074932; x=1793679732;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gourry.net; s=google; t=1793074938; x=1793679738; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fubOaxOgmofN/3iFYwSrZzfn2/O9nYxlfixW+9HNaRE=;
-        b=UBok2abu0mm+YZNleEjwxk6+L/AFjPsJKQN6bAUExRf4mQZNsqrCsxDDnjlhQ7XKa5
-         V2PDcMLNQlgiT8LYg6QErHJ+Kg3ZoHZpnj10sxHWsQSxi+qJuBUeH4XwxiH4TATw2BO3
-         XAC+5h7TkWWWzYqQayFUVqazI3Fz//SEmNV7OdIRu7L/W4txDaJ/39rhF2oG1n7nk6ql
-         mRG8kFNodmzJS7w4FAIFUcbakU8Ter0PW1CZh2WsfUKK9kOp2O8srthfo5Lvy42V2wSi
-         7/p7FfO5K7d2Cogb8Pc1C4Qg35d67GfsnaV5iysyB5JbytdYKb8utgro/xb18WGB3OD/
-         amIA==
-X-Forwarded-Encrypted: i=1; AKwUvByXwpgYO5axwMH4mFxkXOom2P/OFgbIlk8ByNicWnwfBB1Ud2NuVoYpEGbLZYtpirxZTH2KSZx3cWw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKA8WAiN0DMPtV4eMlMvyNdtqc1P4OTnCVF+3BSpSVfQZwn59BQ
-	nPH97czlvoGdji1MM93nCX7mXeWGIJg/Ieww8R9WLVF2btYu6SCYYpMALgSDcvweMKQ=
-X-Gm-Gg: AYBFou0OSpOpPndLwS+o1hz6ORTauho74aYZkBegRjes35xN1o4QaQ+jnZUh5lIUXBV
-	Cnjf+xRlwv5AzfjKsePnW2evVyyOUD7i0DQqidoBLFjpSfDSNld4UceH8mPR8JXGvkSzQPSRUuL
-	OgI33JVhQ+2+ieta2QaLywn9+5j/IyW6pz21hJiPohRWdbxXVLPm+OsUNCFwhc7a9kanzMFdufH
-	N85ULGvkyFUOIoeIxj2qiTsZKM5//PR8JA9Aceog3DqJFH0+n6PUIes+LFR8nwABKr3lwUFcjc5
-	/FmNh4LYHBF1ojHKJleC1w01KMJpH0ifldu/2RAUJH7KTh3L+zsdwVD43pz+3xXu9bJc895XxeS
-	6WmxdaQafw7YbeoVrhKJhNjbtCSn4PHMT9XE93/mje0Yt5mRx1NZBYEhXc+brWOYypk1SQ71pDs
-	YxkVeeSHcMexIPF/xA3pD7tHe9vRVRVGfoOZHxlc2EwmN7na7C/76ydfDcvG2FbHcTM9gG+md3n
-	nhIYivaNTnwiUvaWXJ5mcys+7mu9D94a99DEBjBwNPvE95jmLxVPd0doPvNvwMdaZzt/elTl/0g
-	oSHGs5hu+fENxaNDwUCoN9xpCqyaPbacqMqh+dTzAQ==
-X-Received: by 2002:a05:6214:29ed:b0:91c:65d0:1d78 with SMTP id 6a1803df08f44-91c65d0312dmr64203956d6.50.1793074932283;
-        Mon, 26 Oct 2026 21:22:12 -0700 (PDT)
+        bh=YK5LaBMFpVaVrqLIEsL57jG1VfZYq1+Fawu+FzQQ2vo=;
+        b=GPE8+0kFu72jV0ihXCtD42paUML7FqexI5dNiWXTbUjvgLoA8C2CfR6UyzdskAt9Ev
+         2MV0zRW5gCY3jajbt739cG24dtp1Dz9n4MlCDA1kMT1u6p0C+PgGoUV9jiK4eg2HTw6T
+         3YhOj8hvZ8xH5SP8AWZVR7Y0SRPmE5sczojI3/N/ou2x/IMa3+Hq8YSSUq2hFJzKPJkp
+         VFzX7W9Ux1E7/pl+z3pitE7jUTX+z1IA92Hv1bN/rtftaqq7PknPMs9whxmef3ZoO9at
+         UHcVab/32SbQkG6ZjbgjXVZQznveGCDRjaO0k+7WH9CX0MU5yFA3UQi/rjLfSpSO20JC
+         nslw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793074938; x=1793679738;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YK5LaBMFpVaVrqLIEsL57jG1VfZYq1+Fawu+FzQQ2vo=;
+        b=H5kr/b2LZRWfw9sA9hhayfpi3QIqDp9LA8iHqcQ19dD5sgtvCESUmf5HlyNHF8pvDR
+         P4QV5I8y57vsW22D7mxA5GSO38bPJ6UcBrIVXafeWaVoJkoto3VXMC7F0a/20vky+gbg
+         Du4o7O5Xz+vO71hZkJcODwHxQxxPBxMzGad9RK662VW0yTrguZ+WYBIEDkUserJux2h8
+         0w2phmL9XrwcI8IW0b11We3i+uF9q1lD8rWVqc/cJgIudEjzv3Np/lt0kJ8uq7keam06
+         X9ja+yWyjch268awqqhoryVWwElQ4IOfqReXcjotaoI6dC1idBs/xwFV8bQyJ0bSppF9
+         Rr5g==
+X-Forwarded-Encrypted: i=1; AKwUvBznt8g6oq0SGXwnQyvS1rZFRGbId4KJgHzjHM4Shu9eqARqnxuy9XU43uFiJcHT6y8p1+DcLQR9Plc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYINDE9xUd++WdYoVh/eh1hOXEvH8x0HcKF6zjhMV7gkfuXnKagP
+	EByL8LTpGJyMtT9at3sVCw2HMmlUcg54VlayaXJS12GkM7XjFBMl9SiUxjkSuV/oWTQ=
+X-Gm-Gg: AYBFou0zVKwf4qzT6hUozcNGhQlBO3snjqsrp1R16bzmTkBXRlMXQzr7bYeaaRVTett
+	cQdnka8nsHeueYMIbhadp0bsr+6boRRsc1dJsDHe+8PHYJmMC0Q3fZHe4VgLop9v3BUUrZwp9rk
+	u50tQ85e37zg1ZMQnDF4mqeqN1JHgZ0xyRnmzoZcqMGRLpBStFvTXFMS4ked9ps4UagKYG4ENWE
+	3JTcX0h5lOdE9iqg8FoXP/3ggXWGZ/3f30h+ht6Tnbq9Ce8O2TqhHczDLV44vdWQ33iW2MlAx4c
+	xRBKGaTXpbIW1mD3fEMeuFWq37EbfVlqyVgnoHlxP+o6X7knvqKw0gENc1K6ej67TDazv9kycA6
+	0tK9QmJbWVDxbpr1znHNloN0vueTMoK9jddxxJauqQn1hc1w7ZIvfv1+kW1vC2XP7JYcBbtOlYI
+	TU/46Mb/LVrkAOCyasMVzF1jHTU0xaL9moFHtHRZIKH2sHmW8E8dJd6weHq4lX2vieVWa3sO+Sr
+	BBbDZoNqrpHwzzWWqOa9TnZe/EsbMiVStQrK3qDR8gR0vzUj/ooBhwx0i5iAFQS11iolal4lW0w
+	mRGS/Ycp+xQdFZET2WOzlGgJfJVhoOMbsYzHXqrB7w==
+X-Received: by 2002:a05:620a:4549:b0:93e:f4f4:346 with SMTP id af79cd13be357-940ef8ef6e5mr1336003385a.39.1793074938389;
+        Mon, 26 Oct 2026 21:22:18 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.10
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 21:22:11 -0700 (PDT)
+        Mon, 26 Oct 2026 21:22:17 -0700 (PDT)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -98,11 +99,14 @@ Cc: linux-kernel@vger.kernel.org,
 	osalvador@suse.de,
 	muchun.song@linux.dev,
 	iamjoonsoo.kim@lge.com,
-	anshuman.khandual@arm.com
-Subject: [PATCH 0/6] mm: fix pfn walker races with memory offline
-Date: Tue, 27 Oct 2026 00:21:58 -0400
-Message-ID: <20261027042204.3741307-1-gourry@gourry.net>
+	anshuman.khandual@arm.com,
+	stable@vger.kernel.org
+Subject: [PATCH 2/6] mm/page_owner: hold off memory offline while a page is read
+Date: Tue, 27 Oct 2026 00:22:00 -0400
+Message-ID: <20261027042204.3741307-3-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261027042204.3741307-1-gourry@gourry.net>
+References: <20261027042204.3741307-1-gourry@gourry.net>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -114,75 +118,179 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several pfn walkers check that a struct page is online, then use it
-after memory offline has poisoned it (CONFIG_DEBUG_VM) or removal has
-freed the vmemmap.  Five of the races crash the kernel; the sixth leaves
-an offline spinning with the device hotplug lock held.
+Reading /sys/kernel/debug/page_owner while memory is removed can oops.
+read_page_owner() checks a pfn with pfn_valid(), and print_page_owner()
+can sleep in kmalloc() before it reads the struct page:
 
-Patch 1 adds pfn_walk, an SRCU-fast read section that offline waits for
-before poisoning the memmap.  Patches 2 and 5 use it; patches 3 and 6
-hold get_online_mems() instead.
+  CPU 1 (read page_owner)             CPU 2 (remove the memory block)
+  pfn_valid(pfn)
+  page = pfn_to_page(pfn)
+  page_ext_get()
+  page_ext_put()
+  print_page_owner()
+    kmalloc()
+                                      offline_pages()
+                                        remove_pfn_range_from_zone()
+                                      arch_remove_memory()
+                                        frees the vmemmap
+    get_pageblock_migratetype(page)
 
-  1. compaction scanners
-  2. page_owner reads
-  3. memory_failure(), soft_offline_page(), unpoison_memory()
-  4. alloc_contig_range() undoing another caller's isolation
-  5. alloc_contig_pages() isolating a range that went offline
-  6. the hwpoison-inject filter
+  BUG: unable to handle page fault for address: ffd4000006000000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  Oops: Oops: 0000 [#1] SMP KASAN
+  RIP: 0010:__get_pfnblock_flags_mask+0x3e/0x2b0
+  Call Trace:
+   <TASK>
+   get_pfnblock_migratetype+0xf/0x20
+   read_page_owner+0x629/0xf00
+   full_proxy_read+0x102/0x190
+   vfs_read+0x153/0xcd0
+   ksys_read+0xe4/0x1b0
+   do_syscall_64+0xbd/0x630
+   entry_SYSCALL_64_after_hwframe+0x4b/0x53
 
-All six are for stable.
-  Patches 2 and 5 need patch 1
-  patch 5 builds on patch 4
-  patch 6 builds on patch 3
+Offline alone faults the same way on DEBUG_VM kernels.  The page_ext is
+safe; offline_page_ext() frees it after an RCU grace period.
 
-Testing
-=======
+Check the pfn with pfn_to_online_page() inside a pfn_walk read section,
+which offline waits for, and move kmalloc() and copy_to_user() out of
+it, since offline waits with the hotplug locks held.  A full read of
+page_owner in a 5G guest takes 1.36 s before and 1.34 s after.
 
-Each race was reproduced on unmodified source in a QEMU guest with three
-NUMA nodes and a pc-dimm left offline at boot (DEBUG_VM, KASAN,
-lockdep).  A test module holds one task inside the window while the
-offline or eject runs, then releases it.
+With a kprobe sleeping the reader on a DIMM pfn across an offline or a
+removal, base faults in 3 of 3 runs of each and this patch in none.
 
-         base                           this series
-  patch  outcome                 runs   outcome                 runs
-  -----  ----------------------  -----  ----------------------  -----
-  1      GPF                     3/3    offline waits, clean    3/3
-  2      GPF or #PF              6/6    offline waits, clean    6/6
-  3      GPF, or unpoison of a   9/9    blocks, -EIO/-ENXIO     9/9
-         poisoned page
-  4      offline still looping   4/4    offline completes       3/3
-         after 30s
-  5      GPF                     3/3    offline waits, clean    6/6
-  6      #PF                     3/3    eject waits, -ENXIO     3/3
+Fixes: 48c96a368579 ("mm/page_owner: keep track of page owners")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+---
+ mm/page_owner.c | 45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-Without forcing the window, offline/online cycling under compaction
-faulted in 8 of 24 runs on base and 0 of 12 with patch 1.
-
-Cost
-====
-I was unable to measure a discernable cost beyond noise, stddev of
-walkers and scanners runtimes on real hardware was wildly inconsistent.
-Leads me to believe this change is largely imperceivable.
-
-Gregory Price (Meta) (6):
-  mm/compaction: wait for pfn walkers before poisoning offlined memmap
-  mm/page_owner: hold off memory offline while a page is read
-  mm/memory-failure: keep the page online while handling it
-  mm/page_alloc: don't undo another isolation in alloc_contig_range
-  mm/page_alloc: keep the range online while alloc_contig isolates it
-  mm/hwpoison-inject: keep the page online while filtering it
-
- mm/compaction.c      |  8 +++++++
- mm/hwpoison-inject.c | 55 +++++++++++++++++++++++++++++---------------
- mm/internal.h        | 41 +++++++++++++++++++++++++++++++++
- mm/memory-failure.c  | 31 +++++++++++++++++--------
- mm/memory_hotplug.c  | 16 +++++++++++--
- mm/mm_init.c         |  4 ++--
- mm/page_alloc.c      | 35 +++++++++++++++++++++++++---
- mm/page_alloc.h      |  7 +++++-
- mm/page_owner.c      | 45 +++++++++++++++++++-----------------
- 9 files changed, 186 insertions(+), 56 deletions(-)
-
+diff --git a/mm/page_owner.c b/mm/page_owner.c
+index cfc31c92d7657..d2c0b831fcd3b 100644
+--- a/mm/page_owner.c
++++ b/mm/page_owner.c
+@@ -13,6 +13,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/sched/clock.h>
+ 
++#include "internal.h"
+ #include "page_alloc.h"
+ 
+ /*
+@@ -600,20 +601,14 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
+ #endif
+ 
+ static ssize_t
+-print_page_owner(char __user *buf, size_t count, unsigned long pfn,
++print_page_owner(char *kbuf, size_t count, unsigned long pfn,
+ 		struct page *page, struct page_owner *page_owner,
+ 		depot_stack_handle_t handle,
+ 		struct page_owner_filter_state *state)
+ {
+ 	int ret, pageblock_mt, page_mt;
+-	char *kbuf;
+ 	enum page_owner_print_mode print_mode;
+ 
+-	count = min_t(size_t, count, PAGE_SIZE);
+-	kbuf = kmalloc(count, GFP_KERNEL);
+-	if (!kbuf)
+-		return -ENOMEM;
+-
+ 	print_mode = state->print_mode;
+ 
+ 	ret = scnprintf(kbuf, count,
+@@ -637,14 +632,14 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+ 	if (print_mode != PAGE_OWNER_PRINT_HANDLE) {
+ 		ret += stack_depot_snprint(handle, kbuf + ret, count - ret, 0);
+ 		if (ret >= count)
+-			goto err;
++			return -ENOMEM;
+ 	}
+ 
+ 	if (print_mode != PAGE_OWNER_PRINT_STACK) {
+ 		ret += scnprintf(kbuf + ret, count - ret, "handle: %u\n",
+ 				 handle);
+ 		if (ret >= count)
+-			goto err;
++			return -ENOMEM;
+ 	}
+ 
+ 	if (page_owner->last_migrate_reason != MR_NEVER) {
+@@ -657,17 +652,9 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+ 
+ 	ret += snprintf(kbuf + ret, count - ret, "\n");
+ 	if (ret >= count)
+-		goto err;
+-
+-	if (copy_to_user(buf, kbuf, ret))
+-		ret = -EFAULT;
++		return -ENOMEM;
+ 
+-	kfree(kbuf);
+ 	return ret;
+-
+-err:
+-	kfree(kbuf);
+-	return -ENOMEM;
+ }
+ 
+ void __dump_page_owner(const struct page *page)
+@@ -734,10 +721,17 @@ read_page_owner(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ 	struct page_owner *page_owner;
+ 	depot_stack_handle_t handle;
+ 	struct page_owner_filter_state *state = file->private_data;
++	ssize_t ret = 0;
++	char *kbuf;
+ 
+ 	if (!static_branch_unlikely(&page_owner_inited))
+ 		return -EINVAL;
+ 
++	count = min_t(size_t, count, PAGE_SIZE);
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
+ 	page = NULL;
+ 	if (*ppos == 0)
+ 		pfn = min_low_pfn;
+@@ -766,7 +760,12 @@ read_page_owner(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ 			continue;
+ 		}
+ 
+-		page = pfn_to_page(pfn);
++		/* Offline waits for us before it poisons the memmap */
++		guard(pfn_walk)();
++		page = pfn_to_online_page(pfn);
++		if (!page)
++			continue;
++
+ 		if (skip_buddy_pages(&pfn, page))
+ 			continue;
+ 
+@@ -825,14 +824,18 @@ read_page_owner(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ 
+ 		page_owner_tmp = *page_owner;
+ 		page_ext_put(page_ext);
+-		return print_page_owner(buf, count, pfn, page,
++		ret = print_page_owner(kbuf, count, pfn, page,
+ 				&page_owner_tmp, handle, state);
++		break;
+ ext_put_continue:
+ 		page_ext_put(page_ext);
+ 		cond_resched();
+ 	}
+ 
+-	return 0;
++	if (ret > 0 && copy_to_user(buf, kbuf, ret))
++		ret = -EFAULT;
++	kfree(kbuf);
++	return ret;
+ }
+ 
+ static loff_t lseek_page_owner(struct file *file, loff_t offset, int orig)
 -- 
 2.53.0-Meta
 
