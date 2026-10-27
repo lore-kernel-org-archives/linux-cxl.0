@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793072574;
-	b=2B+z5obBpDXD9xI/D6rgrwFdor+WRytiKyAjpLWh2ht/+BRahI7yqrRN1/6eIYOTVu3H
-	 x9P7b2fF9QPwNVgnHkH6bgsbx+qx1MF19m9jJpJHZTNnnWpXLL9ht7whIxVYXtVHo5/Bg
-	 Yj7hBCF+/1vO7c4MtJ5TfsxWT+F4k/292gjhZ3gqi+nSTLpNrfg3QMo/s0ObY7a3XBSdt
-	 52NNBT+66BxWyZoizj++6Y4LNTOEQRnLpkZzuoLF0ERyhYFpuSEcx7VrQrTMoSTyuVS3r
-	 qrMvCQLOVs7cuUXN3oJtQKJvreUNhNt+obniSYXkafxxDdyIPCjfWYMoPY0wLQ/sPgQ==
+	t=1793072705;
+	b=2GnlXnfaoiiARMRW8sMqWIyMnUpUDHDYq8RUvVGysfNVYarvaX+oOUp8fxExPcVlgek8
+	 4elkveQxvymcK9EPUMnSUOLHObDAAtWfz5wyWzuH0LoYvIeNiKe6UN7zdQtl9yaDFCj58
+	 bTSJZJNkHbaxqDQuWdQLQTLfP94zNQoedv/CXA9PkjZBe7KV+IO9gHvzHOOMfQSkPG8xh
+	 E0bC9Z8boJ2Xo1WihsgvOnMbmzTtVKL1Z1M5Nx+0fFJJwD9OKS27a8G2tQhwRHCAFDI16
+	 ZwEUBmUK7SxVOncBlc9HHkBPtwVzmZGmm6hEo0hxB2c2SqVvdNFJ8Klya1dDZ6hVRUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793072574;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793072705;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=3AmNHif0hEkmbwEeTcZrwdr+/HB8qgSmoybIARXFX10=;
-	b=PBAnLoAfD39ixA+ps4YIbaHEz1qfSmgv+4DIDHx8i+0sf7AnTQOlb0+8IQ07gyCX8TTP
-	 Coo25R5sL2oa/zcbegHNB6xye3WzYJmtmjz2Qfa9Nc3MhAF2S9pvzmNUwiCSLemSPOxUl
-	 na44yKYCDmNh6dFLpIHl95brUHE5k3ujaZuZ6mD6YCrQX6E95cuW1ckmWdQAs3m+OOumu
-	 FyJSFNHzr7BzcreJ829kugBd+aoEDK+spSDrhoAAz4zF0AuDvgR7kFIkhRcQOcmwSElpr
-	 g9KZB3StugxhrgfWUUsy/BH+8LO//E1ueXiXz+etcyPNE4vj5GyCLxTj5HqIabXeecw==
+	bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
+	b=S3GyQ7+KrX9X7blyJRqsaTST+GdsrrCqx4hLLmrbbY6TaSkACIsl1Hif5B1AFHMHbjYH
+	 wSGa76GdTvzBQdi4VWOx1NyH4R4QhBfKTXRRT7BetsLeH2zwzVUh2fbtVBIMeeeW/c6bi
+	 OieW8bGPNL3AGCupe+CuWzvVO31Q6DzrSfeDqX0yzitAqGsC5vA//QPpAR5R1Fgdm1g7S
+	 FpDcVow+v9wlZM3jAOYta6uIdJIPilipqA8C2Cq+D8rn8sTS2+SnEA7dbmxXYKbRRqN2u
+	 pRWIohoNxhTx9r5z09nBmSRSH0w4FYdwK2Qgk0Iz+ED5PRHW1sX5SezCgJ2In0VvD5g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=TP6Wb0G9;
-	arc=none smtp.remote-ip=209.85.208.48
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=LpEct1xf;
+	arc=none smtp.remote-ip=209.85.218.46
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA220606A328
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:42:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BA220606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70013606A320
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:45:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70013606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=TP6Wb0G9
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6a642495d81so5321153a12.2
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 20:42:53 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=LpEct1xf
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c40e02b2ebaso570697366b.1
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 20:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793072572; x=1793677372; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1793072704; x=1793677504; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=3AmNHif0hEkmbwEeTcZrwdr+/HB8qgSmoybIARXFX10=;
-        b=TP6Wb0G9zLDqWuDXb4AhwPpwuHlSKdtp7vOXpYDf7eGm1a80xAQ1Kk7a3BAwdBSgbf
-         7jIsPCCAndPaIyaXMt1h9L+v3YN04he2Yn/CRRvHVdHgoUlgLlSgwa9hE7a1amSX74cH
-         Kwjdvwabbe16pgNJqcLstwt0irlt7+SuIDQSlFjPA8tQknv+O8lFGJzh6gB7RDu1kMgs
-         b7Ioo0qZ28U44QqcJ5fTkQnZXkb4QTONZ/A3yzR+1a7MYD/SYCY6zoTd6EcwzJuhItLH
-         0B0L6IlHYe4/Vnwr07ZM2/roJJBr1DR/QdSECM7/FpaBVLw/yoke4fT7pykNvEVAzfsJ
-         pBZA==
+        bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
+        b=LpEct1xfjN1thI8TbP1fFa5w4w7QpAjyNF4cILo4hjgANhwzNTKcYl0/OAf4qytQ+D
+         bTfw0B3W1YrJQBpG4CQa8BYUw8l2YA95j8Iad3IOM19h6jXJAZgZVZG4NeFqABxjmQVx
+         cqyrWzfJOtShgzKATE8MA+KO/cZ6XpKKBzqfRYPV63n+KEkSREwYLpTIdKLylOucISku
+         0b4t0cDOYZZ8VUkN5GYjeY7kLbNFUAZvUWcO7vKMGLuSX/T0QUI3kWhBk14nybsQgrpx
+         sgvekJqRyNLDD3CwyDUMJUgSY/E+TGZ5+ZTFoQY3fbSMcNnskQ516a1VLRqdlAxCgpFM
+         NMXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793072572; x=1793677372;
+        d=1e100.net; s=20260707; t=1793072704; x=1793677504;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3AmNHif0hEkmbwEeTcZrwdr+/HB8qgSmoybIARXFX10=;
-        b=PO0ktW/NtVvfd712Xy7xR33xc4AWuAwGVCcajzRI6OilrplHXC8tsS5Barw7lhDzj5
-         McPrAruwE5M/QDgMRzpNMpGlX0Vb/Pto9BNrbKDiLRBGBNVmvyiLx8oj6HY30ZwYZ7CL
-         WJfAz9dVWHaDD+J6/DidFrx835RhtMMF9gHxEfPLkDht34ZHiG82vzJg1kCfQx2blSqZ
-         BY9duqYUnjr2Jd42KYcK7ItZdNyXuxNIcAkN+QA4B0R0yBCRCGbxiancSjs4ZPcK6V+Z
-         pKwXtuA35BfO5MLUA9iBbN5yJH37s0cpKJvosbKbgRkLxAc06txYNaqSxAuhknTdJSpg
-         ytzg==
-X-Forwarded-Encrypted: i=1; AKwUvBxNjpCkzIPTG4Z3XsfShRayOHbjpU9LjOC+O/HumdJWpyal5qozPqvYaxr2rH6TDsNKCfViC4tv6wM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJWgPH5UFh/4tDMakmp6Whv5U76/pfY9OuDbYOqv9vwDN4Vevt+
-	KfyH6tnv4xqyKFBarV/0DjWfd4i6iiIHfWyauG4U7s/kaMLbx6eJHCuqaclHuf+hUig=
-X-Gm-Gg: AYBFou0JWec4RyI87sgtS9WQp87Q1dVU+S65MmOHNQfSm3cZcAipy7U27Fbs9z0eULY
-	UzhfR62/eXQD4A4VFa3mXqKfj/q88Nc7LNDrzzo1yLoHk5EA208w3/4WFVsxMtOWY7KFqE4RZut
-	sz4F9IyUCZ+HlE3Iglk4guaunFnWB89Ogmtx8A3uIto33A9GXpwAmeTT6R5A8URHH2bvMKQp/bI
-	CA9MkCut5i6TMhr6zfOZKrgL5D3hBFM2h76sQJcYiR0EUSD+/ebeq0p2W6U1UxD+Ge5xSlkQ4Ju
-	6M26jvhDRZAquyJ10/ke2JSngpQenjUtCX0ooAUOA5pAV7vYao+zUuRdy7JUG+Rd9gSsKnFIxh4
-	xTwrkk+PYM78OTP2fpJn/Z9786EXE8tylP1OYF9E59ntmb9FlLeCC/oEQHySJ6lzt/ySgnqwKix
-	jQVHSnQVBMuZizQ9I/aI+imTLNGlXFdPgoOPD/fnOVTmOHGz7R5cQH7EXYI2e8X89/5Vs/Wil1N
-	fRgEyVv2SSCTMA7lEKejoW74opQsZKuGNcs09SXofOD4gPKwfCTpe+OFhnCHv015ZRc
-X-Received: by 2002:a17:907:96a4:b0:c42:102f:15d7 with SMTP id a640c23a62f3a-c46bdbf000fmr901757066b.10.1793072572116;
-        Mon, 26 Oct 2026 20:42:52 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:4a::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd649997sm382056866b.42.2026.10.26.20.42.50
+        bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
+        b=m2VmDLZRdlWLv14fbdXn8oNA6epx2hKf1jsY7cCBQeQbe2NDMAlrnrH/xWtojiZLzq
+         MEuD1e57mY/H33PxNPhJiZF5qwN75EzT0w+9vGcHlGPaKCkiyN5RsSakjC+THWEBLRLu
+         L8+TTR2nkktxhlb6fZ1BY1xTNyKXqLotsCLMu1c47itdH1I6hYTCbowo63ldFBzMxEqb
+         mnZW1XYySEr3W+kXBm+uGmU6i31GdF76ehJY9yFQKc1FR33Fr2XBYUG667+Xk2ur4dn9
+         69gBn+ZMT6gG+7SeH31R8C9umnGxECzGkTDdT9TGxeAjhwbfbPRdAG8fc8KwsgQ/8wLD
+         6y4w==
+X-Forwarded-Encrypted: i=1; AKwUvBwd3E+PMnP4IH5SDYlEkSzdfGDyM4NE6TLxYkt11jj5ltRzDp66qAXv6Nta/9xs4Y3SUCTYe2r82/E=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIpXeKUDKonzRXrUCEIkF8rSqZz/WyLYzxBIRDZsOjZnLOtbF3i
+	XdT6wkIsEobUTzT500HHK956egMJrd+fodd76aQ8IqvuduQa/pDKgWArM7geSMeXG7Q=
+X-Gm-Gg: AYBFou2BmxWf5CPISk0hNuNbhFJdBZ5XP3UNCJKiUJP4+KigyNdFzfsqNiD323S2SqC
+	8800/o1nQjtki7I58EQCmlu6iH7q9QZwIAhkk3kbvEv4tD7Ukp3iBfMQ+oOVIX8d+n1lY+loo4y
+	b+5UYyLFAnrtFloJ5PnEmve9BBWpjAKykNDEivYlwyQ7lV12Sro08xsi/03C7Z45ALnSyVEyJJG
+	UNGnu7hPYGi9joHoZ1dYPDcuWxkMAXelkpeJduX6p6kJNAfbhroobThwXlbQVMtUQuxC8OR1fw5
+	FheBCjDNwvGAUueHl5vEWkaPK14N2JvLtJJb12H5bLPK6wZD0xxXIWZjT83uVIX636mnB9JF5EQ
+	4l9KofEu/Uego3eckhr6RCBLEsDyd6sSRejyJnL3wRabg/vmka+U0+T7AUkZybJuN2hICVAHvJu
+	PvVXAC41YdA1TQ6FFkCOEPBGkIkiNOGz1kAgiGfvZBEiKeT/YdwQOvhDR1Ix3ByLU6ZFvLuYa8p
+	dth5UUWeefD4eGH34Mo5ghUbSD70HXAsG5UgCXPwXcef3E=
+X-Received: by 2002:a17:906:9f85:b0:c41:5a0e:3356 with SMTP id a640c23a62f3a-c46bded5befmr907107666b.41.1793072703836;
+        Mon, 26 Oct 2026 20:45:03 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:49::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd4e7c83sm382468666b.30.2026.10.26.20.45.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 20:42:50 -0700 (PDT)
+        Mon, 26 Oct 2026 20:45:02 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -89,7 +89,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 28/46] mm/mmu_notifier: set ->mm only after mmgrab()
+Subject: Re: [PATCH 41/46] mm/vma: call ->may_split() before a partial
+ merge
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -128,37 +129,151 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
  linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
  stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-28-6f74bec9a5bb@kernel.org>
-Date: Mon, 26 Oct 2026 20:42:49 -0700
-Message-Id: <179307256988.1171062.17835586018092384558.b4-reply@b4>
+ <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
+Date: Mon, 26 Oct 2026 20:45:01 -0700
+Message-Id: <179307270137.1171062.14886397073081900278.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
-On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
+On 2026-10-27 00:18 +0100, David Hildenbrand (Arm) wrote:
 > From: Chris Mason <mason@kernel.org>
 > 
-> Radeon uses a non-NULL notifier->mm to decide whether to call
-> mmu_interval_notifier_remove() when freeing a buffer object.
-> __mmu_interval_notifier_insert() sets ->mm before validating the range,
-> so a wrapping userptr range can leave ->mm set after insertion fails.
-> Cleanup then tries to remove an unregistered notifier for which no mm
-> reference was acquired.
+> A driver can use the ->may_split() hook to forbid a VMA boundary at
+> certain addresses.
 > 
-> Set ->mm only after mmgrab(), once insertion can no longer fail. While
-> we could fix radeon's code instead, setting ->mm on success only makes
-> the code more robust.
+... snip ...
 > 
-> Fix generated by an LLM and sent by Chris Mason in private.
-> 
-> Fixes: 3506ff69c3ec ("drm/radeon: use mmu_interval_notifier_insert")
+> Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify description ]
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: improve description; cleanup the code ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+
+Attached a vma unit test I used to test this
+
+-- >8 --
+From: Gregory Price <gourry@gourry.net>
+Subject: [PATCH] tools/testing/vma: test may_split during partial merges
+
+A partial VMA merge moves a boundary just as a split does, so it must
+consult the driver's may_split callback. Removing an entire VMA during a
+merge needs no split check.
+
+Exercise permitted and rejected partial merges in both directions through
+vma_modify_flags(). Check the callback address and resulting boundaries,
+including unchanged boundaries on rejection. Also check that a full merge
+succeeds without calling a rejecting may_split callback.
+
+Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+---
+ tools/testing/vma/tests/merge.c | 87 +++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+
+diff --git a/tools/testing/vma/tests/merge.c b/tools/testing/vma/tests/merge.c
+index b26f1a66a1707..fcc052be15601 100644
+--- a/tools/testing/vma/tests/merge.c
++++ b/tools/testing/vma/tests/merge.c
+@@ -1488,8 +1488,95 @@ static bool test_expand_only_mode(void)
+ 	return true;
+ }
+ 
++static unsigned long split_checked_addr;
++static unsigned int split_checks;
++static bool split_allowed;
++
++static int merge_may_split(struct vm_area_struct *vma, unsigned long addr)
++{
++	split_checked_addr = addr;
++	split_checks++;
++	return split_allowed ? 0 : -EINVAL;
++}
++
++static const struct vm_operations_struct merge_split_ops = {
++	.may_split = merge_may_split,
++};
++
++static bool check_partial_merge_split(bool left_edge, bool allow)
++{
++	struct mm_struct mm = {};
++	vma_flags_t left_flags = mk_vma_flags(VMA_READ_BIT, VMA_MAYREAD_BIT,
++					      VMA_MAYWRITE_BIT);
++	vma_flags_t right_flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
++					       VMA_MAYREAD_BIT, VMA_MAYWRITE_BIT);
++	struct vm_area_struct *left = alloc_and_link_vma(&mm, 0x1000, 0x3000,
++							1, left_flags);
++	struct vm_area_struct *right = alloc_and_link_vma(&mm, 0x3000, 0x5000,
++							 3, right_flags);
++	struct vm_area_struct *middle = left_edge ? right : left;
++	unsigned long start = left_edge ? 0x3000 : 0x2000;
++	unsigned long end = left_edge ? 0x4000 : 0x3000;
++	vma_flags_t flags = left_edge ? left_flags : right_flags;
++	struct vm_area_struct *result;
++	VMA_ITERATOR(vmi, &mm, start);
++
++	left->vm_ops = &merge_split_ops;
++	right->vm_ops = &merge_split_ops;
++	split_checks = 0;
++	split_allowed = allow;
++	result = vma_modify_flags(&vmi, left, middle, start, end, &flags);
++	ASSERT_TRUE(split_checks > 0);
++	ASSERT_EQ(split_checked_addr, left_edge ? end : start);
++	if (allow) {
++		ASSERT_EQ(result, left_edge ? left : right);
++		ASSERT_EQ(left->vm_end, left_edge ? end : start);
++		ASSERT_EQ(right->vm_start, left_edge ? end : start);
++	} else {
++		ASSERT_EQ(PTR_ERR(result), -EINVAL);
++		ASSERT_EQ(left->vm_end, 0x3000);
++		ASSERT_EQ(right->vm_start, 0x3000);
++		ASSERT_EQ(mm.map_count, 2);
++	}
++	cleanup_mm(&mm, &vmi);
++	return true;
++}
++
++static bool test_partial_merge_may_split(void)
++{
++	ASSERT_TRUE(check_partial_merge_split(true, false));
++	ASSERT_TRUE(check_partial_merge_split(false, false));
++	ASSERT_TRUE(check_partial_merge_split(true, true));
++	ASSERT_TRUE(check_partial_merge_split(false, true));
++	return true;
++}
++
++static bool test_full_merge_no_split(void)
++{
++	struct mm_struct mm = {};
++	vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_MAYREAD_BIT);
++	struct vm_area_struct *left = alloc_and_link_vma(&mm, 0x1000, 0x3000,
++							1, flags);
++	struct vm_area_struct *right = alloc_and_link_vma(&mm, 0x3000, 0x5000,
++							 3, flags);
++	VMA_ITERATOR(vmi, &mm, 0x3000);
++
++	left->vm_ops = &merge_split_ops;
++	right->vm_ops = &merge_split_ops;
++	split_checks = 0;
++	split_allowed = false;
++	ASSERT_EQ(vma_modify_flags(&vmi, left, right, 0x3000, 0x5000, &flags), left);
++	ASSERT_EQ(split_checks, 0);
++	ASSERT_EQ(left->vm_start, 0x1000);
++	ASSERT_EQ(left->vm_end, 0x5000);
++	cleanup_mm(&mm, &vmi);
++	return true;
++}
++
+ static void run_merge_tests(int *num_tests, int *num_fail)
+ {
++	TEST(partial_merge_may_split);
++	TEST(full_merge_no_split);
+ 	/* Very simple tests to kick the tyres. */
+ 	TEST(simple_merge);
+ 	TEST(simple_modify);
 
 -- 
 Gregory Price <gourry@gourry.net>
