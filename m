@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.152
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.196
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793070333;
-	b=b1sN6ahMv8j+Ngag7u6QqbQEqjq62P8Rn5U43WZ39so2dW5rFORczJWVSCS5vUchwwyD
-	 llfgPsgDR28/vwWCfxEgne2SW7/aMJumtCSFpaYLL6r3nlrMVeX9qjgoHD9cNmysULbkD
-	 RMM0jo28SfOLKXtL6O1gVTRwVDEfj4myYgdfInUg9mxv4f9iVzvGEkDVmdltRGrMHKWqL
-	 GAEgbP2gSwco+II+G3UGYH3V4VF4UVDRUNu3qpKDZ0B3VT+hCW1gMy7+++A5IhqUoo7F/
-	 oLADmMSoCn0mpEZcg3cu+7c7Ilg1A/TWBoeuvHVxPQ3CG5KLY/uAPkcILVB0jQLbJBQ==
+	t=1793070410;
+	b=a9/9VvrN5QRcmAhWSjD8OFT9rr0CfoZT3JTYKnrLro9TRU573WDFI+mrDRpHGdoC5Hcn
+	 savzducCHztliH70IQRIrm50GJISb2afOd1Pvr5a0Ifnbk5AlazxeMP7Q5uusbtkjANJR
+	 4Kr3ot53F3gNEfSNQzKPDR7TO81U+1g1hJZf/0YHrYhlMEwdxdgw0oMKC/zKIIdxUiGNy
+	 mbrZE7aparAzOf/xeN6HrgR0edUOZxI16cFunymqG/eT4M5NY8i12QA6IpIlkUhlWgBBz
+	 j4he40UjpugXw9dKKRiDRZtKl7ujG34HXVRM25rTFdjPDQ1H6PUkEsYTY2fMCqdjBuw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793070333;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793070410;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=S2fYp0D+kux7GkOrzGv4DxJUQ1pHehCh6wWsm9VP8mw=;
-	b=t0HFGBrPFp/XEn+eHrAR2+gHix7u7ayoDkYmurgUBrp++1h875nbLW+62PWxjJXYwDDI
-	 pzH8IHJ6+mFtZo9j+6NLZLUx+oC7AmWa2xCsFIDzPpDCOwv4paRuqXz9Edq6zRK6zmy+U
-	 uC7NeNO/eHt2sqeeD/1wDkha0JU5kdH+Jjli5vsMQcs83bJCMFq/jSeR5UsPub2TQG1RA
-	 b2shH48Yh4SrSuSM0do+gxc1L9O9RfYL9HWJs1jdLzEikFPredJgjkvjGBipIxO41ir88
-	 mipmyt0iwol970VBMPKjupdgr252EjMLb5TvEB5gBtURmuVvLOM8DAVBnR3FyRAZZkA==
+	bh=NfiBYouQ7SUxOIRjsg6uwpg+DvPUrarmQVPVZOSrssU=;
+	b=Pzu7WwTURB56Q/2YMMRIl2A3DOxQmPESLfaKfyclM211ScLUlnqVfT4QwGpMyi8wBeVi
+	 4+AodhNbErqsbc0HSbqWJ+6L0xv5elZplyxqy6QoMIyqrSBr+xhuiXcErsGtw4hsJj2HE
+	 g2vlIM3phSAjKeGHIrAVoz9KhLeh2EPzsfgWBNk3zALf0ieYKQdQZQv9FoEseha5Fp994
+	 XYGnFpNs8gsP6tFi1R0JB2qKxc4WzwwdKWIJXE10K3KCRxWsSUz8Z6pJWAsy7gKHRS3JF
+	 lzg6v8aamTqdQ70OmDWceHoQdpZYyhtTJUMnQLtTWkyjoR9nAlqFg10gkuR3K4xQarA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=c65rOCZf;
-	arc=none smtp.remote-ip=95.215.58.152
-Received: from mta1.migadu.com (out-152.mta1.migadu.com [95.215.58.152])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=OmJvHkyF;
+	arc=none smtp.remote-ip=95.215.58.196
+Received: from mta1.migadu.com (out-196.mta1.migadu.com [95.215.58.196])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711F2606A31D
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:05:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 711F2606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EE6606A31E
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:06:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A6EE6606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=c65rOCZf
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=OmJvHkyF
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=PpgTbepyGCQbdry0Tl9jwBnnjb4CaWXJ3ss5elRPGCc=;
+DKIM-Signature: a=rsa-sha256; bh=AqI8n299OICKahJhyCKFqs0u3m8/ZWmCuQo8Rk556kA=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793070330; v=1; x=1793675130;
- b=c65rOCZf1Vlq0GQPAQmQqm5wf83ltLhRtUxYonNAqk4jRy4mWveQ6FYHE0z2KgSx0vBBuhwh
- I5BSaMM8kbNm5zMj9kh6fIQDiuHKd5Weox4bLMD3rtVDFQIbo7eTm65U5091811U3kGr9K6AGAx
- 2ioEyZte5hznqL0+wFow5F8A=
+ t=1793070407; v=1; x=1793675207;
+ b=OmJvHkyFxsfeKypToUZ7LSGC2sUxdtwI3R9o6a19BnFlQ/VY2YusuFobH1ESXjXmdW4D/0v1
+ 2U+cDF/TlFIvOXWIa+BCKSj8lSkeCR2P5jwvU83YvE2C4LcKuDnPaa1N3Qp/AhtOyPyWtF6jp0r
+ X5a1YWHseL+TPDdj7Y10H9cA=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 9170fb527649b4ac;
-	Tue, 27 Oct 2026 03:05:20 +0000
-X-Mizu-Trace-ID: 9170fb527649b4ac
+Received: by smtp.migadu.com with ESMTPS id fa452c266040fd6e;
+	Tue, 27 Oct 2026 03:06:46 +0000
+X-Mizu-Trace-ID: fa452c266040fd6e
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <62dfb28c-1078-440e-ba23-9068f4958570@linux.dev>
-Date: Tue, 27 Oct 2026 11:05:01 +0800
+Message-ID: <b0f16e9c-691a-4ab1-9ac4-d76b92c58b60@linux.dev>
+Date: Tue, 27 Oct 2026 11:06:27 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,8 +59,8 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
- and PMD tables
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 To: "David Hildenbrand (Arm)" <david@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
@@ -98,9 +98,9 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
  Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 From: Qi Zheng <qi.zheng@linux.dev>
-In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -109,38 +109,49 @@ Content-Transfer-Encoding: 7bit
 On 10/27/26 7:17 AM, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 > 
-> MGLRU passes stack copies of page-table entries in walk_pud_range() and
-> walk_pmd_range() when walking to the next level. These copies can become
-> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
-> table concurrently.
+> __tlb_adjust_range() takes the size of the range which has to be flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+> gets truncated, possibly to 0.
 > 
-> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
-> support page table walks"). Likely, earlier locking masked the latent
-> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
-> retract_page_tables() without mmap or vma lock") allowed concurrent
-> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
-> for MGLRU") dropped the walker's outer RCU protection.
+> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 > 
-> The fix is simple, so just fix the original commit so we don't have to
-> speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-> RCU-protected lookup and validation against the live PMD. Note that the PUD
-> handling is required as well to handle folded page tables correctly in all
-> cases.
+> Fix it by flushing the proper range instead of the truncated one.
 > 
 > Fix generated by an LLM and sent by Josef Bacik in private.
 > 
-> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: handle walk_pud_range() as well, clarify+simplify description,
->           adjust Fixes: ]
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
->   mm/vmscan.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>   include/asm-generic/tlb.h | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index fbe1114e9a443..3f4a180b48f3c 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -350,8 +350,7 @@ struct mmu_gather {
+>   void tlb_flush_mmu(struct mmu_gather *tlb);
+>   
+>   static inline void __tlb_adjust_range(struct mmu_gather *tlb,
+> -				      unsigned long address,
+> -				      unsigned int range_size)
+> +		unsigned long address, unsigned long range_size)
+>   {
+>   	tlb->start = min(tlb->start, address);
+>   	tlb->end = max(tlb->end, address + range_size);
 
 Reviewed-by: Qi Zheng <qi.zheng@linux.dev>
 
 Thanks,
 Qi
+
+> 
 
