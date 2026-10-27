@@ -1,83 +1,135 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.46
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793072705;
-	b=2GnlXnfaoiiARMRW8sMqWIyMnUpUDHDYq8RUvVGysfNVYarvaX+oOUp8fxExPcVlgek8
-	 4elkveQxvymcK9EPUMnSUOLHObDAAtWfz5wyWzuH0LoYvIeNiKe6UN7zdQtl9yaDFCj58
-	 bTSJZJNkHbaxqDQuWdQLQTLfP94zNQoedv/CXA9PkjZBe7KV+IO9gHvzHOOMfQSkPG8xh
-	 E0bC9Z8boJ2Xo1WihsgvOnMbmzTtVKL1Z1M5Nx+0fFJJwD9OKS27a8G2tQhwRHCAFDI16
-	 ZwEUBmUK7SxVOncBlc9HHkBPtwVzmZGmm6hEo0hxB2c2SqVvdNFJ8Klya1dDZ6hVRUg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793072705;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
-	b=S3GyQ7+KrX9X7blyJRqsaTST+GdsrrCqx4hLLmrbbY6TaSkACIsl1Hif5B1AFHMHbjYH
-	 wSGa76GdTvzBQdi4VWOx1NyH4R4QhBfKTXRRT7BetsLeH2zwzVUh2fbtVBIMeeeW/c6bi
-	 OieW8bGPNL3AGCupe+CuWzvVO31Q6DzrSfeDqX0yzitAqGsC5vA//QPpAR5R1Fgdm1g7S
-	 FpDcVow+v9wlZM3jAOYta6uIdJIPilipqA8C2Cq+D8rn8sTS2+SnEA7dbmxXYKbRRqN2u
-	 pRWIohoNxhTx9r5z09nBmSRSH0w4FYdwK2Qgk0Iz+ED5PRHW1sX5SezCgJ2In0VvD5g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=LpEct1xf;
-	arc=none smtp.remote-ip=209.85.218.46
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.13
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793073406;
+	b=496cSMOlYmgT1A6haLiGdM8PBQ5A2g+9ovW8pSQ3aocVlqLH/UZ0EuGxsmhWFjx2uvUQ
+	 P/CCXg2tvnMEVFbSnIuDzBXUHZna0ScqXSe0VteXYgZy7Cb1veaP5QCSE2ulRUke2O0dV
+	 ncm4uIpMDKFEpgSp6LLHNc9MC8vol2V5TfphJIkiIWlVLeLs9ehyPS6/n16RrbdXU51mj
+	 LwC0HeP30nX2G7mxXrAsghhvoBKt6inXcjKY+uwF0oIC1Ig9ZSMZom+QUO9/uzmmCEb/G
+	 zeWB8tvZLrgMM7Fx4grdrSi6SJDr5gf8C7Xu+9mUq5qvAB7X2qIjy3heFyVfghOl9DA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793073406;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
+	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
+	 References:Content-Type:Content-Disposition:In-Reply-To:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-LD-Processed:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=yi/ZmHjFHOZGBrMMJhKpNV+HOhEPZKanQqBgflRIZTs=;
+	b=BqVGnZZlPakNYP9ewN7BIIV5446gHKRcarJppRdSHF/VsZwjinbMd7mvGDNIMC6OpRWe
+	 mJtzFCOgojk9LRBpEp8LxPNvUpY2lYN54YE04IXWVPNlPIaIAmd+p2NzLrz4yQL+71jA/
+	 E+Wbv25+WQyrMHytl5EfW/aqTLDxloakhgEVh5qXvyyd6zwL8x/CHwC3UXTfdeUvTjYXy
+	 fDdRlitCzCwNEMeCYiYpxgdUD8+cyx9y4OAgO6T/gQPyi4P/1yDvK8UYjQDvGFowTkhhj
+	 /SIJU/cTaL3QR9nqQkmzBESW8fYwanmkL9Gd6QgwwpE8j0CPJDEu/NxaE6SnDFELwyQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="E/nbtoWq";
+	arc=fail smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70013606A320
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:45:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70013606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50005606A31A;
+	Tue, 27 Oct 2026 03:56:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50005606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=LpEct1xf
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c40e02b2ebaso570697366b.1
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 20:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793072704; x=1793677504; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
-        b=LpEct1xfjN1thI8TbP1fFa5w4w7QpAjyNF4cILo4hjgANhwzNTKcYl0/OAf4qytQ+D
-         bTfw0B3W1YrJQBpG4CQa8BYUw8l2YA95j8Iad3IOM19h6jXJAZgZVZG4NeFqABxjmQVx
-         cqyrWzfJOtShgzKATE8MA+KO/cZ6XpKKBzqfRYPV63n+KEkSREwYLpTIdKLylOucISku
-         0b4t0cDOYZZ8VUkN5GYjeY7kLbNFUAZvUWcO7vKMGLuSX/T0QUI3kWhBk14nybsQgrpx
-         sgvekJqRyNLDD3CwyDUMJUgSY/E+TGZ5+ZTFoQY3fbSMcNnskQ516a1VLRqdlAxCgpFM
-         NMXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793072704; x=1793677504;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7Mznwc8GrpzJ8tK5EL1ob+iPEtoev+BzmKX7CHPnJ74=;
-        b=m2VmDLZRdlWLv14fbdXn8oNA6epx2hKf1jsY7cCBQeQbe2NDMAlrnrH/xWtojiZLzq
-         MEuD1e57mY/H33PxNPhJiZF5qwN75EzT0w+9vGcHlGPaKCkiyN5RsSakjC+THWEBLRLu
-         L8+TTR2nkktxhlb6fZ1BY1xTNyKXqLotsCLMu1c47itdH1I6hYTCbowo63ldFBzMxEqb
-         mnZW1XYySEr3W+kXBm+uGmU6i31GdF76ehJY9yFQKc1FR33Fr2XBYUG667+Xk2ur4dn9
-         69gBn+ZMT6gG+7SeH31R8C9umnGxECzGkTDdT9TGxeAjhwbfbPRdAG8fc8KwsgQ/8wLD
-         6y4w==
-X-Forwarded-Encrypted: i=1; AKwUvBwd3E+PMnP4IH5SDYlEkSzdfGDyM4NE6TLxYkt11jj5ltRzDp66qAXv6Nta/9xs4Y3SUCTYe2r82/E=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIpXeKUDKonzRXrUCEIkF8rSqZz/WyLYzxBIRDZsOjZnLOtbF3i
-	XdT6wkIsEobUTzT500HHK956egMJrd+fodd76aQ8IqvuduQa/pDKgWArM7geSMeXG7Q=
-X-Gm-Gg: AYBFou2BmxWf5CPISk0hNuNbhFJdBZ5XP3UNCJKiUJP4+KigyNdFzfsqNiD323S2SqC
-	8800/o1nQjtki7I58EQCmlu6iH7q9QZwIAhkk3kbvEv4tD7Ukp3iBfMQ+oOVIX8d+n1lY+loo4y
-	b+5UYyLFAnrtFloJ5PnEmve9BBWpjAKykNDEivYlwyQ7lV12Sro08xsi/03C7Z45ALnSyVEyJJG
-	UNGnu7hPYGi9joHoZ1dYPDcuWxkMAXelkpeJduX6p6kJNAfbhroobThwXlbQVMtUQuxC8OR1fw5
-	FheBCjDNwvGAUueHl5vEWkaPK14N2JvLtJJb12H5bLPK6wZD0xxXIWZjT83uVIX636mnB9JF5EQ
-	4l9KofEu/Uego3eckhr6RCBLEsDyd6sSRejyJnL3wRabg/vmka+U0+T7AUkZybJuN2hICVAHvJu
-	PvVXAC41YdA1TQ6FFkCOEPBGkIkiNOGz1kAgiGfvZBEiKeT/YdwQOvhDR1Ix3ByLU6ZFvLuYa8p
-	dth5UUWeefD4eGH34Mo5ghUbSD70HXAsG5UgCXPwXcef3E=
-X-Received: by 2002:a17:906:9f85:b0:c41:5a0e:3356 with SMTP id a640c23a62f3a-c46bded5befmr907107666b.41.1793072703836;
-        Mon, 26 Oct 2026 20:45:03 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:49::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd4e7c83sm382468666b.30.2026.10.26.20.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 20:45:02 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E/nbtoWq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793073406; x=1824609406;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=SI/3t3sySFse9ga75mf14JZiKtIcAiNhQAjJuBx0lAI=;
+  b=E/nbtoWqLZghsc/sYAA4R7fxomjM03Zz91AXTUXuT+jozOizgqhAony7
+   YdUfFu3C3JVx2g7C8v9e2dO7s/pxy2V1TaQIJYWQWMkxdbFHtrH1mZp6S
+   iitKSyKOT9elW4hFBOPa015lXdJnPtqEJon1ViDKJhuKK9xypvUJBiH0J
+   LCXmio2Zh27NTcLIv4zfjHv5WwI7R+FdVszqgD0znOcQ2/m6oi6Tdys2j
+   pMH2seBGUrO/cwhAbLws7O6n2/PnCouWPhB9Dx+wLQXM9cUlBlJqQPC0p
+   ETFtktBTldqZJON05JhSluJHjBViLXenQoli7XkGvWIaWNBWuRZq32R33
+   g==;
+X-CSE-ConnectionGUID: Nask/xXyRROcH48cv+MEaQ==
+X-CSE-MsgGUID: rfdyVVL2QAafjMQGliy4Qw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1757412"
+X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
+   d="scan'208";a="1757412"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 20:56:45 -0700
+X-CSE-ConnectionGUID: l0CVfcq9QZ2cdBwb/X1oCw==
+X-CSE-MsgGUID: SG9dMJ/PQSWb9AzyrVfn2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
+   d="scan'208";a="6270950"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa013.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 20:56:45 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 26 Oct 2026 20:56:44 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49 via Frontend Transport; Mon, 26 Oct 2026 20:56:44 -0700
+Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.56) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Mon, 26 Oct 2026 20:56:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yWMmwgLxX0QB32eRsDUsj6ALDXyR8QKqOrmhJN+o4+N3b9fxVwf8eC7pX0Y0/8WfnT5BcI6egwMU4HDHKMe6GU8AHpQ9prEKLI8xIPy6VQa7VH5Cy1NvX/YqwfqenrsTFx6eE5HVRZkP4btpXZANOadNz1JmLmd20uDKJJFBpElDbdDOWrxnfGvMNuWRhniHF+a7KkpFur6dsk2zpWt8lD5NekBIgGjKlrNwqWnL1svB6EiqZWl73Ub/YOLETlLmmffzf2iCM7z4eOy2YfJAwkQ2r38ogVzaMeh6q/nwAkYreUpangmuJy1fJdGAztwPFM11PCBYStO2FbgcwpZa4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yi/ZmHjFHOZGBrMMJhKpNV+HOhEPZKanQqBgflRIZTs=;
+ b=go5zAqkwXtW95XSBgI3yijeOZhwdEaszrpzEXvF9KvEwVU2VWNoyLaVWWhEAMrQVlE0IjNTn/hUNrAx0GzHA8eyySI8H2kOtPdsqhkocRJIUQlHAmptSGcWFniN0eu2H3/MyTBNlUj5IqlP2O98YMkFtNXzR3jcgBDOzvyrhqe/SEbITPRnTFLD5Yuatk9rHyoG55fMyI+jl/+MibB6kzkTJz/nacrNt4Fb8mwMRSZduKWmpUaYMm1U7csu0T/zSAfoLDKsZ7ncCapRkOv47U5MJ0gPpcbdsrlFftsMGyVYUuYoFKfVZfR2qmvAN9BmuwB3g2I7LVjiVlc+KgtTyJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by IA1PR11MB6291.namprd11.prod.outlook.com (2603:10b6:208:3e5::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
+ 2026 03:56:36 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
+ 03:56:35 +0000
+Date: Mon, 26 Oct 2026 20:56:24 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Srirangan Madhavan <smadhavan@nvidia.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jic23@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Alex Williamson <alex.williamson@redhat.com>,
+	<vsethi@nvidia.com>, <alwilliamson@nvidia.com>, Sai Yashwanth Reddy Kancherla
+	<skancherla@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>, Manish Honap
+	<mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, Richard Cheng
+	<icheng@nvidia.com>, <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v15 13/16] PCI/CXL: Restore CXL state after PCI reset
+Message-ID: <auAg6MFDGyVQvQxM@aschofie-mobl2.lan>
+References: <20261011021422.3428136-1-smadhavan@nvidia.com>
+ <20261011021422.3428136-14-smadhavan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20261011021422.3428136-14-smadhavan@nvidia.com>
+X-ClientProxiedBy: MW4PR03CA0172.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::27) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -87,193 +139,192 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 41/46] mm/vma: call ->may_split() before a partial
- merge
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
- stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-41-6f74bec9a5bb@kernel.org>
-Date: Mon, 26 Oct 2026 20:45:01 -0700
-Message-Id: <179307270137.1171062.14886397073081900278.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA1PR11MB6291:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94c199d6-639f-4c0e-4865-08df33de4baf
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|7416014|6133799003|261026121527099003|22082099003|18002099003|10067099003|56012099006|11063799006|4143699003|261021123027099003|261009223027099003|261021121427099003|261022105027099003|261022075727099003|261026140227099003;
+X-Microsoft-Antispam-Message-Info: W9PrWmiexa0k+K9clHzvK07cfVpgrAykcGUgN/8+qChbO+E/qYQBxvx0q8fJy14/8Q6PlBodA/D1Uo4DUXlYKkpaxfrUlsinGdCme5I9l4sq2/qdZUWPmEaVosDzYreA0Q1bzXM4wypKlpSb7j0leC6M69VvlCfdfgnv0UXDPUTaaPF9+D3t/imO9I1T5Kp/J5qzw+SP2QWLX4STDE5y26PYExJJ43g6Zn629+TssyLFDpcD6LZX2Fa1bYljOUvDKmD4DPP7jdn3p63guyj28oQhls6fzBbcVsbgHDbX6lxhJFtycFcWTzADLPJ9DMtBQTOe4X9P7Kea/Q2OtsbkVBegBhQHrsFAcMcmK0p1bdE2TTxPPAYKqMqwF+iYMt7cZM1bGi+1EFE8JyBcphQ12y0n3pDjAMmOHuwLUAF8LraT7EtIFvRvErpNmQ4k09INyADyVhsNv+POUjRiGZMk6O48tkN+XNaqrfkK2Egjvr5FtFjnI9oX6OGGVYMK+awNGJ2kHL3XcGGOA9ZAdfB709b8MQiis9x4nZHsvK1rpEzTsp8yjsWqCNx9GQIEAryKueh8+qPQ31FaMIIuFCbSlLwLxnKkU8PTf+ogzxJzl2A6ktVAfsDTi/BaUpXiGzusuzNsnLcodT93uceAuMozLr1YODaFM6d4IQ95fbiaT0Y=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(7416014)(6133799003)(261026121527099003)(22082099003)(18002099003)(10067099003)(56012099006)(11063799006)(4143699003)(261021123027099003)(261009223027099003)(261021121427099003)(261022105027099003)(261022075727099003)(261026140227099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?905N/XuPRCmQIpK3g2CUJ/UPgMdcRSaZ90lib9jw1p1G+iTBROxJ7Nq5iP9B?=
+ =?us-ascii?Q?OLtKwz/30pgkNGgFLBFbQp8Y8XiUFAgE6V98qALz751MYOt7H6W902a5AGj7?=
+ =?us-ascii?Q?aic96sK5gxnMBgdLYnFJyEU4FSUg76WDFyU0QzQL1htlyo3sp8dAUyK/Rgrs?=
+ =?us-ascii?Q?HvGo9+5JkQS8hrOLXl9XPBb1d4NMK44lg3Bu2nBsIuoVw6UIS0QU3iE1culG?=
+ =?us-ascii?Q?x3rSf/3KcApIfD7092sCqvZZmdrABuSFYFZS8XZfFSThs0Aj+3rrXxcqaZeB?=
+ =?us-ascii?Q?7VAWlachHyBCpzHZbf6mVVs9+yiw37khLTbT7Br3dUuhCgipR1KREEGoooMP?=
+ =?us-ascii?Q?j3BYlyZiDzZ5hS76GLq+gawa64YmcidqQW8HPnN0prSw8fLFmgGIXNyKgsYo?=
+ =?us-ascii?Q?3LXLa0A4A7CMfaiZGhtARcEJyj2b7dc30Vsi9jpmZ72TJgZ3FBZ3Qmr55H9k?=
+ =?us-ascii?Q?PMheL7hi2x9JzXYsnQInUHT1aso2molww+8rTnAu/lM3cIm0RA+MvusPiO20?=
+ =?us-ascii?Q?sbRsM9ivR0iu/4wnEnUdhlQcJE7KzA8bq+FZtjDeQWzZGOFdESpl9+N/ozqM?=
+ =?us-ascii?Q?HN+bncUfP9VxtaOqEYY7g9++fO7GG4UEbuRmkhAhXv80oLm5UWe1JplfWWat?=
+ =?us-ascii?Q?FBluLrac8r75Oxik70qZ3497fXR6EiwdBSI0K9M9AQK0zsqVPw0uBNIrAjnt?=
+ =?us-ascii?Q?SuRH8/dtsIyAgw1ymfi8nyDFM3NZDiCTgL6WH1YgekVW/nstZGr8UVAQookr?=
+ =?us-ascii?Q?ab5L0RANr+9asGrqyWRhkZTLp85HCDnrfLaAJSeyZKVCGJRHdDT0KIDRzKdk?=
+ =?us-ascii?Q?+HFYOAaMOEs2dQ+k5GurkuXgGDs8Wm3dYb3Fr9/u0NKDeYHgbjecwB8rXK/m?=
+ =?us-ascii?Q?oZX2KcBN5qVN1W2g3tUMndLQGSUULm/q7fD6Nb+JVeTqoYAbyYdtKe01eIyL?=
+ =?us-ascii?Q?/+Je+Sm15REmOeGobifQfM2+Zw1awErzwPr5yBdb7YGFZiTGWVN7hZG6nqmf?=
+ =?us-ascii?Q?ZUrZYKlDU9+UCEkMCS+AeFi87pMAAe7PJbFPd6yRQ+yZOqFbuxunNbM7/rpu?=
+ =?us-ascii?Q?46AD0K+brz5jNVeXshD+OYtezx+UQxNfR0tige5HMFnotjWERD4FECu4wcp8?=
+ =?us-ascii?Q?kmz6LVf0EW7vf43OQeSLEEHDYnopCcibfAzf5Mw4LRMSOzfvgOTOurTQ92aq?=
+ =?us-ascii?Q?m//l+Cip0Gxk2c37bKwEqBjwNkpnBLqCFuPV3O/BjvaGLkRRHRPyH613mKZu?=
+ =?us-ascii?Q?1VIRVgk3lLIMIT6P1jn5j21skz/6AhdSUuhfjQRhgNVVI6TDzZbF8FwVrIMM?=
+ =?us-ascii?Q?VThEU41IL6TMYesxHQ4sLufvxvQNSkioWPd09S2a6JjO6IY4RcLPXD3Ou+Sm?=
+ =?us-ascii?Q?o/MASjTHYiXA8aShmNl+UkssnUAahwQIGFPI3OJ5DukWLMRzPMA328BpTe1N?=
+ =?us-ascii?Q?RLO5PohXpaQEsTUGTSbgA3SM4T8ehMy9icgqSVljilwkI0pfrVl4Oulk1+Rn?=
+ =?us-ascii?Q?aXvo5WfXSdn1P0oOHmjiPt8BhNOCLMYSXRLiVIBNUVG4zhSUIgUjzvzpXj4g?=
+ =?us-ascii?Q?o/G4QsJTVyq4ff9ymAU3RTWRx93A9wegerXijK0O1eloX9wuFzIvZAyv/xy9?=
+ =?us-ascii?Q?hBcIXfkWCyEAaDaCocQlsPPMJOOCjHm1WBqflwy1N0md3NEayEHbZbfZc8mx?=
+ =?us-ascii?Q?Ln/h3Y/cYRiqLvuYS+CAmT5WgWjWdyJY5A6RJLBpGY/rSkf1stLcidnPaec6?=
+ =?us-ascii?Q?6EmB8o9Q68deczWRlMm9pBlVTKtc9AI=3D?=
+X-Exchange-RoutingPolicyChecked: Kivz4dzvgSXn7yMof9PYYhZmOlZ3vHUSvFqNOEfTM8CdE38zppoWNWM4m8/5s/ZqZEJ6R2oIMmYGWQ9TQd/VmyPvtInVdKawZm0Jg16RZQJY9bqfzrk40KnUSRUUdBDi9ZrqBPXtq7EucLoe6aiXIPzfMQzyZZ1pCw9bTKD5a1leU85vhAJXRFFWHu0oBCtD5ix2MSPIVgb7JdXKc/9wGuel3IPHDOkERAkH+3qcoCSa1oxHvUbRlQ4syrGkTcyDj07qfdIYfBaZIRiPZEfWZQ5iH9EeBo0nhlj6Vs1Gt44XS88Wy0FzVnPYOugQ/I3qPv9emgjimmVPpLZhSb1VHQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94c199d6-639f-4c0e-4865-08df33de4baf
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 03:56:35.7759
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zqgpTWKrn3+NTP/cR9dcRtI6rjsCoWFd6uQFM/qI4Vkzt8qfbRJM1XAeLD8/pYkgjIpQVMFOHqhN8XhhTLjmQaAGp5HQ2/KMgWAtArOwcbo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6291
+X-OriginatorOrg: intel.com
 
-On 2026-10-27 00:18 +0100, David Hildenbrand (Arm) wrote:
-> From: Chris Mason <mason@kernel.org>
+On Sun, Oct 11, 2026 at 02:14:19AM +0000, Srirangan Madhavan wrote:
+> Restore the PCI configuration needed for HDM access, followed by cached
+> HDM decoder and CXL Device DVSEC state. Recommit a cleared locked decoder
+> before restoring its lock, but leave surviving locked state unchanged.
 > 
-> A driver can use the ->may_split() hook to forbid a VMA boundary at
-> certain addresses.
+> Stop at the first restoration failure and preserve a disabled PCI command
+> snapshot. Keep IOMMU exclusion active through restoration and post-reset
+> cache invalidation.
 > 
-... snip ...
+> Program the decoders from built-in CXL code that takes only a mapped
+> register block, and keep PCI state handling in drivers/pci/cxl.c.
 > 
-> Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> [ david: improve description; cleanup the code ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> The restore helper structure and diagnostics follow Dave Jiang's
+> reference implementation on his cxl-type2-reset branch.
+> 
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=81fff5893a3140361cac625b09ada798afb92e03
+> Suggested-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> Assisted-by: LLM
+> ---
+>  drivers/cxl/core/hdm_regs.c | 180 ++++++++++++++++++++++++++++++++++++
+>  drivers/pci/cxl.c           | 176 +++++++++++++++++++++++++++++++++--
+>  include/cxl/hdm.h           |   2 +
+>  3 files changed, 351 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm_regs.c b/drivers/cxl/core/hdm_regs.c
+> index f0b360867655..cef5e9949d2c 100644
+> --- a/drivers/cxl/core/hdm_regs.c
+> +++ b/drivers/cxl/core/hdm_regs.c
+> @@ -73,6 +73,26 @@ int cxld_await_commit(void __iomem *hdm, int id)
+>  }
+>  EXPORT_SYMBOL_FOR_MODULES(cxld_await_commit, "cxl_core");
+>  
+> +static int cxld_await_uncommit(void __iomem *hdm, int id)
+> +{
+> +	u32 ctrl;
+> +	int i;
+> +
+> +	for (i = 0; i < COMMIT_TIMEOUT_MS; i++) {
+> +		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMIT_ERROR, ctrl)) {
+> +			ctrl &= ~CXL_HDM_DECODER0_CTRL_COMMIT;
+> +			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +			return -EIO;
+> +		}
+> +		if (!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> +			return 0;
+> +		fsleep(1000);
+> +	}
+> +
+> +	return -ETIMEDOUT;
+> +}
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Hi Srirangan,
 
-Attached a vma unit test I used to test this
+This looks like a copy of cxld_await_commit() w the final test flipped.
+Could cxld_await_commit() take the Committed state to wait for, instead
+of copying it here?
 
--- >8 --
-From: Gregory Price <gourry@gourry.net>
-Subject: [PATCH] tools/testing/vma: test may_split during partial merges
+> +
+>  static u32 cxl_hdm_write_range(void __iomem *hdm,
+>  			       const struct cxl_decoder_config *config)
+>  {
+> @@ -273,3 +293,163 @@ int cxl_hdm_read_state(struct device *dev, void __iomem *hdm,
+>  
+>  	return 0;
+>  }
+> +
+> +static int cxl_hdm_decoder_uncommit(struct device *dev, void __iomem *hdm,
+> +				    int id, bool *retained)
 
-A partial VMA merge moves a boundary just as a split does, so it must
-consult the driver's may_split callback. Removing an entire VMA during a
-merge needs no split check.
+Same ask as on v14.
+Can the restore helpers return the error and let cxl_restore_state()
+report it? v15 swaps struct pci_dev for struct device, but it still
+runs through cxl_hdm_restore_state(), cxl_hdm_restore_decoder(),
+this function and cxl_hdm_read_decoder_settings(), only for dev_err().
 
-Exercise permitted and rejected partial merges in both directions through
-vma_modify_flags(). Check the callback address and resulting boundaries,
-including unchanged boundaries on rejection. Also check that a full merge
-succeeds without calling a rejecting may_split callback.
+snip
 
-Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
----
- tools/testing/vma/tests/merge.c | 87 +++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+> +cxl_hdm_restore_decoder(struct device *dev, void __iomem *hdm,
+> +			const struct cxl_endpoint_decoder_settings *settings)
+> +{
+> +	const struct cxl_decoder_config *config = &settings->config;
+> +	bool retained;
+> +	u32 ctrl;
+> +	int rc;
+> +
+> +	rc = cxl_hdm_decoder_uncommit(dev, hdm, config->id, &retained);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (retained) {
+> +		struct cxl_endpoint_decoder_settings active;
+> +
+> +		rc = cxl_hdm_read_decoder_settings(dev, &active, hdm, config->id);
+> +		if (rc) {
+> +			dev_err(dev,
+> +				"CXL HDM decoder %d has invalid configuration: %d\n",
+> +				config->id, rc);
 
-diff --git a/tools/testing/vma/tests/merge.c b/tools/testing/vma/tests/merge.c
-index b26f1a66a1707..fcc052be15601 100644
---- a/tools/testing/vma/tests/merge.c
-+++ b/tools/testing/vma/tests/merge.c
-@@ -1488,8 +1488,95 @@ static bool test_expand_only_mode(void)
- 	return true;
- }
- 
-+static unsigned long split_checked_addr;
-+static unsigned int split_checks;
-+static bool split_allowed;
-+
-+static int merge_may_split(struct vm_area_struct *vma, unsigned long addr)
-+{
-+	split_checked_addr = addr;
-+	split_checks++;
-+	return split_allowed ? 0 : -EINVAL;
-+}
-+
-+static const struct vm_operations_struct merge_split_ops = {
-+	.may_split = merge_may_split,
-+};
-+
-+static bool check_partial_merge_split(bool left_edge, bool allow)
-+{
-+	struct mm_struct mm = {};
-+	vma_flags_t left_flags = mk_vma_flags(VMA_READ_BIT, VMA_MAYREAD_BIT,
-+					      VMA_MAYWRITE_BIT);
-+	vma_flags_t right_flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
-+					       VMA_MAYREAD_BIT, VMA_MAYWRITE_BIT);
-+	struct vm_area_struct *left = alloc_and_link_vma(&mm, 0x1000, 0x3000,
-+							1, left_flags);
-+	struct vm_area_struct *right = alloc_and_link_vma(&mm, 0x3000, 0x5000,
-+							 3, right_flags);
-+	struct vm_area_struct *middle = left_edge ? right : left;
-+	unsigned long start = left_edge ? 0x3000 : 0x2000;
-+	unsigned long end = left_edge ? 0x4000 : 0x3000;
-+	vma_flags_t flags = left_edge ? left_flags : right_flags;
-+	struct vm_area_struct *result;
-+	VMA_ITERATOR(vmi, &mm, start);
-+
-+	left->vm_ops = &merge_split_ops;
-+	right->vm_ops = &merge_split_ops;
-+	split_checks = 0;
-+	split_allowed = allow;
-+	result = vma_modify_flags(&vmi, left, middle, start, end, &flags);
-+	ASSERT_TRUE(split_checks > 0);
-+	ASSERT_EQ(split_checked_addr, left_edge ? end : start);
-+	if (allow) {
-+		ASSERT_EQ(result, left_edge ? left : right);
-+		ASSERT_EQ(left->vm_end, left_edge ? end : start);
-+		ASSERT_EQ(right->vm_start, left_edge ? end : start);
-+	} else {
-+		ASSERT_EQ(PTR_ERR(result), -EINVAL);
-+		ASSERT_EQ(left->vm_end, 0x3000);
-+		ASSERT_EQ(right->vm_start, 0x3000);
-+		ASSERT_EQ(mm.map_count, 2);
-+	}
-+	cleanup_mm(&mm, &vmi);
-+	return true;
-+}
-+
-+static bool test_partial_merge_may_split(void)
-+{
-+	ASSERT_TRUE(check_partial_merge_split(true, false));
-+	ASSERT_TRUE(check_partial_merge_split(false, false));
-+	ASSERT_TRUE(check_partial_merge_split(true, true));
-+	ASSERT_TRUE(check_partial_merge_split(false, true));
-+	return true;
-+}
-+
-+static bool test_full_merge_no_split(void)
-+{
-+	struct mm_struct mm = {};
-+	vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_MAYREAD_BIT);
-+	struct vm_area_struct *left = alloc_and_link_vma(&mm, 0x1000, 0x3000,
-+							1, flags);
-+	struct vm_area_struct *right = alloc_and_link_vma(&mm, 0x3000, 0x5000,
-+							 3, flags);
-+	VMA_ITERATOR(vmi, &mm, 0x3000);
-+
-+	left->vm_ops = &merge_split_ops;
-+	right->vm_ops = &merge_split_ops;
-+	split_checks = 0;
-+	split_allowed = false;
-+	ASSERT_EQ(vma_modify_flags(&vmi, left, right, 0x3000, 0x5000, &flags), left);
-+	ASSERT_EQ(split_checks, 0);
-+	ASSERT_EQ(left->vm_start, 0x1000);
-+	ASSERT_EQ(left->vm_end, 0x5000);
-+	cleanup_mm(&mm, &vmi);
-+	return true;
-+}
-+
- static void run_merge_tests(int *num_tests, int *num_fail)
- {
-+	TEST(partial_merge_may_split);
-+	TEST(full_merge_no_split);
- 	/* Very simple tests to kick the tyres. */
- 	TEST(simple_merge);
- 	TEST(simple_modify);
 
--- 
-Gregory Price <gourry@gourry.net>
+cxl_hdm_read_decoder_settings() already logs this same message, so it
+gets logged twice. That goes away with the reporting change above.
+
+snip
+> +			config->id, rc);
+> +		return rc;
+> +	}
+> +
+> +	if (!(config->flags & CXL_DECODER_F_LOCK))
+> +		return 0;
+> +
+> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(config->id));
+> +	if (ctrl == U32_MAX)
+> +		return -EIO;
+> +	ctrl |= CXL_HDM_DECODER0_CTRL_LOCK;
+> +	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(config->id));
+
+This reads like we commit the decoder first and set Lock On Commit next.
+The spec seems to say the lock only takes effect at the moment the 
+decoder commits, making this too late. Looking at spec 8.2.4.20.17.
+
+-- Alison
+
+> +
+> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(config->id));
+> +	if (ctrl == U32_MAX ||
+> +	    !(ctrl & CXL_HDM_DECODER0_CTRL_LOCK)) {
+> +		dev_err(dev, "CXL HDM decoder %d failed to restore lock\n",
+> +			config->id);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
