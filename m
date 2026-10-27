@@ -1,83 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793077829;
-	b=KjYbxMkqVC476utC0K4KbCp2UrwgVRks+l82VIZC9aC898sArWLIqKsUnLFWUo26GnZd
-	 ZCtvdh02vlNV42K7hC1GHov7s4FHdfbr2prICC5kHb0Zt0z/keGlWRI5rGxE052he90K/
-	 HaKvJysKwEVFwSHnAf2YBiHVMGt5QJS6+aTQv5UxRdGBPCGzf4a3lMw+TDk2KUAbNsP3D
-	 mql81f36tgCWZWZjfs3DDltHOON7vL7faeMq+W1AdcHr6FSeHFgHTBWDTCHf0BCbdZyoK
-	 oeL9E7SrOGj/L0Rp4gLg5lw/jULZqYrJ63EPDKCbJvPjEE1N7cv5ns+arcm9XMHVlQQ==
+	t=1793078748;
+	b=UeN/RvBuOXGbMbKJ++XjPJJLganpTKl92DowIb8JGVBTnnOLs5s7viKrvtuEpAXsKl6n
+	 AsjOu+E2k7cPBzRAeuznv191wWzZjdrG6VfeNnoraFSFAi/2ovxpY8Iu71ptPR2KlXeyE
+	 YtMYPmcMkbLA/EFAMG1gEV+MDmCVjflHlF3x6ZW5U7gXNACrexevNqCYmRNSKGoU0SnJM
+	 VuxsK8ybxHtPihY0T66n2DwuInjK25U3x0d7mgOFnZyyZszR81J/Az6MMh9CFrHjaFvk2
+	 q0rPG0ioUbhAb40MYqGtFcfPn3qqFYgASHCfYGc1Tfa0k6Loz4qff1B0m+Bq0Oo8kxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793077829;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793078748;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=U8c13Ig6MUdyuuVgJ6RNI7ksV9FwtObecf4rW8b7B7Y=;
-	b=kbR2Nd8UXLMXmh5lMIvHKGjFMbIEgToFp1PyjEQo7e5+QxMbAArK1j9RhV3J/UYva9nA
-	 sQe2gRrunrZG7sN5shkdfQ/xU6yRLuRwy2VxkDhgm8QMePw3QZnCVtzNcLf0MAs/ipIa2
-	 d3zn2uFEASIxsJbKGZv27XnilN0EP8vjFvmcPB6PbuBNTDCUp1f5lOWKlSXFNwMSi86e3
-	 KZEG8ayBCQqvMDgS4IbjsQrdTmxBmDPeSGaiSyWY5Ib0/ZPJ8NYurTYmjNsFO4qH1/ARm
-	 nDxT+j8eAcePjQSPGpAQw9L5jk0xy8myLirczFMICWPo3vasuTjAtKPSKvnniKcHrDw==
+	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=kHQppBuxk2+xzYf3QLOTBE1zqBXUyaj0qCJuhImI8OA=;
+	b=KhZI6Zr5oG5nvVArEM4oXgX3eMdZQ5nHAvFKqTcbOdPfesjJZO9Km0PEoWkVQevKdu6U
+	 53K6hkKRZy1/pm4u7xTrscBgUyH3/D7QWE6vvxffUIY4s9ecDkjbhlu3PmehRr4yZHC6F
+	 i9mg+L/VfFFlUvwefWu31YCB7bS1h02o89KL4H9cnmQCv5xjhM0PLEqJDKPch7rBdgszS
+	 pwvPh7ry94oLABHvp1RpjwSrME//rShb6/0lj4V3tEBn20pfaEQWX1xj+0nRmgzdUmjqR
+	 sW28Fa3P/ITxLGdbWIByJaDKtywmcLfz4OhXzOPqiVRg3R2Mw4DbBsUS643e1CpdXHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b="krSh/1sO";
-	arc=none smtp.remote-ip=209.85.208.52
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="TL/ZMDss";
+	arc=none smtp.remote-ip=209.85.214.180
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BC2606A31F
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 05:10:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5BC2606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490D2606A31B
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 05:25:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 490D2606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=krSh/1sO
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b40fc523faso4047428a12.3
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 22:10:28 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TL/ZMDss
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2e940d5d2beso14217865ad.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 22:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793077827; x=1793682627; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=U8c13Ig6MUdyuuVgJ6RNI7ksV9FwtObecf4rW8b7B7Y=;
-        b=krSh/1sOaB/EnuxksKvaR29m6EPzqsslcEUDvbWR6jV+oy9fnTCovkxM/rPw1u/v+T
-         lxiOLLS87aQMgtIOGwE/Qaa1isZihhaTABaqa/fw900ImJMZPi5PHxp3qJJ3zja9eZN0
-         N1PsgwchS8/1NrSdSxpXbjtCt0kPWGt7IGV7ngziZssa8t5rMKdSZi0+x2oTNqoF1xp9
-         QfCXP/QbfPSLoXvihdVk58EqWwRUWt/KOB4jO4m0uCstPLPsjAhPIMZUiuouP9bofuae
-         Bnw+Gpck4Uy2FyyO7f5GsvYewq849Un6g6AU18RJaXjeNlw7Jif4GLTrZY8PZABYLwKs
-         JfAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793077827; x=1793682627;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1793078747; x=1793683547; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=U8c13Ig6MUdyuuVgJ6RNI7ksV9FwtObecf4rW8b7B7Y=;
-        b=XJzjAPUmgB7RX5XsEK1bsvpf0lCNPV6GMS+qxJXhLFf0+xmx3uQZXF0nd72DC6GU3M
-         Ybh3jFu4SwQNZtoH7zjkgIbLeNZBBM7JteA/y3DcjfnqSx81inaVtydIwGW5OO7dJMHq
-         ypiETtJxCNecBRXY3foBw8hjFzOkooSeDe3cN87jEDnwZDkFUQZtwCSFSXMRmZ56AAqz
-         lWQwsmDCdQW2WTAf8UGFfoZQLGmLQNz8Ns0F8uh7JNn4ISGe5xhn8gyTf2rn0KrNlVKD
-         sjMrpGo1uhj16o6wjNRe4TsZ/+XnoTegs/ykA8kWQYWbXzQ7QJtru9hWwzktgEp4Fd2S
-         3hRw==
-X-Forwarded-Encrypted: i=1; AKwUvBxSnwoDvm6D90WyHfVR7BSdvIA4snI7tthjDCHGGeQugGZyQKLVpnTuNMzr1CppzEQ781td07p6JwI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLSeL4FHSfbLk2OtNpb1/l0f5m+IPOXRIm9kmpuQXLLDIBcjS5r
-	f9HSbJhy5EQmLCcqaOj+YVwl1x0ePrkw1wP2geMNgG4tqxtuiFa4DFVtG6Pujl/IVJQ=
-X-Gm-Gg: AYBFou2ULtxfUdTW/LVDSvwQl54sGRVwIhmuwrsa8AIfFJFWX9NfsurI6wFPaMNVcnp
-	pVS7IOMLPzej5UOxI8cNZhRpfb0EboRJC15xxF1YIV/WitLVnE3sg0vROT8SWjbYVZ9p5fao1Ma
-	HeN+kkYBDz9Ldpa3CuAD18KJxfjTuIaExLGsMOmenNQ6xuDIsVE5ioWatmcnr9YvHAuPFuN1tAe
-	CF1IUWxIEaQAuqV/QQYq0jdMwu6b/fYoQdsTGFluwzw09OXOxt2xTrQgHZ9q5ZpASWArokf6kSe
-	fiPNAGsBcIQP+pNMjnqEq5jd9oMfAoriTv12IxhBA987IQyTGLC0HNWxTcmgvPG1HDkMGmRKCRk
-	iHCgfWrLc/sNsWIL7EzY+0uRVdeZdIH1AcAUiAB4i6dszJtjOyRTgCcNJ/YKtHTZqvDOncx5ZW1
-	IPgWPGM5IBP+o0DbzZ1Q3c6Zf+AgZGP80IxwG/0NlJJzjVicKgly1x1rtAe+3lpUIrh5js2PjeJ
-	LZ+KK9PK1a9cnh6aPp2qKgMESBZPZr70/po1aCRjcI=
-X-Received: by 2002:aa7:d642:0:b0:6af:80c4:8981 with SMTP id 4fb4d7f45d1cf-6b443001da4mr6849436a12.26.1793077826967;
-        Mon, 26 Oct 2026 22:10:26 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b445984d85sm4571938a12.29.2026.10.26.22.10.25
+        bh=kHQppBuxk2+xzYf3QLOTBE1zqBXUyaj0qCJuhImI8OA=;
+        b=TL/ZMDssXogw5ydIJYnfWZjriwgtecG2+uJ4HMuMiv2WDe4gfJFA1yj0Un2nLCJJv0
+         wMw6B7Wdk8jrDHSse/vmrsC2SJyORZIwS45IdraShJqJ1+NE9ue6u3iEje70M6uQ2liF
+         NuDQBHpbqTCR5ikqtdV4ZV/KGeu1fzeu86w+Qa8zeZIOfNDjMd4blhgBJXrw4i9oORyt
+         +zXMHmFTgB/G+L4MuX1l2ijJHmzZyu7eR/CrPrlrYExpYdDKnEE7bV9F8CNqGIWXfya8
+         EP7pFglnJMzkmXrz6UA/vlFxBkWix5BtMFL5A7y7ODruGrxHMJgwxtglYkL3V+kzukI0
+         TPnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793078747; x=1793683547;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kHQppBuxk2+xzYf3QLOTBE1zqBXUyaj0qCJuhImI8OA=;
+        b=DanqlVvXuaQzLjJHq5Rhqr6j/ojRDnXy2/IGkQOO0WtIg/7SIXEt2yAuOjaC6HvT3a
+         gPy7pT1mBd0O/h8aQaa6OHvfjifZVMrgf9tx70IPcdCwEhV8njacuejjsd2lv1uIq8Sl
+         2JRx18avPxZItF63zoNvY5KETyK1fAi8P0SLlnjJUYFxvxLbXMLdJvGPz0tua1xYGggT
+         c4AbhywRlQWcU+SqvrjIbMw4PQiQtwLJduNgcldw1w/eWDvvHm0jh+ylJd1wB9rjlDig
+         8GgEIbklbcWr8OZd72Y84txUAkik+Tc0G8HPmcbLViJH2yITa7DMwb8I3gRqJX99H5Vo
+         cFsw==
+X-Forwarded-Encrypted: i=1; AKwUvBz15bbEDtIbLsFFlwceVb4Ye9xVZ2TxuBkWO0BM48Jnues2tqOG18/epKbLD1kB31KbIteSoAGXwgQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK3Yh+SeAdu9pPID92wLMwUBB2/OfM2sdYODWehZyE+Fr+qsQZ+
+	sQVHTi56AtH5eZgmXlfBK0rOgMA/QZaNjuqyPFJpYKDV/mPJYpkmYJVg
+X-Gm-Gg: AYBFou2W9XT1a/0LplPhN1qfolomKN/v5Ji4lBoheifKt4kkLrnbdralkF4LyZvjtCB
+	8BbbFDMbra+hOLstFf6VBwKrdXOSFIPsUYN1U+uLpvH8+IT5k9JvZCXP4L2vuCHiYJLqpvka751
+	2TImREJ7whcdvCPntkIHEtyAuGxzmgRdUl3eWKkkNQVysgKjSvSl9U0v2KvNSswWSULZoubiZrF
+	8z9cIKMHuMVVZBdwxjvZcwiMR3HZ80TuDbzvaWgWcPDf3hJ0JpgEdkBoxtnonI8AWAqz7rxAwIc
+	j+IXAmzfGQTKa9eJcr4l7DPDC0JzHsJ6/HYK6+j36KDuB3uqU6iemOkRr/L0qMBEvFZO+BGq4pT
+	1YsvrZotzoWjnB8chAa8GkPa6SyRLGT1LsWx6ybbSJ/pIawW4LcLWnFFSHRIpCEJgkd8U46cLc6
+	pnggTSGlfITQ6rms/0yh0E/vYTT5GdFpX5TChDQ4gJgomTt12qA+iKZLQOVzIiFcB0vOgbFOoIL
+	LzUVUDrNrxrG6V2wA35pcEjM2db2OJ8+xsx2bxskZtP2PNhDWwlLLI/LI+O/K6yYfcXmPdcbTq6
+	RYQxpvb9oGUZpmllBh6W5eZsSIHVWOImYPoa403fRDSjs+U=
+X-Received: by 2002:a17:903:fa8:b0:2e9:5eee:e078 with SMTP id d9443c01a7336-2ea9c0f39c7mr63239465ad.3.1793078746410;
+        Mon, 26 Oct 2026 22:25:46 -0700 (PDT)
+Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6c9757bsm3307715ad.58.2026.10.26.22.25.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 22:10:25 -0700 (PDT)
+        Mon, 26 Oct 2026 22:25:45 -0700 (PDT)
+From: alistair23@gmail.com
+X-Google-Original-From: alistair.francis@wdc.com
+To: akpm@linux-foundation.org,
+	bhelgaas@google.com,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	alistair@alistair23.me,
+	rust-for-linux@vger.kernel.org,
+	jic23@kernel.org
+Cc: ojeda@kernel.org,
+	aliceryhl@google.com,
+	a.hindborg@kernel.org,
+	alistair23@gmail.com,
+	wilfred.mallawa@wdc.com,
+	bjorn3_gh@protonmail.com,
+	gregkh@linuxfoundation.org,
+	boqun.feng@gmail.com,
+	benno.lossin@proton.me,
+	gary@garyguo.net,
+	tmgross@umich.edu,
+	alex.gaynor@gmail.com,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v5 00/23] lib: Rust implementation of SPDM
+Date: Tue, 27 Oct 2026 15:25:13 +1000
+Message-ID: <20261027052536.1722081-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -88,154 +116,234 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 25/46] mm/userfaultfd: wake waiters when registration
- modes are removed
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-cxl@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-25-6f74bec9a5bb@kernel.org>
-Date: Mon, 26 Oct 2026 22:10:24 -0700
-Message-Id: <179307782442.2301705.17273288326330283268.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+Content-Transfer-Encoding: 8bit
 
-On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
-> UFFDIO_REGISTER can replace MISSING or MINOR tracking without waking
-> faults that are already queued. For example, switching an anonymous
-> range from MISSING to WP leaves a missing-fault waiter asleep until
-> userspace explicitly wakes it.
-> 
-> When a registration change removes a UFFD mode, wake waiters in the
-> affected interval after updating the VMA. The VMA is write-locked at
-> this point, so no new faults can queue under the old modes and woken
-> threads cannot retry until mmap_write_unlock(). Waiters for retained
-> modes in the same interval may also wake and refault.
-> 
-> The hang reproduces for MISSING-to-WP and MINOR-to-MISSING transitions,
-> with both read and unread fault events.
-> 
-> Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+From: Alistair Francis <alistair.francis@wdc.com>
 
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Security Protocols and Data Models (SPDM) [1] is used for authentication,
+attestation and key exchange. SPDM is generally used over a range of
+transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
 
-Two additional automated reviews independently confirmed a similar
-pre-existing issue and generated the same patch (below).
+From the kernels perspective SPDM is used to authenticate and attest devices.
+In this threat model a device is considered untrusted until it can be verified
+by the kernel and userspace using SPDM. As such SPDM data is untrusted data
+that can be mallicious.
 
-Sashiko filed this as a pre-existing:
-https://sashiko.dev/#/map/217050
+The SPDM specification is also complex, with the 1.2.1 spec being almost 200
+pages and the 1.3.0 spec being almost 250 pages long.
 
-But this seems directly related to your patch here, so it might be worth
-squashing this in:
+As such we have the kernel parsing untrusted responses from a complex
+specification, which sounds like a possible exploit vector. This is the type
+of place where Rust excels!
 
-> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> index 2122676c4220f..710e913c73bfa 100644
-> --- a/mm/userfaultfd.c
-> +++ b/mm/userfaultfd.c
+This series implements a SPDM requester in Rust.
 
-[ ... ]
+This is done using the `Validate` and `Untrusted` traits. The `validate()`
+function has been updated updated to allow `context` which we use as
+part of the validation.
 
-> @@ -2287,6 +2290,8 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
-> 		prev = vma;
-> 
-> 	for_each_vma_range(vmi, vma, end) {
-> +		const bool any_mode_removed = vma->vm_flags & __VM_UFFD_FLAGS & ~vm_flags;
-> +
-> 		cond_resched();
-> 
-> 		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vm_flags, wp_async));
+The validation has also swapped from a C style pointer cast to using a valid
+Rust struct and copying the data from the original buffer to the new struct.
+This obvious has some overhead, but as SPDM packets are relativly small, and
+not used as part of a constant hot path this seems fine. The big advantage is
+that we can validate everyting at once, convert the endianess when creating
+the struct and we get left with valid (not repr[c, packed]) Rust structs.
 
-Could the pre-existing no-op check also require an exact mode match?
-It currently does this later in userfaultfd_register_range():
+This makes the code a lot cleaner and more robust. It also removes a large
+number of `unsafe`s and using `get()` for the arrays removes a large number
+of possible `panic`s. Thanks for everyone at Kangrejos for the help with this!
 
-        if (vma->vm_userfaultfd_ctx.ctx == ctx &&
-            vma_test_all_mask(vma, vma_flags))
-                goto skip;
+I have kept Jonathon's reviews of the SPDM code, as the changes since the
+last vesion are mostly just mechanical, convertting the repr[c, packed] structs
+to copy structs.
 
-Registering MISSING|WP, then requesting WP alone, takes this branch.
-It leaves missing tracking enabled and bypasses the new wake. A writer
-started after the replacement ioctl returns still queues a missing fault.
-A writer already waiting before replacement also stays asleep.
+This is based on Lukas' C implementation [2], but has been refacted during the
+first few RFCs. I have included some of the relevent patchesfrom Lukas' C
+SPDM implementation in this series where they are required.
 
-Both cases time out on the base and on the full series. Replacing the
-predicate with
+This is a standalone series and doesn't depend on Lukas' implementation.
 
-        (vma->vm_flags & __VM_UFFD_FLAGS) == vm_flags
+The goal of this series is to get the smallest possible SPDM implementation
+upstream. That will provide building blocks for us to continue working on.
 
-makes both pass with this series. On the base that change fixes only the
-fresh-fault case; the already-pending case still needs this patch's wake.
-Would a separate fix for the mode comparison make sense alongside this
-patch? This is not introduced by the series.
+As such we don't yet provide evidence or certificates to userspace, allow
+userspace to provide a nonce, support PQC or more advanced SPDM features.
+This is enough to communicate with a device and return "authenticated" to
+userspace.
 
--- >8 --
-From: Gregory Price <gourry@gourry.net>
-Subject: [PATCH] mm/userfaultfd: compare exact registration modes before skipping
+Note that RFC v3 did provide evidence and certificates to userspace and
+allowed a custom nonce. Showing that it's possible. I also have patches
+that build apon [4] to do this via a TSM driver, again showing it's
+possible with the current approach.
+We just don't support it yet and for TSM I need [4] upstream first.
 
-Changing registration from MISSING|WP to WP returns success but leaves
-MISSING enabled. The no-op check sees that WP is already set and skips
-the update, so later accesses to missing pages still wait for userspace.
+This series is different to Lukas' original approach and the approach taken
+in the previous RFCs and instead adds the PCI-CMA support as a TSM driver.
+This was described by Dan in [3] and [5]. The advantage here is that for PCIe
+we can leverage the TSM work for a lot of the features and provide userspace
+a consistient interface between PCI TSM and CMA.
 
-Skip the update only when the current and requested UFFD modes match
-exactly.
+This series also doesn't check the certificate chain against the kernel
+keyring and will instead leave that to userspace once [4] is merged.
 
-Fixes: 63b2d4174c4a ("userfaultfd: wp: add the writeprotect API to userfaultfd ioctl")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
----
- mm/userfaultfd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Other transport mode (such as ATA, SCSI, NVMe and MCTP) will
+therefore need slightly different approaches, as TSM doesn't apply.
+The library can support this though, it will just need some netlink
+and sysfs wrappers added as applicable. This way each transport can support
+SPDM in the way it sees fit.
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 669f71d485d02..0a28130cebc99 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -2299,7 +2299,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
- 		 * userfaultfd and with the right tracking mode too.
- 		 */
- 		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
--		    vma_test_all_mask(vma, vma_flags))
-+		    (vma->vm_flags & __VM_UFFD_FLAGS) == vm_flags)
- 			goto skip;
- 
- 		/*
+The entire tree can be seen here:
+https://github.com/alistair23/linux/tree/alistair/spdm-rust-tsm
+
+I'm testing this by running the following
+
+```shell
+cargo run -- --qemu-server response
+
+qemu-system-x86_64 \
+  -nic none \
+  -object rng-random,filename=/dev/urandom,id=rng0 \
+  -device virtio-rng-pci,rng=rng0 \
+  -drive file=deploy/images/qemux86-64/core-image-pcie-qemux86-64.rootfs.ext4,if=virtio,format=raw \
+  -usb -device usb-tablet -usb -device usb-kbd \
+  -cpu Skylake-Client \
+  -machine q35,i8042=off \
+  -smp 4 -m 2G \
+  -drive file=blknvme,if=none,id=mynvme,format=raw \
+  -device pcie-root-port,chassis=1,id=pci.1 \
+  -device nvme,drive=mynvme,serial=deadbeef,spdm_port=2323,spdm_trans=doe,bus=pci.1 \
+  -snapshot \
+  -serial mon:stdio -serial null -nographic \
+  -kernel deploy/images/qemux86-64/bzImage \
+  -append 'root=/dev/vda rw  console=ttyS0 console=ttyS1 oprofile.timer=1 tsc=reliable no_timer_check rcupdate.rcu_expedited=1 swiotlb=0 '
+
+echo tsm0 > /sys/bus/pci/devices/0000:01:00.0/tsm/connect
+```
+
+1: https://www.dmtf.org/standards/spdm
+2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+3: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
+4: https://lore.kernel.org/all/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch/
+5: https://lore.kernel.org/lkml/69e19c80b892b_fe0831000@djbw-dev.notmuch/
+
+v5:
+ - Split out crypto into Rust kernel wrappers
+ - Use ZeroCopy for SpdmHeader
+ - Add the Transport trait and CTransport type
+ - Bind the device driver
+ - Address bugs and issues from reviews
+v4:
+ - Based on discussions at Kangrejos the following changes were made
+     - Add context to the validate functions
+     - Convert the validate() functions to be complete Rust structs and copy the
+       data, instead of C style pointer casts
+     - Use ForeignOwnable trait for SpdmState
+     - Use get() for array accesses
+ - Address review comments
+v3:
+ - Rebase on 7.3-rc1
+v2:
+ - Tidy up the PCI/TSM function naming and is_pci_tsm_host()
+ - A large number of changes (mostly to the Rust code) based on Sashiko reviews
+     - This includes a few local runs of Sashiko
+     - This has fixed a few undefined behviour bugs in the Rust code
+ - Rebase on v4 of Benno's validate patches (patch 1, 2, 3)
+v1:
+ - Add CMA as a TSM driver
+ - Initial support for SPDM 1.4
+ - Cleanup a range of comments and concerns from RFC
+ - Remove kernel keyring checks
+RFC v3:
+ - Use netlink to send information to userspace
+ - Don't autogenerate Rust helpers
+RFC v2:
+ - Drop support for Rust and C implementations
+ - Include patches from Lukas to reduce series deps
+ - Large code cleanups based on more testing
+ - Support for authentication
+
+Alistair Francis (17):
+  virt: coco: change tsm_register() to use a const struct
+  rust: add bindings for hash.h
+  rust: device: Expose Device from_raw() publically
+  lib: rspdm: Initial commit of Rust SPDM
+  PCI/TSM: Rename pf0 to host
+  PCI/TSM: Support connecting to PCIe CMA devices
+  PCI/CMA: Add a PCI TSM CMA driver using SPDM
+  lib: rspdm: Support SPDM get_version
+  lib: rspdm: Support SPDM get_capabilities
+  rust: kernel: Add crypto hash bindings
+  lib: rspdm: Support SPDM negotiate_algorithms
+  lib: rspdm: Support SPDM get_digests
+  lib: rspdm: Support SPDM get_certificate
+  rust: public_key: Add crypto public key bindings
+  rust: x509: Add X509 certificate bindings
+  lib: rspdm: Support SPDM certificate validation
+  lib: rspdm: Support SPDM challenge
+
+Benno Lossin (2):
+  rust: create basic untrusted data API
+  rust: validate: add `Validate` trait
+
+Lukas Wunner (4):
+  X.509: Make certificate parser public
+  X.509: Parse Subject Alternative Name in certificates
+  X.509: Move certificate length retrieval into new helper
+  PCI/CMA: Validate Subject Alternative Name in certificates
+
+ MAINTAINERS                               |   13 +
+ crypto/asymmetric_keys/x509_cert_parser.c |    9 +
+ crypto/asymmetric_keys/x509_loader.c      |   38 +-
+ crypto/asymmetric_keys/x509_parser.h      |   42 +-
+ drivers/crypto/ccp/sev-dev-tio.h          |    4 +-
+ drivers/crypto/ccp/sev-dev-tsm.c          |   14 +-
+ drivers/pci/Kconfig                       |   14 +
+ drivers/pci/Makefile                      |    5 +
+ drivers/pci/cma.asn1                      |   41 +
+ drivers/pci/cma.c                         |  271 +++++
+ drivers/pci/doe.c                         |    6 +-
+ drivers/pci/tsm.c                         |  122 ++-
+ drivers/virt/coco/tsm-core.c              |    4 +-
+ include/keys/asymmetric-type.h            |    2 +
+ include/keys/x509-parser.h                |   57 ++
+ include/linux/oid_registry.h              |    3 +
+ include/linux/pci-doe.h                   |    4 +
+ include/linux/pci-tsm.h                   |   48 +-
+ include/linux/pci.h                       |    1 +
+ include/linux/spdm.h                      |   66 ++
+ include/linux/tsm.h                       |    2 +-
+ lib/Kconfig                               |   17 +
+ lib/Makefile                              |    2 +
+ lib/rspdm/Makefile                        |   10 +
+ lib/rspdm/consts.rs                       |  113 +++
+ lib/rspdm/lib.rs                          |  329 ++++++
+ lib/rspdm/state.rs                        |  784 ++++++++++++++
+ lib/rspdm/validator.rs                    | 1129 +++++++++++++++++++++
+ rust/bindings/bindings_helper.h           |    5 +
+ rust/helpers/hash.c                       |   22 +
+ rust/helpers/helpers.c                    |    1 +
+ rust/kernel/device.rs                     |    2 +-
+ rust/kernel/hash.rs                       |  145 +++
+ rust/kernel/lib.rs                        |    7 +
+ rust/kernel/public_key.rs                 |   69 ++
+ rust/kernel/validate.rs                   |  275 +++++
+ rust/kernel/x509.rs                       |  118 +++
+ 37 files changed, 3669 insertions(+), 125 deletions(-)
+ create mode 100644 drivers/pci/cma.asn1
+ create mode 100644 drivers/pci/cma.c
+ create mode 100644 include/keys/x509-parser.h
+ create mode 100644 include/linux/spdm.h
+ create mode 100644 lib/rspdm/Makefile
+ create mode 100644 lib/rspdm/consts.rs
+ create mode 100644 lib/rspdm/lib.rs
+ create mode 100644 lib/rspdm/state.rs
+ create mode 100644 lib/rspdm/validator.rs
+ create mode 100644 rust/helpers/hash.c
+ create mode 100644 rust/kernel/hash.rs
+ create mode 100644 rust/kernel/public_key.rs
+ create mode 100644 rust/kernel/validate.rs
+ create mode 100644 rust/kernel/x509.rs
 
 -- 
-Gregory Price <gourry@gourry.net>
+2.56.0
+
