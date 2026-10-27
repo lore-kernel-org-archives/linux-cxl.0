@@ -1,79 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793109365;
-	b=vwUy8ghiD/DEkXnltejvUw1YjNUYplQPP8DoyH54/5rKOPVgrADK7uD/k1uPfwOF21qF
-	 0v6f+rMwJCihSJmqWt1EOjz2yb4dpazwBJh11La6SjNnMiuSOmpqQLkk8dXkHHG2d6QLv
-	 8THb6r9nMjr7LwCOgUxiLJPdpJJIXNbYPFh2/dWhQ+UHdsRUCSvx630AJMuNzX/Ovw2XC
-	 eoyIizJY/BxRWUHmjwtrlEGVuHBUtSbbxHJNbPRNPoEhsEe81EpSnQdsjpkNwNItavQKy
-	 egkBNcmnuhu4uZmKttfCcnN4w87kcD1OoxiSYR+9M3h+WGvut3L/YyQ3fyr3XmTLoDg==
+	t=1793109978;
+	b=Ipv7UwxZgzx9E0G20AGxYkxCJXXom3jemeyCpSUAtc8u8OCEff6E/xOEh6sYw9ApaTK1
+	 4VgHXk+8ie9wtUXuz+gjCPVkMbN4ABJto/drc6iOy4I5QR5YEtuxl3pZ36aZ2jyZq0O2X
+	 IKs6Um47qlH0iaKAIqY5uvepaPdey1KJPlDyt4bwfTgOwwXqap2Lz/gYPnGn48tOv8bpr
+	 L4hlyLDB4i+LlUiej7wl/U2Q50dLViH1IgOKv1S5skvSjTa71oYQ2PkCp9a1jp950x90+
+	 kjQVtRQZ9PJFx7QZrhZzdDvsnTQtnPNad8M89PmILCrlXOqSCyAxw+q+VXxJrgzDqMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793109365;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Zr1jTThDFAddOSK457sc66293xmVyHCCi9iGlWUeddU=;
-	b=sTn0sPUqmFAiDPy8q4VCKVadAtQ4U7hzk36VR7xSnNVqJ+5EPk14VKvEKtsRzrEUA+0q
-	 op1OPE+AGKMxtlBC/t4J1a+XK2L5dUfiljQ7Jrn/JwY+Xovh+XFuSuljgXMZFnFYayagG
-	 A9rhU2zthJO0D6dqxXS6hhvcbJ4pM9k0x7/kjWUs2rPnLGDAIgR+OOfM9cMflS8n2ezrj
-	 Eyj42HhNQd+p3ajGytJbWWYI4BB6vLdNanhG42lp5b3RVBxomK/winobZI0QsE4SpHJdy
-	 o46wu3sWbHm3PYM5psYlDRKlJUdHpUaj8aO0J55ixiAi8exC7bvqD1EDugpkRJw2UIQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793109978;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
+	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
+	bh=CcioC45MmLY3DkNK9gmi2R+KmuN+SF2m/a7+FcEpEKk=;
+	b=PY6AOTJpy0yZn5Xco0oNPt32Oa0oEY3jfvQ99fZxLbJZGKl6gOrdkBBgyoYxsU2sBOiw
+	 Ux5fenD2oJv6qF1bFEthWp+4Pf10hFqJX+EsT+Ejpx6DtydOE7vAgNgXesOMwZyOV0bAj
+	 pHYkjaKCd44Ns6ZGgZiLmCoMiYbg/fvgNdDrZDyVGXGrbpkFcS9YPq/vuuyqjbdZHls9I
+	 fv6s8TNvah4cAle+7agI6tQ1fhuRWVPfbfXDTJROm0RE7jDR6dQ+MOYEUskILp7fey94H
+	 Tw8bs18ht75+opChTtW2McbdvekZyU4dBCR+EZojCOJMSO86ese5QDowl7T//8dqN2g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jIhYLNBN;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=WocpRbPS;
+	arc=none smtp.remote-ip=209.85.217.47
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E5C606A320;
-	Tue, 27 Oct 2026 13:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B1B606A321
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 14:06:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6B1B606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jIhYLNBN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17E81F01825;
-	Tue, 27 Oct 2026 13:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793109364;
-	bh=Zr1jTThDFAddOSK457sc66293xmVyHCCi9iGlWUeddU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jIhYLNBNpp0NexZNmMUHOUCY+eEy16NfWjuSuwLJqmFHwNWPY9BdmcaHZW+1fGIg9
-	 fiBkl7KehfwTpd4R+QE8pIbz2ex/lWNl//inoU+svKsu/oI0sqh9JGs4nayk/63cZa
-	 PuQtRNz2s2eqW5o62hUTfQo+difIHb2bfTQI3wmFE48eH1hqvasX2J061wIVJ/8XLp
-	 B8iwzzJIHvVnrgkO1CLMhM/dtnxK1pMp932wcPpTyDMf/mtjlI6T7bM2e0ImgLpb5G
-	 itjSlM0i78ybkEbvAJ0jTU2GNXWaOjkHSgMcq3b5iw8EB94IUavJ0yBcssBsMi8xzh
-	 0HHSAVhaSG0Nw==
-Date: Tue, 27 Oct 2026 13:56:02 +0000
-From: Harry Yoo <harry@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
-	Rik van Riel <riel@surriel.com>, Alistair Popple <apopple@nvidia.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
-Message-ID: <auCtP8SCiHFcSGci@thinkstation>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=WocpRbPS
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-7cc013095d4so1295476137.2
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 07:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1793109977; x=1793714777; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=CcioC45MmLY3DkNK9gmi2R+KmuN+SF2m/a7+FcEpEKk=;
+        b=WocpRbPSqHP+BacSU/D7X3AgNcwBTyKCSmQa1WiDzaZeb/i/7127ANs4AQKkrhDpj8
+         sre2xom8UwklJb0Fuuk+38Ac1aNbTkJEwpaMNjuw/lRn49lXI9yAJuDIvoBzbQXkq+69
+         BDfcgpBufrlBxtepqsCgYCDXFgsZqNVIKQG2cofamkjfl1KVq9n6ZJaSrL7qbhwz+J4M
+         gO/E3ecD6ph1V1pFV/pybEZvGUxvw8tQj5nBIFB9zsljg19A4tN4oPRpKDjrTwAJBRHl
+         ARuZ7aYO0XD8h13N67wpXKHOa2Efgjnc9yytKyWBmunOKcWT1TbMIDAbh/AQZIUTthuA
+         LCEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793109977; x=1793714777;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CcioC45MmLY3DkNK9gmi2R+KmuN+SF2m/a7+FcEpEKk=;
+        b=WNE0CiHEiLIzrdTz0Y3Va0WcjyqsXEItEfXwe0HVLGRwZGV4TCHnk2om4rwg8Kt52F
+         Kh+N5DIQfy2HjXEyOLKtN+Fcn5P7Vbm25QZdjY36cyJRsYjrflZK/57Fv9DyRru+81Fy
+         twt+KnxYw1yD1ZUAjB7hdF570n16hrDLZD6AdotMBRW5uPdFsxYIR5x4Da9JBHgGC4f9
+         bEb5l7Nc6JNqvWNb6E0lxHhekvmBTcFPS8t15K/qZ+rBh5aOjYBYMBlIYIiBTVo9FwvN
+         XiZvcem17TwahdB4ajHIJMptiM4/bBv6qZXz3z2sbuP0Op7EeRUowPA2Zm7pTCZxzLeY
+         wpdw==
+X-Forwarded-Encrypted: i=1; AKwUvBzrLbUVuqsPr39WsNzjGGys37GSPW6gT2qb/flq+PXltnZ7L0rPi53Q9CjIP4zzyOeCT0F7eHwOoxo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ4dzVyK6Qnzqqb/FpsAi0UJkn26f0hbFw/dt7af2978VsNoRth
+	rIToymD/jl5z9azjq6v2E+EYlOmnmWi4JtIrpn/LThzub0I8G8TmRts7R0qPLk+P99M=
+X-Gm-Gg: AYBFou2oPCo6oQqEv5JeQvxbcuIMFVu3wjFWdCQmo6E6/v+mGaN0kHhfD4Q2EZpvC+g
+	wTd5eVFFCbTO/vAmanc9vZkl2fGU4hvNLz6EkidzZaTMpTHs/2hqwiwSglQJjg+S0vAE3DtTxLM
+	3HKu+IuVJ6JYXzGVM5f0tnoNxUAdT6VFcecxqJPuUzpucP75tCi4mcjxreeZRDwuDuvEytNAdT/
+	ncIlaGat1Jm+LoeNx1Pn1TkiTEAJGzXtlaPoMKYFCyLezAXRJU6LDpCG0hsDOobLnxJeJDCP8eE
+	7Tp74b3VgcMYSnhvgxzfyGoMQMDnrqFzsBYNCzU1eQvSnp1gMWO5bWSrkGNOJo/ibOWiv/WgRRL
+	aeUrKQQdraYckau2Z8LKT55oOzoL09Fn2R9Ki8Ddfhmry9sMmrvGEQujfoLwQQHpuBijF+HkVUL
+	x8/d7sEAFjjupL3l5jnrSmT+16+OPIf/4wW90M4SCny3mXxBBQ8UVmFFcS7yPIikH8TAJuxY0Iv
+	+CVikOjqtmjd9qqS5WBtAuCLPjzAk6i+U57B5hgl+QFR3w4mumUX/luhnZlYaHiOeGQLUex/usL
+	Fe2pHALXHloBAYjwvunkiNdJyzA=
+X-Received: by 2002:a05:6102:14a3:b0:7cc:28a6:ee1c with SMTP id ada2fe7eead31-7ce5ca1e4bbmr3674778137.2.1793109976725;
+        Tue, 27 Oct 2026 07:06:16 -0700 (PDT)
+Received: from [192.168.86.58] (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd2110sm103733996d6.13.2026.10.27.07.06.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 07:06:15 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,39 +88,45 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 4/6] mm/page_alloc: don't undo another isolation in
+ alloc_contig_range
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org, 
+ surenb@google.com, mhocko@suse.com, brendan.jackman@linux.dev, 
+ hannes@cmpxchg.org, ziy@nvidia.com, linmiaohe@huawei.com, 
+ nao.horiguchi@gmail.com, ljs@kernel.org, liam@infradead.org, 
+ rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev, 
+ iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com, stable@vger.kernel.org
+In-Reply-To: <a4fc92b5-7d99-49f4-94ac-89fdee699042@kernel.org>
+References: <20261027042204.3741307-1-gourry@gourry.net>
+ <20261027042204.3741307-5-gourry@gourry.net>
+ <a4fc92b5-7d99-49f4-94ac-89fdee699042@kernel.org>
+Date: Tue, 27 Oct 2026 10:06:14 -0400
+Message-Id: <179310997463.2232644.3260379218896917308.b4-reply@b4>
+X-Mailer: b4 0.17-dev
 
-On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) wrote:
-> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
-> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
-> and newer heap mappings, causing later brk() requests to fail.
+On 2026-10-27 14:37 +0100, David Hildenbrand (Arm) wrote:
+> On 10/27/26 05:22, Gregory Price (Meta) wrote:
 > 
-> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarly
-> cause inconsistencies.
+> We have an existing AI fix for that as well already handled by Vlasta.
 > 
-> As a simple and robust fix, grab the parent's mmap_lock earlier. This
-> way we don't need to update individual mm fields in dup_mmap() and
-> keep missing ones. Stop updating the 4 existing members (total_vm, data_vm,
-> exec_vm, stack_vm), as that is now no longer required.
+> I think we'll have to establish some model of "ask David first before posting"
+> because otherwise we just create duplicate work for everyone.
 > 
-> Keep releasing the parent's mmap_lock in dup_mmap(), before
-> userfaultfd completion, to avoid moving the userfaultfd handling into the
-> caller. This should get cleaned up later.
-> 
-> Move uprobe_start_dup_mmap() to preserve the lock ordering.
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
 
-Looks good to me,
-Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
+Yeah, this is going to happen more.
+
+I've been sitting in these patches for over a month while they soaked on
+hardware getting performance tests.  
+
+Maybe worth a private tree we can rebase on regularly for these kinds of
+un-vetted/posted fixes to see what's coming?
 
 -- 
-Cheers,
-Harry / Hyeonggon
+~Gregory
+
