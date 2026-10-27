@@ -1,83 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793074942;
-	b=lGr5sthwyqpKX/0XI73K0GaMXRJkk+aeLq2wqgu0rSioP9vzNeh17lDPBsjj5giPuJDw
-	 s+qL58RERTqK2qzL14fooq4IUnRtp3OPRB0s0SBWL72snvkBOd3KfG6b4XcMZSeHlLZa3
-	 GJ6m1gYEa6E6A1HAT0NbpOec6kSJA0NUwywzogiVzR4/eQX8+RyobM2VLSd5K05k75a7k
-	 qADRTa3zPRFjatqE3eynvZCQuMZ0VNijz7PUIoRST3oroSqEfj1m/NJvyex420emHjLEX
-	 Hmbg4ZsifwF6gFb8YFFh0RcWGww3pSsc5FOAka7HvKPd5mZ9W4uwZg+PZFA1NFRyqCw==
+	t=1793074945;
+	b=F5wJ+pRh85sW/rjL9V7RPZsIyR3WhMFa71HjNCh2VI9jovFGVdTfd4GP1s5UGMeh9P3v
+	 AnKtK7gk4pe/FDW8+KFLm7f1fw+AWr62Zn1fyYf+luTXHZXhhjtLzDPIxHsrODb4VhM9A
+	 TQE/33vMoJWgN3aBl+Q/fO88eoXErK0cwWkMvB4Lv/gBd531IIW6nuO79cdbDvJMThQ18
+	 PAvvSiF4C4dH4LyW98l3lIwgBOk47Jdg7yqenC6fJzkz5dMsRQ/0z+gdS5uiCcNU3lfhS
+	 BOysLQetfAbfJS50sRm64Im8xOF1BPJjM1RsD0TFdIqaTNlRuCj5bOv/a9cSe49FJRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793074942;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793074945;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=JYR0kjWyeHwovzI94J0HLudxjoqlHJ5bLaQ4w5OVpbo=;
-	b=L/+G3Abh4dLF4yXhfxz6wkVJfAdSHMhXqbto+dRV6pPcS4f0OeWmswI1TyTLZHNUU77h
-	 kUe1Fnm0CMm6cof1TVkAIY3Mbz0WYwIZ2WSX+Ce0I9STdJob3riqnd5Ttvp9SCSqEBPJc
-	 WDKzUrBGeiPsz2uteRme/EA6Ai8Y5U8n/B8UlZtAheGDP9vNp4hjB/vEoBVD5dtr6QvOf
-	 Ib+hDsdwsNDqvU9fx0mg+rkA494ZNKTbBwrK4OFbIe1evaDhrLzJjG8YYrPbHjEkP3Njd
-	 QuZMJPI/Dl8D0bPc+EQ7703Q6R41rW8qn5NJJTjT8EvHDpAzl4/hlgx8SL8QX+71ZfQ==
+	bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
+	b=J0BFzTNiQxoG3pjep4IlO3A0YEeN8ThtrWbq9abRjJLhk+PIh+wMyMP5qQfO5P9I5oc3
+	 QpH2jlEumkdpWpjncri1W/h5kTTwlsACrS1SS+jHCFygUVJrnj5c/hSPz33R5PkKk5g42
+	 YM+HMmEcBCwKO0mJx/e3eup/SGUgw1eGuSBTch6DXxQNjuupyyh57+e0xBRcdheoj325/
+	 c371xDlatuXxn7Wct5egj9YP7Ho2fAUfggNadhDRtKRovZJHcixKzuz58hQHnb7e2MjlE
+	 vvrcGK/qTnLCT7Ya5MF9En+NkH3az4ZE13DUYOjtpAcde/Kotza+y7gueh3jy3PHGtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b="t9nVPwt/";
-	arc=none smtp.remote-ip=209.85.222.173
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Uh1dDRxG;
+	arc=none smtp.remote-ip=209.85.219.49
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50865606A32A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50865606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF86606A32E
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 04:22:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FF86606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=t9nVPwt/
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-93f3c895a0eso287680185a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:22 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=Uh1dDRxG
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-91b89c6caffso29635736d6.2
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 21:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793074941; x=1793679741; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1793074944; x=1793679744; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=JYR0kjWyeHwovzI94J0HLudxjoqlHJ5bLaQ4w5OVpbo=;
-        b=t9nVPwt/dYQcOhPQS9n24nTChJsxSN6cnfVwH7VORn5e/1tN0OohhOYyoPSTzhVh9c
-         8w54DfO+Kj7vgoDjZszWvwaBIT29XXoYZpMNwfgrvrENL/WS4NBq/wSBTsi0TneRUM8I
-         pXHaQlCJMA2PuZiUW4vQOhgnGee0R2znYuLTaofci15uG05KDQHIJSCDHX/r0BMxeALZ
-         0PLGvmfrL3+PrSRs4p+xuj1Pza1lX0FomNOVMgT6NMXA8ncUBfkQOr6BI2b860oSI5l2
-         mGPHXsST2Y5nIAPt/b1zjnQZQFR3RLGfIdUUito4NWTRgDv50W+wIKmmNnWdECne5w+k
-         jTzA==
+        bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
+        b=Uh1dDRxG255t8FsdHTDn6DBOQan/CFITNS+SJISOlJdP3PwYjGv3T8ELkvvXQqFNGl
+         xnHyMYbjZ6K+jnitvhsJoeGAbAT3fzxUgjR+gVXxz7uBoEYQi78NHoXaFlWZJIC5+ntl
+         AGRIr/A6FGmmCBDilwfZ9rn8hCkAXnsmtoHnZ4Tfmw/e231yLueV38JEGEi892tHROMY
+         AcLHbdyRJ7MBMSEWYiYmU0fRZs8UvG8+24vw9eLjyYth0iQAeBptkJochELEdv/7Nnki
+         CkWWBOU+GiTtCb7wc341KP45BJwnYweMQKBAH2lSkGS0Bf9sONRg6PIQ1WNgNercipnk
+         hBtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793074941; x=1793679741;
+        d=1e100.net; s=20260707; t=1793074944; x=1793679744;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JYR0kjWyeHwovzI94J0HLudxjoqlHJ5bLaQ4w5OVpbo=;
-        b=uiSmmjFZ4dBkfdviVl93cLFey5olNrHAp8g3Ks6/u81E2zclz0VlQCxLKLxyhpWQ2q
-         fmM5DKxyqmtgZvbHMtiPI0k7sqd/QTzFQODWT5ZPf9iYb25yB04Mx1UltunrN9dVdOR3
-         wcVOuWNd5+WjvtqmuCvK2KTPh/nuHtJ5/bhvk9mh7KJJuJTPU/4zIwbALUOKnhOCpg1l
-         2CjtInU7ElnjA6JdJAOzUnSjsDILj3BHHwGC1Xp4MYFfZnxSK62kxzIoXRI4VPZ5slZj
-         6vlZOQb9sOKQ6eI0zAahLbaD+NOEq/5/YZDvRE5H4yYmdKFqRJzcyxla9lSUJe2Q+/qC
-         WtFQ==
-X-Forwarded-Encrypted: i=1; AKwUvBykugNlZdqK+x9ZJXP5IKcsDGbz8eJZBG954mh2Y1vGMy9IVPXRmYFXeXQGoUMP5RIfwjEi0LTZ5Cw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIy/GgIXL0mC1sNo42XPag0sfaa+cdX4VyoQe8CgeWfMRITZf6v
-	3DAtPqcLn2E4+pQtH3/B5YnrA6796R4+vsBiL1uApO87Y9DadVG3isfkxJogHMO9fpM=
-X-Gm-Gg: AYBFou39GsJHG1fR0x+bsPS3CCtehW8MijKla6mibapNMXcwN0rKyfu9psxf4421Kfh
-	d6TaCTjgfzzXpGCywatcx85sEOSMbFJXhCJ+jAiRkDUGfoFQb6G0+rgl2O64gU1z7qI9ToDzLWJ
-	y1yD6HzWeLP9kSlZrlJcfKbfX163e+K5LNygHFUKdLRrodZSHvN3m2mkPlArfnIxWhPgIroNl0s
-	kLCjgfMl/jmW0EZ22/GoVaYn5pLvPeHMOXa99f4/+hQnm/nzy8Qi0L7lRN/FdYA13C+ggZwHv7y
-	9c0fSeyYZhqupRXZ90yXldpMIqVadw1bZ358lkE1IzBuEqEsvRk4mh7WR1iXJiLKmTbTI2E89Tw
-	m88ad9lGK1jax79NyflKXArw29YB3MkUUtuU/PcUoVoM+LkAU/+daADTYOM31lmdSEde65Pnjuw
-	OzXVf3Uoojryk/UiQ5DkcZM05ta8L7gt5Fliqo52wcudGjSr+3gMmWs2oouWdBjF7efjpZsZGAf
-	oTAraNxjdMFFUuNTvfQ6odZjn9o4Coj9vi2mdIx02JM74bbTr+ARrhL4AP3XA4bPt3qeGlCTvXn
-	Sx8DZ7jjHpYU4hBuu33XgtmBp4NH3PzRJG2pjXZ3jA==
-X-Received: by 2002:a05:620a:440b:b0:93f:6375:aa97 with SMTP id af79cd13be357-940ef9df9damr1400486085a.83.1793074941325;
-        Mon, 26 Oct 2026 21:22:21 -0700 (PDT)
+        bh=O/I0LmBFR7uBLBrLDEFm/yc+s/I6APM2Icy/EDbK9iQ=;
+        b=m46OZmBdFyVZd/edTgfXtzxZnjAs198k5cO6SevRJ95wfB7wNJqhEgkSxeWpIVoJHA
+         ysQ4r6+IW9NJAglrPxmrfAV6KFvHq6X4i5nTCh4x9PGztL6Vy0LlZdANJqfktIDr4IC/
+         XUt6K0NA6DFSzVck6ihZ7puXWbiDH6QON1yG1Tyzpd2HjXBGYvh7RB5m4f/E4L35w1W8
+         HFi+4k1BNC9EoRjNREyftD2L5ZQ7wiJ7RRb2dyvRXw+5Izi9D7T8GmmYEg03BVH9bhSi
+         v5kcJb0ZQEeWY2i4LnLXruUhLqHynOB38rJYWsf3tkSmpLmmj33ajLtpKhpaW7bvdK7/
+         4VWQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzOE6HglmGMNCT/B93rM9FXvdXIofsBPr2U5HA4mPdhyTvJbdV14OCu1M0AogTPGjC//ygvvXVQvNk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLS+4pFkWwDyFYvTv9dX/Y5C5Z2qDZGjV3zThlYnJ4YHO+g24BV
+	ep7l8KGqFpO8uwjToURlVbL8tXONtfhoQNwDE81/xfBM/XNWvYMdZ2/EGq9sDgn2sZryYxvTORg
+	mRoJGDyc=
+X-Gm-Gg: AYBFou2xdtp3D6e/CAYxEWSyGiqh1xlxnn1XdVkFk+L6y9zsTH9gREJFkjFSWm/vff3
+	3AlZBoMmsAs/Bk+qPJfpDpNmbhAAKA1Q0Pb3M5dECl+BAmbqE4TzGSjDFFzgRPLlgt+sK+9uk7s
+	4HVgB+EIS6UDlEyMX2BgZWL1haOt1zg3jiCpNKdRh3FW0UNCZ2JZVwPBEBb82zfDt22t3l5M1qp
+	0D95nlKzgZXETHZpTWuaM57XjnC4bQmYe4VZt+yHmzNWBYRJ2tlJxvW2aOKWwbzOXS6HpnFJjFB
+	qY1qqCQGV6nsqY/vxPBlBxkvjkaV79KlLVbuHKA4jjfAVAa1YvbbhjI1IHExmlUbgolEPx08irw
+	INRPVOhWzHcAqiS12BA/Zun9cR8Wyv1eNarju2dYchsJh1j8ivem39eOuT2wSbQVJwUguR1Irrs
+	H5ZXGmgWih94UH0AO2lNRwdCIBE3E2zLt0VEHYK5AnrGrN8lIV7+JBlo/z0JiwxhFMvObSE4/ZQ
+	LQd+qT8rRIMZZjV7zRXhyXWMeYmqgGsV9gjXc2rFN2kv2s+vek5Aw/2kHqH1IiVDLjgPQXL1vwn
+	Fd9kDsTOGV3M4Zn915M5rzWNi8fwJHr+8xxG3PAPXg==
+X-Received: by 2002:a05:6214:800a:b0:91c:60e8:a8aa with SMTP id 6a1803df08f44-91c60e8a8c1mr69350086d6.49.1793074944062;
+        Mon, 26 Oct 2026 21:22:24 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.19
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47bd01cdsm91139676d6.7.2026.10.26.21.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 21:22:19 -0700 (PDT)
+        Mon, 26 Oct 2026 21:22:22 -0700 (PDT)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -101,9 +102,9 @@ Cc: linux-kernel@vger.kernel.org,
 	iamjoonsoo.kim@lge.com,
 	anshuman.khandual@arm.com,
 	stable@vger.kernel.org
-Subject: [PATCH 3/6] mm/memory-failure: keep the page online while handling it
-Date: Tue, 27 Oct 2026 00:22:01 -0400
-Message-ID: <20261027042204.3741307-4-gourry@gourry.net>
+Subject: [PATCH 4/6] mm/page_alloc: don't undo another isolation in alloc_contig_range
+Date: Tue, 27 Oct 2026 00:22:02 -0400
+Message-ID: <20261027042204.3741307-5-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261027042204.3741307-1-gourry@gourry.net>
 References: <20261027042204.3741307-1-gourry@gourry.net>
@@ -118,157 +119,63 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-memory_failure(), soft_offline_page() and unpoison_memory() check that a
-pfn is online, then sleep on mf_mutex before using its page.  If the
-block goes offline meanwhile, a DEBUG_VM kernel faults on the poisoned
-memmap, and removal frees it on any kernel:
+An alloc_contig_range() that overlaps a block going offline can leave
+the offline spinning until it gets a signal, holding the device hotplug
+lock.  When isolation fails, alloc_contig_frozen_range() undoes it over
+the whole range, clearing the offline's MIGRATE_ISOLATE too:
 
-  CPU 1 (soft_offline_page)           CPU 2 (offline_pages)
-  pfn_to_online_page()
-    page is online
-  mutex_lock(&mf_mutex)
-                                      offline_mem_sections()
-                                      remove_pfn_range_from_zone()
-                                        page_init_poison()
-  get_hwpoison_page()
-    zone_pcp_disable(page_zone(page))
-      zone of a poisoned page
+  CPU 1 (offline_pages)               CPU 2 (alloc_contig_range)
+  start_isolate_page_range()
+    blocks are MIGRATE_ISOLATE
+                                      start_isolate_page_range()
+                                        -EBUSY on CPU 1's blocks
+                                      undo_isolate_page_range()
+                                        blocks are MIGRATE_MOVABLE
+  test_pages_isolated()
+    never succeeds again
 
-  Oops: general protection fault, probably for non-canonical address 0xdffffc000000069e: 0000 [#1] SMP KASAN
-  RIP: 0010:__zone_set_pageset_high_and_batch+0x89/0x270
-   zone_pcp_disable+0x28/0x40
-   get_hwpoison_page+0xc2/0x1160
-   soft_offline_page.part.0+0xe7/0xbf0
+start_isolate_page_range() fails only on a block someone else isolated,
+after undoing its own, so this undo only ever clears another caller's.
+Return directly, as before alloc_contig_range() went pageblock granular.
 
-memory_failure() faults the same way.  unpoison_memory() does not fault,
-but it clears flags on the poisoned page and returns success.
+With offline_pages() parked after isolating a DIMM block and a 1G
+hugetlb allocation made over it, the offline on base still loops 30s
+later in 4 of 4 runs:
 
-Hold get_online_mems() from before the online check to the last use of
-the page.  soft_offline_page() took it only around get_hwpoison_page();
-it now takes it once, earlier.
+  offline_pages+0x5b2/0x1570
+  memory_subsys_offline+0x17e/0x470
+  device_offline+0x250/0x340
+  state_store+0x88/0x110
 
-With a kprobe parking each entry point across the offline, base faults,
-or for unpoison_memory() succeeds, in 3 of 3 runs each.  With this patch
-all 9 runs wait and fail with -EIO or -ENXIO, and lockdep stays clean
-over offline/online cycles mixed with error injection.
+With this patch the allocation still fails, and the offline completes in
+3 of 3 runs.
 
-Fixes: 96c804a6ae8c ("mm/memory-failure.c: don't access uninitialized memmaps in memory_failure()")
-Fixes: feec24a6139d ("mm, soft-offline: convert parameter to pfn")
-Fixes: d613f53c83ec ("mm/memory-failure: fix VM_BUG_ON_PAGE(PagePoisoned(page)) when unpoison memory")
+Fixes: b2c9e2fbba32 ("mm: make alloc_contig_range work at pageblock granularity")
 Cc: stable@vger.kernel.org
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/memory-failure.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ mm/page_alloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 0c96eb5119976..cdae2a1988bb8 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2394,6 +2394,8 @@ int memory_failure(unsigned long pfn, int flags)
- 	if (!sysctl_memory_failure_recovery)
- 		panic("Memory failure on page %lx", pfn);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 55d3fc4b307f5..bb3c7e95f2ed4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7396,9 +7396,13 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
+ 	 * put back to page allocator so that buddy can use them.
+ 	 */
  
-+	/* Keep the page online from the check below until we are done */
-+	get_online_mems();
- 	mutex_lock(&mf_mutex);
++	/*
++	 * On failure this has undone its own isolation, and any other
++	 * isolated blocks in the range belong to someone else, e.g. offline.
++	 */
+ 	ret = start_isolate_page_range(start, end, mode);
+ 	if (ret)
+-		goto done;
++		return ret;
  
- 	if (!(flags & MF_SW_SIMULATED))
-@@ -2608,11 +2610,13 @@ int memory_failure(unsigned long pfn, int flags)
- identify_page_state:
- 	res = identify_page_state(pfn, p, page_flags);
- 	mutex_unlock(&mf_mutex);
-+	put_online_mems();
- 	return res;
- unlock_page:
- 	folio_unlock(folio);
- unlock_mutex:
- 	mutex_unlock(&mf_mutex);
-+	put_online_mems();
- 	return res;
- }
- EXPORT_SYMBOL_GPL(memory_failure);
-@@ -2742,9 +2746,12 @@ int unpoison_memory(unsigned long pfn)
- 	static DEFINE_RATELIMIT_STATE(unpoison_rs, DEFAULT_RATELIMIT_INTERVAL,
- 					DEFAULT_RATELIMIT_BURST);
+ 	drain_all_pages(cc.zone);
  
-+	get_online_mems();
- 	p = pfn_to_online_page(pfn);
--	if (!p)
-+	if (!p) {
-+		put_online_mems();
- 		return -EIO;
-+	}
- 	folio = page_folio(p);
- 
- 	mutex_lock(&mf_mutex);
-@@ -2833,6 +2840,7 @@ int unpoison_memory(unsigned long pfn)
- 		unpoison_pr_info("%#lx: software-unpoisoned page\n",
- 				 page_to_pfn(p), &unpoison_rs);
- 	}
-+	put_online_mems();
- 	return ret;
- }
- EXPORT_SYMBOL(unpoison_memory);
-@@ -2974,38 +2982,42 @@ int soft_offline_page(unsigned long pfn, int flags)
- 		return -ENXIO;
- 	}
- 
-+	if (!sysctl_enable_soft_offline) {
-+		pr_info_once("disabled by /proc/sys/vm/enable_soft_offline\n");
-+		put_ref_page(pfn, flags);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/* Keep the page online from the check below until we are done */
-+	get_online_mems();
-+
- 	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
- 	page = pfn_to_online_page(pfn);
- 	if (!page) {
-+		put_online_mems();
- 		put_ref_page(pfn, flags);
- 		return -EIO;
- 	}
- 
--	if (!sysctl_enable_soft_offline) {
--		pr_info_once("disabled by /proc/sys/vm/enable_soft_offline\n");
--		put_ref_page(pfn, flags);
--		return -EOPNOTSUPP;
--	}
--
- 	mutex_lock(&mf_mutex);
- 
- 	if (PageHWPoison(page)) {
- 		pr_info("%#lx: page already poisoned\n", pfn);
- 		put_ref_page(pfn, flags);
- 		mutex_unlock(&mf_mutex);
-+		put_online_mems();
- 		return 0;
- 	}
- 
- retry:
--	get_online_mems();
- 	ret = get_hwpoison_page(page, flags | MF_SOFT_OFFLINE);
--	put_online_mems();
- 
- 	if (hwpoison_filter(page)) {
- 		if (ret > 0)
- 			put_page(page);
- 
- 		mutex_unlock(&mf_mutex);
-+		put_online_mems();
- 		return -EOPNOTSUPP;
- 	}
- 
-@@ -3023,6 +3035,7 @@ int soft_offline_page(unsigned long pfn, int flags)
- 	}
- 
- 	mutex_unlock(&mf_mutex);
-+	put_online_mems();
- 
- 	return ret;
- }
 -- 
 2.53.0-Meta
 
