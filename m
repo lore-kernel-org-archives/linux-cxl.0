@@ -1,113 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793124250;
-	b=3bvoRQW1Q+TcRHKzvjSO/rse/cTquw6ql8ks9lroR9zRIF2tjxgT40JXyw5DST6ADhLw
-	 cLoA8jvBhAxihXp1hQQwWnj45gN7DNYBq2YA4qna9F6s3yE0ztImqBoEdS+/qMTmy0LSm
-	 B1+46dbSorQFoVGVijYNiQK7P52KbyGr79i3sB9yKON5wpvmPGFMMyB7ldHRi0bZiiPnH
-	 PVw26BXUF2gUnjbJiXo6vAUgvIKFpfHY8MXTaBenCXypCYG/26NiKTdv01koJDYLU9/et
-	 NN1yYIqu523duDxCOQ02pcBzs7rVuooxThtYeXREEWFnx+QM1bEyOGwo+9ctoFrO8+g==
+	t=1793125226;
+	b=pjWg2sAsw1QfPcvz0MeQy5LbcSmq0np6ijDmnGi9gp85MhG/CMCYRJQODyMFg90kcOB5
+	 JdN9UmEWfKf3D1z/+HTooV0irk3d5n2TDsiBx2Sv3Gzp0vZg4oFGkbLr4i1jZUA2CgRg0
+	 b+/k9FIWoUXFEOLRxtdqqY3CeDw0rPznl4//WnOslp9ntjN1Nh/GeBOML8JsmHt4V5deF
+	 e8WCSV0BVjHHrRBb+vehNBsIyrGBZxacL9gkmVaFUWiIWEDL6IQco1077lKK6YnjQrLEL
+	 8kzvBujsCaadCpQ+ANXzdB8Bd7Qk8iG+ft+h4kCkazSyvQyNCww+A2Vmj2aB9fXYKHg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793124250;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793125226;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
 	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Spam-Details-Enc:
-	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=CbwQln0osS5Ody02EmE3zfTJ+96bXVyWs9ItOG40Y20=;
-	b=WUIA589imE1MGzrmeYzA7JU/1tdKq9lgDeNOrHvW0E8D+qhinLixX6TDaIlIrUqALz8z
-	 Qco5+DqTwIFHeFkykyp14Dhzyt80Uym8gnENoxOhBmW0V5ZP5Lo/deCpwWWu7F6IhAQpn
-	 y2W2HomP0bV2hozOlxcrIIeyVSHJEyk/TaMiNEfd2c2WPw4Yx6aoGmGkHm/wBQtHHB9GR
-	 19w+i9lrdPfL2WhWVtsfWJ9CkWF2w+ErUq4rBt8hCJVzC7b95zNxdxzqcwjZ7rHgVuk2K
-	 Z4HhTRptZywoPBSuJMluJiX73woBXDpj6PPxSNBSQ8pPZ54Bq23MvGgJgCWW4ZU1+lw==
+	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
+	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-GUID:X-Proofpoint-Spam-Info:X-Authority-Analysis:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=l/eyCz6OAbl+DS5fLuIlzjlbpRVKk1BOYI/y79dV96Q=;
+	b=GynGAW8DMVxPaJFPtGjaC38Z2V+fBVeQ0/WSKOTneR8WVQ+uCP70xt+2BEkH3QPI25eB
+	 Ngp0Zev7t049TpDlCz7PL1Vf3c1x6NHRkSOuNAgZclBk/c14+aV0PhPYLSbpRSYlzc2Dg
+	 scp8G1I8ohyt9fNHa/2kpqa9cZ/AkX+fIfLx+lfYqdqO4Ok7JHjnmSkuSfmcCp2R8kPr0
+	 bi1pN80UwTxGJVlb3O/xzSYFuJetnymRXE6DEDkZ8IuCKLmZMXaeHt3RZeZicrOuA4yYF
+	 LCk/gVk8ROTZ5wLyY5aK45P64yWDF2XwoU50ASPuJ899jMKheI30TO6SiS0RHBYkNag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=columbia.edu;
-	spf=pass smtp.mailfrom=columbia.edu;
-	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=HWMW+LuC;
-	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=MkOva+DP;
-	arc=none smtp.remote-ip=148.163.139.74
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=n7dAzJ39;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Rk+JP5ib;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8116D606A31E
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 18:04:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8116D606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB90606A31A
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 18:20:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8CB90606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=HWMW+LuC;
-	dkim=pass (2048-bit key, unprotected) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=MkOva+DP
-Received: from pps.filterd (m0167076.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69RHhNY9273992
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 14:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=n7dAzJ39;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Rk+JP5ib
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69RIHoJB4036022
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 18:20:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps01; bh=CbwQ
-	ln0osS5Ody02EmE3zfTJ+96bXVyWs9ItOG40Y20=; b=HWMW+LuCz6utW8S/VyIJ
-	rHuo4CHhRhfcBnkgT2it5oCdt4YIlLKc6jaoFTG6NBRm9OQx8/Gj8cgBC4Do0iWk
-	mAEHeGX4ZEQrgjmx5BHUqwprw2uw/fxZQF3p+JzRElcb76yXcKt4GQvOnFFzOajv
-	msygurYhvvDfEXZY1Y1OFRcS/MQ3DzxL1Zn7WjVKu/boL2iCknUIbvotLMEHVOFn
-	8z9EcTAubn7A/+OQElkqnT0CU8euYHGKsuMyJovfBE9MpfZ4akkMjYw62aGpHRD7
-	9NYu/mzCxLPH6caGTchbWrsAFJNSQvq09+77FlRkr73QTb2lnAcZCq5a3XUaooGA
-	UQ==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4hjqr9ckwx-1
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	l/eyCz6OAbl+DS5fLuIlzjlbpRVKk1BOYI/y79dV96Q=; b=n7dAzJ39aoyMybfW
+	C8p0Iyuxi7XkYk9D8imsy4nxniqVV6zmD3azOUtVTBNpRVV+Bj6JvpCHRLtFWtdT
+	JVGkhz4XbmGEkyJIXpzbeXgndVngtQhudEfIzH8+eA+aXhuCOFvXXZM3JC1zpkmH
+	ky8Wm14wDzko8eTGd5CtMFZB8m3oUG4P3tvueJCIPIOxAKT+RBeW2cNik6V4wRDW
+	5nbI1ZAalZEaZrE1Zl3YzVdZ96aWtf7jhURrIvQBv+WnWnJl9e08lvT5x0QFAkw5
+	+3ufaGu51gktQtnCp4NnKbugB0rHh9IXxkBxaD9Z1SnTJN0x9HrJvgC4cIf7Xzpc
+	OWb86Q==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hjyjprfsb-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 14:04:03 -0400 (EDT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-917a7c17166so3709256d6.1
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 11:04:03 -0700 (PDT)
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 18:20:24 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93f13c143c8so8951585a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 11:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=columbia.edu; s=lionmail; t=1793124242; x=1793729042; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CbwQln0osS5Ody02EmE3zfTJ+96bXVyWs9ItOG40Y20=;
-        b=MkOva+DPKFBicQaIHSSly2JfoMAicHAbd7jFFZ2jAPfMZSSAxwOfcC3CPShO84ijPq
-         ZECGGl73Kz7/09FPj4HtrAatZ8+T45RQt+M4cGZiieC2QJbgruC3B154GGVXb7OAzN+0
-         2UhtrH2K//SHtIBzgQwch7+1xSTuSdd3XBXrSOFftUuUdhA49+eAWmetIwHQ/lmQkNU1
-         eDgkpiPJIa7m+mdnAJUQCGKhtaBLbGtQoh5/+RjGZf2sev+2X2y5UVI9n1Ip2H0WcVvt
-         DLiMDqjdZzodxrWp70M2mYAtjmKnXIkOjZKPebpETepX3BO/HR7B5Mv3SiADMWH9paOp
-         KEYA==
+        d=oss.qualcomm.com; s=google; t=1793125224; x=1793730024; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=l/eyCz6OAbl+DS5fLuIlzjlbpRVKk1BOYI/y79dV96Q=;
+        b=Rk+JP5ibflAx4RfOYR9Nexx30TkerXcQzYPagK6fL+ieCFzZTqMyu+OClKbSPgGCC6
+         miAx1a4FRDYVQ66dWgIbzRfqNgeMolhcTrL5oH7EQVIOle7C6qdpSd/NuPnV8PHkARlE
+         7qJ7vtLxze4wkKTk7xy6hhMbdARHx8+E8L4v+fE4D7IHEIfvh4elM0CnVT66/S4gaXEZ
+         ah6A81KgS+N/M3JLVa+dwAueFZBoNmoIQK+BzjtJrlheX2CmmrzWjUG/6zJpWQPaL6ss
+         gnXO157bu3CDSW0M/Ns13UyijEgnkw+qbjjkHQwXPdAXp0jn4PCnPAotBUyj4Hyzzx5c
+         Jy4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793124242; x=1793729042;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1793125224; x=1793730024;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CbwQln0osS5Ody02EmE3zfTJ+96bXVyWs9ItOG40Y20=;
-        b=a4kJvOfyGoCFAhzBXT6vtIuQLybhuxWTzLtLLBqX/CzYg6vif/b2FMNJqUqncbPW30
-         EcsuCY1BpFE2pJleZ6EpbXJ8+gHw+2sRu8DU3Kdeqm3wrC1S+YeJGfd9kVxKBNtiNzUp
-         0d8i8eTlPoHk7ldODO6ciW/IrOXmIHyry4gw1u3vqVAxWbA26ElSAFLHvrkcF3LT9cQ2
-         6AbOTbk3C/OUHbG3BdTNmazhL10C99j2tpttVgJnASwT3DTPQkWI2ce7d8DXxQ9GoYyY
-         02Kc+IQWxgJT8gwPJ5HrTQUX/l4iSHEojypQq17BLzM2WZWZp/21D84VlN5RiC2KG2ap
-         hzog==
-X-Forwarded-Encrypted: i=1; AKwUvBwvxhXJXHYvhLtiexP4Ly/s5eaG7czpZE64ldP3ajJmr/jfY+aI+0YomHyPkLdHfDE2Pu2pSzxRbMA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIv3OqT/MGcAArEPivwvw140vGdmShdi3VLWAOVjiqITF7EKUCl
-	uU6osNt4OIIuOrTdqhI6CSRck/dXkmy5gNCgHVI8mbhw3IvRofiCx9cegcxkChImSSe1kJkRWGb
-	R5NMIWv6dCIPIBxbCCU/GI6qNr2TU95FSUUq1a+U/+PQvljFLjRw1B3Vt4A==
-X-Gm-Gg: AYBFou0eoxeYD6CMb7OavU8RLh4IWlHWZwj8XWq9PH5TRHjxnuec49TGdMuMJjjR8Jk
-	cR6LB1PL5vAOzXX97D0lSa+AnQY5ufcZJ5KI+k9ncr2T8h8lAFlWtha6oY1Gs4TmCgVSZ55CdN7
-	NnxdfbYdZG0kkz5c0+PKKPnViF9dc8eHOCHscs47G4is84lNeLK2336IPwZu/RoYrxLEYE44/12
-	WjhnN9CgyF/ejnZFoGHGU7Kudq7+tCY6e316slGNksXaZis9TCtRqwRmKfQ2FzI9HA/v+igdDYz
-	/LLwCj944jfMK+HYRxe+gaU9sIPtw4q0oN2jGCFpoetDzogACn53Ba51J7sH2fCHPlAI3e/Y0cc
-	EXtjalwNL7ZfhJPeQ4NkIFsr+p/rOs1v5b6oTDGP7wvzRJnMw5lLpRQWhuSrASIp6oXSzDZGn3J
-	2I5+ylh1Oak2mPfAt843nRMZAjVRBzyxORXupPCoR0bz6chbHreSO8KBkecGftjZvoN7NkK49jT
-	Z14rTguwjQBt5A=
-X-Received: by 2002:a05:620a:2a06:b0:93e:c12c:9dd2 with SMTP id af79cd13be357-940ef9ed966mr1547498485a.82.1793124242398;
-        Tue, 27 Oct 2026 11:04:02 -0700 (PDT)
-X-Received: by 2002:a05:620a:2a06:b0:93e:c12c:9dd2 with SMTP id af79cd13be357-940ef9ed966mr1547486985a.82.1793124241704;
-        Tue, 27 Oct 2026 11:04:01 -0700 (PDT)
-Received: from [10.206.51.58] ([129.236.225.183])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-940f0a94a5csm1037624685a.41.2026.10.27.11.03.58
+        bh=l/eyCz6OAbl+DS5fLuIlzjlbpRVKk1BOYI/y79dV96Q=;
+        b=Z+ZmXYDoS5ALW+3/te7Qk2sMwAeeVs6z5icgoyE6X0SHmIRuYBmYt4m++GA06rgrx4
+         8ArbdZUdBl2vL+GQRYRWN6Qy6XYJecYXjXQe1DWcUZ6fNp9/3OyESw/pg1PVTnhMJA2q
+         xyn75Fk202CialKl7Kf39XyaZgpnx3S07UG+Do8CzWrVO5BMUNshHi1bq538o56DRgwx
+         fko8Dtm4PcTNjPHrUAhiw6/AHqoVA3WjOakSPsn7V/kjcmdhTRKjZ8KYhk9sph613pQo
+         5WnE7EWdm7KjIi2J+X4HrPdsOMCJtcTQBbO6po/uqZmriKA5oubCZ8bBN5lTDfHKBnsG
+         2+IA==
+X-Forwarded-Encrypted: i=1; AKwUvBzhU9908X0jLhDiJOQbqaK0vnwFUwdHNyz6pPpNH9Zdw9wC8rDguRoVx8ewwBWkISHjMwjv5dYphmU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI1pvnVf2eh2clCSYtmVJ8KJVWsZERbvP8p0R8ChqM+7Zin4Uwe
+	mU99M2wS1y0C7Vec/+qtNqHcQGAV/9LTsWLtxOKYljyfhPpWfxWJzdBWXyfQJCipoDcOuTjMwAm
+	XUdX98fzOgnsQ1+x5EKnAXCKtOHDaFwdXFXshPz+fBMhOy42/KR9n0G6X12zn9zA=
+X-Gm-Gg: AYBFou27ZR3TcTPMhw9BqhnrQRtIgkkXarqhHVT2fcl22JmklBCu+qNdc+mihSAZpJ3
+	LDGUrywsKfanc4IVNwnx6lcocMM17u8MJIQC+HxnKz70i4D8JJDPktNpHjrpokjVSRbqCDPQorz
+	AjdKDDMPfuagYY2uuUjcd/7QCrGs4AoJ622HkmdOdO6TkaO1crBultYybFxg9Aejm0e/eoiJKsf
+	meqRdeYLd7jHSYAF4kStIqy1TlC/5HQuay0ODWZFBumAJx7e4GyMGuqFqXSAEJ2kOot2oZkMXaS
+	MPwj8ZI9Xz5GX7aDf+8nOR9wrbtNm7wWiGtbJX0ODmZ00HB3cGcKnmN6RMfuv7xR1RK3gKghjEF
+	K21nFTT26N6I9V0ywflSXwNUGVgnCLBJsDJmeSl37fe59aYfJVA==
+X-Received: by 2002:a05:620a:a992:10b0:943:faab:aabe with SMTP id af79cd13be357-943faabb32bmr278237785a.62.1793125223759;
+        Tue, 27 Oct 2026 11:20:23 -0700 (PDT)
+X-Received: by 2002:a05:620a:a992:10b0:943:faab:aabe with SMTP id af79cd13be357-943faabb32bmr278233285a.62.1793125223141;
+        Tue, 27 Oct 2026 11:20:23 -0700 (PDT)
+Received: from [192.168.69.229] (82-67-153-177.subs.proxad.net. [82.67.153.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebd48e0sm24775219f8f.38.2026.10.27.11.20.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2026 11:04:00 -0700 (PDT)
-Message-ID: <208738b1-35df-458c-9955-e2e5318fd2c7@columbia.edu>
-Date: Tue, 27 Oct 2026 14:03:58 -0400
+        Tue, 27 Oct 2026 11:20:22 -0700 (PDT)
+Message-ID: <02d394e6-eafe-4a3d-9f63-61b639267aa8@oss.qualcomm.com>
+Date: Tue, 27 Oct 2026 19:20:21 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -118,113 +114,69 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/46] mm/huge_memory: fix list corruption when
- deferred_split_scan() races with deferred_split_folio()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
-        Barry Song <baohua@kernel.org>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-        Baoquan He <baoquan.he@linux.dev>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Liam R. Howlett" <liam@infradead.org>,
-        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-        Hugh Dickins <hughd@google.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Pratyush Yadav <pratyush@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>,
-        Harry Yoo <harry@kernel.org>, Alistair Popple <apopple@nvidia.com>,
-        Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
-        Kiryl Shutsemau <kas@kernel.org>,
-        Matthew Brost <matthew.brost@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
-        Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
-        Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
-        Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
-        Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
-        Gregory Price <gourry@gourry.net>,
-        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-        Ying Huang <ying.huang@linux.alibaba.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-cxl@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
- <auCw2-_yjh1_RjiO@cmpxchg.org>
- <5d431bf7-8813-4e2c-a40d-b45d4ff39a5b@kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Update Junjie Cao's email address
 Content-Language: en-US
-From: Mani Tofigh <mt4022@columbia.edu>
-In-Reply-To: <5d431bf7-8813-4e2c-a40d-b45d4ff39a5b@kernel.org>
+To: Junjie Cao <junjie.cao@linux.dev>, qemu-devel@nongnu.org
+Cc: jic23@kernel.org, mst@redhat.com, anisa.su@samsung.com,
+        linux-cxl@vger.kernel.org, junjie.cao@intel.com
+References: <20261021134307.874867-1-junjie.cao@linux.dev>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
+In-Reply-To: <20261021134307.874867-1-junjie.cao@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 7fXxOzCurmSJi-ECo-wgLcESrvWSlpi9
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI3MDA3MSBTYWx0ZWRfX65nFNkEyJqlE
- uqOHnhPVM1IcUnN3x+82bB6CRNBptJs0a9mbZR2VXA84Q3HZy/VvATy1Aarkr5SGHssBT5nMi1K
- ywxgo0ArfLiZsfcvrzcDLid8zTsvAoM1JSbJG1V8LaCmSHqnC9Lx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI3MDA3MSBTYWx0ZWRfX8Mme+roP+Rxp
- +zgKgOvNlteA84gmwuD/lW+1WY7LBxmaSn/yGm2tQ8Y50D7StE4OFsr3bAgYy4kUZWPUASRIBfB
- A4NiQ3MHUl38giRJ6nfZNUNsJFE6Ecb9ln7SDWT6zN3BSMl885bGD8+qCaWL2GBVp/Q6MZNadXV
- jWG+mx5czTHSRAupAIYp7/U6gMo2bxjsRehitcENb8D/G22YDL6DFGDB2EEBNEwHkkYBo9bQcuh
- fUec+xv88LqopCxkR0cx4NJUDKaD4r9TsqbpsAsvt4xqb9sWl669Ii2m4KHeWPvXa27K0Z2w3qA
- onv33A2FuLScE06MBeL6JC/xoaEqq2Ux0QRlNgjIWzJN4oMw6sz3nGjLOVyLXe/k4zqEJJImJzq
- dRpDBgW8eXGP3W8TtMjmmSqmC0LRaWhYDwsKaghzZkAI+qYUQgt2A/3JUiPJPK6xNRgEp4/BNhH
- Kwx6/scQuI5usVTUKRg==
-X-Authority-Analysis: v=2.4 cv=PKSaavqC c=1 sm=1 tr=0 ts=6ae0e793 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=TdXXog4ttPu8yHJGq4T0ug==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=x7bEGLp0ZPQA:10 a=A0y_DWxS2BwA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Da8U98TiO7q1upZEImrf:22 a=Qm0qsxP7aFY2tkT6R2MF:22
- a=VwQbUJbxAAAA:8 a=pJWPUViXIfCbsMganCcA:9 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22 a=zY0JdQc1-4EAyPf5TuXT:22
-X-Proofpoint-GUID: 7fXxOzCurmSJi-ECo-wgLcESrvWSlpi9
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11948
- signatures=596817
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI3MDA3MiBTYWx0ZWRfXw9EWCUqw0xB8
+ 8IcCYojoNUdrgx4ylK/BdPckTVVf0MTWGScpxOOhKndeKt3Ppe7LrC9UTYwAx1afpWIP3GbujkG
+ B9SlbpcpFKWl1PFYvjLl+kdG0OAZWqaDZO082eXZ284KzcPVfdJQuKvjR6wAl9VXWv5w9srC+lq
+ WUywBfiw+Sr3/gNpi//iXwRYNbAzAEF1v+Yf2P2sC3MZgCfWag9bKwuYNw5Zvn4rYO4jmw3TKNs
+ +c0WEhOg7kW2GdpZBYAWwOnSEko5vWzjMjKD74o3B6HfIfPM1k2Uj8ZhdmQ0uKQBliJDtieFKQx
+ n9KtC8QVTcqtsb1oYyOccWJKaYZyz1oHZPjOGTA1HV0uUAwPn1SLzzbaCYahtkGEeOyE4Jmmwws
+ U/wf5v6ZPrfumJrmOH36s28O98rlgV4P+1T1WelXap0Re5VrnWrQgGRispKQyh/nb6CrTJCaNoz
+ tjWI8hUzdRdN17jJnPQ==
+X-Proofpoint-ORIG-GUID: oEUrkUgERl6Gfpg3kFWYig9KIEVH_cEO
+X-Proofpoint-GUID: oEUrkUgERl6Gfpg3kFWYig9KIEVH_cEO
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI3MDA3MiBTYWx0ZWRfX9i6/aKU0BX8T
+ yRpVF0tZBClBq7gW67cZ+xGP2r/CSBHI7oQ7IKhKHq5evCYBJ+AwSn1726nHpklcm0p6+9dpcdX
+ oMAboSbtwVdEiHmK7QvvhcfQDHFTsPs=
+X-Authority-Analysis: v=2.4 cv=JodkP84C c=1 sm=1 tr=0 ts=6ae0eb68 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=nz36NW0qrpeEijYxj/H2Ew==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=M51BFTxLslgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
+ a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=hD80L64hAAAA:8 a=njIK7alONr2zF-bboPIA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-10-27_05,2026-10-21_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 clxscore=1011 lowpriorityscore=10 adultscore=0
- bulkscore=10 impostorscore=10 spamscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610270071
+ reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610270072
 
+Hi,
 
-
-On 10/27/26 11:15 AM, David Hildenbrand (Arm) wrote:
-> While I have your attention: This variant works, a different proposal used
+On 21/10/26 15:43, Junjie Cao wrote:
+> Update my email address to junjie.cao@linux.dev for future correspondence.
+> I'll continue contributing and reviewing CXL patches.
 > 
-> list_del_init_careful()
+> Signed-off-by: Junjie Cao <junjie.cao@linux.dev>
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> instead. However, that is documented to require list_empty_careful().
-> 
-> Do you think it's worth looking into?
-> 
-> 
-> https://lore.kernel.org/all/20261026-thpsplit-careful-v1-1-d357d70fd6f4@columbia.edu/
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d9209f043f..2b78316436 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3370,7 +3370,7 @@ F: docs/devel/migration/CPR.rst
+>   
+>   Compute Express Link
+>   M: Jonathan Cameron <jic23@kernel.org>
+> -R: Junjie Cao <junjie.cao@intel.com>
 
-In this case the careful variant is fine without
-list_empty_careful() since it writes ->prev first
-and then ->next with smp_store_release(), and
-__list_lru_add() only writes to the entry after it
-sees -> next == entry so it can't race with the ->prev
-write anymore.
+Could you Ack from your other email?
 
-But your version also covers the PG_partially_mapped
-race your comment mentions, which mine doesn't, so
-it's the more complete fix anyway.
-
-Thanks,
-Mani
+> +R: Junjie Cao <junjie.cao@linux.dev>
+>   R: Anisa Su <anisa.su@samsung.com>
+>   L: linux-cxl@vger.kernel.org
+>   S: Supported
 
