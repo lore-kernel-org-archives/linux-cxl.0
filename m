@@ -1,54 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.135
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793094281;
-	b=hmU2YtegsrP6fTDK9DviWao0QeRanHfssS0Fae6fp0AVDrI7tqiEBByND6gR4w4zQN0d
-	 VxNzB5kZWnDKFQ5xfIU4hHCl3iZnKo572kP0HlpdbV5o0sNcP9Uh96t+lnKEgZOY+5IF9
-	 J43rUcqtXtxMYxdyslvuOvgJEEU1p414iUM3Rl2bU8IaCL7Y5EHoCnJuinXUXpGcwFeQF
-	 xJGup7j9Fm0xyG14uD5c1P5dZScOsqJaDLLnYIHh3psUZPeRuvC4ty5WbyfG0HVvQ0D/N
-	 FQorxoXhlo9rS3ApUHzZSlFaj5wZpJNHujwsLoC7XkPUzt3I5ByQrO28T2ZbL7yII4A==
+	t=1793094363;
+	b=seO4C7h0vWe2i4ZluDO7bP78u6KeTQa36N7l0BbmrW1ghrxgwATo3EcYKqZxYukR+9xZ
+	 z3K6S8VXcm71/lU8VyfJyUxOWh9wRAjmIzM7MYoPbnb1t71NDKqQLhdfP6byqlHhkEP8/
+	 /stFCys//k2EcJlQRpDztMcdaOo71fEpLUaLJ07Ba+voRH9X7OT8EOzksF26NH9N3ILxN
+	 s0cCI7JdNQF7lLYPhIhKBkDsjzpYFP61PqUDf338me4LfBc4a3P2GUKIoJnlVfc6xpVhI
+	 44dAvl2L8us9oQpDkfEiq3VrPevg3+MaC1/0epfmXnc8OAwCkKHCmbpN3oLcxfsXHDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793094281;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
-	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
-	 To:X-Mailer;
-	bh=+gg4vR3fmVnG5maxAfXCLUk2K7fJTSLOiXsuwQyP13c=;
-	b=UF4/WA3GZ2CzfuLUZ/2ruHTv9D+Gb0vJkhnyFrkSkIWu8mmPjkvV5/SOF8W3mrf/tbMI
-	 YbdhuSmaQYnXwlmqsjJub05x23F/fczsG//fTaMdj3c++k1TPlMwd3h2rwXtNh4L3OGms
-	 e3B/O4iZ9/+xu/lA7zxMkCJzfsu5TsWnCBRbodMu9zi8XgmA3QljyPS/IPXctZYv6bmX3
-	 Ue72O/K3UqsTPQvTDwEEwnL6su3mto8STQVivT3ivGsD7xRBCHlRiBKonWJ8R3N+hpTCr
-	 YNuje81+Sif2XOVsTLMb/QfN5lmsmRdmxTxym+YycDjGCvZjolkDPbLYumiQjGDCSnA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793094363;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=+T9dXJtHkajTuMxj33xJNknQApvv9iNPJoMhnaDiDss=;
+	b=QoI2LD2pMwmNPvbu0jBDi/Ol4nmez44Q+QbFqZSAPzePSyQX/pzM9bIG/PAfrv1Ebpem
+	 1QeTBAImfZ1k54vFOWEcmS+mLQyEggvTAhyrf/KTQyWWb/worBWz36URDgntrDHYA3VrJ
+	 u0Nax5iORzmkJvHcOh8J9n2OOOcwxutJ5tchju9h1oGgQnL7dqK8Gu6j7QDrJsKxnUA43
+	 HyKpppktjoocMTgVvY2iOWpY9ahJ+gqc/YOAvg4NUxMwSnmKjJFlU95+bT4N0qUMxEuen
+	 N8ef7S3HOrzipDxc/710Z/2PrH5U79xxTQDo71GIzqhaaNSvpXDzVBbE5A8BUszgnmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gNzLclvd;
-	arc=none smtp.remote-ip=95.215.58.135
-Received: from mta1.migadu.com (out-135.mta1.migadu.com [95.215.58.135])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RoZqLVAo;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A1B606A32D
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:44:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35A1B606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8AF606A325
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gNzLclvd
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=+gg4vR3fmVnG5maxAfXCLUk2K7fJTSLOiXsuwQyP13c=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793094279; v=1; x=1793699079;
- b=gNzLclvdu9m1gyvv0pSAmIjLpny2p0E4lbCIgdharCug0gruLgksOqUPZHjJjYvzCRrMZEqZ
- BhMKbq2Tt5gWy1KtiCZ7kwh9wWR1Po4osGjY8vUU/f1n8v2J0dH2J2mW12ceWGdmUh6+8ngwqDK
- /m6YU/MKq9hmnUlKgC7g+22I=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta12.migadu.com with ESMTPS id d06deef23f08d73b;
-	Tue, 27 Oct 2026 09:44:38 +0000
-X-Mizu-Trace-ID: d06deef23f08d73b
-X-Migadu-Flow: FLOW_OUT
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RoZqLVAo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A921F031EA
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 09:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793094362;
+	bh=+T9dXJtHkajTuMxj33xJNknQApvv9iNPJoMhnaDiDss=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=RoZqLVAoSWSAEmjBUgu9YU78srb1gwKkbdA8lS4bEtzWIHsPLUJiW2B2E75h9GBjH
+	 q66Fr+bjISn9zM6oSv1d64uWVfBv/+RLraP0X/pjl02RwSPrHcdBk3hvtQqxYdwuBc
+	 +zEMxmdaTBeJJUtCPTjAxwb+P/eDQ1F4FbYendLcPCdMKu1xX1w6DtspI/0b8kQV/7
+	 4y7lTNNgU0gz8paDIJCy/8loVjufVEc/415q6oRf+J19aXUnnCk3siDIYBURTGytRB
+	 Ltzmc8Mz+4aWfeVTkMDBHpcjxlVK5xE47kPG/UVvsiPikUMZydmcyo+aDG8nGcblVK
+	 hUgqTpADSTHGA==
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-93ead211f14so79153985a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 02:46:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzXnr7gwOHqiXPyaK2l9oGyCIwKvzqI7VFXF5LZdJTLt57ktDnbBYNRCY62Hyaxlw4OkmfOsQxtiPo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK3JvjayVqrQjCqoxFUn2ClO8gAP6nFst0JBatQYZzBRTPKUxIU
+	UZzTWM54SxDwMrDBXaxoN/h2dVArbLAV19qZrNCIIiaeHl7TWSi8y+sOC25CYpmdYWMa+/v99bJ
+	NtlSsTsiucjJYkocZOzWlEH3HAaB4p5w=
+X-Received: by 2002:a05:620a:1793:b0:93f:1fa0:9f27 with SMTP id
+ af79cd13be357-943f4ad5cb9mr379876485a.29.1793094361679; Tue, 27 Oct 2026
+ 02:46:01 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -57,103 +58,77 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [PATCH 22/46] mm/gup: check for overflow when converting nr_pages
- to bytes in GUP-fast
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
-Date: Tue, 27 Oct 2026 17:44:07 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>,
- Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- Kees Cook <kees@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>,
- Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>,
- Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>,
- Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>,
- John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>,
- Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>,
- Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>,
- Xu Xin <xu.xin@linux.dev>,
- Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>,
- Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>,
- Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>,
- Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org,
- linux-cxl@vger.kernel.org,
- stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DD785D08-2054-4DED-9EC2-A7464BAAAFE0@linux.dev>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-22-6f74bec9a5bb@kernel.org>
+MIME-Version: 1.0
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org>
+From: Barry Song <baohua@kernel.org>
+Date: Tue, 27 Oct 2026 17:45:49 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4xh2BXe_e+8oJS3ZbzoLi=7r7-+90SHPy1+OwcPNdGUxQ@mail.gmail.com>
+X-Gm-Features: AclHuK_Q0tGAJYZBBe8Ofc91w4jrj3Ei9mVOmmElYzvOyxGV38djS-jM8bZnzBM
+Message-ID: <CAGsJ_4xh2BXe_e+8oJS3ZbzoLi=7r7-+90SHPy1+OwcPNdGUxQ@mail.gmail.com>
+Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-X-Mailer: Apple Mail (2.3901.100.1.1.12)
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-> On Oct 27, 2026, at 07:17, David Hildenbrand (Arm) <david@kernel.org> =
-wrote:
->=20
-> The overflow check in gup_fast_fallback() only covers the addition to
-> start. The preceding nr_pages << PAGE_SHIFT can already have truncated
-> the length on 32bit.
->=20
-> Users such as RapidIO's rio_dma_transfer() can derive such page counts
-> from a 64-bit userspace length.
->=20
-> Let's just check_shl_overflow() to reject any such overflow with
-> -EOVERFLOW early.
->=20
-> Fixes: c28b1fc70390 ("mm/gup: reorganize =
-internal_get_user_pages_fast()")
+On Tue, Oct 27, 2026 at 7:18=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
+> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
+> mmap_lock. A concurrent brk() can leave the child with a stale mm->brk
+> and newer heap mappings, causing later brk() requests to fail.
+>
+> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can similarl=
+y
+> cause inconsistencies.
+>
+> As a simple and robust fix, grab the parent's mmap_lock earlier. This
+> way we don't need to update individual mm fields in dup_mmap() and
+> keep missing ones. Stop updating the 4 existing members (total_vm, data_v=
+m,
+> exec_vm, stack_vm), as that is now no longer required.
+>
+> Keep releasing the parent's mmap_lock in dup_mmap(), before
+> userfaultfd completion, to avoid moving the userfaultfd handling into the
+> caller. This should get cleaned up later.
+>
+> Move uprobe_start_dup_mmap() to preserve the lock ordering.
+>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
 
-Acked-by: Muchun Song <muchun.song@linux.dev>
-
-Thanks.
-
+Reviewed-by: Barry Song <baohua@kernel.org>
