@@ -1,80 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793131673;
-	b=gFtf2p0v6OKffIVKYcauBaPYm1ZoP1RHxT8jo7EDgK4nyP0bdqGItTF0Ew6iMV9JyO4s
-	 Sbk7C10HpeWtSH1DhWEdItJVjD9yGFd2YoMUR/Voju63WLUpEC84td7Dl+zaySq6nXji6
-	 1LOAVD3IvLHg9FZuSJKfUVJ8SWcSK2TieDOqV/t/6RFYm9NW08d2YrBAANU47K4LbJ1yz
-	 xvzSDTmZG/vljSWm24+i+ZHubL/LRvtH/LFP79F7Zyc+Z52FRO7DTbGep/RyUpIYZN4oM
-	 EAxjbVkQ4kosuUpfSdUXh6LM2bWmmykJAsNGkLL8RPrDIVc7roFcQWlMs2YKK3j9C8A==
+	t=1793132680;
+	b=3Q3rQN4XnJrDF5sVwgyVdM4Cd7KvpcJqrlH7PGI4Foh9ZXH8dz5T39Ypj/vjJlFCiooC
+	 9t9of/amIcqX3uZUTFJKebtC5m9/N4psD+t29tp4rRoA//mbYR4KjO6JlFHqQXK+5DCHB
+	 g/d6l3TbsVHEpi4YOZCjV4X9uYaqyU5Hbhi1lroRogluJaCQnTx3F/Ax75WZA6I3WvpVL
+	 mOjeDJq/W71YCKAkfna3FtuPTDx4a7XnG+Rk5yW0aAoFJQqn0nqqGIEQlx7B9fi6QXqmO
+	 56qGzK611lP5nEV4MT6r4+LVu96jOfYpEB3Nc+C86JX5CA3/HHBpkxsxAZlQOxoWCYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793131673;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=7GmJ1pURkrI2M4cFdKYZZ2Ya/fgG59abQ7Yb/9UtrSs=;
-	b=grGIG09/DaCOnGAMbqvOnb7mJxeDeUh1WMKGDdcL+O1OLQpNRGGKk5ZIrXUj8ZvziN9A
-	 PFIqVU5tVVKxYA8XksX9cB48OTwy4bA2ZXRZBxl1dX2hA30cpElbWi5dUK4HMEpl9O8k9
-	 E4XxcXNBu7CTZuTMbFABCYAOEt3lIlWDtxmN2d9EKqFuvwkDfVpc9LdYpOcynjbYnAOaR
-	 UPXWlxCIiPgDdbi5ADQjk2DTgTf91chF/fW8dp69NvWT+0LujgmDSS54OfuMXwCSpvVRW
-	 7wBmjluefI3OQikua9P8tlFeEiWcSg78b95gizNQMxrnfvI3KtG2kc4Sbign/74PE3A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793132680;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=pDrzL4ldTnZQIT/GAoRY8qgOJKT6dHcsc7F2wuy5Kmk=;
+	b=vjCiyRvpvTuhpQS04Rjuh6QHWSboP+9g2dnhRMLhsdIcviDcz4AN7eHGwCwR0/rYUusO
+	 RCYA2TLdMH3rQOp8Uf5b55BpnsPQNs0xyFwlvBN5qsWY8cL4lILIz1N+opWGq4Tim4LuN
+	 vBreJJ6Bvrm3NHrTNW8DgSl3JkJfyf/34ml6OH6I9m+7DtlK7suJB7Wn6RQYZIDvN7DFv
+	 hX9fC9lbB39Ea+VKDq2zWewoqcU1IlcMRcg8qom5yf6SnhypZ4xw/9ksp4R0OhTX8AWQc
+	 ZadXYFdogCa26aMPFRwXT0fqRn0P6jsEbk1i60OOTN2A4mIlDL0fN0xjcS6m45a1mKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="f/91R5wp";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FzDseVK9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA55606A31A;
-	Tue, 27 Oct 2026 20:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28FA606A331
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 20:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f/91R5wp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CF11F01825;
-	Tue, 27 Oct 2026 20:07:52 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FzDseVK9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D1B1F0135D
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 20:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793131673;
-	bh=7GmJ1pURkrI2M4cFdKYZZ2Ya/fgG59abQ7Yb/9UtrSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=f/91R5wprezD4KJkX2Jx7eMJXK4zGt7nCjRBu4zWgh8B2lozTbjxHynKIIEt9/m3f
-	 KmyPkE3l8j/1agfXZbGkBypO2fHwU0XhSfNULcLHjxjA52K9g29144aOXDupqH3gVj
-	 OT3eLlqbs0BTCVZVhirng7gxbOWPZ8yfKPk5IvDDERvJBacYahHrZc6ze7rglgM8w6
-	 imkuTFKf8yCjOjgLHdSu9sDjLJshaUz/ScopTOXRxeyoDso5ip229Mq5ygKszg6hf8
-	 HikkJKqYHXvk2V7qmSpaCnNcIPX5qKKye2psG5orwcoufcMa2jqaetc2Dy2c7kS6jc
-	 2bZ5YYFxsJP3g==
-Date: Tue, 27 Oct 2026 20:07:51 +0000
-From: Harry Yoo <harry@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
-	Rik van Riel <riel@surriel.com>, Alistair Popple <apopple@nvidia.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
-Message-ID: <auEDQlAfJZZzaape@thinkstation>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+	s=k20260515; t=1793132678;
+	bh=pDrzL4ldTnZQIT/GAoRY8qgOJKT6dHcsc7F2wuy5Kmk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=FzDseVK9Ysko91Rkuq+QlEaFb2aAO095E8N7yIyvvONeohFAvEsNuXL/t50nDF4QA
+	 dB5RS0qSQDyYKaQaQWzOLKiy8bN7OzmckzsSTJ0jnH1Qw/2x2YaVSN6GxSjIbbxDx8
+	 6YPifMscpbIXjfoVMUUATqDBadzckblpHh5eoBXFbwrjvTULXKrPFYypotdKpK58DR
+	 T3W5/x+BLgYO/uqSgOwbx0psff5ZkS+yXOS1sCDyFfPieQMn9gqqd1jDYw169JcsjM
+	 H4Tthi6yhRiV7WxwtKCJQJaKm6v8skUAG5+0ZkEJfKUFputM9fxnc7vdLjTMxWwDOl
+	 m4R1HwtIFSlZg==
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-93f269e335eso18238585a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 13:24:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzf3l+Puuwrem566V0MPr0wWXZoOJAaSq4v97NQ62W8uXFRbjXDNxfmNVcDJUgKZBolY67sFrNWRL4=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJdYYgc3e2jAckvcYGmKJ2syA2gx9Y2R+N92y6wglRv7FKcdGJe
+	RB5JeIjiCFDWrrvA26n7Ql8uHFSIvnzwg+KjlVx7/BgsmUOZ1nZOV267tQvnGQnSv2Be6EugmGx
+	9NT4f/2IaVp5WJ/tOGm47CzJ0s1y0j/Y=
+X-Received: by 2002:a05:620a:2a03:b0:93f:611d:a18e with SMTP id
+ af79cd13be357-94408cfc2b6mr7042985a.55.1793132677465; Tue, 27 Oct 2026
+ 13:24:37 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -84,33 +59,75 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org> <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
 In-Reply-To: <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org>
+From: Barry Song <baohua@kernel.org>
+Date: Wed, 28 Oct 2026 04:24:25 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4ytMqpLJ7wQe_gUz6Fo+BBK6ym-T6kjwgrHi7HNM0LiZQ@mail.gmail.com>
+X-Gm-Features: AclHuK-1Qeuu3Mu9aA1DkXbl4G55KJdsUzpEs7vpxIgxIJbJWhUve_AqW65AwOY
+Message-ID: <CAGsJ_4ytMqpLJ7wQe_gUz6Fo+BBK6ym-T6kjwgrHi7HNM0LiZQ@mail.gmail.com>
+Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
+ and PMD tables
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 27, 2026 at 12:17:21AM +0100, David Hildenbrand (Arm) wrote:
+On Tue, Oct 27, 2026 at 7:18=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
 > From: Josef Bacik <josef@toxicpanda.com>
-> 
+>
 > MGLRU passes stack copies of page-table entries in walk_pud_range() and
 > walk_pmd_range() when walking to the next level. These copies can become
 > stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a PTE
 > table concurrently.
-> 
+>
 > This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
 > support page table walks"). Likely, earlier locking masked the latent
 > bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
 > retract_page_tables() without mmap or vma lock") allowed concurrent
 > retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg locking
 > for MGLRU") dropped the walker's outer RCU protection.
-> 
+>
 > The fix is simple, so just fix the original commit so we don't have to
 > speculate. To fix it, pass the actual PMD/PUD pointers. This restores the
-> RCU-protected lookup and validation against the live PMD. Note that the PUD
-> handling is required as well to handle folded page tables correctly in all
+> RCU-protected lookup and validation against the live PMD. Note that the P=
+UD
+> handling is required as well to handle folded page tables correctly in al=
+l
 > cases.
-> 
+>
 > Fix generated by an LLM and sent by Josef Bacik in private.
-> 
+>
 > Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
@@ -119,9 +136,4 @@ On Tue, Oct 27, 2026 at 12:17:21AM +0100, David Hildenbrand (Arm) wrote:
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > ---
 
-Looks good to me,
-Reviewed-by: Harry Yoo (Meta) <harry@kernel.org>
-
--- 
-Cheers,
-Harry / Hyeonggon
+Reviewed-by: Barry Song <baohua@kernel.org>
