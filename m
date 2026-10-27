@@ -1,82 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793078887;
-	b=qGzzGvohiQw8m8vz8DSxag3ZYaCEt/9GfDaJHsQanpHn+sCs7ahbjFJAa+Xr83CQPNnE
-	 DivB7NMPpOk/XyaQgDV6A2jOD3WI1eluw4+G8OCAeyofK1dZwfVpeF0V27ZZKvTabgvol
-	 ab0lVPk0dzo5KaV9i14OkLjlcUUKplPbXg83LxIENtpRGn58kaYmqxShPgWcbZpv1e23r
-	 Xb4waOoce1aTbjLx37npZnETbxLa432EzKx43lKekbnuir0CKCRf5ZOKLluncn3IfR3ZA
-	 xsXhQOKLqeLJPoRNulfirTjROK3Xms4UTwsASWg+6nwg0mB8IO43WDPLRYDcbIVbQnw==
+	t=1793078895;
+	b=QkAHhqR0XdCTfViXlYCYpAmSmYO0fLlS2DVSJ2bTzG5JWa6v7kENqqTgPX1HxDeN5rJE
+	 mvCuvQIzz/lGqxid62/iSBS48s0FplaQxFCtfLD4zBR6Sr4HKbQtMbfQfIARTrlm7APxt
+	 8c0mhEtNdp0rYJJYu/Ouwi9JAOzYmXPmcjqMEb59r8tAjXCxRJ1pEwUSh7b1JsC4eEARq
+	 LdnrUs7SUYIlCSkw6O6bobO2jgiwbe1UzZtavGWdLVltRRtcgjbPqq/s3qCmKv0Q+uqjL
+	 mYzUEOczbm6h4F3JFU/t//Kg9NtY/7H49LBF/+RK/CoBxaA6n0HzONt1dPmCO4XuIEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793078887;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793078895;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=CxrG9aWJ5Sg0J8a+Po4yS4C8JvicGpcPP85E8KyGvy4=;
-	b=kmgRUiP3hRisjTSjTT9+jN0YcsCxUMFVr7iDn2NWAPIYXMg5wSoBCbaSHOjVsr8Zw8mP
-	 MpyWjv1yUQFs6xPs85HQiKZL3CVlVuKeobUpfhDfd/79BKP54tJbBRKQIttStJwPpWzZr
-	 xGlVpDXKr+CF23vZxFUAvdwagvUy3bavA+bOLKel3gS05GQ2RQ/W4okGZ69ZVgrBSHCmQ
-	 Gri1XEfIoQ4aXBJf6qzE0ususXJ9LtiiTipLxY70+bfFPITzSTe0jYMITJ9QXuZi60XZX
-	 XkR1C201hQP5Cz8AwrMLvQDDrZWAjW+aZZdMQeV6y2z74owNZ+4OTjx0Qt4tkJvk0sA==
+	bh=2qxG0IV7oHSsxVohiC35AuoAmHVp7nCjFSNAcc89WrE=;
+	b=LJ2PMI0yZFEZ+tpJWAB8wo95gHWMEox+vUg/7+BLZQV4WWqEnZKRYgf+wJX44Fe0v4d5
+	 rDIKY3iSikxZfTtWbaM+2nF15k2marb/8Ye5AABFIhWOtgigbkdH2cEZFg6z0V+PHgzjW
+	 bLKR6P0z1hCjgG9IyUTP4U2pw545NRp9xqWtD9Rj77fTDOm7IDVpRwNNc7IJQh+Uxglpx
+	 06MHznQrxZbi+nrGNJpfAYp4uvX6XNpFh2BYuF/uUg0/Cr+NM1dFFwCtmiQTidHM2DLa6
+	 EhXHG7OcPLe3tEqY/Bz6eZrCgWVBf85rTj5GfAbIyjZ5HctS0avQ5zyGqda9bwv6jyQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eZ7kj3+B;
-	arc=none smtp.remote-ip=209.85.214.169
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rSm8yHgr;
+	arc=none smtp.remote-ip=209.85.214.170
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F94606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 05:28:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0F94606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FCF606A321
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 05:28:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33FCF606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eZ7kj3+B
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2e977109392so21768835ad.0
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 22:28:06 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rSm8yHgr
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2e9d1114320so28473305ad.3
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 22:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793078886; x=1793683686; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1793078895; x=1793683695; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CxrG9aWJ5Sg0J8a+Po4yS4C8JvicGpcPP85E8KyGvy4=;
-        b=eZ7kj3+BQoKSpfg23gU0JlKQYypVAfO8biw59MjnCeVfnkPd3xb1Jq0lUtlTgTtzcP
-         2CvpwksroXdsfSvQsOyHWeitZXXjbHh6iPdxEaxeyJhHnjPuVPGeuBB413eDgIR8Ew9T
-         hqzR3jq3dkoJ37Ygk1zCIj/EGzAo/ObIfcIe1qQ+QfjCtL1Mcd0hN0xbNGCXnp1onvtu
-         pDdDNplGWUmkslUVajA/e/sBmy9sT4NKEVjDaAgq4NORE6mx5AIplKdJjwr+wfmy9qRI
-         HxHBO+S612zcQ1BhleTMvQJGk/RDz4EhoZsmflMa8iKYieU+BkDmLaCzcIiVx1gtPe1B
-         gnww==
+        bh=2qxG0IV7oHSsxVohiC35AuoAmHVp7nCjFSNAcc89WrE=;
+        b=rSm8yHgr9FPHE0kcDZAAT55JxUi+PjbKN5XUkWRx7KHlUqD8IBh0P3P0wqxdF1jIgF
+         h3B6eLFBq+vwH2k1Z91Xyw8PFuvnB/lL2ElNBSHDq6g3MFm26IXYtM4U+tE9NlDA/iFN
+         VrroccmH5dA9VAxbfXN4z2Y2QR0rMypBdfjEyTTriYvzAW+LPFQi9zaluQAqBEbggRI3
+         hl/W9MGDmfoMu1xAJMkkNMelPbQf+n89zku8BQF6YVqN86nfSPNZYWNeePV9S5RZxMR4
+         zeKqb27hRYuxFs0dfNvs9wkFK+8Ba3WHg2MMfdWlbCcM34HnaSAbND6mBRVEBBXOgZ9S
+         nMrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793078886; x=1793683686;
+        d=1e100.net; s=20260707; t=1793078895; x=1793683695;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CxrG9aWJ5Sg0J8a+Po4yS4C8JvicGpcPP85E8KyGvy4=;
-        b=tw2zvE8dzNhS8j82G7DSSGwZS+os5jhkOp+nVzx8zYEApAXbaBPqMh+qyTCEXv2/ze
-         cCikTYXk5bWYntrKxv1nMMNpOlJKLUtTTg8XBlBRoZDCYPHzZp4YsRFc+xz5h8uT4zxG
-         XANhrQ3dcNzZ3wBZevFNIX4tIXhn/yMvpnu7S++kynmsygz2oqCw2ofv9ABXeiUO7Quj
-         rKvpR4m6ldeSABXG6lYgAl9WM/kSYP9pOe+zi61qLszFWKRqCl+gSM82Q20OPXrs0gLo
-         LfnXRFgt60I9mtk3hkJzkEc7XyVBDBUsn8KAXrSx0ZQDejUnDZc0/kH4lIQ+JRcTt8+x
-         y4iw==
-X-Forwarded-Encrypted: i=1; AKwUvBwfUEh/HvITPXEecBpVxy+LWWh5EBu0zmRTh+z34+cIPOygLMAQNDa6GEP29XEBJSFIvvSXQ9+hYPg=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLWpv/2bTmyX9DHe7HoLxpOLje2q0Ls5zADFVGq0/zrUzdunM6c
-	tRroZqUbof+tCnaiCJFNzWBOIYc0M6IOXhfmBAFyhMA1Iv3HnX/jf8zp
-X-Gm-Gg: AYBFou0eQ0r6zcxriV3MpucNG/jp5BAFe6xiXP/1d45azI5CVd0+tAtI2rwu7Kt8UNH
-	1nR9OpQj9raegVfFtPmI4vHxZopYDHJpGXtP7zFuxGyGVWGnD37iaX9kk7RQFiaxKWZZmLAGcF4
-	SkzcmVRjYzxJMvJ0N/3sSnEtkLiFAsauNiebN3hpRTCi6/O5YCIJFA4LhNGk92mkhFCnYTksJEg
-	Dr+ZRsbimwOUwnSO99C7x4PnvOgieudD+gr/cp721s/dtHzj6TtMtL8HO0muyM06AoYh2u8qVyy
-	qFk48AUEttkgoQp9tKjAzxpYB9HowjRVn07QCcaosSgvK6yOeBndX+qSdmToPu6VcwxtJUwu/FR
-	73lStg4+HoLQQTw9lK2O0Qgq0Ge8Vo7DVuocNCbe/9sQtGrNsG4mDrGk58SQyEdmDtaW4I5KJfs
-	GpPAlssU+AOfXGsG4oJ65VfX8Gp/eIuFCoPtiGiEVe7kIuJGdDt0yPc7+gkOcox4QiraE6k+PL0
-	5KxEcuhUbRUr/Ejr6lsH9NqW2UNzMNkvCI3QmUjOnIZMvNIAxUy2VES0BD3cWzGnbSjC5FNVg==
-X-Received: by 2002:a17:902:e74b:b0:2e4:b37a:d577 with SMTP id d9443c01a7336-2ea9c819496mr71523295ad.43.1793078886044;
-        Mon, 26 Oct 2026 22:28:06 -0700 (PDT)
+        bh=2qxG0IV7oHSsxVohiC35AuoAmHVp7nCjFSNAcc89WrE=;
+        b=seYMhI6DOMOvd1RFscf5HzdaXgD6pX2YApNALbvbyq1/SgV6W7MmqijPux9IghMm/j
+         0uFtWERjINzq9gDd0M44LKqxqV215ZnVwjHWVeAxjXU4GDK5m2gaBnvX/iUv7oPXGfQQ
+         O/BIUV60IRneqQOqRVe94X8r5g0p6UFApBL36nSWmH8iCgKQ9Fb9zMNdxSibS6ECoMt7
+         b5bJ7O3TIo7PNtd3XlIW0MJMCRsHmSMBHJHRJBYwgITmkHmkUKAVJBizp/NYjFoiEd/t
+         6O6RE8T2IwqS9NMMKeLajg0TQsU64iCQq4WKtQum8TKkkgdUvlk6I72I9oR8/ogWWGqg
+         icaA==
+X-Forwarded-Encrypted: i=1; AKwUvBzp8n80vaBmaKb00uKK/7ujx2aViPHOPmYUKfek3x6Abb2ssJZb5IncHUroifvpZnkaJYQNXTTUnoo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIRdrHimH8GKBy0wNHaV5PARKWrILqVyfygMH7PmAEQ/Wj4J0TR
+	kP1U0eQd1CTEDVnouHIVhiHJ2yX1UpMmfLfq8CjkVclAEYlVJNIWSz0t
+X-Gm-Gg: AYBFou1DSDZH5zb/tc8tTLQGDQmyaxBkow49WnyYU6CDQzibNkPNqZKZ6YPOFKhXyYg
+	m82PzCCHMqb6yeLz0jt33i0wI2UYaOEyO7JkN+eKkT+F7Y9fswksXhnri/8DP4JnMAZy94UM/xT
+	TS80dBtfKWG2R6WeZoMHWRk/+TlRTEm3hhzqu9LgVhJPdwn8sGxmahvJSOxj8cjuQLkvnDhgKA9
+	VuSnCiGII/zSXY6CX6Aq+wm7QQQJbW7lmCDEJCKchg0UhUUVSn2VmdRVw/4DuzB58JI5a9eBqWW
+	c2lVnUpdJhVF1dOEK5nE0Oi7ZNVjYExGeodOPh5pnn1ld2k/2BWuBjXOAqMMDODBL16vlz4fae0
+	5lmWApZNSUoKe6bn8q8NnetTYVdI3u508mRmngXSq84IUC4sPREneR2ND5CdSww7QtZzKDVPcqo
+	FAm/vFhZWhqX2HEFfcYDEkjUeq4h26wswRqz3S66ejJq0ueM66+lBA4nKCT+/nIqRnov8iFOpLU
+	E0XFxhhYTmpLuBTfXbq7VO2NVGGTqZTLhtgnkHcZqEVdsJzhCdVDpHSIlEJCR9mFGr/9Hxugg==
+X-Received: by 2002:a17:902:f609:b0:2cc:6018:f030 with SMTP id d9443c01a7336-2ea9c62160fmr76192135ad.14.1793078894499;
+        Mon, 26 Oct 2026 22:28:14 -0700 (PDT)
 Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6c9757bsm3307715ad.58.2026.10.26.22.27.58
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6c9757bsm3307715ad.58.2026.10.26.22.28.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 22:28:05 -0700 (PDT)
+        Mon, 26 Oct 2026 22:28:13 -0700 (PDT)
 From: alistair23@gmail.com
 X-Google-Original-From: alistair.francis@wdc.com
 To: akpm@linux-foundation.org,
@@ -100,11 +100,10 @@ Cc: ojeda@kernel.org,
 	gary@garyguo.net,
 	tmgross@umich.edu,
 	alex.gaynor@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v5 18/23] lib: rspdm: Support SPDM get_digests
-Date: Tue, 27 Oct 2026 15:25:31 +1000
-Message-ID: <20261027052536.1722081-19-alistair.francis@wdc.com>
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v5 19/23] lib: rspdm: Support SPDM get_certificate
+Date: Tue, 27 Oct 2026 15:25:32 +1000
+Message-ID: <20261027052536.1722081-20-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261027052536.1722081-1-alistair.francis@wdc.com>
 References: <20261027052536.1722081-1-alistair.francis@wdc.com>
@@ -121,227 +120,296 @@ Content-Transfer-Encoding: 8bit
 
 From: Alistair Francis <alistair.francis@wdc.com>
 
-Support the GET_DIGESTS SPDM command.
+Support the GET_CERTIFICATE SPDM command.
+
+The kernel will send a GET_CERTIFICATE request to the the responder and
+then iterate over all of the certificates returned.
+
+Certificate validation happens in the next commit.
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 ---
- lib/rspdm/consts.rs    |   5 +-
- lib/rspdm/lib.rs       |   4 ++
- lib/rspdm/state.rs     |  61 +++++++++++++++++++++++-
- lib/rspdm/validator.rs | 102 ++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 169 insertions(+), 3 deletions(-)
+ lib/rspdm/consts.rs    |   2 +
+ lib/rspdm/lib.rs       |  15 ++++
+ lib/rspdm/state.rs     | 100 ++++++++++++++++++++++++-
+ lib/rspdm/validator.rs | 162 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 278 insertions(+), 1 deletion(-)
 
 diff --git a/lib/rspdm/consts.rs b/lib/rspdm/consts.rs
-index 7a75bd1e4649c..68f347a046859 100644
+index 68f347a046859..964ae2a21c6da 100644
 --- a/lib/rspdm/consts.rs
 +++ b/lib/rspdm/consts.rs
-@@ -18,10 +18,11 @@
- pub(crate) const SPDM_VER_10: u8 = 0x10;
- pub(crate) const SPDM_VER_11: u8 = 0x11;
- pub(crate) const SPDM_VER_12: u8 = 0x12;
--#[expect(dead_code)]
- pub(crate) const SPDM_VER_13: u8 = 0x13;
- pub(crate) const SPDM_VER_14: u8 = 0x14;
+@@ -75,6 +75,8 @@
  
-+pub(crate) const SPDM_SLOTS: usize = 8;
-+
- pub(crate) const SPDM_MIN_VER: u8 = SPDM_VER_10;
- pub(crate) const SPDM_MAX_VER: u8 = SPDM_VER_14;
+ pub(crate) const SPDM_GET_DIGESTS: u8 = 0x81;
  
-@@ -72,6 +73,8 @@
- pub(crate) const SPDM_HASH_SHA_384: u32 = bit_u32(1);
- pub(crate) const SPDM_HASH_SHA_512: u32 = bit_u32(2);
- 
-+pub(crate) const SPDM_GET_DIGESTS: u8 = 0x81;
++pub(crate) const SPDM_GET_CERTIFICATE: u8 = 0x82;
 +
  // If the crypto support isn't enabled don't offer the algorithms
  // to the responder
  #[cfg(CONFIG_CRYPTO_RSA)]
 diff --git a/lib/rspdm/lib.rs b/lib/rspdm/lib.rs
-index 4c219b32098ab..ee7e9be5b41c1 100644
+index ee7e9be5b41c1..6b0be0a0303fa 100644
 --- a/lib/rspdm/lib.rs
 +++ b/lib/rspdm/lib.rs
-@@ -270,6 +270,10 @@ pub extern "C" fn spdm_authenticate(state_ptr: *mut spdm_state) -> c_int {
+@@ -274,6 +274,21 @@ pub extern "C" fn spdm_authenticate(state_ptr: *mut spdm_state) -> c_int {
          return e.to_errno() as c_int;
      }
  
-+    if let Err(e) = state.get_digests() {
-+        return e.to_errno() as c_int;
++    if state.provisioned_slots == 0 {
++        return -(bindings::EIO as c_int);
++    }
++
++    let mut provisioned_slots = state.provisioned_slots;
++    while (provisioned_slots as usize) > 0 {
++        let slot = provisioned_slots.trailing_zeros() as u8;
++
++        if let Err(e) = state.get_certificate(slot) {
++            return e.to_errno() as c_int;
++        }
++
++        provisioned_slots &= !(1 << slot);
 +    }
 +
      -(EPROTONOSUPPORT as i32)
  }
  
 diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-index 79819c492b07b..73c39847d7335 100644
+index 73c39847d7335..7799d4ac70c3f 100644
 --- a/lib/rspdm/state.rs
 +++ b/lib/rspdm/state.rs
-@@ -41,13 +41,17 @@
-     SPDM_OPAQUE_DATA_FMT_GENERAL,
-     SPDM_REQ,
-     SPDM_RSP_MIN_CAPS,
-+    SPDM_SLOTS,
-     SPDM_VER_10,
-     SPDM_VER_11,
--    SPDM_VER_12, //
-+    SPDM_VER_12,
-+    SPDM_VER_13, //
- };
+@@ -50,16 +50,21 @@
  use crate::validator::{
      GetCapabilitiesReq,
      GetCapabilitiesRsp,
-+    GetDigestsReq,
-+    GetDigestsRsp,
++    GetCertificateReq,
++    GetCertificateRsp,
+     GetDigestsReq,
+     GetDigestsRsp,
      GetVersionReq,
      GetVersionRsp,
      NegotiateAlgsReq,
-@@ -119,6 +123,12 @@ pub(crate) struct SpdmState<'a, T: Transport> {
-     /// Hash algorithm for measurement blocks. Selected by responder during
-     /// NEGOTIATE_ALGORITHMS exchange.
-     pub(crate) meas_hash_alg: u32,
-+    /// Bitmask of responder's supported certificate slots. Received during
-+    /// GET_DIGESTS exchange (from SPDM 1.3).
-+    pub(crate) supported_slots: u8,
-+    /// Bitmask of responder's provisioned certificate slots. Received during
-+    /// GET_DIGESTS exchange.
-+    pub(crate) provisioned_slots: u8,
+     NegotiateAlgsRsp,
++    SpdmCertChain,
+     SpdmErrorRsp,
+     SpdmHeader,
+     GET_CAPABILITIES_RSP_SZ,
+-    NEGOTIATE_ALGS_RSP_SZ, //
++    GET_CERTIFICATE_RSP_HDR_SZ,
++    NEGOTIATE_ALGS_RSP_SZ,
++    SPDM_CERT_CHAIN_HDR_SZ, //
+ };
  
-     /// Human-readable name of `base_asym_alg`'s signature encoding. Passed
-     /// to the crypto subsystem when calling `verify_signature()`.
-@@ -129,6 +139,10 @@ pub(crate) struct SpdmState<'a, T: Transport> {
- 
-     /// Hash transformation for `base_hash_alg` computation.
-     crypto: Option<Shash>,
-+
-+    /// Certificate chain in each of the 8 slots. Empty `KVec` if a slot is
-+    /// not populated. Prefixed by the 4 + H header per SPDM 1.0.0 table 15.
-+    pub(crate) certs: [KVec<u8>; SPDM_SLOTS],
- }
- 
- impl<'a, T: Transport> SpdmState<'a, T> {
-@@ -148,12 +162,23 @@ pub(crate) fn new(
-             base_asym_alg: 0,
-             base_hash_alg: 0,
-             meas_hash_alg: 0,
-+            supported_slots: 0,
-+            provisioned_slots: 0,
-             base_asym_enc: c"",
-             sig_len: 0,
-             crypto: None,
-+            certs: [const { KVec::new() }; SPDM_SLOTS],
-         }
-     }
- 
-+    /// Hash length of `base_hash_alg` (in bytes). H in SPDM specification.
-+    pub(crate) fn hash_len(&self) -> usize {
-+        self.crypto
-+            .as_ref()
-+            .map(|hash| hash.hash_len())
-+            .unwrap_or(0)
-+    }
-+
-     /// Start a SPDM exchange
-     ///
-     /// The data in `request_buf` is sent to the device and the response
-@@ -394,4 +419,38 @@ pub(crate) fn negotiate_algs(&mut self) -> Result<(), Error> {
+ /// Transport for exchanging SPDM messages with a responder device.
+@@ -453,4 +458,97 @@ pub(crate) fn get_digests(&mut self) -> Result<(), Error> {
  
          Ok(())
      }
 +
-+    pub(crate) fn get_digests(&mut self) -> Result<(), Error> {
-+        let mut request = GetDigestsReq::default();
++    pub(crate) fn get_certificate(&mut self, slot: u8) -> Result<(), Error> {
++        let mut request = GetCertificateReq::default();
 +        request.header.version = self.version;
++        request.header.param1 = slot;
 +
-+        let rsp_sz = core::mem::size_of::<SpdmHeader>() + SPDM_SLOTS * self.hash_len();
++        let rsp_sz = (GET_CERTIFICATE_RSP_HDR_SZ as u32 + u32::from(u16::MAX))
++            .min(self.transport_sz) as usize;
 +
-+        let mut request_buf = request.to_bytes()?;
++        request.offset = 0;
++        request.length = (rsp_sz - GET_CERTIFICATE_RSP_HDR_SZ) as u16;
 +
 +        let response_vec: KVec<u8> = KVec::from_elem(0u8, rsp_sz, GFP_KERNEL)?;
 +
-+        let response: GetDigestsRsp = self
++        let mut request_buf = request.to_bytes()?;
++        let response: GetCertificateRsp = self
 +            .spdm_exchange(request_buf.as_mut_slice(), response_vec)?
 +            .validate(&*self)?;
 +
-+        let mut deprovisioned_slots = self.provisioned_slots & !response.header.param2;
-+        while (deprovisioned_slots.trailing_zeros() as usize) < SPDM_SLOTS {
-+            let slot = deprovisioned_slots.trailing_zeros() as usize;
-+            self.certs[slot].clear();
-+            deprovisioned_slots &= !(1 << slot);
++        if (response.header.param1 & 0xF) != slot {
++            pr_err!("Invalid slot response\n");
++            return Err(EPROTO);
 +        }
 +
-+        self.provisioned_slots = response.header.param2;
++        let portion_length = response.portion_length;
++        let rem_length = response.remainder_length;
 +
-+        let supported_slots = if self.version >= SPDM_VER_13 {
-+            response.header.param1
-+        } else {
-+            0xFF
-+        };
++        let total_cert_len = portion_length as usize + rem_length as usize;
 +
-+        self.supported_slots = supported_slots;
++        let mut certs_buf: KVec<u8> = KVec::new();
++
++        certs_buf.extend_from_slice(&response.cert_chain, GFP_KERNEL)?;
++
++        let mut offset: u16 = portion_length;
++        let mut remainder_length = rem_length as usize;
++
++        while remainder_length > 0 {
++            request.offset = offset;
++            request.length = (remainder_length.min(rsp_sz - GET_CERTIFICATE_RSP_HDR_SZ)) as u16;
++
++            let mut request_buf = request.to_bytes()?;
++
++            let response_vec: KVec<u8> = KVec::from_elem(
++                0u8,
++                request.length as usize + GET_CERTIFICATE_RSP_HDR_SZ,
++                GFP_KERNEL,
++            )?;
++
++            let response: GetCertificateRsp = self
++                .spdm_exchange(request_buf.as_mut_slice(), response_vec)?
++                .validate(&*self)?;
++
++            let portion_length = response.portion_length;
++            let rem_length = response.remainder_length;
++
++            if portion_length == 0
++                || (response.header.param1 & 0xF) != slot
++                || offset as usize + portion_length as usize + rem_length as usize != total_cert_len
++            {
++                pr_err!("Malformed certificate response\n");
++                return Err(EPROTO);
++            }
++
++            certs_buf.extend_from_slice(&response.cert_chain, GFP_KERNEL)?;
++            let (val, overflow) = offset.overflowing_add(portion_length);
++            if overflow {
++                pr_err!("portion_length  response overflowed\n");
++                return Err(EPROTO);
++            }
++            offset = val;
++            remainder_length = rem_length as usize;
++        }
++
++        let header_length = SPDM_CERT_CHAIN_HDR_SZ + self.hash_len();
++
++        if total_cert_len < header_length || total_cert_len != certs_buf.len() {
++            pr_err!("Malformed certificate chain in slot {slot}\n");
++            return Err(EPROTO);
++        }
++
++        let certs: SpdmCertChain = Untrusted::new(certs_buf.as_slice()).validate(&*self)?;
++        let cert_chain_length = certs.length as usize;
++
++        if total_cert_len != cert_chain_length {
++            pr_err!("Malformed certificate chain in slot {slot}\n");
++            return Err(EPROTO);
++        }
++
++        self.certs[slot as usize].clear();
++        self.certs[slot as usize].extend_from_slice(&certs_buf, GFP_KERNEL)?;
 +
 +        Ok(())
 +    }
  }
 diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
-index 9afcb3f8bcb6c..f7ad46aef1b88 100644
+index f7ad46aef1b88..469a5722368f2 100644
 --- a/lib/rspdm/validator.rs
 +++ b/lib/rspdm/validator.rs
 @@ -12,6 +12,7 @@
      SPDM_CAP_SUPPORTED_ALGORITHMS,
      SPDM_CTEXPONENT,
      SPDM_GET_CAPABILITIES,
-+    SPDM_GET_DIGESTS,
++    SPDM_GET_CERTIFICATE,
+     SPDM_GET_DIGESTS,
      SPDM_GET_VERSION,
      SPDM_HASH_ALGOS,
-     SPDM_MEAS_SPEC_DMTF,
-@@ -19,9 +20,11 @@
-     SPDM_MIN_VER,
-     SPDM_NEGOTIATE_ALGS,
-     SPDM_REQ_CAPS,
-+    SPDM_SLOTS,
-     SPDM_VER_10,
-     SPDM_VER_11,
--    SPDM_VER_12, //
-+    SPDM_VER_12,
-+    SPDM_VER_13, //
- };
- use crate::{
-     SpdmErrorCode,
-@@ -719,3 +722,100 @@ fn validate(unvalidated: KVec<u8>, context: &'c SpdmState<'c, T>) -> Result<Self
+@@ -819,3 +820,164 @@ fn validate(unvalidated: KVec<u8>, context: &'c SpdmState<'c, T>) -> Result<Self
          })
      }
  }
 +
-+pub(crate) struct GetDigestsReq {
++pub(crate) struct GetCertificateReq {
 +    pub(crate) header: SpdmHeader,
++
++    pub(crate) offset: u16,
++    pub(crate) length: u16,
 +}
 +
-+impl GetDigestsReq {
++impl GetCertificateReq {
 +    pub(crate) fn to_bytes(&self) -> Result<KVec<u8>> {
-+        self.header.to_bytes()
++        let mut out = self.header.to_bytes()?;
++
++        out.extend_from_slice(&self.offset.to_le_bytes(), GFP_KERNEL)?;
++        out.extend_from_slice(&self.length.to_le_bytes(), GFP_KERNEL)?;
++
++        Ok(out)
 +    }
 +}
 +
-+impl Default for GetDigestsReq {
++impl Default for GetCertificateReq {
 +    fn default() -> Self {
-+        GetDigestsReq {
-+            header: SpdmHeader::new(SPDM_GET_DIGESTS),
++        GetCertificateReq {
++            header: SpdmHeader::new(SPDM_GET_CERTIFICATE),
++
++            offset: 0,
++            length: 0,
 +        }
 +    }
 +}
 +
++pub(crate) const GET_CERTIFICATE_RSP_HDR_SZ: usize = mem::size_of::<SpdmHeader>() + 4;
++
++pub(crate) const SPDM_CERT_CHAIN_HDR_SZ: usize = mem::size_of::<u16>() + 2;
++
++/// A parsed SPDM certificate chain
 +#[expect(dead_code)]
-+pub(crate) struct GetDigestsRsp {
++pub(crate) struct SpdmCertChain {
++    // `length` is a u16 (with 2 bytes reserved) for SPDM versions 1.3
++    // and lower and u32 for 1.4. We don't currently support `LargeOffset`
++    // and `LargeLength`, so let's pretend this is always a u16
++    pub(crate) length: u16,
++
++    pub(crate) root_hash: KVec<u8>,
++
++    pub(crate) certificates: KVec<u8>,
++}
++
++impl<'a, 'c, T: Transport> Validate<'c, Untrusted<&'a [u8]>, &'c SpdmState<'c, T>>
++    for SpdmCertChain
++{
++    type Err = Error;
++
++    fn validate(unvalidated: &[u8], context: &'c SpdmState<'c, T>) -> Result<Self, Self::Err> {
++        let length = u16::from_le_bytes(
++            unvalidated
++                .get(0..2)
++                .ok_or(EPROTO)?
++                .try_into()
++                .map_err(|_| EPROTO)?,
++        );
++
++        let root_hash_end = SPDM_CERT_CHAIN_HDR_SZ + context.hash_len();
++        let mut root_hash = KVec::new();
++        root_hash.extend_from_slice(
++            unvalidated
++                .get(SPDM_CERT_CHAIN_HDR_SZ..root_hash_end)
++                .ok_or(EPROTO)?,
++            GFP_KERNEL,
++        )?;
++
++        let cert_chain_end = length as usize;
++        let mut certificates = KVec::new();
++        certificates.extend_from_slice(
++            unvalidated
++                .get(root_hash_end..cert_chain_end)
++                .ok_or(EPROTO)?,
++            GFP_KERNEL,
++        )?;
++
++        Ok(SpdmCertChain {
++            length,
++            root_hash,
++            certificates,
++        })
++    }
++}
++
++pub(crate) struct GetCertificateRsp {
 +    pub(crate) header: SpdmHeader,
 +
-+    pub(crate) digests: [KVec<u8>; SPDM_SLOTS],
++    pub(crate) portion_length: u16,
++    pub(crate) remainder_length: u16,
 +
-+    // KeyPairIDs, added in 1.3
++    pub(crate) cert_chain: KVec<u8>,
 +
-+    // CertificateInfo, added in 1.3
-+
-+    // KeyUsageMask, added in 1.3
 +    /// The actual length of the SPDM message. `raw_bytes` might be longer
 +    /// as it includes transport specific padding.
 +    length: usize,
@@ -350,21 +418,23 @@ index 9afcb3f8bcb6c..f7ad46aef1b88 100644
 +    raw_bytes: KVec<u8>,
 +}
 +
-+impl GetDigestsRsp {
++impl GetCertificateRsp {
 +    #[expect(dead_code)]
 +    pub(crate) fn as_bytes(&self) -> Result<&[u8], Error> {
 +        self.raw_bytes.get(..self.length).ok_or(EPROTO)
 +    }
 +}
 +
-+impl<'c, T: Transport> Validate<'c, Untrusted<KVec<u8>>, &'c SpdmState<'c, T>> for GetDigestsRsp {
++impl<'c, T: Transport> Validate<'c, Untrusted<KVec<u8>>, &'c SpdmState<'c, T>>
++    for GetCertificateRsp
++{
 +    type Err = Error;
 +
 +    fn validate(unvalidated: KVec<u8>, context: &'c SpdmState<'c, T>) -> Result<Self, Self::Err> {
 +        let header: SpdmHeader =
 +            Untrusted::new(unvalidated.get(0..4).ok_or(EPROTO)?).validate(context)?;
 +
-+        if header.code != SPDM_GET_DIGESTS - 0x80 {
++        if header.code != SPDM_GET_CERTIFICATE - 0x80 {
 +            return Err(EPROTO);
 +        }
 +
@@ -373,38 +443,35 @@ index 9afcb3f8bcb6c..f7ad46aef1b88 100644
 +            return Err(EPROTO);
 +        }
 +
-+        if header.param2 == 0 {
-+            pr_err!("No certificates provisioned\n");
-+            return Err(EPROTO);
-+        }
++        let portion_length = u16::from_le_bytes(
++            unvalidated
++                .get(4..6)
++                .ok_or(EPROTO)?
++                .try_into()
++                .map_err(|_| EPROTO)?,
++        );
++        let remainder_length = u16::from_le_bytes(
++            unvalidated
++                .get(6..8)
++                .ok_or(EPROTO)?
++                .try_into()
++                .map_err(|_| EPROTO)?,
++        );
 +
-+        let mut digests: [KVec<u8>; SPDM_SLOTS] = [const { KVec::new() }; SPDM_SLOTS];
-+        let mut offset = mem::size_of::<SpdmHeader>();
-+        let mut slot_mask = header.param2;
++        let cert_chain_end = 8 + portion_length as usize;
 +
-+        while (slot_mask.trailing_zeros() as usize) < SPDM_SLOTS {
-+            let slot = slot_mask.trailing_zeros() as usize;
++        let mut cert_chain = KVec::new();
++        cert_chain.extend_from_slice(
++            unvalidated.get(8..cert_chain_end).ok_or(EPROTO)?,
++            GFP_KERNEL,
++        )?;
 +
-+            digests[slot].extend_from_slice(
-+                unvalidated
-+                    .get(offset..(offset + context.hash_len()))
-+                    .ok_or(EPROTO)?,
-+                GFP_KERNEL,
-+            )?;
-+            offset += context.hash_len();
-+
-+            slot_mask &= !(1 << slot);
-+        }
-+
-+        if context.version >= SPDM_VER_13 && (header.param2 & !header.param1 != 0) {
-+            pr_err!("Malformed digests response\n");
-+            return Err(EPROTO);
-+        }
-+
-+        Ok(GetDigestsRsp {
++        Ok(GetCertificateRsp {
 +            header,
-+            digests,
-+            length: offset,
++            portion_length,
++            remainder_length,
++            cert_chain,
++            length: cert_chain_end,
 +            raw_bytes: unvalidated,
 +        })
 +    }
