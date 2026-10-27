@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793072074;
-	b=ohyw4FeMparOImGh2QypesQBeyGVg5Wp0SV4YimGuzS7b9UckFQHYxCacNff/5JomwT2
-	 JebhLJkXokW7SE43mFDFJJSJREFGd5QqoPkgiPmCFf9bqtpOuxps7/B2/+RDRMsnNosPt
-	 GeS5iiydCuhs5hd+gJ1KN/U/SRe3Wd8IBcp9a3pEX3RdcVlZBQ9rEdBB2CmOzmaQxHnw6
-	 3hB+LaDYyxGPU1rlzEXLQG3pURKXnjsA5PiGpQHq68vnFNyclRVJRYKNEX3dsbz3UrcZi
-	 gevgYmN34ZpTRkvPvJ13IrSidjmnrhKmoJAxeD4ZRoq86D2+2GwUSCWI+5w8VRuJ0KA==
+	t=1793072434;
+	b=eoQyECKthcEKp+XtCZagahfGrnniuIAhdxUn8ZXHEodWB0DNs2x6dVuhFLHCBI89FXca
+	 0W99hDVcvYHm4mAHzbJ1NF+/gCnsfakdsQO8fpyqaTcCzenYcfQeD0US4GzUiJrqKLMZ+
+	 jG4qMEm6CNahOlsIkrtNNQKoZbAXBLYhIk8h/DZAZrVXze+HpWKEca4NQ6c31rKK1onen
+	 JX83QTYJmE07aqPFTdaFq1kltMRPA68hKavteuRqsUvpGmgEXap1V9IqBDXfwiF2Xl/vb
+	 KLh1h9btT/yUQ2/1UJ/Yh36T9flpcfRnhGzV4K+VpG9uZA4N0XnB6thaP2ApboFn9Mg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793072074;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793072434;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=JJLvmVV2iFndDkwChBmGVao/pICrf/b8G6/BBv8WQzs=;
-	b=oa/sSf3zji925plQWWj6nTjv311hRppQBveMXEyjUgJ1zP1LVTmkAZyq7acpOyzCtcWY
-	 HWHcQJ4+4j9LRH9veH7Wn+LQNSxEkP70xLLPFGmhovrtCSwXegjlhL1DuyfSHEQfmVGCN
-	 bX+ewxqpkrY5ta7Si4O3cUWJSI8M+SNk5Wq8bLRfqGje8aBpL65hWtoO1Bi4eqdHQ2Dfg
-	 xVZjtYrGUbSD/oa7Gclv2K6c1b3tobgT9hWEHEn8EoxJLb0onUvFCb6wwr7OXdN8pf0Ve
-	 MQxfuZ8+Qru49CcNE7GzCm3TF3qP3wg/R6ubCOBPcQFeKb1yiDUjGbbZLZUp1LliJ/g==
+	bh=cRzqF3pZC9T9+mgqazzI3wB0gyIKv4okDYmmTH+ci9I=;
+	b=F1AEQXM61viPoX6AZ2+04MizKsy4R31Ec+1I/UlV9zN2eCExiqPsKNV+sTvTX1GRDC4S
+	 2rcwf3UuJRecdv5KQ3iXRNsxrBOBIrvhYEHCsIbWMtOF29eaxMHnAPoH2XKh9Ve4EbORq
+	 qB1UCR144LK24zZHrX8ByYtSjfB806UTezGyh9EUqnAtDg/lnC4cgSD1zyR9upMcUrBHg
+	 sySNITPUaivgprogYYrFH2qCGtNcJMV1tNH+cvBRcYmtYt1PYu04W8xlK6EseTuqHLtJq
+	 OPWOJmqQ2RlixgIHAyBm+CP6XWvfbm+tCvamt5h5f9WzxPncouj1GqvXeBJzruCpmNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=PrPhYdj4;
-	arc=none smtp.remote-ip=209.85.218.46
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=klpxKBx6;
+	arc=none smtp.remote-ip=209.85.218.49
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3E3606A31D
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:34:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA3E3606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965C8606A31E
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 03:40:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 965C8606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=PrPhYdj4
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c46bd7a7345so94694166b.0
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 20:34:32 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=klpxKBx6
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c315869241fso478335666b.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Oct 2026 20:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793072071; x=1793676871; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1793072432; x=1793677232; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=JJLvmVV2iFndDkwChBmGVao/pICrf/b8G6/BBv8WQzs=;
-        b=PrPhYdj4lsl6WY1eRcIYnVNPzLWRrynHcUVj9I5xsoprzRZAeOt6ayDDiUc/trGUDU
-         zEEtUvahpwB3yfKrXVSGtn1hq0c5++9cTKlzb4K/mtZ/zEv0TH4Zg99KXDJ6dOs2oshB
-         yFYwXMyC++79nRfPELlLKzOVJtcZEkNU0o3Xlqfv3VUoiVDmgy5KolN5DO/PO8U61iqf
-         qbx+2TKjQL21JW1lRhafU6DB6bMJdJgrDtJvkKE8E1cIupVnc0ERW7WH6J78ESjGgh+m
-         bOFvg+UcxByPQ0Z60FqDar+JfOxEjjKQlAudE0UvBAO84v60l1P9/uoWoeogBgdVcpi4
-         WtEA==
+        bh=cRzqF3pZC9T9+mgqazzI3wB0gyIKv4okDYmmTH+ci9I=;
+        b=klpxKBx6XIdguBPv1gdEeaxX3Q5nBOE0QyQKgI+nQtmFi2e6yyGoD1z99atiOq/X0L
+         29MGF1ep4EQ1gv/+055Qkplcqf1YtKuIcCv5aGSKHjEYK3jS7yM9nfCIB9wNkxkiBkUw
+         3XYbbVntwybyBZUIqAVzhr/u8Gfrjw4XN/c1wAbiBcjL3VyyvbdMABrMl8JljkCI4HBP
+         HDeVnIkL+LtyK7DjLzJaTMJ1PXNZWLEFJCqh4gUIf6KP43zgwJECwGuEgMjpM78oIwbB
+         yrbDn8qUsI/PxLnPvbStsGGa4HcTlJR/M8tesdaSKCW5YkmlnkFTtYdIc+MJU/KUH2YX
+         ocTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793072071; x=1793676871;
+        d=1e100.net; s=20260707; t=1793072432; x=1793677232;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=JJLvmVV2iFndDkwChBmGVao/pICrf/b8G6/BBv8WQzs=;
-        b=d+8xUYyRTrwkbB0kaBGvLXo2n/kap4NwmqgKIU8MYKo/W2HaoTCIaiIVffcCIJdd1r
-         0DOePzrf+34/W61Y/fPjSQWucWbSPrg30amA1QzyTQ9TX1gIhE+DksJbK+gSjzr0TyxT
-         GrrWA8RSU+iQcbVJenZoWid/s9dfcRQKsZOfkdKpbpHhfS3esmVSctEYBQd3uP8RQGOg
-         dCKxt+3+xgQAJ+o7h9I5lr/FQmzIxBo2boNbWuKfiyuIUFm6Tviu/F/ZHP5cawx1njdO
-         /hEvBdftQCRezCWBgmd3XnvcdyvBn5OB0JIpZZe4J8L8nkZeFSHq+UopfWb8+bQ6Z4rW
-         8tEA==
-X-Forwarded-Encrypted: i=1; AKwUvBxC3xShnvFz/Umu2I997lsPQUH1q77nQCYEX3u2CVPTinmN0EbDwY/obJkcvD9CeGLxQUQtiHjQ2tY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLSpWdUrpz5S7Klhbr0ipm/Zlj62fE+DGGVNq70U9F5CW2gzwUw
-	iJDPNxoa9RqaXSwYX4onvODJ1hN89GOsJJ8TK9CTgcy6m66Gg+vu0yIJ7z7bqsl/GbI=
-X-Gm-Gg: AYBFou2a5hFjboaC5AnKocZH6ZLEbxB40qg37eivqnc9sTM8kwKcxu2CEx8++fH0qZ9
-	c6PtV+RL1KwpI3JkhUl29TNjAeqGVXaytzhso4h8jY+p+CjR3Xxv5HUJkrIQSWUqPq4VeeyKkqS
-	TvUdNEmEcf14gm1g3vQ4QbmdVJ3lY8lgOm56gqmpsmg6thqsheBu1QsVytRA+VGOgtcF7/nB5P7
-	M9Crj7Osy0Aam69lbMhnf2ryKZQ9YicYD4rOYxSI9HXaeVxFmbSVbQxGgmH/UPwhqL4dYYJW6GD
-	rjapcyhvN87ts8B+bSI5fdez7Mrgkozv5RxIVyRNcxMUF5QmGvDV2ZIJJELuPxJV8o+0tYD2WDT
-	hB6Jv+bk0gIA7ux0VaiVJsu044BbvPlwNmTawuVqMaf+2vyVI37XT2LVfYEkTGjsebrwOSQRA+u
-	d+94f0Qu4smANj9gEOGTxgyjeV1o5BkY6mvTpO+c+Eiiqds9JcdBwD+1hCQOrJoEX8IxUYpVND4
-	KwE9GVhqYRGFV8A0bumoG7RtP8IVPIO8SvA32DTIcq/IA==
-X-Received: by 2002:a17:907:9303:b0:c46:7de7:e41d with SMTP id a640c23a62f3a-c49a7417cabmr116191366b.18.1793072071043;
-        Mon, 26 Oct 2026 20:34:31 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:9::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd52435asm380825966b.36.2026.10.26.20.34.29
+        bh=cRzqF3pZC9T9+mgqazzI3wB0gyIKv4okDYmmTH+ci9I=;
+        b=u7F1T9uA+uMGVr48OEe7BVELVQnAosp/JTre4xGD8z9PHWOKmPtyLs/v+5pBvDcw80
+         UqJOeHzuFUsPNWQi8cam8yIdOfewX0/7ECT8F2daMIfFw30QJGtaoKn6rCIyl9epjgsj
+         Jxaxuc5SC4fjKioWIiw5TqjG/4X1Rr4CEuNCpETQKVK7M/o1NleXT5G+8OfRAnIIpARw
+         dtCLXdyoSyDn+pHrV7AMfuTJxVLeg9sytnHUNrO/Lv1mKvAOyNvwtHCFdxQE1sYDfvjt
+         h5SRBMq0NK1rOAxRl3ybmvHVB3UqhwXSM36JBW255w+d0KMZqoje4fasUBbVlDvqAihL
+         vOhg==
+X-Forwarded-Encrypted: i=1; AKwUvBw409v1g1NhfK1xZrEcuohZdL2m05fixOKmYoxCsb5hhRwcJ4o+ScZdMCLVKP73AEHBOFDaEFmKWh0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIaCuS+UJ3HUo+UMB0wfQ8aS7HkEBRXKDN0Cxr/flsaEtL7oQRd
+	fXZWezIkdILRl3ksaDtmNdvqixpU+qJdMACIYw2Jc+zQW+dyhj9KmlGOQZV5Ct5Vb94=
+X-Gm-Gg: AYBFou2BUjkLjDSc+VnIc6ab/cF14McNiWHLTCO8z4eROcWZDU0PXNeCXpEce86Hy0T
+	qn83EE0lSHLX/FKBP7aqQYLCToHnOfhBhpOBQ4B7jUzUOqfniDcb6EqEplXfmZ46qLkhE26x1GB
+	aQTJuzQZgq3Lmc5GPny2C/1VUzIXrE4IrCCaKsMoVexwvd1npyEvl6UkgIU4g/G+TauQeo469i4
+	KZ19QMlZ1JLKy2Z2+pZi9FOvbaupkc8+jjgWlL+DNSQ+v+sLIYTxsgiFQ6o+0tjrSSfN9DB+mfs
+	iuBTcUw2CTtHfWE7jeyF9hsnGJtTvIFGheNAzxmpOZHa+WW0lPiGNHuNfhsJddY2mc8MyvBJ1SQ
+	8G6wY17Re0+XjQIndebzxwvr7aaK82LmXnj9Q1aEhynfF/f1YWhzaMrBXLsEjbkQ2YEpwBJIt90
+	lrFh/YMYv7RMiLb4uNxn7CNbYpQdgFOpimS9p6cT/H7jQkg5Od6tKm8uICr5KWJxpnJ7cFTJGge
+	zFFifPLP+I9vDQI+KJDGOvPpSD67hjs6OG9k1z8bE/KcQ==
+X-Received: by 2002:a17:907:971e:b0:c46:723d:600 with SMTP id a640c23a62f3a-c46bde9f783mr916491966b.41.1793072431944;
+        Mon, 26 Oct 2026 20:40:31 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:3::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd4e784esm379153566b.19.2026.10.26.20.40.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 20:34:29 -0700 (PDT)
+        Mon, 26 Oct 2026 20:40:29 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -89,7 +89,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
+Subject: Re: [PATCH 26/46] mm/mmu_gather: fix flushing ranges with 4 GiB or
+ larger
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -128,238 +129,39 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
  linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
  stable@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
-Date: Mon, 26 Oct 2026 20:34:28 -0700
-Message-Id: <179307206859.1171062.6841971971647864368.b4-reply@b4>
+ <20261027-fixes_core-v1-26-6f74bec9a5bb@kernel.org>
+Date: Mon, 26 Oct 2026 20:40:28 -0700
+Message-Id: <179307242835.1171062.11616590599815003560.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
 On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
 > From: Josef Bacik <josef@toxicpanda.com>
 > 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> __tlb_adjust_range() takes the size of the range which has to be flushed
+> as an unsigned int. Its callers, tlb_flush_{pte,pmd,pud,p4d}_range(), get
+> and pass an unsigned long. Consequently, a range that is 4 GiB or larger
+> gets truncated, possibly to 0.
 > 
-... snip ...
+> On arm64 with hugetlb, a 64k kernel can flush 16 GiB hugetlb PMDs, and a
+> 16k kernel can flush 64 GiB PUDs through tlb_unshare_pmd_ptdesc(). So
+> at least these two scenarios are affected.
 > 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+> Fix it by flushing the proper range instead of the truncated one.
+> 
+> Fix generated by an LLM and sent by Josef Bacik in private.
+> 
+> Fixes: b528e4b6405b ("mm/hugetlb: add tlb_remove_hugetlb_entry for handling hugetlb pages")
+> Fixes: 8ce720d5bd91 ("mm/hugetlb: fix excessive IPI broadcasts when unsharing PMD tables using mmu_gather")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> [ david: use two-tab indent, simplify description ]
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 Tested-by: Gregory Price (Meta) <gourry@gourry.net>
-
-This one arguably should have at least a trivial selftest.
-
-Test attatched
--- >8 --
-From: Gregory Price <gourry@gourry.net>
-Subject: [PATCH] selftests/memfd: test shared file position atomicity
-
-Without FMODE_ATOMIC_POS, concurrent reads or writes on a shared memfd
-can use the same file position. Two writers can overwrite each other's
-records:
-
-    CPU 1                         CPU 2
-    pos = file->f_pos
-                                  pos = file->f_pos
-    write a record at pos
-                                  write a record at pos
-    file->f_pos = pos + size
-                                  file->f_pos = pos + size
-
-Add separate shared-read and shared-write tests using the kselftest
-harness. Check the final offset, file size and exactly-once record delivery
-rather than requiring a particular interleaving.
-
-Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
----
- tools/testing/selftests/memfd/.gitignore  |   1 +
- tools/testing/selftests/memfd/Makefile    |   3 +-
- tools/testing/selftests/memfd/memfd_pos.c | 136 ++++++++++++++++++++++
- 3 files changed, 139 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/memfd/memfd_pos.c
-
-diff --git a/tools/testing/selftests/memfd/.gitignore b/tools/testing/selftests/memfd/.gitignore
-index dd9a051f608e2..574ab97ebd982 100644
---- a/tools/testing/selftests/memfd/.gitignore
-+++ b/tools/testing/selftests/memfd/.gitignore
-@@ -2,4 +2,5 @@
- fuse_mnt
- fuse_test
- memfd_test
-+memfd_pos
- memfd-test-file
-diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
-index 163b6f68631c4..67a95c34541cd 100644
---- a/tools/testing/selftests/memfd/Makefile
-+++ b/tools/testing/selftests/memfd/Makefile
-@@ -2,7 +2,7 @@
- CFLAGS += -D_FILE_OFFSET_BITS=64
- CFLAGS += $(KHDR_INCLUDES)
- 
--TEST_GEN_PROGS := memfd_test
-+TEST_GEN_PROGS := memfd_test memfd_pos
- TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
- TEST_GEN_FILES := fuse_test fuse_mnt
- 
-@@ -22,6 +22,7 @@ include ../lib.mk
- 
- $(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
- 
-+$(OUTPUT)/memfd_pos: LDLIBS += -pthread
- $(OUTPUT)/memfd_test: memfd_test.c common.c
- $(OUTPUT)/fuse_test: fuse_test.c common.c
- 
-diff --git a/tools/testing/selftests/memfd/memfd_pos.c b/tools/testing/selftests/memfd/memfd_pos.c
-new file mode 100644
-index 0000000000000..5f3749d13f561
---- /dev/null
-+++ b/tools/testing/selftests/memfd/memfd_pos.c
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <pthread.h>
-+#include <stdatomic.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <sys/mman.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+
-+#include "../kselftest_harness.h"
-+
-+#define THREADS 4
-+#define RECORDS 16384
-+#define TOTAL (THREADS * RECORDS)
-+
-+struct worker {
-+	int fd;
-+	unsigned int id;
-+	bool reading;
-+	pthread_barrier_t *barrier;
-+	atomic_uint *seen;
-+	int error;
-+};
-+
-+static void *transfer(void *arg)
-+{
-+	struct worker *w = arg;
-+	unsigned int i;
-+
-+	pthread_barrier_wait(w->barrier);
-+	for (i = 0; i < RECORDS; i++) {
-+		uint32_t value = w->id * RECORDS + i;
-+		ssize_t n;
-+
-+		do {
-+			n = w->reading ? read(w->fd, &value, sizeof(value)) :
-+				write(w->fd, &value, sizeof(value));
-+		} while (n < 0 && errno == EINTR);
-+		if (n != sizeof(value) || value >= TOTAL) {
-+			w->error = 1;
-+			break;
-+		}
-+		if (w->reading)
-+			atomic_fetch_add(&w->seen[value], 1);
-+	}
-+	return NULL;
-+}
-+
-+FIXTURE(memfd_pos) {
-+	int fd;
-+	atomic_uint *seen;
-+};
-+
-+FIXTURE_SETUP(memfd_pos)
-+{
-+	self->fd = memfd_create("position", MFD_CLOEXEC);
-+	if (self->fd < 0 && errno == ENOSYS)
-+		SKIP(return, "memfd_create unavailable");
-+	ASSERT_GE(self->fd, 0);
-+	self->seen = calloc(TOTAL, sizeof(*self->seen));
-+	ASSERT_NE(self->seen, NULL);
-+	for (unsigned int i = 0; i < TOTAL; i++)
-+		atomic_init(&self->seen[i], 0);
-+}
-+
-+FIXTURE_TEARDOWN(memfd_pos)
-+{
-+	close(self->fd);
-+	free(self->seen);
-+}
-+
-+static int run_workers(int fd, bool reading, atomic_uint *seen)
-+{
-+	pthread_barrier_t barrier;
-+	pthread_t threads[THREADS];
-+	struct worker workers[THREADS];
-+	int ret = 0;
-+	unsigned int i;
-+
-+	if (pthread_barrier_init(&barrier, NULL, THREADS))
-+		return 1;
-+	for (i = 0; i < THREADS; i++) {
-+		workers[i] = (struct worker) {
-+			.fd = fd, .id = i, .reading = reading,
-+			.barrier = &barrier, .seen = seen,
-+		};
-+		/* The harness isolates this test in a child; abort on setup failure. */
-+		if (pthread_create(&threads[i], NULL, transfer, &workers[i]))
-+			abort();
-+	}
-+	for (i = 0; i < THREADS; i++) {
-+		if (pthread_join(threads[i], NULL) || workers[i].error)
-+			ret = 1;
-+	}
-+	pthread_barrier_destroy(&barrier);
-+	return ret;
-+}
-+
-+/* Concurrent writes sharing an open file description must not overlap. */
-+TEST_F(memfd_pos, shared_write)
-+{
-+	struct stat st;
-+	uint32_t value;
-+	unsigned int i;
-+
-+	ASSERT_EQ(run_workers(self->fd, false, self->seen), 0);
-+	ASSERT_EQ(fstat(self->fd, &st), 0);
-+	ASSERT_EQ(st.st_size, (off_t)(TOTAL * sizeof(value)));
-+	ASSERT_EQ(lseek(self->fd, 0, SEEK_CUR), st.st_size);
-+	ASSERT_EQ(lseek(self->fd, 0, SEEK_SET), 0);
-+	for (i = 0; i < TOTAL; i++) {
-+		ASSERT_EQ(read(self->fd, &value, sizeof(value)), sizeof(value));
-+		ASSERT_LT(value, TOTAL);
-+		atomic_fetch_add(&self->seen[value], 1);
-+	}
-+	for (i = 0; i < TOTAL; i++)
-+		ASSERT_EQ(atomic_load(&self->seen[i]), 1);
-+}
-+
-+/* Concurrent reads must consume every record exactly once. */
-+TEST_F(memfd_pos, shared_read)
-+{
-+	uint32_t i;
-+
-+	for (i = 0; i < TOTAL; i++)
-+		ASSERT_EQ(write(self->fd, &i, sizeof(i)), sizeof(i));
-+	ASSERT_EQ(lseek(self->fd, 0, SEEK_SET), 0);
-+	ASSERT_EQ(run_workers(self->fd, true, self->seen), 0);
-+	ASSERT_EQ(lseek(self->fd, 0, SEEK_CUR), (off_t)(TOTAL * sizeof(i)));
-+	for (i = 0; i < TOTAL; i++)
-+		ASSERT_EQ(atomic_load(&self->seen[i]), 1);
-+}
-+
-+TEST_HARNESS_MAIN
 
 -- 
 Gregory Price <gourry@gourry.net>
