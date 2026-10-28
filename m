@@ -1,61 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793156533;
-	b=inz+Tu97uu1wjkvIhMuA0Fu7gInDl56P8/l6mTg6XVH8YYIVA6GpK0DDaEPD8ez8xpqv
-	 F19dLV7ld6XdweisrXlkHFUhSWkDE626MS4x0WeGJzeemdYvxf2mpIo0z7jgwwmAf0sbX
-	 PuANRoI8MH8n9A8aN8g7msulyosxZkhh0AKt/IpvC06pRbQPZ0NPIvBfqpJKhRRV+odi4
-	 rfxVrCUXDppk1DzHRi2zjPV7Sa30+APclvL4SwXBcBc4803sX86WfSSm6JamdfzQgQXu0
-	 bgnWHcK7CPoRz4ODsVM1+Tw15ODPQPcTPrEPYr5msnaVw2ZcMYhWy/NphznxiU+OC4Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793156533;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
-	 X-ZohoMailClient;
-	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=;
-	b=fDh9tuloc4lPdaH6CdNzYiYG7lJlSh2jclLDy0KU0W1HvjAVjXF1YAcCrn+8GQ+C0l64
-	 888rL263gKjRGoDtVmhmxsiZ7ta0eiwwxV3YLcuY1rwyiSCypgrca0UCeE6dEbSrrKkj5
-	 LrXBUn4eHkaY3tKY7ya3kRk3PFidvNViF608xUpvGQc5q0qgUI5d8bJ48agICZpVjytsx
-	 peRHb30r+A12E8UYxqCVgvN+Q+6AHTHHEWsIdTwVSxl/nHgKF3wj60uqDm2o8fER2vMJm
-	 XdGdOfmRyH7WkFfESgqMMU3yc78REqq5bRkrKkK5GzMw+6MeVmyH6GK7ypLJaI2ZuNg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zohomail.com;
-	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=OOgLrYoT;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793161353;
+	b=0eA83y2CdDrP0kyaVMU073LievzOueSAXFhiUULYEMzhHGioINEDmfKS8d6MArDw4Ors
+	 wUK3AGT9gU69lnCaLvaSl+ppi7gN+ETShFu+dtbr+YFBsoudse0hbyoo/3cYtcjleKfIA
+	 x+UQsgnuKYa7yb2FLQNUs2qAyMOvc1ZswgjgdN/ZKKh70A9THkvXeXXWscp16CJdC4+W7
+	 1uFPan+K7vtCZv4Gac05G0EI7kqyBibf1VPMEN1PVaY64Tah6VDfIc4x9tUNOq6VrEith
+	 Bvv9yH543IT1HrkWBVgpZyPqe7VyUJZqwaY/ryOykPfBrhyntklWNM2bcfu4zk12oPw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793161353;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=KJe1DnSL5I+ScvDr3zb529EygXW8khYJB6ts23Z9hAM=;
+	b=1Mk92PprzNFuWtJgiLXe4a03B5+EX+xnIcASiy7ZFo+ldk/VEpu73XwZd0GXUYafcFJW
+	 kgB0ne/mERoTulshFDicE0KpXOeFGBH51TyMLeyoqJ07ABGxEssBLvCz5IYNVkCa6IKPU
+	 +VH/t0+CLSRd7X+AocT2bGyhC2RL9QBdCCYDcm5lvIw9jsmHgYT/jZWH/ryG3yncEwFpt
+	 Tj480Iv9ZNOVYcgZj1GFpNHo1xx4NYaJTF0TxojtpwBN/VuWpRYBaVGOuivbJIgtrONNQ
+	 NhaJFk0QIrzOzyVWvoUotKpOdnbJuKPP8r8byoyNnc397G5/0W+4KCjXR6kOVEcn/cg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZDPD8zXX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD454606A332;
-	Wed, 28 Oct 2026 03:02:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD454606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A33606A31A
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 04:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=OOgLrYoT
-ARC-Seal: i=1; a=rsa-sha256; t=1793156516; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Fw1D14/cmWDpP6r13f0uHiYP7HARa9MUrN5wX+ZNd3zImh5DeTT3HtXdnASPp0bxVw2E8IkKL+OK7dn//mYAS6NMSjnWdDl3qW7cZBzhoZEkvX7WPuZRu9aLEZmIbdcOh8Klc0eNnt4C6UZOo13llzrILjRR2jCbQyEhwFQc79I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793156516; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=; 
-	b=VAJ2YtGJoT5xHdcCSqgxRwsgiT2aaFaLc0pv8pXjtM/qLwCXFeT9xmzuM6s2c4JWxyJG3C3J5QadKATuhrJRCY/1xB8nfEsSNUkCCTq7zbGPYIBNesYz5yi3cufruQ3zCaerQ+MA3arOP9AQ463/UUnMJ/ztctoNX8J7T5zZh7U=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793156516;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=;
-	b=OOgLrYoTmMOZ+jvln9uC6DiyUi/GaHmaO+a3d5PydbIrxImiBmuOUzYdQhVvmTOi
-	MsKwt8EFdjNuCUuiGi40AoSwzU1RJMFrmRIkFzjCL6VW4T0b/5mgcu4PWnUojOaj3rD
-	RMhvyvc0nchzFLIXQLP7eYr8ph1k/gHIXTNVD3n8=
-Received: by smtp.zohomail.com with SMTPS id 1793156513768853.2509454165186;
-	Tue, 27 Oct 2026 20:01:53 -0700 (PDT)
-Message-ID: <37c6f2bc-53b3-4260-aa27-04f89c45e950@zohomail.com>
-Date: Wed, 28 Oct 2026 11:01:46 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZDPD8zXX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4183C1F01828;
+	Wed, 28 Oct 2026 04:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793161352;
+	bh=KJe1DnSL5I+ScvDr3zb529EygXW8khYJB6ts23Z9hAM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZDPD8zXXytnUTyzxAqJY/nqLza35XK0CUR2IKGMTYIvpb4Cqs3TSqijASoj0hI1aJ
+	 iHpKoxo9y9L1bDwOZhQ3JYNb2WgsJD6Kxu8HKT1znRG9oG1Xpc5r1zJuqx+Stz3txb
+	 1F5jnB22/mj0Ld8rFIr0PVpw/NrzzX+/VZMFJaipyJ13pUfuwD8JG97uKpc2B5ba6m
+	 ly2CpCqyWkjBAQXTwVSvVeFcIDwQOW/LwZAvZNCbawiiWxnQlcTs8v5yWqzP2BlMOU
+	 5qep2HB8GbhceFiF27Kqy855JkRD84NSbHwSjB971cf46d2DzUy6DTiX5nLoRohjpk
+	 OjsVlnfds4pbQ==
+Message-ID: <sashiko-outbox-187473@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/6] mm/compaction: wait for pfn walkers before
+ poisoning offlined memmap
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?R3JlZ29yeSBQcmljZSAoTWV0YSk=?= <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org, kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com
+In-Reply-To: <20261027042204.3741307-2-gourry@gourry.net>
+References: <20261027042204.3741307-1-gourry@gourry.net>
+ <20261027042204.3741307-2-gourry@gourry.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Oct 2026 04:22:30 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -64,386 +60,203 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 10/16] PCI/CXL: Add CXL Device Reset sequencing
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
- Jonathan Cameron <jic23@kernel.org>, Vishal Verma
- <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20261011021422.3428136-1-smadhavan@nvidia.com>
- <20261011021422.3428136-11-smadhavan@nvidia.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20261011021422.3428136-11-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227f9a06f15f01b217c8f5af17a00005c66a3146a1dd455837ec18d79dfc7d3e9be92dd262450e365:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] mm/compaction: clamping low_pfn in isolate_migratepages() loops fo=
+rever
+- [High] mm: race in pageblock_pfn_to_page() with move_pfn_range_to_zone() =
+onlining
+- [Medium] mm: pfn_walk_srcu is disabled when CONFIG_MEMORY_HOTREMOVE=3Dn
+--
 
-在 2026/10/11 10:14, Srirangan Madhavan 写道:
-> Implement CXL Device Reset for eligible Type 2 devices: disable CXL.cache,
-> perform supported writeback, drain transactions, prepare the IOMMU,
-> initiate reset with Memory Clear enabled, and wait for completion.
->
-> Observe the 100 ms post-reset quiet period before polling Status2, and
-> treat an all-ones read as not ready. Treat Control2 command bits as
-> transient state, restore cache policy on exit, preserve the primary error,
-> and abort when IOMMU preparation fails.
->
-> Reuse Device DVSEC discovery from cache initialization and keep the
-> reset entry point declaration private to PCI core.
->
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=04f8f84816d724f8b47f4d47a77916ac37c63a49
-> Suggested-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> ---
->   drivers/pci/cxl.c             | 249 +++++++++++++++++++++++++++++++++-
->   drivers/pci/pci.h             |   5 +
->   include/uapi/linux/pci_regs.h |  14 ++
->   3 files changed, 267 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-> index 471b57391593..9eb13adf0daa 100644
-> --- a/drivers/pci/cxl.c
-> +++ b/drivers/pci/cxl.c
-> @@ -3,13 +3,17 @@
->   /*
->    * CXL reset support in the PCI core. Cache the HDM decoder state of a CXL
->    * memory device at enumeration, so it can be restored after a reset without
-> - * a CXL driver. HDM register formats and programming live in drivers/cxl.
-> + * a CXL driver, and implement CXL Device Reset. HDM register formats and
-> + * programming live in drivers/cxl.
->    */
->   #include <linux/bitfield.h>
->   #include <linux/cleanup.h>
-> +#include <linux/delay.h>
->   #include <linux/errno.h>
->   #include <linux/io.h>
->   #include <linux/ioport.h>
-> +#include <linux/iommu.h>
-> +#include <linux/jiffies.h>
->   #include <linux/kernel.h>
->   #include <linux/pci.h>
->   #include <linux/slab.h>
-> @@ -221,3 +225,246 @@ void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
->   {
->   	cxl_hdm_cache_release(&pdev->hdm);
->   }
+commit 6ad7c6454b21a8c91c2521a8135b38b5d2766881
+Author: Gregory Price (Meta) <gourry@gourry.net>
+
+mm/compaction: wait for pfn walkers before poisoning offlined memmap
+
+This patch introduces an SRCU-fast read section around compaction PFN walks
+and waits for readers in remove_pfn_range_from_zone() before poisoning
+offlined memmap pages. It also updates pageblock_pfn_to_page() and
+isolate_migratepages() to handle zone span changes across memory offlining.
+
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index f1b2060eb2016..2aeb18b6d54dd 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+
+[ ... ]
+
+> @@ -2116,6 +2121,9 @@ static isolate_migrate_t isolate_migratepages(struc=
+t compact_control *cc)
+>  	 */
+>  	fast_find_block =3D low_pfn !=3D cc->migrate_pfn && !cc->fast_search_fa=
+il;
+> =20
+> +	/* Offline may have shrunk the zone start past an old migrate_pfn */
+> +	low_pfn =3D max(low_pfn, block_start_pfn);
 > +
+>  	/* Only scan within a pageblock boundary */
+>  	block_end_pfn =3D pageblock_end_pfn(low_pfn);
+
+[Severity: High]
+Can clamping low_pfn to block_start_pfn without updating cc->migrate_pfn
+cause compact_zone() to enter an unbounded infinite loop?
+
+If memory offlining shrinks cc->zone->zone_start_pfn upward via
+offline_pages() -> remove_pfn_range_from_zone() -> shrink_zone_span() while
+compaction is running, cc->migrate_pfn can sit below the new
+cc->zone->zone_start_pfn while cc->free_pfn is either also in the offlined
+lower range (with cc->migrate_pfn < cc->free_pfn) or in the first pageblock
+of the new zone start (where block_end_pfn > cc->free_pfn).
+
+In isolate_migratepages() in mm/compaction.c, clamping low_pfn to
+block_start_pfn advances block_end_pfn =3D pageblock_end_pfn(low_pfn) past
+cc->free_pfn, so the pageblock loop is skipped completely:
+
+	for (; block_end_pfn <=3D cc->free_pfn;
+			fast_find_block =3D false,
+			cc->migrate_pfn =3D low_pfn =3D block_end_pfn,
+			block_start_pfn =3D block_end_pfn,
+			block_end_pfn +=3D pageblock_nr_pages) {
+
+Because the loop does not execute, isolate_migratepages() returns
+ISOLATE_NONE without advancing cc->migrate_pfn or calling cond_resched().
+
+Back in compact_zone(), compact_finished() -> __compact_finished() checks
+compact_scanners_met(cc):
+
+static inline bool compact_scanners_met(struct compact_control *cc)
+{
+	return (cc->free_pfn >> pageblock_order)
+		<=3D (cc->migrate_pfn >> pageblock_order);
+}
+
+Since cc->migrate_pfn was never updated to low_pfn, compact_scanners_met(cc)
+remains false and __compact_finished() returns COMPACT_CONTINUE (even
+before checking fatal_signal_pending(current) when is_via_compact_memory()
+or !pageblock_aligned(cc->migrate_pfn) holds), causing compact_zone() to
+spin forever on ISOLATE_NONE without rescheduling.
+
+Should cc->migrate_pfn also be updated when low_pfn is clamped to
+block_start_pfn?
+
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 3a402e735dbe2..fdc83a7aafb51 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/rmap.h>
+>  #include <linux/swap.h>
+>  #include <linux/leafops.h>
+> +#include <linux/srcu.h>
+>  #include <linux/tracepoint-defs.h>
+> =20
+>  /* Internal core VMA manipulation functions. */
+> @@ -1208,6 +1209,46 @@ struct tlbflush_unmap_batch;
+>   */
+>  extern struct workqueue_struct *mm_percpu_wq;
+> =20
 > +/*
-> + * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
-> + * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms after
-> + * initiating CXL Reset, then limits software to CXL Status2 access until
-> + * reset completion, timeout, or error.
+> + * Compaction checks that a pageblock is online and then uses its pages,
+> + * possibly across sleeps.  remove_pfn_range_from_zone() waits for these
+> + * readers before it poisons the memmap of a range taken offline.
 > + */
-> +#define CXL_RESET_RRS_WAIT_MS 100
-> +#define CXL_RESET_STATUS_POLL_MS 20
-> +#define CXL_RESET_MAX_WAIT_MS 20000
-> +static const u32 cxl_reset_timeout_ms[] = {
-> +	10, 100, 1000, 10000, 100000,
-> +};
-> +
-> +#define CXL_CACHE_WBI_TIMEOUT_US 100000
-Why is it 100000us? I think it is worth a comment.
-> +#define CXL_CACHE_WBI_POLL_US 100
-> +
-> +#define CXL_RESET_CTRL2_CMD_MASK \
-> +	(PCI_DVSEC_CXL_INIT_CACHE_WBI | PCI_DVSEC_CXL_INIT_CXL_RST)
-> +
-> +static int cxl_reset_update_ctrl2_no_replay(struct pci_dev *pdev, int dvsec,
-> +					    u16 set, u16 clear)
-If there is no a similiar function called cxl_reset_update_ctrl2(), I 
-think that is better to use cxl_reset_update_ctrl2() as this function name.
-> +{
-> +	u16 ctrl2;
-> +	int rc;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +	if (PCI_POSSIBLE_ERROR(ctrl2))
-> +		return -ENODEV;
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +extern struct srcu_struct pfn_walk_srcu;
 
-I think this PCI_POSSIBLE_ERROR() checking is not needed, in 
-pci_bus_read_config_word() marco, if bus->ops->read() returns a error, 
-then the function will use PCI_SET_ERROR_RESPONSE() then returning the 
-errno. That means that we can always get an error as return value of 
-pci_read_config_word() while ctrl2 is an error response.
+[Severity: Medium]
+Should pfn_walk_srcu be guarded by CONFIG_MEMORY_HOTPLUG rather than
+CONFIG_MEMORY_HOTREMOVE?
 
-> +
+When CONFIG_MEMORY_HOTPLUG=3Dy, CONFIG_MHP_MEMMAP_ON_MEMORY=3Dy, and
+CONFIG_MEMORY_HOTREMOVE=3Dn, pfn_walk_lock(), pfn_walk_unlock(), and
+pfn_walk_synchronize() compile to no-ops.
+
+However, during memory_block_online() in drivers/base/memory.c:
+
+	if (nr_vmemmap_pages) {
+		ret =3D mhp_init_memmap_on_memory(start_pfn, nr_vmemmap_pages, zone);
+		if (ret)
+			goto out;
+	}
+
+	ret =3D online_pages(start_pfn + nr_vmemmap_pages,
+			   nr_pages - nr_vmemmap_pages, zone, mem->group);
+	if (ret) {
+		if (nr_vmemmap_pages)
+			mhp_deinit_memmap_on_memory(start_pfn, nr_vmemmap_pages);
+		goto out;
+	}
+
+If nr_vmemmap_pages >=3D PAGES_PER_SECTION, mhp_init_memmap_on_memory() in
+mm/memory_hotplug.c marks full vmemmap sections online via
+online_mem_sections() before online_pages() runs. If online_pages() then
+fails, mhp_deinit_memmap_on_memory() calls offline_mem_sections() and
+remove_pfn_range_from_zone(), which poisons the struct pages without waiting
+for concurrent compaction pfn_walk readers when CONFIG_MEMORY_HOTREMOVE=3Dn.
+
+[ ... ]
+
+> diff --git a/mm/page_alloc.h b/mm/page_alloc.h
+> index 2b1017a91928c..3446a2ebdd0f2 100644
+> --- a/mm/page_alloc.h
+> +++ b/mm/page_alloc.h
+> @@ -216,7 +216,12 @@ extern struct page *__pageblock_pfn_to_page(unsigned=
+ long start_pfn,
+>  static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
+>  				unsigned long end_pfn, struct zone *zone)
+>  {
+> -	if (zone->contiguous)
 > +	/*
-> +	 * INIT_CACHE_WBI and INIT_CXL_RST are commands. Do not replay a command
-> +	 * that remains set in the value read back while updating persistent
-> +	 * Control2 state.
+> +	 * Offline can shrink the zone under a caller's old pfns and then set
+> +	 * zone->contiguous again, so only trust it inside the current span.
 > +	 */
-> +	ctrl2 &= ~CXL_RESET_CTRL2_CMD_MASK;
-> +	ctrl2 &= ~clear;
-> +	ctrl2 |= set;
-> +
-> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_reset_wait_cache_wbi(struct pci_dev *pdev, int dvsec)
-> +{
-> +	unsigned long deadline;
-> +	u16 status2;
-> +	int rc;
-> +
-> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
-> +					      PCI_DVSEC_CXL_INIT_CACHE_WBI, 0);
-> +	if (rc)
-> +		return rc;
-> +
-> +	deadline = jiffies + usecs_to_jiffies(CXL_CACHE_WBI_TIMEOUT_US);
-> +	while (time_before(jiffies, deadline)) {
-> +		usleep_range(CXL_CACHE_WBI_POLL_US,
-> +			     CXL_CACHE_WBI_POLL_US * 2);
-> +
-> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
-> +					  &status2);
-> +		if (rc)
-> +			return pcibios_err_to_errno(rc);
-> +		if (PCI_POSSIBLE_ERROR(status2))
-> +			return -ENODEV;
-Same as above
-> +		if (status2 & PCI_DVSEC_CXL_CACHE_INV)
-> +			return 0;
-> +	}
-> +
-> +	/* Do not miss completion concurrent with the polling deadline. */
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
-> +				  &status2);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +	if (PCI_POSSIBLE_ERROR(status2))
-> +		return -ENODEV;
-> +	if (status2 & PCI_DVSEC_CXL_CACHE_INV)
-> +		return 0;
-I think checking again after deadline is not needed, if it usually 
-happens, it means we should adjust CXL_CACHE_WBI_TIMEOUT_US.
-> +
-> +	return -ETIMEDOUT;
-It is better to output a warning before returning -ETIMEDOUT.
-> +}
-> +
-> +static int cxl_reset_disable_cache(struct pci_dev *pdev, int dvsec, u16 cap)
-> +{
-> +	int rc;
-> +
-> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
-> +					      PCI_DVSEC_CXL_DISABLE_CACHING, 0);
-> +	if (rc || !(cap & PCI_DVSEC_CXL_CACHE_WBI_CAPABLE))
-> +		return rc;
-> +
-> +	return cxl_reset_wait_cache_wbi(pdev, dvsec);
-> +}
-> +
-> +static int cxl_reset_restore_cache_policy(struct pci_dev *pdev, int dvsec,
-> +					  u16 saved_ctrl2)
-> +{
-> +	int rc;
-> +
-> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
-> +					      saved_ctrl2 & PCI_DVSEC_CXL_DISABLE_CACHING,
-> +					      PCI_DVSEC_CXL_DISABLE_CACHING);
-> +	if (rc)
-> +		pci_err(pdev, "failed to restore CXL cache policy: %d\n", rc);
-> +
-> +	return rc;
-> +}
-> +
-> +static int cxl_reset_wait_done(struct pci_dev *pdev, int dvsec, u16 cap)
-> +{
-> +	unsigned long deadline;
-> +	u32 timeout_ms;
-> +	u16 status2;
-> +	int idx, rc;
-> +
-> +	idx = FIELD_GET(PCI_DVSEC_CXL_RST_TIMEOUT, cap);
-> +	if (idx >= ARRAY_SIZE(cxl_reset_timeout_ms)) {
-> +		pci_warn(pdev,
-> +			 "unknown CXL reset timeout encoding %d; using %u ms\n",
-> +			 idx, CXL_RESET_MAX_WAIT_MS);
-> +		idx = ARRAY_SIZE(cxl_reset_timeout_ms) - 1;
-> +	}
-> +
-I noticed that the worst situation is that we have to wait cxl reset 
-done for 100s. If my understanding is correct, userspace would hang on 
-"echo 1 > reset" until reset done. Is it better to add a pci_info() here 
-to output the reset timeout value?
-> +	/* Allow one retry after the mandatory 100 ms quiet period. */
-> +	timeout_ms = clamp_t(u32, cxl_reset_timeout_ms[idx],
-> +			     CXL_RESET_RRS_WAIT_MS + CXL_RESET_STATUS_POLL_MS,
-> +			     CXL_RESET_MAX_WAIT_MS);
-> +	msleep(CXL_RESET_RRS_WAIT_MS);
-> +	deadline = jiffies + msecs_to_jiffies(timeout_ms -
-> +					      CXL_RESET_RRS_WAIT_MS);
-> +
-> +	for (;;) {
-> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
-> +					  &status2);
-> +		if (rc)
-> +			return pcibios_err_to_errno(rc);
-> +		if (status2 != U16_MAX) {
-> +			if (status2 & PCI_DVSEC_CXL_RST_ERR)
-> +				return -EIO;
-> +			if (status2 & PCI_DVSEC_CXL_RST_DONE)
-> +				return 0;
-> +		}
-> +
-> +		if (time_after_eq(jiffies, deadline))
-> +			return -ETIMEDOUT;
-> +
-> +		msleep(CXL_RESET_STATUS_POLL_MS);
-> +	}
-> +}
-> +
-> +static int cxl_clear_memory(struct pci_dev *pdev, int dvsec, bool initiate)
-> +{
-> +	if (initiate)
-> +		return cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
-> +						      PCI_DVSEC_CXL_INIT_CXL_RST |
-> +						      PCI_DVSEC_CXL_RST_MEM_CLR_EN,
-> +						      0);
-> +
-> +	return cxl_reset_update_ctrl2_no_replay(pdev, dvsec, 0,
-> +					      PCI_DVSEC_CXL_RST_MEM_CLR_EN);
-> +}
-> +
-> +static int __cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap)
-> +{
-> +	int rc, rc2;
-> +
-> +	if (!pci_wait_for_pending_transaction(pdev)) {
-> +		pci_err(pdev, "timed out waiting for pending transactions\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	rc = pci_dev_reset_iommu_prepare(pdev);
-> +	if (rc) {
-> +		pci_err(pdev, "failed to stop IOMMU for CXL reset: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	rc = cxl_clear_memory(pdev, dvsec, true);
-> +	if (!rc)
-> +		rc = cxl_reset_wait_done(pdev, dvsec, cap);
-> +
-> +	/* Always clear Memory Clear; successful cleanup must not hide reset failure. */
-> +	rc2 = cxl_clear_memory(pdev, dvsec, false);
-> +	if (rc2)
-> +		pci_err(pdev, "failed to clear CXL Reset Memory Clear: %d\n", rc2);
-> +	rc = rc ?: rc2;
-> +
-> +	pci_dev_reset_iommu_done(pdev);
-> +	return rc;
-> +}
-> +
-> +static int cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap)
-> +{
-> +	u16 saved_ctrl2;
-> +	int rc, rc2;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &saved_ctrl2);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +	if (PCI_POSSIBLE_ERROR(saved_ctrl2))
-> +		return -ENODEV;
-> +
-> +	rc = cxl_reset_disable_cache(pdev, dvsec, cap);
-> +	if (!rc)
-> +		rc = __cxl_reset_execute(pdev, dvsec, cap);
-> +	/* Restore cache policy after any attempt to disable caching. */
-> +	rc2 = cxl_reset_restore_cache_policy(pdev, dvsec, saved_ctrl2);
-> +	return rc ?: rc2;
-> +}
-> +
-> +int cxl_reset_function(struct pci_dev *pdev, bool probe)
-> +{
-> +	u16 dvsec, cap, ctrl;
-> +	int rc;
-> +
-> +	rc = cxl_pci_device_dvsec(pdev, &dvsec, &cap);
-> +	if (rc)
-> +		return rc;
-> +	if (!(cap & PCI_DVSEC_CXL_CACHE_CAPABLE) ||
-> +	    !(cap & PCI_DVSEC_CXL_MEM_CAPABLE) ||
-> +	    !(cap & PCI_DVSEC_CXL_RST_CAPABLE) ||
-> +	    !(cap & PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE))
-> +		return -ENOTTY;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL, &ctrl);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +	if (PCI_POSSIBLE_ERROR(ctrl))
-> +		return -ENODEV;
-> +	if (!(ctrl & PCI_DVSEC_CXL_CACHE_ENABLE) ||
-> +	    !(ctrl & PCI_DVSEC_CXL_MEM_ENABLE))
-> +		return -ENOTTY;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	return cxl_reset_execute(pdev, dvsec, cap);
-> +}
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9e218f236e66..743e65abd758 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -733,9 +733,14 @@ static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
->   #ifdef CONFIG_CXL_RESET
->   void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
->   void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
-> +int cxl_reset_function(struct pci_dev *pdev, bool probe);
->   #else
->   static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev) { }
->   static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev) { }
-> +static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
-> +{
-> +	return -ENOTTY;
-> +}
->   #endif
->   
->   #ifdef CONFIG_PCI_NPEM
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index facaa324bd86..7224857c7b30 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1352,8 +1352,22 @@
->   #define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
->   #define   PCI_DVSEC_CXL_MEM_CAPABLE			_BITUL(2)
->   #define   PCI_DVSEC_CXL_HDM_COUNT			__GENMASK(5, 4)
-> +#define   PCI_DVSEC_CXL_CACHE_WBI_CAPABLE		_BITUL(6)
-> +#define   PCI_DVSEC_CXL_RST_CAPABLE			_BITUL(7)
-> +#define   PCI_DVSEC_CXL_RST_TIMEOUT			__GENMASK(10, 8)
-> +#define   PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE		_BITUL(11)
->   #define  PCI_DVSEC_CXL_CTRL				0xC
-> +#define   PCI_DVSEC_CXL_CACHE_ENABLE			_BITUL(0)
->   #define   PCI_DVSEC_CXL_MEM_ENABLE			_BITUL(2)
-> +#define  PCI_DVSEC_CXL_CTRL2				0x10
-> +#define   PCI_DVSEC_CXL_DISABLE_CACHING			_BITUL(0)
-> +#define   PCI_DVSEC_CXL_INIT_CACHE_WBI			_BITUL(1)
-> +#define   PCI_DVSEC_CXL_INIT_CXL_RST			_BITUL(2)
-> +#define   PCI_DVSEC_CXL_RST_MEM_CLR_EN			_BITUL(3)
-> +#define  PCI_DVSEC_CXL_STATUS2				0x12
-> +#define   PCI_DVSEC_CXL_CACHE_INV			_BITUL(0)
-> +#define   PCI_DVSEC_CXL_RST_DONE			_BITUL(1)
-> +#define   PCI_DVSEC_CXL_RST_ERR				_BITUL(2)
->   #define  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)		(0x18 + (i * 0x10))
->   #define  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)		(0x1C + (i * 0x10))
->   #define   PCI_DVSEC_CXL_MEM_INFO_VALID			_BITUL(0)
+> +	if (smp_load_acquire(&zone->contiguous) &&
+> +	    zone_spans_pfn(zone, start_pfn) && zone_spans_pfn(zone, end_pfn - 1=
+))
+>  		return pfn_to_page(start_pfn);
+> =20
+>  	return __pageblock_pfn_to_page(start_pfn, end_pfn, zone);
+
+[Severity: High]
+Can pageblock_pfn_to_page() race with move_pfn_range_to_zone() during memory
+onlining and return poisoned struct pages through the zone->contiguous fast
+path?
+
+When a boundary range is offlined by remove_pfn_range_from_zone(), its
+struct pages are poisoned, the zone span shrinks, and set_zone_contiguous()
+sets zone->contiguous =3D true for the remaining span.
+
+When that range (or a newly hot-added range) is later onlined via
+online_pages() -> move_pfn_range_to_zone() in mm/memory_hotplug.c:
+
+	clear_zone_contiguous(zone);
+
+	if (zone_is_empty(zone))
+		init_currently_empty_zone(zone, start_pfn, nr_pages);
+	resize_zone_range(zone, start_pfn, nr_pages);
+	resize_pgdat_range(pgdat, start_pfn, nr_pages);
+	...
+	memmap_init_range(nr_pages, nid, zone_idx(zone), start_pfn, 0,
+			 MEMINIT_HOTPLUG, altmap, migratetype,
+			 isolate_pageblock);
+
+move_pfn_range_to_zone() clears zone->contiguous first (with a plain store
+and no barrier or grace period) and then expands zone->zone_start_pfn and
+zone->spanned_pages in resize_zone_range() before memmap_init_range()
+reinitializes the poisoned struct pages and before the sections are marked
+online.
+
+Because pageblock_pfn_to_page() also loads zone->contiguous first and checks
+zone_spans_pfn() second, a concurrent reader in pageblock_pfn_to_page() can
+load zone->contiguous =3D=3D true right before clear_zone_contiguous(zone),=
+ and
+then observe the newly expanded zone_start_pfn / spanned_pages from
+resize_zone_range() while memmap_init_range() is still running (or observe
+the stores out of order on weakly ordered architectures), bypassing
+__pageblock_pfn_to_page() on offline poisoned pages.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027042204.3741=
+307-1-gourry@gourry.net?part=3D1
