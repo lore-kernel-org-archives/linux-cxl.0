@@ -1,122 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.50
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793206438;
-	b=LIKbFNXNk+hyiihcFOm65CiLJA3GSdyfQHqeoGhXNS54egC6C9NBwtbj/MDFvxP1JssW
-	 2QCjAad9kiXh5XjtJZTlOTPIwuI46k+ca9Whz6ani2njqVG0wynzkZsJk+se4no0IdjX1
-	 Py1uVoDzxek1JNBViiIyif7b7bbn8H1dwVW/cyDaXyD3NivlPDF1MSLnxIb3ywteZf+9A
-	 Ky5pNCaTBnZ+JpegDSNZj84/mRivDnzcEqPqlJt9Z9WPOaqqv8UXeD0n+NTTawJOpgeGD
-	 B3Fl5ZIRykqhlwqbTRb8dscIZ2sIg75MCZtwyXTkiZb/XHw0IGKt7Pw6UrJs0dBIQAA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793206438;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793206481;
+	b=is1WGq1L3AtZnCFsRzdzMUiVPW4zJkE9KkeFojJNnibj5PsUHXqKKZ6tz9vtHNKmZurk
+	 ORc7JdRrgLKV8bSkhy6pgCVjB+kvY/Yucrf7J+9/wzgv7zELFpYlmfs0gFzqhdWD5uCp4
+	 F9HfttYyEWSvgOxDlBijBi4hs5CiaNb1MplqAgbUtsUd41BRBMUfyYF8y7rgJToXLo9gI
+	 kuJDK8bOAlrtu+8OhveJQo1Mhr1UEfe2+EXtI44ToOdJP8OjaLGvooMOdibp2xXZau589
+	 25+pOQ0ElFAF54mXiFoePUQP1SRyH2mDB4/pfAL7wpvuN/Sl24iISoqOG5E77iQDTcQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793206481;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
-	b=wLyNg8NijPIYd+kU+o4o8CK1iwSHI8SCeguh7a75O5ACyLqFgEBpc8wVQlDHE59n3I7E
-	 EU44nJ1+gNY4mK/RuKLJVHmCf8j5GMD5URgF7AUQbwo54pKzmzSUn61X5+TmrcNF784jB
-	 qAuksu53Bu4EEhlnC0BnApJZfG4YQxYlECXr3v7sE+nJKVRSNiwQdWESDnFFYV0wJnUKQ
-	 QgHXJibcX4JvI2WIx3YS2Hx9KEXFwupkd0xlMaL3JfwiAZ7TC/IEBwEM0ocJUbeSdUtGD
-	 rhPAhvAfm5++1yR7OxsrLQjD5csYtukZfPzBr+1Gm1qLvXQRseHjhGFfA+Ez6AZzetw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=soleen.com;
-	spf=pass smtp.mailfrom=soleen.com;
-	dkim=pass header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=XDq4mZkF;
-	arc=none smtp.remote-ip=209.85.217.50
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=h3ystJhrkZfs4wDwVdxIpAnqZwF+5sjgEnOhfYS+4Ds=;
+	b=jAd0h/vRPTPMluk7Nn6VfAXuJ20H8K3WrnFD2v4S6gZphCOMqURYXQCFXPfk4aKTBK6f
+	 FgfFWrbrlGs7kobtb64voUhvKXVjQnKUDFJDMVM4nSYm9rAGjNMHS6NyTPfaLFq8TualD
+	 9rXhcrIos1os+7ocRlEjRPNh/JWqQmpeiAu9IaGtJDW8GzpkayzsioCX8+s76W06exc/z
+	 KoJaHIV7tmpHjWgPR/0R42reBlu5WxdlvrkAfJlNjQQpP5PxbD2ch/YHTFjgmquIh8V1w
+	 3S47rPDjEYXdOTU2+3URozNKqUW4/Myo18bCeRYnHsEBMGfYnqnlEBmCWgabJK00ycA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oj4eYMqF;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.49
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64487606A31E
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 16:53:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64487606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D36E606A31E
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 16:54:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D36E606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=XDq4mZkF
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-7cb6dc850c7so398654137.0
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 09:53:57 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oj4eYMqF
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c43fbcb4393so193636466b.0
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 09:54:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793206480; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mmyIM7FkLzGDkWT9f3GE3o+PznfqvKpzryAxKxqNwsAcnGMleNYrzG+RtSX5w+wKO6
+         gjcaaShDwiVhK2bzsvVvjWmnIOF3QPINW5iY3qoH39MuH4GcnLE2zZ9fzFn5bDlL5jZx
+         esMbwY3s68/2kUinuMvI2XG0mcAzhHLfPXZQ8YR6n4Cc71jo170oQh6thi7v1gSMGmTU
+         EPoTmXiI6u1txX2hbo5G5PaBBc4Pq/QauhbvHyjDCb7b7gY6fSqFW+ivsNBe9aOi83wK
+         V5UI3uJ7GYh2jw5jZzMBu4cNoR+VFI91jFO5Uil1SVzFREVQ7iTiw+/HxYCLS1GFbNKx
+         tNTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=h3ystJhrkZfs4wDwVdxIpAnqZwF+5sjgEnOhfYS+4Ds=;
+        fh=BgZ1B0b0LxehtEjZlcJTY5AgJjJFdLl0OoNLk6PNELU=;
+        b=gthr3T4tMU485e3FNYpOlqBltewPWNlDoOBuJvHz6MxkVChblwTHyAR3bCdsKBegiD
+         JAmX/jB8+Dr51gPP7y0vrFhVlovmjL/XmZhWHO4mG5dKrAcFIF1vAgHZpujE0jqDpgbt
+         754FlDR4ptmSQ5hQFwCpszSk3RO3uR9mDRLAHuj7lTPReMLtSKaLsCnJ7sc+M8tnb9dB
+         QCi9pZ/2a1RBGtYnH8aEZihWPaqmz/JoMFTI1wJW95YB/GvCBwYvITpaJORRCPWdCYv/
+         oBT0BnTQW7X4Nzq+u9DUvDFk3wCKE5p+IalejGKaAq5oeZXN2AWvFnN4LJWk8TM+oScF
+         /+Fw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1793206436; x=1793811236; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1793206480; x=1793811280; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
-        b=XDq4mZkFFwWiuClm+CVqUYc4wMUeEj61wwTEJ2ZEwdKAAZOVs4mAkia9/oOPQEGvZ7
-         0CPllEZOpo+2Vx7NH/qeJyuqrXNeGxLOX9kPYs9EQ9wuoJxqmE3014fXKocl5hQCZSSq
-         jYT4HKvnmSRh02d1ht2QsIKl81mDMWNV+vmtqq/q3kRlDKFLvoFwvUwOFm0i3nE1GCkQ
-         0TjmSaJ0QDxHwSaQMTz0/I03VsYupX2JpKIJaxwXOjS22DLQQPY2UaMVlL2DtL/m4NnR
-         nHVimsjgnDDTHtl7ghN+41KfpsxRYFoCjEcPBdzS03ioSJ55NDDAbq0L5U9RWlFtVa5Q
-         rq3Q==
+        bh=h3ystJhrkZfs4wDwVdxIpAnqZwF+5sjgEnOhfYS+4Ds=;
+        b=oj4eYMqFg7gHe9H2JcxnVX1xekmxsJ19PcyDmk/OMgjn5UXSCYYnXu7Ac1axMQ7SR9
+         q4zcTyMTKwoBmlpjcyBns4x2YrJV/wZCM14e5QvikeiV0C+wKNF7KUibECOIrMdPWZb8
+         TeeSnShwQLOPfWWedxcIMlWY8bdOdzbeIcmNlPYAeJPXpTRHI3uLnL51w/g/MSBgrYqU
+         hM8NCxRBVHWjK69lGvL9PkV9slxoAJvbLHj55IQQFN7GfFG4bIrQO3qJDWc5uDOrVsDp
+         Urwxbb1Ol2RkuzF1a7HS3sIe18QCl/MS8DkzaZbxu24cwwm8EY03lDrdPNjvlUvh/BZE
+         LYyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793206436; x=1793811236;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1793206480; x=1793811280;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
-        b=Bw/27BOpG7h1+GTu5w9zR6/600xeraHlL6dZxrRgOtJbV1R4+6Wlc4qjS79hWV0iFZ
-         e2j3SIunQz2vL08y2c9pip3VnNVBigcYU2f5kyX2DEGOd6S3U8Me95vPe9AMkk7Tva5u
-         6NvHunYZopovSIjgyORqeNMiWaLzs7ECGkaLzKR030hbyr8H7M6J+krCMjeRKuJiQyi2
-         snZGlz4MgMZP8EkQ7mlPMZ8defCeZ7Dcqq1oqFn6DiQ211/JHS0qiXDcQzpFInN12UnW
-         /wk45jsB64XqruGc3ujZh+gsGZntex3UyJUcAYA6Gb8zH1K6EFgi7GHTFHHdFfwbpI3o
-         9XDg==
-X-Forwarded-Encrypted: i=1; AKwUvByeR0p3H/XachvUsVE3YYLtqNW0snKOZmC1kAPSn/jQ+7EUgOZKGWLVxW6bCgkWa187sTnbBXVDJVk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJpfE812q3xo72a+YvLrksb5PVAlfra4LSdNDcsHAwXiLKKbRMN
-	OPxny3Dpd/OnYtnDiCrMHQ4TeORN7dEsTO2WYZQL4rEdHcBjUBlnbKQZ44iYsJz0DZE=
-X-Gm-Gg: AYBFou2qeTqzW2AQx25M+FIc9UZHW9C0Vd3ir1FaMfrfkz/TcDQEhqvhVaLHimROsb3
-	vH8G89JooVlcC9+LAZIzSw8tGWRSvkFTt3B7d5fLo9S0W3VmYK6BimINQcmXXypXfwfx9Jb1RTx
-	CBW3IrV+r6b2BfG6Uv8J6HiTX/T3bYm3ucRuhmWkl7yM4BmYsLUuSH7Vfaz3oD3DgMYW3J0rt62
-	8w7ndK8V9MJYgf0LFTOROf695vZJ2NeHehnlzRdmXhHmz7O8ZHDWp/+4DlyQjVsNtKXRx8UuXyj
-	w8jfls/h1r5vJItPuCbHCV78Ug9fGPm91Jgv90Yk5o2aodoL7txQTYgx4COvKWQQGgHkluY3cwe
-	Sz+dJ1bKLeZyS1x6xgETTGwUuneMMHXJHJN7KwhqYkFvf+AFgRXnsCnz3m4ZtkC56bDNMAjJbU1
-	K4lEmyCKK0JgIp8S/tB86j5PgZDQP9oTeJ781RGwtzp+HfWr2udxpEN1KeNEMdOAgAEwlGR8iXz
-	RV2SauMbN/fYmvgHCn0+a78GwMiqtAp1RZWocudEuoNOA9ziGK1qEVcuXGdGffFolrTtpPjdTQz
-	+EGSv+GTxOzxXGg0e8cOmdXMw9IKP6stvvf6BkHlrWb61ZCzt/x+R77ZlO1DWgDpdlio4jrJ4BB
-	wKTkPywAkxj7vIW+temO4qmkHeza6CQ==
-X-Received: by 2002:a05:6102:3e8d:b0:7cb:bb33:8412 with SMTP id ada2fe7eead31-7d03a5063b4mr1453208137.10.1793206435862;
-        Wed, 28 Oct 2026 09:53:55 -0700 (PDT)
-Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-991259db2d3sm6495987241.6.2026.10.28.09.53.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 09:53:54 -0700 (PDT)
-Date: Wed, 28 Oct 2026 12:53:47 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Chris Mason <mason@kernel.org>
-Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
- accessing shmem state
-Message-ID: <auIoDgHmzpGH6cOl@google.com>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
+        bh=h3ystJhrkZfs4wDwVdxIpAnqZwF+5sjgEnOhfYS+4Ds=;
+        b=KHuYcVPi82nO2+r3wG3CnuiPmzopJpQJw44VaXU3jfITQ+rrxpXX99k/PRrIvblunX
+         gMJ+7IkmEmHMVmEHhsvLpWwP/8jIrWrcrCKyXzg3GUHGpV2Ls2CE+rDp/QyQ0QxnVEza
+         lNuq92hXLvR0xV2uepaI8zAcAuygcs1cYG62AwmezDXE1SmuN1IJfbSgJAvBiFoJzTiM
+         S9gBD6CB59L6YowoAT7Jn2NITiKrOT86NdkJQUK+B/yc03/G+JBColLjCCrJ6OYutXnD
+         6Fxn7KMkgZqEQvLrBauPK9HYPfFna9LQcgm1puqJ2j1Yglr4pyVfWQYewqo6yWViuD2C
+         4N8Q==
+X-Forwarded-Encrypted: i=1; AKwUvBysLCJl0UoK0hQOi28jmUSbMc+j7A/i2PIhXS6D/aHJ1VWZ6uhCfQ6+oBjwKwmDTpavoBWoo8sl+RM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI0SYjFLdEdBBATQbFSieABHwXP/nF0HB3aUpGI0HTIjLWBI5iS
+	22WvJp6E2zJvrNkHxTZ/5RKra8i/cM/iTRE7ChV2b/dHjxhUcYdZD4YQjI1/IKoAc6ji+Jfun7w
+	zFoKUV0abgCWymFlrRkfFJrWDFsEieRE=
+X-Gm-Gg: AYBFou1BZpCUwBC2W27p+1YlKe6x0UTbUrNXxm2KsoAQX1O4TQ/2JajI7DjJFblcOeT
+	hejU0CfhEaEZv9HFpsCOve0lUIw5gZbZUSkqvB5xMggsPxWC8LVBvFTJi/s6tRUwBGhoJINNxzN
+	J7zoIMLNmL10MiCYeTmQNDF0j2c/XbyOs0xmmVauBLOISst/Z8tW3CzTn7Jq65lMCT98RuMSP8w
+	LZWpTIXdGcNE6Q2VpE8N4F9ZAkBe/KZawGL0g2bbC19ooLY8eQ+lV2HNWQnAN+v/N4+EBnOR/jK
+	V5wMBVi2d6qgCc1VC/vKORh85J3RrHcCSPy7UuktJIbBMAOU81y8Z6/lYygZVl9Za1tg8J81ABq
+	Xmeq7/pGSd5/58FMoEmpSRLNVHl+uiKnijJ13gooK9CwFPJcFhUiUxx/7IoVcfhgo37Vcdw==
+X-Received: by 2002:a17:906:f586:b0:c46:5973:2a1c with SMTP id
+ a640c23a62f3a-c49be00bf7amr248310266b.37.1793206479455; Wed, 28 Oct 2026
+ 09:54:39 -0700 (PDT)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -126,109 +104,105 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-1-6f74bec9a5bb@kernel.org> <auBbKP8UNI9talDL@gremlin> <e5766fe2-6cbb-45bc-bc57-87314c130de8@kernel.org>
+In-Reply-To: <e5766fe2-6cbb-45bc-bc57-87314c130de8@kernel.org>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 29 Oct 2026 00:54:01 +0800
+X-Gm-Features: AclHuK9Ir5cjQUbkmvsMXXN1XNQvMKyhNeup0qo5sC4qB6sDOiJzphX3Pz6BQcc
+Message-ID: <CAMgjq7DzLFcznTqVaRneoN+qa9StPTvcBwHMdLM52ZbfZ-ffEQ@mail.gmail.com>
+Subject: Re: [PATCH 01/46] mm/mglru: don't use stack pointers when walking PUD
+ and PMD tables
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10-27 00:17, David Hildenbrand (Arm) wrote:
-> shmem_file() only checks a file's backing mapping. That mapping can belong
-> to another file, as with a Coda file backed by a tmpfs container after
-> mmap(). It does not establish that file_inode(file) is a shmem inode.
-> 
-> Seal handling and memfd preservation use this check before accessing
-> shmem inode state, so they can access an inode of the wrong type.
-> 
-> Add file_inode_is_shmem() to check the inode's file operations in both
-> paths. This identifies regular shmem inodes, including those used by
-> memfds and ordinary tmpfs files, independently of wrapper file operations.
-> 
-> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
-> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
-> Cc: stable@vger.kernel.org
-> Reported-by: Chris Mason <mason@kernel.org>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  include/linux/shmem_fs.h | 6 ++++++
->  mm/memfd.c               | 8 +++++---
->  mm/memfd_luo.c           | 2 +-
->  mm/shmem.c               | 5 +++++
->  4 files changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index a7c7a96a7cbf9..2ceca7993e4f5 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
->  		unsigned long len, unsigned long pgoff, unsigned long flags);
->  extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
->  #ifdef CONFIG_SHMEM
-> +bool file_inode_is_shmem(const struct inode *inode);
->  bool shmem_mapping(const struct address_space *mapping);
->  #else
-> +static inline bool file_inode_is_shmem(const struct inode *inode)
-> +{
-> +	return false;
-> +}
-> +
->  static inline bool shmem_mapping(const struct address_space *mapping)
->  {
->  	return false;
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 0f6fff004f5e4..7d2da23157003 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -211,12 +211,14 @@ static int memfd_wait_for_pins(struct address_space *mapping)
->  
->  static unsigned int *memfd_file_seals_ptr(struct file *file)
->  {
-> -	if (shmem_file(file))
-> -		return &SHMEM_I(file_inode(file))->seals;
-> +	struct inode *inode = file_inode(file);
-> +
-> +	if (file_inode_is_shmem(inode))
-> +		return &SHMEM_I(inode)->seals;
->  
->  #ifdef CONFIG_HUGETLBFS
->  	if (is_file_hugepages(file))
-> -		return &HUGETLBFS_I(file_inode(file))->seals;
-> +		return &HUGETLBFS_I(inode)->seals;
->  #endif
->  
->  	return NULL;
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 59de210bee5f9..c0811407ce397 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -582,7 +582,7 @@ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
->  {
->  	struct inode *inode = file_inode(file);
->  
-> -	return shmem_file(file) && !inode->i_nlink;
-> +	return file_inode_is_shmem(inode) && !inode->i_nlink;
->  }
+On Wed, Oct 28, 2026 at 3:07=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
+> On 10/27/26 09:06, Lorenzo Stoakes (ARM) wrote:
+> > On Tue, Oct 27, 2026 at 12:17:21AM +0100, David Hildenbrand (Arm) wrote=
+:
+> >> From: Josef Bacik <josef@toxicpanda.com>
+> >>
+> >> MGLRU passes stack copies of page-table entries in walk_pud_range() an=
+d
+> >> walk_pmd_range() when walking to the next level. These copies can beco=
+me
+> >> stale when khugepaged or MADV_DONTNEED (CONFIG_PT_RECLAIM) removes a P=
+TE
+> >> table concurrently.
+> >>
+> >> This pattern dates back to commit bd74fdaea146 ("mm: multi-gen LRU:
+> >> support page table walks"). Likely, earlier locking masked the latent
+> >> bug. Later changes exposed it: commit 1d65b771bc08 ("mm/khugepaged:
+> >> retract_page_tables() without mmap or vma lock") allowed concurrent
+> >> retraction, and commit cf4a65539c13 ("memcg-v1: no need for memcg lock=
+ing
+> >> for MGLRU") dropped the walker's outer RCU protection.
+> >>
+> >> The fix is simple, so just fix the original commit so we don't have to
+> >> speculate. To fix it, pass the actual PMD/PUD pointers. This restores =
+the
+> >> RCU-protected lookup and validation against the live PMD. Note that th=
+e PUD
+> >> handling is required as well to handle folded page tables correctly in=
+ all
+> >> cases.
+> >>
+> >> Fix generated by an LLM and sent by Josef Bacik in private.
+> >>
+> >> Fixes: bd74fdaea146 ("mm: multi-gen LRU: support page table walks")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> >> [ david: handle walk_pud_range() as well, clarify+simplify description=
+,
+> >>          adjust Fixes: ]
+> >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> >> ---
+> >
+> > God, terrible. And why does MGLRU feel it needs its own independent pag=
+e
+> > walking mechanism?...
+>
+> It's all a big mess. I think at LSF/MM there was some talk of using that =
+also
+> for traditional LRU, but I guess it might take a while ...
 
-Yeah, file_ is not needed, otherwise:
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
-
->  
->  static unsigned long memfd_luo_get_id(struct file *file)
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index fadf23f9e21ed..0d41aac125df9 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -275,6 +275,11 @@ static const struct vm_operations_struct shmem_vm_ops;
->  static const struct vm_operations_struct shmem_anon_vm_ops;
->  static struct file_system_type shmem_fs_type;
->  
-> +bool file_inode_is_shmem(const struct inode *inode)
-> +{
-> +	return inode->i_fop == &shmem_file_operations;
-> +}
-> +
->  bool shmem_mapping(const struct address_space *mapping)
->  {
->  	return mapping->a_ops == &shmem_aops;
-> 
-> -- 
-> 2.43.0
-> 
+Right, there are reasons, MGLRU's page table walker uses a bloom
+filter and have some zig-zag avoidance. It would be nice to fold that
+into the generic walker eventually, but it=E2=80=99s not a high priority ri=
+ght
+now, but we=E2=80=99ll get there eventually. And using that for CLRU lacks
+support for lazy promotion so I'm not very sure about that, but still
+things are being unified bit by bit, so it will at least looks better
+step by step. :)
