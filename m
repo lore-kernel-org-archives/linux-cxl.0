@@ -1,92 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.135.74
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793143746;
-	b=o64bwbzQhoFawLFFPJpb0pJRUSjBqZgOLLOfZCURnqomF9f0lHvSoWek6pDhRHb1uuI6
-	 Ok7AXB2Ly69VbEohAxvNUXdsaga6Xrooe5wQ4ylDdncLZswqD4+hnJvqIBDAEKgnrpIOT
-	 DoB/E54eYCfOE1bHAaK7KJDxRdPBmkuZnfuRxrnRhTqLaJrUgCGbPZ4jrC2ds3bn74j2S
-	 1EFTwewDK0LwEWhC6lbIZTHvYl7fPSEcoQJ6OJCubhEUee1uT36z7AizYr1XqYF2gCPN+
-	 qN2ayZ7wARNeZqPQjr/vjq9qmBKluI6O1GHq698q+ZpAj+92JegC1xHVylK4euMhUzQ==
+	t=1793146460;
+	b=I9pMzlL3cevxBxZPU0x01cuShvowhLt4uO1iygPvS6Ut1MQNghTz99uBmHN/HL2MvgWW
+	 B4HO2m/BLD2mGIRwYD7dX+S1Y/eSpHSpAAZYqgi0KOxYBZi/usvQpnG1Qug8YhsmWU8PO
+	 EwneX5YxtWvcXquPwWvtnXVkOTkpDCR5kPCg2umCt07KtAkKEkvti3KEePB1TqifuG/9X
+	 tKYyjnphleAa0H/PpTlzmaahslTDhvGas49saGK2NIWXMh2Zz27cLfURx3BHzvSezduSE
+	 C7mkTv/ID2nhTFvd7HvcUz3H2FVwr/M5H0Cbxcoje2eK+1UV525KCkPS8tRISK1zrcw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793143746;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
-	b=NzX9j17cwEaJ3urPRCYfiREirtj1awXsEy52ZGfct7YVaylb8zHVrZPDM3k2e/4Q8EtX
-	 jikdMd0kEi7MV82XO7BbajiH0vOtb/hpwmDK0njgb2bv37ALICfgvZ5ilw2PUvzdBv6xT
-	 vM46ovusGL+AUcwl6D925io0s3mAPifzn2fJKzUzP89dPBaWM6cphuIRJe8h/+5npDbNS
-	 KXUJjiur7EgC/JBlf2Re1PmD/1NdxEmDKWAqdWXbUCYW0MTp5Mj/k3FdbeaRpAFrTEpn9
-	 lSxyY0kFkKNURUFRgo9J17gt8DK+BJbfCx0S00KexLMT32oGt1stfeSUa6pfi7lihgg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793146460;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
+	 X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=7p1ucq/Ny8UBz6ghlqYuLhKrCHyG8ylaL7otql1jOZ8=;
+	b=zXQSuo4wLZc6iyoECxxNr/64PNQTtldlwTW8LmJmMOTgcjADjn7rRq5svoyIXuirVVuF
+	 zyPoXgZ3iytknVKfQhXmIANLT1prulTmhwrnJVXCQCGI6vYj+lTz7jhFsn4xJuij2i0Hz
+	 q0ts5Q7NVD11ljQktcNzpZBNW5WRz6Adob8tt+XLQwFp2wEg5IK+1gkoeVakE7qslRQ3i
+	 IHzmKAkckth0hk1CL10wj1jQXKDj2NmtIYxkHbGQiCIssfodgX8luC2t9Eak/+6h/e8sf
+	 ECE0jikDHP03fjqmloMxuozxUH7SKhn6yIubTY9RcX/sLV/rwbBbZrlFIvcuqZo4tNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WQHrj7OM;
-	arc=none smtp.remote-ip=209.85.210.182
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=columbia.edu;
+	spf=pass smtp.mailfrom=columbia.edu;
+	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=lsovCs6I;
+	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=Q4NLyjW1;
+	arc=none smtp.remote-ip=148.163.135.74
+Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0F606A31A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 23:29:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFB0F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE56F606A31D
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 00:14:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE56F606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WQHrj7OM
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-89ff475a152so188818b3a.3
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 16:29:05 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=lsovCs6I;
+	dkim=pass (2048-bit key, unprotected) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=Q4NLyjW1
+Received: from pps.filterd (m0499199.ppops.net [127.0.0.1])
+	by mx0a-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69RIuxwt479834
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 20:14:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps01; bh=7p1u
+	cq/Ny8UBz6ghlqYuLhKrCHyG8ylaL7otql1jOZ8=; b=lsovCs6IxaWMyufeHyab
+	UGnNVfqeJNBrnilLDH1hmBBzIDO1Xw2PYSUP6AO5lBNUxpxEQbs+32FmrWqXgs2U
+	tOPH30t80MNHG2qpSiuiuflnpzM+Fl8MrVaIQ/TzOQwsV3+8EA9G3C0UHn/qCG3Q
+	PQj237pzIWWLwXlIO/8itmTx5LzX4mvdorMSSEhTUlDiVt+iAvZg3DPutnck/E72
+	SD4t4EgnBW4hfXCWuhw5rDgUQrr386PNS4Nzie4yCvvMNEyT2eeHSzgksDyKzRBz
+	69BiiAg+4Y9BSAZh6oP9aUSXMEnXOkAGEduwN+78Gc0cdd8YkiEvb2dw4F4cmelV
+	dQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 4hjxk9mh09-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 20:14:12 -0400 (EDT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-91c7b175e38so10019036d6.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 17:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793143745; x=1793748545; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
-        b=WQHrj7OM5yRaRkGeTrggC5Jhxy5tOOVJj7jEXN/Hvplk0kPwW7Pev0atIgOFxcxpS+
-         EEsVKGR+r4K0aroU1MCxSBLtcahvIz7kTdikMOPuw/WWzB23HjNmHikWboIRlF40k0AD
-         RmZZ6Vo1Q1d749KBGgZD7xiebCrh8eIgQI49JmCdZTxfo9uWHY78v7WhIHde2BbUYRTI
-         tmSIyIbuZQSnJMCN4HZ/sBhttosWAzM5TjCZUocPV+UezLbJG+o/hKetAcKaE0C8C0uV
-         7rkGfk/ns/7fn1ybFddTOZq4umBqUEZ8qSvGplYmcPtVroi0SIXnoxH2GPPnjnm6S7xP
-         dvfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793143745; x=1793748545;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=columbia.edu; s=lionmail; t=1793146451; x=1793751251; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Ln10d+mgN0LQwoxe6WFCwLj+G0pXkKeGxjA0i13u1Mg=;
-        b=r569Sr7owjL5VBCt+i6pJoQ6JG7eQGS5V3i/UlQkcSqOKLFCci0sRQMLCZ222TOOuS
-         L/pYyKBzskKx0x8v7ekR/KhNe9hCW7bop+isBXLWpIAXxMJ/NY/SBMDKfyu8XLBcDfVj
-         l+mG7+ZwrdtCeeJzLvpeXEVL1AboqOfI3Eqyj4hzmdiCc9vL0TwLQk98dfGz/olpt6Xe
-         ifgRZZT7Yyv/nd+qVCwgzWTr4GwsjLLBRaDfwRGwNPH4C5D1bsFAKWeGx2hfuIdX+yUN
-         2Q6uTL3dhnLurcjFE6k+4wveVuUFRsDAGtr7xmNsKo7lCtQxZzQznua4xiZlg+U9YLoN
-         To3A==
-X-Forwarded-Encrypted: i=1; AKwUvBx56uy7m0NdWpZFYEm0LrVWmAttqa3Qkldvl0mMg3WMxGcMCp9rB5pbc38DjaL6Hx2hTDGcd5xqMq4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJRbrd3S139Q5T78vLqwQuF0UO7nSNQiAHIk2kyVqsYGUoCntbJ
-	wF/XTsk0sOtKLq0NtO2cwza0sH2fdcWlmPhRxu/dv8s4tIntfFpYSU9R
-X-Gm-Gg: AYBFou2kf6mzkf0JHu5sg956w2xvXhWpOBoKoiyNLCpVoIdc10TTbGxpNST2uamKSLc
-	izFiuYbxPeC/2A03+Cv4pYK7gehaEMt1TNsollzD1SzTY8lA1Tgi6+ybq8vrxXqZPSCKyq63owZ
-	KYEfAC/m04PB2VrQxsRBeQte6YKO4gu55vuDHCz6AIIfJ8Q91JqcS4ps8pQc3rrqrQzSZWQsgnM
-	Op74/PITr/b59iK4S7gCMy/JqqTF24hhQHgnwtIlXYIanzmsKSU6R1f1GAyElNyvbkxNaVKWKSp
-	3e1T2gMdexy0uLHSHfRh3UDb9ATJYFQGUYAk87ym00ITdK4VV1WrgS6BI543vI6/3Ol4ydrgrsS
-	SH0gjS+uT/TULv2tDg1gcWO8qOnRzsl6ysAJgUQPag3ItDceeW/IsnTWBEbrOFRHOBn+KwI4GSW
-	WTuG4On4TlaQrsQw/5rJ7NAuvyXrPhjsfBUARnpP6O/AfN62onhKH3SOCoUm/uK9VT46vYWcNuh
-	Q/FgeJhL8SFusSY4ZLgrL0moJtYS//s1/M6OjayPG1MmUgUOvc=
-X-Received: by 2002:a05:6a20:4327:b0:3e2:89c3:2fb0 with SMTP id adf61e73a8af0-3e902107ceamr548447637.7.1793143745236;
-        Tue, 27 Oct 2026 16:29:05 -0700 (PDT)
-Received: from cxlqual ([220.120.90.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6c2485703sm352437b3a.49.2026.10.27.16.29.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 16:29:04 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 28 Oct 2026 08:30:32 +0900
-To: Richard Cheng <icheng@nvidia.com>
-Cc: jic23@kernel.org, junjie.cao@intel.com, linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: Re: [RFC PATCH] hw/cxl: Align mailbox payload backing storage
-Message-ID: <auE0GKAvRSufpJuZ@cxlqual>
-References: <20261027102227.4976-1-icheng@nvidia.com>
+        bh=7p1ucq/Ny8UBz6ghlqYuLhKrCHyG8ylaL7otql1jOZ8=;
+        b=Q4NLyjW19/i3ait1GGvuGUivPbsqagcGPGP+qWcDf7njdgRSJuYGwHwfXBRn6+WApZ
+         u2dU/OtMje0X9b8UevuOY8/zp+xcTBSlA+AQPyXfpQIFvqXQkrx7HvxUuLeKu1xIjmOz
+         kiBinAtDG9/rbdMBTxkVC2eZ+5y6Lcu8Hj86h5xFKIuiV8Oo+uj+Ulbj4qOr85BrMbkh
+         EyxD2Q8Thz/bitPJU4cocw8Ol6X7hbw2JlkPyQ66x5sGjM+qvJmR/qMkUXyApTT34u/s
+         sZcQJdUwxGiWQoZpZVBv/TUZjOGT3aT0Y0GxHW03AK0xQsXqWosKF43hPhwNOMY3TfSO
+         p3Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793146451; x=1793751251;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7p1ucq/Ny8UBz6ghlqYuLhKrCHyG8ylaL7otql1jOZ8=;
+        b=vNfid7beIN4e4kzV1SURLQRtbdMap9z9xb2aeK/YIWMOFCL6UE8aS3XDulYoiBkAGK
+         FXBFdHJsF7ISIci582CwFAo8+hlF5f1+FBtPBioux4g2YwE2KniZY4y7PYkxj7Qlk03h
+         B3iEuSs9Zd3hIB/fjTGvKxbK4lcv1NOkUPD5Fg/nf+nuJekdoqCkQ//s24pH2GujWP44
+         I+eAcz0DZMAFZoWX+ktxtl6Suu0NP7tyItb42IyBKB/vF5vkSL5aH3NrWB/oxnXOScM0
+         F3VbUtmo82/uxYcHy5zaTPD8S7OU5D/17HI55i7rj2gaxxPK41q6/+adMo9DvMTkfZvb
+         4pOg==
+X-Forwarded-Encrypted: i=1; AKwUvBwY82Akw9guSVTlBveEmm3MtYFtfy0Hb/YDGJaC+EK3jlWCR8K6dQQ9w8duoCsgRtc4PagrQ2HvoyY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYL4s8glxK5e5zsn8FztbCIW9ofXF7MlqqDHIh8T+NkCuxp7ZF1h
+	PdmzAToSG8iefNvWg2lg2MEjWePyxzJF+gGmupM4KzGnTtajx9fr8+VNVy+JCYz5rNGgWu88LNU
+	aO2ynxTrILwM4oWoD1wXUToMG2mc/HkBNtcDt4o9jsVxALVIQP3XEcA5Hlw==
+X-Gm-Gg: AYBFou2RLUu9AchCAAoa89ESl6RPRIC+s4GPSn+ZO1pbTftHzzUQcB8NAJUmeuvxEY8
+	qIqwXq96TR38q6FvBT8GW3omPb28Z11tahBNCMHf2956rk8/0xh9dC0RrZmxNqv9r/WWWF0kgSd
+	ouKL6uHPs/vePbDbWSm95XNWlbSrrZ4aFJBJIzwa+T4vpcIU/t3zY558HTlFmP3zBHYk5++JEqx
+	sqm1/WWfd6qsZTOWFqc9v58B1CAGHPyJJgoIO2HX80e4LUyHD23qB1i/ZL7AVhTGWa2yjv3fk4n
+	pMm/Yc8nGIUeGSZi3t8NqoIcQ9yYGl9tHNOfn2UZCG7s89qecFT+GJV4IgEKEtAVwFKExwKgErT
+	qgaWFbdj0MZArF8keWJ3nYEJ5fsM75/XZ2XfXC/UMUnnSA4DCWqT3cXazOSA7+DoWT29Hr8oFMP
+	mtiEGcrGIozPTafzgPDKqlcxNsFUXkFvz/aP1k2k08oV5KRl0fTJHFcGvvIseVLF3v91alnUoda
+	CNTbdVfJdJofm0PiZvlNk8HAUV0SmJsNpXzb3JHTQ/Jf2NLfeOYFitmLgoFFOJ5
+X-Received: by 2002:a05:6214:21e7:b0:91c:76aa:2c67 with SMTP id 6a1803df08f44-91c7d1aaecbmr12070276d6.39.1793146451387;
+        Tue, 27 Oct 2026 17:14:11 -0700 (PDT)
+X-Received: by 2002:a05:6214:21e7:b0:91c:76aa:2c67 with SMTP id 6a1803df08f44-91c7d1aaecbmr12069876d6.39.1793146450883;
+        Tue, 27 Oct 2026 17:14:10 -0700 (PDT)
+Received: from [10.206.51.58] ([129.236.225.183])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c6d8103b1sm40645156d6.44.2026.10.27.17.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2026 17:14:09 -0700 (PDT)
+Message-ID: <3c754c36-86de-44a6-ab3f-5c86e4bf83a6@columbia.edu>
+Date: Tue, 27 Oct 2026 20:14:07 -0400
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -96,116 +117,128 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261027102227.4976-1-icheng@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/46] mm/huge_memory: fix list corruption when
+ deferred_split_scan() races with deferred_split_folio()
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+        Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+        Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+        Barry Song <baohua@kernel.org>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+        Baoquan He <baoquan.he@linux.dev>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+        Hugh Dickins <hughd@google.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>,
+        Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>,
+        Harry Yoo <harry@kernel.org>, Alistair Popple <apopple@nvidia.com>,
+        Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
+        Kiryl Shutsemau <kas@kernel.org>,
+        Matthew Brost <matthew.brost@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+        Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+        Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+        Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+        Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+        Gregory Price <gourry@gourry.net>,
+        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+        Ying Huang <ying.huang@linux.alibaba.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
+Content-Language: en-US
+From: Mani Tofigh <mt4022@columbia.edu>
+In-Reply-To: <20261027-fixes_core-v1-10-6f74bec9a5bb@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI4MDAwMCBTYWx0ZWRfX2fkea6EAf6o4
+ yRKvuqOjZozbifQywKCj3v24m+8HHMDzD9r+XlSzJhMYydwrxN8dEtMrPOyDC/XJq1QySkJ4MKC
+ ZF8Z5VS9uHaYuO9mKMD7IdF4NCi2MBgdTiDumtq3YzT/QsArUp/Y
+X-Proofpoint-GUID: MZa1b_qPzY6tUP5xL168cS_GaoIvtlFF
+X-Authority-Analysis: v=2.4 cv=SowFe/O0 c=1 sm=1 tr=0 ts=6ae13e54 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=TdXXog4ttPu8yHJGq4T0ug==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=x7bEGLp0ZPQA:10 a=A0y_DWxS2BwA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=Da8U98TiO7q1upZEImrf:22 a=G--0XuH5328wxK7v7Suf:22
+ a=VwQbUJbxAAAA:8 a=maIFttP_AAAA:8 a=_zromwrzjHPDTWxWFBQA:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=qR24C9TJY6iBuJVj_x8Y:22
+X-Proofpoint-ORIG-GUID: MZa1b_qPzY6tUP5xL168cS_GaoIvtlFF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI4MDAwMCBTYWx0ZWRfX59n6Vf3yxZer
+ hr0UsWiUoCYktyuXyo1oZHOmg5EKasO+E/yoXv2p4s5SdOvpKIo/IR04soih6gs4nxRndqBoBEh
+ oB3MEFUZ5TBChJEUKpZ+wrNq7c57xf/9MPchp6dfIxm193V8qKdSnLBkmH/F9WPY3+zCLaP+71T
+ TmwQLiypbTZfkXJ5lOQLIHm/3gn/AoVuptsahsPcwVH+oI/shuS0ETwtICtMWWF8BL1gZLM9ibJ
+ sCRdKR99p11TzyoJti9in++L71Eu7nTvflf6lSH2pEn+7kXw6IAQs4QR6xYKJ4FWdKpTZX9gG/x
+ R+fGwWmhX54gxbUEQIBnqP6hlNEgBfTMrxK8kZSDXioDpjse5UlggXD96L6vxtvbYN5Y82saEb5
+ 7BXcTi7Rqibru2YHw4TP/vUHfWGFhLwjEwDmShOoXbgIbdeTvZpQ8Ucg9U3Q8wMNlMJo/mXLE7Q
+ j4A+tQiHbrDnUfW288Q==
+X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11948
+ signatures=596817
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=10 bulkscore=10 lowpriorityscore=10
+ suspectscore=0 spamscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610190000
+ definitions=main-2610280000
 
-On Tue, Oct 27, 2026 at 06:22:27PM +0800, Richard Cheng wrote:
-> The Get Supported Features handler treats payload_out as a 16-byte
-> aligned structure. However, the mailbox register is aligned to 8 bytes.
-> Since the payload starts at A_CXL_DEV_CMD_PAYLOAD, a misaligned union
-> will produce a misaligned payload pointer.
+
+
+On 10/26/26 7:17 PM, David Hildenbrand (Arm) wrote:
+> Since the deferred split queue became a list_lru, the isolate callback
+> moves the folios it took a reference on to an on-stack list, linked
+> through folio->_deferred_list, and deferred_split_scan() takes them off
+> that list with list_del_init() without holding the list_lru lock.
 > 
-> The bug can be triggered when QEMU built with UBSAN:
+> deferred_split_folio() does not know about the on-stack list. It only
+> holds the list_lru lock when it looks at the same list_head, and it can
+> run for such a folio: a THP is queued when it is mapped, as a candidate
+> for the underused check, and is queued "again" when a part of it gets
+> unmapped:
 > 
->   hw/cxl/cxl-mailbox-utils.c:1571:39: runtime error:
->   member access within misaligned address 0xff7772f3d628 for type
->   'struct <unknown>', which requires 16 byte alignment
+>    CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
+>    list_del_init(&folio->_deferred_list)
+>      next->prev = prev
+>      prev->next = next
+>      entry->next = entry
+>                                        list_lru_lock_irqsave()
+>                                        folio_set_partially_mapped()
+>                                        __list_lru_add()
+>                                          list_empty(item)  -> true
+>                                          list_add_tail(item, &l->list)
+>                                            item->next = &l->list
+>                                            item->prev = tail
+>      entry->prev = entry
 > 
-> QEMU aborts while handling GET_SUPPORTED_FEATURES
+> The folio now sits on the list_lru with ->prev pointing to itself. The
+> next removal leaves the neighbours pointing to it, and they still do so
+> after the folio has been freed. With CONFIG_DEBUG_LIST:
 > 
-> Didn't see a strong evidence why QEMU would treat it as 16-byte aligned,
-> so I want to raise the RFC and see what's the actual corrected fix,
-> rather than dropping the aligned tag directly.
+>    list_del corruption. prev->next should be ffd4000000270090, but was
+>    ffd4000000278090. (prev=ffd4000000270090)
 > 
-> Align the mailbox backing union to 16 bytes. Since the payload offset is
-> 0x20, payload_out now satisfies the handlers' existing alignment
-> requirement.
+> Fix it by grabbing the lock around list_del_init() so
+> deferred_split_folio() cannot race with it.
 > 
-Hello Richard,
-
-It looks like Jonathan already has this commit in his tree:
-
-https://github.com/qualcomm/qemu/commit/271340b769bdf4b2614fcff76455a813f154d77b
-
-I'm not really sure why the features handlers require QEMU_ALIGNED(16). I don't
-see anything in the spec that requires the 16B alignment. And the Get Supported
-Features input payload is padded from 8B to 16B because of QEMU_ALIGNED(16),
-which seems not right?
-
-The commit message from 271340b7 says:
-
-"hw/cxl: Ensure the register space for the mailbox registers is 16 byte aligned.
-
-Given there are some carefully aligned UUIDs in the registers,
-enforce the alignment to solve ubscan issue..."
-
-but if that refers to the UUID of output->feature_entries[x]:
-the output payload has an 8B header, so the UUID of any feature entries
-won't start at a 16B-aligned address anyway?
-
-/*
- * Get Supported Features Supported Feature Entry
- * CXL r3.1 section 8.2.9.6.1 Table 8-97
- */
-typedef struct CXLSupportedFeatureEntry {
-    QemuUUID uuid;
-    uint16_t feat_index;
-    uint16_t get_feat_size;
-    uint16_t set_feat_size;
-    uint32_t attr_flags;
-    uint8_t get_feat_version;
-    uint8_t set_feat_version;
-    uint16_t set_feat_effects;
-    uint8_t rsvd[18];
-} QEMU_PACKED CXLSupportedFeatureEntry;
-
-struct {
-        CXLSupportedFeatureHeader hdr; <--- 8B
-        CXLSupportedFeatureEntry feat_entries[];
-    }
-
-
-If QEMU_ALIGNED(16) is not needed for Get Supported Features, then I think it should also
-be dropped from the other Features handlers, and Get Log (Opcode 0401h).
-I don't see anything in specification that requires 16B alignment for those
-commands.
-
-Thanks,
-Anisa
-
-> Fixes: d80378943a6b ("hw/cxl/cxl-mailbox-utils: Add support for feature commands (8.2.9.6)")
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
-> Reproduce with:
-> 
->     1. Configure QEMU with --enable-ubsan.
->     2. Start QEMU with UBSAN_OPTIONS=halt_on_error=1 and a cxl-type3
->        device.
->     3. Boot a guest with CONFIG_CXL_FEATURES=y, or reprobe the endpoint:
-> 
->        # echo <type3-bdf> > /sys/bus/pci/drivers/cxl_pci/unbind
->        # echo <type3-bdf> > /sys/bus/pci/drivers/cxl_pci/bind
-> 
-> Best regards,
-> Richard Cheng.
-> ---
->  include/hw/cxl/cxl_device.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index ba551fa..2191b7c 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -248,7 +248,7 @@ typedef struct cxl_device_state {
->              uint16_t mbox_reg_state16[CXL_MAILBOX_REGISTERS_LENGTH / 2];
->              uint32_t mbox_reg_state32[CXL_MAILBOX_REGISTERS_LENGTH / 4];
->              uint64_t mbox_reg_state64[CXL_MAILBOX_REGISTERS_LENGTH / 8];
-> -        };
-> +        } QEMU_ALIGNED(16);
->      };
->  
->      /* Stash the memory device status value */
-> -- 
-> 2.43.0
-> 
+> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+Reviewed-by: Mani Tofigh <mt4022@columbia.edu>
+Tested-by: Mani Tofigh <mt4022@columbia.edu>
