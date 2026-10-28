@@ -1,89 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.209.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793222351;
-	b=H6rnlp8lrXCZkdPCxGI4yjPUquRzC6Cf+qED2vvhdfcVW/+Qa51GikqjNsLL+RD5bRx3
-	 iI2nzrf+0VJt+QThT3kkB19YPyW/b1v0xPLBrRaH4BYXsT3GlRAPr7033NDWeFvefyv71
-	 JIq7mkMZzmRnPYL7GbbfqEjwlm/qprENI5gpXcO1VEIYRK6kGTlKxJhRt+sKg3af/R7Bl
-	 54wG0ai1UaBV2Zjxxq/1A5DOlTfpOjimB0+jU1JnhPCwsz2zw70nymPjL7nsla05+a1eu
-	 8kj0W0pb3NLpaKuU+xj1X3e2K+X8gbpZxYHjp5JQY9ZB7mXwsgACtFYmhNPnnQjuFtQ==
+	t=1793222562;
+	b=G9lryEXX3Q1Jtm7rMl/n3oRQUpDZT8ZWsztFZ4nu+E+3jRvpvW/pHT9QJga3rYldfPaj
+	 n2B0eBfdjYDdC0KZa1WOXaHYeMzFHzTN4Vzjh3t0PJGfLd8gEZ//0av12RpgWf4DF4jns
+	 iCACcTR7MUWj2tNCBKDcqm7OG/Q6krorJgI2X7Hmv7Pqd8w8XMlHHUSXlbHelw3PTaQ35
+	 phGSHdctJv3BtcyfSPr8WRKcofDrLgsjwWuQGy1ssx8qurvlUutkY8u5l5jP/8JiOhR0A
+	 OKCcyUeUWXgI8icPZcz1y82dgNe49mEzSRPZL5V5Le/i1l4URUeRL0bwR9e1TzjLjHg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793222351;
-	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Bored-Troubled:
-	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
-	 DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=MLVHR1TaToacfGgBynTFfVp/dF8TU4TCKrrj8uNbtR0=;
-	b=XlWg4ZRCXoRfLjIRDgufOuIivP1THZaKio+G098bty+qz0/l+bkP1izDzBiCbbmXFzbh
-	 Be2nndm7/q4Ne5H1EK8q3QFtqR/zzusjbAWy1ShjecvSIjFUzLYZerEEamJZ1G7TlgA83
-	 WH0c1kur48vsCoFfpD/izLz2A4nF92zDj4M+cOKiXumglR/ON9wExe7f69gyjdfvcVuiG
-	 N7SdMwFmxXVgDyoiTj4+fS7/tC2IBnpoec/4bIo7UfmJUnuhiXCylRcCOn//kKgOogg0K
-	 mei5BQPdGN9uhSWKWTLo4pIKc6o3K/bcYUTo7lbfjiTsthyIkRhXJtm3LGpeS9NjY5A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793222562;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version:
+	 X-Mailer;
+	bh=WMki2iGDcWIUAFS2COZpWEg7kj0OK6Yz3Faiyp7P30s=;
+	b=mPq12UenWsraphAG2w226pmURHT7GuQoeUU7DgCa7VpTNHQ9rV4pGyN/GJt+j3d/qXHk
+	 HaWCukkYufG1c+kIIZDmZqNIJ1ksq0RulA90QQFAPHmt05amlZmqTnqLTvnbzZhqjWv84
+	 ei3Is9Zo7u4wAYKKVqbhox4edrvqk8PjVNHsodHPNpR4L8zzZ9n9kw/AbJm6OJ77bWhDk
+	 GlV0I3CF+v0jW9gAPCs1CnOWbKWBTtSYJ7JFFMfDEbAZAl0OWkKji+XUNCcCayoiJUymA
+	 9/XnXYDA4y7Qllw/7Ou/xF4P7Mf+YuNdoas6R4273f42kVIqciBAOaC4rum9mhm6SnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=stgolabs.net;
-	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=iZ5JSLez;
-	arc=none smtp.remote-ip=23.83.209.48
-Received: from dog.birch.relay.mailchannels.net (dog.birch.relay.mailchannels.net [23.83.209.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=A7jbuUAq;
+	arc=none smtp.remote-ip=209.85.208.44
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AC5606A31D
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 21:19:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1AC5606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6894606A321
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 21:22:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B6894606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=iZ5JSLez
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 2930E382AD2;
-	Wed, 28 Oct 2026 21:19:04 +0000 (UTC)
-Received: from pdx1-sub0-mail-a254.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.96.18.161])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id CA41638270F;
-	Wed, 28 Oct 2026 21:18:59 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Bored-Troubled: 6d5783cf23248330_1793222344013_1074215436
-X-MC-Loop-Signature: 1793222344013:4218349828
-X-MC-Ingress-Time: 1793222344013
-Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.18.161 (trex/8.0.2);
-	Wed, 28 Oct 2026 21:19:04 +0000
-Received: from offworld.tailf5af7a.ts.net (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4jFKwz1pS7zyrD;
-	Wed, 28 Oct 2026 14:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1793222339;
-	bh=MLVHR1TaToacfGgBynTFfVp/dF8TU4TCKrrj8uNbtR0=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=iZ5JSLezSSRbA6FdEZ9Kjy2esD+fPsWqyHVWzeC0Ck+bsgMb+JXlnNiGWI/bBEma2
-	 /rSI38aVaw6T+gpVkukhKzAYXM8urK8GggUck7yRFwXv+q02RpGEguiyM6wGGypo18
-	 VNfpKB9HrsC/cGF4xePMSe78g0digXQL+JIbg/81MTEUHKm5gS/EgC/7Gp/d0ekYSh
-	 Eke2kqIa85qrswjciQlZ0q8F6J3sBMTvq7UvDaBFGC2dHFFY5TfvbZQgWqKWbKmEa2
-	 UFnvPl0dCUSPXnL3nf7Z54hsq29+iQunP8JH2crujSO2sOXOka5dNJrMEjfrZEGj4I
-	 2lJK08M9Vy9+w==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org,
-	alison.schofield@intel.com,
-	ming.li@zohomail.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	dave@stgolabs.net
-Subject: [PATCH] cxl/hdm: Account for a firmware-armed Lock On Commit
-Date: Wed, 28 Oct 2026 14:18:36 -0700
-Message-Id: <20261028211836.939648-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=A7jbuUAq
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6acb9c018ffso157380a12.1
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 14:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1793222560; x=1793827360; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WMki2iGDcWIUAFS2COZpWEg7kj0OK6Yz3Faiyp7P30s=;
+        b=A7jbuUAqYpfO0vAk2Eumz02eNSwU5WPmtoQwO+6EKYN5wMOgLaG9kcU4BN9QbVD/t1
+         cBRMIyvwqaC1LcAfH+sDwzlDJZaXixXK6eNah3UPSqTm+HiCZeBm4P0RbRsFvcFQqXXZ
+         bIPDTo8+fixpYluUhP1LE+xb3e4D4j44g39nbudrFykkqhqYkbCiyE6uaQlhl4Dnxqve
+         Y36gmtwfxA9NLyHA6uSELUuvqVkVJu4w72kzyyZ/OvC2PEs/e0pJgoYrkHa5Len2X3l0
+         b9t55YLGoDskY38aAfehhB35WiZUhjJbppVRWzNAGW8MtIt5yTLirXQSSQd0aLxsa1wW
+         REqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793222560; x=1793827360;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=WMki2iGDcWIUAFS2COZpWEg7kj0OK6Yz3Faiyp7P30s=;
+        b=sS8p5Mm/fFrTSDIrJv8djYcNaV51YD/rvP2nCspY9eDKcmnfA9pKMctxgDrPEUADMG
+         jV/kSO9oNKDYkTlV3tSk8w6CiAYKYcbPXMg1lzOzholsaML8Fm0pDKmlbnzIXZXwTXU1
+         slSosrzqk6cqyZyVth8/7g9HJmvQrMjQMXHsVf5E3G3dD5rzxSjI4a6dXcK/QrY6DXLI
+         djOlvlOiQ/w9n6OrCo11nQ6URCHnxJIOD2j7T9lvcowRy+FIU1OwNHle5aaJJQpVr1Et
+         TU2Fwf6OZVb5FEffRfv0YS251o48H+s3mMG3dgcqxlkUftJiYOzNx/6ZueCUXU96NBJC
+         89Sw==
+X-Gm-Message-State: AFq9FYI0iqIsMrIUf9I2dpWLQP6a+dDipnLw4fyNnbdJxc5QIxAP+idT
+	x1mkIdJhWGZBfdQzHxpNiB/O4KXorHwkrryA6AKn5dCV/vep9kGukcYb+HYlbg7w++TT9E6DDxW
+	KN1ytKcE=
+X-Gm-Gg: AYBFou1cXV7QHaDA2sx1y6Br2HU9r44EFOeP1kvF2XsLCSZeSgMwCIyctRVFe/sKTk8
+	fNTUuiSaSQxmd/xzmSfm5WFxaiWLMMW6mugrEqzDxX8lxCgh7cBMOLmREcZcGf9o9tBxz8+h3lW
+	4IXA+j4Z9ARUOXQfas/PFqP/paRX6FNQgHtq11DAtT9wWodSz1h8dfSkSChUJyLA3oHwnQrzuNs
+	QB9l9ZpBHfnHxk5OxlwHbK836xXYfIvsXLwrVL09M58bEUOfZnyrx4dTy8x6E4uIS/eh2Jhat9j
+	vkw50rU7MuZ5xOFytB5oZruBjnpUsQNq7QQbTGUvTMJkQAXP99zAq/KW6T+/T2RWnRnLfrasknp
+	gI8yK21+bLjKnNxWy6qDte+oShqRcv1YSDywY+2JawJk3WxJJINR6i4gZkCWP1wPhON/VIlvAiS
+	Cu4HT8n40IwH/3Se4JT/4oyTk285K+m4rUJtw6VwdQRj6g0Gvf6z9Y0d68mmtU/u+a3QcZ6q5ok
+	Giyg0fID7K3zTEI9NXgnFRsRnxgg52Xeq5+TMrD2k+Q220mpjfxSESvfDLOZ1ayRktiD8+9fQUL
+	zSuIOvZd2VRFCH931cR8
+X-Received: by 2002:aa7:c789:0:b0:6b3:e4e8:74ba with SMTP id 4fb4d7f45d1cf-6b4b0be034fmr390383a12.13.1793222559800;
+        Wed, 28 Oct 2026 14:22:39 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:44::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b4964488e8sm1911850a12.31.2026.10.28.14.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 14:22:37 -0700 (PDT)
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: nvdimm@lists.linux.dev, alison.schofield@intel.com
+Cc: linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] libdaxctl: check the zone of onlined memory blocks
+Date: Wed, 28 Oct 2026 14:21:23 -0700
+Message-ID: <179322248318.3398847.13424413341337264007@gourry.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -93,65 +95,68 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.17-dev
 
-A corner case (yet valid) where firmware sets the the locked bit
-without committing the decoder. setup_hw_decoder() carries the bit
-through.
+daxctl_memory_online_with_zone() is meant to scan the device's blocks
+after onlining them and fail with -EBUSY if any block is not in the
+requested zone: an agent such as an auto-online policy or a udev rule
+may have onlined some blocks first, into a zone daxctl did not ask for.
+online_one_memblock() relies on that scan, it ignores a failed write
+for a block that someone else onlined ("There will be a full scan for
+zone correctness later").
 
-A later region teardown then writes a reset the hardware ignores and
-clears CXL_DECODER_F_ENABLE anyway, so the flags claim a decoder is
-free that still decodes: cxl_dpa_free() releases its DPA, and a new
-region committed on it appears to succeed, cxld_await_commit()
-returning as soon as Committed reads 1, while the old mapping stays
-in effect.
+But daxctl_memory_op() returns the number of blocks it onlined, and the
+function returns early on any non-zero value, so the scan only ever
+runs when no block was onlined at all.  Whenever daxctl does online
+memory, a zone mismatch goes unreported.
 
-Read the control register back after the commit so the decoder is
-treated like one found locked at probe.
+Example: 
+  memory_hotplug.online_policy=auto-movable
+  reconfigure-device --no-movable -m system-ram
 
-Tested on qemu modified to enforce locked semantics, setting the bit
-behind the driver on an uncommitted endpoint decoder, committing and
-deleting a 256M region on it, then creating a 512M one. Before, the
-decoder sysfs reads locked=0, its DPA is freed and the second region
-reports committed while the hardware still decodes the first; after,
-locked=1, the DPA release fails with -EBUSY and the second region
-cannot allocate DPA.
+  => reports success with the memory in ZONE_MOVABLE.
 
-Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Return early only on errors, and return the number of onlined blocks
+after the scan.
+
+Fixes: 0542201b5902 ("daxctl: detect races when onlining memory blocks")
+Signed-off-by: "Gregory Price (Meta)" <gourry@gourry.net>
+
 ---
-Found while battle-testing BI locked decoders.
+ daxctl/lib/libdaxctl.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
- drivers/cxl/core/hdm.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index fdcef20e01ba..d23076aabb89 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -856,6 +856,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
- 	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
- 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
- 	int id = cxld->id, rc;
-+	u32 ctrl;
+diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+index 01b1915..f4b2fda 100644
+--- a/daxctl/lib/libdaxctl.c
++++ b/daxctl/lib/libdaxctl.c
+@@ -1691,7 +1691,7 @@ static int daxctl_memory_online_with_zone(struct daxctl_memory *mem,
+ 	struct daxctl_dev *dev = daxctl_memory_get_dev(mem);
+ 	const char *devname = daxctl_dev_get_devname(dev);
+ 	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+-	int rc;
++	int rc, count;
  
- 	if (cxld->flags & CXL_DECODER_F_ENABLE)
- 		return 0;
-@@ -899,6 +900,14 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
- 	port->commit_end++;
- 	cxld->flags |= CXL_DECODER_F_ENABLE;
+ 	switch (zone) {
+ 	case MEM_ZONE_MOVABLE:
+@@ -1704,8 +1704,9 @@ static int daxctl_memory_online_with_zone(struct daxctl_memory *mem,
+ 		err(ctx, "%s: BUG: invalid zone for onlining\n", devname);
+ 		rc = -EINVAL;
+ 	}
+-	if (rc)
++	if (rc < 0)
+ 		return rc;
++	count = rc;
  
-+	/*
-+	 * Lock On Commit armed by firmware engages on this commit and
-+	 * makes the decoder read-only, like one found locked at probe.
-+	 */
-+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-+	if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
-+		cxld->flags |= CXL_DECODER_F_LOCK;
-+
- 	return 0;
+ 	/*
+ 	 * Detect any potential races when blocks were being brought online by
+@@ -1724,7 +1725,7 @@ static int daxctl_memory_online_with_zone(struct daxctl_memory *mem,
+ 		return -EBUSY;
+ 	}
+ 
+-	return rc;
++	return count;
  }
  
--- 
-2.39.5
+ DAXCTL_EXPORT int daxctl_memory_online(struct daxctl_memory *mem)
 
