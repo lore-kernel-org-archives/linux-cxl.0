@@ -1,55 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793221888;
-	b=RSaAG1OULlUqnrLXD8/Tskn+Cc/uCs7zcenxyiWgoLt/KazxfHZE8pUfvB8YMVM8r5NA
-	 64z+8/hl3josuaB8QnQShhcijppaqqDwNbqbz+SeGnSegQaORYO1mTMw3NoPhG/3MuO7o
-	 olH9dBeLwtsi6jRqdyFFZP0/cDVDgzXFTZWsDy1lsKIMoRflx2STfF8UQSmYOrW+cTwjS
-	 SumiW+Com0lw/4jfkD6Poe0zq0oju3VaKjz/C+ZXkizJ7dLexkw4KsKISdfaXGB96tA24
-	 W9MYb82ho1JrMiJlxseSegf3Kllkl+1d1uwAacEe3knCHsHvN82CKKxQThakjExcPZg==
+	t=1793222157;
+	b=lFjm6Bb7LUN/+5L0pITJE0rXIbqwqFA1rFtKM+ktLYWjKG6r6SO65SoptTrq0FM3m6Vv
+	 d3wVKV5I0t9YCMWzzpRg2tX4ykn52wyebqPce5OYk7j3QBfDPFLIlyNsTRVSN0DPcPIyn
+	 cEUY4o9GP32oh2u/XilX5CVjkHqmniOyeV7GCUH/SgcIiepiohCEP3lLVMLBHQGgI0Hui
+	 ArUqfKH1UF5dGbiXtXFxcFXQW58XcdFOiIyqigrV3pZ76LCylEmZB/wdUqEO0zFKKj7pm
+	 FkrMkYcB3kYLrtxQVRUr5X0TDrDAlCP+ECxzX/Q71YeFluqMtZsFLjBTSCB9QSproWw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793221888;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=2T2ryu8CYGBb/tgqfVT9uEsdD2RyXJuHuC2cnmKBcaE=;
-	b=zNwkXNfHcK/dl8EUw5bDlqRh0QL0tt6guUmtBoMFq86lL5C1oFEX0gM9u2rpsKvHYGWF
-	 4kqvfG6CjC/HzQcxa7ZSLZpeGjWF2X1mhrOKgSH88u+nT1Oc8y+wDKvBjk7bPNKIDos7D
-	 ey1pPZ/BLaKIZ32iqk0p5gLi43S9mH4cd+s8kd+sF6UwaodkWFitq3DRoO8KxyIeR48eV
-	 G/BzQgmxKnMCRowYrPtL4pxVm6D/Nu+TN0X0yNDsQPVHWV3T7XqW2I21NsGuEexPs0A9j
-	 JeSMiTwr90IbmmiFNF+vdg8fC3jY6TPC6e0FDBSu0qwG+hDFARrd67ROlIqhPeoXFMw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793222157;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=Gk8pg2wKBMP/5kEMjpmOkNXbA3/EnbPJI6yaBvDpwN8=;
+	b=H+W1e1EtJE8UrGVtlh/PVUgNB2MqpLNUGEOk2UOxE7Lv+uIySYqeDtACqz8pnAdnYpcG
+	 6p7cZG9u0/LJcQKvQVovaKJm+QOBu1X19E56SzLc56mgtAEr90oXMxN8OPbDCwbaIDH+E
+	 La8oJNpHhTKFmmGGy0uUSA4o1AoZgqF/HRyx6opifun/6+StYyDqI0rcIeGa02uUX0w2k
+	 4W4Fy7Yn7R3KpNp42D/p6+iKYa2M7kgXxIPW2hntXfPZjz8ITh/EJyX/5ejetLfvzvn+0
+	 raEpffAbaeeC7IYHUwQbLzDNrvqkXBH+DcVg+74RAii1uGfvFJnsuMC9PrJ/mE1DrKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="kIvE1Av/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Md59gUPu;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A01606A31D
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 21:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E636606A31A
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 21:15:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9E636606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kIvE1Av/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F571F031E2
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 21:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793221887;
-	bh=2T2ryu8CYGBb/tgqfVT9uEsdD2RyXJuHuC2cnmKBcaE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=kIvE1Av/NonADig4ues3OMWwzmxsWyNeBhYPhdsQL5Yc5BL1YXObcZTr1qaF3e5ga
-	 dszFsqLr0ZRvrDM1FuSyNUyoV71ayuuKa3+vu2X5iasPuSZrzMyirfRIfuayvnhBF/
-	 NMoE2sNALjgYz+YqfbqEiZ+gLdBOk35crImYyNQ9bkRu9KZhv7hFFtEOZyTUnWVYDh
-	 37gsGkGUTMWclDWhNrbCjPF0V2u0TwpumujohEzJyZE+CpZMOVJRLnX4vMbsQ2Iz8g
-	 gKWPFlP4nqLmSSFIvwhUyZ6/5awb5oYMOgvY5W14PBNquzH4csFPyZaMDQ3MnIgecS
-	 rEIPPcuuD6+Tg==
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-91986c5cb75so17028496d6.0
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 14:11:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzEWGOR7YAL2HCSyyPYa+2CmnGYXnATJ1XqxvLQUH2AvySNlBv02Toi2SKYRJXw7u/NPmuuU8bDQuw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI6fUtx3y3Ln/jrfLWJLYvV81eU0nH2SFXhUn7tmBG6lqDhHPT5
-	wJtt6pQo6+cr+riaEHoW07T747HYKvDWiUhKqqGuxyNrd/IGlYhS8YPkM5igTCT/j7hELMnBW6/
-	ObjwRe9KDbk+5njpzfWnM/cmUqKU8O5E=
-X-Received: by 2002:a05:620a:2a12:b0:93f:43a4:a48c with SMTP id
- af79cd13be357-94408cb191dmr541635185a.45.1793221886373; Wed, 28 Oct 2026
- 14:11:26 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Md59gUPu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793222156; x=1824758156;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RanB8vTQZwJrry99ZY1rbkYp9XuM5vohc+lSwdQQkbo=;
+  b=Md59gUPufGFvJtODVLM4CWOu9dHHlu9/lvlBPWOA0UnPdjw9qmKibXj3
+   cp+Sjk6Vvllmo6XaMe80flwbeccL7eSSKZ7dtT639iB5GarjZ+3rxt0FD
+   9ac5pHYJxun/nLmMBeRmpn1gTi0SvtwoZvtc0gD9cekipvVoSn900GO+x
+   jrvQkjGQC1WrluPkx+HSZDcITtsZooCMSX/PHKdWj3GITRlEvIOm4zpvw
+   a7pdKrNg4Pt8q+DzeMa8ZdVxE8K/2ZbjmEgnzpMAuBiQUj3QWE1jrIA+f
+   WE0NBsKkCOdF6XNopuT73z9t/NHmALWhngA7P+8ZBAvDT+gVp0RKvddlm
+   w==;
+X-CSE-ConnectionGUID: KYKOmeB7Sza6chZGHNmCFg==
+X-CSE-MsgGUID: ivkOaqBwQRWF4qASurGoKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11949"; a="1840402"
+X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
+   d="scan'208";a="1840402"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 14:15:56 -0700
+X-CSE-ConnectionGUID: kkfujK/HR8SFILZfP339VQ==
+X-CSE-MsgGUID: dTa+SyP+TdyqhiWorFfKSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
+   d="scan'208";a="5034437"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.227]) ([10.125.108.227])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 14:15:54 -0700
+Message-ID: <e66f1d85-b46a-469a-ac5a-2b480309acc0@intel.com>
+Date: Wed, 28 Oct 2026 14:15:53 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,131 +72,47 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-2-6f74bec9a5bb@kernel.org> <auB-3BQn_rR6IfY8@pedro-suse.tail5790ac.ts.net>
- <22b819a2-631d-468e-b724-770caf9f94e4@kernel.org> <CAGsJ_4z3qgCPBpCDitVTq+xiGsS=-yEhKSbEO4Lbdn9MVAHK0g@mail.gmail.com>
- <auHve-G8bboW77IZ@pedro-suse.tail5790ac.ts.net>
-In-Reply-To: <auHve-G8bboW77IZ@pedro-suse.tail5790ac.ts.net>
-From: Barry Song <baohua@kernel.org>
-Date: Thu, 29 Oct 2026 05:11:13 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xD_EU9sBZmJRb3ET3zfxnOnXJvZB1p_3pTLV=Y4xHPMw@mail.gmail.com>
-X-Gm-Features: AclHuK-GiN_SNdh0TbEQNxyVeAnkfKV91o-Gzvz83ZLTf2wxKLZGDZHJQeX3iwc
-Message-ID: <CAGsJ_4xD_EU9sBZmJRb3ET3zfxnOnXJvZB1p_3pTLV=Y4xHPMw@mail.gmail.com>
-Subject: Re: [PATCH 02/46] fork: take mmap_lock before copying mm_struct
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh Dickins <hughd@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/acpi: Drop the root decoder target_type assignment
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jic23@kernel.org, alison.schofield@intel.com, ming.li@zohomail.com,
+ icheng@nvidia.com, linux-cxl@vger.kernel.org
+References: <20261028202757.912948-1-dave@stgolabs.net>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20261028202757.912948-1-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 28, 2026 at 8:55=E2=80=AFPM Pedro Falcato <pfalcato@suse.de> wr=
-ote:
->
-> On Wed, Oct 28, 2026 at 03:48:09AM +0800, Barry Song wrote:
-> > On Wed, Oct 28, 2026 at 3:07=E2=80=AFAM David Hildenbrand (Arm)
-> > <david@kernel.org> wrote:
-> > >
-> > > On 10/27/26 11:38, Pedro Falcato wrote:
-> > > > On Tue, Oct 27, 2026 at 12:17:22AM +0100, David Hildenbrand (Arm) w=
-rote:
-> > > >> dup_mm() copies the parent's mm_struct before dup_mmap() takes the
-> > > >> mmap_lock. A concurrent brk() can leave the child with a stale mm-=
->brk
-> > > >> and newer heap mappings, causing later brk() requests to fail.
-> > > >>
-> > > >> Other operations (e.g., PR_SET_MM) on the parent's mm_struct can s=
-imilarly
-> > > >> cause inconsistencies.
-> > > >>
-> > > >> As a simple and robust fix, grab the parent's mmap_lock earlier. T=
-his
-> > > >> way we don't need to update individual mm fields in dup_mmap() and
-> > > >> keep missing ones. Stop updating the 4 existing members (total_vm,=
- data_vm,
-> > > >> exec_vm, stack_vm), as that is now no longer required.
-> > > >>
-> > > >> Keep releasing the parent's mmap_lock in dup_mmap(), before
-> > > >> userfaultfd completion, to avoid moving the userfaultfd handling i=
-nto the
-> > > >> caller. This should get cleaned up later.
-> > > >>
-> > > >> Move uprobe_start_dup_mmap() to preserve the lock ordering.
-> > > >>
-> > > >> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > > >> Cc: stable@vger.kernel.org
-> > > >> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> > > >> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > > >> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> > > >
-> > > > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> > > >
-> > > > FWIW, strictly speaking malloc() isn't usable in a forked
-> > > > (multi-threaded) child, but glibc/musl provide this in a best-effor=
-t way.
-> > >
-> > > Yeah, I'm more concerned about other things that can race ... :)
-> >
-> > Regarding the race with memcpy(mm, oldmm, sizeof(*mm)), we
-> > still have one [1] even after this patch.
-> >
-> > That is, copying mm_struct can happen concurrently with
-> > lru_gen_del_mm(). However, this race doesn't seem harmful.
-> > I might be missing something here though.
->
-> I don't think it's harmful as well. mm_init() reinitializes those fields.
->
-> Though I hate that memcpy. I think that ideally we copy by member and
-> data_race() benign races, like what is done in vm_area_init_from().
 
-Yes. I was suggesting something like using data_race() to
-silence the warning[1], but applying it to memcpy() also
-seems a bit too drastic.
 
-Another option is to copy members one by one, skipping those
-that don't need to be copied. However, that would make the
-code quite lengthy, and the copying might also be slower?
+On 10/28/26 1:27 PM, Davidlohr Bueso wrote:
+> A root decoder's target_type is never consumed. The field is
+> already initialized to CXL_DECODER_HOSTONLYMEM by cxl_decoder_init().
+> Drop the redundant assignment, which only suggests the root decoder's
+> type matters.
+> 
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
->
-> Anyway, KCSAN reports aren't the most serious thing in the world, so this=
- can
-> (should?) be cleaned up later.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Yep, I don't think there are any blockers for this patch. I had
-actually given my Reviewed-by tag before raising this race.
+> ---
+>  drivers/cxl/acpi.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index b7ce6b59c680..740e229e1c4c 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -443,8 +443,6 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  
+>  	cxld = &cxlrd->cxlsd.cxld;
+>  	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> -	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+>  	cxld->hpa_range = (struct range) {
+>  		.start = cfmws->base_hpa,
+>  		.end = cfmws->base_hpa + cfmws->window_size - 1,
+> --
+> 2.39.5
 
-David discussed races between memcpy() of mm_struct
-and other operations. I recalled another related case, so I
-posted it here. Hopefully, I'm not just making noise.
-
-[1] https://lore.kernel.org/linux-mm/CAGsJ_4xnM66UZ-n55AHW4UHn+PSCP7G-gGUHU=
-fSt6MRZGeRnfw@mail.gmail.com/
-
-Best Regards
-Barry
