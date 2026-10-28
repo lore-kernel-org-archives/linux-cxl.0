@@ -1,126 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.70
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793156322;
-	b=01vCk2l9CvPum4QRkqnFOZx3TNtvf3pZEv+0OS0cJxuG1v1NUylbLBe7SVQS8VgyIXDV
-	 sNRh/uZtZh6rFwellA0P/zmVWv68eAaRfQsdWcYEEVQSHqeozqzWk3jLyYf9A0RTAMV1H
-	 OsSs7Ji0sALcBkaQ97ud53SFAtb/fZv6v36Vf8mhKOmjTC478G/0B+/VqTxFHBXfISHaf
-	 duEiY4LtD9qE66Wk+KwoDl+pn4mWK7BUIAXsArv+vOfilV2iAULl760xdj+aflBlUsekz
-	 DRpWGDhrXTlnK0WdGTC8nkfCxqCLuzOyQ0U9avKwhaWW3wH0Zw0tT4c5o9CvFfVENtQ==
+	t=1793156533;
+	b=inz+Tu97uu1wjkvIhMuA0Fu7gInDl56P8/l6mTg6XVH8YYIVA6GpK0DDaEPD8ez8xpqv
+	 F19dLV7ld6XdweisrXlkHFUhSWkDE626MS4x0WeGJzeemdYvxf2mpIo0z7jgwwmAf0sbX
+	 PuANRoI8MH8n9A8aN8g7msulyosxZkhh0AKt/IpvC06pRbQPZ0NPIvBfqpJKhRRV+odi4
+	 rfxVrCUXDppk1DzHRi2zjPV7Sa30+APclvL4SwXBcBc4803sX86WfSSm6JamdfzQgQXu0
+	 bgnWHcK7CPoRz4ODsVM1+Tw15ODPQPcTPrEPYr5msnaVw2ZcMYhWy/NphznxiU+OC4Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793156322;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 Content-Transfer-Encoding:Content-Type:Date:Message-Id:Subject:Cc:To:
-	 From:X-Mailer:References:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=70+ae3ZTqtj1+07muayYl3ANIB+dyOWYDBZ5+RJCHYs=;
-	b=OED74frYz+KjVh0h0h6jBqIHJY9yXn+mo5a9Som3dMbYhKin6AQl4VwyVOuML2A5FJjE
-	 KbeQvQJo9xIf9VdKG/+gClZhMfcUs3uZ4r663uuywlHD+vzfV+dCZEw50+zF1Riy2gfPO
-	 OOjBaFkW1zMhizMFCh14oeZN4mFO2GWYo9NnmZbQ4XUPs3klwxsq3JkRkA7t8W1z/9UCg
-	 8HapUDFBWUvWh9oBMkhdRoA3pSDYXVOL8XypHEPgmEQciyiDOWMglYDAKZyo7PAY15GK8
-	 +v2nGSrtGZakJ6YgLTybk2vuQbw38z14qCfU7/jUmkOi4YsfKxdCaUfdPzr2/V23nJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793156533;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=;
+	b=fDh9tuloc4lPdaH6CdNzYiYG7lJlSh2jclLDy0KU0W1HvjAVjXF1YAcCrn+8GQ+C0l64
+	 888rL263gKjRGoDtVmhmxsiZ7ta0eiwwxV3YLcuY1rwyiSCypgrca0UCeE6dEbSrrKkj5
+	 LrXBUn4eHkaY3tKY7ya3kRk3PFidvNViF608xUpvGQc5q0qgUI5d8bJ48agICZpVjytsx
+	 peRHb30r+A12E8UYxqCVgvN+Q+6AHTHHEWsIdTwVSxl/nHgKF3wj60uqDm2o8fER2vMJm
+	 XdGdOfmRyH7WkFfESgqMMU3yc78REqq5bRkrKkK5GzMw+6MeVmyH6GK7ypLJaI2ZuNg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HZUJT375;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.70
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010070.outbound.protection.outlook.com [40.93.198.70])
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=OOgLrYoT;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83C6606A31A;
-	Wed, 28 Oct 2026 02:58:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D83C6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD454606A332;
+	Wed, 28 Oct 2026 03:02:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD454606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HZUJT375
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LxkpL9B2OJrBuU388imPmmPuuXNOqaciLWhgvSkeDv3iNPSeTaDwKTXLYYTbchoQZfIFjaXnJL17JT9+tyRzyM1WBmHv5swwyidIUWtPuvu4P2cJkhqcfNHvKNlGT/DNQZbKfaj/SQMP+DDriUh0Nid4fP3Rthn8ccoqUIq+bbD6IBgQJaO/evVbe1HZgPu6I1dZofSrkJqCo+JFD97uEyjSzSdsatAhelh4Qqe6TZwWaGy/ECJxwqG9oNd5K995HJ5YGvhG/EKngGH7P4OY8HKWW5virxa0UMQwiCFs8n/KCZc/k5ku6sxV0k0ZChHfAT0hcit/0ZbEh58DKJ2+EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=70+ae3ZTqtj1+07muayYl3ANIB+dyOWYDBZ5+RJCHYs=;
- b=NwFAtlQ1KDLnYi/zSlcDXnvGiVhKnp8KwAHvV/QGayYFh102vSmQWqQ5V8Les5u0L90hJqhNHgCUGYwAwSPyIKV0xwWmZyI0jxRMbBr0qcjMy8o85B5EDdjXA9Phsb9Ipw5YIpg8V4UIeM4QeteQMqVNjLUXJkDODXLTkPg2zlPPvstr9bqwL64XDT2orEa8hOWco7op7ASdzvFFY/OgvPcMncJmOAnWH6lOacWYSIcq3hvZ7SrtGBQdBpuSSDxPji5PunB18b3WRzUL/QaWJ2+WjkUhmprED7QrGlJ6O5KZkhFEY5w59F2xdMzyHJ7j9tO10Ny7gtnPK2jdSujGUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=70+ae3ZTqtj1+07muayYl3ANIB+dyOWYDBZ5+RJCHYs=;
- b=HZUJT375SpdVAF7Sp9FPnfiCDV9dEWNoMq3y8My/RrO/kwzjh2ji0fwylBheC/blH4oLA+2wqy+58cOL4nIsJVR9UEyFQq5vf6qozzyO2BoA8WtX21lNXE+4GYMTULUlw+NEUFliTdIMqY2cAQQ1DsdQLaZoYvAKBX4ya9ZE7hsCLv43lUXOIbbJaC8+rG3/uurvPM7gwnwxu1O4qtUK6hxAuJnFvO9l0WwCGywcP9h/0VIdK5mXoPl0f5qvkNNXW0Qi3ea+Mt6Lm/aqVC0IamDWgd4K1gmnyB4z5XkCxiP5gcBSG8ORfvaPAT0Aue2tJ6clppftcFmEkAMGrdzH7Q==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DM6PR12MB4155.namprd12.prod.outlook.com (2603:10b6:5:221::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Wed, 28 Oct
- 2026 02:58:32 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0546.021; Wed, 28 Oct 2026
- 02:58:32 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 Oct 2026 22:58:30 -0400
-Message-Id: <DMG4V0W8WUGW.31QWJYW2A4Q1X@nvidia.com>
-Subject: Re: [PATCH 14/46] mm/huge_memory: fix zapping migration entries for
- device-private THPs
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
- <kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Chris Mason"
- <mason@kernel.org>, <stable@vger.kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>,
- "Michal Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>,
- "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo Stoakes"
- <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Barry Song"
- <baohua@kernel.org>, "Axel Rasmussen" <axelrasmussen@google.com>, "Yuanchu
- Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>, "Baoquan He"
- <baoquan.he@linux.dev>, "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka"
- <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Kees
- Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Jann
- Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Hugh
- Dickins" <hughd@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>,
- "Pratyush Yadav" <pratyush@kernel.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Lance Yang"
- <lance.yang@linux.dev>, "Rik van Riel" <riel@surriel.com>, "Harry Yoo"
- <harry@kernel.org>, "Alistair Popple" <apopple@nvidia.com>, "Nico Pache"
- <nico.pache@linux.dev>, "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain"
- <dev.jain@arm.com>, "Usama Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau"
- <kas@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "John Hubbard"
- <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>, "Will Deacon"
- <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Nick
- Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>, "Minchan
- Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>, "Xu Xin"
- <xu.xin@linux.dev>, "Chengming Zhou" <chengming.zhou@linux.dev>, "Chris Li"
- <chrisl@kernel.org>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat Pham"
- <nphamcs@gmail.com>, "Youngjun Park" <youngjun.park@lge.com>, "Gregory
- Price" <gourry@gourry.net>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
- Kim" <rakie.kim@sk.com>, "Ying Huang" <ying.huang@linux.alibaba.com>,
- "Jason Gunthorpe" <jgg@ziepe.ca>
-From: "Zi Yan" <ziy@nvidia.com>
-X-Mailer: aerc 0.22.0
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-14-6f74bec9a5bb@kernel.org>
-In-Reply-To: <20261027-fixes_core-v1-14-6f74bec9a5bb@kernel.org>
-X-ClientProxiedBy: MN0PR03CA0023.namprd03.prod.outlook.com
- (2603:10b6:208:52f::22) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=ming.li@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=OOgLrYoT
+ARC-Seal: i=1; a=rsa-sha256; t=1793156516; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Fw1D14/cmWDpP6r13f0uHiYP7HARa9MUrN5wX+ZNd3zImh5DeTT3HtXdnASPp0bxVw2E8IkKL+OK7dn//mYAS6NMSjnWdDl3qW7cZBzhoZEkvX7WPuZRu9aLEZmIbdcOh8Klc0eNnt4C6UZOo13llzrILjRR2jCbQyEhwFQc79I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793156516; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=; 
+	b=VAJ2YtGJoT5xHdcCSqgxRwsgiT2aaFaLc0pv8pXjtM/qLwCXFeT9xmzuM6s2c4JWxyJG3C3J5QadKATuhrJRCY/1xB8nfEsSNUkCCTq7zbGPYIBNesYz5yi3cufruQ3zCaerQ+MA3arOP9AQ463/UUnMJ/ztctoNX8J7T5zZh7U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793156516;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=9Ep5ZGCOPzJgaBvSsiI45IrfOU+KwKtWoFJMmEot9dQ=;
+	b=OOgLrYoTmMOZ+jvln9uC6DiyUi/GaHmaO+a3d5PydbIrxImiBmuOUzYdQhVvmTOi
+	MsKwt8EFdjNuCUuiGi40AoSwzU1RJMFrmRIkFzjCL6VW4T0b/5mgcu4PWnUojOaj3rD
+	RMhvyvc0nchzFLIXQLP7eYr8ph1k/gHIXTNVD3n8=
+Received: by smtp.zohomail.com with SMTPS id 1793156513768853.2509454165186;
+	Tue, 27 Oct 2026 20:01:53 -0700 (PDT)
+Message-ID: <37c6f2bc-53b3-4260-aa27-04f89c45e950@zohomail.com>
+Date: Wed, 28 Oct 2026 11:01:46 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -130,105 +65,385 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM6PR12MB4155:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6663443-d9fc-4b67-c97e-08df349f59d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|921020|4143699003|11063799006|10067099003|261026121527099003|261021123027099003|261021121427099003|261022075727099003|261009223027099003|56012099006|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	xESxOB2XQxZz/eM+nB9DvC/xPJefH+YtO7mibdKFnWCiTzc2jXvn/RrXUhWKk7YkvKBv06z8gHfovoel6XKsmpWOEdEwb0UrROjujvQ/36I4FeWcSBcsqj0KAjhvQ3mrRim8tWT9ZzzyZc7Dc+bwq/2w9VN4gItpSFCq5YYeDrTxZ37LnFO6ZATeXSzdVTn47DGRPK5MY7/Y14uyHIXMzzotLdd5Lxf67JnBDZL/eMAMoQ5Nfv9jZnaW8SK6lhSBvSluPzHuub5AqwrzduXrLfbqE1oLCGlK9wKeKSfIdxcfczfxGA+2z1Et1e+iZmPR5Y0/q2cYl9yU7iDBLoxdYb/eUHCTU3DnqVbm9vBbgGBz+cr5fH+It4TojB0UbDQtXBdXEyrTbVPVim2HllR+YIgRbwCa0pnn3mBBGwzx7E0qscciqKpubpmMpTOqd7dpUCeFq/2NMIPBRLmzhtbPWFu8vMajN+Q1yso0HPbGhp4gTd5GeYFrbzdgBGBst5ohR5G2TQ7eGy8qKU0/9KMwYFW9oP3hb+PrY7yxdC2vrO0gC7jBxMVmnnkdGlwpKBQLY9f4Lbx623EQJTG3I+Ft1ux5soCVirMsgTIB/UIIGg6qLragBMN+vXi1Ma5S0WwhgX5EheX1VEJ52R2cveEC+Bv6nLpGX/ZpJdYdMYfYIqAJWMCsk80I5dJFyOL5sovxMIYe3IO6Mt/xmAKamJAFSA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(921020)(4143699003)(11063799006)(10067099003)(261026121527099003)(261021123027099003)(261021121427099003)(261022075727099003)(261009223027099003)(56012099006)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHp3NHVXOEJvNVFaemhtQjgybDFNdVFPbVRNNytmTGE3MHJaQzgwbzBnY2Jy?=
- =?utf-8?B?NllmZmU5NFIzV0xhZEdZSm9Ibi9aeTM4OFMrMC9FVHJXVnE2NWsrMTJoeERX?=
- =?utf-8?B?MTdJNW1qRzdnVXhER3lOd05LcW1ydEllKzUxSzVWcnlSdzVidEdhYm9nMEFR?=
- =?utf-8?B?OWx0NVArYWY3alE0SCtMYlRROTRiTEZJM3Y5RUF2b2ZtVkVQL092UWtzNHA3?=
- =?utf-8?B?Vm9GY2RHZUtweFpMMXNjMWtmczNrZzllMXExSlVBUjFXODRLTlNpVy9EMnlH?=
- =?utf-8?B?bXJOSUgxR25mb24zaVBIenF6TzYvZzlIdDlPVHhZTkQvWTdQMm1xSFF0Q2Ex?=
- =?utf-8?B?K0ZjODE0Qnk2MjlJOVdTMk5wcUhLNStWenNUL3hscnNSekdXeksxTVlmSmxu?=
- =?utf-8?B?WGZsUTQ1MjJDQVNieHY0cENkWk5ZaXB5amZNMGh4OEFPS3FscWMrcStWdjdZ?=
- =?utf-8?B?OXltdTZtVm9BQThWV21CL2crY2JydUptN21XMUdkckp3Zld6eWc0eVNLUnlx?=
- =?utf-8?B?L3JpT3hTTmJjYmdkWURhNEQ4cDYxZE1nMWhYdnpYK0EzbGJxdkdNeHNUcDhm?=
- =?utf-8?B?Zk5xVVFUVFFFbjdQV01OdVhUU2xRbzNTY3IwdVlFZE1HVjBROUxiWXdqVWpp?=
- =?utf-8?B?WWlxWEIrSXZvU2dSZnlFWTNlR1g3OUtNdUZ5ZVByV21iWXpqVnlLc3hOWkRM?=
- =?utf-8?B?Q0JvWDU1cUZIMTVZNXduME5SYkNEUXdiY25EVmFMZk5wOEVUMFpoaWQvVDBi?=
- =?utf-8?B?eWxzWmF2RytoZ1NVbTBVUHBCWHI0THdKVmFCb2Zkdy9Ic0laZXdVdVBxK3hF?=
- =?utf-8?B?aFdEVTloMXcrM3EvYUgxbDNlU0RIaDZZT3lndWR2Y25DQnVweWpEczRpbW1R?=
- =?utf-8?B?YVVlckZkcTJLdmtnbnJlWklSdVZ6bFNULzhPdEdYaWhlaWxOZ3daMXpSWEJD?=
- =?utf-8?B?ZW54UUdPVExPK0w3Q3FpTGF4UmV3cW9wUWVxckFaRTFXYkU0TzhXWkx3akR3?=
- =?utf-8?B?OWlTVytINFMwTlZld3ZiT3hMT0F0UHN0bHlkQS9PVWViTGNDR1NPeVVVMlJ1?=
- =?utf-8?B?RjB0SUNMMTVMK2lRNS9BajRDQlEvcm93djBkZ3VicUM1QnJZV2ZBTU42TUZ1?=
- =?utf-8?B?aW1DS1d2dlR6RGhidEIzdzFlVnlWaXhncDJZczFzTlE4RVZRN3hPQ1hia1Ro?=
- =?utf-8?B?RFBwNm5jcSthdFk1bVZTWmxtMFlLR0lkU0FXZytROVN0Y0toTysyUEtGOHJm?=
- =?utf-8?B?eEM0MUF5TU5ub2RwVUF6SHRFS2VoaWhPc093QnViRTVpS0pOdFBLcHRWSmlC?=
- =?utf-8?B?L3JFYmJ1Q1ArRkpZUDY1V21XMkQwMm9vZVNibW1TMnBhaXN1LzJXWjRnTjds?=
- =?utf-8?B?YzFoSlAvWjFnMnlvbmxPa2lGWEtOVlp3S1lKVGtYbEZhMDZvT0xJNi9DTTRE?=
- =?utf-8?B?UlB6K1hnSDJuNUc5bC90UExCMDRDT3hORTFJMG9IMnViSldLTm85dmNCdWFs?=
- =?utf-8?B?WmkyZWt2cGp4WUZQL0NUOUNqR015Rk05TkhQZ2ZvdDkzemY4UFNGNzhXd0tu?=
- =?utf-8?B?ZzA4V3gzem1TMmhxY2U1cDVvbGc5R002QzZrWnJsYkVZUjV3QWkyU3RIc1pq?=
- =?utf-8?B?Z3FVWlNrd1E1WmRtUzE0L2toUXFiam52Zy9YOU1HeEU2OFhtVDlSK0hMSWEr?=
- =?utf-8?B?UDB1bHlZcTR4SVRENjVTMHorNXhNanNjWDd4OE1UckFSeFJ0QnFYWFdWOXUw?=
- =?utf-8?B?Unl2RHJ3a3p3cncwOXRMejNFQ1k5bHl0dGZ0T2lvUExjQUY0Ny9iRUJCU21a?=
- =?utf-8?B?ZUgzL2NOUWRzYzVLYk5uZHhxa1VkOGJIUVc5WWtncFBES0ZrKzZORngzOUJB?=
- =?utf-8?B?T3I2M3d2d2lGSEs1SmhYVkwzV2dJSSsxekFRcGNhSWp0WWZLSmpSdWN3VVFp?=
- =?utf-8?B?RjhDei9EbG9FQ3AvVnFoQXRYOHRJTFFyeWl4c3UvRTk4dm9CTEJHOTN0b3lq?=
- =?utf-8?B?a0d5SE5sNkVrNjVFYzA3bm14c1ZQd3dGeFlLcmNZaUs5ZDZCNkR5UlVZdXJi?=
- =?utf-8?B?enhZd3huZVo4b0JUaFVBcGMySmw2eldzZnpFOGQvMmpyNmxSMk1jaC9MVXB2?=
- =?utf-8?B?UVBibW04OTNwSnRRSVpVSkIzRTdFcVAzZk9rNXVuOUdKVFpOOWIrdWhhODhr?=
- =?utf-8?B?ZXZMRlJ1TE1nZnU4azJocFM1cHZYeDdYTlFINW8yKy9TK2ZsRkJqcUZBeG5N?=
- =?utf-8?B?UkZRc0hONlJDRDFlN3RHZEFXS1NhWW83NmxXamhDL1BDRGk4Ym55VkFucmFP?=
- =?utf-8?Q?K2a7+abisiieuFtvEq?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6663443-d9fc-4b67-c97e-08df349f59d5
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2026 02:58:32.2679
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wk1su8W9IPs55MRRIgbk0V82MMl9tHWF7iAM3t5q1yKThc1ixgS5czsHLTkO5VY5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4155
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 10/16] PCI/CXL: Add CXL Device Reset sequencing
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Vishal Verma
+ <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20261011021422.3428136-1-smadhavan@nvidia.com>
+ <20261011021422.3428136-11-smadhavan@nvidia.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20261011021422.3428136-11-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227f9a06f15f01b217c8f5af17a00005c66a3146a1dd455837ec18d79dfc7d3e9be92dd262450e365:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Mon Oct 26, 2026 at 7:17 PM EDT, David Hildenbrand (Arm) wrote:
-> From: Chris Mason <mason@kernel.org>
->
-> A PMD migration entry can refer to a device-private folio.
 
-Right, set_pmd_migration_entry() does that when a device private folio
-is migrated back to system memory.
-
-> zap_huge_pmd_folio() checks the folio type instead of the entry type,
-> so it treats such a migration entry as a device-private entry.
+在 2026/10/11 10:14, Srirangan Madhavan 写道:
+> Implement CXL Device Reset for eligible Type 2 devices: disable CXL.cache,
+> perform supported writeback, drain transactions, prepare the IOMMU,
+> initiate reset with Memory Clear enabled, and wait for completion.
 >
-> Installing the migration entry already removed the reverse mapping and
-> dropped the mapping reference. Zapping it must not repeat those
-> operations. Concurrent MADV_DONTNEED during migration back to system
-> memory can trigger this.
+> Observe the 100 ms post-reset quiet period before polling Status2, and
+> treat an all-ones read as not ready. Treat Control2 command bits as
+> transient state, restore cache policy on exit, preserve the primary error,
+> and abort when IOMMU preparation fails.
 >
-> Check the PMD entry type using pmd_is_device_private_entry().
+> Reuse Device DVSEC discovery from cache initialization and keep the
+> reset entry point declaration private to PCI core.
 >
-> Fix generated by an LLM and sent by Chris Mason in private.
->
-> Fixes: 368076f52ebe ("mm/huge_memory: add device-private THP support to P=
-MD operations")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: simplify description ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=04f8f84816d724f8b47f4d47a77916ac37c63a49
+> Suggested-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
 > ---
->  mm/huge_memory.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/pci/cxl.c             | 249 +++++++++++++++++++++++++++++++++-
+>   drivers/pci/pci.h             |   5 +
+>   include/uapi/linux/pci_regs.h |  14 ++
+>   3 files changed, 267 insertions(+), 1 deletion(-)
 >
+> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
+> index 471b57391593..9eb13adf0daa 100644
+> --- a/drivers/pci/cxl.c
+> +++ b/drivers/pci/cxl.c
+> @@ -3,13 +3,17 @@
+>   /*
+>    * CXL reset support in the PCI core. Cache the HDM decoder state of a CXL
+>    * memory device at enumeration, so it can be restored after a reset without
+> - * a CXL driver. HDM register formats and programming live in drivers/cxl.
+> + * a CXL driver, and implement CXL Device Reset. HDM register formats and
+> + * programming live in drivers/cxl.
+>    */
+>   #include <linux/bitfield.h>
+>   #include <linux/cleanup.h>
+> +#include <linux/delay.h>
+>   #include <linux/errno.h>
+>   #include <linux/io.h>
+>   #include <linux/ioport.h>
+> +#include <linux/iommu.h>
+> +#include <linux/jiffies.h>
+>   #include <linux/kernel.h>
+>   #include <linux/pci.h>
+>   #include <linux/slab.h>
+> @@ -221,3 +225,246 @@ void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
+>   {
+>   	cxl_hdm_cache_release(&pdev->hdm);
+>   }
+> +
+> +/*
+> + * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
+> + * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms after
+> + * initiating CXL Reset, then limits software to CXL Status2 access until
+> + * reset completion, timeout, or error.
+> + */
+> +#define CXL_RESET_RRS_WAIT_MS 100
+> +#define CXL_RESET_STATUS_POLL_MS 20
+> +#define CXL_RESET_MAX_WAIT_MS 20000
+> +static const u32 cxl_reset_timeout_ms[] = {
+> +	10, 100, 1000, 10000, 100000,
+> +};
+> +
+> +#define CXL_CACHE_WBI_TIMEOUT_US 100000
+Why is it 100000us? I think it is worth a comment.
+> +#define CXL_CACHE_WBI_POLL_US 100
+> +
+> +#define CXL_RESET_CTRL2_CMD_MASK \
+> +	(PCI_DVSEC_CXL_INIT_CACHE_WBI | PCI_DVSEC_CXL_INIT_CXL_RST)
+> +
+> +static int cxl_reset_update_ctrl2_no_replay(struct pci_dev *pdev, int dvsec,
+> +					    u16 set, u16 clear)
+If there is no a similiar function called cxl_reset_update_ctrl2(), I 
+think that is better to use cxl_reset_update_ctrl2() as this function name.
+> +{
+> +	u16 ctrl2;
+> +	int rc;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +	if (PCI_POSSIBLE_ERROR(ctrl2))
+> +		return -ENODEV;
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+I think this PCI_POSSIBLE_ERROR() checking is not needed, in 
+pci_bus_read_config_word() marco, if bus->ops->read() returns a error, 
+then the function will use PCI_SET_ERROR_RESPONSE() then returning the 
+errno. That means that we can always get an error as return value of 
+pci_read_config_word() while ctrl2 is an error response.
 
-
---=20
-Best Regards,
-Yan, Zi
-
+> +
+> +	/*
+> +	 * INIT_CACHE_WBI and INIT_CXL_RST are commands. Do not replay a command
+> +	 * that remains set in the value read back while updating persistent
+> +	 * Control2 state.
+> +	 */
+> +	ctrl2 &= ~CXL_RESET_CTRL2_CMD_MASK;
+> +	ctrl2 &= ~clear;
+> +	ctrl2 |= set;
+> +
+> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_reset_wait_cache_wbi(struct pci_dev *pdev, int dvsec)
+> +{
+> +	unsigned long deadline;
+> +	u16 status2;
+> +	int rc;
+> +
+> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
+> +					      PCI_DVSEC_CXL_INIT_CACHE_WBI, 0);
+> +	if (rc)
+> +		return rc;
+> +
+> +	deadline = jiffies + usecs_to_jiffies(CXL_CACHE_WBI_TIMEOUT_US);
+> +	while (time_before(jiffies, deadline)) {
+> +		usleep_range(CXL_CACHE_WBI_POLL_US,
+> +			     CXL_CACHE_WBI_POLL_US * 2);
+> +
+> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
+> +					  &status2);
+> +		if (rc)
+> +			return pcibios_err_to_errno(rc);
+> +		if (PCI_POSSIBLE_ERROR(status2))
+> +			return -ENODEV;
+Same as above
+> +		if (status2 & PCI_DVSEC_CXL_CACHE_INV)
+> +			return 0;
+> +	}
+> +
+> +	/* Do not miss completion concurrent with the polling deadline. */
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
+> +				  &status2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +	if (PCI_POSSIBLE_ERROR(status2))
+> +		return -ENODEV;
+> +	if (status2 & PCI_DVSEC_CXL_CACHE_INV)
+> +		return 0;
+I think checking again after deadline is not needed, if it usually 
+happens, it means we should adjust CXL_CACHE_WBI_TIMEOUT_US.
+> +
+> +	return -ETIMEDOUT;
+It is better to output a warning before returning -ETIMEDOUT.
+> +}
+> +
+> +static int cxl_reset_disable_cache(struct pci_dev *pdev, int dvsec, u16 cap)
+> +{
+> +	int rc;
+> +
+> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
+> +					      PCI_DVSEC_CXL_DISABLE_CACHING, 0);
+> +	if (rc || !(cap & PCI_DVSEC_CXL_CACHE_WBI_CAPABLE))
+> +		return rc;
+> +
+> +	return cxl_reset_wait_cache_wbi(pdev, dvsec);
+> +}
+> +
+> +static int cxl_reset_restore_cache_policy(struct pci_dev *pdev, int dvsec,
+> +					  u16 saved_ctrl2)
+> +{
+> +	int rc;
+> +
+> +	rc = cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
+> +					      saved_ctrl2 & PCI_DVSEC_CXL_DISABLE_CACHING,
+> +					      PCI_DVSEC_CXL_DISABLE_CACHING);
+> +	if (rc)
+> +		pci_err(pdev, "failed to restore CXL cache policy: %d\n", rc);
+> +
+> +	return rc;
+> +}
+> +
+> +static int cxl_reset_wait_done(struct pci_dev *pdev, int dvsec, u16 cap)
+> +{
+> +	unsigned long deadline;
+> +	u32 timeout_ms;
+> +	u16 status2;
+> +	int idx, rc;
+> +
+> +	idx = FIELD_GET(PCI_DVSEC_CXL_RST_TIMEOUT, cap);
+> +	if (idx >= ARRAY_SIZE(cxl_reset_timeout_ms)) {
+> +		pci_warn(pdev,
+> +			 "unknown CXL reset timeout encoding %d; using %u ms\n",
+> +			 idx, CXL_RESET_MAX_WAIT_MS);
+> +		idx = ARRAY_SIZE(cxl_reset_timeout_ms) - 1;
+> +	}
+> +
+I noticed that the worst situation is that we have to wait cxl reset 
+done for 100s. If my understanding is correct, userspace would hang on 
+"echo 1 > reset" until reset done. Is it better to add a pci_info() here 
+to output the reset timeout value?
+> +	/* Allow one retry after the mandatory 100 ms quiet period. */
+> +	timeout_ms = clamp_t(u32, cxl_reset_timeout_ms[idx],
+> +			     CXL_RESET_RRS_WAIT_MS + CXL_RESET_STATUS_POLL_MS,
+> +			     CXL_RESET_MAX_WAIT_MS);
+> +	msleep(CXL_RESET_RRS_WAIT_MS);
+> +	deadline = jiffies + msecs_to_jiffies(timeout_ms -
+> +					      CXL_RESET_RRS_WAIT_MS);
+> +
+> +	for (;;) {
+> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
+> +					  &status2);
+> +		if (rc)
+> +			return pcibios_err_to_errno(rc);
+> +		if (status2 != U16_MAX) {
+> +			if (status2 & PCI_DVSEC_CXL_RST_ERR)
+> +				return -EIO;
+> +			if (status2 & PCI_DVSEC_CXL_RST_DONE)
+> +				return 0;
+> +		}
+> +
+> +		if (time_after_eq(jiffies, deadline))
+> +			return -ETIMEDOUT;
+> +
+> +		msleep(CXL_RESET_STATUS_POLL_MS);
+> +	}
+> +}
+> +
+> +static int cxl_clear_memory(struct pci_dev *pdev, int dvsec, bool initiate)
+> +{
+> +	if (initiate)
+> +		return cxl_reset_update_ctrl2_no_replay(pdev, dvsec,
+> +						      PCI_DVSEC_CXL_INIT_CXL_RST |
+> +						      PCI_DVSEC_CXL_RST_MEM_CLR_EN,
+> +						      0);
+> +
+> +	return cxl_reset_update_ctrl2_no_replay(pdev, dvsec, 0,
+> +					      PCI_DVSEC_CXL_RST_MEM_CLR_EN);
+> +}
+> +
+> +static int __cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap)
+> +{
+> +	int rc, rc2;
+> +
+> +	if (!pci_wait_for_pending_transaction(pdev)) {
+> +		pci_err(pdev, "timed out waiting for pending transactions\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	rc = pci_dev_reset_iommu_prepare(pdev);
+> +	if (rc) {
+> +		pci_err(pdev, "failed to stop IOMMU for CXL reset: %d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_clear_memory(pdev, dvsec, true);
+> +	if (!rc)
+> +		rc = cxl_reset_wait_done(pdev, dvsec, cap);
+> +
+> +	/* Always clear Memory Clear; successful cleanup must not hide reset failure. */
+> +	rc2 = cxl_clear_memory(pdev, dvsec, false);
+> +	if (rc2)
+> +		pci_err(pdev, "failed to clear CXL Reset Memory Clear: %d\n", rc2);
+> +	rc = rc ?: rc2;
+> +
+> +	pci_dev_reset_iommu_done(pdev);
+> +	return rc;
+> +}
+> +
+> +static int cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap)
+> +{
+> +	u16 saved_ctrl2;
+> +	int rc, rc2;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &saved_ctrl2);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +	if (PCI_POSSIBLE_ERROR(saved_ctrl2))
+> +		return -ENODEV;
+> +
+> +	rc = cxl_reset_disable_cache(pdev, dvsec, cap);
+> +	if (!rc)
+> +		rc = __cxl_reset_execute(pdev, dvsec, cap);
+> +	/* Restore cache policy after any attempt to disable caching. */
+> +	rc2 = cxl_reset_restore_cache_policy(pdev, dvsec, saved_ctrl2);
+> +	return rc ?: rc2;
+> +}
+> +
+> +int cxl_reset_function(struct pci_dev *pdev, bool probe)
+> +{
+> +	u16 dvsec, cap, ctrl;
+> +	int rc;
+> +
+> +	rc = cxl_pci_device_dvsec(pdev, &dvsec, &cap);
+> +	if (rc)
+> +		return rc;
+> +	if (!(cap & PCI_DVSEC_CXL_CACHE_CAPABLE) ||
+> +	    !(cap & PCI_DVSEC_CXL_MEM_CAPABLE) ||
+> +	    !(cap & PCI_DVSEC_CXL_RST_CAPABLE) ||
+> +	    !(cap & PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE))
+> +		return -ENOTTY;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL, &ctrl);
+> +	if (rc)
+> +		return pcibios_err_to_errno(rc);
+> +	if (PCI_POSSIBLE_ERROR(ctrl))
+> +		return -ENODEV;
+> +	if (!(ctrl & PCI_DVSEC_CXL_CACHE_ENABLE) ||
+> +	    !(ctrl & PCI_DVSEC_CXL_MEM_ENABLE))
+> +		return -ENOTTY;
+> +
+> +	if (probe)
+> +		return 0;
+> +
+> +	return cxl_reset_execute(pdev, dvsec, cap);
+> +}
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9e218f236e66..743e65abd758 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -733,9 +733,14 @@ static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+>   #ifdef CONFIG_CXL_RESET
+>   void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
+>   void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
+> +int cxl_reset_function(struct pci_dev *pdev, bool probe);
+>   #else
+>   static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev) { }
+>   static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev) { }
+> +static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
+> +{
+> +	return -ENOTTY;
+> +}
+>   #endif
+>   
+>   #ifdef CONFIG_PCI_NPEM
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index facaa324bd86..7224857c7b30 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1352,8 +1352,22 @@
+>   #define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
+>   #define   PCI_DVSEC_CXL_MEM_CAPABLE			_BITUL(2)
+>   #define   PCI_DVSEC_CXL_HDM_COUNT			__GENMASK(5, 4)
+> +#define   PCI_DVSEC_CXL_CACHE_WBI_CAPABLE		_BITUL(6)
+> +#define   PCI_DVSEC_CXL_RST_CAPABLE			_BITUL(7)
+> +#define   PCI_DVSEC_CXL_RST_TIMEOUT			__GENMASK(10, 8)
+> +#define   PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE		_BITUL(11)
+>   #define  PCI_DVSEC_CXL_CTRL				0xC
+> +#define   PCI_DVSEC_CXL_CACHE_ENABLE			_BITUL(0)
+>   #define   PCI_DVSEC_CXL_MEM_ENABLE			_BITUL(2)
+> +#define  PCI_DVSEC_CXL_CTRL2				0x10
+> +#define   PCI_DVSEC_CXL_DISABLE_CACHING			_BITUL(0)
+> +#define   PCI_DVSEC_CXL_INIT_CACHE_WBI			_BITUL(1)
+> +#define   PCI_DVSEC_CXL_INIT_CXL_RST			_BITUL(2)
+> +#define   PCI_DVSEC_CXL_RST_MEM_CLR_EN			_BITUL(3)
+> +#define  PCI_DVSEC_CXL_STATUS2				0x12
+> +#define   PCI_DVSEC_CXL_CACHE_INV			_BITUL(0)
+> +#define   PCI_DVSEC_CXL_RST_DONE			_BITUL(1)
+> +#define   PCI_DVSEC_CXL_RST_ERR				_BITUL(2)
+>   #define  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)		(0x18 + (i * 0x10))
+>   #define  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)		(0x1C + (i * 0x10))
+>   #define   PCI_DVSEC_CXL_MEM_INFO_VALID			_BITUL(0)
