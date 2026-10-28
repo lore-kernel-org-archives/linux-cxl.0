@@ -1,49 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793173941;
-	b=LeXvswjqMz/+7eYAx4tKEjncyItjiaqCMS003QtIGBhObreTRbZi2y1LWzc9iHnxWZwL
-	 Ew8GaPNHukLaFAn6A+LDG1hS1nI0Y5UJdfGNV3CqbF7CIP6X8qWSheQWs8IVS5M0mLeSh
-	 W4fOxCfnnBvwy9lekJUt1vqgQvz587kv/Qmr28h3iN4oa8mhV7O3vKgNQ+ogDDII3ztAt
-	 S6Lf0Y6o5Dcr1SkIqRnsMtc9N68pTLcYHKLHfTJ2sm6aM4SYsOmDKI+qlpP7pT3BDUiS5
-	 ttYao102JpoTWuKXhbI2eTpmYIZX1FmL9G0fu7jRUmN1EgxEbABlYYFwrxSenVGNS3A==
+	t=1793174307;
+	b=yxxqcT7aTJqfGOKZ1ynzDwkl7tXqpirZ7+cwOwuNJhCEnrUUOGaVifmsd6MQHz1u5bAu
+	 NG8iIKWlVuzrgQnJh5usJrMRac3otZsdn8Bd2P0MwaEc++eetnSTaO1Axf1ZbOGmxT5ym
+	 DLvWzbpHrkUbU5hmuAvEqnbYU0o/dTWfhgx0/hjPLyphdEFTq+03S6OZnx4xxwJ1648gk
+	 5n832QY7OEJFCIYDNCHYqg7H961HwI48PYIxVFKrnQU8oMIZS0kTKAczZ0YvImSgS0zXX
+	 dlH1L7NbMz/DE5ZAuqUJuMTKfKlvNRRElsP31rUVVxB442O/BC+qCkktajOYnc7Iuvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793173941;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=C2MebSDm+AGzraIelTihisR4wHMyVkbMMbZmgrZJ7WY=;
-	b=LPkyzcTZcQti5CbA4YgBzLxmPv2ZQfXLXEYRu790di0RlUz5TZJcF7Y5/vWIRh7jjOkM
-	 ufbgoWocLZr6LmnwIn7dxeLFUhS1OygNC0a6MHHbwuOQfvpgASaLFhdIfA45+5ZSydUTR
-	 9rXddrwd/w5GVMZEO77diVGFdyqxFPWuBKuGM3qtOTqpZPd1B8z230IIB08iw0PweaAmd
-	 ykTOYepb1oPbDeUaLf6uUjuOnhet2aGXFDUcWt9ujz9YH28xiB7nClipJPKBiMCrh5itW
-	 Dt+JbiQgnAQ2b8zu1PSCq7Wog9/TpJQt2EzmgIa+lh7/bO5eGAqlh+9H+cIZ1aQuAHQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793174307;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
+	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Authority-Analysis:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=rhvGInK5zgI1eQ4J9LAjRQ2bzaVQYhPb/C5AQkVEQgo=;
+	b=cq8PK+5ETSdBvYIthp5DOtEgqXxG64f+dcyBrzCU6qFoz2umqA5a/XWaMFD6WU/xye3n
+	 eGsj40P0Dk63l1/CnCbQDZT0jL2hYunkAQKcV5zDKZmLHyR91TU1hXrTH293gDt4L2wFV
+	 gTBl8jgUftvBpJOrUm/v/LNZzdYoqZp08nbPdMhzyo9BZ58/JQXYXtUPxK+clFNx4+Fld
+	 1uMq3G9TjskjY4N2A+hKBqWaSJKeJXQ0TzJml24YL/1GtieHBDlXMwWqvI/G2gov1JknY
+	 zD9qLucSgDKP9KQXRMH70yZOHhA19M29EpZp0CqghBW6xYiyHKRzgjnfvUP25qT3XIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=qAO7tgcE;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A45E606A31D;
-	Wed, 28 Oct 2026 07:52:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A45E606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=gRyuYSlQ;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=av3kTdIK;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15CB606A31A
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 07:58:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C15CB606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=qAO7tgcE
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09F282ECB;
-	Wed, 28 Oct 2026 00:52:16 -0700 (PDT)
-Received: from [10.163.164.200] (unknown [10.163.164.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 046D23F673;
-	Wed, 28 Oct 2026 00:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793173939; bh=wGe8fo0LsEeNmyXuE7t5RJoQX1lGKJltqCDxnR+anGM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qAO7tgcEvyo0Q3H3HaTM1nwzy8/QBeW1tnF4JOXa8qF71VXcIH8niSLEX8yBfM9DY
-	 y3XuPsTISI5OiWjvg0v6LudaMoMHfe0T+fQRVNRKQDaWP3kjmosTINe/S2/q5eMvvF
-	 XylgVFbGPVK2/y+rwaLieJ3EjGQdsqqHDKUNnM9o=
-Message-ID: <e32a19c4-76c4-40ba-83a4-781333af7b0a@arm.com>
-Date: Wed, 28 Oct 2026 13:21:55 +0530
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=gRyuYSlQ;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=av3kTdIK
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69S4PUXw3381693
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 07:58:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rhvGInK5zgI1eQ4J9LAjRQ2bzaVQYhPb/C5AQkVEQgo=; b=gRyuYSlQFmBoGm1f
+	faSRooSnfI3yO4w3BIFpy9cDdTlLeYuEfSJhLl3buQhgyJdhZfL0+dNdXrxB4Cuy
+	gDKETFo5QavH+RqofMcKr9ofz9Co4ahulGJZwseamZakXHz0ZjyHuqrutcxAgajE
+	SYVt+ONf14oZMfkOP9Zl+RJfbULMtnUXx2a8HtxvTr8mVW8t7fJKBAZlaz3Cc3ET
+	vNopJJ+GDoQYBvZ4JGtyHMKPRI3/xJ31TmQuCseYwh2CvjrS8ZcemwmLku24IoU/
+	V+YATyFtGzSfv2NhQOk5zVhr2BwbxhaH/K+RG1O8Q2quVdcKB2xfptlU8Ezs/iqA
+	m4rTOQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hk6f91dfr-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 07:58:25 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-93e49a1d3b1so133166085a.2
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 00:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1793174304; x=1793779104; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=rhvGInK5zgI1eQ4J9LAjRQ2bzaVQYhPb/C5AQkVEQgo=;
+        b=av3kTdIKQ3iod865qQR1ETnxxuW0Rtj8JTPsYVdlOM/3TqLZJkwPg5GNl1FgCSTjYS
+         zlxBxfKIkS/PE0dkdg269aqknQDw4xNilo6Y0mUEqOygvNss2wWVrYnbeLgCfKs0WqDJ
+         6j4EZI55DwN3g2/YRm57pQZIEPyu3UFUpRd11hGey5irBztUhFslMMpXeHO+I0H5Wtzx
+         idVlV1KkpkJk8c1+1RTPoIUMUOCc4AXpmdiRdvbfIzkhMsq9SP+DJcuydVeKrld18rJA
+         S4Rbz7S30zda61l6eSbiPNAWJTBb2SzQDR2ApALmLtIvstbNWTpngk4kwN5GcC/sDtng
+         cBUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793174304; x=1793779104;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rhvGInK5zgI1eQ4J9LAjRQ2bzaVQYhPb/C5AQkVEQgo=;
+        b=qI2QWKV+4jFdMrdVIfARr2wQ/MTvH9SNgw420oq8U4MrLvfq7UwGqYKq7WACpsV3zt
+         shbEyWMKRZtJ13aPfAsP9k/DPqOOf69BTQv7ssAkYqMydvM+QIlzIIAXc2DbZDOsieLZ
+         LSquH/vqA/Ze3F5HHiusfAooxMUXfHLgJ/Ehi7lAjcLoHdS8bcjfut+S9VaKBIuZ20w7
+         /8yY1ROQqaBeE9jGgexmD414cC0oFTowB9O+u7F7+ciTUofE89IOgbPGtjhNKZzKtrEl
+         KQPrZhY9X2K68F/q2VMjOCPGyY4j0Ka02mfGlHarzENH0BWPVmtInR4CMuzZoMSkwWE4
+         FQww==
+X-Forwarded-Encrypted: i=1; AKwUvBz4TfDcAFsJ2VP4sMydO7+ktuGVqh+fJ+NEKP9JNUX76RRbvlIFUlmjujYL/yJxB6k6nBY68u4Z+y8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYL1hDYvl93Id3+FImz7tjuBGqJ19Z5zHNcKv/u1b8RfLSfuRxWj
+	QmvrGNtlHtDDPp0Tx+c3Hnm2YmJ9zMvMJu6XoOQo88vMBLp5jo6U/ivlCLkO3FHNU7/hyxF/UwC
+	wxPvL5jP7Mrg4n7SPBg4GLA/F7HhJSjDPUQMnNANHbDD9Bo1N/wiAMJ5y7VOmi4I=
+X-Gm-Gg: AYBFou21csrTlj+M9bgEkVlwf94V5kqeVsMihNVXNr0/lxVh/5pTfPXk9ZmulnhZt3+
+	eK2e8Mk3WLkd9zQ5EaAYnsc3zGi7TdBOPWuHlM0yq+ZCXepKMpFFfFesdWFFOXwSR1yCPSB0/oB
+	WMTa6KuvGd1h2sh+t6xX9K+OqNo79jiuRgF5PY3qJyUCmBUqnFRuFs0ss6pZuY/t3hVTNBqUdob
+	5dM4ag4PHJB8wiElkG+0IxB+x4zi18BqI3fcxK4nzL/1aB3/6oVUmKao+y9XXKoj+GPFM7874jp
+	bsbHyWQ6Zgm6MZJ05y+DlJ1hu2kQysVskbk0KuAzqjG6kwBDIG0UoDWq6OJ+9A7/GUNCcM8ux3I
+	UP8zIk6EW4KK41bh8IjALfOU/vY9uwjBTTfmtYwx2g0ptERSjDyeE70frtMv/RMXXeioyHhCqD8
+	fefaOhYnszV1rEtdtUTzDOpJc=
+X-Received: by 2002:a05:620a:31a7:b0:940:f53d:5f7 with SMTP id af79cd13be357-94408debc40mr205401685a.69.1793174304132;
+        Wed, 28 Oct 2026 00:58:24 -0700 (PDT)
+X-Received: by 2002:a05:620a:31a7:b0:940:f53d:5f7 with SMTP id af79cd13be357-94408debc40mr205400585a.69.1793174303684;
+        Wed, 28 Oct 2026 00:58:23 -0700 (PDT)
+Received: from [192.168.69.229] (82-67-153-177.subs.proxad.net. [82.67.153.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebc4d76sm27424057f8f.12.2026.10.28.00.58.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Oct 2026 00:58:23 -0700 (PDT)
+Message-ID: <f81a624d-73d3-4de2-a17e-2bfad705a677@oss.qualcomm.com>
+Date: Wed, 28 Oct 2026 08:58:22 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -54,145 +115,65 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/46] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Update Junjie Cao's email address
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20261027-fixes_core-v1-9-6f74bec9a5bb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+To: "Michael S. Tsirkin" <mst@redhat.com>, Junjie Cao <junjie.cao@linux.dev>
+Cc: qemu-devel@nongnu.org, jic23@kernel.org, anisa.su@samsung.com,
+        linux-cxl@vger.kernel.org, junjie.cao@intel.com
+References: <02d394e6-eafe-4a3d-9f63-61b639267aa8@oss.qualcomm.com>
+ <20261028021551.498530-1-junjie.cao@linux.dev>
+ <20261028032407-mutt-send-email-mst@kernel.org>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
+In-Reply-To: <20261028032407-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=frhJ914f c=1 sm=1 tr=0 ts=6ae1ab21 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=nz36NW0qrpeEijYxj/H2Ew==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=M51BFTxLslgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
+ a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=EUspDBNiAAAA:8 a=Zq7r3Ef6Bm_1TbWsCMMA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI4MDAzMSBTYWx0ZWRfX26F6MbRj0MxY
+ ClAm4K0mZW+pX+KFm2UzadaF42FKnq22Wrv6PP+JpIQe8SdHc+kSpekmlgQvFJcluVZHWMYAGpa
+ OSgKdehpmtNA0k6cRPa+/d2vvIqrIao=
+X-Proofpoint-GUID: My4-It_U7HCTHN3OvpryhJec1lMehpge
+X-Proofpoint-ORIG-GUID: My4-It_U7HCTHN3OvpryhJec1lMehpge
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI4MDAzMSBTYWx0ZWRfX7uiCktOi425f
+ nT7LoYRxKlyUId+yFYrz6HJeVgTCsNtn6KeQJp8W1pxKLzCUqnOORk7DZQ31Ot6fsUzc7Yp9REi
+ k3k8DR3cHnapGxILkyqP0zRoq1EhY4Ds9lhISiZNu5fnEs89lAuRSINGhEhiD06IkZRdbCQD1RF
+ rMJNvIwswVVPHuvIZSLtVt4Atd033uWdkaLHAV0e7VL/LpfYITN82K0mF6YY64U9LZ789VdjFHw
+ NgNityWUJC9Gbbul7OogLysM+U3Yak7eyd3Y10r/ag8tq6TDG1cUVwBC7A9mmvsUNCzTyzj0Vrs
+ //xZEaeDVhlU2ZzvjpUzIlyF/EN7lxzVFyA+D5Ldlhf+fAL5PU+icWDMq+ftXtwBZui7ZT6nEq1
+ kHVkuzKwZy4r2y0YG5z+ZbNrV9VO1gGZGmwpzpjTJ0Sc6zDxi7GHvJyyC6yj+v/HoQfsUAKJjTO
+ AQ8BrWoehUk/uLLhDsA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-10-28_02,2026-10-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 clxscore=1015 suspectscore=0 adultscore=0 phishscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610280031
 
-
-
-On 27/10/26 4:47 am, David Hildenbrand (Arm) wrote:
-> page_vma_mapped_walk() can return non-present device-exclusive entries,
-> but folio_referenced_one() passes them to PTE young-bit accessors that
-> require present PTEs.
+On 28/10/26 08:24, Michael S. Tsirkin wrote:
+> On Tue, Oct 27, 2026 at 09:15:51PM -0500, Junjie Cao wrote:
+>> Hi Philippe,
+>>
+>> On Tue, 27 Oct 2026 19:20:21 +0100, Philippe Mathieu-Daudé wrote:
+>>> On 21/10/26 15:43, Junjie Cao wrote:
+>>>> -R: Junjie Cao <junjie.cao@intel.com>
+>>>
+>>> Could you Ack from your other email?
+>>
+>> Sorry, I've already completed my handover at Intel and no longer have
+>> access to that mailbox.
+>>
+>> If it helps, this aw99706 kernel driver patch from August is
+>> DKIM-signed by intel.com and has linux.dev as author and SoB:
+>> https://lore.kernel.org/all/20260804030255.1934470-2-junjie.cao@intel.com/raw
 > 
-> We must neither call clear_flush_young_ptes_notify() nor
-> folio_pte_batch() with non-present entries. For example, clearing the
-> young bit on non-present PTEs can corrupt the entry: on arm64
-> PTE_AF overlaps the swap type, so clearing it turns a device-exclusive
-> entry into an ordinary swap entry.
-> 
-> folio_pte_batch() will VM_WARN_ON_FOLIO.
-> 
-> Apply the same approach as the previous fixes to e.g., damon_ptep_mkold():
-> treat these entries as old from the CPU's perspective and obtain their
-> young state through the MMU notifier.
-> 
-> Skip PTE batching and MGLRU look-around for non-present entries, and
-> don't modify non-present PTEs.
-> 
-> Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
+> ok, will apply then.
 
-Reviewed-by: Dev Jain <dev.jain@arm.com>
-
-But nit below.
-
-
->  mm/rmap.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 1131b76bbbc28..0faef46806e5c 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -924,6 +924,7 @@ static bool folio_referenced_one(struct folio *folio,
->  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
->  	int ptes = 0, referenced = 0;
->  	unsigned int nr;
-> +	pte_t pteval;
->  
->  	while (page_vma_mapped_walk(&pvmw)) {
->  		address = pvmw.address;
-> @@ -968,10 +969,12 @@ static bool folio_referenced_one(struct folio *folio,
->  			return false;
->  		}
->  
-> -		if (pvmw.pte && folio_test_large(folio)) {
-> +		if (pvmw.pte)
-> +			pteval = ptep_get(pvmw.pte);
-> +
-> +		if (pvmw.pte && pte_present(pteval) && folio_test_large(folio)) {
->  			const unsigned long end_addr = pmd_addr_end(address, vma->vm_end);
->  			const unsigned int max_nr = (end_addr - address) >> PAGE_SHIFT;
-> -			pte_t pteval = ptep_get(pvmw.pte);
->  
->  			nr = folio_pte_batch(folio, pvmw.pte, pteval, max_nr);
->  		}
-> @@ -981,11 +984,23 @@ static bool folio_referenced_one(struct folio *folio,
->  		 * are. —they could be on active/inactive lists or on MGLRU. So the
->  		 * simplest approach is to disable this look-around optimization.
->  		 */
-> -		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte) {
-> +		if (lru_gen_enabled() && !lru_gen_switching() && pvmw.pte &&
-> +		    pte_present(pteval)) {
->  			if (lru_gen_look_around(&pvmw, nr))
->  				referenced++;
->  		} else if (pvmw.pte) {
-> -			if (clear_flush_young_ptes_notify(vma, address, pvmw.pte, nr))
-> +			bool young = false;
-> +
-> +			/*
-> +			 * PFN swap PTEs, such as device-exclusive ones, that
-
-You mean "PFN softleaf PTEs"? Better expressed as "softleaf PTEs embedding a PFN" ...
-
-
-> +			 * actually map pages are "old" from a CPU perspective.
-> +			 * The MMU notifier takes care of any device aspects.
-> +			 */
-> +			if (pte_present(pteval))
-> +				young = clear_flush_young_ptes(vma, address, pvmw.pte, nr);
-> +			young |= mmu_notifier_clear_flush_young(vma->vm_mm, address,
-> +								address + nr * PAGE_SIZE);
-> +			if (young)
->  				referenced++;
->  		} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
->  			if (pmdp_clear_flush_young_notify(vma, address,
-> 
-
+LGTM now:
+Reviewed-by: Philippe Mathieu-Daudé <philmd@oss.qualcomm.com>
