@@ -1,55 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793167715;
-	b=TY06OsGzcEmWLeORtwBTetLLkrog/e8JryMoNQty7MIaqppBsBwhvvnX+be+TvPLHXEM
-	 JaBw7WIEsVqnUi0FzHYmBd2q2VMdk2TtmKxb+mq/hQ2jtNBpzjTfFqE/BTd7lK8nn8G1l
-	 puFJST6fRpRGPrgvKBVv1/6w2x6zloyF44bvcGduwy0O2kcWow5dj0n/wYcmkj5RL+nyl
-	 Nyc4bbGu73EteO8nZh6ULHviXBPEbkrlYKsADYJcV2iWzjs3Bd1kP4qd0vkygaaSGL6lk
-	 cyJ1HN+MowwrCPfu2TTYunN+foT8ajPJh9sdKC2quqdYhCtW5ZtjbpAtB59tg4JHvpQ==
+	t=1793170211;
+	b=x7X3K9TjuYV/dWwfM0EWfZGsUE2ZlEMcqzihOhpF7xQoCv0+YlhYoR2SWcz2TjIqIPss
+	 sd+fd3manpc7iCip9PhlhotimFOy5X5pewRaM+h52ve9RbAukEnt1zLfhTgojmR1NutTu
+	 t1ClyTFwXNjtOfLwtvctKyySh0Fh2vmpBpLZhIPnOGADvZIlxHbFqiaFchMr68zal1+6R
+	 ioDkNqD3e4a05cA17u5geseINsoocDydrhLLN5KXqcQbg5D0IV4n+SE6hHw55hiPyjF4I
+	 RYMRU9SaEuSG9+GoRqAuygcWdY4IxAaovNkhSLiLVyL5JwfYHIQdEdmNy4xgRBMnOXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793167715;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=/TPcF4ULGqI2fEO87ogNm7T72JaMgv/YppexPEkAeQY=;
-	b=IS+gYN91Pw/hvxpE/js1N8O4M/Gg26W5dvE/IO5eJO9DlFVjrpjhttZVx/ldBqbtbXDa
-	 LDa7oxcBWK3XGGglpjJm/qdHCYdrIeGrGR0k3Q9amt6nkVz+5RXnzJ7Mv3SNpaEiuCGyT
-	 g95ogmkzAEdCQbIj3H4SDGyjBsGs41eX/mQpCnmNWud0q6YhuQlIpsjMMfQmryAu+LMoB
-	 HVvAA6hyB3/lATdS2GySJ//626cPu16QovggLrT73X+ExkiPmY3joVdSXft6mkCBsVYiP
-	 mexmGnV0EPyD2ExT3AkyP+xyz2oSv+zmg92ANapZjJCWq+UwCLBXOJjT173dugMtxew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793170211;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=sFhRdI8EQ8MK0p+CW7dH/qNlkXIP7SsPBqhbqXWLgo8=;
+	b=ivnrMZAB0ckTHeh1Ht0amRLZ+DXJL748qTXdPw2Fv7KOGbCpW4QpNGBUuL2A3/t13ymG
+	 GL1ssyfSqmYauVJdqhgRsrNgfHZnazGjmrC0H9X97pRHo+icE1UX4QEuCttZeb2XpaoTW
+	 0r78ZPbCcUJeVj7bG4OBCmzpy4JabMgdDN648y9Y1XRyqxM6zMqIFjzITVESY19NRKSME
+	 9UJeq+ZI5qRbEeX19tK2NUnS/kOdBGKFO7o8US2wLhAhfF/m4Jk1OcmYnBwEwYnFgd98W
+	 lYBkIqTDObpOz7SLCo9tcZ++KnnePDEXJ91AXzIf88473pJfMrKNsTrgkX0dFXtZP7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZrjEg98q;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HqMUEPXJ;
+	arc=none smtp.remote-ip=209.85.128.53
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0934D606A31A
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 06:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A805F606A31E
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 06:50:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A805F606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZrjEg98q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0DD1F01825;
-	Wed, 28 Oct 2026 06:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793167714;
-	bh=/TPcF4ULGqI2fEO87ogNm7T72JaMgv/YppexPEkAeQY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZrjEg98qTHNC1lVSjPyTE2doONtcLkfg/1c/BhVI+TuHPyiSt82GwaMFW/CBHhlDe
-	 j8kzWJ3cs8CZDYLMHKP9JU2CVVkcsorsvAPDw7SBi9ito1Kxta9V+lc+VZf28YXPUL
-	 ESxXk0kIGE8TscMM+dIOBB5htog9CwEm9nXbxzugqhGuYftDIULzkU1L2l5WEh3vec
-	 lpodoflW/iyKhRYVeFsgFRWLSlV4eLcva771yjx74Fa4s75XoQBkr6xlaHCWwDa5LK
-	 cNacIgrRVe0bdUCtRW0CclnFH1uNUHtJhr457tQ/9sKO5TrgDGQB0Ip9MpiY+IwkZn
-	 I8o1NuAnckFig==
-Message-ID: <sashiko-outbox-187549@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] cxl/core: Create einj_types when EINJ becomes available
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Yongxin Yang" <yangyongxin@kylinos.cn>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20261028055401.1626640-1-yangyongxin@kylinos.cn>
-References: <20261028055401.1626640-1-yangyongxin@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 06:08:33 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HqMUEPXJ
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a208d93758so5739725e9.3
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Oct 2026 23:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793170209; x=1793775009; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sFhRdI8EQ8MK0p+CW7dH/qNlkXIP7SsPBqhbqXWLgo8=;
+        b=HqMUEPXJVdP6J1IEnR1xcnYhEHqrxYYo9t0WW9OF/y887mPyMsPavGLyLE4fOEPvAZ
+         1rpgz8llkCN4XHtVNIULxpHhY0O6FtZfYMtlD9mzH1ffpCb3hcEuBxQ3O+X6UX3dedGl
+         eUKS88Psa82wHjupcx01IGEd/7aq7NESmRkc+AFd99PpHe3YQunLvnQ8PzPCFLwRncKK
+         46/eaYSHd/oEorjebO2mSIASZUKIhXn8hhui0MAXOrUftee5I45COXgHYu8kxZWbVwmH
+         t7cC7qER7Nq3cqj/uFDOnK0kR6KTXPuGuMdwTRkz6gO9cQT/rhknwACglRa7thSXu15P
+         Uimw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793170209; x=1793775009;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sFhRdI8EQ8MK0p+CW7dH/qNlkXIP7SsPBqhbqXWLgo8=;
+        b=FuujqfcHE1ncvgWyjRHU1AVJyFFp1VZgFsHVWHuZ72UfSyQUxxW2KiaNOc++qSmbHs
+         D90eG+2oWR2EoKIOKtanrgcpOueOnLD6+GQxC+roNYwSggufgdvVgVGcMz87DbpeK+v6
+         QcFLi3GKhuHy1UOudmtT2+LhHlTsv0VFC0zDoMyfTKcVwV0k4d6CHesiZDdGibDikRCi
+         4K4TXDLbO1EQaTj1beter21A4K1nGN55f8BSP4wa2lXjuct6xNURIhVw1xgW8I4vjC/e
+         pc2nRsAdtpYUeedPn/Ii/vOF5NCcAV9veSkmdhZvILopqziIyY1sYaE43DcF+5i7v9fD
+         MdyQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzSmhrhxFN4cgaR3/QEcilFxhrjCIqRhTQJMJxwJV1Zf9zHFVf3OQy5uQs7P3jMbP9zNJ6lXpI2NV0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJo3tuMGZaYo9qyX3BDt4QjZLx7IbVw2mTGsuT9PUPrYSteiEAm
+	2rVWBHx1CB0sNm+rufWIN5ljTqZrkXIC4mabEymgPFxCrzEK/1osMy+v
+X-Gm-Gg: AYBFou2Jfqq5r8joyKXu/8FOj9Hwei3BfXqYFoXloHDB5XLfJGdpWR52Y69Uv3H7azP
+	8kgHcjY2Ps3mKzt7l4kdNd4oEAhLWxqj1PDnEkW+A9byJvvxbWXqNNR7EgCRkse5kTRPra/YsGT
+	SWrMSIDglLCRMvgMlicOwnGhYRoz5YiLYOhkM6lQE4Z/wFSaJuu03oO7xafxkDOyIXEubYHs2jj
+	7hh0vYWJTQVA+K7LE7WeRWnmuqA0BlhzEOT7yAlOokAglSOgytMGkJSOpVl70GxIj1cxFqk7kFd
+	DZuZhqiaIZBl/1Zk8SyPYajB9qvW5MnTQXyFUxCBPluhQ+yVXDyJ9CEtPgJMMVv8UGd6voArqAd
+	kJDsAavLc+RhtPhw8Teevemlz7cUA636Fz1tuTNzEf+nR6iNBy6f9App2nbqihJokAM9UoAAzG3
+	pQ5yHrvSQ/EMHjphS8dxS3hgncrfcF8AzTBkf/k5MZSzEPYeP+OEaTTaybvfduWOewz74mARiAO
+	NfQh53Cn4ADqO7RXCrsSRq9SHacAOAzAi6bTqRZkK7ymvuRqto8965shLRO112/JpwuFDfFG1ww
+	gnNx4Z3g5vIr3VlRd1Mhzg7B9zAT89lSZpY=
+X-Received: by 2002:a05:600c:154a:b0:4a2:fe3:121b with SMTP id 5b1f17b1804b1-4a9678c268dmr27227395e9.28.1793170208726;
+        Tue, 27 Oct 2026 23:50:08 -0700 (PDT)
+Received: from LAPTOP-AVI.lan ([2a06:c701:4778:c500:80cd:d127:b224:9e6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a978d57b39sm38767015e9.10.2026.10.27.23.50.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 23:50:08 -0700 (PDT)
+From: Avi Weiss <thnkslprpt@gmail.com>
+To: Dan Williams <djbw@kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Avi Weiss <thnkslprpt@gmail.com>
+Subject: [PATCH] dax/bus: clear parent drvdata when releasing a region
+Date: Wed, 28 Oct 2026 08:50:01 +0200
+Message-ID: <20261028065000.580077-2-thnkslprpt@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -58,188 +98,46 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] cxl/core: data race on einj_types_dentry in cxl_einj_debugfs_add=
-_types()
-- [Medium] cxl/core: incomplete einj_types init ordering and modular regres=
-sion
---
+alloc_dax_region() sets parent drvdata before reserving the resource
+and registering sysfs attributes. If either operation fails, the
+region is freed but drvdata still points to it. A later allocation
+on the same parent is rejected by the non-NULL drvdata check.
 
-commit 8c31c56682570f7a66710a4b59dab14f80b09a59
-Author: Yang Yongxin <yangyongxin@kylinos.cn>
+The devres unregister action also leaves drvdata pointing to the
+released region. Clear drvdata on both allocation error and
+unregister paths.
 
-cxl/core: Create einj_types when EINJ becomes available
+Fixes: d7fe1a67f658 ("dax: add region 'id', 'size', and 'align' attributes")
+Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
+---
+ drivers/dax/bus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This commit moves the creation of the einj_types debugfs file out of
-cxl_core_init() into a helper called from cxl_debugfs_create_dport_dir() so
-that the file can be created lazily after the einj driver initializes.
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index b809e1a264afa..dceaa395760e7 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -627,6 +627,7 @@ static void dax_region_unregister(void *region)
+ 	sysfs_remove_groups(&dax_region->dev->kobj,
+ 			dax_region_attribute_groups);
+ 	release_resource(&dax_region->res);
++	dev_set_drvdata(dax_region->dev, NULL);
+ 	dax_region_put(dax_region);
+ }
+ 
+@@ -685,6 +686,7 @@ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+ err_sysfs:
+ 	release_resource(&dax_region->res);
+ err_res:
++	dev_set_drvdata(parent, NULL);
+ 	dax_region_put(dax_region);
+ 	return NULL;
+ }
 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index f3705ea44db77..f80dd8f4221a7 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -811,6 +811,27 @@ static int cxl_dport_setup_regs(struct device *host,=
- struct cxl_dport *dport,
-> =20
->  DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
-> =20
-> +static struct dentry *cxl_debugfs;
-> +static struct dentry *einj_types_dentry;
-> +
-> +/*
-> + * einj_types cannot be created from cxl_core_init(): that runs at
-> + * subsys_initcall level, before einj_init() has set einj_initialized.
-> + * Create it lazily, from the first place where EINJ is known to be up.
-> + */
-> +static void cxl_einj_debugfs_add_types(void)
-> +{
-> +	if (einj_types_dentry)
-> +		return;
-> +
-> +	if (!einj_cxl_is_initialized())
-> +		return;
-> +
-> +	einj_types_dentry =3D debugfs_create_file("einj_types", 0400, cxl_debug=
-fs,
-> +						NULL,
-> +						&einj_cxl_available_error_type_fops);
-> +}
+base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
+-- 
+2.43.0
 
-[Severity: Medium]
-Can concurrent dport enumeration race on einj_types_dentry in
-cxl_einj_debugfs_add_types()?
-
-Previously, debugfs_create_file("einj_types", ...) was only called once from
-cxl_core_init() in single-threaded initcall context. With this change, it is
-called via:
-
-  cxl_pci_probe()
-    -> devm_cxl_add_memdev()
-      -> cxl_mem_probe()
-        -> devm_cxl_enumerate_ports()
-          -> add_port_attach_ep()
-            -> probe_dport()
-              -> cxl_port_add_dport()
-                -> devm_cxl_add_dport_by_dev()
-                  -> __devm_cxl_add_dport()
-                    -> cxl_debugfs_create_dport_dir()
-                      -> cxl_einj_debugfs_add_types()
-
-Because cxl_pci_driver enables asynchronous probing in drivers/cxl/pci.c:
-
-	.driver	=3D {
-		.probe_type	=3D PROBE_PREFER_ASYNCHRONOUS,
-	},
-
-and add_port_attach_ep() in drivers/cxl/core/port.c only serializes on the
-per-port device lock:
-
-	scoped_guard(device, &parent_port->dev) {
-		parent_dport =3D cxl_find_dport_by_dev(parent_port, dparent);
-		if (!parent_dport) {
-			parent_dport =3D probe_dport(parent_port, dparent);
-
-two worker threads probing endpoints under different parent ports can enter
-cxl_einj_debugfs_add_types() simultaneously, both observe einj_types_dentry
-as null, and both call debugfs_create_file("einj_types", ...).
-
-In fs/debugfs/inode.c:debugfs_start_creating(), the losing caller will fail
-with:
-
-	dentry =3D simple_start_creating(parent, name);
-	if (IS_ERR(dentry)) {
-		if (dentry =3D=3D ERR_PTR(-EEXIST))
-			pr_err("'%s' already exists in '%pd'\n", name, parent);
-		simple_release_fs(&debugfs_mount, &debugfs_mount_count);
-	}
-
-logging a spurious error and racing to overwrite einj_types_dentry with the
-error pointer. Should einj_types_dentry creation be synchronized with a lock
-or once-only helper?
-
-> +
->  static int cxl_einj_inject(void *data, u64 type)
->  {
->  	struct cxl_dport *dport =3D data;
-> @@ -833,6 +854,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_d=
-port *dport)
->  	struct cxl_port *parent =3D parent_port_of(dport->port);
->  	struct dentry *dir;
-> =20
-> +	cxl_einj_debugfs_add_types();
-> +
->  	if (!einj_cxl_is_initialized())
->  		return;
-> =20
-> @@ -2589,8 +2612,6 @@ const struct bus_type cxl_bus_type =3D {
->  };
->  EXPORT_SYMBOL_NS_GPL(cxl_bus_type, "CXL");
-> =20
-> -static struct dentry *cxl_debugfs;
-> -
->  struct dentry *cxl_debugfs_create_dir(const char *dir)
->  {
->  	return debugfs_create_dir(dir, cxl_debugfs);
-> @@ -2603,10 +2624,6 @@ static __init int cxl_core_init(void)
-> =20
->  	cxl_debugfs =3D debugfs_create_dir("cxl", NULL);
-> =20
-> -	if (einj_cxl_is_initialized())
-> -		debugfs_create_file("einj_types", 0400, cxl_debugfs, NULL,
-> -				    &einj_cxl_available_error_type_fops);
-> -
-
-[Severity: Medium]
-Does removing this check from cxl_core_init() introduce a regression for
-modular builds, while still missing built-in restricted host topologies?
-
-First, when cxl_core is built as a module, subsys_initcall(cxl_core_init)
-compiles to module_init(cxl_core_init). Because cxl_core directly references
-einj symbols (einj_cxl_is_initialized and
-einj_cxl_available_error_type_show), the einj module is already initialized
-before cxl_core_init() runs. Removing the creation from cxl_core_init()
-rather than calling cxl_einj_debugfs_add_types() here means einj_types is no
-longer created when cxl_core.ko is loaded before or without dport
-enumeration.
-
-Second, when both cxl and einj are built-in, cxl_acpi_init() runs at
-subsys_initcall_sync in drivers/cxl/acpi.c:
-
-  subsys_initcall_sync(cxl_acpi_init);
-
-which still executes before einj_init() at device_initcall in
-drivers/acpi/apei/einj-core.c:
-
-  module_init(einj_init);
-
-During cxl_acpi_probe(), add_host_bridge_dport() in drivers/cxl/acpi.c adds
-the host bridge and restricted host dports:
-
-	if (ctx.cxl_version =3D=3D ACPI_CEDT_CHBS_VERSION_CXL11) {
-		dev_dbg(match, "RCRB found for UID %lld: %pa\n", ctx.uid,
-			&ctx.base);
-		dport =3D devm_cxl_add_rch_dport(root_port, bridge, ctx.uid,
-					       ctx.base);
-	} else {
-		dport =3D devm_cxl_add_dport(root_port, bridge, ctx.uid,
-					   CXL_RESOURCE_NONE);
-	}
-
-At that point einj_cxl_is_initialized() is still false in
-cxl_debugfs_create_dport_dir(). Later, when restricted host endpoints probe
-at device_initcall, devm_cxl_enumerate_ports() in drivers/cxl/core/port.c
-returns early without adding any further dports:
-
-	if (cxlmd->cxlds->rcd)
-		return 0;
-
-As a result, on built-in restricted host platforms,
-cxl_debugfs_create_dport_dir() is never called after einj_init(), so neither
-einj_types nor the dport's einj_inject file is created despite an injectable
-dport being present.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028055401.1626=
-640-1-yangyongxin@kylinos.cn?part=3D1
