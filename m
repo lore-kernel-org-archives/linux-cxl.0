@@ -1,75 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793205640;
-	b=VP5wtQoLklrdZqRWt1Hzpgys2MDSvifvYaXzVPT4eb9vAK3BHfIryVdO/Aq+INsjVr2E
-	 BFuopR1/rUbtIel+z3EnyLVMYxZrj1Y1T46nVK1JJMqkUysE/kP61CNlY83s2I8lmRvEx
-	 mBNBWO0Ut2GXlWYNQk3umQAD7P3+n68DAd+m4Xcrtmk8XxTTjkygsN3W3q3iaZQy119+5
-	 w+Bk3B1OOcTsZ8YS6z/59jT4acaJiKyueFSItiW+iEl52v8PLsafz9z460dgPgjZzwiH5
-	 1du8EsZdNZpx1mt03fs415xxLhxrxChTJrXKS3t97QgAQ9GUzRfplStT/w5qmO51ptA==
+	t=1793206438;
+	b=LIKbFNXNk+hyiihcFOm65CiLJA3GSdyfQHqeoGhXNS54egC6C9NBwtbj/MDFvxP1JssW
+	 2QCjAad9kiXh5XjtJZTlOTPIwuI46k+ca9Whz6ani2njqVG0wynzkZsJk+se4no0IdjX1
+	 Py1uVoDzxek1JNBViiIyif7b7bbn8H1dwVW/cyDaXyD3NivlPDF1MSLnxIb3ywteZf+9A
+	 Ky5pNCaTBnZ+JpegDSNZj84/mRivDnzcEqPqlJt9Z9WPOaqqv8UXeD0n+NTTawJOpgeGD
+	 B3Fl5ZIRykqhlwqbTRb8dscIZ2sIg75MCZtwyXTkiZb/XHw0IGKt7Pw6UrJs0dBIQAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793205640;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=3q7TO+ZwaEbqoqmLKPrIUPjIISzIPUN3/sJr3wevERg=;
-	b=S90VIxTKkaBv601LR+m3TaMpRJ8mgm5FS2SB5f9FCVqTZKqiBSaMea8dmbWmCSVJ++tC
-	 gwCb7OTekYhhYqhKkpSca4MRjgofZFCVDHf+tfOPP6TZdNI31wpUtgXhCrxuKpp3eZeCx
-	 vHMWWkEjzm3Mi/UBIMPd0UWriAIVF7UExht0LW8iNiM0OeaDsMIzg+HqA2ogQMvsJqt6r
-	 zbASc8wheOUkq1ccXE6iHcFNVZitAtE5Ap1CmTWC0gfbn3v5RKb9j7bvutbhP+zRK/XGu
-	 tKTv8ZadNppyeATUpKz+rzpHU8v0opt6U3SpV/ktZKs0rSY/atdlxqXH9FS8SnfZZJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793206438;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
+	b=wLyNg8NijPIYd+kU+o4o8CK1iwSHI8SCeguh7a75O5ACyLqFgEBpc8wVQlDHE59n3I7E
+	 EU44nJ1+gNY4mK/RuKLJVHmCf8j5GMD5URgF7AUQbwo54pKzmzSUn61X5+TmrcNF784jB
+	 qAuksu53Bu4EEhlnC0BnApJZfG4YQxYlECXr3v7sE+nJKVRSNiwQdWESDnFFYV0wJnUKQ
+	 QgHXJibcX4JvI2WIx3YS2Hx9KEXFwupkd0xlMaL3JfwiAZ7TC/IEBwEM0ocJUbeSdUtGD
+	 rhPAhvAfm5++1yR7OxsrLQjD5csYtukZfPzBr+1Gm1qLvXQRseHjhGFfA+Ez6AZzetw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Clt9BGFA;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=soleen.com;
+	spf=pass smtp.mailfrom=soleen.com;
+	dkim=pass header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=XDq4mZkF;
+	arc=none smtp.remote-ip=209.85.217.50
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94B8606A31F;
-	Wed, 28 Oct 2026 16:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64487606A31E
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 16:53:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64487606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Clt9BGFA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8D41F01828;
-	Wed, 28 Oct 2026 16:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793205639;
-	bh=3q7TO+ZwaEbqoqmLKPrIUPjIISzIPUN3/sJr3wevERg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Clt9BGFAO6FunMnG3BktqQdCWJrcPnaMDWug57IQu444FcIO+Jk+rveBxyGhwgcTq
-	 sBOr66NhkV9nYwgROWEZ0mlY6J7+pQkg7Zsne2F/vz44/MxN3CvAW2PIi5rSBpKIOS
-	 LSOJGTlaNQGXZ48QsIltE3WLaCBNWItqzRFpDVlGuy7ix7rcKILXHjG5maKOQa579O
-	 BhjCM8yRzBr283z+Yttr5p9uT46dg0TS02/dNtFYcql+WCjF1s7+hs2FOZxTWYL7o1
-	 crnMsIepwqcSwXVN/RXEosxQ20ps8dJRqSSXL6Azj7qm77DtFK3P76ygvhEVUyHjt6
-	 uUGwz6hpLFJNg==
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 8F8CF198003A;
-	Wed, 28 Oct 2026 12:40:24 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 28 Oct 2026 12:40:34 -0400
-X-ME-Sender: <xms:eCXiaqiN7uW55pdnDLmQfMCpgqKssyEAlbg2kEo-5uT2EnxoO4ZuSw>
-    <xme:eCXialQiwOxUKOiOgRbMVzuCX901N_ygNZZlIGwGmhUSPEOO024OPL_frpYc5UvRF
-    ufzO0DZbg79qizqZNu3oZPsAJjfr-Rc3mcV7MSCwYMa2c4GY3IOmUfF>
-X-ME-Received: <xmr:eCXiakFBqwymY7_RFYo0Ad-7d64WPxU19dNbSVic6uXNgnkcXdts2JTSFpw>
-X-ME-Proxy-Cause: dmFkZTF9BSIUpdbqdcQtRDBoZ6omZu6gkWuOLh6CEtsiN9GCwL96yShYRR0sGWUfB/BAqE
-    WZ64unNfK3Oe0Pmq84aQBKzz6U4bNLPGOt0L+3it1u7lBgkGfJBxf+KgimcC8ODml/Bvs4
-    tVarhMXUh7RcWdDG/2JFwnscmJK43/IZh/RFjzDX4hQQAHQgOtEMpiD/6x6mNoabLgV1Uh
-    8N833SkC9jtVG28yAz+w/Ea9Sw7TZ1VqhdC4+mQnrllda/7izabJuHYqT4SfvoZvONJ4j5
-    MPW1Gk8oi9Trgp5oDcZSI4Pe9o74RJVHkS7lxxR8lsEZd8CIgsegB1KiHE2T7Z5xehGBqQ
-    3UynFVkTFHQUjTSucs9dm2AKKwGlYfQ+KZouD3lwtJq+CNgLVrRX8hnysY6WtAmZYn+2FA
-    UMKoGHv2nyQcjhytg8JcnhDM5D5FH8oTePRRudgezShXdD3VQZaIwdMFryvIDXfmNdG+xS
-    x3FgXxCpjM1Dnx36WNsJr9NZywtGtqeBnpNa2CcH7uZItXr/EJtDkKFaLLDYrmrMYoRZy6
-    9WMgAdXyW/auCalGZ898cnS6rzXymDqGbDfabqdqvexVbud3Xyfh83yzVJNAJb/KZJB0Dr
-    RwkvxvaWvVMVXraC6fhht0GDpCcItQ8xXgQ8CizyTFww+xm1P2qA5dskCNwg
-X-ME-Proxy: <xmx:eCXial92jNgSBQTxWlBjZMWgmR6TBvKzWaFSBoP-VAqjL0ukcNqioQ>
-    <xmx:eCXiaiF9yjc9digKd5Ya1GDuxp2814mB5aHgvCvd4OHzLNuho0A7Aw>
-    <xmx:eCXiarjoMRi8d9X-XM92nD_cnaj5ysHGPELtUq4mL-3Vs4NwrN19_g>
-    <xmx:eCXiauHvY_LuyMcaATsWdR4V2wsHPU2Pnegr0ayYJWcc1st6zamU_g>
-    <xmx:eCXiav1OXfLSRm-Vd5XTlOvlVQyXslpANnXfV-qVihMApMQBeiD5C2MX>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 Oct 2026 12:40:22 -0400 (EDT)
-Date: Wed, 28 Oct 2026 16:40:21 +0000
-From: Kiryl Shutsemau <kas@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=soleen.com header.i=@soleen.com header.a=rsa-sha256 header.s=google header.b=XDq4mZkF
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-7cb6dc850c7so398654137.0
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 09:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1793206436; x=1793811236; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
+        b=XDq4mZkFFwWiuClm+CVqUYc4wMUeEj61wwTEJ2ZEwdKAAZOVs4mAkia9/oOPQEGvZ7
+         0CPllEZOpo+2Vx7NH/qeJyuqrXNeGxLOX9kPYs9EQ9wuoJxqmE3014fXKocl5hQCZSSq
+         jYT4HKvnmSRh02d1ht2QsIKl81mDMWNV+vmtqq/q3kRlDKFLvoFwvUwOFm0i3nE1GCkQ
+         0TjmSaJ0QDxHwSaQMTz0/I03VsYupX2JpKIJaxwXOjS22DLQQPY2UaMVlL2DtL/m4NnR
+         nHVimsjgnDDTHtl7ghN+41KfpsxRYFoCjEcPBdzS03ioSJ55NDDAbq0L5U9RWlFtVa5Q
+         rq3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793206436; x=1793811236;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jQ5eyf1zl1dztY8G8GNDjIbe5i6XtlGMZ8AEehh0sP8=;
+        b=Bw/27BOpG7h1+GTu5w9zR6/600xeraHlL6dZxrRgOtJbV1R4+6Wlc4qjS79hWV0iFZ
+         e2j3SIunQz2vL08y2c9pip3VnNVBigcYU2f5kyX2DEGOd6S3U8Me95vPe9AMkk7Tva5u
+         6NvHunYZopovSIjgyORqeNMiWaLzs7ECGkaLzKR030hbyr8H7M6J+krCMjeRKuJiQyi2
+         snZGlz4MgMZP8EkQ7mlPMZ8defCeZ7Dcqq1oqFn6DiQ211/JHS0qiXDcQzpFInN12UnW
+         /wk45jsB64XqruGc3ujZh+gsGZntex3UyJUcAYA6Gb8zH1K6EFgi7GHTFHHdFfwbpI3o
+         9XDg==
+X-Forwarded-Encrypted: i=1; AKwUvByeR0p3H/XachvUsVE3YYLtqNW0snKOZmC1kAPSn/jQ+7EUgOZKGWLVxW6bCgkWa187sTnbBXVDJVk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJpfE812q3xo72a+YvLrksb5PVAlfra4LSdNDcsHAwXiLKKbRMN
+	OPxny3Dpd/OnYtnDiCrMHQ4TeORN7dEsTO2WYZQL4rEdHcBjUBlnbKQZ44iYsJz0DZE=
+X-Gm-Gg: AYBFou2qeTqzW2AQx25M+FIc9UZHW9C0Vd3ir1FaMfrfkz/TcDQEhqvhVaLHimROsb3
+	vH8G89JooVlcC9+LAZIzSw8tGWRSvkFTt3B7d5fLo9S0W3VmYK6BimINQcmXXypXfwfx9Jb1RTx
+	CBW3IrV+r6b2BfG6Uv8J6HiTX/T3bYm3ucRuhmWkl7yM4BmYsLUuSH7Vfaz3oD3DgMYW3J0rt62
+	8w7ndK8V9MJYgf0LFTOROf695vZJ2NeHehnlzRdmXhHmz7O8ZHDWp/+4DlyQjVsNtKXRx8UuXyj
+	w8jfls/h1r5vJItPuCbHCV78Ug9fGPm91Jgv90Yk5o2aodoL7txQTYgx4COvKWQQGgHkluY3cwe
+	Sz+dJ1bKLeZyS1x6xgETTGwUuneMMHXJHJN7KwhqYkFvf+AFgRXnsCnz3m4ZtkC56bDNMAjJbU1
+	K4lEmyCKK0JgIp8S/tB86j5PgZDQP9oTeJ781RGwtzp+HfWr2udxpEN1KeNEMdOAgAEwlGR8iXz
+	RV2SauMbN/fYmvgHCn0+a78GwMiqtAp1RZWocudEuoNOA9ziGK1qEVcuXGdGffFolrTtpPjdTQz
+	+EGSv+GTxOzxXGg0e8cOmdXMw9IKP6stvvf6BkHlrWb61ZCzt/x+R77ZlO1DWgDpdlio4jrJ4BB
+	wKTkPywAkxj7vIW+temO4qmkHeza6CQ==
+X-Received: by 2002:a05:6102:3e8d:b0:7cb:bb33:8412 with SMTP id ada2fe7eead31-7d03a5063b4mr1453208137.10.1793206435862;
+        Wed, 28 Oct 2026 09:53:55 -0700 (PDT)
+Received: from google.com (16.49.199.35.bc.googleusercontent.com. [35.199.49.16])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-991259db2d3sm6495987241.6.2026.10.28.09.53.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 09:53:54 -0700 (PDT)
+Date: Wed, 28 Oct 2026 12:53:47 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
 	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
@@ -87,22 +99,24 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
 	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
 	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
 	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
 	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
 	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 04/46] mm/memfd: make f_pos accesses atomic
-Message-ID: <auIlVgNRuGsBrRso@thinkstation>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Chris Mason <mason@kernel.org>
+Subject: Re: [PATCH 03/46] mm/memfd: check for real shmem inodes before
+ accessing shmem state
+Message-ID: <auIoDgHmzpGH6cOl@google.com>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -114,47 +128,107 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-4-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-3-6f74bec9a5bb@kernel.org>
 
-On Tue, Oct 27, 2026 at 12:17:24AM +0100, David Hildenbrand (Arm) wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+On 10-27 00:17, David Hildenbrand (Arm) wrote:
+> shmem_file() only checks a file's backing mapping. That mapping can belong
+> to another file, as with a Coda file backed by a tmpfs container after
+> mmap(). It does not establish that file_inode(file) is a shmem inode.
 > 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") made
-> read(), write() and lseek() on a shared open file description of a regular
-> file serialize on ->f_pos_lock.  The flag that asks for it,
-> FMODE_ATOMIC_POS, is set in do_dentry_open().  A memfd is a regular file
-> too, but its struct file comes from alloc_file_pseudo() and never passes
-> through do_dentry_open(), so it does not get the flag:
+> Seal handling and memfd preservation use this check before accessing
+> shmem inode state, so they can access an inode of the wrong type.
 > 
->   CPU0                                CPU1
->   write(memfd, "a", 1)                write(memfd, "b", 1)
->     pos = file->f_pos  (= 0)
->                                         pos = file->f_pos  (= 0)
->     vfs_write(..., &pos)
->                                         vfs_write(..., &pos)
->     file->f_pos = pos  (= 1)
->                                         file->f_pos = pos  (= 1)
+> Add file_inode_is_shmem() to check the inode's file operations in both
+> paths. This identifies regular shmem inodes, including those used by
+> memfds and ordinary tmpfs files, independently of wrapper file operations.
 > 
-> One of the two bytes is overwritten.  Two threads writing 100000 bytes
-> each, one at a time, to a memfd end up with a file that is far shorter than
-> 200000 bytes, while the same program on a tmpfs file never loses a byte.
-> 
-> Set the flag when the memfd is created.  As for any other regular file the
-> lock is only taken if the file is reachable in more than one way, and
-> nothing a memfd does in read or write waits for another operation on the
-> same file.  This cannot be done for all alloc_file_pseudo() files: anon
-> inode files such as eventfd are S_IFREG as well, and a blocked read holding
-> ->f_pos_lock would lock out the write that is supposed to wake it.
-> 
-> Fix generated by an LLM and sent by Josef Bacik in private.
-> 
-> Fixes: 9183df25fe7b ("shm: add memfd_create() syscall")
+> Fixes: c49fcfcda8b5 ("mm/shmem: update file sealing comments and file checking")
+> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> [ david: minor description tweaks ]
+> Reported-by: Chris Mason <mason@kernel.org>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  include/linux/shmem_fs.h | 6 ++++++
+>  mm/memfd.c               | 8 +++++---
+>  mm/memfd_luo.c           | 2 +-
+>  mm/shmem.c               | 5 +++++
+>  4 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index a7c7a96a7cbf9..2ceca7993e4f5 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -117,8 +117,14 @@ extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
+>  		unsigned long len, unsigned long pgoff, unsigned long flags);
+>  extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
+>  #ifdef CONFIG_SHMEM
+> +bool file_inode_is_shmem(const struct inode *inode);
+>  bool shmem_mapping(const struct address_space *mapping);
+>  #else
+> +static inline bool file_inode_is_shmem(const struct inode *inode)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline bool shmem_mapping(const struct address_space *mapping)
+>  {
+>  	return false;
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index 0f6fff004f5e4..7d2da23157003 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -211,12 +211,14 @@ static int memfd_wait_for_pins(struct address_space *mapping)
+>  
+>  static unsigned int *memfd_file_seals_ptr(struct file *file)
+>  {
+> -	if (shmem_file(file))
+> -		return &SHMEM_I(file_inode(file))->seals;
+> +	struct inode *inode = file_inode(file);
+> +
+> +	if (file_inode_is_shmem(inode))
+> +		return &SHMEM_I(inode)->seals;
+>  
+>  #ifdef CONFIG_HUGETLBFS
+>  	if (is_file_hugepages(file))
+> -		return &HUGETLBFS_I(file_inode(file))->seals;
+> +		return &HUGETLBFS_I(inode)->seals;
+>  #endif
+>  
+>  	return NULL;
+> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+> index 59de210bee5f9..c0811407ce397 100644
+> --- a/mm/memfd_luo.c
+> +++ b/mm/memfd_luo.c
+> @@ -582,7 +582,7 @@ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
+>  {
+>  	struct inode *inode = file_inode(file);
+>  
+> -	return shmem_file(file) && !inode->i_nlink;
+> +	return file_inode_is_shmem(inode) && !inode->i_nlink;
+>  }
 
-Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+Yeah, file_ is not needed, otherwise:
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+>  
+>  static unsigned long memfd_luo_get_id(struct file *file)
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index fadf23f9e21ed..0d41aac125df9 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -275,6 +275,11 @@ static const struct vm_operations_struct shmem_vm_ops;
+>  static const struct vm_operations_struct shmem_anon_vm_ops;
+>  static struct file_system_type shmem_fs_type;
+>  
+> +bool file_inode_is_shmem(const struct inode *inode)
+> +{
+> +	return inode->i_fop == &shmem_file_operations;
+> +}
+> +
+>  bool shmem_mapping(const struct address_space *mapping)
+>  {
+>  	return mapping->a_ops == &shmem_aops;
+> 
+> -- 
+> 2.43.0
+> 
