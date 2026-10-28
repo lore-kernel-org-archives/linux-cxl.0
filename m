@@ -1,49 +1,126 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793154117;
-	b=I7Y/actucuGJMpKll36UERxTA+mGB5/Krrtlopv6/OqY0JE1hgUKKZXtDGVlW9pGyv8Q
-	 NGyKJROXQMJV82sFGgPWe20x+uBswwfcNl2E7R9JvHTTuEGNi5eRFq2VQGtSQ1a5T/Lry
-	 vQh9xOkjwoeB+NDBlVsr7XiZIUy3lgU7eFaOwGJeLUEwpB0WzGQtrVyXuAWNU0Y7kJKt+
-	 oGpUxn6LWI3Qcr21ZoELUd1PI6vrV72Omfma9tMGqxGZGcLfhDeR83SaQOaTRVvP/lkda
-	 Zrl72XJU1DhxU2hUITEjLvNvUlzBvNHZL18Lxq9b/aR+yfVc2NyIpI82VU2ymyu54cg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793154117;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=07fdz0+VNa8IX3wBAkhzwCQegklKd+ur4DUhHBeZ5no=;
-	b=uNwPSfuKUhrDlICXodUdONiLbkoIr97hUaCaSeNCMxW3IfRLJe8PcdYgeeh34p6clP7X
-	 4BTDQp9ftE/Ib1WdnSadrqid5jV1Eo2RWAU614sM0SBHibY04RjHowiHiDV7E899F9A6Q
-	 NWxROfYtNVWDqmifUz5KOZ/B2Msq3eYPQ0R1YY1vy6mcfyXENww2xYxYSTOQ5nByKG8Bu
-	 DrEjosKkRGpQW19fdZ6RYUY9ztOLgGb7kuVQHbsaSgjFTawGAhpb/Oi6TwBjfnHXchDnx
-	 X9peky4vZu6BdQoQ2M5jqhmpUXrgpRsVd9ZCf7DQwQIQ33CF7938z9e8UdLswRnRsfA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.alibaba.com;
-	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=j0x4GeoU;
-	arc=none smtp.remote-ip=115.124.30.99
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793156084;
+	b=kW4EkThk+S96XhX+mPc/UIroAmJlYeY9pSPbxYF2jA1Gj2YULPTR8V6WbiTTW6HrtvNO
+	 d0hK3go775KG0nXF50batR0cQBFzqC16jH6c/BGqH9aKmum7PyEprYxZ6wrU70fXPov1q
+	 0uF3XRJDFeMau6zAy73gse8nq5EkkRWphx+SzVGMMmp8u602quHAW8P2/3afQdvRvqs2u
+	 akn4yYzEA4mfCbnucRkeLP/+Iitt0aOJuE5kWZizURzUyqVhG3FT7psDiIqBjG9I9m6So
+	 49DmF6xzN2QZApPOEP5RMCeC8/noYV7pxJJ2fHmASoAiKjd2mxAQZw8azIgAQHY8KJg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793156084;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 Content-Transfer-Encoding:Content-Type:Date:Message-Id:Subject:Cc:To:
+	 From:X-Mailer:References:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=CMb2oVQye3RPKvMmYxLoWlrPiQUfMmGkRTvDAZ0TYtI=;
+	b=FPKOAGXSsXJwKZ6IR227Sr3sbYJcy3IwbglTscaAJm7ikG5mubtLf3toD4kQCbQdVDPY
+	 qN5voVmNdNXXRBCoO9Ay6ZnLjehhGghik0DvoVchtZ4YD9zkl4EOQzaHfYTGJgqe7JtAc
+	 2cb8ZPJlniT6wGu3aZIlJwdOiEsKrk4WlXJPqOlX2obM64AKzK2SGTkBYNvpycMRUwGE5
+	 coXPSqGqPk3zMwUxad0KhQRiMYmneC7u+zW7wtzQ/bktyGQCdzF1bjNF1xQJ4pMUloj7K
+	 nB3WMHKb6Wh3Xz06cjdu1dknSRY61U8POMX7k/kRX7+xn39EKNlFF6x3gusX2S8/38A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=Td+mfv4p;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012066.outbound.protection.outlook.com [52.101.53.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A4B606A327;
-	Wed, 28 Oct 2026 02:21:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 54A4B606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC7B606A31A;
+	Wed, 28 Oct 2026 02:54:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFC7B606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=j0x4GeoU
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793154114; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=07fdz0+VNa8IX3wBAkhzwCQegklKd+ur4DUhHBeZ5no=;
-	b=j0x4GeoUe0wwkES8HlsAwyzYQckoTQ2VklVBNj6W+ki/N/zxaUSZYrD9074wr06Umbz1Cnna/Xrfi285HEvQ+fzBPQfm/ClDylUvb2cdfrsZ3vYw8HJIIG4SHKFX+VOfZZYVrM5AtHSNDR4cgkVr6QzQKE49Q5+0J+oKPqHw6hI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0XDfO8OP_1793154112;
-Received: from 30.178.69.77(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0XDfO8OP_1793154112 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 Oct 2026 10:21:53 +0800
-Message-ID: <b42c1849-8998-40d1-a433-2b4077374074@linux.alibaba.com>
-Date: Wed, 28 Oct 2026 10:21:51 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=Td+mfv4p
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ydYLIWq6W1iwhje/hOX8xJKHEecf7oNydsIfJQhsTN33XzOFx77nBCpzUVKvw0hBGM6BcL2gMhOlWPF+JYg3q7EXHFarVOqqnZuKl9xSfr7bI8IqwMgv7pVNCfCTeayLTo7km0cnTlREQ5iHsrZkx5CD2mwIdUi2KwbjLgb2BtfrBmdfRzoaxN5ZALqBfjf1U0HyY2F2GieANzJQt+xqQR0cfX5wfCFh9sF/P4WzjDlTAjSEw9xLHmyGDxPvd0uyuJTL2sY0TKWt1dWcDKqu5jln+b3D1GlFpYwsndxSnu7e+HA23oUMnrJfDu+oZys2aQ20trpfvVV/W8RL+x5R3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CMb2oVQye3RPKvMmYxLoWlrPiQUfMmGkRTvDAZ0TYtI=;
+ b=gy3yN0FLVPYLJzLnbZf0J/qjbWi+17R7WvNg7hMydy4oKtDnfWAQVpAmcRX2WK2CAtuv0dwdrqsyOYegSWkUhW1cbf8XuxVs00mAy4JdrgFtZCjerAe9ecrDvQ4gQUrV9E4Xm3C9lDExTevUBhf/nBRpGnRyT6LGVpqwdFaroN06wHZ90JxnNqqFzSAyePiYBQvMx7QVlafHQfBZSQ7618ullkWlBybQ0SnX3hnsyyCH9hgN2qD7zQ5x6KYp8AHHKcOx7RP3n++OM+LrqbVqbA7kdsiw6DH5AKLsUa35xRTkzbtScMcAu53Q93IAHhyVu882YRwKh2vVqwoVK/0Lrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CMb2oVQye3RPKvMmYxLoWlrPiQUfMmGkRTvDAZ0TYtI=;
+ b=Td+mfv4pRQCtrM/B5rxLLI1LuwRIMt8HRWQgzB9zAMz/NusJdSUTXDrU18a/iOd9qSlPWaxXMyxtRNa54os1D837xnpaT5TcifJlq8BursF4ytaWAwUxblb/rFE9YSTGJ3iHF7YOiqtGRC449DMNb33MA81m+cc93rX9mSi5n/3v/PgwET8aaHG2LqBb8ixQBA/SNBWhld+FxqD1OUbfXR6qbiLK+4Z9avQcp5lE8sBDR1+JQ2FLFYHnrQx/O7rb1EINRji1zdVJ89idTMp/syW7hixqsNF+I+rPsXcKFI7Ez1Us3kUvWBorGbXDtcFzaT8SOVGhAsoW8ZGz87h8sw==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DM6PR12MB4155.namprd12.prod.outlook.com (2603:10b6:5:221::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Wed, 28 Oct
+ 2026 02:54:31 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0546.021; Wed, 28 Oct 2026
+ 02:54:31 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 Oct 2026 22:54:27 -0400
+Message-Id: <DMG4RXAC0531.1TP9FSMKUMZS0@nvidia.com>
+Subject: Re: [PATCH 13/46] mm/huge_memory: fix truncate racing with PMD
+ zapping
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-arch@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Chris Mason"
+ <mason@kernel.org>, <stable@vger.kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Johannes Weiner" <hannes@cmpxchg.org>,
+ "Michal Hocko" <mhocko@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>,
+ "Shakeel Butt" <shakeel.butt@linux.dev>, "Lorenzo Stoakes"
+ <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Barry Song"
+ <baohua@kernel.org>, "Axel Rasmussen" <axelrasmussen@google.com>, "Yuanchu
+ Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>, "Baoquan He"
+ <baoquan.he@linux.dev>, "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka"
+ <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Kees
+ Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Jann
+ Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Hugh
+ Dickins" <hughd@google.com>, "Pasha Tatashin" <pasha.tatashin@soleen.com>,
+ "Pratyush Yadav" <pratyush@kernel.org>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Lance Yang"
+ <lance.yang@linux.dev>, "Rik van Riel" <riel@surriel.com>, "Harry Yoo"
+ <harry@kernel.org>, "Alistair Popple" <apopple@nvidia.com>, "Nico Pache"
+ <nico.pache@linux.dev>, "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain"
+ <dev.jain@arm.com>, "Usama Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau"
+ <kas@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "John Hubbard"
+ <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>, "Will Deacon"
+ <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Nick
+ Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>, "Minchan
+ Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>, "Xu Xin"
+ <xu.xin@linux.dev>, "Chengming Zhou" <chengming.zhou@linux.dev>, "Chris Li"
+ <chrisl@kernel.org>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat Pham"
+ <nphamcs@gmail.com>, "Youngjun Park" <youngjun.park@lge.com>, "Gregory
+ Price" <gourry@gourry.net>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
+ Kim" <rakie.kim@sk.com>, "Ying Huang" <ying.huang@linux.alibaba.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.22.0
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-13-6f74bec9a5bb@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-13-6f74bec9a5bb@kernel.org>
+X-ClientProxiedBy: YQBPR0101CA0165.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:f::8) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -53,115 +130,141 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] checkpatch: don't flag ACQUIRE_ERR() assignments in if
- conditions
-To: Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- Andy Whitcroft <apw@canonical.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Jonathan Cameron <jic23@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20260924033923.4140210-1-kanie@linux.alibaba.com>
- <6595ac9f640a3796f34f58ba6d97d61bc0c07558.camel@perches.com>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <6595ac9f640a3796f34f58ba6d97d61bc0c07558.camel@perches.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM6PR12MB4155:EE_
+X-MS-Office365-Filtering-Correlation-Id: b30f481d-89b1-45e7-6f53-08df349eca35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|921020|261026140227099003|4143699003|11063799006|10067099003|261026121527099003|261021123027099003|261021121427099003|56012099006|261022105027099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	OZTu+o0W3haK2eOig9g4KGRW9l++E2eJHbYgl7rZhIXF/aiVpg6F0Z2oxR6IAv97PBEuzZIpdj+POd8WGLkFQ74Cl4fSOB1qWj4mm6LEfrxaL3cxzevCaSwGL0EYsJ+M4Uh6c/oSzuRISDiemQmXts4mtUz0JAMa/le8ck5MFVYhSVOdJq9ka9J/fQytd2mxhBMnLzbQjy3iZ18EBx/MZb/NypSyvHJihhgYfrA+an86HP2K6PvDM39qU/mYC4VznaqeMXH5fni5OzkkvrceXNp9a4jdZRS9K+gL9lI9Ot6N5n7fPBk2lM5ipwYABzE6SZ57M0gKtbxMk1hZGca1IhiGsyVH1hP+gRaWFmPBKIu3R2OujSXBmQFKOXaLn9fQG4OMFUQ15BX3cbH+4GgShgsUCYh2GjMg81XSSZPdzyp+f0zuUgG7AY/jmmD8+mnxfwDjyy+Hf6OnBuPESgsFjvyc7kuP0cvuF31JYdHa/GcwGSVjt3I7OMHwsjKzzyOVzu5qG6k1ADVPGjNq4X1x/igXlzSuN6wBbSLcvyFGlNyRd5BjeHk5gZbQRqPewAEyaF4rVukOBQ6XKOD2MHLwqPZZ45zVaCliKF0lhiF1aG/+0bC6no/Or64LTw99mx9by0L0iMoNKNyzUEZ0PQ/GENCL0Qau3V6YDWnkLC3A8hmzGHNXR6Hk93D8jhEq2Up418iFuydH2Xi9DdpWkpPIYQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(921020)(261026140227099003)(4143699003)(11063799006)(10067099003)(261026121527099003)(261021123027099003)(261021121427099003)(56012099006)(261022105027099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?KzVqNmRFQmZSM1RzQVpCcFdjeHN0YkVLL1duWWpSQlZZdjhTNjZsYll4TnZu?=
+ =?utf-8?B?ZlIyM2V5U3VueVl0MHRGT0I0VFpDbUc2cEhLMTBYMS9KMER1WHhYUG0xUlla?=
+ =?utf-8?B?OUVNRHJ6NHZQYTA0TVgwU1VRS1VuQ252R2dKU1JwK1dhcEJoS2tCc1hoUTh4?=
+ =?utf-8?B?eGROMnR2TGQ5eTJMU1hQc25GK2oyL3g3c2NmYm51M3JjTnhLNzZhUCtMV1Uw?=
+ =?utf-8?B?L3lKN3p0anN1eG9zTE0vcGJpUnBNamh0WHQ1Z3JuZ2ROK2FWM3F5ZlJxQ0xk?=
+ =?utf-8?B?Y1FNdjhMcjVwZUlFVFRESGp2MmtOL3ZoaFgyZGVVLytRNXNIWVEyM1E3L2JY?=
+ =?utf-8?B?N2Q2K2daQU1lczZGOHorcHhWV1lnOWNwWXl4Q2hiMGswN2ZqaTNHSEpGT1FE?=
+ =?utf-8?B?TGZycGtGSFgwem9jbzd3VFZPOWNRTjVmVGZEZmZTY282ZCtkc09XczFGb2cy?=
+ =?utf-8?B?cCtRM3dRUjA5amtKQUFxR2pXQjdJMkszb1BCYlZKcHh1RHRFQ29lVVgrT3Jx?=
+ =?utf-8?B?bmN0amptV2ZJMlVvUVFSUnFINTlneWNXNnZNZHNESEs2dEhQMnpsYU9wSDNF?=
+ =?utf-8?B?bEZSK3ZhWmI0UXVla2RUaFV5TkRnVFpvcXdLTTA3a3Zldnl3c3UrM0tMUDVQ?=
+ =?utf-8?B?bjcwN3FOTUlIYTdqcG1zQ0NLMGlhbEoxUlZDZHNDUkNxQ0VWOVFaZVVMVWFE?=
+ =?utf-8?B?UUUrWGVjc2lvQ2dnLyt4UnhyK3I3YU8zdVkwZ3dCdDZKazhLTGF6a1grUlJE?=
+ =?utf-8?B?YTJoYU1hcXhCdUhscXc1ZTVUMUlNZ0J5UDIwc21YQ3JMcm0yT1NnUWMybzA5?=
+ =?utf-8?B?NC9ZZzhQQ3dmdFRMcWt1NW03akhMMXVkbWZmdTN2WkdqM2hGQk44MUZzQTBN?=
+ =?utf-8?B?aGp2ZWgyNS85MlhTQlh6a01wcHdOSWUxOTZwRUVIaWtmeGczRytnek5MamRh?=
+ =?utf-8?B?T1dlbWluY2thelBDNm56MzRqZzlkNThkK0JSbUpMdkVsVHJrcytOVTg1T1dO?=
+ =?utf-8?B?WS9UYWI4OGlGWmlvcjhxT1k5ckhDNWM0TVZuT0VLNEpRRVpMNEM5MkRENG9p?=
+ =?utf-8?B?TThRZ2RQTU9EQWhGdHNuR1ZEbUFpdlVHamZVa0NiM0ErbDMwUUdzK2VteWpF?=
+ =?utf-8?B?dlFVK29BbFM3YkdIRW81RjRURmc4WUFoT1ZySlJsTkdUaEpUbkQ5N2lsMkZZ?=
+ =?utf-8?B?eTBpbFBJZkNhd3NhREZWZ0szUlFjQ2xtR01DQ0NyVzloek5WRlVGU1QyZ3Fz?=
+ =?utf-8?B?VXpHZC9INEZWMjhuZ21UVTc3VjBiZHBHd09lRGNPNm84VXpIV0VvWnBOblBl?=
+ =?utf-8?B?WitudU9ma0k2UmV3TGlMRkpna2x2SUZmYVBYdVlpZUprR3E4Y3hRaG8wWFVh?=
+ =?utf-8?B?bjIyN0x3d2JBd0NPdG10b3p4aW10eVo1b3RxNWRxM2RhRm5ETkYzUlBITWlE?=
+ =?utf-8?B?czVBeU0rNFREWkt3WEVxZlJ1MFZCMm8xYVdQS0dhTWJoM1IwOVFFakIyK3gw?=
+ =?utf-8?B?MG5WQ2h5Ym0zZWc4WUJGaXI4Rm1nNFFRQ0tZQXVaY0xYWHEza0F6YXpNS004?=
+ =?utf-8?B?MzE0c0dkeFBoZ2xsR3QrVnBTcTY5TGptU3NUS0ZKZld2SktrZkR6Mk1aUFlh?=
+ =?utf-8?B?c1Zwa3NjVjRDejFPOFkzakJtQnpuNUtmdGhwL3N3M0k2eVNpYlVrbjJXNU1h?=
+ =?utf-8?B?YVc0NkV1RllGOVkxdEk1Q1N3VlduYVZRY0orKzNxaXZRM3c4UFQ5OUNSeks5?=
+ =?utf-8?B?b1d2RUxBbFhMYjZuQllNMktsZ3ZuR1Nvc1VYcCtRaFk1a2FBMWpxdlVBREVW?=
+ =?utf-8?B?aFJuS2owcUNrT2F0SHVjeUxGSFZuTFdYYVlwampTekFCdWNkUDFFSXpjb2o3?=
+ =?utf-8?B?OGlGaW9FMFg1TVVMS3o4byt5S1ZuTlR1QTc5ZXI5bmpDQi80RVEyNzFXbUdy?=
+ =?utf-8?B?WHNmbjltZ0Z1cHpjNU0yM3p0WFIwT1dUTUxRUFNqVFlwS3l0R2dIcFRWL2Iz?=
+ =?utf-8?B?R25pak1iajdHUEljM1N3Und0UjhJUHVKc01xYkVtVUNmVis0RE9HdFA4aGtE?=
+ =?utf-8?B?cjZmNldva0FqUjZScXFsS1RkczdVRVJ5b2hLbzkyUkNjc2RHbzlKbTUzellT?=
+ =?utf-8?B?UG9RZW15KzBucEhaTjR0T2lqVjdlUmNpa2ppMkRKdG44Snp0OW5sMVNaWEd3?=
+ =?utf-8?B?aEQvV2VuaGUyNXdqYTVrRk1McmRYOUowRGMrY3lQNDlpTmVhRVRvcVh6NGRt?=
+ =?utf-8?B?RTF1MWNGaFVpY2JHZWc0eGtldVd1cGhEU0ZCSVV6aEc3VHBnTXh1dHFsM3dM?=
+ =?utf-8?Q?xD+nAPcjBeBYePWKBB?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b30f481d-89b1-45e7-6f53-08df349eca35
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2026 02:54:31.3406
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pv7vMDR3pr9wb3UChXTf5DyTKBW056riedEYYsKtyJgQKJ2LCPD1OkojT61SltU9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4155
 
-Hi Joe,
-  Could you please apply this patch to 7.4?
-
-Best Regards,
-Guixin Liu
-
-在 2026/9/25 01:09, Joe Perches 写道:
-> On Thu, 2026-09-24 at 11:39 +0800, Guixin Liu wrote:
->> ACQUIRE_ERR() and its wrappers, PM_RUNTIME_ACQUIRE_ERR() and
->> IIO_DEV_ACQUIRE_FAILED(), report whether a conditional cleanup.h guard
->> was acquired, and drivers consume the result directly in an if
->> condition:
->>
->> 	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
->> 		return rc;
->>
->> That combined form is the established style at the 49 in-tree call
->> sites under drivers/cxl and drivers/pci/tsm.c, so ASSIGN_IN_IF fires
->> there only as a false positive, and every patch touching those lines
->> carries noise that reviewers have to wave off manually.
->>
->> Skip the check only when every assignment in the condition assigns the
->> result of such a call, matched by the *_ACQUIRE_ERR() /
->> *_ACQUIRE_FAILED() naming convention of its wrappers. Plain
->> assignments, mixed conditions and near-miss identifiers still get
->> flagged.
->>
->> Suggested-by: Alison Schofield <[alison.schofield@intel.com](mailto:alison.schofield@intel.com)>
->> Cc: [linux-cxl@vger.kernel.org](mailto:linux-cxl@vger.kernel.org)
->> Assisted-by: LLM
->> Signed-off-by: Guixin Liu <[kanie@linux.alibaba.com](mailto:kanie@linux.alibaba.com)>
-> Acked-by: Joe Perches <joe@perches.com>
+On Mon Oct 26, 2026 at 7:17 PM EDT, David Hildenbrand (Arm) wrote:
+> From: Chris Mason <mason@kernel.org>
 >
->> ---
->> Changes since v1 [1]:
->>
->> - Check each assignment in the condition instead of the condition as a
->>   whole, so a mixed condition such as
->>   "if ((rc = regular_function()) || (ret = ACQUIRE_ERR(...)))" keeps
->>   getting flagged (Alison Schofield).
->> - Match the assigned-to expression with $Lval, as Joe Perches
->>   suggested on Alison's earlier attempt at this exception [2].
->> - Cc linux-cxl, where most users of this form live.
->>
->> Two deviations from [2]: the assigned expression capture excludes '=',
->> so an '==' comparison in a mixed condition is not mistaken for a bad
->> assignment, and the check requires an assignment the $Lval match can
->> see, so compound assignments like '+=', which it cannot see, are not
->> silently allowed.
->>
->> Testing: ran checkpatch on a test file with the allowed forms (bare
->> macro and both wrappers, member and array element lhs, multiple
->> ACQUIRE family assignments in one condition, an '==' comparison
->> alongside, no spaces around '=') and with 14 cases that must still
->> trigger (plain assignments, near-miss identifiers, arithmetic on the
->> call result, ACQUIRE_ERR in a comment, indirect assignment, mixed
->> conditions in both orders). All allowed forms pass, all 14 still
->> trigger. The 49 in-tree call sites under drivers/cxl and
->> drivers/pci/tsm.c no longer report ASSIGN_IN_IF, and checkpatch output
->> is unchanged for fs/namei.c, kernel/sched/core.c, mm/vmscan.c and
->> net/core/dev.c.
->>
->> [1] [https://lore.kernel.org/all/20260916020921.3480730-1-kanie@linux.alibaba.com/](https://lore.kernel.org/all/20260916020921.3480730-1-kanie@linux.alibaba.com/)
->> [2] [https://lore.kernel.org/linux-cxl/20250815010645.2980846-1-alison.schofield@intel.com/](https://lore.kernel.org/linux-cxl/20250815010645.2980846-1-alison.schofield@intel.com/)
->> ---
->>  scripts/checkpatch.pl | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
->> index 8a7787d228a6..eee06ac6737f 100755
->> --- a/scripts/checkpatch.pl
->> +++ b/scripts/checkpatch.pl
->> @@ -5777,7 +5777,21 @@ sub process {
->>  			my ($s, $c) = ($stat, $cond);
->>  			my $fixed_assign_in_if = 0;
->>  
->> +			# ACQUIRE_ERR() and its wrappers, e.g. PM_RUNTIME_ACQUIRE_ERR()
->> +			# and IIO_DEV_ACQUIRE_FAILED(), are meant to be evaluated in an
->> +			# if condition, with the error assigned in the condition:
->> +			#	if ((rc = ACQUIRE_ERR(name, &lock)))
->> +			# Allow that only when every assignment in the condition assigns
->> +			# the result of such a call, so that a mixed condition keeps
->> +			# getting flagged:
->> +			#	if ((rc = regular_function()) || (ret = ACQUIRE_ERR(name, &lock)))
->> +			my $assign_in_if = 0;
->>  			if ($c =~ /\bif\s*\(.*[^<>!=]=[^=].*/s) {
->> +				my $has_assignment = $c =~ /\b$Lval\s*=\s*[^,)&|=]+/;
->> +				my $has_other_assignment = $c =~ /\b$Lval\s*=\s*(?!\s*\w*ACQUIRE_(?:ERR|FAILED)\s*\()[^,)&|=]+/;
->> +				$assign_in_if = !$has_assignment || $has_other_assignment;
->> +			}
->> +			if ($assign_in_if) {
->>  				if (ERROR("ASSIGN_IN_IF",
->>  					  "do not use assignment in if condition\n" . $herecurr) &&
->>  				    $fix && $perl_version_ok) {
->>
+> zap_huge_pmd_folio() removes the rmap before calling folio_mark_dirty().
+> If this was the last mapping, truncation can skip unmapping the folio
+> and proceed without waiting for the PMD lock, racing with dirtying.
+>
+> ifs_set_range_dirty() can oops if MADV_DONTNEED races with
+> ftruncate() on XFS, when we get the folio set dirty after it was found
+> to not be mapped anymore.
+>
+> Move folio_mark_dirty() and folio_mark_accessed() before rmap removal,
+> matching the PTE zap path. This keeps the folio mapped while updating
+> its state, so truncation must wait for the page table lock.
+>
+> Fix generated by an LLM and sent by Chris Mason in private.
+>
+> Fixes: fe6cf984939d ("mm/huge_memory: transfer the pmd dirty bit to the f=
+olio on zap")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Chris Mason <mason@kernel.org>
+> [ david: simplify comment and description ]
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/huge_memory.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+
+It seems to me that moving the rmap removal code after folio_mark_*()
+matches zap_present_folio_ptes() closer. Feel free to use it or ignore
+it.
+
+Anyway,
+
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index bd44d58e86845..192f7969e3648 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2484,10 +2484,6 @@ static void zap_huge_pmd_folio(struct mm_struct *mm,=
+ struct vm_area_struct *vma,
+ {
+ 	const bool is_device_private =3D folio_is_device_private(folio);
+=20
+-	/* Present and device private folios are rmappable. */
+-	if (is_present || is_device_private)
+-		folio_remove_rmap_pmd(folio, &folio->page, vma);
+-
+ 	if (folio_test_anon(folio)) {
+ 		add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
+ 	} else {
+@@ -2501,6 +2497,13 @@ static void zap_huge_pmd_folio(struct mm_struct *mm,=
+ struct vm_area_struct *vma,
+ 			folio_mark_accessed(folio);
+ 	}
+=20
++	/*
++	 * Present and device private folios are rmappable. Only remove the rmap
++	 * after transferring young+dirty to the folio.
++	 */
++	if (is_present || is_device_private)
++		folio_remove_rmap_pmd(folio, &folio->page, vma);
++
+ 	/* Device private folios are pinned. */
+ 	if (is_device_private)
+ 		folio_put(folio);
+
+
+--=20
+Best Regards,
+Yan, Zi
 
