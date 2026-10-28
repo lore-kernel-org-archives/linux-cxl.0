@@ -1,57 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.219
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793161354;
-	b=nSuWLrFjGZ/tRQVqMrnITBgajZeMP5f0PkhcUSVUEjKReJPG9Xjf2xJeUGkdDdJwQ0zp
-	 lNrmoXiMBLai8WRHvCCV8Xg2d7riihl1SBOprwoWUMH57Ycpr2QDqJC97OgfWURnlyyn+
-	 ksxEy/adI08eusRcY+pmLkIBn+51iNF5ldnihb7AKok35bNCICXmWkoieeVHBwBouahV3
-	 f9R2cAeZFheKPSKwEQWhI0Z9MeNTUEOY7sPlrlked0EulfbYj0QjAL8kq/SpOxjua6W52
-	 e5UMubwwbUCKrruxRpH7qjw9hvi1JOvjE/wFoaSdMTQvU+DIjgkqqn1QqiwwjnVL11g==
+	t=1793162004;
+	b=ctLLpQCM/PzCtNrjIITwXUrzPWnGMdY0p4NPwUIwi5cukCddEGmWLKXps8hv/DcWoWY0
+	 AswllOgppxCjlMoHCwYAENV77z6YqtXSYgnsgUCaqAwkmfleVozUvYClLCSMhzTTF9inn
+	 LUYbtvh6y4AXtpQkUlxWgLi0DJbCTx9bnFxHU5qzOcjdve8z4A1hxlZymjMX87X3ovVAb
+	 k4AgfBHZyCJPEfwB//q+chG2mSPrdo6+JNQKDkFJD1hx5km7ms+J+lHx/OdNMnRVPHPyI
+	 rkHEMOUlkxBT2OKp2/55113/48Nf94XvVABJWjASQPnFRQ49KbEZ+yJq0CZPwM0i+Yg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793161354;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vkyQ8vHhkWSt512yuI1HFfvtHuYn2OinQNhM77ow/sg=;
-	b=SPLF0csIp8V2mx4+zkhopZWqvMNktmKw9fGb2gSGxeNSMv4i1LW+DlH9ykyFMQ3y2/Jr
-	 kgWkvK4btk0DfVqnmK77PeOgLpiOpJWFpuw8/KpBh1fLY3koSREQ5kdlVgOBymMSkQlcz
-	 K8ccQdMSJ3IRXU2rJYne5aHBObVgDQrkHv/cXvSHsoC3UiaD9i4Kzg+2j3gRkRNNqRpmy
-	 A5WD3Oya1arKDpvxlDTMTrMOPZaHJgog0e1UfK1dpskJ1N62dpjfNwKl4JB3VrC5xQqF4
-	 59qlPppM7SLHIy0VV+4u0eJ9S7OZSptmN7TvdbFHCbwgjKTQzUv4LCI0psjZRTIDB9w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793162004;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=hoaYYE9clIuJ0Ig445chvZt4nolRKxe5BT9MRTh3Egg=;
+	b=u07n8+ueIsVHhmYXY31u5Yzv1ax/ajfYV6JBr8yeZpexTUFjFoHamKchrDJDfMVGlkhl
+	 bchEcYayi3jBM+OYBFv4IreH3lq9N6TvwU1j1pC4QKkNe9EUU5+ZXSLsfdRoBpu/gV32A
+	 cpo/fsSPRN1b3hmCqf0/skmoIdA+XTC/9W+oNiJFxVOUDTg7AhAPfxmAmmEy/xzGY44Sw
+	 ulBSnmS0dpou7qPPEGIY+Ua62HxDgd75k2bISHRg9tRno/l5OWpABehTDfINbwU8fAKRw
+	 XzDxbHrkK+7xBHHB91/RrAZY/V5L0eba0o9RMzDa96c+77aY1x+mEq0UaX4iQea9G8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U0I9hRGg;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WeW0dcEy;
+	arc=none smtp.remote-ip=95.215.58.219
+Received: from mta1.migadu.com (out-219.mta1.migadu.com [95.215.58.219])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F38606A31A
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 04:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94538606A322
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 04:33:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 94538606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U0I9hRGg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6141F01825;
-	Wed, 28 Oct 2026 04:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793161353;
-	bh=vkyQ8vHhkWSt512yuI1HFfvtHuYn2OinQNhM77ow/sg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U0I9hRGgBbIvYWK4Y3maDxqSJe8UWuC/jqU3jpE5KHNCyZpc2lTw8E/yB7HZHpgn4
-	 ulM6xIxcCByD/EAXHJWGfpoKRsXaiuC+aravlHhYAgtH3EinlFI9sBdCF4fYEG4tPM
-	 Z7E+QVHqiwP6fSSJUM/MmPjThC8gGnu8q3XG02RWhyH86TodyLhfkx3mD1sZXgB8nb
-	 wsnAi9CpfKxXBholTq4YtSx8j8scXxIpf/WdB100K1/c8QpZbM1caJNS/wQGwPh8I7
-	 WyAD3e0703tdgK4zSHBFf3RHA4QxMZeZtY5sBjlbq1aIDE+05s/gZF/aTczBoCzfug
-	 zsvlYFHsuxycQ==
-Message-ID: <sashiko-outbox-187474@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/6] mm/page_owner: hold off memory offline while a page
- is read
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?R3JlZ29yeSBQcmljZSAoTWV0YSk=?= <gourry@gourry.net>, linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org, kernel-team@meta.com, akpm@linux-foundation.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org, osalvador@suse.de, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com
-In-Reply-To: <20261027042204.3741307-3-gourry@gourry.net>
-References: <20261027042204.3741307-1-gourry@gourry.net>
- <20261027042204.3741307-3-gourry@gourry.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 04:22:32 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WeW0dcEy
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=T4efCo2Hap6aPJgKK/ehUGhK0yIt+mn0LCQnSmlQd0s=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793162000; v=1; x=1793766800;
+ b=WeW0dcEyzkw6mTIdVt2Z06iHEedOA9csfafpNxIqlvgXWGNleOMk4G5+xIqtxnfY0oJlEGQo
+ 3RIOLo03odtO32V/gvt274JFHEpf0OAsY2K6WgJh+s2w2M9H9KOLel/juzZL0FcuRQ3OjvRdcI0
+ 9UEAxWdkfJdjVzGrmw7+tycY=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id bee4a2cb7972e2c2;
+	Wed, 28 Oct 2026 04:33:20 +0000
+X-Mizu-Trace-ID: bee4a2cb7972e2c2
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <fa0f07af-e8d7-44b0-b1e7-ad325d75ac34@linux.dev>
+Date: Wed, 28 Oct 2026 12:32:54 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -60,101 +57,98 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 32/46] mm/memory_hotplug: avoid races in
+ pfn_to_online_page() with dying pgmap
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
+ qi.zheng@linux.dev, shakeel.butt@linux.dev, ljs@kernel.org,
+ kasong@tencent.com, baohua@kernel.org, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, baoquan.he@linux.dev,
+ baolin.wang@linux.alibaba.com, liam@infradead.org, vbabka@kernel.org,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org,
+ peterz@infradead.org, jannh@google.com, pfalcato@suse.de, hughd@google.com,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, willy@infradead.org,
+ jack@suse.cz, ziy@nvidia.com, riel@surriel.com, harry@kernel.org,
+ apopple@nvidia.com, nico.pache@linux.dev, ryan.roberts@arm.com,
+ dev.jain@arm.com, usama.arif@linux.dev, kas@kernel.org,
+ matthew.brost@intel.com, jhubbard@nvidia.com, peterx@redhat.com,
+ will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ osalvador@suse.de, minchan@kernel.org, muchun.song@linux.dev,
+ xu.xin@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, youngjun.park@lge.com,
+ gourry@gourry.net, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+ ying.huang@linux.alibaba.com, jgg@ziepe.ca, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, josef@toxicpanda.com
+References: <20261027-fixes_core-v1-32-6f74bec9a5bb@kernel.org>
+ <20261027121307.40431-1-lance.yang@linux.dev>
+ <87e3d64e-8b25-4d51-a984-7ab8a58f785d@kernel.org>
+Content-Language: en-US
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <87e3d64e-8b25-4d51-a984-7ab8a58f785d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mm/page_owner: read_page_owner() mixes guard(pfn_walk) with goto=
- cleanup
---
 
-commit b2d3acd01e2d83565fff990fcda39fb4ee08ffa7
-Author: Gregory Price (Meta) <gourry@gourry.net>
 
-mm/page_owner: hold off memory offline while a page is read
+On 2026/10/28 03:41, David Hildenbrand (Arm) wrote:
+>> LLM stumbled upon a possible race in kpage_read() ...
+>>
+>> Say the reader passes pfn_section_valid() for a device PFN in a section
+>> shared with online RAM, gets preempted, and resumes after
+>> pgmap_array_delete(). We'd then find no pgmap and return pfn_to_page(pfn),
+>> even though the subsection is no longer valid ...
+> 
+> I think that's similar to our pfn_to_online_page() vs. memory offlining races,
+> just slightly different. Getting these races down to 0 is pretty hard.
+> 
+> This patch here tries to do better and arguably almost looks like a cleanup.
+> 
+> I wouldn't worry about that one for now; it's extremely unlikely to hit. And it'
 
-This commit prevents page faults during concurrent memory offlining or remo=
-val
-when reading /sys/kernel/debug/page_owner by checking PFNs with
-pfn_to_online_page() inside a pfn_walk read section and moving kmalloc() and
-copy_to_user() outside that section.
+Ack.
 
-> diff --git a/mm/page_owner.c b/mm/page_owner.c
-> index cfc31c92d7657..d2c0b831fcd3b 100644
-> --- a/mm/page_owner.c
-> +++ b/mm/page_owner.c
+>>
+>> Could we take the memory hotplug read lock in kpage_read(), covering both
+>> the lookup and the metadata reads? We can drop it before put_user(), once
+>> we're done with the page.
+>>
+>> Maybe along these lines?
+>>
+>> ---8<---
+>> diff --git a/fs/proc/page.c b/fs/proc/page.c
+>> index 6aa99e42ec22..12bed36d76dc 100644
+>> --- a/fs/proc/page.c
+>> +++ b/fs/proc/page.c
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/hugetlb.h>
+>>   #include <linux/memremap.h>
+>>   #include <linux/memcontrol.h>
+>> +#include <linux/memory_hotplug.h>
+>>   #include <linux/mmu_notifier.h>
+>>   #include <linux/page_idle.h>
+>>   #include <linux/kernel-page-flags.h>
+>> @@ -77,6 +78,8 @@ static ssize_t kpage_read(struct file *file, char __user *buf,
+>>   	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
+>>
+>>   	while (count > 0) {
+>> +		/* Prevent memory removal while inspecting the memmap. */
+>> +		get_online_mems();
+> get_online_mems() is the big hammer we try to avoid (or ideally remove at some
+> point). And it's most pfn_to_online_page() users that are affected.
+> 
+> A seqcount in pfn_to_online_page() could detect concurrent pgmap removal and
+> retry from the start. But I'd rather delay something like that.
 
-[ ... ]
+Fair enough, let's leave it alone for now given how unlikely it is to hit :)
 
-> @@ -766,7 +760,12 @@ read_page_owner(struct file *file, char __user *buf,=
- size_t count, loff_t *ppos)
->  			continue;
->  		}
-> =20
-> -		page =3D pfn_to_page(pfn);
-> +		/* Offline waits for us before it poisons the memmap */
-> +		guard(pfn_walk)();
-> +		page =3D pfn_to_online_page(pfn);
-> +		if (!page)
-> +			continue;
-> +
->  		if (skip_buddy_pages(&pfn, page))
->  			continue;
-> =20
-> @@ -825,14 +824,18 @@ read_page_owner(struct file *file, char __user *buf=
-, size_t count, loff_t *ppos)
-> =20
->  		page_owner_tmp =3D *page_owner;
->  		page_ext_put(page_ext);
-> -		return print_page_owner(buf, count, pfn, page,
-> +		ret =3D print_page_owner(kbuf, count, pfn, page,
->  				&page_owner_tmp, handle, state);
-> +		break;
->  ext_put_continue:
->  		page_ext_put(page_ext);
->  		cond_resched();
->  	}
+> Thanks for taking a look! (Can I convince you to review some of the THP fixes?
+> pleeeeaaasseee :) )
 
-[Severity: Medium]
-In read_page_owner(), guard(pfn_walk)() is declared inside the for-loop bod=
-y,
-so its scope extends to the closing brace of the loop after cond_resched().
+Of coursssssssse! I'm already looking through the THP fixes :D
 
-When a PFN is skipped via goto ext_put_continue (for example on an unalloca=
-ted
-page, tail page, missing handle, or filtered node ID):
+Cheers, Lance
 
-mm/page_owner.c:read_page_owner() {
-    for (; pfn < max_pfn; pfn++) {
-        ...
-        guard(pfn_walk)();
-        ...
-        if (!test_bit(PAGE_EXT_OWNER, &page_ext->flags))
-            goto ext_put_continue;
-        ...
-ext_put_continue:
-        page_ext_put(page_ext);
-        cond_resched();
-    }
-}
-
-First, include/linux/cleanup.h notes that goto-based cleanup and scope-based
-cleanup helpers should not be mixed in the same function.
-
-Second, because the guard(pfn_walk) scope only ends at the closing brace of
-the loop, cond_resched() is called while the pfn_walk SRCU read lock is sti=
-ll
-held, even though all accesses to struct page and page_ext for that PFN have
-already completed. If the task is scheduled out in cond_resched(), concurre=
-nt
-memory offlining in offline_pages() -> remove_pfn_range_from_zone() ->
-pfn_walk_synchronize() has to wait for the reader to be scheduled back in
-while holding the memory hotplug locks.
-
-Should the pfn_walk guard and page_ext cleanup be scoped so that the pfn_wa=
-lk
-read section ends before cond_resched(), and without mixing guard() with
-goto-based cleanup?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027042204.3741=
-307-1-gourry@gourry.net?part=3D2
