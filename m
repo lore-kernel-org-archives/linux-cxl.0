@@ -1,131 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793194208;
-	b=GMQL4zSGjrx/cfglssu43Gqb5Q4fvgLvbmnxM4cNPXDkqSkG5ABy7+8dHt771t4PMLgN
-	 IQDtUnlkCjhaLjFHPmhaOza8dX1FWhHSQa9nzd7DKSk7U3e4G8f0nhfnwY1SrGsup0eP0
-	 nI940y+HW2eMHzM2nCmNWSyJ8LE22WReYCH5s+7vnaJuUwLiUo18dBTvxjTAu1ipTCtCY
-	 cLDWjdSvkhz96F6Et8wSeIpzxqzj+1qiVQBtvATlIL7McDAK6G+uBezQRb9xoEggRaXWM
-	 O3Mj7cOdQ5UGDd7IIeb6JUJ9FwS556oLvnu+PezvH23qV61GXDSDSJ5j6ANuN5RK2bQ==
+	t=1793195416;
+	b=VVP+bJzmRD4lZc7cuZwKzJHA4ZdEBeoO+Oo66YtjjeEniG2SD0Bfa6G5qOxG8zfw6vTy
+	 W6dkhuCabW5vvS/i/oIbJLQ97mxM4CJbHzy8VZc4cG9DHPDa2x8a1A2FNgsHy6+ljwS4I
+	 s+qPmm6BSXGxMvk3M3PW9woKCb1eSoW5rtk0pL7VqQC4cChUY6bvib77lUYtLOr9pfSbV
+	 2dwBuDs2/ay840IOP1OQbp+bIwDWL1uuzvQOR7ktRuKSWg2zoim/tFO9EvPGNpzx3+/ol
+	 GnTdmoocz8jZ/FV65BedAw1GOT4bu7EcM29fSySotabnA0SZzqnqcOST7iyr/O+2qNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793194208;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Spamd-Result:X-Spam-Score:X-Spam-Level:X-Spam-Flag;
-	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
-	b=IMGVQV2/Hc4JOX9ePriB0VaI0uu7NZ9aYYAanqYzZU1TVdcUfBBBG3xRnWb9JFlBkTma
-	 4vslY0+4ARZZZghAosT4abhtWQYxv/n8LeZ25aP4byIL2u2OTxqHOERkmS3ElLO5hyv7Z
-	 vaFTuUNaqYvqLAjSTnHL+B0Bwd0R1ARH+SLwVtUaKc5IVVU6kodKcVm/zn1zdEJdEJZTL
-	 f+0loF9BLhMTrPEYy5OGqS5tEfOl3cLRm5T2kO+Q9FB1pilji66YaX83LTZ5vxifJ2q6b
-	 MJA4fQXDMmpP0AXrcY7HYecM5KZkbtiSgorpjHmCuH2XEBqXy9390COp7PVr7qKQXuQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793195416;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=EKOJSvQCyvmegciiDSA3qkq54znl6sRsTPqc7BTTnKg=;
+	b=MQa5FSN/dUrwopcu6lSI0IkhedJOB9nwkQtJO83aBuL8Wnk1d38o6yt5ax1STwLVbFXE
+	 5w/SREVRLKeAgYXAcjbDX463ZpZ9HtSgr5H6TIDTtBI5bR5qvU6gbqmUV1/u/2dqucvSn
+	 WWsB8VP58qphxfz875B6t1zC2YMBB5LT/dhIs+7KT2V38o5yyGUD7p77nGnTPaSItorRm
+	 /M6MKXyuNMZRQMO7yUAwsvynpJ6O807IeMPqvYvnqJWn5OFCYwsskfNT4hvbCC6Db3mF5
+	 SR9x8agOvy8DOUMBO6kWFhwB/OCkLiVn+DriCvwZWKP2mMlSvMwDMtbyhDYUQaM6U9w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="Pfvj/4IU";
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="Pfvj/4IU";
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=BxUepWxa;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D916C606A31E;
-	Wed, 28 Oct 2026 13:30:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D916C606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3131D606A32F;
+	Wed, 28 Oct 2026 13:50:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3131D606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Pfvj/4IU;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=mRyYh38z;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Pfvj/4IU
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 187361F7AF;
-	Wed, 28 Oct 2026 13:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793194206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
-	b=mRyYh38zGNqTdDzU2IBgubLvN6qxwLaC4yFWHklZIKqU26TyZ4oRQY7PAOrHeC8vFtNPfh
-	tcu52wSZ2Uc0egE7xLAaTMsq7kNtqVi5AcopCj8oycgRjtrCAgktm5lNVefPGRrF3AzCBi
-	EJzcNw70UCWj9ijZwZO8mecYSsw/20I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793194206;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
-	b=Pfvj/4IUnhBaGC3rOJuYYnvHJWbGlsw4oQr9Z6uxVKVb+noUK+iNaGhZ7KFB1kZMqC9m+b
-	WQDtLt4MDXAFB/Cg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793194206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
-	b=mRyYh38zGNqTdDzU2IBgubLvN6qxwLaC4yFWHklZIKqU26TyZ4oRQY7PAOrHeC8vFtNPfh
-	tcu52wSZ2Uc0egE7xLAaTMsq7kNtqVi5AcopCj8oycgRjtrCAgktm5lNVefPGRrF3AzCBi
-	EJzcNw70UCWj9ijZwZO8mecYSsw/20I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793194206;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uDU7TgA2jvFg6264ATbsfhpdhHYSRjVLVOATZ2t540=;
-	b=Pfvj/4IUnhBaGC3rOJuYYnvHJWbGlsw4oQr9Z6uxVKVb+noUK+iNaGhZ7KFB1kZMqC9m+b
-	WQDtLt4MDXAFB/Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B299213419;
-	Wed, 28 Oct 2026 13:30:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id R8HKH9n44WrwOgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 28 Oct 2026 13:30:01 +0000
-Date: Wed, 28 Oct 2026 13:30:00 +0000
-From: Pedro Falcato <pfalcato@suse.de>
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=BxUepWxa
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EKOJSvQCyvmegciiDSA3qkq54znl6sRsTPqc7BTTnKg=; b=BxUepWxaQM94nl47RKcbqrBwZ7
+	kKjKjVjHXt+ZcHaBoC9nDp4oSN9ak/TO/XSgZcZWwNyUes07CsiuLocLH66v0bHNVj9IKB35ZiIBf
+	fXcJPdkUhdzi3eVA3yYx2Wb11fbpqdcML3ik3qmNvo9oHUT+1pIV40JNfxDMJ/wmX9eR2jxICexSE
+	ad3Hc1No0hfI+y0IgWiVtZAg0BshCR6qLOZqqp16nouHynXTJ9IQB4qiaP3+hFCWqYSQ+ZvQao6uQ
+	gtgCbH3J+tJpJRCI+onTodJWcxHXBKOxtmizI01tTt3GIKNO4zPmrK05hh4otiSxEU/f4XlZ4mWb4
+	KFvceyFg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xM41u-002Ho4-0T;
+	Wed, 28 Oct 2026 13:49:26 +0000
+Date: Wed, 28 Oct 2026 06:49:18 -0700
+From: Breno Leitao <leitao@debian.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+Cc: Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
 	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Hugh Dickins <hughd@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Lance Yang <lance.yang@linux.dev>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Minchan Kim <minchan@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, Chris Mason <mason@kernel.org>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 17/46] mm/khugepaged: preserve dirty bits when collapsing
- PTE-mapped THPs
-Message-ID: <auH4sb2pq-LpAUI3@pedro-suse.tail5790ac.ts.net>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, kas@kernel.org, kexec@lists.infradead.org, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	shakeel.butt@linux.dev, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v6 4/7] mm/memblock: add a reserved-region flag for
+ poisoned frames
+Message-ID: <auH6WT5zR1RM1lpA@gmail.com>
+References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+ <20261016-hwpoison-kho-v6-4-f304255147da@debian.org>
+ <ato62palTbNjLwN7@kernel.org>
+ <524ee7d9-790d-48b6-8613-841da042c32a@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -137,63 +87,44 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027-fixes_core-v1-17-6f74bec9a5bb@kernel.org>
-X-Spamd-Result: default: False [-11.80 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,cmpxchg.org,kernel.org,linux.dev,tencent.com,google.com,linux.alibaba.com,infradead.org,suse.com,soleen.com,suse.cz,nvidia.com,surriel.com,arm.com,intel.com,redhat.com,gmail.com,suse.de,huaweicloud.com,lge.com,gourry.net,sk.com,ziepe.ca,kvack.org,vger.kernel.org,lists.infradead.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[65];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Score: -11.80
-X-Spam-Level: 
-X-Spam-Flag: NO
+In-Reply-To: <524ee7d9-790d-48b6-8613-841da042c32a@kernel.org>
+X-Debian-User: leitao
 
-On Tue, Oct 27, 2026 at 12:17:37AM +0100, David Hildenbrand (Arm) wrote:
-> From: Chris Mason <mason@kernel.org>
+On Wed, Oct 28, 2026 at 09:39:42AM +0100, David Hildenbrand (Arm) wrote:
+> On 10/22/26 18:33, Mike Rapoport wrote:
+> > Hi Breno,
+> > 
+> > On Fri, Oct 16, 2026 at 05:15:44AM -0700, Breno Leitao wrote:
+> >> memblock allocates from and frees to buddy whatever is not reserved, and
+> >> knows nothing about frames an earlier kernel found hardware-poisoned.
+> >> Such a frame can back the memmap, a page table or a percpu area before
+> >> any hwpoison code runs, and otherwise reaches the buddy allocator like
+> >> any other free frame.
+> >>
+> >> Add MEMBLOCK_RSRV_HWPOISON for a reserved range holding those frames.
+> > 
+> > How much this would fragment memblock.reserved?
+> > 
+> > memblock is not very scalable, to say the least, and each new flag
+> > increases the size of memblock arrays which obviously hurts performance.
 > 
-> try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
-> bits to the folio. A shmem read fault can map a clean folio writable, so
-> a later store only dirties the PTE. Losing that dirty bit allows reclaim
-> to discard modified data.
+> I assume that if you have too many regions there, you have different problems
+> than scalability problems.
 > 
-> The assumption that regular files are read-only is also obsolete since
-> commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
-> for writable files"). In any case, transferring PTE dirty bits to the folio
-> when removing mappings (and while the folio is still mapped) is the right
-> thing to do.
-> 
-> Use get_and_clear_ptes() to collect the dirty bits and mark the folio
-> dirty before unmapping it. Update the comment.
-> 
-> This was reproduced with shmem using MADV_COLLAPSE followed by
-> MADV_PAGEOUT.
-> 
-> Fix generated by an LLM and sent by Chris Mason in private.
-> 
-> Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-> Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Mason <mason@kernel.org>
-> [ david: adjust comment; simplify description; cover file-thp as well ]
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> We should cut out larger chunks, and if they are all over your address space you
+> should scrap that machine.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Ack, that is what the 2M unit does. A DRAM row fault shows up as many 4K
+pages but lands in one or two units, and adjacent units share one
+memblock.reserved region.
 
--- 
-Pedro
+Mike, on the statistics you asked for: across the Meta hosts that logged
+a hard memory failure in the last 28 days, these are the
+memblock.reserved regions each host would need:
+
+             p50   p90   p99
+     x86      1     4    41
+     arm64    1     5    27
+
+Thanks,
+--breno
