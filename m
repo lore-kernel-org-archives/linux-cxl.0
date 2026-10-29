@@ -1,115 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793256321;
-	b=dt8c0IQSVQOAc906VxPaun3s8Fl8/EjPrn+S2BK11lve6GvtroEz6T5IOzHeOg7wxuF1
-	 LBt0O8G50iEL6SHF59t424Ha1kxTm3+34Dhq8+S/Ggb50296hL2Ew8OPW1ke3MKGsmaYG
-	 94FE9tYaSs793OJ0h0F9o6QkJq6JVZI3LkWomBK4649kne5iynOtzPpd6fEfyi+XhmH3D
-	 JMT6H/XMIWFP9Dt7C/bZu4fQenZvo8vWfAhUwXtKcoSCaBFfo8GT/10AScxJWW7WFiJlA
-	 AYQzvIeJXm3jmk/4ncv0p/aIKfQBqZYaJdALv3IX9A8Wmqtu7QqIOh3ei4ebww1VgkA==
+	t=1793257042;
+	b=GFJCwkt1pYSyFzElIo433s7yOZdcy/r7KARmPqyB4KjZDraBVPfCiU1d3cg6gWvQ3BBx
+	 3be9GtLrjjxgbm5+rr5dDgflAE+EDW4XxHjb6ZQ3zN2lXJ9r+R3qvRAG0ymAORo7xcb/F
+	 Nx7DI4vpRTSZtBND5rYe8g/JyOPNVhmhXfmLvBdk5gNuv1oSwC8zFwJM8lKOR7SZqPwwe
+	 /qBKqEQ8kMEU6aRPmvxn40r7Z9tW0rpNBQWFd+H+gncnsxyRYzmwmi94muq26rN98LxBB
+	 DA6lFyLRkBv6Y22qtV8h96oHqeL0FVlCXHAaqPEzSKQzAb9+Cd6NM1unEm0uuGzE5hA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793256321;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Sender:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding;
-	bh=PpZwiOLy+qBSQ8PQ3tlsCfW6m/0pXMByVlZ/42AmEx0=;
-	b=KRuIX91T16SCZDKoUJd7OHpzX2tBYTBjIvcPm6dWKPUbp5FcOyXcOHf6cORSHaBKybSH
-	 CtM+QmuiweEIivJKkWoPILRNJrdNR/Y7/uuBitjjCbg6ofSYy/Jog6aZeBj1XwEZjrpKi
-	 Riio8LKh/+/u00hLHXNppqXs0xGQV5Tj87Gz/5FWWrpHTlKoVsJYUTcKU1fea/byMEM8B
-	 2kNOzf+77fpBXtnIkpeOBXJwEdOeMc1WQzSLi2+2JY7Ul7t1+EgExDeu6PYinfLXnABQM
-	 NctPUsqB8jmkvU1Fmj7Mfar4cO7TXysLzeNcplKqXVJkOKjoAVL3oR3PN8w5NBhv5rw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793257042;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:Sender:
+	 X-CM-SenderInfo;
+	bh=2BR2wSy5joZ/Mpe7EJC50aJ2E6Aa1XiDqjOTNWWpSlc=;
+	b=WBNe6LIwy9/Bkz3Hq0papZq45R0Na/nsWe8PVPW6LmERXDe8ceo8Zkq51vOeLZ4goZCS
+	 89m2MMzj7iNQVFS6mdFmOPi09Xz3OCfd9NhrhbMf5PYKICrm+H3P4RnHDWnAx5eboOIlP
+	 eijATZ8D4C8YjsGFoaLhM7E1nXvr0H8RbWzuJ/lcH40tt5HHyUERO4T8BOsNZrA0vegzM
+	 +bofuy5O1XGFLjn1Px/8hmJjmfKxfO00sTWpgaljraiPvA2AAGrGCOdsunsUL7mJ/fb7d
+	 7Z6wA2i9qiWVHeIp5w4czDFEBMlAtcledS5p+lO/5kf0P20V6fFRFcqJ+Pyb7oDdaXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="KCg5n/Q8";
-	arc=none smtp.remote-ip=209.85.214.181
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Kr19EuUW;
+	arc=none smtp.remote-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C989606A31F
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 06:45:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C989606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619DB606A31A;
+	Thu, 29 Oct 2026 06:57:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 619DB606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=KCg5n/Q8
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ea759cc9b6so7369085ad.3
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 23:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793256320; x=1793861120; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PpZwiOLy+qBSQ8PQ3tlsCfW6m/0pXMByVlZ/42AmEx0=;
-        b=KCg5n/Q8XqL00OlgFFq3nv6XZvSJbvibwOIUf3l4ieuhRJh02MJd3TmHNL8ItAvBb6
-         DQI7zORWyFVVog+kbdHN/hAjpeFznKr71mR13ljhlNkwi/XxIpA2gM2IQ7y8YAQ+0G3H
-         ji7h8gpO2SHejHiHeGkBF7sakQPW7l1YdGaqRXkXMFRuxljqORyfWpIq0YHu7SCZ6iVS
-         kye+V+d3VcqR+mnKfGJi3n6/Q4Yd+xqIXxBtOLaP8gROLPokcoy9TYDEdztFWQUwCpQ5
-         bETn4zmz0nsCFsoruMBK6xUnzv+Hfawie6E/LuJYrcqEEaNK3MZ0HvwhMP7lgfZhK9T0
-         kgxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793256320; x=1793861120;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PpZwiOLy+qBSQ8PQ3tlsCfW6m/0pXMByVlZ/42AmEx0=;
-        b=re90s++1qYY/yYxyBy+WjK9p7LOHJ+6Jk+wheUwthpqZBPyyIX0t4Vh2m8EdCjGyZM
-         LnaHHPrum+Ht2dNrouxW4rgfbPcv4t+TAJ73I5yGpxZ+XyopUeALd3uALQMIPdFIbPeL
-         kKxp4mef6kItUSHs0k6TA30C5WGRLApN8S3935ytyx7D6KoBWHHr3bIlvHISzjBQT56V
-         k8EZycdndVXLhNRR95BxH2BSTEbZzf6G4dr7AuVxA4vYieDN8okBaSu3J17a0Pj6/9KK
-         ro4gSaVT7uoEINR/8FgX9nCdSOFQmWItEy2r2iMQYWSrsYPkfQA4sE/chjYWNDwJwf6+
-         2psQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxnriLruAzx1Gg6sRAbRv8TeR3eMOTLio+L9VUZqzf8JKEmkELrHRqmViCvAwlkoQA4ZXKJWwQUy4s=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLKiioDP92mGH0aLHWNmoFIf2TffQwtKlpcBWnmDaSWWte4YUgE
-	WuIqN47xCtJdqIQt9ePH27lCm+CkE4iCNtso8eZohZdG7UHXCmGMN1H4
-X-Gm-Gg: AYBFou1noWgqqZwXVLbPKkgCLmyKdxu55eKFPd76Ur+fg03rm7pm3I+l4qKBxcqgVt5
-	CVRNGM/Yljs0/KVQ8A+HFh0T5Hw3upa3noxSANMubUw98gWR7zK44IqsleC8hnJZmUIrApLk0Dm
-	cydDIC1YNFAT/yaxNR/JBr50wbpBuf+0oCc3yDHy+CX24nZQHhtHXfaF+RJrx0XO7LTuLJcFGSq
-	iZJtAUQnsfh9EYt/hZhuCQkxJ7xTKBaBJOCbjXMjiL8xgnSzyClyCgjxVeAPiUQ+2fuJAQlX1BT
-	ZGglefCDrUN4vDA+22WO2v6vSgG+1IHxu3/N4oIkej4RN5nWcjJE4LrF2P4dMEDBgUfohxCAWvB
-	j3voZumVdJ/8v/CWhTKuMMLhqoqu6Co5mdcK07JG0k4Iga0oBu05M5H3oSoyXAoKeidnjLVHGUm
-	SWqOOrpCmOZdQpHb1izT0UjgBWvGAuQJwq/25DhIPe9cjk3zpwiO32qko6srhugu1IU9tUk+5qn
-	ZvW6XoGcBiacmoajTfHYUvwUpCsGAs03j4rHPg6qxNiquvNdd13sTipR4iibfsL5tDY3gcnk1nO
-	9LKvsdjSohmLTUxJCeqK0LDqhkkjOBGuJq6K3QViShiq7cOZoQyjxQ==
-X-Received: by 2002:a17:90b:2543:b0:3a0:e1f7:9b04 with SMTP id 98e67ed59e1d1-3ae58172e4emr3338233a91.12.1793256320522;
-        Wed, 28 Oct 2026 23:45:20 -0700 (PDT)
-Received: from localhost.localdomain ([101.44.96.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e8401casm2729502a91.11.2026.10.28.23.45.15
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 28 Oct 2026 23:45:20 -0700 (PDT)
-Sender: Yilei Zheng <trilithzheng@gmail.com>
-From: Yilei Zheng <trilith.zheng@gmail.com>
-To: Muchun Song <muchun.song@linux.dev>
-Cc: Muchun Song <songmuchun@bytedance.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <djbw@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Pankaj Gupta <pankaj.gupta@amd.com>,
-	linux-mm@kvack.org,
-	nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Vishal Verma <vishal.l.verma@intel.com>,
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Kr19EuUW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=2B
+	R2wSy5joZ/Mpe7EJC50aJ2E6Aa1XiDqjOTNWWpSlc=; b=Kr19EuUWqtR3JHj0jo
+	tsp2PXpBHPcDFB94Mb+07tkLCXukrZHcUlEYi9NaFkGIrD/pZiEORmXyM0r9ZdiQ
+	J1Gk/9Mkh4IbYv6ivEFgJ14EYypT8mZVTRXVHRn5yEJUIYP5PbULzmNmr7uusLeB
+	qe65BpCmJMHigKZFIPu2kNgMM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3318h7uJqLmdrDQ--.46914S2;
+	Thu, 29 Oct 2026 14:56:35 +0800 (CST)
+From: Yongxin Yang <yangyongxin@kylinos.cn>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Qi Zheng <qi.zheng@linux.dev>
-Subject: Re: [PATCH 3/4] mm: add shared read-only vmemmap support for FS-DAX
-Date: Thu, 29 Oct 2026 14:45:10 +0800
-Message-Id: <20261029064510.17667-1-trilith.zheng@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <2E5C10CF-F3E0-4694-965C-B0E432A1A962@linux.dev>
-References: <20260903122128.12264-1-songmuchun@bytedance.com> <20260903122128.12264-4-songmuchun@bytedance.com> <20261027065723.66564-1-trilith.zheng@gmail.com> <4c9741cf-ac62-41d4-9c7a-7d5ceea4a8e1@linux.dev> <20261029030511.12004-1-trilith.zheng@gmail.com> <2E5C10CF-F3E0-4694-965C-B0E432A1A962@linux.dev>
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	Yang Yongxin <yangyongxin@kylinos.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] cxl/core: Create einj_types when EINJ becomes available
+Date: Thu, 29 Oct 2026 14:56:29 +0800
+Message-Id: <20261029065629.333949-1-yangyongxin@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20261028084934.1735010-1-yangyongxin@kylinos.cn>
+References: <20261028084934.1735010-1-yangyongxin@kylinos.cn>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -120,18 +72,182 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3318h7uJqLmdrDQ--.46914S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr4rArWxurWrAF1fWFW5trb_yoWxCF1rpa
+	98Gr4rCrWkAayxAr43A34UZ34rWw4kW3srCrykW34aya1Dur15JFyDAayY9ayDWFW8Jr10
+	q3WYyFyUG340yr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgNV9UUUUU=
+Sender: yang_yongxin123@163.com
+X-CM-SenderInfo: 51dqwsp1rqw5tlqrjji6rwjhhfrp/xtbC-wMXtGri7iNUqgAA3k
 
-> What's the size of the roots image? And I just want to know how much
-> memory this series could save in your workload.
+From: Yang Yongxin <yangyongxin@kylinos.cn>
 
-In our setup, the rootfs is an EROFS image exported from the OCI
-container image, so the pmem device size follows the image size.
+The einj_types file under the CXL debugfs directory is never created.
 
-Most of our workloads are simple today, with images around 1 to 2 GiB,
-which means 16 to 32 MiB of vmemmap overhead per guest. And we expect
-the average image size to reach about 5 GiB as we add heavier desktop
-and agentic RL environments. That would save roughly 80 MiB per guest.
+cxl_core_init() runs at subsys_initcall level, while EINJ registers itself
+from einj_init() at device_initcall level. When cxl_core_init() evaluates
+einj_cxl_is_initialized() the built-in EINJ driver has not been initialized
+yet, so the value is always false and the debugfs_create_file("einj_types")
+call below it is never reached. Users have no way to discover which CXL
+error types the platform supports from debugfs.
 
-At our target density of about 200 sandboxes per node, this adds up
-to around 16 GiB of guest RAM saved per node. Memory is what caps
-density here, so this saving helps a lot.
+Create the file from every point that can tell EINJ is up: cxl_core_init()
+covers cxl_core being a module loaded after EINJ has been initialized;
+cxl_acpi_probe() covers the same case for cxl_acpi and also systems where
+the CEDT is parsed but no dport is ever added; and the dport probe path
+covers the built-in case, where the dport added from the memdev probe is
+the only hook reached after einj_init().
+
+The dport probe path can run concurrently for different parent ports, each
+holding only its own device lock, so serialize the check and the create to
+avoid a duplicate debugfs_create_file() attempt that would only fail with
+-EEXIST. Reset the cached dentry in cxl_core_exit() so that reloading
+cxl_core starts from a clean state.
+
+Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/all/de14c4ef-e3d8-432f-9ce8-87c468d6d2ad@amd.com/
+Signed-off-by: Yang Yongxin <yangyongxin@kylinos.cn>
+---
+Changes in v3:
+- Take the review from Ben: the helper is now cxl_debugfs_einj_add_types(),
+  non-static, declared in cxl.h and exported to cxl_acpi only, so that the
+  cxl_acpi hook can call it.
+- Add the cxl_acpi_probe() hook, before cxl_bus_rescan(), so the file is
+  created once the CXL topology exists instead of waiting for a dport.
+- Keep the dport path as a retry point. With EINJ built in, cxl_core_init()
+  and cxl_acpi_probe() both run before einj_init(), so dropping it would
+  still leave the file uncreated there.
+- Drop the "RCH is out of scope" paragraph. RCH does add a dport, from
+  add_host_bridge_dport(); the file is still not created there when EINJ is
+  built in, so do not claim the acpi hook fixes RCH.
+- Reset einj_types_dentry and cxl_debugfs in cxl_core_exit(), so that a
+  reloaded cxl_core does not keep a stale pointer and lose the file.
+- Use guard(mutex) instead of mutex_lock()/mutex_unlock().
+
+ drivers/cxl/acpi.c      |  9 +++++++++
+ drivers/cxl/core/port.c | 41 +++++++++++++++++++++++++++++++++++------
+ drivers/cxl/cxl.h       |  2 ++
+ 3 files changed, 46 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 3b818adbd38b..0584245b30f2 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -958,6 +958,15 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	/*
++	 * Create einj_types from here as well, so the file also shows up when
++	 * cxl_acpi is a module loaded after EINJ, and on systems where the
++	 * CEDT is parsed but no dport is ever added (no CHBS for the host
++	 * bridge, or a CHBS without a valid component register base), which
++	 * leaves the dport probe path untouched.
++	 */
++	cxl_debugfs_einj_add_types();
++
+ 	/* In case PCI is scanned before ACPI re-trigger memdev attach */
+ 	cxl_bus_rescan();
+ 	return 0;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 625e4aa427db..76ac612b514c 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -802,6 +802,35 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+ 
+ DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
+ 
++static struct dentry *cxl_debugfs;
++static struct dentry *einj_types_dentry;
++
++/*
++ * einj_types can only be created once EINJ is up, and no single hook is
++ * reached after that point in every configuration:
++ *
++ *  - cxl_core_init() runs at subsys_initcall level and cxl_acpi_probe() at
++ *    subsys_initcall_sync level, so both create the file when cxl_core and
++ *    cxl_acpi are modules loaded after EINJ has been initialized;
++ *  - when EINJ is built in, einj_init() runs at device_initcall level, so
++ *    both of them are too early and the only hook left is the dport added
++ *    from the memdev probe.
++ *
++ * The dport probe path can run concurrently for different parent ports, each
++ * holding only its own device lock, so the check and the create need to be
++ * serialized to avoid a duplicate debugfs_create_file() attempt.
++ */
++static DEFINE_MUTEX(einj_types_lock);
++void cxl_debugfs_einj_add_types(void)
++{
++	guard(mutex)(&einj_types_lock);
++	if (cxl_debugfs && !einj_types_dentry && einj_cxl_is_initialized())
++		einj_types_dentry = debugfs_create_file("einj_types", 0400,
++							cxl_debugfs, NULL,
++							&einj_cxl_available_error_type_fops);
++}
++EXPORT_SYMBOL_FOR_MODULES(cxl_debugfs_einj_add_types, "cxl_acpi");
++
+ static int cxl_einj_inject(void *data, u64 type)
+ {
+ 	struct cxl_dport *dport = data;
+@@ -822,6 +851,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 	if (!einj_cxl_is_initialized())
+ 		return;
+ 
++	cxl_debugfs_einj_add_types();
++
+ 	/*
+ 	 * Protocol error injection is only available for CXL 2.0+ root ports
+ 	 * and CXL 1.1 downstream ports
+@@ -2501,8 +2532,6 @@ const struct bus_type cxl_bus_type = {
+ };
+ EXPORT_SYMBOL_NS_GPL(cxl_bus_type, "CXL");
+ 
+-static struct dentry *cxl_debugfs;
+-
+ struct dentry *cxl_debugfs_create_dir(const char *dir)
+ {
+ 	return debugfs_create_dir(dir, cxl_debugfs);
+@@ -2515,10 +2544,6 @@ static __init int cxl_core_init(void)
+ 
+ 	cxl_debugfs = debugfs_create_dir("cxl", NULL);
+ 
+-	if (einj_cxl_is_initialized())
+-		debugfs_create_file("einj_types", 0400, cxl_debugfs, NULL,
+-				    &einj_cxl_available_error_type_fops);
+-
+ 	cxl_mbox_init();
+ 
+ 	rc = cxl_memdev_init();
+@@ -2541,6 +2566,8 @@ static __init int cxl_core_init(void)
+ 
+ 	cxl_ras_init();
+ 
++	cxl_debugfs_einj_add_types();
++
+ 	return 0;
+ 
+ err_region:
+@@ -2560,6 +2587,8 @@ static void cxl_core_exit(void)
+ 	destroy_workqueue(cxl_bus_wq);
+ 	cxl_memdev_exit();
+ 	debugfs_remove_recursive(cxl_debugfs);
++	cxl_debugfs = NULL;
++	einj_types_dentry = NULL;
+ }
+ 
+ subsys_initcall(cxl_core_init);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index cab8ce39f465..b9245261ee39 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -926,4 +926,6 @@ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
+ 
+ u16 cxl_gpf_get_dvsec(struct device *dev);
+ 
++void cxl_debugfs_einj_add_types(void);
++
+ #endif /* __CXL_H__ */
+-- 
+2.25.1
+
