@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793287543;
-	b=rM5enyApDdu/98Ib3kGCDzjFTumCUMLT6e6X6yXOwdQppB14X2qcYymVcwoozpAFgHky
-	 7Sx6P7ik2KrN68nUUPredd9cIVcyO/4mkEz9EHiCMo1KycGPcwZqexkLjcuFU+Dv/5kzX
-	 7oxkHiWD1sN9E+sinj6HPgHy+nY6RNJ9GGCVSGhtF0co1/A4scPDWJ2kSRFlPqeSBQc7d
-	 B1hZsFPmNqFa78YFmTDQiLQp5wugEVbLfh/eRiTInkjBwm6XArYUX2gvAK1ngJi8Ukt4m
-	 CRsUb5+8PsuoAnLqcOpPlC3jr1rkzu6UIw5RJpLbUYtpqcB8aru5elB7aRUKWQAg36w==
+	t=1793287760;
+	b=j6bPtK4lPRCXRY4TRGM0Ew2gBGQIFx8EvW1yeb0uP80ObJc9J2DA0XwdymMAMpTwoCSY
+	 KJWKsY9xB9zglcUOWj2sk6TtyU788BDCLa2PPv9PTsnQ2N0fyNjQYv3re+iYEoSgVrAo0
+	 HI/tW8ytTYvgpiZHKqJnO6+/aBQJQ1X7AvT7irP0QeSEpsfEHYH2LN/3Jvy68N6BFSvQK
+	 XGe/BgpRohX8zAxEVPIcnCniSUnp8DH8d3shZI56JSZX1PyZF0t0b2p6aTGkODpFH924l
+	 PQpx0+ayNBL0eAXvC19dUadu8yEyeQCzWtyWe3URvwa+ltzWunXPkLfLzU+EuhYZyLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793287543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793287760;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iq3SDgtYy2kEN3rvhAeP9GPbbHzk2V92ozhBX5q1wc0=;
-	b=M0Y/tnoirALOQQvwJt//7dL7Zkbdj8yoi2G+GZsMRkB/BZ/QJBjf9nq6BzZoxDXNTMTz
-	 27N2NOzeU2WyJdJDJYbSNa4MO0Ja+E1gzpGz/531fd1FVZ1SlVI5EMWR/DZXtuhewfYdm
-	 UX8VFVZXwXUs1HgAO4oaZWaM5+tU4HPiDDVhSobySF6ILwJfKdMD2TEb2Q335mkLPKpjN
-	 JymgSB60DEqtzqC10+J6tM+UWYLsUTH5RUrVMeCtrniPHZntki5BFcSHtGehYP3Lh+uSm
-	 jFR8GKjUO4ZAye+dvTsmivk/yvRPe2/GEX4HqFj/xx+Zq6Gjkq7d97ev72BvtpziIxg==
+	bh=YToyvZk34yrk+TaQWFeLoYWs0xKK8iCkFtinElmzF+8=;
+	b=LNWj7RqlS0UVj5dOpAKQ5T7Kp6YfpjX1pSMA11elhjH6TTYzkaEC4V/zf9KuVO2y9euU
+	 BWZquEJuFRtzAcmzbTrn5iKzrYDvPbw4yURtamLTF/D58geTGd+9sGK7j9ivTs6Cb7Byi
+	 w4KhLT9AUd3VA98WpY+pRld37FOeLaXjuCLWSSh+363eptJ/NiMA6FKbioOJNtgPZyfkC
+	 huA6s0NOay6yom46K4uZjgsveo6yrqPvftzhmfWBqmdzBq9VPmkSmhOQ0ncHcBk+ionjF
+	 SiIjCKtIqRC3vDSjUyzojEo14DVxnsv/2xmjxxP6TM0V3giMlGxGNM0zI9ERymQakkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HxrdHkHu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BO0c6qDo;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95079606A31C;
-	Thu, 29 Oct 2026 15:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF57606A31A;
+	Thu, 29 Oct 2026 15:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HxrdHkHu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C64D1F01816;
-	Thu, 29 Oct 2026 15:25:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BO0c6qDo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790661F01816;
+	Thu, 29 Oct 2026 15:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793287543;
-	bh=iq3SDgtYy2kEN3rvhAeP9GPbbHzk2V92ozhBX5q1wc0=;
+	s=k20260515; t=1793287759;
+	bh=YToyvZk34yrk+TaQWFeLoYWs0xKK8iCkFtinElmzF+8=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=HxrdHkHure6qjp1MJ/rgn75ZsBntFObVZlUgRBYrl4vLDssiik1Y0Rk52Ct9qYxNP
-	 LNPwBQhloAHLjM5TvHO2OdYcwuIEuGsbe6LoW1+mvOIy53g1ajZrNrMve7e7I0vcq1
-	 tZa1U++wT8z2nNYUdOGPBB6xQS6NY9ymuwXwq5vGMpGomnfbd6bmSl+9FR3lBt1Qxx
-	 JVa1dz2yNAEr1tPJ1vwI8kwlTbL5z4jbN3AIivM1+RQLgsWFJ7aigjn4aoJBAEJwqW
-	 IpxVXX9dPY0iz3HRPXta8vf32UkRJVlhjnN7uBVjS/TV4s/IkIgsRSNNoO4fFAj5rb
-	 E01Ufa74SklyA==
-Message-ID: <sashiko-outbox-189602@kernel.org>
+	b=BO0c6qDojjdakwinkAlHGGs04tJRm82CeXV4hZ8j+F6BnTR0wgC2BH5pk1RJAHMrT
+	 UOEZywlbXd5zTuO9mz+MwypwB8Viz+hNwi9e+OJCMlGMIlHX3cHy+hYlzlkPjuWZ0A
+	 DdCCy2Hbg+l4z2N1DrQ05Mmt6Dor7cqHfnq0YR95LLYPy4knQrMWv7UWf6FpDEsOcS
+	 iR3Aqam7z19u3juC1izWaRIJL2momj9aH0K3RwGPeo/F2cZk1XWHsLiydu7m+iThRj
+	 fcSy2kirRXH69KCSYbGdFoxUTGyzGyEH/85s3lpJX6DZPGa36TQBV5lHm8uNFMqpvi
+	 7W9f9m9QYlU+g==
+Message-ID: <sashiko-outbox-189605@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 13/18] cxl: Validate and synchronize HDM ranges
- around reset
+Subject: Re: [PATCH v16 15/18] PCI/CXL: Restore CXL state after PCI reset
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Srirangan Madhavan" <smadhavan@nvidia.com>, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20261029145703.2185231-14-smadhavan@nvidia.com>
+In-Reply-To: <20261029145703.2185231-16-smadhavan@nvidia.com>
 References: <20261029145703.2185231-1-smadhavan@nvidia.com>
- <20261029145703.2185231-14-smadhavan@nvidia.com>
+ <20261029145703.2185231-16-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 15:25:42 +0000
+Date: Thu, 29 Oct 2026 15:29:19 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -60,201 +59,100 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] cxl: unpropagated normalized addressing flag in cxl_hdm_ranges_col=
-lect()
-- [High] cxl: stale cache state and unlocked pre-checks in cxl_reset_functi=
-on()
-- [Low] cxl: missing context lock annotations on cxl_region_quiesce_lock()
+- [Low] PCI/CXL: missing __must_hold(cxl_region_quiesce) on __cxl_reset_exe=
+cute()
 --
 
-commit 2ab2ba1a8c9580e8171daa685fd9f57270c18ea2
+commit da830bbfe7ea5fbc66b29d8fb48ea9c9acd0a112
 Author: Srirangan Madhavan <smadhavan@nvidia.com>
 
-cxl: Validate and synchronize HDM ranges around reset
+PCI/CXL: Restore CXL state after PCI reset
 
-This commit validates and reserves enabled system-physical HDM ranges and
-invalidates CPU caches before and after a CXL reset. It also holds
-cxl_rwsem.region across snapshot, reset, and restoration while rejecting
-resets on devices using normalized addressing or DVSEC range decoding.
+This commit restores the PCI configuration needed for HDM access, cached HDM
+decoder settings, and CXL Device DVSEC state after a CXL device reset. It a=
+lso
+handles restoration failures by disabling the device in the saved PCI comma=
+nd
+state.
 
-> diff --git a/drivers/cxl/core/hdm_state.c b/drivers/cxl/core/hdm_state.c
-> index 1140006de50d9..cb7ec0f86ab15 100644
-> --- a/drivers/cxl/core/hdm_state.c
-> +++ b/drivers/cxl/core/hdm_state.c
+> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
+> index 9a298e90586da..58bbd5b47539f 100644
+> --- a/drivers/pci/cxl.c
+> +++ b/drivers/pci/cxl.c
 
 [ ... ]
 
-> @@ -132,3 +139,239 @@ void cxl_hdm_cache_release(struct cxl_hdm_info **sl=
-ot)
->  	}
->  	kfree(info);
->  }
-> +
-> +/**
-> + * cxl_hdm_cache_dvsec_decode() - check for memory decoded by DVSEC rang=
-es
-> + * @slot: cache pointer owned by the device
-> + *
-> + * Return: true if the published state shows CXL.mem enabled while HDM
-> + * decoders are globally disabled, so that the device decodes memory thr=
-ough
-> + * its DVSEC ranges, which the cache does not describe.
-> + */
-> +bool cxl_hdm_cache_dvsec_decode(struct cxl_hdm_info *const *slot)
+> @@ -232,6 +233,162 @@ void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
+
+[ ... ]
+
+> +/* Caller holds the region lock and keeps device traffic isolated. */
+> +static int pci_cxl_restore_state(struct pci_dev *pdev,
+> +			  const struct cxl_hdm_info *snapshot, u16 *command)
+> +	__must_hold(cxl_region_quiesce)
 > +{
-> +	struct cxl_hdm_info *info;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	info =3D *slot;
-> +	return info && (info->dvsec_ctrl & PCI_DVSEC_CXL_MEM_ENABLE) &&
-> +	       !(info->global_ctrl & CXL_HDM_DECODER_ENABLE);
+> +	device_lock_assert(&pdev->dev);
+> +	cxl_restore_pci_state_for_hdm_restore(pdev, command);
+> +	return cxl_restore_state(pdev, snapshot);
 > +}
-
-[Severity: High]
-Can info->dvsec_ctrl and info->global_ctrl be stale relative to the hardware
-state when cxl_reset_function() calls cxl_hdm_cache_dvsec_decode()?
-
-First, cxl_reset_function() reads the live PCI_DVSEC_CXL_CTRL register into
-ctrl and confirms PCI_DVSEC_CXL_MEM_ENABLE is set, but
-cxl_hdm_cache_dvsec_decode() checks the cached info->dvsec_ctrl instead.
-info->dvsec_ctrl is only populated during PCI enumeration in
-pci_cxl_hdm_cache_init() or updated via cxl_set_mem_enable(). If
-PCI_DVSEC_CXL_MEM_ENABLE was clear at enumeration and later enabled without
-cxl_set_mem_enable(), or if cxl_hdm_decode_init() takes the active DVSEC
-range return path without calling devm_cxl_enable_mem() (where
-devm_cxl_enumerate_decoders() also skips cxl_hdm_refresh_decoder() because
-emulated is true):
-
-drivers/cxl/core/pci.c:cxl_hdm_decode_init() {
-	...
-	if (allowed && info->mem_enabled)
-		return 0;
-	...
-}
-
-then info->dvsec_ctrl remains 0 while the device actively decodes memory
-through DVSEC ranges, causing cxl_hdm_cache_dvsec_decode() to return false
-and allowing the reset to proceed without quiescing those ranges.
-
-Second, neither devm_cxl_enable_hdm() nor its devres teardown callback
-disable_hdm() in drivers/cxl/core/pci.c updates pdev->hdm->global_ctrl:
-
-drivers/cxl/core/pci.c:disable_hdm() {
-	...
-	global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-	writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
-	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-}
-
-When cxl_port unbinds, disable_hdm() clears CXL_HDM_DECODER_ENABLE in
-hardware while info->global_ctrl keeps CXL_HDM_DECODER_ENABLE set in the
-cache. Conversely, during cxl_endpoint_port_probe(), devm_cxl_enable_mem()
-sets PCI_DVSEC_CXL_MEM_ENABLE in info->dvsec_ctrl before
-devm_cxl_enumerate_decoders() refreshes info->global_ctrl.
-
-Finally, cxl_reset_function() calls cxl_hdm_cache_present() and
-cxl_hdm_cache_dvsec_decode() in separate cxl_rwsem.dpa read-lock sections
-before cxl_reset_execute() acquires cxl_region_quiesce_lock(), and neither
-cxl_hdm_cache_snapshot() nor cxl_hdm_quiesce_prepare() re-checks the
-captured snapshot for DVSEC decode mode while cxl_endpoint_port_probe() and
-port unbind run under device_lock(&port->dev) without holding
-cxl_rwsem.region.
-
-[ ... ]
-
-> +static int cxl_hdm_ranges_collect(struct cxl_hdm_quiesce *q,
-> +				  const struct cxl_hdm_info *snapshot)
-> +{
-> +	int rc;
 > +
-> +	for (int i =3D 0; i < snapshot->decoder_count; i++) {
-> +		const struct cxl_decoder_config *config =3D
-> +			&snapshot->settings[i].config;
+>  /*
+>   * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
+>   * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms af=
+ter
+> @@ -412,7 +569,9 @@ static int cxl_clear_memory(struct pci_dev *pdev, int=
+ dvsec, bool initiate)
+>  }
+> =20
+>  static int __cxl_reset_execute(struct pci_dev *pdev, int dvsec, u16 cap,
+> -			      struct cxl_hdm_quiesce *q)
+> +			      const struct cxl_hdm_info *snapshot,
+> +			      struct cxl_hdm_quiesce *q,
+> +			      u16 *command)
+>  {
+>  	int rc, rc2;
+> =20
+> @@ -437,10 +596,15 @@ static int __cxl_reset_execute(struct pci_dev *pdev=
+, int dvsec, u16 cap,
+>  		pci_err(pdev, "failed to clear CXL Reset Memory Clear: %d\n", rc2);
+>  	rc =3D rc ?: rc2;
+> =20
+> +	if (!rc)
+> +		rc =3D pci_cxl_restore_state(pdev, snapshot, command);
 > +
-> +		/* A committed zero-size decoder maps no HPA. */
-> +		if (!(config->flags & CXL_DECODER_F_ENABLE) ||
-> +		    !range_len(&config->hpa_range))
-> +			continue;
-> +
-> +		if (config->flags & CXL_DECODER_F_NORMALIZED_ADDRESSING)
-> +			return -EOPNOTSUPP;
-
-[Severity: High]
-Can CXL_DECODER_F_NORMALIZED_ADDRESSING ever be set in
-snapshot->settings[i].config.flags here?
-
-CXL_DECODER_F_NORMALIZED_ADDRESSING is a software flag rather than a
-hardware HDM register bit, so pci_cxl_hdm_cache_init() ->
-cxl_hdm_read_state() -> cxl_hdm_unpack_decoder() never sets it during PCI
-enumeration.
-
-When the endpoint port driver probes in cxl_endpoint_port_probe(), it first
-runs devm_cxl_endpoint_decoders_setup() -> devm_cxl_enumerate_decoders(),
-which refreshes pdev->hdm before region discovery runs:
-
-drivers/cxl/port.c:cxl_endpoint_port_probe() {
-	...
-	rc =3D devm_cxl_endpoint_decoders_setup(port);
-	if (rc)
-		return rc;
-	...
-	device_for_each_child(&port->dev, NULL, discover_region);
-	...
-}
-
-CXL_DECODER_F_NORMALIZED_ADDRESSING is only set later during
-discover_region() -> cxl_add_to_region() -> get_cxl_root_decoder() ->
-cxl_root_setup_translation() -> cxl_prm_setup_root():
-
-drivers/cxl/core/atl.c:cxl_prm_setup_root() {
-	...
-	cxld->config.flags |=3D CXL_DECODER_F_LOCK;
-	cxld->config.flags |=3D CXL_DECODER_F_NORMALIZED_ADDRESSING;
-	...
-}
-
-Because nothing calls cxl_hdm_refresh_decoder() after cxl_prm_setup_root()
-sets that flag (and the auto-discovered decoder is already enabled and
-locked, so cxl_decoder_commit() and cxl_decoder_reset() will not run on it),
-pdev->hdm->settings[i].config.flags never receives
-CXL_DECODER_F_NORMALIZED_ADDRESSING. Would a reset on a
-normalized-addressing endpoint bypass this -EOPNOTSUPP check and instead
-reserve and invalidate the untranslated normalized address range?
-
-[ ... ]
-
-> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
-> index cfb55b10f8acf..7919d872a34de 100644
-> --- a/include/cxl/hdm.h
-> +++ b/include/cxl/hdm.h
-
-[ ... ]
-
-> +void cxl_region_quiesce_lock(void);
-> +void cxl_region_quiesce_unlock(void);
-> +int cxl_hdm_quiesce_prepare(struct cxl_hdm_quiesce *q,
-> +			    const struct cxl_hdm_info *snapshot)
-> +	__must_hold(cxl_region_quiesce);
-> +int cxl_hdm_quiesce_flush(struct cxl_hdm_quiesce *q)
-> +	__must_hold(cxl_region_quiesce);
-> +void cxl_hdm_quiesce_destroy(struct cxl_hdm_quiesce *q);
+>  	rc2 =3D cxl_hdm_quiesce_flush(q);
 
 [Severity: Low]
-Should the declarations of cxl_region_quiesce_lock() and
-cxl_region_quiesce_unlock() in include/cxl/hdm.h carry the
-__acquires(cxl_region_quiesce) and __releases(cxl_region_quiesce)
-annotations that are present on their definitions in
-drivers/cxl/core/hdm_state.c, and should __cxl_reset_execute() in
-drivers/pci/cxl.c also be annotated with __must_hold(cxl_region_quiesce)?
+Does __cxl_reset_execute() also need the __must_hold(cxl_region_quiesce)
+annotation to avoid compiler context-analysis (-Wthread-safety) warnings wh=
+en
+context analysis is enabled?
 
-Without those annotations visible in drivers/pci/cxl.c, context analysis
-(-Wthread-safety) cannot see that cxl_reset_execute() acquires
-cxl_region_quiesce before calling cxl_reset_quiesced(), or that
-__cxl_reset_execute() holds cxl_region_quiesce when calling
-cxl_hdm_quiesce_flush().
+Both its caller cxl_reset_quiesced() and its callees pci_cxl_restore_state()
+and cxl_hdm_quiesce_flush() are annotated with
+__must_hold(cxl_region_quiesce), while __cxl_reset_execute() itself is not:
+
+  cxl_reset_execute()
+    cxl_region_quiesce_lock()
+    cxl_reset_quiesced()                [__must_hold(cxl_region_quiesce)]
+      __cxl_reset_execute()             [unannotated]
+        pci_cxl_restore_state()         [__must_hold(cxl_region_quiesce)]
+        cxl_hdm_quiesce_flush()         [__must_hold(cxl_region_quiesce)]
+    cxl_region_quiesce_unlock()
+
+Relatedly, in include/cxl/hdm.h:
+
+  void cxl_region_quiesce_lock(void);
+  void cxl_region_quiesce_unlock(void);
+
+the prototypes omit the __acquires(cxl_region_quiesce) and
+__releases(cxl_region_quiesce) annotations that are present on the definiti=
+ons
+in drivers/cxl/core/hdm_state.c, which also prevents context analysis from
+seeing the lock acquisition in cxl_reset_execute().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029145703.2185=
-231-1-smadhavan@nvidia.com?part=3D13
+231-1-smadhavan@nvidia.com?part=3D15
