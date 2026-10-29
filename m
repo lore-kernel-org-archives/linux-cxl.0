@@ -1,84 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.46
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793238537;
-	b=KzBJG9Te5wprojwgrxJlUDvC68yJHN1uxdgyseAtVKYvg4l8GR3qtnI9m+tTX0jtSQgz
-	 mkzzFBNdKsabbGJR70J6CC+wCOiRZGohS9JitEoZvD8pDVFspO91ruhUC1Eh6Hd2AJQbM
-	 GEsG/Cm1AX2yn7L/aUa57YpdzTlEuAkNHpMNF2BAnepuqzZu3ulAJ3D7S48iP5ayfXYKC
-	 KBjX8y3FgsQ8lE65+yrmlmt+DGrralVCsYlGNQ4XRGifi0Hn6u0o2uP7qvCIAgUN1TV3x
-	 JCVEqxiULncKZGY6mDHjB3NP7nbjk21sJTDAsISOE3wHV6HB/VBpTN/hrGRzr2/gmyg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793238537;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
-	b=OGHA9K0lEnBw5C19LPpNt81VdBIruwu2J5JF/Q1EjMRTf85ixZa6sU823Lx+isrD9Gf7
-	 fL9KlhkSNjZkya0Ngry439zgJHn3Nbs6n4JscAmB/nbqxkrXUep18Yde2IxSwahMZmSkq
-	 64/2trZV40U00o+rHuFuywCFwSc0IJBnvLJjSCtYXfFJQW51UnKQTi5zig/hn1hI12pvC
-	 sXZZVaeKRZl3WP/CmCJ2Ex8qUdZuPWJuFLVuEjI/g+lBUSroQOvjRmhho8UtQ81m/4h93
-	 y0JYPwtjSeHhzFh94HYHkbsmvDdmqErmMgDupxPMWyTKblzLLrvXiNGhoEHxOy7lAIQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=BoVyrxHL;
-	arc=none smtp.remote-ip=209.85.218.46
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.92
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793239925;
+	b=ixIO4V2Z+ojej8zm2ndjMQ2L6nISsKqbkwLxUW744rnzTNRVVRblTS9V7BynK4jmhPzp
+	 10wMyue+AcgjARQlcrm8ea0ytN9m2yRqGTl/ajN3bQH+xB83XxG8u56mn65paAtm4HNFb
+	 jDWFYfmMl05Fglj55nTZfztTu0/IU7DN/H4WtdRRLXBe87X2sbSuirRmdDyFBfGAQZlLs
+	 M8GzqKZao1zlzCbUZrcnjnKPukNQstsNI+a8DaUfsPQoX63BMNbFM+cjMX/2BhbPimaSf
+	 c+awxdXltDR7gWJJDx1qAM3kmOYsrOqyHbzMh7D5RVeqtnqTyEt1rS0l/a8fRb0+T1A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793239925;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=upbKjrmUcLKM7VJXdAken43IHjuQ9dosr7as3F0EJMs=;
+	b=COfV6ykIPrj1agUnciBjbeQS4XYOtfVFL4xisESvfedO6fML9L9M+n7btalgOb9elpGn
+	 cW4N1w6VvVi6IYGjB4JtWh8+c1Ayh8BFJbR8suEFNHPwvU2nhm0oMugXNIElZq1QLKtnS
+	 sKUyHZzNUrgkcG5w3xY1s9uFoDi2KptMDAGIDNzcjqGVLKqijKvJ8ahFkF4qkVp73hLOQ
+	 ShadLIb43fZCszPmEYexu5RUuWGB/MlFlvEgUgL97tYvVAji3DThtDHVNPET06oi7qXaw
+	 xGq9xfXINk/9Q8AsDX5bbQD/If7fSyNvkL1z0Du1v8gT+EK3tItfYBi83yyT1R4/NGw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=CAzps2lC;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.92
+Received: from sender5-pp-o92.zoho.com (sender5-pp-o92.zoho.com [165.173.182.92])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E3D606A31F
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 01:48:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3E3D606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E31606A31A
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 02:12:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3E31606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=BoVyrxHL
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c315869241fso251248666b.0
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Oct 2026 18:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793238535; x=1793843335; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
-        b=BoVyrxHL0J/es+BtxA3ZGTbS/DVq4pf4tZK3IXlwuavJCQp9ZgDbhOmfgzjP0Vgo4Q
-         O7nsgVSMAufKHiGA2urFI/8Cpcsz+94tTIkehaDZ0FnZdrXDfElhPbySA2FacNShYf8v
-         e1HeuTTKH3pcl6hHWbzMUReNQps3W7G601tERrUbV5tTsUaWEKIOI2xlTt3+ty752RZq
-         j7YiHOk/V+B+oR38IBlKlNrooIh39EeynSMsGDHUNZcxT8iRUpcuczBRO6GMb2GXwsBW
-         no8UR7YRtSjq6TeU5v3IJW5HkcDJGMQu+1uzT2kCKHIh33Q8oUKAqS9tRbC7LrYfjA9c
-         vC0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793238535; x=1793843335;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WpPpjm9qqTzsBHBWliVMSUioS6+fsJ4niawtYuOMrWQ=;
-        b=ZQ+vA4Y81k8gnrYUP6atRsAeK1MDmh2Y/WwezeiU0bKUFG3SIhLTCngZSOgsoNjuXS
-         Tm86yIlE3I9QKmqnc7Sr4E/kZEhwe+/IjB0fCcaTZWKhqKDDRjyJtsiOlpY8wM/X50bB
-         gKoOAvD8unugLU+64eX9W0f51xaAikzM/9jhC7s5GAUayDRuPWMG3x6mhxoPOs/m7zzq
-         rngf9rLy2DmH42sGbtC+x/aQWpOqPPkr6yJ5+GgozhnZeWUR43xcEGsOs7inxnHfIV6g
-         bQJs8122EAeGjC8G1tTUFxYDK6Jfs3oJayygxW4+gVuj5r+bVWhRxXj7GSOkWTsrg7xC
-         zZwA==
-X-Forwarded-Encrypted: i=1; AKwUvByoF5TphO7y5VtCpFbTxRO56dbwoDF8bWHjaRaSp/DfWdhpXdPUwduD3QtwsQW+QV5dGh7xHgGcp+A=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLw08d3MZxtvyl3PuQG4pt5SbgUNwlIVvBk+1Eaq3ZMl8W53xf+
-	67/neToBmwUTWvw31i4VkYq30elBspkkBO87+hMrbIZHcd+FPq58xoYMgc2HgQY6rUI=
-X-Gm-Gg: AYBFou2MYQIxPb2hMABn6AVEHbufarGtSKtAhu7Hk72m94Rlx1Nrwmzs4WymV9wSRmG
-	6lvVf9TlEiBHZWLqeeqYBd9ZulFlNGK0KnRNb4rTIfo+6rqd/iJi1VQNJ0Ye+hyH1ylPWCs9tEr
-	b2uKKVeEKIPfC6lvEjrVRh1S33YJ5/QyWVp7CkCBwbAFvASkqxA1cTFD5ukR4SeQJRSl8G57GmE
-	79M4kWInOyRuORJSfXX3YDcxlrfX4mb05ikEnCVqYNnKRR3r3mqOfpN6CpPagcNSUFvfTw77vVZ
-	L5ToaBl1bP4GviM3a3SxizRKKjPJdO1Bl5r6i0MsJZ58Lz+7JUbhUI7PynfGQ6x0bX81AY/Um7I
-	4rjuDyImPI1suWHVK9K9dCOBqSZteyFnp+Dt/y0aeV3IYWFKvMJDwb6pFgc10MQcieIrv48qwLQ
-	JgqpPPpt4PFq+jlkvkx+lqonma2o17rYfMAMH3NBu6GVItqiTXWkR/f/58FKfWow8I4g3XL+OfD
-	/P2afnvBjLiwieEQOSh2anhwrraepEHGVz1f/4nDmudAFoMWEhkZsDTAlZZt5TUnl09VmYp1wpV
-	rnK41cGSJLJOTypRWP+A
-X-Received: by 2002:a17:906:ef0b:b0:c41:b94c:4539 with SMTP id a640c23a62f3a-c49bddac7b0mr353178966b.6.1793238535200;
-        Wed, 28 Oct 2026 18:48:55 -0700 (PDT)
-Received: from localhost ([2a03:2880:32ff:4e::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b495ac454fsm2147232a12.1.2026.10.28.18.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 18:48:53 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=CAzps2lC
+ARC-Seal: i=1; a=rsa-sha256; t=1793239917; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cAT+ezGzmPmaUZmmeh4wBhNKMHJBXWDPwlfG89HvQoQtHl6yRHLjx9A+ZqBuTb4qY8k3B5TMdHPQ1VlPpqi6wp8af5NFDN3ASmen2sZcTpsH3dMnE7K7zmPPATLtZU+TrpthV0wHBInmGdKbnL+3jniNWt7IMLyXQCrZMdsuGwE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793239917; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=upbKjrmUcLKM7VJXdAken43IHjuQ9dosr7as3F0EJMs=; 
+	b=LrVUR2tm0LTwDZLUgpDzjALZX2snxoQAgoX6wR6JUxwdqtUtzVxGaFEfvSiRlO8COfFNPiwxKh1bTVQRrH83RW3eHb98PRGqI1rDGXiPL2fRnkhrMtOdc8rFclmq3jL6yMhIPe9OoHoWqC6T8yh7qxbQbqLzF1yQB4n5rAkbpZk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: a=rsa-sha256; b=CAzps2lCPrL5TfuPoFD3BzqlAUZWvB8ij65PtRecKcCCqxlUJilaSRU30ceBTK9kTqpPCXoJzFX6ivYj8V4ijn2AFgzZXIVdjmX9YQ6NVJxNRfIkHeo2yWN+KtalxBB3mKjqhMJ9D3rLMNTUwNxk216HV3LzAf5JRa5xFWn0kCY=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=upbKjrmUcLKM7VJXdAken43IHjuQ9dosr7as3F0EJMs=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793239916273590.5723306792166;
+	Wed, 28 Oct 2026 19:11:56 -0700 (PDT)
+Message-ID: <5eda91a9-9f44-4b3b-a154-f60227a90bfd@zohomail.com>
+Date: Thu, 29 Oct 2026 10:11:52 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -88,88 +59,92 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 18/46] mm/khugepaged: check if PTE table is empty in
- try_collapse_pte_mapped_thp()
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/hdm: Account for a firmware-armed Lock On Commit
+To: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com
+Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
  linux-cxl@vger.kernel.org
-In-Reply-To: <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-18-6f74bec9a5bb@kernel.org>
-Date: Wed, 28 Oct 2026 18:48:51 -0700
-Message-Id: <179323853182.453251.8510731747954180380.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+References: <20261028211836.939648-1-dave@stgolabs.net>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20261028211836.939648-1-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227ccc0c061c5e8a975830a469f0000904387a5a26543dbcf818c57b7450d0c4cdd992a9cbbc80fd1:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On 2026-10-27 00:17 +0100, David Hildenbrand (Arm) wrote:
-> The existing code is rather horrible and already resulted in bugs in the
-> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
-> lock early, but ignore any other markers (guard, poison through uffd) that
-> could have been inserted into the page table in the meantime, effectively
-> dropping them.
-> 
-> Let's just unify and simplify the locking: try to grab the PMD table
-> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
-> the right order and check if the page table is still empty.
-> 
-> We still perform the heavy lifting (zapping the folio ptes) under PTE table
-> lock only.
-> 
-> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
-> depends on hugetlb helpers. This dependency needs a separate cleanup.
-> 
-> Both issues this fixes are rather corner cases. Let's not CC stable for
-> now.
-> 
-> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only mappings")
-> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with mmap_read_lock()")
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-This patch is painful. It's taking me a bit to wrap my head around.
+在 2026/10/29 05:18, Davidlohr Bueso 写道:
+> A corner case (yet valid) where firmware sets the the locked bit
+> without committing the decoder. setup_hw_decoder() carries the bit
+> through.
+>
+> A later region teardown then writes a reset the hardware ignores and
+> clears CXL_DECODER_F_ENABLE anyway, so the flags claim a decoder is
+> free that still decodes: cxl_dpa_free() releases its DPA, and a new
+> region committed on it appears to succeed, cxld_await_commit()
+> returning as soon as Committed reads 1, while the old mapping stays
+> in effect.
+>
+> Read the control register back after the commit so the decoder is
+> treated like one found locked at probe.
+>
+> Tested on qemu modified to enforce locked semantics, setting the bit
+> behind the driver on an uncommitted endpoint decoder, committing and
+> deleting a 256M region on it, then creating a 512M one. Before, the
+> decoder sysfs reads locked=0, its DPA is freed and the second region
+> reports committed while the hardware still decodes the first; after,
+> locked=1, the DPA release fails with -EBUSY and the second region
+> cannot allocate DPA.
 
-I get that you want to avoid taking both locks while zapping, but
-wouldn't it be simpler?  I suppose we don't know what kind of
-regressions might pop up with that though, bah.
+Hi Davidlohr,
 
-I can say that I've reproduced and tested the before/after state,
-and it looks stable.
+My first feeling is that we should read this decoder locked state during 
+init_hdm_decoder()(currently, init_hdm_decoder() already does it for 
+committed decoders), so that driver and user have change to know the 
+locked bit of the decoder has been set at the beginning.
 
-Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+Besides, I am not sure if ndctl can expose decoder locked state for an 
+uncommitted decoder, but I think let user know that is neccessary.
 
--- 
-Gregory Price (Meta) <gourry@gourry.net>
+Does it make more sense?
+
+
+Ming
+
+>
+> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+> Found while battle-testing BI locked decoders.
+>
+>   drivers/cxl/core/hdm.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index fdcef20e01ba..d23076aabb89 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -856,6 +856,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>   	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+>   	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+>   	int id = cxld->id, rc;
+> +	u32 ctrl;
+>   
+>   	if (cxld->flags & CXL_DECODER_F_ENABLE)
+>   		return 0;
+> @@ -899,6 +900,14 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>   	port->commit_end++;
+>   	cxld->flags |= CXL_DECODER_F_ENABLE;
+>   
+> +	/*
+> +	 * Lock On Commit armed by firmware engages on this commit and
+> +	 * makes the decoder read-only, like one found locked at probe.
+> +	 */
+> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +	if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+> +		cxld->flags |= CXL_DECODER_F_LOCK;
+> +
+>   	return 0;
+>   }
+>   
