@@ -1,67 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.5
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793257042;
-	b=GFJCwkt1pYSyFzElIo433s7yOZdcy/r7KARmPqyB4KjZDraBVPfCiU1d3cg6gWvQ3BBx
-	 3be9GtLrjjxgbm5+rr5dDgflAE+EDW4XxHjb6ZQ3zN2lXJ9r+R3qvRAG0ymAORo7xcb/F
-	 Nx7DI4vpRTSZtBND5rYe8g/JyOPNVhmhXfmLvBdk5gNuv1oSwC8zFwJM8lKOR7SZqPwwe
-	 /qBKqEQ8kMEU6aRPmvxn40r7Z9tW0rpNBQWFd+H+gncnsxyRYzmwmi94muq26rN98LxBB
-	 DA6lFyLRkBv6Y22qtV8h96oHqeL0FVlCXHAaqPEzSKQzAb9+Cd6NM1unEm0uuGzE5hA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793257042;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:Sender:
-	 X-CM-SenderInfo;
-	bh=2BR2wSy5joZ/Mpe7EJC50aJ2E6Aa1XiDqjOTNWWpSlc=;
-	b=WBNe6LIwy9/Bkz3Hq0papZq45R0Na/nsWe8PVPW6LmERXDe8ceo8Zkq51vOeLZ4goZCS
-	 89m2MMzj7iNQVFS6mdFmOPi09Xz3OCfd9NhrhbMf5PYKICrm+H3P4RnHDWnAx5eboOIlP
-	 eijATZ8D4C8YjsGFoaLhM7E1nXvr0H8RbWzuJ/lcH40tt5HHyUERO4T8BOsNZrA0vegzM
-	 +bofuy5O1XGFLjn1Px/8hmJjmfKxfO00sTWpgaljraiPvA2AAGrGCOdsunsUL7mJ/fb7d
-	 7Z6wA2i9qiWVHeIp5w4czDFEBMlAtcledS5p+lO/5kf0P20V6fFRFcqJ+Pyb7oDdaXw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinos.cn;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Kr19EuUW;
-	arc=none smtp.remote-ip=117.135.210.5
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793257397;
+	b=BvP6u2D56pDyGM6dHV0hOAMISc2EcmNSXMXi8ZSinvWtnLEQp3k5q3VrjszDFxm135+4
+	 1WF7AiZr5SsenTxaJmvU1ZBmLeNFggzobs9/xDjPSpFehaSCNUaXZR5Gb7u/qNUhEgL92
+	 SbsQvGA1fAVghRrIiLB+ElLWZv3DnlziUqpUDsRzFyo5h34rjy5NmhxXRkunrQm0oiNKZ
+	 CowGAgeXpfJSA57W6VUddSOi3JslHqPXUnDjbA3OjtVgTVY1cTFuM9Ne2PmXbYEpH2eiB
+	 Gcdx++Yjreo8XyBOmX7blQ4VOFcAF4hU9KAaItu3q7SM8lJDembDsBHwVeAax96v0iQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793257397;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=siAtoA3LmwM66cto6wEnaQCAaHagsf4O0rPv61+/NIY=;
+	b=oqb7I7y5Tx5mG4bfjb3FtutTmYRgCDUPxwdiPoByUEy6r1kNfqz42OScQti4NkSdEoMR
+	 1tecYpkzKoZvz2I5Ev6LCbM0gxl1AabNh6CSt+gor86RUQW/VQ2vcp4KcaWVnuDGYg0KR
+	 hOYk10OBss+ZTn6mfwIyANH+RvUhExJvghg30c0ELnj9qKys6PmyMGfubMvetipq5IKGq
+	 sBiG8IsqBDLFwPVbvbbNCfj55MEMZsMAHJX6BdTStmwlVi3f4JREZxhG4dvBDWLw8JOD6
+	 hrNzzvLDw5otqwYD2XgOLTJr1+XWo5GZF2iOX4E8v9EuMwQYARmSLdDOWDaQXobwTPg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=QOzAm7gt;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619DB606A31A;
-	Thu, 29 Oct 2026 06:57:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 619DB606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9471606A31E;
+	Thu, 29 Oct 2026 07:03:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9471606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Kr19EuUW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=2B
-	R2wSy5joZ/Mpe7EJC50aJ2E6Aa1XiDqjOTNWWpSlc=; b=Kr19EuUWqtR3JHj0jo
-	tsp2PXpBHPcDFB94Mb+07tkLCXukrZHcUlEYi9NaFkGIrD/pZiEORmXyM0r9ZdiQ
-	J1Gk/9Mkh4IbYv6ivEFgJ14EYypT8mZVTRXVHRn5yEJUIYP5PbULzmNmr7uusLeB
-	qe65BpCmJMHigKZFIPu2kNgMM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3318h7uJqLmdrDQ--.46914S2;
-	Thu, 29 Oct 2026 14:56:35 +0800 (CST)
-From: Yongxin Yang <yangyongxin@kylinos.cn>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Cheatham <benjamin.cheatham@amd.com>,
-	Yang Yongxin <yangyongxin@kylinos.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] cxl/core: Create einj_types when EINJ becomes available
-Date: Thu, 29 Oct 2026 14:56:29 +0800
-Message-Id: <20261029065629.333949-1-yangyongxin@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20261028084934.1735010-1-yangyongxin@kylinos.cn>
-References: <20261028084934.1735010-1-yangyongxin@kylinos.cn>
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=QOzAm7gt
+ARC-Seal: i=1; a=rsa-sha256; t=1793257384; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bDX0ikBnqRfvx0lJHIydfPHNQCLV9MSPR12BgbmRBOirqQesxNVKu1mJsZRtjlhqTpySEe7Z3sZc2IjTyXTFfAItRDPAUCQ1eSZ9981/bIKryFW4tUMy5UmAQYGwlnD9mGJZK8RBs/s+5tPJsPBau3TilVqx4xSV2qVxJ5AuKnE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793257384; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=siAtoA3LmwM66cto6wEnaQCAaHagsf4O0rPv61+/NIY=; 
+	b=jiH3gRfJfHAw88YOTuYlK4bfOkfZmlFb1O+LBUNf9k2T/Ptk4UXNCUWJVV5ubUcoU+J40I2hyfyEdJPchfUS7eaIXLvmKdS0WeMiGY/fYYOawrFkdDSMKPZpgnBtOe11+yVLAhniMXNBf0nZx2NbVGg4f0tWCjA1/tCpiVDfjOw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: a=rsa-sha256; b=QOzAm7gtHmJvMP6qJpIhb4y52Te/5xkhHQnMnilgtXh2fl37Zagu9d6sCwEoGhP9LCYBYZyjIn3qzxGh1qinU/4SnJm0nUzjO6OL5YH7VNPXEKrr4JAneH0KA0iwPz280eM+sPVrUPNKDeeUZDGoD8pyLXPlPAe+718406ZPc4Q=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=siAtoA3LmwM66cto6wEnaQCAaHagsf4O0rPv61+/NIY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793257383109417.86376047976523;
+	Thu, 29 Oct 2026 00:03:03 -0700 (PDT)
+Message-ID: <d80771e0-29c5-4a32-9887-72a56190c9b9@zohomail.com>
+Date: Thu, 29 Oct 2026 15:02:55 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -71,183 +59,524 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 09/16] PCI/CXL: Cache endpoint HDM state during PCI
+ enumeration
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Vishal Verma
+ <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20261011021422.3428136-1-smadhavan@nvidia.com>
+ <20261011021422.3428136-10-smadhavan@nvidia.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20261011021422.3428136-10-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3318h7uJqLmdrDQ--.46914S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr4rArWxurWrAF1fWFW5trb_yoWxCF1rpa
-	98Gr4rCrWkAayxAr43A34UZ34rWw4kW3srCrykW34aya1Dur15JFyDAayY9ayDWFW8Jr10
-	q3WYyFyUG340yr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgNV9UUUUU=
-Sender: yang_yongxin123@163.com
-X-CM-SenderInfo: 51dqwsp1rqw5tlqrjji6rwjhhfrp/xtbC-wMXtGri7iNUqgAA3k
+Feedback-ID: zu08011227403eb141366044df6aa1131e00003495e3f25ea589af0f55595944b9af85efbb9220a397eda728:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-From: Yang Yongxin <yangyongxin@kylinos.cn>
 
-The einj_types file under the CXL debugfs directory is never created.
+在 2026/10/11 10:14, Srirangan Madhavan 写道:
+> Cache HDM state in pci_dev->hdm after BAR resource setup and before driver
+> binding, so reset can restore it without a bound CXL driver.
+>
+> Save the HDM register location, decoder settings, and Device DVSEC state.
+> Validate capability reads and decoder counts, and restore PCI_COMMAND
+> after temporary MMIO access, reporting restoration failures.
+>
+> Keep PCI discovery separate from shared HDM helpers. Move cxl_rwsem into
+> built-in state code and protect cache publication with its DPA lock, so
+> the cache remains usable when cxl_core is modular.
+>
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=b12baa1105f33cc1a10f9c9c0c6376194397d9f3
+> Suggested-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> Assisted-by: LLM
+> ---
+>   MAINTAINERS                  |   1 +
+>   drivers/cxl/core/Makefile    |   3 +-
+>   drivers/cxl/core/hdm.c       |   5 -
+>   drivers/cxl/core/hdm_regs.c  |  99 ++++++++++++++++
+>   drivers/cxl/core/hdm_state.c |  64 ++++++++++
+>   drivers/cxl/core/pci.c       |  17 ++-
+>   drivers/cxl/core/regs.c      |   9 ++
+>   drivers/cxl/cxl.h            |   3 -
+>   drivers/pci/Makefile         |   1 +
+>   drivers/pci/bus.c            |   1 +
+>   drivers/pci/cxl.c            | 223 +++++++++++++++++++++++++++++++++++
+>   drivers/pci/pci.h            |   8 ++
+>   drivers/pci/probe.c          |   1 +
+>   include/cxl/cxl.h            |   6 +
+>   include/cxl/hdm.h            |  12 ++
+>   include/cxl/pci.h            |  13 ++
+>   tools/testing/cxl/Kbuild     |   1 -
+>   17 files changed, 454 insertions(+), 13 deletions(-)
+>   create mode 100644 drivers/cxl/core/hdm_state.c
+>   create mode 100644 drivers/pci/cxl.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c2414447892c..b874340b0265 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6572,6 +6572,7 @@ S:	Maintained
+>   F:	Documentation/driver-api/cxl
+>   F:	Documentation/userspace-api/fwctl/fwctl-cxl.rst
+>   F:	drivers/cxl/
+> +F:	drivers/pci/cxl.c
+>   F:	include/cxl/
+>   F:	include/uapi/linux/cxl_mem.h
+>   F:	tools/testing/cxl/
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 6703c1729396..9a77e68d44ce 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -1,6 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   obj-$(CONFIG_CXL_BUS) += cxl_core.o
+> -obj-$(subst m,y,$(CONFIG_CXL_BUS)) += hdm_regs.o
+> +obj-$(subst m,y,$(CONFIG_CXL_BUS)) += hdm_regs.o hdm_state.o regs.o
+>   obj-$(CONFIG_CXL_SUSPEND) += suspend.o
+>   
+>   ccflags-y += -I$(srctree)/drivers/cxl
+> @@ -8,7 +8,6 @@ CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
+>   
+>   cxl_core-y := port.o
+>   cxl_core-y += pmem.o
+> -cxl_core-y += regs.o
+>   cxl_core-y += memdev.o
+>   cxl_core-y += mbox.o
+>   cxl_core-y += pci.o
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index b57257efbf4e..a0d8f6a66810 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -17,11 +17,6 @@
+>    * for enumerating these registers and capabilities.
+>    */
+>   
+> -struct cxl_rwsem cxl_rwsem = {
+> -	.region = __RWSEM_INITIALIZER(cxl_rwsem.region),
+> -	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
+> -};
+> -
+>   static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld)
+>   {
+>   	int rc;
+> diff --git a/drivers/cxl/core/hdm_regs.c b/drivers/cxl/core/hdm_regs.c
+> index b6ee4becde8d..f0b360867655 100644
+> --- a/drivers/cxl/core/hdm_regs.c
+> +++ b/drivers/cxl/core/hdm_regs.c
+> @@ -2,6 +2,7 @@
+>   /* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
+>   #include <linux/delay.h>
+>   #include <linux/bug.h>
+> +#include <linux/device.h>
+>   #include <linux/errno.h>
+>   #include <linux/export.h>
+>   #include <linux/kernel.h>
+> @@ -174,3 +175,101 @@ int cxl_hdm_unpack_decoder(struct cxl_decoder_config *config, int id,
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_unpack_decoder, "cxl_core");
+> +
+> +/**
+> + * cxl_hdm_decoder_count_mapped() - read the decoder count of a mapped block
+> + * @dev: device for error reporting
+> + * @hdm: mapped HDM decoder capability
+> + * @size: size of the mapping
+> + *
+> + * Return: the decoder count, or a negative errno if the count is reserved or
+> + * the mapping cannot hold every decoder.
+> + */
+> +int cxl_hdm_decoder_count_mapped(struct device *dev, void __iomem *hdm,
+> +				 resource_size_t size)
+> +{
+> +	int count;
+> +
+> +	count = cxl_hdm_decoder_count(readl(hdm + CXL_HDM_DECODER_CAP_OFFSET));
+> +	if (count < 0)
+> +		return count;
+> +
+> +	/* The last decoder's target-list high register must fit in the mapping. */
+> +	if (CXL_HDM_DECODER0_TL_HIGH(count - 1) + sizeof(u32) > size) {
+> +		dev_err(dev, "CXL HDM decoder count exceeds mapped register block\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +/* Read one endpoint decoder; a disabled decoder keeps only its id. */
+> +static int cxl_hdm_read_decoder_settings(struct device *dev,
+> +					 struct cxl_endpoint_decoder_settings *settings,
+> +					 void __iomem *hdm, int id)
+> +{
+> +	u64 base, size;
+> +	u32 ctrl;
+> +	int rc;
+> +
+> +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> +	base = ((u64)readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id)) << 32) |
+> +	       readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+> +	size = ((u64)readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id)) << 32) |
+> +	       readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
+> +	rc = cxl_hdm_unpack_decoder(&settings->config, id, ctrl, base, size);
+> +	if (rc) {
+> +		dev_err(dev,
+> +			"CXL HDM decoder %d has invalid configuration: %d\n",
+> +			id, rc);
+> +		return rc;
+> +	}
+> +
+> +	if (!(settings->config.flags & CXL_DECODER_F_ENABLE))
+> +		*settings = (struct cxl_endpoint_decoder_settings) {
+> +			.config.id = id,
+> +		};
+> +	else
+> +		settings->skip =
+> +			((u64)readl(hdm + CXL_HDM_DECODER0_SKIP_HIGH(id)) << 32) |
+> +			readl(hdm + CXL_HDM_DECODER0_SKIP_LOW(id));
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cxl_hdm_read_state() - read endpoint HDM decoder state
+> + * @dev: device for error messages
+> + * @hdm: mapped HDM decoder capability
+> + * @info: state to fill; @info->decoder_count must be set
+> + *
+> + * Return: 0 on success, or a negative errno if a decoder holds an invalid
+> + * configuration or the decoder count changed while reading.
+> + */
+> +int cxl_hdm_read_state(struct device *dev, void __iomem *hdm,
+> +		       struct cxl_hdm_info *info)
+> +{
+> +	int count;
+> +	int rc;
+> +
+> +	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+> +	for (int i = 0; i < info->decoder_count; i++) {
+> +		rc = cxl_hdm_read_decoder_settings(dev, &info->settings[i],
+> +						    hdm, i);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	/*
+> +	 * A changed decoder count means the snapshot no longer describes the
+> +	 * complete hardware state. Reject it rather than publish a partial cache.
+> +	 */
+> +	count = cxl_hdm_decoder_count(readl(hdm + CXL_HDM_DECODER_CAP_OFFSET));
+> +	if (count != info->decoder_count) {
+> +		dev_err(dev, "CXL HDM decoder count changed from %d to %d\n",
+> +			info->decoder_count, count);
+> +		return -ENXIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/cxl/core/hdm_state.c b/drivers/cxl/core/hdm_state.c
+> new file mode 100644
+> index 000000000000..9a31f5996c74
+> --- /dev/null
+> +++ b/drivers/cxl/core/hdm_state.c
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
+> +#include <linux/cleanup.h>
+> +#include <linux/export.h>
+> +#include <linux/slab.h>
+> +
+> +#include <cxl/hdm.h>
+> +#include "cxl.h"
+> +#include "core.h"
+> +
+> +/*
+> + * CXL state that must stay available while no CXL driver is bound: the CXL
+> + * locks and the per-device HDM cache filled during PCI enumeration.
+> + */
+> +struct cxl_rwsem cxl_rwsem = {
+> +	.region = __RWSEM_INITIALIZER(cxl_rwsem.region),
+> +	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
+> +};
+> +EXPORT_SYMBOL_FOR_MODULES(cxl_rwsem, "cxl_core");
+> +
+> +/* A published cache is usable only if its HDM register block was mapped. */
+> +bool cxl_hdm_cache_present(struct cxl_hdm_info *const *slot)
+> +{
+> +	guard(rwsem_read)(&cxl_rwsem.dpa);
+> +	return *slot && (*slot)->hdm_size;
+> +}
+> +
+> +/**
+> + * cxl_hdm_cache_publish() - publish HDM state read during enumeration
+> + * @slot: cache pointer owned by the device, for example &pci_dev->hdm
+> + * @info: state to publish
+> + *
+> + * Ownership of @info passes to @slot, or @info is freed if another caller
+> + * published first.
+> + */
+> +void cxl_hdm_cache_publish(struct cxl_hdm_info **slot,
+> +			   struct cxl_hdm_info *info)
+> +{
+> +	struct cxl_hdm_info *new __free(kfree) = info;
+> +
+> +	guard(rwsem_write)(&cxl_rwsem.dpa);
 
-cxl_core_init() runs at subsys_initcall level, while EINJ registers itself
-from einj_init() at device_initcall level. When cxl_core_init() evaluates
-einj_cxl_is_initialized() the built-in EINJ driver has not been initialized
-yet, so the value is always false and the debugfs_create_file("einj_types")
-call below it is never reached. Users have no way to discover which CXL
-error types the platform supports from debugfs.
+Why we need to holding cxl_rwsem.dpa in cxl_hdm_cache_publish() and 
+cxl_hdm_cache_present()? I guess the lock is used to protect the struct 
+cxl_hdm_info of a pci device assignment. But struct cxl_hdm_info 
+allocation only happens during pci_bus_add_device()-> 
+pci_cxl_hdm_cache_init(). If I understand correctly, holding pci_dev 
+lock is enough.
 
-Create the file from every point that can tell EINJ is up: cxl_core_init()
-covers cxl_core being a module loaded after EINJ has been initialized;
-cxl_acpi_probe() covers the same case for cxl_acpi and also systems where
-the CEDT is parsed but no dport is ever added; and the dport probe path
-covers the built-in case, where the dport added from the memdev probe is
-the only hook reached after einj_init().
+snip
 
-The dport probe path can run concurrently for different parent ports, each
-holding only its own device lock, so serialize the check and the create to
-avoid a duplicate debugfs_create_file() attempt that would only fail with
--EEXIST. Reset the cached dentry in cxl_core_exit() so that reloading
-cxl_core starts from a clean state.
-
-Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/all/de14c4ef-e3d8-432f-9ce8-87c468d6d2ad@amd.com/
-Signed-off-by: Yang Yongxin <yangyongxin@kylinos.cn>
----
-Changes in v3:
-- Take the review from Ben: the helper is now cxl_debugfs_einj_add_types(),
-  non-static, declared in cxl.h and exported to cxl_acpi only, so that the
-  cxl_acpi hook can call it.
-- Add the cxl_acpi_probe() hook, before cxl_bus_rescan(), so the file is
-  created once the CXL topology exists instead of waiting for a dport.
-- Keep the dport path as a retry point. With EINJ built in, cxl_core_init()
-  and cxl_acpi_probe() both run before einj_init(), so dropping it would
-  still leave the file uncreated there.
-- Drop the "RCH is out of scope" paragraph. RCH does add a dport, from
-  add_host_bridge_dport(); the file is still not created there when EINJ is
-  built in, so do not claim the acpi hook fixes RCH.
-- Reset einj_types_dentry and cxl_debugfs in cxl_core_exit(), so that a
-  reloaded cxl_core does not keep a stale pointer and lose the file.
-- Use guard(mutex) instead of mutex_lock()/mutex_unlock().
-
- drivers/cxl/acpi.c      |  9 +++++++++
- drivers/cxl/core/port.c | 41 +++++++++++++++++++++++++++++++++++------
- drivers/cxl/cxl.h       |  2 ++
- 3 files changed, 46 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3b818adbd38b..0584245b30f2 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -958,6 +958,15 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	if (rc < 0)
- 		return rc;
- 
-+	/*
-+	 * Create einj_types from here as well, so the file also shows up when
-+	 * cxl_acpi is a module loaded after EINJ, and on systems where the
-+	 * CEDT is parsed but no dport is ever added (no CHBS for the host
-+	 * bridge, or a CHBS without a valid component register base), which
-+	 * leaves the dport probe path untouched.
-+	 */
-+	cxl_debugfs_einj_add_types();
-+
- 	/* In case PCI is scanned before ACPI re-trigger memdev attach */
- 	cxl_bus_rescan();
- 	return 0;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 625e4aa427db..76ac612b514c 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -802,6 +802,35 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
- 
- DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
- 
-+static struct dentry *cxl_debugfs;
-+static struct dentry *einj_types_dentry;
-+
-+/*
-+ * einj_types can only be created once EINJ is up, and no single hook is
-+ * reached after that point in every configuration:
-+ *
-+ *  - cxl_core_init() runs at subsys_initcall level and cxl_acpi_probe() at
-+ *    subsys_initcall_sync level, so both create the file when cxl_core and
-+ *    cxl_acpi are modules loaded after EINJ has been initialized;
-+ *  - when EINJ is built in, einj_init() runs at device_initcall level, so
-+ *    both of them are too early and the only hook left is the dport added
-+ *    from the memdev probe.
-+ *
-+ * The dport probe path can run concurrently for different parent ports, each
-+ * holding only its own device lock, so the check and the create need to be
-+ * serialized to avoid a duplicate debugfs_create_file() attempt.
-+ */
-+static DEFINE_MUTEX(einj_types_lock);
-+void cxl_debugfs_einj_add_types(void)
-+{
-+	guard(mutex)(&einj_types_lock);
-+	if (cxl_debugfs && !einj_types_dentry && einj_cxl_is_initialized())
-+		einj_types_dentry = debugfs_create_file("einj_types", 0400,
-+							cxl_debugfs, NULL,
-+							&einj_cxl_available_error_type_fops);
-+}
-+EXPORT_SYMBOL_FOR_MODULES(cxl_debugfs_einj_add_types, "cxl_acpi");
-+
- static int cxl_einj_inject(void *data, u64 type)
- {
- 	struct cxl_dport *dport = data;
-@@ -822,6 +851,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- 	if (!einj_cxl_is_initialized())
- 		return;
- 
-+	cxl_debugfs_einj_add_types();
-+
- 	/*
- 	 * Protocol error injection is only available for CXL 2.0+ root ports
- 	 * and CXL 1.1 downstream ports
-@@ -2501,8 +2532,6 @@ const struct bus_type cxl_bus_type = {
- };
- EXPORT_SYMBOL_NS_GPL(cxl_bus_type, "CXL");
- 
--static struct dentry *cxl_debugfs;
--
- struct dentry *cxl_debugfs_create_dir(const char *dir)
- {
- 	return debugfs_create_dir(dir, cxl_debugfs);
-@@ -2515,10 +2544,6 @@ static __init int cxl_core_init(void)
- 
- 	cxl_debugfs = debugfs_create_dir("cxl", NULL);
- 
--	if (einj_cxl_is_initialized())
--		debugfs_create_file("einj_types", 0400, cxl_debugfs, NULL,
--				    &einj_cxl_available_error_type_fops);
--
- 	cxl_mbox_init();
- 
- 	rc = cxl_memdev_init();
-@@ -2541,6 +2566,8 @@ static __init int cxl_core_init(void)
- 
- 	cxl_ras_init();
- 
-+	cxl_debugfs_einj_add_types();
-+
- 	return 0;
- 
- err_region:
-@@ -2560,6 +2587,8 @@ static void cxl_core_exit(void)
- 	destroy_workqueue(cxl_bus_wq);
- 	cxl_memdev_exit();
- 	debugfs_remove_recursive(cxl_debugfs);
-+	cxl_debugfs = NULL;
-+	einj_types_dentry = NULL;
- }
- 
- subsys_initcall(cxl_core_init);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index cab8ce39f465..b9245261ee39 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -926,4 +926,6 @@ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
- 
- u16 cxl_gpf_get_dvsec(struct device *dev);
- 
-+void cxl_debugfs_einj_add_types(void);
-+
- #endif /* __CXL_H__ */
--- 
-2.25.1
-
+> +static struct cxl_hdm_info *cxl_pci_hdm_read_info(struct pci_dev *pdev,
+> +						  struct cxl_register_map *map,
+> +						  int dvsec)
+> +{
+> +	struct cxl_hdm_info *info;
+> +	u16 command;
+> +	int rc;
+> +
+> +	guard(pci_dev)(pdev);
+> +
+> +	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
+> +	if (rc)
+> +		return ERR_PTR(pcibios_err_to_errno(rc));
+> +
+> +	if (command & PCI_COMMAND_MEMORY)
+> +		return __cxl_pci_hdm_read_info(pdev, map, dvsec);
+> +
+> +	rc = pci_write_config_word(pdev, PCI_COMMAND,
+> +				   command | PCI_COMMAND_MEMORY);
+> +	if (rc)
+> +		return ERR_PTR(pcibios_err_to_errno(rc));
+> +
+> +	info = __cxl_pci_hdm_read_info(pdev, map, dvsec);
+> +	rc = pci_write_config_word(pdev, PCI_COMMAND, command);
+> +	if (!rc)
+> +		return info;
+> +
+> +	pci_err(pdev,
+> +		"failed to restore PCI_COMMAND after CXL HDM cache init: %d\n",
+> +		pcibios_err_to_errno(rc));
+> +	if (IS_ERR(info))
+> +		return info;
+> +
+> +	kfree(info);
+> +	return ERR_PTR(pcibios_err_to_errno(rc));
+> +}
+> +
+> +static int __pci_cxl_hdm_cache_init(struct pci_dev *pdev)
+> +{
+> +	struct cxl_register_map map = { };
+> +	u16 dvsec, cap;
+> +	int rc;
+> +
+> +	/* Avoid duplicate MMIO reads when the cache is already present. */
+> +	if (cxl_hdm_cache_present(&pdev->hdm))
+> +		return 0;
+> +
+> +	rc = cxl_pci_device_dvsec(pdev, &dvsec, &cap);
+> +	if (rc == -ENOTTY)
+> +		return 0;
+> +	if (rc)
+> +		return rc;
+> +	if (!(cap & PCI_DVSEC_CXL_MEM_CAPABLE) ||
+> +	    !cxl_dvsec_hdm_count_valid(FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT, cap)))
+> +		return 0;
+> +
+> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+> +	if (rc)
+> +		return rc;
+> +	if (map.bar < 0 || map.bar >= PCI_STD_NUM_BARS ||
+> +	    !cxl_pci_bar_assigned(pdev, map.bar))
+> +		return -ENODEV;
+> +
+> +	struct cxl_hdm_info *read_info =
+> +		cxl_pci_hdm_read_info(pdev, &map, dvsec);
+Should move read_info definition to the top of the function if we don't 
+need scope-based cleanup helper for the variable.
+> +	if (IS_ERR(read_info))
+> +		return PTR_ERR(read_info);
+> +
+> +	/* Another initializer may have published while we read MMIO. */
+> +	cxl_hdm_cache_publish(&pdev->hdm, read_info);
+> +
+> +	return 0;
+> +}
+Like what I said above, if we can use pci_dev lock in 
+cxl_hdm_cache_present(), since cxl_pci_hdm_read_info() also needs to 
+hold pci_dev lock, I think we can hold pci_dev lock at the beginning of 
+this function, then you don't need cxl_hdm_cache_publish() anymore. 
+Assigning read_info to pdev->hdm directly is enough.
+> +
+> +void pci_cxl_hdm_cache_init(struct pci_dev *pdev)
+> +{
+> +	int rc;
+> +
+> +	rc = __pci_cxl_hdm_cache_init(pdev);
+> +	if (rc)
+> +		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
+> +}
+> +
+> +void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
+> +{
+> +	cxl_hdm_cache_release(&pdev->hdm);
+> +}
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ba3c3fddddc2..9e218f236e66 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -730,6 +730,14 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
+>   static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+>   #endif
+>   
+> +#ifdef CONFIG_CXL_RESET
+> +void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
+> +void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
+> +#else
+> +static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev) { }
+> +static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev) { }
+> +#endif
+> +
+>   #ifdef CONFIG_PCI_NPEM
+>   void pci_npem_create(struct pci_dev *dev);
+>   void pci_npem_remove(struct pci_dev *dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 27008e2ea5af..cb52357344ed 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2484,6 +2484,7 @@ static void pci_release_dev(struct device *dev)
+>   	struct pci_dev *pci_dev;
+>   
+>   	pci_dev = to_pci_dev(dev);
+> +	pci_cxl_hdm_cache_release(pci_dev);
+>   	pci_release_capabilities(pci_dev);
+>   	pci_release_of_node(pci_dev);
+>   	pcibios_release_device(pci_dev);
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index b29374b34cfa..3e70f74685b6 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -27,6 +27,7 @@ enum cxl_devtype {
+>   
+>   struct cxl_region;
+>   struct cxl_hdm_info;
+> +struct pci_dev;
+>   
+>   enum cxl_decoder_type {
+>   	CXL_DECODER_DEVMEM = 2,
+> @@ -149,6 +150,8 @@ struct cxl_pmu_reg_map {
+>    * @base: virtual base of the register-block-BAR + @block_offset
+>    * @resource: physical resource base of the register block
+>    * @max_size: maximum mapping size to perform register search
+> + * @bar: PCI BAR containing the register block
+> + * @bar_offset: register block offset relative to @bar
+>    * @reg_type: see enum cxl_regloc_type
+>    * @component_map: cxl_reg_map for component registers
+>    * @device_map: cxl_reg_maps for device registers
+> @@ -159,6 +162,8 @@ struct cxl_register_map {
+>   	void __iomem *base;
+>   	resource_size_t resource;
+>   	resource_size_t max_size;
+> +	int bar;
+> +	resource_size_t bar_offset;
+>   	u8 reg_type;
+>   	union {
+>   		struct cxl_component_reg_map component_map;
+> @@ -167,6 +172,7 @@ struct cxl_register_map {
+>   	};
+>   };
+>   
+> +
+>   /**
+>    * struct cxl_dpa_perf - DPA performance property entry
+>    * @dpa_range: range for DPA address
+> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
+> index d5e7efd2ffc0..af7cef649446 100644
+> --- a/include/cxl/hdm.h
+> +++ b/include/cxl/hdm.h
+> @@ -23,6 +23,7 @@ struct cxl_endpoint_decoder_settings {
+>    * @hdm_offset: offset of the HDM decoder capability in @hdm_bar
+>    * @hdm_size: size of the HDM decoder register block
+>    * @global_ctrl: HDM decoder global control register
+> + * @dvsec: config space offset of the CXL Device DVSEC
+>    * @dvsec_ctrl: CXL DVSEC control register
+>    * @dvsec_ctrl_valid: whether @dvsec_ctrl contains valid state
+>    * @settings: per-endpoint-decoder programming state
+> @@ -36,9 +37,20 @@ struct cxl_hdm_info {
+>   	resource_size_t hdm_offset;
+>   	resource_size_t hdm_size;
+>   	u32 global_ctrl;
+> +	u16 dvsec;
+>   	u16 dvsec_ctrl;
+>   	bool dvsec_ctrl_valid;
+>   	struct cxl_endpoint_decoder_settings settings[] __counted_by(decoder_count);
+>   };
+> +struct device;
+> +
+> +int cxl_hdm_decoder_count_mapped(struct device *dev, void __iomem *hdm,
+> +				 resource_size_t size);
+> +int cxl_hdm_read_state(struct device *dev, void __iomem *hdm,
+> +		       struct cxl_hdm_info *info);
+> +bool cxl_hdm_cache_present(struct cxl_hdm_info *const *slot);
+> +void cxl_hdm_cache_publish(struct cxl_hdm_info **slot,
+> +			   struct cxl_hdm_info *info);
+> +void cxl_hdm_cache_release(struct cxl_hdm_info **slot);
+>   
+>   #endif /* __CXL_HDM_H__ */
+> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+> index 3e0000015871..b15d7e415e27 100644
+> --- a/include/cxl/pci.h
+> +++ b/include/cxl/pci.h
+> @@ -4,6 +4,8 @@
+>   #ifndef __CXL_CXL_PCI_H__
+>   #define __CXL_CXL_PCI_H__
+>   
+> +#include <linux/types.h>
+> +
+>   /* Register Block Identifier (RBI) */
+>   enum cxl_regloc_type {
+>   	CXL_REGLOC_RBI_EMPTY = 0,
+> @@ -19,4 +21,15 @@ struct pci_dev;
+>   
+>   int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>   		       struct cxl_register_map *map);
+> +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> +		      struct cxl_register_map *map);
+> +int cxl_setup_regs(struct cxl_register_map *map);
+> +/*
+> + * CXL r4.0 sec 8.1.3.1: a CXL.mem capable device reports one or two HDM
+> + * ranges. 00b is illegal when Mem_Capable is set and 11b is reserved.
+> + */
+> +static inline bool cxl_dvsec_hdm_count_valid(unsigned int hdm_count)
+> +{
+> +	return hdm_count == 1 || hdm_count == 2;
+> +}
+>   #endif
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 2be1df80fcc9..e80500f457a9 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -55,7 +55,6 @@ obj-m += cxl_core.o
+>   
+>   cxl_core-y := $(CXL_CORE_SRC)/port.o
+>   cxl_core-y += $(CXL_CORE_SRC)/pmem.o
+> -cxl_core-y += $(CXL_CORE_SRC)/regs.o
+>   cxl_core-y += $(CXL_CORE_SRC)/memdev.o
+>   cxl_core-y += $(CXL_CORE_SRC)/mbox.o
+>   cxl_core-y += $(CXL_CORE_SRC)/pci.o
