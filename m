@@ -1,50 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.181.3.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.202.115.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793278460;
-	b=TdKQS5dSz6wvNhGjSFFy/guwozGgIK+l+yQAQUd8r4hkyKSjCEOCYYxvkEoh/ZL+L+Ti
-	 fjebwqZw3kycKmkBG1+kKAEYilvOlb1iqUEFsl/IKwIAGrdxPRQAj1DssMxZe5nlTHhmI
-	 u7SETo+SCiN1R1lkxUqN+zDDGaGwEH711GXlEcFAwR5kJSXam9kbjW4PCP+uzeSKmsOiW
-	 2zFlMjkafoJWAU4hulcOf9tATAfF4KwHfdPHNd4/XMlCO2HqRm3zO1iflruGiwACTAN5m
-	 St4aZjdiz94xxdqJGa/DdyqOMbXUNkUYU6tRzU4Mc6KPWBczevGaJMxxpIQ8+VnmEmw==
+	t=1793279438;
+	b=Eay+dc03GujM4gIir5D8ppgyzjchXuh89V+Xdr76Zkgp7Pf3Qsy8X9Ywhzx+GbX+rvE0
+	 ODsENEu/mvvqxFa6zcf4AfX83u1FbcyCIRP88r8DOiOqa1lc6pHAJ4rz/Yy5PtfR+AQji
+	 G00r6pOiAPFeOGm0d6AirZMlioXU1A020a5zbtRVuLtLo4lq0WfbYeu0eoomFyY8jERst
+	 h4XOwhoGzRMHBigYIJj/CRhFKqOdTk7ZlH30UoiFjB/lT0c234rG4yJVOTGmqA+r/yOzc
+	 +mcJONn1Ngd21EkbVj3docEb88M9ko/0xSEpi6srU7S5W/0Aui2jKxFB+gn4c0QPHOA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793278460;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793279438;
 	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:CC:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:DKIM-Signature;
-	bh=FtU8Inpw+jVWYTylDfqR88WUy4Wf3QCqAYa7s1yMIlY=;
-	b=jxiLNPAFjZew7yzmEOJvahuh6uwJvo5WZTFBP/MIAbQJnRQL55bcCC9JUavtFiCsVT3z
-	 +Q1fGpQGfr8ZpeiQc9WitFS6lY7011kkW8u3QWQOjH6HGPEVi08/k8XKTUxDQjpb6xxzb
-	 oUUDX6jrX1UrXgbDGJqq4xEAxFZawi88Usu99K3sjg26x9TO2JQHIRmfihHqj2dgwSLrJ
-	 u29Q3uNFR6RROwvbTuhOrmVe86VFNJJG1saIPXLhIhjgJjpfiRXC28hUspkubJG5mtYFs
-	 TEQ34pbRLfVaPQ0C+AvaZ+z7V7LNcD9ltN/DUj7E74hXS8C4Lw5N2yRR/IJqjo5RcBg==
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 Content-Type:X-Originating-IP:X-ClientProxiedBy:DKIM-Signature;
+	bh=Wm5M22Gb6vhRgb1kaAzigLTQLwmCID5pqNENHUh+A70=;
+	b=ZZ7k4Uo8lX80e0T+KHU+GDQpip1D33AgtQYmEonUEdGi4BLGY1UTLGTUHUYzkPETJQ24
+	 XhYhD1YO6pRb9+g17PPgpF6r5m8qQRd4QrSpyjo067C5mS9SCmZFhmwYrXrKG1D4OihSm
+	 LbKt4fk6r1jcs2R95cMg7icDp2UQjerBbddlHjXn3oEGQIP15xOmB3yNSG5dev5pT0ofX
+	 bkn0PXDyw0xKnYotJGKlos1uiKdfZgesc0FrE3Xo+nrLWRQ3kfAqB+SavLCR0FvcfL8pE
+	 NzkNYmAL5jmGAlGeTU6wzKk72jxUJi15wm5lIWIAlomQJ4JH8pdyJOthSWxFMZffwoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=baidu.com;
 	spf=pass smtp.mailfrom=baidu.com;
-	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=jE7zi1yP;
-	arc=none smtp.remote-ip=220.181.3.101
-Received: from outbound.baidu.com (mx14.baidu.com [220.181.3.101])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id BC59B606A321;
-	Thu, 29 Oct 2026 12:54:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC59B606A321
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=XmtxnpM0;
+	arc=none smtp.remote-ip=111.202.115.100
+Received: from outbound.baidu.com (mx15.baidu.com [111.202.115.100])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 21C2B606A31A;
+	Thu, 29 Oct 2026 13:10:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21C2B606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=jE7zi1yP
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=XmtxnpM0
 X-MD-Sfrom: zhangyili01@baidu.com
 X-MD-SrcIP: 172.31.51.15
 From: Yili Zhang <zhangyili01@baidu.com>
-To: <benjamin.cheatham@amd.com>
-CC: <alison.schofield@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
-	<djbw@kernel.org>, <jic23@kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shijujose2008@gmail.com>,
-	<vishal.l.verma@intel.com>, <zhangyili01@baidu.com>
-Subject: Re: [PATCH v3] cxl/edac: Fail ECS threshold read for reserved encodings
-Date: Thu, 29 Oct 2026 20:54:00 +0800
-Message-ID: <20261029125400.84466-1-zhangyili01@baidu.com>
+To: <jic23@kernel.org>
+CC: <alison.schofield@intel.com>, <benjamin.cheatham@amd.com>,
+	<dave.jiang@intel.com>, <dave@stgolabs.net>, <djbw@kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<shijujose2008@gmail.com>, <vishal.l.verma@intel.com>,
+	<zhangyili01@baidu.com>
+Subject: [PATCH v4] cxl/edac: Fail ECS threshold read for reserved encodings
+Date: Thu, 29 Oct 2026 21:10:13 +0800
+Message-ID: <20261029131013.85983-1-zhangyili01@baidu.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <d65d524d-49a0-4b5a-8df0-68ef63a0b1af@amd.com>
-References: <d65d524d-49a0-4b5a-8df0-68ef63a0b1af@amd.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -56,54 +54,124 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: bjhj-exc4.internal.baidu.com (172.31.3.14) To
+X-ClientProxiedBy: bjkjy-exc12.internal.baidu.com (172.31.51.12) To
  BJKJY-Exc19.internal.baidu.com (172.31.51.15)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1793278448;
-	bh=FtU8Inpw+jVWYTylDfqR88WUy4Wf3QCqAYa7s1yMIlY=;
+	s=selector1; t=1793279426;
+	bh=Wm5M22Gb6vhRgb1kaAzigLTQLwmCID5pqNENHUh+A70=;
 	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=jE7zi1yPCbVSE7nWky2SGuEz0NTLa634ipNnIk24IwHjqfJW6zHd4cwlVTrzoMfjU
-	 Bhba0cvh5HLNbv1k2tDU6frpPZUPd0mNkkAQWkPr5imFphHAb1rv5v1oNZhf+CgaGD
-	 dE7pG02ss1YqgKY7wLE8yIz7aRhc0CXZ2lZz9MgTso1oaVb8W8SAKVE3CgEgk+R80c
-	 D9U9rgOXnDcqCPEFl60L/lf/+fJuB6XsHQ4/XP4Tbrf01TGwtE1UF+SOLlBqUSQB0K
-	 xM3oXuaiuwfWmiCT7xTtk23cZHmW9s4KM7SHye5gPsNYOTo417E7T2xHoiedGXD5YA
-	 PuvWiBg38GIfw==
+	b=XmtxnpM0TQnNTXKkOUw7x4i28FnsoNqLxWdBaRZWrhZUB/RDnaf6rl0+V/C5Ymw5X
+	 yJJUgi7ITBv+1KrMQdfC4vW4xADDVUtvhjyBBQPdUERVMyNWKp1DrydReDNA0C4s27
+	 bUr6p+OBqZW9sS4JLGd76ckFxN9MLBN2M+ZM/EknVn8xcRdX3xU4yiaVzKQ7FKxRED
+	 XQJGb4ZGhKNJutJPBfGquG6slPezq2Z7BaW5jaCK0JC0fbmkHoo4GFEnUsycOnEkCD
+	 VBxwhszK6aaPnd8AJ/G0CaBV23Egjp3LU8/74QvMparCQqpd54nQq5cg9R2Xb/LNDV
+	 kK8YXBTu+dVqw==
 
-Hi Ben,
+cxl_get_ecs_threshold() extracts a 3-bit index (0-7) from the
+device-supplied Error Check Scrub (ECS) config word and uses it to
+index ecs_supp_threshold[], which only has 6 elements. A device
+reporting index 6 or 7 causes an out-of-bounds read of adjacent
+.rodata, whose value is then returned to userspace via the EDAC
+'threshold' sysfs attribute (small info leak and wrong reported
+threshold).
 
-Thanks for the review, and thanks Jonathan for sorting out the
-documentation question.
+The threshold count field also has reserved encodings 0-2, which
+currently read as 0 from the sparse lookup table. That behavior is
+not intentional; it is just an artifact of the array's implicit
+zero-fill. The ABI documentation only lists 256, 1024 and 4096 as
+supported values, and the write side (cxl_set_ecs_threshold())
+rejects everything else, so a reserved encoding can only come from
+the device reporting it. Rather than documenting 0 as well, make the
+read fail for all reserved encodings and only ever report the
+documented values.
 
-On 2026-10-28 09:18, Cheatham, Benjamin wrote:
-> On 10/27/2026 8:16 PM, Jonathan Cameron wrote:
-> > On Fri, 23 Oct 2026 16:05:27 -0500
-> > "Cheatham, Benjamin" <benjamin.cheatham@amd.com> wrote:
-> > 
-> >> On 10/21/2026 10:20 AM, Yili Zhang wrote:
-> >>> cxl_get_ecs_threshold() extracts a 3-bit index (0-7) from the
-> >>> device-supplied ECS config word and uses it to index  
-> >>
-> >> Nit: Should probably spell out ECS here for people (like myself) who don't
-> >> know what it means.
+None of these encodings can be written through the sysfs write path,
+and no device is known to report them, so this is hardening against
+a device returning values not covered by the spec rather than a fix
+for known hardware.
 
-Will do. v4 will spell out "Error Check Scrub (ECS)" in the first
-paragraph, matching the wording in Documentation/ABI/testing/sysfs-edac-ecs.
+Convert the cxl_get_ecs_*() helpers to return an int and write the
+attribute value through an output parameter (u32 * to match the
+macro), so that errors propagate through the shared
+CXL_ECS_GET_ATTR() macro to the sysfs read.
 
-> 
-> Cool, then this looks good to me. For Yili:
-> 
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> 
-> And thanks for the response Jonathan!
-> 
-> Thanks,
-> Ben
-> 
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Signed-off-by: Yili Zhang <zhangyili01@baidu.com>
+---
+v4: Spell out Error Check Scrub (ECS) on first use (Ben Cheatham)
+and drop the Suggested-by tag (Alison Schofield). The diff is
+unchanged, so the Reviewed-by is carried over from v3.
 
-v4 will also drop the Suggested-by tag, per feedback on the v2 thread.
-The diff itself is unchanged, so unless anyone objects I'll carry your
-Reviewed-by over to v4.
+v3: Per review feedback, drop the Fixes tag and reword the
+description to make clear this is hardening against a device
+reporting values not covered by the spec rather than a fix
+(Jonathan Cameron).
 
-Best regards,
-Yili
+v2: Per review feedback, fail the read with -EINVAL for all reserved
+encodings instead of returning 0, converting the cxl_get_ecs_*()
+getters to an int return with an output parameter so the error
+reaches the sysfs read (Alison Schofield).
+
+v1: https://lore.kernel.org/all/20260928073553.85669-1-zhangyili01@baidu.com/
+v2: https://lore.kernel.org/all/20260930095627.32616-1-zhangyili01@baidu.com/
+v3: https://lore.kernel.org/all/20261021152053.85322-1-zhangyili01@baidu.com/
+
+ drivers/cxl/core/edac.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index b321971fef58..fd6612dde7f1 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -624,21 +624,31 @@ static int cxl_mem_ecs_set_attrbs(struct device *dev,
+ 			       0, NULL);
+ }
+ 
+-static u8 cxl_get_ecs_log_entry_type(u8 log_cap, u16 config)
++static int cxl_get_ecs_log_entry_type(u8 log_cap, u16 config, u32 *val)
+ {
+-	return FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
++	*val = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK, log_cap);
++
++	return 0;
+ }
+ 
+-static u16 cxl_get_ecs_threshold(u8 log_cap, u16 config)
++static int cxl_get_ecs_threshold(u8 log_cap, u16 config, u32 *val)
+ {
+ 	u8 index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK, config);
+ 
+-	return ecs_supp_threshold[index];
++	if (index >= ARRAY_SIZE(ecs_supp_threshold) ||
++	    !ecs_supp_threshold[index])
++		return -EINVAL;
++
++	*val = ecs_supp_threshold[index];
++
++	return 0;
+ }
+ 
+-static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
++static int cxl_get_ecs_count_mode(u8 log_cap, u16 config, u32 *val)
+ {
+-	return FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
++	*val = FIELD_GET(CXL_ECS_COUNT_MODE_MASK, config);
++
++	return 0;
+ }
+ 
+ #define CXL_ECS_GET_ATTR(attrb)						    \
+@@ -655,9 +665,7 @@ static u8 cxl_get_ecs_count_mode(u8 log_cap, u16 config)
+ 		if (ret)						    \
+ 			return ret;					    \
+ 									    \
+-		*val = cxl_get_ecs_##attrb(log_cap, config);		    \
+-									    \
+-		return 0;						    \
++		return cxl_get_ecs_##attrb(log_cap, config, val);	    \
+ 	}
+ 
+ CXL_ECS_GET_ATTR(log_entry_type)
+-- 
+2.27.0
 
