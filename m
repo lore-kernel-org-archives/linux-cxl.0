@@ -1,89 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.223.166
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793304866;
-	b=XpK7LAwhP76xfGpBCgJHJ39hebdaYceE1rRbTmeMKj9gGtiKzOEVhGqwzvK10xo23tBr
-	 EpExLPx/DCCpcdNPzXt/PzKQlLJiFcnXl4mr0HLKp19L7ucSdLyZpKU2Rn1fz/yOtJvfL
-	 yWEF9NHiyVGftB94rP85OukJiMsIRYbIpJUUD/c2j3nARSUkGvIqPvAXxzr6AP7qVwJqn
-	 q0fHVBdXkAxy4mFEvNMCjegxw0yj0RjvLC6+lX6pQwSBOtcp8shl6kBtEzxrc5ayT4Fmw
-	 TeuAPi0dMTB9A7PQEqpLwjEDNLJ+g12haEagO6fdu24YmyEWlJ6QYDf3gqK82n66vzg==
+	t=1793306015;
+	b=3wufJ27WXW1OyL8xg7/+4bD5DWM4N1ogg9B8koyl81Rrpy4AnmQ8TZiReR4/vPh2dBsi
+	 et/GzOUKDZSWQ4EplLQ8E44i0Ey7zaG2/zG9lsDo8GuWPimH0CdAirBYrviqF0BYrDBOL
+	 c29H/jQjws8SSobJLn1ftYUHA1a8lUQMDzF1EgwVA1HxGl2IAZSK4n7mQxJXjHUPVPH/f
+	 UmGswV7luedgWQ3ps0BFNBcKOD4Mu6YYBRYqoAnP+ta7CHnZ6q7kXc1qdKvsifVuDn9xA
+	 arxY29Z8sHCNs1uVHL/SvxbeTg8rSz10JRD6LHuFKMYfHC6Xv638KFHQu32P8i5iJjQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793304866;
-	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Cold-Battle:
-	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
-	 DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=i6RKODoDUkc7uRDqYTyKQ3eGPdaCQ8LzwdUOfqmZNQw=;
-	b=CXJDWyEwIVZMoGYG5JOKqMfsrBaXRqAiQiDAW/ghwVTjtOf87hLVKGwk8tN+qWckcDMm
-	 N6lvdg9NztfU3rO4Q2Wnb/U5ki2q4vhvErq9pVYAkPfnE/Ubw8hz3CVIURZMxj0yd0NwK
-	 KuyP5bncXlGMZGzC+2TIbRRuxsrATVL/8QbBgLLOWXX3DMx7FtbeSXMvC8JBPIR/01DnI
-	 IqofnmrjKSBALlQgHYsEPNoF4iZnx3clhZij2Hw3NMvPJ593Eq4QmGUicIS6U4T0q1aiU
-	 iVLVxU+JnVW5Eo3VijLDKDSCOqSsXlmL/vcsXaEYUtYW0qYuM3CGFo8IXvZEphd4DrA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793306015;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=17oxeHm4MUFXx8oUnMg2RFZzsT/fdDnqLdZR64DpZFo=;
+	b=mdpw2Fo1nL/Lks+qtKiV15pyR3mA7gdxD73z7Bui7GrLg3oKV3y1HFk0FTVv7o2EDiS1
+	 6lXFuAnkH7I/pwbvcoTXYprM5WHtIMJvwEMQSsTubXzjIUrO07Bgts+q3Uy3Gmlf16OjS
+	 UwLyD1M144xxlCWj+OehrRREzw36yOuVTrOcb1TzBrHmQMwR9d7j8irwGvzA/+SAC195L
+	 u789fNii23zEiTEEMBEuWV6vuqTHIi7m9Esm2tUdBuHHzv3ZHt4JY3MIYzbGEBOSHkMJ8
+	 mscXbelQeGaNsWW7BwnWp1CfgTaKoGVvg/U3lMk3S3DIyvGqxxCxU4fKSPPWyPXLPhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=stgolabs.net;
-	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=gLB+TDgY;
-	arc=none smtp.remote-ip=23.83.223.166
-Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CNcaCASB;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F41606A31C
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 20:14:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65F41606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81989606A33F;
+	Thu, 29 Oct 2026 20:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=gLB+TDgY
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A2707641E57;
-	Thu, 29 Oct 2026 20:14:20 +0000 (UTC)
-Received: from pdx1-sub0-mail-a221.dreamhost.com (100-99-186-176.trex-nlb.outbound.svc.cluster.local [100.99.186.176])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 3CA15641EEA;
-	Thu, 29 Oct 2026 20:14:16 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cold-Battle: 08705f602857e204_1793304860457_4048901475
-X-MC-Loop-Signature: 1793304860457:3589132790
-X-MC-Ingress-Time: 1793304860457
-Received: from pdx1-sub0-mail-a221.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.186.176 (trex/8.0.2);
-	Thu, 29 Oct 2026 20:14:20 +0000
-Received: from offworld.tailf5af7a.ts.net (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a221.dreamhost.com (Postfix) with ESMTPSA id 4jFwRq4176z1Z;
-	Thu, 29 Oct 2026 13:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1793304856;
-	bh=i6RKODoDUkc7uRDqYTyKQ3eGPdaCQ8LzwdUOfqmZNQw=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=gLB+TDgYW9KqmSL7mtEi7xFT4taDKhaj6Ah8Sq24CF215SN1QkANWMDvEh/yKLn5L
-	 zGLhc7NOxkmn7gHSjloOv/57Gb3DFUfPmltN+kWfDAa5biOqXf9QqVzZQbMZ5JCCxB
-	 rJFji7+zOf96axlae9HPIOcGvjNrzpUBIk7UXXl/vQRIBWYUrokZ/LWDw42YizxQPs
-	 eKXCEmMuOTToX4nFN8bZ2fr+bCi7T6fBqVMF7IBoDrSIaW0n/SXYaTLmpOqVdIC1HO
-	 pIekoqzTtWftC91DvBYaRIg9+3KeexFI1XXLuRK/ylYu4Jc7xu2iR+13yTZCD4myFD
-	 SYYGWcKzvOR0Q==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org,
-	alison.schofield@intel.com,
-	ming.li@zohomail.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	dave@stgolabs.net
-Subject: [PATCH] cxl/hdm: Account for locked decoders regardless of commit state
-Date: Thu, 29 Oct 2026 13:13:27 -0700
-Message-Id: <20261029201327.1119231-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CNcaCASB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37FAB1F01816;
+	Thu, 29 Oct 2026 20:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793306010;
+	bh=17oxeHm4MUFXx8oUnMg2RFZzsT/fdDnqLdZR64DpZFo=;
+	h=From:Subject:Date:To:Cc;
+	b=CNcaCASBkr58BkeV5FzL0HNWxoVf1d7Rlajv79gTSCyzTkE8UVWkZWDPi59dKuXSW
+	 tWfLF5byrXEIpUod1i7TmvAQrkDvnZIO8uC3fwEZiU19cxoq6PjqXRCIQUWyYVJMmR
+	 3f3VeRic4DZCtZoT2rZwcT8OKgjKALj4Va6fiVeF0s2liIDTHEUsosMuXu+ebxh9eP
+	 XKtThH4+3G61SbynruUTIxI4Y3GDMDDoOnZXAzDMFS6EXvBjLU74Enzg21lax2P+xB
+	 n3IUmfliGEAzxoPxrHihHpIEGdSLCRYA3KavBEzvEvIu9U1pjyEGX9blFs8OsTZh30
+	 VWwR7B9C577mQ==
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: [PATCH v2 00/47] mm: various (urgent?) fixes
+Date: Thu, 29 Oct 2026 21:32:55 +0100
+Message-Id: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -93,55 +53,192 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHet42oC/02NQQ6CMBBFr0JmbU1bFNSV9zDEtGUKVdKaKRIN6
+ d0tGBOXL/P+mxkiksMIp2IGwslFF3wGuSnA9Mp3yFybGSSXleBSMOteGK8mEDLd2qo8WGW5LCE
+ PHoTrNfuX5svxqW9oxqWwGL2LY6D3+m0Si/cL1//hSTDOKlvvNJqj2mt9viN5HLaBOmhSSh9Rf
+ FwQtwAAAA==
+X-Change-ID: 20261021-fixes_core-bdf638faf023
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
+ Muhammad Usama Anjum <usama.anjum@arm.com>, 
+ "David Hildenbrand (Arm)" <david@kernel.org>, 
+ Chris Mason <mason@kernel.org>, 
+ Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
+ Mani Tofigh <mt4022@columbia.edu>, Samiullah Khawaja <skhawaja@google.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5939; i=david@kernel.org;
+ h=from:subject:message-id; bh=cGtcVx8+Zxqn025k2zdD4rFE67pcocOs1hUqk8Z4pYg=;
+ b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLIer63lutW86ETmr4pGiRuTg2c/XsmStPHZeYP33AvDX
+ z4/yBnO3lHKwiDGwSArpsgSFHzf4OXLdbXVbnzMMHNYmUCGMHBxCsBEzJsZ/nAvcHbjOWt1P8rv
+ oLzhlrKSH1esZfhSEm59EAhUYb31vRyoojiz+6yxg2Nj2W/18INnPfMDTe7w3nowg929pVxpsR0
+ 3AA==
+X-Developer-Key: i=david@kernel.org; a=openpgp;
+ fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
 
-Firmware may arm a locked decoder it leaves uncommitted, a corner
-case albeit a valid one. Enumeration only records the bit for committed
-decoders, yet setup_hw_decoder() carries it through and the driver's
-own commit triggers it read-only.
+See v1 on details. TL;DR various fixes :)
 
-A later region teardown then writes a reset the hardware ignores and
-clears CXL_DECODER_F_ENABLE anyway, so the decoder looks free while it
-still decodes and releases its DPA.
+Thanks to everyone for the review! Hoping I can get some more? :)
 
-Record the bit regardless of the commit state, such that the decoder
-then reads locked from probe, and a region built on it is locked at
-attach.
+I am planning on picking these myself, moving them to linux-next fairly
+soon through mm/core.git.
 
-Tested on qemu modified to enforce locked, arming the bit on an
-uncommitted endpoint decoder before the endpoint probes, then
-committing and deleting a 256M region on it and creating a 512M one.
-Before, the decoder and region read unlocked, the DPA is freed and the
-second region reports committed while the hardware still decodes the
-first; after, both read locked from attach, decommit fails with
--EPERM, the DPA release with -EBUSY, and the second region cannot
-allocate DPA.
-
-Fixes: 2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/core/hdm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Changes in v2:
+- "mm/memfd: check for real shmem inodes before accessing shmem state"
+ - Call it inode_is_shmem
+- "mm/truncate: look again if a folio left the mapping"
+ - Different fix for truncate_inode_pages_range
+ - Adjust description
+- "mm/huge_memory: fix zapping migration entries for device-private THPs"
+ - Move handling in zap_deposited_table
+- "mm/mmu_gather: fix flushing ranges with 4 GiB or larger"
+ - Adjust description"
+- "mm/huge_memory: split huge PUDs when adjusting VMA boundaries"
+ - Drop split_pud check
+- Link to v1: https://patch.msgid.link/20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index fdcef20e01ba..a34f3509ab1f 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1064,11 +1064,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		.end = base + size - 1,
- 	};
- 
-+	if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
-+		cxld->flags |= CXL_DECODER_F_LOCK;
-+
- 	/* decoders are enabled if committed */
- 	if (committed) {
- 		cxld->flags |= CXL_DECODER_F_ENABLE;
--		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
--			cxld->flags |= CXL_DECODER_F_LOCK;
- 		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
- 			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 		else
--- 
-2.39.5
+---
+
+Chris Mason (11):
+      mm/huge_memory: fix truncate racing with PMD zapping
+      mm/huge_memory: fix zapping migration entries for device-private THPs
+      mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
+      mm/gup: fix clearing folios in memfd_pin_folios()
+      mm/gup: fix out-of-bounds write for nr_pages == 0 in GUP-fast
+      mm/mmu_notifier: set ->mm only after mmgrab()
+      mm/memory: reject remote COW faults on PFN mappings
+      mm: fix unkillable fault loop on MAP_DROPPABLE memory
+      mm: fix deadlock of mremap() against UFFDIO_MOVE
+      mm/ksm: check large swap-cache folios before mapping them
+      mm/vma: call ->may_split() before a partial merge
+
+David Hildenbrand (Arm) (20):
+      fork: take mmap_lock before copying mm_struct
+      mm/memfd: check for real shmem inodes before accessing shmem state
+      mm/truncate: look again if a folio left the mapping
+      mm/filemap: finish fault cleanup before dropping the fault lock
+      mm/rmap: handle device-exclusive entries in folio_referenced_one()
+      mm/huge_memory: fix list corruption when deferred_split_scan() races with deferred_split_folio()
+      mm/huge_memory: properly handle refcounted PUD mappings on fork
+      mm/khugepaged: check if PTE table is empty in try_collapse_pte_mapped_thp()
+      mm/gup: recheck the PUD under PTL in follow_pud_mask()
+      mm/gup: check for overflow when converting nr_pages to bytes in GUP-fast
+      mm/userfaultfd: write-lock the VMA before waking waiters when unregistering
+      mm/userfaultfd: wake waiters when registration modes are removed
+      mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
+      mm/mremap: recheck PUDs under the page table lock
+      mm/madvise: fix data loss from MADV_FREE on a KSM page
+      mm/ksm: reset the unstable trees of all nodes
+      mm/ksm: fix use of a freed anon_vma at swap-in
+      mm/huge_memory: split huge PUDs when adjusting VMA boundaries
+      mm/vma: don't leak the charge for stack growth
+      mm/memory-tiers: unregister empty tiers outside memory_tier_lock
+
+Gregory Price (1):
+      mm/userfaultfd: compare exact registration modes before skipping
+
+Josef Bacik (14):
+      mm/mglru: don't use stack pointers when walking PUD and PMD tables
+      mm/memfd: make f_pos accesses atomic
+      mm/filemap: read mapping->a_ops->free_folio under i_lock
+      mm/filemap: don't lose a folio lock wakeup to a signal
+      mm/huge_memory: fix livelock on device private folio
+      mm/khugepaged: always recheck the pmd in try_collapse_pte_mapped_thp()
+      mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
+      mm/userfaultfd: wake all waiters on unregister
+      mm/mmu_gather: fix flushing ranges with 4 GiB or larger
+      mm/mmu_notifier: finish non-blocking interval invalidation on error
+      mm/mremap: fix moving PUD leaves
+      mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
+      mm: fix unmap_mapping_range() beyond 4 GiB on 32-bit
+      fs/proc/task_mmu: refuse addresses beyond 32 bits on 32bit
+
+Rik van Riel (1):
+      mm/cma: don't release CMA pages still in use
+
+ fs/proc/task_mmu.c            |   6 ++
+ include/asm-generic/tlb.h     |   3 +-
+ include/linux/huge_mm.h       |   5 +-
+ include/linux/ksm.h           |   6 +-
+ include/linux/memremap.h      |   6 ++
+ include/linux/mmu_notifier.h  |   3 +-
+ include/linux/shmem_fs.h      |   6 ++
+ include/linux/userfaultfd_k.h |   2 -
+ kernel/fork.c                 |  20 ++++--
+ mm/cma.c                      |  10 ++-
+ mm/filemap.c                  |  88 ++++++++++++-------------
+ mm/gup.c                      |  53 ++++++++++-----
+ mm/huge_memory.c              | 146 +++++++++++++++++++++++++++++++-----------
+ mm/hugetlb.c                  |  14 +---
+ mm/internal.h                 |  28 ++++++++
+ mm/khugepaged.c               |  77 +++++++++++-----------
+ mm/ksm.c                      |  56 ++++++++++++----
+ mm/madvise.c                  |   9 +++
+ mm/memfd.c                    |  10 ++-
+ mm/memfd_luo.c                |   2 +-
+ mm/memory-tiers.c             |  29 ++++-----
+ mm/memory.c                   |  30 ++++++---
+ mm/memory_hotplug.c           |  13 ++--
+ mm/memremap.c                 |  13 ++++
+ mm/mmap.c                     |   8 +--
+ mm/mmu_notifier.c             |  24 +++++--
+ mm/mremap.c                   | 103 +++++++++++++----------------
+ mm/nommu.c                    |   2 +-
+ mm/rmap.c                     |  23 +++++--
+ mm/shmem.c                    |   5 ++
+ mm/swapfile.c                 |   3 +-
+ mm/truncate.c                 |  13 +++-
+ mm/userfaultfd.c              |  75 ++++++++++------------
+ mm/util.c                     |  13 ++++
+ mm/vma.c                      |  24 +++++--
+ mm/vmscan.c                   |   4 +-
+ 36 files changed, 585 insertions(+), 347 deletions(-)
+
+---
+
+base-commit: 65ba8f34ec886ec72b2c07ddc8cf3d815c32869d
+
+change-id: 20261021-fixes_core-bdf638faf023
+
+--
+
+Cheers,
+
+David
 
