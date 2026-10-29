@@ -1,125 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.220
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.249
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793249628;
-	b=EEZ77uRHy5StENg1CKxT/+AzB2b1UKsOurAVsf/h2lq9atVuvGeCaED7oySMSlXoRX3U
-	 12bZaqGTeKQ0K2JCIPuYH9SMPm334HLVL3hFERWipo/ohEkDBnYDg4WC9YZuLw9OEkaGH
-	 f9XYFKkFLzd2uOHpRo4WnIfrcBjVIqSLvsJQcdHHeYDea+wBSKMsufXABfGqTPXi6HGUE
-	 NLwN7bNuIJWyq5lWX+ZLLb9z9s3KXnIkdkEsrJQ3WfEh21zk1Sl0BSRC0agRZUibjJIS3
-	 SA7DEp+XmBOpRFLElB/mw+EvtWUHspUWlAdOh0wHMNrIP/eqlqKn7/fuVRRUThtvl/Q==
+	t=1793252137;
+	b=R05R2gjNawe/d8WP0dg5vyiJ7uuJHx6Y80UyIpp0tTS1ccELj/Z3WGdCvkTY1OamObQq
+	 i0rN3pEHicQMjQyNu0zypQWRCotbaoM0lakX+GtSQ+osRKaJmg5qeqNexQx9b7cpvD/25
+	 2kQ4bKThFr+XzNII1vTWTXnj93Dh0gKVstbsB2C1O9vWRgns4X48KgyQtYygIsoWmXFU5
+	 zU/YWXRfJ2NUCs5hFswyCuki9Z5eVAqmnvew/WldI3QCY2T0TgjZzzs01BK4k9kcUsQW7
+	 z42zGrr/2xU44nmFoAYp8tPXsZiLFt70HbiTaSI40yIqiKIgki1PDYnI7fNh+mYi0Wg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793249628;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793252137;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=nSvRu+DrKpZk9fhC33/WfqayjP5HLD0PEYNxYg/H2d4=;
-	b=454hVbPEYU2Kpznsa1UZq2gQd/JNnQeq38Nsh45Dbwa6+v36hJjaq5QEE5FEuXz+1F/+
-	 50RIU5enpmdj7aBPd/o8V9nwmGi+xBVpEXz+VI+HefqfCqQUD9+0yUf6+cknhi4QI8jUi
-	 UJ//UH8gb/Cb59/R6hUdNZgbhwl53kf4J9vdUvTu+LE3kKVmVqUPSf/rlR4AG6cGNe0er
-	 z3lhMIeqG1bn8doRb3uIRbtLtDbPDYtO9NH3mMFPHbW1GDil+Gt70Lv9v40oQ5L+muQnY
-	 HFqeTlqDO0j69J6gd0DmPVGnzhJxOSJ7XFJ8M27X6xmgUqFkgv4Sl1JaJcG+JGGCrug==
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
+	 To:X-Mailer;
+	bh=63NDZq8Cyb35cDuhqqHvr+BDCkAeruK0XwrO5RdM9ZY=;
+	b=rVw17rq3ZK3LDS7nhIezDb3x6JOieh0nsmm1oixWqQ2UINQuMJZnu5XVVOnPE19jzYfa
+	 HJvj+4aQLs77IR6pMgf2ZawY5Us9pMvRT8iANta2RfLxXpfyaRfNKX8xSPOsn3QvrVis8
+	 XeUIkjQ2XZ4XijA8YnxuJtNg1nu0NW93ObmvmiXAJ8BzvKKeuP06XowLM4OykYrX4+WKs
+	 GFCAXzvfSPYVSzvBxskcJ4I/Bqco6Zk2K3GSdFDzcWPM9Kzyuf4Lz5NIHM07Sgw7cfqFf
+	 vAyYsnVx+LBkQQmWtURWv08y+jMDCFS0KsU60qLV+oczqd4/V8GBdtOqocszzRlWT7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=wzldufxr;
-	arc=none smtp.remote-ip=95.215.58.220
-Received: from mta1.migadu.com (out-220.mta1.migadu.com [95.215.58.220])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="E/AmkrY8";
+	arc=none smtp.remote-ip=95.215.58.249
+Received: from mta1.migadu.com (out-249.mta1.migadu.com [95.215.58.249])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71661606A31C
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 04:53:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 71661606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D68606A31D
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 05:35:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 80D68606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=wzldufxr
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=E/AmkrY8
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=i7u+rlmCh6Mr8ur+/yCWDheirhBIEcgUXzKbr5iYaLI=;
+DKIM-Signature: a=rsa-sha256; bh=JWxFG3qn2YevCpVcd3JxV3GGyjj+u2htHokQ1v3x0Pw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793249625; v=1; x=1793854425;
- b=wzldufxrq7LeGF/UT1w/d7qBoo4cSoxFnLCvJgGiKddxIK6nGj3eWwtYfsSoRfGtBw1RSw+o
- l2EEGi9jB7oYX3VF+s085Fb8klvLZm/TtHLejbv1l7E/dPxEI1csGXXbkf56r/0e2nXCXfg2S7r
- 8BiHJX3hY4QzJUxF7RNT23/I=
+ t=1793252134; v=1; x=1793856934;
+ b=E/AmkrY8zj2MdvEWmWN4ZE7Err/HvTah50oUTB3R7Fe4qK9Lh4KjjGNh8wT48vWIcKTHTHJY
+ HZfIiBrKYNH0CpfU7ddyXH9knzUPHFLeylxbC3ZOM8A0X3UliJ0pCVcB+e1sugSVLLc2OMOXOcH
+ jyxQzR7fV+57Dl0py4Xzdrok=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 06f3ecca37f8f8d0;
-	Thu, 29 Oct 2026 04:53:44 +0000
-X-Mizu-Trace-ID: 06f3ecca37f8f8d0
+Received: by mta12.migadu.com with ESMTPS id 24f16e16ac99131d;
+	Thu, 29 Oct 2026 05:35:31 +0000
+X-Mizu-Trace-ID: 24f16e16ac99131d
 X-Migadu-Flow: FLOW_OUT
-From: xu.xin@linux.dev
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	aneesh.kumar@kernel.org,
-	apopple@nvidia.com,
-	axelrasmussen@google.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baoquan.he@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	harry@kernel.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jannh@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	josef@toxicpanda.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	kasong@tencent.com,
-	kees@kernel.org,
-	kexec@lists.infradead.org,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	ljs@kernel.org,
-	matthew.brost@intel.com,
-	mhocko@kernel.org,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	nico.pache@linux.dev,
-	nphamcs@gmail.com,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	pasha.tatashin@soleen.com,
-	peterx@redhat.com,
-	peterz@infradead.org,
-	pfalcato@suse.de,
-	pratyush@kernel.org,
-	qi.zheng@linux.dev,
-	rakie.kim@sk.com,
-	riel@surriel.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shakeel.butt@linux.dev,
-	shikemeng@huaweicloud.com,
-	stable@vger.kernel.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	weixugc@google.com,
-	will@kernel.org,
-	willy@infradead.org,
-	xu.xin@linux.dev,
-	ying.huang@linux.alibaba.com,
-	youngjun.park@lge.com,
-	yuanchu@google.com,
-	ziy@nvidia.com
-Subject: Re: [PATCH 33/46] mm/madvise: fix data loss from MADV_FREE on a KSM page
-Date: Thu, 29 Oct 2026 12:53:07 +0800
-Message-Id: <20261029045307.131675-1-xu.xin@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261027-fixes_core-v1-33-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-33-6f74bec9a5bb@kernel.org>
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -128,58 +57,88 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: [PATCH 3/4] mm: add shared read-only vmemmap support for FS-DAX
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20261029030511.12004-1-trilith.zheng@gmail.com>
+Date: Thu, 29 Oct 2026 13:35:05 +0800
+Cc: Muchun Song <songmuchun@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dan Williams <djbw@kernel.org>,
+ David Hildenbrand <david@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>,
+ Pankaj Gupta <pankaj.gupta@amd.com>,
+ linux-mm@kvack.org,
+ nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>,
+ Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>,
+ Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>,
+ Michal Hocko <mhocko@suse.com>,
+ Qi Zheng <qi.zheng@linux.dev>
+Content-Transfer-Encoding: 7bit
+Message-Id: <2E5C10CF-F3E0-4694-965C-B0E432A1A962@linux.dev>
+References: <20260903122128.12264-1-songmuchun@bytedance.com>
+ <20260903122128.12264-4-songmuchun@bytedance.com>
+ <20261027065723.66564-1-trilith.zheng@gmail.com>
+ <4c9741cf-ac62-41d4-9c7a-7d5ceea4a8e1@linux.dev>
+ <20261029030511.12004-1-trilith.zheng@gmail.com>
+To: Yilei Zheng <trilith.zheng@gmail.com>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
-> MADV_FREE can clear the dirty flag of a singly mapped KSM folio. The
-> folio remains in the stable tree and can gain new mappings without being
-> dirtied again. Once marked lazyfree, reclaim can discard data that those
-> mappings still need.
-> 
-> KSM always marks a folio dirty when converting it to a KSM folio in
-> try_to_merge_one_page(). Marking a folio lazyfree clears PG_swapbacked
-> but leaves PG_dirty unchanged. Preserving PG_dirty makes reclaim restore
-> PG_swapbacked instead of discarding the folio. This also protects folios
-> that were already lazyfree when KSM converted them.
-> 
-> Skip KSM folios before clearing their dirty flag, checking under the
-> folio lock to serialize with KSM conversion.
-> 
-> Fixes: 854e9ed09ded ("mm: support madvise(MADV_FREE)")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/madvise.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 75b409e97dbf2..a16e3cb256b7b 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -756,6 +756,15 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
->  		if (folio_test_swapcache(folio) || folio_test_dirty(folio)) {
->  			if (!folio_trylock(folio))
->  				continue;
-> +			/*
-> +			 * KSM folios can gain new mappings at any time, so we must
-> +			 * not clear their dirty flag.
-> +			 */
-> +			if (folio_test_ksm(folio)) {
-> +				folio_unlock(folio);
-> +				continue;
-> +			}
-> +
->  			/*
->  			 * If we have a large folio at this point, we know it is
->  			 * fully mapped so if its mapcount is the same as its
-> 
-> -- 
-> 2.43.0
 
-The fix looks correct to me: checking folio_test_ksm() under the
-folio lock properly serializes with KSM conversion, and skipping
-the folio avoids clearing PG_dirty on a KSM folio.
 
-Reviewed-by: Xu Xin <xu.xin@linux.dev> 
+> On Oct 29, 2026, at 11:05, Yilei Zheng <trilith.zheng@gmail.com> wrote:
+> 
+> Hi Muchun,
+> 
+>> Thank you very much for the test, so in your scenario, this is also
+>> the behavior of your real workload (mainly read/write-based, rather
+>> than mmap), right?
+> 
+> Yes. We mount read-only rootfs images over virtio-pmem and FS-DAX. Most
+> file access goes through normal read/write. mmap is only used for
+> loading binaries and shared libraries at startup, which is a small part
+> of the image.
+
+What's the size of the roots image? And I just want to know how much memory
+this series could save in your workload.
+
+> 
+>> To be fair, it does fix the issue, but it's not very clean. I might
+>> do some code cleanup first to solve this more gracefully. I want to
+>> move the initialization to where the template page is allocated,
+>> similar to what section-based vmemmap optimization does.
+> 
+> Makes sense. Initializing it at allocation time is cleaner.
+> 
+>> Thanks for the analysis and suggestions. However, the reason I
+>> haven't sent out v2 yet is that I've been trying to refactor the
+>> vmemmap optimization logic to make FS_DAX support cleaner. I think
+>> I'll probably do some code refactoring first.
+> 
+> Understood. It would also help if the refactor could support subsection
+> (2 MiB) alignment, so any 2 MiB-aligned device can use the optimization
+> without padding to a 128 MiB multiple.
+
+I think I can.
+
+> 
+>> I'cc you next time if you'd like to help me test.
+> 
+> Sounds good. Please Cc me when you post v2 and I'll be glad to test.
+
+Thanks.
+
+> 
+> Best regards,
+> Yilei
+
