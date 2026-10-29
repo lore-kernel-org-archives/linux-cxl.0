@@ -1,56 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793287791;
-	b=4aNGijO5DPPnZchGIwWH96yRlra3UyOzeOBEXO4HMou0M5D0oVQrx2k5zcawwDBxltCf
-	 5IRXZE/dRd0wyPF2p+OXeWwGnjDFVp7Rpbc9uXpFX66QFC3OSPVMBe/fTjCazhPGw0o0W
-	 jNmAciP7/3/v8DNBEaFxLVU3eEgq8UNt2QFL6zu4jil2WxOs+TsAtXM3KZKETWckUsZdE
-	 e+uFhMVsRZ1K0q/OYpJ11YWfycItOsmvxTPa/w+uwJCCakOH1SYkLy801zMI57RkmP5ki
-	 CrqsB1DBzYWid4VE2ACpRwy1URuQ61tJ9kFrkZ9zq2ktGBQVME6c2Ov7qeFntqjg/Bg==
+	t=1793288164;
+	b=tOvyFntOcj5G9zpknRotD8tHV1wySGcaAIvL8gb1SBZK2L8ufxJqTAyS9BQuppHAqfD9
+	 7NV2wJxJrlt256XPWn7U5Ab9Ch0GvEkZExSCYS8ljm8VxeBReJ6mNvg+YuKlRspBAbO2w
+	 kv9oEoAfPYNo0XWUkLQbNfljt2mnPMn0tK2hVifIDL5H309nLJ8d5qyEVA/oOtaA2Wa9Q
+	 fXCT8d3ylrAEhDPI78fE1pgMSQ8kEkyvVUT7GoyNr4oKNhDhKJJtI4QVVyRYSrd2lAQ+y
+	 JeZmhgxtFWmcKZzZKug393QR3HxmhyjnMWdVQHYTJpGc3VTkmehdy5Cq02jb9U0AZUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793287791;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=OO7TkYUjjpVmmmdlvA5Uy4POtQ6D3oUqzw1Nn5yMXKs=;
-	b=UR3ghpeNzcU2BfjWZVA8ji8RjDINEQ+cttisMg+FqQIuSEzZRiyRFiJAZWhxg56UJpaz
-	 oaiKdczSecBzBgehIOSWl40l/DrYTvXo6sw475J/V+RJ18PO0bpN5htuYLXm0vjBHcMuM
-	 nT0dQit+x6izrdP1v78yDWbvl35mHs8+pwEXf6z7J2OAiZ/ig3ZMCpvDLAPJsMNFfuTyk
-	 /uQK+RiYkmUUylBFyM/Xh/E/+dUN8EZLzJeHRKVc5CgS8F7dnez5ItnDd/pkbcpwCdDFN
-	 cIWMInRD57aKFmCLfWDGB6sP+nbfHvEtey9f9sAP2huvLTqMzmmEGJO+xPWbpKNViEA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793288164;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=0MZ+Cdtu8ZetD6MQAGKoqkVifXgXtqYdnKHo/eTOhbs=;
+	b=l5lkuQZsRqk6jjl7lZnCUKcq0m67ndW+1uQwcT2CLhQi4ZkTv2ClvtaNE+7HopG3aNWB
+	 JAbrjskSw6ZeGM8zeFbYKOa8ls6xcl63qYnbWorfj+k/NOfzm59tezNxJ276sfJvgGyQ7
+	 Wnwbro37CLMjfKBMhbFUVUhawR/6MYGREc2AZAh6lSfCb09beQYrMXg+q9APqdHsQ64NG
+	 CoeMKUJeAcaxiPQ0z4Mmg0d2GsObU3nOVMVcEg5xnvsvFrvxKSEFCam20KSFtYoirbyRX
+	 oDIkrheCH9zxzMfE2IyPBpgjf4AXufJnXx08W8XBdSYCzhsDvE48k5lP+YE0ai1+U2w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LAR6fYgO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SvnxR1RE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ECF606A31F;
-	Thu, 29 Oct 2026 15:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3280606A31A;
+	Thu, 29 Oct 2026 15:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LAR6fYgO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5031F01447;
-	Thu, 29 Oct 2026 15:29:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SvnxR1RE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBEE31F01824;
+	Thu, 29 Oct 2026 15:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793287790;
-	bh=OO7TkYUjjpVmmmdlvA5Uy4POtQ6D3oUqzw1Nn5yMXKs=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=LAR6fYgOpeBqG0FPrUqTeFsSTlfuuYIIbf2HsJuQCMLiR7tS8R+glzDHbQWg02XCV
-	 KbRRJ8qR5AXtYSeWIIDKD48Jbat2J8ZiX1kY7NtndDGwpI6gPuBFsmZvFtTFiJOipf
-	 AsJN/isq2pByG5Al29tmNdP8FSVa4VOXK64xNq8VSwLHqFLS/esgi3OjQcCNdH3sZz
-	 rPAacKSzKSta07jcN9F9Z2blgNLvRBEez8yZzquUbuuojmq47n0nYbMMJywCrInhMS
-	 p7BB1j2Qksvm7ZlRNkBaExQdn67CGj5/o7nV/VIgvTHn1V1MHdX5OdnJzF+70n2Uw+
-	 fk6C5l05izmYw==
-Message-ID: <sashiko-outbox-189606@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 11/18] PCI/CXL: Cache endpoint HDM state during PCI
- enumeration
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Srirangan Madhavan" <smadhavan@nvidia.com>, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20261029145703.2185231-12-smadhavan@nvidia.com>
-References: <20261029145703.2185231-1-smadhavan@nvidia.com>
- <20261029145703.2185231-12-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 15:29:49 +0000
+	s=k20260515; t=1793288163;
+	bh=0MZ+Cdtu8ZetD6MQAGKoqkVifXgXtqYdnKHo/eTOhbs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=SvnxR1REqXjogeGPFsmkj46v0mjpHOkSNLkbtpJLKJnBH2R57tcgmfFBLxg3pg+tc
+	 hyT1sCGbf5V9UaG9pEvhmd/4dZjpLb7ssvKXSN0V7KILMB8LcOXEFLy+Is3AkWvyyS
+	 uSMXMe7F5Ryv+os8+r6jBBYCoI2bgM3QV6MI/39SdvciA0pOCwQNuaL5x92OOIZgkI
+	 jYsv8a3nz9ca+51kEv6QxK7fMZmRnlAZUIelKhdKNS2pI48R9iE46PIH/2UXUpYFFp
+	 b7sZoOi9kvVNaM/xMhYaE69JMYiB1hlPi/NKqIFfmvSD0Fzq0an+EX7an9WJEKizxt
+	 w7qkPA0NsvJBg==
+Message-ID: <957fc9ce-1789-41d7-a4cb-66acdf7fcecb@kernel.org>
+Date: Thu, 29 Oct 2026 16:21:54 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,242 +50,203 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the mapping
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+ Josef Bacik <josef@toxicpanda.com>
+References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
+ <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
+ <auIniV8YSpA4_oxg@thinkstation>
+ <2f2ef336-2186-4f20-b7f5-565e60471bda@kernel.org>
+ <auMvYdTd_e9O9kDj@thinkstation>
+ <7fab2115-6c44-43b1-b03b-8ce4a37ffe32@kernel.org>
+ <auNaOMYUUpnzCofx@thinkstation>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <auNaOMYUUpnzCofx@thinkstation>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] PCI/CXL: out-of-bounds MMIO read in cxl_pci_hdm_map_regs() before =
-bounds check
-- [High] PCI/CXL: pci_cxl_hdm_cache_init() runs before BAR assignment and b=
-ridge enable
-- [Medium] cxl/pci: unchecked PCI_POSSIBLE_ERROR() in cxl_set_mem_enable() =
-corrupts cached dvsec_ctrl
-- [Medium] cxl/pci: disable_hdm() leaves stale CXL_HDM_DECODER_ENABLE in ca=
-ched global_ctrl
---
+On 10/29/26 15:38, Kiryl Shutsemau wrote:
+> On Thu, Oct 29, 2026 at 03:18:23PM +0100, David Hildenbrand (Arm) wrote:
+>> On 10/29/26 12:37, Kiryl Shutsemau wrote:
+>>>
+>>> Yes, I missed that the loop only goes back to start when a lookup
+>>> comes back empty below end. When the last batch reaches end, it exits
+>>> without another look. It doesn't need the split either: any punch hole
+>>> whose last page is in the page cache gets there.
+>>>
+>>> That exit looks unintended to me. b9a8a4195c7d ("truncate,shmem: Handle
+>>> truncates that split large folios") turned the "if (start >= end) goto
+>>> out" early exit into the loop condition. Before it, the loop went back
+>>> to start until a lookup from start found nothing; Hugh kept that on
+>>> purpose for hole punch in 792ceaefe621 ("mm/fs: fix pessimization in
+>>> hole-punching pagecache").
+>>>
+>>> Restoring it is enough, and makes the "restart to make sure all gone"
+>>> comment true again:
+>>>
+>>> +       if (start >= end)
+>>> +               return;
+>>> +
+>>>         index = start;
+>>> -       while (index < end) {
+>>> +       for (;;) {
+>>>
+>>> Then a replaced folio is found on the next round, and truncate needs no
+>>> special case for it.
+>>>
+>>
+>> But that's then another lookup even if not really required?
+>>
+>> Why do you thing that is that better?
+>>
+>> I agree that the code is simpler, but at least it's consistent with the other
+>> handling.
+> 
+> The extra lookup only happens when the second loop had work to do.
+> Normally the first pass removes everything, the first lookup from start
+> comes back empty, and both versions stop there. When the second loop did
+> run to end, it costs one more lookup over a range that is now empty.
+> 
+> What I like about it is one way to look again instead of two: the loop
+> already goes back to start when the last batch ends below end, and the
+> patch adds a second way for when it ends at end. truncate is not like
+> shmem here: shmem_undo_range() stops after one sweep on hole punch on
+> purpose, so it needs the rewind; truncate was meant to sweep until
+> nothing is left.
+> 
+> Your version fixes the bug too, so I'll leave the choice to you.
+> 
 
-commit a7ebc7643586c3c5e8b6adb597a5c7e1384802d3
-Author: Srirangan Madhavan <smadhavan@nvidia.com>
+Can we just do:
 
-PCI/CXL: Cache endpoint HDM state during PCI enumeration
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 733d2713a875..9e9bf029635c 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -475,8 +475,11 @@ void truncate_inode_pages_range(struct address_space *mapping,
+ 		}
+ 	}
+ 
++	if (start >= end)
++		return;
++
+ 	index = start;
+-	while (index < end) {
++	while (true) {
+ 		cond_resched();
+ 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
+ 				indices)) {
+@@ -499,6 +502,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
+ 			folio_lock(folio);
+ 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
+ 			folio_wait_writeback(folio);
++			/* Do not handle errors, we'll do another lookup */
+ 			truncate_inode_folio(mapping, folio);
+ 			folio_unlock(folio);
+ 		}
+@@ -760,7 +764,12 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
+ 			folio_lock(folio);
+ 			if (unlikely(folio->mapping != mapping)) {
+ 				folio_unlock(folio);
+-				continue;
++				/*
++				 * Folio might have been replaced: look up
++				 * again.
++				 */
++				index = indices[i];
++				break;
+ 			}
+ 			VM_BUG_ON_FOLIO(!folio_contains(folio, indices[i]), folio);
+ 			folio_wait_writeback(folio);
+-- 
+2.43.0
 
-This commit caches endpoint HDM decoder and Device DVSEC state in
-pci_dev->hdm during PCI enumeration so that CXL reset paths can restore
-hardware state without a bound CXL driver. It also hooks DVSEC control
-updates in the CXL core to keep the cached DVSEC control value synchronized.
 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index e2034a2179b48..44fa9d5d1a052 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -209,22 +209,24 @@ static int cxl_set_mem_enable(struct cxl_dev_state =
-*cxlds, u16 val)
->  	struct pci_dev *pdev =3D to_pci_dev(cxlds->dev);
->  	int d =3D cxlds->cxl_dvsec;
->  	u16 ctrl;
-> -	int rc;
-> +	int rc, ret =3D 1;
-> =20
->  	rc =3D pci_read_config_word(pdev, d + PCI_DVSEC_CXL_CTRL, &ctrl);
->  	if (rc)
->  		return pcibios_err_to_errno(rc);
-> =20
-> -	if ((ctrl & PCI_DVSEC_CXL_MEM_ENABLE) =3D=3D val)
-> -		return 1;
-> -	ctrl &=3D ~PCI_DVSEC_CXL_MEM_ENABLE;
-> -	ctrl |=3D val;
-> +	if ((ctrl & PCI_DVSEC_CXL_MEM_ENABLE) !=3D val) {
-> +		ctrl &=3D ~PCI_DVSEC_CXL_MEM_ENABLE;
-> +		ctrl |=3D val;
-> =20
-> -	rc =3D pci_write_config_word(pdev, d + PCI_DVSEC_CXL_CTRL, ctrl);
-> -	if (rc)
-> -		return pcibios_err_to_errno(rc);
-> +		rc =3D pci_write_config_word(pdev, d + PCI_DVSEC_CXL_CTRL, ctrl);
-> +		if (rc)
-> +			return pcibios_err_to_errno(rc);
-> +		ret =3D 0;
-> +	}
-> =20
-> -	return 0;
-> +	cxl_hdm_cache_set_dvsec_ctrl(pdev, ctrl);
+That would be easier for me to digest than the index <= end thing.
 
-[Severity: Medium]
-What happens in cxl_set_mem_enable() if the device is undergoing a reset or
-the link is down when pci_read_config_word() reads PCI_DVSEC_CXL_CTRL?
 
-On root complexes where config reads to an unresponsive device return
-PCIBIOS_SUCCESSFUL with ctrl =3D=3D 0xffff, cxl_set_mem_enable() does not c=
-heck
-PCI_POSSIBLE_ERROR(ctrl). When called from clear_mem_enable() during endpoi=
-nt
-port teardown (which is not serialized by pci_dev_lock(pdev)) or from
-devm_cxl_enable_mem(), ctrl (0xffff) is masked to 0xfffb (or kept as 0xffff=
-),
-written back to PCI_DVSEC_CXL_CTRL (including RW1C Viral_Status,
-Viral_Enable, Cache_Enable, and reserved bits), and then stored into
-pdev->hdm->dvsec_ctrl via cxl_hdm_cache_set_dvsec_ctrl().
+-- 
+Cheers,
 
-Unlike cxl_hdm_cache_refresh_decoder(), which checks global_ctrl !=3D U32_M=
-AX
-to preserve the last good value when the device does not respond,
-cxl_hdm_cache_set_dvsec_ctrl() unconditionally overwrites
-pdev->hdm->dvsec_ctrl, permanently clobbering the cached DVSEC control state
-for subsequent resets. Should cxl_set_mem_enable() check
-PCI_POSSIBLE_ERROR(ctrl) before modifying and caching ctrl?
-
-[Severity: Medium]
-Also, while cxl_set_mem_enable() and clear_mem_enable() keep
-pdev->hdm->dvsec_ctrl updated on both enable and teardown, does disable_hdm=
-()
-leave a stale CXL_HDM_DECODER_ENABLE bit in pdev->hdm->global_ctrl?
-
-When the CXL driver binds and sets up endpoint decoders:
-
-  devm_cxl_endpoint_decoders_setup()
-    cxl_hdm_decode_init()
-      devm_cxl_enable_hdm()
-      devm_cxl_enable_mem()
-        cxl_set_mem_enable()
-          cxl_hdm_cache_set_dvsec_ctrl()
-    devm_cxl_enumerate_decoders()
-      cxl_hdm_refresh_decoder()
-        cxl_hdm_cache_refresh_decoder()
-          info->global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-
-cxl_hdm_cache_refresh_decoder() latches CXL_HDM_DECODER_ENABLE into
-pdev->hdm->global_ctrl. When the endpoint port driver later unbinds (or fai=
-ls
-probe after refreshing a decoder), devres runs clear_mem_enable(), which
-clears PCI_DVSEC_CXL_MEM_ENABLE in pdev->hdm->dvsec_ctrl, and then runs
-disable_hdm():
-
-drivers/cxl/core/pci.c:disable_hdm() {
-	global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-	writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
-	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-}
-
-Because disable_hdm() does not update pdev->hdm->global_ctrl, a subsequent
-reset while unbound will restore CXL_HDM_DECODER_ENABLE in hardware while
-PCI_DVSEC_CXL_MEM_ENABLE is disabled, and a later CXL driver re-bind in
-cxl_hdm_decode_init() will see CXL_HDM_DECODER_ENABLE already set and skip
-devm_cxl_enable_hdm(). Should disable_hdm() (and devm_cxl_enable_hdm()) also
-update pdev->hdm->global_ctrl?
-
-[ ... ]
-
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 655ed53436d3e..aad567fb7c560 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -359,6 +359,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> =20
->  	/* Save config space for error recoverability */
->  	pci_save_state(dev);
-> +	pci_cxl_hdm_cache_init(dev);
-
-[Severity: High]
-Can pci_cxl_hdm_cache_init() run here before BAR resources are validated and
-assigned, or while upstream bridges still have memory decoding disabled?
-
-On x86 ACPI boot, acpi_init() (subsys_initcall) enumerates the root bus and
-calls pci_bus_add_devices() -> pci_bus_add_device() before pci_subsys_init()
-runs pcibios_resource_survey() and before pcibios_assign_resources()
-(fs_initcall) assigns unassigned resources:
-
-  acpi_init()
-    acpi_pci_root_add()
-      pci_bus_add_devices()
-        pci_bus_add_device()
-          pci_cxl_hdm_cache_init()
-
-In drivers/pci/cxl.c, cxl_pci_bar_assigned() checks res->start and res->end
-without checking res->parent:
-
-drivers/pci/cxl.c:cxl_pci_bar_assigned() {
-	struct resource *res =3D &pdev->resource[bar];
-
-	return pci_resource_len(pdev, bar) &&
-	       !(res->flags & (IORESOURCE_UNSET | IORESOURCE_DISABLED)) &&
-	       resource_type(res) =3D=3D IORESOURCE_MEM && res->start && res->end;
-}
-
-And cxl_pci_hdm_read_info() temporarily sets PCI_COMMAND_MEMORY directly on
-pdev without enabling upstream bridges:
-
-drivers/pci/cxl.c:cxl_pci_hdm_read_info() {
-	if (!(command & PCI_COMMAND_MEMORY)) {
-		rc =3D pci_write_config_word(pdev, PCI_COMMAND,
-					   command | PCI_COMMAND_MEMORY);
-		...
-	}
-}
-
-This appears to have two consequences:
-1. If a disabled device has an unclaimed BIOS BAR address that conflicts wi=
-th
-   another resource, enabling PCI_COMMAND_MEMORY before
-   pcibios_resource_survey() claims and validates resources can activate the
-   conflicting BAR decoding.
-2. If the endpoint BAR or an upstream bridge window is assigned later during
-   pcibios_assign_resources(), or if an upstream PCI-to-PCI bridge does not
-   have PCI_COMMAND_MEMORY enabled yet, pci_cxl_hdm_cache_init() fails and
-   leaves pdev->hdm permanently NULL.
-
-> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-> new file mode 100644
-> index 0000000000000..b992f71d964a8
-> --- /dev/null
-> +++ b/drivers/pci/cxl.c
-[ ... ]
-> +static void __iomem *cxl_pci_hdm_map_regs(struct pci_dev *pdev,
-> +					  struct cxl_register_map *map,
-> +					  resource_size_t *hdm_offset,
-> +					  int *decoder_count)
-> +{
-> +	struct cxl_reg_map *hdm_map =3D &map->component_map.hdm_decoder;
-> +	void __iomem *hdm;
-> +	int rc;
-> +
-> +	/* cxl_setup_regs() populates hdm_map, including its valid bit. */
-> +	rc =3D cxl_setup_regs(map);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +	if (!hdm_map->valid)
-> +		return ERR_PTR(-ENODEV);
-> +	if (hdm_map->offset > map->max_size ||
-> +	    hdm_map->size > map->max_size - hdm_map->offset)
-> +		return ERR_PTR(-ENXIO);
-
-[Severity: High]
-Does cxl_setup_regs(map) perform MMIO reads past map->max_size before the
-bounds check in cxl_pci_hdm_map_regs() is reached?
-
-In __pci_cxl_hdm_cache_init(), cxl_find_regblock() populates map via
-cxl_decode_regblock(), which only checks offset > pci_resource_len(pdev, ba=
-r)
-and sets map->max_size =3D pci_resource_len(pdev, bar) - offset.
-
-When cxl_pci_hdm_map_regs() calls cxl_setup_regs(map):
-
-  cxl_pci_hdm_map_regs()
-    cxl_setup_regs()
-      cxl_map_regblock()
-        map->base =3D ioremap(map->resource, map->max_size);
-      cxl_probe_regs()
-        cxl_probe_component_regs()
-
-cxl_probe_component_regs() unconditionally adds CXL_CM_OFFSET (0x1000) to
-map->base, reads CXL_CM_CAP_HDR_OFFSET, and then reads each capability head=
-er
-at base + offset (which is map->base + hdm_map->offset) without checking
-map->max_size.
-
-If a device's remaining BAR length (map->max_size) is smaller than
-CXL_CM_OFFSET + sizeof(u32) or smaller than hdm_map->offset + sizeof(u32),
-won't cxl_probe_component_regs() fault on the unmapped ioremap guard page
-before cxl_pci_hdm_map_regs() checks hdm_map->offset against map->max_size?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029145703.2185=
-231-1-smadhavan@nvidia.com?part=3D11
+David
