@@ -1,87 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.218.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793316344;
-	b=ZCosUzziynu9MmJrfSgBS+7bRzRUjRd92B5FPDf9SmDHCn3uZtIgYY21T4QDWa2mEAGn
-	 LMn98IEbgJRBKkLjizQucK0VP30qYSxzmAotdIB2Hf0zeHR7uJZQpc/FjaVp0PO2aHphX
-	 JkPQ3kyt3GRAAJgW0U9UcDG6UpmK0rFELsEZhdaYeQvxOzNfPqwwJjUCEG5NARnzq1g0W
-	 12jn9OFua/AcyalKf/AufFFCiTXryJApoQcOxw5QFjVEm07xD95D6ueKgvJkmlkaq1v/c
-	 2tNG06tPkkUypoCRIxMOf1Vhn+lqrrn5vLVDn2vzr0kACNacMQQimtSaR+/2w9BDDqg==
+	t=1793316361;
+	b=Qt5b9joW8ODZ1LRz0oaolCpWLDnME5ELCuY+CG661UbCYVoQhkZfni6m8ghh9xvovIFW
+	 UhIePLCBDk2NYaSBtJ7ZvBM6xyamxU2o6Grop8xJDXXuXjhbOMV2OQoBK8XWdqvZVixpH
+	 UUEd0CU5Je/1/r3F4XXYxrkGbuvy8C7a0qDOZnGGmKQtBwzp49ItAjfUMumv7RQWMwPeY
+	 25HFrqL2D5l68L0UbrPl6C+tpUqfc/+V2YPAPQSiYfpOed/r1Vu44acvAb9QuYfVz2Amo
+	 fVJFNLh/2JV/1HhcJwEsH69AbCKb2hGgQ8zesMd5mBqSXb9SUp+/9T49ZtI1rActMxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793316344;
-	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Thoughtful-Arch:
-	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
-	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=gUhi95tHATKdLOlDBWXHMhyTcJgO61Ly6UA5MujeC8Q=;
-	b=F7pVESMHYJeZbBTn7vxSS4PeohFgJ8UwzBT/MIl2hAgcTwXq3e3Ohgt8A4PIjnNzsE78
-	 lh7YDw8V5jcrtpmLngK36cYJIxGK1YFpIGvYumW7/bzH0rH2BFpIRlxHsIfsIfeyvYCww
-	 FpM2zfTRqmZjT1ivLB0ElkvVNJEFGNUMSti7NCNMGv/Nqr4O1JCE8K4476PCMr+EVsr3U
-	 uYQk3HKAKl9/d3S1+p7jKMXCwpDRtTNrwq16DCoQgbJmfblTKDjMek3mwY6+7RfJBXlEl
-	 DYn93Jr0U6Wq5xfE5XApF7hzWP2Mvfd1ePWkQdcJSuA5Rhck9rzG4XjNQFiMkhTuE0w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793316361;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=2GKDMvDpti7ogQfsUpI0XQxRzogq/+Pxx/2i1iX462o=;
+	b=xOGJeW62PBTiJ6b3l+9QHz3nwu3drGRY8AA4sps/NC5gvtp0Yyk9VJwqQJcHGoAKgrzc
+	 VzJo6JR4QIQxnF6Gg47+yE+EMrfo6wqCoQnZX+UZNligk4ArzdZdvFb8He07MZkOlROh/
+	 B5nqGTX/L0EMVBMQxEJMI/as9QEWc7384iFORwHpI+Abk0bntIVNUMcf39rB+kaasRcFM
+	 cAy5wQ9RASJpIrFVWM9udtG+y1E9G2TwjvTOt+wkA5cP5Nfx6+ShhSkHNL+yX61Jo0h5q
+	 fEzZy2IwJpbmBLARHRyIZlh3Mg3/XKlDC997PQQiH3DLKLzHpGFGog/289Sz5LwCj4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=stgolabs.net;
-	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=dUN5erDM;
-	arc=none smtp.remote-ip=23.83.218.248
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lxKKeLZd;
+	arc=none smtp.remote-ip=192.198.163.18
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F854606A333
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 23:25:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F854606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EAE606A31E
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 23:26:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65EAE606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=dUN5erDM
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id AE39A46147A;
-	Thu, 29 Oct 2026 23:25:38 +0000 (UTC)
-Received: from pdx1-sub0-mail-a203.dreamhost.com (100-96-2-151.trex-nlb.outbound.svc.cluster.local [100.96.2.151])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 43BAF460BDE;
-	Thu, 29 Oct 2026 23:25:34 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Thoughtful-Arch: 621e041105710783_1793316338553_677256058
-X-MC-Loop-Signature: 1793316338553:4001395389
-X-MC-Ingress-Time: 1793316338553
-Received: from pdx1-sub0-mail-a203.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.2.151 (trex/8.0.2);
-	Thu, 29 Oct 2026 23:25:38 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a203.dreamhost.com (Postfix) with ESMTPSA id 4jG0hY5MVjz3K;
-	Thu, 29 Oct 2026 16:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1793316334;
-	bh=gUhi95tHATKdLOlDBWXHMhyTcJgO61Ly6UA5MujeC8Q=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=dUN5erDMeXlKhErhUEvhUa9IffX2zZnoXQxmh2sKCKNwf6LfSZlKz4lj8ZNsJbdzY
-	 OsTxmZya36Ya13SJ9Bex2WsSt8bq3C1d5JoaDawEXzgDS50HnzEobcc1yP0sPPhRVE
-	 2F1cUDCCv8ReZTRrRXdc3pcMfnFK66Zd0yRBQ/lbR9TKHe23COPyy7SKLb2NAb5O0l
-	 ab6PtBiti1VMVLGrx/7ZBIqBwQNOwIVLLO5WwjIeHoV3SUnp+z17v4lcShTza4ISu3
-	 9uAC7N6wpeYglWKtdQZIrd+1HlclvFngxsUa12pUxr4F7JfPbTDmkusHhSbe4p3XD+
-	 MpnH6II/n33RQ==
-Date: Thu, 29 Oct 2026 16:25:30 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: jic23@kernel.org, alison.schofield@intel.com, ming.li@zohomail.com,
-	icheng@nvidia.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/hdm: Account for locked decoders regardless of
- commit state
-Message-ID: <20261029232530.5obimin3kbkaido5@offworld>
-References: <20261029201327.1119231-1-dave@stgolabs.net>
- <197c7286-6961-4934-80f7-896cf8a37ef6@intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lxKKeLZd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793316360; x=1824852360;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=f2c86y7tCUpdmzIoFBpj69OPF7ons05hRkX2eBJ7NVE=;
+  b=lxKKeLZdW409Wyb4VIY5l0a99EtRMn2Q+a/uml1l0A8fi/wKqt6HFmdL
+   O9yyXPqLCndrRVN2DCKjwQfM6bbzw2yhoWKLvmPSRAasHK3EYKFA1ZX3w
+   KAQS8+668to+vmXIb6FRbdppsEPLB3vw+maNp3WBhC2sRChC0+1kIwcAb
+   rVqoQfDnWKzSAzbVEYc7KOEm4OZX5xdhIEH5FPvYRHhfL5/qEXghcC8ea
+   JTIx58vUagprduOsJ3cixGSD1k1O+lqVq7A5LNqG58BslmL79OhndXSVJ
+   g3dZGmEp+p7S3A+Fyq8jXRQIC6H+I/S/WQqhJs8cdJwYM0W301yukYkRT
+   g==;
+X-CSE-ConnectionGUID: 0qOgRMFdRKSbCGbL3cjzlg==
+X-CSE-MsgGUID: PRmiGGOvQsOpP3tip4a8AQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2106366"
+X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
+   d="scan'208";a="2106366"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:25:59 -0700
+X-CSE-ConnectionGUID: /vqEK+TrQKiHqgYIwlxvRg==
+X-CSE-MsgGUID: n+UVvOhNSv+hJKtvSKLR2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
+   d="scan'208";a="5159688"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.28]) ([10.125.109.28])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:26:00 -0700
+Message-ID: <99118f65-9ce8-4423-a926-ec9935176b36@intel.com>
+Date: Thu, 29 Oct 2026 16:25:58 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,48 +72,167 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <197c7286-6961-4934-80f7-896cf8a37ef6@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH 1/4] libdaxctl: handle mapping initialization
+ failures
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
+ Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org
+References: <cover.1792695259.git.alison.schofield@intel.com>
+ <7737e1406eb60677979d3b6b090d52ee124ebaa7.1792695259.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <7737e1406eb60677979d3b6b090d52ee124ebaa7.1792695259.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 29 Oct 2026, Dave Jiang wrote:
 
->
->
->On 10/29/26 1:13 PM, Davidlohr Bueso wrote:
->> Firmware may arm a locked decoder it leaves uncommitted, a corner
->> case albeit a valid one. Enumeration only records the bit for committed
->> decoders, yet setup_hw_decoder() carries it through and the driver's
->> own commit triggers it read-only.
->>
->> A later region teardown then writes a reset the hardware ignores and
->> clears CXL_DECODER_F_ENABLE anyway, so the decoder looks free while it
->> still decodes and releases its DPA.
->>
->> Record the bit regardless of the commit state, such that the decoder
->> then reads locked from probe, and a region built on it is locked at
->> attach.
->>
->> Tested on qemu modified to enforce locked, arming the bit on an
->> uncommitted endpoint decoder before the endpoint probes, then
->> committing and deleting a 256M region on it and creating a 512M one.
->> Before, the decoder and region read unlocked, the DPA is freed and the
->> second region reports committed while the hardware still decodes the
->> first; after, both read locked from attach, decommit fails with
->> -EPERM, the DPA release with -EBUSY, and the second region cannot
->> allocate DPA.
->>
->> Fixes: 2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->
->Can you commit the decoder in locked state? Or are you just stuck in this weird state?
 
-I would think so, the bit is locked *on* commit, so the decoder is not
-locked yet.
+On 10/22/26 12:56 PM, Alison Schofield wrote:
+> A failed sysfs read can silently truncate a device's mapping list, leaving
+> callers with incomplete range information and potentially incorrect memory
+> block accounting. An allocation failure also causes an infinite loop,
+> hanging the caller.
+> 
+> Distinguish the end of the mapping list from read failures, reject
+> incomplete lists, and discard partial results on error. The mappings
+> describe the device's constituent ranges, so validate that their combined
+> size matches the device size. Return -ENOMEM on allocation failure.
+> 
+> Fixes: 5a31bf710399 ("libdaxctl: add mapping iterator APIs")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
->
->Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks,
-Davidlohr
+> ---
+>  daxctl/lib/libdaxctl.c | 70 ++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 58 insertions(+), 12 deletions(-)
+> 
+> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+> index 5b47c770bd15..f630f4791f59 100644
+> --- a/daxctl/lib/libdaxctl.c
+> +++ b/daxctl/lib/libdaxctl.c
+> @@ -222,6 +222,17 @@ static void free_mem(struct daxctl_dev *dev)
+>  	}
+>  }
+>  
+> +static void free_mappings(struct daxctl_dev *dev)
+> +{
+> +	struct daxctl_mapping *mapping, *_m;
+> +
+> +	list_for_each_safe(&dev->mappings, mapping, _m, list) {
+> +		list_del_from(&dev->mappings, &mapping->list);
+> +		free(mapping);
+> +	}
+> +	dev->num_mappings = -1;
+> +}
+> +
+>  static void free_dev(struct daxctl_dev *dev, struct list_head *head)
+>  {
+>  	if (head)
+> @@ -1269,15 +1280,17 @@ DAXCTL_EXPORT unsigned long daxctl_memory_get_block_size(struct daxctl_memory *m
+>  	return mem->block_size;
+>  }
+>  
+> -static void mappings_init(struct daxctl_dev *dev)
+> +static int mappings_init(struct daxctl_dev *dev)
+>  {
+> +	const char *devname = daxctl_dev_get_devname(dev);
+>  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+> +	unsigned long long size = 0;
+>  	char buf[SYSFS_ATTR_SIZE];
+>  	char *path = dev->dev_buf;
+> -	int i;
+> +	int i, rc;
+>  
+>  	if (dev->num_mappings != -1)
+> -		return;
+> +		return 0;
+>  
+>  	dev->num_mappings = 0;
+>  	for (;;) {
+> @@ -1285,31 +1298,43 @@ static void mappings_init(struct daxctl_dev *dev)
+>  		unsigned long long pgoff, start, end;
+>  
+>  		i = dev->num_mappings;
+> +		sprintf(path, "%s/mapping%d", dev->dev_path, i);
+> +		if (access(path, F_OK) < 0) {
+> +			if (errno == ENOENT)
+> +				break;
+> +			rc = -errno;
+> +			err(ctx, "%s: Unable to access mapping%d: %s\n",
+> +				devname, i, strerror(-rc));
+> +			goto out;
+> +		}
+> +
+>  		mapping = calloc(1, sizeof(*mapping));
+>  		if (!mapping) {
+> -			err(ctx, "%s: mapping%u allocation failure\n",
+> -				daxctl_dev_get_devname(dev), i);
+> -			continue;
+> +			rc = -ENOMEM;
+> +			goto err;
+>  		}
+>  
+>  		sprintf(path, "%s/mapping%d/start", dev->dev_path, i);
+> -		if (sysfs_read_attr(ctx, path, buf) < 0) {
+> +		rc = sysfs_read_attr(ctx, path, buf);
+> +		if (rc < 0) {
+>  			free(mapping);
+> -			break;
+> +			goto err;
+>  		}
+>  		start = strtoull(buf, NULL, 0);
+>  
+>  		sprintf(path, "%s/mapping%d/end", dev->dev_path, i);
+> -		if (sysfs_read_attr(ctx, path, buf) < 0) {
+> +		rc = sysfs_read_attr(ctx, path, buf);
+> +		if (rc < 0) {
+>  			free(mapping);
+> -			break;
+> +			goto err;
+>  		}
+>  		end = strtoull(buf, NULL, 0);
+>  
+>  		sprintf(path, "%s/mapping%d/page_offset", dev->dev_path, i);
+> -		if (sysfs_read_attr(ctx, path, buf) < 0) {
+> +		rc = sysfs_read_attr(ctx, path, buf);
+> +		if (rc < 0) {
+>  			free(mapping);
+> -			break;
+> +			goto err;
+>  		}
+>  		pgoff = strtoull(buf, NULL, 0);
+>  
+> @@ -1320,9 +1345,30 @@ static void mappings_init(struct daxctl_dev *dev)
+>  
+>  		dev->num_mappings++;
+>  		list_add(&dev->mappings, &mapping->list);
+> +		size += end - start + 1;
+>  	}
+> +
+> +	/* each of the device's ranges has a mappingN */
+> +	if (dev->num_mappings && size != dev->size) {
+> +		err(ctx, "%s: mappings total %#llx, device size %#llx\n",
+> +			devname, size, dev->size);
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	/* sysfs_read_attr() already logged these */
+> +	if (rc != -EACCES && rc != -EPERM)
+> +		err(ctx, "%s: Unable to read mapping%d: %s\n", devname, i,
+> +			strerror(-rc));
+> +out:
+> +	free_mappings(dev);
+> +	return rc;
+>  }
+>  
+> +/* NULL means either no mappings or a failure to read them */
+>  DAXCTL_EXPORT struct daxctl_mapping *daxctl_mapping_get_first(struct daxctl_dev *dev)
+>  {
+>  	mappings_init(dev);
+
