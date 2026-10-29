@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793273883;
-	b=PXSLBExwhOhkjRhQTBn/VVXBNNf8AOUvM544rEv83GlGajEJC5onmuSLeCjelfObLI4r
-	 BhySzfnzGvkNQXC7N/9Cd5iQvy//ui2u3KsMd+QXlm5E7SnTTHmKRbYBaVUbu3aPsJ+iD
-	 Rz6q/x1ZUPmrmgfWKf40V7lGPdpC3dOD3BGT6oEqbyPKGd3Exat/Q7vGffPlPhCNDXcJ8
-	 kIAkg4Cw4AUYrBKngwYnVaJY6eYx/WpIapAAAz9xs5FN9N2hgO+cEm8HC4S3zPi1U6Idi
-	 kbkva7J7z2D3AW4LoUYSPkF+WOpiVWg1q0mI3vF3JABUy7efakQ8O+ruyI3XELmXeVA==
+	t=1793274349;
+	b=2cp4TZehzip8XX8134zq1PKnlYM6rtaDj1TnBFvsQfEU5NC36Hle09+CCGQ/eU9UKWcS
+	 bZeP2GJK5FZOnxrH46fGyRGGL214iz3gbhvq2Rpw+3ixCNJ4XNtN4xn5nL7s2T//eBAPw
+	 kBdV5bg0dS+/HvsCtd5EfUqAxi7Utr0kHtZ0E/TJjVInGoW5xy7pbR9x3oy9yxczx7FTB
+	 qwrJolX+jQLZ/3jV7Rpg5/43gHFAlwh6AH8dXz28nH+l4skai+8Uq6JWDe9jCAL1fumjK
+	 eBYb9mxhTBFPIfnARQ7Bp9dKSQzB59JXqzl0RYN/s/EDtGKHioj+4TjEip2ByylAx2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793273883;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793274349;
 	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
 	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=hNCQwk1kVwwDQd6YdP9bn0F2tzwSBJGnMYrpsz+xroI=;
-	b=H/aVNKUjpf9eBpBeg9pQa/yjoRb6LG6YKHEkRsJKGb4zofRFAW40n9c9wmiyKCyQGIQt
-	 Tit5HcXmWtpEgtpiQYNlogoxuSXUUlLadpTmEX8ByVTDFZU1CmZqC/GzwBYixEXR6IXE6
-	 bDRdv+4CpxBs4pyoVkvAIMhvNnCP/2x6FB3AO0GU/vf0xgtu8VTjjcDXOVNTNZWqSSNUC
-	 LiwgTpgDRFLov2GTleRDwZoqMY10+0XIhse9LH2G+nuHBa3wR0Uj5FaNwvZ0vi8L6P3bj
-	 QoOD6BJl59DRpZmoogzoBKYdzD2aWyeXa6IFRr+jAaNA21joQODVdSOTPScciD2tc6w==
+	bh=fsnAuqtxtLr325mSlI6KyfkPKcAjsjpo5pAZm2Ry5UQ=;
+	b=Cz6m9Qi1C6/cYHC1i/uXq9s3ZQNVAQVWvHc9ssnV+MBxLEglFJSiEElPYbR0gzDRzSq9
+	 vxL2SZe6sJQLzXVuTT5n/64eT5apznlkuUdCAEq3UI+aSQyxqbm3jQxGMGOI+7cAZokGt
+	 kaPT+qPBJzigr5WHHkrXN+GqpuyfXxvY7vZT84CsnalEo//S/IRB64Lu1hJm5Mwoo4nvC
+	 t7I05f5f6PPdpI1DJuAnxvceSBZn3K3ccAAxuTT/PhHmfobJFStb4XQQ6io3IV9RTpChS
+	 6Ioc+aqn5JllxyVnolp0JJSeLEOho6oGzwAaYX4t+L6Tlz1lIef+a8AAYjbnfmRhi4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y+wvSFRZ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UHn0a5YL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986E0606A31E
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 11:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E9F606A320;
+	Thu, 29 Oct 2026 11:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y+wvSFRZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA971F01828;
-	Thu, 29 Oct 2026 11:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UHn0a5YL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38801F01825;
+	Thu, 29 Oct 2026 11:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793273883;
-	bh=hNCQwk1kVwwDQd6YdP9bn0F2tzwSBJGnMYrpsz+xroI=;
+	s=k20260515; t=1793274348;
+	bh=fsnAuqtxtLr325mSlI6KyfkPKcAjsjpo5pAZm2Ry5UQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Y+wvSFRZHiA/CwsgHT6WIkTAUfN/hrULLfM6EXRseX5ekir+xOA8Ej16YbJjdUqYr
-	 qlT+J37lnqOzHyYf+2qkV4FchoGpuWsz5ktqIWegKLAYBh3JkfOM/ckol2afDh0pzK
-	 hOYIJDSt/hhYRKye+2l2lWlYg2jgxWgWeU2nC/UukkaaN5T6itDQt+EB83IuKiD+EU
-	 N9o0KhHh9CduPUzqioKIbXxMiw9Fysvs711ZluJx+5fe/UUQi0Z12wrSGCetLRakSs
-	 rQNAAXQQe/ernfQrdf74dWLEyz98D+fBxX8UgDEpxsp8CN45dekmS0VBB6QZ9VH/dk
-	 kaPO9u32T6Ecw==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 61199198003A;
-	Thu, 29 Oct 2026 07:37:47 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 29 Oct 2026 07:37:57 -0400
-X-ME-Sender: <xms:CjDjajshZPeHtuir7v6mreGhAT4TgwhDFbd67W8lqX6eL1H1h2Hveg>
-    <xme:CjDjapxTdjr1qMNJTi5jiBAbPeUL8WNi-rLAE_SEgVpbUTGclmUKEQ760n5h0fqeV
-    hy4NTYi59RMULuyZS8aZ2YEk4SsTRY2j-0YZqzoSiY2c-6zrTJ_WiZa>
-X-ME-Received: <xmr:CjDjah4JZaAhw-Fk9PScSG2a10e8jvqhDX8C23W0UBFCIs08u9qC86Fq1ss>
-X-ME-Proxy-Cause: dmFkZTEJDAstCk+7zNgejakM4nNk+p9JZpQkZ6Wp/ORPY45DYJ9sLHFzb2OSqjFNCrREyO
-    88yfN6Bm2PU/BZ+n9uLJeM8IQCx6gh4dmoBjtrR/gRMQnW1vav0T4U3R0wWLGH7ILSJz0U
-    jdMa6OkiVebfbkVm5JCCWeL4Bgmn1pDydwYsJOPck3Qdns4HPrCASx59vSMT+/j+yF0qvX
-    G2BRvU5cIsoY70+iA26gBsYSOUUpx4hNQp6J+87EVccCZ9Ae0yLIol7hi0rblFUAevpiPd
-    uHrIkD9QzQyn3BgarrdLD501N6XdbeMUSrCRkW1q1L/F8zcqlxf0OSCgggqIu+bFPdnmVK
-    NcNYxpSkwWOCwZcLOuaYHRTsxYx6D85JDsOHrpKL1vEhmUAKDtUhCnUAlLFqot1DM9q/eV
-    ZTIcjPJqq14fF0zy0HGkF60Z4NFN+bSz/WNKQw6f5WcVzsXmI0zvI1J66w/XqmME697OXQ
-    zERHpQf1f2P1KpVc8eIXbHuzD/SOd6B+KE+lUnfFtKDQN9VNcFcye2oj8ZEx6A7qEAQffs
-    IUWqlyPo0fg/2eaM6xeJ2DOITKhJqU9srQCSgILo9WyD2HhperaR62DEVqvtfMq6CL02UO
-    uYQhCBNO5b6ROgC+/K/MpQZdw9fNc5YCZUTnJbGBtnaHKfxJROTOsVpYwzvA
-X-ME-Proxy: <xmx:CjDjanSS7Mx8TZPiU7heer_Q9SPTwHVFNB-SMCwAJ9aut0b1vRFrUw>
-    <xmx:CjDjag-PYdm5Aer_OhpqtOoZx_SwLxAY07eLDmtLNEeq-uTx5hq8eg>
-    <xmx:CjDjauzsU80bWiXzCsXzA_QbCjiGNW-gGh7_khHqQIP9Mv30v0qhhg>
-    <xmx:CjDjaqzuB5gcDCgx7-WAvZUa70Eg8YXQlUPcy8ONATKcSf71OQuvVg>
-    <xmx:CjDjah0f_57xCcmxZRGSyxLW9vwtr4aZedU-FEl-YETeEd7d6gRBRj2j>
+	b=UHn0a5YL6QGcNihIKQluv0b4guqjf823yj6bWc/4QmvszvCUipU3pERW76DKSVMmf
+	 SQ43D/ZSxYLZCWL40xUNbF//Eufa2HSflsgj5JCntvW3pnJ/GsYihC3RPLC+0hs14e
+	 HMBm+cNAb6mgsvToK7+Nb6uoX5vpyTK+6VFLILEsOV9G7RpShjzu9YCfjWHqry2RiO
+	 yJP11ZdaMob/O3RJuKskyEXDlCUB0twtuE4qa+qDZhU4ibW7pf6z6TIJXl9+MtCuxW
+	 q/ljUQKR+DsDFZtDsfbIoFJSUIlbnp3NKBO4iaVdBQON1RQwALHRq/YPVjb+3bqbl5
+	 TtWinaxZFlO5Q==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 7799F1980050;
+	Thu, 29 Oct 2026 07:45:33 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Thu, 29 Oct 2026 07:45:43 -0400
+X-ME-Sender: <xms:3DHjairuennPQvhjwo3_YPAmukFu5CBTYJVtCw3By7gJ5flYOHlT5w>
+    <xme:3DHjakQea4FFA7_DjkBefq1IYJ3IoZ8tbRUAJFfGUd8nUX90_xR6mBJo34i5-VF56
+    fu_q9PvNAHOkq9z8X63Q6OlwnauiVA8Dx1uZop3DEgo_Rz86ZRW79C6>
+X-ME-Received: <xmr:3DHjaudpUFhx7vg_2m9VdYjKdXNzWumT-isAu-JU_TgSqAgZbdb3lrsMrBI>
+X-ME-Proxy-Cause: dmFkZTFdC3J2hM2mtuuiUkWv9UlgSJMYvAmbEHpjS7/lcF0eeZ0j60Cp90J60IZRmcx8lL
+    PLZLLgyvpra8qBzeYo05eA0QxZ3x2jCz6Gb9lcqoI9ZYyDtpfsk77/KYC7fg0bOW2V6khe
+    SVry6R5jukpqaeN/XKgPBdc/Hevm5XujAyffZc/FYa9tDCLI9VOtsk5ekVOYLimIwkZaCx
+    wQl/7MdAFBJjvst9SLlJcM4Ti5div+EjygRDVQjnnm7dGxa8I9gqYC1WDG4iG79q9DF3Fd
+    otKmdtPPpwpkSbMEfNk0nOiDSMxwiiwyROavlNREce8238nK2ItWRHhGdyNGqrpSoezbWc
+    nOV30O4GmIEdMLlrkRy0R++7wow4/MbSGet4veO9h1iLmc4yjwDn3vj67d/hkN1ejAM7hW
+    3gL5/qyFcGR3sM9iaQPQTKOPK6Qiu/buabpadH2ZB/2wGUAsRiSCgh6kHO1O0dDWQ7hIvN
+    4R8pcREuG38L0xxH6Mo/v2o+amX8bAeuca98DN0oyDFf5HyLBDZbL9lA/O/uNijOVCILFF
+    505LL9fML5cbgV2XjBsUNHdMON6lE28Lq82Q+kFkUvHxhD6Ec/9mG/yLyI7CX2FYhit08I
+    RgSeNdXmyN4YBEBd+mU57gup2cHHhyJ1Koc/0jGrcbpsR0rK+9SpTA8/K8ig
+X-ME-Proxy: <xmx:3DHjam3rTZsBh_e2_zwfN3K42dpDgexgI2_pYHy3j1QVDWxB7e84cA>
+    <xmx:3DHjam3_Qd3-qlMqVEjkKl7toFqJfdoexFJuKGZoEhViyoFE1ZnwHw>
+    <xmx:3DHjavBW8LeD-DaKoSnAo9f9cLFsq42I2Sq-gvAOF-VHEoplQChM2A>
+    <xmx:3DHjat9bZbqruIhj4rdY3dd7aUcgJ17-bVxxD3xFYuFNBc-yr6JrFQ>
+    <xmx:3THjau7Kt31Te8SB122Obd4TYWN2w-2Y_N5NfPn8P5VHANauPC_q9fbu>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 29 Oct 2026 07:37:45 -0400 (EDT)
-Date: Thu, 29 Oct 2026 11:37:44 +0000
+ 29 Oct 2026 07:45:31 -0400 (EDT)
+Date: Thu, 29 Oct 2026 11:45:30 +0000
 From: Kiryl Shutsemau <kas@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -97,14 +97,12 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 05/46] mm/truncate: look again if a folio left the mapping
-Message-ID: <auMvYdTd_e9O9kDj@thinkstation>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 42/46] mm/huge_memory: split huge PUDs when adjusting VMA
+ boundaries
+Message-ID: <auMxQPze5cOvGbCe@thinkstation>
 References: <20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org>
- <20261027-fixes_core-v1-5-6f74bec9a5bb@kernel.org>
- <auIniV8YSpA4_oxg@thinkstation>
- <2f2ef336-2186-4f20-b7f5-565e60471bda@kernel.org>
+ <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -116,35 +114,112 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f2ef336-2186-4f20-b7f5-565e60471bda@kernel.org>
+In-Reply-To: <20261027-fixes_core-v1-42-6f74bec9a5bb@kernel.org>
 
-On Wed, Oct 28, 2026 at 10:45:34PM +0100, David Hildenbrand (Arm) wrote:
-> My brain hurts, does the above make sense?
+On Tue, Oct 27, 2026 at 12:18:02AM +0100, David Hildenbrand (Arm) wrote:
+> PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
+> allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
+> only handles PMDs.
+> 
+> After faulting a writable PUD-sized VFIO BAR mapping, changing its first
+> page to read-only with mprotect() makes the PMD walk treat the PUD leaf
+> as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
+> the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
+> 
+> Walk the page tables once at each adjusted boundary and split a huge
+> PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
+> PMD-aligned.
+> 
+> Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/huge_memory.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 60 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 08e58cda7d37d..d090642ac8c2b 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -3503,16 +3503,66 @@ void split_huge_pmd_address(struct vm_area_struct *vma, unsigned long address,
+>  	__split_huge_pmd(vma, pmd, address, freeze);
+>  }
+>  
+> -static inline void split_huge_pmd_if_needed(struct vm_area_struct *vma, unsigned long address)
+> +static bool pud_split_required(const struct vm_area_struct *vma,
+> +		unsigned long address)
+>  {
+> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD))
+> +		return false;
+> +	if (IS_ALIGNED(address, HPAGE_PUD_SIZE))
+> +		return false;
+>  	/*
+> -	 * If the new address isn't hpage aligned and it could previously
+> -	 * contain an hugepage: check if we need to split an huge pmd.
+> +	 * Only selected VMAs support mapping PUDs for now. Lift the
+> +	 * restriction once this changes.
+>  	 */
+> -	if (!IS_ALIGNED(address, HPAGE_PMD_SIZE) &&
+> -	    range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PMD_SIZE),
+> -			 ALIGN(address, HPAGE_PMD_SIZE)))
+> -		split_huge_pmd_address(vma, address, false);
+> +	if (!vma_is_dax(vma) && !vma_test_any(vma, VMA_PFNMAP_BIT, VMA_MIXEDMAP_BIT))
+> +		return false;
+> +	return range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PUD_SIZE),
+> +			    ALIGN(address, HPAGE_PUD_SIZE));
+> +}
+> +
+> +static bool pmd_split_required(const struct vm_area_struct *vma,
+> +		unsigned long address)
+> +{
+> +	if (IS_ALIGNED(address, HPAGE_PMD_SIZE))
+> +		return false;
+> +
+> +	return range_in_vma(vma, ALIGN_DOWN(address, HPAGE_PMD_SIZE),
+> +			    ALIGN(address, HPAGE_PMD_SIZE));
+> +}
+> +
+> +static void split_huge_leaf(struct vm_area_struct *vma,
+> +		unsigned long address)
+> +{
+> +	const bool split_pud = pud_split_required(vma, address);
+> +	const bool split_pmd = pmd_split_required(vma, address);
+> +	pgd_t *pgd;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	pmd_t *pmd;
+> +
+> +	/*
+> +	 * mmap, VMA and rmap write locks protect the walk; the split helpers
+> +	 * take the page table locks.
+> +	 */
+> +	if (!split_pud && !split_pmd)
+> +		return;
+> +
+> +	pgd = pgd_offset(vma->vm_mm, address);
+> +	if (!pgd_present(*pgd))
+> +		return;
+> +
+> +	p4d = p4d_offset(pgd, address);
+> +	if (!p4d_present(*p4d))
+> +		return;
+> +
+> +	pud = pud_offset(p4d, address);
+> +	if (split_pud && pud_leaf(*pud))
+> +		__split_huge_pud(vma, pud, address);
+> +	if (!split_pmd || !pud_present(*pud))
+> +		return;
 
-Yes, I missed that the loop only goes back to start when a lookup
-comes back empty below end. When the last batch reaches end, it exits
-without another look. It doesn't need the split either: any punch hole
-whose last page is in the page cache gets there.
+This looks wrong.
 
-That exit looks unintended to me. b9a8a4195c7d ("truncate,shmem: Handle
-truncates that split large folios") turned the "if (start >= end) goto
-out" early exit into the loop condition. Before it, the loop went back
-to start until a lookup from start found nothing; Hugh kept that on
-purpose for hole punch in 792ceaefe621 ("mm/fs: fix pessimization in
-hole-punching pagecache").
+We should bail out here if PUD is was a leaf and wasn't split.
+pmd_offset() below expects page table PUD entry.
 
-Restoring it is enough, and makes the "restart to make sure all gone"
-comment true again:
-
-+       if (start >= end)
-+               return;
-+
-        index = start;
--       while (index < end) {
-+       for (;;) {
-
-Then a replaced folio is found on the next round, and truncate needs no
-special case for it.
+> +	pmd = pmd_offset(pud, address);
+> +	__split_huge_pmd(vma, pmd, address, false);
+>  }
+>  
+>  void vma_adjust_trans_huge(struct vm_area_struct *vma,
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
