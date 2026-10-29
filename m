@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793317479;
-	b=BNamSd/AXo6NrVnRCdh0WyuKz0O6OBAmHnIHpZls2SrQz7Yy+OFE/frh3l0Uh98KaJ/u
-	 q8qa9ULN/plv6vrwu1ksdwbhIiOyqcAVY/KVH8eQN0lt24f661yhdzoqmfJ8zP7dxnCXz
-	 3kqfQB5T/UhDOHgoUxzBD8TvTCbGx/BvNPfIXBeVIMRYfwHMOMGh2jfRu09qc9AaNv3Ek
-	 tb0piStLSCgvEMry/q78jL3wKxnpfbHzDp15M/ntt6l9SmHK51nOQXSzBL8mF3Sms1j8i
-	 I+phLSF2tIM7n2XVvtJZavIfCHj0pgVefTcI7c8EDU6Bb116K8GhfBZ6PAuDKJxYY2g==
+	t=1793317482;
+	b=SJ4W75ToZ7u/MMOQHuLkXenPgaEixp17URcMLRKAEA8gsez1HpOgk7uzrTLwGwGAn9vJ
+	 OLAIML1UbfRb3jdaJxKfumuaEtGSPZsj2ga/thvGXMr1/a+KpX87y24FRbhUCVldXVgbP
+	 nRwKontYTkIWyayXlHYoO7yBcnyPGbOmKDCaB7+c5Po+6YqiGY2FGlTzyN6Sawtirno/H
+	 Ja9YWiklIroLyAsO8WJqZASWh59PhY1ILrNqWxsltncwb7sa20mQfYIlldLciXWCQfr1M
+	 JVMFNGp/9CsIIzZlZ1ysi0Q4c3RWM/A+SHkaGWEVcIZI7fPQsT0HTYxA+svte37y/WA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793317479;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793317482;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=UJWUF6wnWZroGQ6VwPZOk5pgOTGsd13Wc4WcOsUFh9I=;
-	b=adONwPbec8qKF2KzL22Psxpe8b5XY86vMSPeEI1pSalsxEZUGQgEE51bJmizwJtg5R0X
-	 R9NPXfo9wZ9Gj6Gkq6fcMQh6Cns976eSIca58Dgl4DaFuyw+Hw+vCClawKDl+nEjAyLVM
-	 M9nw4KHBTvpsfJOZu/Y+ziRQ6LqujxQHV0tN8v8d/xT1FgRdSZbTX3VD6EiAmbsgb6oBY
-	 dTXumoxtSy2VoLbvEzPBxSyaluwg2/pklFdDvY046uDbK2otVn1oEKRk5aBaRk71po/Xt
-	 weEzozIcOMmbICxfIuJhm2jkR4HMlFCpYg6VtGjz+Vnx/bHQwrmmmizChwB+b6NKv7A==
+	bh=yb373LVMahPHXhPARb7KPryWsGd0kAlYzWpNgah5AIU=;
+	b=pbC16i1ThSvldoMgnQm4xWKBYSezQu4FG1EdUW5C5phkrcc3mvzQ5XoWhTEUWn1pz/eq
+	 M3aO8dPwcdC9Iu76EKY7/vhJAxnurVTi7N2r/bZzKtcIusqPnpIudzAZOiQcOXIrhdSy0
+	 FeDqGs9xGoY4PJoIZjhz5X07YmEHP+HFrvnlDV6QtO78R2ptIaWGs622xseuZl85FXfuL
+	 wEUCUpHcR7I1Zrei2MW/AFgzk7JeSSzVmu+JiIuaBfzJpkzJ3b1/7VeWTLNPOcxPW3pXJ
+	 3WR0zelo3oEnLBMwITB2FQCFN0URRlTqznmRc16QjE+TN/cBqfyupVQ/hHKTB1DRYSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jxcQQ5OB;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CwGSR4r9;
 	arc=none smtp.remote-ip=198.175.65.20
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A023606A322
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 23:44:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A023606A322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB35606A32E
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 23:44:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CB35606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jxcQQ5OB
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CwGSR4r9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793317461; x=1824853461;
+  t=1793317465; x=1824853465;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pv+1MBTdrlSH34YF3X0K2DbJu0bsHdKnDSl+JmAWO8Q=;
-  b=jxcQQ5OBPGfF25LzSx6//ZyCme7kqvfKjiSuEk/9I7zPiPzU8dhDE+L3
-   1VtXaiWT2p0jbiSGjI+CcazKW80OEiXmRtZqfoELSbDN1barJkBEkp5uQ
-   3T/ejj3Kqd4u1ddlHJtuwiFr9tSVmx7FJTC4DltxmfSqaFDx3DJlleFg2
-   +KDDlXguExMKxt8MbQkzlV1Gr9iPatjkIL5jGVhbkQUO+wneSxGsjtuW6
-   2lqacwPmeLahUy4SAVn7DS7r9f9tMU0TNIx8cZbX7H5L2kAl3zekf4yTW
-   1BXA5uCGNNFGYR7fLIUffm5bPxlvVfPd5bNV4gcAqnr1BhmKi1pgidAR2
-   g==;
-X-CSE-ConnectionGUID: RVRxBtPgR0y+jjgI3y5q4w==
-X-CSE-MsgGUID: 3MnF2tq9Qhivn5tm20L6ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2100443"
+  bh=xoByWkV84r1/uYTNFWAQVV9c9j5HC5kAXMCdLV3J0+k=;
+  b=CwGSR4r9Upx5rqaq+bV3oQXqTjGLlmd5+5VGh4Ksi0iqvX8vnNI6QCbu
+   jZiURuOGyGRBWXtRYb27OjyoLps28XDb5mVP+nmCF0fhW9wDOpaPTVGGU
+   MShqJjivlK/zEu6yoKBLw9OS77l1oXg+9RTYf+S/yOjDv+yVDCU7dVR9+
+   wqtvdY0wzYK3HDA5gVhYZHuvjMAXni9716uXPel+l5pTiXg2KnOXGgu6f
+   tCbdYg2y/V12pFmxPltMj8ztmBzTuZXOhuIR3yOiwVtv6Ae6zE/5/6CsU
+   5jTS9EOuJ533++1bxNBltkiWCXT6mJVgFHJi4QrCwhaybU/1R/KDNtyY0
+   Q==;
+X-CSE-ConnectionGUID: b+BOzDIJRlKzzJ7XfhZmyQ==
+X-CSE-MsgGUID: D9swkf0MSdSUuKIRxWQRlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2100450"
 X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="2100443"
+   d="scan'208";a="2100450"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:44:09 -0700
-X-CSE-ConnectionGUID: 7M13LsodTM2iiTGcRxz71A==
-X-CSE-MsgGUID: WAo+hQcASQGAFs+Ggb0qMA==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:44:11 -0700
+X-CSE-ConnectionGUID: lVPcZyI1SPi4KbkujdzGBw==
+X-CSE-MsgGUID: oTJGEC3DQySnXyYKvCcMow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="5385218"
+   d="scan'208";a="5385226"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.57])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:44:09 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 16:44:10 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: nvdimm@lists.linux.dev,
 	Gregory Price <gourry@gourry.net>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v2 2/4] libdaxctl: tie mapping cache lifetime to the device
-Date: Thu, 29 Oct 2026 16:44:01 -0700
-Message-ID: <f69d432b0d91c247a801112252db4dfe57a9f8b3.1793315621.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v2 4/4] test/daxctl-create.sh: count memory blocks across dax mappings
+Date: Thu, 29 Oct 2026 16:44:03 -0700
+Message-ID: <4f8ccd305a70f3f63f98a0b489b47ea67773c7f8.1793315621.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1793315621.git.alison.schofield@intel.com>
 References: <cover.1793315621.git.alison.schofield@intel.com>
@@ -83,68 +83,109 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cached mappings are not freed when a device is destroyed or invalidated
-when its ranges change. This leaks memory and can leave callers using
-obsolete physical address ranges, potentially operating on memory blocks
-that no longer belong to the device.
+Existing tests use single-range devices and cannot detect incorrect memory
+block accounting across discontiguous mappings. A two-range device exposed
+this bug by reporting only one of its two blocks.
 
-Free mappings on device destruction and invalidate the cache when device
-ranges may have changed.
+Create a device with two separated mappings and verify its memory block
+count against the expected count from both mappings.
 
-Fixes: 5a31bf710399 ("libdaxctl: add mapping iterator APIs")
-Fixes: 52a2653098a5 ("libdaxctl: add daxctl_dev_set_mapping()")
 Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- daxctl/lib/libdaxctl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ test/daxctl-create.sh | 58 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
-index f630f4791f59..f7cbf3fa12e7 100644
---- a/daxctl/lib/libdaxctl.c
-+++ b/daxctl/lib/libdaxctl.c
-@@ -241,6 +241,7 @@ static void free_dev(struct daxctl_dev *dev, struct list_head *head)
- 	free(dev->dev_buf);
- 	free(dev->dev_path);
- 	free_mem(dev);
-+	free_mappings(dev);
- 	free(dev);
+diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
+index 954a112d0f18..c4fe369eac3a 100755
+--- a/test/daxctl-create.sh
++++ b/test/daxctl-create.sh
+@@ -7,6 +7,9 @@ rc=77
+ 
+ trap 'cleanup $LINENO' ERR
+ 
++policy=/sys/devices/system/memory/auto_online_blocks
++saved_policy=
++
+ modprobe -r cxl_test
+ modprobe cxl_test
+ $CXL list
+@@ -14,6 +17,7 @@ $CXL list
+ cleanup()
+ {
+ 	printf "Error at line %d\n" "$1"
++	[[ $saved_policy ]] && echo "$saved_policy" > "$policy"
+ 	[[ $testdev ]] && reset_dax
+ 	exit $rc
+ }
+@@ -396,6 +400,59 @@ daxctl_test7()
+ 	test_pass
  }
  
-@@ -593,14 +594,15 @@ static void *add_dax_dev(void *parent, int id, const char *daxdev_base)
- 	else
- 		dev->target_node = -1;
- 
-+	dev->num_mappings = -1;
-+	list_head_init(&dev->mappings);
++# Test 8: multi-range system-ram
++# Successfully counts every memory block of a device whose two ranges
++# have a gap between them. The memory is never onlined: cxl_test memory
++# is not backed by RAM.
++daxctl_test8()
++{
++	local daxdev_1 daxdev_2 daxdev path m start end n nmaps=0 total=0
++	local bs size
 +
- 	daxctl_dev_foreach(region, dev_dup)
- 		if (dev_dup->id == dev->id) {
- 			free_dev(dev, NULL);
- 			free(path);
- 			return dev_dup;
- 		}
--	dev->num_mappings = -1;
--	list_head_init(&dev->mappings);
- 	list_add(&region->devices, &dev->list);
- 	free(path);
- 	return dev;
-@@ -1186,6 +1188,7 @@ DAXCTL_EXPORT int daxctl_dev_set_size(struct daxctl_dev *dev, unsigned long long
- 	}
- 
- 	sprintf(buf, "%#llx\n", size);
-+	free_mappings(dev);
- 	if (sysfs_write_attr(ctx, path, buf) < 0) {
- 		err(ctx, "%s: failed to set size\n",
- 				daxctl_dev_get_devname(dev));
-@@ -1242,6 +1245,7 @@ DAXCTL_EXPORT int daxctl_dev_set_mapping(struct daxctl_dev *dev,
- 	}
- 
- 	sprintf(buf, "%#llx-%#llx\n", start, end);
-+	free_mappings(dev);
- 	if (sysfs_write_attr(ctx, path, buf) < 0) {
- 		err(ctx, "%s: failed to set mapping\n",
- 				daxctl_dev_get_devname(dev));
++	bs=$((0x$(cat /sys/devices/system/memory/block_size_bytes)))
++	size=$((available / 4))
++	if (( size < bs || size % bs )); then
++		echo "test8: skipped, region too small for $bs byte memory blocks"
++		return 0
++	fi
++
++	# a devdax device in the gap between the two ranges, it has no
++	# memory blocks to be miscounted
++	daxdev_1=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
++	daxdev_2=$("$DAXCTL" create-device -r "$region_id" -s $size | jq -er '.[].chardev')
++	test -n "$daxdev_2"
++	"$DAXCTL" disable-device "$daxdev_1" && "$DAXCTL" destroy-device "$daxdev_1"
++
++	daxdev=$("$DAXCTL" create-device -r "$region_id" -s $((size * 2)) | jq -er '.[].chardev')
++	test "$(daxctl_get_nr_mappings "$daxdev")" -eq 2
++
++	# memory blocks wholly inside each mapping
++	path=$(readlink -f /sys/bus/dax/devices/"$daxdev")
++	for m in "$path"/mapping[0-9]*; do
++		start=$(cat "$m"/start)
++		end=$(cat "$m"/end)
++		n=$(((end + 1) / bs - (start + bs - 1) / bs))
++		(( n > 0 ))
++		total=$((total + n))
++		nmaps=$((nmaps + 1))
++	done
++	test "$nmaps" -eq 2
++
++	saved_policy=$(cat "$policy")
++	echo offline > "$policy"
++	"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"
++	test "$("$DAXCTL" list -d "$daxdev" | jq -er '.[].total_memblocks')" -eq "$total"
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++	echo "$saved_policy" > "$policy"
++	saved_policy=
++
++	"$DAXCTL" disable-device -r "$region_id" all
++	"$DAXCTL" destroy-device -r "$region_id" all
++
++	clear_dev
++	test_pass
++}
++
+ find_testdev
+ rc=1
+ setup_dev
+@@ -407,6 +464,7 @@ daxctl_test4
+ daxctl_test5
+ daxctl_test6
+ daxctl_test7
++daxctl_test8
+ reset_dev
+ modprobe -r cxl_test
+ exit 0
 -- 
 2.37.3
 
