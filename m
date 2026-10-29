@@ -1,165 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793286741;
-	b=HanE3/U+f5m04T4gBAi1J6An0gDYVJqBqvDxsyAJOXFJ0/7UuPDH1em8wdUdd1VfgzLw
-	 1n+oLmyruE2lJo0cJfWzIUz6oGJV1fdx1+rLBj1E09ii2xfMYSXjC0KGGSeiEkKrD4wHM
-	 7hVzwkf3sM7mFXnGKkRpVxws9ogP7Lp9/bWXYerMA9ZRdf8gjyNFCtqmPYSGB629Hbarc
-	 2l1btKuxIeqthmbqkQ4uXsKMYwDeAOH3plI/KAdJcJiSoCDFUc0s51+dmBmaDDda9n0nI
-	 m6H0H5ddgkTihocaKDby2JWcfQlJ/JAO/eh82ubM9+J0lZFLEJ97TL3yd8AtPEn2FwQ==
+	t=1793287543;
+	b=rM5enyApDdu/98Ib3kGCDzjFTumCUMLT6e6X6yXOwdQppB14X2qcYymVcwoozpAFgHky
+	 7Sx6P7ik2KrN68nUUPredd9cIVcyO/4mkEz9EHiCMo1KycGPcwZqexkLjcuFU+Dv/5kzX
+	 7oxkHiWD1sN9E+sinj6HPgHy+nY6RNJ9GGCVSGhtF0co1/A4scPDWJ2kSRFlPqeSBQc7d
+	 B1hZsFPmNqFa78YFmTDQiLQp5wugEVbLfh/eRiTInkjBwm6XArYUX2gvAK1ngJi8Ukt4m
+	 CRsUb5+8PsuoAnLqcOpPlC3jr1rkzu6UIw5RJpLbUYtpqcB8aru5elB7aRUKWQAg36w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793286741;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:Reply-To:References:MIME-Version:In-Reply-To:User-Agent:
-	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Type:Content-Disposition:Content-Transfer-Encoding;
-	bh=sy6RcJq7kWnzNPatcCz5vMju7T26X8KtMwEXCbitl90=;
-	b=zWCR6KkYnX66UG3/L3UsimqKNmJsOxZZQg2b7C09rJ9XR7XL5Xmt7REFnF9XECjjQLR1
-	 oPhmhsG7bfCFYz4rAjTILGE8lBX71Zedv/7NWPm47QlB+JF7nzK1Hk/3De6tX/GIJzfhC
-	 xdbTs89xHeHOTAkmjX3fI16rMvzQ9S9rAd+/wOw0EVn7s47aT6XZxAovC9Pri7RTBX+5k
-	 x2XsXEcJJwGiMwX1T40npvSRGxDcBUcPASAqJkT2Bp9xTQkLV40NBzbA+JLi6bMA0Dkg4
-	 zFQi7HfHhwOsQOgaN1Ur/Ygsf4gFLTnBFh/tJkUMtyf06QWcAgunpwoaG/4pjC+spWQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793287543;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=iq3SDgtYy2kEN3rvhAeP9GPbbHzk2V92ozhBX5q1wc0=;
+	b=M0Y/tnoirALOQQvwJt//7dL7Zkbdj8yoi2G+GZsMRkB/BZ/QJBjf9nq6BzZoxDXNTMTz
+	 27N2NOzeU2WyJdJDJYbSNa4MO0Ja+E1gzpGz/531fd1FVZ1SlVI5EMWR/DZXtuhewfYdm
+	 UX8VFVZXwXUs1HgAO4oaZWaM5+tU4HPiDDVhSobySF6ILwJfKdMD2TEb2Q335mkLPKpjN
+	 JymgSB60DEqtzqC10+J6tM+UWYLsUTH5RUrVMeCtrniPHZntki5BFcSHtGehYP3Lh+uSm
+	 jFR8GKjUO4ZAye+dvTsmivk/yvRPe2/GEX4HqFj/xx+Zq6Gjkq7d97ev72BvtpziIxg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Xm56vkH9;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HxrdHkHu;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942D606A31A
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Oct 2026 15:12:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A942D606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95079606A31C;
+	Thu, 29 Oct 2026 15:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Xm56vkH9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793286739;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sy6RcJq7kWnzNPatcCz5vMju7T26X8KtMwEXCbitl90=;
-	b=Xm56vkH9ATMJMygfPZSg+6GK3F6dQs7YPsYUO98Xep2m+NG+NICizkX3sSRQ6aFxum1tFS
-	2r5qzweZVvntR9s1vJ+llUI80AT507RpAf8Wam+f6LXJQP6VwleF7JeNpCHZ3Pdfknrstd
-	mi7fwEqZHv79SYuWjlc8dXp0RGQs8wo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-lR4E_uxDPxGRis0Bj7u-cg-1; Thu,
- 29 Oct 2026 11:12:15 -0400
-X-MC-Unique: lR4E_uxDPxGRis0Bj7u-cg-1
-X-Mimecast-MFC-AGG-ID: lR4E_uxDPxGRis0Bj7u-cg_1793286731
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CA951956043;
-	Thu, 29 Oct 2026 15:12:09 +0000 (UTC)
-Received: from redhat.com (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 11F131955F08;
-	Thu, 29 Oct 2026 15:11:43 +0000 (UTC)
-Date: Thu, 29 Oct 2026 15:11:41 +0000
-From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-To: Markus Armbruster <armbru@redhat.com>
-Cc: =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
-	qemu-devel@nongnu.org, Michael Roth <michael.roth@amd.com>,
-	John Snow <jsnow@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Kostiantyn Kostiuk <kkostiuk@redhat.com>,
-	Eric Blake <eblake@redhat.com>,
-	David Hildenbrand <david@kernel.org>,
-	Igor Mammedov <imammedo@redhat.com>,
-	"Edgar E. Iglesias" <edgar.iglesias@gmail.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org,
-	Alberto Garcia <berto@igalia.com>, Kevin Wolf <kwolf@redhat.com>,
-	Hanna Reitz <hreitz@redhat.com>,
-	Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>,
-	Zhao Liu <zhao1.liu@intel.com>, Jonathan Cameron <jic23@kernel.org>,
-	Junjie Cao <junjie.cao@intel.com>, Anisa Su <anisa.su@samsung.com>,
-	Elena Ufimtseva <elena.ufimtseva@oracle.com>,
-	Jagannathan Raman <jag.raman@oracle.com>,
-	John Levon <john.levon@nutanix.com>,
-	Thanos Makatos <thanos.makatos@nutanix.com>,
-	=?utf-8?Q?C=C3=A9dric?= Le Goater <clg@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>, qemu-block@nongnu.org,
-	linux-cxl@vger.kernel.org, qemu-s390x@nongnu.org,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Sergio Lopez <slp@redhat.com>, qemu-arm@nongnu.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Weiwei Li <liwei1518@gmail.com>,
-	Daniel Henrique Barboza <daniel.barboza@oss.qualcomm.com>,
-	Liu Zhiwei <zhiwei_liu@linux.alibaba.com>,
-	Chao Liu <chao.liu@processmission.com>, qemu-riscv@nongnu.org,
-	Song Gao <17746591750@163.com>, Bibo Mao <maobibo@loongson.cn>,
-	Xianglai Li <lixianglai@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Pedro Barbuda <pbarbuda@microsoft.com>,
-	Mohamed Mediouni <mohamed@unpredictable.fr>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Harsh Prateek Bora <harshpb@linux.ibm.com>,
-	Amit Machhiwal <amachhiw@linux.ibm.com>, qemu-ppc@nongnu.org,
-	Zhang Chen <zhangckid@gmail.com>,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	Alistair Francis <alistair@alistair23.me>,
-	Alexander Graf <graf@amazon.com>,
-	"Gonglei (Arei)" <arei.gonglei@huawei.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>, Ani Sinha <anisinha@redhat.com>,
-	Luc Michel <luc@lmichel.fr>,
-	=?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-	Jamin Lin <jamin_lin@aspeedtech.com>,
-	Kane Chen <kane_chen@aspeedtech.com>,
-	Samuel Tardieu <sam@rfc1149.net>, "Denis V. Lunev" <den@openvz.org>,
-	FangSheng Huang <FangSheng.Huang@amd.com>,
-	Tyrone Ting <kfting@nuvoton.com>, Hao Wu <wuhaotsh@google.com>,
-	Keith Busch <kbusch@kernel.org>, Klaus Jensen <its@irrelevant.dk>,
-	Jesper Devantier <foss@defmacro.it>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Glenn Miles <milesg@linux.ibm.com>, Conor Dooley <conor@kernel.org>,
-	Sebastian Huber <sebastian.huber@embedded-brains.de>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Jason Herne <jjherne@linux.ibm.com>,
-	Titus Rwantare <titusr@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Anthony PERARD <anthony@xenproject.org>,
-	Peter Xu <peterx@redhat.com>, Chinmay Rath <rathc@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	xen-devel@lists.xenproject.org,
-	Roman Bolshakov <rbolshakov@ddn.com>,
-	Phil Dennis-Jordan <phil@philjordan.eu>, Fam Zheng <fam@euphon.net>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Tao Tang <tangtao1634@phytium.com.cn>,
-	Stefan Berger <stefanb@linux.vnet.ibm.com>,
-	Fabiano Rosas <farosas@suse.de>,
-	Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-	Artyom Tarasenko <atar4qemu@gmail.com>,
-	Yoshinori Sato <yoshinori.sato@nifty.com>,
-	Jiri Pirko <jiri@resnulli.us>, Eric Auger <eric.auger@redhat.com>,
-	Laurent Vivier <lvivier@redhat.com>
-Subject: Re: [PATCH v7 54/65] qdev: adjust PciDevfn declared type
-Message-ID: <auNiLX-dsm8XsFG-@redhat.com>
-Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
- <20261020-qom-qapi-v7-54-431a86b02b58@redhat.com>
- <atsxLV5YZo8dr-8G@redhat.com>
- <CAMxuvazd7G_NBOM_c6BxZn5PFSw=XQUHueHqBoQQfpzPPgi9qA@mail.gmail.com>
- <87zevz5h4k.fsf@pond.sub.org>
- <auC-ilqUJq27neSR@redhat.com>
- <87o6ce47rr.fsf@pond.sub.org>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HxrdHkHu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C64D1F01816;
+	Thu, 29 Oct 2026 15:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793287543;
+	bh=iq3SDgtYy2kEN3rvhAeP9GPbbHzk2V92ozhBX5q1wc0=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=HxrdHkHure6qjp1MJ/rgn75ZsBntFObVZlUgRBYrl4vLDssiik1Y0Rk52Ct9qYxNP
+	 LNPwBQhloAHLjM5TvHO2OdYcwuIEuGsbe6LoW1+mvOIy53g1ajZrNrMve7e7I0vcq1
+	 tZa1U++wT8z2nNYUdOGPBB6xQS6NY9ymuwXwq5vGMpGomnfbd6bmSl+9FR3lBt1Qxx
+	 JVa1dz2yNAEr1tPJ1vwI8kwlTbL5z4jbN3AIivM1+RQLgsWFJ7aigjn4aoJBAEJwqW
+	 IpxVXX9dPY0iz3HRPXta8vf32UkRJVlhjnN7uBVjS/TV4s/IkIgsRSNNoO4fFAj5rb
+	 E01Ufa74SklyA==
+Message-ID: <sashiko-outbox-189602@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v16 13/18] cxl: Validate and synchronize HDM ranges
+ around reset
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Srirangan Madhavan" <smadhavan@nvidia.com>, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20261029145703.2185231-14-smadhavan@nvidia.com>
+References: <20261029145703.2185231-1-smadhavan@nvidia.com>
+ <20261029145703.2185231-14-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 Oct 2026 15:25:42 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -168,137 +59,202 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-In-Reply-To: <87o6ce47rr.fsf@pond.sub.org>
-User-Agent: Mutt/2.4.2 (2026-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: X6T666IozjUiXGV9Z-ZT56n7d3wxvq9dAZn0yyGTM_4_1793286731
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 28, 2026 at 08:13:44AM +0100, Markus Armbruster wrote:
-> Daniel P. Berrangé <berrange@redhat.com> writes:
-> 
-> > On Tue, Oct 27, 2026 at 03:54:03PM +0100, Markus Armbruster wrote:
-> >> Marc-André Lureau <marcandre.lureau@redhat.com> writes:
-> >> 
-> >> > Hi
-> >> >
-> >> > On Fri, Oct 23, 2026 at 2:04 PM Daniel P. Berrangé <berrange@redhat.com> wrote:
-> >> >>
-> >> >> On Tue, Oct 20, 2026 at 02:46:11PM +0400, Marc-André Lureau wrote:
-> >> >> > PciDevfn is a bit special, since it accepts integer and string as
-> >> >> > setter, but only output integer as getter.
-> >
-> > snip
-> >
-> >> >                                                       But I agree we
-> >> > could do better.
-> >> >
-> >> > There are multiple options. We could keep declaring the property as
-> >> > str instead. In this case, the getter should probably return a string
-> >> > for consistency and correctness. This might surprise some existing
-> >> > users though.
-> >> 
-> >> I.e. ditch numeric suppport for numeric addresses, right?
-> >> 
-> >> Incompatible change.  Do we care?
-> >> 
-> >> If we don't, we should be honest about it and mark qom-get unstable.
-> >> 
-> >> > We could introduce new properties like `devfn-str` and `devfn-int`
-> >> > that alias the same value.
-> >> 
-> >> Compatibility break.  If breaking compatibility is okay, I'd rather use
-> >> the opportunity to get rid of cleverness, and go with your first option.
-> >> 
-> >> > We could also introduce a new structured QAPI type.
-> >> 
-> >> What kind of type do you have in mind?
-> >
-> > IMHO the root cause design flaw here was to overload 'addr' as a
-> > way to set both the slot number and function number, as using
-> > one property for two pieces of data is a well known anti-pattern
-> > we caution against.
-> >
-> > IOW, we should have had 'slot' and 'function' as separate properties
-> > from the start.
-> 
-> Fair.
-> 
-> Our modeling of PCI is old and weird.
-> 
-> What we call "pci-device" isn't a device, it's a function, where
-> function 0 sort of stands in for the device.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] cxl: unpropagated normalized addressing flag in cxl_hdm_ranges_col=
+lect()
+- [High] cxl: stale cache state and unlocked pre-checks in cxl_reset_functi=
+on()
+- [Low] cxl: missing context lock annotations on cxl_region_quiesce_lock()
+--
 
-Mmm, yes, interesting way of looking at it.
+commit 2ab2ba1a8c9580e8171daa685fd9f57270c18ea2
+Author: Srirangan Madhavan <smadhavan@nvidia.com>
 
-> Its "addr" isn't a PCI address, it's the address of the function on its
-> PCI bus, i.e. the tail of a PCI address.
-> 
-> > From a CLI POV, we could easily change 'addr' to mean only the slot
-> > number, since it is always parsed in string format without the
-> > magic (slot << 4) | function encoding. Then add a 'function' prop
-> 
-> In CLI, HMP and QMP string (not integer), value "5" is shorthand for
-> "5.0", and means device 5, function 0.
-> 
-> We could deprecate the .FN part in favor of a new property "function".
-> 
-> Once we drop support for .FN from "addr", its name becomes even more
-> misleading than it always was.
+cxl: Validate and synchronize HDM ranges around reset
 
-Yes.
+This commit validates and reserves enabled system-physical HDM ranges and
+invalidates CPU caches before and after a CXL reset. It also holds
+cxl_rwsem.region across snapshot, reset, and restoration while rejecting
+resets on devices using normalized addressing or DVSEC range decoding.
 
-> > The challenge is the impact on QMP with strict typing, as ideally
-> > int format would soley represent the slot number, but today the
-> > int format is encoded (slot << 4) | function.  So anyone relying
-> > on int format in QMP would silently have a semantic change if we
-> > altered what 'addr' means. 
-> 
-> That's a no-go.
-> 
-> > Deprecating 'addr' entirely and adding brand new 'slot' and
-> > 'function' properties would be a significant disruption to
-> > a syntax which has been documented for years (decades).
-> 
-> What about this:
-> 
-> * No change to PCIDevice member @devfn: encodes slot and function as an
->   integer.
-> 
-> * New "pci-device" properties "slot" and "function".  "slot" sets just
->   the slot bits of @devfn, and "function" sets just the function bits.
->   Both default to zero, so specifying just "slot" gives you
->   PCI_DEVFN(slot, 0), which makes sense.
-> 
-> * Deprecate "pci-device" property "addr" for QMP.  We can keep it around
->   for longer than the required grace period if that helps.
-> 
-> * Declare it legacy for CLI and HMP, with no intent to remove it.
+> diff --git a/drivers/cxl/core/hdm_state.c b/drivers/cxl/core/hdm_state.c
+> index 1140006de50d9..cb7ec0f86ab15 100644
+> --- a/drivers/cxl/core/hdm_state.c
+> +++ b/drivers/cxl/core/hdm_state.c
 
-We can't easily keep it in CLI/HMP, while removing from QMP can we ?
-As long as the property exists on the PCIDevice object, it will be
-accessible everywhere.
+[ ... ]
 
+> @@ -132,3 +139,239 @@ void cxl_hdm_cache_release(struct cxl_hdm_info **sl=
+ot)
+>  	}
+>  	kfree(info);
+>  }
+> +
+> +/**
+> + * cxl_hdm_cache_dvsec_decode() - check for memory decoded by DVSEC rang=
+es
+> + * @slot: cache pointer owned by the device
+> + *
+> + * Return: true if the published state shows CXL.mem enabled while HDM
+> + * decoders are globally disabled, so that the device decodes memory thr=
+ough
+> + * its DVSEC ranges, which the cache does not describe.
+> + */
+> +bool cxl_hdm_cache_dvsec_decode(struct cxl_hdm_info *const *slot)
+> +{
+> +	struct cxl_hdm_info *info;
+> +
+> +	guard(rwsem_read)(&cxl_rwsem.dpa);
+> +	info =3D *slot;
+> +	return info && (info->dvsec_ctrl & PCI_DVSEC_CXL_MEM_ENABLE) &&
+> +	       !(info->global_ctrl & CXL_HDM_DECODER_ENABLE);
+> +}
 
-Perhaps keep it relatively simple and merely deprecate the string
-syntax of 'addr' in QMP. That's the place where it is really ugy.
-Force QMP over to only the integer syntax for 'addr', and leave
-CLI/HMP accepting the (optionally dotted) string syntax.
+[Severity: High]
+Can info->dvsec_ctrl and info->global_ctrl be stale relative to the hardware
+state when cxl_reset_function() calls cxl_hdm_cache_dvsec_decode()?
 
-Mgmt apps like libvirt will have to adapt. Tedious, but actually
-quite simple compared to most deprecations, as the integer syntax
-can already be used with all historical QEMU versions in QMP that
-mgmt apps ever need to deal with. They can unconditionally change
-their code to int syntax and not worry about old/new QEMUs at all.
+First, cxl_reset_function() reads the live PCI_DVSEC_CXL_CTRL register into
+ctrl and confirms PCI_DVSEC_CXL_MEM_ENABLE is set, but
+cxl_hdm_cache_dvsec_decode() checks the cached info->dvsec_ctrl instead.
+info->dvsec_ctrl is only populated during PCI enumeration in
+pci_cxl_hdm_cache_init() or updated via cxl_set_mem_enable(). If
+PCI_DVSEC_CXL_MEM_ENABLE was clear at enumeration and later enabled without
+cxl_set_mem_enable(), or if cxl_hdm_decode_init() takes the active DVSEC
+range return path without calling devm_cxl_enable_mem() (where
+devm_cxl_enumerate_decoders() also skips cxl_hdm_refresh_decoder() because
+emulated is true):
 
-With regards,
-Daniel
--- 
-|: https://berrange.com       ~~        https://hachyderm.io/@berrange :|
-|: https://libvirt.org          ~~          https://entangle-photo.org :|
-|: https://pixelfed.art/berrange   ~~    https://fstop138.berrange.com :|
+drivers/cxl/core/pci.c:cxl_hdm_decode_init() {
+	...
+	if (allowed && info->mem_enabled)
+		return 0;
+	...
+}
 
+then info->dvsec_ctrl remains 0 while the device actively decodes memory
+through DVSEC ranges, causing cxl_hdm_cache_dvsec_decode() to return false
+and allowing the reset to proceed without quiescing those ranges.
+
+Second, neither devm_cxl_enable_hdm() nor its devres teardown callback
+disable_hdm() in drivers/cxl/core/pci.c updates pdev->hdm->global_ctrl:
+
+drivers/cxl/core/pci.c:disable_hdm() {
+	...
+	global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+	writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
+	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+}
+
+When cxl_port unbinds, disable_hdm() clears CXL_HDM_DECODER_ENABLE in
+hardware while info->global_ctrl keeps CXL_HDM_DECODER_ENABLE set in the
+cache. Conversely, during cxl_endpoint_port_probe(), devm_cxl_enable_mem()
+sets PCI_DVSEC_CXL_MEM_ENABLE in info->dvsec_ctrl before
+devm_cxl_enumerate_decoders() refreshes info->global_ctrl.
+
+Finally, cxl_reset_function() calls cxl_hdm_cache_present() and
+cxl_hdm_cache_dvsec_decode() in separate cxl_rwsem.dpa read-lock sections
+before cxl_reset_execute() acquires cxl_region_quiesce_lock(), and neither
+cxl_hdm_cache_snapshot() nor cxl_hdm_quiesce_prepare() re-checks the
+captured snapshot for DVSEC decode mode while cxl_endpoint_port_probe() and
+port unbind run under device_lock(&port->dev) without holding
+cxl_rwsem.region.
+
+[ ... ]
+
+> +static int cxl_hdm_ranges_collect(struct cxl_hdm_quiesce *q,
+> +				  const struct cxl_hdm_info *snapshot)
+> +{
+> +	int rc;
+> +
+> +	for (int i =3D 0; i < snapshot->decoder_count; i++) {
+> +		const struct cxl_decoder_config *config =3D
+> +			&snapshot->settings[i].config;
+> +
+> +		/* A committed zero-size decoder maps no HPA. */
+> +		if (!(config->flags & CXL_DECODER_F_ENABLE) ||
+> +		    !range_len(&config->hpa_range))
+> +			continue;
+> +
+> +		if (config->flags & CXL_DECODER_F_NORMALIZED_ADDRESSING)
+> +			return -EOPNOTSUPP;
+
+[Severity: High]
+Can CXL_DECODER_F_NORMALIZED_ADDRESSING ever be set in
+snapshot->settings[i].config.flags here?
+
+CXL_DECODER_F_NORMALIZED_ADDRESSING is a software flag rather than a
+hardware HDM register bit, so pci_cxl_hdm_cache_init() ->
+cxl_hdm_read_state() -> cxl_hdm_unpack_decoder() never sets it during PCI
+enumeration.
+
+When the endpoint port driver probes in cxl_endpoint_port_probe(), it first
+runs devm_cxl_endpoint_decoders_setup() -> devm_cxl_enumerate_decoders(),
+which refreshes pdev->hdm before region discovery runs:
+
+drivers/cxl/port.c:cxl_endpoint_port_probe() {
+	...
+	rc =3D devm_cxl_endpoint_decoders_setup(port);
+	if (rc)
+		return rc;
+	...
+	device_for_each_child(&port->dev, NULL, discover_region);
+	...
+}
+
+CXL_DECODER_F_NORMALIZED_ADDRESSING is only set later during
+discover_region() -> cxl_add_to_region() -> get_cxl_root_decoder() ->
+cxl_root_setup_translation() -> cxl_prm_setup_root():
+
+drivers/cxl/core/atl.c:cxl_prm_setup_root() {
+	...
+	cxld->config.flags |=3D CXL_DECODER_F_LOCK;
+	cxld->config.flags |=3D CXL_DECODER_F_NORMALIZED_ADDRESSING;
+	...
+}
+
+Because nothing calls cxl_hdm_refresh_decoder() after cxl_prm_setup_root()
+sets that flag (and the auto-discovered decoder is already enabled and
+locked, so cxl_decoder_commit() and cxl_decoder_reset() will not run on it),
+pdev->hdm->settings[i].config.flags never receives
+CXL_DECODER_F_NORMALIZED_ADDRESSING. Would a reset on a
+normalized-addressing endpoint bypass this -EOPNOTSUPP check and instead
+reserve and invalidate the untranslated normalized address range?
+
+[ ... ]
+
+> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
+> index cfb55b10f8acf..7919d872a34de 100644
+> --- a/include/cxl/hdm.h
+> +++ b/include/cxl/hdm.h
+
+[ ... ]
+
+> +void cxl_region_quiesce_lock(void);
+> +void cxl_region_quiesce_unlock(void);
+> +int cxl_hdm_quiesce_prepare(struct cxl_hdm_quiesce *q,
+> +			    const struct cxl_hdm_info *snapshot)
+> +	__must_hold(cxl_region_quiesce);
+> +int cxl_hdm_quiesce_flush(struct cxl_hdm_quiesce *q)
+> +	__must_hold(cxl_region_quiesce);
+> +void cxl_hdm_quiesce_destroy(struct cxl_hdm_quiesce *q);
+
+[Severity: Low]
+Should the declarations of cxl_region_quiesce_lock() and
+cxl_region_quiesce_unlock() in include/cxl/hdm.h carry the
+__acquires(cxl_region_quiesce) and __releases(cxl_region_quiesce)
+annotations that are present on their definitions in
+drivers/cxl/core/hdm_state.c, and should __cxl_reset_execute() in
+drivers/pci/cxl.c also be annotated with __must_hold(cxl_region_quiesce)?
+
+Without those annotations visible in drivers/pci/cxl.c, context analysis
+(-Wthread-safety) cannot see that cxl_reset_execute() acquires
+cxl_region_quiesce before calling cxl_reset_quiesced(), or that
+__cxl_reset_execute() holds cxl_region_quiesce when calling
+cxl_hdm_quiesce_flush().
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029145703.2185=
+231-1-smadhavan@nvidia.com?part=3D13
