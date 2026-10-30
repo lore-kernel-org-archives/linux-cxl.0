@@ -1,68 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793380097;
-	b=Evplfl0SXSsjufFTsn8SFrQaPiYn9TrebeKnBAbs4jFsse0OPRdwhH9LyvpwQLAVFpfY
-	 c8eAEe3I6ciiUh3wwi+bODWOVBFpzvmT3w8ztD4R+mFfjvTtdfALknTE3JSK2WYCE1skk
-	 TmOQPuSBJh0tWvfhFbhFTuhxOmIegqkBW4CwNUN3Asotf2OpfVUT3VcbxKA74iDqhqZsb
-	 s1euyDEgqb8Bc6QJ+jzHsxqm/wwEeC8QPEMV9WxjsyUAv3Zq24wjvIB1MyVXZmBCYb9Rw
-	 Mlf3jfkSL9nqBoxPyxwBV9gSMcpGALigEiRGhr1dUqbHmO2kX3HQS7qja+GTNppojXA==
+	t=1793380403;
+	b=PXAWUh+VAzpWg4nsKDgv3FAT8W/a7VBgD5uDzBSasgRJAS14116k0YTC+tOxSRak8GXv
+	 7DM1ch+ixLNb7NmYxIj71+5BtBI/YX/+9MglT2YktGc8eEygsZC2gLXqNayul8vSZDWBO
+	 fxGSOGW7MzhKWJMhbGUgnw+6jEZLp0UBwe9f9Zmr1kAQzHIKa3P/5pTWQ7esI/4SZdWQu
+	 Tm3HVXCVe8jkLoh1bKHE4g46KgxxVrAKI1lE3eTIwOI0PJW8bEO28w3QNrNDBtd5r50gf
+	 8F4rv899Lc+TR35nU0DG8DhktoOEVNVXFvo0l/Xl0kCgPbVsw6jdnoKye4OUdO1xpBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793380097;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=MxTNcFovyeUvNcbkqmtArfTu7j98UPGtZOH5XMgUOCs=;
-	b=GtHKtkA9OyqZSMFhOObYQdPdd356ESNW3fCyoyjEuvKRvO8Yigv+q72hYYhjn6aG1pC5
-	 DxxV1R4IlFuipewi6pfd/5Sw8HTPCAA8Khdct2MFW6iuIvXEbmbgjEALjPOkmC57ANVdR
-	 wdLVRuEeGm8u9iwSTVR4vM5AkCetoLt+Q2A8rW7OKpMMUqeOF5D0IoEXl5pLHzQO+vfch
-	 AZU9EEKlZcpqSbMNCo9Iwngk9ElnxkNmaajyDlNfwiNMbhfDGCVbUW2rTWEp4ugd3g1Kb
-	 7Ol+3ESIjv6WcpNuqxUcXhR9cJ0Wz1W1tUtjnLHSAgqQ/0NI9EUp4QyeRcHWPtu+AVw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793380403;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=QXe+E+RdINfQkHY+Os5n/a14dX5ou5KZ8OJABuBnKpA=;
+	b=bc0anXrDBrt1cOJYptAe6kwuCqY/0wR1EZeYDK+kSgAL6W1OLpVNw6ZUYf/wzmoVThvP
+	 SBMR8trIjPtUCwH7rSrLA1tXxYuMDyGNtx79lnk/giOuHbQIyfj06dPIJGxpHXk0mihsV
+	 S6xhdCmA4vPjsLkRBUrBdT/b+lIQOgDbGTt54bsFEaM9LCpVPYO2SWTB8fXj6hDSmQcFU
+	 +566nC+dCiq89sPJKazEC+qhE2qdKkwu4QjWDPqLtTZ6bT2vgRjucbpE1JA7866IWMbVa
+	 9C82Jp/2DdO5hL48MhUOxjC8OUW9dee+C3ShleC9wd63HyBFmLU+6OMz58fZj8bmGXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DuwCMLGa;
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DbGzyk9a;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1113606A31D;
-	Fri, 30 Oct 2026 17:08:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1113606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B93606A337;
+	Fri, 30 Oct 2026 17:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DuwCMLGa
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793380097; x=1824916097;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aUI5eh52NNsqWKRcNFvW4Cmvnj+EOLZmBgtljE5pYJA=;
-  b=DuwCMLGah0Gc/H7wWBT+hSTOleLV+rgz/4TlAdR6jqVZ5pTURcrhGVrh
-   niVaNtam273+TA3Tk007bfL9op3GnuRRdo9tjFV/ssWF5MgLUyehlOESW
-   C7lq7s6nBJdRZUy3ySOH60Vbwz8iWmMbhQTNPDZzRZ+EmN1mK/OXY3zYy
-   yTWDhasNquG/netfSujG/YU6yh/pquLoaFXyf2lBcvmetyuhrmLlV5z7B
-   ijELFQiNcQhxBLLXOWXwmH1mn6QQHS3OBxpoHhzirCJWUhzzjGpmH0k/Q
-   8eOS40l/KA3UzBLJK+HVIUJQT+hfaHN3z7Ro9ZSifs0nEwx9Kzg4KRTrz
-   A==;
-X-CSE-ConnectionGUID: NL+6DPJuQXGKXAKhp5ieeg==
-X-CSE-MsgGUID: uqDw+bccQO69435ePBQZUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2166570"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2166570"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 10:08:16 -0700
-X-CSE-ConnectionGUID: FS20cj/BT1m6um7dSnznlQ==
-X-CSE-MsgGUID: MkZ1mWf0R9CCr+KttFsBTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5615077"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.85]) ([10.125.109.85])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 10:08:14 -0700
-Message-ID: <b9539a2c-fbe3-4043-9347-b60cbc375fe1@intel.com>
-Date: Fri, 30 Oct 2026 10:08:13 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DbGzyk9a
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925621F0093A;
+	Fri, 30 Oct 2026 17:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793380402;
+	bh=QXe+E+RdINfQkHY+Os5n/a14dX5ou5KZ8OJABuBnKpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=DbGzyk9azvvZF4/Hf1MTiO384vuycPWTpofwisFowcjfo9WOO4kdW/wu1Ibqn+W6X
+	 gy8qEeDON8gi/LmAcPUpHcAM6SwwMxcc1RI5XzFx+w/cR1PUoyu5jNOX856m5HUzj7
+	 tsTPxHh6q4pXGm3Fqfla8pk7sbXX84pxQEyv/1GypbCyzauFS0gkv/BxU+qmfUzXCD
+	 L1dr4R/iSkJQaZr/fenudyZudqY8PtXbSOyZT6+Ni/FYj4qE5UAS3UV68aVOaJWVIS
+	 jhlY31zdemO/w2q32veNVndGy1v5j2Pb6YJI/wCOqHKqV5u+Dv2WXdDfvExfzK0IFu
+	 hw9EktPxmvAJg==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 044BE198003A;
+	Fri, 30 Oct 2026 13:13:06 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 30 Oct 2026 13:13:17 -0400
+X-ME-Sender: <xms:ItDkaj6BqRTxPmXLqubigL9EIueGGMOYyDZJHCauOtMaJ3MgxX2GuA>
+    <xme:ItDkauPmBiLS4zCQgI1ako_rkgN7gbD3xA4ARpouMkPkpq9O5bXLcGZwRmkNbUUut
+    qyhhY_EPdfh927drDZvQyQeEArWzf_MyCtxvA8F_6kLpeF5_qBhFD4>
+X-ME-Received: <xmr:ItDkalmIuXQCXobPHjON4pMwdG5tSr8ylF0JjGNRwZNDTm2lzJPWtHsCUV4>
+X-ME-Proxy-Cause: dmFkZTErCCgqI31kxNLKTziv36fnXBEJjUhhbu5DiE4X/B+EDWlW7m/zWFNgj1YSweXkBU
+    PolifZvSXcJFjYufRKMQCfH+Axb7faxt1OysaST/5q0uUjNM3zGxzIA3gFeFVcWBhKXbNW
+    KPCqx0t+2ThS+g9I65B/SqyV4EvgT8RlcuSd8AYuiBPGNwT0icuK3QI4dKqmmyYnVc3+GT
+    6sN2z26Z5vHbtaohVyhAiEzg5APh/ZsY1FhYWee3mGH8aF7tJkErXhZ/+GVhIa6n2uEJBH
+    7u5P0K7Osx5Q9n4zMWIL1lmmrSHDOexahwyC1SzqtSVC6J0zZuS3gxQCWSSTutkbLvz9OL
+    1G5B0tCBk3zs4PzBncyaLxYHanwinwdtaZCqpJ6ef6jJM2nPi2PwFlt5b0F/ITt4b0h9+N
+    izzIHz2ibHZClHnL2/8tuTURhBG1Ba2FmvoP3NwOgzaF03d1urngRk50/UaHRkfb97cyRM
+    IAGxj9UWlUuiLNDhLWj9LLzrJRJWBrIr3BO1pnJqvr5enhEZfEYeCVvf1npM4ODEAjt8pG
+    ARm03c556YtFsMKqSFO8pTdHu2AOabc3nN1UdP3lNk3JPopre+kBHu8NM5sit83odXXixV
+    jTndLM0PW/1LFe8x41sowgTYQrmlsDVv97xDfCdkdL1jfY+QRBa84fdZR4qA
+X-ME-Proxy: <xmx:ItDkapPAmZPW4q4RAziPX67H4eU72Yrby8DdxcsuJnNo0pFZ-jDvCw>
+    <xmx:ItDkakIMIm-_XrCHX4dmQFiWs9DlFcrikbwOcl3tkf5o1lepgl-B9w>
+    <xmx:ItDkaqMNySXZj_L2GTHIklevHvfhnRQclkIEgZsWH22uE8K1My3IrA>
+    <xmx:ItDkapdG_1eBWASKAWJm3tyiukEI-QLBZXWe1PqxLtyhat2Sm5uwiQ>
+    <xmx:ItDkaiyw8GqfXS_d4RkLJK8Hj0Mla3U0nqXEpyEFV7uLsMI1u4YkQmrM>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Oct 2026 13:13:04 -0400 (EDT)
+Date: Fri, 30 Oct 2026 17:13:03 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>, 
+	Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+	Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Youngjun Park <youngjun.park@lge.com>, Gregory Price <gourry@gourry.net>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH v2 05/47] mm/truncate: look again if a folio left the
+ mapping
+Message-ID: <auTQFEMJucBqFuzJ@thinkstation>
+References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -72,109 +113,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/port: Fix endpoint RAS error unmasking
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com
-Cc: iweiny@kernel.org, ming.li@zohomail.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, kaihengf@nvidia.com, kobak@nvidia.com,
- newtonl@nvidia.com, kristinc@nvidia.com
-References: <20261030095923.46051-1-icheng@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20261030095923.46051-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
 
-
-
-On 10/30/26 2:59 AM, Richard Cheng wrote:
-> Commit dab7162d0ae7 ("cxl/port: Move endpoint component register
-> management to cxl_port") moved EP RAS handling from cxl_pci to cxl_port,
-> while cxl_ras_unmask() have the assumption that port->uport_dev is a PCI
-
-s/have/has/
-
-> device.
-> If the topology use cxl_memdev as uport_dev, the PCI check will fail and
-> CXL RAS masks remain set.
-
-Endpoint ports always use memdev as uport_dev right? Maybe we can say the unmask has never run.
-
+On Thu, Oct 29, 2026 at 09:33:00PM +0100, David Hildenbrand (Arm) wrote:
+> invalidate_inode_pages2_range() skips a folio which no longer belongs to
+> the mapping by the time it has got the folio lock, on the assumption
+> that somebody else has removed it from the page cache. But the folio may
+> have been replaced, and then there is a new folio with the same data at
+> that index.
 > 
-> Resolve memdev uports to their parent dev and verify the device is PCI.
+> For most cases, like folio migration, that is impossible. However,
+> collapse_file() only checks the refcount of the old folios, under the
+> i_pages lock, and relies on their folio locks from there on. That works for
+> users which repeat the lookup when they find folio->mapping changed.
+> The following scenario is, however, possible:
 > 
-> Fixes: dab7162d0ae7 ("cxl/port: Move endpoint component register management to cxl_port")
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
-> Reproducer is a QEMU Type-3 guest
+>   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
+>   kiocb_invalidate_pages()
+>                                       read the folio (old data), lock it
+>                                       refcount check
+>   the write completes                 copy to new_folio
+>   kiocb_invalidate_post_direct_write()
+>     find_get_entries() -> old folio
+>                                       xas_store(new_folio)
+>                                       folio->mapping = NULL
+>                                       folio_unlock(folio)
+>     folio_lock()
+>     folio->mapping != mapping
+>       -> continue
 > 
-> 1. Ensure no CXL region is active and PCIe AER is enabled.
-> 2. Restore the emulated RAS registers to their reset masks.
-> 3. Reprobe cxl_pci and read the masks again.
+> In that scenario, the collapsed folio with the data from before the write
+> stays in the page cache after the write has returned.
 > 
-> ```
-> BDF=$(basename "$(dirname "$(readlink -f /sys/bus/cxl/devices/mem0)")")
-> BAR0=$(awk 'NR == 1 { print $1 }' /sys/bus/pci/devices/$BDF/resource)
-> UNC_MASK=$(printf '0x%x' $((BAR0 + 0x1084)))
-> COR_MASK=$(printf '0x%x' $((BAR0 + 0x1090)))
+> This used to be impossible, as khugepaged only collapsed files that nobody
+> had open for writing.
 > 
-> busybox devmem "$UNC_MASK" 32 0x1cfff
-> busybox devmem "$COR_MASK" 32 0x7f
+> Restart the lookup at that index, like shmem_undo_range() does. The same
+> problem seems to exist in truncate_inode_pages_range() as well when
+> truncate_inode_folio() fails, so handle it there as well, but slightly
+> differently: simply check once more through find_get_entries().
 > 
-> echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/unbind
-> echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/bind
-> udevadm settle
-> 
-> busybox devmem "$UNC_MASK" 32
-> busybox devmem "$COR_MASK" 32
-> ```
-> 
-> Before the fix, the masks remain 0x1cfff and 0x7f. After the fix,
-> both masks read as zero.
-> 
-> Best regards,
-> Richard Cheng.
-> ---
->  drivers/cxl/port.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index c12fd0b89883..c48216e5078f 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -74,15 +74,18 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->  
->  static int cxl_ras_unmask(struct cxl_port *port)
->  {
-> +	struct device *host = port->uport_dev;
->  	struct pci_dev *pdev;
->  	void __iomem *addr;
->  	u32 orig_val, val, mask;
->  	u16 cap;
->  	int rc;
->  
-> -	if (!dev_is_pci(port->uport_dev))
-> +	if (is_cxl_memdev(host))
-> +		host = host->parent;
-> +	if (!host || !dev_is_pci(host))
->  		return 0;
-> -	pdev = to_pci_dev(port->uport_dev);
-> +	pdev = to_pci_dev(host);
+> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
+> Cc: stable@vger.kernel.org
+> Reported-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Rik van Riel <riel@surriel.com>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Can we simplify this to something like:
-	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-	struct device *parent = cxlmd->dev.parent;
+Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 
-	if (!dev_is_pci(parent))
-		return 0;
-	pdev = to_pci_dev(parent));
-
-Also, maybe we should rename it to cxl_endpoint_ras_unmask(struct cxl_port *endpoint) to be intentionally clear?
-
->  
->  	if (!port->regs.ras) {
->  		pci_dbg(pdev, "No RAS registers.\n");
-> 
-> base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
