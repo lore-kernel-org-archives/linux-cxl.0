@@ -1,125 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793330678;
-	b=KQbqY5TN9r8Nqf5ZrzMc/0KwNo3OOujR5yC7JJ/wP9FIgRO2qDuk0JFagNeD403X4+ob
-	 iyctmijrmTG+TaUAw2G2GcJ+HtyvsNxfURc++Ac3dbEi4qjKeDnYvxCeZGujKOqxICgb8
-	 q34a1a98OBDyHAtQWV1aaG1gDw1xUZZPTHqDLhaG/Umatwz2RIeYlDmSHe6V1YkCd/Ppa
-	 OFfySQU2A2KMafxHlX+yfyP6irayg0Ju2a8If4hfUON2qblrNlKiM7oIpKIPyEtUUWkd+
-	 z2UGCLD9N78lWwQao35WzO/awMDTixRmBZQ7uYP38vWbZLl1psc8+U02dDivt641r4A==
+	t=1793331248;
+	b=INjSmaBXWSwY6y+SQWjVLjvSTpZnqr2ASWYoy290e4tJSig28M/am2sYDEK+v/xnlOUU
+	 /i7Yii7A/HVsmEIOIWmMkiZdp0XxIMqRf1WHfRvG+BGir2rfmItPNUqbVIbjSI5K+7qM7
+	 eBR6x8fdUPit2X6cuP0/7HHTBUYjFZGGB3JjXR0u8mwSMkB2PyHfN2ikdcfsPoXqtYoJP
+	 NOU7YzvOxz3f4oYV0b1D/cD3c1RdOUOq5hKdhxPAsrtannNrGOEDrSOO7XdUN9Wn4AZyo
+	 o5UucqbZEv3aG6f4YK+GgmFFWDKO+kvhbsFeJLY46eb+c8m89/HZkNNE7jJc2W7DBMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793330678;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=YxF7dRKdKAp6T/NOw/hryWAVYb3GZKlSovGXpa5oCY8=;
-	b=XN6cfhnxuJMiw9wc9bRKwlwGwqwEXNzxu8sVk6AYI5tqsfKU3QT9QWnmGpVPqSnb+vzK
-	 125qPiIM0R7uIvro74J166aL1bXZg7+WyAa0/gjKBZsYSPy5xpkD34JfwZmkUjd+8VRDh
-	 OipMNz1xLYNvO6oJAIUM82cdM+sAE79eM9bBhSDsb6goet2BBLDenp7AbA7s06R291VpR
-	 ejSnKjEDxU4lI+6T05Zvrz53rHmo9wNO20FxbZg0ewH50YGXJ72UzjDbgWSEJ1snfi8Nn
-	 y0o8PTVpPtUIpymVyI0LanAMYtKx5JgSvQpnMuB/YIJyye0RGS5tLGLpsWbC3ziS8vA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793331248;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=e0rmtmi8YR+vkA2MG+f7oqg704jsdQwuvCR8xeLNahg=;
+	b=1YEVyhu9ruPwoJbzcFSl2yORJuvWZNDmFsbM+OtbSY5JNtKLStk9TnTC7vtwBY7oh268
+	 QqqYIq+rDEWqrV9LJU/iE0KlHTNkBP915RgbX6mGxKh+YYASrP3lXzahgVYNz5nd+LNeo
+	 L/TDnb5deGT7hVog3O4P7Y6VKtm0wjZAAbVkSo9oulV37knri8fm1fX4ppMLTrzRM9LOK
+	 1zQYt0anm044fh5kl8qXIUJLwIUxZvqjsIvcrmRH+xjKS9hDDe7ieanE6ZgSjuyjeD5Nu
+	 +8lasRlj1aibhQsuP71zDaxlcGKuetPRE6mJGKnnyb8ME1kZhNVfh0RDC5pxeli3GXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sFWn6Osd;
-	arc=none smtp.remote-ip=91.218.175.19
-Received: from mta0.migadu.com (out-19.mta0.migadu.com [91.218.175.19])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EOWn2ylI;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55EB606A31E
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 03:24:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E55EB606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9376606A322
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 03:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sFWn6Osd
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=K9e2xpCltZ0luCSKJ76+rRB5TbBjqG8Rs7tkxWAziAc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793330674; v=1; x=1793935474;
- b=sFWn6Osd3p26eREcmcIASru+spScdxjMfW23b0Y2POx0A7cPjdRAZnOrHq+XGzSQm8O8znSL
- GcPW+KYbC/rayHgTcZsEHJo0uyjZtTCnQEGFm/LVMX+PMJM2sOtnbK4b1ngvJXY84rWZ79OpEq2
- myhFIaTzDDfiCZo6MKBT4eIY=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 13ff5ce3ac3bfaeb;
-	Fri, 30 Oct 2026 03:24:34 +0000
-X-Mizu-Trace-ID: 13ff5ce3ac3bfaeb
-X-Migadu-Flow: FLOW_OUT
-From: xu.xin@linux.dev
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	aneesh.kumar@kernel.org,
-	apopple@nvidia.com,
-	axelrasmussen@google.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baoquan.he@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	harry@kernel.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jannh@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	josef@toxicpanda.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	kasong@tencent.com,
-	kees@kernel.org,
-	kexec@lists.infradead.org,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	ljs@kernel.org,
-	matthew.brost@intel.com,
-	mhocko@kernel.org,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	nico.pache@linux.dev,
-	nphamcs@gmail.com,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	pasha.tatashin@soleen.com,
-	peterx@redhat.com,
-	peterz@infradead.org,
-	pfalcato@suse.de,
-	pratyush@kernel.org,
-	qi.zheng@linux.dev,
-	rakie.kim@sk.com,
-	riel@surriel.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shakeel.butt@linux.dev,
-	shikemeng@huaweicloud.com,
-	stable@vger.kernel.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	weixugc@google.com,
-	will@kernel.org,
-	willy@infradead.org,
-	xu.xin@linux.dev,
-	ying.huang@linux.alibaba.com,
-	youngjun.park@lge.com,
-	yuanchu@google.com,
-	ziy@nvidia.com
-Subject: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
-Date: Fri, 30 Oct 2026 11:24:09 +0800
-Message-Id: <20261030032409.127393-1-xu.xin@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
-References: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EOWn2ylI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1661F000C1;
+	Fri, 30 Oct 2026 03:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793331247;
+	bh=e0rmtmi8YR+vkA2MG+f7oqg704jsdQwuvCR8xeLNahg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EOWn2ylIWCDLFXI8vhWBdz0FDzdhQeuDoGzN2WtcssqoYrYCQ35/g36EZppnz+Gbw
+	 KyT7dlSMhXSHTiiBK00Bc9k5BBOUnnfe3jZ2yWJB3TrawbCW7hZllWHKQw5QFPTUcB
+	 nTU9VIIf1KVpNrXnco26B++CuSme77X7MJEN4M+2ivqNwpthaymuD2duW+AP0odooO
+	 GFSbGa7a6UkSoeMmKNK0xliaqu9DnpYKWnmu1UiCTu5NhJI1tx8UxjewSEy7CG04OU
+	 lVKihXjWlt02vtMMh3+Edc+kcNOvAgheNVbk6xptkSpYiva+pT2FufzxatI5QzmP/I
+	 hlzS99SdtAK2w==
+Message-ID: <sashiko-outbox-190223@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4] cxl/core: Create einj_types when EINJ becomes
+ available
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yongxin Yang" <yangyongxin@kylinos.cn>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20261030032050.787682-1-yangyongxin@kylinos.cn>
+References: <20261029065629.333949-1-yangyongxin@kylinos.cn>
+ <20261030032050.787682-1-yangyongxin@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Oct 2026 03:34:06 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -128,71 +60,112 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-> 
-> Let's fix it by tracking in ksm_nr_node_ids the actual number of
-> allocated tree roots.
-> 
-> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
-> more tree roots (skipping the empty ones), which is harmless.
-> 
-> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/ksm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index dbfb8f98b1892..9c51925825cbf 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -475,6 +475,7 @@ static void advisor_stop_scan(void)
->  #ifdef CONFIG_NUMA
->  /* Zeroed when merging across nodes is not allowed */
->  static unsigned int ksm_merge_across_nodes = 1;
-> +/* Number of allocated stable and unstable tree roots. */
->  static int ksm_nr_node_ids = 1;
->  #else
->  #define ksm_merge_across_nodes	1U
-> @@ -3636,14 +3637,13 @@ static ssize_t merge_across_nodes_store(struct kobject *kobj,
->  			else {
->  				root_stable_tree = buf;
->  				root_unstable_tree = buf + nr_node_ids;
-> +				ksm_nr_node_ids = nr_node_ids;
->  				/* Stable tree is empty but not the unstable */
->  				root_unstable_tree[0] = one_unstable_tree[0];
->  			}
->  		}
-> -		if (!err) {
-> +		if (!err)
->  			ksm_merge_across_nodes = knob;
-> -			ksm_nr_node_ids = knob ? 1 : nr_node_ids;
-> -		}
->  	}
->  	mutex_unlock(&ksm_thread_mutex);
->  
-> 
-> -- 
-> 2.43.0
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] cxl/core: einj_types still missing on built-in RCH/RCD and redun=
+dant ACPI hook
+--
 
-Looks correct as far as it goes, but I think it is not quite sufficient
-on its own.
+commit 85011aad4fb602610b914a77c4e46997107304a4
+Author: Yang Yongxin <yangyongxin@kylinos.cn>
 
-The documentation requires that merge_across_nodes can only be changed
-when there are no KSM shared pages in the system, but
-merge_across_nodes_store() does not enforce this at the sysfs level.
+cxl/core: Create einj_types when EINJ becomes available
 
-Should we also reject writes while ksmd is merging? At minimum:
+This commit defers the creation of the CXL debugfs einj_types file to a
+new helper, cxl_debugfs_einj_add_types(), called from cxl_core_init(),
+cxl_acpi_probe(), and cxl_debugfs_create_dport_dir() so the file can be
+created once EINJ is initialized.
 
-+	if (ksm_run & KSM_RUN_MERGE)
-+		return -EBUSY;
+Link: https://lore.kernel.org/all/de14c4ef-e3d8-432f-9ce8-87c468d6d2ad@amd.=
+com/
+Link: https://lore.kernel.org/all/7a22cc6a-deba-40e6-8033-97d1234420ba@amd.=
+com/
 
-Ideally, we should also check that ksm_pages_shared is zero, since
-KSM_RUN_STOP (0) does not guarantee that all pages have been unmerged.
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index b7ce6b59c680b..62dcb2b308430 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -968,6 +968,15 @@ static int cxl_acpi_probe(struct platform_device *pd=
+ev)
+>  	if (rc < 0)
+>  		return rc;
+> =20
+> +	/*
+> +	 * Create einj_types from here as well: with cxl_core built in,
+> +	 * cxl_core_init() runs before EINJ is up, so when cxl_acpi is a module
+> +	 * loaded afterwards this is the only hook that can create the file,
+> +	 * including on RCH/RCD hierarchies, where the single dport is added by
+> +	 * this probe itself and cannot help.
+> +	 */
+> +	cxl_debugfs_einj_add_types();
 
-That would make the interface match the documented sequence and close
-the remaining race window.
+[Severity: Medium]
+Does this hook in cxl_acpi_probe() ever actually create the einj_types
+file, and does it still leave RCH/RCD hierarchies without einj_types (and
+without the dport einj_inject file) when cxl_acpi is built in?
+
+Earlier in cxl_acpi_probe(), host bridge dports are registered via
+bus_for_each_dev(..., add_host_bridge_dport):
+
+drivers/cxl/acpi.c:add_host_bridge_dport() {
+	...
+	if (ctx.cxl_version =3D=3D ACPI_CEDT_CHBS_VERSION_CXL11) {
+		dev_dbg(match, "RCRB found for UID %lld: %pa\n", ctx.uid,
+			&ctx.base);
+		dport =3D devm_cxl_add_rch_dport(root_port, bridge, ctx.uid,
+					       ctx.base);
+	} else {
+		dport =3D devm_cxl_add_dport(root_port, bridge, ctx.uid,
+					   CXL_RESOURCE_NONE);
+	}
+	...
+}
+
+Both devm_cxl_add_rch_dport() and devm_cxl_add_dport() call
+__devm_cxl_add_dport() -> cxl_debugfs_create_dport_dir() ->
+cxl_debugfs_einj_add_types().
+
+When cxl_acpi is loaded as a module after einj_init() has completed,
+add_host_bridge_dport() has already called cxl_debugfs_einj_add_types()
+before execution reaches the direct cxl_debugfs_einj_add_types() call at
+the end of cxl_acpi_probe().
+
+Conversely, when both cxl_core and cxl_acpi are built in, cxl_acpi_init()
+runs at subsys_initcall_sync level, before einj_init() runs at
+device_initcall level. At that point, einj_cxl_is_initialized() returns
+false during both add_host_bridge_dport() and the direct call in
+cxl_acpi_probe().
+
+Later, when an RCD endpoint probes after einj_init(),
+devm_cxl_enumerate_ports() returns early without adding any dports:
+
+drivers/cxl/core/port.c:devm_cxl_enumerate_ports() {
+	...
+	/*
+	 * Skip intermediate port enumeration in the RCH case, there
+	 * are no ports in between a host bridge and an endpoint.
+	 */
+	if (cxlmd->cxlds->rcd)
+		return 0;
+	...
+}
+
+And cxl_endpoint_port_probe() sets up RCH RAS without setting up EINJ
+debugfs:
+
+drivers/cxl/port.c:cxl_endpoint_port_probe() {
+	...
+	if (dport->rch)
+		devm_cxl_dport_rch_ras_setup(dport);
+	...
+}
+
+As a result, on built-in RCH/RCD configurations, wouldn't
+cxl_debugfs_create_dport_dir() and cxl_debugfs_einj_add_types() never be
+called after einj_init(), leaving both einj_types and the RCH dport's
+einj_inject debugfs files missing?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030032050.7876=
+82-1-yangyongxin@kylinos.cn?part=3D1
