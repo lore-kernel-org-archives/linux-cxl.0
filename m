@@ -1,68 +1,68 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793385208;
-	b=zGre7l082SWo9knS/ltK81qJzcqS3OidHNLfG3Xip+TaXO2JLn9Ol/OAtkwTrD/WRFHx
-	 bbLbsaD58dXVtFlrs2+KzNgEL8IizXcm9vDSgYUzyskQ1do5/PowGuI9LTA7fyVJJNuFi
-	 Wd+LBrZ6EJ+9ePaAcFGgyOqYrQVdItEIrCXPy7AeVl7rIa9I5afLgfVNQGdfuA8J7yZLo
-	 TXCpbE9zYikOyCugRWEk7ZYHum5VvcFKAhD7/SN6zgGn/s9j2h+sv2sVnP81tDVbzmyyU
-	 0r8LuUcuiAas7zJkxPe24tpihLDHO1A0kUpjLLfI6RX55qh/cUoNiutArpAneSCXpgQ==
+	t=1793385557;
+	b=SG0jnG3EA8AK1fe9+zIfQ7kerjOd6YLaUmJHCPuLCazpn4nWPUX1UlXmlus9TNQ35SHN
+	 mCcGgx11bZNPw8yEK6AubUBtY0dpQfH3soycGonPSGtqRiC2YjejGQF9rxQLXe7KnaNEh
+	 //AEP/ffzdQ6HR460YQZxbMLhOepTt/vm5M0XpLgpctijyv4jJqjyw8kA1mAikJ353USH
+	 8swd37Xm6kFiKWzJRcy8Cuoi40enbc5VfJ1UiBiTsy0anmc8yjxi7i76M+0n5KHRSPJLF
+	 mwHadBaGHdiVLB1rMamVJzEOhTS+Ky2NnLl53FT78gjF+HO+WxDQfuZqepVTYEiLn7A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793385208;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793385557;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
 	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
 	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=ufF6t5hjYWrklI4qHpLBwXavVvTj5i8GVnRkPzAqVRI=;
-	b=eLI/JMhuNx2fEh4SE9BZD5Vl/BmzjZe/TXMjMSmUmP81CGRSc1u9iqo3TccHqYe05oHU
-	 gZCIVIh3OXTAaxsWVNWFxF8lfT7UgElAyu9dEBwItzSVaJzz0SU+t7dZtphg4eboJ2Hjc
-	 dv6ASB7JIDOci895fWRinMOo8L30Q+9VkDuVtq5idG2rowcrctDupXDoLpU+MFyvTH83B
-	 OXtJ8+F6iTPtmJ+t7a/Tl/RKtlsqBKF87wqEc8w6YZl47OhOJgz+SscBC2Fjma9OpOqcR
-	 IUdqNLq4fITsmeQQMWuCZ5zr4q10RDdGnZ5kI13evz590YcNXCue4QDTrWS2UrIfvew==
+	bh=2z4n8t7UyAs2zhyh3rfLcTEvPoKHSDEFmDtIMhUC/uE=;
+	b=DnLuZXtLcpuEWpaoqzgZS6uLqmrmIuDvgukEwmaMxldvjKshxG4SVVnMqxBJyXAH/uQJ
+	 +oFOsIBpt+QsDAAItFuJw3AXK52fWYL7LExrmt21KSXWlpYBVB4y9bmgpHiDK3MfPWoxD
+	 9ufa3fcWWCz0kb/K7OZQcqeGqTn4/9TKJg8CtK1zZVqNJib0b8G2Kuy9NCaq0EigSMEr9
+	 O+KxO8GpND3jhCY1X4FheXY5iwl5wcpWl46eYP730qCIYcd4oyXPQALT2/xUaFhv4mdrb
+	 OUh6W3eKeaCC8Up1L0TyXuMwbTNz3f8Mii+8aoFviNIYNgQsFSfU3gH5c7HL2HYG9vQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mK9KG3UC;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MmDOkdg+;
 	arc=none smtp.remote-ip=198.175.65.20
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D18606A31A;
-	Fri, 30 Oct 2026 18:33:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9D18606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D252606A321;
+	Fri, 30 Oct 2026 18:39:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D252606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mK9KG3UC
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MmDOkdg+
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793385207; x=1824921207;
+  t=1793385556; x=1824921556;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=lQiboPHxn6YNj6yeBHmrszgvChgzTtz1jM8g9AE0HhQ=;
-  b=mK9KG3UCrM4cZniCkrvYu0rLf2QuZf5O42RHeuFoKenf8WwzfWD8IE/M
-   Ymjpjf/KjY/rVHFjytA8idJLRa1BfLBsBE2Zz+K/aLJy96WxoLyFOB7MG
-   6HcnDksr4e6g+86PnEPxNGFaCFc4mx5x2GtwSN0CiqbLKv2Lyk166n1g3
-   xG0RK+jeTmhcCreYpqY4McAqs0cjXheDUUStYmoPPAVWClgCwxLQtV93a
-   wNRZH/eSawIP+v9hWsf1ZvLrmbcvtYYnufL4nkrCumEioPUPfIlx7jZ4s
-   3/WH8BuX8De+YJA1OnqrFIkzJOI6whwBcBugE5TbTEWiGOeAalMEvN3d0
+  bh=ZXo9VbuOZo50mRPjcb/rvfj7jmkkuUo8q7gJTPgUEBU=;
+  b=MmDOkdg+Sej2HYwYOn1hN10BGNuZpvBHG5yGciiKM7lIcpWYO4pxEnlU
+   l9RAvEG5jhEZiMnsHJ+v3wd6L4xulfZ3PsGR1GK/dYOPjA2bQ6qY4qwhg
+   HCzYoscd0VcekHbSgs81Qvbxp9MfOrPeek/g2Gglsby77pg8bl1X63xj0
+   hvSGGHypjuNfyjWqVL8K3LxhNXGk8LwGwsyem4/TvmZ5ROtM+sIwtcx01
+   cowzMICqtCU4f+5WzGLZRW/A6i5Fcm5nINFRAx9l65m6lCYbIkP8slHz4
+   lVqFBg1D1xbQnD3lX9/aXhMCY4yf0P6TtjPMbAUF3HX7fNFM2nwwxNdnC
    g==;
-X-CSE-ConnectionGUID: mz+d8RQER2eVkesBm8MBew==
-X-CSE-MsgGUID: mpEQv94wS9CM1MREvl+5Vg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2181447"
+X-CSE-ConnectionGUID: fehLtUT8TyehxnFh806cOg==
+X-CSE-MsgGUID: FQty7XgXT8m9ERc9Wt74LQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2181906"
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2181447"
+   d="scan'208";a="2181906"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 11:33:26 -0700
-X-CSE-ConnectionGUID: Dxioxu46SEO4QOvYWIon1Q==
-X-CSE-MsgGUID: cV6q6+JyRzS1BGEd7puL7Q==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 11:39:04 -0700
+X-CSE-ConnectionGUID: uYjgqvqKSCCDcv98GxIy5w==
+X-CSE-MsgGUID: 2Ze/VbxbTR24Fehux7Siag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5504451"
+   d="scan'208";a="5504989"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.85]) ([10.125.109.85])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 11:33:25 -0700
-Message-ID: <89885d4d-02b0-4c4c-8568-fc3d41623d51@intel.com>
-Date: Fri, 30 Oct 2026 11:33:24 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 11:39:02 -0700
+Message-ID: <2f2fac75-eb91-408a-a436-f7e2494f7e3c@intel.com>
+Date: Fri, 30 Oct 2026 11:39:01 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -76,10 +76,9 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4] cxl/core: Create einj_types when EINJ becomes
  available
 To: Yongxin Yang <yangyongxin@kylinos.cn>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
+ <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Jonathan Cameron
+ <jic23@kernel.org>, Ira Weiny <iweiny@kernel.org>
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ben Cheatham <benjamin.cheatham@amd.com>, stable@vger.kernel.org
 References: <20261029065629.333949-1-yangyongxin@kylinos.cn>
@@ -120,9 +119,6 @@ On 10/29/26 8:20 PM, Yongxin Yang wrote:
 > avoid a duplicate debugfs_create_file() attempt that would only fail with
 > -EEXIST. Reset the cached dentry in cxl_core_exit() so that reloading
 > cxl_core starts from a clean state.
-
-That is a REALLY wordy commit log. Maybe AI generated? Can you please condense and simplify it?
-
 > 
 > Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
 > Cc: <stable@vger.kernel.org>
@@ -130,6 +126,13 @@ That is a REALLY wordy commit log. Maybe AI generated? Can you please condense a
 > Link: https://lore.kernel.org/all/7a22cc6a-deba-40e6-8033-97d1234420ba@amd.com/
 > Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 > Signed-off-by: Yang Yongxin <yangyongxin@kylinos.cn>
+
+Couple more things. Can you send a new email per revision instead of reply-to the previous post? Otherwise it's a mess of email threads.
+
+Also, please update email addresses in your submission. Many of them have changed and are now bouncing. Check the latest MAINTAINERS please.
+
+DJ
+
 > ---
 > Changes in v4:
 > - Scope the problem statement to the built-in case: the file is only never
@@ -265,10 +268,3 @@ That is a REALLY wordy commit log. Maybe AI generated? Can you please condense a
 > +
 >  #endif /* __CXL_H__ */
 
-Maybe drop the cxl_acpi_probe() hook? Host bridge dports, RCH included, already go through __devm_cxl_add_dport() -> cxl_debugfs_create_dport_dir() -> cxl_debugfs_einj_add_types() inside the same probe, so the hook runs at the same time and adds nothing. That also removes the export.
-
-Also, the RCH all built-in case still never gets einj_types since the only RCH dport is added at subsys_initcall_sync. Should the commit log say so?
-
-I do wonder if it's simpler to always create einj_types in cxl_core_init() and have einj_cxl_available_error_type_show() return -ENODEV when EINJ isn't initialized. That covers every config without the lock and the extra hooks. Any thoughts Ben?
-
-The NULL resets in cxl_core_exit() aren't needed. Module reload gets fresh .bss.
