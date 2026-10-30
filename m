@@ -1,66 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793364283;
-	b=RLAx17JZwAXHlL68MyzIFu8J/taEjXZYyRXHUPcaMwG5xIoKLU/Y/Uc0cT2y+MGH5M5i
-	 rn1kWH2fkxzQIWwdt1R6ZSWJUFMhrsGwq4fby9E08xhoVIQMK0TepjwvCTnhNQCpt5MQ7
-	 /WA9uc/07YxTbjtpNFZK0bOZi7oiVZwlzYHsas6F+60oDt0kpEWLdz/n7dWJ4sTG2sMQb
-	 82AN2GQfpt3wBYCh5U9vZ7oJnw/r3hJ2GGcweZsGZ3cvmk8omNbyD86eORqjrKzqxoDAt
-	 TFMmFzQHRCiitxXm/3usSyikyW2lm/lbeQ5l7qKBeWNoOY1VckzH6I5UFPHfNxaR/vg==
+	t=1793365828;
+	b=TcyumACXDVNEg8TZCwZOCyCVFGxH+PIwDDpyaZAEDOLWKZC4OT1U5yRElOSR/Z1xSGCQ
+	 Tjx9+tHlRj4bGyhClD1mUZSmBT/m50iAyKVRKeH8P1QW4aJdQ+ODuBMi86DZfsQAJUHLZ
+	 J850EDWPsXB66N0us2/2RsK0mZd4B61JJv8QEFfoJpcEKvUXdWmmPvq4iOm7GCVDfhNep
+	 7U7vCvwowfj7KEU0uHjzWV9QNDg/erXd9/IjtuJAhn9D3XXJU3rfvb0Rq9z0W0RNg6l2b
+	 cEpjNaEYlCRbwRBY0oBQw325SIJ3b8t5nuqNbrVcJRjGYaDBhP40/YH00ICb73ykZ/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793364283;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=TEVH8SHcLytPnkygqFo+kY1zSEY44saM1DUrM9+em9U=;
-	b=1rGc2XTo6xIlz1Drc8AJVcghRrK7kGJ6Oo8RSRJvgCOVBdfgrngxQpTiy1EoGgV51fNQ
-	 MRGtEC7GSw4W/WfZSE+a8IuVSvAX5D/MWx3/mS/E4RKB7TWkc8qFFwfgZWIWvifUsr5Ga
-	 ZiriRWn4WzpUmtvr2W1j6xmze7DOX2R6FLfAwRdUIGK2KbKkRpS1iu4slcw+Q0DfzbXN/
-	 NyX+Ohr+VHV6c66k6WzqV/DBnANb/bUahugKHndcS07fDyR4Vo6EzZ2tfIqAlEV7L+YgP
-	 /wp2ifcPiIT98A3LYxclw2n3hb/r2+RiFQsd6RR8rQ+c8J2iWkNUINIu2/3ZVsXpT7w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793365828;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=BIsmxaqlcIiqqe+DfpItRAhgOJbkWsY0ZSYuASH2dgo=;
+	b=e1qoajg1QdBs3VRRZeLBwzmB91PWnkF8fz//FGfSehmx0766vBzfBaJKzLEm+RFguU+X
+	 2LRBrGVSr9hvV/PeIQMeZ2lgV/lxD5wpU2iXugAwqF0uZSVqOOAkT350eALstcHHkJEfI
+	 Ry8RFaO4/SvD4EsstxQSURxm9wJCqU28do8204sIVGLV0LhNh8QgEf2pFdU3HNPZfPkNX
+	 rD87Riusn+qkiaqV2jIeGw+ULs2P3z1PGffHAeBtEITK3tn4AXgzUmpElZNkumfP7wIdb
+	 lqSiNo/P0ooZejeLzGMD43p55Q1Tufl1xVBGJ6fgyNaEmSizNgguZlO2ZK/LDbJINug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=bF3vlsBY;
-	arc=none smtp.remote-ip=91.218.175.12
-Received: from mta0.migadu.com (out-12.mta0.migadu.com [91.218.175.12])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aE+UcR4O;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90FB606A31A
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 12:44:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E90FB606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDF8606A31D;
+	Fri, 30 Oct 2026 13:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=bF3vlsBY
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=QtRt0ves/wBA9PlBFoIyVL02XOI83JkkfiRXPN+Jr1Q=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793364280; v=1; x=1793969080;
- b=bF3vlsBYShxzSfNICMVK7D3iEdA0hA+Pn3fFxnUMD4y8XrpXxyzENFE5M/LSFcxEBTQrM48i
- dAARL8/LrR0e4AgLisyFF511jraGSs+3O6rAgBXnfxl7+c7+a9iZxKssHmlrstkwiHsiThRD+Ue
- Qp8Fj7t6PP5tH80YJ09nMQ8o=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5c66046834214a38;
-	Fri, 30 Oct 2026 12:44:39 +0000
-X-Mizu-Trace-ID: 5c66046834214a38
-X-Migadu-Flow: FLOW_OUT
-From: Junjie Cao <junjie.cao@linux.dev>
-To: mjt@tls.msk.ru
-Cc: qemu-devel@nongnu.org,
-	qemu-stable@nongnu.org,
-	jic23@kernel.org,
-	philmd@oss.qualcomm.com,
-	linux-cxl@vger.kernel.org,
-	junjie.cao@linux.dev
-Subject: Re: [PATCH v3 0/7] hw/cxl: fix Type-3 device reset resource leaks and convert to three-phase
-Date: Fri, 30 Oct 2026 07:44:31 -0500
-Message-ID: <20261030124431.1066454-1-junjie.cao@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <379a2300-b1af-4b32-9d10-7a8347c22476@tls.msk.ru>
-References: <20260729144645.1552511-1-junjie.cao@intel.com> <379a2300-b1af-4b32-9d10-7a8347c22476@tls.msk.ru>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aE+UcR4O
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 501D61F00A02;
+	Fri, 30 Oct 2026 13:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793365827;
+	bh=BIsmxaqlcIiqqe+DfpItRAhgOJbkWsY0ZSYuASH2dgo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=aE+UcR4OtmI1gsAuleOjFb68pLXXLXkRQbAWvngo171T2MUUuwjy+lrcz2fa900Oa
+	 4jrYfKABe2JsUQNDDMr8LHMydxA2OR4eFUP0n+okjO+fCYNkr2t0oFDX3OZbWNsHkc
+	 9FOki2qP8o1578DoVS6j4Ha2l9nKWXo/PwQLeofhbAptMNLznIZcalKf4CfY+TsEU5
+	 ko938kjuwV+SzeAc1oCkdQMWrUvfCXsLdHLlXHlbAX4d2Qvq1JA8oZU/MBsn4zu9iH
+	 /mYszUAhgaZ3QvOiktJYjo8pq2d+/cDPxcPeXZHq7P6jbizyjM3/JsXTfeJejutH0+
+	 QVqpbytwntPyg==
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfauth.stl.internal (Postfix) with ESMTP id B22B6780043;
+	Fri, 30 Oct 2026 09:10:26 -0400 (EDT)
+Received: from stl-imap-13 ([10.204.2.104])
+  by stl-compute-04.internal (MEProxy); Fri, 30 Oct 2026 09:10:26 -0400
+X-ME-Sender: <xms:QpfkaudgPlWfhG2nuX5v0oYxnFnd34OSZvAUv1UZVpB12tHv8EreXg>
+    <xme:QpfkajCgIdn2T-PjuQzu2w2WrYYDqpLVkhxKQrSCYdBa1aOg3t5bIjhv1fn84uU-X
+    gWui-BFJypI5jHtbfxKx9anlVeSzOeMnJ9FBaX8ytr50BFBoJ7ChA>
+X-ME-Proxy-Cause: dmFkZTGh/6azztQX4EjOpOWsP9cU87M/GO2aoMRhBpjxyvA9Mgxud2UfYibhs/CNwlNrxR
+    OVYhQ00dRta7xjyTz8NtYoTm7ScvixKhrCgmB14JzOz0EI/mP6fEi8NWTuMHhrcDaZeBk1
+    YaQTwyUEgXvrrCojrJE/qHFnsqVSnKBrUgjzGmjfEQsz/3lIybZUkOsNLIPE9CqfqBx7Ah
+    c24qnXX2j9fLPh5cewjKYtSEE+5zOGLldi7n9WyLyT2lALzgx/t2uBwk6YlpgQtoGaFAlv
+    yB2TdRcPZQLT6XQVgCOGmWsKCe+r6lBRqzeLlPt7JfBlWSjnTHhGNl3PrxEWFRylHy3lYf
+    kpptfFm+LkbmYdnqv7oT9qRe6teuGi7QOqfk5YudV2k5/qHerwrD5mfpc1QxohxNmdHQ67
+    yj8Rz7kBIydzzYNKrzYQKqbQXg0kSF8IHV2N8ZkxHRhLt4+XOPrRrgms7SZ9do1Qu2fOEf
+    7gKxf9P9fbZ/DgTar35vJ2bvnTZ317N7Y8UTtBnGUltw+RKrdEC4+6AQZMWYfuqSibj6JM
+    96wE3O2w5if218SI9BPq+AC04w4C8BL1PIZ2E3PLHYgJEITmt5yhSABPu0OlnexaD6/LLQ
+    jwjzjRs+epVjfmBA0tpujtP4JNG/zdq0IHpXR7m2kfDQlL4Dtjw0AhljJPGg
+X-ME-Proxy: <xmx:Qpfkat0lFMgtIn-egodGPRZg50OJO_gN8Ozpuq4JeAFHSOZDyFLdGw>
+    <xmx:QpfkakdhY6IUI_POEWnR2AytGl7qggQuuGL6GirIVsyTlrDwSSoTuA>
+    <xmx:QpfkavBC5Cv9FH0260FxTRXt_JzcSeG3bnfgZiX914OEIxY2vrWv9g>
+    <xmx:Qpfkam3RZTfgcCrKd5Jr7vSiAo8ay2X3TiHRB67g5-Wew0ciZZ1vZA>
+    <xmx:QpfkavMdLUJ1qZO3QO5a3wtqeItG9O9oeeqToDsDHFEcmk4CL7Mtt8M3>
+Feedback-ID: iccae4b50:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 59AA0F6007F; Fri, 30 Oct 2026 09:10:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -70,34 +77,124 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Aey4jMk1dEgs
+Date: Fri, 30 Oct 2026 09:10:05 -0400
+From: "Chris Mason" <mason@kernel.org>
+To: "Muhammad Usama Anjum" <usama.anjum@arm.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Johannes Weiner" <hannes@cmpxchg.org>, "Michal Hocko" <mhocko@kernel.org>,
+ "Qi Zheng" <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>,
+ "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, "Kairui Song" <kasong@tencent.com>,
+ "Barry Song" <baohua@kernel.org>,
+ "Axel Rasmussen" <axelrasmussen@google.com>,
+ "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>,
+ "Baoquan He" <baoquan.he@linux.dev>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka" <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>,
+ "Kees Cook" <kees@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Jann Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>,
+ "Hugh Dickins" <hughd@google.com>,
+ "Pasha Tatashin" <pasha.tatashin@soleen.com>,
+ "Pratyush Yadav" <pratyush@kernel.org>,
+ "Matthew Wilcox" <willy@infradead.org>, "Jan Kara" <jack@suse.cz>,
+ "Zi Yan" <ziy@nvidia.com>, "Lance Yang" <lance.yang@linux.dev>,
+ "Rik van Riel" <riel@surriel.com>, "Harry Yoo" <harry@kernel.org>,
+ "Alistair Popple" <apopple@nvidia.com>, "Nico Pache" <nico.pache@linux.dev>,
+ "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>,
+ "Usama Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau" <kas@kernel.org>,
+ "Matthew Brost" <matthew.brost@intel.com>,
+ "John Hubbard" <jhubbard@nvidia.com>, "Peter Xu" <peterx@redhat.com>,
+ "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ "Nick Piggin" <npiggin@gmail.com>, "Oscar Salvador" <osalvador@suse.de>,
+ "Minchan Kim" <minchan@kernel.org>, "Muchun Song" <muchun.song@linux.dev>,
+ "Xu Xin" <xu.xin@linux.dev>, "Chengming Zhou" <chengming.zhou@linux.dev>,
+ "Chris Li" <chrisl@kernel.org>, "Kemeng Shi" <shikemeng@huaweicloud.com>,
+ "Nhat Pham" <nphamcs@gmail.com>, "Youngjun Park" <youngjun.park@lge.com>,
+ "Gregory Price" <gourry@gourry.net>, "Joshua Hahn" <joshua.hahnjy@gmail.com>,
+ "Rakie Kim" <rakie.kim@sk.com>, "Ying Huang" <ying.huang@linux.alibaba.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ "Josef Bacik" <josef@toxicpanda.com>, stable@vger.kernel.org,
+ "Thadeu Lima de Souza Cascardo" <cascardo@igalia.com>,
+ "Mani Tofigh" <mt4022@columbia.edu>,
+ "Samiullah Khawaja" <skhawaja@google.com>
+Message-Id: <ad0d82f5-c2ad-46d0-986d-94626faac1f9@app.fastmail.com>
+In-Reply-To: <bc8c1fc5-4620-4515-8520-22ebcd0d592a@arm.com>
+References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
+ <2f23dafc-43a5-47c9-a819-e696cda6fd44@arm.com>
+ <baeda061-e0d0-4be1-9aa5-8886182ca83f@kernel.org>
+ <bc8c1fc5-4620-4515-8520-22ebcd0d592a@arm.com>
+Subject: Re: [PATCH v2 00/47] mm: various (urgent?) fixes
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Michael,
 
-On 30/10/26 14:35, Michael Tokarev wrote:
-> This patch series has been Cc'ed to qemu-stable@.  It is interesting how
-> it's been Cc'ed, and I think there's some error here.  From whole series,
-> only patch 2 (destroy primary CCI before re-initialization on reset) is
-> tagged for-stable.  Patch 1, which is a fix, is not tagged, and not Cc'ed
-> to qemu-stable@ either.  The rest - patches 3-7 - has been Cc'ed to the
-> qemu-stable mailing list, but are not tagged for-stable.
 
-Thanks for pointing this out. Only patches 1 and 2 were intended
-for stable; I copied qemu-stable@ on the whole series. I'll keep
-the stable Cc limited to the relevant patches in future.
+On Fri, Oct 30, 2026, at 8:12 AM, Muhammad Usama Anjum wrote:
+> On 30/10/2026 11:35 am, David Hildenbrand (Arm) wrote:
+>> On 10/30/26 12:19, Muhammad Usama Anjum wrote:
+>>> On 29/10/2026 8:32 pm, David Hildenbrand (Arm) wrote:
+>>>> See v1 on details. TL;DR various fixes :)
+>>>>
+>>>> Thanks to everyone for the review! Hoping I can get some more? :)
+>>>>
+>>>> I am planning on picking these myself, moving them to linux-next fairly
+>>>> soon through mm/core.git.
+>>>>
+>>>> ---
+>>>> Changes in v2:
+>>>> - "mm/memfd: check for real shmem inodes before accessing shmem state"
+>>>>  - Call it inode_is_shmem
+>>>> - "mm/truncate: look again if a folio left the mapping"
+>>>>  - Different fix for truncate_inode_pages_range
+>>>>  - Adjust description
+>>>> - "mm/huge_memory: fix zapping migration entries for device-private THPs"
+>>>>  - Move handling in zap_deposited_table
+>>>> - "mm/mmu_gather: fix flushing ranges with 4 GiB or larger"
+>>>>  - Adjust description"
+>>>> - "mm/huge_memory: split huge PUDs when adjusting VMA boundaries"
+>>>>  - Drop split_pud check
+>>>> - Link to v1: https://patch.msgid.link/20261027-fixes_core-v1-0-6f74bec9a5bb@kernel.org
+>>> I ran Fastpath, a Linux kernel performance benchmarking framework, on
+>>> this series against mm-stable on aws-m7g.metal. (I) and (R) indicate
+>>> statistically significant improvements and regressions, respectively.
+>>> The results show 10 improvements and 1 regression. Other, unmarked
+>>> percentage changes can be ignored as statistically insignificant. Hence:
+>>>
+>>> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>> 
+>> 
+>> Thanks for the results. IIUC it's schbench that shows a possible regression.
+>> 
+>> I would expect that no changes here really affect performance at all (neither
+>> positively nor negatively).
+>> 
+>> "mm/huge_memory: fix list corruption when deferred_split_scan() races with
+>> deferred_split_folio()" fixes locking, but I wouldn't assume that this matters
+>> at all for this benchmark.
+>> 
+>> "fork: take mmap_lock before copying mm_struct" changes locking, but I also fail
+>> to see how that would affect the benchmark.
+>> 
+>> Maybe some code layout changes just affect some benchmark on some machines?
+>> Because already seeing 10 improvements makes me wonder how that could possibly be.
+>> 
+>> So I'll move forward with these fixes for now and see if we get more reports and
+>> could identify actual problematic commits.
+>
+> Yes, these improvements/regression might be because of code movement and how it
+> has affected the run time performance. Most importantly, these results show that
+> there isn't any drastic affect on performance. These fixes are good to go.
 
-Patch 1 carries the tag both on the list and in 259b877eac, and you
-already have it as 4a39c7d61e in 11.1.2.  So for 11.1.x patch 2 is
-indeed the only one left.
+This schbench configuration is going to be really sensitive to process placement, and it
+should be doing all of its memory allocations up front.   I haven't done many schbench
+runs on this type of hardware, but I'd agree this result shouldn't indicate a bigger lurking
+regression anywhere.
 
-> From this list, I'm only picking up patch 2, and only for 11.1.x series.
-> The other active stable series, 10.0.x, - apparently it's not needed there.
-
-Neither applies to 10.0 as-is since cxl_destroy_cci() only exists from
-10.1, but the leak is there too: ct3d_reset() re-runs cxl_init_cci() on
-all three CCIs, allocating a new timer each time.  I've just sent a
-10.0 version, "[PATCH stable-10.0] hw/cxl: free the CCI background
-timer on Type-3 reset and exit".
-
-Thanks,
-Junjie
+-chris
