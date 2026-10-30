@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793380403;
-	b=PXAWUh+VAzpWg4nsKDgv3FAT8W/a7VBgD5uDzBSasgRJAS14116k0YTC+tOxSRak8GXv
-	 7DM1ch+ixLNb7NmYxIj71+5BtBI/YX/+9MglT2YktGc8eEygsZC2gLXqNayul8vSZDWBO
-	 fxGSOGW7MzhKWJMhbGUgnw+6jEZLp0UBwe9f9Zmr1kAQzHIKa3P/5pTWQ7esI/4SZdWQu
-	 Tm3HVXCVe8jkLoh1bKHE4g46KgxxVrAKI1lE3eTIwOI0PJW8bEO28w3QNrNDBtd5r50gf
-	 8F4rv899Lc+TR35nU0DG8DhktoOEVNVXFvo0l/Xl0kCgPbVsw6jdnoKye4OUdO1xpBQ==
+	t=1793380517;
+	b=c1Bx2w9wtP7PT9ZDdcoKPQ1R+kt+4s7ZpEjk39Ya+aBMR7S7lOhmHqgahNGITlx86jL/
+	 xIZrXvI4QzFyJxRn/4vbtcTG5XmUo6BvHf4Ao/Jtt1jklqJ9J2CFECG/pZ7qKUflu1PNp
+	 UJjUQDwkzzVD9eHQcu569LBFqDpZlUa6zgbBePSCWJ+qYYgCBRIlR85dma/NE+mZw83b3
+	 GlsK+0mUmJYNpkZO6sxWdSjQQ4TjYqLdCh6UpzpoQ39U6sJHBvuhSbI1kiLflZcDvM6sa
+	 MH9OeYaFQzgoTLEO3pOeXJJW3gWr9jgWZ2H9CHzPysIbymVQUjYd6hZ9CdsoAXzYEpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793380403;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793380517;
 	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
 	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=QXe+E+RdINfQkHY+Os5n/a14dX5ou5KZ8OJABuBnKpA=;
-	b=bc0anXrDBrt1cOJYptAe6kwuCqY/0wR1EZeYDK+kSgAL6W1OLpVNw6ZUYf/wzmoVThvP
-	 SBMR8trIjPtUCwH7rSrLA1tXxYuMDyGNtx79lnk/giOuHbQIyfj06dPIJGxpHXk0mihsV
-	 S6xhdCmA4vPjsLkRBUrBdT/b+lIQOgDbGTt54bsFEaM9LCpVPYO2SWTB8fXj6hDSmQcFU
-	 +566nC+dCiq89sPJKazEC+qhE2qdKkwu4QjWDPqLtTZ6bT2vgRjucbpE1JA7866IWMbVa
-	 9C82Jp/2DdO5hL48MhUOxjC8OUW9dee+C3ShleC9wd63HyBFmLU+6OMz58fZj8bmGXw==
+	bh=s4lfKj1K0mW/s2L7Sgy/qf7fmtgSr6raq1ricsBA8ac=;
+	b=F4bD3On8wlpbs5WL6K/cijbc6mk7wV1c3XdAEt+AKuiVTen10izzZxoVuE92nzM4VNAw
+	 Bg/aEFsL0dpfO6dGohhiy1QnBu2JFmei93a2f4jX72HiICtDrR+0WuYCBx2MNaEOuQNAe
+	 i50nQdFn/Fqca8t0BZW9eqNmJ0LqZZAZwStFkEsuwJN6TjNcxb5brka5rYxTJAS3NoE+W
+	 D0jDlmPcamp9LBA6dGdeT/DS2afbo79bBCnAzRVTHIzVcXFWGSvIQbVVJ1MuGJ/XXLIRs
+	 XeuL2kWuF7PiAGHtQVvX3TLQzIkvsgq1HOKBnZeApzrV1ogADEdhCup6djxyV9n3upQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DbGzyk9a;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CUzBhmPJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B93606A337;
-	Fri, 30 Oct 2026 17:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC33606A329;
+	Fri, 30 Oct 2026 17:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DbGzyk9a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925621F0093A;
-	Fri, 30 Oct 2026 17:13:18 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CUzBhmPJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006CE1F00A02;
+	Fri, 30 Oct 2026 17:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793380402;
-	bh=QXe+E+RdINfQkHY+Os5n/a14dX5ou5KZ8OJABuBnKpA=;
+	s=k20260515; t=1793380517;
+	bh=s4lfKj1K0mW/s2L7Sgy/qf7fmtgSr6raq1ricsBA8ac=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DbGzyk9azvvZF4/Hf1MTiO384vuycPWTpofwisFowcjfo9WOO4kdW/wu1Ibqn+W6X
-	 gy8qEeDON8gi/LmAcPUpHcAM6SwwMxcc1RI5XzFx+w/cR1PUoyu5jNOX856m5HUzj7
-	 tsTPxHh6q4pXGm3Fqfla8pk7sbXX84pxQEyv/1GypbCyzauFS0gkv/BxU+qmfUzXCD
-	 L1dr4R/iSkJQaZr/fenudyZudqY8PtXbSOyZT6+Ni/FYj4qE5UAS3UV68aVOaJWVIS
-	 jhlY31zdemO/w2q32veNVndGy1v5j2Pb6YJI/wCOqHKqV5u+Dv2WXdDfvExfzK0IFu
-	 hw9EktPxmvAJg==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 044BE198003A;
-	Fri, 30 Oct 2026 13:13:06 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 30 Oct 2026 13:13:17 -0400
-X-ME-Sender: <xms:ItDkaj6BqRTxPmXLqubigL9EIueGGMOYyDZJHCauOtMaJ3MgxX2GuA>
-    <xme:ItDkauPmBiLS4zCQgI1ako_rkgN7gbD3xA4ARpouMkPkpq9O5bXLcGZwRmkNbUUut
-    qyhhY_EPdfh927drDZvQyQeEArWzf_MyCtxvA8F_6kLpeF5_qBhFD4>
-X-ME-Received: <xmr:ItDkalmIuXQCXobPHjON4pMwdG5tSr8ylF0JjGNRwZNDTm2lzJPWtHsCUV4>
-X-ME-Proxy-Cause: dmFkZTErCCgqI31kxNLKTziv36fnXBEJjUhhbu5DiE4X/B+EDWlW7m/zWFNgj1YSweXkBU
-    PolifZvSXcJFjYufRKMQCfH+Axb7faxt1OysaST/5q0uUjNM3zGxzIA3gFeFVcWBhKXbNW
-    KPCqx0t+2ThS+g9I65B/SqyV4EvgT8RlcuSd8AYuiBPGNwT0icuK3QI4dKqmmyYnVc3+GT
-    6sN2z26Z5vHbtaohVyhAiEzg5APh/ZsY1FhYWee3mGH8aF7tJkErXhZ/+GVhIa6n2uEJBH
-    7u5P0K7Osx5Q9n4zMWIL1lmmrSHDOexahwyC1SzqtSVC6J0zZuS3gxQCWSSTutkbLvz9OL
-    1G5B0tCBk3zs4PzBncyaLxYHanwinwdtaZCqpJ6ef6jJM2nPi2PwFlt5b0F/ITt4b0h9+N
-    izzIHz2ibHZClHnL2/8tuTURhBG1Ba2FmvoP3NwOgzaF03d1urngRk50/UaHRkfb97cyRM
-    IAGxj9UWlUuiLNDhLWj9LLzrJRJWBrIr3BO1pnJqvr5enhEZfEYeCVvf1npM4ODEAjt8pG
-    ARm03c556YtFsMKqSFO8pTdHu2AOabc3nN1UdP3lNk3JPopre+kBHu8NM5sit83odXXixV
-    jTndLM0PW/1LFe8x41sowgTYQrmlsDVv97xDfCdkdL1jfY+QRBa84fdZR4qA
-X-ME-Proxy: <xmx:ItDkapPAmZPW4q4RAziPX67H4eU72Yrby8DdxcsuJnNo0pFZ-jDvCw>
-    <xmx:ItDkakIMIm-_XrCHX4dmQFiWs9DlFcrikbwOcl3tkf5o1lepgl-B9w>
-    <xmx:ItDkaqMNySXZj_L2GTHIklevHvfhnRQclkIEgZsWH22uE8K1My3IrA>
-    <xmx:ItDkapdG_1eBWASKAWJm3tyiukEI-QLBZXWe1PqxLtyhat2Sm5uwiQ>
-    <xmx:ItDkaiyw8GqfXS_d4RkLJK8Hj0Mla3U0nqXEpyEFV7uLsMI1u4YkQmrM>
+	b=CUzBhmPJr9eAYRositKVhICwE3c28ZkAAjS0KumWeYbRW0XPkQdPfFpUmhNzkduGf
+	 eNK8cJBXkm1LcRxdgz8pbim++vUwl3Qo2Wi2u67IFCwGpc0KJW1hJgM4PL9wsWPFQ8
+	 n2vgJajN9/JgJBDSNkCRUr3Ps+lLziGRn4KfYlKDlQ+Q2dM0AgRuVN0AeKmwNjLoou
+	 DBKAoVd3hAzzeWjNRcM9745yIRlDvqdgJ1NKYsy5PmzcCycLrZcqyW3ha8Da9RfdED
+	 qQmoCBUP0/65hIin82cHE3MyoSUOhm5iJV/Lgwvzixtexx6EGf7oiA8FZISupkzNi3
+	 4d5D02eDjfIYA==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 40599198003A;
+	Fri, 30 Oct 2026 13:15:01 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 30 Oct 2026 13:15:11 -0400
+X-ME-Sender: <xms:lNDkamuImIsjl-Hb9Y5yPVbFGJUSJ2YkTbfduoFzzyBJU9zxFetHMw>
+    <xme:lNDkavExiGJ-vgkdZfzFxhLNhTdhym7QicbGj1KOQOxfDjsmOaza50LntODZuYjuW
+    oTCuZvAWjDptGh2dRPl_hiHmmfAylPPS6hxAHR1NhFysI-fJLS0NG4>
+X-ME-Received: <xmr:lNDkapA423pMVrTnw-aFqjww79eVY1slYYooZoVKAUZ_5j2dE890Pbgd3c8>
+X-ME-Proxy-Cause: dmFkZTGMRFW6wwkHRR3YT/ZEaqGEmM3s/XdACkapu3EoKr46FLACqjR7K3Thpw4JePzMmg
+    efUKMlli7l4jKADcUqysPC7rXWTo3hsYHN95q7KQKBB0hS2BIQ4ReFIX5pJg46qGnZeHIj
+    bAM5c7zHLm1wlrOFZO/hvF/gM1Hi3h2fg4ArYsNqb9BHlobWTRKUbrfNiAlALH4kz/HLFT
+    22veRLEf/VUYXdArHteMiDkSfTJI5lxN84Jbw5/XkTUVbHRwfdNMh6O9KPIRhA16SYy/2h
+    VplmIiPi0J6XsEMZXbvYp0xNB16fhKfQeo5VIG13ZPS1nPnH3WXL1vFmZPgI5a43gwebLd
+    1QCkS61BanvTvpCFk5Uba1eb3YhkPf89SQKfmvmtUPhoWRI0oksjeXpevdv7fyK7pYk6z3
+    sPwgoOguaX7V4NETkGOzkJxhRVtfa1iYoBV17bKhJ3JKBGkENt7Bb9rtwzX9X48TpJ3FMg
+    RiTgTIyy6IUPbP+cOSc8nQLp6znFG9wAxt3tjXwoNsVUC2MaYAd9ZvSb0k2qO8ooUcjvko
+    wP+8NiCmzXNvb1kihY7Cb6icraE0ycDmt27hE6CQuqXQZU1PY9+6OTefhgwvPq9ACoV2Ct
+    c26sah+C6kmiElOI+lSyNoY0Ql0YWwX+drZljpEOs/SRovpQukfpjYQvAMZg
+X-ME-Proxy: <xmx:lNDkamK_3xdLFI2j9ne9t6fJjXYd1OjImERMgH0j8v-jsitvEKrnMg>
+    <xmx:lNDkar5co8fUMQE80BkdKKzbpQ1N_HMq8FlD5AjWBbVyDf9BktqaSA>
+    <xmx:lNDkam3Y50Gp444UM859DwrQVODdGKeCxEz7XRaENTsldtzUtBTtWQ>
+    <xmx:lNDkahjMWZx2j4GxFA2FoF0_jnQTMClJIpXa8dWSQs69ovj50BHgTQ>
+    <xmx:lNDkajPJKjKzhIorpxlSxBCSjnEddyKszhFHgdWuKDKxBwVhcGC3Hw_s>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 30 Oct 2026 13:13:04 -0400 (EDT)
-Date: Fri, 30 Oct 2026 17:13:03 +0000
+ 30 Oct 2026 13:14:58 -0400 (EDT)
+Date: Fri, 30 Oct 2026 17:14:57 +0000
 From: Kiryl Shutsemau <kas@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -97,13 +97,12 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
 	Ying Huang <ying.huang@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH v2 05/47] mm/truncate: look again if a folio left the
- mapping
-Message-ID: <auTQFEMJucBqFuzJ@thinkstation>
+	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 43/47] mm/huge_memory: split huge PUDs when adjusting
+ VMA boundaries
+Message-ID: <auTQhAuyokuSPX-D@thinkstation>
 References: <20261029-fixes_core-v2-0-a64ce7f83abb@kernel.org>
- <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
+ <20261029-fixes_core-v2-43-a64ce7f83abb@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -115,50 +114,24 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261029-fixes_core-v2-5-a64ce7f83abb@kernel.org>
+In-Reply-To: <20261029-fixes_core-v2-43-a64ce7f83abb@kernel.org>
 
-On Thu, Oct 29, 2026 at 09:33:00PM +0100, David Hildenbrand (Arm) wrote:
-> invalidate_inode_pages2_range() skips a folio which no longer belongs to
-> the mapping by the time it has got the folio lock, on the assumption
-> that somebody else has removed it from the page cache. But the folio may
-> have been replaced, and then there is a new folio with the same data at
-> that index.
+On Thu, Oct 29, 2026 at 09:33:38PM +0100, David Hildenbrand (Arm) wrote:
+> PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
+> allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
+> only handles PMDs.
 > 
-> For most cases, like folio migration, that is impossible. However,
-> collapse_file() only checks the refcount of the old folios, under the
-> i_pages lock, and relies on their folio locks from there on. That works for
-> users which repeat the lookup when they find folio->mapping changed.
-> The following scenario is, however, possible:
+> After faulting a writable PUD-sized VFIO BAR mapping, changing its first
+> page to read-only with mprotect() makes the PMD walk treat the PUD leaf
+> as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
+> the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
 > 
->   CPU0 pwrite(O_DIRECT)               CPU1 collapse_file()
->   kiocb_invalidate_pages()
->                                       read the folio (old data), lock it
->                                       refcount check
->   the write completes                 copy to new_folio
->   kiocb_invalidate_post_direct_write()
->     find_get_entries() -> old folio
->                                       xas_store(new_folio)
->                                       folio->mapping = NULL
->                                       folio_unlock(folio)
->     folio_lock()
->     folio->mapping != mapping
->       -> continue
+> Walk the page tables once at each adjusted boundary and split a huge
+> PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
+> PMD-aligned.
 > 
-> In that scenario, the collapsed folio with the data from before the write
-> stays in the page cache after the write has returned.
-> 
-> This used to be impossible, as khugepaged only collapsed files that nobody
-> had open for writing.
-> 
-> Restart the lookup at that index, like shmem_undo_range() does. The same
-> problem seems to exist in truncate_inode_pages_range() as well when
-> truncate_inode_folio() fails, so handle it there as well, but slightly
-> differently: simply check once more through find_get_entries().
-> 
-> Fixes: 1b6444331beb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
+> Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Rik van Riel <riel@surriel.com>
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
