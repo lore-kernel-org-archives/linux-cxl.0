@@ -1,79 +1,178 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793562058;
-	b=A+C/DbgDBqdIvAtT6hZ+pZrEgT23fvFxHmpsqFUZXYxpZEoXvt1CsNewLFaM6qjeeFh3
-	 qMOK7qkVn3KnfWQddNvarOes15j9Um/8SC0KduuOUd7r3frD/OQnFE6hAGB747KJrDWXG
-	 bG699B2+aXHljxlkArRWFeJVEQvDlt2kL2UsmaTfSnsaYbO9xte3gH7NMbLV4aoxErSva
-	 KXsm/nOeAf5HPrRElPoHr2G3nC4JpSfKE9oWWS0v5mY6CYBmQv1Rf5HcDFrrG3jjhhnCy
-	 E+o2uybONPL6zb13VLSbZLDzpAoGpWXQnHD87cYNPyDInrmQiWBKxN7LE8mIYWXwiJQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793562058;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=7XMDi9CyJyqlkPG+GPZu8bn2Eo00P3/ky4TB2vvOoyk=;
-	b=gvuSUCwkZYVPsw76okbi/Y83F4PqtkWjC2nPSiz0P0JfABs7Zx23gUE5YGU6DFbp88+n
-	 eGkt45+F/UcUElMgt9bIWA9s5zHmt6Lkv+fRuhhlUzaQi+bzGOOtfeWx79X3ZayRFp9fH
-	 0dMFjewuFfiUuveNavRMvML5K35A7//Cu/O0BaGMvVDgfykrHqRrQgRdppSr33WXFEYJd
-	 hGGOHExvK6co7eCJ443ltNDRd2gsSMq5DW2Dx3o5tpUHn6QwljGXdYVYdWXHJc9jRBvJS
-	 /XxZaATxHZJF+I4hIf7moMYzd+YlapRE2Pr3tTxs+fVdNuyGGyxZO88SdUs/WIpkIBg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LYqVyDMf;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01621606A324;
-	Sun,  1 Nov 2026 19:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LYqVyDMf
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1793562057;
-	b=zxZV+Oy8wV1D+AyQbLyRO0WlY9+e48SJoHoI3ba53/7kVdXYxU+YyJJZS/T2ox4UIg/J
-	 hU1qHvLuKTHaw42KHaSSbnLA/gAYqMD5EPQndtlPBoi8oGTiK8Hhyr7KsNTw1v7c8n6+0
-	 1JEotGO1s6BRK//BWGTV6nCj4sE/qkd5zXDX51ZOHwFj6W9i8r2RqDJ0aULEOmCe0QOfN
-	 wik3Yx2iuOOvLhjgPh1Nf/ARUqbATfKTxtwI5hRNRsfjma4nyb2hcG7Fsc0o7STzjoFy1
-	 dggr8Ld9N97jV/IDF5XgxEU36s92jI2ji1XQmTIFcMXanz4u+xpIItb4lHxS5C36ZtA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1793562057;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=7XMDi9CyJyqlkPG+GPZu8bn2Eo00P3/ky4TB2vvOoyk=;
-	b=yV6dYbOEhu5JSD9PZm+qO7GCj+GKioutI2rBIwDtrBnSplwzk1gaMoatfFeMGfHVNFvI
-	 Gmg9RrksfbCLMT9Q3RPRHsOTYyU7kmfoyqIP6acFkA3uc/cVQAIQDJBHvtqKQ0np2HStD
-	 2yfctUnfimcJhox5ZSVZ5d2YM5OxQB2T7S82wKV+j+JoC+8JsKzL/z1mFzewa/1wOXRFI
-	 dYnOn0hhFP3kAw1c3C32FwCaUAnz3Ly0b3NM384g/S8oHghGe+EcIDkVqp8CP3zCbTKD6
-	 ScY3Q751oXn1iFfETMXqH12TE9MQD6Ll8WSxZ1iqpX16K/nurTGY/8u2llnVIcPK6+Q==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793563729;
+	b=f9KTeJqx9eqABz27tUsGx0tTVvuBAL+yIEXGz6R7yZk//3G2hox4q758ZcEq5R4aMEqK
+	 0C4tHSowtOI0CtkrDCjy1hi982LUL+p4SmgqNpPxmnAVxn0nnxtmwyJFE/6aFF3NSxRED
+	 Zwr0BsZ61yQpZ6PHj5UxcJ5kmoBSbdIjbKSr5EvJ0bIrpOFHO0ZbXZwam+STlN9+5qn0g
+	 0U9A6Un+2CaN87tVnNXkzPQEb+DdeoFF6vIoFiFkXIqzdA+Pr/Hl5u5eXYzB+HDjHUu+I
+	 Fr/2jhuugl19pXqIlcWMeTC0vWIHs3/ixvhX8i9o5/2d2fdvOfTEsBXCLFdLOUGUhiQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793563729;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Resent-To:
+	 Resent-From:Resent-Date:Resent-Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:Lines:
+	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=NosSc9Yc34/yxPTSQxwFm3NAockGEayknf7JSdxuCWM=;
+	b=zgZjCEUtPM2x1z0alQ8KBvkAh5R3/IlS6eAO66n5vWVLqdJvhsUiceR0tk45Skh2s25L
+	 nDuXar2mVWiuZGPp1yYnEzMoUgjEu4j5xaBZEPRo+NOjuBat0Jg7d2culo4kfYSON61Kv
+	 U4+gAFf3duM6HhTkbCD+ZVpWB3zUZKxohtldX5NDfUINOPoYA2ijX7uSAs+Pxk/IrNed1
+	 EtdzSu8pNGBEKlP+B/YI+I5L+2zTVO4KPMvi+ra6fNYAHRdVavHpOMzA/dPJO7CrDVlhK
+	 FK2SDzgGLWP3nkkzSsgarTFx0M7+ZjFssV8UmWVoYD6wFvpx6c8lKsd6H516TnmNUuQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hSyVQAt+;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 030231F000C1;
-	Sun,  1 Nov 2026 19:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793562057;
-	bh=7XMDi9CyJyqlkPG+GPZu8bn2Eo00P3/ky4TB2vvOoyk=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=LYqVyDMfZgOyNqQRM6wvXgEYSfdlTOIM0SKR3H5shrw+i0/XRhQA7JeuOpfdkj/QB
-	 dlYHRh7G4IibxzD7/fQ5MnJt/ErZCfxxDAf9nIB7ecTjK6G9gS+Fn/LWtqkDHFeE6c
-	 fZXivq0fOwDu5n6QK7kAVfjAUJbGNc2WnaBj19zy1iG1BiUfj358mdrnzzTipnQog/
-	 i9dhE9qEP6SfaYXZB4K4uC2nW2l9Pcluzrxs+h+5XPw5FnUJYsb0fDdJRKqw3GqCcb
-	 /6ZdiLzZrFw7hlqdOb+IcIkRBr8OG0nw1lrQAe/8N8y/5fkzI+6Ak87UDE02QRa5Px
-	 gb1MlGNkv0nug==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 573A546250;
-	Sun,  1 Nov 2026 19:40:56 +0000 (UTC)
-From: Mani Tofigh via B4 Relay <devnull+mt4022.columbia.edu@kernel.org>
-Date: Sun, 01 Nov 2026 14:40:56 -0500
-Subject: [PATCH] mm/memory_hotplug: don't offline a hwpoisoned page still
- in the page cache
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E49606A324
+	for <linux-cxl@vger.kernel.org>; Sun,  1 Nov 2026 20:08:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1E49606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hSyVQAt+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1793563727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:resent-to:
+	 resent-from:resent-message-id:in-reply-to:in-reply-to:  references:references;
+	bh=NosSc9Yc34/yxPTSQxwFm3NAockGEayknf7JSdxuCWM=;
+	b=hSyVQAt+gw2t2KTs9F5bTbDMHlcmMRswznyUWAPQf+th4WjNzZOnwZDdLeQSM37A+Y9BBO
+	7Z6dI6bS4Q7/p0IWlWiZ1MspK5I/FWUsNdnPbx7HHV90rM/qqlvdn0a15C2/lXh/g4E6it
+	VYdcg94BuZ38+0PSDSChraBWFdAG/JI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-2zE9XaLbMxqdAeWTtl2FYw-1; Sun,
+ 01 Nov 2026 15:08:43 -0500
+X-MC-Unique: 2zE9XaLbMxqdAeWTtl2FYw-1
+X-Mimecast-MFC-AGG-ID: 2zE9XaLbMxqdAeWTtl2FYw_1793563719
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE00A1955BFE;
+	Sun,  1 Nov 2026 20:08:35 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.2])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5729A7E0;
+	Sun,  1 Nov 2026 20:08:31 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 00A1E21E6A04; Sun, 01 Nov 2026 21:08:28 +0100 (CET)
+Resent-To: 17746591750@163.com, pasic@linux.ibm.com, alistair@alistair23.me,
+ rathc@linux.ibm.com, graf@amazon.com, stefanb@linux.vnet.ibm.com,
+ FangSheng.Huang@amd.com, xen-devel@lists.xenproject.org,
+ michael.roth@amd.com, luc@lmichel.fr, lixianglai@loongson.cn,
+ maobibo@loongson.cn, pbarbuda@microsoft.com, yoshinori.sato@nifty.com,
+ qemu-arm@nongnu.org, qemu-block@nongnu.org, qemu-devel@nongnu.org,
+ qemu-ppc@nongnu.org, qemu-riscv@nongnu.org, qemu-s390x@nongnu.org,
+ john.levon@nutanix.com, thanos.makatos@nutanix.com, kfting@nuvoton.com,
+ den@openvz.org, elena.ufimtseva@oracle.com, jag.raman@oracle.com,
+ daniel.barboza@oss.qualcomm.com, philmd@oss.qualcomm.com,
+ pierrick.bouvier@oss.qualcomm.com, phil@philjordan.eu,
+ tangtao1634@phytium.com.cn, chao.liu@processmission.com, jiri@resnulli.us,
+ sam@rfc1149.net, anisa.su@samsung.com, alex@shazbot.org, farosas@suse.de,
+ mohamed@unpredictable.fr, kvm@vger.kernel.org, linux-cxl@vger.kernel.org,
+ alistair.francis@wdc.com, anthony@xenproject.org,
+ jamin_lin@aspeedtech.com, kane_chen@aspeedtech.com, palmer@dabbelt.com,
+ rbolshakov@ddn.com, foss@defmacro.it, sebastian.huber@embedded-brains.de,
+ fam@euphon.net, jiaxun.yang@flygoat.com, lizhijian@fujitsu.com,
+ atar4qemu@gmail.com, edgar.iglesias@gmail.com, jasowangio@gmail.com,
+ liwei1518@gmail.com, npiggin@gmail.com, zhangckid@gmail.com,
+ titusr@google.com, wuhaotsh@google.com, arei.gonglei@huawei.com,
+ berto@igalia.com, mark.cave-ayland@ilande.co.uk, junjie.cao@intel.com,
+ zhao1.liu@intel.com, its@irrelevant.dk, clg@kaod.org, conor@kernel.org,
+ david@kernel.org, jic23@kernel.org, kbusch@kernel.org,
+ mchehab+huawei@kernel.org, sstabellini@kernel.org,
+ peter.maydell@linaro.org, richard.henderson@linaro.org,
+ zhiwei_liu@linux.alibaba.com, zhenwei.pi@linux.dev, adityag@linux.ibm.com,
+ alifm@linux.ibm.com, amachhiw@linux.ibm.com, borntraeger@linux.ibm.com,
+ brueckner@linux.ibm.com, farman@linux.ibm.com, harshpb@linux.ibm.com,
+ iii@linux.ibm.com, jjherne@linux.ibm.com, milesg@linux.ibm.com,
+ mjrosato@linux.ibm.com
+Resent-From: Markus Armbruster <armbru@redhat.com>
+Resent-Date: Sun, 01 Nov 2026 21:08:28 +0100
+Resent-Message-ID: <87zevs1fib.fsf@pond.sub.org>
+From: Markus Armbruster <armbru@redhat.com>
+To: =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>
+Cc: qemu-devel@nongnu.org,  Michael Roth <michael.roth@amd.com>,  John Snow
+ <jsnow@redhat.com>,  Peter Maydell <peter.maydell@linaro.org>,  Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>,  Pierrick Bouvier
+ <pierrick.bouvier@oss.qualcomm.com>,  Paolo Bonzini <pbonzini@redhat.com>,
+  Daniel P. =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Kostiantyn
+ Kostiuk
+ <kkostiuk@redhat.com>,  Eric Blake <eblake@redhat.com>,  David Hildenbrand
+ <david@kernel.org>,  Igor Mammedov <imammedo@redhat.com>,  "Edgar E.
+ Iglesias" <edgar.iglesias@gmail.com>,  Jason Wang <jasowangio@gmail.com>,
+  Marcelo Tosatti <mtosatti@redhat.com>,  kvm@vger.kernel.org,  Alberto
+ Garcia <berto@igalia.com>,  Kevin Wolf <kwolf@redhat.com>,  Hanna Reitz
+ <hreitz@redhat.com>,  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
+ <philmd@oss.qualcomm.com>,
+  Zhao Liu <zhao1.liu@intel.com>,  Jonathan Cameron <jic23@kernel.org>,
+  Junjie Cao <junjie.cao@intel.com>,  Anisa Su <anisa.su@samsung.com>,
+  Elena Ufimtseva <elena.ufimtseva@oracle.com>,  Jagannathan Raman
+ <jag.raman@oracle.com>,  John Levon <john.levon@nutanix.com>,  Thanos
+ Makatos <thanos.makatos@nutanix.com>,  =?utf-8?Q?C=C3=A9dric?= Le Goater
+ <clg@redhat.com>,
+  Cornelia Huck <cohuck@redhat.com>,  Eric Farman <farman@linux.ibm.com>,
+  Matthew Rosato <mjrosato@linux.ibm.com>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Ilya Leoshkevich <iii@linux.ibm.com>,
+  qemu-block@nongnu.org,  linux-cxl@vger.kernel.org,
+  qemu-s390x@nongnu.org,  "Michael S. Tsirkin" <mst@redhat.com>,  Sergio
+ Lopez <slp@redhat.com>,  qemu-arm@nongnu.org,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Alistair Francis <alistair.francis@wdc.com>,
+  Weiwei Li <liwei1518@gmail.com>,  Daniel Henrique Barboza
+ <daniel.barboza@oss.qualcomm.com>,  Liu Zhiwei
+ <zhiwei_liu@linux.alibaba.com>,  Chao Liu <chao.liu@processmission.com>,
+  qemu-riscv@nongnu.org,  Song Gao <17746591750@163.com>,  Bibo Mao
+ <maobibo@loongson.cn>,  Xianglai Li <lixianglai@loongson.cn>,  Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  Pedro Barbuda <pbarbuda@microsoft.com>,
+  Mohamed Mediouni <mohamed@unpredictable.fr>,  Nicholas Piggin
+ <npiggin@gmail.com>,  Harsh Prateek Bora <harshpb@linux.ibm.com>,  Amit
+ Machhiwal <amachhiw@linux.ibm.com>,  qemu-ppc@nongnu.org,  Zhang Chen
+ <zhangckid@gmail.com>,  Li Zhijian <lizhijian@fujitsu.com>,  Alistair
+ Francis <alistair@alistair23.me>,  Alexander Graf <graf@amazon.com>,
+  "Gonglei (Arei)" <arei.gonglei@huawei.com>,  zhenwei pi
+ <zhenwei.pi@linux.dev>,  Ani Sinha <anisinha@redhat.com>,  Luc Michel
+ <luc@lmichel.fr>,  =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,  Jamin
+ Lin
+ <jamin_lin@aspeedtech.com>,  Kane Chen <kane_chen@aspeedtech.com>,  Samuel
+ Tardieu <sam@rfc1149.net>,  "Denis V. Lunev" <den@openvz.org>,  FangSheng
+ Huang <FangSheng.Huang@amd.com>,  Tyrone Ting <kfting@nuvoton.com>,  Hao
+ Wu <wuhaotsh@google.com>,  Keith Busch <kbusch@kernel.org>,  Klaus Jensen
+ <its@irrelevant.dk>,  Jesper Devantier <foss@defmacro.it>,  Aditya Gupta
+ <adityag@linux.ibm.com>,  Glenn Miles <milesg@linux.ibm.com>,  Conor
+ Dooley <conor@kernel.org>,  Sebastian Huber
+ <sebastian.huber@embedded-brains.de>,  Halil Pasic <pasic@linux.ibm.com>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,  Jason Herne
+ <jjherne@linux.ibm.com>,  Titus Rwantare <titusr@google.com>,  Stefano
+ Stabellini <sstabellini@kernel.org>,  Anthony PERARD
+ <anthony@xenproject.org>,  Peter Xu <peterx@redhat.com>,  Chinmay Rath
+ <rathc@linux.ibm.com>,  Hendrik Brueckner <brueckner@linux.ibm.com>,
+  xen-devel@lists.xenproject.org,  Roman Bolshakov <rbolshakov@ddn.com>,
+  Phil Dennis-Jordan <phil@philjordan.eu>,  Fam Zheng <fam@euphon.net>,
+  Farhan Ali <alifm@linux.ibm.com>,  Alex Williamson <alex@shazbot.org>,
+  Tao Tang <tangtao1634@phytium.com.cn>,  Stefan Berger
+ <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Mark
+ Cave-Ayland <mark.cave-ayland@ilande.co.uk>,  Artyom Tarasenko
+ <atar4qemu@gmail.com>,  Yoshinori Sato <yoshinori.sato@nifty.com>,  Jiri
+ Pirko <jiri@resnulli.us>,  Eric Auger <eric.auger@redhat.com>,  Laurent
+ Vivier <lvivier@redhat.com>
+Subject: Re: [PATCH v7 38/65] qom: convert scalar properties to QAPI-aware
+ registration
+In-Reply-To: <20261020-qom-qapi-v7-38-431a86b02b58@redhat.com>
+ (=?utf-8?Q?=22Marc-Andr=C3=A9?=
+	Lureau"'s message of "Tue, 20 Oct 2026 14:45:55 +0400")
+References: <20261020-qom-qapi-v7-0-431a86b02b58@redhat.com>
+	<20261020-qom-qapi-v7-38-431a86b02b58@redhat.com>
+Date: Fri, 30 Oct 2026 09:48:08 +0100
+Message-ID: <87y0bfa81j.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,167 +182,389 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMyw6CMBBG4Vchs3aSUhSjr2JcjOWXjglt0+IlI
- by7FZff4pyFCrKi0LlZKOOlRWOoaHcNOS9hBOtQTdbYvjX2xBMmn9i/U9QSAycZ4cR5sPTo5GD
- 30h0N1Txl3PWzrS/Xv8vz9oCbfz9a1y+oKOfyfAAAAA==
-X-Change-ID: 20261029-memhp-hwpoison-pagecache-a6e3a524a370
-To: David Hildenbrand <david@kernel.org>, 
- Oscar Salvador <osalvador@suse.de>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, 
- Naoya Horiguchi <nao.horiguchi@gmail.com>, 
- Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>, 
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- tz2294@columbia.edu, stable@vger.kernel.org, 
- Mani Tofigh <mt4022@columbia.edu>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793562056; l=5557;
- i=mt4022@columbia.edu; s=20261026; h=from:subject:message-id;
- bh=4LOLUja2zhU2UmZEiAhPn4FmO7n0a/B92rAAWeju898=;
- b=id4ER9EJOI/KEW5CRMKHacr3GbM19oDkiK8h+mizdyCCmDEw/R1+cUw4WSv8ve40O0ZIjZKFC
- wBbU5QsS08nBzG1vzh9tN0wgXi5yoVweIBBzOmid+9oGZFmLC906wZe
-X-Developer-Key: i=mt4022@columbia.edu; a=ed25519;
- pk=gljCMQDuxyKPmd5y37CRpEJGSPXDV1MyAnHBhCgXl0I=
-X-Endpoint-Received: by B4 Relay for mt4022@columbia.edu/20261026 with
- auth_id=1322
-X-Original-From: Mani Tofigh <mt4022@columbia.edu>
-Reply-To: mt4022@columbia.edu
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: RxOEb1xQVAMjZPAEturF4BbVFtp6gVEBQoE3gDYyI5I_1793563719
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Mani Tofigh <mt4022@columbia.edu>
+Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com> writes:
 
-Memory offline skips hwpoisoned pages, assuming nobody uses them
-anymore.  memory_failure() however sets PG_hwpoison before it takes the
-page, and taking it waits on pcp_batch_high_lock, which offline_pages()
-holds for the whole offline.  A memory error during the offline thus
-marks the page and then waits while the offline skips it:
+> Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> Signed-off-by: Markus Armbruster <armbru@redhat.com>
+> Signed-off-by: Marc-Andr=C3=A9 Lureau <marcandre.lureau@redhat.com>
 
-  Task A (offline_pages)               Task B (memory_failure)
-  zone_pcp_disable()
-                                       TestSetPageHWPoison(P)
-                                       get_hwpoison_page()
-                                         /* waits for Task A */
-  do_migrate_range()
-    /* P is poisoned (not migrated) */
-  test_pages_isolated()
-    /* P is poisoned (accepted) */
-  zone_pcp_enable()
-                                       /* P is off the LRU (Ignored) */
+How did you create this patch?  It looks almost mechanical.
 
-The block goes offline while the file still points to P, and the next
-walk of the file's pages (here drop_caches on ext4) crashes on a struct
-page of offlined memory:
+It misses a few conversions, almost certainly in code added since you
+made this patch.  I can take care of them.
 
-  [   11.710348] Memory failure: 0x24224: unhandlable page.
-  [   11.710372] Memory failure: 0x24224: recovery action for get hwpoison page: Ignored
-  [   11.765371] page:000000008c304eee is uninitialized and poisoned
-  [   11.765389] page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-  [   11.765440] kernel BUG at include/linux/mm.h:1990!
-  [   11.765458] Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-  [   11.772284] CPU: 3 UID: 0 PID: 85 Comm: mfoffline Tainted: G        W            7.3.0-17087-gd865f2677c44 #1 PREEMPT
-  [   11.777970] RIP: 0010:find_lock_entries+0x8ee/0xad0
-  [   11.798761] Call Trace:
-  [   11.799297]  <TASK>
-  [   11.803284]  mapping_try_invalidate+0xfd/0x2c0
-  [   11.810571]  drop_pagecache_sb+0x111/0x330
-  [   11.811572]  __iterate_supers+0x2e2/0x370
-  [   11.815863]  drop_caches_sysctl_handler+0x74/0xb0
-  [   11.816994]  proc_sys_call_handler+0x2ec/0x440
-  [   11.821360]  vfs_write+0x545/0x1250
-  [   11.825220]  ksys_write+0xfa/0x200
-  [   11.830202]  do_syscall_64+0xfb/0x590
-  [   11.832084]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  [   11.848423]  </TASK>
+[...]
 
-Once the memory is also removed it's a use-after-free of the memory map.
-tmpfs and the swap cache can end up the same way without the race.
-Since commit a76054266661 ("mm: shmem: don't truncate page if memory
-failure happens"), memory_failure() leaves a poisoned tmpfs folio in the
-page cache on purpose, and it does the same for a dirty folio in the
-swap cache.
+> diff --git a/accel/kvm/kvm-all.c b/accel/kvm/kvm-all.c
+> index 1d91667fb880..bc178482b309 100644
+> --- a/accel/kvm/kvm-all.c
+> +++ b/accel/kvm/kvm-all.c
+> @@ -24,6 +24,7 @@
+>  #include "qemu/config-file.h"
+>  #include "qemu/error-report.h"
+>  #include "qapi/error.h"
+> +#include "qapi/qapi-builtin-type-infos.h"
+>  #include "hw/pci/msi.h"
+>  #include "hw/pci/msix.h"
+>  #include "hw/s390x/adapter.h"
 
-Treat a hwpoisoned page whose folio is still in a page cache or swap
-cache as busy in scan_movable_pages() and
-__test_page_isolated_in_pageblock() so that the offline fails and a
-waiting memory_failure() can go on.  A later offline succeeds once the
-page is out of the cache.  With the fix, the offline fails with -EBUSY
-and the file doesn't point to offlined memory anymore.
+Not needed; we already include "qapi/qapi-type-infos-common.h".
 
-This bug was identified and confirmed with the help of a deterministic
-hypervisor currently under development.  The C reproducer below however
-hits it within about 10s.
+[...]
 
-Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mani Tofigh <mt4022@columbia.edu>
----
-Taking get_online_mems() in memory_failure(), as in Gregory's series
-[1], would close only the race and not the tmpfs or swap cache case.
+> diff --git a/hw/acpi/ich9.c b/hw/acpi/ich9.c
+> index 6d421b990cef..64228a620e69 100644
+> --- a/hw/acpi/ich9.c
+> +++ b/hw/acpi/ich9.c
+> @@ -26,6 +26,7 @@
+> =20
+>  #include "qemu/osdep.h"
+>  #include "qapi/error.h"
+> +#include "qapi/qapi-builtin-type-infos.h"
+>  #include "qapi/visitor.h"
+>  #include "hw/pci/pci.h"
+>  #include "migration/vmstate.h"
 
-[1] https://lore.kernel.org/all/20261027042204.3741307-4-gourry@gourry.net/
+Missing:
 
-Reproducer: https://github.com/manitofigh/files/blob/main/linux-repros/mfoffline.c
----
- mm/internal.h       | 9 +++++++++
- mm/memory_hotplug.c | 2 ++
- mm/page_isolation.c | 2 +-
- 3 files changed, 12 insertions(+), 1 deletion(-)
+                                       PM_REG_FIELD(acpi_pci_hotplug.root),
+                                       object_property_allow_set_link,
+                                       OBJ_PROP_LINK_STRONG);
+   -    object_class_property_add(oc, ACPI_PM_PROP_GPE0_BLK, "uint32",
+   +    object_class_property_add_qapi(oc, ACPI_PM_PROP_GPE0_BLK, &uint32_t=
+ype_info,
+                                  ich9_pm_get_gpe0_blk,
+                                  NULL, NULL, NULL);
+        object_class_property_add_uint8_ptr(oc, ACPI_PM_PROP_S3_DISABLED,
 
-diff --git a/mm/internal.h b/mm/internal.h
-index aeebb3e49ed1..ba7b1650a5ca 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1195,6 +1195,15 @@ static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, b
- }
- #endif
- 
-+/*
-+ * A hwpoisoned page can be skipped by memory offline only once no page
-+ * cache or swap cache can find it anymore.
-+ */
-+static inline bool hwpoison_page_offlineable(const struct page *page)
-+{
-+	return !folio_mapping(page_folio(page));
-+}
-+
- extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
-         unsigned long, unsigned long,
-         unsigned long, unsigned long);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c9cc42e54f05..3d36f7f2e04b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1820,6 +1820,8 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- 		struct folio *folio;
- 
- 		page = pfn_to_page(pfn);
-+		if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
-+			return -EBUSY;
- 		if (PageLRU(page) || page_has_movable_ops(page))
- 			goto found;
- 
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 5aaad037384e..beb09ef345ee 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -593,7 +593,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
- 			 */
- 			pfn += 1 << buddy_order(page);
- 		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
--			 PageHWPoison(page))
-+			 PageHWPoison(page) && hwpoison_page_offlineable(page))
- 			/* A HWPoisoned page cannot be also PageBuddy */
- 			pfn++;
- 		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
+[...]
 
----
-base-commit: 243e8cdab64129d6207c398f8cf5fbb1962ff7e1
-change-id: 20261029-memhp-hwpoison-pagecache-a6e3a524a370
+> diff --git a/hw/xen/xen-pvh-common.c b/hw/xen/xen-pvh-common.c
+> index cca37202ffb2..7b4fd933a8fb 100644
+> --- a/hw/xen/xen-pvh-common.c
+> +++ b/hw/xen/xen-pvh-common.c
+> @@ -9,6 +9,7 @@
+>  #include "qemu/osdep.h"
+>  #include "qemu/error-report.h"
+>  #include "qemu/units.h"
+> +#include "qapi/qapi-builtin-type-infos.h"
+>  #include "qapi/visitor.h"
+>  #include "hw/core/boards.h"
+>  #include "hw/core/irq.h"
+> @@ -413,7 +414,7 @@ void xen_pvh_class_setup_common_props(XenPVHMachineCl=
+ass *xpc)
+> =20
+>  #define OC_MEMMAP_PROP_BASE(c, prop_name, name)                         =
+  \
+>  do {                                                                    =
+  \
+> -    object_class_property_add(c, prop_name "-base", "uint64_t",         =
+  \
+> +    object_class_property_add_qapi(c, prop_name "-base", &uint64_type_in=
+fo,\
+>                                xen_pvh_get_ ## name ## _base,            =
+  \
+>                                xen_pvh_set_ ## name ## _base, NULL, NULL)=
+; \
+>      object_class_property_set_description(oc, prop_name "-base",        =
+  \
+> @@ -422,7 +423,7 @@ do {                                                 =
+                     \
+> =20
+>  #define OC_MEMMAP_PROP_SIZE(c, prop_name, name)                         =
+  \
+>  do {                                                                    =
+  \
+> -    object_class_property_add(c, prop_name "-size", "uint64_t",         =
+  \
+> +    object_class_property_add_qapi(c, prop_name "-size", &size_type_info=
+, \
+>                                xen_pvh_get_ ## name ## _size,            =
+  \
+>                                xen_pvh_set_ ## name ## _size, NULL, NULL)=
+; \
+>      object_class_property_set_description(oc, prop_name "-size",        =
+  \
 
-Best regards,
---  
-Mani Tofigh <mt4022@columbia.edu>
+Use of &size_type_info is not mechanical.  Better to be as mechanical as
+possible in such a huge patch.
 
+[...]
+
+> diff --git a/qom/object.c b/qom/object.c
+> index cc113c0810e7..9f9a2abfa08d 100644
+> --- a/qom/object.c
+> +++ b/qom/object.c
+> @@ -22,10 +22,10 @@
+>  #include "qapi/string-output-visitor.h"
+>  #include "qapi/qobject-input-visitor.h"
+>  #include "qapi/forward-visitor.h"
+> +#include "qapi/qapi-builtin-type-infos.h"
+>  #include "qapi/qapi-builtin-visit.h"
+>  #include "qapi/compat-policy.h"
+>  #include "qobject/qdict.h"
+> -#include "qobject/qjson.h"
+
+The deletion doesn't belong.
+
+>  #include "qemu/id.h"
+>  #include "qapi/qmp/qerror.h"
+>  #include "trace.h"
+> @@ -2449,7 +2449,7 @@ object_property_add_str(Object *obj, const char *na=
+me,
+>      prop->get =3D get;
+>      prop->set =3D set;
+> =20
+> -    return object_property_add(obj, name, "string",
+> +    return object_property_add_qapi(obj, name, &str_type_info,
+>                                 get ? property_get_str : NULL,
+>                                 set ? property_set_str : NULL,
+>                                 property_release_data,
+> @@ -2467,7 +2467,7 @@ object_class_property_add_str(ObjectClass *klass, c=
+onst char *name,
+>      prop->get =3D get;
+>      prop->set =3D set;
+> =20
+> -    return object_class_property_add(klass, name, "string",
+> +    return object_class_property_add_qapi(klass, name, &str_type_info,
+>                                       get ? property_get_str : NULL,
+>                                       set ? property_set_str : NULL,
+>                                       NULL,
+> @@ -2519,7 +2519,7 @@ object_property_add_bool(Object *obj, const char *n=
+ame,
+>      prop->get =3D get;
+>      prop->set =3D set;
+> =20
+> -    return object_property_add(obj, name, "bool",
+> +    return object_property_add_qapi(obj, name, &bool_type_info,
+>                                 get ? property_get_bool : NULL,
+>                                 set ? property_set_bool : NULL,
+>                                 property_release_data,
+> @@ -2536,7 +2536,7 @@ object_class_property_add_bool(ObjectClass *klass, =
+const char *name,
+>      prop->get =3D get;
+>      prop->set =3D set;
+> =20
+> -    return object_class_property_add(klass, name, "bool",
+> +    return object_class_property_add_qapi(klass, name, &bool_type_info,
+>                                       get ? property_get_bool : NULL,
+>                                       set ? property_set_bool : NULL,
+>                                       NULL,
+
+Missing:
+
+   @@ -2929,7 +2930,7 @@ object_class_property_add_bool_ptr(ObjectClass *kl=
+ass, const char *name,
+            setter =3D property_class_set_bool_ptr;
+        }
+
+   -    return object_class_property_add(klass, name, "bool",
+   +    return object_class_property_add_qapi(klass, name, &bool_type_info,
+                                         getter, setter, NULL, (void *)offs=
+et);
+    }
+
+> @@ -2945,8 +2945,8 @@ object_property_add_uint8_ptr(Object *obj, const ch=
+ar *name,
+>          setter =3D property_set_uint8_ptr;
+>      }
+> =20
+> -    return object_property_add(obj, name, "uint8",
+> -                               getter, setter, NULL, (void *)v);
+> +    return object_property_add_qapi(obj, name, &uint8_type_info,
+> +                                    getter, setter, NULL, (void *)v);
+>  }
+> =20
+>  ObjectProperty *
+
+Missing:
+
+   @@ -2969,7 +2970,7 @@ object_class_property_add_uint8_ptr(ObjectClass *k=
+lass, const char *name,
+            setter =3D property_class_set_uint8_ptr;
+        }
+
+   -    return object_class_property_add(klass, name, "uint8",
+   +    return object_class_property_add_qapi(klass, name, &uint8_type_info=
+,
+                                         getter, setter, NULL, (void *)offs=
+et);
+    }
+
+> @@ -2986,8 +2986,8 @@ object_class_static_property_add_uint8_ptr(ObjectCl=
+ass *klass,
+>          setter =3D property_set_uint8_ptr;
+>      }
+> =20
+> -    return object_class_property_add(klass, name, "uint8",
+> -                                     getter, setter, NULL, (void *)v);
+> +    return object_class_property_add_qapi(klass, name, &uint8_type_info,
+> +                                          getter, setter, NULL, (void *)=
+v);
+>  }
+> =20
+>  ObjectProperty *
+> @@ -3006,8 +3006,8 @@ object_property_add_uint16_ptr(Object *obj, const c=
+har *name,
+>          setter =3D property_set_uint16_ptr;
+>      }
+> =20
+> -    return object_property_add(obj, name, "uint16",
+> -                               getter, setter, NULL, (void *)v);
+> +    return object_property_add_qapi(obj, name, &uint16_type_info,
+> +                                    getter, setter, NULL, (void *)v);
+>  }
+> =20
+>  ObjectProperty *
+
+Missing:
+
+   @@ -3030,7 +3031,7 @@ object_class_property_add_uint16_ptr(ObjectClass *=
+klass, const char *name,
+            setter =3D property_class_set_uint16_ptr;
+        }
+
+   -    return object_class_property_add(klass, name, "uint16",
+   +    return object_class_property_add_qapi(klass, name, &uint16_type_inf=
+o,
+                                         getter, setter, NULL, (void *)offs=
+et);
+    }
+
+> @@ -3047,8 +3047,8 @@ object_class_static_property_add_uint16_ptr(ObjectC=
+lass *klass,
+>          setter =3D property_set_uint16_ptr;
+>      }
+> =20
+> -    return object_class_property_add(klass, name, "uint16",
+> -                                     getter, setter, NULL, (void *)v);
+> +    return object_class_property_add_qapi(klass, name, &uint16_type_info=
+,
+> +                                          getter, setter, NULL, (void *)=
+v);
+>  }
+> =20
+>  ObjectProperty *
+> @@ -3067,8 +3067,8 @@ object_property_add_uint32_ptr(Object *obj, const c=
+har *name,
+>          setter =3D property_set_uint32_ptr;
+>      }
+> =20
+> -    return object_property_add(obj, name, "uint32",
+> -                               getter, setter, NULL, (void *)v);
+> +    return object_property_add_qapi(obj, name, &uint32_type_info,
+> +                                    getter, setter, NULL, (void *)v);
+>  }
+> =20
+>  ObjectProperty *
+
+Missing:
+
+   @@ -3091,7 +3092,7 @@ object_class_property_add_uint32_ptr(ObjectClass *=
+klass, const char *name,
+            setter =3D property_class_set_uint32_ptr;
+        }
+
+   -    return object_class_property_add(klass, name, "uint32",
+   +    return object_class_property_add_qapi(klass, name, &uint32_type_inf=
+o,
+                                         getter, setter, NULL, (void *)offs=
+et);
+    }
+
+> @@ -3108,8 +3108,8 @@ object_class_static_property_add_uint32_ptr(ObjectC=
+lass *klass,
+>          setter =3D property_set_uint32_ptr;
+>      }
+> =20
+> -    return object_class_property_add(klass, name, "uint32",
+> -                                     getter, setter, NULL, (void *)v);
+> +    return object_class_property_add_qapi(klass, name, &uint32_type_info=
+,
+> +                                          getter, setter, NULL, (void *)=
+v);
+>  }
+> =20
+>  ObjectProperty *
+> @@ -3128,8 +3128,8 @@ object_property_add_uint64_ptr(Object *obj, const c=
+har *name,
+>          setter =3D property_set_uint64_ptr;
+>      }
+> =20
+> -    return object_property_add(obj, name, "uint64",
+> -                               getter, setter, NULL, (void *)v);
+> +    return object_property_add_qapi(obj, name, &uint64_type_info,
+> +                                    getter, setter, NULL, (void *)v);
+>  }
+> =20
+>  ObjectProperty *
+
+Missing:
+
+   @@ -3152,7 +3153,7 @@ object_class_property_add_uint64_ptr(ObjectClass *=
+klass, const char *name,
+            setter =3D property_class_set_uint64_ptr;
+        }
+
+   -    return object_class_property_add(klass, name, "uint64",
+   +    return object_class_property_add_qapi(klass, name, &uint64_type_inf=
+o,
+                                         getter, setter, NULL, (void *)offs=
+et);
+    }
+
+> @@ -3169,8 +3169,8 @@ object_class_static_property_add_uint64_ptr(ObjectC=
+lass *klass,
+>          setter =3D property_set_uint64_ptr;
+>      }
+> =20
+> -    return object_class_property_add(klass, name, "uint64",
+> -                                     getter, setter, NULL, (void *)v);
+> +    return object_class_property_add_qapi(klass, name, &uint64_type_info=
+,
+> +                                          getter, setter, NULL, (void *)=
+v);
+>  }
+> =20
+>  typedef struct {
+
+[...]
+
+> diff --git a/target/i386/sev.c b/target/i386/sev.c
+> index b2c7260c80a4..3a36fa4d0b95 100644
+> --- a/target/i386/sev.c
+> +++ b/target/i386/sev.c
+> @@ -3266,7 +3266,7 @@ sev_snp_guest_class_init(ObjectClass *oc, const voi=
+d *data)
+>      x86_klass->adjust_cpuid_features =3D sev_snp_adjust_cpuid_features;
+>      x86_klass->kvm_type =3D sev_snp_kvm_type;
+> =20
+> -    object_class_property_add(oc, "policy", "uint64",
+> +    object_class_property_add_qapi(oc, "policy", &uint64_type_info,
+>                                sev_snp_guest_get_policy,
+>                                sev_snp_guest_set_policy, NULL, NULL);
+>      object_class_property_add_str(oc, "guest-visible-workarounds",
+
+Missing:
+
+   @@ -3290,7 +3290,7 @@ sev_snp_guest_class_init(ObjectClass *oc, const vo=
+id *data)
+        object_class_property_add_bool(oc, "secure-tsc",
+                                      sev_snp_guest_get_secure_tsc,
+                                      sev_snp_guest_set_secure_tsc);
+   -    object_class_property_add(oc, "tsc-frequency", "uint32",
+   +    object_class_property_add_qapi(oc, "tsc-frequency", &uint32_type_in=
+fo,
+                                  sev_snp_guest_get_tsc_frequency,
+                                  sev_snp_guest_set_tsc_frequency, NULL, NU=
+LL);
+    }
+
+[...]
 
