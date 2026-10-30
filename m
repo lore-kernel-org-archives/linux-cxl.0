@@ -1,65 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793364265;
-	b=WPqoHRnSsziPnf+Igqt4JvpZGQboXqgX5zIl4UqhJe0RJ/lR9OevRvPuCH+FCP9pjQ4v
-	 fcu4gSNIbtXeq9+Q2GIVjN5JLF/MPdZrtECzCfiIcOYReRAg6MHGmPUzh9cWjQ36m8HUX
-	 IK5uyG5b5Q9HgJUv5qyDPY9XLqLzDVz1yWozt8pml94DW/Z2yqy42PnDYC8WbU4Ugjr5a
-	 uNyTrtE1SaCMn5jnMg8Ovj2yMGYgv23ZqjcoZr1kFvwgYM/rKfd44iu7iZNGVyOIXiTaB
-	 vuJA12LX4tZmk2QUt54PUOeOc1QyzKaZJIzEtDMBCPc1YSM1ACgoE2Zb9EK/VqlJukg==
+	t=1793364283;
+	b=RLAx17JZwAXHlL68MyzIFu8J/taEjXZYyRXHUPcaMwG5xIoKLU/Y/Uc0cT2y+MGH5M5i
+	 rn1kWH2fkxzQIWwdt1R6ZSWJUFMhrsGwq4fby9E08xhoVIQMK0TepjwvCTnhNQCpt5MQ7
+	 /WA9uc/07YxTbjtpNFZK0bOZi7oiVZwlzYHsas6F+60oDt0kpEWLdz/n7dWJ4sTG2sMQb
+	 82AN2GQfpt3wBYCh5U9vZ7oJnw/r3hJ2GGcweZsGZ3cvmk8omNbyD86eORqjrKzqxoDAt
+	 TFMmFzQHRCiitxXm/3usSyikyW2lm/lbeQ5l7qKBeWNoOY1VckzH6I5UFPHfNxaR/vg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793364265;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793364283;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=VSPz+L6W93An9Mm6mOGoGNqrdBphByjhj8UXXIBhUuw=;
-	b=fGhQ/iuTsPODKb6ufj0+8+AFtCO7GZHLPvKhut48BBTC55EpKYT+wZ16DDg0Xuw9y6oO
-	 NU5oR766VXo/ylYs+s/XV3Q12qbDhdCEW7+1ITooX6Xqa+me+9YMOkbNNcfgL78gARi4l
-	 zaMk1QSIPlq2y1ec/oYuDSHbCbTBmkPhATWOd86SO1YLAfXFC8CL/jLXE8GAxL/OZWe4u
-	 dbpsfFx82WoFPBQiNECGoNppF26UD34LtvhlM1+8+H0zVDI5N/RDJGoIs1v7SSRWGmQPm
-	 jH0PMMXAtm4igVbIoVR3lZcqBo8hZQ1fduwhkTTJUjtNSshWm89z69cPKbJgsqxMvSg==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=TEVH8SHcLytPnkygqFo+kY1zSEY44saM1DUrM9+em9U=;
+	b=1rGc2XTo6xIlz1Drc8AJVcghRrK7kGJ6Oo8RSRJvgCOVBdfgrngxQpTiy1EoGgV51fNQ
+	 MRGtEC7GSw4W/WfZSE+a8IuVSvAX5D/MWx3/mS/E4RKB7TWkc8qFFwfgZWIWvifUsr5Ga
+	 ZiriRWn4WzpUmtvr2W1j6xmze7DOX2R6FLfAwRdUIGK2KbKkRpS1iu4slcw+Q0DfzbXN/
+	 NyX+Ohr+VHV6c66k6WzqV/DBnANb/bUahugKHndcS07fDyR4Vo6EzZ2tfIqAlEV7L+YgP
+	 /wp2ifcPiIT98A3LYxclw2n3hb/r2+RiFQsd6RR8rQ+c8J2iWkNUINIu2/3ZVsXpT7w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mLm6MotU;
-	arc=none smtp.remote-ip=91.218.175.5
-Received: from mta0.migadu.com (out-5.mta0.migadu.com [91.218.175.5])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=bF3vlsBY;
+	arc=none smtp.remote-ip=91.218.175.12
+Received: from mta0.migadu.com (out-12.mta0.migadu.com [91.218.175.12])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22E0606A31A
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 12:44:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F22E0606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90FB606A31A
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 12:44:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E90FB606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mLm6MotU
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=bF3vlsBY
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=JQxFpb1w6oonfIYf6ktt9ZoYfLKevZVXLt9ujZm4CoA=;
+DKIM-Signature: a=rsa-sha256; bh=QtRt0ves/wBA9PlBFoIyVL02XOI83JkkfiRXPN+Jr1Q=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793364261; v=1; x=1793969061;
- b=mLm6MotUj4i5hMseaHIy4Uuq0pZ0QqaKYIpn8yUesOSddj6Kz0qcALAwKkVxPy6/djK3i8WR
- duXCM6YhEzx4+8YmJCgnAPL5THyXhz7h8Jtm5bQSvHm+o4rgRGmVbHzpjunZfmcTLddS79KNHwD
- ergrwBYhY5mZoPFP18dN+OnY=
+ t=1793364280; v=1; x=1793969080;
+ b=bF3vlsBYShxzSfNICMVK7D3iEdA0hA+Pn3fFxnUMD4y8XrpXxyzENFE5M/LSFcxEBTQrM48i
+ dAARL8/LrR0e4AgLisyFF511jraGSs+3O6rAgBXnfxl7+c7+a9iZxKssHmlrstkwiHsiThRD+Ue
+ Qp8Fj7t6PP5tH80YJ09nMQ8o=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id dccdfc7b858c4d25;
-	Fri, 30 Oct 2026 12:44:21 +0000
-X-Mizu-Trace-ID: dccdfc7b858c4d25
+Received: by smtp.migadu.com with ESMTPS id 5c66046834214a38;
+	Fri, 30 Oct 2026 12:44:39 +0000
+X-Mizu-Trace-ID: 5c66046834214a38
 X-Migadu-Flow: FLOW_OUT
 From: Junjie Cao <junjie.cao@linux.dev>
-To: qemu-devel@nongnu.org
-Cc: qemu-stable@nongnu.org,
-	mjt@tls.msk.ru,
+To: mjt@tls.msk.ru
+Cc: qemu-devel@nongnu.org,
+	qemu-stable@nongnu.org,
 	jic23@kernel.org,
-	anisa.su@samsung.com,
-	mst@redhat.com,
 	philmd@oss.qualcomm.com,
 	linux-cxl@vger.kernel.org,
 	junjie.cao@linux.dev
-Subject: [PATCH stable-10.0] hw/cxl: free the CCI background timer on Type-3 reset and exit
-Date: Fri, 30 Oct 2026 07:44:17 -0500
-Message-ID: <20261030124417.1066423-1-junjie.cao@linux.dev>
+Subject: Re: [PATCH v3 0/7] hw/cxl: fix Type-3 device reset resource leaks and convert to three-phase
+Date: Fri, 30 Oct 2026 07:44:31 -0500
+Message-ID: <20261030124431.1066454-1-junjie.cao@linux.dev>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <379a2300-b1af-4b32-9d10-7a8347c22476@tls.msk.ru>
+References: <20260729144645.1552511-1-junjie.cao@intel.com> <379a2300-b1af-4b32-9d10-7a8347c22476@tls.msk.ru>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -71,96 +72,32 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ct3d_reset() re-runs cxl_init_cci() on all three CCIs, and each run
-allocates a fresh background timer without freeing the old one, so
-every reset leaks three QEMUTimers.  ct3_exit() doesn't free them
-either.
+Hi Michael,
 
-Upstream fixed this in 259b877eac36 ("hw/cxl: fix timer leak in
-cxl_destroy_cci()") and a004df0be51f ("hw/cxl: destroy primary CCI
-before re-initialization on reset"), but both rely on
-cxl_destroy_cci() and the .initialized flag from 98cbac128f1c, which
-only went in for 10.1.  Add a minimal cxl_destroy_cci() here and call
-it before each re-init and from ct3_exit().  timer_free() takes NULL,
-so the first reset needs no guard.
+On 30/10/26 14:35, Michael Tokarev wrote:
+> This patch series has been Cc'ed to qemu-stable@.  It is interesting how
+> it's been Cc'ed, and I think there's some error here.  From whole series,
+> only patch 2 (destroy primary CCI before re-initialization on reset) is
+> tagged for-stable.  Patch 1, which is a fix, is not tagged, and not Cc'ed
+> to qemu-stable@ either.  The rest - patches 3-7 - has been Cc'ed to the
+> qemu-stable mailing list, but are not tagged for-stable.
 
-ASan on v10.0.15, 5x system_reset on a paused guest with one
-cxl-type3: 720 bytes in 15 allocations from cxl_init_cci ->
-timer_new_ms before, none after.  cxl-test passes.
+Thanks for pointing this out. Only patches 1 and 2 were intended
+for stable; I copied qemu-stable@ on the whole series. I'll keep
+the stable Cc limited to the relevant patches in future.
 
-Fixes: 221d2cfbdb53 ("hw/cxl/mbox: Add support for background operations")
-Cc: qemu-stable@nongnu.org
-Signed-off-by: Junjie Cao <junjie.cao@linux.dev>
----
- hw/cxl/cxl-mailbox-utils.c  | 6 ++++++
- hw/mem/cxl_type3.c          | 6 ++++++
- include/hw/cxl/cxl_device.h | 1 +
- 3 files changed, 13 insertions(+)
+Patch 1 carries the tag both on the list and in 259b877eac, and you
+already have it as 4a39c7d61e in 11.1.2.  So for 11.1.x patch 2 is
+indeed the only one left.
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 516c01d840..6cbc649367 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -2986,6 +2986,12 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
-     cci->fw.slot[cci->fw.active_slot - 1] = true;
- }
- 
-+void cxl_destroy_cci(CXLCCI *cci)
-+{
-+    timer_free(cci->bg.timer);
-+    cci->bg.timer = NULL;
-+}
-+
- static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[256])
- {
-     for (int set = 0; set < 256; set++) {
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 1606aa3279..df9c70973e 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -973,6 +973,9 @@ static void ct3_exit(PCIDevice *pci_dev)
-     cxl_doe_cdat_release(cxl_cstate);
-     msix_uninit_exclusive_bar(pci_dev);
-     g_free(regs->special_ops);
-+    cxl_destroy_cci(&ct3d->cci);
-+    cxl_destroy_cci(&ct3d->vdm_fm_owned_ld_mctp_cci);
-+    cxl_destroy_cci(&ct3d->ld0_cci);
-     if (ct3d->dc.host_dc) {
-         cxl_destroy_dc_regions(ct3d);
-         address_space_destroy(&ct3d->dc.host_dc_as);
-@@ -1222,15 +1225,18 @@ static void ct3d_reset(DeviceState *dev)
- 
-     pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed);
-     cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
-+    cxl_destroy_cci(&ct3d->cci);
-     cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
- 
-     /*
-      * Bring up an endpoint to target with MCTP over VDM.
-      * This device is emulating an MLD with single LD for now.
-      */
-+    cxl_destroy_cci(&ct3d->vdm_fm_owned_ld_mctp_cci);
-     cxl_initialize_t3_fm_owned_ld_mctpcci(&ct3d->vdm_fm_owned_ld_mctp_cci,
-                                           DEVICE(ct3d), DEVICE(ct3d),
-                                           512); /* Max payload made up */
-+    cxl_destroy_cci(&ct3d->ld0_cci);
-     cxl_initialize_t3_ld_cci(&ct3d->ld0_cci, DEVICE(ct3d), DEVICE(ct3d),
-                              512); /* Max payload made up */
- 
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 3a0ee7e8e7..d9238c903e 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -316,6 +316,7 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
- void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
-                                   DeviceState *d, size_t payload_max);
- void cxl_init_cci(CXLCCI *cci, size_t payload_max);
-+void cxl_destroy_cci(CXLCCI *cci);
- void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
-                           size_t payload_max);
- int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> From this list, I'm only picking up patch 2, and only for 11.1.x series.
+> The other active stable series, 10.0.x, - apparently it's not needed there.
 
-base-commit: c2cfbc6c121b4875ac509da605968ff4289b6aef
--- 
-2.43.0
+Neither applies to 10.0 as-is since cxl_destroy_cci() only exists from
+10.1, but the leak is there too: ct3d_reset() re-runs cxl_init_cci() on
+all three CCIs, allocating a new timer each time.  I've just sent a
+10.0 version, "[PATCH stable-10.0] hw/cxl: free the CCI background
+timer on Type-3 reset and exit".
 
+Thanks,
+Junjie
