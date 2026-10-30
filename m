@@ -1,100 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.62.0
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793349499;
-	b=bEO8z2zQmiB8zpWLeNwkO2tBVUchvBDJ5UWFHVqWNLjzxUFoYrzGrFspgZbUdnbbchWG
-	 yJLTKbs8XGT5bfGsNg6hrMqQm473A/8tMraAZQJbO+3wtEymxa2/QfqxHBcSCupXU2MBL
-	 QFrSw5gSntTOCIyWqwv0n/96C84jGrkhqdvbPrzdCOLif3dEvHdvmWzhmP1anZyqOnT6D
-	 ap4kFcU3mWfhGVrOzcPsrwh3/8PZAUijtCVUxZucOR0MmNwqH6VH0pOvWu+wsNBZ3QrQE
-	 1swLXjPkXan6x8PCVJfLnsBCBZbrn8vcACfJibVpRDX8DrduqACacuZ8Ta0uqqeTBWQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793349499;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:Content-Type:Content-Disposition:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=kSJ2bzk0G3jjCkWkJf1+zSUor+YkNxMPIfKZygUQytc=;
-	b=C1uZfX+WWZih5LcWotIM3vEidLurHlwOGazepcegPxOr1tzZF+e28ax1X4JSQ2wCc3CF
-	 ecy9KFccJ1b4YPvYm1KIY5r9oYsL1TmdD0a9BFgNdUlO1qDwKXEMdLenuQNnAuUcZ/EBZ
-	 3wJRLRIfrrU8B4+8QYAJH5/gAMX/nEyS5rQrLJgUz0oeJkzpbybwCVh7bxTsBJp3e35cA
-	 jTamALrh6fcBKQqt/4hlpH5EKVJEAKSFAV7BtaBf/pjnX9YkSDRbAPPTnQ31tvUMrnULw
-	 Ee1ud/7iqCTz94h0CZIMMIiQTNgBdne5PfdzMb2tv1c5uWDlBOsL/X8fpc3KwvmN+ZA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=T9WhWsIP;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.62.0
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011000.outbound.protection.outlook.com [52.101.62.0])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793350517;
+	b=TTo5HooBRwb6Ys4ZoWmxPkqDx9hZ9/k/e1+dQawVOE2m6XfSxNx1IyGL5XrqtI0oCcid
+	 WdmuPoYquUK+UfXXZNK8puqd8zhs69/GeraOjW6vLhILPdNs2sUOzN0bPdws9IaWy9BWf
+	 AoC6NjQoyzYkYHivqncNooCiHNfG3cgodWjfmFtldzMgNIlw6vV7U64lZ16FPNlXPooPx
+	 9R9xLEQAbsOpqmHu4uTmwvdDmSYvuz0r1CIe0SbN8mpU4+wMoGGnDUYdutz9itVaMb+G+
+	 ENWkyz7UCFcP2jLQKvI3DU7r5fuYxO+7UwntnBGKAq6I3jxkoETSKNOLHePyRjYW4gg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793350517;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=2ME/YKcQAmqEKXR0yxRYRyIXblEy16rwwZK5YWNyjhA=;
+	b=x9nN7tQX/bjGG7wV3+utKyXwX5qF2mCV+bcajESCG0Oi87udBXqdtw5EoxUK1nbR8Q7p
+	 GHLnpujMCPNxE5ZyK0am14YAHzJ0m+shr58U0Xo78u1bnN74CzBx9HzMyesypluZXSdIj
+	 FaqzwocvmCUBsuBnjS9hsF8GqwLMjCr7vsnKvDAoj9Uu3XyWiL52eUeiqCRRyfONg8kT/
+	 kwe+aeeXy+EsnD9DhkOeM2Z3FjICLnNURtNfqAK7n1zgTeSVSxoCOSC14YUmvW7rRyYfM
+	 DzemFsHAWkJ+IE+ai4BA2mK2lpLD9FUppx1p6C/BDlzaaWCfyTFjBdew9IgGwck7jVA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CXll4QP4;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2E3606A323;
-	Fri, 30 Oct 2026 08:38:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE2E3606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5271A606A320;
+	Fri, 30 Oct 2026 08:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=T9WhWsIP
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n+QqCoItqA99X0DTfYkf8ceWPfyU45wEb0ROKNF0r9Ifa97v9h9xwibXTf/jsXMOiIbbx4vUuq2+vPW3p81eHvaOIHsCZbR02M44qSuJDUinWHGZ8gF4YW8rkjndLgNQW9qLzogAqoagNlgWbENzvrizEM2JED+gpcTRSvl5Yu+FzXqrOmhwfHzbnAcw8Xk3dvJcLg8jhoeEjrxow2wJOkjx694hE5y6eTivUkVJNaLiX5HVw8zbWD8ArhdRKsmJtt2Qe9uMYJt6xUCxPFULPNThhqyauswTVde6q7FADBK1yp1EqvOcu0vw0ka3bAVOgPPcjdnmBuVPNb3TRTraOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kSJ2bzk0G3jjCkWkJf1+zSUor+YkNxMPIfKZygUQytc=;
- b=HclzBLwaN+xn0TTTHT38HXCNute+y2l3twDliGma9rL4xJtdNeZVYYYZunT+xfTY+kGyHfso98OCqxtuaC0jHJX7bnvWhCY7vTUiivnA/hVFzMTS5naWBkJms6qmgoRwFu5/gKFqP3rMgRYlxSPWdLrpEm1YJHgPvVD28Vn/f3gJaGdA+vFu/YL4aY/IxRf2MPPvoZu5Mmyc33whD2ONCgBYvUcKO6uMkmvOrxzp4w3eYIENBas/o5+1cvv5jeHjSmDhIHRkanOXuqX1uWH6WWNPe6qUQiZkT8Gf7cT/JocHF2P/YViGqpMth4rxv+gcS1ZaK2ANSjviDmOViGR8GA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kSJ2bzk0G3jjCkWkJf1+zSUor+YkNxMPIfKZygUQytc=;
- b=T9WhWsIP8BsYdFj1PEkg0R3DPeGmWCpyxuWcm01bYMz/xWfSQl2z8C8kTCfpUuzYBzjSV6bpwEJpwVJ/nSqFXKgZh+3FphVe7QpZR6uZ079yXAjxrwe+kLVXOSqdAfMXshFVXbAd5tFZifSsRQ5q9qa4/HrnOByKD+4sQBU1FbapPsPQ/4PXyd9CIiHP8kT7L3O+tcrlm59AdX+caPkU37uCsJFH/w5ctlr/8tIHUDgcQknqa3cssgHd3qRhe13waE+ftVnIHQjRXNqSA/V3ZdFxNaePX71eutAbHTVdmjLoqTPTxjNrEr2L/UnYtzAZ7P/39dkmKLZPiopXj8Tg7A==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by FT1PR12MB155092.namprd12.prod.outlook.com (2603:10b6:170:3d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.10; Fri, 30 Oct
- 2026 08:38:03 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0569.008; Fri, 30 Oct 2026
- 08:38:03 +0000
-Date: Fri, 30 Oct 2026 16:37:57 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Srirangan Madhavan <smadhavan@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Li Ming <ming.li@zohomail.com>, Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com, 
-	alwilliamson@nvidia.com, Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>, 
-	Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, 
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v16 14/18] PCI/CXL: Reject reset with unsafe function
- scope
-Message-ID: <auRXPsGjIZgOv2lN@MWDK4CY14F>
-References: <20261029145703.2185231-1-smadhavan@nvidia.com>
- <20261029145703.2185231-15-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261029145703.2185231-15-smadhavan@nvidia.com>
-X-ClientProxiedBy: SI3PR03CA0001.apcprd03.prod.outlook.com
- (2603:1096:4:297::16) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CXll4QP4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61461F000C1;
+	Fri, 30 Oct 2026 08:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793350517;
+	bh=2ME/YKcQAmqEKXR0yxRYRyIXblEy16rwwZK5YWNyjhA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=CXll4QP4+ROaktyPv7RAJz7f+WPuofJbzyw2m4AACejiGVIILiYZq+PxNbpYDu8vd
+	 2Dm5iuJ/12bzLkrDS1RdE10rGH6i9HYqGkE0UXGfgzXOzXXE6naiSTFXFT7mi2yMsS
+	 a5WNcQ+GTLBcmmRjtarEdx1R8caixrVhQKolICv40IegTz6IRR+SoElmpwOTHyW/q6
+	 7Df3TV3klPlzpPUtvCGhWSAq9qOAqVDLWQWzyNS7wv5Qwyy8WwoASqZBNjn4XEEStK
+	 CMKfPt8dwsnEchT7An+jO6D/nNxutbcvk8hJ6ADyAH3HF0ZZuRBHVTr7HFOcvGhjm2
+	 gDwN1kw1sLmow==
+Message-ID: <1e277f4a-87b7-4f5e-8c87-1b2bf280e859@kernel.org>
+Date: Fri, 30 Oct 2026 09:54:59 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -104,107 +51,173 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|FT1PR12MB155092:EE_
-X-MS-Office365-Filtering-Correlation-Id: faadad28-ec97-4852-b67a-08df36611c5a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|260925022911599003|260925021911599003|260925021311599003|11063799006|4143699003|56012099006|261009223027099003|261021121427099003|10067099003|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	i6PEsg+1bMJ2eFkwgdERxzKDpxMlaeh2RD5JtNvs9ycf0DxulUeE7p5wccL/ONfu1t5lrE7pXDDbz7Dg8HB62aqJIkNKI01ZqV9cEjkdKeaLawa8TjDiGFqvJKpNnkvYXwl7dwVF3f0WpEvf81845cfTTAso8hObil9gKjXa2ZQ7209irTkCIIERP5Iltrt4iw+whA6SObalzs8eT+1qS0rd85wfJ1Hmcrd0334slN3UWPmpcuZxReYm6GnICkS93HigF1rg1zXAhkacm4/+YQxmlS8i3rizv2CvTvZzNSFDSrrjh0kailvxk2YtwqyhkdZScqaGWhuptkq6npQUB46jV3snHayakgw+mAyDzpBJ8nDtv/OXOkYCAUagxF9mrOThNAYbfBIxnB119pYOJfjohpm/tddEhJoV/DbCoE1CZPyI8W06rKhhLPkPyOH4z5zPDiwKChQs9A2ybhqIyjo/kuU+1v2/74g0mXHmqnVFcXKeoUdX/zW8ijXsOMUD8uxqaL0EhItgGfaDWLJKXKFvGPmeqwgOKHDBlzBBPvnTKT+OpkGCKGHkyVA3959eu0NQBOxLErOogGg6mfcOsxmpqhMHB3Ftx6/esc5wlFdu2G1ZSvz7DDReVtH05lAFSHEVbDHwXFB2I5TFkov2aG+MeBTioCRz7y20L+0xClg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(260925022911599003)(260925021911599003)(260925021311599003)(11063799006)(4143699003)(56012099006)(261009223027099003)(261021121427099003)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4+JiIezbMNbZqsdEGUoE3urKKKjIv6J1W8sujn7F0FDAFZFUOypt7/s3bh6X?=
- =?us-ascii?Q?sNW4Ajx2jLSNx4e5vjEi/lOV4N6qar5PYdiaCM2qfXN2J89o6vx1D0ypG+TZ?=
- =?us-ascii?Q?A1TybhgD9V8WRSlyT3QV2WU8klgigIFOdz7lPA4odhW2AWz0EVJbF2z2Ndi7?=
- =?us-ascii?Q?K/h8eptj2mqwm3ufB7iN1wZo9sFyNUvyPxe3/90oKJXu4Dp0ghO2xdAUbnYV?=
- =?us-ascii?Q?nRuCLh60QGU93yMbqfKbRHLkeSakVpKGLsVXko4CybLGgfEb+yvCFdgp2aq+?=
- =?us-ascii?Q?5fJ/MYBOEQmsd0xnnwALA+DFuouGrd89YCq3r+BnzcJ9khSfW5pEY0HpIuga?=
- =?us-ascii?Q?ZBCIoH086OsKZgyihiMcSiWdw70KenFlr0tzMJl+bN//9rTwkozQKDDo1cnl?=
- =?us-ascii?Q?hFp7NqrgwQfiXbPrZvSvz3xmO/hMgRn4bQEP7VqCYLxJGvPcYRgkYeg+uleR?=
- =?us-ascii?Q?NKJRB3Mrcqv0RaLyQMlF3hJdS6YQWH4474k57M/u+l5V+p0obTQhYgu/xqbm?=
- =?us-ascii?Q?W6FhyQXyX24HXDaPD4V1xc1AP2uGuVbc5BPfRspkznGL6kBXKS/piYicmAba?=
- =?us-ascii?Q?dCQfljNTLokkpmZgrM9hfvV8RPgoU7ckTCHfG9pBodWSZDXgSF6z3byWpJj9?=
- =?us-ascii?Q?kLNwJx3dGCPfZK0fEzZvQzGpSNQ+f20znWCUdCxQ6MHZpUkegJr6bXdOZfsq?=
- =?us-ascii?Q?HTbVuWSKYiSpXV+GiuGSdYCZhvKIhO7CmJQQq4iGHt2TJ5l70BbO/3KKnRaj?=
- =?us-ascii?Q?2q+nyo3kNUiHbEjxKwYvFTOJ4EdJenpmUvCrMxg6h6CZv/G/VVJP4VfF3Vfx?=
- =?us-ascii?Q?bDj9pSKPqhxGh27xH6rXmQT0o/otzt67WRUWQOqQ+445vW3YQj3+yqA6WFBq?=
- =?us-ascii?Q?vbYV+IA7q6w/TfpphFrAODlcKhpTDRRsdNHjqWY63UIFW3ifBveldhpAARdF?=
- =?us-ascii?Q?lhn1yA+XcZnkxtOwHxUHu9+DYSmm/yBRpPXu1Y+d8LZ8xfUbUkGXHT4FwmSS?=
- =?us-ascii?Q?ziG1niBzOhC6clw6i26KfHs4Q3ZLk6Cxhq/NQYQ9NlQV8S2SM+hk7GV0S5jR?=
- =?us-ascii?Q?sWZoDO54z05FDb65/Yb2zzkTNuVamoohpL99lpU8o1CHwNVG7wd5OxS2FvlC?=
- =?us-ascii?Q?jtMtAswELOdRm55lrrZkGfOVC//2OcqOnL3rmhDyn2gPsZz6QXd7jZsbtNRW?=
- =?us-ascii?Q?F17FZv07kdHT5su353qMSFsUzmky00Dog+sUy2iyhyt6kw8iJ5IWl0KbSxXm?=
- =?us-ascii?Q?z86t4MSrzfsk93LSs8ZsQb4yPsf/CD7FERV8o2Z8zPg2e8n4GApfMwk2Ai32?=
- =?us-ascii?Q?d2q5RtPj3i2G2fXB73+R4+ex3kmNU7jfo5lAqxQlmjtQONnwQQVD9nuwG21n?=
- =?us-ascii?Q?/yXCEBylBxrhAgVTobGdoCxGcrYta1SWg9AKpWd+Cla6N9UkW96Dn2n65esC?=
- =?us-ascii?Q?5B0WlhgfYufW8kUvsMxzJmkvlJcVh/xDDIM4qyzsUj3/bnhJIQydJIP8pBtR?=
- =?us-ascii?Q?5nJTXKWVznCNIF02bRanUmHyWBYV3sp9LxUditdLY4ZnL6uSDghA9bH3E36W?=
- =?us-ascii?Q?z9/harvMJIzPa5nBIyL2MZG8zvfPx8Ksz4C3Btl6sR/lX8uGUjuP/RNfQ+2A?=
- =?us-ascii?Q?qf3OzVoJBOIVv29BthXOmeGXo6UmirvCIrLQQK+ZeMqhTJv1KJHF0+u9vQfK?=
- =?us-ascii?Q?cxOnaa5jrBJyTWXNIfBkcyCXUfmZsKZgpjl7ey8auVUX4KaGkVfm4Wzpl1NF?=
- =?us-ascii?Q?zjSVlxuEEQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: faadad28-ec97-4852-b67a-08df36611c5a
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2026 08:38:02.9052
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lHjJ4hl/yO/A1B9b4UDMMgfkM0SfloBAqROmf2cY9dC5HqwLlmcrmxYlOAz5arUDiStOeiekC1K+JYWDm+b4eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FT1PR12MB155092
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 38/46] mm/ksm: reset the unstable trees of all nodes
+To: xu.xin@linux.dev
+Cc: akpm@linux-foundation.org, aneesh.kumar@kernel.org, apopple@nvidia.com,
+ axelrasmussen@google.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+ baoquan.he@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
+ dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, harry@kernel.org,
+ hughd@google.com, jack@suse.cz, jannh@google.com, jgg@ziepe.ca,
+ jhubbard@nvidia.com, josef@toxicpanda.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, kasong@tencent.com, kees@kernel.org,
+ kexec@lists.infradead.org, lance.yang@linux.dev, liam@infradead.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ljs@kernel.org, matthew.brost@intel.com,
+ mhocko@kernel.org, mhocko@suse.com, minchan@kernel.org,
+ muchun.song@linux.dev, nico.pache@linux.dev, nphamcs@gmail.com,
+ npiggin@gmail.com, osalvador@suse.de, pasha.tatashin@soleen.com,
+ peterx@redhat.com, peterz@infradead.org, pfalcato@suse.de,
+ pratyush@kernel.org, qi.zheng@linux.dev, rakie.kim@sk.com, riel@surriel.com,
+ rppt@kernel.org, ryan.roberts@arm.com, shakeel.butt@linux.dev,
+ shikemeng@huaweicloud.com, stable@vger.kernel.org, surenb@google.com,
+ usama.arif@linux.dev, vbabka@kernel.org, weixugc@google.com,
+ will@kernel.org, willy@infradead.org, ying.huang@linux.alibaba.com,
+ youngjun.park@lge.com, yuanchu@google.com, ziy@nvidia.com
+References: <20261027-fixes_core-v1-38-6f74bec9a5bb@kernel.org>
+ <20261030032409.127393-1-xu.xin@linux.dev>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261030032409.127393-1-xu.xin@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 29, 2026 at 02:56:59PM +0800, Srirangan Madhavan wrote:
-> The per-device PCI reset interface must not reset sibling functions.
-> Reject cxl_reset and cxl_bus for VFs, multifunction devices, and PFs with
-> enabled VFs.
+On 10/30/26 04:24, xu.xin@linux.dev wrote:
+>>
+>> Let's fix it by tracking in ksm_nr_node_ids the actual number of
+>> allocated tree roots.
+>>
+>> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
+>> more tree roots (skipping the empty ones), which is harmless.
+>>
+>> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Josef Bacik <josef@toxicpanda.com>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>> ---
+>>  mm/ksm.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/mm/ksm.c b/mm/ksm.c
+>> index dbfb8f98b1892..9c51925825cbf 100644
+>> --- a/mm/ksm.c
+>> +++ b/mm/ksm.c
+>> @@ -475,6 +475,7 @@ static void advisor_stop_scan(void)
+>>  #ifdef CONFIG_NUMA
+>>  /* Zeroed when merging across nodes is not allowed */
+>>  static unsigned int ksm_merge_across_nodes = 1;
+>> +/* Number of allocated stable and unstable tree roots. */
+>>  static int ksm_nr_node_ids = 1;
+>>  #else
+>>  #define ksm_merge_across_nodes	1U
+>> @@ -3636,14 +3637,13 @@ static ssize_t merge_across_nodes_store(struct kobject *kobj,
+>>  			else {
+>>  				root_stable_tree = buf;
+>>  				root_unstable_tree = buf + nr_node_ids;
+>> +				ksm_nr_node_ids = nr_node_ids;
+>>  				/* Stable tree is empty but not the unstable */
+>>  				root_unstable_tree[0] = one_unstable_tree[0];
+>>  			}
+>>  		}
+>> -		if (!err) {
+>> +		if (!err)
+>>  			ksm_merge_across_nodes = knob;
+>> -			ksm_nr_node_ids = knob ? 1 : nr_node_ids;
+>> -		}
+>>  	}
+>>  	mutex_unlock(&ksm_thread_mutex);
+>>  
+>>
+>> -- 
+>> 2.43.0
 > 
-> Suggested-by: Alex Williamson <alwilliamson@nvidia.com>
-> Link: https://lore.kernel.org/linux-cxl/20260626160846.426e71b6@nvidia.com/
-> Link: https://lore.kernel.org/linux-cxl/6a50441e2bb5e_3cabcb1003e@djbw-dev.notmuch/
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Thanks for the review!
 
-> ---
->  drivers/pci/cxl.c | 3 +++
->  drivers/pci/pci.c | 3 +++
->  2 files changed, 6 insertions(+)
+> Looks correct as far as it goes, but I think it is not quite sufficient
+> on its own.
+
+I think this fixes the problem described. What you describe below is a mismatch
+between documentation and the implementation, but I don't think it is
+problematic as in "responsible for BUGS". See below.
+
 > 
-> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-> index 4a8969145f8b..9a298e90586d 100644
-> --- a/drivers/pci/cxl.c
-> +++ b/drivers/pci/cxl.c
-> @@ -515,6 +515,9 @@ int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  	    !(ctrl & PCI_DVSEC_CXL_MEM_ENABLE))
->  		return -ENOTTY;
->  
-> +	if (pdev->is_virtfn || pdev->multifunction || pci_num_vf(pdev))
-> +		return -ENOTTY;
-> +
->  	if (probe)
->  		return 0;
->  
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b2879a6be5f8..9031060423cc 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5026,6 +5026,9 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->  	if (!dvsec)
->  		return -ENOTTY;
->  
-> +	if (dev->is_virtfn || dev->multifunction || pci_num_vf(dev))
-> +		return -ENOTTY;
-> +
->  	if (probe)
->  		return 0;
->  
-> -- 
-> 2.43.0
+> The documentation requires that merge_across_nodes can only be changed
+> when there are no KSM shared pages in the system, but
+> merge_across_nodes_store() does not enforce this at the sysfs level.
 > 
+> Should we also reject writes while ksmd is merging? At minimum:
+> 
+> +	if (ksm_run & KSM_RUN_MERGE)
+> +		return -EBUSY;
+> 
+> Ideally, we should also check that ksm_pages_shared is zero, since
+> KSM_RUN_STOP (0) does not guarantee that all pages have been unmerged.
+
+We do that already in merge_across_nodes_store() I think:
+
+if (ksm_pages_shared || remove_all_stable_nodes())
+	err = -EBUSY;
+
+Which is really required when swapping trees.
+
+> 
+> That would make the interface match the documented sequence and close
+> the remaining race window.
+
+Right, either we should adjust documentation or adjust the implementation. Not
+sure if restricting the interface is really required. Personally, I'd simply
+fixup the documentation (separately) unless there is a real problem with the
+implementation when allowing KSM_RUN_MERGE.
+
+(I think there is no problem as we are synchronized on the mutex).
+
+-- 
+Cheers,
+
+David
