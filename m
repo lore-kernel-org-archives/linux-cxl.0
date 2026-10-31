@@ -1,86 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.136
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793408271;
-	b=0FZXFK/3DD30aIk4I34cMKaK/s89oUAZWE1EASjPYF3dezXR0RE0bpQvdMNxSiEkuaI8
-	 h5mw7JEwxv5c4YZoQ6pJR0ISyn10zue9dMszTjaBfEfC2nho/kgct8r1rebxyZfNoFJES
-	 C9ZIdq5o+/QytptFHMvYjC6LNCwCeY+XFep02inV6m5VGhNGAO2n6E6q9h6uFWHXyYeLe
-	 wtxMxOD/UkQ6VWuKugiba3srL9bVCru8bAZPDbEwLKbYv4sBW60E5Q7xz5FuP1Sy6+2hS
-	 SITcmaK1y63E73zfppx4Pe3nyg7au0c8tWNeBB8im+7obOu48e2TxzrowduQIuoOU5A==
+	t=1793410937;
+	b=PPtjfzlCZgNS5Ap4+vdpYKgvp5M8JMYpJNz3L0wIOt6TgOMQGpxBUQuwrxFOc2elgZ0u
+	 4T5tlcYQlrgvXl8wVdE0s9GHWCRZKLCOLBY3ZLSZPeIY6noB8T1Sa4uiqH5dYe+Cu00X8
+	 IADNByaTTjZDhbZajXGTEGb2J6NEbrTgWfVhMs2irdTAW6eLaIyntpVnihxL33vZN5F2C
+	 X/TY7mmopcXDkLjzuItddJ2wbbD7gLVkYa6n+nacu2CAKvdFYt7zQdR+o/CtmrOrxTCDQ
+	 cxty25KPyIsclfR0BKOqU65QtVwcXg/dBQP3f5IB8/bIQjZoAE0KJArCiFBrHvA8mow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793408271;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=Bl537ijlD23VW4erxTZOlzT9E/4cxctJl4Miyc9Kivg=;
-	b=elvT+DoSwBqk0mXohswBGSZoOyX/CYadJ+vKUznM++CysVOL41mFf+4E6qyUvBi6z0pT
-	 xGKbbfRJSG3rRFuEIX+xf7oeW1z2S5sw95dmAAaEKhxsicbhqeVcx3uemmiGYtv/XrjQh
-	 Lu8XK6csW5fTrfbrobgt0wIeijlehSEjXE/8dw04UyYlLJGbzMDYZNDkFdotS2lwe+k3y
-	 XMd44vviDMqg05+aaCwSz8tglJGilnzgQ0xjjAbyBW2LsAwLlNSBhODfBv+/GswoLEtwJ
-	 TBMDPRsgSKs5z2v/jJzGkJgOgpKNlnHMUG06rcr+RIUu6F5POpTmKU5Hp1bSBT49U7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793410937;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=i5beK/wqta6fa7ekid99EnBANYB7xsLLW6wDEnyFugQ=;
+	b=Dj9wO7uO2NbcDTjcaydDBTKI/VnwJbLveGc2kY+s22HRaIg1i9yhQjdEaADFP9+9vYe6
+	 40AwA7JmqRpglPDPXoD/ufOqd3h4HMOtW2pG95ugIZkrFVkZ7Fg5O8C3YZyDK9kPW4t8E
+	 e3eu8Eh+oCWt4rW08qROrFyn9Kma5vAu0jv6l+7+ich5GZ+TM2Hsg7x4jIcRn6Pkoipg1
+	 UyspOCPMg+LJRQ7g7hzdYTAVckIE7M6XnXliEsEk4ooHDf8h6oHVolOtKv5xbWhj2Q4wW
+	 nzwa6/deiM4PJyA9ZKK1lCQGwMiuOr6W/VRaO5T4QahP70Ws2JsvS+Uirck3oIii6tA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=fail header.from=linux.com;
-	spf=pass smtp.mailfrom=korea.io;
-	arc=none smtp.remote-ip=209.85.215.181
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=i4RxBCx4;
+	arc=none smtp.remote-ip=91.218.175.136
+Received: from mta0.migadu.com (out-136.mta0.migadu.com [91.218.175.136])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473E2606A31C
-	for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 00:57:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 473E2606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cc4c02ddd62so655590a12.0
-        for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2026 17:57:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793408270; x=1794013070;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Bl537ijlD23VW4erxTZOlzT9E/4cxctJl4Miyc9Kivg=;
-        b=AtozPMoGLcNhVrJmGA1LC6yv7XbM9j/gR2M3c+TTlnFCKpMALk1q0DSUZM/jc2Df9w
-         xmISy4EeMOKFenIZomM0QVCIiIPAoESoUlbf4YR6hZeciiZGOz9BSzxiucE4maeaQn80
-         uKNakncoHasNbT5R+boc8JpTi/h0RhKL5p478GxDL9tfW0s1NVXlejzM6dQIhMHw/oW5
-         ShjG+SDvgPlnOa4GX4ZU8L0Qhtq1Spt0HgpuywSt9CIJ04sdIUSNzCJeyHbTRO9uquSB
-         nQowK2RQdM/fmtBuzdc2CVLnP0Y3ojbv/YiMRnA0Q32xWDDyPIxvgLaNR5e6fjmWwmZY
-         gXqg==
-X-Forwarded-Encrypted: i=1; AKwUvBxuebhL3kd6zcq9gmB7+zsg53sahdOEkMUhFBt15+SdmHVVUitXvYsHlKAh44wmTKzCajyivm15uf4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJiEmXF5VwBaiP/cmU3mqLTAroA8iY//bcmzur7euqAeL9mc6Mk
-	cdG1jMWEIQ2zIzIEuL7sT6PZlHD345gEUx/2dUqsaCIaza0hrAyTVQrZybZoEikq9/GK
-X-Gm-Gg: AYBFou0giSNXdKGNLNosbbNh68NXsuPFWrrS3ux2s4TnAbXK/Y1FEWVv5BvAL1WJ+UC
-	PzS0+gH/j/WTR79IyO0os0EBleaStAQsFJ0+8SSQQhBAXewYa3CeA+GIQ+2CPjcIvU5aveGPoXL
-	dtFR9Q3IIvRpu+K+PYWF9Dv5vyMbemjE8CfoWzLZto9mBSe9T0mVw7oqxXouQQJHjXGMJrthF1t
-	RJ9dKJMS6UeHoA0xs2cUaoA117Z6mUaVJ0WBzr/M8/HvCqCMVUvj8e+zEEVEB8e/IKEgXfyZopN
-	twTt730iCLnLevU+szRaoORtaGGCqecvEjmRsIkcY5janioSg3AhB7K/FgxoyQ42L0tSVJp9m4+
-	diiVpDK3jetb1ErO4VvlbYHsmUmJTido/PcXltsmAGA52zzqH33det8QoKJkDboLBM9AyXp6Njk
-	2fsZG02m7Q07Nq/ICdDtGwBC1gwG8FtxhuoCEXUJJuWcLzyVXD2O9Va/9NOMIdOItXvhzeXtpuR
-	7fyc7jhqr7OKBl35z2dJmUIJm52kMEq8G9ztOm+6II22TDmosrbJl48pkTon04KvoSoZkp6QBHT
-	+buvf9zscoTrEl2MDbZuTS5ya7qrdpv3wxyq2p1M1z1X05UrQuhn2mNGs/8nvBOq36tTHROnBJd
-	FDSq7aG/YWMKQ+B6m7x14QJQKrbIwM7c9qvIyN8U=
-X-Received: by 2002:a17:90b:440d:b0:3a4:fe48:d410 with SMTP id 98e67ed59e1d1-3ae897f8c6fmr2910757a91.30.1793408270496;
-        Fri, 30 Oct 2026 17:57:50 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e98f888sm10200098a91.13.2026.10.30.17.57.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 30 Oct 2026 17:57:49 -0700 (PDT)
-From: Jongwon Lee <ai@linux.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/edac: Mask DPA flags in the event record cache key
-Date: Sat, 31 Oct 2026 09:57:42 +0900
-Message-ID: <179340826284.3478.8780635809480680434@linux.com>
-In-Reply-To: <8afa233c-13c3-478e-89d2-1d3f87ec7c08@intel.com>
-References: <20261030072721.31970-1-ai@linux.com>
- <8afa233c-13c3-478e-89d2-1d3f87ec7c08@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48464606A31D
+	for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 01:42:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48464606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=i4RxBCx4
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=MpJ2KknoxvhydMM0mBu6hlDwlGwxhQOvcnm75Ft8d4M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793410933; v=1; x=1794015733;
+ b=i4RxBCx4+vXFIwhiP6CNwflbt3rAtoBok+EdOFAGJXqPkgnid6trH1RYGNUsz+s0B79enYr8
+ c7kWo/qZ/bkJtum4X3dvnr5XpPJDNhEMkqmtbV5EHWkoKh7AlaPIljgPOcsVoG9ZsLRhFMyZGU8
+ PtnFVSvFeTCx34K90DjAn8LY=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id bee3307f5ff8da89;
+	Sat, 31 Oct 2026 01:42:12 +0000
+X-Mizu-Trace-ID: bee3307f5ff8da89
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <febf6aeb-82dd-4a98-9a33-0ef321792285@linux.dev>
+Date: Sat, 31 Oct 2026 09:41:50 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -90,20 +58,85 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
+ PUD and PMD tables
+To: "David Hildenbrand (Arm)" <david@kernel.org>, SJ Park <sj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ stable@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>
+References: <20261030002004.154595-1-sj@kernel.org>
+ <6d679adb-a866-4a76-b9ea-3b8c64171fae@kernel.org>
+From: Ridong Chen <ridong.chen@linux.dev>
+In-Reply-To: <6d679adb-a866-4a76-b9ea-3b8c64171fae@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 10/30/26 10:44 AM, Dave Jiang wrote:
->> Co-developed with Claude Code.
->
-> You can drop this now. Or just put it under ---
 
-Moved it under --- in v2.
 
->> Signed-off-by: Jongwon Lee <ai@linux.com>
->
-> Is this a real email address? Please use your actual email.
+On 10/30/2026 6:21 PM, David Hildenbrand (Arm) wrote:
+> On 10/30/26 01:20, SJ Park wrote:
+>> 'get_maintainer.pl --nogit --nogit-fallback' suggests adding below recipients.
+>> But I can show there are already quite a number of recipients, so I'm just
+>> noting here.
+>>
+>> - Brian Geffon <bgeffon@google.com>
+>> - Oleksandr Natalenko <oleksandr@natalenko.name>
+>> - Steven Barrett <steven@liquorix.net>
+>> - Yu Zhao <yuzhao@google.com>
+> 
+> The CC list was so long that I limited it to people that area either a reviewer
+> or a maintainer of code.
+> 
+> MGLRU not having any real maintainer is a big problem; because that maintainer
+> would know whom to CC.
+> 
+Agreed. FWIW, I think Barry Song and Kairui Song would be good candidates
+for the maintainer role.
 
-Yes, it's my own address and I read it. It's a linux.com alias
-that forwards to my inbox, and it's the one I use for my other
-upstream work (rasdaemon). Happy to change it if it's a problem.
+Both of them have been contributing to MGLRU consistently and
+substantially. Barry is currently working on improving aging and fixing
+the swappiness-related issues, and Kairui is driving the MGLRU-FG
+optimization work.
 
-Thanks for the review. I'll send v2 shortly.
+They have also been active in reviewing MGLRU patches, and their review
+comments are usually to the point and helpful. They have been looking
+after this code well, so I think they would be a good fit as
+maintainers.
+
+-- 
+Best regards
+Ridong
+
