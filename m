@@ -1,92 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793444134;
-	b=i6mwXDLe5FVDfmvHHJbTrVN5xzAZv9dFdK+giahxYXS9PtE2ucsqj69Eot7OeeWIjlrW
-	 w3IQhcTwTs9zljLY+T40nrO7Aj5ln7366Rx6/Iwap0P12SzwOuyvNpEFN04YzB4lMXQM0
-	 QUwmRM5wPzXLboWEkXBRNI4XnjW9WOoAE4HhStdPXs398NwZLQl/GFe6542zP/jVLhkn1
-	 WafRNjduwJZMbAnY53akdCpGkJ9QIqgyqZ/vLLPEhghR7sqKk5r0I9fMLh5YwHhktWmiH
-	 1Ju0rdqmcirmj6eGF2cMfYL6O+p0ucjfYmzUSOQRG0oX/8d7Ti65bwM476roJxu66yg==
+	t=1793463090;
+	b=Vas4A8MgvSHWzpV7fdObubQ8cmzYy1VPVmUUEQlfSjgpOK27GAhh/rwvLD1bkaLQyNrb
+	 6V8RJzvUoEU2w9OpbK8cPRPoI+msUMkD6gApEf3FLQ6nw30hWHeTTpGZjMUmYIi1A8cvh
+	 jlHoRhhGr9zHZU+DM+vRQoW+d+yFp8LWMc73gVSCnDSrPFxNWM44/r4jsAjnhyLKzEAjD
+	 zIj16B4D4/jjMi0ow4CPWuBk/2BquFIIXx3x4UpzV9WsCKVIGm7CxuadOyst7BDh4Ydx9
+	 muoYRhSqBWepa7vN6uxfOEBhlVZKBbNLzp+EVBfZjm3NrQ30e4FIDusL9WlG1mblw+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793444134;
-	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
-	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Mailer;
-	bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=;
-	b=k6WqZc7DOzaeq+Hq++domnX+5PrwESKUs6vVxZMfmDO28FkfCtCNGp4qPzzPS6j1SCk7
-	 fExC6tSUfiiFwsnEDySkZ0a60AfP75FXPeSoAKX0XWm0NKnH+tfbj4Voean0/uFMb8ku+
-	 1PTwKSC91tlmnRrdUzLNSzCUAuOLKWD3B8/KtlWzDTf3xMo6E0lcoYUX3VQNxjcIoDDat
-	 zj6z5Qm4mRwtsEEog66al1JyfKJYTL5lzHmS8UaEQM8D3VSZ8cyF5uxtAdl66fJddIdu7
-	 tdpQ0b8IO0BD2bQcwprPG1C6w9VkO52JTsML0Qn50LcgKK2n+rKSCALmsAAFIJpTJLw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793463090;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	bh=J6XXVdZ2sRu/Aglz0WkyROyyzIAaDf4Y/GZJgKKRZhw=;
+	b=cBnJ8aNLSs+B8Tj0vPFa5Lk4zcZSN9kxqXQlBky/9L25MMtZSklHHnxCIwzBYh/JyZcn
+	 /TBNncWmfIpkgxl74ydTv4yTs3e8sXzlJWkQKCVwPx3BG588Mzkql15hsK8cNSNpJs82S
+	 VfU6dpZPcSrn3v2aCVQ/UOPmhT8onxabQlH1grehyet1S2YBkXfEi0hQhlcjE6trXyit4
+	 +BpVH8taGO7yBYixK2Miea3mG4fnk67NM7YhD/Mx5/JOKPMGLB9b+/kc2GXDzLLMp2CY5
+	 tl2TC5Sl8u1PSwYMEwJLwSX5BVQz5ttMnoiLC+Uut7HU3/wDmysuGE3M9xyIusaQbWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hZVih8RK;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=fail header.from=linux.com;
+	spf=pass smtp.mailfrom=korea.io;
+	arc=none smtp.remote-ip=209.85.210.174
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17346606A31A;
-	Sat, 31 Oct 2026 10:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hZVih8RK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E14E1F000C1;
-	Sat, 31 Oct 2026 10:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793444133;
-	bh=kf7DHW+HPMG6HKkFPWFn96X9OnxzATvopEw39adSoAw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=hZVih8RKW7+5gqeTqGdWFckbkE1fBUoRpN0Yf0ztRjkuk4YcZRZ4SSexv/PHbbF0M
-	 Iw/MDy6ZJVau5vIvy4d9TQWjFHxgzfqg7bAxcQxHH7309wEJ+KyA/WF+gb8Ma44Loc
-	 9wYsFL/TYaZFnAgSNIladW1t5k5pX9s2HV/slhp4sv/yPogd5Np88XzSI7K6yxbGiR
-	 U+XWdtKEx3lD/aDZfVO3Mxo7uGmn9jDQqnBS3Zl7IX2O1Y8pWhA/5Ptf4nkgq+Aof7
-	 Kos1TmRXkKGX3i46dfJQXPVPBQJTav6JodXebp2iYW9yajnhsPGigGBu9AbiWXzfC9
-	 hTLYOZQ3crkbA==
-From: David Hildenbrand <david@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>, 
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Hugh Dickins <hughd@google.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>, 
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, 
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Josef Bacik <josef@toxicpanda.com>, stable@vger.kernel.org, 
- Muhammad Usama Anjum <usama.anjum@arm.com>, SJ Park <sj@kernel.org>, 
- Chris Mason <mason@kernel.org>, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
- Mani Tofigh <mt4022@columbia.edu>, Samiullah Khawaja <skhawaja@google.com>
-In-Reply-To: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
-Subject: Re: [PATCH v3 00/47] mm: various (urgent?) fixes
-Message-Id: <179344411888.15514.3120155844849052881.b4-ty@b4>
-Date: Sat, 31 Oct 2026 11:55:18 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD31606A324
+	for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 16:11:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BFD31606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-886e61fa30fso651260b3a.1
+        for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 09:11:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793463089; x=1794067889;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=J6XXVdZ2sRu/Aglz0WkyROyyzIAaDf4Y/GZJgKKRZhw=;
+        b=JK4zS7Jd+cCgNogw2FWEGSUyviKu7lC42cK9p2BkuZr9W8wrCapUz0ONp8dcN7G++e
+         +MPamnuvbS6X0ejOhcJQeyJE8cIHM5sFf2u5mBjMPKzgFIOzFVQA6eSKrtNwtEesvLG6
+         e+QkvZo5j+md0jl2L5COd/7GEYL30DjpPi/PzPqQD5jIOcogLUSh6W6qdORFKMr2vUOl
+         WYAbrngRlBqfSbeKgl5LKlYH94ZuDFSuWWD0LitsAQAWPPxSafp///PRQTfGM4Q9vx6I
+         DjiM4sYcuqg+SBw7WqWYg3mm5BArgxFQrH10mZlRljwFz9/W1XbAE1lq7gS6OSmzQObm
+         RXAg==
+X-Forwarded-Encrypted: i=1; AKwUvBwPmz9cyF7pGH67WlwKqphyepRrbDonGL0DO+jetjJxOl1kaQztzx1R5k7sgb0MpEHzDl9oykKtf3Q=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLeTktTQyhudSvT++58BPEOpYxVlTNiyx+ZX6s4tDTPnwq4Xs0m
+	6ZDrQF0lj21gJGTUFPp0Vbr3itd8jHEVutjirZD+Y4hAqjIwSQNnNuaOtriYPOlO8Iu3
+X-Gm-Gg: AYBFou2l4j5YpW4mMk5bH+MKkWo7O7etholto0AvUxH9H3Um3AXKUVwrbrVDsXlOUXQ
+	XghzoB2MIj67Ta+kMQxM9PiFvRIXMsI8M2rL6rPJ0doRvUuUzCmTn9K5QUnVSIxxqeaGvX79x6j
+	ivmNqilInKKYkvBzKPIzLELUBQ5FdyWSfH41EmTrp3bG9U+etVWLfFZq47Gy5DJP1htsz4gR2Ws
+	1M5SeZYZjKTwyf7nCV5j4dCyZ9+T7d21LCZkaFJ31sTq4PjOBqxPPVZJ+wGRXkV3sY2/KWVazib
+	rMzu4KD6gJC8sCst3jDeRnZJOc0Jp/4Dz3wjLTgEcY+eVge7rFDAtQ3xlLmcBzyXlgRKSZzZGL8
+	OuxLIkpmNn/50NpBaoVEVc0AX7/4OHQHx7GrjlE3bp74MkhTBr05tmMnMBMTzG/UF22kjvZGvcP
+	qi5gf9e9ecvA2FNv1hdO7FaBjW2CiPtZKrBKkynTezzix/uNA8WhXp7DdKG3ibQ5npHbYGOPE3i
+	HlHD+yY3p4CX260Lrue2UUK6a31jmYUm4QXFjxR8X4qW6+/tTfQNVg1IvGnNVIh4zkZXt6Ved39
+	3Xxrp4CWl+xxWGeFlX/6Hwuqkt20iEmNmtdFgUS8hu4vHBaXV1KAofBQbn6WhALJcRg1moqauNP
+	UgUKemA8u8nmkbl4c+U8DXb7SaahuCWBP/glFpfQ=
+X-Received: by 2002:a05:6a00:9a7:b0:878:6ee:672b with SMTP id d2e1a72fcca58-8a9bf04f139mr3954262b3a.35.1793463089071;
+        Sat, 31 Oct 2026 09:11:29 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8aad963d6acsm812368b3a.18.2026.10.31.09.11.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 31 Oct 2026 09:11:28 -0700 (PDT)
+From: Jongwon Lee <ai@linux.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>
+Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: [PATCH v2] cxl/edac: Mask DPA flags in the event record cache key
+Date: Sun, 01 Nov 2026 01:11:21 +0900
+Message-ID: <20261031161121.15948-1-ai@linux.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -96,131 +85,115 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16.0
 
-On Sat, 31 Oct 2026 10:39:29 +0100, David Hildenbrand (Arm) wrote:
-> Thanks to everyone for the review! Hoping I can get some more? :)
-> 
-> A quick resend, I'll queue these immediately after sending to get them
-> into -next asap. Don't let that discourage you from reviewing ;)
+The low bits of the DPA in a General Media or DRAM event record are
+flags: bit 0 is VOLATILE and bit 1 is NOT_REPAIRABLE. The trace events
+report the DPA with CXL_DPA_MASK applied, but cxl_store_rec_gen_media()
+and cxl_store_rec_dram() use the raw value as the xarray key.
 
-Applied, thanks!
+User space reads the DPA from the trace event and writes it to the
+mem_repair dpa attribute. If the record had any flag set, xa_load()
+misses it and the repair fails with -EINVAL. The raw key also lets a
+repair go through for a record the device marked NOT_REPAIRABLE, if the
+DPA is written with bit 1 set.
 
-tree: mm/core.git
-branch: for-next-fixes
+Key the records by the masked DPA and skip records marked
+NOT_REPAIRABLE.
 
-Applied patches will appear soon in mm-next, followed by linux-next.
+Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+Signed-off-by: Jongwon Lee <ai@linux.com>
+---
 
-Please report any outstanding bugs that were missed during review, so we
-can either drop the patch series or decide how to fix it up.
+Notes:
+    Changes in v2:
+    - Moved the Claude Code note below the --- (Dave Jiang)
+    
+    This patch was developed with Claude Code.
+    
+    Tested on QEMU master (b574eaf) with a CXL type 3 device, region
+    committed, KASAN and PROVE_LOCKING on. DRAM events injected with
+    cxl-inject-dram-event at 0x1001, 0x2000 and 0x3002, then a repair
+    requested through mem_repair0..4. Same result for all five:
+    
+      DPA written   before    after
+      0x1000        -EINVAL   ok
+      0x1001        ok        -EINVAL
+      0x2000        ok        ok
+      0x3000        -EINVAL   -EINVAL
+      0x3002        ok        -EINVAL
+      0x5000        -EINVAL   -EINVAL
+    
+    No KASAN, lockdep or WARN output. Only DRAM events were injected; the
+    General Media path has the same change but was not exercised. Not
+    tested on real CXL hardware.
 
-It is encouraged to provide Acked-bys, Reviewed-bys, and Tested-bys even
-though the patches have already been applied. If possible, patch trailers
-will be updated.
+ drivers/cxl/core/edac.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. Further, this is not a guarantee that the
-patches will go upstream. If in doubt, please check the listed branch.
-
-[01/47] mm/mglru: don't use stack pointers when walking PUD and PMD tables
-        https://git.kernel.org/mm/core/c/3922fe76
-[02/47] fork: take mmap_lock before copying mm_struct
-        https://git.kernel.org/mm/core/c/6cf33ce8
-[03/47] mm/shmem: make shmem_file() check the file's inode
-        https://git.kernel.org/mm/core/c/d6003145
-[04/47] mm/memfd: make f_pos accesses atomic
-        https://git.kernel.org/mm/core/c/b6638250
-[05/47] mm/truncate: look again if a folio left the mapping
-        https://git.kernel.org/mm/core/c/e7086d79
-[06/47] mm/filemap: read mapping->a_ops->free_folio under i_lock
-        https://git.kernel.org/mm/core/c/c9073948
-[07/47] mm/filemap: don't lose a folio lock wakeup to a signal
-        https://git.kernel.org/mm/core/c/c39c22f2
-[08/47] mm/filemap: finish fault cleanup before dropping the fault lock
-        https://git.kernel.org/mm/core/c/335429f6
-[09/47] mm/rmap: handle device-exclusive entries in folio_referenced_one()
-        https://git.kernel.org/mm/core/c/6324d435
-[10/47] mm/huge_memory: fix list corruption when deferred_split_scan() races with deferred_split_folio()
-        https://git.kernel.org/mm/core/c/be9ec969
-[11/47] mm/huge_memory: properly handle refcounted PUD mappings on fork
-        https://git.kernel.org/mm/core/c/1ef69272
-[12/47] mm/huge_memory: fix livelock on device private folio
-        https://git.kernel.org/mm/core/c/88ee4890
-[13/47] mm/huge_memory: fix truncate racing with PMD zapping
-        https://git.kernel.org/mm/core/c/a63ff7ba
-[14/47] mm/huge_memory: fix zapping migration entries for device-private THPs
-        https://git.kernel.org/mm/core/c/2814cce8
-[15/47] mm/khugepaged: always recheck the pmd in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/17382ca5
-[16/47] mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/bf852461
-[17/47] mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
-        https://git.kernel.org/mm/core/c/299b8524
-[18/47] mm/khugepaged: check if PTE table is empty in try_collapse_pte_mapped_thp()
-        https://git.kernel.org/mm/core/c/22b08cd1
-[19/47] mm/gup: recheck the PUD under PTL in follow_pud_mask()
-        https://git.kernel.org/mm/core/c/e04a9b5e
-[20/47] mm/gup: fix clearing folios in memfd_pin_folios()
-        https://git.kernel.org/mm/core/c/c6791388
-[21/47] mm/gup: fix out-of-bounds write for nr_pages == 0 in GUP-fast
-        https://git.kernel.org/mm/core/c/5b1b815c
-[22/47] mm/gup: check for overflow when converting nr_pages to bytes in GUP-fast
-        https://git.kernel.org/mm/core/c/8791ac0a
-[23/47] mm/userfaultfd: write-lock the VMA before waking waiters when unregistering
-        https://git.kernel.org/mm/core/c/35f48d65
-[24/47] mm/userfaultfd: wake all waiters on unregister
-        https://git.kernel.org/mm/core/c/9e4d60fe
-[25/47] mm/userfaultfd: wake waiters when registration modes are removed
-        https://git.kernel.org/mm/core/c/a9cba229
-[26/47] mm/userfaultfd: compare exact registration modes before skipping
-        https://git.kernel.org/mm/core/c/86de3945
-[27/47] mm/mmu_gather: fix flushing ranges with 4 GiB or larger
-        https://git.kernel.org/mm/core/c/61437375
-[28/47] mm/mmu_notifier: finish non-blocking interval invalidation on error
-        https://git.kernel.org/mm/core/c/ec3feff7
-[29/47] mm/mmu_notifier: set ->mm only after mmgrab()
-        https://git.kernel.org/mm/core/c/10ad9b99
-[30/47] mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
-        https://git.kernel.org/mm/core/c/f16f7e7c
-[31/47] mm/mremap: recheck PUDs under the page table lock
-        https://git.kernel.org/mm/core/c/ae414aed
-[32/47] mm/mremap: fix moving PUD leaves
-        https://git.kernel.org/mm/core/c/262a6a25
-[33/47] mm/memory_hotplug: avoid races in pfn_to_online_page() with dying pgmap
-        https://git.kernel.org/mm/core/c/67782b68
-[34/47] mm/madvise: fix data loss from MADV_FREE on a KSM page
-        https://git.kernel.org/mm/core/c/4fc80184
-[35/47] mm/memory: reject remote COW faults on PFN mappings
-        https://git.kernel.org/mm/core/c/99e96e4d
-[36/47] mm: fix unmap_mapping_range() beyond 4 GiB on 32-bit
-        https://git.kernel.org/mm/core/c/1ca84b58
-[37/47] mm: fix unkillable fault loop on MAP_DROPPABLE memory
-        https://git.kernel.org/mm/core/c/a4c8fb4f
-[38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
-        https://git.kernel.org/mm/core/c/55f62b5f
-[39/47] mm/ksm: reset the unstable trees of all nodes
-        https://git.kernel.org/mm/core/c/9c1d2a06
-[40/47] mm/ksm: fix use of a freed anon_vma at swap-in
-        https://git.kernel.org/mm/core/c/9c20c73c
-[41/47] mm/ksm: check large swap-cache folios before mapping them
-        https://git.kernel.org/mm/core/c/7fa9d8cb
-[42/47] mm/vma: call ->may_split() before a partial merge
-        https://git.kernel.org/mm/core/c/e0b967df
-[43/47] mm/huge_memory: split huge PUDs when adjusting VMA boundaries
-        https://git.kernel.org/mm/core/c/0653a27f
-[44/47] mm/vma: don't leak the charge for stack growth
-        https://git.kernel.org/mm/core/c/a8ebd75d
-[45/47] mm/cma: don't release CMA pages still in use
-        https://git.kernel.org/mm/core/c/d7950ad4
-[46/47] mm/memory-tiers: unregister empty tiers outside memory_tier_lock
-        https://git.kernel.org/mm/core/c/b6d7ad49
-[47/47] fs/proc/task_mmu: refuse addresses beyond 32 bits on 32bit
-        https://git.kernel.org/mm/core/c/021ea6d2
-
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index 34b81e8dfb..b3dfc33ca6 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -918,6 +918,21 @@ struct cxl_mem_repair_attrbs {
+ 	enum cxl_mem_repair_type repair_type;
+ };
+ 
++/*
++ * The low bits of the event record DPA are flags (VOLATILE, NOT_REPAIRABLE).
++ * Records are looked up by the DPA user space writes back, which comes from
++ * the trace event and has the flags masked off, so key them the same way.
++ */
++static unsigned long cxl_rec_key(const struct cxl_event_media_hdr *hdr)
++{
++	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_MASK;
++}
++
++static bool cxl_rec_not_repairable(const struct cxl_event_media_hdr *hdr)
++{
++	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_NOT_REPAIRABLE;
++}
++
+ static struct cxl_event_gen_media *
+ cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
+ 		       struct cxl_mem_repair_attrbs *attrbs)
+@@ -929,7 +944,7 @@ cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
+ 		return NULL;
+ 
+ 	rec = xa_load(&array_rec->rec_gen_media, attrbs->dpa);
+-	if (!rec)
++	if (!rec || cxl_rec_not_repairable(&rec->media_hdr))
+ 		return NULL;
+ 
+ 	if (attrbs->repair_type == CXL_PPR)
+@@ -950,7 +965,7 @@ cxl_find_rec_dram(struct cxl_memdev *cxlmd,
+ 		return NULL;
+ 
+ 	rec = xa_load(&array_rec->rec_dram, attrbs->dpa);
+-	if (!rec)
++	if (!rec || cxl_rec_not_repairable(&rec->media_hdr))
+ 		return NULL;
+ 
+ 	validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
+@@ -1105,8 +1120,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 		return -ENOMEM;
+ 
+ 	old_rec = xa_store(&array_rec->rec_gen_media,
+-			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
+-			   GFP_KERNEL);
++			   cxl_rec_key(&rec->media_hdr), rec, GFP_KERNEL);
+ 	if (xa_is_err(old_rec)) {
+ 		kfree(rec);
+ 		return xa_err(old_rec);
+@@ -1135,8 +1149,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 		return -ENOMEM;
+ 
+ 	old_rec = xa_store(&array_rec->rec_dram,
+-			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
+-			   GFP_KERNEL);
++			   cxl_rec_key(&rec->media_hdr), rec, GFP_KERNEL);
+ 	if (xa_is_err(old_rec)) {
+ 		kfree(rec);
+ 		return xa_err(old_rec);
 -- 
-Cheers,
-
-David
+2.55.0
 
