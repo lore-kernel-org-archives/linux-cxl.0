@@ -1,119 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.248.84.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793473826;
-	b=abfu64nclCFQjcZQKU7wqtah2jViSU33hZ/dwwjejASRnMIB/AFK6sK7wE6Z4hAKR1n8
-	 uWWqsbjAeYPj4MacAfGxbqtla6LGct0zPY2N53siwf8gqnIqD51NbsynbMfl0SA9DLD8Y
-	 KLz5rRh9jJ5PxIxKiWiPUQh6ZePWuxWSdPAgQ2audXTkBqpmSIVdDbTiT+pdOq7AJrQET
-	 gXXgavTdmXxRdXpuxwAielBhvTf5mcAe90HmyFJi0Jximz77on55aTHEyAEJXGcxd/tcQ
-	 3oc/K3icIutcwBSLv0nz1ts/NO1Z0IGiMapVNezITb8+sRQgpqfTaQ35ifnCGk6uCzQ==
+	t=1793479840;
+	b=zQYrkeB+TIDh1lyCzYwjgp9IWGrU747aVTKziyI8c6xekxRjrFyexxI2XkwiSsXfo+h3
+	 R0cEgRCaC//wtep200TdF5yV3U045ky3MrB3GI36BOFuMrEZsftZcszcrT8iN7jWVqMYf
+	 sqyUivWWDLEcmPOycQfirQbPrz2/ON3tlNu95i/jAvRCZ9RQBvVki+kaubxNeT2i25Ie+
+	 B2W9Kvw8lfsetdlJhimTUpIQUIEb84eZfFZTp9R3bNEQzh83Nsk674wjaY2JnfHXlkzWa
+	 IzZl4S/fBAD6YFtoEigpFvPDK1oB21cPTQweuy2NoXdx9AvYBHSmhv2EjaBnqMjVgjQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793473826;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding;
-	bh=P15p9Hb5w1tBvsdlJFg638wJNRLHIyW6DyqlyUCSHFc=;
-	b=lKD1v1ssVu7Ct97IPR4PVOTIFWxSMjK1bYmGIghcvTxpQbaT/2e3FNgNOtzxL2RRClRI
-	 1NIfbx03vG2pIvlRetRrrfMRQbZV0QAujHL+6DvfmbLgtB3sG0RXal8c1lp1/DE1ygfAa
-	 //A2Sc00kvMnp9qqYEaRjE458BCMZwzTWlRLvcprhK5cb7CBgP6xO+7BWZ9UhdzLsSoiw
-	 PD6NMcjnvafpFRU+/v7y40VoF2jWGePee+GzmZFQQLwed395bxaEKVCH0ZTUwePPrgYVM
-	 1Kvps6+73E0L/qj/9cpIoBjycBUku1olPglYgOfRxpJBJT3b5SjnMc3KO4/5uAWtlZg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793479840;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=p4jrLfpxBlMGSQmHzoUVmPQbmzlY0z0Yqtc1/x/Xf3w=;
+	b=DggEzg/OTv2Dp45+Jv1TKXnNpJCTic699h6qMZLPj/MDvkHfWo/tQnk5Xl/EKQ/1VWsJ
+	 bGbjZVUuAfo/qErYLqfqhwssb82VpsrW9WHnMwVG4+v08M+lDr/J/8y9mS4O4afj7+27T
+	 mS2ShyCpu8VA6Qi8fmkplndd2+jSQPtM2AuhM7nOJh9bRPJvw10rKAWzj7NN1Pey5uiJ6
+	 RMUcLF+MUVkCf4TPCCFjcuvUlf+8WF6MLGldoUsRu1Uv6f+YFvKRRx37B4KgzozlEfDka
+	 aq9oBwTYbhOBS467pzO5AgsyUxUd5nYE577Cs6h8yff2YcwccrL/y0Jb+90/bCa7xxA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nexthop.ai;
-	spf=pass smtp.mailfrom=nexthop.ai;
-	dkim=pass header.d=nexthop.ai header.i=@nexthop.ai header.a=rsa-sha256 header.s=google header.b=M0iRGKX4;
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=tls.msk.ru;
+	spf=pass smtp.mailfrom=tls.msk.ru;
+	dkim=pass header.d=tls.msk.ru header.i=@tls.msk.ru header.a=rsa-sha256 header.s=202602 header.b=ktAYtiNY;
+	arc=none smtp.remote-ip=212.248.84.144
+Received: from isrv.corpit.ru (isrv.corpit.ru [212.248.84.144])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F26606A31F
-	for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 19:10:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A8F26606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nexthop.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexthop.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B42606A31A
+	for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 20:50:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7B42606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tls.msk.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=nexthop.ai header.i=@nexthop.ai header.a=rsa-sha256 header.s=google header.b=M0iRGKX4
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-353804b591eso2919079eec.0
-        for <linux-cxl@vger.kernel.org>; Sat, 31 Oct 2026 12:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nexthop.ai; s=google; t=1793473825; x=1794078625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=P15p9Hb5w1tBvsdlJFg638wJNRLHIyW6DyqlyUCSHFc=;
-        b=M0iRGKX4ZakyHPXgwlWKQuWrbvUmrEt1k4+8j+Da6Dso/Dh7GSCRhGjVKtDYwfzJrj
-         2HEAllh00C24MUCD82TGUaZz4bWnjiMTRhAzuWXvWqNUwh9NIMyFAIxSoJmQ4tgmhnAF
-         F245HULIR/4UBpfnm4XNgJVWo0HiMpt1bXAuHbkJDG9vLis8pelTxr1WpUiwasUmrW+0
-         9tOkzQntOI0UA8bT96YYn1nh7WxQBJCWb1rCljfbu4Ofk4oPQ7yUkax5ncCroyqti4PR
-         O+aX72UPS59IWB8w+y+J4RXBJLyCiSRq72tVighCAw7INgBmnyi41FWHKGgDOpB397rH
-         f/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793473825; x=1794078625;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=P15p9Hb5w1tBvsdlJFg638wJNRLHIyW6DyqlyUCSHFc=;
-        b=A9rDVl6U5fB4PQya+5F8/bJ+YBxM95dowNSQvUJAn+VyCL7K4opUW0r7dcpCt9jv7F
-         9xwgSUp42ecmCRKMeBhTr4IpHrNyzYDME+736l1PyJKou85g5XDzBK6PaEs4Tih4m2/n
-         EslvOhfRbUFAz7dt2CuhJNCet9h6ZA1qurUJ4TuL9SkKM2z+v5896wzb9N0hMTt7Q8Wh
-         DeYaFhB9C1h8jjzHkZGXyRk4zgbBpFos9+xpYZGcnR+O4FtoFT419U0gMjiZD06wgCSL
-         M2u1RGdMagqvC+Tnkk16YTeX+3gEYWDwO8mvg/lk5O+UUkyrVdECj9EmjCNRoKRbKtSe
-         /Eag==
-X-Forwarded-Encrypted: i=1; AKwUvBxxYPT3SZYO2HUZ/rbF6kiwU58Ut60wDO/frHYQHlehHI+p1T+EsGeIqZdhKq4zSF2tmfIqM08PA/U=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI8Mz3AO3/61JX9o2bTmZG4lp6uyTk2iWQnctwfDRVFtwTRnwRi
-	oDixbF2IpTV2EyxKA3OOqtCw47YAi96iU4uu7UpTr7wXTh5buVgOSO6hnFhO+ifP2jE=
-X-Gm-Gg: AYBFou2593MPglJUWNb6MUIjch3VxNPmy1rzmdM/x3NGPevDB3Rt/bZhOfKYRwUlqY9
-	31cn5W0VyGrvMEImOmYcqvhoxWg1RV+8u8dhhqWXJIAHWvxHJUetxOWYd4/khbIdA0Kq7ikM8Ep
-	PpeJL8rncvJREEP9wNSKql4Fz2IvmRO0Slp3+V78aivGXXlVQhhN5IeBG4U6qdG/1SYPGVNjIQA
-	sPJswXGJhK2sz4YmpYNxCrYCJhgHkCCRX/DCcMIpB5xILd0oJ56EQFm8cK3UrA4yrhqNtB7mmcp
-	efS1q68HAdaaBnX6WFl9nQf9Jpb8QyJum2VFC+5BDt09Qo/r4WgDSe+sGXyAs/MGO6inK7Noje8
-	7DGI8e+PVS0JqUv9cLUFJLvHs216WLSy4PR/gm7LRyMuYx1rnJX4icLQssj2cA27382E3iT2fH2
-	SnaS4mm3F3QbHi3MjDO0bu7GzCVad1coE2GEB7BHAaVP7bTo4NFMmd8tycbvFud1CIk5xU05qpR
-	8buZ9o8Fyir4OkNe8J1g5IT6r7MCrIB+1T05tkgH1lC778kNiceZ5DKJ6o+vLgG725hKFNPnR8D
-	BjGZu4iwglpDYhVSwI6L7TgfHm2blWj4SogFY1cZlw4X446HKtM=
-X-Received: by 2002:a05:701b:4515:20b0:166:5552:780a with SMTP id a92af1059eb24-1ac5b028b11mr7948547c88.8.1793473824427;
-        Sat, 31 Oct 2026 12:10:24 -0700 (PDT)
-Received: from localhost ([50.145.100.174])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac1b38ac58sm17384804c88.23.2026.10.31.12.10.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 31 Oct 2026 12:10:23 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 31 Oct 2026 12:10:22 -0700
-Message-Id: <DMJ9ERWOMF5G.3KVDIP2QE3A7J@nexthop.ai>
-Cc: "Richard Cheng" <icheng@nvidia.com>, "Andrew Lunn" <andrew@lunn.ch>,
- "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Charles Keepax" <ckeepax@opensource.cirrus.com>,
- "Richard Fitzgerald" <rf@opensource.cirrus.com>, "David Rhodes"
- <david.rhodes@cirrus.com>, "Linus Walleij" <linusw@kernel.org>, "Andy
- Shevchenko" <andriy.shevchenko@linux.intel.com>, "Daniel Scally"
- <djrscally@gmail.com>, "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
- "Sakari Ailus" <sakari.ailus@linux.intel.com>, "Bartosz Golaszewski"
- <brgl@kernel.org>, "Len Brown" <lenb@kernel.org>, "Davidlohr Bueso"
- <dave@stgolabs.net>, "Jonathan Cameron" <jic23@kernel.org>, "Dave Jiang"
- <dave.jiang@intel.com>, "Alison Schofield" <alison.schofield@intel.com>,
- "Vishal Verma" <vishal.l.verma@intel.com>, "Dan Williams"
- <djbw@kernel.org>, "Ira Weiny" <iweiny@kernel.org>, "Li Ming"
- <ming.li@zohomail.com>, "Lizhi Hou" <lizhi.hou@amd.com>,
- <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-sound@vger.kernel.org>,
- <patches@opensource.cirrus.com>, <linux-gpio@vger.kernel.org>,
- <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Allan Nielsen"
- <allan.nielsen@microchip.com>, "Horatiu Vultur"
- <horatiu.vultur@microchip.com>, "Daniel Machon"
- <daniel.machon@microchip.com>, "Steen Hegelund"
- <steen.hegelund@microchip.com>, "Luca Ceresoli"
- <luca.ceresoli@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v13 00/10] lan966x pci device: Add support for SFPs, PCI
- part
-From: "Abdurrahman Hussain" <abdurrahman@nexthop.ai>
-To: "Herve Codina" <herve.codina@bootlin.com>
-In-Reply-To: <20261012142826.159178-1-herve.codina@bootlin.com>
-References: <20261012142826.159178-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key, unprotected) header.d=tls.msk.ru header.i=@tls.msk.ru header.a=rsa-sha256 header.s=202602 header.b=ktAYtiNY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tls.msk.ru; s=202602;
+	t=1793479825; bh=aWvHt17uMo64E+aJMbxlk1LmvKPP0d19UsYBc1/GfMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ktAYtiNYV/RUfevjHrqXGpWzrPCGP7alTsMgq545IAxqZnZMSxmJl97j/2hXxKLE0
+	 T4KNVdBANaCxOdpPurB+ANHwyjy5i3whCmafwAgZ7oz8CQbVq76UghGDIfRDYat+IL
+	 QHZtQVFGZw+Ao/D8ttTH5noFhzDGQJ7XZnw+kGZShVMls9sG/4PhPyU8LymK6TnJ2j
+	 q060JS2BYMiYMz16JREcGemcRyahfqdv8gEbxeK57mLcuZHjImFVtaF/7oezxiuoz/
+	 E8ToiAoHLy5BWMqsaZN6EePDC+pG8i/Htu2n/0Z+TM7x9q8HBSsh8zgU5HF+DQghKP
+	 KSv0aYQn3df3w==
+Received: from tsrv.corpit.ru (tsrv.tls.msk.ru [192.168.177.2])
+	by isrv.corpit.ru (Postfix) with ESMTP id 4B4331E2CF4;
+	Sat, 31 Oct 2026 23:50:25 +0300 (MSK)
+Received: from [192.168.177.130] (mjt.wg.tls.msk.ru [192.168.177.130])
+	by tsrv.corpit.ru (Postfix) with ESMTP id D8AE944FC7F;
+	Sat, 31 Oct 2026 23:50:24 +0300 (MSK)
+Message-ID: <0dccaee9-4294-4645-9432-e17142c7b0d9@tls.msk.ru>
+Date: Sat, 31 Oct 2026 23:50:24 +0300
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -123,34 +59,49 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/7] hw/cxl: fix Type-3 device reset resource leaks and
+ convert to three-phase
+To: Junjie Cao <junjie.cao@linux.dev>
+Cc: qemu-devel@nongnu.org, qemu-stable@nongnu.org, jic23@kernel.org,
+ philmd@oss.qualcomm.com, linux-cxl@vger.kernel.org
+References: <20260729144645.1552511-1-junjie.cao@intel.com>
+ <379a2300-b1af-4b32-9d10-7a8347c22476@tls.msk.ru>
+ <20261030124431.1066454-1-junjie.cao@linux.dev>
+Content-Language: en-US, ru-RU
+From: Michael Tokarev <mjt@tls.msk.ru>
+In-Reply-To: <20261030124431.1066454-1-junjie.cao@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Herve,
+On 10/30/26 15:44, Junjie Cao wrote:
+> Hi Michael,
+> 
+> On 30/10/26 14:35, Michael Tokarev wrote:
+>> This patch series has been Cc'ed to qemu-stable@.  It is interesting how
+>> it's been Cc'ed, and I think there's some error here.  From whole series,
+>> only patch 2 (destroy primary CCI before re-initialization on reset) is
+>> tagged for-stable.  Patch 1, which is a fix, is not tagged, and not Cc'ed
+>> to qemu-stable@ either.  The rest - patches 3-7 - has been Cc'ed to the
+>> qemu-stable mailing list, but are not tagged for-stable.
+> 
+> Thanks for pointing this out. Only patches 1 and 2 were intended
+> for stable; I copied qemu-stable@ on the whole series. I'll keep
+> the stable Cc limited to the relevant patches in future.
+> 
+> Patch 1 carries the tag both on the list and in 259b877eac, and you
+> already have it as 4a39c7d61e in 11.1.2.  So for 11.1.x patch 2 is
+> indeed the only one left.
+> 
+>>  From this list, I'm only picking up patch 2, and only for 11.1.x series.
+>> The other active stable series, 10.0.x, - apparently it's not needed there.
+> 
+> Neither applies to 10.0 as-is since cxl_destroy_cci() only exists from
+> 10.1, but the leak is there too: ct3d_reset() re-runs cxl_init_cci() on
+> all three CCIs, allocating a new timer each time.  I've just sent a
+> 10.0 version, "[PATCH stable-10.0] hw/cxl: free the CCI background
+> timer on Type-3 reset and exit".
+Thank you very much for the explanation and for writing the fix for
+10.0.x.  I thought the prob actually doesn't exist there ;)
 
-On Mon, Oct 12, 2026 at 04:28:14PM +0200, Herve Codina wrote:
-> Patches 8 and 9 fix fw_devlink issues specific to PCI and the
-> device-tree nodes created during enumeration.
-
-We hit exactly this on x86 switch platforms with
-CONFIG_PCI_DYNAMIC_OF_NODES. A driver applies a device-tree overlay
-onto each Xilinx FPGA PCI endpoint and populates I2C controllers
-(xiic), watchdogs and GPIO blocks. Their interrupts go through small
-chained irqchips that are themselves fed by the FPGA's MSI vectors.
-
-Without this series, fw_devlink drops every supplier link under the
-synthesized PCI root bridge node ("Not linking ... might never become
-dev"), so the irqchips end up with no consumers. Unbinding one of them
-frees IRQ descriptors that the I2C controllers and the watchdog still
-hold. We get a remove_proc_entry "removing non-empty directory 'irq/N'"
-WARNING per IRQ, and the I2C controllers are dead until reboot.
-
-With the series applied on v7.3, the device links are created (up to
-32 consumers per irqchip), and unbinding an irqchip now unbinds its
-consumers first. I tested on two platforms, with 2 and 3 FPGAs (4 and
-7 irqchips). Repeated unload/reload of the irqchip driver was clean
-every time, and everything probed again afterwards.
-
-Tested-by: Abdurrahman Hussain <abdurrahman@nexthop.ai>
-
-Thanks,
-Abdurrahman
+/mjt
