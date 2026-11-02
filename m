@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.68
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793598163;
-	b=xwQPTXk3p1F3exk+APBHsNYQ8D0w8O3ohJJrDNGJKbQGh5y5B/DckcoUQJyfwsV40rId
-	 79UtvEmSQ1TKRR3XZOusJ48BA+zSw0cXZHacqez+KNXvyXLuqHf5a3/ZaoNgbtLG5gD0X
-	 q2cVUQRwS91CfOmMXAHX13nHPwIW+h97gF+Ze5shZIzwbMYboMsClbOlTxwrxQ2PX7w+S
-	 Xq3UDRjyAGBI+IkXsVw6LyNxYPuMyZMZrRErB6EqIgJ43mtpzmeTDhKbw6ioiCjdelCty
-	 APllle696D6tWczI800Z+aNGMhlscuoqTgpSrcWgrBiI6b9RkS2qez7Zhln23fSh6Kw==
+	t=1793599566;
+	b=FDVnM5s9kJoDYMMhFV4861OwbW9w+x/66iPV6xbTrP6bjGgn0Lg+NLQErNNpcPWnrkqs
+	 TO4wmvQQ4GldbM0V8WE+vUewLnmNfLxmYRItAZ8FksdQXSwmWyiV6jivjYPB6r+4C8uB7
+	 DzG3xOMONefCqiP4rWyi7Tm03sEhvyrC8oJRSAl853J76KPe+A+b0MnUk/MhTG1v/Mpjb
+	 4a1aHxUQafdyyuZIwwBDmCf2H+Jd43EQFiRMC3lJopL/CB+fENbJJMo2dmH/U5mZcZYPx
+	 O3G7FzS6K9TpQZGJa7fo2enMzaq8lZpKzy5APjaiYux8O3Oa9w1Fh+z9O4jbiFtG0/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793598163;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793599566;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=MiW8Mroe3U2+fZ+1bplzdhcNfTtvPuhlvwZ0rPfG9Ps=;
-	b=OSTqPRA7h6VPydMsTsZQF/x2zk1SImrtWk8ew3EOwMLnsjmThtTUnBW9VxAYOeFfPzAn
-	 LVepWCyDWmiyBwa1DH29roqtNmc/Y8jL4Ny5jzdrkZv2XHkuAhcE3EBEehtxii66LNDsL
-	 sysGlHLCy3y8Y+o0NdZ0tHrUxmsA7Ebm+zBy2zNFokUbPRcKqfTB0Nf/qw/0emm7Xl+4c
-	 xvXlFrJO0fUya2qie0YFaCIZzvfmLv+W5EN/MARYbc4PTIKAldP/Ppb+46ue49ldW/cLV
-	 0I9Ye6cQJmWefW3Gbu3uqwFGEXk2Ub+W8xF8ww/kEZCzIJktcyKs+lNm87hyGoHMOhA==
+	bh=+yuFDhrhf3kM/PO/AnTTpZJjMtV5tAkK8200L66uGl8=;
+	b=4KXFNyZRCeKlywhaLIiCHEhibJKPfgsrIjcy5lRz+X2DqBnlxzd6dcLjGh0Racd7IwdB
+	 EN9WfDIV5LlWpHj2ZnJbuCxeyhi4NjM/9wpkJNbA3jwBP7hfa2B6AZyt3g9foM2ERh/IR
+	 2bowvh9c8LTjUqVRvSNzJWlUn78/2OnqkCjhr5Gqz+TyDl0YcmmTxmzShsFZSECASL70d
+	 /rpI8lPyl+bVPFhAn7qQyF7+TUt+b3NrpSR8TQEib4yNJL64F9EJyJ2lpMeYHAO4iDH2a
+	 Zz9oG0lLV94H3ZM4bq6zCEBYO+5+vST1ggK8aMleBNeqydhUMzk6Mk0AIwFzHr6bLBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UuwuZrpR;
-	arc=none smtp.remote-ip=91.218.175.68
-Received: from mta0.migadu.com (out-68.mta0.migadu.com [91.218.175.68])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mnLeKo3J;
+	arc=none smtp.remote-ip=95.215.58.173
+Received: from mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31569606A324
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 05:42:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31569606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA62606A324
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 06:05:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CEA62606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UuwuZrpR
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mnLeKo3J
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=MiW8Mroe3U2+fZ+1bplzdhcNfTtvPuhlvwZ0rPfG9Ps=;
+DKIM-Signature: a=rsa-sha256; bh=ex0bR+wqY48y7Ys0l1lS/C4xyqfg/lqStx93s8K9wXI=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793598159; v=1; x=1794202959;
- b=UuwuZrpRkQYutb58GVikL5ByJkdXkY5hrZ320Ad6t9zbKbpIWUeWtzUj6e7jA2gUDGMoLrrH
- gUeLCTBMp061JCHx6Qhx3sjIJSwh8MQzoBlRonU4eD5oEI2+kpHt3ULEzO6l5PK/syFv0vJ1f4r
- DZ12u63g6acTOpq0688ukOGg=
+ t=1793599557; v=1; x=1794204357;
+ b=mnLeKo3JIlrjZ0v8csYIXQvs0MqjNYBAaha6FI+GsXgzsTBscKhu47xfdxei1GstkYX55TtU
+ s7+ijDrBsSQikbWr4RhQIABec//XfnZQfXcLKbZqgwK2XEUTDJ36HqPkKEIRh6O+ifRMQgl5bW3
+ ABiUUGhU4PsBaXEJa27dL80Y=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 9704e208af575192;
-	Mon, 02 Nov 2026 05:42:37 +0000
-X-Mizu-Trace-ID: 9704e208af575192
+Received: by smtp.migadu.com with ESMTPS id 85932c5ab249e449;
+	Mon, 02 Nov 2026 06:05:56 +0000
+X-Mizu-Trace-ID: 85932c5ab249e449
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: david@kernel.org
@@ -112,15 +112,15 @@ Cc: akpm@linux-foundation.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	josef@toxicpanda.com,
+	mason@kernel.org,
 	stable@vger.kernel.org,
 	usama.anjum@arm.com
-Subject: Re: [PATCH v3 16/47] mm/khugepaged: fix PMD table lock leak in try_collapse_pte_mapped_thp()
-Date: Mon,  2 Nov 2026 13:42:32 +0800
-Message-ID: <20261102054232.36829-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v3 17/47] mm/khugepaged: preserve dirty bits when collapsing PTE-mapped THPs
+Date: Mon,  2 Nov 2026 14:05:47 +0800
+Message-ID: <20261102060547.39942-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-16-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-16-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-17-d6437171ecc3@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -134,32 +134,70 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, Oct 31, 2026 at 10:39:45AM +0100, David Hildenbrand (Arm) wrote:
->From: Josef Bacik <josef@toxicpanda.com>
+On Sat, Oct 31, 2026 at 10:39:46AM +0100, David Hildenbrand (Arm) wrote:
+>From: Chris Mason <mason@kernel.org>
 >
->For a private mapping with userfaultfd, try_collapse_pte_mapped_thp()
->takes the PMD table lock before it maps the page table for the second time.
->If that (pte_offset_map_rw_nolock) fails, because the page table vanished
->in the meantime due to concurrent page table reclaim, it leaves through
->the abort label, where the PMD table lock is unlocked if it differs from
->PTE table lock.
+>try_collapse_pte_mapped_thp() clears PTEs without transferring their dirty
+>bits to the folio. A shmem read fault can map a clean folio writable, so
+>a later store only dirties the PTE. Losing that dirty bit allows reclaim
+>to discard modified data.
 >
->In case the PMD table lock and the PTE table lock match, which is the
->case without CONFIG_SPLIT_PTE_PTLOCKS after pte_offset_map_rw_nolock()
->failed, we miss to unlock the PMD table.
+>The assumption that regular files are read-only is also obsolete since
+>commit 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse
+>for writable files"). In any case, transferring PTE dirty bits to the folio
+>when removing mappings (and while the folio is still mapped) is the right
+>thing to do.
 >
->To fix it, forget the PTE table lock when we unmap+unlock the PTE table.
+>Use get_and_clear_ptes() to collect the dirty bits and mark the folio
+>dirty before unmapping it. Update the comment.
 >
->Fix generated by an LLM and sent by Josef Bacik in private.
+>This was reproduced with shmem using MADV_COLLAPSE followed by
+>MADV_PAGEOUT.
 >
->Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
+>Fix generated by an LLM and sent by Chris Mason in private.
+>
+>Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+>Fixes: 1b6444331bebb ("mm/khugepaged: enable clean pagecache folio collapse for writable files")
 >Cc: stable@vger.kernel.org
->Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->[ david: move the ptl = NULL handling; rewrite description, drop wrong comments ]
+>Signed-off-by: Chris Mason <mason@kernel.org>
+>[ david: adjust comment; simplify description; cover file-thp as well ]
+>Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 >Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 >Tested-by: Gregory Price (Meta) <gourry@gourry.net>
 >Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 >Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 >---
+> mm/khugepaged.c | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
+>
+>diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>index 34ebb37c862c0..ce794d9760a87 100644
+>--- a/mm/khugepaged.c
+>+++ b/mm/khugepaged.c
+>@@ -1995,9 +1995,10 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
+> 		/*
+> 		 * Must clear entry, or a racing truncate may re-remove it.
+> 		 * TLB flush can be left until pmdp_collapse_flush() does it.
+>-		 * PTE dirty? Shmem page is already dirty; file is read-only.
+> 		 */
+>-		clear_ptes(mm, addr, pte, nr_batch_ptes);
+>+		ptent = get_and_clear_ptes(mm, addr, pte, nr_batch_ptes);
+
+I went through get_and_clear_ptes() as well. It merges dirty bits across
+the batch, so we're covered even when the first PTE is clean and a later
+one is dirty.
+
+LGTM!
 
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
+
+>+		if (pte_dirty(ptent))
+>+			folio_mark_dirty(folio);
+> 		folio_remove_rmap_ptes(folio, page, nr_batch_ptes, vma);
+> 		nr_mapped_ptes += nr_batch_ptes;
+> 	}
+>
+>-- 
+>2.43.0
+>
+>
