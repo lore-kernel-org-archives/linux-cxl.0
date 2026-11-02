@@ -1,55 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793650322;
-	b=pE0XMMrJ6Sh5J3f9U7SYbj6RtAzhF/GOpT7qEU+CmhmGcMbmoFxC4zGXgFnB6pVg2LfK
-	 ReWbCIlW9PSYfBbg1FbimEr4uLW+NyCFfYqrYe66bzGRMbKZJ1EtO3aySCj4a4LOy4fHy
-	 JflK0627ldizxf5rs5Ct7KUtBnnt+yhbWNphOSKCKi5ZU6NlmgwnplI3XdCa/NPVlIDtw
-	 3zYLBrh84cMYRSPHBnfFTgZblD8ev27N8CEHZ2BKt5fvfSk/sEEGJt2z4kvQHDsjrnxBM
-	 yflPDnFMO5522uSctrnfoQ9DWKCP/g29crKn8+nMz7NkozRBILZVhJdyl3LX4jh8WTw==
+	t=1793650570;
+	b=E5e+Agy1m1wBHYn686kpP8C6HAKFpbzzc1Cb6yaoj1vGym2V+6ZMVBMat6g84CmP54wT
+	 P622mduwd+Yjk+jyXhULjQJ5a54mgGIpGx9cGV8T2vrYhLd/MctRCktOcMK0SwkY/bSVQ
+	 mwHJ6w0t7v5WGVxlVjJvw0fCQIKewIh9xLMvxGR/j/R5L2gEiZq5n46FPjiUV8AtWRGpI
+	 DUlRmR9zmHVgppl1NDtsutyysvf3wzyJVDAdhZAyf6YGfttm5pBgwK991gCQT0mM7kcph
+	 Qm7EP2MtT4yIe8pN0xR4nF3VSOqBaO1cpey3Q6cs/DoyolJMffMjNUdM+8uQxKVaT/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793650322;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=BjDOfNesHUvUYdnemATt3QpEnFnBaEWBJAu+ke/IeV8=;
-	b=uRbguddzEN76kZfEFGKG1pF4UvWjk1bTv3buzwzKXkHDuAjfYm4zCFUyOcWiPfmhsIHG
-	 C6INIlP4K0CxG2bxc8tdzdZJjtD/BFTSNv2OIHY+w62AkA/AfgXGwd5aT6jQprdQ2utTI
-	 WQ0I/kc4IWvDGjZByn/Xq94e3vbBuRIFTqyKPqK5aGdjAr1O7meB6fsXj0JIFrOsC1zAO
-	 YghGvnh1moXlZkIrtM8pNb+6n6P6J8YkREGi3ZDUhXEECpln8lpmHGhdJFucBLiagz126
-	 foYPtYac60AJv74Ma4mpkrC1VPMk/omNmsZRB8tJqgXxzAyLMCkVWC7pli8cos1ertQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793650570;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=ztTjqeQs6bVCLNy+6AyI1WTQJ9tKkNkIeBdvuOj+cHw=;
+	b=pWHz+GxfnLdwwlVCv0QKaZJ3XjnkwejsIHcucKxqHb4c71vhikZRjksCp/k80sTakuWh
+	 IG0LTGcPq6mkcGmzz5k58XukYE9hg3Jbt2w8lRm2IwVAo4aoDwFBoRufkOr/rayIPB3Yv
+	 ctRAUFnfxrwJCY9xa80FhVz5rrgtuAEeX9rRyrv56ztSYVlEP8waoYtgYd5zep76fR410
+	 RdLtEanG7ICzXDD1pUgDP0V1X72zZ5Yv3mwXXpRJIIbyuAhntN5beAYVKDO9DWm1FZ/lg
+	 spPzmKQQ19UJUhVDeQTrB5h9gY9lCSnnyd5vv+BsZ0SWAFeDAC3LLN5PtZVOxMqWqcA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=McxsqyC0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="hzqhR/8J";
+	arc=none smtp.remote-ip=192.198.163.19
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DC9606A333
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CCA606A330
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:16:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1CCA606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=McxsqyC0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44CB1F00A1F
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793650321;
-	bh=BjDOfNesHUvUYdnemATt3QpEnFnBaEWBJAu+ke/IeV8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=McxsqyC0gzl+XOKZisxRUfguzN1o1crXDnXW3AqY7+r5QfqJrmI0DCYcyCe4NmMFs
-	 0nb0JSN21Rjz57RKn0QholqTrs+nSYEfCfeLFZgEiEAoJMBSAJe1KqJUKnj4Wm73DE
-	 Yp2e68RoGIg1u6+3Z5c0/4I8FFgfR3/nesMk2JOhB5lboYtR0Ed2T6F79PBjuhekMt
-	 Yt2o4mwK4Jqjh9k40LpiFAxr6czwwFwURcJmRMEv29/Y6qprFvOu9xEbKoFchQdyRq
-	 JGV62si467AURsBWnbZlCraHmNgP1GPy4HIHbgWb1WrFsyIAr192APppSI2zWIuHm5
-	 QNYdA2NM0S9wg==
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-93f20c3aaa5so370594385a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Nov 2026 12:12:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBwwXdFHv31IysqArlF95i80YiLsCsX4kIsg9Ck3aK+W8xnv6Bl3mEiBzX2Ts9TCe1NI+YHASgx1z+U=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKMZkUrKTVh7EdzgqWYaep7quDjiAJnc1pmuJGwkIZ9bNMjN3YN
-	r71s4I5xl1V4LYVJrzIr7frwc1SL04ikUP31JLYAt24dRfgu9hr0ZokovC6h5n+qvEM+RrxVTgC
-	FUSuZAi5fKre9eJhg8YnRe3PV295rTmA=
-X-Received: by 2002:a05:620a:2614:b0:93f:baf:279e with SMTP id
- af79cd13be357-94421588032mr1947387285a.8.1793650320775; Mon, 02 Nov 2026
- 12:12:00 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hzqhR/8J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793650569; x=1825186569;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eQRy61cIwe0wwF+wbUonegbm4Mn53+TDE5IlkEy1Gk0=;
+  b=hzqhR/8JlHuD8uLH7INMF6Iyl6WMHr9CpGU7fI8WsOU4PlfhOFDAkqGF
+   7GzIpYATTzLOfY+lAINRoXVA6AATaLN80Q4rvi7OxMbILiumSugZcHiHu
+   RS6kL40ukVxQc7P5/v2smHJQzf1JePpG1JzZan8IU8kDv5y4F9BskrOrl
+   n3M1TY90+VxDrlGGjdNKRQUx8VBrfAzFR722qCeZve/6VvXJbW4b1sQvZ
+   19JUOraf0ccvEQIJzRr2VkWlDd8U0BfBYu6s/+z+8/oSqAWxq0iaVB7l/
+   IuPSC+m+D0ChO30R1h5fOYFqH7TxxwMsnJHONC0eDCL7jOXl88uFv0q+j
+   A==;
+X-CSE-ConnectionGUID: uEerSNcISzmcU8h45eeRmQ==
+X-CSE-MsgGUID: GBTmaTcnS5W9V10I1IcAfg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2463984"
+X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
+   d="scan'208";a="2463984"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:08 -0800
+X-CSE-ConnectionGUID: SCLFIxx8QlWuXPIlMcM67g==
+X-CSE-MsgGUID: OoFaGujbRmmfuQQ+HevmGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
+   d="scan'208";a="6215523"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.173])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:08 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v5 0/9] cxl/region: Refactor cxl_port_setup_targets()
+Date: Mon,  2 Nov 2026 12:15:55 -0800
+Message-ID: <cover.1793649898.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,91 +83,89 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <6FACF8FF-F943-45C8-BDFD-3AFB5C060E0A@linux.dev>
- <20261031055838.60138-1-lance.yang@linux.dev> <a704d458-ad60-43bf-a0ce-3b128b218d88@kernel.org>
-In-Reply-To: <a704d458-ad60-43bf-a0ce-3b128b218d88@kernel.org>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 3 Nov 2026 04:11:47 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
-X-Gm-Features: AclHuK_rJzE5Yay_lHuYFvz2Gw1cEWyIS737R4EkfHxGw2G6SeGPSgpipiW_eIU
-Message-ID: <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Lance Yang <lance.yang@linux.dev>, muchun.song@linux.dev, kasong@tencent.com, 
-	ridong.chen@linux.dev, sj@kernel.org, hannes@cmpxchg.org, mhocko@kernel.org, 
-	qi.zheng@linux.dev, shakeel.butt@linux.dev, ljs@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
-	baoquan.he@linux.dev, baolin.wang@linux.alibaba.com, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	kees@kernel.org, peterz@infradead.org, jannh@google.com, pfalcato@suse.de, 
-	hughd@google.com, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	willy@infradead.org, jack@suse.cz, ziy@nvidia.com, riel@surriel.com, 
-	harry@kernel.org, apopple@nvidia.com, nico.pache@linux.dev, 
-	ryan.roberts@arm.com, dev.jain@arm.com, usama.arif@linux.dev, kas@kernel.org, 
-	matthew.brost@intel.com, jhubbard@nvidia.com, peterx@redhat.com, 
-	will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com, 
-	osalvador@suse.de, minchan@kernel.org, xu.xin@linux.dev, 
-	chengming.zhou@linux.dev, chrisl@kernel.org, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, youngjun.park@lge.com, gourry@gourry.net, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, ying.huang@linux.alibaba.com, 
-	jgg@ziepe.ca, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org, josef@toxicpanda.com, 
-	stable@vger.kernel.org, usama.anjum@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 31, 2026 at 5:42=E2=80=AFPM David Hildenbrand (Arm)
-<david@kernel.org> wrote:
->
-> On 10/31/26 06:58, Lance Yang wrote:
-> >
-> > On Sat, Oct 31, 2026 at 09:46:37AM +0800, Muchun Song wrote:
-> >>
-> >>
-> >>>
-> >>>
-> >>>
-> >>> Agreed. FWIW, I think Barry Song and Kairui Song would be good candid=
-ates
-> >>> for the maintainer role.
-> >>
-> >> +1
-> >>
-> >> It would be great if they could take this over.
-> >
-> > +1 from me too ;)
-> >
-> > They both have been really active on MGLRU and doing great work for qui=
-te
-> > a while. No doubt they'll continue to do so :D
->
-> Fully agreed, we really need some people familiar with this code to help
-> maintain it, and Kairu and Barry have most experience on this.
 
-Thanks to Ridong, Muchun, Lance, and David for all the
-kind words. Your encouragement is truly inspiring!
+Changes in v5:
+- Update patch 4 commit message w test result & benefit info (RichardC)
+- Rebase on 7.4-rc1
+v4: https://lore.kernel.org/all/cover.1792263750.git.alison.schofield@intel.com/
 
->
-> Just a note that I also don't want to pressure into such a role (which co=
-mes
-> with responsibility).
+Changes in v4:
+- Pass cxlsd to cxl_switch_port_setup_targets() (DaveJ)
+- New Patch 4 from Richard, only calc peer distance on target reuse (RichardC)
+- Add function comment to cxl_port_parent_interleave() (RichardC)
+- New Patch 8 simplifies control flow (MingL, JonathanC)
+- Remove claim in cover letter of a strictly mechanical refactor
+- Drop LLM tags per latest guidance
+v3: https://lore.kernel.org/linux-cxl/cover.1791860305.git.alison.schofield@intel.com/
 
-It would be a great pleasure to work for the MGLRU
-community.
+Changes in v3:
+- Drop patch "cxl/region: Name the interleave locals in cxl_port_setup_targets()".
+- Move the distance comment above cxl_port_peer_distance() (Jonathan)
+- Name the out-params out_iw/out_ig.
+- Minor reverse fir and alignment cleanups
+- Reorder the cxl_port_calc_interleave() declarations
+v2: https://lore.kernel.org/linux-cxl/cover.1791676454.git.alison.schofield@intel.com/
 
-Over the past few months, we've seen many active
-contributors join the MGLRU effort. It feels like MGLRU
-has never been this popular. I'm really glad to see the
-community growing.
+Changes in v2:
+- New patch 3 adds 'switch' to cxl_port_setup_targets() name (DaveJ)
+- Add 'switch' to cxl_port_add_target() name (DaveJ)
+- Pass the switch decoder to cxl_switch_port_add_target (DaveJ)
+- Minor commit message updates based on function renamings
+v1: https://lore.kernel.org/linux-cxl/cover.1791575481.git.alison.schofield@intel.com/
 
-I may have missed someone, but besides Kairui and me, I'd
-like to mention Baoquan, Baolin, Hui Zhu, Ridong, Kunwu,
-Maxim, T.J., Siddharth, Xiang Liu, Bingfang Guo, Shakeel,
-Zicheng, and many others.
 
-It's great to see so many people contributing to MGLRU!
+Begin Cover Letter:
+cxl_port_setup_targets() has grown to nearly 200 lines. It open codes each
+step of adding an endpoint to a port's decoder: finding the distance
+between peer positions, reading the parent interleave, calculating and
+validating the port's interleave, setting up the decoder, and adding the
+target.
 
-Best,
-Barry
+This set is inspired by review feedback from Robert Richter on the series
+that adds mixed-granularity region support [1]. That series needs to change
+how this function calculates interleaves and Robert asked for that new code
+to be moved into a helper. Rather than tidy only the new code, this set
+splits up the whole function first.
+
+Patch 1 prepares the code that moves. It is a suggestion Jonathan offered
+on the mixed gran series.
+
+Patch 2 renames the function to cxl_switch_port_setup_targets(), since it
+configures switch decoder targets, and changes its parameter to accept a
+switch decoder rather than a port, both DaveJ suggestions.
+
+Patches 3-9 extract the individual steps into helpers and add two new patches:
+RichardC's patch 4 avoids calculating peer distance when an endpoint adds a
+new target, and patch 8, suggested by Ming and Jonathan, removes the goto paths
+before the final helper is extracted.
+
+The result reduces cxl_switch_port_setup_targets() to 53 lines.
+
+[1] https://lore.kernel.org/linux-cxl/cover.1788475206.git.alison.schofield@intel.com/
+
+
+Alison Schofield (8):
+  cxl: Add interleave encoding validity helpers
+  cxl/region: Rename cxl_port_setup_targets() to
+    cxl_switch_port_setup_targets()
+  cxl/region: Factor out cxl_port_peer_distance()
+  cxl/region: Factor out cxl_port_parent_interleave()
+  cxl/region: Factor out cxl_port_calc_interleave()
+  cxl/region: Factor out cxl_port_setup_decoder()
+  cxl/region: Simplify switch port target setup control flow
+  cxl/region: Factor out cxl_switch_port_add_target()
+
+Richard Cheng (1):
+  cxl/region: Calculate peer distance only for reused targets
+
+ drivers/cxl/core/region.c | 243 +++++++++++++++++++++++---------------
+ drivers/cxl/cxl.h         |  21 ++++
+ 2 files changed, 172 insertions(+), 92 deletions(-)
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.37.3
+
