@@ -1,56 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793571857;
-	b=lwMki8epKdv9sSLQlfrIjalMUVcYlottY261nSSzTG1NDAjAgYqHS+hbTy1S3PBCU3Fj
-	 ykYw514IEOT6/RD3PYbGHPT13NIap5OyqAu32kSa6ibudBbOpgqTDI42SrBVHUaDoqVTx
-	 uXyj4WeUKm0QKMVuhX3axZQkeH2X35le8zDS7NIw537tOOM8pPguYEc92vWX3MXzHUtoC
-	 yTwFkkGpGwPawJu0S7JnEXhUvV8DN7fdVTJ4LT4VaPCsH8FTMwX8yhhXQ6BkyqsaFxjQe
-	 9NnkIIRhxbki/giHuOO4wJbzWXiCEmz0bm0fxDgxcf9mzvkearGpafn9dNz2qka2WHA==
+	t=1793589944;
+	b=x6x7UyBRXkpveEsA71sb+AG9rHsoProwGAhT6BNCAx7zE0QHOemC7JOu0rPNAn/W4pYY
+	 coLh0JnQvvR/5KQEv4+uAOfs9evFoD6k7S2PoHhIyLKR+kd0aD4wwAZI3wn6itqV8q+Md
+	 ujyXshIoY4n5bD6EbZ+oi++QqfiWlnKKhJayE28TfczXBMYPooOAM7htvDLapU66nFeby
+	 1UxpaBGMCDpzUS5HyZKMLvMjTqYdRTvAOvwVIDla+ku/qUGGEX8EV2Yb5g+Q3rQAhvqc8
+	 BdT8a2W1FkeSS8RBh230ejhaaZoC36EyXJiyzfibEJ5d7KNb8cbtFFfIHnr/2zjto/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793571857;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=XsL0I3dILPl644yu1R6hdCjATiRmOsFMtZg1SW8wUJs=;
-	b=0kvWsVWXEWZCW+4UK9uBiX0EEf2/5MJkg0VvsVNpkmY54N5qpTueHo93kJrey/+Mc80M
-	 YkvSw9uodDNPYrVbRtVaIR5r5VHd0wcA/ss4vfRL5i9HnYXEOdb3Onrz4lbGTMhWUZbj+
-	 fPJ/yRfXxkTcg1up6wp8YGE0TgH23vQkO/7OL2esNYqgJyJjJZ0U3qMezIqPdCgMU3uC/
-	 dDAaLfdlTdbJuRMx1AGw/Q2b6PK6AICTQFyJdHMsxLKlxaAwFz5uL7upeA4CfIYFCejzz
-	 MYTglgFgBwBpf+o+5vOqo/1ihO0j40rXp27mbVXkzJYZR1Da29zbBZzGe+kn9xBODZw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793589944;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:Sender:X-CM-SenderInfo;
+	bh=veZDpRBvsFIvF/XJwen4k9bmxlWJry4e0api1yU19lY=;
+	b=kGEkcfQwlS5mDhdStaWZ8vKJE4ZH8ont7aUaca2ubC339tb4pqmyh67LaeLTR3EvwSsn
+	 0F9iXRhzlMfGCdFd1W7ktmZzSCHqnPdo3enawWftD999Teso6FaNcv6jRiyo7tsrkj9u3
+	 Cqm3s0+I6ply/aH8lgFjxPl4T0l75Bh6+0x9QSG1Ws+MfvF7Rfmsn6GWPkXPO/3BtxmCM
+	 jEzxq6LiamLMAytu2dpR4qI5cKSX5Ui/4Myq/r66dZvVEOTKYq0xVt5eRNGUvn7elZkhH
+	 a4FIitOVuGKhBK0mbkJRt8ZMfjNiEe6QogKbIM0MuB+xEOfagbPxFuuQUg8YNQBIZCA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MnUZxm7d;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=hurb2bK1;
+	arc=none smtp.remote-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CEB606F694
-	for <linux-cxl@vger.kernel.org>; Sun,  1 Nov 2026 22:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83697606A324;
+	Mon,  2 Nov 2026 03:25:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 83697606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MnUZxm7d
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E471F00A25;
-	Sun,  1 Nov 2026 22:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793571857;
-	bh=XsL0I3dILPl644yu1R6hdCjATiRmOsFMtZg1SW8wUJs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MnUZxm7d6m+TxvJZ0HOR8xKi2myLcY00unDzVuz0BfpaYopEDxIi4gbSXOm4i2gvM
-	 zodhiuY4QYsGK24Q9PipeYMJ5bIXo15HaqctiLoCcjK/8j6IS2nbYMT8Jb8pnyBnM8
-	 NPWKvaOEkeYBGVh13lJDQfUaXxN3fymKwMsnmJRDqmgqnTHyUQt/cAQTnJIpxo0UoA
-	 7VZbB9cCLhYqRt6sba3YfBnoZQxEKSHJWGc3oH5IjWoHqYrTrls3bZCNDgB2fcp0zi
-	 5c0vSmWocliUbAJ/XXFA5jr4dWeN1Fxb5+5bLYMwrYQebl2GNVU/O0EKctS1g8znD5
-	 EuPIZkPNw3o/Q==
-Message-ID: <sashiko-outbox-192709@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 04/10] cxl: Add HDM-DB region creation
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Davidlohr Bueso" <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
-References: <cover.1793567979.git.dave@stgolabs.net>
- <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 01 Nov 2026 22:24:16 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=hurb2bK1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ve
+	ZDpRBvsFIvF/XJwen4k9bmxlWJry4e0api1yU19lY=; b=hurb2bK1wnF/7c1yiM
+	Qd+ryg1SzmOwRJdYq8Z4ImzlMSv18EA8wEmL6GktXhkA2yzv5qZuTEhxmHiVflFj
+	7ZxiH4l2vZdt5jTMzYnOMmcJ/jYQ9vDNyxUPMzF/qdSMrFv68U4IhsgrCDnUC+zu
+	7lhpyHbWNmAUDHLA8u+j+8pB0=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDX30V0AuhqjnIJDg--.46362S2;
+	Mon, 02 Nov 2026 11:24:45 +0800 (CST)
+From: Yongxin Yang <yangyongxin@kylinos.cn>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Len Brown <lenb@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yongxin Yang <yangyongxin@kylinos.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v5] cxl/core: Create einj_types regardless of EINJ init order
+Date: Mon,  2 Nov 2026 11:24:36 +0800
+Message-Id: <20261102032436.230945-1-yangyongxin@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,183 +76,93 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDX30V0AuhqjnIJDg--.46362S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWFykZrWxXrW8WrykWw4fuFg_yoWrJw1fpa
+	yDurnYyrykAF4IyrsxA34UZa4Fgws5WayDCryDW343Zan8urnYyF10yFWY9a1kGFWkJa40
+	qwn8Ar12kayjkrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j5KsUUUUUU=
+Sender: yang_yongxin123@163.com
+X-CM-SenderInfo: 51dqwsp1rqw5tlqrjji6rwjhhfrp/xtbDAB50EmroAn4PiQAA3A
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] cxl/acpi: cxl_acpi_cfmws_verify() rejects Host-only + BI windows=
- on QEMU 11.0+
-- [Medium] cxl: stale cxlds->bi state on reset in cxl_region_decode_commit()
-- [Low] cxl/acpi: unreachable third coherency check in cxl_acpi_cfmws_verif=
-y()
---
+The einj_types file under the CXL debugfs directory is never created when
+cxl_core is built in.  cxl_core_init() runs at subsys_initcall level, while
+einj_init() registers EINJ at device_initcall level, so the
+einj_cxl_is_initialized() check in cxl_core_init() always sees EINJ as not
+up yet and the debugfs_create_file() below it is never reached.  With
+cxl_core as a module, module dependencies make sure it is loaded after EINJ
+is up and the file is created.
 
-commit d4a68ccdfa9e0e2b1d3fcb54967d9cb568d07b31
-Author: Davidlohr Bueso <dave@stgolabs.net>
+Create the file unconditionally instead, gated only on the CXL error
+injection support being compiled in, and have
+einj_cxl_available_error_type_show() return -ENODEV until EINJ is up.  This
+single check in cxl_core_init() covers every combination of built-in and
+modular cxl_core, cxl_acpi and EINJ, with no extra hooks.
 
-cxl: Add HDM-DB region creation
+The check in the show callback is required, not cosmetic: einj_tab is
+NULL until einj_init() runs, so einj_get_available_error_type() would
+dereference a NULL pointer.
 
-This commit adds support for creating HDM-DB (device-coherent with
-back-invalidate) CXL regions via sysfs and auto-assembly, introduces
-CFMWS coherency verification in cxl_acpi_cfmws_verify(), and exposes the
-cap_back_invalidate and back_invalidate sysfs attributes.
+This restores the discovery of the supported error types only.  On a fully
+built-in RCH/RCD hierarchy the inject files below the dport directory are
+still not created: cxl_debugfs_create_dport_dir() has the same early return
+and the only dport there comes from cxl_acpi_probe() at
+subsys_initcall_sync level, before EINJ is up.
 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index b7ce6b59c680b..cc7c99d3066d8 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -152,6 +152,8 @@ static unsigned long cfmws_to_decoder_flags(int restr=
-ictions)
->  		flags |=3D CXL_DECODER_F_PMEM;
->  	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED)
->  		flags |=3D CXL_DECODER_F_LOCK;
-> +	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)
-> +		flags |=3D CXL_DECODER_F_BI;
-> =20
->  	return flags;
->  }
-> @@ -198,6 +200,24 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
->  		dev_dbg(dev, "CFMWS length %d greater than expected %d\n",
->  			cfmws->header.length, expected_len);
-> =20
-> +	if ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM) &&
-> +	    (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)) {
-> +		dev_err(dev, "CFMWS cannot have both HDM-H and HDM-DB\n");
-> +		return -EINVAL;
-> +	}
+Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+Cc: <stable@vger.kernel.org>
+Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Suggested-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Link: https://lore.kernel.org/all/de14c4ef-e3d8-432f-9ce8-87c468d6d2ad@amd.com/
+Link: https://lore.kernel.org/all/7a22cc6a-deba-40e6-8033-97d1234420ba@amd.com/
+Signed-off-by: Yongxin Yang <yangyongxin@kylinos.cn>
+---
+Changes in v5:
+- Rework per Dave's suggestion, agreed by Ben: create einj_types from
+  cxl_core_init() without looking at the runtime EINJ state, and return
+  -ENODEV from einj_cxl_available_error_type_show() while EINJ is not
+  initialized, instead of creating the file from three separate hooks.
+  This drops the mutex, the exported helper and the cached dentry.
+- Drop the cxl_acpi_probe() hook: host bridge dports, RCH included, already
+  go through __devm_cxl_add_dport() -> cxl_debugfs_create_dport_dir() in the
+  same probe, so the hook added nothing.
+- Gate the creation on CONFIG_ACPI_APEI_EINJ_CXL rather than on the runtime
+  EINJ state.
+- Dropped the Reviewed-by tag as the approach changed significantly.
 
-[Severity: Medium]
-As reported by Alison Schofield on v9 [1], does rejecting the entire CFMWS
-window in cxl_acpi_cfmws_verify() when both ACPI_CEDT_CFMWS_RESTRICT_HOSTON=
-LYMEM
-and ACPI_CEDT_CFMWS_RESTRICT_BI are set cause a regression on released QEMU
-v11.0+ systems?
+ drivers/acpi/apei/einj-cxl.c | 4 ++++
+ drivers/cxl/core/port.c      | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-During cxl_acpi_probe() -> acpi_table_parse_cedt() -> cxl_parse_cfmws() ->
-__cxl_parse_cfmws() -> cxl_acpi_cfmws_verify(), returning -EINVAL for this
-combination aborts root decoder registration completely. Because released
-QEMU versions from v11.0 onward set both restriction bits by default, CXL
-windows are rejected at boot and manual HDM-H region creation is lost on
-windows where BI was previously ignored.
+diff --git a/drivers/acpi/apei/einj-cxl.c b/drivers/acpi/apei/einj-cxl.c
+index e70a416ec925..3090c7649ed2 100644
+--- a/drivers/acpi/apei/einj-cxl.c
++++ b/drivers/acpi/apei/einj-cxl.c
+@@ -30,6 +30,10 @@ int einj_cxl_available_error_type_show(struct seq_file *m, void *v)
+ 	int cxl_err, rc;
+ 	u32 available_error_type = 0;
+ 
++	/* einj_tab stays NULL until EINJ is initialized, don't read it. */
++	if (!einj_cxl_is_initialized())
++		return -ENODEV;
++
+ 	rc = einj_get_available_error_type(&available_error_type, ACPI_EINJ_GET_ERROR_TYPE);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 625e4aa427db..d4ed1cc7c480 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -2515,7 +2515,7 @@ static __init int cxl_core_init(void)
+ 
+ 	cxl_debugfs = debugfs_create_dir("cxl", NULL);
+ 
+-	if (einj_cxl_is_initialized())
++	if (IS_ENABLED(CONFIG_ACPI_APEI_EINJ_CXL))
+ 		debugfs_create_file("einj_types", 0400, cxl_debugfs, NULL,
+ 				    &einj_cxl_available_error_type_fops);
+ 
+-- 
+2.25.1
 
-Could cfmws_to_decoder_flags() withhold CXL_DECODER_F_BI when
-ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM is set (or when
-ACPI_CEDT_CFMWS_RESTRICT_DEVMEM is not set) instead of failing the entire
-window in cxl_acpi_cfmws_verify()?
-
-> +
-> +	if (!(cfmws->restrictions & (ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-> +				     ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM))) {
-> +		dev_err(dev, "CFMWS has no coherency model\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI) &&
-> +	    !(cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)) {
-> +		dev_err(dev, "CFMWS BI requires device-coherent\n");
-> +		return -EINVAL;
-> +	}
-
-[Severity: Low]
-Can this third check in cxl_acpi_cfmws_verify() ever be reached?
-
-For (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI) &&
-!(cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM) to evaluate to
-true, ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM must be either set or clear:
-
-- If ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM is set, the first check
-  ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM) &&
-  (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)) already returns
-  -EINVAL.
-
-- If ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM is clear (with
-  ACPI_CEDT_CFMWS_RESTRICT_DEVMEM also clear), the second check
-  (!(cfmws->restrictions & (ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-  ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM))) already logs "CFMWS has no
-  coherency model" and returns -EINVAL.
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index a048bd5c06cb6..28c61feef06d2 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -313,8 +313,25 @@ static int commit_decoder(struct cxl_decoder *cxld)
->  static int cxl_region_decode_commit(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p =3D &cxlr->params;
-> +	bool hdm_db;
->  	int i, rc =3D 0;
-> =20
-> +	hdm_db =3D cxlr->type =3D=3D CXL_DECODER_DEVMEM &&
-> +		 cxl_root_decoder_is_bi(cxlr->cxlrd);
-> +
-> +	/* a reset since attach may have invalidated cxlds->bi */
-> +	for (i =3D 0; i < p->nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled =3D p->targets[i];
-> +		struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> +
-> +		if (hdm_db && !cxlmd->cxlds->bi) {
-> +			dev_err(&cxlr->dev, "%s:%s BI not enabled on device\n",
-> +				dev_name(&cxlmd->dev),
-> +				dev_name(&cxled->cxld.dev));
-> +			return -ENXIO;
-> +		}
-> +	}
-> +
->  	for (i =3D 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled =3D p->targets[i];
->  		struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> @@ -346,6 +363,21 @@ static int cxl_region_decode_commit(struct cxl_regio=
-n *cxlr)
->  			cxled->cxld.reset(&cxled->cxld);
->  			goto err;
->  		}
-> +
-> +		/*
-> +		 * A reset after the check above wipes BI Enable, but
-> +		 * cxlds->bi is only refreshed from .reset_done, which may
-> +		 * not have run. Ask the hardware.
-> +		 */
-> +		if (hdm_db && !cxl_bi_decoder_enabled(cxled_to_port(cxled))) {
-> +			dev_err(&cxlr->dev,
-> +				"%s:%s BI disabled by reset during commit\n",
-> +				dev_name(&cxlmd->dev),
-> +				dev_name(&cxled->cxld.dev));
-> +			rc =3D -ENXIO;
-> +			i++; /* this target committed, so undo it too */
-> +			goto err;
-> +		}
-
-[Severity: Medium]
-When a reset clears CXL_BI_DECODER_CTRL_BI_ENABLE in hardware without
-.reset_done (cxl_bi_reset_detected()) having updated cxlmd->cxlds->bi (for
-example, during a concurrent reset before .reset_done runs, a secondary bus
-reset that does not invoke .reset_done, or on a Type-2 device driver that
-does not call cxl_bi_reset_detected()), doesn't this leave cxlmd->cxlds->bi
-stale and transiently commit decoders before rolling them back?
-
-First, in the pre-commit loop at the top of cxl_region_decode_commit(), only
-the software flag !cxlmd->cxlds->bi is checked rather than
-cxl_bi_decoder_enabled(cxled_to_port(cxled)). If hardware BI Enable was
-already cleared while cxlmd->cxlds->bi is still true,
-cxl_region_decode_commit() programs and commits the endpoint and switch HDM
-decoders in hardware with CXL_HDM_DECODER0_CTRL_BI set before catching the
-mismatch in the post-commit check and rolling back via
-cxl_region_decode_reset().
-
-Second, when the post-commit check detects
-!cxl_bi_decoder_enabled(cxled_to_port(cxled)), it does not clear
-cxlmd->cxlds->bi =3D false. If .reset_done never runs, cxlmd->cxlds->bi
-remains true indefinitely: back_invalidate_show() in
-drivers/cxl/core/port.c continues to report 1 while the decoder is attached,
-cxl_region_check_coherency() continues to allow attaching the endpoint to
-HDM-DB regions, subsequent commit_store() calls repeat the hardware commit
-and rollback cycle, and cxl_bi_release() attempts to disable BI on teardown.
-
-Should the pre-commit check also verify
-cxl_bi_decoder_enabled(cxled_to_port(cxled)), and should cxlmd->cxlds->bi be
-updated when hardware BI Enable is found cleared?
-
-[1] https://lore.kernel.org/r/ar3TU4IM_TtcGgwl@aschofie-mobl2.lan
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1793567979.gi=
-t.dave@stgolabs.net?part=3D4
