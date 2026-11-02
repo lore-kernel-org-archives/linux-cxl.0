@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793650576;
-	b=LWlkyvUjdzejG2skVIb6oG0B8JlZJzTL7azVKXqcMm9fJs8qvB8ooDsWjMV4VlUE+e2L
-	 DSlAhA9JLbpSV5SX/RLnFvWoQeVulGGPcUz6fcPiGCjZ4hnRwm3r6RbqVAsK4InPapTtC
-	 u7WfCYeAa17HcuoYj+Z4Tjp0LeOzQuYKzXf4sBLKO1dYRGQZ6oM8X+lHWB4nBXKWm0xUy
-	 XNPEVdny8nKWu0shyXD1Q1ARbnqkaIvViILpdAdARZEtaHYWJZxFClbJW7ksEc6vIT8iL
-	 IC71nraYzqy7mGZ0trkieDvBuEfVtbWposP9b8yJdKiv92Sq8ogPGZ22WRoJgAQnSug==
+	t=1793650575;
+	b=z2/885xe0EyLt9ULabvTLpkxthkk97vulEi8TfAR1dQhqeROeIgTkXWdOzLMBNdCcf94
+	 YrQlsMHtV8qJaj+Fv4r3ZNn2Js+w2NLIWCqHEE2LMS6+tOlkmcI1gi2cnlYunno9AS7cW
+	 ZRh+CMbGlglpUn2j1PjKHYDpIR4YINSWPDeZ14QWG8NndfvXeGOamHZhwHJw1i8cZ2CMe
+	 i7kyYY3vsf09mM56PKcfVt2V15fxZxqItVkeuB8isMeQuAN905m+TfU4kGNiDygvRfO6o
+	 0A7QTzymibypQ+rIWoruwm1PigjNhPctFJuxIeJDFXNd3FQcX+xfphAUv8vB8KP8+lg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793650576;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793650575;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=TbVyUni2GWS9V+k5KIx3YGRJeHypl3NDY9ZCsSgcvDQ=;
-	b=lsUpmU+iLyN/JOIbqQ4I0glLnaxPrlf7+GzmBzKsQbzu8oY3tmCxW5/CsFnInCqcF+Hz
-	 mIRyWiL/M5qGlonMDb6u1/PWWGgChvkSH+TcPzL14SBE/TNmUWyp0S1YCsd6KkgwkZLQv
-	 FEZIbo4LiZwnwxtRzWo2Oal0NKnTOF9Q/vtjYZplwY5PuKd3nbkGq0Hg9+oHKmHA1xAU3
-	 CR7YCX9ORlkAaAnd7YtR10UqMlQIXxm/+KMPdlDG5UiaX0yr9oUGvo08YzorhI2rTVkoG
-	 adWlJtAc7A2HzDD0IqB0Nx5uiM8qi991L0mRlr/CIqpbp5w3nzru1k5DDW2l3YAwo+A==
+	bh=jLxJTCybwMEcrUMXDKiNaIrE3ag1EFWjREUFfOXqYv4=;
+	b=RRarGNqluTflQn+j3CVjwhLek+GZbGh73PTWYvOOaOUXsz4EOVbZ/PNokpMzN8MGT2GM
+	 XAmKSvlY86o0AdGi9LYy1Yqba66/s1dx7hmeYtFRPBGiZWPVYZfWhTBt9+vAJqnuN3CR0
+	 9ZA8VX+qA0xoQwGYRuL3JKs0fYQkOR2ma7vo7fHbX+WQU8jXga/nm6mq2H3aT0LPEVIqB
+	 qKQ6WNbHfIvbh/iQRKmLLYfJqDUFoK8qNzzN9LIAaaEPQCg+Bg0eOYsaqUnFoK4S2/t6a
+	 feQ9fyxiSAjIkydccdovYtqDnP4HOBUYLwRewbTbrXmIrk68zaVXfd7V8e7YJWkUAuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aivDtZr6;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z8eVDzgN;
 	arc=none smtp.remote-ip=192.198.163.19
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8989B606A32E
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:16:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8989B606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D582606A334
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:16:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D582606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aivDtZr6
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z8eVDzgN
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793650576; x=1825186576;
+  t=1793650575; x=1825186575;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=E6OUD8oDsfB1Bexj9r3yuhToNjIIS4B7Z28j/1m4yuA=;
-  b=aivDtZr6wEgb0Ye98UbFxLfYXvK8GD3v7rxN4NR3LKP9nxYONZLhH4mG
-   8bAnH/OLlDxBxN/r69hrBLluwBSH3UkVTKQmFG147zgRS6notnRRXWrQx
-   8MTAsTp+RqZ5Msjg3bl3/EBdb4BD92eeul9TV0jXIYCVkvQl2+Ny8Iz5U
-   jbp7hAZpopfaEoqZvAvTjFe5W0x9WJjyKxN3XKc7QGrtCGRnbcDuNKty3
-   L5D1ed57tZyNx3SJtfyR90lk5Cl9bKjLKSNoR9Qhwb9TdH83kYvq+o5/0
-   vD1ggck29cSkeZs+ilxiUGE7DYxRF3QxdI9CVilhLKoLlmSy5jMz6qAgA
+  bh=NoVfHk57W+5PZ7pdLcq+lXu8jJ5my+RAaSw2wAc0T94=;
+  b=Z8eVDzgNYpgcvsjlv19ldf0qH6GAz+3mbzQkch3aP+Zpb1LwFzjFhgQD
+   blYvVY32uDzgMQvO9OOtcnilNtq/EjRJOgbsh/AjeKWItto7gThRuHQ+h
+   +ygp0ETpoye88FsMd+SaOwlB6Pj0CPo35gH2ADjelUR+FuvgKRD1xAhjq
+   i/68UK/ujxSWDxZcgjRbxUUr6TAlB8qer+yj5SLTnovh5drf12Z/HB+2z
+   3890BzH501JOtCec2qHyzmUnLM8MJgSLCrh/Xbaq4ERG95JAsKRVL5IfN
+   ls08fH1SocCWIh/C7kGUS8i2egHowsgPKKWAcJUjG/DU6qE5p9cTIbcgL
    g==;
-X-CSE-ConnectionGUID: L6o5bEBsS0CR5Im5qUdscg==
-X-CSE-MsgGUID: B0WuYInjQJSQXm0iY6mGEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2464056"
+X-CSE-ConnectionGUID: hCrQQR/mRC2E+icdeAwhCQ==
+X-CSE-MsgGUID: 69T+US1+QjqtVHSPv/RNUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2464040"
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="2464056"
+   d="scan'208";a="2464040"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:15 -0800
-X-CSE-ConnectionGUID: 86L+OfUDS5ex363TpSMWpA==
-X-CSE-MsgGUID: fHWGgS7pRYCUf1KZwaIHkg==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:14 -0800
+X-CSE-ConnectionGUID: fiPAS8amTrGOClf/m5JWpQ==
+X-CSE-MsgGUID: 8Gur54E/TY6utjcz0znXUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="6215637"
+   d="scan'208";a="6215625"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.173])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:15 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 12:16:13 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -71,9 +71,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v5 9/9] cxl/region: Factor out cxl_switch_port_add_target()
-Date: Mon,  2 Nov 2026 12:16:04 -0800
-Message-ID: <0a46cfc2e9da5e92d0cc263f08b424a785c627aa.1793649898.git.alison.schofield@intel.com>
+Subject: [PATCH v5 7/9] cxl/region: Factor out cxl_port_setup_decoder()
+Date: Mon,  2 Nov 2026 12:16:02 -0800
+Message-ID: <b7591ef1790f21b3e3168778e25eadcf7cd2c4e6.1793649898.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1793649898.git.alison.schofield@intel.com>
 References: <cover.1793649898.git.alison.schofield@intel.com>
@@ -88,102 +88,131 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_switch_port_setup_targets() adds an endpoint's downstream port to a
-port's decoder target list. For an auto region it checks that the decoder
-already targets that downstream port at the next position. For a user
-created region it programs the downstream port at that position. That step
-is open coded.
+Once cxl_switch_port_setup_targets() has calculated the interleave for a
+port's decoder, it either checks that interleave against the decoder
+settings found for an auto region, or checks the decoder's interleave
+capabilities and programs the decoder for a user created region. Both paths
+are open coded in cxl_switch_port_setup_targets().
 
-Move that step to a new helper, cxl_switch_port_add_target(). The helper
-takes the switch decoder whose target list it updates, which makes the
-scope explicit.
+Move both paths to a new helper, cxl_port_setup_decoder().
 
 No functional change.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
 ---
- drivers/cxl/core/region.c | 59 +++++++++++++++++++++++++--------------
- 1 file changed, 38 insertions(+), 21 deletions(-)
+ drivers/cxl/core/region.c | 88 ++++++++++++++++++++++-----------------
+ 1 file changed, 50 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 2a64ecf656b7..d6a5dbe65d26 100644
+index d25df041e922..025cf21adfa9 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1612,6 +1612,41 @@ static int cxl_port_setup_decoder(struct cxl_port *port, struct cxl_region *cxlr
+@@ -1565,46 +1565,11 @@ static int cxl_port_calc_interleave(struct cxl_port *port, struct cxl_region *cx
  	return 0;
  }
  
-+static int cxl_switch_port_add_target(struct cxl_switch_decoder *cxlsd,
-+				      struct cxl_region *cxlr,
-+				      struct cxl_region_ref *cxl_rr,
-+				      struct cxl_endpoint_decoder *cxled,
-+				      struct cxl_ep *ep)
-+{
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_port *port = cxl_rr->port;
-+	int pos = cxled->pos;
-+
-+	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
-+		dev_dbg(&cxlr->dev,
-+			"%s:%s: targets full trying to add %s:%s at %d\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev),
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
-+		return -ENXIO;
-+	}
-+	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
-+			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
-+				dev_name(port->uport_dev), dev_name(&port->dev),
-+				dev_name(&cxlsd->cxld.dev),
-+				dev_name(ep->dport->dport_dev),
-+				cxl_rr->nr_targets_set);
-+			return -ENXIO;
-+		}
-+	} else {
-+		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
-+		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
-+	}
-+	cxl_rr->nr_targets_set++;
+-static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
+-					 struct cxl_region *cxlr,
+-					 struct cxl_endpoint_decoder *cxled)
++static int cxl_port_setup_decoder(struct cxl_port *port, struct cxl_region *cxlr,
++				  struct cxl_decoder *cxld, int iw, int ig)
+ {
+-	struct cxl_port *port = to_cxl_port(cxlsd->cxld.dev.parent);
+-	int iw, ig, rc, pos = cxled->pos;
+-	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
+-	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+ 	struct cxl_region_params *p = &cxlr->params;
+-	struct cxl_decoder *cxld = &cxlsd->cxld;
+-
+-	/*
+-	 * While root level decoders support x3, x6, x12, switch level
+-	 * decoders only support powers of 2 up to x16.
+-	 */
+-	if (!is_power_of_2(cxl_rr->nr_targets)) {
+-		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
+-			dev_name(port->uport_dev), dev_name(&port->dev),
+-			cxl_rr->nr_targets);
+-		return -EINVAL;
+-	}
+-
+-	if (cxl_rr->nr_targets_set) {
+-		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+-			if (ep->dport == cxlsd->target[i]) {
+-				int distance = cxl_port_peer_distance(port, cxlr);
+-
+-				rc = check_last_peer(cxled, ep, cxl_rr,
+-						     distance);
+-				if (rc)
+-					return rc;
+-				goto out_target_set;
+-			}
+-		goto add_target;
+-	}
+-
+-	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
+-	if (rc)
+-		return rc;
++	int rc;
+ 
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+ 		if (cxld->interleave_ways != iw ||
+@@ -1643,6 +1608,53 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
+ 	}
+ 	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport_dev),
+ 		dev_name(&port->dev), iw, ig);
 +
 +	return 0;
 +}
 +
- static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
- 					 struct cxl_region *cxlr,
- 					 struct cxl_endpoint_decoder *cxled)
-@@ -1652,27 +1687,9 @@ static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
- 			return rc;
- 	}
- 
--	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
--		dev_dbg(&cxlr->dev,
--			"%s:%s: targets full trying to add %s:%s at %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
--		return -ENXIO;
--	}
--	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
--		if (cxlsd->target[cxl_rr->nr_targets_set] != ep->dport) {
--			dev_dbg(&cxlr->dev, "%s:%s: %s expected %s at %d\n",
--				dev_name(port->uport_dev), dev_name(&port->dev),
--				dev_name(&cxlsd->cxld.dev),
--				dev_name(ep->dport->dport_dev),
--				cxl_rr->nr_targets_set);
--			return -ENXIO;
--		}
--	} else {
--		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
--		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
--	}
--	cxl_rr->nr_targets_set++;
-+	rc = cxl_switch_port_add_target(cxlsd, cxlr, cxl_rr, cxled, ep);
++static int cxl_switch_port_setup_targets(struct cxl_switch_decoder *cxlsd,
++					 struct cxl_region *cxlr,
++					 struct cxl_endpoint_decoder *cxled)
++{
++	struct cxl_port *port = to_cxl_port(cxlsd->cxld.dev.parent);
++	int iw, ig, rc, pos = cxled->pos;
++	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
++	struct cxl_decoder *cxld = &cxlsd->cxld;
++
++	/*
++	 * While root level decoders support x3, x6, x12, switch level
++	 * decoders only support powers of 2 up to x16.
++	 */
++	if (!is_power_of_2(cxl_rr->nr_targets)) {
++		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
++			dev_name(port->uport_dev), dev_name(&port->dev),
++			cxl_rr->nr_targets);
++		return -EINVAL;
++	}
++
++	if (cxl_rr->nr_targets_set) {
++		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
++			if (ep->dport == cxlsd->target[i]) {
++				int distance = cxl_port_peer_distance(port, cxlr);
++
++				rc = check_last_peer(cxled, ep, cxl_rr,
++						     distance);
++				if (rc)
++					return rc;
++				goto out_target_set;
++			}
++		goto add_target;
++	}
++
++	rc = cxl_port_calc_interleave(port, cxlr, cxl_rr, &iw, &ig);
 +	if (rc)
 +		return rc;
- 
- 	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
- 		dev_name(port->uport_dev), dev_name(&port->dev),
++
++	rc = cxl_port_setup_decoder(port, cxlr, cxld, iw, ig);
++	if (rc)
++		return rc;
+ add_target:
+ 	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
+ 		dev_dbg(&cxlr->dev,
 -- 
 2.37.3
 
