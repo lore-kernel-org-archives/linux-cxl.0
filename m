@@ -1,87 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793622780;
-	b=A5xmm8HneWau/FOI6qMAY6uQJyV07T/iAT5/7+h/S/gr8KmWZHVhSvwYMykx4jZ79Jg7
-	 yKZ06mjwoAMJikJobOJ/094Om/1kodMFoHXNuGRQbIYHTO9IRnHwfWtYAGV73d7A/hQp/
-	 UFtNBZoT0SBPCOv4q6q84yCEjQjM630OTYZAtVPQ4wLMCl0f7fTCd73l8liut1kdZnxvp
-	 cbu5CJgWLKJ+sQHEypyYb0utnFnsR1BBeqwqCMFQ25Oor3YzspShhY/oxDdek7xNkuNOd
-	 F1nafMy377lKUeU/rcha2aOnz0l7qBUW2jgqvefHfcW7RtxKJuF2lCpcbxIG9cNoMPw==
+	t=1793646919;
+	b=Kn7VTpHkkz2TtaWfUxKFWfHoXK4os5D8ntIhZ2x+cWK5Nr0TtmVG9JKxYvWaxtGmeoCu
+	 4gTJGMGX5Vvo2KoObn6r94jT/5jvBYLKX0VWrTyIa0F/i+riSjTFkZE95BUuUO+oe1fVQ
+	 W1YDahQTrUxPfJUYuN97hoe3XYefj6XT7tkaRWUbGllJpKuy4l2aPO68uPJQtGjkkqJ4K
+	 BX/5Wimpa4w+o6JaB14E9d18Iz0YBfIXXKSbxdw10brBAwyZyvKRDOY0KHooYgapG5Yaw
+	 oLIFyGBGAfBy3zWL1RgwdWToL0eooz7YovfzDTJLQ0C+c+gZL7qysgLOYW7++SjwmfQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793622780;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=lu6jKVMmWomkYGOYdMnLmaub6He5lRxtqe+uzz2qc2Q=;
-	b=IO7ltQit8zPhtaQJE+TH4LsIH9RJE5PzdXsigUx8t1/PNeeixQPonHthzLlpzVDlD1Mo
-	 tiek7jcQ9vFOjX1kT+5kDojki6KSUp/Rc2XrbU/+lcxILqr2oNo89OaxwFwhjKZX2UsBC
-	 zW+nIKQ2OiTV3opu6puEGEkFlNbKIC9uyQU/xBcAir6ldQtpmGCtKY/nmPfb1ORAoBgTE
-	 8VraMGD4WUNjQk1RxkKwcQ5yO+IoqwWo4LSWMLdcyzfea9HyZ7dCaTfSxwXIpvHmV/mbQ
-	 roOTranhUtLgEss8VJJZrcIgXddG87eU+8MdvkK7LxqX0JJ6THOuV5j+Ab3z5iPb8dg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793646919;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=tqFKmigeTD+MfvoT7YW2E8qoX5d7P8FBk2IeBiKDls0=;
+	b=CEMmVkpCqwSOv6XLQ6dAg33pVt56JwGZgW/GEbt1yQ2HFEQ6VOxc+4ZpM9NEPRyfBun1
+	 5a7BaPiAcUV0OmIWF1cUu1NvOpn4pGFf4ES4p2cBCdiww1nzwqDC21y7UdzcKfCMRYmZi
+	 UkAFX9r4BYYa6Zz/c2mQkq/jSwhrZgjwxIjm8XGquKn9yZ8rfvoC3Lhi9gO6TeWCQUZRM
+	 kYi31D5mOG20KxlfBJb584biqQ6pS2OuJirxaHpceIcfeFEDU1YgihYDgZVymZIikCavS
+	 ky9VpJeSBo9ea/b0CqJqEOZ9985rPEEygGnp2KwBVcf8dBD+7JthE1QIWoumS+QGqnw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=fail header.from=linux.com;
-	spf=pass smtp.mailfrom=korea.io;
-	arc=none smtp.remote-ip=209.85.214.179
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WrJ4PMC8;
+	arc=none smtp.remote-ip=192.198.163.14
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A967160A261E
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 12:32:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A967160A261E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2e9eb579c0eso15018405ad.3
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Nov 2026 04:32:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793622779; x=1794227579;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lu6jKVMmWomkYGOYdMnLmaub6He5lRxtqe+uzz2qc2Q=;
-        b=fcyUU6QI72EgDP+WlrNZ7HNh6VO31nlwkpooGHnSaWq05E5ntxLQ9BHsZ6kY+s8Peo
-         sJ3tfArpDFES9PCJo1s1fTBE5lY4uR4Mu4MU+80YyskWksikNpYRu7xjdGleQw88ZDcL
-         +bn39fY0B8llTfBvgYP59FdgSnWHoEnzOJ09OsQNfipGjbHQnyFkaZDglgX6BxPRvbjy
-         CQzQwkx9hHRRTQVj28P5BZ2R4WnWjfaWpPl/wVQ5k+9WW5IfCUP+yqWCAgJILxM8kvGG
-         LPRWhe9MhRPt/s7xQRpWV5L8ZhABMDKgWO1vOWs8q8TJT3eHlTFq62RTS986Iml05dFX
-         J5ZQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxT/h1krlc7JsKfZ237FBX8PQJ5pF5E1Ky3VtzC5FbZRq9fzkfg+YAbHVbXs02AgVNpX6LFCV4nIVA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8kJIuJrc2+jdvOHZW24BCR1UA8UyWzFUkeBLBLQox5WfSMJ8N2
-	TYOlXt+BUHcobfAZo7uzRlsJKs6otKaADt3WGIig+qfDE/Q3dYKkYgrhICkY2hm9B7o7
-X-Gm-Gg: AYBFou2nB+WgnNRE+1fvqMMEswf0rT0dELb+HcaF/1cHEV8uB7EWzM0CWVXRqkCuAlC
-	4Qom6Ud4PZ9Q/Dz647pCq/qUejeGTQyMFIugGOEmJy0GJ4MBboyRYE7iSbSeubmL/WvcjG5Pccf
-	J05NIevYzIU1JQES4TdPpRrumn/DTd4vVZR+QeG47zwvobvhB2L4JHa8TmeU2Wvqm8DyXsmHEjH
-	1x3QXELrLyPibQ2hFZthylFGn60PgNdvrmODtShCfE6nNoQpCGmdGU8ENfMIm80bafYir4Ei/kH
-	20HJpOWFQBroWtoNu5vZ+yB+34mPMEmvgh4tt4HP0asPWS48lV4ATXGrCvqTksCyHZ7tQcN9HyO
-	JX+cv4r5lHynUkzZTfjCnpWCFmFaOTB4MGVPceul91A+CzirlYnUB+LEvRI96LmS4gSFoluAbWk
-	H92W/+yTxKjabNqas5bU6rn/6hDESA/M7meQuOYWBRWkfXy0RggSFNyGponRWn4Owa9pxbBYsmU
-	tSyGZ86iLWJdl/pgkg0XBdT48JwXW/7fOHOezoZ6wg0VaBFVadtv6oBH5PoPkAFi189gZndBVjJ
-	+zqMYH4htzQEMbqiZl/4uvM/QfWpwG32SRawggMtyzO2EyMedmDG18lt3OOBBK95lkXiEOARZwL
-	PQKdnHEMl4r9cpDvfBqLp0xGH0UY580oJ4yDaHkQ=
-X-Received: by 2002:a17:903:2ec3:b0:2ea:7180:3aba with SMTP id d9443c01a7336-2eb364614b8mr88398755ad.39.1793622778961;
-        Mon, 02 Nov 2026 04:32:58 -0800 (PST)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392492fbsm27101845ad.32.2026.11.02.04.32.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Nov 2026 04:32:58 -0800 (PST)
-From: Jongwon Lee <ai@linux.com>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v3 2/2] cxl/edac: Mask DPA flags in the event record cache key
-Date: Mon, 02 Nov 2026 21:32:39 +0900
-Message-ID: <20261102123233.74598-r2-ai@linux.com>
-In-Reply-To: <auhH_eBMYqFznZlM@MWDK4CY14F>
-References: <20261101013418.87326-1-ai@linux.com>
- <20261101013418.87326-3-ai@linux.com> <auhH_eBMYqFznZlM@MWDK4CY14F>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369E1606A330
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 19:15:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 369E1606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=WrJ4PMC8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793646918; x=1825182918;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KO35rck8MZqAbsAwM2HfBzpbOqnJksAOaz0TGDOdmG8=;
+  b=WrJ4PMC8kbqZHB8xlZI33nGq+rvAinWOzJ3yfQn8wpDKfLx/FeF3Y6ZL
+   80yJeOe9B+AUrYAoaz1/ZbQAIuGbwVQLUh+uxgAjqLVtiuHz+CpgxQPvl
+   iSr8HKzYTYTJ7QckXSqRr0IuWu/t4OYCkPwUN0cTcnWbElEP7NBkkaZcL
+   F9eLq0zr0KzMeVZkshLSCdk919E4p0vu68P7+jgIk5WLlvJNeMI9f+9kM
+   A7cHwWujV1x4/8WprXtNQHNQpFuKD9m3NC7Fr0AMdSeZwqovPI5Ynm/dX
+   Ob72LDRsLQwruO0i3EjgsEoweu3E7wXd0yKjCriiX32VEbqK812YlrWlf
+   Q==;
+X-CSE-ConnectionGUID: o+Ct8AXzRKe7vQLGbbngUA==
+X-CSE-MsgGUID: umvpDjXSSESZV9y7xV5MiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2383463"
+X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
+   d="scan'208";a="2383463"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:17 -0800
+X-CSE-ConnectionGUID: owkioaeKSPKejjt36iFOng==
+X-CSE-MsgGUID: ixV1poytQvGWecJD6EsRrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
+   d="scan'208";a="6294132"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.173])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:17 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v2 0/4] cxl: Add KUnit tests and documentation
+Date: Mon,  2 Nov 2026 11:15:10 -0800
+Message-ID: <cover.1793645996.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,27 +83,71 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Richard,
 
-On Mon, Nov 02, 2026 at 04:30:57PM +0800, Richard Cheng wrote:
-> Maybe something like the following to follow the pattern of rb_parent
-> hiding the packed address and metadata encoding ?
->
-> ```
-> #define CXL_EVENT_DPA(hdr) \
->     (le64_to_cpu((hdr)->phys_addr) & CXL_DPA_MASK)
-> ```
->
-> Or at least make it static inline.
+Changes in v2:
+- Use explicit hex designators in the decoder count table to match the spec (JonathanC)
+- Generalize arch option and add help ref in testing page (AnisaS)
+- Explicitly initialize the mock return_code to SUCCESS (MingL)
+- Add a 'Maintaining KUnit tests' section to testing page
+- Wrap long lines in testing page (JonathanC)
+- Rebase on 7.4-rc1
+v1: https://lore.kernel.org/linux-cxl/cover.1791949910.git.alison.schofield@intel.com/
 
-I'd like to keep it a function so the argument stays type checked, as
-coding-style.rst prefers for function-like macros. I'll make both
-helpers static inline, which is what v4 does.
 
-cxl_event_trace_record() in mbox.c open-codes the same mask. If a shared
-helper next to CXL_DPA_MASK in trace.h is wanted, I can do that as a
-separate cleanup so this fix stays small for stable.
+The CXL subsystem has no KUnit tests. Its automated test coverage comes
+from cxl_test and the ndctl suite, which exercise the driver stack through
+an emulated CXL topology. KUnit complements that coverage by testing self-
+contained logic and error paths in isolation.
 
-Thanks again for the review,
-Jongwon
+This series introduces CXL KUnit infrastructure and documentation describing
+how it complements the existing cxl_test coverage.
+
+The first KUnit suite, a collection of related test cases, exercises the HDM
+decoder interleave encoding helpers, providing a starting point for testing
+self-contained CXL logic. The second suite exercises mailbox command handling,
+including error paths that are difficult to reach through cxl_test.
+
+The mailbox tests also demonstrate the value of regression coverage. An
+unknown device return code can cause an out-of-bounds read and allow a failed
+command to be reported as successful. The series corrects that behavior, then
+adds tests that reproduce the failure without the correction. With KASAN enabled,
+the tests also expose the out-of-bounds read.
+
+Together, the two suites establish a pattern for adding KUnit coverage
+to CXL, both for existing functionality and for bugs as they are found.
+
+
+Alison Schofield (3):
+  Documentation/driver-api/cxl: Add a testing page
+  cxl: Add KUnit tests for HDM decoder encoding helpers
+  cxl/mbox: Add KUnit tests for cxl_internal_send_cmd()
+
+Gaobin Huang (1):
+  cxl/mbox: Treat unknown device return codes as errors
+
+ Documentation/driver-api/cxl/index.rst   |   1 +
+ Documentation/driver-api/cxl/testing.rst | 139 +++++++++++++
+ drivers/cxl/.kunitconfig                 |   4 +
+ drivers/cxl/Kconfig                      |  16 ++
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/tests/Makefile          |   5 +
+ drivers/cxl/core/tests/mbox_kunit.c      | 250 +++++++++++++++++++++++
+ drivers/cxl/cxlmem.h                     |   6 +
+ drivers/cxl/tests/Makefile               |   5 +
+ drivers/cxl/tests/hdm_encoding_kunit.c   | 159 ++++++++++++++
+ 11 files changed, 587 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/testing.rst
+ create mode 100644 drivers/cxl/.kunitconfig
+ create mode 100644 drivers/cxl/core/tests/Makefile
+ create mode 100644 drivers/cxl/core/tests/mbox_kunit.c
+ create mode 100644 drivers/cxl/tests/Makefile
+ create mode 100644 drivers/cxl/tests/hdm_encoding_kunit.c
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.37.3
+
