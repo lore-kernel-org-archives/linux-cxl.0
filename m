@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793646920;
-	b=Puxl4nHU/CKoLZ8y0SUqTCYL+uQNnd6wptHSOP9MRwpi/qB4xh5EObfHYNTyrRR5/5ED
-	 xu08Pp/cJVs8wFFk5IkLZRZHWQoRo3AWdozLXEusmcAFI15aluRFARFpkcTapGQ2LQ69J
-	 Y0ul5KkBWn7IhNuzzNVJrgExaVu1bthNLYTzi4NW5J7f8tvpmHsZ1o7QKmfYg6zXQiwGQ
-	 BgxLBMyyISK3ZE/8v1umJTT8I5P5Mk43+CK2PvuGLNqt9dBIuu5RTa7R8eYTMwQaHeoM7
-	 UyJbUyZ6Wv4NVl5HzIy04dT/zuC23a2uiSXZfop+tXoVdCh2nJN9XbPoj3Kl+C/JIIQ==
+	b=oQLhUx9ZNzODyKfP1akTcOlJzR1K2eKZezr9FNKYWAjl7bcsXoAp1GotTH9S2D4Ed8x9
+	 uvrvqY54hkL9FeZxiq9c25r97VBBclHnwqRWN+/YLSUDnzhpp/Mc+Mh6rlLddHLMHa2Ys
+	 elskSKPyR5u7rz73HnsIoOJomxQiXiMvqy+Aqa3wXGxw9T67JkkY+TP0ov/RsNSDDNB1e
+	 jdXLeV92Shv3nifWKy5nxF+lJgco+RzEsRWGAZ8KSFXipLQc7P4NgeEXB3d5dJXDx462s
+	 vlC7Vqrqzi11RCz21nPUiyX3Di5IUKtiiD4bzMIIrJfRsB3aVd5Y1brH45PyTQX9F4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793646920;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,54 +13,54 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=D1aNdeMRQG6uVteJYv5za+JK0bNTCc6PIIgViN7ZRwA=;
-	b=b/rSgPWXbcmZHysEUvH7DadTrdqLnc45s730UPhuZ6355DIE9iPLA+ZFEuvOJNtIm8BV
-	 rDABKGZaqwS3qdd2kD1fEr3uoNBUwIECVPs2dQoJxxMI1LYUzt71oPvJ5Nz5Ks1vb2279
-	 Jd65+Ey7Uk9frgiQOeQ30FXJmJNGh/mILjnQTPNw+bIjCkFhqyHnJQp586WVqMdLRmIfN
-	 DAPTHm3j+RfwV2/f+GokdC4oq6LYV0fSSaxnQgDPogu1MLsnxo3LtsR4voktKOHrPsb8p
-	 EdX1jVVwG8vxh9M+C7JBhmFoVmjZ1RbyDSErL9IvOmNdAY610kIEs2+Wi671KQyl86A==
+	bh=GM9wWFUXHYJFvTJ25KwUKfNBMPoN0wQH6bLJNW2JTBw=;
+	b=FMZVnzAPAHqHWvhUF0fpeCL+N/E1kjzCITOk4EBCwz275f1yiviccg5GvGQ/iXplp5Px
+	 z+eQahlawGnqmlUbJM/rbd8ssdDwB/QBRdZKNYWTAnvKb27BS+UfqRAPgr8axM9TzrgVC
+	 auhCRWca0eB/z+JxI6iZOPuqT6f8oxt+658ideO41Xkc8VPDEgbJHEHITPd1ocNDtH7o+
+	 ezuI20EhWI3R0rmU9avRrLZvloWuKsfti74JXnu3DHqf3ubdFtFAnV3uM41oMNRdVQXE3
+	 EZZrQNgx94u+S9zurG2pCFmE06f9zBYbeq+PGe4odjnvlxv7uV0yqkAYIhPcyzaXAgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aK3eBDbx;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KbW3C2gq;
 	arc=none smtp.remote-ip=192.198.163.14
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC990606D801
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89998606A33F
 	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 19:15:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC990606D801
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89998606A33F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aK3eBDbx
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KbW3C2gq
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1793646919; x=1825182919;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RSvJ/mnmwdGc8RCcXGCB2E07gRuZo74o6jBvesUQiP0=;
-  b=aK3eBDbxml/FgVfkOkbGYPd2/Xyyz/s5/ReGLdU6nzk0uMQgfafNeNIE
-   n7BEFgCjM29hBMThqFll3sfmip2Al+oBq9IJy95F+pxvq/WD3+6lVyuvg
-   RM60uuOZMKcgze/gpI/WAHSWpvOIAjVkCJHrpqHEvDn1Sjwu16XCXDYqD
-   si0ThqXT/6heKipqAMuFVweLkqk9lO5HmPc9aDBgwA2G+rY0geayxoYEf
-   7EzE544VQusVdnJMJvReRzjSrPLZH/lnK1p1s0om2svP/pDFLKZhMkIzQ
-   WKKElibJs2NlHYTPuOBGIh8HpqFAj6NRlg3x4bwdqE9+nW/uMgrNcz8B8
-   w==;
-X-CSE-ConnectionGUID: cuwVFqf1Rim0VjRkoRd3Pg==
-X-CSE-MsgGUID: mXpKKpiLQMGhsncDQOSEEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2383476"
+  bh=9AVwROzHqm6D2/bEIwyXhjiYjaqm6sS5eu0VkrJhXOs=;
+  b=KbW3C2gqsksSfq8Xm8nNwRr8WzIvyZeKaswQDFaf0FfI1kcejPjFOYJe
+   +wRvVCvljsirqGZvYMozpJQq75m+y5hX8zV/qiCyHiJZR9R3QgnoLR1Fh
+   yRLGmy5pZrnn2nKJfWSaQAMnJ0e4fzhwXwsU4v8YQH49ov95HKno4ctri
+   z9D4dfH4z/CoDS1YIzN7lSgAH/Lh+wuTws0Qhr1t8eZjnCJEKcidLCYxG
+   +vnz1OUd0yB6WVgtC9kKBtZAE5/k+gsP238ltn4Tp6yZCmDqV4NO8rl1k
+   wrNqlKBmOOvBqo6tzhLpPdd+7iC7u7SqibqpdxyUyYcTYtexd3pXHKJs0
+   g==;
+X-CSE-ConnectionGUID: ZbkxGR1rTQm8w7rXRvvfgQ==
+X-CSE-MsgGUID: N696IGybQymAwtdRMTmWvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2383468"
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="2383476"
+   d="scan'208";a="2383468"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:19 -0800
-X-CSE-ConnectionGUID: chIBIjxrSh6+QfhxUPQ5WA==
-X-CSE-MsgGUID: 4k0gi3cnTlyGy7TNeJaYmw==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:18 -0800
+X-CSE-ConnectionGUID: yWiOc/JbScq9075NXKqiVg==
+X-CSE-MsgGUID: 3kqtMqGBTcSbp3Hg0iIc+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="6294146"
+   d="scan'208";a="6294140"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.173])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:18 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 11:15:17 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -71,10 +71,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v2 2/4] cxl: Add KUnit tests for HDM decoder encoding helpers
-Date: Mon,  2 Nov 2026 11:15:12 -0800
-Message-ID: <8a79de4a04a17fa8b92bee617792719dc6bd5a41.1793645996.git.alison.schofield@intel.com>
+Subject: [PATCH v2 1/4] Documentation/driver-api/cxl: Add a testing page
+Date: Mon,  2 Nov 2026 11:15:11 -0800
+Message-ID: <6d6857ad64f05580dca8dbbb2d09b37b7e190406.1793645996.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1793645996.git.alison.schofield@intel.com>
 References: <cover.1793645996.git.alison.schofield@intel.com>
@@ -89,259 +90,178 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CXL subsystem has no KUnit infrastructure for testing self-contained
-logic.
+The CXL documentation does not describe the subsystem's testing
+infrastructure or provide guidance on choosing between cxl_test
+and KUnit.
 
-Introduce CONFIG_CXL_KUNIT_TEST and drivers/cxl/.kunitconfig, along with
-an initial suite for the HDM decoder interleave encoding helpers. The
-suite checks valid and invalid encodings and round-trip conversions.
-
-Use a single Kconfig option for all CXL KUnit suites, with each suite
-built as a separate module. This allows new suites to be added without
-requiring additional configuration options.
-
-The HDM decoder helpers provide a starting point for establishing the
-location, naming, and configuration conventions for future CXL KUnit tests.
+Add a testing page that describes when to use each framework, how
+to run the tests, and how to add a CXL KUnit test.
 
 Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Anisa Su <anisa.su@samsung.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/.kunitconfig               |   4 +
- drivers/cxl/Kconfig                    |  16 +++
- drivers/cxl/Makefile                   |   1 +
- drivers/cxl/tests/Makefile             |   5 +
- drivers/cxl/tests/hdm_encoding_kunit.c | 159 +++++++++++++++++++++++++
- 5 files changed, 185 insertions(+)
- create mode 100644 drivers/cxl/.kunitconfig
- create mode 100644 drivers/cxl/tests/Makefile
- create mode 100644 drivers/cxl/tests/hdm_encoding_kunit.c
+ Documentation/driver-api/cxl/index.rst   |   1 +
+ Documentation/driver-api/cxl/testing.rst | 136 +++++++++++++++++++++++
+ 2 files changed, 137 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/testing.rst
 
-diff --git a/drivers/cxl/.kunitconfig b/drivers/cxl/.kunitconfig
-new file mode 100644
-index 000000000000..4fee684f5ff6
---- /dev/null
-+++ b/drivers/cxl/.kunitconfig
-@@ -0,0 +1,4 @@
-+CONFIG_KUNIT=y
-+CONFIG_PCI=y
-+CONFIG_CXL_BUS=y
-+CONFIG_CXL_KUNIT_TEST=y
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 80aeb0d556bd..fdd57a4118db 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -243,4 +243,20 @@ config CXL_ATL
- 	depends on CXL_REGION
- 	depends on ACPI_PRMT && AMD_NB
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index 3dfae1d310ca..786c189366ca 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -15,6 +15,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+    theory-of-operation
+    maturity-map
+    conventions
++   testing
  
-+config CXL_KUNIT_TEST
-+	tristate "KUnit tests for CXL" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the KUnit tests for the CXL subsystem. When built
-+	  as a module, each test suite is its own cxl_<name>_kunit
-+	  module. This one option covers every CXL KUnit test, so new
-+	  tests need no new configuration.
-+
-+	  For more information on KUnit and unit tests in general,
-+	  please refer to the KUnit documentation in
-+	  Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index 2caa90fa4bf2..d57fb0e9e7da 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-+obj-$(CONFIG_CXL_KUNIT_TEST) += tests/
- 
- cxl_port-y := port.o
- cxl_acpi-y := acpi.o
-diff --git a/drivers/cxl/tests/Makefile b/drivers/cxl/tests/Makefile
+ .. toctree::
+    :maxdepth: 2
+diff --git a/Documentation/driver-api/cxl/testing.rst b/Documentation/driver-api/cxl/testing.rst
 new file mode 100644
-index 000000000000..aa5e4f8e3638
+index 000000000000..923492b6bfa9
 --- /dev/null
-+++ b/drivers/cxl/tests/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+ccflags-y += -I$(srctree)/drivers/cxl
++++ b/Documentation/driver-api/cxl/testing.rst
+@@ -0,0 +1,136 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+obj-$(CONFIG_CXL_KUNIT_TEST) += cxl_hdm_encoding_kunit.o
-+cxl_hdm_encoding_kunit-y := hdm_encoding_kunit.o
-diff --git a/drivers/cxl/tests/hdm_encoding_kunit.c b/drivers/cxl/tests/hdm_encoding_kunit.c
-new file mode 100644
-index 000000000000..68db36ea3890
---- /dev/null
-+++ b/drivers/cxl/tests/hdm_encoding_kunit.c
-@@ -0,0 +1,159 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KUnit tests for the HDM decoder interleave encode/decode helpers
-+ * in drivers/cxl/cxl.h
-+ */
-+#include <kunit/test.h>
-+#include "cxl.h"
++===========
++Testing CXL
++===========
 +
-+struct eiw_case {
-+	u8 eiw;
-+	int ways;
-+};
++CXL testing uses two complementary frameworks: cxl_test exercises the driver
++stack against an emulated CXL topology, while KUnit tests self-contained logic
++in isolation. Changes should preserve existing test coverage and extend the
++framework appropriate to the behavior being changed.
 +
-+/* Encodings of the IW field in the HDM Decoder n Control Register */
-+static const struct eiw_case valid_eiw[] = {
-+	{ 0, 1 }, { 1, 2 }, { 2, 4 }, { 3, 8 }, { 4, 16 },
-+	{ 8, 3 }, { 9, 6 }, { 10, 12 },
-+};
++cxl_test
++========
 +
-+static const u8 invalid_eiw[] = { 5, 6, 7, 11, 12, 13, 14, 15, 0xff };
++The cxl_test modules, built from tools/testing/cxl/, emulate a CXL topology with
++host bridges, switches, memory devices, and mailboxes. This allows the CXL driver
++stack to be tested without hardware. The tests are maintained in the ndctl repo
++at https://github.com/pmem/ndctl, under test/cxl-<name>.sh.
 +
-+static const unsigned int invalid_ways[] = {
-+	0, 5, 7, 9, 10, 11, 13, 14, 15, 17, 24, 32,
-+};
++Use cxl_test for behavior that depends on a live topology: port and endpoint
++enumeration, region creation and assembly, decoder commit, and anything that
++crosses the sysfs ABI.
 +
-+static void eiw_to_ways_valid(struct kunit *test)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(valid_eiw); i++) {
-+		int ways = 0;
++Build the cxl_test modules from the top of the kernel tree::
 +
-+		KUNIT_EXPECT_EQ_MSG(test, eiw_to_ways(valid_eiw[i].eiw, &ways),
-+				    0, "eiw=%u", valid_eiw[i].eiw);
-+		KUNIT_EXPECT_EQ_MSG(test, ways, valid_eiw[i].ways, "eiw=%u",
-+				    valid_eiw[i].eiw);
-+	}
-+}
++  make M=tools/testing/cxl
 +
-+static void eiw_to_ways_invalid(struct kunit *test)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(invalid_eiw); i++) {
-+		int ways;
++After installing the modules for the running kernel, run the CXL suite from an
++ndctl build::
 +
-+		KUNIT_EXPECT_EQ_MSG(test, eiw_to_ways(invalid_eiw[i], &ways),
-+				    -EINVAL, "eiw=%u", invalid_eiw[i]);
-+	}
-+}
++  meson test -C build --suite cxl
 +
-+static void ways_to_eiw_valid(struct kunit *test)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(valid_eiw); i++) {
-+		u8 eiw = 0xff;
++For more on building and running the ndctl unit tests, see:
 +
-+		KUNIT_EXPECT_EQ_MSG(test, ways_to_eiw(valid_eiw[i].ways, &eiw),
-+				    0, "ways=%d", valid_eiw[i].ways);
-+		KUNIT_EXPECT_EQ_MSG(test, eiw, valid_eiw[i].eiw, "ways=%d",
-+				    valid_eiw[i].ways);
-+	}
-+}
++- the Unit Tests section of the ndctl README,
++  https://github.com/pmem/ndctl?tab=readme-ov-file#unit-tests
++- the ndctl test runner,
++  https://github.com/pmem/ndctl-test-runner?tab=readme-ov-file#ndctl-test-runner
 +
-+static void ways_to_eiw_invalid(struct kunit *test)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(invalid_ways); i++) {
-+		u8 eiw;
 +
-+		KUNIT_EXPECT_EQ_MSG(test, ways_to_eiw(invalid_ways[i], &eiw),
-+				    -EINVAL, "ways=%u", invalid_ways[i]);
-+	}
-+}
++KUnit
++=====
 +
-+static void eig_to_granularity_valid(struct kunit *test)
-+{
-+	for (u16 eig = 0; eig <= CXL_DECODER_MAX_ENCODED_IG; eig++) {
-+		int gran = 0;
-+		u16 back = 0xffff;
++KUnit tests run self-contained logic in the kernel without any CXL topology.
++KUnit is suited to logic that can be exercised with controlled test inputs,
++including encode/decode helpers, address translation and interleave calculations,
++parsers of device- or firmware-supplied data, and mailbox command handling
++through a stub transport.
 +
-+		KUNIT_EXPECT_EQ_MSG(test, eig_to_granularity(eig, &gran), 0,
-+				    "eig=%u", eig);
-+		KUNIT_EXPECT_EQ_MSG(test, gran, 256 << eig, "eig=%u", eig);
++To run all of the CXL KUnit tests, from the top of the kernel tree::
 +
-+		/* Round trip back to the encoding */
-+		KUNIT_EXPECT_EQ_MSG(test, granularity_to_eig(gran, &back), 0,
-+				    "gran=%d", gran);
-+		KUNIT_EXPECT_EQ_MSG(test, back, eig, "gran=%d", gran);
-+	}
-+}
++  ./tools/testing/kunit/kunit.py run --kunitconfig=drivers/cxl
 +
-+static void eig_to_granularity_invalid(struct kunit *test)
-+{
-+	static const u16 invalid_eig[] = { 7, 8, 15, 0xffff };
++This builds a test kernel in .kunit/ using drivers/cxl/.kunitconfig and runs it
++under User Mode Linux (UML). The running kernel is not modified, and no
++installation is required. The test kernel runs the tests, reports the results,
++and exits.
 +
-+	for (int i = 0; i < ARRAY_SIZE(invalid_eig); i++) {
-+		int gran;
++Use --arch=<arch> to run the tests under QEMU instead.
++Use --arch=help to list supported architectures.
 +
-+		KUNIT_EXPECT_EQ_MSG(test,
-+				    eig_to_granularity(invalid_eig[i], &gran),
-+				    -EINVAL, "eig=%u", invalid_eig[i]);
-+	}
-+}
++Running during development
++--------------------------
 +
-+static void granularity_to_eig_invalid(struct kunit *test)
-+{
-+	static const int invalid_gran[] = {
-+		0, 1, 128, 255, 257, 384, 768, SZ_32K, -256,
-+	};
++kunit.py builds in .kunit/, but kbuild does not allow an out-of-tree build when
++the source tree already contains an in-tree build. If you build the kernel
++in-tree, use a separate worktree for KUnit. The worktree contains the committed
++sources at the selected revision::
 +
-+	for (int i = 0; i < ARRAY_SIZE(invalid_gran); i++) {
-+		u16 eig;
++  git worktree add ../linux-kunit HEAD
++  cd ../linux-kunit
++  ./tools/testing/kunit/kunit.py run --kunitconfig=drivers/cxl
 +
-+		KUNIT_EXPECT_EQ_MSG(test,
-+				    granularity_to_eig(invalid_gran[i], &eig),
-+				    -EINVAL, "gran=%d", invalid_gran[i]);
-+	}
-+}
++To run a single suite, name it::
 +
-+/* Decoder Count field of the CXL HDM Decoder Capability Register */
-+static void hdm_decoder_count(struct kunit *test)
-+{
-+	static const int expect[16] = {
-+		[0x0] = 1,
-+		[0x1] = 2, [0x2] = 4, [0x3] = 6, [0x4] = 8,
-+		[0x5] = 10, [0x6] = 12, [0x7] = 14, [0x8] = 16,
-+		[0x9] = 20, [0xA] = 24, [0xB] = 28, [0xC] = 32,
-+		[0xD ... 0xF] = -ENXIO,
-+	};
++  ./tools/testing/kunit/kunit.py run --kunitconfig=drivers/cxl cxl_core_mbox
 +
-+	for (u32 val = 0; val < ARRAY_SIZE(expect); val++) {
-+		u32 cap = FIELD_PREP(CXL_HDM_DECODER_COUNT_MASK, val);
++Enable KASAN when testing memory safety error paths. It can detect an out-of-bounds
++access even when the resulting value does not cause a test assertion to fail. Run
++under QEMU, for example x86_64::
 +
-+		KUNIT_EXPECT_EQ_MSG(test, cxl_hdm_decoder_count(cap),
-+				    expect[val], "count field=%u", val);
-+	}
++  ./tools/testing/kunit/kunit.py run --kunitconfig=drivers/cxl \
++      --arch=x86_64 --kconfig_add CONFIG_KASAN=y
 +
-+	/* Bits outside the count field are ignored */
-+	KUNIT_EXPECT_EQ(test,
-+			cxl_hdm_decoder_count((u32)~CXL_HDM_DECODER_COUNT_MASK),
-+			1);
-+}
++Maintaining KUnit tests
++-----------------------
 +
-+static struct kunit_case cxl_hdm_encoding_cases[] = {
-+	KUNIT_CASE(eiw_to_ways_valid),
-+	KUNIT_CASE(eiw_to_ways_invalid),
-+	KUNIT_CASE(ways_to_eiw_valid),
-+	KUNIT_CASE(ways_to_eiw_invalid),
-+	KUNIT_CASE(eig_to_granularity_valid),
-+	KUNIT_CASE(eig_to_granularity_invalid),
-+	KUNIT_CASE(granularity_to_eig_invalid),
-+	KUNIT_CASE(hdm_decoder_count),
-+	{}
-+};
++Use loop bounds and table sizes from the code under test, such as ARRAY_SIZE()
++of a lookup table, so tests adapt as the code evolves. Derive expected results
++from the specification, not the implementation, so tests can detect unintended
++behavior changes.
 +
-+static struct kunit_suite cxl_hdm_encoding_suite = {
-+	.name = "cxl_hdm_encoding",
-+	.test_cases = cxl_hdm_encoding_cases,
-+};
++When a patch changes behavior covered by a test, update the test in the same
++patch. For example, add newly supported encodings to a valid-value table or
++adjust the expected errno for a new return code.
 +
-+kunit_test_suite(cxl_hdm_encoding_suite);
++A failing test may indicate a regression or a test that needs updating. Run the
++CXL KUnit tests throughout development, not just before posting, to catch either
++case while making changes.
 +
-+MODULE_DESCRIPTION("KUnit tests for CXL HDM decoder encoding helpers");
-+MODULE_LICENSE("GPL");
++Adding a KUnit test
++-------------------
++
++A CXL KUnit test follows these rules:
++
++- Place the test in a tests/ directory beside the code under test, in a
++  file named <name>_kunit.c.
++
++- Derive the module and suite names from the path below drivers/cxl/, excluding
++  tests/. For example, drivers/cxl/core/tests/port_kunit.c produces module
++  cxl_core_port_kunit and suite cxl_core_port, while drivers/cxl/tests/port_kunit.c
++  produces module cxl_port_kunit and suite cxl_port.
++
++- Build new suites under CONFIG_CXL_KUNIT_TEST rather than introducing a separate
++  Kconfig option for each suite. Individual suites can be selected by name with
++  kunit.py or by loading their module.
++
++- If the code under test depends on another configuration option, such as
++  CONFIG_CXL_REGION, make the test build conditional on that option in
++  tests/Makefile and enable it in drivers/cxl/.kunitconfig.
++
++- Use exported interfaces where possible, importing the CXL symbol namespace as
++  needed.
++
++When to add a test
++==================
++
++New or modified self-contained logic should be accompanied by KUnit coverage where
++practical. Extend an existing suite when possible, or introduce a new one for
++functionality that is not yet covered.
++
++Bug fixes should include regression coverage that reproduces the problem without
++the fix.
++
++Changes to topology-dependent behavior should be covered by cxl_test tests in ndctl.
++KUnit coverage complements, but does not replace, cxl_test.
 -- 
 2.37.3
 
