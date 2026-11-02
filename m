@@ -1,58 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.223.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793648474;
-	b=25JUDA2pvKCtX+aoQmxNaPmWqB3hAot8qcGZ4Pp5FkhdKIHRRA5Q7ylxvCyn0Ukx1xjW
-	 nhz0z8BWgEx6nC30Ehsz3Ri7HHlZ7mxjw130Xsc0MZP606d+k7ToKRrjjVGtVbeYLD4d+
-	 UHLPHk3pOI22Qe2kvGo0uI7Ri9lRZ9eqohL3hH5VGzcUooJr4R6xI8mfTakLsXbyDp9IU
-	 oZBQ3/yvWN6EK9ted64eX4Ye/+G1bZujOhoBb4yOpcJyPEprMMKAa0T1LExfE2d95etMH
-	 73GeEh6C4Vag2v2Ct0z+qqGPYTbO5ecQlVYVTvkWBN7xmDIKdCLNOW1EBkDMuywAylA==
+	t=1793649904;
+	b=JD599ss4DBT902O9mJglL+4BZtXqonGUCbPIkG2uJgSdnS4s0x24xCS8PppUP1stwq+N
+	 pU6WTCdUHt31TRrAxVUceJofVLUgwy0A00DXmDDNB1PV9Woiicy/Gy4DJNrA5pumYTAHL
+	 e6USNrJDTKh8bwHEAlOlpb3fTWN8blYFOBAxxZ9oQcsyyy/n6ki+KVdse/iC8SR8IJT4l
+	 zTKI1Xz7wV70x2p2B7Wf3L1ghCnxiaZZEWLKyUpqpIsohFnGCXevFvWMvTVGTTmIwGobe
+	 IdkF4Q/ZxmT+WLN3gC2xg55vFLQF74Jsnm0Vhl9QI6Wmq4qkfTAYZ0JjyWDt4Q64xog==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793648474;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hkPWmaCky5W9ZtvBeQ8qvs6llvQ7sqyJvIYBj283GTg=;
-	b=Ef91iMyknQqS+vn/5l0xwX5ARNdFdeszbaWFHvk2V3ziALuWcOn0mvi3jovtANsDE2ry
-	 WyLVXt0VwCWWjNJiQlZ/MiVc4RTLRDnM4O3DQMpraw5pDjvpfcFXTZf/DNex5aaP2ZC0B
-	 ItDQ/dYRz2YimKGayuQ3P9fhxJIm2143JItTTZhSA3KD/YVUErJu4Jgh9MjIYV1+GlgaQ
-	 F2oO604bmAZnRIRRYI7yD133DHpC5NxVDMoSo5EWJB/StDPz2gPdNVYX4Y17zspEU6OwB
-	 +dJeWGAje+tJACVfiWaYwoMStxtzQm6rwlFZBvpeK/xnJ4b0slMY0Pytos93kdy5nHA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793649904;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Glossy-Well-Made:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=yn1mE6uxhL1gkPEJipoOpcuVRIiAHeoRK6ltnkiGt7M=;
+	b=EfVWrERWmY1nf9YmCFyDvx85Q6t+F6nO+vneEjspQcIevTTnBjZvO4TKLLPjHVG/p+Bn
+	 ZEVIMOrZP/9Lko1AHwILGfCAKL86BOKnTtZjPLmzFsg06BLrELriYsSAI5OSW2Dmejf3h
+	 48Ou9vdWgtXbPDpDwgVvszDVoEyOHyIKlJqyY1YYHjSI0yOJkU+vL62SR5v5t75gW4iNs
+	 +IBmMqjxNxGCAIpkoBXXDvF6ZSB2QUaol0x5s1YHkHTwuCzx6O8gJ5VNSChhPt7aU1ArQ
+	 y3W7lsjzfsLlXGyvazW/d768pEvvtEvJbhTsCbXVG09yv1I+CSsECOtCR5C1nkpIXcg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E4AAeII1;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b="kk/lXLa2";
+	arc=none smtp.remote-ip=23.83.223.169
+Received: from slategray.cherry.relay.mailchannels.net (slategray.cherry.relay.mailchannels.net [23.83.223.169])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6371606A324
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 19:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DBE606A324
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 20:05:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21DBE606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E4AAeII1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01BDB1F00A17;
-	Mon,  2 Nov 2026 19:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793648473;
-	bh=hkPWmaCky5W9ZtvBeQ8qvs6llvQ7sqyJvIYBj283GTg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=E4AAeII1KS1riiB887L0qFvZPCQ8+b2dATicts/b3r3eax4TmYosUy7OVfRCt0osL
-	 8iOymyMEPiYkT+CDFGd7pAuhRaa22heDtzJ+ellS/40LuBkBIwJi5oZzSj0rF0oGi1
-	 L/X0YF4x540L/3pY6fmIV1X2l5ZHjjWoT5A///eHbHrmAYDDIt4Wf9VYeuUDf4ojD1
-	 NnOA1/9ayRzJamq5+qEzq65+co0czMYwZbpIYuxSGJIh4g+KSyQ2aD9GcNFUDcn2KH
-	 KgDhK9aEQ4fUthkdLZOFk9l3uPEoQjHi2dio2b5Jb1SzuiSi/vAlFjYRN/kTXtU0oS
-	 294Fo0Rdfbhag==
-Message-ID: <sashiko-outbox-194015@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] mm/memory_hotplug: don't offline a hwpoisoned page
- still in the page cache
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mani Tofigh" <mt4022@columbia.edu>, "David Hildenbrand" <david@kernel.org>, "Oscar
- Salvador" <osalvador@suse.de>, "Andrew Morton" <akpm@linux-foundation.org>
-Cc: "Miaohe Lin" <linmiaohe@huawei.com>, "Naoya Horiguchi" <nao.horiguchi@gmail.com>, "Vlastimil
- Babka" <vbabka@kernel.org>, "Gregory Price" <gourry@gourry.net>, linux-mm@kvack.org, linux-cxl@vger.kernel.org, tz2294@columbia.edu
-In-Reply-To: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
-References: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 19:41:12 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=kk/lXLa2
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5DDE28018EE;
+	Mon, 02 Nov 2026 20:04:57 +0000 (UTC)
+Received: from pdx1-sub0-mail-a251.dreamhost.com (trex-green-2.trex.outbound.svc.cluster.local [100.99.192.246])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D9B94801985;
+	Mon, 02 Nov 2026 20:04:55 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Glossy-Well-Made: 305bec7c08e5c877_1793649895980_3108639294
+X-MC-Loop-Signature: 1793649895980:2284964918
+X-MC-Ingress-Time: 1793649895979
+Received: from pdx1-sub0-mail-a251.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.192.246 (trex/8.0.2);
+	Mon, 02 Nov 2026 20:04:55 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a251.dreamhost.com (Postfix) with ESMTPSA id 4jJN390Y7Qz105b;
+	Mon,  2 Nov 2026 12:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1793649895;
+	bh=yn1mE6uxhL1gkPEJipoOpcuVRIiAHeoRK6ltnkiGt7M=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=kk/lXLa2sV628vGMsdRUwvZdzQ9d9T+4IadWSVSVPwu/eKHNwIlByBKxNN5HR360m
+	 ICG/zwEmb6qpBrM7kIsr7MLIpXYsJcTGSQTCdytHh6l7VJBAOcyPwtoqlmSwkyhB5V
+	 jp3fBXZVu2abwxKnt+CkZ1i8oqKJIWsHigCcNLIP3K8mYZXzBQz8FwX1B9UVwcTTu7
+	 ve1p/JmZdQjM74DPdPCZSt2rBJlMoIEfJcWJjw6hyB35l2HqKxiTge5WK+35JySIWg
+	 ewBd5wvGxvbzY632OGdfvhTlFnxlluvHaV0HvpXb576icIW5jxv9xxArf3cmQeWbF6
+	 HLtBeBYx2aqRw==
+Date: Mon, 2 Nov 2026 12:04:49 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: dave.jiang@intel.com, jic23@kernel.org, alison.schofield@intel.com,
+	icheng@nvidia.com, benjamin.cheatham@amd.com,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v10 08/10] cxl: Handle auto-committed BI hdm decoders
+Message-ID: <20261102200449.y7jx3guifolmlent@offworld>
+References: <cover.1793567979.git.dave@stgolabs.net>
+ <db0f7cc38da1300596a7b8653bd2fba010e20e52.1793567979.git.dave@stgolabs.net>
+ <dfe70cf5-f6ef-4b28-9c51-49e7fbd8b9c8@zohomail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -61,150 +92,41 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <dfe70cf5-f6ef-4b28-9c51-49e7fbd8b9c8@zohomail.com>
+User-Agent: NeoMutt/20220429
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] mm/memory_hotplug: do_migrate_range() isolates busy hwpoisoned fol=
-ios from LRU
-- [High] mm/memory_hotplug: scan_movable_pages() misses poisoned tail pages=
- of folios
---
+On Mon, 02 Nov 2026, Li Ming wrote:
 
-commit 90624953bdb2c5ae02a7473ca37edfda72128f6d
-Author: Mani Tofigh <mt4022@columbia.edu>
+>>@@ -907,6 +907,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>>  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+>>  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+>>  	int id = cxld->id, rc;
+>>+	u32 ctrl;
+>>  	if (cxld->flags & CXL_DECODER_F_ENABLE)
+>>  		return 0;
+>>@@ -950,6 +951,10 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>>  	port->commit_end++;
+>>  	cxld->flags |= CXL_DECODER_F_ENABLE;
+>>+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+>>+	if (ctrl & CXL_HDM_DECODER0_CTRL_BI)
+>>+		cxld->flags |= CXL_DECODER_F_BI;
+>>+
+>
+>IIUC, this part is unrelated auto-committed BI HDM decoder handling, 
+>because above "if (cxld->flags & CXL_DECODER_F_ENABLE)" will return 
+>directly for auto-committed BI HDM decoder, I guess this part should 
+>move to patch #4?
 
-mm/memory_hotplug: don't offline a hwpoisoned page still in the page cache
+That's fair. Since Alison's comment for caching this read was in this patch,
+I just went ahead and did it all here for the endpoint. Patch 4 introduces
+the flag for the root decoder, and this patch extends its use for BI
+endpoints (much like how we do it for the LOCK equivalent).
 
-This commit prevents memory offlining from skipping hwpoisoned pages whose
-folios still have a page-cache or swap-cache mapping in scan_movable_pages()
-and __test_page_isolated_in_pageblock(). This avoids offlining memory while
-files or swap caches still reference poisoned pages.
+I'll move the non strictly auto-commit CXL_DECODER_F_BI users out of
+this patch and into patch 4 - which is basically this and the reset.
 
-[ ... ]
-
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c9cc42e54f05d..3d36f7f2e04b6 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1820,6 +1820,8 @@ static int scan_movable_pages(unsigned long start, =
-unsigned long end,
->  		struct folio *folio;
-> =20
->  		page =3D pfn_to_page(pfn);
-> +		if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
-> +			return -EBUSY;
->  		if (PageLRU(page) || page_has_movable_ops(page))
->  			goto found;
-
-[Severity: High]
-Does do_migrate_range() still isolate a non-offlineable hwpoisoned folio fr=
-om
-the LRU and leak its reference when another movable page precedes it in the
-range?
-
-In offline_pages(), scan_movable_pages() returns 0 as soon as it finds the
-first movable page, and offline_pages() then passes the entire remaining
-range [pfn, end_pfn) to do_migrate_range():
-
-mm/memory_hotplug.c:offline_pages() {
-    ...
-			ret =3D scan_movable_pages(pfn, end_pfn, &pfn);
-			if (!ret) {
-				/*
-				 * TODO: fatal migration failures should bail
-				 * out
-				 */
-				do_migrate_range(pfn, end_pfn);
-			}
-    ...
-}
-
-In addition, because memory_failure() does not hold mem_hotplug_lock,
-TestSetPageHWPoison() can run after scan_movable_pages() has already scanned
-past that PFN.
-
-When do_migrate_range() reaches the hwpoisoned page-cache or swap-cache fol=
-io
-while memory_failure() is waiting in get_hwpoison_page() on
-pcp_batch_high_lock, it isolates the folio from the LRU without checking
-hwpoison_page_offlineable():
-
-mm/memory_hotplug.c:do_migrate_range() {
-    ...
-		if (folio_contain_hwpoisoned_page(folio)) {
-			if (folio_test_large(folio) && !folio_test_hugetlb(folio))
-				goto put_folio;
-			if (folio_test_lru(folio) && !folio_isolate_lru(folio))
-				goto put_folio;
-			if (folio_mapped(folio)) {
-				folio_lock(folio);
-				unmap_poisoned_folio(folio, pfn, false);
-				folio_unlock(folio);
-			}
-
-			goto put_folio;
-		}
-    ...
-}
-
-On the next pass of the loop in offline_pages(), scan_movable_pages() reach=
-es
-the poisoned page and returns -EBUSY. However, folio_isolate_lru() has
-already cleared PG_lru and taken an extra reference on the folio that
-put_folio does not drop.
-
-When the waiting memory_failure() resumes in get_hwpoison_page() ->
-get_any_page() -> __get_hwpoison_page(), HWPoisonHandlable() sees
-!PageLRU(page) and fails with -EIO instead of truncating the folio, and the
-leaked reference from folio_isolate_lru() keeps the poisoned folio pinned in
-the page cache so subsequent offline_pages() attempts also fail with -EBUSY.
-
-Should do_migrate_range() also skip isolating the folio when
-!hwpoison_page_offlineable() is true?
-
-[Severity: High]
-What happens in scan_movable_pages() when a tail page of a large page-cache
-or swap-cache folio is hwpoisoned?
-
-PG_hwpoison is set per subpage whereas PG_lru is on the head page. Because
-scan_movable_pages() scans sequentially from start, it visits the head page
-of a large folio before any tail page. At the head page, PageHWPoison(page)
-is false and PageLRU(page) is true, so scan_movable_pages() takes the
-goto found branch at the head PFN without scanning the poisoned tail PFN.
-
-In do_migrate_range(), if PG_has_hwpoisoned is already set on the large
-folio (for instance, when memory_failure() could not split the large folio):
-
-mm/memory_hotplug.c:do_migrate_range() {
-    ...
-		if (folio_test_large(folio))
-			pfn =3D folio_pfn(folio) + folio_nr_pages(folio) - 1;
-
-		if (folio_contain_hwpoisoned_page(folio)) {
-			/*
-			 * unmap_poisoned_folio() cannot handle large folios
-			 * in all cases yet.
-			 */
-			if (folio_test_large(folio) && !folio_test_hugetlb(folio))
-				goto put_folio;
-    ...
-}
-
-do_migrate_range() skips the large folio without clearing PG_lru, and the
-do-while (!ret) loop in offline_pages() calls scan_movable_pages() again at
-the same head PFN, looping indefinitely while holding mem_hotplug_lock and
-pcp_batch_high_lock.
-
-Conversely, if memory_failure() on a tail page is blocked in
-get_hwpoison_page() before setting PG_has_hwpoisoned, do_migrate_range()
-advances pfn to the end of the large folio, sees
-folio_contain_hwpoisoned_page(folio) as false, and migrates the folio
-despite the poisoned tail page.
-
-Can scan_movable_pages() and do_migrate_range() check for poisoned subpages
-across the folio so that large folios with poisoned tail pages are handled
-consistently?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261101-memhp-hwpo=
-ison-pagecache-v1-1-ed8785ca44eb@columbia.edu?part=3D1
+Thanks,
+Davidlohr
