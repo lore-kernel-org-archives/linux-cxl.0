@@ -1,65 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793654383;
-	b=rm3QYwjWrmqEVWJzmgh9hthYsnWd/jeSmK6UcCbKEs86F0lAvghMmml6oWHe09NrTTu9
-	 x7DXbgVpIaVFQsQZ5GVbVInjcNLatlrkQXM9mSPK3AxXa4utGzhz2azauzPwTnGHVSCEn
-	 gUic7h3XNZYTA3bPhu9fQDofZd2hwpsRfQ0ocVCcFLe6HlICl0bq3yMnerl1QQNCE0GAl
-	 EiJEGjkqNSU3MyNq/Oll0S6PwhXppYakcX6iCdvXQcmeyAyPQL2Fyb/jO9wKQw6FCBtLQ
-	 MJncSwuNoXeCPj5FTT00m/i+EBDbS6wFUE659e6ppVzmZBlzaLxDWy/qK6gMTd9bCsw==
+	t=1793654384;
+	b=hk1zHiycs03qoVe/N12+8U2xt386J+vVyOSc+8QT7gnqPG8aYEpILDQJ1P2EKj7qBDYM
+	 uxPouEavIOwHDpCDGvzGwXEAw8EPvnKXPTy75pVqCxxP5YacpoeU/9bQTagYPdFpuknrZ
+	 wgy8oJcN9OnTbbdxFh9Yee4z4kwWkas5IWldPY82uYc7EicOGqND7AcbTtXp/dhpcRUqf
+	 pcx4rZD9aMHb+yza0zq8p6mqlJP1o+Qut0kXf7k1mGPysQhNtsXPJ+Aatpd0CQJN32dpm
+	 xmp9aJzwB84OEMdspQ1x0+gmaxgz/bxfr01wBCnPo5H3AQHEAabmC2OP9KHgwGmp8uA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793654383;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793654384;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=QulupLz4ZjPKY3lr/PuFBSP6cKkVSxsyMSlXegfcKG8=;
-	b=MAuMU2DgsG33hskgcst6dlJ1X7ltCA3Kr+iyZ9KqGUHGU+RAiW3cit9Zj2jRDa/K44Y+
-	 GIlRFtfWsJb/3mVdoKoBqWAO9S6lDg/6MzGAnqn+deLYOOEGLVe2QWjDW863cnj0GxF28
-	 oAvJowUS/xl0RlM4SlBXUWa3Axua5b3gTDuaV6/EHa8sIgIcLMysSuQfQjVS1S8Q7BTgm
-	 5u6aCtDuXGzcGNwkupbmtcwt5MBmSKxEki2Oxq/Johrkb04P8UTBO64e5smY8j+MVOYQz
-	 42PWNZKY+cGcpIb5V8xvOyU7UGujaAdmX6vydwkc4OckLfvOMaOmoMgspWNXwbdZtmQ==
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=Bl4nBJ+jPqbeGkBbC70UjTA+IKil0peLV/sYI2/jfsM=;
+	b=TF6k1sxhoX8z0ZHQ11yUtDnTEw8t8SPMIkHLAnnYBJ3mKXDH7ow2Zz584xLwZEzCDTS0
+	 VAsT6nmGySi4bUWOwwYRPOwvbsnQf6JSt9z1rhmoJ683iEPzjCFP+r2Aj7PcTgUf0c0Pc
+	 Q3PKTlMYJYvNvssFg5YZtsd2Ee1P6es/1mvcar5KAr+xNaAbudf2xyqCZ9KbSEnRSlAZv
+	 MCqRmXuFwoSQL+U+HcATkfxtWm1RQsqbgice7a1rWLZK+cqd6ffSrNPVqqqWr10QgRHN+
+	 2c6Bxy9zaP52LcPOMT3zdhqmG4UdNSQZcddKUnp7U693PUkHisvwvSpauXw2JuCZ+0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=OaHCALJ0;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="Uk/DQ0S9";
 	arc=none smtp.remote-ip=198.175.65.11
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5512E606A326
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 21:19:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5512E606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BD606A32C
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 21:19:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 988BD606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=OaHCALJ0
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Uk/DQ0S9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793654383; x=1825190383;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ob9F+id1/Z4V9R2SiZNgo2nI+Z+z+JHcTREoQcoZxDY=;
-  b=OaHCALJ0iCwko7EwabWGrx/4aXDYz7Mgw+G6TmII4hlpe96stx7jRVuO
-   TQcV4OzddFeJbC8Vd8jcJAbk1yCS/atzdnF0sbfi5WdRR1Cx4UfLwqAJb
-   1nEvFbJjMU+hWASfgxvpGZolxJGh2MV9gFK68nE+sRmczyUXZohMiY/6u
-   jfx2Eec/pJInHZ4G30hLOgcP/ZEIfe82ikOy2tf1wVwNdxs7L3i3knn1H
-   fFFhzrVRQaGcQz+pI9cF5Ee/qYG/nXP+7+B2o0ZjlSrqSHDGGRHBKKjRp
-   GFKZQ4TO75mfOsIVe99RzjrTL1h/SxBdOzzSZ1r11Np8gEWkf5a7Gdb50
+  t=1793654384; x=1825190384;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VbLn49I12WtEtKqcyIV2MMpnYzZ4WtR006PqQbCa8II=;
+  b=Uk/DQ0S9aOv3DDp5spAYI+tQhDnG+hPnqwGPG7fyO/Tr8QWVCmhTRUMg
+   5rc+053baUZMm55ketCDcdE5bby4c9+mJ0rSP643rzbMZrWIIIkZzWC54
+   TPaTZdTs36BIfWvgL6tpkrImhsQkF5uuahtG+UcEaJtQFxzeRG02NHz8K
+   G9b5nEyn+BUjVAv+FR3C4l0Z95TdvOa+uhryfUFpfxZpaop2xb4B0CNcA
+   SAcZg35xYInMtK0SQ6pcSSiJ2FYhBkqTA29frRGZre9InUDlMu3ddJRf8
+   sWn7z4bSfhcGcjXBsreE7zv+ewp5ySLCvRcF8A4MH8nEq0gZKaFVGVZVh
    w==;
-X-CSE-ConnectionGUID: qn5LpOlsS6m/glU2E1g0+w==
-X-CSE-MsgGUID: MGH7WKwHQQGb4vHmzRpbnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2242574"
+X-CSE-ConnectionGUID: sJVUqFm3ScGeh87rpgdK3w==
+X-CSE-MsgGUID: YNBQpSJ1S8aZR0Uo17GG5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2242580"
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="2242574"
+   d="scan'208";a="2242580"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 13:19:42 -0800
-X-CSE-ConnectionGUID: i8jZtokqSmCDfg//Z+wXYw==
-X-CSE-MsgGUID: v6KHUasiTT6qY/Cp/YZECQ==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 13:19:44 -0800
+X-CSE-ConnectionGUID: AU1ZLu/wSnCJ+Xgfrjt22g==
+X-CSE-MsgGUID: 1y4zUhuUQumG5IE08uajUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,191,1787036400"; 
-   d="scan'208";a="8062468"
+   d="scan'208";a="8062481"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.173])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 13:19:41 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 13:19:42 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -70,10 +71,12 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 1/2] cxl/region: Reject a repeat write of an endpoint decoder to targetN
-Date: Mon,  2 Nov 2026 13:19:36 -0800
-Message-ID: <3e5af9d6d59f8df52b9d21bcf1c7e78f06918f80.1793653629.git.alison.schofield@intel.com>
+Subject: [PATCH v3 2/2] cxl/Documentation: Describe clearing a region targetN position
+Date: Mon,  2 Nov 2026 13:19:37 -0800
+Message-ID: <e87248b8d13d3f07741243a45891365450c66881.1793653629.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <3e5af9d6d59f8df52b9d21bcf1c7e78f06918f80.1793653629.git.alison.schofield@intel.com>
+References: <3e5af9d6d59f8df52b9d21bcf1c7e78f06918f80.1793653629.git.alison.schofield@intel.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -85,85 +88,46 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Writing an endpoint decoder to a region targetN attribute that already
-holds it returns -EBUSY, but leaves the partially populated region in an
-inconsistent state. The targetN attribute still names the decoder, so the
-failed write gives no indication that the region was damaged.
+The region targetN ABI documents that writing to an occupied position
+returns EBUSY, but does not describe how to clear the position. Clearing
+a position is supported but undocumented, leaving no documented recovery
+path after writing the wrong endpoint decoder.
 
-Filling the remaining target positions can then trigger a NULL pointer
-dereference in cxl_region_setup_targets(). This can be reproduced through
-sysfs:
+Document how to clear a position by writing an empty string, how clearing a
+position decommits a committed region, and how the region can be committed
+again after all positions are filled.
 
-    echo $decoder > /sys/bus/cxl/devices/region0/target0
-    echo $decoder > /sys/bus/cxl/devices/region0/target0
-    echo $other_decoder > /sys/bus/cxl/devices/region0/target1
-
-An existing check recognizes when the decoder already occupies the
-requested position, but does not prevent the attachment from proceeding
-and modifying region state.
-
-Move the check ahead of the attachment work, so a repeat write fails with
--EBUSY without modifying region state. The targetN ABI documents EBUSY for
-an occupied position and makes no exception for writing the same decoder.
-
-Fixes: 9995576cef48 ("cxl/region: Move region-position validation to a helper")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
 
-Note: cxl_region_perf_data_calculate() currently updates region performance
-data before attachment validation completes. This is a pre-existing issue
-that will be addressed separately. This patch places the repeated-write
-check before that call, so the issue does not affect this fix.
-
 Changes in v3:
-- Subject line back to v1's 'Reject a repeat write of an ...'
-  v3 rejects again, but before any region state is modified
-- Fail a repeat write with -EBUSY, as the original ABI documents
+- Restore the original entry text and append how to clear a position
 - Rebase on 7.4-rc1
-v2: https://lore.kernel.org/linux-cxl/920d80735a449f93a1f17a8bca4c25e4b302cb42.1792989098.git.alison.schofield@intel.com/
+v2: https://lore.kernel.org/linux-cxl/efa1a098550077dc3571796ba0102ddabe1e9b0d.1792989098.git.alison.schofield@intel.com/
 
 Changes in v2:
-- New Subject line. v1 as 'Reject a repeat write of an ...'
-  v2 does not reject, it treats as no-op and protects region state
-- Keep repeat write as a no-op instead of failing with -EBUSY (JonathanC)
-- Check before the decoder's bandwidth is added to the region
-- Correct the Fixes tag
-v1: https://lore.kernel.org/linux-cxl/94e9157aac2e99df1251d733769d539b914fdefc.1790829690.git.alison.schofield@intel.com/
+- Say that writing the endpoint decoder already at a position succeeds
+- Split the entry into paragraphs and drop the v1 error code reordering
+v1: https://lore.kernel.org/linux-cxl/a007c751d88ee64c9d0b7bb3c69a486c42358b36.1790829690.git.alison.schofield@intel.com/
 ---
- drivers/cxl/core/region.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-cxl | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a048bd5c06cb..90226327e03c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1764,9 +1764,6 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 7352dbd70bc7..3629c983f05c 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -568,6 +568,10 @@ Description:
+ 		not an endpoint decoder. Once all positions have been
+ 		successfully written a final validation for decode conflicts is
+ 		performed before activating the region.
++		To clear a position, for example to replace an endpoint
++		decoder, write an empty string (echo > targetX). Clearing
++		a position in a committed region also decommits the region.
++		It can be committed again after all positions are filled.
  
--	if (p->targets[pos] == cxled)
--		return 0;
--
- 	if (p->targets[pos]) {
- 		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
- 		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
-@@ -2130,6 +2127,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -EINVAL;
- 	}
  
-+	/* Already at @pos: fail before changing any region state */
-+	if (pos >= 0 && pos < p->interleave_ways && p->targets[pos] == cxled) {
-+		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
-+			pos, dev_name(&cxlmd->dev),
-+			dev_name(&cxled->cxld.dev));
-+		return -EBUSY;
-+	}
-+
- 	cxl_region_perf_data_calculate(cxlr, cxled);
- 
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+ What:		/sys/bus/cxl/devices/regionZ/commit
 -- 
 2.37.3
 
