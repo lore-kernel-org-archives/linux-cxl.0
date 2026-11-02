@@ -1,126 +1,127 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793615958;
-	b=rQ182tumFx96A0IZ37b3s5ylfshsNjWn08aV3Nq82wIp4E4m8HYG2E4CkJAHMCt4fpos
-	 3mgmM1n3g3eOahdKUU0GdTdpxG6lgo/w+AvvHk1GQHSgC7Kvx5TgXS/6TwIxliPRK1mJT
-	 siYa6LWU6K/iB1J9v8VU2GXothKqy1UfK9+h6SlBCDpKZlwN67LeWMr19eaTT0YGQjhc1
-	 iHnRfjrnxqd2xOBU90A12gfd4ofRm0Nubx1kHaRaVN+Sm2zKBiD49uZXOZgfk4Juukxzk
-	 vX2tlzBT+D/rWWSxz4znLH0ptyeaGq/3gpc/+lq9bklres+27g+0mCFSht6Yul7NWPA==
+	t=1793618556;
+	b=tfHijTFzAAJvHh4BxIkgx8VBJ+RCVj10lrmFd+R3LW+ob6SvcsyTYLzIngetNQdsYPFb
+	 YVCBhtiriFGPnYO8WLaPEQsqleCvFM+GFcOIsfzitTW5CX/uWJaA50QKz/vSGp72+7ILx
+	 IsCPgzu4Pg3V9/MNWOBlLXjzlNfGbryXRZ4QRlbJ9lCR/Lzhc/K5BQRctOjzlGaGNqOzi
+	 SQCHS6KRVXg07oGpo9SAJcBhDZhoHyTaBN+PEh6nVIW4FYo4Zg9k6TzrrdnII+u0HuRNB
+	 I4RXzi7MJIGQYmbLXD/Sunf8amkgEKaP0kcQYc+vgY4rV051u44TsclNyygeItswtrg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793615958;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793618556;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=SXPkduc5HmvcD4JbyCflilxUkIbcOVZyKgcYfnLDPdM=;
-	b=TJh5G2VKj4eAELQbnHEOMNrVkwzTYqFRXXUrL/dw/tyx4lK9Nm9YxNJFYY/mvZAfAZQS
-	 nv3kl3OOt5dHQ7lrcaaimMPjVQC5MbaYyfUToje5whp8BpAryJ8wkbZz6sT3aiLNOlrqk
-	 W4hMN3r1UllZ+CqzO1KY2hNs5Qt8FjERtSg1F5T4uJbPQOY0nhP5Z78oagwCKMm9ClaNd
-	 tmjjF6X75Kce6MY6GcTphb+txeP9SRGM1Ey4PGe9H29xFHk8evdZALMVtyfAcsQfFyP9y
-	 QhdW5v/BcDHb0Gx8L3/Ab1f8dEskBe3mH5v62ISeGODNas1ZukMoQy6Fx3pJdqiY+JQ==
+	bh=rlYYUg5m282yLIStEKkIHTozLzxeQHV9wO/ECVNrg9o=;
+	b=PEdaqclTmcTtmM4ocHi6duV/evivHWKDQdfXe6VW0Uhxt/cgjMvOGxeiAYKASmKI6jfe
+	 zz5aol5tgTVDTUWyJMUDhcZC1aiTFcD8DNJyB23MYfiXrRSwoBW23vUgaO1Kj2eUvFp3a
+	 x52pZwjGc/oEMZE4gsrjqzBKWAa1Uw6aDOm92DyTaIFokl09u3Qmw1AeAME/wFfqYq34Y
+	 yfq4A8gRjc79BV9E2kfj3sSOaQ8dhcaQvpGPYK260fdnGJwUPfgNfgDIeZf6H8qxFeIZV
+	 lF009SWN2m7V1fkBxErVsGxx78a3mJiYEXIhvLN9UV824SVzCpFlofgtTPWKraVhXdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=kjuHoq7Z;
-	arc=none smtp.remote-ip=91.218.175.177
-Received: from mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dNl8kU2Z;
+	arc=none smtp.remote-ip=91.218.175.51
+Received: from mta0.migadu.com (out-51.mta0.migadu.com [91.218.175.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789AB606A331
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 10:39:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 789AB606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6873F60A5BD4
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 11:22:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6873F60A5BD4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=kjuHoq7Z
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dNl8kU2Z
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=g/mOLxr73xiPzfSEauykXJcCVgHJm2aXb9jWqKek3jg=;
+DKIM-Signature: a=rsa-sha256; bh=rlYYUg5m282yLIStEKkIHTozLzxeQHV9wO/ECVNrg9o=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793615948; v=1; x=1794220748;
- b=kjuHoq7Z7WInoWQjvZyWXCq6fLcyusxA/wCxez4d8Pyx+CwmRFc4uUR3ShfNvGhGHMUT3+HP
- /G1fYZPWIznutntr52aGAg2slMISGBWg0BtWi9p7pPPh9X8UUm5MJAgIMWouR/qsesR6a5zHsUA
- 2kKl7WCLwMIhiRGwVbPnT1pQ=
+ t=1793618553; v=1; x=1794223353;
+ b=dNl8kU2ZZnY7p+1AZb5FkPRPxnYNE0pNnRkYzfMXhsQ6nzU8z5o/GWyH69JI2jndGu8pOXov
+ iCXfD2V18rj7VtN0dm54SEJgnoT8r9LSk12pObDE1JIpBZph6bgTHoxZAQEPzv45DOvyDH48795
+ PK/VAB0uVps+jfwrxgnpYmZo=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 8bbf69835e69a785;
-	Mon, 02 Nov 2026 10:39:08 +0000
-X-Mizu-Trace-ID: 8bbf69835e69a785
+Received: by smtp.migadu.com with ESMTPS id 0a735c2090dc6b54;
+	Mon, 02 Nov 2026 11:22:32 +0000
+X-Mizu-Trace-ID: 0a735c2090dc6b54
 X-Migadu-Flow: FLOW_OUT
-From: xu.xin@linux.dev
+From: Lance Yang <lance.yang@linux.dev>
 To: david@kernel.org
 Cc: akpm@linux-foundation.org,
-	aneesh.kumar@kernel.org,
-	apopple@nvidia.com,
-	axelrasmussen@google.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baoquan.he@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
 	hannes@cmpxchg.org,
-	harry@kernel.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jannh@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	josef@toxicpanda.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	kasong@tencent.com,
-	kees@kernel.org,
-	kexec@lists.infradead.org,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	ljs@kernel.org,
-	matthew.brost@intel.com,
 	mhocko@kernel.org,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	ljs@kernel.org,
+	kasong@tencent.com,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	baoquan.he@linux.dev,
+	baolin.wang@linux.alibaba.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
 	mhocko@suse.com,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
+	kees@kernel.org,
+	peterz@infradead.org,
+	jannh@google.com,
+	pfalcato@suse.de,
+	hughd@google.com,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	ziy@nvidia.com,
+	lance.yang@linux.dev,
+	riel@surriel.com,
+	harry@kernel.org,
+	apopple@nvidia.com,
 	nico.pache@linux.dev,
-	nphamcs@gmail.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	usama.arif@linux.dev,
+	kas@kernel.org,
+	matthew.brost@intel.com,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
 	npiggin@gmail.com,
 	osalvador@suse.de,
-	pasha.tatashin@soleen.com,
-	peterx@redhat.com,
-	peterz@infradead.org,
-	pfalcato@suse.de,
-	pratyush@kernel.org,
-	qi.zheng@linux.dev,
-	rakie.kim@sk.com,
-	riel@surriel.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shakeel.butt@linux.dev,
-	shikemeng@huaweicloud.com,
-	stable@vger.kernel.org,
-	surenb@google.com,
-	usama.anjum@arm.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	weixugc@google.com,
-	will@kernel.org,
-	willy@infradead.org,
+	minchan@kernel.org,
+	muchun.song@linux.dev,
 	xu.xin@linux.dev,
-	ying.huang@linux.alibaba.com,
+	chengming.zhou@linux.dev,
+	chrisl@kernel.org,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
 	youngjun.park@lge.com,
-	yuanchu@google.com,
-	ziy@nvidia.com
-Subject: Re: [PATCH v3 39/47] mm/ksm: reset the unstable trees of all nodes
-Date: Mon,  2 Nov 2026 18:38:39 +0800
-Message-Id: <20261102103839.225014-1-xu.xin@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261031-fixes_core-v3-39-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-39-d6437171ecc3@kernel.org>
+	gourry@gourry.net,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	ying.huang@linux.alibaba.com,
+	jgg@ziepe.ca,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	mason@kernel.org,
+	stable@vger.kernel.org,
+	skhawaja@google.com,
+	usama.anjum@arm.com
+Subject: Re: [PATCH v3 20/47] mm/gup: fix clearing folios in memfd_pin_folios()
+Date: Mon,  2 Nov 2026 19:22:27 +0800
+Message-ID: <20261102112227.62593-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20261031-fixes_core-v3-20-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-20-d6437171ecc3@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -130,66 +131,37 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-> Each full scan resets ksm_nr_node_ids unstable tree roots. Enabling
-> merge_across_nodes resets this count to 1, even if per-node roots were
-> previously allocated.
-> 
-> So when toggling "merge_across_nodes" 0 -> 1 -> 0, a scan that starts
-> while the setting is 1 and continues after switching back to 0 can
-> encounter stale unstable tree roots, resulting in UAF.
-> 
-> Only root is allowed to change "merge_across_nodes", and the documented
-> sequence is: "merge_across_nodes setting can be changed only when there
-> are no ksm shared pages in the system: set run 2 to unmerge pages first,
-> then to 1 after changing merge_across_nodes, to remerge according to the
-> new setting."
-> 
-> Let's fix it by tracking in ksm_nr_node_ids the actual number of
-> allocated tree roots.
-> 
-> remove_all_stable_nodes() and ksm_check_stable_tree() will now scan
-> more tree roots (skipping the empty ones), which is harmless.
-> 
-> Fixes: ef53d16cded7 ("ksm: allocate roots when needed")
-> Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/ksm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index dbfb8f98b1892..9c51925825cbf 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -475,6 +475,7 @@ static void advisor_stop_scan(void)
->  #ifdef CONFIG_NUMA
->  /* Zeroed when merging across nodes is not allowed */
->  static unsigned int ksm_merge_across_nodes = 1;
-> +/* Number of allocated stable and unstable tree roots. */
->  static int ksm_nr_node_ids = 1;
->  #else
->  #define ksm_merge_across_nodes	1U
-> @@ -3636,14 +3637,13 @@ static ssize_t merge_across_nodes_store(struct kobject *kobj,
->  			else {
->  				root_stable_tree = buf;
->  				root_unstable_tree = buf + nr_node_ids;
-> +				ksm_nr_node_ids = nr_node_ids;
->  				/* Stable tree is empty but not the unstable */
->  				root_unstable_tree[0] = one_unstable_tree[0];
->  			}
->  		}
-> -		if (!err) {
-> +		if (!err)
->  			ksm_merge_across_nodes = knob;
-> -			ksm_nr_node_ids = knob ? 1 : nr_node_ids;
-> -		}
->  	}
->  	mutex_unlock(&ksm_thread_mutex);
 
-Reviewed-by: Xu Xin <xu.xin@linux.dev>
+On Sat, Oct 31, 2026 at 10:39:49AM +0100, David Hildenbrand (Arm) wrote:
+>From: Chris Mason <mason@kernel.org>
+>
+>memfd_pin_folios() pins folios obtained directly from the page cache
+>without checking whether they are uptodate. However, shmem fallocate()
+>can leave newly allocated folios uncleared and not uptodate. Callers
+>such as udmabuf can then expose uninitialized memory to userspace.
+
+Right, just make sure the folios are initialized before handing them to
+callers. They shouldn't have to care whether shmem deferred the clearing ;)
+
+>Clear non-uptodate folios and mark them uptodate under the folio lock
+>before returning them to the caller.
+>
+>Fix generated by an LLM and sent by Chris Mason in private.
+>
+>Fixes: 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning memfd folios")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Chris Mason <mason@kernel.org>
+>[ david: simplify description and comment ]
+>Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+>Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+>Tested-by: Samiullah Khawaja <skhawaja@google.com>
+>Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>---
+
+LGTM!
+
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
