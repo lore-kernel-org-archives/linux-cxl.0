@@ -1,51 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.211
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793619893;
-	b=RkceNVAxGLp51U+0Crr719NV/7X5gOnM6O3EtBEDz/sLWQra1dJvWLUKsivzNlC+RSzt
-	 mty2ou1k9wfIAQ3JaUSurdUVfEFW6hUG1wn+rZ0sITNgoI5F/ypqtUGcB3AnlWO1RZj3t
-	 nX3TA9S3LinZ98t8ZJ/Cr/bgKr8GeaKrebCxVw6Yy+iurKuvi3goeqzmiXusilHnRyT1A
-	 W+9CZESkK5S7ntL5afyLMNo5Qmife1L92yqJ+pbQNxtFu13eAW8vNMIAw6AdESdh9c8kg
-	 bM7K208lVHz125Bep/sRKGe94SJ+zvyOKbeGKc8BwYgv6lulZVskaJSjv3lfB0z38qw==
+	t=1793621966;
+	b=NFsnSPTpT/C3bURk+PNyLICp/ACxbT7eP/yBKTzKl9vSR9VceCECrXjtjOAmTEEZODcr
+	 9jckSxNP03PCvSbicrjnbYnQQCsKhESte3bgbxBWwKNMEy38NzOJ3uj9oOYMAEQYcIPxb
+	 HfT3t9Ksd2dgDFP6JdPYuQNbL6d5vYFXJerBZ1R98xVxtgqo4WG9VYSB1RSdlCu1C8JPj
+	 OlOGUfYT1CfXtYT/tW8v+rfNylOTpaIkrGV8q7s0JLt70fjpPOi/m065ggJ6E4D83G0iD
+	 Ve1Mf/+qKb0Jmtan2qm6j1XmoRGsMIC9vBAWuvUz+O1r4k0yBY5eLEDgWhzLVGaPVTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793619893;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793621966;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=who8ZKKpx/jTygdDf46XygrUGTNQ5Ti9QGrea7MK2kQ=;
-	b=N23TMDWW9f2G8MjmbYCcvM04Ivu5RULvV8azEzWYyeOR5MCWGt2VwDWCeqtyrfnfhCO2
-	 TGpg2YVrB3/DijDvDqrQF0f0G8pkjNi/KK+1wGqCX1ZMVrrKkHXsbjNyxHjlEha+3boz4
-	 JfSDZugiXVLXhW8MLgMx2+VVLNBeO3KwXHrWRjvMcJM4jyOTEOXnc2KqhFSNTb3rJrTAp
-	 h0BeEJy1pD7o8gJcVDbxTFukWSRTD4WYr7th+rJ3qef5n+m5SsX5x9h9UQk/XsalsOkjA
-	 osgBjT2CWE4l8pKDUDNSiux84fe565p9haFB4WQ4va1ivCfiHYvu08CuiZVa2eEdHog==
+	bh=7aamrL1eeNrbIdMSN+jaXpW6b7pg64KUgg9/NR7r4M8=;
+	b=vkPWPbEbmN+nXVo13bXF2pISs7IX2kweK5vwKJNX/qqjGBgjK8OjJGYEz7jHriHhX6ms
+	 V4ZbcqXXa4m1pJyCEfnFynpGcYWrWRBWTpdWFzumpkjYiAAr2FxSYh2gWWhFVPSC8jscp
+	 t9prkIfES/4UKPh5a1DahODIh8KQ27XI7grNCphDYOjfLtMbm/vFssIvFSb8ykD43V2zg
+	 3/y1PItTv+2b1/er9F6jRfXBdCrC3I2y79fGmMWcs06P6Sc1VX319RAeBErYz1lLIRRWI
+	 GUAEIHSvSY/HOaYcYu3rdhWxp7/7Ne0Fn5gK7kXj+A21tSL8+wtJEoWsuY6OFfp9PEQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Zb1GeGbo;
-	arc=none smtp.remote-ip=91.218.175.211
-Received: from mta0.migadu.com (out-211.mta0.migadu.com [91.218.175.211])
+	arc=none smtp.remote-ip=95.215.58.173
+Received: from mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B612606A33B
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 11:44:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5B612606A33B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52490606A840
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 12:19:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 52490606A840
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Zb1GeGbo
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=fgRhZQDSEmJFZyIgGkSRYKnhjZ4Z1l5m8LV8w/ZXnHw=;
+DKIM-Signature: a=rsa-sha256; bh=r/y28Pr8KNBr61CZIB3z7msn3ARAQOG25oOo8bDyEqs=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793619890; v=1; x=1794224690;
- b=Zb1GeGbojxXveT3cZxDPn//4R8A7h+RMO72HLl435m67FVvM9SHf44yaVVp55n3SAPWWoirq
- Hz8XE56QJlzs5IpeJmF7MvIRESwEWtyXzDq/oA5mLYy34SDIJOr+HdZ4EG3OGTtz9aHGD3cJfWY
- yqj/TBZodxsUUHX+M5Y8plAE=
+ t=1793621962; v=1; x=1794226762;
+ b=Z6X9Wt1f2OM0mk9Cvw5ZsBYTsSsI5PkwaBYJjVaRrHKRsTE9x/ymuRWOcLnrF28+pJweuNV7
+ 6EzFPwGVjc92CRJwXYeA37ONO25xqpbqAElMy37M/9RJ7oZUyP837HGQFBUQd7QRrP3u8yb4+GD
+ 5HLS9jSoxykzaPBgfV1a8xbo=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 6ed161f8dd0a3c59;
-	Mon, 02 Nov 2026 11:44:49 +0000
-X-Mizu-Trace-ID: 6ed161f8dd0a3c59
+Received: by smtp.migadu.com with ESMTPS id c966688054ce713b;
+	Mon, 02 Nov 2026 12:19:21 +0000
+X-Mizu-Trace-ID: c966688054ce713b
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: david@kernel.org
@@ -114,12 +111,12 @@ Cc: akpm@linux-foundation.org,
 	linux-cxl@vger.kernel.org,
 	stable@vger.kernel.org,
 	usama.anjum@arm.com
-Subject: Re: [PATCH v3 30/47] mm/mremap: use pudp_huge_get_and_clear() when moving huge PUDs
-Date: Mon,  2 Nov 2026 19:44:42 +0800
-Message-ID: <20261102114442.65682-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v3 31/47] mm/mremap: recheck PUDs under the page table lock
+Date: Mon,  2 Nov 2026 20:19:14 +0800
+Message-ID: <20261102121914.69229-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-30-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-30-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-31-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-31-d6437171ecc3@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -133,49 +130,33 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, Oct 31, 2026 at 10:39:59AM +0100, David Hildenbrand (Arm) wrote:
->move_huge_pud() reads the old PUD and clears it in separate operations.
->Hardware accessed or dirty updates between those operations can be lost
->when the saved entry is installed at the new address.
-
-Yep. HW can still update the A/D bits while the PUD lock is held :)
-
->The raw pud_clear() also bypasses page_table_check_pud_clear(), while
->set_pud_at() accounts for the destination mapping. This leaves the
->checker counts unbalanced for mappings tracked by page table checking.
+On Sat, Oct 31, 2026 at 10:40:00AM +0100, David Hildenbrand (Arm) wrote:
+>Once get_old_pud() is fixed to accept PUD leaves, unmap_mapping_range() can
+>clear a leaf between the lookup and the move. Holding mmap_lock in write
+>mode does not prevent this.
 >
->To fix it, simply use pudp_huge_get_and_clear().
+>If the zap happens before move_page_tables() tests the entry, an empty
+>PUD can reach move_normal_pud(), where pud_populate() turns it into a
+>present page table entry. If it happens after the test, move_huge_pud()
+>can instead try to move an empty entry, triggering CONFIG_DEBUG_VM
+>warnings on powerpc.
 >
->Fixes: 7d846db7d0e2 ("mm/mremap: convert huge PUD move to separate helper")
+>Recheck the source under the page table lock in both helpers. Treat an
+>empty source in move_normal_pud() as a completed move, and use
+>__pud_trans_huge_lock() in move_huge_pud().
+>
+>In the future we should likely have the code lookup a PUD/PMD lockless
+>once, instead of multiple times, because one of the problematic bits
+>here is the:
+>
+>	pud_trans_huge(*old_pud)
+>
+>Fixes: 0881ace292b6 ("mm/mremap: use pmd/pud_poplulate to update page table entries")
 >Cc: stable@vger.kernel.org
 >Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 >Reviewed-by: Pedro Falcato <pfalcato@suse.de>
->Reviewed-by: Dev Jain <dev.jain@arm.com>
 >Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 >Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 >---
-> mm/mremap.c | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
->
->diff --git a/mm/mremap.c b/mm/mremap.c
->index 0d06d7f37f19a..16e736c72d9cb 100644
->--- a/mm/mremap.c
->+++ b/mm/mremap.c
->@@ -509,8 +509,7 @@ static bool move_huge_pud(struct pagetable_move_control *pmc,
-> 		spin_lock_nested(new_ptl, SINGLE_DEPTH_NESTING);
-> 
-> 	/* Clear the pud */
->-	pud = *old_pud;
->-	pud_clear(old_pud);
->+	pud = pudp_huge_get_and_clear(mm, pmc->old_addr, old_pud);
 
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
-
-> 
-> 	VM_BUG_ON(!pud_none(*new_pud));
-> 
->
->-- 
->2.43.0
->
->
