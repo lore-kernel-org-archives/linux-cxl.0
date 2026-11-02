@@ -1,49 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793600420;
-	b=AJYfjY3wPlXpdnmwDNtToCa8EgiK7M1yePuIPAZqqDehajioR08Alnt7bQr1grtzEXu2
-	 +ImenWtq9n6kDoDHx4HNq/XlhyrLczlGQangOTNf2WvKhUOX0J/SsWnoqkJ7YwpDt76Aj
-	 h4UMP5DMhaFOwbubHN87YnLfpybZpSc5GQTcpU46a9K7yiZIS+mRTkjGQbtityi0XchUa
-	 k951JCFqx+JhQm2xGD64N/t7f2It/mxTJ9Ekmn8FTaQN+SyULeSPPdbCbR6/ke9neFHi9
-	 dv77yGP3g5tOpvlbULaL3XNTVhqwL0DxEbUZ7YJD/1w0vbnknyvwqU/aMVQDrhpJv6g==
+	t=1793602593;
+	b=qoLyFA21HRBe8T0UMC9UsyLrDkkLu9wIl6Ecp5wcjSjZl3UbQd0y76qka3PFG8BWOe1N
+	 pPA7OtG4mPJ9PCxrKFhsqRyNw9ebQE7wEWye+on7jJh+Bs5JhFB3RX5CScmoUcWPNNxaX
+	 S1Nkw+mWFLnBU7p3Jp23zlhiDkkeCI3GUJsjTKnuXPPfvYRWb3UykgH+GkoHv+1iMYDEF
+	 PvhS6XPAL7shJ18bcqd4HyJoRsaCF7qjTlN/NUGJMX7uSlYF/m5APON08RDHEgObFH5tD
+	 HvR/CuLV8pOVXnavCrS1vylaNWT8Gb4rRajNVTSkzVMBbbXI3zuO00SUgt5GciD99lA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793600420;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=k85vwGun/ME58WuhAJ471wGe1ShuWGkpnjyDxU6NW6s=;
-	b=DXp9q+jImK1yH4Rp1Qx3dDqRF0smzJBcMxdeYD+Ubn4yEfu0IGY6jJWRoZONvHz4aDRY
-	 iyJbwGt8OguMOcqISbI7cQnqeFFvjVrgKJLJoJRGiA8MahLr3aOL2FjRr3xnBQSizb+Yo
-	 QubRFBnArAqWf2Y7d6zJiqrpXGsSCzbWrEcb/oabbaFBmC0dXldlX2/06VojjS5MPi9ty
-	 CDDHy6PzrUcoeXD7WQSZjJz84C6Lbtaz8rqxEQNZNZT0clAbpMWly1CsmVg7ApuGejdCq
-	 +gCrmxhyljB8TUrT5l+aW72DMGXxeRwgpZ+GDrZ1lxjUMreLq++BKjcItXDDu7wuzJA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793602593;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=bCDf4ZW3rE+CGNZfOsXMT1wgJaQq6SHV/zB4PxcXzws=;
+	b=RUMdinw6k4zt64zoF8Ahps4g7QHSQsg0X6+bb8IL9cpamc9YSmCD+npsUfPWZPu4jnc7
+	 wEwA2bSr+otF4gEzuMBgLjLVCAT9BbtYjRkgGFGBv20kq8gCpeTUkfgYyrMZveSPSpuxD
+	 +/3Qrksyp0MlSOP+FkNjy5WH6YM6Gcr6QoPvSppDdXs/nbTmcw+7yo+z6gAOaOXaxvMCo
+	 rZYKgdG0CziAtusgSMev50sE+VgC0vD8AjYEVtIFehUXisk2c8rLhgl0dQ1yOq1EKms9X
+	 /lehbhLEAz2uo7+UXjUJyfG19dNG3JJmwv7n0JOaSq8GWO+Oiwh3nA7Vl6yi7x2dYEA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.alibaba.com;
-	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YYcFwmTi;
-	arc=none smtp.remote-ip=115.124.30.111
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iSuGB1Vz;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4EA606A32F;
-	Mon,  2 Nov 2026 06:20:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E4EA606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DAF606A324;
+	Mon,  2 Nov 2026 06:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YYcFwmTi
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793600413; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=k85vwGun/ME58WuhAJ471wGe1ShuWGkpnjyDxU6NW6s=;
-	b=YYcFwmTif2MUle3G2fE4vTBfFxymZ/6Wm/kSqmMfYd4zpHXpazL0oP+iFcGBEjDmOtH0s8ExDjnOTWNQtw1bgB/HSZfRWpsf/vmvfmoWxZgTq8Txx2CVtdKBSj5GXuAcRgUyVtEgjZQnyedY+A4vUqnWsCa8mrCCfNehGjuYvAA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=67;SR=0;TI=SMTPD_---0XDunP4-_1793600408;
-Received: from 30.74.144.167(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDunP4-_1793600408 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 02 Nov 2026 14:20:09 +0800
-Message-ID: <2fd4f929-d7e1-4deb-b3c7-4bdc611e789b@linux.alibaba.com>
-Date: Mon, 2 Nov 2026 14:20:07 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iSuGB1Vz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C08C1F000C1;
+	Mon,  2 Nov 2026 06:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793602592;
+	bh=bCDf4ZW3rE+CGNZfOsXMT1wgJaQq6SHV/zB4PxcXzws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=iSuGB1Vz47JLVuaefZLVIZbkKz4UmxB7ofSbm1uICkj4KSw6wznxNSxosbBdF/Myj
+	 1172MZCKJE+mCnBhjE0+n392O0Xy17f1ZRp1kugIyZiNlEFqdCZlnm41tX9BtY8YMw
+	 g4kKoG9kky/Cjzl9ygn5On1pV7zLTQFlUOq22z8XU++r5vbcPVlEt2Oxi9SmnBIJWF
+	 dKMjleveJCPhmc5m5J/2X63qnk+rY9WZk9P4wRRG+hPV9jXlncLZL74wcu/wbmPGNg
+	 sg4Yfxwd4ivD2/RW9Qh7dpXCxMg8aLA0gM3MipHCDq+udFLRKarizzHSIf+43c6z3L
+	 vthFWNjBRaSHA==
+Message-ID: <1b6a6d13-8a01-414b-9bbe-cd194af1f539@kernel.org>
+Date: Mon, 2 Nov 2026 07:56:27 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -54,99 +52,202 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/47] mm/huge_memory: fix list corruption when
- deferred_split_scan() races with deferred_split_folio()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
- Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
- stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- Mani Tofigh <mt4022@columbia.edu>, Muhammad Usama Anjum <usama.anjum@arm.com>
-References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
- <20261031-fixes_core-v3-10-d6437171ecc3@kernel.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20261031-fixes_core-v3-10-d6437171ecc3@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] mm/memory_hotplug: don't offline a hwpoisoned page still
+ in the page cache
+To: mt4022@columbia.edu, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ tz2294@columbia.edu, stable@vger.kernel.org
+References: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
-> Since the deferred split queue became a list_lru, the isolate callback
-> moves the folios it took a reference on to an on-stack list, linked
-> through folio->_deferred_list, and deferred_split_scan() takes them off
-> that list with list_del_init() without holding the list_lru lock.
+On 11/1/26 20:40, Mani Tofigh via B4 Relay wrote:
+> From: Mani Tofigh <mt4022@columbia.edu>
 > 
-> deferred_split_folio() does not know about the on-stack list. It only
-> holds the list_lru lock when it looks at the same list_head, and it can
-> run for such a folio: a THP is queued when it is mapped, as a candidate
-> for the underused check, and is queued "again" when a part of it gets
-> unmapped:
+> Memory offline skips hwpoisoned pages, assuming nobody uses them
+> anymore.  memory_failure() however sets PG_hwpoison before it takes the
+> page, and taking it waits on pcp_batch_high_lock, which offline_pages()
+> holds for the whole offline.  A memory error during the offline thus
+> marks the page and then waits while the offline skips it:
 > 
->    CPU0 deferred_split_scan()          CPU1 deferred_split_folio()
->    list_del_init(&folio->_deferred_list)
->      next->prev = prev
->      prev->next = next
->      entry->next = entry
->                                        list_lru_lock_irqsave()
->                                        folio_set_partially_mapped()
->                                        __list_lru_add()
->                                          list_empty(item)  -> true
->                                          list_add_tail(item, &l->list)
->                                            item->next = &l->list
->                                            item->prev = tail
->      entry->prev = entry
+>   Task A (offline_pages)               Task B (memory_failure)
+>   zone_pcp_disable()
+>                                        TestSetPageHWPoison(P)
+>                                        get_hwpoison_page()
+>                                          /* waits for Task A */
+>   do_migrate_range()
+>     /* P is poisoned (not migrated) */
+>   test_pages_isolated()
+>     /* P is poisoned (accepted) */
+>   zone_pcp_enable()
+>                                        /* P is off the LRU (Ignored) */
 > 
-> The folio now sits on the list_lru with ->prev pointing to itself. The
-> next removal leaves the neighbours pointing to it, and they still do so
-> after the folio has been freed. With CONFIG_DEBUG_LIST:
+> The block goes offline while the file still points to P, and the next
+> walk of the file's pages (here drop_caches on ext4) crashes on a struct
+> page of offlined memory:
 > 
->    list_del corruption. prev->next should be ffd4000000270090, but was
->    ffd4000000278090. (prev=ffd4000000270090)
+>   [   11.710348] Memory failure: 0x24224: unhandlable page.
+>   [   11.710372] Memory failure: 0x24224: recovery action for get hwpoison page: Ignored
+>   [   11.765371] page:000000008c304eee is uninitialized and poisoned
+>   [   11.765389] page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
+>   [   11.765440] kernel BUG at include/linux/mm.h:1990!
+>   [   11.765458] Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+>   [   11.772284] CPU: 3 UID: 0 PID: 85 Comm: mfoffline Tainted: G        W            7.3.0-17087-gd865f2677c44 #1 PREEMPT
+>   [   11.777970] RIP: 0010:find_lock_entries+0x8ee/0xad0
+>   [   11.798761] Call Trace:
+>   [   11.799297]  <TASK>
+>   [   11.803284]  mapping_try_invalidate+0xfd/0x2c0
+>   [   11.810571]  drop_pagecache_sb+0x111/0x330
+>   [   11.811572]  __iterate_supers+0x2e2/0x370
+>   [   11.815863]  drop_caches_sysctl_handler+0x74/0xb0
+>   [   11.816994]  proc_sys_call_handler+0x2ec/0x440
+>   [   11.821360]  vfs_write+0x545/0x1250
+>   [   11.825220]  ksys_write+0xfa/0x200
+>   [   11.830202]  do_syscall_64+0xfb/0x590
+>   [   11.832084]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>   [   11.848423]  </TASK>
 > 
-> Fix it by grabbing the lock around list_del_init() so
-> deferred_split_folio() cannot race with it.
+> Once the memory is also removed it's a use-after-free of the memory map.
+> tmpfs and the swap cache can end up the same way without the race.
+> Since commit a76054266661 ("mm: shmem: don't truncate page if memory
+> failure happens"), memory_failure() leaves a poisoned tmpfs folio in the
+> page cache on purpose, and it does the same for a dirty folio in the
+> swap cache.
 > 
-> Fixes: fafaeceb89a5 ("mm: switch deferred split shrinker to list_lru")
+> Treat a hwpoisoned page whose folio is still in a page cache or swap
+> cache as busy in scan_movable_pages() and
+> __test_page_isolated_in_pageblock() so that the offline fails and a
+> waiting memory_failure() can go on.  A later offline succeeds once the
+> page is out of the cache.  With the fix, the offline fails with -EBUSY
+> and the file doesn't point to offlined memory anymore.
+> 
+> This bug was identified and confirmed with the help of a deterministic
+> hypervisor currently under development.  The C reproducer below however
+> hits it within about 10s.
+> 
+> Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
 > Cc: stable@vger.kernel.org
-> Reported-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
-> Reviewed-by: Mani Tofigh <mt4022@columbia.edu>
-> Tested-by: Mani Tofigh <mt4022@columbia.edu>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Mani Tofigh <mt4022@columbia.edu>
 > ---
+> Taking get_online_mems() in memory_failure(), as in Gregory's series
+> [1], would close only the race and not the tmpfs or swap cache case.
+> 
+> [1] https://lore.kernel.org/all/20261027042204.3741307-4-gourry@gourry.net/
+> 
+> Reproducer: https://github.com/manitofigh/files/blob/main/linux-repros/mfoffline.c
+> ---
+>  mm/internal.h       | 9 +++++++++
+>  mm/memory_hotplug.c | 2 ++
+>  mm/page_isolation.c | 2 +-
+>  3 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index aeebb3e49ed1..ba7b1650a5ca 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -1195,6 +1195,15 @@ static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, b
+>  }
+>  #endif
+>  
+> +/*
+> + * A hwpoisoned page can be skipped by memory offline only once no page
+> + * cache or swap cache can find it anymore.
+> + */
+> +static inline bool hwpoison_page_offlineable(const struct page *page)
+> +{
+> +	return !folio_mapping(page_folio(page));
+> +}
+> +
+>  extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+>          unsigned long, unsigned long,
+>          unsigned long, unsigned long);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c9cc42e54f05..3d36f7f2e04b 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1820,6 +1820,8 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+>  		struct folio *folio;
+>  
+>  		page = pfn_to_page(pfn);
+> +		if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
+> +			return -EBUSY;
+>  		if (PageLRU(page) || page_has_movable_ops(page))
+>  			goto found;
+>  
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 5aaad037384e..beb09ef345ee 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -593,7 +593,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+>  			 */
+>  			pfn += 1 << buddy_order(page);
+>  		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
+> -			 PageHWPoison(page))
+> +			 PageHWPoison(page) && hwpoison_page_offlineable(page))
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+I was recently wondering about that one as well.
+
+What if we still have the page pinned somehow? (vmscplice etc).
+
+Wouldn't it be better to make sure that poisoning code holds exactly one
+reference (whoever set hwpoison) and check here that the refcount is 1 ?
+
+Pagecache references would turn it > 1.
+
+A note that I consider this here extremely low priority.
+
+-- 
+Cheers,
+
+David
