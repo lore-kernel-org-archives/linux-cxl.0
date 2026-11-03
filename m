@@ -1,102 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.3
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793722381;
-	b=bedicvLqDH6LacM1nylhAEKbSxy7/16ufpR2k3r5KkeXygmRYTsr5n4ZaYdbhX2B2Fff
-	 axKhyGCoJ5G23n9yfiWmAb/xUaxVjlDroBva0gQyuZ6mqBAPfMRYdczT7Y24f+Kfb3U9F
-	 4BI3mS4zNRzkRJ6HXEHzpkGaMV0z7TgeJ9sknHE872vUz64KV0ogKJgljnIWwDtPnobha
-	 XJip9GBVyrkeU1moH9efAmiaw+1ENBlUaMssozX0/ST5ptnfirmIeRY6Q+5gkXHK9JqVz
-	 UwYi/0LOLUqEUucbNB+CiPLlCJKUT8L1j+UsH5cKbCbAqHjcBWMF3g+Ym3y9UGqxqtA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793722381;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:X-Mailer:Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-MS-Reactions:X-ClientProxiedBy:
-	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=brER5E6AiOc41/iMcDOMIPpJ+BAylAFG8gkZPPLfEHE=;
-	b=JMdIitMXyDw6R1zntNFldYcFuwzEMZXj8p8PQs/nleS2Rpkl7bS4OBS5dFJ7dLu+gIUV
-	 k0MdslygK5ex+JN/DQdCd8YRT0NCU1QopN0cGaNYiCVJu7YbpHxhxQVeFXc4x9C6oSwuG
-	 iLnt2FEvcVnWJXsrD4EfY0nVBF+M/4xMp4KKTASJTRMqBgCEBcV9FaAXtpA12fBucyabh
-	 ofxHYoJ4iOgVKfanU1ElV+qwc6SV0Pn7tXJaD53rcSDidXr0SmDSibqyls76TyNZR8dpX
-	 8kJONJ/gWDjNgYtQh+c/hJKP+mAdGkmnrVCsAN722/xiPUvygj1aFMMu+c7RuEANNMA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=ljfLG2xK;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.3
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011003.outbound.protection.outlook.com [52.101.52.3])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793723396;
+	b=s/60NGbPsLmwxPknKrjwl9eh12L18iAelScDKZguEDY2MRGKFFx//gZ5x/peVDOAQP9p
+	 E4bzvpqTI8LPtMNauc+f0AGsoth2aDiDW3Pull8RtuwtAlrVx9RKBWKnVBNgXvvIclaCF
+	 9jplSlCSKcsrJi29G7gZ4sHzerac0KfKk91/OA82M2Kppvwcxoni/FVO8YMkQH5GwxPst
+	 12CZdkirwwLUBnrehAGT31gKm1MkJ/T3TMLW81mMCjxLFgTSDcSv4cqUzylh1aEPnSyDz
+	 VCwTeMH74VMrlN8jnJE9WTNIBg5SDVArypyOkpz9dVOxSdrdBmHDv0QkT6AKj2UfOJw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793723396;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=XP0ozVk9+CRaYdZkDjrlK4V/5HSBcJ6GFrBwej+PFtA=;
+	b=Y/+YuN9OysjPwbeUOuNQ+xJVlyLd2lD5b0HMhfzYKwAznSNsqkphyHRoFIZDSG++28Ol
+	 Ji95ouSAXLRHsXKa5xr3QraLYrKckxPC/C4r2ThT7YOBCDKjftFjUQSGFL+iUAQHeWL9V
+	 s7KEhiqNOM5fy0CRUUhowP1aXFwtTqH9rhSDdU4qAqOqOiphY+N7y48NkdMemJ0koEq6p
+	 8fn7lSq1aksKrQeiYrb8EGkz97Bq1kG+VrY48ipJFmS9NL3YLnS6YcvVUQa2/8ixZi8U1
+	 zu//U7tpKr0KkTfzfQyTsKmzMwvmstv7TFwBQn37jC5a2FsVogeMXuTCB8T4GbwBATw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ajLm0KeB;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382A3606A32F;
-	Tue,  3 Nov 2026 16:13:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 382A3606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFD2606A324;
+	Tue,  3 Nov 2026 16:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=ljfLG2xK
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kR8YtGFM1AlvOdL0hlOiwtgsh8Js+9cqsO0JTEr0J0y/CMtzkTKyq/iwajYVeVUSdti//ftCma6bitoHXFsgu5+uyTryLJOpQ4tvCc36D88O61AOHvuiM026bCDqyO65/RP95YAamNN4jW4kS23vpY5mcF3Z9kdLOxFWtuDObTA0MZG+FI/RlVlRU6xnTguRxyCVrLtSg8gzYJRxrC7oSJCsYThyNwawvG+Mi5jQQqBW0MgwQBJelTJDgwqyGQmdMssmgRNAoSj9rCZVt2L6r+S9oR9c2lSB8EOAwMPqF8NH5V9Cg87Tsgf+52s85mONQwRVexHpXefeLPPK8h3R+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=brER5E6AiOc41/iMcDOMIPpJ+BAylAFG8gkZPPLfEHE=;
- b=Gt8v4BhYboTr05cLAff62WErua4E6ljFxV7ABrjt3/Ldbmr8A0FCcTDKCg40eC21M/EJ7B3ib+qftoEEvKT/a32TMEI9ehP40wDL105b5ElNIFiMA6nGJV7Nj1d153+royro+Y6jS39KuO3bsleqQ1k5lnmMd2kYTuTCp7BGqw+BlaLbeeseK2Bt+0KKTRnqJ7WDMglCvvwJ2sbsqfM4vLKB+3oAcQfAsUOrWi4jFqfscnvrhepKdl9oyiscS+gZxpZt99eVbVD/fQCj1sdzxv+vKTDtivrldrslfIrYlU7O06ipQNkJXdX5J0gAQu7+QFFqE9oG79yysQZNhFr8+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=brER5E6AiOc41/iMcDOMIPpJ+BAylAFG8gkZPPLfEHE=;
- b=ljfLG2xKmm8B/0lW0HB/xvYXLGP2FpfQVX5jHXVgw3iffGKonzuulz0GkPrTZPbEzTjCbl3FxQh1h05mdpAkK07FrShAmqtTjSjtWzdHFNrosdWu7soOYZ9vHq69A26HHEwbQ6uBFKOaXNqKc/imz1cgFyjPb0Tb34ZuPntvT7gEdjN91+bfeAk962zc2QrteSadjM49jk68qfknFY5Ih39Z6SZb/2MCbIsV99nLLZwwlf/ETMScaEAMhIBYabzzBeV8ZIkFUNOTTn8tKP3qrtkl5vEfRhb7D8GdI3skvP+PHhFcsvoxWDM7Enm/+kdD4tPg9VL5rKJR+v+dX5Y9fQ==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DS0PR12MB8478.namprd12.prod.outlook.com (2603:10b6:8:15a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
- 16:12:55 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 16:12:55 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- kernel-team@meta.com, akpm@linux-foundation.org, surenb@google.com,
- mhocko@suse.com, brendan.jackman@linux.dev, hannes@cmpxchg.org,
- linmiaohe@huawei.com, nao.horiguchi@gmail.com, david@kernel.org,
- ljs@kernel.org, liam@infradead.org, rppt@kernel.org, osalvador@suse.de,
- muchun.song@linux.dev, iamjoonsoo.kim@lge.com, anshuman.khandual@arm.com,
- stable@vger.kernel.org
-Subject: Re: [PATCH 4/6] mm/page_alloc: don't undo another isolation in
- alloc_contig_range
-Date: Tue, 03 Nov 2026 11:12:52 -0500
-X-Mailer: MailMate (3.0r7038)
-Message-ID: <CEC81354-7239-4F7F-B46F-935BFEB8930D@nvidia.com>
-In-Reply-To: <6091a4d5-ded8-423e-a806-2c4b11f21e09@kernel.org>
-References: <20261027042204.3741307-1-gourry@gourry.net>
- <20261027042204.3741307-5-gourry@gourry.net>
- <6091a4d5-ded8-423e-a806-2c4b11f21e09@kernel.org>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-MS-Reactions: disallow
-X-ClientProxiedBy: BN9PR03CA0069.namprd03.prod.outlook.com
- (2603:10b6:408:fc::14) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ajLm0KeB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772D11F00919;
+	Tue,  3 Nov 2026 16:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793723395;
+	bh=XP0ozVk9+CRaYdZkDjrlK4V/5HSBcJ6GFrBwej+PFtA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ajLm0KeBDWIea2Y0ancKBrYORerT1THMaXy4jFvdxErxcwgHfh+0oiYOveUkK9Nic
+	 XDAFGUviaQL/b0kNaroGvMJMqoLUZcayGQsdxlhhKJxTYSIUrnZsBKzGU4wv4rNf7r
+	 3CBPCl+Ey1fm96csxww1HLjXlVEsssmjSz/rMlAZZgy7+5Nhk2XccA3BneAUCBtfaf
+	 2QgZDOqG6J1xT7AHzWRKG9bzb6tKo3BhHqX7f2/GxXJ4qnCbEovQlZj91NtWbCJUGd
+	 zpk6sZlD0x7hC77KXkvSqgUw9O6xVoAVxA8jXsTPtgtNxonUYjtEccrALxOXWNnR36
+	 dBwXxiyDg6Utw==
+Message-ID: <fd6094d5-50d3-4e73-8c09-91b0769476ab@kernel.org>
+Date: Tue, 3 Nov 2026 17:29:44 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -106,116 +51,91 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DS0PR12MB8478:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4656f0a4-0907-4233-4cb5-08df39c55158
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|7416014|1800799024|366016|4143699003|11063799006|56012099006|261009223027099003|261022105027099003|261102123227099003|261021121427099003|261028144727099003|261026140227099003|261026121527099003|10067099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	2Q/Q6OTyUnRzQE+Wc+vK90DL4wlQPZg8t5y48ZTS+F4od05U8+HlWNa/j12dG03n6hbdCxB4yj4ktBUCgEFtAgz6I6IdNZEPtT27mdc4CYkqWK0KNe6vnOYetDT1gUBwF5ErNdwrvR7oQTlfDPEA5dAjSoTZzznDJCFgY4t68rvIcaehtb3UcoKHrfmMKKw8AIfux/epl+yR2VQl1wLcUyoZyblS9PiNuMCNCjLsK/a0278hrhEjqKZ+RftpwXyKNhxvLgfz2BqpHLGEzdIcO61oKmEAAdf0ZRjnkrLfIQXYwfB9M+hNzYqg5TwH4vTrgSoA6XPRKIbbocAAn2Gk0rPsn+SeSJPsUKQsboBMexPuYV4+Q7pyJLv/AaXH/8Vkn5kdX7l6T1USNLv6zffNLhvSV9m2p9oPGeop3+R68cORHaNJOK0b8ZjFy4dHiFV1tl0Ct44s1NsdbNT2JUIwapxqhVyc7SyMwfaztF2vtSO4bd5PgHlvcqZkHdd/Ig96p8mT2VeekyWmAOlDyUI0WRj2tOfXY3c9WpYoQp/pXWlfC3PcEDWZ7cpd7y0vT/9XkBXpjBGEXJoS5gDDlNnh6+GujF4/XO9oKyVWyjGxXWElxjpPt7qhE7DTSOjuqG6HzokuK5/x1m5CGM15bUQ3FkTqbqVtx3iQ4Tv34kZisI4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(1800799024)(366016)(4143699003)(11063799006)(56012099006)(261009223027099003)(261022105027099003)(261102123227099003)(261021121427099003)(261028144727099003)(261026140227099003)(261026121527099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bRDdnvkIm3P9iRNO2GcLAcWuFayHfgmYtI9V9ThTUTaJay8A4NNDKp69yeLM?=
- =?us-ascii?Q?VMrbNFxENH7Y4LYKmSXyOZBLGIFHqtpOVwuUu9MscSzhESKkVSqHstgekl89?=
- =?us-ascii?Q?9h80Uzk1jmx0Q0upbTqmGN+a+LWN8xesflIeGifPDSIS5a228WceiEiZikC1?=
- =?us-ascii?Q?hgQuR2anUHhgDr1EkR8xDDzLLUrj8OgbMVO8OaD7Mh1Z8Jvbq5XZkTgOLcmp?=
- =?us-ascii?Q?wv53Uiw/aspjouuzqf/4x0Z7aMIc/vXKk+NQOcgP5m6tbhMbL446gXVSqLyi?=
- =?us-ascii?Q?GAX0p00iAoO1k2j42wHhoUuPVUJHN4IIMVa8u2vLkwnMqAM6W5kYFvDcwhtK?=
- =?us-ascii?Q?kwiPP1HjUBNrEMAJdlTc4ByToqKtjSa2DsdjTueC5976bkKAGHOspRCMKmra?=
- =?us-ascii?Q?Y6zRiEZfpjzni/GEoVMXk2WPGhYBhNPc8FDeGi8xmtjf6SN5vak6wGVXIRhk?=
- =?us-ascii?Q?+EzqkKWvFJHwnXWBFg6lkrtwxU+vnFha8o7jueAx4sIkDbyezhMYUJZmk6eS?=
- =?us-ascii?Q?p44UEMU2ADJuIwFOT/BcRu7yuKx8uJglU6cLzGO7LDCEBi/pHE2wf2eU6GXC?=
- =?us-ascii?Q?iDAIKQCgpqIMghwUfYFXB2nr9yKjTtm0qStg7nFCAIWgktHQhDhfOzSdoPVl?=
- =?us-ascii?Q?SOYxCD5TxkYrbL8oJ5CpjLlsiOL2m1yJL5Yv3RnIbYZMkCSl18eXMQHSzeHB?=
- =?us-ascii?Q?5jC5NIeCbX6wYJNZFwqndlW0AAbsTopO6KvdMrLie0HqOG1STo2A9edsriNn?=
- =?us-ascii?Q?o1dIQGnQHebunYy2v2r7CBAXAtRqbqXPdA9eY4v7iEAsl79xeJVlyCpWmGdI?=
- =?us-ascii?Q?OQQOmWcJXl0FnrsjWPkuvLrhcWD8Rht1PtGd4hm0BwWSl6zVam37mmvlgiGh?=
- =?us-ascii?Q?7kgMvCHN6hxiJWFYu6gtpmHSTeQqlkeeEGkHCYJLu6ig/sVoAwlnn0Qwgwfq?=
- =?us-ascii?Q?TR2fyY59BTfftceEzGy5JcXcc2UtJh0sUJxrdaxSW4q+tmebEPNjJaORj4M5?=
- =?us-ascii?Q?5WFz7kptU2KqI/7uoKnFSoPEoYowsMV3JAwV9Q0vkJo9HgGp/6avZQW1o4EK?=
- =?us-ascii?Q?f+8Mq+QK9SGplEn5W1/dcqWBGe1VShRN8PqNSBr/mXJ0QPp+fWxJlSecQLk4?=
- =?us-ascii?Q?31l0a2FaGOm1XijZRw0LgCONboNE2hJPVC433vnE1R69NQhN/J5uY6Hh4qIb?=
- =?us-ascii?Q?nbt8JgSx6Huxf9T9BW4UeFC/owfqUf/ZfanwkBO2OaTtR+Z2GLs9JuU5ReGG?=
- =?us-ascii?Q?cYjz6KWGkEdJPSupNqY0zwDM5B/LPNW+ZpvBxRCPlREkIyHoOsYevfErSpHH?=
- =?us-ascii?Q?IP/pB5zkgXhBj9aupgcw34Flhjbt2C2kVZ0HaQGgFPSyp7V+p9CWnfLk86hA?=
- =?us-ascii?Q?bdoj1DtYHxqfBEsoWXYO0ngTdcVPSgqRjLLXzy+U/bv1B8hdvlJF7UC4Npy3?=
- =?us-ascii?Q?3nWhCnT5IYDx9pE/AhZxAFtoMGDHuSv/O0gysSDkwL51BRUwszXriKaSdvY0?=
- =?us-ascii?Q?hiWaCofXWF5wK+pdQvoKiZVVnukq2ocbQ74y3Yxfd2EZj2oLmbpuSZWZYco0?=
- =?us-ascii?Q?FHxo2sr9KyXx4j/zGhjBCCfnlNpOogevPr9KQKmIBh5mCmcBqD68Ton1b8RF?=
- =?us-ascii?Q?KPb9kTUbhbF0SxQaG75j0yK2w8CaXBK8gz/P+D7i0wQzQ2Sf0ZiIJVnTRXyd?=
- =?us-ascii?Q?/1s7935IkiorZnu2dJ5m7up8rYoU2gVwzct36dSZL2R10WWr?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4656f0a4-0907-4233-4cb5-08df39c55158
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 16:12:54.8050
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AuZ8oyWeWDYNkq05fnUFwrpDEuvDc1YRaPCNFNxfN9fJsz6OSAmzxAxCPCcaRfO9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8478
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/6] virtio-mem: support memmap_on_memory
+To: Nikolaos Karaolidis <nick@karaolidis.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: Oscar Salvador <osalvador@suse.de>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Jason Wang <jasowangio@gmail.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Michal Hocko <mhocko@suse.com>, Hui Zhu <teawater@gmail.com>,
+ Georgi Djakov <georgi.djakov@oss.qualcomm.com>,
+ virtualization@lists.linux.dev, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+References: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 3 Nov 2026, at 10:12, Vlastimil Babka (SUSE) wrote:
+On 11/3/26 10:50, Nikolaos Karaolidis wrote:
+> virtio-mem adds memory without MHP_MEMMAP_ON_MEMORY. With the memory
+> onlined to ZONE_MOVABLE, a VM that grows to many times its boot size
+> can run short of unmovable memory. I ran into this while working on
+> a guest-initiated memory negotiation project.
 
-> On 10/27/26 05:22, Gregory Price (Meta) wrote:
->> An alloc_contig_range() that overlaps a block going offline can leave
->> the offline spinning until it gets a signal, holding the device hotplu=
-g
->> lock.  When isolation fails, alloc_contig_frozen_range() undoes it ove=
-r
->> the whole range, clearing the offline's MIGRATE_ISOLATE too:
->>
->>   CPU 1 (offline_pages)               CPU 2 (alloc_contig_range)
->>   start_isolate_page_range()
->>     blocks are MIGRATE_ISOLATE
->>                                       start_isolate_page_range()
->>                                         -EBUSY on CPU 1's blocks
->>                                       undo_isolate_page_range()
->>                                         blocks are MIGRATE_MOVABLE
->>   test_pages_isolated()
->>     never succeeds again
->>
->> start_isolate_page_range() fails only on a block someone else isolated=
-,
->> after undoing its own, so this undo only ever clears another caller's.=
+Care to pitch the use case to me?
 
->> Return directly, as before alloc_contig_range() went pageblock granula=
-r.
->>
->> With offline_pages() parked after isolating a DIMM block and a 1G
->> hugetlb allocation made over it, the offline on base still loops 30s
->> later in 4 of 4 runs:
->>
->>   offline_pages+0x5b2/0x1570
->>   memory_subsys_offline+0x17e/0x470
->>   device_offline+0x250/0x340
->>   state_store+0x88/0x110
->>
->> With this patch the allocation still fails, and the offline completes =
-in
->> 3 of 3 runs.
->>
->> Fixes: b2c9e2fbba32 ("mm: make alloc_contig_range work at pageblock gr=
-anularity")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
->
-> I've applied this single patch to page_alloc/for-next-fixes and will dr=
-op
-> the version from Josef [1]. Also transferred Zi's R-b since it's the sa=
-me
-> code change (plus comment).
->
-> [1]
-> https://lore.kernel.org/all/20261027-pgalloc-ai-hotfixes-v1-1-9c7d1aca8=
-01e@kernel.org/
+I'm all for making virtio-mem better suitable for some workloads, but my time is
+limited.
 
-Thanks.
+Is this something that your use case would actually benefit from, or was that
+project already discarded?
 
-Best Regards,
-Yan, Zi
+Why so much MOVABLE memory, and how do other kernel allocations (page tables
+etc) cope with that?
+
+-- 
+Cheers,
+
+David
