@@ -1,129 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.17
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793661558;
-	b=u2Hv01CgFnCO4f/n7kN6ZAnE+ujnOB9tMhf4ozk1pUmT4deBvkXneQDIaWMWEXwLmZJT
-	 ttUpNn3l5wXhL5MBy/084X7amHCV4nRpYlucxYFcN4vYWCbHkG0jIptjMnXxiCqBA6Vbl
-	 bpq1HslCdX4kmy8LtSmrdE3KT9sRoBIauIRUva+o5O3ETphvv+SZaDEaiTy/x5pz+UEmB
-	 rSf9gmNLB2UKJzakgKUKDZvedOVD1VB5CDH3PwRQEE7C3pezPKQkmi3J/M3V6OcnNtE16
-	 4CfeElDtAJgBXzRWv5sbop2ZGzyfGWG2d5NEoOc5r7ZKndV8Oe8MdzwZrsJFovNo83g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793661558;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:Content-Transfer-Encoding:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=smkV+0Vl5D6ra8aSkNnh3PmZWk2TvCOwgCTYezGFZVE=;
-	b=jBrGiQiX+vtcddNJAXBFOVgVFBE1r/PX4oU+KMaaj9AMmW083D8STxayP532oczhE62l
-	 MIAiWWbS7W5QCLJ46bXSs1rYXpjEDTXc26k7vApO6zQ2OOVbQFtukpopeJoR7NiJaxwPN
-	 O/l2Lw0yizbRMlZn0HwJN60qMac8ZRdAVOndLQnxUIRxOj0pii6nL6AavWKd2pAuZwuGh
-	 2ZUcN+MrTnF2qrrcru3hAI0I2bLFzlXGL+Kr/g8762Kb3KNtFxIKWKLp9ZNf7EFLBA7Hy
-	 OYE1OXZPRikLwJglslxpF/EDLvh24tdpLsihek9rFUjDpjGHAYuaWTKZgUcm1Ekh/Ow==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kE0wqQNr;
-	arc=fail smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.231
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793673208;
+	b=HPIfj4RuJEMSA7Nw+oQ1CMPNsIOFCJuMFZ68T1mLbCkWUlzH3fZwUj+Hj77gqWGIa+5t
+	 WJqiGk8/183Zy1fHDJtAcpynzLQtFdZ4UdacL9z7yvdGO3Xq+cdrlPB2ReQIpkawHOkAJ
+	 CUWFqCGrhDYXhav6LWSrlrST/REe7uaRoC9gcf9fe6/fqgDerXq1PSfacQaPGNT/23Cn+
+	 Vbf4C0NbrU3gprjYq6KahyzRNT+9G1RPsWeBH3Tzd5Zl+EltxmnWTgkgFfAEn6huIfzcE
+	 F2IURN/I8EdRVVOrM9ckJiGAS7fdZ+C3DISpfSZ5sm+uI1g2Qo6DMw2XBeQ3IKj9nfw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793673208;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=plPOmmg8Wbucg4dOntyZK89XdF19GIkTemSi8VnEEAM=;
+	b=O6S0KX57SThlgC0Vsu9Qod+GTTCjsoZdULKw6vqKfnWJ6uEpVLc7+VocxT0E1/7wmuzN
+	 0VxsyIXN9Vp2pGrXKbonjaVk9Z4VDa0p7pL9INO9pa0kkf0Gum6nU2ZSh5zyBLjvg0geK
+	 2ArrQwx+vlLWx+Qw3nbp+mUsozITJ7EEKbiDEg3iiKAOSXft0DUWsxM7YWwHs+4xgxJRn
+	 ln3qTPqqMXOiuHMZKPn2VmdyM5C8fH3ZwhsFodksBB0KFEEpIDtLlQl6qR8ziTV4qedf+
+	 TSk/5eWWGlfuVE6+r+7B+YC1sidMK2XX/XvwArj0sXMt+MW/Ds7wXCiHbRWsSR7wSVw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BgTIjVx8;
+	arc=none smtp.remote-ip=91.218.175.231
+Received: from mta0.migadu.com (out-231.mta0.migadu.com [91.218.175.231])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0FC606A324
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2026 23:19:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A0FC606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EBB606A32D
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 02:33:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59EBB606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kE0wqQNr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793661558; x=1825197558;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=fyOYnTjqln4Hf0MclQsDTnHibhI981LU63dQOf+8+5I=;
-  b=kE0wqQNrppvELOeKx3qkjtaokhqZeNYJu5mDJcMItBaZ0m/yVXK/iLXl
-   sTMJ9jC9uOx6JYClGx6uD8qCILxALVV/7eTo6fO7mk/S8IbOYj7TfL4mX
-   u7H7bIILp4Stg0Xl/P94DrfEeHl5ZNbiFZtqZcFA12AKMwYqXC60UNdZn
-   LYTXXrt8NvR/zcjRnZf0PhBpdlZvY8uxsNSvXwe0BVA4U4L/Qz/JCJnPo
-   tLM1eKom+FsZ7BK6znYQX8KSSogWtcIrqvX+E/vg30hR8kFB4pmvfLA+g
-   z6OtUcsH1J6YD1cTRBnu4E9XkJe1/hVuNOx5eZXW38uAtwgUbrV6c/R9e
-   Q==;
-X-CSE-ConnectionGUID: Zjlcx2ZVSxe343Wj/9XfMw==
-X-CSE-MsgGUID: d4jCDhQJQiaBQ2qfyEalhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2384362"
-X-IronPort-AV: E=Sophos;i="6.27,192,1787036400"; 
-   d="scan'208";a="2384362"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 15:19:17 -0800
-X-CSE-ConnectionGUID: xY1IZdC0R3u/oaIPf1UxhQ==
-X-CSE-MsgGUID: aGYSYXp3SKymEbD2uF7Z3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,192,1787036400"; 
-   d="scan'208";a="6108772"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 15:19:16 -0800
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Mon, 2 Nov 2026 15:19:13 -0800
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56 via Frontend Transport; Mon, 2 Nov 2026 15:19:13 -0800
-Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.7) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Mon, 2 Nov 2026 15:19:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SCIBlyURRi4m/dMS4BvUU62mDta1DslDPi6ja/yQYo6GfQ8DIUd2+6RAoigqNRkOMua2Xsop7ThtMPWnMzAVwu2Agl8qdowGtuDT1YfRu2iGuqxbVE3TNuQP+rfdwXRJgLuk+0Xezn5nU1faD1/TB7qrbs6qFfrAJ9sTI355VW2VeHjER94p4+tGJ/ox5RF5zgoQkgXOBWIq/eCYxSgDY9PyRFfz9QWwPVqCUrJigeEUpdmGzIIlj4nCDH2KSl/vZ2cwtp3VGUQ9sfYA2+X4UNDqwbwdV842dgB8ZazH97HPMvhgWWO4dYNAMSkNPaSOYR8xzE82gViP3ZItYZF1lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mR+XroSUQ1iszhLdXY70HU05C0v4uScLaGSDMzB2mXA=;
- b=lbYdlEASylaBttoID/WzbZYsTFbP/MNV3nCgmoqd1x74GEl767zSeMOR2FK6tmHuKm5Lmoj/J780tVDNpVCKhEIfAMxuJPJLLWlD8lNJFWAsPgbeVwgoDs5mo7HwMlDCoKcjn6hB/KN/mtu2Ao2MDaThGnpWNKO+WuKUaTGozU/4kCS/C++a7RBCM2/kYgaxuXUXd1ahs8xDWDIP+ALIehHkKGzwXX90WjVRTnfGkE6UHMam5xzSv6iSOR6CEyLKH6inwvzRnWP6qGo1w+1Eo7uCy4PJDk1zR9EsNokCWDT+TtRqvRX2FNlPD70nQokeF4YS4AXBpp6yivz/IbVisg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SA1PR11MB6805.namprd11.prod.outlook.com (2603:10b6:806:24c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
- 2026 23:18:08 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
- 23:18:08 +0000
-Date: Mon, 2 Nov 2026 15:18:04 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: <sashiko-reviews@lists.linux.dev>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] cxl/region: Reject a repeat write of an endpoint
- decoder to targetN
-Message-ID: <aukaLAMiCHn0xX4S@aschofie-mobl2.lan>
-References: <3e5af9d6d59f8df52b9d21bcf1c7e78f06918f80.1793653629.git.alison.schofield@intel.com>
- <sashiko-outbox-194200@kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-194200@kernel.org>
-X-ClientProxiedBy: MW4PR04CA0366.namprd04.prod.outlook.com
- (2603:10b6:303:81::11) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BgTIjVx8
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=QEpd6a+5vyb7YKmH2HfXuDiiboBz4CjeIOL7fouBhLE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793673205; v=1; x=1794278005;
+ b=BgTIjVx8nAsBtP3F1/GUXtMqw3pw4OJEPGpQ++uutFfQds3NbRcIfmcp3GNAGaLK7RPpjY/S
+ yw/Uj5HTzpBk3eyf5tM9Jsqi8rj63sDupbOUjOGiN5/9gjgHzyT+vi9Zyr+9DoBdCp16aZJbRus
+ vipK+BIW9Sgzd5Lh3Bd6yy9Q=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by mta11.migadu.com with ESMTPS id 09cae95fccecce83;
+	Tue, 03 Nov 2026 02:33:24 +0000
+X-Mizu-Trace-ID: 09cae95fccecce83
+X-Migadu-Flow: FLOW_OUT
+Date: Tue, 3 Nov 2026 10:33:19 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Barry Song <baohua@kernel.org>, kasong@tencent.com
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>, muchun.song@linux.dev,
+	ridong.chen@linux.dev, sj@kernel.org, hannes@cmpxchg.org,
+	mhocko@kernel.org, qi.zheng@linux.dev, shakeel.butt@linux.dev,
+	ljs@kernel.org, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, baolin.wang@linux.alibaba.com,
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, kees@kernel.org,
+	peterz@infradead.org, jannh@google.com, pfalcato@suse.de,
+	hughd@google.com, pasha.tatashin@soleen.com, pratyush@kernel.org,
+	willy@infradead.org, jack@suse.cz, ziy@nvidia.com, riel@surriel.com,
+	harry@kernel.org, apopple@nvidia.com, nico.pache@linux.dev,
+	ryan.roberts@arm.com, dev.jain@arm.com, usama.arif@linux.dev,
+	kas@kernel.org, matthew.brost@intel.com, jhubbard@nvidia.com,
+	peterx@redhat.com, will@kernel.org, aneesh.kumar@kernel.org,
+	npiggin@gmail.com, osalvador@suse.de, minchan@kernel.org,
+	xu.xin@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, youngjun.park@lge.com,
+	gourry@gourry.net, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	ying.huang@linux.alibaba.com, jgg@ziepe.ca, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org, josef@toxicpanda.com,
+	stable@vger.kernel.org, usama.anjum@arm.com
+Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
+ PUD and PMD tables
+Message-ID: <aulH7zeGrjIvF8Hs@fedora>
+References: <6FACF8FF-F943-45C8-BDFD-3AFB5C060E0A@linux.dev>
+ <20261031055838.60138-1-lance.yang@linux.dev>
+ <a704d458-ad60-43bf-a0ce-3b128b218d88@kernel.org>
+ <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -133,156 +90,68 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA1PR11MB6805:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18ef70a5-af52-4c59-c382-08df39378dba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|10067099003|18002099003|22082099003|56012099006|4143699003|11063799006|261022105027099003|261026121527099003|261022075727099003|261026140227099003|261009223027099003|261028144727099003|260925021311599003|260925022911599003|260925021911599003;
-X-Microsoft-Antispam-Message-Info: oiiKJsPg1VCvMK8J6TvEHi6Qcl87lp+bUQ6Q/jlIqNOX4IuxP59boZnadr1jfTQ2d2z+hj05y6aUzhqSSJBrOWHfB9o2TsRLb89LQMZxYFiMmcmmkWiF8OaMvQAG67SBPhmrxXbeuFuaSAnmPY8AbCENL6hikbU4eXmjFEzhbLh+dYHJt+QOxHX6BTUmNcaNIj0uS8hsH5QfLiLPptBqNQ2pAv0qMKHCXFnoUIrw5hZqIa9EWwkWUgGl9dzl53+DpjNQnRcXqPC8pea0bSd6vb/7MlW3yGb1FNIL3b/WL669J7UA/xSpZ+k3moiAGBO4K6HD+vyUBo3lQ+DXSw8Eu+QK0wejV9yGa6sCLZ4bGunGtT1nchHSBbnzom3vaVrrLBIcfmjkebC0bqsTD4CigOhW/Mf/IAy0i8Rp34O4WA4MnqXqgZX04Gr/2U9CEzukUgp5KZr5cv7brlMvYXKSF50a8g6FoA7/mwrYEtS8Yjs4cwb2pOjY/QL6EHTLyIho3oaTvckWtLHtBHUM0bPQQ2uubeCVuK3fMVEPZjP+Y3VGm51mzc11V5bz1IS6vOt8EDWNCoeVEG47cvnPu1oBppSvMu7AV4bnUp8Xeg3aYlw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(10067099003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(261022105027099003)(261026121527099003)(261022075727099003)(261026140227099003)(261009223027099003)(261028144727099003)(260925021311599003)(260925022911599003)(260925021911599003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?zr0lxgxNQ9ivYt5dy7GYzlonxDiR7c41RtZbgXbNQmMttyHFz+ImuO3e6K?=
- =?iso-8859-1?Q?BnLDC3Sh3N1dmnEAUik1/B7VKLCrEwV695Y+hBn+OT+OLnMZyTj6KNbFrY?=
- =?iso-8859-1?Q?WxooFquv6ulhxn6v4ktXLy58PgZY7MifHTz7SNojyOCdr4If10MSy12KJh?=
- =?iso-8859-1?Q?p7bdHJRW8Y0p5en1frWg7uzprqzKW3/pPT3vBFr83CKR+TGgFbs8usZlOB?=
- =?iso-8859-1?Q?zN27rb8xk9nNsj4GLQIfDBYjyoweljUG1VCF/w8GFIhdfYhZ29nrZuTaMz?=
- =?iso-8859-1?Q?nX/zbU3yj00g1QFZjlqsszi76mVbPb4bsq9Avx/NY/votNDveHlSMHYu2P?=
- =?iso-8859-1?Q?pPdQikvPA8t5AMNM9fXIDc3A6Uk+8THjggHFFq0m36X6YPQLbtBHlJ9S/G?=
- =?iso-8859-1?Q?0brjBrHFJlONjD1WnW2DBzZ+y1oxX6RDee/smUrLiC3RedgDfQ8sLDyEAQ?=
- =?iso-8859-1?Q?06qzebRRu8Gd84/kJFOr0Dft9mIqrRWurrAngxBBnVRo92A7CsmT/ssIPA?=
- =?iso-8859-1?Q?LCl+A0fnl7F9sTZ6dI07CXuv69CgSUTsytELx2yxh5sJ22JCxb8XC1AXQG?=
- =?iso-8859-1?Q?gMlzAv+m2J5ItfRdU2A+/Ss93JYciUWoWI8lru4GUFTP14N2lcY1v29fxy?=
- =?iso-8859-1?Q?d44b5NNJdvtdf63O2GQc7BWkDICXNiqVta43/PhAuBhyyCr3d8H0MA8G1Y?=
- =?iso-8859-1?Q?GAJ30Eeeo1kdWGPRY7HQrLGkLl7fh5pjDrsJYbX/oYP5U1MsxibxvFpxlv?=
- =?iso-8859-1?Q?BMjueFSOvIIuVuGjTDLEJYMQeQ16+gkH9lO3TJ3vVzwnO+YUtN1Y+EJLYk?=
- =?iso-8859-1?Q?PhJ7VT60HOsdMyMIScAYalBZ5dJWzwoqUm7tVDQnzdMSRud5dztvsoX5AK?=
- =?iso-8859-1?Q?QwpbUP0Lqj0L5PTg0cDtGXm04HkEgcyvzUUWGYvRMwQMIwVmUla7gZ1xFm?=
- =?iso-8859-1?Q?oNAGgwHmbaeI+VEYq8SfQJOP8tOstcV1rmbEWW+p37oCvjUDRdPQkIpBaH?=
- =?iso-8859-1?Q?wUt4cSbFLzJWKcZUTMX+/Kzem+hlDrd6Yml2b1pSSeZldv6FioMnwzl8IR?=
- =?iso-8859-1?Q?lRb1selZsZ2TxHjP6mJ/nJi6KpkytS7NTnAaufATGkuiyRLiO9Jt9+CxOq?=
- =?iso-8859-1?Q?pZBlNkTyRMgBENxEPbH7KkB5n57iuUaBlzRDO7QLBA4a2mVUHdM9YSVrM0?=
- =?iso-8859-1?Q?ffVoIVjv/ph6l3pRyzGOtX/9lpHpRFU1GpI0o8/QhoK3mN/8bATBhwACaB?=
- =?iso-8859-1?Q?wks7dTJyTSfuN5hqTj/f2Racd6Rgtpd9J6pd4riU8yZ0zw/UGQjVT/4E3K?=
- =?iso-8859-1?Q?SRioCWNtUNWhmAXATBwTAvW+3GygVMZSDjFKyzALMyqmxQDApYALIhOIii?=
- =?iso-8859-1?Q?3eS3lTQjrWgQV8LEUS2fE8cBlZz2fJSUcvDTEl/RnawAkjPc+CBOUXnLY4?=
- =?iso-8859-1?Q?ZGITBaUgQOKyqL43Jmp2GgHU3gbu0py4hL4B0mFGuiU7BvpzS7JcRB/jJb?=
- =?iso-8859-1?Q?Q8LfHgLhIe9Q9cUBwr6DRpJWWz8K+36eXMYq4rF8zh0QJIWtihN8XIrBi0?=
- =?iso-8859-1?Q?EYsODtxyOfrwNP5elGdI1eEMvCPuucDEjo/X3owjodyz2+6p2F9LLbNxG6?=
- =?iso-8859-1?Q?iegQbeDLC7Eg0R6FtshsdVNa0e+e0UyGzHatQfGqQH6fy+scgZMG+oh8ab?=
- =?iso-8859-1?Q?PG4ipC+j1cdbm/qKo/HMVlJh4ei2BxzWWmz9fQsNXXiRhvMPnJZqIJu3rf?=
- =?iso-8859-1?Q?qwb+pkJfA64Bm6igEHJO0r8o/DSS4UszdH+CSYw/ZpFKlciUucQljpk5VZ?=
- =?iso-8859-1?Q?dpW31pjgAcRH2lKVMU4v01+IzZBiUx4=3D?=
-X-Exchange-RoutingPolicyChecked: s/81JjEYTPdNKxqmqRPk1cAWR2an6JwpKaKlMXugy27mGpwVM7HATccR9IVlfM0S3MPmZt7oM0JiNz3ZAJJr1EiLLzF29ohexGY10X808Ghpl5BieLxLVuB/If0ewIOq/S9pL5ZF/BF6GoAaQIqbOh5XnH6sWqtvwfC7XCbYiHwXSU0b8broxVPPWOttZbNXuXrA9iqYUVwQDPRWZ+kA99ixnZwEnKSAPfZGBrAvtem1/46IbqmSBWgbQYt4UDAWczFESAEvpvugIuAY1Xlq/kBsYSuDY0mi2IOc1sVpKRmXeTC2bJlB0tdsLyOhzRDkOzkouBiKuaxx6KvbriKEqw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18ef70a5-af52-4c59-c382-08df39378dba
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 23:18:07.9105
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q/AKPBfUKxbim6h+w67sKgiaSbl/TKXECbGVSwXCS0l20AyG+ULmBd0DeyR/eFfy+8SzG2/f4qPDe7RsYCA/Z7x2I98k5RaWpB6eReYu9EE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6805
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
 
-On Mon, Nov 02, 2026 at 09:30:31PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] cxl/region: duplicate occupied-position check in cxl_region_attach()
-> --
-> 
-> commit 8e6a6e0273b1dca525bf14e3930192ed09907f10
-> Author: Alison Schofield <alison.schofield@intel.com>
-> 
-> cxl/region: Reject a repeat write of an endpoint decoder to targetN
-> 
-> This commit rejects repeat writes of an already-assigned endpoint decoder to
-> a CXL region targetN sysfs attribute with -EBUSY before modifying region
-> state.
-> 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index a048bd5c06cb6..90226327e03c8 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1764,9 +1764,6 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
-> >  		return -ENXIO;
-> >  	}
-> >  
-> > -	if (p->targets[pos] == cxled)
-> > -		return 0;
-> > -
-> >  	if (p->targets[pos]) {
-> >  		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
-> >  		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
-> > @@ -2130,6 +2127,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > +	/* Already at @pos: fail before changing any region state */
-> > +	if (pos >= 0 && pos < p->interleave_ways && p->targets[pos] == cxled) {
-> > +		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
-> > +			pos, dev_name(&cxlmd->dev),
-> > +			dev_name(&cxled->cxld.dev));
-> > +		return -EBUSY;
-> > +	}
-> 
-> [Severity: Low]
-> This isn't a bug, but once the early return for p->targets[pos] == cxled is
-> removed from cxl_region_validate_position() in drivers/cxl/core/region.c,
-> doesn't the immediately following block in cxl_region_validate_position()
-> already handle this case with the same dev_dbg() message and -EBUSY return?
+On 11/03/26 at 04:11am, Barry Song wrote:
+> On Sat, Oct 31, 2026 at 5:42â€¯PM David Hildenbrand (Arm)
+> <david@kernel.org> wrote:
+> >
+> > On 10/31/26 06:58, Lance Yang wrote:
+> > >
+> > > On Sat, Oct 31, 2026 at 09:46:37AM +0800, Muchun Song wrote:
+> > >>
+> > >>
+> > >>>
+> > >>>
+> > >>>
+> > >>> Agreed. FWIW, I think Barry Song and Kairui Song would be good candidates
+> > >>> for the maintainer role.
+> > >>
+> > >> +1
+> > >>
+> > >> It would be great if they could take this over.
+> > >
+> > > +1 from me too ;)
+> > >
+> > > They both have been really active on MGLRU and doing great work for quite
+> > > a while. No doubt they'll continue to do so :D
+> >
+> > Fully agreed, we really need some people familiar with this code to help
+> > maintain it, and Kairu and Barry have most experience on this.
 
-v4 will drop the needless check in cxl_region_attach().
-
+Agree. Kairui and Barry have done so much to review and contribute
+patches to MGLRU. The nomination is well deserved.
 
 > 
-> drivers/cxl/core/region.c:cxl_region_validate_position() {
-> 	if (pos < 0 || pos >= p->interleave_ways) {
-> 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
-> 			p->interleave_ways);
-> 		return -ENXIO;
-> 	}
+> Thanks to Ridong, Muchun, Lance, and David for all the
+> kind words. Your encouragement is truly inspiring!
 > 
-> 	if (p->targets[pos]) {
-> 		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
-> 		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
+> >
+> > Just a note that I also don't want to pressure into such a role (which comes
+> > with responsibility).
 > 
-> 		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
-> 			pos, dev_name(&cxlmd_target->dev),
-> 			dev_name(&cxled_target->cxld.dev));
-> 		return -EBUSY;
-> 	}
-> }
+> It would be a great pleasure to work for the MGLRU
+> community.
 > 
-> In cxl_region_attach(), cxl_region_validate_position() is called before
-> cxl_region_attach_position(), so attachment only proceeded previously
-> because cxl_region_validate_position() returned 0 instead of falling through
-> to the p->targets[pos] check.
+> Over the past few months, we've seen many active
+> contributors join the MGLRU effort. It feels like MGLRU
+> has never been this popular. I'm really glad to see the
+> community growing.
 > 
-> Also, placing this check in cxl_region_attach() ahead of the
-> CXL_REGION_F_AUTO branch means that if an auto-discovered region is partially
-> assembled (with cxled staged in p->targets[pos] by cxl_region_attach_auto())
-> and userspace writes cxled to targetN via store_targetN() -> attach_target()
-> -> __attach_target() -> cxl_region_attach(), it will now return -EBUSY
-> instead of reaching cxl_region_attach_auto() and returning -EINVAL for
-> pos >= 0.
-> 
-> Could cxl_region_validate_position() simply be called before
-> cxl_region_perf_data_calculate() (or inside the manual attachment branch)
-> instead of duplicating the bounds and p->targets[pos] check in
-> cxl_region_attach()?
+> I may have missed someone, but besides Kairui and me, I'd
+> like to mention Baoquan, Baolin, Hui Zhu, Ridong, Kunwu,
+> Maxim, T.J., Siddharth, Xiang Liu, Bingfang Guo, Shakeel,
+> Zicheng, and many others.
 
-I don't want to move cxl_region_validate_position() call in this
-patchset. That is a separate issue that I mention below the scissors
-line and it will be fixed up in a separate patch. The reason we don't
-just toss it in here is that it is a partial fix for a problem different
-than what we are doing in this set.
-
--- Alison
-
-
-
+Thanks for the recognition, Barry. MGLRU has always been on my to-do
+list, I will come back to catch up to review and post queued MGLRU
+patches after my xswap patches are posted.
 
 > 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/3e5af9d6d59f8df52b9d21bcf1c7e78f06918f80.1793653629.git.alison.schofield@intel.com?part=1
+> It's great to see so many people contributing to MGLRU!
+> 
+> Best,
+> Barry
