@@ -1,55 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.106
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699472;
-	b=qiQSW23obrkJDnWCjICmk92HT1WfjZDc+u/mmNKC9djVxv1upCS7w4UtGVsoqqH3uWJI
-	 Xy9VfD5Qp7Qg83KN70ythzjOuqGiwuoXMPetO+9CDFbFRhyJrHzXeivLvIAYdY2BAIPEl
-	 PlSdI7wcKMfqhPdReMH54flY7Pste8DuGO1DIlqO5DLWV2xOZu0nsYTypZlXlwTpnt21T
-	 //BJ0sv06kQvqTB/b+4rvH21+pkkHPJ4f6tXWYhdLk+NdjbUoJmzOASEnuBiRntu9EgAK
-	 Az63/XE+rRc9mzDa32eDF8EcmLYyA//GS9ue8Fv2kmts7i3wJKv+4G1D3PgFy4mIDyA==
+	t=1793700427;
+	b=WAdqlzKX7fnAEEzep/l7YnUTCUARqunsPpPXqZwmvg4wd1N9kyE1ujpufomzQCd5ee9b
+	 +w4j3q47l+A6ffoej5rfjHNH0OmBPbmvRWIB/vnjzIQ/lZe0hUYUHz3EwqhLPdZ27Frwc
+	 bQdXnq8seFJSfuDr1bGx/0NPXloKcrjcvfrsV7eIKw/6kRAJZoo1wDviqgYP694vjVPNx
+	 v7vI7gtgSMZzM/W/dbw/nh08Co23HP1uFrz76TH3Tulk+JOtIYKiaH8FIzEf6bDBLG09B
+	 QMFbzxvd9dlrAGCBM34TP5Souuk3qx8/TIBqF14nOAf7MK/NC95Lhcay1Cwa4DEQzag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699472;
-	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:Date:Subject:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
-	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
-	 X-Developer-Key;
-	bh=HxMHbHcW0bcCswFq9k6faxMAZ4OoY4XSKBUYGTUqi5I=;
-	b=5dCQUlAjiI1UTLpZc2oUfxL/++zUXVZz7BX3DaGJMSdL2XszT8frD/EvAONkCZGmmhax
-	 2yXoNDuf+KJRlI9jsLf4zFdQZOSfMDb45T2zBCycnetAAGJJIEV6pKglmLMwNItlEAPBf
-	 0FtYOwgyCJf31BhWQROD5dcFwCi2xdAnaRHtzQcQ9sjRirsVh3BmWlzslnwZ1BxkzY5CY
-	 EjmS3BIG2RjcpV1VBiIPRbLBiMv1SVoaV0oJekLCFRcyZP4Ngzgam4xDQrWIc+tYVgmLw
-	 CGwM2OoXk6oPdrV9FhKkVIyWRo8jPfgg3eZW70Hlufn9HoegriMCabRPD0LQoTAw/AQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793700427;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=yOEv4rlICtm+9MGZIVJit4iJjbb/HbqDxTBh2E0PNYM=;
+	b=LNhC64guaf3KjAswSa3mZeOtQ4U+zS7S9s1ElT+kbhyp/ULN+ndbqDkI3FQ4m4I1uLkt
+	 M62ys3EdWWnc2ruDCqWk19kL2rvr2xxFzfjwIivmVrI6d+hoBIir6bOmoA+TG/+OGNNvq
+	 ACj0DythNFt4WxdkfpHiDAQhpFw1cazFLKVvUh+yGeOgyQH91gyvWFDoHzPpnpaPxqPqz
+	 utoHbQUcGi7WnWYJHu0urjtY1KxmQpBnEe5p5glsu22OUv5lQqw4pQkVBFHTWgIRiRDj2
+	 XaE7cYTbpkUzViuQVkXs8wTZR6NAKENFztLbYqTYYWezYhRv12wL3U0Wjgxc+XqRG7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=karaolidis.com;
-	spf=pass smtp.mailfrom=karaolidis.com;
-	dkim=pass header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=eunwfoT8;
-	arc=none smtp.remote-ip=109.224.244.106
-Received: from mail-244106.protonmail.ch (mail-244106.protonmail.ch [109.224.244.106])
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=T8GHUIeu;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E29606A32E;
-	Tue,  3 Nov 2026 09:51:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5E29606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=karaolidis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=karaolidis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C679D606A817;
+	Tue,  3 Nov 2026 10:07:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C679D606A817
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=eunwfoT8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karaolidis.com;
-	s=protonmail3; t=1793699469; x=1793958669;
-	bh=HxMHbHcW0bcCswFq9k6faxMAZ4OoY4XSKBUYGTUqi5I=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=eunwfoT8ZlTWcs007nWnsW8Oeh/g4tEbRRD2T4dNh8mWyi2aQO6YA/vgKlXVU1PM6
-	 +hqOAII1KuJ1jCtohrrD5RKvuS1B0dosYXEog8p7EVT2CMIk1ur29lR3NytoUpNthy
-	 J0Or103AMhcWftJw8rQscbghBnKYCL9pDaq2DkZeQ6ILXE/sVgQXlTNpyp7+LdWLoN
-	 Uu/hpJm84SuMSzopzxghFnTBsGdfpCH4Y5yLSDpRqF+WD5sID6UBWShwHOVG4gtYEY
-	 lsbfQd32UcyGlLp4R4bazHIfZsarLOrfV0sDpgc00b5PqysggJn22/hUl5enuDMQGX
-	 BLGs99EQeBY6w==
-X-Pm-Submission-Id: 4jJkNW1X87z2Scj6
-From: Nikolaos Karaolidis <nick@karaolidis.com>
-Date: Tue, 03 Nov 2026 09:50:12 +0000
-Subject: [PATCH RFC 6/6] Documentation/admin-guide/mm: document virtio-mem
- memmap_on_memory
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=T8GHUIeu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yOEv4rlICtm+9MGZIVJit4iJjbb/HbqDxTBh2E0PNYM=; b=T8GHUIeuwcDQEX7YFBA0dHaPtB
+	2kVj9KSOFPEikB0F9pAaccEJIVjNxbKR3+e0f9oaOThinmGoXpI0EvZVDNwsXfU7AGr9ATQG+ak4X
+	z2dA0u862tnlHdxULQMW9u6wC8/34oIlt51HyBjY2ZPhPEqEQ7F2QlBBCab/c1vclkwgOD+hM7I5Y
+	Apd1Al26l3U1O8FO7cvKq+udwXcUON4wKT7E1OLcFB1DgsHO9juQDwNhoajOQfbR9TQ7vZZE+8K4T
+	LmEzS5pvIZvxQ3GwRaJaAmhojV9r2fEIapcI/uXjfq4sDAf9cLR2RFL0jyHQmO9HjiEpQaLi6OAZZ
+	0upLu0Xg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xOBPO-006r0Z-0j;
+	Tue, 03 Nov 2026 10:06:26 +0000
+Date: Tue, 3 Nov 2026 02:06:17 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kas@kernel.org, 
+	kexec@lists.infradead.org, Brendan Jackman <brendan.jackman@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, shakeel.butt@linux.dev, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, rmikey@meta.com, riel@surriel.com, harry@kernel.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v6 3/7] mm/memory-failure: add hwpoison_boot_page() to
+ flag an inherited frame
+Message-ID: <aumvVjoHo4KeuyEp@gmail.com>
+References: <20261016-hwpoison-kho-v6-0-f304255147da@debian.org>
+ <20261016-hwpoison-kho-v6-3-f304255147da@debian.org>
+ <aumt-4kfGGtoXuh-@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,90 +85,25 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261103-virtio-mem-memmap-v1-6-308ae1da6240@karaolidis.com>
-References: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
-In-Reply-To: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
-To: David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>
-Cc: Oscar Salvador <osalvador@suse.de>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowangio@gmail.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
- Hui Zhu <teawater@gmail.com>, 
- Georgi Djakov <georgi.djakov@oss.qualcomm.com>, 
- virtualization@lists.linux.dev, linux-mm@kvack.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Nikolaos Karaolidis <nick@karaolidis.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2275; i=nick@karaolidis.com;
- h=from:subject:message-id; bh=9Fmh5NuyL8RhhgKP+TzDpDGr/90k+nu1z+yyKGLv62E=;
- b=owJ4nAFtApL9kA0DAAoB2mjImL9M9YgByyZiAGrprniVRbgFszd+tPH1XcKsBEFpdpjWocrOP
- chMaIO9Ut5PsYkCMwQAAQoAHRYhBLMZG7EWqsMYjymWX9poyJi/TPWIBQJq6a54AAoJENpoyJi/
- TPWIJRkP/1HyOCbdgqUgCgsDOEG0drBO5bgCHQOZFrl1Iu57GRvZWBy88fgRkacVoxcrRFGASrU
- xqIlqUVcmDamlsgH0IJTTHFqf3uBOBNe8l2Qu6KOW+r+c4GkquCdV/q+NJNYmQXCdeBCHtjFGM7
- z8RBCHWdGFsQlIBTE/qP5NBdT5mImNKrEPg94g9w+aHAY8szKVpCvEh7GXnB29bTK+cVS9liF2o
- xaWiT/m/tVdN7bJFNCIHTyY2yWr3iR++p/QcD/skVPXBkvx0ZaicZnu2YuaC43kgVl6ZpSTTVck
- 42vENRHxgj4lDpz6sfRunj1XLXIZfYZ+PC6cE0mMCaBodfydU8qLnFFvc59+qUr66hGbH+YZLYm
- //de+riD0roZ2p46aJUvbqMcq9rToblaAKPQFFNm0aPsmtutuOxJ2DLf3xYuYZswySJR7X4KF8u
- DffHhhhBr4Gn4lTmkvkD3gvvvRwoO31Sx/F0rnaVczRU/vLXTex0UKe8tTN+WD2EHcqGfaO4HYg
- LQnEsc8y6A3fy41641Wka9eV0PxKH4C82huYoxI4C9AcA2MuOX18Fyh0ZsaidMLGv2tLMz9pqLf
- en7FdPfXT1WQ1q6LJbtcpV0XocD4kyM2d7K6qAysfLrVfXVNl5tgYfVeB1gUybibhA+sfcW3gwg
- VIVwiCo656C7OBys4+zksFg==
-X-Developer-Key: i=nick@karaolidis.com; a=openpgp;
- fpr=B3191BB116AAC3188F29965FDA68C898BF4CF588
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aumt-4kfGGtoXuh-@kernel.org>
+X-Debian-User: leitao
 
-Document that virtio-mem only uses memory_hotplug.memmap_on_memory with
-virtio_mem.memmap_on_memory=1.
+On Tue, Nov 03, 2026 at 11:48:43AM +0200, Mike Rapoport wrote:
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> 
+> We've been splitting internal.h to smaller headers, maybe it's time to add
+> "memory-faulure.h"?
 
-Assisted-by: LLM
-Signed-off-by: Nikolaos Karaolidis <nick@karaolidis.com>
----
- Documentation/admin-guide/mm/memory-hotplug.rst | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Ack. I'm happy to move the "mm/memory-failure.c" section out of
+mm/internal.h into a new mm/memory-failure.h, as preparation for this
+patch.
 
-diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-index 0207f8725142..b0f895766fb5 100644
---- a/Documentation/admin-guide/mm/memory-hotplug.rst
-+++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-@@ -454,6 +454,10 @@ The following module parameters are currently defined:
- 				 architecture does not support the forced mode
- 				 in all configurations.
- 
-+				 virtio-mem additionally requires
-+				 ``virtio_mem.memmap_on_memory=1``. See
-+				 `ZONE_MOVABLE Sizing Considerations`_.
-+
- ``online_policy``		 read-write: Set the basic policy used for
- 				 automatic zone selection when onlining memory
- 				 blocks without specifying a target zone.
-@@ -628,6 +632,20 @@ ZONE_MOVABLE, especially when fine-tuning zone ratios:
- - In certain DAX configurations the memory map for the device memory will be
-   allocated from the kernel zones.
- 
-+- The memory map of hotplugged memory is allocated from the kernel zones,
-+  unless ``memory_hotplug.memmap_on_memory`` is used (for virtio-mem, together
-+  with ``virtio_mem.memmap_on_memory=1``).
-+
-+  With virtio-mem in Sub Block Mode, the subblocks containing the memory map of
-+  a memory block stay plugged until the memory block is removed. They count
-+  towards the plugged size of the device but are not available to Linux:
-+  plugging 128 MiB into an empty 128 MiB memory block makes 126 MiB available.
-+  The plugged size can stay below the requested size by up to these subblocks
-+  of one memory block. Sub Block Mode only uses the self-hosted memory map if
-+  it spans complete subblocks, for example with 128 MiB memory blocks and a
-+  2 MiB device block size; otherwise, virtio-mem continues without it.
-+  ``virtio_mem.force_bbm=1`` can be used instead.
-+
- - KASAN can have a significant memory overhead, for example, consuming 1/8th of
-   the total system memory size as (unmovable) tracking metadata.
- 
+Since this patchset is moving slowly, I'll start the header split in
+parallel as a separate series, and rebase this patchset on top of it
+when I respin. Is it this ok?
 
--- 
-2.55.0
-
+Thanks,
+--breno
