@@ -1,16 +1,16 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.70
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.195.57
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793687662;
-	b=z9NaVGbQw2RqX3NwOCWSfI3rq13fNrM1hSE6Yb9SrkghqsdGp1hGVVYI3ld+rUFCBl1e
-	 y1eYFgQo/RU+2UpMGgC8Mva9QwQM55hgoXZ8umMpC12QSeu2TMamMHEJGL5UPLLV9x402
-	 /PWhlZnoExpuNmBnLBMW1Y6BmC8gCZ0686mlALR8Ekvw+d7Hm9R5bSjTr/dJSl0f/ZZ4B
-	 Lp1tXVme1fOxFECM+ivbbRRJsEKZfHYybo5RjQIfRpkmvADW4esjvSAzEtR6pSuYtZFRb
-	 NcyGurQNfqQshNbzrXQbGWw8ckGvy0qAwnggcAO0FEU54wMCfc5GxEbsms84yoxg0TQ==
+	t=1793690272;
+	b=0nOBhWnNY3wVJG3IbdFNH3Hh9fLxR7jO9BVTjvoi9P/yA4FjrIgDAsf+MOXR1CQ7VwDl
+	 zbhyhzFm9ZnxZhztwb6ft73CIX1VkGjde47IW4vuVRm9okxGhtg2+py5UEKs2HGzIodVq
+	 c+bqvOEFQsMNGClntb9/azBHG3Uak5ZLcz2eejcOeidFhDGQ1B2ky5gRC/exWuAMSy0+z
+	 6ficj+gydaL+tSgcLKHS+UF1e8cWAmCw/pK1WXT+ihQVasQnZ599SU/Q+sK/unoF/G06i
+	 7CulFnJqrVhBK0zNtC2O6inseLT6my1nhZn3sYFdRoBdG/FaVnTe7nHV6qjz89D9xyQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793687662;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:Content-Transfer-Encoding:Content-Type:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793690272;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
 	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
 	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
 	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
@@ -24,78 +24,71 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
-	b=Y0hnWcQ1Nl6Gn7SRVtA9U84C1G+aWpzJlg+5cAopAVjcA/AJuW9TXtX+fZg1tqbBxKSY
-	 IkK78wKLTIGt+CZD457RSMrK8J793tZjqAKtmnymfhPern21E5T4VP+KPMMBBcCUHxk6t
-	 ljOB3wP+Qmuw7QJKhmpQ/hsL5NcWAZO9DhyPJaA1svtidxF7inDKg2LVf8toVFrdBylTn
-	 oEGJyjL4pURY5B9wInjrqYhoneByVIhC5HdiLtUPDcsDU3EBwim4fdWboG/7PHHwhI9Xv
-	 FSEGCKO5Ac73oRL5K2MApXylGHBGXbdstA0JqXCTqizYx6FGNcBR+Iy3xW27WC6Cxjg==
+	bh=26TT+xbY3I0nPow1sz/e6Ha8ZQNItNR2eeRxOhenSoQ=;
+	b=sOmvhKS5XkPLj9BDy3dH3sKMXQd4R8K7JZ3tQCxqwckdCTKGg0noffHkoO4uTQx4q683
+	 ylqr0YfAq6gmKH845w5NYsPdK+bkdadMvB3Jr1g1y2MDbe4FGaM7SDTgta1eKAPap+Xq6
+	 ehNHY+ylFoK/0wXWWWusdINRocaoMWpiRs1ufKIf0xBREQeQ1xxxvEpq74mASV7HFk7c2
+	 Ng/R7zbuinoNgiV9CFHAoeYk9tWybc+P/2hrIMU2I+P9uaJiFq0cWXMuYEi7ZN88z67VQ
+	 GUKyzBwHCHPpisXDU5PAHOCTJ9A6KFeooMRXutNcaw7doqkbHFoYz9dqFFXbvBeuk2A==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=olZ4YE5V;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.70
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011070.outbound.protection.outlook.com [52.101.57.70])
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=l+ywl9qi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.195.57
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012057.outbound.protection.outlook.com [40.93.195.57])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AB7606A324;
-	Tue,  3 Nov 2026 06:34:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34AB7606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C6606A329;
+	Tue,  3 Nov 2026 07:17:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 001C6606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=olZ4YE5V
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=l+ywl9qi
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FC39dFrhDeIMaO+Ch9HBgnoloXzPYXueFQSOhpQQrT/d9XASQ8Ib2qwOQ0doOIUhI0S1OGjLFs61ifX1QIV0TEcv//zi7lG0SA1nwjv5VTw7+PCpxC1qb2Zv8msPAPzWiJDzyc1Zbg/5t0TVin4psQNUO8fuxBBe9Hot4qxjVRnZp1igIWjYdx4d+tA/bn231Ry5DJDrm7gtAl+CDve1U8YXpdKnukNzc/vLL0h1MlRA92S382huOPOcJPDD4Cmx20Vj5aYHGESETG7UCh1cfGIVn8/VfdzFRG6jf9ce9Yr3DqGg2VGxnHt5n9wvlYXifLEgZNUNai3sLKRNUxJ3IQ==
+ b=KYjfkXmK5VoImmacku5breGy8wl7Z36xO6YWnc/iwRhlRbHn0xfAsZu4rZxYeH+Nbsovz8nYw62q24wJBEZP+JNspLl00cY5LjlqA5Y+XqN5my7/DCHvdu1ZGQ3xzE/Az/mdzPoOD/2PxcxqT0SKNpt+J//jc1qTogns2Lc2ncIElMnOcziKwjjv6ne6hMAaDR1XPQdC5sryhi8zhUYg4m/rpeCsJrmJIsgmmLhxLNHHfublUV+pO4/au3xwAtHZ92bMdL89z2fFWWfPM7wB3TlDBPXISUeK3KFvyFaz3DH8eeK+b99G5khGEB5dpSVRF9ESHahUqGfVkrQJN24z4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
- b=CQqBxxFxkqQrIXhtj6gaCm5Q3VRdHJgcpvDXrYy1HYVpK0rmFNkMAKscrC6P88oCsBc36fcOzC+mlSAA8CYUZ0WfHw9JDcvxM8zNjK5zf/0mxr/nL3BtG9nveyJQr0kY/IKAlM1OXprU7gB6dOBTty8eROuf8NiOmHxVOPgHbMALHga7KD7OWeTPt7gJrIY1hkBxXsPyTuCH1honG1fpMj7Xzb6hakxJdV3m6s7XaQOSTEGw2r2adU7r8PWBLbl3M/JRjGQ7USroHqR1vGulbrJHwHQmsLpOxGR4xPix8jMdoYdrBcjFazZAAZbCDxZHwm3TA1qWYA8gCcSy/QAXUQ==
+ bh=26TT+xbY3I0nPow1sz/e6Ha8ZQNItNR2eeRxOhenSoQ=;
+ b=lrZkWHeYgOomougLe7IjmElramEtPyt9GQvh4gYIBOd41qfbcYbtLlrYSkl+0uQRBI5SAjyymX6jLQrgdlc5ofsJOHl3teRmD9+8qpmiYhP9k4h4m7+Y6YduuoXP1lWDOg1jQb0w5wh1xMSD83LWwTRL6lE9Lcp7/K3Wsjoe4awaDSAFKZVgM65wCrcda5UNy+lXOMW3rKzKmcvDzGD9jDFqYxwKSPazHkY9oGkPi9kKEgjSchz49V12OPCodHTnD4KgqH2bImrEik7rrD3XuB5lGUtQSgtZqmDBD8UA5PoeJNOdzRRJ7bYkzqQjEOb2SA5gRg5HS+dU2Ec9dg1NwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
- b=olZ4YE5VTukIebwnhVUs63jPTaNoWQMnu5WN/nkXUAAVglyBbA64I8KBDn1sARjQ3KdeNhz5xWRwAKlTLkHdPpFSlxM4ypZA7LPiMmkzvMz18lWkKlyyPwrdjLVkHRh+TQSNeXktXjtvOLNuKVZNl+4KMbLpwYC5hlr0skw5AgsYKU/SCvUosI4npXD7jPZTwBKj4gz57FEzOGm3tZadlXBWxrfGpXn5FXuyI5bKpAGZmY9Kj0Q0oh/bObudzjXmBBydH7aevmIq6F00E/m2L5f+eV3TZXGtiPdYWuI3lMOdQYRevpZQlHb15Lf82lm4XISCszWjjaMOqwwqKeouWQ==
+ bh=26TT+xbY3I0nPow1sz/e6Ha8ZQNItNR2eeRxOhenSoQ=;
+ b=l+ywl9qilnjGYm9+jPm259Tj800AGEQHfCsLI0TOeZsiKA7TqnB+G9UgUkohgDefvBXvA5JHYCEuR3t5OUjGfsT2oyIyKHlHlz3n+GSQQPJXOacfEO8rXVGIDMB9CSdfxklDf889d563my6W0PhCpVKKwDkxOgBgtfPUqA5v0lT0rYN6FKQM7EhLMQ3xRl3oGgWNT5r2P+GtXFg9SsRdZe3P8NM6DQfqDIcyU5QeFA6H0tKvTRj4+md3AKr8uYmOrhUYhJr/80C716eT7JAr6CXk7KRZqCsMoR2z2NF+WAnyVWJ04le7jcuLAb7HnEP7ARkDLzvGI8SPCBLCltz5/Q==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by CY5PR12MB6551.namprd12.prod.outlook.com (2603:10b6:930:41::9) with
+ by SJ1PR12MB6340.namprd12.prod.outlook.com (2603:10b6:a03:453::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
- 06:34:18 +0000
+ 07:17:48 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0592.007; Tue, 3 Nov 2026
- 06:34:18 +0000
+ 07:17:46 +0000
+Date: Tue, 3 Nov 2026 15:17:41 +0800
 From: Richard Cheng <icheng@nvidia.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com
-Cc: iweiny@kernel.org,
-	ming.li@zohomail.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kaihengf@nvidia.com,
-	kobak@nvidia.com,
-	newtonl@nvidia.com,
-	kristinc@nvidia.com
-Subject: [PATCH v2] cxl/port: Fix endpoint RAS error unmasking
-Date: Tue,  3 Nov 2026 14:34:09 +0800
-Message-ID: <20261103063409.18275-1-icheng@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: JH0PR01CA0062.apcprd01.prod.exchangelabs.com
- (2603:1096:990:57::6) To MW2PR12MB2380.namprd12.prod.outlook.com
- (2603:10b6:907:4::32)
+To: Li Ming <ming.li@zohomail.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, kaihengf@nvidia.com, 
+	kobak@nvidia.com, newtonl@nvidia.com, kristinc@nvidia.com
+Subject: Re: [PATCH] cxl/port: Unmask AER internal errors for VH endpoints
+Message-ID: <aumKcxC28vRfs0rL@MWDK4CY14F>
+References: <20261030095951.46080-1-icheng@nvidia.com>
+ <e362b604-58da-43c8-bc3c-904becf92035@zohomail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e362b604-58da-43c8-bc3c-904becf92035@zohomail.com>
+X-ClientProxiedBy: TPYP295CA0059.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:8::20) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -106,172 +99,128 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CY5PR12MB6551:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0e43abf-6f7b-47d9-3ee2-08df39747bd9
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SJ1PR12MB6340:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d105cf5-7d4b-427f-ae9d-08df397a8ef5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|11063799006|56012099006|261009223027099003|261028144727099003|261021121427099003|261102123227099003|261022105027099003|261021123027099003|261022075727099003|261026140227099003|10067099003|18002099003;
+	BCL:0;ARA:13230040|366016|376014|23010399003|1800799024|6133799003|10067099003|22082099003|18002099003|3023799007|56012099006|11063799006|4143699003|261022075727099003|261021123027099003|261102130727099003|261102123227099003|261021121427099003|261026121527099003|261009223027099003|260925021911599003|260925022911599003|260925021311599003;
 X-Microsoft-Antispam-Message-Info:
-	+6P8kPl+kQEp6eWh2MPHY3V2RtkamBBbOE7udm6DC711TskTLb8o3U+HuuA3JqJ6PGRjftG3c/srS4MlM4VWQz/JZS7UnCEu3rNaB2fZ4Th2uvd3ATsBwgvKluzCq49e9b4PKjrpYcyy3WtmByEngCGoiYLTlP8nF/gZ0AVgaItBirqBWeYUpBd4exIC5tuib9bR509Bj4nG37vWPPkl0YrTEY0XWxN7pwCIvMvInuV7uxqpUkTwMmO/yQU7evf46NppKrcxWJJhM/vXA1JWLFX0ZROqsZvSLbD770mOs3FTNlOouJ+LxgxheIk9zrv6dq7wAl8bxpJMnYOdyjmyH2aMZvs8mDspVis8mpc4rYK5NK4jrXcPPcRE6F5y81baIL6jf+CArhabv5y7SOX34NYR+7mMSDCsRRox37/b/wZ/jLyS7zH09Or1uq1Ej2KhTeMhLPtGAkK0IKRy60/r8Rp+VZ37EQEqqyJzRVuuFTbPHwNUuWa6libX03yfpDO+my6BxrxoO2LGdGKVwvHV7d75+/DoNIU6Bgl3oXhN9NDssyVBRiaAa9ndkYIuwfXgNdmeIkqry1slR8ru7YJgNakXOKWmeRdk5XJd+RxqufxqkyPP1mCcINiqs05ig/RjLXS5RAN6V4aDNymkE2r2tvK8F7daapA3554hYSdiedw=
+	DvkaO0Q0Rkv6YN8XjjfLL6fhxWACnZesLdcV1kJ/xWq5wdW8QjNw7XK2L4ugHcmOhcLuibtN5GJTjNNyxaUsx01PsINJ9RAylNCIjYsHBIrcCH8NILA5AnDThal7T83B9d8s8GIi9y8CXRZD2ieV7Q+zk4mlYQOsr9OPgfzJDoL0uMBYAZDQMPL+6RS8XKOAbXCXWNsB1dWXXHC7uLfwxmXWzSlNniFURkWOwn1LTqk71ndv4I5X9nYdKoruB/+m2KXFDMadSW8KmdutGeBQE+p80MP+wNlylLeJBaSI/YmQeE6ovdOJWybmbRyCwivAA9G1hTs2/KxtDYnb4opfOZ3sv7V74UAXQbjYFK2p3JTeq0pnJHF3LZqkJk/nCaO7ETdqX0ktYEOS0m2GN/LUtBUJbCe/b/8GQBj6I6f22KSgyUP/vgcjRdgvNsgUGk4OwellIgKmvuA1rFBzbCtDQT1A6+v2tz7MLnYlR4RXZ2Q5kICG6l8N7y/Z7iPXCidWeLVvHctnmV6Ks1nAn4AB6UIe6OsDfi1KRiPfRutpvsixX3TkFAEeIn3nkvPyKeapjAjUOySfwjx9N0NHNxiZW018P2PnxFMYduWeSgxw/FQV0yCnGm8uB9d2w87lJICc+4nbAjIHH+WeMAo2VcNkSlYBhwJ+y5y/MjzycsqZoKw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(11063799006)(56012099006)(261009223027099003)(261028144727099003)(261021121427099003)(261102123227099003)(261022105027099003)(261021123027099003)(261022075727099003)(261026140227099003)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(1800799024)(6133799003)(10067099003)(22082099003)(18002099003)(3023799007)(56012099006)(11063799006)(4143699003)(261022075727099003)(261021123027099003)(261102130727099003)(261102123227099003)(261021121427099003)(261026121527099003)(261009223027099003)(260925021911599003)(260925022911599003)(260925021311599003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?F5NEWp3NE7fU72qDDHFcSUUdsilCT6eb5WiXOkZn6ukS6g4lA2PTd+4RuPc6?=
- =?us-ascii?Q?FHA3OSCQyB/qAA3QjU8cqxFUenJQJRdR32Lm0GRJMxBRhK3dmEFLsAjEvSfW?=
- =?us-ascii?Q?tCmPmZKiSx+OZOHrfdNyAO4cAibKjjGKuJZK2/tzj3zOSySSKObqWbw8xAPD?=
- =?us-ascii?Q?9AA1PWDFCF04nL8ucvizX92XBJC2hQYq92L6jMSkBKeZVQM0R5TMFJ0AWp05?=
- =?us-ascii?Q?uMlPFF5pHMq8HgWorTSF1fpdz9GotgMY91tbO73JDuBmtkzDABy0mjLvaju/?=
- =?us-ascii?Q?OwlYQtFSN3bvxlMa7WYfBFHeLtk956bbXPd6Q24vetEeXwGdFmhsCPW0yjKP?=
- =?us-ascii?Q?UaUYad8EYkLhKCPhTsjRZapy7FBaaB8+3+yR44vHz88O0yrPAO1wELNZX2MA?=
- =?us-ascii?Q?VRjtWyEx3KiivKd8dlkFHRUN3a2ti0MkeVNAupKcHAiuMMjdbKcEllgt05pZ?=
- =?us-ascii?Q?UzYuUlJCkS9hNOxvNddG3f84dSPzWbJeRCRAZi+zT09ptCnnJd1JaPX+BbKZ?=
- =?us-ascii?Q?tsjsj7QKSh0EOIrMsL4BBwtEIkXPL2OTUtf+fBaoiUy+BlfN0X+PPwuJW9Z/?=
- =?us-ascii?Q?FzdtTwnHSVoerwRJ/nnAOcK2j1hsGjvUQbRdIug2sH3gYPDqRr0KzMPV5lBP?=
- =?us-ascii?Q?NTCdI/p886PDHDh5rdPnUwdK6EGNV6C+5VzjqCwn8LQjqQ0aciYUKlU0KCOl?=
- =?us-ascii?Q?uSVr53vVNnLCwvA1hOuh1unZqY1LTFJdxj+PyPdcTZV0WedfqMlGOfAVaRU1?=
- =?us-ascii?Q?AKtgK8z1VHPzAFV7zR/WN0byu9v5RLe3vHhoFLhDKSF4gnwLVLOl1HEKwswh?=
- =?us-ascii?Q?5/SJH8CE/KUfJLA21UYjYWBZ4yUvqXUqbzLKp07hmX/VjoSJtyd1U1DBG4C1?=
- =?us-ascii?Q?Ny6zNlC1d/QW1gFYj+gpQnVscnDxhO9yDCq3w2IOWG0kPkUeth3611Y0hrmj?=
- =?us-ascii?Q?GN8VpkNzVQXmtxK+EaE/hi91u2NVCqgSNomVWBoeqx7V0hlLZrjMBQXsrj89?=
- =?us-ascii?Q?go+GNmV37WUoC9bkC2TSctQgZNq5ipUdtEGU8WMkfnft17FBzQ7MiGzqd+87?=
- =?us-ascii?Q?4ktwNK0cMtdMWqSSMgxNVeAN6iIXlM1zcc3uj+JdzMR6ShiVGVipGUiouKpv?=
- =?us-ascii?Q?8PrVAc8mnEKByspFUFAxjPDCMz9Oh4cQ8Ew4nNWWOqlpOALAfaLidSesE91P?=
- =?us-ascii?Q?xnBD9jPIrXIBzlSyGJCUK3HgpC1OsKhUbn+6MY1Wlo+QdzqTOjsVXUkwrHvb?=
- =?us-ascii?Q?X2Cm+tCSTmXtpajhRwxvgwMj8iI63FlofCDXhJJt3vylqS41OE4JL6+B5srm?=
- =?us-ascii?Q?oqotY6x6xc6ZKE9gxjwENiKtR+0+jeM2PpfUQIjFLGIIgKlFbMNFgpI57itw?=
- =?us-ascii?Q?tTSQR0HsIU3wzkPwOIZaVxa+2acx2tvKJ/qULW6YnH8Gw6Fr1P0EpifqI409?=
- =?us-ascii?Q?qVQBBiFdK/yQcam7AqQ+5UG3bScR5IdntFEIKq2VuuTY1LcKkmxcPiTNIjy9?=
- =?us-ascii?Q?kpsmSSv3gC1xNF4aO1FS2HIEe/c0XFRWrDo9f172igSQKX/feNtB8rPR817u?=
- =?us-ascii?Q?4ne02OjAftEPirXr0tjjb718k9NQnpDQ7wZlDVFIYtOJbh7zpMtoahmNwjf6?=
- =?us-ascii?Q?xFnHJn/cGtz69p3ZIWHiSSMFmuJdQol6ko8cr0cER08B5G4KFUb3fkYqZMpp?=
- =?us-ascii?Q?v3n839AzTWygvI21ACMt1Ebr2tzQveWRER8i2cwM1kXEe3s9?=
+	=?us-ascii?Q?WYJqRVRqWwSukd3cFQ2UPrrFv1IKO4MX1qZSvlWkc1fBKQabsR/C+9FlyVK4?=
+ =?us-ascii?Q?WsDhRNuNjdFVXJibwPG9WKLY8ygMvQRuwG/YPCxf2somMEY7419sVQWnmI9F?=
+ =?us-ascii?Q?b18l4pf1tVBK0zKJXfaBp4ZnfoA0+/vZN6NiFtEBywXAag/SerTLTuzmNf92?=
+ =?us-ascii?Q?N8uKM+kD2OtKVHGLPgG6+lXJzpLNRVPaZ+rO89CdSd8/eysQf2Fndp3GY8JK?=
+ =?us-ascii?Q?uMj02lS8q091jrUyyVbwd67YV/Wbc/APu7C8/b9ohItWynDC5wOovgqvmvLt?=
+ =?us-ascii?Q?I7QkeghXs8lhuNfqAGgdKBmaGFsqenJx0aFeTM7kVDc9vZJfZ+ll0dm8FG1p?=
+ =?us-ascii?Q?H655ksfq4zwSdXx23uIglrsTw9MeYu9YzvLAGKHkouh9b1MM+ag4rQ5g4DsK?=
+ =?us-ascii?Q?UE5CzbfCn62S8RnpwmdCKUcqZPOMMdQXkITos0F2+N+k0TPMMnrWFk7xdJ5z?=
+ =?us-ascii?Q?j+iUZG4Dfig7WiheEbotkVTi7zIuDJFFHDHij9RDPRoWe/NKkCJlpy0TKYuH?=
+ =?us-ascii?Q?ASAzb/xundz4scSLTETn9CTYY9bFC5Z5hKZDyuDp8NHE8IAzEoA+T906lHs3?=
+ =?us-ascii?Q?JC1CNyQBeeFJ3l2eMmH8iQshcP3W1EhQKUTFiYn9u6bIwjZ83dOgW40mpsMc?=
+ =?us-ascii?Q?DGxezkrsYPTFf7ov99FAOn50GQuuXZgGoT4iXp1lbuEnsYRmrAhv+rwmI+rx?=
+ =?us-ascii?Q?auq+8Hz2XNht9Hicyn/oTjjuFm73fTtR7MFCVIZwHeTGvlo6duSRa7x7/vgt?=
+ =?us-ascii?Q?w9I9ke4HFdNx1AuFanlFS5TQwGIz30DQ3+mi9XAzwPE63WZkHAzwG6Hb/QXd?=
+ =?us-ascii?Q?EL4nw4eXpBWfP7OY9ARsdLqL/4pPHDKBmDjJoYw8U/jrmE0MZrJ6fUtL0pqy?=
+ =?us-ascii?Q?5OGLjpxApcsjuU1wL5llSqmPNhVboIYKaErDlyF0pEcZjWtZ4+UR18bNf6g5?=
+ =?us-ascii?Q?fSLfuEJq972kUxnsXFwYyJxgnHl03+UX2Wz7xCHmYWoTXLqvd+iq3qZaZhzF?=
+ =?us-ascii?Q?LdxefWYTAV7tpfIR6LiDLNdJAQ2ox0PWNTPv3TkLQywv7FsnhQuH42mPC4Ke?=
+ =?us-ascii?Q?D1VY8iFKD7+fkhStcWBcMSzIAqMt7j75tYANl/x96NMdSTe2Ab0sQfD+v+JU?=
+ =?us-ascii?Q?sdRHun6Bo29TdcDotWUr/Q/Hj34pjjpJ34k6S9QurTrOjN+/iOYnygsLTUPM?=
+ =?us-ascii?Q?mSORkNryKyGr+fyT1nYn2YP1ZDnuQEhfHvIE2a1qBnOLEnbNLUv1XQXpI3Ja?=
+ =?us-ascii?Q?SSPGHZPKqlykb9c6V27ZWdxcbx921s0vHxOWJJHY3clznfVOCQuXXtduOH3t?=
+ =?us-ascii?Q?c9Nl2uOPMc4wtaB5YBUuuLeRRZVwSGXKAVnldRzqky2W/UYmEZEi5Pz1iByU?=
+ =?us-ascii?Q?rCEQZhtqcABcSTkTWCY8sm23slBpLXbeRH8Pzji1BHGpdxbTjBGr2QXHkCRL?=
+ =?us-ascii?Q?K8MyPSzJjjiR7Ch2cKr1V24Fgg+hM80CiNyWcF2d/pRkMsFtgT0j4w45KW21?=
+ =?us-ascii?Q?yRaSjWZcFNouW9MnrGoRR4CvHzGHPhV77P1weghusMqrINDxSrhgcaAvXHNI?=
+ =?us-ascii?Q?xc8cir6ROMuVI5KYV8ZrMgA9pUhXNdTBOTIllqReV8OV9G805RFc/xmQsx5d?=
+ =?us-ascii?Q?+f1JwRUUJPFm5gDBTX7zYX1/6X2jefwMVTaAlU70rvA8IQKtpTSSF/Dvbm48?=
+ =?us-ascii?Q?5M6jF7RFG5va9ihYlLCYY95nlE8In9vYtA57sAFJEZnXsEpy?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0e43abf-6f7b-47d9-3ee2-08df39747bd9
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2380.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d105cf5-7d4b-427f-ae9d-08df397a8ef5
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 06:34:18.2583
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 07:17:46.0788
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IfNzA7Vf5+WTxoNj9K/cHIGRSsX6AnYwVGNCqANySLTd0jLW3Te7R3Y2l8Ka3jo8Az0/yH5c3i4WgQ2EZXPUBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6551
+X-MS-Exchange-CrossTenant-UserPrincipalName: JBkkMWRHGJhkUsKkx+eFodm4Me07koaLrd+DvxXzPwDhnTjNASphwVskd6Fhgk227IBMfEjZ1RV7YlomahUJEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6340
 
-Moving endpoint RAS handling from cxl_pci to cxl_port left
-cxl_ras_unmask() checking whether port->uport_dev is a PCI device.
-Endpoint ports always use a cxl_memdev as uport_dev, so this check
-returns early and leaves the CXL RAS error masks unchanged.
+On Sat, Oct 31, 2026 at 03:11:29AM +0800, Li Ming wrote:
+> On 10/30/2026 5:59 PM, Richard Cheng wrote:
+> > CXL protocol errors are reported through PCIe AER internal errors.
+> > Unmasking the endpoint's CXL RAS register alone leaves the AER internal
+> > errors masked, thus the notification can't reach the Root Port.
+> >
+> > Unmask AER internal errors during native endpoint RAS setup for VH
+> > devices. Allow cxl_port to use pci_aer_unmask_internal_errors() through
+> > its module-restricted export.
+> >
+> > Verified with QEMU mem-data-ecc injection: the Root Port AER interrupt
+> > fires, the CXL correctable-error trace is emitted, and the endpoint's
+> > CorrIntErr counter increments.
+> 
+> I found the similiar implementation[1] in CXL RAS support for VH patchset[2], seems like it is under review.
+>
 
-Resolve the PCI device directly through the memdev's parent. Rename
-helper to cxl_endpoint_ras_unmask() and its param to endpoint to make
-its endpoint-only scope explicit.
+Ohh ok, then I think we can drop this one.
 
-Fixes: dab7162d0ae7 ("cxl/port: Move endpoint component register management to cxl_port")
-Signed-off-by: Richard Cheng <icheng@nvidia.com>
----
-Changelog:
-
-v1 -> v2:
-- Clarify that endpoint ports always use a cxl_memdev as uport_dev, so
-  the PCI device check always skips endpoint RAS unmasking
-- Simplify the PCI device lookup to use the memdev's parent directly
-- Rename cxl_ras_unmask() to cxl_endpoint_ras_unmask() and its param to
-  endpoint to make the endpoint-only scope explicitly
-- Rephrase commit messages.
-
-Reproducer is a QEMU Type-3 guest
-
-1. Ensure no CXL region is active and PCIe AER is enabled.
-2. Restore the emulated RAS registers to their reset masks.
-3. Reprobe cxl_pci and read the masks again.
-
-```
-BDF=$(basename "$(dirname "$(readlink -f /sys/bus/cxl/devices/mem0)")")
-BAR0=$(awk 'NR == 1 { print $1 }' /sys/bus/pci/devices/$BDF/resource)
-UNC_MASK=$(printf '0x%x' $((BAR0 + 0x1084)))
-COR_MASK=$(printf '0x%x' $((BAR0 + 0x1090)))
-
-busybox devmem "$UNC_MASK" 32 0x1cfff
-busybox devmem "$COR_MASK" 32 0x7f
-
-echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/unbind
-echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/bind
-udevadm settle
-
-busybox devmem "$UNC_MASK" 32
-busybox devmem "$COR_MASK" 32
-```
-
-Before the fix, the masks remain 0x1cfff and 0x7f. After the fix,
-both masks read as zero.
-
-Best regards,
-Richard Cheng.
----
- drivers/cxl/port.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index c12fd0b89883..7b4726c7276d 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -72,19 +72,21 @@ static int cxl_switch_port_probe(struct cxl_port *port)
- 	return 0;
- }
+Thanks.
  
--static int cxl_ras_unmask(struct cxl_port *port)
-+static int cxl_endpoint_ras_unmask(struct cxl_port *endpoint)
- {
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	struct device *parent = cxlmd->dev.parent;
- 	struct pci_dev *pdev;
- 	void __iomem *addr;
- 	u32 orig_val, val, mask;
- 	u16 cap;
- 	int rc;
- 
--	if (!dev_is_pci(port->uport_dev))
-+	if (!dev_is_pci(parent))
- 		return 0;
--	pdev = to_pci_dev(port->uport_dev);
-+	pdev = to_pci_dev(parent);
- 
--	if (!port->regs.ras) {
-+	if (!endpoint->regs.ras) {
- 		pci_dbg(pdev, "No RAS registers.\n");
- 		return 0;
- 	}
-@@ -98,7 +100,7 @@ static int cxl_ras_unmask(struct cxl_port *port)
- 		return rc;
- 
- 	if (cap & PCI_EXP_DEVCTL_URRE) {
--		addr = port->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-+		addr = endpoint->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
- 		orig_val = readl(addr);
- 
- 		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK |
-@@ -110,7 +112,7 @@ static int cxl_ras_unmask(struct cxl_port *port)
- 	}
- 
- 	if (cap & PCI_EXP_DEVCTL_CERE) {
--		addr = port->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
-+		addr = endpoint->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
- 		orig_val = readl(addr);
- 		val = orig_val & ~CXL_RAS_CORRECTABLE_MASK_MASK;
- 		writel(val, addr);
-@@ -152,7 +154,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		devm_cxl_dport_rch_ras_setup(dport);
- 
- 	devm_cxl_port_ras_setup(port);
--	if (cxl_ras_unmask(port))
-+	if (cxl_endpoint_ras_unmask(port))
- 		dev_dbg(&port->dev, "failed to unmask RAS interrupts\n");
- 
- 	/*
-
-base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
--- 
-2.43.0
-
+> 
+> [1]: https://lore.kernel.org/linux-cxl/20260902133933.2992457-9-terry.bowman@amd.com/
+> 
+> [2]: https://lore.kernel.org/linux-cxl/20260902133933.2992457-1-terry.bowman@amd.com/
+> 
+> 
+> Ming
+> 
+> >
+> > Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> > ---
+> >  drivers/cxl/port.c     | 7 +++++++
+> >  drivers/pci/pcie/aer.c | 3 ++-
+> >  2 files changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> > index c48216e5078f..c94a310061b0 100644
+> > --- a/drivers/cxl/port.c
+> > +++ b/drivers/cxl/port.c
+> > @@ -121,6 +121,13 @@ static int cxl_ras_unmask(struct cxl_port *port)
+> >  			orig_val, val);
+> >  	}
+> >  
+> > +	/*
+> > +	 * RCH errors are reported by the RCEC. VH endpoints report CXL
+> > +	 * protocol errors as PCIe AER internal errors.
+> > +	 */
+> > +	if (!is_cxl_restricted(pdev))
+> > +		pci_aer_unmask_internal_errors(pdev);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index db4f607f889c..94eca22422b7 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1287,7 +1287,8 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> >   * Internal errors are too device-specific to enable generally, however for CXL
+> >   * their behavior is standardized for conveying CXL protocol errors.
+> >   */
+> > -EXPORT_SYMBOL_FOR_MODULES(pci_aer_unmask_internal_errors, "cxl_core");
+> > +EXPORT_SYMBOL_FOR_MODULES(pci_aer_unmask_internal_errors,
+> > +			  "cxl_core,cxl_port");
+> >  
+> >  #ifdef CONFIG_CXL_RAS
+> >  bool is_aer_internal_error(struct aer_err_info *info)
+> >
+> > base-commit: f0c48323b0402349530abc60ea908b5f5f40c395
+> 
+> 
