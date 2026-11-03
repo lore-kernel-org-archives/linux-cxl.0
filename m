@@ -1,48 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.227
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.189
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793706396;
-	b=S26RHg9ljS4gajRgszx0IyaWUf0+/4ihfnbPXNtGzTH+3v6sypUKb/6eeF4ntnT32oRo
-	 Hjx3qcZRqrvruuIAfwqy4WktPZmebOIIDBzH1LOW1OWua4yazz/kBuRufwU0dpjQ+Uwkh
-	 x2R4j+nGoIHN98Drq8uVGm9dVAvMSLFO4yYBbqwlv/ffqpWckS+pxqMx5xqERyqRXRf53
-	 VKqSmulf20e60nypPNNkA2P9u280oKOXNOqRtbcA+NDqC7Dl6P/TuYNVa4lSJyQ+RfPus
-	 7H+ZxQzGYTlZ2xWTM1osKj2caz909S8/cv0XJZzkQwOii133oj5uv658cv1kJFCcaDA==
+	t=1793717362;
+	b=HPO7z+AtWjiURq2/kSwqfIaxIBAJmWKpAyuhbOPQjieg3zpWT1SKeRuJXNL8gnbGDbE5
+	 rhMwQ2J6a+VFpaRISUW6VapKLl2tDkaX39MIsUc72EXQYyR4XsnZGI/VH0YSCmnJt0V/6
+	 DhSLbk2NDlYSuDYF25qBJdmYm691S1aaoWR5Wy+8FhZgkZnxLhCNndDq2OIOn58A5VG2D
+	 aVI+1PC6ebveR0TrfbwFGR+U2hSDHu+bwSYPhVf8EinMOCstN7G/WW5wA/PFIca9gkx/p
+	 ApjfQRij6vc5c42JRgNCg/HNmdzwKImsOOtFHUGWpaEWVSXN6x4TvFSlzZXqicLt4NA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793706396;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793717362;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=1h7SuxIdXP1BrmLiSW0TA0Y4x+A0dQHqIxOY0fZWzgw=;
-	b=hLqbwXBq3+SqkoRUUupaeoddC63WCUR7Di9JNRrYGCO1YTQ4FRAcOukac0WSsZIV0OZH
-	 XYz/hX7r6IBPU4WXcV5xNKMkAsAhX2zI1zMpXl+pGIxkAJSwXMo+Vol9gsKqDdQNJ9UE2
-	 RhWHlmLNPqzCb7AaijKrFwKo1C8ce4igLJUIuLaRI4qEMdpuh5/bYQydeqeKt6hQKSRwA
-	 wW5T/3hQn8l80Um+ig3i0F9B8Xx5Ln3sjh494SWnPbVtBVOTUeSBe4/AUtEFQ0pKu1Vku
-	 3+C1hNhJvQaaSDCUyulbjfWC3gzoDS1zaWO+QTI0/5XbsK/030iu6mHW9Yls9nrTO+A==
+	bh=0jU0FKXBVK1IwPB+pnplBif7xzGvyqeYd/rvs2r/ax0=;
+	b=cQec+b4yPSSrGknOT8IkDAlWNoGS3U05okK1clpGm/6HvhgwcaSGITVuF2cwCXx7Anqg
+	 a14hBMIrKTVLfFbpputjXgmLt8qFU0KJoJ7MUQKzGkUDk6lcbFw2R3EGuyJlK8TH5DPp/
+	 BoNaVlwOeAnNjYjVZKcjweEZt8gvzp1UJHejB19js7vMIzDTTGWYVXnOJHv75WYprz1A8
+	 +wOSwR+L4RDs96/tZ/7Pu2Aj4kU+qanorGQkDUbT94wzKTwy6hu5KXT1EshmfCJwIYUEd
+	 2M4v4AQWt/4gL1w8Koyd1n+oe5eE2N053+vB75Yp5w8yH4v8ShPkAlC8DCCaxV5AaIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	arc=none smtp.remote-ip=91.218.175.227
-Received: from mta0.migadu.com (out-227.mta0.migadu.com [91.218.175.227])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QzuU3YVM;
+	arc=none smtp.remote-ip=95.215.58.189
+Received: from mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5629606A32D
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 11:46:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5629606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A5D606E6E0
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 14:49:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 26A5D606E6E0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QzuU3YVM
 X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=1h7SuxIdXP1BrmLiSW0TA0Y4x+A0dQHqIxOY0fZWzgw=;
+DKIM-Signature: a=rsa-sha256; bh=dOHWqJbFAMJYJY9pYQ0G9QdWl3ff5fr4nC5HvUAG8+A=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793706391; v=1; x=1794311191;
- b=M5WQx64W3OrKv3IrbfaaaUU8t9LBurF+lIi1NsZf+TH86Tb8kzcQtOfRinqCLkp6vbJeJkjn
- Wdwp+SEY7bV+SCApfixGc5g2PSWIhjsr5o8DnWz2b+eULeX3U8KrowNWRCDh9p9CW2PdjVmXutk
- fgWn2GKcQL5AnmV3qr19TWzU=
+ t=1793717360; v=1; x=1794322160;
+ b=QzuU3YVMkybToy3jCx589JuXk6v7arOjZKVMIuzVTtcNW67BI2N1Sv/tO1vpXZew6+OWlgh+
+ BtzfOsvNi5KxLjRGGqGPhJtBN3VmFTvpgdWNR8NKH7Gp6SbMkzFQdncMIrRdzS1uk7Hz+9X+9N+
+ g3oq2Ln4/BioZxzKZymYhmOg=
 X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 4c5c651460189e35;
-	Tue, 03 Nov 2026 11:46:31 +0000
-X-Mizu-Trace-ID: 4c5c651460189e35
+Received: by smtp.migadu.com with ESMTPS id 632a76e6b0da1a08;
+	Tue, 03 Nov 2026 14:49:18 +0000
+X-Mizu-Trace-ID: 632a76e6b0da1a08
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: david@kernel.org
@@ -112,12 +115,12 @@ Cc: akpm@linux-foundation.org,
 	mason@kernel.org,
 	stable@vger.kernel.org,
 	usama.anjum@arm.com
-Subject: Re: [PATCH v3 41/47] mm/ksm: check large swap-cache folios before mapping them
-Date: Tue,  3 Nov 2026 19:46:26 +0800
-Message-ID: <20261103114626.15764-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v3 42/47] mm/vma: call ->may_split() before a partial merge
+Date: Tue,  3 Nov 2026 22:49:09 +0800
+Message-ID: <20261103144909.6138-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-41-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-41-d6437171ecc3@kernel.org>
+In-Reply-To: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -131,30 +134,66 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, Oct 31, 2026 at 10:40:10AM +0100, David Hildenbrand (Arm) wrote:
+On Sat, Oct 31, 2026 at 10:40:11AM +0100, David Hildenbrand (Arm) wrote:
 >From: Chris Mason <mason@kernel.org>
 >
->KSM folios are always small, but their shared swap slots can be read
->back as part of a large folio in the swap cache. ksm_might_need_to_copy()
->skips large folios, so another process can map a page with an incompatible
->anon_vma or page index. Reverse mapping then cannot find the new
->mapping, preventing migration or reclaim.
+>A driver can use the ->may_split() hook to forbid a VMA boundary at
+>certain addresses.
 >
->Apply the same compatibility checks to large folios as to small ones.
->Pass the page corresponding to the swap entry and copy only that page
->when necessary. In do_swap_page()'s copy path, decrement only that slot's
->swap count, because the source swap-cache folio can now be large.
+>A device-dax device is a character device that gives raw access to a
+>range of memory through mmap(). device-dax refuses any address that is not
+>a multiple of the device's alignment through vm_ops->may_split.
+>
+>vma_merge_existing_range() can move boundaries, but does not call
+>vm_ops->may_split.
+>
+>If a range at the edge of a VMA gets the attributes of the adjacent VMA,
+>the function moves only that range over to the neighbour: one VMA shrinks
+>and the other grows. This is a partial merge, and vma_modify() tries it
+>before any split.
+>
+>Take a device-dax VMA that lies next to another VMA of the same file.
+>The user calls mprotect() on the one page of the first VMA that touches
+>the second VMA, and asks for the protection that the second VMA already
+>has. The result is a partial merge. It puts the boundary inside a 1 GiB
+>mapping, which is a single leaf entry at the PUD level.
+>
+>As part of the merge, the kernel looks for a huge PMD to split at the
+>new boundary. That code does not expect a PUD leaf:
+>
+>    vma_merge_existing_range()
+>      commit_merge()
+>        vma_adjust_trans_huge()
+>          split_huge_pmd_address()
+>            mm_find_pmd()
+>              treats the PUD leaf as a pointer to a PMD table,
+>              so the "table" is the device memory that the leaf maps
+>            __split_huge_pmd()
+>              reads a PMD that the user wrote to the device memory
+>              folio_put() on the folio that this PMD names
+>
+>Bad. While the code must at some point be taught to split PUD entries as
+>well, the issue here is that we move VMA boundaries such that they are
+>incompatible with the driver.
+>
+>Fix this by calling ->may_split() on the address that a partial merge
+>would move the boundary to, and by abandoning the merge if the driver
+>refuses. vma_modify() then tries the split, which fails with -EINVAL.
+>
+>Factor out existing split handling into check_split() and reuse it.
 >
 >Fix generated by an LLM and sent by Chris Mason in private.
 >
->Fixes: f1879e8a0c60 ("mm, swap: never bypass the swap cache even for SWP_SYNCHRONOUS_IO")
+>Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
 >Cc: stable@vger.kernel.org
 >Signed-off-by: Chris Mason <mason@kernel.org>
 >Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>[ david: improve description; cleanup the code ]
+>Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+>Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+>Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 >Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 >Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 >---
-
-LGTM1
 
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
