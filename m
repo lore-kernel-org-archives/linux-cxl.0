@@ -1,49 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.218.24
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793736965;
-	b=SDgNFMWzAL+yVyPAJSAx4a//8pv2yZoDt12JXxvw+Da6TQZZhWNI1cpcD09xzLCf20lg
-	 og+W5gRNbtWOH2eABtjIUt9IZHMANRI6FcE1dDc2gBbQnPdDmKMXJ6nHR8uYSzdF6uaZW
-	 BGSNC5/Y8g64lMDKC2EbmnHK6c885RFW5BF1csdA1vCCAQPajDlOgsDRK4U2oIkc9xLpp
-	 pxwZchzThS+VvPbqjZSgKt3Jww+tuBbQDv+Xs2mULAvGOFuUuAfVk7cS/osO7j3pNPoTg
-	 i+WIEjy/uAB6p2QxiKlgyn6zSm9A+O6ofS8Tepz4y/+j7FBilYs+zLm/kmtuocDr9cQ==
+	t=1793738779;
+	b=bPASK4VhOIL9zaMlNnCefzPJBd7ihZHTzw6IPDZKLKQXv7j7OmelZR7yQqqDnyweG4pR
+	 D/WE7vto+LELlvbv0BHaY41ZnvbwaGJyXsn0t4o8AomN7/GZx18ARiU1gtG4MyKGx61IN
+	 ZMoJqG5o60BRBG5PgB7WzHnFZQddZAwMSA2Gv/7Njys6TbL7HNay3x+vJSi8ReuvblDaq
+	 cfc1kUAdy9B9Dj+IZhSVjGZFfQsMAL8gGwj6mWJ/xNKbwpb1/UD6WpP0QrRo4kqB/y9Ag
+	 fNtBcMB8vcZGaaIONh2buAHf4Oc0s3xxp/T1yh4vG5fZMW3H1xqg6iJ2OYtMYaGXEKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793736965;
-	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=hYNTlkSNVOmO03JDGrtxWD2nbkkOaysUcNtUsh9A9Aw=;
-	b=FepHrupdHZ81i+Cvq/kwClSIf7lnqJ/Q+u8ehkJg2N5vgg+m4b/xk+QkXOtoDZML/InA
-	 86GsSPCm/9FJ5tPVP+IQVs2gbbjkbZ+946wiAfL4QCLJYL2SM1mFaZCX7qNPr8GE1jGbt
-	 QFr70A4XcxsP0tqWgnogWyCDIIOTtZyxW9oAuVBiDymXa1vXKwhMtAH6uuPTbm878kUGT
-	 LJBh5VwN/DP5BPG4SxyswW1IKd/ZD+Ky2xe45BIfHTIOTceIIsLljijXhk1dg8LZPNxHa
-	 CvCAxPzwSOwo7f54oLXdhP55tZBdOEivoDksPo7Eb8uq+uk17i6+X2FUBQFEsdJ0FdQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793738779;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Company-Wipe:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=jIU7d709b3DCMTX3C9XJdoZqLQtxTHIKdqVtHcC1xIE=;
+	b=zMi6UJRM2fTB8kpnNWh6j5HQ25m+4crhjqYbHCqF0Z/obE08gCfmPafdfXWPdqXqM/B5
+	 6xCYZm8PNLLGP5mUoWEIy8MsH3QmytOSxPFsvuzXLZu47Q6qUNn1eThauqS6YdAdRVqsW
+	 nT1rezJbhNCzIWqm4Oi0nPUAaYlNpsz/cpbLmc+fmMA4B+tuvkjSaHWXnzHN3lxVSPHy6
+	 PpY4U4ZBclXfNCm8g1pqdTWMSrGczFne21Tm2QY9SQ+LMzkbWKqOl0YehpG8eNy4w5umK
+	 Y7x91xGUSum5zlnd0Mzpw27FL5pwT+XFceSvGjveYbVZeDC0HdjLPgZwJb6Oj4uLTgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b="ZkVoq0Y/";
+	arc=none smtp.remote-ip=23.83.218.24
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD1C606A326;
-	Tue,  3 Nov 2026 20:16:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832AA1F000C1;
-	Tue,  3 Nov 2026 20:16:04 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>
-Subject: [PATCH] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for djbw
-Date: Tue,  3 Nov 2026 13:15:47 -0700
-Message-ID: <20261103201547.4079847-1-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1241606A31B
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 20:46:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1241606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=ZkVoq0Y/
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id BF79E9430B0;
+	Tue, 03 Nov 2026 20:46:10 +0000 (UTC)
+Received: from pdx1-sub0-mail-a249.dreamhost.com (trex-blue-0.trex.outbound.svc.cluster.local [100.99.198.86])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 59212941F73;
+	Tue, 03 Nov 2026 20:46:10 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Company-Wipe: 38a4697b7f5f457d_1793738770569_943858695
+X-MC-Loop-Signature: 1793738770569:682477327
+X-MC-Ingress-Time: 1793738770569
+Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.198.86 (trex/8.0.2);
+	Tue, 03 Nov 2026 20:46:10 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4jK0wK73ryzymg;
+	Tue,  3 Nov 2026 12:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1793738770;
+	bh=jIU7d709b3DCMTX3C9XJdoZqLQtxTHIKdqVtHcC1xIE=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=ZkVoq0Y/0CDTP5YEDgp+K/wFLm+J6nmTBQeX8jZgX9bNGJRChLCWfLtmVBO3rcDUf
+	 g+++ZLAXa6yUdUoBGSrGX7UWbhuByoYl0av+3zSd+y5aeL5LQbbJeRWWTsZ4XYNt8j
+	 TsWhj4a03v7sZOc0PGvRd2WGWggX0Edu3aulyzh5gMb9ke8+OIQ5LnIZbMKCAb0tPw
+	 hVNUNNzHz/m5DCfSvZlE39ogc9Jx2odqPWLZQKy2yY1KUXyczEhxKMv+FJ2uKtsPy/
+	 DanAKEJicGps5Pcn5TMraDuF8fmVoi2O/44xd++kfRUPXpJaEHVHJI6XP+7PgPrB8G
+	 zeLrGNLZ08A/A==
+Date: Tue, 3 Nov 2026 12:46:07 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: sashiko-reviews@lists.linux.dev, dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v10 04/10] cxl: Add HDM-DB region creation
+Message-ID: <20261103204607.xybp5dfybdu5tlip@offworld>
+References: <cover.1793567979.git.dave@stgolabs.net>
+ <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
+ <sashiko-outbox-192709@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -53,112 +90,100 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <sashiko-outbox-192709@kernel.org>
+User-Agent: NeoMutt/20220429
 
-Dan is no longer with us. Removing entries in MAINTAINERS to prevent
-people from keep emailing his address.
+On Sun, 01 Nov 2026, sashiko-bot@kernel.org wrote:
 
-async_tx will be essentially orphaned. There has been discussion of
-deprecation for the feature on the dmaengine mailing list.
+>Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+>- [Medium] cxl/acpi: cxl_acpi_cfmws_verify() rejects Host-only + BI windows on QEMU 11.0+
 
-fsdax will no longer have a maintainer. But there are reviewers still
-and Alison Schofield will continue to wrangle patches for DAX overall.
+We already decided that the check stays.
 
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Frank Li <Frank.Li@kernel.org>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>- [Medium] cxl: stale cxlds->bi state on reset in cxl_region_decode_commit()
 
----
-For FSDAX, Jan or Willy if you guys want to step up and be the
-maintainer please let me know and I'll update the entry. Thanks.
----
- MAINTAINERS | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+This is mostly benign, but still worth a fix, see below.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 14e4daf8ea8a..32b86033b5f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4285,8 +4285,7 @@ S:	Maintained
- F:	crypto/rsa*
- 
- ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
--R:	Dan Williams <djbw@kernel.org>
--S:	Odd fixes
-+S:	Orphan
- W:	http://sourceforge.net/projects/xscaleiop
- F:	Documentation/crypto/async-tx-api.rst
- F:	crypto/async_tx/
-@@ -6715,7 +6714,6 @@ M:	Jonathan Cameron <jic23@kernel.org>
- M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
- M:	Vishal Verma <vishal.l.verma@intel.com>
--M:	Dan Williams <djbw@kernel.org>
- R:	Ira Weiny <iweiny@kernel.org>
- R:	Li Ming <ming.li@zohomail.com>
- R:	Richard Cheng <icheng@nvidia.com>
-@@ -7610,7 +7608,6 @@ S:	Maintained
- F:	scripts/dev-needs.sh
- 
- DEVICE DIRECT ACCESS (DAX)
--M:	Dan Williams <djbw@kernel.org>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
-@@ -10304,12 +10301,11 @@ F:	include/linux/fcntl.h
- F:	include/uapi/linux/fcntl.h
- 
- FILESYSTEM DIRECT ACCESS (DAX)
--M:	Dan Williams <djbw@kernel.org>
- R:	Matthew Wilcox <willy@infradead.org>
- R:	Jan Kara <jack@suse.cz>
- L:	linux-fsdevel@vger.kernel.org
- L:	nvdimm@lists.linux.dev
--S:	Supported
-+S:	Odd Fixes
- F:	fs/dax.c
- F:	include/linux/dax.h
- F:	include/trace/events/fs_dax.h
-@@ -13444,7 +13440,6 @@ F:	drivers/platform/x86/intel/hid.c
- 
- INTEL I/OAT DMA DRIVER
- M:	Dave Jiang <dave.jiang@intel.com>
--R:	Dan Williams <djbw@kernel.org>
- L:	dmaengine@vger.kernel.org
- S:	Supported
- Q:	https://patchwork.kernel.org/project/linux-dmaengine/list/
-@@ -15267,7 +15262,6 @@ K:	libie
- 
- LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
- M:	Vishal Verma <vishal.l.verma@intel.com>
--M:	Dan Williams <djbw@kernel.org>
- M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
- L:	nvdimm@lists.linux.dev
-@@ -15277,7 +15271,6 @@ P:	Documentation/nvdimm/maintainer-entry-profile.rst
- F:	drivers/nvdimm/btt*
- 
- LIBNVDIMM PMEM: PERSISTENT MEMORY DRIVER
--M:	Dan Williams <djbw@kernel.org>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
-@@ -15296,7 +15289,6 @@ F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
- F:	drivers/nvdimm/of_pmem.c
- 
- LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
--M:	Dan Williams <djbw@kernel.org>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
+>- [Low] cxl/acpi: unreachable third coherency check in cxl_acpi_cfmws_verify()
 
-base-commit: abf8c33470f78e2226ee3dcdc69004660020ab47
--- 
-2.54.0
+I've removed it.
 
+[...]
+>> @@ -346,6 +363,21 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
+>>  			cxled->cxld.reset(&cxled->cxld);
+>>  			goto err;
+>>  		}
+>> +
+>> +		/*
+>> +		 * A reset after the check above wipes BI Enable, but
+>> +		 * cxlds->bi is only refreshed from .reset_done, which may
+>> +		 * not have run. Ask the hardware.
+>> +		 */
+>> +		if (hdm_db && !cxl_bi_decoder_enabled(cxled_to_port(cxled))) {
+>> +			dev_err(&cxlr->dev,
+>> +				"%s:%s BI disabled by reset during commit\n",
+>> +				dev_name(&cxlmd->dev),
+>> +				dev_name(&cxled->cxld.dev));
+>> +			rc = -ENXIO;
+>> +			i++; /* this target committed, so undo it too */
+>> +			goto err;
+>> +		}
+>
+>[Severity: Medium]
+>When a reset clears CXL_BI_DECODER_CTRL_BI_ENABLE in hardware without
+>.reset_done (cxl_bi_reset_detected()) having updated cxlmd->cxlds->bi (for
+>example, during a concurrent reset before .reset_done runs, a secondary bus
+>reset that does not invoke .reset_done, or on a Type-2 device driver that
+>does not call cxl_bi_reset_detected()), doesn't this leave cxlmd->cxlds->bi
+>stale and transiently commit decoders before rolling them back?
+>
+>First, in the pre-commit loop at the top of cxl_region_decode_commit(), only
+>the software flag !cxlmd->cxlds->bi is checked rather than
+>cxl_bi_decoder_enabled(cxled_to_port(cxled)). If hardware BI Enable was
+>already cleared while cxlmd->cxlds->bi is still true,
+>cxl_region_decode_commit() programs and commits the endpoint and switch HDM
+>decoders in hardware with CXL_HDM_DECODER0_CTRL_BI set before catching the
+>mismatch in the post-commit check and rolling back via
+>cxl_region_decode_reset().
+
+The post-commit read prevents this. A reset can land after any check made
+before the decoders are programmed, so only reading the hardware once a
+target is committed closes that window, and the target is undone before
+the region is ever committed. So a stale flag cannot commit anything with
+BI.
+
+>
+>Second, when the post-commit check detects
+>!cxl_bi_decoder_enabled(cxled_to_port(cxled)), it does not clear
+>cxlmd->cxlds->bi = false. If .reset_done never runs, cxlmd->cxlds->bi
+>remains true indefinitely: back_invalidate_show() in
+>drivers/cxl/core/port.c continues to report 1 while the decoder is attached,
+>cxl_region_check_coherency() continues to allow attaching the endpoint to
+>HDM-DB regions, subsequent commit_store() calls repeat the hardware commit
+>and rollback cycle, and cxl_bi_release() attempts to disable BI on teardown.
+>
+>Should the pre-commit check also verify
+>cxl_bi_decoder_enabled(cxled_to_port(cxled)), and should cxlmd->cxlds->bi be
+>updated when hardware BI Enable is found cleared?
+
+The first, no - per the above. Only a read once a target is committed is
+conclusive.
+
+The second, yes. This can impact the sysfs 'back_invalidate', for example.
+I've folded the below, and in addition sprinkled READ/WRITE_ONCE lockless accesses
+to ->bi - which while is a bool so no tearing, readers run under cxl_rwsem.region
+and the writers under the endpoint port's device lock. It does document it and
+potentially silences kcsan. While I couldn't get a kcsan splat with the
+code as is, I was able to artificially trigger it in a tight loop reading cxlds->bi,
+so it is best to have these.
+
+@@ -374,6 +374,8 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
+  				"%s:%s BI disabled by reset during commit\n",
+  				dev_name(&cxlmd->dev),
+  				dev_name(&cxled->cxld.dev));
++			WRITE_ONCE(cxlmd->cxlds->bi, false);
+  			rc = -ENXIO;
+  			i++; /* this target committed, so undo it too */
+  			goto err;
