@@ -1,91 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.209.135
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793738942;
-	b=s5jipH3lc0kGLZeo4Gs1tvuyGPmyGHch/6fPhIDD9c33mFJvNQEp6maK9izSfJgHDEda
-	 B5kGAiP/jZ6G5FOJ5ePszsZZLQm5LbkozZBfYuWRlHgPBtjy233pK9oSCjqaOMqaqz70I
-	 mmjVzCVlCM4zbAQ/AH7OkXgp02CMHgfzgQk1mXcg2rpxn1/+ySyo1dt8UUlxHgLLXdv+d
-	 Sb0rKJFFgjVClBvR9xSc9KOBDHgILkEHiW0/5mrefTfvQigLsAWhtmH2hvJnE6ppjLp6Q
-	 vr8eG2KmLnWqhtSp23yjt9ZwLo8xaZSCdaJFbAGk5MzEwS5H3PsnSlVHaprIMKpzsuA==
+	t=1793739147;
+	b=je0UZOpbHdzlBPPTw26Q0eD94RQmGsyhjqZbx7S7geNkvizRHy7uLr+Izd1VA4CD/l+a
+	 MtFD5UZfST9QNVKCJ+dLZ36LO4hb5NrQm/m/fU7Xp/D/CM5gUMJuMREw9jfkffa/hNrAf
+	 p6Hpj+OaPLjbDU+Ji7Ije7WX4NzFeJiipe21iaiwD9nGXg4l9wqTpeBrCffVL2RsD/FvU
+	 S3YgP/90zXZWY2nJv2fu+bm5thGDehUs7qVUQg2ngyTDipPZmp/I8Iwi80aYSjnrFxh8B
+	 JicZwIuWySrZkRKm3EtEXaoEvyd23UeipfBA2hm5lzGHm+8H7GqgdCD7x1n9SzZvr4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793738942;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793739147;
 	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Spill-Robust:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Stop-Whispering:
 	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
 	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
 	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=CixWyglPjJq+NuYBAuybNSUrDT7S8FVzUuoegqk0l5g=;
-	b=lGmvMb+roSk0YY40Y6+iub4GAmJw1X6g9bVB8J0PFzs0cG8BDHezdxKBEq66uCgiTnB2
-	 B7NS170vSfdH77aHXnZhGKqtK60Fe5c4ys+G4+16bRlYfHkW7Mtc46vUl5Lj3aC3kxdIK
-	 5j3vd4UxKrSkQoXiZjA086xfCGhDNhvlCTyuU/BfnSeCz1OMwvSw2aTUpfGKq2WxJclLw
-	 TZOtTyeUyQ+4m8JtHlGqhuvopaXzYrKLIXWE40ipPfc5dTbC7wh6nfm7RoytcX+tnCXwk
-	 +3P6ptsvXes+k9oMVTPfo3RzBylAJjiukiwKo2BlZk4/2LklJONMlTwbprKqbYxEJ/w==
+	bh=6M/kUMvA0UzgjNwvS0eMpTxMfz/tcXoWNV729ws5vZ0=;
+	b=UUr89SPRBdvS2wBCVW9dlDrmAHe6Ug8B4xdBDBmldvEEcV+/NmDbHoInCalJ5OP0NMDV
+	 5s+B+TGfVkis/jzWWH5ucoprgprviW8OjTC08NqmsRj7JfBw71aXnQisq1wMMOLzAffsF
+	 Xo7TR9qpXLBooNrdk4pVSqcsu0wfZV6SxIL+KakznEceMQH8Xtawhl3Egjw7Ur3l0mO16
+	 kMfROyFHfYA9bga74g8FCPwh9RCC6RPF92pY6f3HwCcPYXoZmQkzToABZLLnuP1NrMVnr
+	 q7vIxS+CUnIo3NmGOmOtGHCskQR38JlvjYbsVUOIzguqKUF9HXBH7Ubo6HEAzHGPkRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=stgolabs.net;
 	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=b8zCEMv9;
-	arc=none smtp.remote-ip=23.83.223.162
-Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=A2qF8jnG;
+	arc=none smtp.remote-ip=23.83.209.135
+Received: from olivedrab.birch.relay.mailchannels.net (olivedrab.birch.relay.mailchannels.net [23.83.209.135])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD660606A324;
-	Tue,  3 Nov 2026 20:49:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD660606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA453606A324
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 20:52:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA453606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=b8zCEMv9
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=A2qF8jnG
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 885DE4C1392;
-	Tue, 03 Nov 2026 20:48:55 +0000 (UTC)
-Received: from pdx1-sub0-mail-a249.dreamhost.com (trex-green-2.trex.outbound.svc.cluster.local [100.99.192.246])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0A947941A7C;
+	Tue, 03 Nov 2026 20:52:20 +0000 (UTC)
+Received: from pdx1-sub0-mail-a249.dreamhost.com (100-99-189-159.trex-nlb.outbound.svc.cluster.local [100.99.189.159])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 2EA7C4C0C00;
-	Tue, 03 Nov 2026 20:48:55 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id AC468941609;
+	Tue, 03 Nov 2026 20:52:15 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Spill-Robust: 300bfe26607bd16d_1793738935457_4122454896
-X-MC-Loop-Signature: 1793738935457:1005928785
-X-MC-Ingress-Time: 1793738935457
+X-Stop-Whispering: 2a78b63d2dcf4f6b_1793739139889_1141921077
+X-MC-Loop-Signature: 1793739139889:1747846557
+X-MC-Ingress-Time: 1793739139889
 Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.192.246 (trex/8.0.2);
-	Tue, 03 Nov 2026 20:48:55 +0000
+	by 100.99.189.159 (trex/8.0.2);
+	Tue, 03 Nov 2026 20:52:19 +0000
 Received: from offworld (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4jK0zV1BM8zymd;
-	Tue,  3 Nov 2026 12:48:54 -0800 (PST)
+	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4jK13M0KSlzymg;
+	Tue,  3 Nov 2026 12:52:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1793738934;
-	bh=CixWyglPjJq+NuYBAuybNSUrDT7S8FVzUuoegqk0l5g=;
+	s=dreamhost; t=1793739135;
+	bh=6M/kUMvA0UzgjNwvS0eMpTxMfz/tcXoWNV729ws5vZ0=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=b8zCEMv9bhNCGM1tlmBK2EMLJBD1rcF1sm/u/EJTNNWWz3OG1iX9Mq2VL/ghE/4ch
-	 eqIGuBDuWjE/XvR9GDMpJYcW+YN4O6EOHwLc6oCxjxXAmxmm3my/Pm9mfPSUeqD+r8
-	 8LymCeE1FL+poryrkmBlBe40sOxdEo61oLWoduxYafry4p5ZKyL+1KoaggZy1x3tnR
-	 MPUBnvbI4fmY65BFuS1xCcROWODExD4KaFCSJLB4WxsmSTa0PRyDNOq0FHF38KFrY+
-	 wFO+5dUpyRyhr5qxbyRbWNgFPjJwznKh18a7eY4Ho1+qvk7sZ7M9bzfyY3Wq1JAdjw
-	 HwXsk1TKvFPOg==
-Date: Tue, 3 Nov 2026 12:48:51 -0800
+	b=A2qF8jnGKe7qjEAZhm/L9ZZ0dAEv8Ogmmz8sAhmTjkw9jBOxcBBguogGN65rdb/YF
+	 kcTTwaAQliZBO3D4I2hRNbB7XfTWV5Q8PucWLDVwwN3rz6oRWMXyJiMvHbi0Ry9mBF
+	 qzNm/yoRTPbU17BLcqg9IHlIqsAsyowTwgFW3jejAKOy34qDAhyRGgGgU7hgxG5FvD
+	 W4b2YaKUboh5+vH3KPDaZKQnV84TZ/lqsVhj7GuRdGZAI/qgawUoHknoTpKBbBf0CV
+	 qGSUOz2bLAlpa9kD/csso9MSYGd9ITPxjlg448iU03Lqka83Sfd3YbUGWW/h2gCz0w
+	 rzbSAst5m0h5A==
+Date: Tue, 3 Nov 2026 12:52:12 -0800
 From: Davidlohr Bueso <dave@stgolabs.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Jonathan Cameron <jic23@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for djbw
-Message-ID: <20261103204851.v2blzpa25xopouc6@offworld>
-References: <20261103201547.4079847-1-dave.jiang@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave.jiang@intel.com, jic23@kernel.org, icheng@nvidia.com,
+	ming.li@zohomail.com, benjamin.cheatham@amd.com,
+	linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: Re: [PATCH v10 04/10] cxl: Add HDM-DB region creation
+Message-ID: <20261103205212.7vtja6zizuetpsui@offworld>
+References: <cover.1793567979.git.dave@stgolabs.net>
+ <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
+ <aulMglfChjfQGGOz@aschofie-mobl2.lan>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -97,30 +95,22 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20261103201547.4079847-1-dave.jiang@intel.com>
+In-Reply-To: <aulMglfChjfQGGOz@aschofie-mobl2.lan>
 User-Agent: NeoMutt/20220429
 
-On Tue, 03 Nov 2026, Dave Jiang wrote:
+On Mon, 02 Nov 2026, Alison Schofield wrote:
 
->Dan is no longer with us. Removing entries in MAINTAINERS to prevent
->people from keep emailing his address.
+>v10 changes LGTM, Thanks!
 >
->async_tx will be essentially orphaned. There has been discussion of
->deprecation for the feature on the dmaengine mailing list.
+>Looking at Sashiko's comments:
+>1. the qemu 11+ regression I believe we agreed not to worry about
+>2. the stale BI state after reset, needs looking into
+>3. the unreachable CFMWS validation is a minor cleanup
 >
->fsdax will no longer have a maintainer. But there are reviewers still
->and Alison Schofield will continue to wrangle patches for DAX overall.
+>With 2 & 3 above addressed, you can add:
 >
->Cc: Alison Schofield <alison.schofield@intel.com>
->Cc: Vishal Verma <vishal.l.verma@intel.com>
->Cc: Matthew Wilcox <willy@infradead.org>
->Cc: Jan Kara <jack@suse.cz>
->Cc: Davidlohr Bueso <dave@stgolabs.net>
->Cc: Jonathan Cameron <jic23@kernel.org>
->Cc: Vinod Koul <vkoul@kernel.org>
->Cc: Frank Li <Frank.Li@kernel.org>
->Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-Thanks for sending this.
+Thanks! fyi I replied to sashiko with these (particularly point 2):
+https://lore.kernel.org/all/20261103204607.xybp5dfybdu5tlip@offworld/
 
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
