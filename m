@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=198.175.65.19
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793674100;
-	b=FWtlEum1byLu/Dq3Akc7i0Bx0Beh+3P2r1+xzQRXp1xLxSDsyvnteppQLqUH2KOILdMS
-	 S8DUYw+9zZcXe0WgxupesbGDqrXOXsG+T47Gya/NlSif6r/BuG0OgRtfQhT9/zG5Kl2Cg
-	 fsVl7AdBAtskKPt+DOWt9oXRGGRJCrZjQepkjeiXS53FE0L0fx52EA/BLpS8tDFDKNpoh
-	 Y30ZhFY5VW5pBLBOY+5SliK+5UpHHAVday5KFV3UvEBn1/cRo2Ta8uDWTfx9/fw60MEqy
-	 wHIWYHbvobpLozeNvH7pJG7wcCtFWy+0/mUm2jlgv9QidhAYbBa+YBOduexIlE5RxaQ==
+	t=1793674378;
+	b=0kwUVtXx9wpye5qJ0/Xxtl2aLAKwtMg4+6OiOYLKX4hwM0LnRRvy0WmQYedN0gQbO1gx
+	 PZP8D+6OIhghAOzHjti9H650oG+VdoxOG0CniwS48grAzOMANvlKvIawliQbzefDMJLDy
+	 rwG4ndBZzeTc/sOq+Dlu//7tL/xv8CZnmiYZ9Aps2jw5VPKNZ7B8lVjesoMqCJnZT/+wO
+	 1bEiuw5LD011hwQP1Alk3p8iAesI1OJ5cVY8UJjBS34Ixq1QU/CSdP/mDP2HRFgmH51SW
+	 J1XdiM8sIe96OgN0MXlBisxBFgS9uP4ieP7aBA1ifmFuSoLEhZMQJsNixD2XDuKZQ7w==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793674100;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793674378;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
@@ -27,103 +27,103 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=JvIKPG5k0lrzUGOluElEfe/QzZoNs9tDkNcEqx/qEyY=;
-	b=w7GanEAhFh5HDdxMhNa4uxq9BUinh2KL7ryY5PtH9Aj76ct93+hC6eO8RywZhg2VR+de
-	 AfqUyq8hxiTS9NCveukFssgg1f0vUpnhMMUkk1BV+zHUWLPKBsOzbS4BL5/rfOFeAYq9h
-	 Ts4ySUXzmnVESugbse7mLLgQe67HFyGTsMVLVloydvgeXA/4A7thQyI/7SWODlq9RjEXz
-	 1u1AMBfZVfqvySGzal6VawGFrEQyw67NqwIbhe3XUuK5xq1w1erNQTfha1GOXsyTlGPr0
-	 aHy8/Yf83HJm14XKHTBGoc73Pm4ytDPTocnGL5Hm0J5qjUrcNocJBRCpfRhvgjiN4ig==
+	bh=eRd44CKEQtge4Na6GXz7f0ITzt//t1Vz8Os30TRjmnE=;
+	b=TtUNbMTBrEfnj9oXI+760vo6Gj1wYGPAXFAgEDVsVkPYZHjYYdZRfdVAGUOIVG0LeO1c
+	 XJeAm+e2Q2IGqEBcf3gtcAAY2HDQ5Z4qyqYfNQOFAJWYC36+5kz5eJcD2x9r/uz8WpMYY
+	 yf12d+WGH7ZXProw4y9NNFiSzSLkPpKHdbIPDK33OraCw7s7c4FRau26xoA65mNVn0ECA
+	 xFgR0N+MtrVag5YLLpUfmrUv0t1Qf8sMFcFYaLaOISwrJAxQK5nHzKgzaPKQFdxz8nmVC
+	 nM5itLYZa4dz1AgroytOfodVQp470XKNnMOVqYdfncO6MbRgbmTBMEiTLhXbqeiuEjw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KAV6Zzgy;
-	arc=fail smtp.remote-ip=192.198.163.14
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mWHLqVoQ;
+	arc=fail smtp.remote-ip=198.175.65.19
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DE6606A324
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 02:48:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06DE6606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9C2606A337
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 02:52:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB9C2606A337
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KAV6Zzgy
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mWHLqVoQ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793674099; x=1825210099;
+  t=1793674377; x=1825210377;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=svI9rXEEN6MRbKg/Vdl07w89aHjxSm2LQ/VVChB1/wo=;
-  b=KAV6Zzgy0sd7d/sr+W1+YS5rWkkXL1GTEOgiQKRKS7r9A2WllW1XfThv
-   02Zj2ndzOm3MERkCkKYKi1K8Hj0jLosHD0Xnnu7evkP9LrThQPbPSVrtN
-   qAqWXPCb//LQ6PEdb+6vIo4MEWLuAsjv7elcfppmBi80DkTp9aRHJgBJo
-   nhTsH+KKL1UlOzsw89cldguYSFRWZaynqtmZuEjaV76ICnEigMs/xbIPl
-   hQefkyWgLGPhD++lZBv63RYwVV03cPfi+tSwWv31qgxbmKSL6qCz/zHQ9
-   nC9rCEgyyyszfygtdbOIiBX+OHFmoGasVhcnXyVk/XLSuiNg6jC0Zq/O8
-   g==;
-X-CSE-ConnectionGUID: x5RykghbS6G3xsDtz8u1kw==
-X-CSE-MsgGUID: Gxg9teDVRZ294NH89fdvaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2415996"
+  bh=uUJmbM+cn9zO0gshO+ybX0jGJAOEfuHaWYhmkRPpeY8=;
+  b=mWHLqVoQkxcUpgQYNSPyDZRYayCB14dRDxaUpRnUYlf2LedIyNDtlpwc
+   YP3NrMc0mXZAhH5taAXtF9TLstGK/fdFFy9XUpbLMpTTK1eu4TGf5i2jr
+   Fv6hmT2+2btlUi+pdi4XehzirJRJGe9Dn55rCX7HCPUA1Zw0Psj6C/N1K
+   XasvDNCPjmyopTCSXmPR8xEyF7tKZ4VRq1Jqb/zmxYPW5aXfSsXsM7FRe
+   +DWT/Oj7uWOFzJ3aS7GqofHa8kRxRyGDzYL1WLElChIlQbmyNx3Za6OHh
+   QhtaB4/dRTlL1jkcPXHohl5jgA4/UtQpnsxsJXmLEYaPTIsm2hzkX4p5/
+   w==;
+X-CSE-ConnectionGUID: v7NCBh3TRm2mmShH6FvS+Q==
+X-CSE-MsgGUID: 5pQhoBHVRPWyNELPlGGMYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11954"; a="2414407"
 X-IronPort-AV: E=Sophos;i="6.27,192,1787036400"; 
-   d="scan'208";a="2415996"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 18:48:18 -0800
-X-CSE-ConnectionGUID: +V+/MSrLQV2EfmEetrHSdQ==
-X-CSE-MsgGUID: HY+PvWGmRyGAjLjB8esC+g==
+   d="scan'208";a="2414407"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 18:52:56 -0800
+X-CSE-ConnectionGUID: +/6N8CgvRWaK9owACCOpCw==
+X-CSE-MsgGUID: P/qLbw1jTvqWF6hqWl5BoA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,192,1787036400"; 
-   d="scan'208";a="6131987"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 18:48:17 -0800
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+   d="scan'208";a="6620796"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2026 18:52:57 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Mon, 2 Nov 2026 18:48:17 -0800
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ 15.2.2562.56; Mon, 2 Nov 2026 18:52:55 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56 via Frontend Transport; Mon, 2 Nov 2026 18:48:17 -0800
-Received: from BN8PR05CU002.outbound.protection.outlook.com (52.101.57.49) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ 15.2.2562.56 via Frontend Transport; Mon, 2 Nov 2026 18:52:55 -0800
+Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.18) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Mon, 2 Nov 2026 18:48:17 -0800
+ 15.2.2562.56; Mon, 2 Nov 2026 18:52:55 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=r1m25dhXqb/sNjUntg0d9rLb9O/w70PXfAH9euSEHzjvvHham8KPQ05kpMgc+JA1Ed722sLNOvqEAUZ0QGrmQRc3LzNLkhi0HFz2Lur3T/3P/2TrejQ/zt9182dFZFB+zrjtI0NcWITn6Hvculvp0DVKorUrsc4cqLpIGQ1qURzoYPGenHyiOAj8VsrlcXP/NiS9v/U2jfik4S43xJ6vfhepD+MYC9aaFL0gBu/IAhwoH0ryKl7gKYjxOWElWieRMuNFRXcqN92PdM8mUT/mgh82nvExDYAs7l52ytYtHKehHcxAEDhJtkGRXBdq1qRNMdMehVQWw2HQEx5zW3Pl3w==
+ b=TLZ+9B+oonawfDxkaxqaeFJ32ZE8QjWAPurxyRQFvzVCmErKNjQyOrXBBD0+wLTrLei9Ukxg48UoPZnw/XCZ/hbyGV8REqBkoXbzUk5YsjGEJAZkSxwSkdioE6rMGRvewh6n/FFxqnl5yRtOByip6NqgsjJfF0knSg7InWc02ckKB7737HK1epL0mniQFRDOx3cIpk21NBYbdh6S+36IBLdv12Qs3ODOSCdzDov+Xm0U2/5Tb5K8kpOc8kN0pp7g/1HC2P6ng8EY/BMUZIssfEHvBvAUG0F1gaSyey54ca6800BOBlXKTZK2d+1cgmRrDWkXbJRHVYfR09XxBAKHxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JvIKPG5k0lrzUGOluElEfe/QzZoNs9tDkNcEqx/qEyY=;
- b=ndy8wk8CtOZwdQxjQh2RUWORMla8zSwrMOTthhoxhUtXI84RadVF0VhopfM7R9UuPmedheODIubrUKTIiMajIl+aZhm/ZzO6rI2g7FXcG8q++SmP6R40msDM/Exg1rtl5gXfYyK3XUjdIvKGfQB2e97f8sn3wTsMsQF9b19+kTr4s8Qqqi9LKJ5sJEnqvQV4jcqo9KWuGaCWdC9QZV87MYHr1C4EwslsNAozSPzXk1zZ76V19QaPnBMsKOwBN/Ww6chwzLTowOA0S/HUOInsdst0beLvqcYjOgmp8VH5xK1iTNrcZ53tjYODVqilbskSd3i3POZXnI2nJq/9BVSpAA==
+ bh=eRd44CKEQtge4Na6GXz7f0ITzt//t1Vz8Os30TRjmnE=;
+ b=W2CNBoAKkWQbEcP9RtUPFoipFGMN6rYERWP4WzIBbhRGcKsrumtoouYacM2MJ+qnBAY7RFl8CKwOaOVfXCQWza8Jw1/liJwcTYMD6IDEsetkLoWEF3GNT9R7i/f3PFvvm0cO0MWvVOevsPZk5qxWreiOyI5cQV346YtG1Pgb+yFJE4TSPUqa7Sa5IDLtAeXbhC1Ufc4ULxcPHL93zKdHX/Cs2bO5/CXrIRoOUifeBWa8BXiaOhI2j7d+t5SHMPpdjdn2UPQXy9ghXT4dmzNpr0XejJL/MnUObyWTJrceWMLMvSQiC4TeTr1Oe5hdoodQANKekdATD4r8EssmoHgJFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SA2PR11MB4954.namprd11.prod.outlook.com (2603:10b6:806:11b::17) with
+ by DM3PPFAB6A6CF3C.namprd11.prod.outlook.com (2603:10b6:f:fc00::f44) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
- 2026 02:48:15 +0000
+ 2026 02:52:53 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 02:48:14 +0000
-Date: Mon, 2 Nov 2026 18:48:11 -0800
+ 02:52:53 +0000
+Date: Mon, 2 Nov 2026 18:52:50 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>
 CC: <dave.jiang@intel.com>, <jic23@kernel.org>, <icheng@nvidia.com>,
 	<ming.li@zohomail.com>, <benjamin.cheatham@amd.com>,
 	<linux-cxl@vger.kernel.org>, Jonathan Cameron
 	<jonathan.cameron@oss.qualcomm.com>
-Subject: Re: [PATCH v10 08/10] cxl: Handle auto-committed BI hdm decoders
-Message-ID: <aulLa-fBF1T_LDQU@aschofie-mobl2.lan>
+Subject: Re: [PATCH v10 04/10] cxl: Add HDM-DB region creation
+Message-ID: <aulMglfChjfQGGOz@aschofie-mobl2.lan>
 References: <cover.1793567979.git.dave@stgolabs.net>
- <db0f7cc38da1300596a7b8653bd2fba010e20e52.1793567979.git.dave@stgolabs.net>
+ <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <db0f7cc38da1300596a7b8653bd2fba010e20e52.1793567979.git.dave@stgolabs.net>
-X-ClientProxiedBy: MW4PR03CA0137.namprd03.prod.outlook.com
- (2603:10b6:303:8c::22) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <187374442f21d6cc52ec6b9e390550db198f05c2.1793567979.git.dave@stgolabs.net>
+X-ClientProxiedBy: MW4PR03CA0301.namprd03.prod.outlook.com
+ (2603:10b6:303:dd::6) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -135,126 +135,128 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA2PR11MB4954:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbc4c261-646b-4c52-9596-08df3954e84d
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM3PPFAB6A6CF3C:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd8c55dd-fcb1-405d-3107-08df39558e6d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|6133799003|10067099003|22082099003|261102123227099003|18002099003|56012099006|11063799006|5023799004|4143699003|261026140227099003|261022105027099003|261021121427099003|261021123027099003|261026121527099003|261028144727099003;
-X-Microsoft-Antispam-Message-Info: Mv3TOAft3neitppmo1Ph0qdUDr602NyZKwyGsbZaYs4BTvElVOPhhA1YmKvKuYc04NfO6//cWqdhCXSYePDDwZk13BbK+1VqaxOau3/vNG8D2CGKPv3GSbiOcVQ5racRQkjZBygHktaqRjO6icpwGZk6ACm+nCOtaZ7RhT8usDRbW0zpGinmsArnPFnp+8EWEuHBCHtVvOzrYBzKNV4Wjc7suz7wlf3f1sV5jjpc9sUmJMWnziFKOx8abFjGpX4fJTJUswYrrpfg7tLGiYkSFBmpRKQ2HaQJ2RG/LM4EMHq44Q5qjN7/eMwF+USPjl+CYQYFZ0WOJBG23ylXM/Nhi66nycP8sSlwurVw8ciCeI3c0ew1p/dXfdDfkURaGQRNex/otYDlDSwILZuOvU1R/YKR9+49+n+aMaL0ABemLlRRliMYPeGHB/WlEeUcZeoYSMuz8prsrjlyIoAp7wGcrnIkBENDQQyTzHyk0/AsJu6sKi3qbtGY4qgtCskdyapyZB6CplcrfvneoMbrMnOXlOG9+hnZPHyIPhUIu3U+dUsgswmhC7g1e8qKpzH3MzRMe9uL4uflTq0HHZTh7y/Ya4cYo7pSmbeQTaR0SKKTjXzmlS+lYIJfEzwGPNM8EiP7n08kmwFCZq9yjZaW+TjFW8rULUvXKlhQItpGuIFT5uE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(6133799003)(10067099003)(22082099003)(261102123227099003)(18002099003)(56012099006)(11063799006)(5023799004)(4143699003)(261026140227099003)(261022105027099003)(261021121427099003)(261021123027099003)(261026121527099003)(261028144727099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|6133799003|10067099003|18002099003|261102123227099003|22082099003|56012099006|11063799006|5023799004|4143699003|261022105027099003|261026121527099003|261026140227099003|261022075727099003|261028144727099003|261021121427099003|261021123027099003;
+X-Microsoft-Antispam-Message-Info: jD2ieriwnz2G/2t95wcOptxmpkxp9xUdg7s5wvn7KATq9yCcIsafPgdiB9J3/Daj6Xt6qpwpsFPOOAE0Z+3qC1RgR74B/uvZTcF/BOinbrjK0g1RUtfXANnqkuAKEYX83olpbOQCUbzU5QcK/ShOHESp+nECtnarIGnt8yCxUshPU1x86OhxsEWKlhO2E3eRG6XE11O6wGfNO2ZWM4bnf+dvpMtxYjRa8CRterFlZgWjUHwhHG75yB2+Zj/RXRBVaG46HzC7yh4aqzC3mPzgMLeNp+KhKpgrwhkIFDOTSxgPu7Or4RFCyzfHjKFlWlTGgWhvxJQvDfW7okX9t4NEogM3OibsnsD9wCHgVxaSe/dfCJMsNogImUzkHdH2MDohhp+fHkWsITHK1Bx+u3aulRaHA4/ZD3j0d4XDOO0p7P9IcEC1+Yfz30zG/x/ajrIg59H86YqzJq01EKxHm3s8F4OrPXN3+iwB7jPtyrasjWjm9HaYcuWPzO8mEBrLgNzHHFOXr9K+/duIq0y7ozIPEimHC/vdDEQhpS+yMUIheIS2fxPrbFalrGilg9PRtt7i7ifv2OcUjon4KP5nujhgRQONqkQQE/9Y16xzo1gx7tjQB2adPOapygkY2rjrJn9LzT6GyP0lSuIZvOshY3iG8GA0N+ONKyunP07UcS1ESzs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(6133799003)(10067099003)(18002099003)(261102123227099003)(22082099003)(56012099006)(11063799006)(5023799004)(4143699003)(261022105027099003)(261026121527099003)(261026140227099003)(261022075727099003)(261028144727099003)(261021121427099003)(261021123027099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BAZeFDUTfkzt0IfTRfDiu/waB3SqNE8EiEE0DPLR/G08ogQn/ACt0sVVurN2?=
- =?us-ascii?Q?Q2gmc36a/+sxsP2s5oro4xKHIqVli0otcwOQ1RSfWQL9dGmHjsoAYMi5gPnd?=
- =?us-ascii?Q?Kg7V7BqNr0cg7SOE2PGWtjLcDTvekKoVg43dQkf+OlWQl9SqJaAih5oqSmR1?=
- =?us-ascii?Q?FiNo0g4/9Q0/aTQvKLVfSZpEog5Ba2ODOHAWKsjYZGKMsjW3OLcFXXByoFv1?=
- =?us-ascii?Q?kl7ZZu/W+iTbVotee0RY9TV0IjWVgi3Uf50ReNaMuhLYwq3iAE3yJsAEV0RH?=
- =?us-ascii?Q?VRpoHlfu2+l+kNuGj5oFHKdxvzBdWBsj/9KIfNKh58oeB7PwLMefkS/kuNcC?=
- =?us-ascii?Q?TbgRIais1z9XbYrYzVqZkukzO63XZkgGmga4qZUGWzbMod4Qg93IY3GFvs/L?=
- =?us-ascii?Q?RcGaxWd7PwWVANMwKYTH5i5h5EjW1WEO9ihxQVbEBs4vaUTrbzdLw1RjKghS?=
- =?us-ascii?Q?sqTtzP26cRNc9tn9x9GjRWKSiv98sEqGAFWvPkzzpRY9gzOs9WkxkGKx18XN?=
- =?us-ascii?Q?DzDfjRNt1S3OOjvuwQ1VLDi/zr0kOEoIccev36k08PiMNJ+4fTg9uwQLNksy?=
- =?us-ascii?Q?eVjNvwgPQ4fo+jEM8ErtVCe1AIUdc64Gd08Gl5PKTEy5MrWUCMmHqbuoprmB?=
- =?us-ascii?Q?Wrp2FVqF6SfEJkjDNFqfQZ/i4MGupK91FuL++R+PVQHY4ZQ5enjrHIhlU4dY?=
- =?us-ascii?Q?4RGwRJ+0uw0EzudTOJPK0fj+usarwmCjHAUeK+e3we7YPuGxxOhfdtkxEIjv?=
- =?us-ascii?Q?nvrxSENSPn2TIQ6rXV8ep8tsVAaq5CY2yaQfHFnn4+tJKoDFj8JG0qDBIVBb?=
- =?us-ascii?Q?kmIX/aVVP/37RcwOHTPCPCKPf0E0W5FdWrlcimUZjEvLNHOsXQl1P/ynfkwl?=
- =?us-ascii?Q?u+5gHXkGJXjKEnAmqGhRq1n4xOheOzuGygnNopkHxDpOMBRYc8LYTT4RSA1T?=
- =?us-ascii?Q?c8ARBLcALmig5f5+gMMEPUCnCoRI9qrDucRveJcND9aGf2Ho2eTdlCMzW1rt?=
- =?us-ascii?Q?beShhu5TVDHVkqz76lD3HZukm4d3MDjwd3QX0A677eQ3Qqgw7MYMVPmqZxOp?=
- =?us-ascii?Q?7lNc/4FNWNf7DXh98PFMtl1z1odjMFh5GUMlnhlamM/Z3HXPbZ25yIWqtNKA?=
- =?us-ascii?Q?SohhV+H723iuoAOjf53DIU2GJXzySn4iAJTeXC0CJzr6pNWt82rjpbOeYgSW?=
- =?us-ascii?Q?Z5PdKCm58b766IukzaDl5uVAJogHAauCiHFGJtbbvuIgcN35e+3Ab33Qh1IO?=
- =?us-ascii?Q?0xSQTI1TfJ5ABSjwRwjCyUifI9IBbfMv6mL22vsmJwJyz+N5kopBLuMialWK?=
- =?us-ascii?Q?fue5siRdpiqF5aNbHpx+D1FtVQgJS0AazpySE4pot6J5hxNcA4R6dA8iTDH5?=
- =?us-ascii?Q?R3aQxw8+AOxSw5jMNv+H4oR3a6oDkVRbzQuciyfdlAMUIBOtSdUMODKXq7ts?=
- =?us-ascii?Q?IhTk57+MHX4czZDBdCfeAt/2jcNv7qnAL3H1YUYlTDZoKNTXukW+sExCHwgc?=
- =?us-ascii?Q?+y7CfRs4juPIr85dz0RUI3GO15ZDp5qpN9Gifhy9vQ7AihxLl4Y7yPjyQ3Hp?=
- =?us-ascii?Q?PsZzMXz2NLmDdPtz+QHs7lhcPxFSLQI6o/uK1Kx5Wy+UpOh2r39ep2BJWMvI?=
- =?us-ascii?Q?p6DqQgM1yBPaHupocXtYx3m7Iuquign6HsAg/zXxxzisEkKadT8keXRCwq2+?=
- =?us-ascii?Q?Lrbsrn+8bxrxeHMp/m5N7YKbmZdNvPMVUw7KQXXF01I88+bpGrFGMiy/RbQL?=
- =?us-ascii?Q?FGCEnf9NjyNDUQwJAHY39ZLF50sY0kc=3D?=
-X-Exchange-RoutingPolicyChecked: SXx2zuCZDEekmuSrrH9NJAz9qYXKKAjH9dLB00Luo/9bWaPYWvThXtLFuSL3/0TmUVUB3EJyhdG1XJUMS9F8nNp5Q6HJbF0u9uRLJC+9AJIu0AgmRCo3ofV+P+cFxJVfPJSSqZEl1ZKOvTEQ6fJVYKQGewcUEELui0Qg7tBFvzEigwVIwgVymGbl3VNpNYLJo2MKcD3YVbUmbJ16SoO4E93YVBHc9GxDDL+spSXjDODGUA2M64ksxrS9crMASnGboIiepQk97+jFVZcdDaEwurY+2zZdlEpFP3sMxn9LbTevyZhuYaTRCzWpbcIDzXg0v/423dUGSACCwlgOetDhYw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbc4c261-646b-4c52-9596-08df3954e84d
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3AVxn7Gkem81hK+ZtpEsD25foSAp3XL8KiWbb082oHJ5Synbt20k3bT1CfiQ?=
+ =?us-ascii?Q?s1ISAgeho/Z8s4bSvKHXEbVlAFQqRvG8qOl5D6fwzGKrZ1UjZoUejhQqtra3?=
+ =?us-ascii?Q?jkbblFHEn1w7Ijy0aalStqaFzKLNFOK+uqxoOFV6bsu8wHWdJBSafpwghBQH?=
+ =?us-ascii?Q?NYjB3GDK0nu9IyY6NH4HBFqRpgvCzLHLcJtY23bUTYTZp5nj55xWMfaIT62p?=
+ =?us-ascii?Q?uqKApjMW5AMBOu0tmfWivdPtKa3k5xYUjn5izYs3qfYtRbZmddVngYyIY5DG?=
+ =?us-ascii?Q?WUAjNeh1wMcCy63cu0voOw9ZEVauHPQNwMFd+gmeutrzX8tyVuW7Ml2rdRFP?=
+ =?us-ascii?Q?seNw2eU2LlMDs+rHV5MfzYa2VvinHceUNlzhmn5hHHGiGU/Ntwvhr2eaXF9v?=
+ =?us-ascii?Q?FUtNLo/vOLzpcio3cq1TPrikm6QTLj+tQQvmdRGI8zUrjdLK/Y4G0z4AmxDX?=
+ =?us-ascii?Q?RZDGHkWpFWoLVcy9cgFOdEEie0/dcHgc6l31EmWxwyjO5tsDuF4BQVN567Y8?=
+ =?us-ascii?Q?mA9UpKTz4Cv/P/pgHe4fPOTMfFuA0hm1YKhEtl34mhpxRjBeRfQvr+tMmGdW?=
+ =?us-ascii?Q?rr29o+8FpU2Nz/uaqORnmVc7CrY/8R5wINc9+1Qm7mG3KETgKo7qQlrbvWHx?=
+ =?us-ascii?Q?lsAnamU8rdBgGobyakYaN0UKiUXOb6+46lyKErV/A0j+Pct4U25tXSDcSvb4?=
+ =?us-ascii?Q?aB8yPAO5G4Lit3Dh26nphHxiQh/cK7lnuY/HQ73zHmBzhyuzv7YVrgi6yGi/?=
+ =?us-ascii?Q?w/b1dRoK65/3ShQIIZjsq2rZ2Mip8UJYxuVMYIwd8ZlXHcPb3VKKk8x9Teu8?=
+ =?us-ascii?Q?GMWE1WNnrhlED2NNM7iYuSXkbheskqYJD5st6cB7REdr3Wij5mvI9Xw9wKSy?=
+ =?us-ascii?Q?zPiS70+MPY/igixSS2/w7TuKED6rl1rPYx1t9Sf1+GMB5+mjh4n6+xe/584K?=
+ =?us-ascii?Q?IYqdvytxqnW0otIqJdK+JJswWkQq9Cs3BTDGf+YlWQ/yHpZgPT3ZcY03rv96?=
+ =?us-ascii?Q?pzRAhe3t9UTGVKDAL2apRBvWy+VB5KR435BcDMF8FV7zXh9hoz0a6UDw49cD?=
+ =?us-ascii?Q?rQQToAlGD1gHHmyqFDd/L5I16gcms8XUFeNZHYHH+SkXCR9oMyrnA6ppAWcM?=
+ =?us-ascii?Q?ljFY4nF/65aWWQrHjGnt5L4xjjXcOQVshGRWQbMaAaBAiJKYEhqcvRaOOt8U?=
+ =?us-ascii?Q?zAz5ncJbilwkEjo8uTGOOGYCZys9f2JVkcjUbhZzqjfjjwKXRDQlD1U5bdfl?=
+ =?us-ascii?Q?H8eTx1TAs+WRB8SOOMMy0KHBmWXlOdxsbai81qRS5o4LmoCKUEiO82x4ReIO?=
+ =?us-ascii?Q?gNvo9IqV/iW8tNpd4WENMGVXK4E143s7m+Wng+PQiZ3os9wNLpHqlZRDKp0c?=
+ =?us-ascii?Q?+7zwC6AIb/FbS50YlxUvxbzTTunYPkztIN8VQwz1kiuZ/4ru4rBAqi5WAHOl?=
+ =?us-ascii?Q?o0e1Ja2gRcS2X1FoQWzfo8FqLp+8f+CC1JU8opu3sKmmPfl03698Yp77vusc?=
+ =?us-ascii?Q?658U2iy9g/dRyRbqQxoRUl1U3fgmdb1ykKNVPIn8IG4L64n1ptNfKMttILUw?=
+ =?us-ascii?Q?4L9CCJZ8HkJmPacTMHYMut+s99rLRsJKW7wOEDPQSxbSoGlQ+SKWZBoXqO09?=
+ =?us-ascii?Q?f5t0EYIbsOWz61xWJryL45Gy0olc481P3ZX/BW3k8+v7ygCfIinqNUbIku92?=
+ =?us-ascii?Q?qpIfCywKZn0pCT+iZnEYzWrzTQHIrpEMfP4+lBcndkeZcqNFmz8CvjUQpc4F?=
+ =?us-ascii?Q?HwoLgYZYs6beojDiyahifvk8IvpI+hY=3D?=
+X-Exchange-RoutingPolicyChecked: KyJx8m21WQpUxl9eDaMTNZfRBWa1NljUil7pox2ni6fOYrqohcSH2OBGcWS0du6ue4gfg79yLso488/yVoR/w1F2HH+eCS+baldDYbgNNoMnQzpXNE7OFMu79yp1o2QQMBACGxsCv5SH60Z4jPq0YtKpGgzcbMk6OaZFAq2tgsVy6mnfVdjhUb967upJWo7ZDfZ5oU9xSIYqbhueRSJtu8BtDepUa0LnQFsj1RZ/nLLGRItLwovG/uTw+DRWtKmaVS9WQaGirpoYKddfAWIqNhoGZdLpq7AUn61xbPWt4mJPUOPpC1e9Pk0j4R+l9sZfTFAmD5dX78rvNBDRsZwzFg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd8c55dd-fcb1-405d-3107-08df39558e6d
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:48:14.9118
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:52:53.5960
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CEyq9IdFwQt3rCOxXH83dqpUTmE2bJFxbCnsmfGc4HbmNJnOjO3LTpsT4LtJ1a8Nt0HNAqcfA7GIiR4h9DzpcOmAv0UwUokPFFX/nM3iplE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4954
+X-MS-Exchange-CrossTenant-UserPrincipalName: LF4T+DsX4vBoEr/dkz4UIXFcXWkF9LLAtNqFASVZqbnW3OlZ4w+iQpbzxD0w18H87vwZQoe6pL+I2sAANkzCz4JBJCSeIJjjOOyE/3j33V4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFAB6A6CF3C
 X-OriginatorOrg: intel.com
 
-On Sun, Nov 01, 2026 at 01:51:05PM -0800, Davidlohr Bueso wrote:
-> An HDM decoder that firmware committed with the BI bit set was
-> assembled without the bit ever being looked at. Record it, and
-> refuse what is broken - BI paired with a host-only target range type,
-> or for an endpoint decoder BI on a path that cannot route BISnp.
+On Sun, Nov 01, 2026 at 01:51:01PM -0800, Davidlohr Bueso wrote:
+> A region created through sysfs inherits its coherency from the chosen
+> root decoder - HDM-DB if the root has CXL_DECODER_F_BI, otherwise
+> HDM-H. An auto-assembled region takes its type from the committed
+> decoder it is built from instead.
 > 
-> Taking over such a path must not re-program what firmware already
-> did, and a dport's committed state does not say which device it was
-> committed for, only that firmware committed for something below it.
-> Two endpoints sharing a level show why that is not enough to go on.
+> cxl_acpi_cfmws_verify() rejects a Window that declares no coherency
+> model at all (neither Device Coherent nor Host-only Coherent), one that
+> sets BI together with Host-only Coherent, which the CFMWS definition
+> calls undefined behavior, and one that sets BI without Device Coherent,
+> since HDM-DB is defined only as bit[0] and bit[5] together. A BI Window
+> therefore always exposes device-coherent memory and nothing else.
 > 
->                         RP      Forward set, but for mem0
->                         |
->                        USP
->                        /  \
->                    DSP0    DSP1
->                      |       |
->                   mem0      mem1
->                BI Enable   BI Enable
->                   set       clear
+> Introduce the following read-only sysfs ABI.
 > 
-> Adoption is therefore seeded from the endpoint's own BI Enable, since
-> only a device firmware itself enabled can have had its BI-ID
-> accounted for above, and carried up the walk. A level is taken as
-> found, with no register write and no commit, when nothing this driver
-> routed sits below it, the value this driver would write is already
-> there, and both the decoder and the switch's route table are
-> committed - the table carries a commit of its own that firmware may
-> not have performed. The first level to fall short ends adoption, and
-> from it up the driver programs and commits as for any other device.
+>   - decoderX.Y/cap_back_invalidate (root) reports the CFMWS BI
+>     restriction.
+>   - decoderX.Y/back_invalidate (endpoint) reads '1' when configured
+>     for HDM-DB.
 > 
->                     RP    Forward, written but never committed
->                     |
->                   USP0    route table committed by the driver
->                     |
->                   DSP0    Forward, written and committed
->                     |     ..... adoption ended here .....
->                   USP1    route table already committed
->                     |
->                   DSP1    Enable, taken as found
->                     |
->                   mem0    BI Enable already set by firmware
+> cxl_region_attach() rejects endpoints whose device or HDM cannot
+> serve the region's type; target_type is inherited from cxlr->type
+> in cxl_rr_assign_decoder(), restored to the endpoint default on
+> detach unless the decoder is still committed, and to whatever it was
+> on a failed attach - a refusal may come before any inheritance, for a
+> decoder another region owns or one firmware committed, and must not
+> relabel it.
 > 
-> An adopted level owes no commit either way. Table 8-152 and Table
-> 8-156 owe one per new BI device enabled below the port, and an
-> adopted level is not seeing one.
+> An HDM that reports Unknown coherency support is not rejected.
+> Supported Coherency Models is how a device declares whether Target
+> Range Type is writable - Host-only+Device Coherent means RW, a single
+> model means the bit may be hardwired to it, Unknown declares neither
+> - so refusing Unknown would also exclude devices that support both
+> models without saying so.
 > 
-> On failure the walk unwinds through the same release as teardown. An
-> adopted level was found up and is held, so the unwind drops its
-> reference and leaves its register alone; a level this walk brought up
-> is cleared. Teardown works the same way: every level this driver
-> brought up is deallocated, unless a decoder below still decodes with
-> BI and holds it.
+> A Type 3 decoder defaults to host-only, unless its HDM supports only
+> device-coherent, and inherits device-coherent when it joins an HDM-DB
+> region, which requires cxlds->bi. A Type 2 decoder defaults to
+> device-coherent and an HDM-H region refuses it outright, since the
+> spec reserves HDM-H for Type 3 devices. An HDM-D region is only
+> assembled from a committed decoder, taking that decoder's type, so no
+> inheritance is involved.
 > 
-> A committed decoder is refused when its coherency model does not fit
-> where it lands: unlike a decoder this driver programs it cannot
-> inherit a region's model, so its committed BI bit must match the
-> window's, checked before the region is built and again at attach,
-> where a second decoder joining the region arrives.
+> The HDM Decoder Control BI bit is set at commit time for a
+> device-coherent decoder in a region under a BI root, endpoint and
+> switch decoders alike. Whether the device has BI enabled (cxlds->bi)
+> is checked when an endpoint attaches and again for every target
+> before a commit programs anything, since a reset in between
+> invalidates it; the refusal is the same in both places.
 > 
-> A committed decoder's BI bit is recorded as CXL_DECODER_F_BI. On a
-> root decoder the same flag is the window's BI restriction, as F_LOCK
-> already means a fixed window there and Lock On Commit below.
+> A committed decoder cannot inherit a region's type, so its range type
+> is checked instead: against the window before the region is built,
+> as the manual path already does through can_create_ram(), and
+> against the region at attach, where upstream's type mismatch refusal
+> stays for committed decoders. Committed means CXL_DECODER_F_ENABLE,
+> not an auto-assembly state: a decoder left committed by a region that
+> never assembled, or by a locked one, is as committed as one in an
+> assembled region.
 > 
 > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-v10 changes LGTM!
+v10 changes LGTM, Thanks!
+
+Looking at Sashiko's comments:
+1. the qemu 11+ regression I believe we agreed not to worry about
+2. the stale BI state after reset, needs looking into
+3. the unreachable CFMWS validation is a minor cleanup 
+
+With 2 & 3 above addressed, you can add:
 
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
