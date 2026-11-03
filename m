@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.106
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699461;
-	b=bDQgx2CLInUXBKas+maI87SASjYIXzNjpDG7YnNBIuInZyo1zehGtHiiKY036M9xHGV4
-	 B4wWZgjAoJ9besgUdAGTVa/+2PjT7fAq0RNEdtQZtmlcM6RpRYElBs7CfEUQl3p6avezR
-	 3TWfTU1JxukZZ/4oSVAwuQMy+Lr5Yym2P6KOKE31S5yF+6R8/AXIAE3WtQjorHuQP8OIL
-	 i/kBniLmqKWOp9P/nsSpNR9ePXqj8LkOuq0Ic5991lkizmSONNSZL1Am+0LpFBInSNprp
-	 rAURz79BLo/9ZTji02jmms9Ajn00m2fXeSLT9q/EO/hPFmrX0b0n4FYDdvFfBWt9u9Q==
+	t=1793699472;
+	b=qiQSW23obrkJDnWCjICmk92HT1WfjZDc+u/mmNKC9djVxv1upCS7w4UtGVsoqqH3uWJI
+	 Xy9VfD5Qp7Qg83KN70ythzjOuqGiwuoXMPetO+9CDFbFRhyJrHzXeivLvIAYdY2BAIPEl
+	 PlSdI7wcKMfqhPdReMH54flY7Pste8DuGO1DIlqO5DLWV2xOZu0nsYTypZlXlwTpnt21T
+	 //BJ0sv06kQvqTB/b+4rvH21+pkkHPJ4f6tXWYhdLk+NdjbUoJmzOASEnuBiRntu9EgAK
+	 Az63/XE+rRc9mzDa32eDF8EcmLYyA//GS9ue8Fv2kmts7i3wJKv+4G1D3PgFy4mIDyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699461;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793699472;
 	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=OBdI6sTn5K4OgfmCVF/8zIHq3UrF3Zy+wUPm5MAIdzg=;
-	b=V6L+TzHZ8aEofq6aAsPMFbndh3e5tB11STVi6UyCOvZZXCTPESkdocmZZan8wSADe+5l
-	 Fi/Ymi9DrII2pYRSbWV6pfmDSZShX/VFyziGpjOkACPaseKFw68Py2xA5YVJ5z7hSW1CX
-	 A5gsURUjqD/UXn9r1Jxw850VnPc3I+3KaGKBYRf7TxASXPJjl4UxHp+1KfDSaTAJF3oE4
-	 UNb3xwnhBDmYIbflMSNSx5AtsQQN4qAYS085AUSqKcwSRxsZvSV5ZDKdV7j23Dr2kC1cU
-	 Ur1LDQwz9zsWnivnAfIlNuYI1DCHQPww0DtTzaXbQjjKauUUoVWtdHCrgiTbyqaRQyw==
+	bh=HxMHbHcW0bcCswFq9k6faxMAZ4OoY4XSKBUYGTUqi5I=;
+	b=5dCQUlAjiI1UTLpZc2oUfxL/++zUXVZz7BX3DaGJMSdL2XszT8frD/EvAONkCZGmmhax
+	 2yXoNDuf+KJRlI9jsLf4zFdQZOSfMDb45T2zBCycnetAAGJJIEV6pKglmLMwNItlEAPBf
+	 0FtYOwgyCJf31BhWQROD5dcFwCi2xdAnaRHtzQcQ9sjRirsVh3BmWlzslnwZ1BxkzY5CY
+	 EjmS3BIG2RjcpV1VBiIPRbLBiMv1SVoaV0oJekLCFRcyZP4Ngzgam4xDQrWIc+tYVgmLw
+	 CGwM2OoXk6oPdrV9FhKkVIyWRo8jPfgg3eZW70Hlufn9HoegriMCabRPD0LQoTAw/AQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=karaolidis.com;
 	spf=pass smtp.mailfrom=karaolidis.com;
-	dkim=pass header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=RTFB8Kme;
+	dkim=pass header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=eunwfoT8;
 	arc=none smtp.remote-ip=109.224.244.106
 Received: from mail-244106.protonmail.ch (mail-244106.protonmail.ch [109.224.244.106])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19123606A32D;
-	Tue,  3 Nov 2026 09:50:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19123606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E29606A32E;
+	Tue,  3 Nov 2026 09:51:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5E29606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=karaolidis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=karaolidis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=RTFB8Kme
+	dkim=pass (2048-bit key, unprotected) header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=eunwfoT8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karaolidis.com;
-	s=protonmail3; t=1793699458; x=1793958658;
-	bh=OBdI6sTn5K4OgfmCVF/8zIHq3UrF3Zy+wUPm5MAIdzg=;
+	s=protonmail3; t=1793699469; x=1793958669;
+	bh=HxMHbHcW0bcCswFq9k6faxMAZ4OoY4XSKBUYGTUqi5I=;
 	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
 	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=RTFB8KmexjksUk20HrjmyS1e1SwZL4VvFQR020kdzu5KmKV6ahtxVkSu6cytKVo3x
-	 wRpNDXXhsjvXTbd/nIBNQp2KB5cwMzGj5pTLY7I4BCvzXbr0v6MzcNQFxB0AOH7Q9b
-	 +YFtelNTADrcMBdsyiVS4Xhu3EVuhBjIRxy3SgdB2jcemj8nDtMtH3wMvw+myjiW5Z
-	 8aqIhC1E6on7pT0iKPKld7GIqpjJN29HtvfKtrrwZjF0MBHOT3hjZ66PCDNK/o9ADl
-	 H8jwHr7GGELk238IfaWXQly2UROvFAi4GfzSVrfyN631PN2v37vvS73oiFI6thOwCO
-	 4/b/lg+nNCynw==
-X-Pm-Submission-Id: 4jJkNH0h9pz2ScjC
+	b=eunwfoT8ZlTWcs007nWnsW8Oeh/g4tEbRRD2T4dNh8mWyi2aQO6YA/vgKlXVU1PM6
+	 +hqOAII1KuJ1jCtohrrD5RKvuS1B0dosYXEog8p7EVT2CMIk1ur29lR3NytoUpNthy
+	 J0Or103AMhcWftJw8rQscbghBnKYCL9pDaq2DkZeQ6ILXE/sVgQXlTNpyp7+LdWLoN
+	 Uu/hpJm84SuMSzopzxghFnTBsGdfpCH4Y5yLSDpRqF+WD5sID6UBWShwHOVG4gtYEY
+	 lsbfQd32UcyGlLp4R4bazHIfZsarLOrfV0sDpgc00b5PqysggJn22/hUl5enuDMQGX
+	 BLGs99EQeBY6w==
+X-Pm-Submission-Id: 4jJkNW1X87z2Scj6
 From: Nikolaos Karaolidis <nick@karaolidis.com>
-Date: Tue, 03 Nov 2026 09:50:08 +0000
-Subject: [PATCH RFC 2/6] virtio-mem: prepare memory notifier for a
- self-hosted memmap
+Date: Tue, 03 Nov 2026 09:50:12 +0000
+Subject: [PATCH RFC 6/6] Documentation/admin-guide/mm: document virtio-mem
+ memmap_on_memory
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -61,7 +61,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261103-virtio-mem-memmap-v1-2-308ae1da6240@karaolidis.com>
+Message-Id: <20261103-virtio-mem-memmap-v1-6-308ae1da6240@karaolidis.com>
 References: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
 In-Reply-To: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
 To: David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
@@ -80,109 +80,68 @@ Cc: Oscar Salvador <osalvador@suse.de>,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-cxl@vger.kernel.org, Nikolaos Karaolidis <nick@karaolidis.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3542; i=nick@karaolidis.com;
- h=from:subject:message-id; bh=TO2CmbxVRk5IIxBT/zUC8sOXtYzHOqzh3B7e5x1oZ0Y=;
- b=owJ4nAFtApL9kA0DAAoB2mjImL9M9YgByyZiAGrprnfulwaXR03O2p0qJDHLazzry3QLpv4Ia
- U4y+Pitk66ahYkCMwQAAQoAHRYhBLMZG7EWqsMYjymWX9poyJi/TPWIBQJq6a53AAoJENpoyJi/
- TPWIRpEQALF1yuzhT+G9+r/UaOZj+ncGcwkxjmTohjHCy77NkVXvj4vAzd3+Y7HPpD2AaqYkchw
- g15fGpkaHJGslMRxczn5mCczJOj6EjzsmThGmSQNIk++5GLtopumrnPrtR3WHpP/cIQv35P3oGn
- Q0KOw8IVZ3XR7yZDMt3MXy9ONcuAkYT8HIpl490imwmZvW6zvJTNGLwU4ebtqqLE6PrXqHPnmas
- VRIi/bwtPAvPxOXNLum18q3ixX7KFlV0bJV5bHH6mB/+71kOhV6SKo06ocN1yeScE2suNdDYpwX
- SKvLtTNE3kWGQA/0ckSj7t5y5WyYE//WoBOs24j89Z9Pm2vWhDSPVOF3T7P8UTr8W6/sHigPrwc
- mk6nHWBcxitvRp1l8NTFG3EiTkjpnq4o8rpR6pg3OZ8U7IyWO7CW7l2/4XGGk9uFS4mmtC1wkc0
- vhrbjxLwJDC6bpZYXyNWj7skLCJmDiL/23MuL4kuE0dg98x66IqZc6UsF3D9CYA+koiBhn4zxmc
- +XPIJi/WBmAEJkYlVZLhV6cbiD8u1wrsPtJs6akIbjv1m9AI44vz5z8hGv/+fln34JqsolDmubH
- 4IkZb6zcMvg/0h3gA5bLrj7B6G1kYyOO1+66BPyM4FNFIr7k9tKI6b4wvIbaI0Eyj5zrpfRVXOK
- L3rqdJjtcLV0CIEJzyBs8FA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2275; i=nick@karaolidis.com;
+ h=from:subject:message-id; bh=9Fmh5NuyL8RhhgKP+TzDpDGr/90k+nu1z+yyKGLv62E=;
+ b=owJ4nAFtApL9kA0DAAoB2mjImL9M9YgByyZiAGrprniVRbgFszd+tPH1XcKsBEFpdpjWocrOP
+ chMaIO9Ut5PsYkCMwQAAQoAHRYhBLMZG7EWqsMYjymWX9poyJi/TPWIBQJq6a54AAoJENpoyJi/
+ TPWIJRkP/1HyOCbdgqUgCgsDOEG0drBO5bgCHQOZFrl1Iu57GRvZWBy88fgRkacVoxcrRFGASrU
+ xqIlqUVcmDamlsgH0IJTTHFqf3uBOBNe8l2Qu6KOW+r+c4GkquCdV/q+NJNYmQXCdeBCHtjFGM7
+ z8RBCHWdGFsQlIBTE/qP5NBdT5mImNKrEPg94g9w+aHAY8szKVpCvEh7GXnB29bTK+cVS9liF2o
+ xaWiT/m/tVdN7bJFNCIHTyY2yWr3iR++p/QcD/skVPXBkvx0ZaicZnu2YuaC43kgVl6ZpSTTVck
+ 42vENRHxgj4lDpz6sfRunj1XLXIZfYZ+PC6cE0mMCaBodfydU8qLnFFvc59+qUr66hGbH+YZLYm
+ //de+riD0roZ2p46aJUvbqMcq9rToblaAKPQFFNm0aPsmtutuOxJ2DLf3xYuYZswySJR7X4KF8u
+ DffHhhhBr4Gn4lTmkvkD3gvvvRwoO31Sx/F0rnaVczRU/vLXTex0UKe8tTN+WD2EHcqGfaO4HYg
+ LQnEsc8y6A3fy41641Wka9eV0PxKH4C82huYoxI4C9AcA2MuOX18Fyh0ZsaidMLGv2tLMz9pqLf
+ en7FdPfXT1WQ1q6LJbtcpV0XocD4kyM2d7K6qAysfLrVfXVNl5tgYfVeB1gUybibhA+sfcW3gwg
+ VIVwiCo656C7OBys4+zksFg==
 X-Developer-Key: i=nick@karaolidis.com; a=openpgp;
  fpr=B3191BB116AAC3188F29965FDA68C898BF4CF588
 
-With MHP_MEMMAP_ON_MEMORY, the core excludes the memmap at the start of
-each memory block from the range passed to memory notifiers. The
-virtio-mem notifier does not expect that:
-
-* In Sub Block Mode, it rejects any range that is not exactly one
-  aligned memory block with a WARN and NOTIFY_BAD.
-
-* It adjusts offline_size by the notified size, while adding and
-  removing memory use the full size. Every onlined memory block would
-  leave its memmap size behind in offline_size, until the offline
-  threshold stops further hotplug.
-
-Track the memmap pages per memory block in vm->memmap_pages, expect the
-notified range to start after the memmap in Sub Block Mode, and include
-the memmap when adjusting offline_size.
-
-vm->memmap_pages is always 0 for now, so there is no functional change.
+Document that virtio-mem only uses memory_hotplug.memmap_on_memory with
+virtio_mem.memmap_on_memory=1.
 
 Assisted-by: LLM
 Signed-off-by: Nikolaos Karaolidis <nick@karaolidis.com>
 ---
- drivers/virtio/virtio_mem.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ Documentation/admin-guide/mm/memory-hotplug.rst | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index e18dd736f2ec..ab06adbc0342 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -158,6 +158,9 @@ struct virtio_mem {
- 	/* If set, the driver is in SBM, otherwise in BBM. */
- 	bool in_sbm;
+diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
+index 0207f8725142..b0f895766fb5 100644
+--- a/Documentation/admin-guide/mm/memory-hotplug.rst
++++ b/Documentation/admin-guide/mm/memory-hotplug.rst
+@@ -454,6 +454,10 @@ The following module parameters are currently defined:
+ 				 architecture does not support the forced mode
+ 				 in all configurations.
  
-+	/* Pages at the start of each Linux memory block hosting its memmap. */
-+	unsigned long memmap_pages;
++				 virtio-mem additionally requires
++				 ``virtio_mem.memmap_on_memory=1``. See
++				 `ZONE_MOVABLE Sizing Considerations`_.
 +
- 	union {
- 		struct {
- 			/* Id of the first memory block of this device. */
-@@ -995,21 +998,23 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- 	struct memory_notify *mhp = arg;
- 	const unsigned long start = PFN_PHYS(mhp->start_pfn);
- 	const unsigned long size = PFN_PHYS(mhp->nr_pages);
-+	const unsigned long memmap_size = PFN_PHYS(vm->memmap_pages);
- 	int rc = NOTIFY_OK;
--	unsigned long id;
-+	unsigned long id, mb_start;
+ ``online_policy``		 read-write: Set the basic policy used for
+ 				 automatic zone selection when onlining memory
+ 				 blocks without specifying a target zone.
+@@ -628,6 +632,20 @@ ZONE_MOVABLE, especially when fine-tuning zone ratios:
+ - In certain DAX configurations the memory map for the device memory will be
+   allocated from the kernel zones.
  
- 	if (!virtio_mem_overlaps_range(vm, start, size))
- 		return NOTIFY_DONE;
++- The memory map of hotplugged memory is allocated from the kernel zones,
++  unless ``memory_hotplug.memmap_on_memory`` is used (for virtio-mem, together
++  with ``virtio_mem.memmap_on_memory=1``).
++
++  With virtio-mem in Sub Block Mode, the subblocks containing the memory map of
++  a memory block stay plugged until the memory block is removed. They count
++  towards the plugged size of the device but are not available to Linux:
++  plugging 128 MiB into an empty 128 MiB memory block makes 126 MiB available.
++  The plugged size can stay below the requested size by up to these subblocks
++  of one memory block. Sub Block Mode only uses the self-hosted memory map if
++  it spans complete subblocks, for example with 128 MiB memory blocks and a
++  2 MiB device block size; otherwise, virtio-mem continues without it.
++  ``virtio_mem.force_bbm=1`` can be used instead.
++
+ - KASAN can have a significant memory overhead, for example, consuming 1/8th of
+   the total system memory size as (unmovable) tracking metadata.
  
- 	if (vm->in_sbm) {
- 		id = virtio_mem_phys_to_mb_id(start);
-+		mb_start = virtio_mem_mb_id_to_phys(id);
- 		/*
- 		 * In SBM, we add memory in separate memory blocks - we expect
--		 * it to be onlined/offlined in the same granularity. Bail out
--		 * if this ever changes.
-+		 * it to be onlined/offlined in the same granularity, excluding
-+		 * a self-hosted memmap. Bail out if this ever changes.
- 		 */
--		if (WARN_ON_ONCE(size != memory_block_size_bytes() ||
--				 !IS_ALIGNED(start, memory_block_size_bytes())))
-+		if (WARN_ON_ONCE(start != mb_start + memmap_size ||
-+				 size != memory_block_size_bytes() - memmap_size))
- 			return NOTIFY_BAD;
- 	} else {
- 		id = virtio_mem_phys_to_bb_id(vm, start);
-@@ -1062,7 +1067,8 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- 		if (vm->in_sbm)
- 			virtio_mem_sbm_notify_offline(vm, id);
- 
--		atomic64_add(size, &vm->offline_size);
-+		/* Adding/removing memory accounts the memmap as well. */
-+		atomic64_add(size + memmap_size, &vm->offline_size);
- 		/*
- 		 * Trigger the workqueue. Now that we have some offline memory,
- 		 * maybe we can handle pending unplug requests.
-@@ -1077,7 +1083,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- 		if (vm->in_sbm)
- 			virtio_mem_sbm_notify_online(vm, id, mhp->start_pfn);
- 
--		atomic64_sub(size, &vm->offline_size);
-+		atomic64_sub(size + memmap_size, &vm->offline_size);
- 		/*
- 		 * Start adding more memory once we onlined half of our
- 		 * threshold. Don't trigger if it's possibly due to our action
 
 -- 
 2.55.0
