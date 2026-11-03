@@ -1,126 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793717362;
-	b=HPO7z+AtWjiURq2/kSwqfIaxIBAJmWKpAyuhbOPQjieg3zpWT1SKeRuJXNL8gnbGDbE5
-	 rhMwQ2J6a+VFpaRISUW6VapKLl2tDkaX39MIsUc72EXQYyR4XsnZGI/VH0YSCmnJt0V/6
-	 DhSLbk2NDlYSuDYF25qBJdmYm691S1aaoWR5Wy+8FhZgkZnxLhCNndDq2OIOn58A5VG2D
-	 aVI+1PC6ebveR0TrfbwFGR+U2hSDHu+bwSYPhVf8EinMOCstN7G/WW5wA/PFIca9gkx/p
-	 ApjfQRij6vc5c42JRgNCg/HNmdzwKImsOOtFHUGWpaEWVSXN6x4TvFSlzZXqicLt4NA==
+	t=1793718747;
+	b=LBJu73pWiOfEMKsFJDeF1wUe0/wTU4w7W/Kvh/DC2yjx/bq535bp62IG1S/86QSBxxIE
+	 FyM2zO33eq/nZBcwkwqJEJNYOg40qbZonxO4UFbDXkYsmx+yyl+FMtXk3RVxSQPX4mY8C
+	 GbKK9e1x3nQ9NWTN2j7YHGSjIqLpPEExXuRflZlhlZVCsrTnuWPHDVoZQix2y314W3vzM
+	 8kVVdqXOk/+Dr47D7+bkJG+Owa/qQ0BgSmE5ypLONzSFJenC6oQqn9CxiDJLoSHQi4ej4
+	 Y5xWTIz6lWowrg9kANPkUdzjlolBsS74uyV+q+u1Su86FYD+PawTynLd7KCse9pSGbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793717362;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=0jU0FKXBVK1IwPB+pnplBif7xzGvyqeYd/rvs2r/ax0=;
-	b=cQec+b4yPSSrGknOT8IkDAlWNoGS3U05okK1clpGm/6HvhgwcaSGITVuF2cwCXx7Anqg
-	 a14hBMIrKTVLfFbpputjXgmLt8qFU0KJoJ7MUQKzGkUDk6lcbFw2R3EGuyJlK8TH5DPp/
-	 BoNaVlwOeAnNjYjVZKcjweEZt8gvzp1UJHejB19js7vMIzDTTGWYVXnOJHv75WYprz1A8
-	 +wOSwR+L4RDs96/tZ/7Pu2Aj4kU+qanorGQkDUbT94wzKTwy6hu5KXT1EshmfCJwIYUEd
-	 2M4v4AQWt/4gL1w8Koyd1n+oe5eE2N053+vB75Yp5w8yH4v8ShPkAlC8DCCaxV5AaIg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793718747;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=zV1T+I0M/X5fYajz5gf/61terI3BQ0fU42btgMq0usc=;
+	b=aSD5RE5xvLDQ7KoJnq3QG6XHeHpMOCV8HWh1ITToSIK1yUSfl4NA2aK9EcPhSyjBfBXh
+	 HCpBQwZSQnzPzByZCkcg7fSDoXX29WnNDgmrhU5oDeAimFou554rtC8j6fU1e1vsatYR6
+	 /04dquW/xK8IBCOHo1ls+TIILJaT2OaL3BENipktSdEFboKDtd7nVe1yN0x5nZoYnqZXY
+	 HGQnsJfBrgejAgLeYlbyzIaEorclqF4hIurxFUbT7E5KZ9aJ5+Kov9nCBd9mPpiacIRav
+	 O9UOjT9KzgQAeUua95IAABvm3YRoKX0YTyc27tnFm3MmIj7NFKCpSFlsMK51ts/+x5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QzuU3YVM;
-	arc=none smtp.remote-ip=95.215.58.189
-Received: from mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Y8XX+R/3";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A5D606E6E0
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 14:49:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 26A5D606E6E0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6F3606A32E;
+	Tue,  3 Nov 2026 15:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QzuU3YVM
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=dOHWqJbFAMJYJY9pYQ0G9QdWl3ff5fr4nC5HvUAG8+A=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793717360; v=1; x=1794322160;
- b=QzuU3YVMkybToy3jCx589JuXk6v7arOjZKVMIuzVTtcNW67BI2N1Sv/tO1vpXZew6+OWlgh+
- BtzfOsvNi5KxLjRGGqGPhJtBN3VmFTvpgdWNR8NKH7Gp6SbMkzFQdncMIrRdzS1uk7Hz+9X+9N+
- g3oq2Ln4/BioZxzKZymYhmOg=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 632a76e6b0da1a08;
-	Tue, 03 Nov 2026 14:49:18 +0000
-X-Mizu-Trace-ID: 632a76e6b0da1a08
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	kasong@tencent.com,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	kees@kernel.org,
-	peterz@infradead.org,
-	jannh@google.com,
-	pfalcato@suse.de,
-	hughd@google.com,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	willy@infradead.org,
-	jack@suse.cz,
-	ziy@nvidia.com,
-	lance.yang@linux.dev,
-	riel@surriel.com,
-	harry@kernel.org,
-	apopple@nvidia.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	matthew.brost@intel.com,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	youngjun.park@lge.com,
-	gourry@gourry.net,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com,
-	jgg@ziepe.ca,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	mason@kernel.org,
-	stable@vger.kernel.org,
-	usama.anjum@arm.com
-Subject: Re: [PATCH v3 42/47] mm/vma: call ->may_split() before a partial merge
-Date: Tue,  3 Nov 2026 22:49:09 +0800
-Message-ID: <20261103144909.6138-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-42-d6437171ecc3@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y8XX+R/3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E921F000C1;
+	Tue,  3 Nov 2026 15:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793718747;
+	bh=zV1T+I0M/X5fYajz5gf/61terI3BQ0fU42btgMq0usc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Y8XX+R/34RU2qrAch5IzWEomeYhJRgnOPmQV0c1P4ua7aD9u6KoBL27GfTNHLhW4b
+	 M+894MvjRu0FPV7UZqNf0BqBv+B3NPVLyYnLJEUvBvfNhTYzb/ZTgeFtmB8zxvqN1L
+	 f8DVezDosMAJUoosTpIUr7qnBX3vQNbpsLPOOfx1bEe1EEFPm8kBu30mbWU4I3dxko
+	 27z/yk6OveFo3E9sLlQLkZlcZpAGw3pxxon+OT0zrLkv7HhFxty/juVata4jEjgw0G
+	 4p6/HQn1Ufn0qLwAYZn70b/sNfSCjlnNRLDhQhgy1o9iXAPrvL/jsm3XC4EJgColuC
+	 3OGNqx1zKipNA==
+Message-ID: <6091a4d5-ded8-423e-a806-2c4b11f21e09@kernel.org>
+Date: Tue, 3 Nov 2026 16:12:20 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -130,70 +51,128 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] mm/page_alloc: don't undo another isolation in
+ alloc_contig_range
+Content-Language: en-US
+To: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ kernel-team@meta.com, akpm@linux-foundation.org, surenb@google.com,
+ mhocko@suse.com, brendan.jackman@linux.dev, hannes@cmpxchg.org,
+ ziy@nvidia.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org,
+ osalvador@suse.de, muchun.song@linux.dev, iamjoonsoo.kim@lge.com,
+ anshuman.khandual@arm.com, stable@vger.kernel.org
+References: <20261027042204.3741307-1-gourry@gourry.net>
+ <20261027042204.3741307-5-gourry@gourry.net>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSNWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBrZXJuZWwub3JnPsLBsAQTAQoAWhYhBKlA1DSZLC6OmRA9UCJPp+fM
+ gqZkBQJqFFy6GxSAAAAAAAQADm1hbnUyLDIuNSsxLjEyLDIsMgIbAwUJGtCBUAULCQgHAwUV
+ CgkICwUWAgMBAAIeBQIXgAAKCRAiT6fnzIKmZJIUEADFx/tREzUImHrEwVHeSvDFmA7tJysI
+ UVrlvrM09E7GIuzphzv7jYmo8n3ANpCczLEVr4G0syYQdTigaZgv3+FQDIIzhKih1IHhu1Ei
+ XHlywNWKnQxxQEUNi5Mwx43wQz5XVw9F1A7gtKBKNtfogO511hAbrzagrYajyQacEJ/+sfhZ
+ 9Da8ltHIXD8pcYaHUfQgEusCgmEd9+KrUwrTbckFKmYq5chuE6yJ4J0EmWknL096jIE6CnzF
+ FRslQ3B1UKDjxVsm1ZHfir5NeWszLkTvGFsddFaWTgh8UycESG6VQzKXjjewXu2pG7YQYRpj
+ QKm1W5X2TkwWkXRBZTmfmbhxIUMh3+zf5wQ463rSmDN/8v81tdqBtAW6rH/kzg1GvkaTHXn0
+ 507yEHFzBksk2viAuIxxr7km8+/KARYLIdGtx30EG8cKzAUZOK6WqxtNCsXUJNrVE8CWrCaD
+ icoNu7Fs1c5hmPHdSTnU48ce67449DdnO4neLSNhRiGlMHJgfJUmgrxu/hcYeOZ3haWmEQ2w
+ uW1Mh01OHi8QZHCEyAbABrPs9GUgccc/4eYXX9hIgxfSkYzn8f+8NuIFPWl/0uTvjgqU29FQ
+ SbzOLxHq9439Ox40G5mS5eZXRGxITYR+6TXvRGI6P/264jvflnr/pDGUttaikU+0W+1uxgKH
+ cmYbEc7ATQRbGTU1AQgAn0H6UrFiWcovkh6EXVcl+SeqyO6JHOPm+e9Wu0Vw+VIUvXZVUVVQ
+ La1PQDUi6j00ChlcR66g9/V0sPIcSutacPKfdKYOBvzd4rlhL8rfrdEsQw5ApZxrA8kYZVMh
+ FmBRKAa6wos25moTlMKpCWzTH84+WO5+ziCTsTUZASAToz3RdunTD+vQcHj0GqNTPAHK63sf
+ bAB2I0BslZkXkY1RLb/YhuA6E7JyEd2pilZOrIuBGl/5q2qSakgnAVFWFBR/DO27JuAksYnq
+ +aH8vI0xGvwn75KqSk4UzAkDzWSmO4ZHuahKtQgZNsMYV+PGayRBX9b9zbldzopoLBdqHc4n
+ jQARAQABwsF8BBgBCgAmAhsMFiEEqUDUNJksLo6ZED1QIk+n58yCpmQFAmfIHFQFCRYU6J8A
+ CgkQIk+n58yCpmS2PA//bqN1LfcotmArgElsa+0EGZSQlYgK48pm8WAeTXTngudP9IJ4SuKY
+ HR5RNjHcBeqN+Me0zxRqYzRb8nGanHEkDyf4Im8DQM8d6vbyU+FcPmG4skud4kgS1zMHnlVd
+ SXfSIwKC/hKgdHG8aBV7545Lz9X6Iohea+94wneD0aw/hqF+QWewGZhWJriWAZtvEkzNjQOi
+ 4U9F/trLten/x7bpphDSnDMKJtITbtzATT1Dq7o7VpIUK1nCTQALMuMjKCdi8OdU/+V+R3O4
+ 0PXWvX8qrvqYapVbZ+9KqT74FsuB0Ya9uXwgBF2Q6cRuETZk5vqaqKxzqoQZCO8AOz/58j6O
+ 2RHNy/mZEN+7tJ5Tsq42zVJ4jxsT8b9YplavCMsnBgDeRWhcbYhCyttoL7nYISyWg4kQYZ/P
+ wIV3OuNv2f8iKYsxNsRuClOAF82+gvqOy1/1pprFjy8uo2pkoOrb63aOP3vO5VHnRKgra6dq
+ NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
+ OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
+ jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
+In-Reply-To: <20261027042204.3741307-5-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 10/27/26 05:22, Gregory Price (Meta) wrote:
+> An alloc_contig_range() that overlaps a block going offline can leave
+> the offline spinning until it gets a signal, holding the device hotplug
+> lock.  When isolation fails, alloc_contig_frozen_range() undoes it over
+> the whole range, clearing the offline's MIGRATE_ISOLATE too:
+> 
+>   CPU 1 (offline_pages)               CPU 2 (alloc_contig_range)
+>   start_isolate_page_range()
+>     blocks are MIGRATE_ISOLATE
+>                                       start_isolate_page_range()
+>                                         -EBUSY on CPU 1's blocks
+>                                       undo_isolate_page_range()
+>                                         blocks are MIGRATE_MOVABLE
+>   test_pages_isolated()
+>     never succeeds again
+> 
+> start_isolate_page_range() fails only on a block someone else isolated,
+> after undoing its own, so this undo only ever clears another caller's.
+> Return directly, as before alloc_contig_range() went pageblock granular.
+> 
+> With offline_pages() parked after isolating a DIMM block and a 1G
+> hugetlb allocation made over it, the offline on base still loops 30s
+> later in 4 of 4 runs:
+> 
+>   offline_pages+0x5b2/0x1570
+>   memory_subsys_offline+0x17e/0x470
+>   device_offline+0x250/0x340
+>   state_store+0x88/0x110
+> 
+> With this patch the allocation still fails, and the offline completes in
+> 3 of 3 runs.
+> 
+> Fixes: b2c9e2fbba32 ("mm: make alloc_contig_range work at pageblock granularity")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 
-On Sat, Oct 31, 2026 at 10:40:11AM +0100, David Hildenbrand (Arm) wrote:
->From: Chris Mason <mason@kernel.org>
->
->A driver can use the ->may_split() hook to forbid a VMA boundary at
->certain addresses.
->
->A device-dax device is a character device that gives raw access to a
->range of memory through mmap(). device-dax refuses any address that is not
->a multiple of the device's alignment through vm_ops->may_split.
->
->vma_merge_existing_range() can move boundaries, but does not call
->vm_ops->may_split.
->
->If a range at the edge of a VMA gets the attributes of the adjacent VMA,
->the function moves only that range over to the neighbour: one VMA shrinks
->and the other grows. This is a partial merge, and vma_modify() tries it
->before any split.
->
->Take a device-dax VMA that lies next to another VMA of the same file.
->The user calls mprotect() on the one page of the first VMA that touches
->the second VMA, and asks for the protection that the second VMA already
->has. The result is a partial merge. It puts the boundary inside a 1 GiB
->mapping, which is a single leaf entry at the PUD level.
->
->As part of the merge, the kernel looks for a huge PMD to split at the
->new boundary. That code does not expect a PUD leaf:
->
->    vma_merge_existing_range()
->      commit_merge()
->        vma_adjust_trans_huge()
->          split_huge_pmd_address()
->            mm_find_pmd()
->              treats the PUD leaf as a pointer to a PMD table,
->              so the "table" is the device memory that the leaf maps
->            __split_huge_pmd()
->              reads a PMD that the user wrote to the device memory
->              folio_put() on the folio that this PMD names
->
->Bad. While the code must at some point be taught to split PUD entries as
->well, the issue here is that we move VMA boundaries such that they are
->incompatible with the driver.
->
->Fix this by calling ->may_split() on the address that a partial merge
->would move the boundary to, and by abandoning the merge if the driver
->refuses. vma_modify() then tries the split, which fails with -EINVAL.
->
->Factor out existing split handling into check_split() and reuse it.
->
->Fix generated by an LLM and sent by Chris Mason in private.
->
->Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
->Cc: stable@vger.kernel.org
->Signed-off-by: Chris Mason <mason@kernel.org>
->Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->[ david: improve description; cleanup the code ]
->Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
->Tested-by: Gregory Price (Meta) <gourry@gourry.net>
->Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
->Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->---
+I've applied this single patch to page_alloc/for-next-fixes and will drop
+the version from Josef [1]. Also transferred Zi's R-b since it's the same
+code change (plus comment).
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+[1]
+https://lore.kernel.org/all/20261027-pgalloc-ai-hotfixes-v1-1-9c7d1aca801e@kernel.org/
+
+> ---
+>  mm/page_alloc.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 55d3fc4b307f5..bb3c7e95f2ed4 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7396,9 +7396,13 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
+>  	 * put back to page allocator so that buddy can use them.
+>  	 */
+>  
+> +	/*
+> +	 * On failure this has undone its own isolation, and any other
+> +	 * isolated blocks in the range belong to someone else, e.g. offline.
+> +	 */
+>  	ret = start_isolate_page_range(start, end, mode);
+>  	if (ret)
+> -		goto done;
+> +		return ret;
+>  
+>  	drain_all_pages(cc.zone);
+>  
+
