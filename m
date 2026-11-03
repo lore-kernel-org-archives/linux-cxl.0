@@ -1,126 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.165
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793687198;
-	b=DgirdQ0iT7HJfNwuvSwRKlL1UN+bwQH1uzOl4kwKAPjdG+Qvcw1K1069kX3EcWtsdwgy
-	 DnkQ8yedjainHDw0nhEHJou7h3tCR4+5OlIIeHPLnp+54GNCHi2txGuCAlSUPrF1i0lmF
-	 EuNCbS6ywJ4IjgpuWvenTMv2Ja7wfwuYJeE/lxg0arKYdogmxIvQ47fIfRGGLmMEFlOG/
-	 ZB7/j1VECyfIik4FMbJH20PTLX8CXtHRydXAyXR8pv5gbfMRszo8La4jYjB18lbEq2/qV
-	 8S1+xEpB3ZxNuXlIt/ivRKTeyUOL9Ne1Hpv/ur0mmiDNiOdyE/5Lk5T+TObdb81nVWw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793687198;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=89WHsBI4UooPN0e/fzWqgj/M9hLD/tFhYxvpr6aA8I0=;
-	b=xwh/QP3/C5PRabr5dJrpA7YaKY+vQre9fgs3DOpfQXceyeuShmnvC2Hummq0wx99Hc+l
-	 L7jSn3Svy/R6sDCbIWgOVR8a45ApNujqMuizgThpvUJqmWr4JdMkZYQLnzhhoV8b5ZtQz
-	 OSFdAobwklXaAJkOsV1Pa8CsDt36YTMa+jg7wkz4hfkpkB+9p955gFC3FYN0LIH/x9RIc
-	 MKh9wEv9kNw251Y3KG2Atg2mlxspXb1CKMdJLN5vMQ8w7Tb6+trYl7iZE0f57Mrwy/g6q
-	 xdQtzaDUOl0BPkZ9wSJpN8E2MQrPEE6bV3qgAAuzV1ZbmS71GnbMXhTiuYN3Kl1BHUw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BrQ5Opza;
-	arc=none smtp.remote-ip=95.215.58.165
-Received: from mta1.migadu.com (out-165.mta1.migadu.com [95.215.58.165])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.70
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793687662;
+	b=z9NaVGbQw2RqX3NwOCWSfI3rq13fNrM1hSE6Yb9SrkghqsdGp1hGVVYI3ld+rUFCBl1e
+	 y1eYFgQo/RU+2UpMGgC8Mva9QwQM55hgoXZ8umMpC12QSeu2TMamMHEJGL5UPLLV9x402
+	 /PWhlZnoExpuNmBnLBMW1Y6BmC8gCZ0686mlALR8Ekvw+d7Hm9R5bSjTr/dJSl0f/ZZ4B
+	 Lp1tXVme1fOxFECM+ivbbRRJsEKZfHYybo5RjQIfRpkmvADW4esjvSAzEtR6pSuYtZFRb
+	 NcyGurQNfqQshNbzrXQbGWw8ckGvy0qAwnggcAO0FEU54wMCfc5GxEbsms84yoxg0TQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793687662;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:Content-Transfer-Encoding:Content-Type:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
+	b=Y0hnWcQ1Nl6Gn7SRVtA9U84C1G+aWpzJlg+5cAopAVjcA/AJuW9TXtX+fZg1tqbBxKSY
+	 IkK78wKLTIGt+CZD457RSMrK8J793tZjqAKtmnymfhPern21E5T4VP+KPMMBBcCUHxk6t
+	 ljOB3wP+Qmuw7QJKhmpQ/hsL5NcWAZO9DhyPJaA1svtidxF7inDKg2LVf8toVFrdBylTn
+	 oEGJyjL4pURY5B9wInjrqYhoneByVIhC5HdiLtUPDcsDU3EBwim4fdWboG/7PHHwhI9Xv
+	 FSEGCKO5Ac73oRL5K2MApXylGHBGXbdstA0JqXCTqizYx6FGNcBR+Iy3xW27WC6Cxjg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=olZ4YE5V;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.70
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011070.outbound.protection.outlook.com [52.101.57.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4786C606A32F
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 06:26:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4786C606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AB7606A324;
+	Tue,  3 Nov 2026 06:34:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34AB7606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BrQ5Opza
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=R4qncA5U596ba8pavgxH4k05FBMaxgAUsAOufRDPVI0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793687194; v=1; x=1794291994;
- b=BrQ5OpzasmaKN5c4rG+lUhIWYHYwU9Zu/yaL7ECDfW6bWPv8oJYd/xoJtaPXoBVLlimlpMUD
- hxMHJYVuqCPlSy9lE3cTmbFIqjIxFUJWVmK1PEWGFGvTx3eyIQsy580HKxs6eKEmRludRp7iNyI
- 96WyFglyjScKawmHaqcOgHAs=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 650e1e2cc95fd22e;
-	Tue, 03 Nov 2026 06:26:33 +0000
-X-Mizu-Trace-ID: 650e1e2cc95fd22e
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	kasong@tencent.com,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	kees@kernel.org,
-	peterz@infradead.org,
-	jannh@google.com,
-	pfalcato@suse.de,
-	hughd@google.com,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	willy@infradead.org,
-	jack@suse.cz,
-	ziy@nvidia.com,
-	lance.yang@linux.dev,
-	riel@surriel.com,
-	harry@kernel.org,
-	apopple@nvidia.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	matthew.brost@intel.com,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	youngjun.park@lge.com,
-	gourry@gourry.net,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com,
-	jgg@ziepe.ca,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=olZ4YE5V
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FC39dFrhDeIMaO+Ch9HBgnoloXzPYXueFQSOhpQQrT/d9XASQ8Ib2qwOQ0doOIUhI0S1OGjLFs61ifX1QIV0TEcv//zi7lG0SA1nwjv5VTw7+PCpxC1qb2Zv8msPAPzWiJDzyc1Zbg/5t0TVin4psQNUO8fuxBBe9Hot4qxjVRnZp1igIWjYdx4d+tA/bn231Ry5DJDrm7gtAl+CDve1U8YXpdKnukNzc/vLL0h1MlRA92S382huOPOcJPDD4Cmx20Vj5aYHGESETG7UCh1cfGIVn8/VfdzFRG6jf9ce9Yr3DqGg2VGxnHt5n9wvlYXifLEgZNUNai3sLKRNUxJ3IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
+ b=CQqBxxFxkqQrIXhtj6gaCm5Q3VRdHJgcpvDXrYy1HYVpK0rmFNkMAKscrC6P88oCsBc36fcOzC+mlSAA8CYUZ0WfHw9JDcvxM8zNjK5zf/0mxr/nL3BtG9nveyJQr0kY/IKAlM1OXprU7gB6dOBTty8eROuf8NiOmHxVOPgHbMALHga7KD7OWeTPt7gJrIY1hkBxXsPyTuCH1honG1fpMj7Xzb6hakxJdV3m6s7XaQOSTEGw2r2adU7r8PWBLbl3M/JRjGQ7USroHqR1vGulbrJHwHQmsLpOxGR4xPix8jMdoYdrBcjFazZAAZbCDxZHwm3TA1qWYA8gCcSy/QAXUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q9WT78x1YkiedwXkVrU2HXeaX2R8w0dBRyEKN5ob4Ow=;
+ b=olZ4YE5VTukIebwnhVUs63jPTaNoWQMnu5WN/nkXUAAVglyBbA64I8KBDn1sARjQ3KdeNhz5xWRwAKlTLkHdPpFSlxM4ypZA7LPiMmkzvMz18lWkKlyyPwrdjLVkHRh+TQSNeXktXjtvOLNuKVZNl+4KMbLpwYC5hlr0skw5AgsYKU/SCvUosI4npXD7jPZTwBKj4gz57FEzOGm3tZadlXBWxrfGpXn5FXuyI5bKpAGZmY9Kj0Q0oh/bObudzjXmBBydH7aevmIq6F00E/m2L5f+eV3TZXGtiPdYWuI3lMOdQYRevpZQlHb15Lf82lm4XISCszWjjaMOqwwqKeouWQ==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by CY5PR12MB6551.namprd12.prod.outlook.com (2603:10b6:930:41::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
+ 06:34:18 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0592.007; Tue, 3 Nov 2026
+ 06:34:18 +0000
+From: Richard Cheng <icheng@nvidia.com>
+To: dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com
+Cc: iweiny@kernel.org,
+	ming.li@zohomail.com,
+	icheng@nvidia.com,
 	linux-cxl@vger.kernel.org,
-	mason@kernel.org,
-	stable@vger.kernel.org,
-	usama.anjum@arm.com
-Subject: Re: [PATCH v3 38/47] mm: fix deadlock of mremap() against UFFDIO_MOVE
-Date: Tue,  3 Nov 2026 14:26:28 +0800
-Message-ID: <20261103062628.92242-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-38-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-38-d6437171ecc3@kernel.org>
+	linux-kernel@vger.kernel.org,
+	kaihengf@nvidia.com,
+	kobak@nvidia.com,
+	newtonl@nvidia.com,
+	kristinc@nvidia.com
+Subject: [PATCH v2] cxl/port: Fix endpoint RAS error unmasking
+Date: Tue,  3 Nov 2026 14:34:09 +0800
+Message-ID: <20261103063409.18275-1-icheng@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: JH0PR01CA0062.apcprd01.prod.exchangelabs.com
+ (2603:1096:990:57::6) To MW2PR12MB2380.namprd12.prod.outlook.com
+ (2603:10b6:907:4::32)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -130,43 +105,173 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CY5PR12MB6551:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0e43abf-6f7b-47d9-3ee2-08df39747bd9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|11063799006|56012099006|261009223027099003|261028144727099003|261021121427099003|261102123227099003|261022105027099003|261021123027099003|261022075727099003|261026140227099003|10067099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	+6P8kPl+kQEp6eWh2MPHY3V2RtkamBBbOE7udm6DC711TskTLb8o3U+HuuA3JqJ6PGRjftG3c/srS4MlM4VWQz/JZS7UnCEu3rNaB2fZ4Th2uvd3ATsBwgvKluzCq49e9b4PKjrpYcyy3WtmByEngCGoiYLTlP8nF/gZ0AVgaItBirqBWeYUpBd4exIC5tuib9bR509Bj4nG37vWPPkl0YrTEY0XWxN7pwCIvMvInuV7uxqpUkTwMmO/yQU7evf46NppKrcxWJJhM/vXA1JWLFX0ZROqsZvSLbD770mOs3FTNlOouJ+LxgxheIk9zrv6dq7wAl8bxpJMnYOdyjmyH2aMZvs8mDspVis8mpc4rYK5NK4jrXcPPcRE6F5y81baIL6jf+CArhabv5y7SOX34NYR+7mMSDCsRRox37/b/wZ/jLyS7zH09Or1uq1Ej2KhTeMhLPtGAkK0IKRy60/r8Rp+VZ37EQEqqyJzRVuuFTbPHwNUuWa6libX03yfpDO+my6BxrxoO2LGdGKVwvHV7d75+/DoNIU6Bgl3oXhN9NDssyVBRiaAa9ndkYIuwfXgNdmeIkqry1slR8ru7YJgNakXOKWmeRdk5XJd+RxqufxqkyPP1mCcINiqs05ig/RjLXS5RAN6V4aDNymkE2r2tvK8F7daapA3554hYSdiedw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(11063799006)(56012099006)(261009223027099003)(261028144727099003)(261021121427099003)(261102123227099003)(261022105027099003)(261021123027099003)(261022075727099003)(261026140227099003)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?F5NEWp3NE7fU72qDDHFcSUUdsilCT6eb5WiXOkZn6ukS6g4lA2PTd+4RuPc6?=
+ =?us-ascii?Q?FHA3OSCQyB/qAA3QjU8cqxFUenJQJRdR32Lm0GRJMxBRhK3dmEFLsAjEvSfW?=
+ =?us-ascii?Q?tCmPmZKiSx+OZOHrfdNyAO4cAibKjjGKuJZK2/tzj3zOSySSKObqWbw8xAPD?=
+ =?us-ascii?Q?9AA1PWDFCF04nL8ucvizX92XBJC2hQYq92L6jMSkBKeZVQM0R5TMFJ0AWp05?=
+ =?us-ascii?Q?uMlPFF5pHMq8HgWorTSF1fpdz9GotgMY91tbO73JDuBmtkzDABy0mjLvaju/?=
+ =?us-ascii?Q?OwlYQtFSN3bvxlMa7WYfBFHeLtk956bbXPd6Q24vetEeXwGdFmhsCPW0yjKP?=
+ =?us-ascii?Q?UaUYad8EYkLhKCPhTsjRZapy7FBaaB8+3+yR44vHz88O0yrPAO1wELNZX2MA?=
+ =?us-ascii?Q?VRjtWyEx3KiivKd8dlkFHRUN3a2ti0MkeVNAupKcHAiuMMjdbKcEllgt05pZ?=
+ =?us-ascii?Q?UzYuUlJCkS9hNOxvNddG3f84dSPzWbJeRCRAZi+zT09ptCnnJd1JaPX+BbKZ?=
+ =?us-ascii?Q?tsjsj7QKSh0EOIrMsL4BBwtEIkXPL2OTUtf+fBaoiUy+BlfN0X+PPwuJW9Z/?=
+ =?us-ascii?Q?FzdtTwnHSVoerwRJ/nnAOcK2j1hsGjvUQbRdIug2sH3gYPDqRr0KzMPV5lBP?=
+ =?us-ascii?Q?NTCdI/p886PDHDh5rdPnUwdK6EGNV6C+5VzjqCwn8LQjqQ0aciYUKlU0KCOl?=
+ =?us-ascii?Q?uSVr53vVNnLCwvA1hOuh1unZqY1LTFJdxj+PyPdcTZV0WedfqMlGOfAVaRU1?=
+ =?us-ascii?Q?AKtgK8z1VHPzAFV7zR/WN0byu9v5RLe3vHhoFLhDKSF4gnwLVLOl1HEKwswh?=
+ =?us-ascii?Q?5/SJH8CE/KUfJLA21UYjYWBZ4yUvqXUqbzLKp07hmX/VjoSJtyd1U1DBG4C1?=
+ =?us-ascii?Q?Ny6zNlC1d/QW1gFYj+gpQnVscnDxhO9yDCq3w2IOWG0kPkUeth3611Y0hrmj?=
+ =?us-ascii?Q?GN8VpkNzVQXmtxK+EaE/hi91u2NVCqgSNomVWBoeqx7V0hlLZrjMBQXsrj89?=
+ =?us-ascii?Q?go+GNmV37WUoC9bkC2TSctQgZNq5ipUdtEGU8WMkfnft17FBzQ7MiGzqd+87?=
+ =?us-ascii?Q?4ktwNK0cMtdMWqSSMgxNVeAN6iIXlM1zcc3uj+JdzMR6ShiVGVipGUiouKpv?=
+ =?us-ascii?Q?8PrVAc8mnEKByspFUFAxjPDCMz9Oh4cQ8Ew4nNWWOqlpOALAfaLidSesE91P?=
+ =?us-ascii?Q?xnBD9jPIrXIBzlSyGJCUK3HgpC1OsKhUbn+6MY1Wlo+QdzqTOjsVXUkwrHvb?=
+ =?us-ascii?Q?X2Cm+tCSTmXtpajhRwxvgwMj8iI63FlofCDXhJJt3vylqS41OE4JL6+B5srm?=
+ =?us-ascii?Q?oqotY6x6xc6ZKE9gxjwENiKtR+0+jeM2PpfUQIjFLGIIgKlFbMNFgpI57itw?=
+ =?us-ascii?Q?tTSQR0HsIU3wzkPwOIZaVxa+2acx2tvKJ/qULW6YnH8Gw6Fr1P0EpifqI409?=
+ =?us-ascii?Q?qVQBBiFdK/yQcam7AqQ+5UG3bScR5IdntFEIKq2VuuTY1LcKkmxcPiTNIjy9?=
+ =?us-ascii?Q?kpsmSSv3gC1xNF4aO1FS2HIEe/c0XFRWrDo9f172igSQKX/feNtB8rPR817u?=
+ =?us-ascii?Q?4ne02OjAftEPirXr0tjjb718k9NQnpDQ7wZlDVFIYtOJbh7zpMtoahmNwjf6?=
+ =?us-ascii?Q?xFnHJn/cGtz69p3ZIWHiSSMFmuJdQol6ko8cr0cER08B5G4KFUb3fkYqZMpp?=
+ =?us-ascii?Q?v3n839AzTWygvI21ACMt1Ebr2tzQveWRER8i2cwM1kXEe3s9?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0e43abf-6f7b-47d9-3ee2-08df39747bd9
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2380.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 06:34:18.2583
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IfNzA7Vf5+WTxoNj9K/cHIGRSsX6AnYwVGNCqANySLTd0jLW3Te7R3Y2l8Ka3jo8Az0/yH5c3i4WgQ2EZXPUBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6551
 
+Moving endpoint RAS handling from cxl_pci to cxl_port left
+cxl_ras_unmask() checking whether port->uport_dev is a PCI device.
+Endpoint ports always use a cxl_memdev as uport_dev, so this check
+returns early and leaves the CXL RAS error masks unchanged.
 
-On Sat, Oct 31, 2026 at 10:40:07AM +0100, David Hildenbrand (Arm) wrote:
->From: Chris Mason <mason@kernel.org>
->
->With per-VMA locks, UFFDIO_MOVE can run concurrently with mremap()
->on different VMAs in the same mm. Those VMAs can share page tables, so
->both operations can acquire the same pair of page-table locks.
->
->UFFDIO_MOVE orders the locks by address, while mremap() takes the source
->lock first. These conflicting orders can deadlock; mremap() holding
->mmap_lock for writing no longer helps.
->
->Move double_pt_lock() and double_pt_unlock() to mm/internal.h and use
->them for all page-table moves in mremap(). Preserve the source entry
->checks after acquiring both locks. Remove the comments claiming that
->exclusive mmap_lock makes lock ordering irrelevant.
->
->In move_ptes(), make sure to just recheck source and destination PMD
->after taking the locks and drop the overly-long comment.
->
->Fix generated by an LLM and sent by Chris Mason in private.
->
->[ david: use new helpers consistently; simplify description and comments;
->         move_ptes() fixup ]
->
->Fixes: 867a43a34ff8 ("userfaultfd: use per-vma locks in userfaultfd operations")
->Cc: stable@vger.kernel.org
->Signed-off-by: Chris Mason <mason@kernel.org>
->Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->Acked-by: Muchun Song <muchun.song@linux.dev>
->Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->---
+Resolve the PCI device directly through the memdev's parent. Rename
+helper to cxl_endpoint_ras_unmask() and its param to endpoint to make
+its endpoint-only scope explicit.
 
-Nothing jumped out at me, so:
+Fixes: dab7162d0ae7 ("cxl/port: Move endpoint component register management to cxl_port")
+Signed-off-by: Richard Cheng <icheng@nvidia.com>
+---
+Changelog:
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+v1 -> v2:
+- Clarify that endpoint ports always use a cxl_memdev as uport_dev, so
+  the PCI device check always skips endpoint RAS unmasking
+- Simplify the PCI device lookup to use the memdev's parent directly
+- Rename cxl_ras_unmask() to cxl_endpoint_ras_unmask() and its param to
+  endpoint to make the endpoint-only scope explicitly
+- Rephrase commit messages.
+
+Reproducer is a QEMU Type-3 guest
+
+1. Ensure no CXL region is active and PCIe AER is enabled.
+2. Restore the emulated RAS registers to their reset masks.
+3. Reprobe cxl_pci and read the masks again.
+
+```
+BDF=$(basename "$(dirname "$(readlink -f /sys/bus/cxl/devices/mem0)")")
+BAR0=$(awk 'NR == 1 { print $1 }' /sys/bus/pci/devices/$BDF/resource)
+UNC_MASK=$(printf '0x%x' $((BAR0 + 0x1084)))
+COR_MASK=$(printf '0x%x' $((BAR0 + 0x1090)))
+
+busybox devmem "$UNC_MASK" 32 0x1cfff
+busybox devmem "$COR_MASK" 32 0x7f
+
+echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/unbind
+echo "$BDF" > /sys/bus/pci/drivers/cxl_pci/bind
+udevadm settle
+
+busybox devmem "$UNC_MASK" 32
+busybox devmem "$COR_MASK" 32
+```
+
+Before the fix, the masks remain 0x1cfff and 0x7f. After the fix,
+both masks read as zero.
+
+Best regards,
+Richard Cheng.
+---
+ drivers/cxl/port.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index c12fd0b89883..7b4726c7276d 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -72,19 +72,21 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+ 	return 0;
+ }
+ 
+-static int cxl_ras_unmask(struct cxl_port *port)
++static int cxl_endpoint_ras_unmask(struct cxl_port *endpoint)
+ {
++	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
++	struct device *parent = cxlmd->dev.parent;
+ 	struct pci_dev *pdev;
+ 	void __iomem *addr;
+ 	u32 orig_val, val, mask;
+ 	u16 cap;
+ 	int rc;
+ 
+-	if (!dev_is_pci(port->uport_dev))
++	if (!dev_is_pci(parent))
+ 		return 0;
+-	pdev = to_pci_dev(port->uport_dev);
++	pdev = to_pci_dev(parent);
+ 
+-	if (!port->regs.ras) {
++	if (!endpoint->regs.ras) {
+ 		pci_dbg(pdev, "No RAS registers.\n");
+ 		return 0;
+ 	}
+@@ -98,7 +100,7 @@ static int cxl_ras_unmask(struct cxl_port *port)
+ 		return rc;
+ 
+ 	if (cap & PCI_EXP_DEVCTL_URRE) {
+-		addr = port->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
++		addr = endpoint->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+ 		orig_val = readl(addr);
+ 
+ 		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK |
+@@ -110,7 +112,7 @@ static int cxl_ras_unmask(struct cxl_port *port)
+ 	}
+ 
+ 	if (cap & PCI_EXP_DEVCTL_CERE) {
+-		addr = port->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
++		addr = endpoint->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
+ 		orig_val = readl(addr);
+ 		val = orig_val & ~CXL_RAS_CORRECTABLE_MASK_MASK;
+ 		writel(val, addr);
+@@ -152,7 +154,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+ 		devm_cxl_dport_rch_ras_setup(dport);
+ 
+ 	devm_cxl_port_ras_setup(port);
+-	if (cxl_ras_unmask(port))
++	if (cxl_endpoint_ras_unmask(port))
+ 		dev_dbg(&port->dev, "failed to unmask RAS interrupts\n");
+ 
+ 	/*
+
+base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
+-- 
+2.43.0
+
