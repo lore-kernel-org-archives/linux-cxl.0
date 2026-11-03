@@ -1,126 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.103
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.4
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793675316;
-	b=mYZ8pWj7Z4jjHP14aEFr1riUmayrrjlgqsO4JjbPIcNiGL3u0lX4YRny/i/kTbiru5sO
-	 xQVOO+ibHbF+gwmLAE7em2vW+q7rCPI14+MUNaFWqSlyECJjWX3o0DTNIiyCwLjQmVq4F
-	 lFoCvX+5Md0W1B0V0iMgjEwopsolaBcY28L3I3RtXYnC8cqTN+j116+ZSoyYg3p2RC2xG
-	 IsAskhN3q2uB90MwFC35qDxa+SN7pPTQxCA2Kvcd2Qx7mduKX2qJ9ttwu7ucZqseVmIl8
-	 sXyLboP7XXzPqcVGJCXOKBH7h8xbHNHYNcayC/dCwySfNZeggiuaYMpXy8dgZoeU8zg==
+	t=1793684249;
+	b=l7kfgVpbCQZSnJzwiZqHgtNEmqBCWdRAtRSD5XpcUV5OUQgqIv1pfD66Qvi98eA7xWuW
+	 d5COJSe2poilxRYGrGfEh0pkn7ljHcrSXsINYq8n16MoFzwu89NiLuQZs+I7nKcVsjk9j
+	 3VQAgwiOUHIu+Rp6gfg1FhH6VHdes+KYjpZswlVup/QeEkOJCUk0Qy+B99RYVc+Nig2Vy
+	 03FbpNNlG9Zo9BS1fspME0TBrXbu0W0ho1sCm+8MEd1jbVXfOKkCA6kcqXrP72BVsgiM0
+	 1dUlBWTYSMgsXPOArw65/DUf9MzHCCgb+5Br0el33ZdQY+A1XnoKQRu7GooMRW/sEaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793675316;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=TcMB+7TMi2bLazC/QSSJVb+dN6unmraBocObaaHDrh4=;
-	b=3Og9KPCmoG5s8HIAWcnMrWoWi7bw5XlYpKDW9+KdBQDIspdJ9Czb9td7f4epG7Nh2jXK
-	 +PdCkoKCUwDVvHnNXiXmlHiHHag2+eY6BEodl6Px+SuBrlTDF/nqN9E5i7KimcRK38gvx
-	 lEvh6YttKir1odJevto8smlDqXynQcbbIrRzIB8yhPr4RfkMqHEg8CCMetU2cNVkz+hPW
-	 KYnYiNLQcJJNwZyEPtL7c9I2w+cTNZ2oqjogOBH5TpyMpEYe8mbBtzUSJCC2/U+vyqTd2
-	 MBdIBCukO7hUSlYWiHDM0EwAqna6vH1cxvOaZ1tPhxXHdFhg6m6LvvLW/hiB0C2nh7w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793684249;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:Sender:
+	 X-CM-SenderInfo;
+	bh=1SUHukhOZD2PvxvVE654q0jDC0/+kYhMEDgWdq91p3s=;
+	b=heiP7pU56KqXnx1iwXrr9fbMHycHbo30wXREOqIdRfYxGjvXTZJgzQBttAC+7RtdqKr2
+	 LT9tzgyHYXc2S5wCKu+viyfXEuYY3N4iswksEnh3G5g+UYBzPFMjkOF4PnRpYO06flmwY
+	 aAIbVVsuy/y9mPqFFUNhqgcjquMZ8M+tXu7Zy7jqJBUQFzQ8m3NWsjg0GdQwYaqPggSyF
+	 IclDPoFSm01daAT+9fpc16X7WIJ8x9QxeFBLS65Iw5aXpjLohxVWf8vg3pdjqdf8r32cy
+	 0POi5xGpAb9LsrQzjPyqXiSkC2rsn3QneKVp48TO+idMTbKIRv9jzpmL7gDG9DrrpCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BmsTYcpv;
-	arc=none smtp.remote-ip=95.215.58.103
-Received: from mta1.migadu.com (out-103.mta1.migadu.com [95.215.58.103])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Z+jH3h5+;
+	arc=none smtp.remote-ip=117.135.210.4
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03342606A32E
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 03:08:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 03342606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4B4606A324;
+	Tue,  3 Nov 2026 05:37:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6B4B4606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BmsTYcpv
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=9TIi4e+jhWvSVLJqdtmuDmhXX3FHNuF+HLGG6Up3ljY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793675313; v=1; x=1794280113;
- b=BmsTYcpvBcL0jj9GzgWU7lQFWGvWOOXuL/EeT7HVmdXH9kJNUYlwsT0yiAkv3jXqQ8HbdXqg
- 76dtaf2657lnh48AYtZ4MG3C94KqUFc67F7Lkl28tlNkA0qIjClaPgI/6vv2bTbzLgVteKC0R7x
- TCDlCyxCeGL1Nbq3QpQwgKvQ=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 59608abf10f0d8e0;
-	Tue, 03 Nov 2026 03:08:32 +0000
-X-Mizu-Trace-ID: 59608abf10f0d8e0
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	kasong@tencent.com,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	kees@kernel.org,
-	peterz@infradead.org,
-	jannh@google.com,
-	pfalcato@suse.de,
-	hughd@google.com,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	willy@infradead.org,
-	jack@suse.cz,
-	ziy@nvidia.com,
-	lance.yang@linux.dev,
-	riel@surriel.com,
-	harry@kernel.org,
-	apopple@nvidia.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	matthew.brost@intel.com,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	osalvador@suse.de,
-	minchan@kernel.org,
-	muchun.song@linux.dev,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	youngjun.park@lge.com,
-	gourry@gourry.net,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com,
-	jgg@ziepe.ca,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Z+jH3h5+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=1S
+	UHukhOZD2PvxvVE654q0jDC0/+kYhMEDgWdq91p3s=; b=Z+jH3h5+Mqutwxst4m
+	qYje7Uo1OEQ+LrKJjtfbVj173XF4EzTZGSkhcmr5DKs4vpI85aTyXzHGnn9eNQFs
+	Jseca0Orfh2lkWEtRuH/ZOYmFpWN71IrtJWnyXCHakmCGtCjrGgY3sIDOLPhtGQB
+	kr6fCwq3RQCoehqTJdOokbcOk=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCXSZPSculq7ZSvDg--.17660S2;
+	Tue, 03 Nov 2026 13:36:34 +0800 (CST)
+From: Yongxin Yang <yangyongxin@kylinos.cn>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Len Brown <lenb@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Robert Richter <rrichter@amd.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
 	linux-cxl@vger.kernel.org,
-	josef@toxicpanda.com,
-	stable@vger.kernel.org,
-	usama.anjum@arm.com
-Subject: Re: [PATCH v3 32/47] mm/mremap: fix moving PUD leaves
-Date: Tue,  3 Nov 2026 11:08:26 +0800
-Message-ID: <20261103030826.79600-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261031-fixes_core-v3-32-d6437171ecc3@kernel.org>
-References: <20261031-fixes_core-v3-32-d6437171ecc3@kernel.org>
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6] cxl/core: Create EINJ debugfs files regardless of EINJ init order
+Date: Tue,  3 Nov 2026 13:36:18 +0800
+Message-Id: <20261103053618.884065-1-yangyongxin@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20261102032436.230945-1-yangyongxin@kylinos.cn>
+References: <20261102032436.230945-1-yangyongxin@kylinos.cn>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -130,80 +79,95 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgCXSZPSculq7ZSvDg--.17660S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWFykZrW8Jw45ArW7uFy5XFb_yoW5ZFyrpa
+	1DC3sYy3y8Cay3Cry3Aa4UZFySqwn5Wa47Ar98u343AF4kCrn8GFn5ArWY9ayDWFs8Ja4F
+	q3WYyr1DCr1Ykr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jTUDJUUUUU=
+Sender: yang_yongxin123@163.com
+X-CM-SenderInfo: 51dqwsp1rqw5tlqrjji6rwjhhfrp/xtbC4wPph2rpcuPufwAA3N
 
+The einj_types file under the CXL debugfs directory is never created when
+cxl_core is built in.  cxl_core_init() runs at subsys_initcall level, while
+einj_init() registers EINJ at device_initcall level, so the
+einj_cxl_is_initialized() check in cxl_core_init() always sees EINJ as not
+up yet and the debugfs_create_file() below it is never reached.
 
-On Sat, Oct 31, 2026 at 10:40:01AM +0100, David Hildenbrand (Arm) wrote:
->From: Josef Bacik <josef@toxicpanda.com>
->
->pud_none_or_clear_bad() only really works on page tables. PUD leaves
->confuse the check and make us clear the page table entry and print a
->warning.
->
->Since commit aed877c2b4257 ("device/dax: properly refcount device dax pages
->when mapping"), this also leaks device-DAX folio references, mapcounts
->and RSS accounting, resulting in "Bad rss-counter state" warnings on exit.
->
->Allow PUD leaves in get_old_pud(). If a PUD leaf cannot be moved as a
->whole or the move fails, split it. This unmaps it with proper accounting
->instead of treating the leaf entry as a PMD table.
->
->Keep using pud_trans_huge() for now, in the future this code should be
->cleaned up to just check for PUD leaves.
->
->Fix generated by an LLM and sent by Josef Bacik in private.
->
->Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hugepages")
->Cc: stable@vger.kernel.org
->Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->[ david: fallthrough after splitting ]
->Reviewed-by: Pedro Falcato <pfalcato@suse.de>
->Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->---
-> mm/mremap.c | 9 ++++-----
-> 1 file changed, 4 insertions(+), 5 deletions(-)
->
->diff --git a/mm/mremap.c b/mm/mremap.c
->index 91f0865f6aeea..1237718848f5c 100644
->--- a/mm/mremap.c
->+++ b/mm/mremap.c
->@@ -87,7 +87,7 @@ static pud_t *get_old_pud(struct mm_struct *mm, unsigned long addr)
-> 		return NULL;
-> 
-> 	pud = pud_offset(p4d, addr);
->-	if (pud_none_or_clear_bad(pud))
->+	if (!pud_trans_huge(*pud) && pud_none_or_clear_bad(pud))
-> 		return NULL;
-> 
-> 	return pud;
->@@ -847,11 +847,10 @@ unsigned long move_page_tables(struct pagetable_move_control *pmc)
-> 		if (!new_pud)
-> 			break;
-> 		if (pud_trans_huge(*old_pud)) {
->-			if (extent == HPAGE_PUD_SIZE) {
->-				move_pgt_entry(pmc, HPAGE_PUD, old_pud, new_pud);
->-				/* We ignore and continue on error? */
->+			if (extent == HPAGE_PUD_SIZE &&
->+			    move_pgt_entry(pmc, HPAGE_PUD, old_pud, new_pud))
-> 				continue;
->-			}
->+			split_huge_pud(pmc->old, old_pud, pmc->old_addr);
+Change the file creation condition from EINJ being initialized to a compile
+time check for ACPI_APEI_EINJ_CXL and return -ENODEV until EINJ is up.
 
-Right, copy_vma() already sets up the file and offset at the new address,
-so we can let subsequent faults rebuild the mapping.
+The same check also guards the inject files under every downstream port
+directory, not just the RCH ones.  Gate that directory creation on
+CONFIG_ACPI_APEI_EINJ_CXL as well, and check einj_cxl_is_initialized() in
+cxl_einj_inject() to reject writes until EINJ is up.
 
-No need to build a PMD table just for the move ;)
+Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+Signed-off-by: Yongxin Yang <yangyongxin@kylinos.cn>
+---
+Link: https://lore.kernel.org/all/de14c4ef-e3d8-432f-9ce8-87c468d6d2ad@amd.com/
+Link: https://lore.kernel.org/all/7a22cc6a-deba-40e6-8033-97d1234420ba@amd.com/
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Changes in v6:
+- Apply the same compile time check to cxl_debugfs_create_dport_dir() and
+  move the runtime check into cxl_einj_inject(), so the inject files under
+  the downstream ports are created as well.  This is not RCH specific, all
+  downstream ports are affected.
+- Reword the commit log as suggested and drop the parts that the code makes
+  obvious.
+- Drop Cc: stable and both Suggested-by tags, move the lore links below the
+  git marker.
 
-> 		} else if (IS_ENABLED(CONFIG_HAVE_MOVE_PUD) && extent == PUD_SIZE) {
-> 			if (move_pgt_entry(pmc, NORMAL_PUD, old_pud, new_pud))
-> 				continue;
->
->-- 
->2.43.0
->
->
+ drivers/acpi/apei/einj-cxl.c | 3 +++
+ drivers/cxl/core/port.c      | 7 +++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/apei/einj-cxl.c b/drivers/acpi/apei/einj-cxl.c
+index e70a416ec925..22a7eb4dc75e 100644
+--- a/drivers/acpi/apei/einj-cxl.c
++++ b/drivers/acpi/apei/einj-cxl.c
+@@ -30,6 +30,9 @@ int einj_cxl_available_error_type_show(struct seq_file *m, void *v)
+ 	int cxl_err, rc;
+ 	u32 available_error_type = 0;
+ 
++	if (!einj_cxl_is_initialized())
++		return -ENODEV;
++
+ 	rc = einj_get_available_error_type(&available_error_type, ACPI_EINJ_GET_ERROR_TYPE);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 625e4aa427db..a949228de936 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -806,6 +806,9 @@ static int cxl_einj_inject(void *data, u64 type)
+ {
+ 	struct cxl_dport *dport = data;
+ 
++	if (!einj_cxl_is_initialized())
++		return -ENODEV;
++
+ 	if (dport->rch)
+ 		return einj_cxl_inject_rch_error(dport->rcrb.base, type);
+ 
+@@ -819,7 +822,7 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 	struct cxl_port *parent = parent_port_of(dport->port);
+ 	struct dentry *dir;
+ 
+-	if (!einj_cxl_is_initialized())
++	if (!IS_ENABLED(CONFIG_ACPI_APEI_EINJ_CXL))
+ 		return;
+ 
+ 	/*
+@@ -2515,7 +2518,7 @@ static __init int cxl_core_init(void)
+ 
+ 	cxl_debugfs = debugfs_create_dir("cxl", NULL);
+ 
+-	if (einj_cxl_is_initialized())
++	if (IS_ENABLED(CONFIG_ACPI_APEI_EINJ_CXL))
+ 		debugfs_create_file("einj_types", 0400, cxl_debugfs, NULL,
+ 				    &einj_cxl_available_error_type_fops);
+ 
+-- 
+2.25.1
+
