@@ -1,55 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.106
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699461;
-	b=saDLjRLiN+RQhwHdJyv4cihsn/ldOyjLRfNWk/9tkfPQZA8Z0c7Tg0vMxjzHbxd3UK7S
-	 ctOOTM95u85ubOOfzpOoBV6n9ER0UwwT9JaHEhE/6TmTJkzXuq6eA7rqXP+5dncRvvrxN
-	 OtbsTSiXzkOc27mKT/3CVmVha7usnfkp04YpGqEvU9wIg+bhZxsqRGA+bDD3Mc4ogbhJx
-	 J+NB7pGKq0yy6w27RihjF7zRmb6GdAqhuWVbodEcS9N8yWb6Ve8FoKGG8qE6OjL3u066H
-	 /R5jQ6ikGKid4ue1L3h2RnwWdLxm2C5yWIcwWphLzQT/VgK4k/DSe262ZnlqvWNdf9Q==
+	t=1793699464;
+	b=1b3xu1BCWb63ZuCnFUJjI5GABVvasxb7dZGXrZkt8vC60DkBCM3YYezek+xtdJggjYFy
+	 r2Tb8iaWKzcj61p0fnOKRaKhgxGzv0Hh0u2iw++ZrZJUSTFFMGikH6BaEgNia5VkSim2I
+	 Nf1BggVdumSm5GctB97X6WfuK7Lr8ZdH+Mr5TCtIj5D7SYbOkpcEIgSQUXaP3veeMLbUE
+	 Ug+w+1+BKzCHy42TTrMsjgsPkKUNuqa8zFRATOWdU+vNGok3WR2zm+Kb+1mYYmZc51Xod
+	 /aVyFfUnc0aVK4rR8mB/pL5NvXjGEQoDW8ZmMPyfRHskqSRjnTLKBh2BhUN8hzk/Jvg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699461;
-	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:Subject:Date:
-	 Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793699464;
+	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=6HeAXp7yX1tk/C25b06NP0zuPlHPPh/+Hik7J1wwkx4=;
-	b=vjxk4/kogrsAvMwLh6nT9oyyDI7aM5hPfnOqjNYwm0N7oTl09iVaTWB6/nFUAMAwp7c6
-	 tKSJ2DNQlTU7CTjlTWwGmhT1v9v87Ph+pf2v9tvzwyXL2sfW1okwVUcHxw6QtZD3Egh3D
-	 rvn9yMSSIvIDI6WwYvYYDAidiTmXhLdb3B0fM0YT/icKPYd57q7Xa6xDvqzSuprvQh/pz
-	 OeIG1Toa6QqaXlAaUFLRkx5XJQPqzfv4TCRqi3vmWtswku4zNlVDM+X2+P/a4IlqADPIp
-	 pkoRaS8pY6fuaVTENFnH0R1mBOiGOcP+UgpYqFrUoHMAWcPMkrCoBGTqbjlXCGHMtsQ==
+	bh=SN2cbNZfZk1rDvDVpASrZGK8gPmH+E9oCxWeHnJltGY=;
+	b=N3JHtkpuL3JccPvz7/d/JkU7edUwZItaDk1jLVZcJj7Y8KISMMzhN4nBA72d4AyHKlOi
+	 IVbBQ9SOtZohiqfp2A5L7zHSjvmF6ZZszTkX4aMaZumC5XfFyALY5n3R9ZCB1oIs1M7mW
+	 WUShllRjk2GCe+qF+rNq536CgEN86avb6ZQRziMm+vqoLIV+90h4K+H1bxLZKq/DIaXjs
+	 Q7LZC7vKzB5cLIW6g0J4hudsBU7ouoROrdKMTrwXdDUmSKiFrtQ4Gxd0aN1Y/niHJLA09
+	 ct7b4ACiBZRcgUl4O3Ckh64Y1xjBdSIgGxQQ3Y3A/FrEmgAvUiWsKPZJeIylVWmSrag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=karaolidis.com;
 	spf=pass smtp.mailfrom=karaolidis.com;
-	dkim=pass header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=gTIswOwx;
-	arc=none smtp.remote-ip=109.224.244.106
-Received: from mail-244106.protonmail.ch (mail-244106.protonmail.ch [109.224.244.106])
+	dkim=pass header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=fFWoOweV;
+	arc=none smtp.remote-ip=79.135.106.113
+Received: from mail-106113.protonmail.ch (mail-106113.protonmail.ch [79.135.106.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF150606A329
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 09:51:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF150606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56D8606D807;
+	Tue,  3 Nov 2026 09:51:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E56D8606D807
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=karaolidis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=karaolidis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=gTIswOwx
+	dkim=pass (2048-bit key, unprotected) header.d=karaolidis.com header.i=@karaolidis.com header.a=rsa-sha256 header.s=protonmail3 header.b=fFWoOweV
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karaolidis.com;
-	s=protonmail3; t=1793699458; x=1793958658;
-	bh=6HeAXp7yX1tk/C25b06NP0zuPlHPPh/+Hik7J1wwkx4=;
-	h=From:Subject:Date:Message-Id:To:Cc:From:To:Cc:Date:Subject:
-	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=gTIswOwxYUKlWxErWTokOEKDObVzE4bKBY/CclpMYDcrnQpos3B4Chm/GAQYdO9ne
-	 NCFU0Nm/1acbnYIthTxWyYkezlUio/rHrN/azR3xwQEZMaNqLXJKpWBSme9JxsDdaw
-	 V0dbE/uGxqH3/S0wBEoxxPbZ0B2UmuqECjGzQDAu1v3bON1zqqm620nPTnzvUJdFs+
-	 Of5brxqy7L/afeq3PfYPi+apdJYg++v6cjNoxjdvstDhJp7WM0AUweiwEXIQhxYuH8
-	 43h9QzoQUBw0aYisHyXYYPyh8zDBRKigXj4AzQM9r4xH396hHJH7F+YiC6LKeX3nIc
-	 kGnJU8S/ELKsQ==
-X-Pm-Submission-Id: 4jJkN811Fsz2Scj6
+	s=protonmail3; t=1793699461; x=1793958661;
+	bh=SN2cbNZfZk1rDvDVpASrZGK8gPmH+E9oCxWeHnJltGY=;
+	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=fFWoOweVN/T9iPa3kVqaqtXUorpdm4UPfLZhHlC+BIYNRvxpIRRYbPlZRNf+8WNL9
+	 0p3gSI2WuSpAduaw5Ssxo66Py30vdjrUZ5AUEoNLHQvEhYnaEaYuRSBYYC4HpQMZe+
+	 V6ktmZfmFCW94vMdNyLcWhWKElVTBhpfxamZ2QyJ6cJLR9iUti23cx5e3xcm6o+JKF
+	 WajtNWAicJPqiFQnU80LIz04bnBqvGIIExv9ygEyuU9vMctK0Lp6HXKQI2d2EkYHsg
+	 GLwrWYG+6mGTsgLTrppjqwk5Xd6tnmjVLwYwmEEqPx5Zi9Tm3cxGwN7NxtMb9GgKnp
+	 90aznmG2PDrlQ==
+X-Pm-Submission-Id: 4jJkNK66X8z2ScjM
 From: Nikolaos Karaolidis <nick@karaolidis.com>
-Subject: [PATCH RFC 0/6] virtio-mem: support memmap_on_memory
-Date: Tue, 03 Nov 2026 09:50:06 +0000
-Message-Id: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
+Date: Tue, 03 Nov 2026 09:50:09 +0000
+Subject: [PATCH RFC 3/6] virtio-mem: support memmap_on_memory in Big Block
+ Mode
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -61,10 +61,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzNDQwNj3bLMopLMfN3c1FwQzk0s0E0zTk02N7YwMjc3SlEC6isoSk3LrAC
- bGa0U5OasFAsRLC5NykpNLgGZplRbCwC08b65egAAAA==
-X-Change-ID: 20261103-virtio-mem-memmap-f3ec7382772d
+Message-Id: <20261103-virtio-mem-memmap-v1-3-308ae1da6240@karaolidis.com>
+References: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
+In-Reply-To: <20261103-virtio-mem-memmap-v1-0-308ae1da6240@karaolidis.com>
 To: David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
@@ -81,102 +80,201 @@ Cc: Oscar Salvador <osalvador@suse.de>,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-cxl@vger.kernel.org, Nikolaos Karaolidis <nick@karaolidis.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3925; i=nick@karaolidis.com;
- h=from:subject:message-id; bh=NNPpcglNLpTNsJShxSz++7ZYM10avVud+ofnAjWB9aY=;
- b=owJ4nAFtApL9kA0DAAoB2mjImL9M9YgByyZiAGrprndObZ4nJcHkyOGnR8X98GzRHnZPY00og
- 5ZdyhePWdMUsIkCMwQAAQoAHRYhBLMZG7EWqsMYjymWX9poyJi/TPWIBQJq6a53AAoJENpoyJi/
- TPWIl/cQAOEJLHdPO99uWz96izDeMCElaiPsorxDa1dY2D7aoG+gVGFyjbiVLoPG9ccyV1X8GgC
- 87APtvVTOGWAICVzNMI0UPWriIepArKYeYAc4lBS+3NAYLHRT4/MLnOtyM3+L8309oIOtWqqGar
- STGxvYP4Mu/EjXRXgFqg6x88Yps/JzPTJX6kKzl7djrtOi/e29OebonxeqcTSnaDQVgKERsH4+e
- idJTNqaGL+oCQMJFGD6xzdqeNOoMJF0SnhSS6okBcXzUOhJq0LUUYMIW5Y2XU26bZ9sgw2fTEPv
- ILJ9/LI0xqeNBobSe3mYGTqv87IWSHaHiM/Y3Ua7sKQ11xvuGB0B9gzRTEh+A/hoQa96hLsXuTo
- 6satoUNqNKdss39D/7karpqARuukEM0TJowUmDXgcpDyRa0TbaTL2yuORmsZrSJWvdyaAPMYSyX
- 7nozNOBTetb1iZoBDllZqEGy4SLiJzqbweJMPAR44VrLXUQsqgKPDuSjWZw5Bd0DWprJcMABQBJ
- PATSor2IAhktB3UF9AoNqLs3PO9hWpzb7/8Fmkkp1oIMHpdtcVal1e3uR7VduKLW9QmJFZUB/Qe
- zz++rHq/JxPYPxJb9tDy9nR8zT9oQg6P7r/CyBFWdyUCitOiOeSrPA5kJ/mxLafm00ve7nFBY92
- vwP46+z4AtqoCW2pzw+clRg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7102; i=nick@karaolidis.com;
+ h=from:subject:message-id; bh=i4qH0gKvOwKh7W5tPy50bPBdXvAZkUQIhbg9Uj8kFII=;
+ b=owJ4nAFtApL9kA0DAAoB2mjImL9M9YgByyZiAGrprndPZWUPQvXERzHktOvvAtXprxxImyzDe
+ LcGzfZLklN4J4kCMwQAAQoAHRYhBLMZG7EWqsMYjymWX9poyJi/TPWIBQJq6a53AAoJENpoyJi/
+ TPWI/BMP/01gF70UakAx03YsBaN7FIvInSKQ+wLb4aVaZphdwC/vL2B/NOiiz3wplFTGnkcLisJ
+ AiYxZVP+wbK4kWN87Biml9Fk2CBmobfmnkL7t4d12F2hvF1b3B0lJN3chlN8HFYEjFU28VmC86/
+ sDEcIjfOPvMJ5M/bq/MdWSX/izR8jbZ+ag1whNXH/8YQfihFLhufOWq0Ibug38iwy4KpJQw7Xme
+ R/ZxrzL0kVlAmPD/MslTahfjy9WPRVJz/IDy2bPpEdTDMvTzZQoNE+jGIrJTsjWXsUY3yOx/3or
+ tHPSepw2mErDJGxrJnViScOsX/9M+Gj3MgWVKjue1EO50gcvOJWZ891TgbURjzDQuXC5I/rxSV6
+ kOc125fXed3doHBHxd6U27UB+9rd3OQAP87wW+CpzgS83JyGrl9xUGAY1F10Qlb4I/SBPZ+XpoL
+ 3xWBbB2Wtk8Q7XaN/k4ohRKKP1bEeHZWXjxGhvw+S/TTE/53oEhdA9SaW2yKNS/ODrDIF6Zg8be
+ 4RgSybmX8bICOQQoErcl+Ch+OMo4146se0epGEpi/eohDyfAhVMcDWHEtCNQdxA1qxDO6yUi71K
+ /kPiGg9rW62rgmKiYK1FJDWE0Bbub+KggH2Fpx5OLqwVQzt0WY5n7815jBPYXvof/TS42ynoXhu
+ rwqCvX5XhA4z5kWUuvZcuig==
 X-Developer-Key: i=nick@karaolidis.com; a=openpgp;
  fpr=B3191BB116AAC3188F29965FDA68C898BF4CF588
 
-virtio-mem adds memory without MHP_MEMMAP_ON_MEMORY. With the memory
-onlined to ZONE_MOVABLE, a VM that grows to many times its boot size
-can run short of unmovable memory. I ran into this while working on
-a guest-initiated memory negotiation project.
+virtio-mem adds memory without MHP_MEMMAP_ON_MEMORY. With hotplugged
+memory onlined to ZONE_MOVABLE, its memmap is allocated from the kernel
+zones. A small VM grown to many times its boot size can run out of
+memory for unmovable allocations.
 
-David wrote last year that memmap_on_memory support for virtio-mem had
-not been worth the effort, because virtio-mem adds memory in small
-blocks [1]. Each block is small, yes, but the memmap adds up when
-scaling to many blocks.
+With MHP_MEMMAP_ON_MEMORY and memory_hotplug.memmap_on_memory, the core
+allocates the memmap of each memory block from the memory block itself.
+In Big Block Mode memory blocks are always added and removed as a
+whole, and the core uses one altmap per memory block, so big blocks
+spanning several memory blocks work.
 
-This picks up Hui Zhu's RFC from 2021 [2] and follows David's review of
-it [3][4]:
+Add virtio_mem.memmap_on_memory, off by default, which only takes
+effect if memory_hotplug.memmap_on_memory is enabled as well, like the
+opt-in knobs of dax/kmem and s390 standby memory. It is opt-in because:
 
-1. Big Block Mode first (patch 3). Since commit 6b8f0798b85a
-   ("mm/memory_hotplug: split memmap_on_memory requests across
-   memblocks"), the core uses one altmap per memory block, so this also
-   works for big blocks spanning several memory blocks.
+* The self-hosted memmap (1/64 with 4 KiB pages) counts towards the
+  plugged size of the device but is not available to Linux, and in Sub
+  Block Mode the plugged size can end up slightly below the requested
+  size. Whoever sizes the device should opt in.
 
-2. alloc_contig_range() with pageblock granularity, so subblocks can be
-   2 MiB: done since v5.19 (Zi Yan's series, 448b8ec3bf11).
+* Gigantic pages can no longer be allocated from virtio-mem memory
+  unless memory blocks are larger than a gigantic page.
 
-3. Sub Block Mode only if the memmap spans complete subblocks (patch 5).
-   With larger device blocks, the driver warns and continues without
-   memmap_on_memory, as David suggested in 2023 [5].
+If the core would ignore MHP_MEMMAP_ON_MEMORY, warn and continue
+without it.
 
-The other review points on [2]:
+When unplugging a big block, skip the memmap of each memory block while
+fake-offlining and when rolling back, because it is not managed by the
+buddy.
 
-- Plugging more than requested: if no more than the memmap subblocks
-  remain to be plugged, the driver stops short of the requested size, so
-  this doesn't happen.
-- Error handling: if unplugging the memmap subblocks of a removed memory
-  block fails, the block is left in VIRTIO_MEM_SBM_MB_PLUGGED and
-  virtio_mem_cleanup_pending_mb() retries.
+Sub Block Mode is not supported yet, so warn and ignore the parameter.
 
-Georgi, Cc'ing you as you mentioned out-of-tree virtio-mem patches that
-use memmap_on_memory [6].
-
-Tested in QEMU/KVM (x86-64 guests) on v7.3: 128 MiB, 1 GiB
-and 2 GiB memory blocks; device block sizes 2 MiB to 1 GiB;
-ZONE_MOVABLE, kernel zones and offline blocks; force_bbm;
-memory_hotplug.memmap_on_memory=force on a kernel without THP;
-grow/fill/unplug cycles with memory held during unplug; 600
-offline/online cycles from user space; random resizing under a memory
-hog; injected failures when unplugging memmap subblocks; the
-memory-hotplug selftest; virtio-mem as a module, reloaded. Also with
-KASAN, lockdep, and DEBUG_VM. Built for x86-64, and the changed files
-for arm64, riscv, and s390.
-
-An LLM was used to review the series against the core, write the test
-harness, and draft the cover letter and changelogs. I have reviewed all
-of it.
-
-[1] https://lore.kernel.org/all/1efcb368-fcdf-4bdd-8b94-a705b7806bc2@redhat.com/
-[2] https://lore.kernel.org/all/20210623115839.3524-1-teawater@gmail.com/
-[3] https://lore.kernel.org/all/CADFyXm7Ky+S2gq5ht2h_tX9bLsoOSuctCkG==VYAH0uUHGp+QQ@mail.gmail.com/
-[4] https://lore.kernel.org/all/bc36b6fe-0d1a-6fe2-e8f3-49bbcaebcf41@redhat.com/
-[5] https://lore.kernel.org/all/1bf30145-22a5-cc46-e583-25053460b105@redhat.com/
-[6] https://lore.kernel.org/all/fb932d7f-0ba7-415d-ab36-e948d2bbb537@oss.qualcomm.com/
-
+Assisted-by: LLM
 Signed-off-by: Nikolaos Karaolidis <nick@karaolidis.com>
 ---
-Nikolaos Karaolidis (6):
-      mm/memory_hotplug: add and export mhp_memmap_on_memory_nr_pages()
-      virtio-mem: prepare memory notifier for a self-hosted memmap
-      virtio-mem: support memmap_on_memory in Big Block Mode
-      virtio-mem: move virtio_mem_sbm_try_remove_unplugged_mb()
-      virtio-mem: support memmap_on_memory in Sub Block Mode
-      Documentation/admin-guide/mm: document virtio-mem memmap_on_memory
+ drivers/virtio/virtio_mem.c | 64 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 56 insertions(+), 8 deletions(-)
 
- Documentation/admin-guide/mm/memory-hotplug.rst |  18 ++
- drivers/virtio/virtio_mem.c                     | 268 +++++++++++++++++-------
- include/linux/memory_hotplug.h                  |   6 +
- mm/memory_hotplug.c                             |  15 ++
- 4 files changed, 236 insertions(+), 71 deletions(-)
----
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-change-id: 20261103-virtio-mem-memmap-f3ec7382772d
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index ab06adbc0342..034d07207e44 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -40,6 +40,11 @@ module_param(bbm_block_size, ulong, 0444);
+ MODULE_PARM_DESC(bbm_block_size,
+ 		 "Big Block size in bytes. Default is 0 (auto-detection).");
+ 
++static bool memmap_on_memory;
++module_param(memmap_on_memory, bool, 0444);
++MODULE_PARM_DESC(memmap_on_memory,
++		 "Allocate the memmap from hotplugged memory itself if memory_hotplug.memmap_on_memory is enabled. Default is 0.");
++
+ /*
+  * virtio-mem currently supports the following modes of operation:
+  *
+@@ -639,6 +644,7 @@ static bool virtio_mem_could_add_memory(struct virtio_mem *vm, uint64_t size)
+ static int virtio_mem_add_memory(struct virtio_mem *vm, uint64_t addr,
+ 				 uint64_t size)
+ {
++	mhp_t mhp_flags = MHP_MERGE_RESOURCE | MHP_NID_IS_MGID;
+ 	int rc;
+ 
+ 	/*
+@@ -654,10 +660,13 @@ static int virtio_mem_add_memory(struct virtio_mem *vm, uint64_t addr,
+ 
+ 	dev_dbg(&vm->vdev->dev, "adding memory: 0x%llx - 0x%llx\n", addr,
+ 		addr + size - 1);
++	if (vm->memmap_pages)
++		mhp_flags |= MHP_MEMMAP_ON_MEMORY;
++
+ 	/* Memory might get onlined immediately. */
+ 	atomic64_add(size, &vm->offline_size);
+ 	rc = add_memory_driver_managed(vm->mgid, addr, size, vm->resource_name,
+-				       MHP_MERGE_RESOURCE | MHP_NID_IS_MGID);
++				       mhp_flags);
+ 	if (rc) {
+ 		atomic64_sub(size, &vm->offline_size);
+ 		dev_warn(&vm->vdev->dev, "adding memory failed: %d\n", rc);
+@@ -2154,6 +2163,20 @@ static int virtio_mem_sbm_unplug_request(struct virtio_mem *vm, uint64_t diff)
+ 	return rc;
+ }
+ 
++/*
++ * A self-hosted memmap is not managed by the buddy and must not get
++ * fake-offlined. Returns the first pfn to process in the memory section
++ * starting at @pfn, which is beyond the section if the memmap covers it.
++ */
++static unsigned long virtio_mem_bbm_section_skip_memmap(struct virtio_mem *vm,
++							unsigned long pfn)
++{
++	const unsigned long mb_pfn = ALIGN_DOWN(pfn,
++						PHYS_PFN(memory_block_size_bytes()));
++
++	return max(pfn, mb_pfn + vm->memmap_pages);
++}
++
+ /*
+  * Try to offline and remove a big block from Linux and unplug it. Will fail
+  * with -EBUSY if some memory is busy and cannot get unplugged.
+@@ -2167,7 +2190,7 @@ static int virtio_mem_bbm_offline_remove_and_unplug_bb(struct virtio_mem *vm,
+ 	const unsigned long start_pfn = PFN_DOWN(virtio_mem_bb_id_to_phys(vm, bb_id));
+ 	const unsigned long nr_pages = PFN_DOWN(vm->bbm.bb_size);
+ 	unsigned long end_pfn = start_pfn + nr_pages;
+-	unsigned long pfn;
++	unsigned long pfn, first_pfn, next_pfn;
+ 	struct page *page;
+ 	int rc;
+ 
+@@ -2184,12 +2207,17 @@ static int virtio_mem_bbm_offline_remove_and_unplug_bb(struct virtio_mem *vm,
+ 	mutex_lock(&vm->hotplug_mutex);
+ 	virtio_mem_bbm_set_bb_state(vm, bb_id, VIRTIO_MEM_BBM_BB_FAKE_OFFLINE);
+ 
+-	for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+-		page = pfn_to_online_page(pfn);
++	for (pfn = start_pfn; pfn < end_pfn; pfn = next_pfn) {
++		next_pfn = pfn + PAGES_PER_SECTION;
++		first_pfn = virtio_mem_bbm_section_skip_memmap(vm, pfn);
++		if (first_pfn >= next_pfn)
++			continue;
++		page = pfn_to_online_page(first_pfn);
+ 		if (!page)
+ 			continue;
+ 
+-		rc = virtio_mem_fake_offline(vm, pfn, PAGES_PER_SECTION);
++		rc = virtio_mem_fake_offline(vm, first_pfn,
++					     next_pfn - first_pfn);
+ 		if (rc) {
+ 			end_pfn = pfn;
+ 			goto rollback;
+@@ -2213,11 +2241,15 @@ static int virtio_mem_bbm_offline_remove_and_unplug_bb(struct virtio_mem *vm,
+ 	return rc;
+ 
+ rollback:
+-	for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+-		page = pfn_to_online_page(pfn);
++	for (pfn = start_pfn; pfn < end_pfn; pfn = next_pfn) {
++		next_pfn = pfn + PAGES_PER_SECTION;
++		first_pfn = virtio_mem_bbm_section_skip_memmap(vm, pfn);
++		if (first_pfn >= next_pfn)
++			continue;
++		page = pfn_to_online_page(first_pfn);
+ 		if (!page)
+ 			continue;
+-		virtio_mem_fake_online(pfn, PAGES_PER_SECTION);
++		virtio_mem_fake_online(first_pfn, next_pfn - first_pfn);
+ 	}
+ 	virtio_mem_bbm_set_bb_state(vm, bb_id, VIRTIO_MEM_BBM_BB_ADDED);
+ 	mutex_unlock(&vm->hotplug_mutex);
+@@ -2607,6 +2639,19 @@ static int virtio_mem_init_hotplug(struct virtio_mem *vm)
+ 					      vm->offline_threshold);
+ 	}
+ 
++	/* All memory blocks of a device must agree, decide once. */
++	if (memmap_on_memory) {
++		vm->memmap_pages = mhp_memmap_on_memory_nr_pages();
++		if (!vm->memmap_pages) {
++			dev_warn(&vm->vdev->dev,
++				 "memmap_on_memory is disabled or not supported by the core, ignoring\n");
++		} else if (vm->in_sbm) {
++			dev_warn(&vm->vdev->dev,
++				 "memmap_on_memory is only supported in BBM, ignoring\n");
++			vm->memmap_pages = 0;
++		}
++	}
++
+ 	dev_info(&vm->vdev->dev, "memory block size: 0x%lx",
+ 		 memory_block_size_bytes());
+ 	if (vm->in_sbm)
+@@ -2615,6 +2660,9 @@ static int virtio_mem_init_hotplug(struct virtio_mem *vm)
+ 	else
+ 		dev_info(&vm->vdev->dev, "big block size: 0x%llx",
+ 			 (unsigned long long)vm->bbm.bb_size);
++	if (vm->memmap_pages)
++		dev_info(&vm->vdev->dev, "memmap on memory: 0x%llx bytes per memory block",
++			 (unsigned long long)PFN_PHYS(vm->memmap_pages));
+ 
+ 	/* create the parent resource for all memory */
+ 	rc = virtio_mem_create_resource(vm);
 
-Best regards,
---  
-Nikolaos Karaolidis <nick@karaolidis.com>
+-- 
+2.55.0
 
