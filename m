@@ -1,86 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.231
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793673208;
-	b=HPIfj4RuJEMSA7Nw+oQ1CMPNsIOFCJuMFZ68T1mLbCkWUlzH3fZwUj+Hj77gqWGIa+5t
-	 WJqiGk8/183Zy1fHDJtAcpynzLQtFdZ4UdacL9z7yvdGO3Xq+cdrlPB2ReQIpkawHOkAJ
-	 CUWFqCGrhDYXhav6LWSrlrST/REe7uaRoC9gcf9fe6/fqgDerXq1PSfacQaPGNT/23Cn+
-	 Vbf4C0NbrU3gprjYq6KahyzRNT+9G1RPsWeBH3Tzd5Zl+EltxmnWTgkgFfAEn6huIfzcE
-	 F2IURN/I8EdRVVOrM9ckJiGAS7fdZ+C3DISpfSZ5sm+uI1g2Qo6DMw2XBeQ3IKj9nfw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793673208;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=plPOmmg8Wbucg4dOntyZK89XdF19GIkTemSi8VnEEAM=;
-	b=O6S0KX57SThlgC0Vsu9Qod+GTTCjsoZdULKw6vqKfnWJ6uEpVLc7+VocxT0E1/7wmuzN
-	 0VxsyIXN9Vp2pGrXKbonjaVk9Z4VDa0p7pL9INO9pa0kkf0Gum6nU2ZSh5zyBLjvg0geK
-	 2ArrQwx+vlLWx+Qw3nbp+mUsozITJ7EEKbiDEg3iiKAOSXft0DUWsxM7YWwHs+4xgxJRn
-	 ln3qTPqqMXOiuHMZKPn2VmdyM5C8fH3ZwhsFodksBB0KFEEpIDtLlQl6qR8ziTV4qedf+
-	 TSk/5eWWGlfuVE6+r+7B+YC1sidMK2XX/XvwArj0sXMt+MW/Ds7wXCiHbRWsSR7wSVw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BgTIjVx8;
-	arc=none smtp.remote-ip=91.218.175.231
-Received: from mta0.migadu.com (out-231.mta0.migadu.com [91.218.175.231])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793673803;
+	b=c/o4dIc0yeKY9jzkHJRI5hNjgcpDeew2KiENTuAtVC91R9k2umwhBRAUxcKRZacQ6vgv
+	 TOXHfms8xnp1euqHpkGmtjTKvfX7Q7aFWV60pAQs5UbyaJ8gFKTP2y8F1SjBChOIly43F
+	 uy/xoqL1ZaAneLlu/UY7rPfKv0k/5efWZinmng+p6RY816cfEw5vstnhJRd5PbvOv//mN
+	 LnieB4AGJy200e3uIZdIo5+XmF9+E73ltrGXMnkBEZedlfzN8Etou1Uwgkj8p72IzWPAo
+	 foDiaCESQosfEKA3qJ66GHSl8l7Zj1AdYtxZrdWLWe3DJmyf/6w4dTkevorl5Zehevg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793673803;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=6W6e0wI4QI5/OKg3yZWgk4/j8ia/yQjNrbB3cwr9/QY=;
+	b=hd/pkLfLmmAIVHGxucTKbYPS+C2Z6peKJv34UWbyvhpehqk7SC+WMB6mzagRTW2XOJLc
+	 68KiZBcYy3jCYqqJnvdEb2lyTp71BVkSayMU0H2gNgl9cPi34LkBiLd07/hhwgFoK2FD5
+	 XOepPeRrbvOoPcHa8S7B1vAqbjQj7ZY/KuAA4+5rOuU16kE5ybFt0k0c9Fo6JUcdO4uTw
+	 wPAHhGJrSyoqzSbqZjeHKzGEG1hn/zN7RDWlXBImTCBwQS8FOtkHKHvQPYNTlKPoVeUAH
+	 I7Q7TSynv9lb6lLAwNHqlBQJBdFAiB2EHlE7gKYU3n13NBNBg8GVF2BfhYxQlow3csw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=PI38M4E6;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
+Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EBB606A32D
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Nov 2026 02:33:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59EBB606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30078606A329;
+	Tue,  3 Nov 2026 02:43:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30078606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BgTIjVx8
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=QEpd6a+5vyb7YKmH2HfXuDiiboBz4CjeIOL7fouBhLE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793673205; v=1; x=1794278005;
- b=BgTIjVx8nAsBtP3F1/GUXtMqw3pw4OJEPGpQ++uutFfQds3NbRcIfmcp3GNAGaLK7RPpjY/S
- yw/Uj5HTzpBk3eyf5tM9Jsqi8rj63sDupbOUjOGiN5/9gjgHzyT+vi9Zyr+9DoBdCp16aZJbRus
- vipK+BIW9Sgzd5Lh3Bd6yy9Q=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 09cae95fccecce83;
-	Tue, 03 Nov 2026 02:33:24 +0000
-X-Mizu-Trace-ID: 09cae95fccecce83
-X-Migadu-Flow: FLOW_OUT
-Date: Tue, 3 Nov 2026 10:33:19 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Barry Song <baohua@kernel.org>, kasong@tencent.com
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	Lance Yang <lance.yang@linux.dev>, muchun.song@linux.dev,
-	ridong.chen@linux.dev, sj@kernel.org, hannes@cmpxchg.org,
-	mhocko@kernel.org, qi.zheng@linux.dev, shakeel.butt@linux.dev,
-	ljs@kernel.org, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, baolin.wang@linux.alibaba.com,
-	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, kees@kernel.org,
-	peterz@infradead.org, jannh@google.com, pfalcato@suse.de,
-	hughd@google.com, pasha.tatashin@soleen.com, pratyush@kernel.org,
-	willy@infradead.org, jack@suse.cz, ziy@nvidia.com, riel@surriel.com,
-	harry@kernel.org, apopple@nvidia.com, nico.pache@linux.dev,
-	ryan.roberts@arm.com, dev.jain@arm.com, usama.arif@linux.dev,
-	kas@kernel.org, matthew.brost@intel.com, jhubbard@nvidia.com,
-	peterx@redhat.com, will@kernel.org, aneesh.kumar@kernel.org,
-	npiggin@gmail.com, osalvador@suse.de, minchan@kernel.org,
-	xu.xin@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, youngjun.park@lge.com,
-	gourry@gourry.net, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
-	ying.huang@linux.alibaba.com, jgg@ziepe.ca, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org, josef@toxicpanda.com,
-	stable@vger.kernel.org, usama.anjum@arm.com
-Subject: Re: [PATCH v2 01/47] mm/mglru: don't use stack pointers when walking
- PUD and PMD tables
-Message-ID: <aulH7zeGrjIvF8Hs@fedora>
-References: <6FACF8FF-F943-45C8-BDFD-3AFB5C060E0A@linux.dev>
- <20261031055838.60138-1-lance.yang@linux.dev>
- <a704d458-ad60-43bf-a0ce-3b128b218d88@kernel.org>
- <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=PI38M4E6
+ARC-Seal: i=1; a=rsa-sha256; t=1793673793; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jmsxHTHf7QkvSJMk1y5EbH32T5RtkIz+udIUGuRtkn1+848/O5BNBp89XpqlIR3lJCxRYMJ2sgi+XcCuRsT44j02nzt+nsP7Ju4QUHSKtInDkU9lRdSjzA2g9gwU+jFh8dr8cpAMa53s0xHU9D7t1PCnR3YWbWRsANlsQVhxjFM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793673793; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6W6e0wI4QI5/OKg3yZWgk4/j8ia/yQjNrbB3cwr9/QY=; 
+	b=AI34x0acldeNEZ0SxSEQMmk6x1AWwkl+FSN5wvOfLMm20Ccx+khqZk1xB/SldbopKb/fzFY54w5x+WakV/3S9NAehOmdPo9sPLbCz/PD4m1HYZ0c+sUJh0dI9QM2rrGHUc1Ck/7eqX7IRIinQfPWyT5Byy03IxSDp/KEZuviU5I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: a=rsa-sha256; b=PI38M4E6hTQ9HEoFQbRh1kMTKrNYB/38GOB/KEEEviaqOC9p3oG88sktNyMm6oyG9BoYNDKMBncYKoKIcxRwC3xkt4ITBjwh4veL/F8TEGz6qnHRB/AmSC8suERS10d00Tm+qWbInvTD3Nl/HF6tjmfHvSCoWPUt5ewQ3BMEjys=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=6W6e0wI4QI5/OKg3yZWgk4/j8ia/yQjNrbB3cwr9/QY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793673792882862.4540011356563;
+	Mon, 2 Nov 2026 18:43:12 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	djbw@kernel.org,
+	iweiny@kernel.org,
+	icheng@nvidia.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] cxl/mbox: Use mapped errno to determine command status
+Date: Tue,  3 Nov 2026 10:43:05 +0800
+Message-ID: <20261103024305.2333508-2-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261103024305.2333508-1-ming.li@zohomail.com>
+References: <20261103024305.2333508-1-ming.li@zohomail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -90,68 +74,41 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGsJ_4wjGjDoFPz3qWHqW8WTv31AkR_zrY14ON0dLbTZNsohWQ@mail.gmail.com>
+Feedback-ID: zu0801122777b729a567c8a3f2c91adbd00000694a88e67a62e4306fb09accbed7fd9285027663648eb7ca7d:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On 11/03/26 at 04:11am, Barry Song wrote:
-> On Sat, Oct 31, 2026 at 5:42 PM David Hildenbrand (Arm)
-> <david@kernel.org> wrote:
-> >
-> > On 10/31/26 06:58, Lance Yang wrote:
-> > >
-> > > On Sat, Oct 31, 2026 at 09:46:37AM +0800, Muchun Song wrote:
-> > >>
-> > >>
-> > >>>
-> > >>>
-> > >>>
-> > >>> Agreed. FWIW, I think Barry Song and Kairui Song would be good candidates
-> > >>> for the maintainer role.
-> > >>
-> > >> +1
-> > >>
-> > >> It would be great if they could take this over.
-> > >
-> > > +1 from me too ;)
-> > >
-> > > They both have been really active on MGLRU and doing great work for quite
-> > > a while. No doubt they'll continue to do so :D
-> >
-> > Fully agreed, we really need some people familiar with this code to help
-> > maintain it, and Kairu and Barry have most experience on this.
+cxl_mbox_cmd_rctable already maps all mailbox command return codes to
+errno values. Use the returned errno directly instead of checking
+mailbox return codes separately to determine whether a command succeeded
+or failed.
 
-Agree. Kairui and Barry have done so much to review and contribute
-patches to MGLRU. The nomination is well deserved.
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+v2:
+- New patch.
+---
+ drivers/cxl/core/mbox.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> Thanks to Ridong, Muchun, Lance, and David for all the
-> kind words. Your encouragement is truly inspiring!
-> 
-> >
-> > Just a note that I also don't want to pressure into such a role (which comes
-> > with responsibility).
-> 
-> It would be a great pleasure to work for the MGLRU
-> community.
-> 
-> Over the past few months, we've seen many active
-> contributors join the MGLRU effort. It feels like MGLRU
-> has never been this popular. I'm really glad to see the
-> community growing.
-> 
-> I may have missed someone, but besides Kairui and me, I'd
-> like to mention Baoquan, Baolin, Hui Zhu, Ridong, Kunwu,
-> Maxim, T.J., Siddharth, Xiang Liu, Bingfang Guo, Shakeel,
-> Zicheng, and many others.
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 55828a836c01..bd91b03c4d21 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -270,9 +270,9 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+ 	if (rc)
+ 		return rc;
+ 
+-	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
+-	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
+-		return cxl_mbox_cmd_rc2errno(mbox_cmd);
++	rc = cxl_mbox_cmd_rc2errno(mbox_cmd);
++	if (rc)
++		return rc;
+ 
+ 	if (!out_size)
+ 		return 0;
+-- 
+2.43.0
 
-Thanks for the recognition, Barry. MGLRU has always been on my to-do
-list, I will come back to catch up to review and post queued MGLRU
-patches after my xswap patches are posted.
-
-> 
-> It's great to see so many people contributing to MGLRU!
-> 
-> Best,
-> Barry
