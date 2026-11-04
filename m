@@ -1,76 +1,43 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.160
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793813152;
-	b=DbiFhRHR97oz645xlQJMeoXAqfn1KXJGa7nccXVmdYgMSwdt1AlXHpLxiOw53qo8ABQg
-	 5ykzVQBvaNADv/wJuZnmK93OQjsvLSZoEwbbMkcB/v6ALrnNMnXWXtwz0K/dAfnFmgt4U
-	 CFSSHjmL0LTYQBAHJKyGgdfwSJRTiL5qlffsyDZhuUP/ENED0RVKHBZg5v6LPE50SjV1V
-	 UiWntODDZ5Tk78HM1GXCcVEkR5Bde2aKx/asY3fuFlidu7gBa+KtFUh6eA0vC0lSvIegu
-	 7KV9I2X4eKDb91bGh1FWGniO/SJeSiR/cg9xLoS7Th45bfiOdIKNUylobqwtBh4rjtg==
+	t=1793814614;
+	b=IB2Z9fUr3jKjF87WyGGRnwYi3ntHsRMKG/GM5zXrjEaBj8pI/r035yvW0c0O4woea9Yq
+	 egsdvbCbF5KzQeN9nrokVW8b40FdTS/fbjwgcbGc1Y85F7Q5Kbyf12rTkr+gVnTEv/HS2
+	 P0m1WK5my1rBLvuTOrCw4K4OD9vqtufJhZTgHx25fwgjQ27vbnzynoHr+bfQeW8G8E/Eu
+	 OrQudsPqI8wd+LTPYEo1ohyblStoBzMAKDfvHbChss+KV+1ijlstCfbBxK9w6nYJjr3tx
+	 n0zp+Mk9wN1fgTQRWXcj5SMySZlMdh546DjVL1obU4tfhil+yp37g3d7za6UFleG38g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793813152;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793814614;
+	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=bd5pazkQFKyYKEGSIrWiOc6GEPTqyZzq9paOrIDWKRk=;
-	b=x7qbkxFLSNzKxBD8xc+tuh+Dks7f1tkVH4W+KwSwkHPWyLtC5YVQju1nb2uXmgu6LKWv
-	 X7CcgDgMDda3Ca5YumOihqZvS1X4MBTkq1hbuvSaOfDuV3TC11GCKJQ7CWY09BlV5ysDY
-	 sQYBr6aKLKC5JMGMfF8EOc/zzi9aDJmwwearO6jhhMJJPeczr3ifh8z48AdzzrNrbrZdB
-	 j88Hty59jhKANhDS5dl5fTcQEVJ8u5deKkIyMSZtJ7R8MIYlMPAniXKkhVDTFhClJFPih
-	 b4uhcymJqwX7vvcaYQIa3PtjubMBo3HH8hzRYz7i/gV8ICJLAyfIhtDDws7wYmph1vw==
+	bh=xDyBR0SVH7j6EXiT+u+KfOqHgFmy8XfO5bCPkpMbaRM=;
+	b=1Rc6Oz/HQ2L7q7hcCTINpeE11U6EBGJvciEbmYUWcJ4Ji0yO9viy0fsYhAzfyER3Q26E
+	 r/udTj3UkFRFyIyZ+p7aykYCvxgdUBFSOloEQEIdT1RnPZh6ZXn1i3/LIf8UCd8kn3UiE
+	 3bPST4wIxYtpTZxmMzM4Iw55IGLM3EOsD38RoGxJD+RNTHY0c8DYo0BQSldgza/cR0Fto
+	 /pe07pOsDRrctS3LIEY1hPHmsQxtGar/OW//Itg5hBOPDOrDJ/ItVgG6HG2L6ve/flEzA
+	 ms3cJMz+rqpxyrUb7Xrhrh0wXX9XxC3znx4/ekzc87zX61PG+l8HXl8tduLh8UkQ+Uw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YMRpIUBf;
-	arc=none smtp.remote-ip=95.215.58.160
-Received: from mta1.migadu.com (out-160.mta1.migadu.com [95.215.58.160])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18D1606A31B
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 17:25:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F18D1606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YMRpIUBf
-X-Envelope-To: linux-cxl@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=bd5pazkQFKyYKEGSIrWiOc6GEPTqyZzq9paOrIDWKRk=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793813150; v=1; x=1794417950;
- b=YMRpIUBfnwMjpobL1YZXYntr0uShvmm/gVsUQvDl8JotH/Fxvub4m/ceJEjRTI4vsdyZ9xl8
- xdlkVcv+NmXFVI6W2kUZnXWaOglWNSfvv/yRCEw1C2lJw1l+nKV5A+arzK/W/O/BPkB4ahzpXm1
- jS9oXOYhV431spqrq19YfZ7E=
-X-Envelope-To: linux-cxl@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id b823a6d435641782;
-	Wed, 04 Nov 2026 17:25:50 +0000
-X-Mizu-Trace-ID: b823a6d435641782
-X-Migadu-Flow: FLOW_OUT
-From: Junjie Cao <junjie.cao@linux.dev>
-To: shrihari.s@samsung.com
-Cc: jic23@kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	qemu-devel@nongnu.org,
-	anisa.su887@gmail.com,
-	mst@redhat.com,
-	marcel.apfelbaum@gmail.com,
-	arun.george@samsung.com,
-	cpgs@samsung.com,
-	dave@stgolabs.net,
-	dongjoo.seo1@samsung.com,
-	gost.dev@samsung.com,
-	s.neeraj@samsung.com,
-	vikash.k5@samsung.com,
-	anisa.su@samsung.com,
-	junjie.cao@linux.dev
-Subject: Re: [PATCH qemu v1 7/8] hw/cxl: Wire SVC and Dev3 capabilities to CXL Type 3 device
-Date: Wed,  4 Nov 2026 11:25:27 -0600
-Message-ID: <20261104172527.2172366-4-junjie.cao@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <331418503.141793792283935.JavaMail.epsvc@epcpadp2new>
-References: <20261104115242.2035807-1-shrihari.s@samsung.com> <331418503.141793792283935.JavaMail.epsvc@epcpadp2new>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B047606B229;
+	Wed,  4 Nov 2026 17:50:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873021F000C1;
+	Wed,  4 Nov 2026 17:50:13 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: [PATCH] MAINTAINERS: Add CXL reviewer Ben Cheatham
+Date: Wed,  4 Nov 2026 10:50:03 -0700
+Message-ID: <20261104175003.297974-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -82,16 +49,33 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tested Type-3 capability enumeration and UIO/SVC/flit dependency
-combinations at cold boot and after system reset on q35, with the
-full series on 3c99db7705c1.
+Adding Ben as a reviewer for the CXL subsystem.
 
-Linux UIO discovery and a 1-way UIO region commit also passed with
-Davidlohr's pcie-uio-rfc kernel [1]. For that kernel's UIO checks,
-QEMU used hdm-db=on and CFMWS restrictions=0x2d; the guest kernel
-enabled CONFIG_CXL_REGION_INVALIDATION_TEST to allow region setup
-in the VM.
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ben Cheatham <benjamin.cheatham@amd.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-[1] https://github.com/davidlohr/linux/commit/4726547f45a612b2d953f5f4e13ab6fe34672c7c
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2a955a626784..edaf70961cba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6729,6 +6729,7 @@ M:	Vishal Verma <vishal.l.verma@intel.com>
+ R:	Ira Weiny <iweiny@kernel.org>
+ R:	Li Ming <ming.li@zohomail.com>
+ R:	Richard Cheng <icheng@nvidia.com>
++R:	Ben Cheatham <benjamin.cheatham@amd.com>
+ L:	linux-cxl@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/driver-api/cxl
 
-Tested-by: Junjie Cao <junjie.cao@linux.dev>
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+prerequisite-patch-id: 57bdcea37c2a480531ec5d1022422748e462077a
+-- 
+2.54.0
+
