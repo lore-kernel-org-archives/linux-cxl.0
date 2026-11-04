@@ -1,131 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.10
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793761623;
-	b=xuDgQyMpcZ5EsZqZtPIBThN6KyD7IVFRwIEpuDL4OQO/nCNBrgiEffCokGS6TJoorQNt
-	 688g7hq2+JYa8uyUNtC2wOsui8McNJcc3d80FeQsGZLcpdmDLlS9/2XuZfpH8dGiV7pXe
-	 6gZ4gNVJESnMvTLHeSH5+noDWf12LwsNtwORokmllQqEfx6ahjkEdFiBDIMBwu1u4tPLC
-	 r6yYDnCt1lSvfC+DLTa0nAPxVVVkNjfDYBc2YG2aSwhCXvMQX8Byg12ituOhZJgmdi+oG
-	 7vZ6addDTiERQIkAdRt0KR+lqMLQZYf97TLE75m4ISPM5+6uBCbzR6NXzVvNyWdKBBA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793761623;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=5bEwnFqAmphGmBwS+VPqs9hGaekCvuBPHrxQJI6EYnA=;
-	b=nzuNKqj2FI18f3xG8hLal0d38MkaNC4XyIeRBlP3Gz1XZXyiZkC5boulY6PRQ6MlxyJ6
-	 i/1Tpvsh3un+lkirNxHu8+JOgZ/oFmAfr0i45T/xC2B2rkv/Uph7RnJvlhEzDjdcsyITi
-	 UV0DKrZY3I0tcuDD8+U/3NO98tILddRqCGI8ORiAJyZuwaNEbuyRnd3Zbuv0jX6NC+S8A
-	 mODpdERLJZlDV+ukR+/Hy1aeNtKJ6fQ0zuYPX0Diiy+6qyZ1zvhZQtUqp4zQM+L01KOgv
-	 +hMN7+JEarzW/DhmrinDDvi3NoGIJ5uqEagor80p8ZOemZUoVGE+Qwyxg2PGRAi8lsg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cu4qNU88;
-	arc=fail smtp.remote-ip=192.198.163.10
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.91
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793761975;
+	b=Mx8gIiIxZXidymiVmEq50P4vBBYEOUSa2IJiIsWGix5MQXsoAGms7psalHtrj/CREdKI
+	 ltj8VCp6M5eJBpOCr9Dp6daD9YiwFVsbYY4fYegkt/PxgmC6sGEmujXuhie30g/Eo7Evk
+	 YZvG2Bp+kBbgBf+5MsgAWZQGJdQijArN7820AyFqgfHXDv6UCitsavZRDccpleVPto5fu
+	 4f6N8FelZDU3KfHo1JIEBaVri5/qJqn15i3oKCx/HXB6wOiWKJgIMdbhZCMH/qb+cPkGN
+	 pOedQaDABYSI+DaTkHZbq0rm2QYBCOvSXrunkEX3A/dBJYGxMqKM1SYTmlEOYOG4Hsg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793761975;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=BFKdbCnvgEnPUCR+piUdwFlucy5SNy4ZmkD3FremwV0=;
+	b=LRae5TGbEIyhp0/rMmQbjTCdIijWchjBVSxyNfERict4YVSk0MBLL3TbZ2Kz63VAEteB
+	 xOeO1scCSedg9NzFNl+1jf8E/QEx5Nla4DH0hhyqYohXCoB8ThU7j4bFo6sbGhQ9ZQgEQ
+	 6UhyGIBPTQSduvaFH50VM70O4GA8HAbFLx5uaLe5aVg/pxiTvTtvD+H3edL4LXS2CoP0I
+	 Y+IHwTFNXSDGDLZnbco6t+o/VfaMfHUn5de0gRUhJzypPsMwxnnxqAbeK6A1qokj/Ka9T
+	 KVgU7GKs/zDUWbdJl9AZT6crktwgiczGrW+DVVCQ1wZ5vTz2SBLiXz6nWpIbpKQUgpQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=MC8VPNm7;
+	arc=none smtp.remote-ip=95.215.58.91
+Received: from mta1.migadu.com (out-91.mta1.migadu.com [95.215.58.91])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358F0606A326;
-	Wed,  4 Nov 2026 03:07:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 358F0606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9977606A329
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 03:12:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9977606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cu4qNU88
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793761623; x=1825297623;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=IDMgQ+uP9/NrFd0SMaexTj9VQ9OTVY8G/d2uB16vfLY=;
-  b=cu4qNU883BjmkliqD/iY6sE5GX08xQX4SHzTvbNUtzSUEYNUuICvqKw6
-   7JtrG85MVZxnD7MWE2HAfw15yJ48e5hi39iCpVprITiui+7B4BdryJtTE
-   GwTrzhJJgkSNMGEuMn17IMAFqcKNXXtEP6CPm8PsghFnVNkybX/Kdslmu
-   paBOpxch3t4Vf3hfM1sQg6R0Ij5KgL8FBqyHippFWiZV5gsdW3k7MNNiO
-   +0YHmlD9EM/Ccui6VAP+xSPR/IoX22AWy5AzYy0yKS+nySmNfgIFeqtf9
-   rmi4FGLLPNk1Xf8MZlQsDztx2rtdQaAUrW0qv2fyWDdjjkmEZsIJvAs4S
-   w==;
-X-CSE-ConnectionGUID: bSI+D5QqQSad7SyJgOUxpQ==
-X-CSE-MsgGUID: kWCt4uZnSMGyGb8aBFr8hg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11955"; a="2406555"
-X-IronPort-AV: E=Sophos;i="6.27,194,1787036400"; 
-   d="scan'208";a="2406555"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 19:07:02 -0800
-X-CSE-ConnectionGUID: 5XpeyzzFQpKyqCqvep858g==
-X-CSE-MsgGUID: ELzMJgL7QZa3lb/sXRZDUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,194,1787036400"; 
-   d="scan'208";a="6712841"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 19:07:01 -0800
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Tue, 3 Nov 2026 19:07:00 -0800
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56 via Frontend Transport; Tue, 3 Nov 2026 19:07:00 -0800
-Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.43) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Tue, 3 Nov 2026 19:07:00 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EPV1jfRXlYNpzp6Vi965ZFbgzwi6AM3NvsoY9/T8PduKxH7N2QIqXt3y6YFvJH5wgZ3Hg9gFWI4eIs8tAIowzIwEzTULDsGRXRkLEhcSYzxICHCkgURge/3cUIabz7zHBMKd9lRWpwZVlc1Rqo2tzeW/6vvw3Ovrk189TBEgY940qdL2o3GedST1+E7emlLS0+mzdbZiLFE8Y/mPvsjguF0ocZYJWVPB00uZ48Edd2CAQKDh6q30maMnaJll28mPKrCiz0BL64W+tzaCpYOUvR533HdkFoqPotv9J9B+jMatRaupgcNB8Yvoby/kAoY+7JXUqYdNUTjV/A6OLbT6jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5bEwnFqAmphGmBwS+VPqs9hGaekCvuBPHrxQJI6EYnA=;
- b=vpsV4Ea5P9Ts8X/i/CFNQhYgn7EURWBLgZxrSEsZQP6ZbGhnp5kXWwoELN3fUdv2ZEUEKq0GcNdeAAIYXpRLbQkAr+t+SqZM/q9ilCeNyZxhYReK3seTnxHj5FC73wR5Ty54ut7CanLpuIwDnSPkwLpPc6hmK2k9apuhYRP1c5Ra/B2c6PBZeqebIOtUFq3UrSK7wGCU4L8Gkn3YIJVg+h+bGr/P3gDCCDehS1+G+V0bu+24rAJnbegt3JqFidH9c8vHmLc6S5CK9q/6OnUA/tmx0hkSCY4wdnm7uji0p9h67JcD0cdLwWN9F9J26IVRz30MdODFceXeOZlBNsdmMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH0PR11MB5782.namprd11.prod.outlook.com (2603:10b6:510:147::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Wed, 4 Nov
- 2026 03:06:51 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0569.011; Wed, 4 Nov 2026
- 03:06:51 +0000
-Date: Tue, 3 Nov 2026 19:06:47 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Davidlohr
- Bueso" <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, Vinod Koul
-	<vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for djbw
-Message-ID: <auqhR3H98vkCdHTk@aschofie-mobl2.lan>
-References: <20261103201547.4079847-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20261103201547.4079847-1-dave.jiang@intel.com>
-X-ClientProxiedBy: MW4PR03CA0346.namprd03.prod.outlook.com
- (2603:10b6:303:dc::21) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=MC8VPNm7
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=BFKdbCnvgEnPUCR+piUdwFlucy5SNy4ZmkD3FremwV0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793761972; v=1; x=1794366772;
+ b=MC8VPNm74Ok18sfdmxnpsI6xRh7R0Zk5W//KSoh4oQqgT/S/C7qdI564Yzn9q9U82YW5fQUa
+ bHEVLCzq9Vqzf9FcDE7exA0+xlnDu1bTQ6V7pBzRG57qh+3OeK8awrDIx3MWDyYkXpPcFBKY+AD
+ RqEEVje7E40Z3XH7oOIjjkYY=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 888f0105953f8a83;
+	Wed, 04 Nov 2026 03:12:52 +0000
+X-Mizu-Trace-ID: 888f0105953f8a83
+X-Migadu-Flow: FLOW_OUT
+From: Lance Yang <lance.yang@linux.dev>
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	ljs@kernel.org,
+	kasong@tencent.com,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	baoquan.he@linux.dev,
+	baolin.wang@linux.alibaba.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	kees@kernel.org,
+	peterz@infradead.org,
+	jannh@google.com,
+	pfalcato@suse.de,
+	hughd@google.com,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	ziy@nvidia.com,
+	lance.yang@linux.dev,
+	riel@surriel.com,
+	harry@kernel.org,
+	apopple@nvidia.com,
+	nico.pache@linux.dev,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	usama.arif@linux.dev,
+	kas@kernel.org,
+	matthew.brost@intel.com,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	minchan@kernel.org,
+	muchun.song@linux.dev,
+	xu.xin@linux.dev,
+	chengming.zhou@linux.dev,
+	chrisl@kernel.org,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
+	youngjun.park@lge.com,
+	gourry@gourry.net,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	ying.huang@linux.alibaba.com,
+	jgg@ziepe.ca,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	stable@vger.kernel.org,
+	usama.anjum@arm.com
+Subject: Re: [PATCH v3 43/47] mm/huge_memory: split huge PUDs when adjusting VMA boundaries
+Date: Wed,  4 Nov 2026 11:12:45 +0800
+Message-ID: <20261104031245.9524-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
+References: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -135,76 +129,31 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5782:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8502037-3280-44a6-73f2-08df3a20ac00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|21046099003|22082099003|56012099006|18002099003|261022105027099003|11063799006|10067099003|261028144727099003|261026140227099003;
-X-Microsoft-Antispam-Message-Info: UoYp7x/KE8qYATzCLnbEWEotlR5fb9Fh6iLr/EcEKf4qzM9dWqx6yhR093ZzzT7tEkzZyodQKWE/rQElBgYktnsSldRuQlCkEq7EFU77XNUMIGkNdUnoFcD3ktN31zmyRlt+UYYGcpUtPuphO1B0HhpLDG0+wSSI07bCmoBRgN7wDo4qqPb5zvEsBgp5wXdXwJFU5ka1rJKMFueB+a7jWOg02SroFhuO94A3grkrdKTfAcz+jEeExmPWfz6MHqdUoKwYmZJzx0nmjzf7fgQrCUaJoB0o6Cr7dc8N25PPQWQMhORYs5AOIcnSfPoxRlItfT0NDGCrH/7ViGrcwbP9B0F50x+Cz3YnqxzSpwEJ5LHIewAmBt2HAPPk8I1lSK3mPdoqi+7v9g5xdZhPZ4Kzv/kU9WDA5tAJmzMh/GXMEAudomvvZ+m8BTK+SaN+JMixUfOdH27zFhR/FhcVFN+KFwS2D52qboWGYUeT3GxwJsQtfANcrWZoaVXwCuBBcBCcre3dOiOcz2lga/MEH4EYw9sjrBp2Jkc5U4aY1FClk7S7ZnqkjD3KNQ3l6unnH8JHc+u+bz3EEV4BKikBpl1Pj1lVpHnyCr5MC/iTmMipQhK56E5fGEVZJUPsBkCmRGQBWUGOtYmy3lQ+ERqtG920ml3po/1jPPerlgn92hhVSm8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(21046099003)(22082099003)(56012099006)(18002099003)(261022105027099003)(11063799006)(10067099003)(261028144727099003)(261026140227099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gjS/+5Ordpuz9gXpV1H3p1nCsdxe3t2IKKWcze5Cy5M+ilAqkNZg6G0CsIog?=
- =?us-ascii?Q?p9qx2F4NNMFWEQwsEfap8uh9ZFZW7lnHOOonmtNrE17EhS+OgJkEQGI47O5F?=
- =?us-ascii?Q?h0fyN6jxxd3ISvCncf0Ja66qbHnKz7rDfvJPo4j2SoiQmgFmTC+KucNnz3qo?=
- =?us-ascii?Q?ncvUKFFxYwstNcuVz7c4NwvaaFcpFluWGET/Kh3UHk2/qXsv6NCC2NuE5IyG?=
- =?us-ascii?Q?nckTWMiRdcF6ul/fKRjJ9OnnP25D5QQGiTUxQ9OP+pzequ0mguQFjeJRKt6C?=
- =?us-ascii?Q?7mqDIY6uaWpd98cdGhfswFOprHBSn2OlxI1Gn+HeMgKG+CShnyCo9X9N3P8P?=
- =?us-ascii?Q?drpvb8hXGuquKVof0cnQgLwc0bMMo9aheUv/cgnVwGlIulY1jmlni/GB+It5?=
- =?us-ascii?Q?CtFbzEptMLi52TzGR/Cno/ghkvVI+qFmRkJN8JPK/AIghei1UcMm5P0aW3wn?=
- =?us-ascii?Q?davbZTh2fce9NzTxknj43WlJSYfRPowg4uPduQUJ9frrUvs1z+ri9Gg8IZPu?=
- =?us-ascii?Q?SrKKcptf4pCHPULPaJiX3m071z12mNHaVvH3ep+1/b8SJhdLn6zpj0MFCvCy?=
- =?us-ascii?Q?cNlZ7NMsEuY3ZnZMAY+q6ybI+VxQJHGl6Noiu54evU8kvbbtJ+/zmLYGNU/u?=
- =?us-ascii?Q?edRn3KR6p3rNwQFAtSVdj9dBTIxI/ZRoDWv63/vTI51MQr+pkcW/Q2uSB3up?=
- =?us-ascii?Q?opfe8QenszxSVuQG/BDmDNTLlrUgyiH0Bw8VK2SFHZdm5kWCi5UA5XWID/qb?=
- =?us-ascii?Q?NqKHP52isB++UDS4mBRgD9dVcuHUOgwCBVaWolLLnXTBUUr+LPf8X0LrjP6M?=
- =?us-ascii?Q?HkFNd8Z5VusSj7jqpsfDN0azwXhq6Xh5c0kaotWXK/20Nj77ItqpRIxL1Y+2?=
- =?us-ascii?Q?YODotCHRp2usddQOabHT1uZxZa+81LYSQtXgP09hbss4OkkLsI3wj0MVKNR4?=
- =?us-ascii?Q?OCt4x3DdP/dOv79pi3DS1VoCwy0LkkGARmRnhvXxC8xYRH8V3sC8DpCMEqzz?=
- =?us-ascii?Q?ZxTd1wLROLAckyqQ7eviGagCZK4DMox/Zpw736U5cT0Y2oqCwDR8RcmtWeVe?=
- =?us-ascii?Q?YBEDuP5Nvj/87pye8Vm59ri78M7AK11W2zKwpJJNuC0nZ6uhqMvqqr1dToF8?=
- =?us-ascii?Q?5E1l7p06O+v9cD309VrPjh4dAehUHloRyE/aSLO7eSrMkd4+cIsJ8+CfOm/w?=
- =?us-ascii?Q?zLP4cgoYEslhUh3oWymtUD8vwqoEeUs1azvHlFjyKXtcA3MEbrTPgRWkuljQ?=
- =?us-ascii?Q?MMc14FJBzyEKA54MWSY6Tb/f7AC1jPwPEE4s70KU2KE/1FBpOEjZZH9SiWRv?=
- =?us-ascii?Q?0D5TounaJuveS5eLIyNPj9sdhbFM5/Li8UKSKnm1M8pKJf7/aMT4mNGoxH4D?=
- =?us-ascii?Q?h/GS7ua5nsxjvEC0YJJBm4Jo56J8Pmo6nO1hhIPXmEi4Rgb4AGYmTWK5xzmM?=
- =?us-ascii?Q?V7E2ceAZhLDR3Lcoc61klN/ZR+F10uegmkUlEsk9DuuTVVWHlLUMeq315uYS?=
- =?us-ascii?Q?ogK5mWd7J3LGJwCRwTHLXQ/AX6nwVjvlvmc4rZ6RD4dRIegpxPqYnyif9vRB?=
- =?us-ascii?Q?WT4Dj+HY8PvJHFty4xucUvtzCELPXavRUBNEe1wwjmbdIaqyAUafqVAr80V7?=
- =?us-ascii?Q?X49PxVRzaoTnA56oPvudhs7ZcFX9AldCG6X3ES/V0UiAEMyX4/jwdnGa7S5f?=
- =?us-ascii?Q?RJ6oVjXBF3MnWt/7RwAkZfXWatJpY269uatd9yF4L666RkhoL0WDM62JKDw+?=
- =?us-ascii?Q?d0jyHb9sl1TXdFuOZiF+y+VT0ZyGiNg=3D?=
-X-Exchange-RoutingPolicyChecked: XhONVnxwx2yHIGiygiHRWbDreOdT4AllJBNsU73DHX2TcW42U37rBS6fEGMLhRQDPYoB/eLCAcyE3jo1zmhR2kKMrdZFYiiF0CyM3emGZE9mlJ3p/DWsa5EHHI78gBFSJIv7+KgHByGErLFQd6Pcj4Pa+cBq42yOiEFLgFP1MPhi9LQcsW8gJS2zIV80gF/FjcWw0scdxLrFOE0QpdoZghLrRcp4I8BJ4CTW3794RADIV9gJ3aaiWPPyJPxcqhI//cXJ0eMy6NIHjAS1Zb62PQTiYYrznJnOFZWtSy/OnhkiVElsOcR2VV0zAduEbGpcmiTtSAdCSA+GBojRhdoSxA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8502037-3280-44a6-73f2-08df3a20ac00
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 03:06:51.3691
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zp1LFBtt3p+/hNCK++OyzbKWkQdLNrFAGVRQ6phALKXmhBJxxa/Nl7FF9G3SM1hncZRs0sALM0Taa5pItlv1ZG4KIjHUdUPkHGUzh7+SxhE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5782
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 03, 2026 at 01:15:47PM -0700, Dave Jiang wrote:
-> Dan is no longer with us. Removing entries in MAINTAINERS to prevent
-> people from keep emailing his address.
-> 
-> async_tx will be essentially orphaned. There has been discussion of
-> deprecation for the feature on the dmaengine mailing list.
-> 
-> fsdax will no longer have a maintainer. But there are reviewers still
-> and Alison Schofield will continue to wrangle patches for DAX overall.
-> 
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Frank Li <Frank.Li@kernel.org>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Acked-by: Alison Schofield <alison.schofield@intel.com>
+On Sat, Oct 31, 2026 at 10:40:12AM +0100, David Hildenbrand (Arm) wrote:
+>PFN mappings such as VFIO PCI BAR mappings can use PUD leaves while
+>allowing VMA splits at page granularity. However, vma_adjust_trans_huge()
+>only handles PMDs.
+>
+>After faulting a writable PUD-sized VFIO BAR mapping, changing its first
+>page to read-only with mprotect() makes the PMD walk treat the PUD leaf
+>as a PMD table. Applying MADV_DONTFORK to the first PMD-sized chunk leaves
+>the PUD spanning two VMAs: the PMD-aligned boundary skips splitting.
+>
+>Walk the page tables once at each adjusted boundary and split a huge
+>PUD or PMD leaf as needed. Handle PUD leaves even when the boundary is
+>PMD-aligned.
+>
+>Fixes: f9e54c3a2f5b7 ("vfio/pci: implement huge_fault support")
+>Cc: stable@vger.kernel.org
+>Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+>Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>---
+
+Nice work!
+
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
