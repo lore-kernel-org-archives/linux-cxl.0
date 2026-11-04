@@ -1,65 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.254.224.25
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793792293;
-	b=uBUCsnqDmEHGTOVqF7e5k84DMkLCeog/3SSfYN9x+PfcvcFq2H9Jl6m02CoEgqinsrjY
-	 R4vDGYPkN4ALwpQ9Ju8b/a3xxOKwv23Hg0ACodCcvBQRklZQJls/Vc5orOoKusf85/H3e
-	 6hmEcSA+029FMQyu8z/4+Rv1zdG9EXJC5u1wEX22LIbQywWq5JCEbYG69OltG7O8NyxwT
-	 sXJtU43PvUefbhMrV2cwr1nlicyUQhuuR4We8AFWABz3Rji6nV4qHXXP4BcJZ2JRtprjb
-	 fvY/tUXvzKbg8+ZqA/1G7gcE4Ai0ehmiaoyYI/dqA/PWzKyW2oMfv2QMT8Lc4J6IyyQ==
+	t=1793792288;
+	b=3FWTj7F/q70nIkuP0C5yFcWZKP0haYqXMKDHOI5Ai/gtRhnvMHopJx2J/HhtgWyOL0iQ
+	 JwjDNJue85MDd00fC+gq70uggKwgvRmdv1iirNmteUXsbJLb000HNXI42NIqSjjTn2CAi
+	 Hj/FiV5sJA8a/Cn0R47s1qrlczlhZAXh1bMc5dcfwX0RKI2is13J/1P2fglJXLx4Vk/Bt
+	 vXxOtDdEH/+yviq8bCsPZ9UK58KbqKQrHhNx+QuYsX7liKnotlSqvACsJbpmc0gCBtAvS
+	 YZRaosg/A0QKXoqiUKQgC9jZDqMr/pd9eUfelskRmTroZGp2vCf7sKgUWGizxKeTQmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793792293;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793792288;
 	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Received:Received:
 	 Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
 	 In-Reply-To:MIME-Version:Content-Transfer-Encoding:X-CMS-MailID:
 	 X-Msg-Generator:Content-Type:X-Sendblock-Type:CMS-TYPE:X-CPGSPASS:
 	 X-Hop-Count:X-CMS-RootMailID:References;
-	bh=KuzFpHCFvUmiQb+Ax0Z+FfwPrcALldvleMJws1Z8LEQ=;
-	b=XnXucUqbrYRk/Fr9mTGmZ2mU4CGfvJV0hTXFZTEUUdFI1jvtNaaAc8nb4f5uXkLX0n02
-	 ioqOqrthWtA0Oh8754ll3ZmU1HynKVOWMgZkyvRpR50NFQ8PDx8TM8pGNA98EOhn1VHzG
-	 wFdP0QfZkETZuRYj3R16xb1P4ndnvMvbRFj2rGigGSeYbtU5vcOPzGbml7nAyyrMK2yai
-	 ggfidPBbo8yKOtiYEVVgpa/whDC5HuMNVm99Tkr8ZvVWcElYzP4NYgFj0fZ2XDWAec43r
-	 ZA0bYXqfKp1fe7RG369xJYjR2+vIE1As93MmmP6herF+fh0ydbZ1HGPBgW0ClWuTjSg==
+	bh=zMRYwjo0X/qwb12AaABRJljD34IxFgc+zPdctLsCiBA=;
+	b=hqtQavzL+qGqGw51x+0R4MJ9uTXNpihpUlqTe2/aGbzpp/aV7L4KcRNsGjagQ6tH8aEl
+	 zyMXTvfy20oiUW0thFqXPFmoRQqyosqGOAUqMT/P+Z9BjIhiUi1bHsEq0v1tNKRdv0jVB
+	 A74r1tquHmKU9mJIO4CH3nJgNx2IstkeKRiIq17bynj0Lfd78RlTzEm505IZNDAr143Lt
+	 EvPAGV+QOMpxT+BdVbN+aYxXagXcPgU5GLT39kVTN6QxFJ/+ieQINEk2Sk6hO0OrSW3n3
+	 Mc2tO8nw+QfLU2L/3EhbbyLJ28jZ89lHrpYN0co86yilwgGlUtsIx2As7OnzytzjtXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=samsung.com;
 	spf=pass smtp.mailfrom=samsung.com;
-	dkim=pass header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=cYB43TXN;
-	arc=none smtp.remote-ip=203.254.224.24
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	dkim=pass header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=HIvMw3x5;
+	arc=none smtp.remote-ip=203.254.224.25
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B34E606D829
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 11:38:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B34E606D829
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE54606D82C
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 11:38:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2BE54606D82C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=cYB43TXN
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20261104113804epoutp01985f5321003112f48451a1d9910a4057~k1JRBoTpx3027130271epoutp01N
+	dkim=pass (1024-bit key, unprotected) header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=HIvMw3x5
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20261104113804epoutp02e0e774f30296a9901f1dc98dec7adaf6~k1JQ--srv1884218842epoutp02C
 	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 11:38:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20261104113804epoutp01985f5321003112f48451a1d9910a4057~k1JRBoTpx3027130271epoutp01N
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20261104113804epoutp02e0e774f30296a9901f1dc98dec7adaf6~k1JQ--srv1884218842epoutp02C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1793792284;
-	bh=KuzFpHCFvUmiQb+Ax0Z+FfwPrcALldvleMJws1Z8LEQ=;
+	bh=zMRYwjo0X/qwb12AaABRJljD34IxFgc+zPdctLsCiBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cYB43TXN+okLZ3yNboIA9UYbTYj00mTm/1EYKdNg1Ol8svZr7o4E7fmieLsTllK+i
-	 ycEuKmjrq5c4NbqQu2d2jbZykdhmYe8rx+hIWyq75/QohDDI67jsiVWUfRqeje/SK9
-	 dckxcVvQ6MsrHwkpI/FId3uM6gDz8QN7jHrCYvig=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	b=HIvMw3x5U9xA37avuErv7SfMkGVbvAjcv+36GoPDOKU/0aA5eKz2T3kod5Rko4pqz
+	 thlOxv/eGqW9IApoQMVRwSpcivcefLezOkHJkunkNHtOw06jhEPSywgF70hQ31KAhx
+	 DQdOtKlfX14lMi4CK3Tk/eyXCzUJGeQB8yry2LZ0=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20261104113804epcas5p1ffba63a24925fbc35da610a67cda0965~k1JQYWYyS3116031160epcas5p1O;
+	20261104113804epcas5p142b60024c39f0f39e61bbdd129782404~k1JQrFsHl0140001400epcas5p1B;
 	Wed,  4 Nov 2026 11:38:04 +0000 (GMT)
 Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4jKNjS0g4Sz2SSKY; Wed,  4 Nov
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4jKNjS2jRgz3hhT3; Wed,  4 Nov
 	2026 11:38:04 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20261104113032epcas5p18ac5d856594b31b8cd7cde2f36b1aa88~k1CrWD-CT0210802108epcas5p1p;
-	Wed,  4 Nov 2026 11:30:32 +0000 (GMT)
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20261104113039epcas5p4cd54cce1d9c2de4f1c1f2101623dd783~k1CyZEvhQ2809328093epcas5p4b;
+	Wed,  4 Nov 2026 11:30:39 +0000 (GMT)
 Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
 	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20261104113029epsmtip1e2f2f20dcc500cae5ef6291c143de947~k1CokIZ3_2364123641epsmtip1X;
-	Wed,  4 Nov 2026 11:30:28 +0000 (GMT)
+	20261104113037epsmtip114cedcb66d95ce7a3d0fa236e5ec38ac~k1CwC-6dY2364123641epsmtip1a;
+	Wed,  4 Nov 2026 11:30:36 +0000 (GMT)
 From: Shrihari E S <shrihari.s@samsung.com>
 To: jic23@kernel.org, junjie.cao@linux.dev, linux-cxl@vger.kernel.org,
 	linux-pci@vger.kernel.org, qemu-devel@nongnu.org, anisa.su887@gmail.com,
@@ -68,10 +68,9 @@ Cc: shrihari.s@samsung.com, arun.george@samsung.com, cpgs@samsung.com,
 	dave@stgolabs.net, dongjoo.seo1@samsung.com, gost.dev@samsung.com,
 	s.neeraj@samsung.com, vikash.k5@samsung.com, anisa.su@samsung.com,
 	junjie.cao@intel.com
-Subject: [PATCH qemu v1 4/8] hw/pci: Add PCIe Streamlined Virtual Channel
- (SVC) capability
-Date: Wed,  4 Nov 2026 17:22:38 +0530
-Message-Id: <603443293.161793792284076.JavaMail.epsvc@epcpadp2new>
+Subject: [PATCH qemu v1 6/8] hw/pci: Add PCIe Device3 capability support
+Date: Wed,  4 Nov 2026 17:22:40 +0530
+Message-Id: <932285561.201793792284372.JavaMail.epsvc@epcpadp2new>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261104115242.2035807-1-shrihari.s@samsung.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -84,534 +83,333 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20261104113032epcas5p18ac5d856594b31b8cd7cde2f36b1aa88
+X-CMS-MailID: 20261104113039epcas5p4cd54cce1d9c2de4f1c1f2101623dd783
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20261104113032epcas5p18ac5d856594b31b8cd7cde2f36b1aa88
+X-CMS-RootMailID: 20261104113039epcas5p4cd54cce1d9c2de4f1c1f2101623dd783
 References: <20261104115242.2035807-1-shrihari.s@samsung.com>
-	<CGME20261104113032epcas5p18ac5d856594b31b8cd7cde2f36b1aa88@epcas5p1.samsung.com>
+	<CGME20261104113039epcas5p4cd54cce1d9c2de4f1c1f2101623dd783@epcas5p4.samsung.com>
 
-From: Dongjoo Seo <dongjoo.seo1@samsung.com>
+Add the PCIe Device 3 Extended Capability (PCIe 6.4 section 7.7.9),
+with which an endpoint exposes its UIO requester and completer
+support and the related control bits.
 
-Implement the PCIe Streamlined Virtual Channel (SVC) Extended
-Capability (PCIe 6.4 section 7.9.29), one of the main prerequisites
-for UIO support, with the port capability, control and status
-registers and a set of SVC resources.
+The capability tracks the link's flit state: the requester-enable
+bits stay clear while the link is not in flit mode, and the Segment
+Captured status bit follows the flit state.
 
-The capability carries three SVC resources: the default VC0, a
-mandatory UIO VC and an optional UIO VC. The write-config path
-validates a guest's Resource Control writes against the resource
-capability and rejects an invalid configuration by clearing the VC
-Enable bit, and the reset path clears the software written state.
-
-Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
 Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
+Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
 ---
  hw/pci/meson.build         |   2 +-
- hw/pci/pci.c               |   5 +
- hw/pci/pcie.c              |  76 ++++++++++++++-
- hw/pci/pcie_svc.c          | 185 +++++++++++++++++++++++++++++++++++++
- include/hw/pci/pcie.h      |   6 ++
- include/hw/pci/pcie_regs.h |  74 +++++++++++++++
- include/hw/pci/pcie_svc.h  |  20 ++++
- 7 files changed, 362 insertions(+), 6 deletions(-)
- create mode 100644 hw/pci/pcie_svc.c
- create mode 100644 include/hw/pci/pcie_svc.h
+ hw/pci/pci.c               |   2 +
+ hw/pci/pcie.c              |  29 ++++++++++
+ hw/pci/pcie_dev3.c         | 111 +++++++++++++++++++++++++++++++++++++
+ include/hw/pci/pcie.h      |   5 ++
+ include/hw/pci/pcie_dev3.h |  26 +++++++++
+ include/hw/pci/pcie_regs.h |  26 +++++++++
+ 7 files changed, 200 insertions(+), 1 deletion(-)
+ create mode 100644 hw/pci/pcie_dev3.c
+ create mode 100644 include/hw/pci/pcie_dev3.h
 
 diff --git a/hw/pci/meson.build b/hw/pci/meson.build
-index b9c34b2acf..d55882a0c9 100644
+index d55882a0c9..0a7f3b162a 100644
 --- a/hw/pci/meson.build
 +++ b/hw/pci/meson.build
 @@ -14,7 +14,7 @@ pci_ss.add(files(
  # The functions in these modules can be used by devices too.  Since we
  # allow plugging PCIe devices into PCI buses, include them even if
  # CONFIG_PCI_EXPRESS=n.
--pci_ss.add(files('pcie.c', 'pcie_aer.c'))
-+pci_ss.add(files('pcie.c', 'pcie_aer.c', 'pcie_svc.c'))
+-pci_ss.add(files('pcie.c', 'pcie_aer.c', 'pcie_svc.c'))
++pci_ss.add(files('pcie.c', 'pcie_aer.c', 'pcie_svc.c', 'pcie_dev3.c'))
  pci_ss.add(files('pcie_doe.c'))
  system_ss.add(when: 'CONFIG_PCI_EXPRESS', if_true: files('pcie_port.c', 'pcie_host.c'))
  system_ss.add_all(when: 'CONFIG_PCI', if_true: pci_ss)
 diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-index 5996229c81..50472cab88 100644
+index 50472cab88..cc5e40ac5c 100644
 --- a/hw/pci/pci.c
 +++ b/hw/pci/pci.c
-@@ -30,6 +30,7 @@
- #include "hw/pci/pci_bridge.h"
- #include "hw/pci/pci_bus.h"
- #include "hw/pci/pci_host.h"
-+#include "hw/pci/pcie_svc.h"
- #include "hw/core/qdev-properties.h"
- #include "hw/core/qdev-properties-system.h"
- #include "migration/cpr.h"
-@@ -568,6 +569,8 @@ static void pci_do_device_reset(PCIDevice *dev)
-     msi_reset(dev);
-     msix_reset(dev);
+@@ -571,6 +571,7 @@ static void pci_do_device_reset(PCIDevice *dev)
      pcie_sriov_pf_reset(dev);
-+    pcie_cap_flit_reset(dev);
-+    pcie_svc_cap_reset(dev);
+     pcie_cap_flit_reset(dev);
+     pcie_svc_cap_reset(dev);
++    pcie_dev3_cap_reset(dev);
  }
  
  /*
-@@ -1814,6 +1817,8 @@ void pci_default_write_config(PCIDevice *d, uint32_t addr, uint32_t val_in, int
-     msi_write_config(d, addr, val_in, l);
-     msix_write_config(d, addr, val_in, l);
+@@ -1819,6 +1820,7 @@ void pci_default_write_config(PCIDevice *d, uint32_t addr, uint32_t val_in, int
      pcie_sriov_config_write(d, addr, val_in, l);
-+    pcie_cap_flit_write_config(d, addr, l);
-+    pcie_svc_cap_write_config(d, addr, val_in, l);
+     pcie_cap_flit_write_config(d, addr, l);
+     pcie_svc_cap_write_config(d, addr, val_in, l);
++    pcie_dev3_cap_write_config(d, addr, val_in, l);
  }
  
  /***********************************************************/
 diff --git a/hw/pci/pcie.c b/hw/pci/pcie.c
-index 4f6fc9db61..b05f70022a 100644
+index b05f70022a..9f16cc8d1b 100644
 --- a/hw/pci/pcie.c
 +++ b/hw/pci/pcie.c
-@@ -112,8 +112,9 @@ pcie_cap_v1_fill(PCIDevice *dev, uint8_t port, uint8_t type, uint8_t version)
+@@ -190,6 +190,32 @@ void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
+     pcie_cap_fill_lnk(dev, exp_cap, width, speed, flitmode);
  }
  
- /* Includes setting the target speed default */
--static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
--                              PCIExpLinkSpeed speed, bool flitmode)
-+static void pcie_cap_fill_lnk(PCIDevice *dev, uint8_t *exp_cap,
-+                              PCIExpLinkWidth width, PCIExpLinkSpeed speed,
-+                              bool flitmode)
- {
-     /* Clear and fill LNKCAP from what was configured above */
-     pci_long_test_and_clear_mask(exp_cap + PCI_EXP_LNKCAP,
-@@ -160,8 +161,14 @@ static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
-     }
- 
-     if (flitmode) {
--        pci_long_test_and_set_mask(exp_cap + PCI_EXP_LNKSTA2,
-+        uint32_t pos = dev->exp.exp_cap;
-+
-+        pci_word_test_and_set_mask(exp_cap + PCI_EXP_LNKSTA2,
-                                    PCI_EXP_LNKSTA2_FLIT);
-+        pci_word_test_and_set_mask(exp_cap + PCI_EXP_FLAGS,
-+                                   PCI_EXP_FLAGS_FLIT);
-+        pci_word_test_and_set_mask(dev->wmask + pos + PCI_EXP_LNKCTL,
-+                                   PCI_EXP_LNKCTL_FLIT_DIS);
-     }
- }
- 
-@@ -180,7 +187,65 @@ void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
-                                QEMU_PCI_EXP_LNKSTA_NLW(width) |
-                                QEMU_PCI_EXP_LNKSTA_CLS(speed));
- 
--    pcie_cap_fill_lnk(exp_cap, width, speed, flitmode);
-+    pcie_cap_fill_lnk(dev, exp_cap, width, speed, flitmode);
-+}
-+
-+/*
-+ * Derive the read-only Flit Status bit of the Link Status 2
-+ * register from the Flit Disable bit of the Link Control register.
-+ */
-+static void pcie_cap_flit_update_sta(PCIDevice *dev)
++bool pcie_link_flit_active(PCIDevice *dev)
 +{
-+    uint8_t *exp_cap = dev->config + dev->exp.exp_cap;
-+    uint16_t lnkctl = pci_get_word(exp_cap + PCI_EXP_LNKCTL);
-+    uint16_t lnksta2 = pci_get_word(exp_cap + PCI_EXP_LNKSTA2);
++    uint8_t *exp_cap;
++    uint16_t lnksta2;
++    uint16_t lnkctl;
++    uint16_t flags;
++
++    if (!pci_is_express(dev) || !dev->exp.exp_cap) {
++        return false;
++    }
++
++    exp_cap = dev->config + dev->exp.exp_cap;
++    flags = pci_get_word(exp_cap + PCI_EXP_FLAGS);
++    if (!(flags & PCI_EXP_FLAGS_FLIT)) {
++        return false;
++    }
++    lnkctl = pci_get_word(exp_cap + PCI_EXP_LNKCTL);
++    lnksta2 = pci_get_word(exp_cap + PCI_EXP_LNKSTA2);
 +
 +    if (lnkctl & PCI_EXP_LNKCTL_FLIT_DIS) {
-+        lnksta2 &= ~PCI_EXP_LNKSTA2_FLIT;
-+    } else {
-+        lnksta2 |= PCI_EXP_LNKSTA2_FLIT;
++        return false;
 +    }
 +
-+    pci_set_word(exp_cap + PCI_EXP_LNKSTA2, lnksta2);
++    return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
 +}
 +
-+void pcie_cap_flit_write_config(PCIDevice *dev, uint32_t addr, int len)
-+{
-+    if (!pci_is_express(dev) || !dev->exp.exp_cap) {
-+        return;
-+    }
-+
-+    if (!ranges_overlap(addr, len,
-+                        dev->exp.exp_cap + PCI_EXP_LNKCTL, 2)) {
-+        return;
-+    }
-+
-+    if (!(pci_get_word(dev->config + dev->exp.exp_cap + PCI_EXP_FLAGS) &
-+          PCI_EXP_FLAGS_FLIT)) {
-+        return;
-+    }
-+
-+    pcie_cap_flit_update_sta(dev);
-+}
-+
-+/*
-+ * The Flit Disable bit of the Link Control register keeps its value
-+ * across a device reset. Derive the Flit Status bit again from the
-+ * current Flit Disable value so the two fields stay consistent after
-+ * the reset.
-+ */
-+void pcie_cap_flit_reset(PCIDevice *dev)
-+{
-+    if (!pci_is_express(dev) || !dev->exp.exp_cap) {
-+        return;
-+    }
-+
-+    if (!(pci_get_word(dev->config + dev->exp.exp_cap + PCI_EXP_FLAGS) &
-+          PCI_EXP_FLAGS_FLIT)) {
-+        return;
-+    }
-+
-+    pcie_cap_flit_update_sta(dev);
- }
- 
- static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-@@ -217,7 +282,8 @@ static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-         /* the PCI_EXP_LNKSTA_DLLLA will be set in the hotplug function */
+ /*
+  * Derive the read-only Flit Status bit of the Link Status 2
+  * register from the Flit Disable bit of the Link Control register.
+@@ -226,6 +252,9 @@ void pcie_cap_flit_write_config(PCIDevice *dev, uint32_t addr, int len)
      }
  
--    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, PCIE_PORT(s)->flitmode);
-+    pcie_cap_fill_lnk(dev, exp_cap, s->width, s->speed,
-+                      PCIE_PORT(s)->flitmode);
+     pcie_cap_flit_update_sta(dev);
++    if (dev->exp.dev3_cap) {
++        pcie_dev3_cap_flit_update(dev);
++    }
  }
  
- int pcie_cap_init(PCIDevice *dev, uint8_t offset,
-diff --git a/hw/pci/pcie_svc.c b/hw/pci/pcie_svc.c
+ /*
+diff --git a/hw/pci/pcie_dev3.c b/hw/pci/pcie_dev3.c
 new file mode 100644
-index 0000000000..38d2c732a6
+index 0000000000..8ca7c74b8c
 --- /dev/null
-+++ b/hw/pci/pcie_svc.c
-@@ -0,0 +1,185 @@
++++ b/hw/pci/pcie_dev3.c
+@@ -0,0 +1,111 @@
 +/*
 + * SPDX-License-Identifier: GPL-2.0-or-later
 + *
-+ * PCIe Streamlined Virtual Channel (SVC) Extended Capability
++ * PCIe Device3 Extended Capability
 + *
 + * Copyright (c) 2026 Samsung Electronics Co., Ltd.
 + */
 +
 +#include "qemu/osdep.h"
-+#include "qemu/bitops.h"
 +#include "hw/pci/pci_device.h"
 +#include "hw/pci/pcie.h"
-+#include "hw/pci/pcie_svc.h"
 +#include "hw/pci/pcie_port.h"
++#include "hw/pci/pcie_dev3.h"
 +
-+int pcie_svc_cap_init(PCIDevice *dev, uint32_t offset, bool flitmode,
-+                      Error **errp)
++int pcie_dev3_cap_init(PCIDevice *dev, uint32_t offset,
++                       bool uio_req, bool uio_comp, Error **errp)
 +{
-+    uint32_t res_ctrl_wmask;
++    uint32_t devcap3 = 0;
++    uint32_t wmask = 0;
 +
 +    if (!pci_is_express(dev)) {
-+        error_setg(errp, "SVC ECAP requires PCIe");
++        error_setg(errp, "Device 3 ECAP requires PCIe");
 +        return -EINVAL;
 +    }
 +
-+    pcie_add_capability(dev, PCI_SVC_CAP_ID, 1, offset,
-+                        PCI_SVC_SIZEOF);
-+    dev->exp.svc_cap = offset;
-+
-+    pci_set_long(dev->wmask + offset + PCI_SVC_CTL_OFFSET,
-+                 PCI_SVC_CTL_VC_EN_CMP);
++    pcie_add_capability(dev, PCI_EXT_CAP_ID_DEV3, 1, offset, PCI_DEV3_SIZEOF);
++    dev->exp.dev3_cap = offset;
++    dev->exp.dev3.uio_req = uio_req;
++    dev->exp.dev3.uio_comp = uio_comp;
 +
 +    /*
-+     * Per PCIe 6.4 Section 7.9.29.5, the SVC Status register resets to
-+     * 0: Use VC/MFVC is 0b, meaning the port permanently uses SVC. If
-+     * legacy VC/MFVC capabilities are ever implemented, the default
-+     * value would need to be 1b and writing 1 to the field would
-+     * enable SVC.
++     * In this implementation, 14-bit tag support is only advertised
++     * when UIO is enabled. A real device may support 14-bit tags
++     * independently of UIO.
 +     */
-+    pci_set_long(dev->config + offset + PCI_SVC_STA_OFFSET, 0);
-+
-+    /*
-+     * Per PCIe 6.4 Specification Section 7.9.29 all the register
-+     * fields of set 0 are hardwired: it carries the default VC0
-+     * (VC ID 000b) with the protocols of VC0 (0000b) and TC0 mapped
-+     * to it.
-+     */
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_CAP(0), 0);
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_CTRL(0),
-+                 PCI_SVC_TC_VC_MAP(0) | PCI_SVC_VC_ENABLE);
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(0), 0);
-+
-+    /*
-+     * Bit 0 of the TC/VC map is read-only and Clear on the extended
-+     * sets, and the Shared Flow Control fields are RsvdP on a port
-+     * without 256-byte flit mode (7.9.29.7).
-+     */
-+    res_ctrl_wmask = PCI_SVC_TC_VC_MAP_RW |
-+                     PCI_SVC_VC_PROTOCOL_SELECTED |
-+                     PCI_SVC_VC_ENABLE;
-+    if (flitmode) {
-+        res_ctrl_wmask |= PCI_SVC_SHARED_FLOW_CONTROL_ENABLE |
-+                          PCI_SVC_SHARED_FLOW_CONTROL_LIMIT;
++    if (uio_comp) {
++        devcap3 |= PCI_DEV3_CAP_TAG_COMP | PCI_DEV3_CAP_UIO_COMP;
++    }
++    if (uio_req) {
++        devcap3 |= PCI_DEV3_CAP_TAG_REQ | PCI_DEV3_CAP_UIO_REQ;
++        wmask |= PCI_DEV3_CTL_TAG_REQ_EN |
++                 PCI_DEV3_CTL_UIO_REQ_EN |
++                 PCI_DEV3_CTL_UIO_256B_DIS;
 +    }
 +
-+    /*
-+     * Set 1 carries VC3 (UIO only, protocols supported 0010b) and
-+     * set 2 carries VC4 (UIO or non-UIO, protocols supported 0011b),
-+     * per Table 2-46 in the PCIe 6.4 specification.
-+     */
-+    pci_set_long(dev->config + offset + PCI_SVC_CAP_OFFSET,
-+                 PCI_SVC_CAP1_EVCC);
-+
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_CAP(1),
-+                 PCI_SVC_VC_PROTOCOL_UIO |
-+                 (3 << PCI_SVC_VC_ID_SHIFT));
-+    pci_set_long(dev->wmask + offset + PCI_SVC_RES_CTRL(1),
-+                 res_ctrl_wmask);
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(1), 0);
-+
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_CAP(2),
-+                 PCI_SVC_VC_PROTOCOL_UIO_NONUIO |
-+                 (4 << PCI_SVC_VC_ID_SHIFT));
-+    pci_set_long(dev->wmask + offset + PCI_SVC_RES_CTRL(2),
-+                 res_ctrl_wmask);
-+    pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(2), 0);
++    pci_set_long(dev->config + offset + PCI_DEV3_CAP_OFFSET, devcap3);
++    pci_set_long(dev->wmask + offset + PCI_DEV3_CTL_OFFSET, wmask);
 +
 +    return 0;
 +}
 +
-+void pcie_svc_cap_reset(PCIDevice *dev)
++/*
++ * Track the link's flit state in the Device 3 capability: the
++ * requester-enable bits of the Device Control 3 register are cleared
++ * while the link is not in flit mode, and the Segment Captured
++ * status bit follows the link's flit state.
++ */
++void pcie_dev3_cap_flit_update(PCIDevice *dev)
 +{
-+    uint32_t offset;
-+    int i;
++    uint32_t off = dev->exp.dev3_cap;
++    uint32_t devctl3;
++    uint32_t devsta3;
++    bool flit;
 +
-+    if (!pci_is_express(dev) || !dev->exp.svc_cap) {
++    if (!off) {
 +        return;
 +    }
 +
-+    offset = dev->exp.svc_cap;
-+    pci_set_long(dev->config + offset + PCI_SVC_CTL_OFFSET, 0);
-+    pci_set_long(dev->config + offset + PCI_SVC_STA_OFFSET, 0);
-+
-+    /*
-+     * Clear the writable Resource Control registers back to their
-+     * reset value as well: a guest-enabled VC would otherwise survive
-+     * a system reset while the Control and Status registers are
-+     * cleared.
-+     */
-+    for (i = 1; i <= PCI_SVC_EVCC; i++) {
-+        pci_set_long(dev->config + offset + PCI_SVC_RES_CTRL(i), 0);
-+        pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(i), 0);
++    flit = pcie_link_flit_active(dev);
++    if (!dev->exp.dev3.uio_req || !flit) {
++        devctl3 = pci_get_long(dev->config + off + PCI_DEV3_CTL_OFFSET);
++        devctl3 &= ~(PCI_DEV3_CTL_TAG_REQ_EN |
++                     PCI_DEV3_CTL_UIO_REQ_EN |
++                     PCI_DEV3_CTL_UIO_256B_DIS);
++        pci_set_long(dev->config + off + PCI_DEV3_CTL_OFFSET, devctl3);
 +    }
++
++    devsta3 = pci_get_long(dev->config + off + PCI_DEV3_STA_OFFSET);
++    if (flit) {
++        devsta3 |= PCI_DEV3_STA_SEGMENT_CAP;
++    } else {
++        devsta3 &= ~PCI_DEV3_STA_SEGMENT_CAP;
++    }
++    pci_set_long(dev->config + off + PCI_DEV3_STA_OFFSET, devsta3);
 +}
 +
-+/*
-+ * Since QEMU doesn't emulate the Flow control states, this function verifies
-+ * the SVC VC enablement done by the software and once done, it clears the
-+ * "SVC VC Negotiation pending" bit of SVC Resource status Register. Ideally
-+ * The hardware should clear this while exiting from FC_INIT2 state.
-+ */
-+void pcie_svc_cap_write_config(PCIDevice *dev,
-+                               uint32_t addr, uint32_t val, int len)
++void pcie_dev3_cap_reset(PCIDevice *dev)
 +{
-+    uint32_t offset = dev->exp.svc_cap;
-+    int i;
++    uint32_t off = dev->exp.dev3_cap;
 +
-+    if (!offset) {
++    if (!off) {
 +        return;
 +    }
 +
-+    /*
-+     * Validate the SVC Resource Control registers of the software
-+     * enabled resource sets (set 1 carries VC3 and set 2 carries
-+     * VC4) per 7.9.29.7 in the PCIe 6.4 Specification. Set 0 carries
-+     * the default VC0 and all its registers are hardwired.
-+     */
-+    for (i = 1; i <= PCI_SVC_EVCC; i++) {
-+        uint32_t res_ctrl, res_cap, res_sta, proto, vc;
-+        bool valid;
++    pci_set_long(dev->config + off + PCI_DEV3_CTL_OFFSET, 0);
++    pci_set_long(dev->config + off + PCI_DEV3_STA_OFFSET, 0);
++    pcie_dev3_cap_flit_update(dev);
++}
 +
-+        if (!ranges_overlap(addr, len, offset + PCI_SVC_RES_CTRL(i), 4)) {
-+            continue;
-+        }
++void pcie_dev3_cap_write_config(PCIDevice *dev,
++                                uint32_t addr, uint32_t val, int len)
++{
++    if (!dev->exp.dev3_cap) {
++        return;
++    }
 +
-+        res_cap = pci_get_long(dev->config + offset +
-+                                PCI_SVC_RES_CAP(i));
-+        res_ctrl = pci_get_long(dev->config + offset +
-+                                PCI_SVC_RES_CTRL(i));
-+        res_sta = pci_get_long(dev->config + offset +
-+                                PCI_SVC_RES_STATUS(i));
-+
-+        /* The VC carried by the set, from the SVC VC ID field */
-+        vc = (res_cap & PCI_SVC_VC_ID_MASK) >> PCI_SVC_VC_ID_SHIFT;
-+
-+        /* Started SVC VC negotiation */
-+        res_sta |= PCI_SVC_VC_NEGO;
-+        pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(i), res_sta);
-+
-+        /*
-+         * Software maps TC<vc> to the VC, per the SVC TC/VC default
-+         * assignments (Table 2-46), and selects the use of the VC:
-+         * 0010b selects the UIO protocols and 0001b the non-UIO
-+         * protocols. The set carries the selection when its
-+         * Protocols Supported field permits the use: 0010b permits
-+         * the UIO protocols only and 0011b permits either use.
-+         */
-+        proto = res_ctrl & PCI_SVC_VC_PROTOCOL_SELECTED;
-+        valid = (res_ctrl & PCI_SVC_TC_VC_MAP(vc)) &&
-+                ((proto == PCI_SVC_VC_PROTOCOL_UIO &&
-+                  (res_cap & PCI_SVC_VC_PROTOCOL_UIO)) ||
-+                 (proto == PCI_SVC_VC_PROTOCOL_NONUIO &&
-+                  (res_cap & PCI_SVC_VC_PROTOCOL_NONUIO)));
-+
-+        if (!valid) {
-+            pci_long_test_and_clear_mask(dev->config + offset +
-+                                         PCI_SVC_RES_CTRL(i),
-+                                         PCI_SVC_VC_ENABLE);
-+        }
-+
-+        /* SVC Negotiation completed */
-+        res_sta &= ~PCI_SVC_VC_NEGO;
-+        pci_set_long(dev->config + offset + PCI_SVC_RES_STATUS(i), res_sta);
++    if (ranges_overlap(addr, len,
++                       dev->exp.dev3_cap + PCI_DEV3_CTL_OFFSET, 4)) {
++        pcie_dev3_cap_flit_update(dev);
 +    }
 +}
 diff --git a/include/hw/pci/pcie.h b/include/hw/pci/pcie.h
-index 79808126dc..3d092e8871 100644
+index 3d092e8871..95f670c830 100644
 --- a/include/hw/pci/pcie.h
 +++ b/include/hw/pci/pcie.h
-@@ -25,6 +25,7 @@
- #include "hw/pci/pcie_regs.h"
+@@ -26,6 +26,7 @@
  #include "hw/pci/pcie_aer.h"
  #include "hw/pci/pcie_sriov.h"
-+#include "hw/pci/pcie_svc.h"
+ #include "hw/pci/pcie_svc.h"
++#include "hw/pci/pcie_dev3.h"
  #include "hw/core/hotplug.h"
  
  typedef struct PCIEPort PCIEPort;
-@@ -82,6 +83,9 @@ struct PCIExpressDevice {
-     uint16_t sriov_cap;
-     PCIESriovPF sriov_pf;
-     PCIESriovVF sriov_vf;
-+
-+    /* Streamlined Virtual Channel (SVC) introduced from PCIe 6.1 */
-+    uint32_t svc_cap;
+@@ -86,6 +87,9 @@ struct PCIExpressDevice {
+ 
+     /* Streamlined Virtual Channel (SVC) introduced from PCIe 6.1 */
+     uint32_t svc_cap;
++    /* PCIe Device 3 Capability */
++    uint32_t dev3_cap;
++    struct PCIEDev3Cap dev3;
  };
  
  #define COMPAT_PROP_PCP "power_controller_present"
-@@ -143,6 +147,8 @@ void pcie_dev_ser_num_init(PCIDevice *dev, uint16_t offset, uint64_t ser_num);
- void pcie_ats_init(PCIDevice *dev, uint16_t offset, bool aligned);
- void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
+@@ -149,6 +153,7 @@ void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
                                 PCIExpLinkSpeed speed, bool flitmode);
-+void pcie_cap_flit_write_config(PCIDevice *dev, uint32_t addr, int len);
-+void pcie_cap_flit_reset(PCIDevice *dev);
+ void pcie_cap_flit_write_config(PCIDevice *dev, uint32_t addr, int len);
+ void pcie_cap_flit_reset(PCIDevice *dev);
++bool pcie_link_flit_active(PCIDevice *dev);
  
  void pcie_cap_slot_pre_plug_cb(HotplugHandler *hotplug_dev, DeviceState *dev,
                                 Error **errp);
-diff --git a/include/hw/pci/pcie_regs.h b/include/hw/pci/pcie_regs.h
-index 33a22229fe..044b3caae4 100644
---- a/include/hw/pci/pcie_regs.h
-+++ b/include/hw/pci/pcie_regs.h
-@@ -81,6 +81,7 @@ typedef enum PCIExpLinkWidth {
- #define PCI_EXP_DEVCAP2_EETLPP          0x200000
- 
- #define PCI_EXP_DEVCTL2_EETLPPB         0x8000
-+#define PCI_EXP_LNKCTL_FLIT_DIS         0x2000
- 
- /* ARI */
- #define PCI_ARI_VER                     1
-@@ -182,4 +183,77 @@ typedef enum PCIExpLinkWidth {
- #define PCI_DOE_VER                     0x1
- #define PCI_DOE_SIZEOF                  24
- 
-+/* Streamlined Virtual Channel (SVC) PCIe 6.4 section 7.9.29 */
-+#define PCI_SVC_CAP_ID                  0x35
-+
-+/*
-+ * The capability structure is sized for the maximum SVC Extended VC
-+ * Count of 7 (7.9.29.2): 0x14 bytes of port registers followed by
-+ * eight resource sets of 0x0c bytes each. With EVCC 2 the register
-+ * space of the resource sets beyond the enabled EVCC is reserved.
-+ */
-+#define PCI_SVC_SIZEOF                  0x74
-+
-+#define PCI_SVC_CAP_OFFSET              0x04
-+#define PCI_SVC_CTL_OFFSET              0x0c
-+#define PCI_SVC_STA_OFFSET              0x10
-+
-+/* VC Enablement Completed (7.9.29.4) */
-+#define PCI_SVC_CTL_VC_EN_CMP          BIT(0)
-+
-+/*
-+ * Two SVC resource sets beyond set 0: set 1 carries VC3 and set 2
-+ * carries VC4, per Table 2-46 in the PCIe 6.4 specification. Set 0
-+ * carries the default VC0 and all its registers are hardwired.
-+ */
-+#define PCI_SVC_EVCC                    2
-+#define PCI_SVC_CAP1_EVCC               (PCI_SVC_EVCC << 0)
-+
-+/* 7.9.29.6 SVC Resource capability Register */
-+#define PCI_SVC_RES_CAP_BASE            0x14
-+#define PCI_SVC_RES_CAP(n)              (PCI_SVC_RES_CAP_BASE + ((n) * 0x0c))
-+
-+/*
-+ * SVC VC Protocols Supported encodings (11:8), per 7.9.29.6 in the
-+ * PCIe 6.4 specification: 0010b permits the UIO protocols on the VC,
-+ * 0011b permits the UIO protocols or the non-UIO protocols, and
-+ * 0001b permits the non-UIO protocols. Bit 9 of the field carries
-+ * the UIO permission and bit 8 the non-UIO permission.
-+ */
-+#define PCI_SVC_VC_PROTOCOL_NONUIO      (0x1 << 8)
-+#define PCI_SVC_VC_PROTOCOL_UIO         (0x2 << 8)
-+#define PCI_SVC_VC_PROTOCOL_UIO_NONUIO  (0x3 << 8)
-+#define PCI_SVC_VC_ID_SHIFT             12
-+#define PCI_SVC_VC_ID_MASK              (0x7 << PCI_SVC_VC_ID_SHIFT)
-+
-+/* 7.9.29.7 SVC Resource Control Register */
-+#define PCI_SVC_RES_CTRL_BASE           0x18
-+#define PCI_SVC_RES_CTRL(n)             (PCI_SVC_RES_CTRL_BASE + ((n) * 0x0c))
-+#define PCI_SVC_VC_ENABLE               BIT(31)
-+#define PCI_SVC_SHARED_FLOW_CONTROL_ENABLE  BIT(30)
-+
-+/*
-+ * SVC VC Protocol Selected field (11:8): software selects 0010b to
-+ * use the UIO protocols on the VC and 0001b to use the non-UIO
-+ * protocols, per 7.9.29.7 in the PCIe 6.4 specification. The other
-+ * encodings of the field are reserved.
-+ */
-+#define PCI_SVC_VC_PROTOCOL_SELECTED    (0xf << 8)
-+#define PCI_SVC_SHARED_FLOW_CONTROL_LIMIT   (0x7 << 27)
-+#define PCI_SVC_TC_VC_MAP_ENABLE        (0xff << 0)
-+
-+/*
-+ * Bit 0 of the TC/VC map is read-only: Set for the default VC0 and
-+ * Clear for the other VCs (7.9.29.7).
-+ */
-+#define PCI_SVC_TC_VC_MAP_RW            (0xfe << 0)
-+
-+/* Bit n of the field carries the mapping of TCn (7.9.29.7) */
-+#define PCI_SVC_TC_VC_MAP(n)            (BIT(n) & PCI_SVC_TC_VC_MAP_ENABLE)
-+
-+/* 7.9.29.8 SVC Resource Status Register */
-+#define PCI_SVC_RES_STATUS_BASE         0x1c
-+#define PCI_SVC_RES_STATUS(n)           (PCI_SVC_RES_STATUS_BASE + ((n) * 0x0c))
-+#define PCI_SVC_VC_NEGO                 BIT(1)
-+
- #endif /* QEMU_PCIE_REGS_H */
-diff --git a/include/hw/pci/pcie_svc.h b/include/hw/pci/pcie_svc.h
+diff --git a/include/hw/pci/pcie_dev3.h b/include/hw/pci/pcie_dev3.h
 new file mode 100644
-index 0000000000..6f52dc0a1c
+index 0000000000..4cfa07fe32
 --- /dev/null
-+++ b/include/hw/pci/pcie_svc.h
-@@ -0,0 +1,20 @@
++++ b/include/hw/pci/pcie_dev3.h
+@@ -0,0 +1,26 @@
 +/*
 + * SPDX-License-Identifier: GPL-2.0-or-later
 + *
-+ * PCIe Streamlined Virtual Channel (SVC) Extended Capability
++ * PCIe Device3 Extended Capability
 + *
 + * Copyright (c) 2026 Samsung Electronics Co., Ltd.
 + */
 +
-+#ifndef HW_PCIE_SVC_H
-+#define HW_PCIE_SVC_H
++#ifndef HW_PCIE_DEV3_H
++#define HW_PCIE_DEV3_H
 +
 +#include "hw/pci/pci.h"
 +
-+int  pcie_svc_cap_init(PCIDevice *dev, uint32_t offset, bool flitmode,
-+                       Error **errp);
-+void pcie_svc_cap_reset(PCIDevice *dev);
-+void pcie_svc_cap_write_config(PCIDevice *dev,
-+                               uint32_t addr, uint32_t val, int len);
++typedef struct PCIEDev3Cap {
++    bool uio_req;
++    bool uio_comp;
++} PCIEDev3Cap;
 +
-+#endif /* HW_PCIE_SVC_H */
++int pcie_dev3_cap_init(PCIDevice *dev, uint32_t offset,
++                       bool uio_req, bool uio_comp, Error **errp);
++void pcie_dev3_cap_reset(PCIDevice *dev);
++void pcie_dev3_cap_write_config(PCIDevice *dev,
++                                uint32_t addr, uint32_t val, int len);
++void pcie_dev3_cap_flit_update(PCIDevice *dev);
++
++#endif /* HW_PCIE_DEV3_H */
+diff --git a/include/hw/pci/pcie_regs.h b/include/hw/pci/pcie_regs.h
+index 044b3caae4..484178adb3 100644
+--- a/include/hw/pci/pcie_regs.h
++++ b/include/hw/pci/pcie_regs.h
+@@ -256,4 +256,30 @@ typedef enum PCIExpLinkWidth {
+ #define PCI_SVC_RES_STATUS(n)           (PCI_SVC_RES_STATUS_BASE + ((n) * 0x0c))
+ #define PCI_SVC_VC_NEGO                 BIT(1)
+ 
++/* PCIe Device 3 capability structure. PCIe 6.4 Specification Section 7.7.9 */
++#ifndef PCI_EXT_CAP_ID_DEV3
++#define PCI_EXT_CAP_ID_DEV3 0x2f
++#endif
++
++#define PCI_DEV3_CAP_OFFSET            0x04
++#define PCI_DEV3_CTL_OFFSET            0x08
++#define PCI_DEV3_STA_OFFSET            0x0c
++#define PCI_DEV3_SIZEOF                0x10
++
++/* Section 7.7.9.2 Device Capabilities 3 Register */
++#define PCI_DMWR_REQ_SUPPORTED         BIT(0)
++#define PCI_DEV3_CAP_TAG_COMP          BIT(1)
++#define PCI_DEV3_CAP_TAG_REQ           BIT(2)
++#define PCI_L0P_SUPPORTED              BIT(3)
++#define PCI_DEV3_CAP_UIO_COMP          BIT(10)
++#define PCI_DEV3_CAP_UIO_REQ           BIT(11)
++
++/* Section 7.7.9.3 Device Control 3 Register */
++#define PCI_DEV3_CTL_TAG_REQ_EN        BIT(2)
++#define PCI_DEV3_CTL_UIO_REQ_EN        BIT(7)
++#define PCI_DEV3_CTL_UIO_256B_DIS      BIT(8)
++
++/* Section 7.7.9.4 Device Status 3 Register */
++#define PCI_DEV3_STA_SEGMENT_CAP       BIT(3)
++
+ #endif /* QEMU_PCIE_REGS_H */
 -- 
 2.34.1
 
