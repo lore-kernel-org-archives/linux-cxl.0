@@ -1,79 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.254.224.24
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793792405;
-	b=Ci8zeiKhVCmSox9j5onOKaNI47itevVdKEYJt1QqGiu3+XmkuTI9XxMitvwT5F/qyczQ
-	 mYbtcLC5Yfp9ZLl1Dx4gHggabq6lg4Ca/WdLHj/78CiKbO43rylVn3Yc1HvoYvj/JKJnl
-	 osfP3AYL94xA6Ou/ap6qp23IzZWj7RYjbTjD7HWsh0+AFPCpNdTQYTI6TEzOBV+cDpGge
-	 4S4y4lzFkWDrSh4viO0dkvIbqG+pJ+ltdWabynQU96VeOkGsfho9mosacak2dHYsdctD1
-	 PNEj4ptBk5xwpOxZQzZZMHGms68WkOYf8PPhPFgKf/SXhGWj6wfwegM38FaFts7X+hg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793792405;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Received:Received:
-	 Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 In-Reply-To:MIME-Version:Content-Transfer-Encoding:X-CMS-MailID:
-	 X-Msg-Generator:Content-Type:X-Sendblock-Type:CMS-TYPE:X-CPGSPASS:
-	 X-Hop-Count:X-CMS-RootMailID:References;
-	bh=CoNTGCBqnm0HhFbxIepmVNdSHPSkoUWvTheSsXhJglE=;
-	b=hj9XLq8c7NqzHgsLjNfV10jAEBFKnsYeBGGPpN3rP5X3Wrci5CnkHGSh1JxlPE+J1j7A
-	 AKAvVqYJj0Ia8npelWKIRsL2iNUpKiTy5ZJYqq1dfCrVgFcdlUogHRt7mDkk/dIm8Wkii
-	 CH5mltAPZOQO+WIZH10E2CZZyAXRx2YYrKA0N+2YFWpMT6ot3ZB0JY5G7qNruMMM5ZYez
-	 k4IYdDAWXUMAOqZ3Hf9G54iemIZqX8dZUFXhD1PcjPCbWApLh2WojrOpUNIN1dzXf2kue
-	 uKy8EphNdJumbnoO34LyHqQkrs8qdygt4FKqmpqQtL99ja/RGpmrJWLmUT4koow1NMg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=samsung.com;
-	spf=pass smtp.mailfrom=samsung.com;
-	dkim=pass header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=RFMkiY5o;
-	arc=none smtp.remote-ip=203.254.224.24
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.50
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793801303;
+	b=AlwKAo25Kb9F44o2QDp4i7Ozmcmpe14gXsEjk7Of9uG6PitvEIxy7ctlL0pHcP9/6UOg
+	 zcO0SvB8kjXh+Pis/XJ+YfFs9QzTf6FPNMkigyyb78skwvunAuo1G0BpL5nDRS3kHiHfy
+	 de1H4WnDrpwAlL458Umt5XhUezak3TxRfUZWWbMzL48ai5877aAUyDR8Gu4W0UqjOOHOk
+	 U/PboQUfaVj2DuJ8ZOS1Ir6EpxibOE9qI3zzc+VwgHx15Fjli991Qg+/Q1cG6iuHQ64nD
+	 iYIlHefljLRPlLMIoksHMqJLlHHzzG//GMADYs1gVwVHTj0I5b9G7/zZ/cwW1OWXW2A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793801303;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
+	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
+	b=0yGZkzuwvJwWIoRLDROfpTKo5Wktc5mklCBBEOHz6FALgJA3HVkZsBjmDJqMblIgV8+B
+	 zEpnqg6iTX56FdppIFcl63KTDNirGUtS7egn/p0lX3c7DXKRffh034EyCU6RRK6ntBfLy
+	 pmsIUjC+9/eG4kS2uBd0IVXE6g8aBFaDfSSTDGiwHY3HLagv7L9ENzgQP0r5TyeLZ/0gh
+	 GwsqNyJrh4JBSHEVaZBWDuJUxr6oAtjrjgsZskvqbxGcX0OL4D8RHJDouRvNp4Hc5EJFE
+	 FbGpRL4Vwx+7ucty31vaUV43qVqbp35FSBgEgXSWRnJNyByx3pzW2qWIIm6CDfNFWGA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=VfoSStn0;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.50
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010050.outbound.protection.outlook.com [52.101.46.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13FA606A31B
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 11:40:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D13FA606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF13606A339;
+	Wed,  4 Nov 2026 14:08:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BF13606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=RFMkiY5o
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20261104114002epoutp012ddda27a3605ddfcf34d01c2b7a681b4~k1K-CZ-5Q2941529415epoutp01g
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 11:40:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20261104114002epoutp012ddda27a3605ddfcf34d01c2b7a681b4~k1K-CZ-5Q2941529415epoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1793792402;
-	bh=CoNTGCBqnm0HhFbxIepmVNdSHPSkoUWvTheSsXhJglE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RFMkiY5o3/F79yLodyA0IIGDVlrbBDk2OoAwE0TP6azo0Ti/iz+z1D74r8uM4PjE0
-	 KS7bwHrcx1OlARgKBDJugSCD6c8ez1KmgPxR8bmENE+rI6BHrcAgQK7IK/A4FiHzuU
-	 Lk7NoElsrEz/zanWCTi5O2cXrEVYRS5fzLPxjrdY=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20261104114002epcas5p4cb0aee132221310d6c7df94b77aa5afe~k1K_cN0UN3192831928epcas5p45;
-	Wed,  4 Nov 2026 11:40:02 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4jKNlk1vs9z6B9m6; Wed,  4 Nov
-	2026 11:40:02 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20261104113035epcas5p41c69e872a13ffe10bd55bdfa00bc699b~k1CufJcXY2809328093epcas5p4M;
-	Wed,  4 Nov 2026 11:30:35 +0000 (GMT)
-Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
-	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20261104113032epsmtip10c3c1e252953d844a702544fb823cf0f~k1CsNd_m02358823588epsmtip1U;
-	Wed,  4 Nov 2026 11:30:32 +0000 (GMT)
-From: Shrihari E S <shrihari.s@samsung.com>
-To: jic23@kernel.org, junjie.cao@linux.dev, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, qemu-devel@nongnu.org, anisa.su887@gmail.com,
-	mst@redhat.com, marcel.apfelbaum@gmail.com
-Cc: shrihari.s@samsung.com, arun.george@samsung.com, cpgs@samsung.com,
-	dave@stgolabs.net, dongjoo.seo1@samsung.com, gost.dev@samsung.com,
-	s.neeraj@samsung.com, vikash.k5@samsung.com, anisa.su@samsung.com,
-	junjie.cao@intel.com
-Subject: [PATCH qemu v1 5/8] hw/pci: Wire SVC initialization into port
- realize functions
-Date: Wed,  4 Nov 2026 17:22:39 +0530
-Message-Id: <360067785.01793792402254.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261104115242.2035807-1-shrihari.s@samsung.com>
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=VfoSStn0
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LzGXaqFcEKB/QhB6o8nLCKfksDDVBujPtBL9/aS/d8C+dkUcM3ZagtBcaT5S4LzR0VjrbynXoZ5u2MOBCv/piTGJS/ARl+pvw4sq/5T1pUiTJmnvmR2jwGmxKlLpXz5LUlsvB+bWMdwEOq66Ie1J6WIP4Bd0D9rGg+2wDgYwAHjJNTbTB/6zcZofDSxA4myzs1tiE6REKpTVUo8Q3aX7et3WZrRGRPSpI4+jUxOeJrQPCMhqzIYppQXDJLdTdC2cDQwJtijt68DFuwbTIVPg79YU04feIITAcxgWdwxoAEn1/374C/Q4GQxmHpVNJbDndVUeiqL0UyK48+feCBZ2Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
+ b=QiiIti83YzbHFdOARkXdZrNIorgPBNi81Wi6zlUBgc/v2XR76jSsbcdPYRZn3LyA5ouGLD6iEKbBCxP5DWaWFOOqDPeCBw1m7bN1bWCNAj+DBTQ3XmFNuFn3uxK6VVwL9xkjDP7DoO54GlvEKCBW9H5XsXZfdqxuUJPrr/HFsopkMB5T5/yTAqUfqYEJ6tqdDBwpSXhAJyCAC/ZMjEf4+7e6IvgnRlryUfuUbhcAUX9MldS+fK6UvQ+N5Lz1nqrqw3p2NmxXnSdNWqPa2HhDnqfOCwpzo7b6FSnDn4IgBlqaYjGepZ/iN3OFdCHqKlfb36zaVWD2X4e19pHT405bdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
+ b=VfoSStn09D1LyGijG7GRCVf9hiO1gZmO4G/dxnoh5BKl9xaw+1s2FrDxKFyi3G9ogCXXPwQtMgAx7wUF0E6iSVHVo+SwHRsdCSPbePbC9BbCSR0m2ZXTn4Ft63ZenJN6y0DU/Sz6hIazIE/onO4T4uOLLwzMoqGq0ILCxpcqtMM=
+Received: from BL1P221CA0025.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::13)
+ by DM4PR12MB6061.namprd12.prod.outlook.com (2603:10b6:8:b3::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.592.8; Wed, 4 Nov 2026 14:08:17 +0000
+Received: from IA0PEPF00000040.namprd04.prod.outlook.com
+ (2603:10b6:208:2c5:cafe::42) by BL1P221CA0025.outlook.office365.com
+ (2603:10b6:208:2c5::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.10 via Frontend Transport; Wed, 4
+ Nov 2026 14:08:17 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ IA0PEPF00000040.mail.protection.outlook.com (10.167.249.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.592.5 via Frontend Transport; Wed, 4 Nov 2026 14:08:17 +0000
+Received: from [192.168.86.113] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Wed, 4 Nov
+ 2026 08:08:15 -0600
+Message-ID: <9535d4f1-d418-40d1-924d-df35f85a8e99@amd.com>
+Date: Wed, 4 Nov 2026 08:08:15 -0600
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,319 +98,93 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20261104113035epcas5p41c69e872a13ffe10bd55bdfa00bc699b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20261104113035epcas5p41c69e872a13ffe10bd55bdfa00bc699b
-References: <20261104115242.2035807-1-shrihari.s@samsung.com>
-	<CGME20261104113035epcas5p41c69e872a13ffe10bd55bdfa00bc699b@epcas5p4.samsung.com>
-
-With the x-svc option, a port appends the SVC capability at the end
-of its extended capability chain at realize time.
-
-In the same realize path a CXL root port derives its UIO status: it
-is UIO capable when the parent pxb-cxl host bridge carries x-uio and
-its own SVC and 256-byte flit mode configuration carry it; a root
-port on any other bus does not carry UIO.
-
-PXB PCIe root ports, CXL root ports, CXL switch ports and PCIe
-switch ports accept the x-svc option; the port types without a
-reserved SVC capability offset do not carry it.
-
-Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
-Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
----
- hw/pci-bridge/cxl_downstream.c     | 10 ++++++++++
- hw/pci-bridge/cxl_root_port.c      | 29 +++++++++++++++++++++++++++++
- hw/pci-bridge/cxl_upstream.c       | 14 ++++++++++++++
- hw/pci-bridge/gen_pcie_root_port.c |  3 +++
- hw/pci-bridge/pcie_root_port.c     | 14 ++++++++++++++
- hw/pci-bridge/xio3130_downstream.c |  6 ++++++
- hw/pci-bridge/xio3130_upstream.c   | 19 +++++++++++++++++++
- include/hw/pci/pcie_port.h         |  4 ++++
- 8 files changed, 99 insertions(+)
-
-diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-index bc1e65bc89..b710ce4f2c 100644
---- a/hw/pci-bridge/cxl_downstream.c
-+++ b/hw/pci-bridge/cxl_downstream.c
-@@ -229,6 +229,15 @@ static void cxl_dsp_realize(PCIDevice *d, Error **errp)
-                      PCI_BASE_ADDRESS_SPACE_MEMORY |
-                          PCI_BASE_ADDRESS_MEM_TYPE_64,
-                      &dsp->bar);
-+    if (p->svc) {
-+        /*
-+         * SVC is appended after the DVSECs so that the extended
-+         * capability layout is unchanged when the port does not
-+         * carry SVC.
-+         */
-+        pcie_svc_cap_init(d, cxl_cstate->dvsec_offset, p->flitmode,
-+                          errp);
-+    }
- 
-     return;
- 
-@@ -260,6 +269,7 @@ static const Property cxl_dsp_props[] = {
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-                                 width, PCIE_LINK_WIDTH_16),
-     DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
-+    DEFINE_PROP_BOOL("x-svc", PCIEPort, svc, false),
- };
- 
- static void cxl_dsp_class_init(ObjectClass *oc, const void *data)
-diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-index 4be2b400f9..4e7eea9deb 100644
---- a/hw/pci-bridge/cxl_root_port.c
-+++ b/hw/pci-bridge/cxl_root_port.c
-@@ -164,7 +164,9 @@ static void cxl_rp_realize(DeviceState *dev, Error **errp)
- {
-     PCIDevice *pci_dev     = PCI_DEVICE(dev);
-     PCIERootPortClass *rpc = PCIE_ROOT_PORT_GET_CLASS(dev);
-+    PCIEPort *p            = PCIE_PORT(dev);
-     CXLRootPort *crp       = CXL_ROOT_PORT(dev);
-+    PCIDevice *hb_dev;
-     CXLComponentState *cxl_cstate = &crp->cxl_cstate;
-     ComponentRegisters *cregs = &cxl_cstate->crb;
-     MemoryRegion *component_bar = &cregs->component_registers;
-@@ -212,6 +214,33 @@ static void cxl_rp_realize(DeviceState *dev, Error **errp)
-                      PCI_BASE_ADDRESS_SPACE_MEMORY |
-                      PCI_BASE_ADDRESS_MEM_TYPE_64,
-                      &crp->bar);
-+    /*
-+     * The Host Bridge UIO Capable bit marks all the root ports
-+     * within the Host Bridge as capable of routing UIO requests
-+     * (CXL 3.2 8.2.4.20.1): a root port below a pxb-cxl host bridge
-+     * carries the UIO capability when the host bridge carries x-uio
-+     * and its own SVC and 256-byte flit mode configuration carries
-+     * it. A root port on any other bus carries no pxb-cxl host
-+     * bridge above it.
-+     */
-+    hb_dev = pci_get_bus(pci_dev)->parent_dev;
-+    crp->uio_capable = hb_dev && object_dynamic_cast(OBJECT(hb_dev),
-+                                                     TYPE_PXB_CXL_DEV) &&
-+                       PXB_CXL_DEV(hb_dev)->uio_capable &&
-+                       p->svc && p->flitmode;
-+
-+    /*
-+     * SVC is appended after the DVSECs so that the extended
-+     * capability layout is unchanged when the port does not carry
-+     * SVC.
-+     */
-+    if (p->svc) {
-+        rc = pcie_svc_cap_init(pci_dev, cxl_cstate->dvsec_offset,
-+                               p->flitmode, errp);
-+        if (rc < 0) {
-+            return;
-+        }
-+    }
- }
- 
- static void cxl_rp_reset_hold(Object *obj, ResetType type)
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index 63d2fd54d4..a16e2e9744 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -414,6 +414,19 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
-         goto err_cap;
-     }
- 
-+    if (p->svc) {
-+        /*
-+         * SVC is appended after the DOE capability so that the
-+         * extended capability layout is unchanged when the port
-+         * does not carry SVC.
-+         */
-+        rc = pcie_svc_cap_init(d,
-+                               cxl_cstate->dvsec_offset + PCI_DOE_SIZEOF,
-+                               p->flitmode, errp);
-+        if (p->flitmode && rc >= 0) {
-+            usp->uio_capable = true;
-+        }
-+    }
-     return;
- 
- err_cap:
-@@ -441,6 +454,7 @@ static const Property cxl_upstream_props[] = {
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLUpstreamPort,
-                                 width, PCIE_LINK_WIDTH_16),
-     DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
-+    DEFINE_PROP_BOOL("x-svc", PCIEPort, svc, false),
- };
- 
- static void cxl_upstream_class_init(ObjectClass *oc, const void *data)
-diff --git a/hw/pci-bridge/gen_pcie_root_port.c b/hw/pci-bridge/gen_pcie_root_port.c
-index 2f7257d166..d4df4a7c16 100644
---- a/hw/pci-bridge/gen_pcie_root_port.c
-+++ b/hw/pci-bridge/gen_pcie_root_port.c
-@@ -26,6 +26,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(GenPCIERootPort, GEN_PCIE_ROOT_PORT)
- #define GEN_PCIE_ROOT_PORT_AER_OFFSET           0x100
- #define GEN_PCIE_ROOT_PORT_ACS_OFFSET \
-         (GEN_PCIE_ROOT_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
-+#define GEN_PCIE_ROOT_PORT_SVC_OFFSET \
-+        (GEN_PCIE_ROOT_PORT_ACS_OFFSET + PCI_ACS_SIZEOF)
- 
- #define GEN_PCIE_ROOT_PORT_MSIX_NR_VECTOR       1
- #define GEN_PCIE_ROOT_DEFAULT_IO_RANGE          4096
-@@ -166,6 +168,7 @@ static void gen_rp_dev_class_init(ObjectClass *klass, const void *data)
-     rpc->interrupts_uninit = gen_rp_interrupts_uninit;
-     rpc->aer_offset = GEN_PCIE_ROOT_PORT_AER_OFFSET;
-     rpc->acs_offset = GEN_PCIE_ROOT_PORT_ACS_OFFSET;
-+    rpc->svc_offset = GEN_PCIE_ROOT_PORT_SVC_OFFSET;
- }
- 
- static const TypeInfo gen_rp_dev_info = {
-diff --git a/hw/pci-bridge/pcie_root_port.c b/hw/pci-bridge/pcie_root_port.c
-index bc173dbf30..645394310c 100644
---- a/hw/pci-bridge/pcie_root_port.c
-+++ b/hw/pci-bridge/pcie_root_port.c
-@@ -68,6 +68,15 @@ static void rp_realize(PCIDevice *d, Error **errp)
-     int rc;
- 
-     pci_config_set_interrupt_pin(d->config, 1);
-+    if (!pci_is_cxl(d) && p->svc && !rpc->svc_offset) {
-+        /*
-+         * Only root port types with a reserved offset for the SVC
-+         * capability in their extended capability space support it.
-+         */
-+        error_setg(errp, "%s: SVC is not supported by this port type",
-+                   object_get_typename(OBJECT(d)));
-+        return;
-+    }
-     if (d->cap_present & QEMU_PCIE_CAP_CXL) {
-         pci_bridge_initfn(d, TYPE_CXL_BUS);
-     } else {
-@@ -120,6 +129,10 @@ static void rp_realize(PCIDevice *d, Error **errp)
-     if (rpc->acs_offset && !s->disable_acs) {
-         pcie_acs_init(d, rpc->acs_offset);
-     }
-+    if (!pci_is_cxl(d) && p->svc) {
-+        pcie_svc_cap_init(d, rpc->svc_offset, p->flitmode, errp);
-+    }
-+
-     return;
- 
- err:
-@@ -153,6 +166,7 @@ static const Property rp_props[] = {
-                     QEMU_PCIE_SLTCAP_PCP_BITNR, true),
-     DEFINE_PROP_BOOL("disable-acs", PCIESlot, disable_acs, false),
-     DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
-+    DEFINE_PROP_BOOL("x-svc", PCIEPort, svc, false),
- };
- 
- static void rp_instance_post_init(Object *obj)
-diff --git a/hw/pci-bridge/xio3130_downstream.c b/hw/pci-bridge/xio3130_downstream.c
-index 0c3fed3053..af4bb5dc83 100644
---- a/hw/pci-bridge/xio3130_downstream.c
-+++ b/hw/pci-bridge/xio3130_downstream.c
-@@ -110,6 +110,10 @@ static void xio3130_downstream_realize(PCIDevice *d, Error **errp)
-     if (rc < 0) {
-         goto err;
-     }
-+    if (p->svc) {
-+        pcie_svc_cap_init(d, XIO3130_AER_OFFSET + PCI_ERR_SIZEOF,
-+                          p->flitmode, errp);
-+    }
- 
-     return;
- 
-@@ -137,6 +141,8 @@ static void xio3130_downstream_exitfn(PCIDevice *d)
- static const Property xio3130_downstream_props[] = {
-     DEFINE_PROP_BIT(COMPAT_PROP_PCP, PCIDevice, cap_present,
-                     QEMU_PCIE_SLTCAP_PCP_BITNR, true),
-+    DEFINE_PROP_BOOL("x-svc", PCIEPort, svc, false),
-+    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
- };
- 
- static const VMStateDescription vmstate_xio3130_downstream = {
-diff --git a/hw/pci-bridge/xio3130_upstream.c b/hw/pci-bridge/xio3130_upstream.c
-index 40057b749b..5ba234bc06 100644
---- a/hw/pci-bridge/xio3130_upstream.c
-+++ b/hw/pci-bridge/xio3130_upstream.c
-@@ -24,6 +24,7 @@
- #include "hw/pci/msi.h"
- #include "hw/pci/pcie.h"
- #include "hw/pci/pcie_port.h"
-+#include "hw/core/qdev-properties.h"
- #include "migration/vmstate.h"
- #include "qemu/module.h"
- 
-@@ -49,9 +50,17 @@ static void xio3130_upstream_write_config(PCIDevice *d, uint32_t address,
- static void xio3130_upstream_reset(DeviceState *qdev)
- {
-     PCIDevice *d = PCI_DEVICE(qdev);
-+    PCIEPort *p = PCIE_PORT(d);
- 
-     pci_bridge_reset(qdev);
-     pcie_cap_deverr_reset(d);
-+    /*
-+     * An upstream port is not a PCIESlot, so the link capability
-+     * and status registers are filled here from the port's
-+     * configuration, the way the CXL upstream port does.
-+     */
-+    pcie_cap_fill_link_ep_usp(d, QEMU_PCI_EXP_LNK_X1,
-+                              QEMU_PCI_EXP_LNK_2_5GT, p->flitmode);
- }
- 
- static void xio3130_upstream_realize(PCIDevice *d, Error **errp)
-@@ -91,6 +100,10 @@ static void xio3130_upstream_realize(PCIDevice *d, Error **errp)
-     if (rc < 0) {
-         goto err;
-     }
-+    if (p->svc) {
-+        pcie_svc_cap_init(d, XIO3130_AER_OFFSET + PCI_ERR_SIZEOF,
-+                          p->flitmode, errp);
-+    }
- 
-     return;
- 
-@@ -123,6 +136,11 @@ static const VMStateDescription vmstate_xio3130_upstream = {
-     }
- };
- 
-+static const Property xio3130_upstream_props[] = {
-+    DEFINE_PROP_BOOL("x-svc", PCIEPort, svc, false),
-+    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
-+};
-+
- static void xio3130_upstream_class_init(ObjectClass *klass, const void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(klass);
-@@ -138,6 +156,7 @@ static void xio3130_upstream_class_init(ObjectClass *klass, const void *data)
-     dc->desc = "TI X3130 Upstream Port of PCI Express Switch";
-     device_class_set_legacy_reset(dc, xio3130_upstream_reset);
-     dc->vmsd = &vmstate_xio3130_upstream;
-+    device_class_set_props(dc, xio3130_upstream_props);
- }
- 
- static const TypeInfo xio3130_upstream_info = {
-diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
-index 1bcc734649..492721ba43 100644
---- a/include/hw/pci/pcie_port.h
-+++ b/include/hw/pci/pcie_port.h
-@@ -35,6 +35,9 @@ struct PCIEPort {
-     /*< public >*/
-     bool flitmode;
- 
-+    /* Streamlined Virtual Channel (SVC) capability */
-+    bool svc;
-+
-     /* pci express switch port */
-     uint8_t     port;
- };
-@@ -94,6 +97,7 @@ struct PCIERootPortClass {
-     int aer_offset;
-     int ssvid_offset;
-     int acs_offset;    /* If nonzero, optional ACS capability offset */
-+    int svc_offset;    /* optional SVC capability */
-     int ssid;
- };
- 
--- 
-2.34.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl/port: Fix endpoint RAS error unmasking
+To: Dave Jiang <dave.jiang@intel.com>, Richard Cheng <icheng@nvidia.com>,
+	<dave@stgolabs.net>, <jic23@kernel.org>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>
+CC: <iweiny@kernel.org>, <ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kaihengf@nvidia.com>, <kobak@nvidia.com>,
+	<newtonl@nvidia.com>, <kristinc@nvidia.com>
+References: <20261103063409.18275-1-icheng@nvidia.com>
+ <aaa772ba-554a-4bef-8910-e271580c2a5b@amd.com>
+ <f1e51d7f-645b-490e-b67c-36732b6db644@intel.com>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <f1e51d7f-645b-490e-b67c-36732b6db644@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PEPF00000040:EE_|DM4PR12MB6061:EE_
+X-MS-Office365-Filtering-Correlation-Id: 048a8597-d01a-4ad3-58e9-08df3a7d132b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|23010399003|376014|7416014|10067099003|22082099003|18002099003|56012099006|4143699003|11063799006|261026121527099003;
+X-Microsoft-Antispam-Message-Info:
+	wP5QS7NLqSmzxQwEsGkqzUCvDZTHqJ7JGXEFsrdmZslZp1/fmdOWBw3zS01xgBDEF9TY+sj9rR9RNYYH7LZDYMAAOoZUwNxSHZf86Ke9G8e+aiGSlqyLRtE8dsO+Ts3xQEKDWtqnazMgnHejlq3iSwgPUGykjiP0Bd+NEHLRKxffb09glmR5T9B3yZjkmIhu+CA7vlqO0RT/UAFZDwE0y5XYbsv3bTVnc49e7B4aSmb7k7s3O127AK+YVTtphU0hzduUB2pxQfp4hRwCxdZltyc7ockCk9/VYm3uL2x5slMqlurs32dgS/aWinAj1W19/xgFPaghs7oK6R6Uw4KSeSz/SDoWdDV6LZx/VrzoWCMMms0ReQ0oPoR7jYIZEysGhXfXPF14ZcMeNtjSy+GHf0vQ/ako4MeX0ddF424iJ4gsI72NC8P/3pM/XBBYx3bIJY8FiqhFqLIFExTpE6qHQa3HvHo/XAWFlx6969kMzaioHqC6oLxF7Z0IzDYlecdAyYqBNhXLMGy3qfluLLfOlGEe4Fl35InfZNwYPtJUpr1TOe8a6WYy+KkRxPqFUtrh43Sbd9ywvUfCjhJDcaQ2C1FJkBQ5lWD7PhcDhsyrRSzu9ZOHGiuqy2Nd6pvJbl/9VdtJgyEHNkdXeb1hCmAOvfrsWH23NMEzbsfMCozqlqEVyntxOQQpSW09PcY2flyaDqz7rurXnKb8yRS5raXXaA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(23010399003)(376014)(7416014)(10067099003)(22082099003)(18002099003)(56012099006)(4143699003)(11063799006)(261026121527099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	KjKOMqMPSSJKWry8BekTT+OlplZWlHpeXUOjUbTyKKJqPUXYtQPvB3tzanJLq3+pI/VU7uO91K+Wxg9y3cD5CK33ZxmTZQZTM+v8qHU2kHg7577wFSKeZLGmwF9ixnPrDi6E7rTyo72z+fwiUJmX8lvCL9rvAexbsu0CmyJyPAaV8Hq2dKTDxDW9u0dSB7IHk86j3A2RxbTADlo6p69CwYipCg2Xi/XhuU+xJ3hXCgu6MtuG6coIqVwadcsw6R9HLObX8Nb4ud+4WF4IY5WE2x7H2H2k9sbVQhYjwe2vSCWuhUJD4nXuYsbsE1R4ep7QEfH6yCOwAkurr38emSmL0eSLk9OZtT5/ZjXil2CGNzlnRCpVCSXRa3UVprZXNGnL9EZBwsDx04uQKgzx9GexN5ztBepY/TEngNWvO9H1jC9kpaErE07pklfzsp1l+tHr
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 14:08:17.6383
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 048a8597-d01a-4ad3-58e9-08df3a7d132b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	IA0PEPF00000040.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6061
 
 
+
+On 11/3/2026 5:15 PM, Dave Jiang wrote:
+> 
+> 
+> On 11/3/26 11:35 AM, Cheatham, Benjamin wrote:
+>> On 11/3/2026 12:34 AM, Richard Cheng wrote:
+>>> Moving endpoint RAS handling from cxl_pci to cxl_port left
+>>> cxl_ras_unmask() checking whether port->uport_dev is a PCI device.
+>>> Endpoint ports always use a cxl_memdev as uport_dev, so this check
+>>> returns early and leaves the CXL RAS error masks unchanged.
+>>>
+>>> Resolve the PCI device directly through the memdev's parent. Rename
+>>> helper to cxl_endpoint_ras_unmask() and its param to endpoint to make
+>>> its endpoint-only scope explicit.
+>>>
+>>> Fixes: dab7162d0ae7 ("cxl/port: Move endpoint component register management to cxl_port")
+>>> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+>>> ---
+>>
+>> ...
+>>
+>>> -static int cxl_ras_unmask(struct cxl_port *port)
+>>> +static int cxl_endpoint_ras_unmask(struct cxl_port *endpoint)
+>>>  {
+>>> +	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
+>>> +	struct device *parent = cxlmd->dev.parent;
+>>
+>> Two small nits:
+>>
+>> 1. Maybe just use endpoint->uport_dev.parent directly and drop the cxlmd part? It's less
+>> readable, but it's future proofing for when/if CXL.cache devices come along.
+>>
+>> 2. I don't think you need to rename the port parameter if you change the name to endpoint. It's
+>> self-explanatory at that point and cuts down on the diff.
+> 
+> I asked for that change. Since we are making changes on that line already, may as well make it explicit for readability. Or at least satisfies my OCD :)
+> 
+> DJ
+> 
+
+Ahh ok, then that's fine with me.
+
+Thanks,
+Ben
