@@ -1,112 +1,112 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793836505;
-	b=QGJyP3lrZI02wBGRkm488yWKv8vielRr5rQ4JxJbF5yj1GkOHXgpaq269bFQ1p2G5oe8
-	 qVwE/95j8LHUV/mjxWfOOzguwnExb8kH89gf7M+7i26EsJC6RQSAFMrOUzVUgxfnW+pdL
-	 xXq2g0szHQ7/YaXxDTZs3V9RVaqRk24ALmMF0rPO48CJKx3HBtVIAl79TArDLogdOGTO8
-	 xrkS/efbyy3nfhjsoE9uO1P/AOY4A6KmdMZIpb7zR2qkr9kTqWQ4mAhme5+IGnqXcS4uL
-	 y7XJUw0AyyI87NExrl/aVZ6nAUXtToDmLt+2yjk8AoFgQWQRXu65IQwJhBQD6TXicnQ==
+	t=1793836512;
+	b=x4L3GKKP/EJZAvBKSndVnK4zAsbEgnPh1kKp/3n1b1GycEoyfOEKSqstB9CLDahNrt7l
+	 XQGxw3PkGMveMtKB3riyMpuuNhlIpiib2UP/6Q4GlGviQB4l3h0C5HEYHfP5EffFHzlAk
+	 yqlJfAe1dtGmKKRrp1c+dEMrvgnaVV8j5MCpQINYGmjuTcPiUJsFShptZwQzGRw5fdL7Z
+	 jo671JCq4tmSRZQb4PfWNGDZ2SITIe8YR64UCMzrnelVumIoXU0xvv/7ytL+xsHW1JSqM
+	 TuYB+pJUmuVa68l6OrYCCRwUT7MkNPTWbK5/8cakKBQQkSrh84MYJR/KbwXJO5KInUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793836505;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793836512;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
 	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
 	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
 	 Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
 	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=yYM7ejxsK/WekSQzcvpWlw+4AYB+YcCjwMSG/SOGOJk=;
-	b=yKxhbtiF0sEFrtwuWtxsNGJt8dFGJsuGHnq/LuJ3u4oEn8XN0dxMQr30PMAidz1cQ5LB
-	 7Lzn21JuO7gAugQG6Is+4Fq99ywp7JErNQB02wDGYPXJ2JVGMfEXkaGjVvk0R6NTTtbPv
-	 NpTYmbrgtfvGLjGUM1reQ2VCPimUoInZoT/2OZAkuw6OMDWWTWNgf7KTxWejIF24BlQd5
-	 VBV3PgT/Hk5Xt3zQHxgzswLyT5mxLzFLgBlwIgHXX6yQCNkW0grLDGHJtSkV5c89VBKe2
-	 FwHFVHyJSm7ZRkCh6cAWlpjODA8/j8GHd9nKeBF0vdDEUhbdiPIDHCImEdcAifETXTg==
+	bh=Pdqghi/Hsjfp283ilYdqjHRoyabbxkVpexYmZMhDhdY=;
+	b=fcpXtDq3XudA/c4K2xrMD0F39BcOnLVwkwaFWqailHwt5u7bzri88O9NbIOqiRevGVho
+	 7Qax17PriicOoWCoimJxDjqF26roH6EjkJFDnTXOaQJRt7XbOhWjfwdJ8hRFmhIf/1twJ
+	 c99gWNE27eXPj7WC27h54B7KRBe7jpO6y18qOTS6DJacwfqbStM+KGBRWVq9rpTMCbInA
+	 ol4rr3sVYxm/oVH3KE/fqWATGxbZcriSeSigLzKO6/6VVRMQtzVvdKkQVi8HYIuE+1n2v
+	 qJXnIYLgNfHqUp5QNnDZFIZNc18EWLB4xH8WtAK/JI3AgyUup+51W4x/QhCRrDCs9aQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=shazbot.org;
 	spf=pass smtp.mailfrom=shazbot.org;
-	dkim=pass header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b="CechH/Am";
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=jm9pkgSM;
+	dkim=pass header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=zNTmUdCu;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=Ufnaj8A1;
 	arc=none smtp.remote-ip=103.168.172.147
 Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293FE606A328
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 23:55:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 293FE606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6299A606D836
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 23:55:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6299A606D836
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=CechH/Am;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=jm9pkgSM
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 56D62EC0184
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 18:55:02 -0500 (EST)
+	dkim=pass (2048-bit key, unprotected) header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=zNTmUdCu;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=Ufnaj8A1
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id CA562EC0192
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 18:55:10 -0500 (EST)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Wed, 04 Nov 2026 18:55:02 -0500
+  by phl-compute-04.internal (MEProxy); Wed, 04 Nov 2026 18:55:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1793836501;
-	 x=1793922901; bh=yYM7ejxsK/WekSQzcvpWlw+4AYB+YcCjwMSG/SOGOJk=; b=
-	CechH/Am7FoRjL0s4MQIPtlPmsahLDjvlrMmgnylMpORnFSGFm6QBvmBxtPZySgG
-	5g3vuQnca2BTHdxRX8WoP9uNMWrIbYxB/NfSDq0XV1CvS/xGPKIbKuHojZ3liuUN
-	R8aY98SsIC6L1mVzG5ARFqyso80Wc6TGxMD2htqBEhcmmT7U8m+8fQVTliwO86kU
-	io5IqQeLsSJ53PTeikCmC9VHMjOUS0MHkXD474uVP4WwsxUkFfhlofA/flVPpTAL
-	UrsM/CkecqPBuTL9xF6jBoTx15g4kkGaHWBJ0+3h+YXHUvzhSuH7fqsrlQ+Jr6VB
-	4O3QofpFDFInoL3VCKAsLg==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1793836510;
+	 x=1793922910; bh=Pdqghi/Hsjfp283ilYdqjHRoyabbxkVpexYmZMhDhdY=; b=
+	zNTmUdCuAzk5AH1ke3y7LGl+N1DTeLpQMr/u8xf87XC5JgWRH2jrv6vPyS02EzSG
+	TjOh6VqG7cClyiYcelrMEBFPQ3tKh7o8S/YwRt7nArclLQYDQhLpCn+F9H+xItsG
+	xbuSC+gCcu3v6yy087hbnzbs+qCy5mCcg9D4Z97d6WYh1IZEh07vowqZw2nbi8uZ
+	HVSNqwqz5w93SYpaxODXk4gRTX/H+Bitr+jWxLKHhNSI6BRsbBJs/tXyATRyo+xK
+	335XGkA8u2hhhFjy0ooMc/M8aRn1Hf7xQgC1yzjRC+q7cO/lDxBGbHgHMOVDL8P+
+	feiOG2I1Am+zY6yINYsHkg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1793836501; x=
-	1793922901; bh=yYM7ejxsK/WekSQzcvpWlw+4AYB+YcCjwMSG/SOGOJk=; b=j
-	m9pkgSMCZAnwJ7WUUj3QPVLCsZhrNGwDk4+KboSBhan/8J3/0DGcQ82IEvFqyahD
-	qzOWhrOodXPyl/+42BtfTyrzxqsPG87R80gVMeoWEr8hOfMqYFl/l0tWrJdUy27T
-	hqzW3rwIV/eR42qnCB1/CMZ8YXrG+rsoWqosDF07mPpyyMXedKoniqksHTzAl3bC
-	Y+F29UDYh4DKcrDcSoIYhBxBhnx3sQGfpy7tnlp60DLFKcX/8hAx5BDdgzxjHTgU
-	g2tGRzxO0AQJF4xeLWkQv46DMEdlbsREaxWD29uuGDHySPgN8+qGxmU8puHFmsjJ
-	bj/N2fQ7kQdqK8eXAlbrA==
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1793836510; x=
+	1793922910; bh=Pdqghi/Hsjfp283ilYdqjHRoyabbxkVpexYmZMhDhdY=; b=U
+	fnaj8A1hxajSrvbUY8A2oX+ObXUMht6Ai+C3HJ0N03hwNHbZHsB5FuFbOdgbR+p+
+	Vthhe3er1YtgFB+nU+mRbaU8VFnShOo7MJhX/5HT5USmSPcTPL+GasKDxxjPOQXg
+	rA/xDrsvOHOWdDENwQBPnwq3+HoERwQnU8SXpIJXa9vD+6eOXVPgfApTrNnmgROZ
+	nESjDsaGIDBf8lhAU3HS+4rx8CHgNZqu42NfVtxhqd5FaZHPuqRi1USHt43P/EbT
+	Zzl5mdXhOqLOn8Yi0GJONzhBWGtj3+At9IUflbkzjnsouC5ThhrAkr04g940zNw0
+	HM0/6OuyW8lXY/USvOVRQ==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
 	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
 	action=sign d=shazbot.org a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1793836501; d=shazbot.org;
+DKIM2-Signature: i=1; m=1; t=1793836510; d=shazbot.org;
 	mf=PGFsZXhAc2hhemJvdC5vcmc+;
 	rt=PGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:UE5swMMV3S+il4WkzeWmuKH1t/HeeRzmfu7pf6dhFAVkQIg
-	PlBJgaJeXQvbYaEONcK2UAYJX0wc+WHGK2VniUXSiQ2+NzQdCsy/JPc9ezsqAiUf
-	Nk71UKFcmZO3aOcVoelGwnf8S1I37J1I45SK7v+XurIM71rGmRhr6nyX6FHN3VdV
-	pee5x2NBdq+jqXF0+5H1XSyLckN5I98ucKgCm0Q1ha8M+jBoAJHWg3wHsXHqB8BM
-	fISf6JruP5FX08dWNi/vNGzmYMWSEflj/7YKOC+FJhPd9vK4e8Ot5sQLh66rgUQh
-	6E/XBWpL/lspui/VEwbmgGqh7wQ2kjB/A24Xyyg==;
+	s=fm2:rsa-sha256:OQG8ijjYa7NOJSi386jqGOGjdJ5YHCz3XANZCZ85gLnwZMV
+	y2674K8So5aducUiNjLtA+uyoAvw9EESjY14Ms4Z8BSRWK+IERZuXOWo2BQY1WaF
+	OnXe4xozv7GfDSVyvemKQeqvp69FPy9KWGSwD/y2Wd2hl7z2J1tvlfH2hlngFDg2
+	QBbATe0UwIx3Si0OHZCYA0ZdtC6l1NoTJHzUUZ8v+Be2E2Nadd3pY88eEcMJRqS6
+	8jODuXDfU3NoyfwlwDlDlcFwtOWv1qlnUJQhww6XDeiRMfz5yrbwApwV3UoXu0AH
+	Vl7b1tctHBQkwYRa+H+sJ+eU3bp2tJaXKAKWNZg==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
 	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
 	action=mi-m=1; hc=12;
 	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
 	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:XZas14fJoJ1GP6E/uNaTPdeSvxw2wWI9h3CPHCvWWR8=:glQ7Lw/gMt67x2C7GFcaTEl3b0L1F8vJEOkBxaYyLpI=;
-X-ME-Sender: <xms:1cXrarJrMFrUU34H3NjrnCkJMQ94i5U7a1IsV8BqNGbV7vu8OTCZJQ>
-    <xme:1cXrap9YsFpu6Ce5a92UyAUpRWUwmwiVfI3UTadwdBiuOh0yfbp_KFZnPPERorxgJ
-    V7PjR1EQppOyGt8tO-dZQm6RTs95vgoFp8lYMwDaWQGeKaS52AOeA>
-X-ME-Received: <xmr:1cXrah9icHMuvkOp3VTQmbl3dpPlFAMRufuMA59CUB2XuwY7PokrZchNmSc6Tw>
-X-ME-Proxy-Cause: dmFkZTFQmWAuqahbE0pU7ZTuuJsHZIRhSQMEWivxEPlFlpH9LDKL3f0KHYwWm3kkDEpyFe
-    KrIpKhUJTT2veHkpGFwVlM0pHfrWR0W9oVTzRZOZhTl7xOES5AScVhzhYSfOhTXEQpAvcc
-    qFWu/7yePZhpK3pLZNTeU21i45lZxc6ABrLUppX5Dl0BPjv1g4FHppts7mHirAQjCqicuS
-    1dSg04ZjaiY87o4eBXyi9RkMV3jelgo6DKAvjm0R8Yo7AWD2LTJTSUYXEHvlVEvxPj+q5E
-    aAtjYzpXQH3pIzygvZV8igknQwVvYdr2BJKiGXvDF2ux0t+g2WGM8+h4kCcKHaf+nBzbBp
-    4/bOPxUPQElsv129anOgUcprtNLOzbjljvlRWdj1SZ6RIVbkePH9msVAyM/X4759JoSnDq
-    VuXRlqNBxGBUDSTsroAze7586O3OB+eCBIcMbd+pCw97RgW9KgsgzCptPM9zvavG3hefzy
-    RhCim3U3NDJKn4zTq/tIHljflyZnOfslnwspXio0gARRk0kom6S+44nEV/4IsBuy1ctDyW
-    Nv5iz1bSWzUfqAUAJwfmZ/PD3YH6p01llbA7O/uH2YKHRSd4bJGpQTvkKWcu0Dpa6Euwup
-    m2uq4Xt7a05KzPJjLb/NfPnWhz2RA88B1oklFS/+7VxfxWtiZmvty74OMOQg
-X-ME-Proxy: <xmx:1cXraj9ZfX8n_0WBfKQGhRpa41x7B03iiq2kK7TzmD1Sd3tJ-SfhXw>
-    <xmx:1cXrasIaMbJSxUWqY6u-zb67BIGbMGM1HvlDUCwKcfN-aB3fEAUNdQ>
-    <xmx:1cXraoT7qO4xVFDOm-ECa2kTLKUEElip1_31VYLYKloVfXyzBESYXg>
-    <xmx:1cXral_L8II1rVgDAJeThLDDOs3Wu8-c2Hnrs5jN-YvGPF2HTNoIrQ>
-    <xmx:1cXravI-7dLaK3o5ritzLvtvUHF_8HQOjVFfBcYTyA2jpcJNFHZstyoZ>
+Message-Instance: m=1; h=sha256:VdutSf7WooPCXQoXuer3NdVF7PRKt9A3AUJb+IYX6+A=:aI+WDWM7VeqR9QslZ0VneK6Aaji8eaR6RRm+IM960l0=;
+X-ME-Sender: <xms:3sXraljwBuwtxddo3nsGkrat8opKZCafFzWsPMbRGUMp4MRsfIJ_qg>
+    <xme:3sXranogo-nu0JiMbtwGoq0-bSw3fy_L8szc1R7s7qSXbY2XSFnoPnVS1qT-eK_kT
+    z72bawSLWYjySlTW-cibzrWBOxpTHxadxzxWQkUMhzah7nc9CDxNA>
+X-ME-Received: <xmr:3sXrascBU5X-09wGXRUA00I5P8K_kqDn8hfA4rn-B8u_2mRv9fWDdRtAGoYhvw>
+X-ME-Proxy-Cause: dmFkZTFU/kbVOsWxOTPcCpe6x61hsj1WNmmGso+RiYOPL9PXBn0IITeBo+AW6SFW+G4ekC
+    /hzYoF162vC7PC2Mtt2USNZ/eCRzPfnSvLH4GpnZYykCQlv/g/2dfaxUihNQ2PdVnmznVt
+    eyzTFpFT8ROSV9PpSF+vkXBd8GjUZhM6/FJB6rHUdJL+IEmDIn9qqg8D9AaoFAEgqB3zaI
+    LQuuKEKLXGp7sIkYnu8IYt8f4dndp/+v360R0jn1bNCYEbWntuZR9TDLjZCVdVdTAj6SKy
+    IHj9Y41QEBh5Iv1k5SCIJDAY7TVRfrnmdQbz1lqnEzzeOazcj9kVYNjTrGiFbntAEPcYeX
+    6duqXQYi5Z8CokUmEWQafV1IgET6f9oJp+QFwdgPjBBgCgRoJ4AV/DRQRgalnKr+BsByEz
+    /oKjQp5wiHN1ScigJptBQqxSxfjsV1jDxVD1bhdL/AJW6pOhCSAJguUUe0nkjjedWRl0wJ
+    8Xpkd6qDRdwuTERhd+l0OX8pCNESHKdyubF6uKNGkPA9BrqlL/XFzTubjohZfboFoN8fHk
+    79s3SnJfsAdhqlx+phocTufsnxRzhPs1GZXC6Iqepa0k1rXC7Otgax+JErgsPM2zEVXZa6
+    blG+jDSbqiAzg3aaVPRZ4c/Nf+e8obJX4YznqSqvg/W2LcPK8JxetNG8viUA
+X-ME-Proxy: <xmx:3sXraidYjC9trw5wmjcwZO52-1vRZrPNe6SnEmRmEz7CU6-leQjDPA>
+    <xmx:3sXraqdK0HUpsznAdzSDrgt2KM2IzElSJxsSgWGUVBwE2yVTo1mlhw>
+    <xmx:3sXragpURdT_NlceXMsSpRdNqyPURoOuAjEHljqG6PzFGLzpvZcp2g>
+    <xmx:3sXraiwPHNtAOKkEsXjbwaAWrHaRQCNlr3XnmwuHARmuwbNg1s1WfA>
+    <xmx:3sXratpWb8U5dEbr0JES6lSyTJPdfiEfUY-6tqoasHSZtKaZwNOXJhr3>
 Feedback-ID: i03f14258:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 4 Nov 2026 18:54:58 -0500 (EST)
-Date: Wed, 4 Nov 2026 16:52:56 -0700
+ 4 Nov 2026 18:55:08 -0500 (EST)
+Date: Wed, 4 Nov 2026 16:52:47 -0700
 From: Alex Williamson <alex@shazbot.org>
 To: <mhonap@nvidia.com>
 Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
@@ -122,12 +122,12 @@ Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
  <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
  alex@shazbot.org
-Subject: Re: [PATCH v6 03/31] cxl: Move component register defines to
- uapi/cxl/cxl_regs.h
-Message-ID: <20261104165256.09860477@shazbot.org>
-In-Reply-To: <20261016161839.2765592-4-mhonap@nvidia.com>
+Subject: Re: [PATCH v6 15/31] vfio/pci: Route every reset point through a
+ try-reset helper
+Message-ID: <20261104165247.2597f574@shazbot.org>
+In-Reply-To: <20261016161839.2765592-16-mhonap@nvidia.com>
 References: <20261016161839.2765592-1-mhonap@nvidia.com>
-	<20261016161839.2765592-4-mhonap@nvidia.com>
+	<20261016161839.2765592-16-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -141,37 +141,264 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Oct 2026 21:48:10 +0530
+On Fri, 16 Oct 2026 21:48:22 +0530
 <mhonap@nvidia.com> wrote:
-> diff --git a/include/uapi/cxl/cxl_regs.h b/include/uapi/cxl/cxl_regs.h
-> new file mode 100644
-> index 000000000000..276f9361c840
-> --- /dev/null
-> +++ b/include/uapi/cxl/cxl_regs.h
-> @@ -0,0 +1,56 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
-> +
-> +#ifndef _UAPI_CXL_REGS_H_
-> +#define _UAPI_CXL_REGS_H_
-> +
-> +#include <linux/bits.h>
-> +#include <linux/const.h>
-> +
-> +/* CXL r4.0 sec 8.2.3 Component Register Layout and Definition */
-> +#define CXL_COMPONENT_REG_BLOCK_SIZE 0x10000
-> +
-> +/* CXL r4.0 sec 8.2.4 CXL.cache and CXL.mem Registers */
-> +#define CXL_CM_OFFSET 0x1000
-> +#define CXL_CM_CAP_HDR_OFFSET 0x0
-> +#define   CXL_CM_CAP_HDR_ID_MASK __GENMASK(15, 0)
 
-A local sashiko review asks if this new uapi header should include
-asm/bitsperlong.h since __GENMASK requires __BITS_PER_LONG.  We include
-the other two header dependencies, but not this one, so it's a bit
-self-inconsistent.
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> A provider such as vfio-cxl must reset its device itself: a CXL Type-2
+> function must not take an FLR, and its reset changes what the provider
+> lets the fault path map. vfio-pci-core resets a function at five points:
+> enable, close, VFIO_DEVICE_RESET, a virtualized PCIe or AF FLR, and the
+> guest's CXL Reset doorbell in the virtualized CXL DVSEC.
 
-BTW, current guidance on the Assisted-by tag: 1e035297ffda ("docs:
-remove Assisted-by references").  Thanks,
+What substantiates the claim that a type-2 device must not take an FLR?
+
+Here we're promoting all resets to a CXL reset, but a CXL reset and an
+FLR have different scopes.  FLR is exposed to the user through config
+space.  A user might reasonably expect an FLR scoped reset through the
+PCIe/AF capabilities.  The CXL spec defines FLR vs CXL reset, so this
+actually makes the device non CXL compliant through vfio-pci.  This is
+a massive policy imposition.
+
+What makes this necessary?
+ 
+> Add a mandatory reset op to the provider ops, and refuse to register ops
+> without it. Add vfio_pci_try_reset_function(), which keeps the trylock
+> of pci_try_reset_function(): it returns -EAGAIN when the device lock is
+> contended, and otherwise runs the provider's reset with the device lock
+> and memory_lock held. The close path keeps its bridge and device trylock
+> and calls a locked variant. vfio_pci_try_reset_function() saves the PCI
+> state first, as pci_try_reset_function() does, for the provider's reset
+> to restore. The locked variant does not save: on close the reset must
+> restore the open-time state that vfio_pci_core_disable() has just
+> loaded. A failed save is returned and the reset is not attempted.
+> 
+> The enable path still fails only on -EAGAIN. A provider checks at bind
+> that it can reset the device, so reset_works is set for a provider
+> device whatever the result of the first reset.
+> 
+> The CXL Reset doorbell now runs the reset and reports its result in
+> Status2: Reset Error on failure, Reset Done on success.
+> 
+> Suggested-by: Alex Williamson <alex@shazbot.org>
+> Assisted-by: LLM
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_config.c | 19 ++++++--
+>  drivers/vfio/pci/vfio_pci_core.c   | 71 ++++++++++++++++++++++++++++--
+>  drivers/vfio/pci/vfio_pci_priv.h   |  1 +
+>  include/linux/vfio_pci_core.h      |  7 +++
+>  4 files changed, 90 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 1fc463540211..6fbece95cb9f 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -910,7 +910,7 @@ static int vfio_exp_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  			vfio_pci_dma_buf_move(vdev, true);
+> -			pci_try_reset_function(vdev->pdev);
+> +			vfio_pci_try_reset_function(vdev);
+>  			if (__vfio_pci_memory_enabled(vdev))
+>  				vfio_pci_dma_buf_move(vdev, false);
+>  			up_write(&vdev->memory_lock);
+> @@ -995,7 +995,7 @@ static int vfio_af_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  			vfio_pci_dma_buf_move(vdev, true);
+> -			pci_try_reset_function(vdev->pdev);
+> +			vfio_pci_try_reset_function(vdev);
+>  			if (__vfio_pci_memory_enabled(vdev))
+>  				vfio_pci_dma_buf_move(vdev, false);
+>  			up_write(&vdev->memory_lock);
+> @@ -1786,9 +1786,20 @@ static int vfio_cxl_dvsec_write(struct vfio_pci_core_device *vdev, int pos,
+>  	if (!(ctrl2 & PCI_DVSEC_CXL_DISABLE_CACHING))
+>  		status2 &= ~PCI_DVSEC_CXL_CACHE_INV;
+>  	if (ctrl2 & PCI_DVSEC_CXL_INIT_CXL_RST) {
+> +		int ret;
+> +
+>  		ctrl2 &= ~PCI_DVSEC_CXL_INIT_CXL_RST;
+> -		status2 &= ~PCI_DVSEC_CXL_RST_ERR;
+> -		status2 |= PCI_DVSEC_CXL_RST_DONE;
+> +
+> +		/* Run the real reset here and report its result in Status2. */
+> +		vfio_pci_zap_and_down_write_memory_lock(vdev);
+> +		vfio_pci_dma_buf_move(vdev, true);
+> +		ret = vfio_pci_try_reset_function(vdev);
+> +		if (__vfio_pci_memory_enabled(vdev))
+> +			vfio_pci_dma_buf_move(vdev, false);
+> +		up_write(&vdev->memory_lock);
+> +
+> +		status2 &= ~(PCI_DVSEC_CXL_RST_DONE | PCI_DVSEC_CXL_RST_ERR);
+> +		status2 |= ret ? PCI_DVSEC_CXL_RST_ERR : PCI_DVSEC_CXL_RST_DONE;
+>  	}
+>  
+>  	*pctrl2 = cpu_to_le16(ctrl2);
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 1e0ac28b7564..6676c561465b 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -605,6 +605,62 @@ static void vfio_pci_core_unmap_bars(struct vfio_pci_core_device *vdev)
+>  	}
+>  }
+>  
+> +/**
+> + * vfio_pci_try_reset_function() - reset the function without blocking
+> + * @vdev: vfio PCI device, with memory_lock held for write
+> + *
+> + * Reset through the PCI core, or let the provider reset a device it serves.
+> + * The provider resets the device with its PCI device lock held, so take that
+> + * lock here, without waiting, as pci_try_reset_function() does.
+> + *
+> + * Return: 0 on success, -EAGAIN when the device lock is contended, or the
+> + * reset error. For a provider device a failed pci_save_state() is also
+> + * returned, and the reset is not attempted: unlike pci_try_reset_function(),
+> + * the provider's reset needs a valid saved state to restore.
+> + */
+> +int vfio_pci_try_reset_function(struct vfio_pci_core_device *vdev)
+> +{
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	int ret;
+> +
+> +	lockdep_assert_held_write(&vdev->memory_lock);
+> +
+> +	if (!vdev->cxl_ops)
+> +		return pci_try_reset_function(pdev);
+> +
+> +	if (!pci_dev_trylock(pdev))
+> +		return -EAGAIN;
+> +
+> +	/*
+> +	 * The provider restores PCI state from the saved copy, so save the
+> +	 * current state first, as pci_try_reset_function() does. The locked
+> +	 * variant on the close path must not: it resets with the state that
+> +	 * vfio_pci_core_disable() has just loaded.
+> +	 */
+> +	ret = pci_save_state(pdev);
+> +	if (!ret)
+> +		ret = vdev->cxl_ops->reset(vdev);
+> +	pci_dev_unlock(pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * As vfio_pci_try_reset_function(), for a caller that holds the device lock.
+> + * Only the close path calls this. It takes memory_lock with the device lock
+> + * held, so user config access is blocked meanwhile: the order a sysfs reset
+> + * uses. That cannot deadlock against a PCI_COMMAND write holding memory_lock
+> + * because no user remains at close.
+
+Please tell the AI not to add any comments, these are difficult to
+parse and often unnecessary.  If there are specific locking
+requirements for this function, they should be annotated.  If this
+function cannot be annotated, and it not general, even within a static
+context, maybe it shouldn't be a separate function.
+
+> + */
+> +static int vfio_pci_reset_function_locked(struct vfio_pci_core_device *vdev)
+> +{
+> +	if (!vdev->cxl_ops)
+> +		return __pci_reset_function_locked(vdev->pdev);
+> +
+> +	guard(rwsem_write)(&vdev->memory_lock);
+> +	return vdev->cxl_ops->reset(vdev);
+> +}
+> +
+>  static void vfio_pci_core_free_dev_regions(struct vfio_pci_core_device *vdev)
+>  {
+>  	for (int i = 0; i < vdev->num_regions; i++)
+> @@ -636,11 +692,14 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  		goto out_power;
+>  
+>  	/* If reset fails because of the device lock, fail this path entirely */
+> -	ret = pci_try_reset_function(pdev);
+> +	down_write(&vdev->memory_lock);
+> +	ret = vfio_pci_try_reset_function(vdev);
+> +	up_write(&vdev->memory_lock);
+>  	if (ret == -EAGAIN)
+>  		goto out_disable_device;
+>  
+> -	vdev->reset_works = !ret;
+> +	/* A provider checks at bind that it can reset the device. */
+> +	vdev->reset_works = vdev->cxl_ops || !ret;
+
+I suppose, but why is ret not still a valid indicator?
+
+>  	pci_save_state(pdev);
+>  	vdev->pci_saved_state = pci_store_saved_state(pdev);
+>  	if (!vdev->pci_saved_state)
+> @@ -846,7 +905,7 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+>  		if (bridge && !pci_dev_trylock(bridge))
+>  			goto out_restore_state;
+>  		if (pci_dev_trylock(pdev)) {
+> -			if (!__pci_reset_function_locked(pdev))
+> +			if (!vfio_pci_reset_function_locked(vdev))
+>  				vdev->needs_reset = false;
+>  			pci_dev_unlock(pdev);
+>  		}
+> @@ -1541,7 +1600,7 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
+>  	vfio_pci_set_power_state(vdev, PCI_D0);
+>  
+>  	vfio_pci_dma_buf_move(vdev, true);
+> -	ret = pci_try_reset_function(vdev->pdev);
+> +	ret = vfio_pci_try_reset_function(vdev);
+>  	if (__vfio_pci_memory_enabled(vdev))
+>  		vfio_pci_dma_buf_move(vdev, false);
+>  	up_write(&vdev->memory_lock);
+> @@ -2397,6 +2456,10 @@ int vfio_pci_core_register_cxl_ops(const struct vfio_cxl_ops *ops)
+>  {
+>  	guard(rwsem_write)(&vfio_pci_cxl_ops_rwsem);
+>  
+> +	/* vfio-pci-core never resets a provider's device by itself. */
+
+What a bizarre comment.  Relevance?
+
+> +	if (!ops->reset)
+> +		return -EINVAL;
+> +
+>  	if (vfio_pci_cxl_ops)
+>  		return -EBUSY;
+>  
+> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+> index 09a68c99b43c..dbede6e24fa9 100644
+> --- a/drivers/vfio/pci/vfio_pci_priv.h
+> +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> @@ -80,6 +80,7 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev,
+>  			     pci_power_t state);
+>  
+>  void vfio_pci_zap_and_down_write_memory_lock(struct vfio_pci_core_device *vdev);
+> +int vfio_pci_try_reset_function(struct vfio_pci_core_device *vdev);
+>  u16 vfio_pci_memory_lock_and_enable(struct vfio_pci_core_device *vdev);
+>  void vfio_pci_memory_unlock_and_restore(struct vfio_pci_core_device *vdev,
+>  					u16 cmd);
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index 991a3fcd84eb..cb9ba92b696a 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -87,6 +87,13 @@ struct vfio_cxl_ops {
+>  	 */
+>  	void	(*reset_prepare)(struct vfio_pci_core_device *vdev);
+>  	int	(*reset_done)(struct vfio_pci_core_device *vdev);
+> +	/*
+> +	 * Reset the function in place of the PCI core; mandatory. Called with
+> +	 * the PCI device lock and memory_lock (for write) held. The caller
+> +	 * provides the saved PCI state the reset restores: the try-reset path
+> +	 * saves it first, the close path keeps the open-time copy.
+> +	 */
+
+Reads like more AI generated comments.  These things like to talk,
+please curb them.  Look at vfio_device_ops for an example how to
+briefly and concisely document callback ops like a human.  Thanks,
 
 Alex
+
+PS - I'm still working on the remainder of the series.
+
+> +	int	(*reset)(struct vfio_pci_core_device *vdev);
+>  	/* Pinned per bound CXL device so vfio-cxl cannot unload under usage */
+>  	struct module *owner;
+>  };
+
