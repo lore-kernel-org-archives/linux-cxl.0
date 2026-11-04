@@ -1,94 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.50
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793801303;
-	b=AlwKAo25Kb9F44o2QDp4i7Ozmcmpe14gXsEjk7Of9uG6PitvEIxy7ctlL0pHcP9/6UOg
-	 zcO0SvB8kjXh+Pis/XJ+YfFs9QzTf6FPNMkigyyb78skwvunAuo1G0BpL5nDRS3kHiHfy
-	 de1H4WnDrpwAlL458Umt5XhUezak3TxRfUZWWbMzL48ai5877aAUyDR8Gu4W0UqjOOHOk
-	 U/PboQUfaVj2DuJ8ZOS1Ir6EpxibOE9qI3zzc+VwgHx15Fjli991Qg+/Q1cG6iuHQ64nD
-	 iYIlHefljLRPlLMIoksHMqJLlHHzzG//GMADYs1gVwVHTj0I5b9G7/zZ/cwW1OWXW2A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793801303;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
-	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
-	b=0yGZkzuwvJwWIoRLDROfpTKo5Wktc5mklCBBEOHz6FALgJA3HVkZsBjmDJqMblIgV8+B
-	 zEpnqg6iTX56FdppIFcl63KTDNirGUtS7egn/p0lX3c7DXKRffh034EyCU6RRK6ntBfLy
-	 pmsIUjC+9/eG4kS2uBd0IVXE6g8aBFaDfSSTDGiwHY3HLagv7L9ENzgQP0r5TyeLZ/0gh
-	 GwsqNyJrh4JBSHEVaZBWDuJUxr6oAtjrjgsZskvqbxGcX0OL4D8RHJDouRvNp4Hc5EJFE
-	 FbGpRL4Vwx+7ucty31vaUV43qVqbp35FSBgEgXSWRnJNyByx3pzW2qWIIm6CDfNFWGA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=VfoSStn0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.50
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010050.outbound.protection.outlook.com [52.101.46.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.248
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793805376;
+	b=qYMFmKi9peyMH9wj1MDNZbuXG3zwJ3r2soNLfnRE9EAIkjfGLp6xRhyOa715cn8AXXB6
+	 Y6N8O8qEthHC32UNDXGU7Q0lqIUKVrB2q5brNVWVhKeZjQUeHSIr+3qxrXUv1g3EGF3h2
+	 aCCuPozRJQj0rvzdLU42fV0J8MeOGKA2ZY3ZMx8mwCFTJJxxUpFJgo9JQQjUszGm8xcjJ
+	 URWaCnNAi59/WbPB7QGov31Jae3W4Of+zRRF+nvI4ur7h2XCwjIpN8WXkvTVFA1F2Eh6J
+	 BnI84qnVWzhN9bO9BTzyPQWE9cnMOezjBHfwyAUvjuIa1lDBPJKTiq927dMnhoWsufQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793805376;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=2QP5qMLgCjzR3Vq+1R7yHnSJoapXAZoBlu3K14T4Qag=;
+	b=LN4iVNaGFqy0/+t7DYtHWH9/FOxMtsWdwaIK2WZCXra8D26UYj7WqXvCRkWW/TAVGlPn
+	 ArFNDDtZ0qaxR6M/6dx3hjRM5u12LTmg7zyVVo4d29y1346i2oqgf6/CpZPsBJEO/UE/g
+	 PPQlZcZO46dSZUBMp3EIwK2rs7AYRxgxE4xiPbGXInakAoUCvTbN0w6xhMCMAS2KmwKC4
+	 okqYtB1tMGLynG6TykiS9XKj17JIjRGYshhTsS4UQhSVNZvD+Fz7jbORs6aF28NyYzZIW
+	 k39Duh5pgnoPivHp8MNEPRtZyLZ3q19OdYKpA4kbpe4whO9/BfS1lM7uw5Bq02ncaIA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	arc=none smtp.remote-ip=91.218.175.248
+Received: from mta0.migadu.com (out-248.mta0.migadu.com [91.218.175.248])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF13606A339;
-	Wed,  4 Nov 2026 14:08:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BF13606A339
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=VfoSStn0
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzGXaqFcEKB/QhB6o8nLCKfksDDVBujPtBL9/aS/d8C+dkUcM3ZagtBcaT5S4LzR0VjrbynXoZ5u2MOBCv/piTGJS/ARl+pvw4sq/5T1pUiTJmnvmR2jwGmxKlLpXz5LUlsvB+bWMdwEOq66Ie1J6WIP4Bd0D9rGg+2wDgYwAHjJNTbTB/6zcZofDSxA4myzs1tiE6REKpTVUo8Q3aX7et3WZrRGRPSpI4+jUxOeJrQPCMhqzIYppQXDJLdTdC2cDQwJtijt68DFuwbTIVPg79YU04feIITAcxgWdwxoAEn1/374C/Q4GQxmHpVNJbDndVUeiqL0UyK48+feCBZ2Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
- b=QiiIti83YzbHFdOARkXdZrNIorgPBNi81Wi6zlUBgc/v2XR76jSsbcdPYRZn3LyA5ouGLD6iEKbBCxP5DWaWFOOqDPeCBw1m7bN1bWCNAj+DBTQ3XmFNuFn3uxK6VVwL9xkjDP7DoO54GlvEKCBW9H5XsXZfdqxuUJPrr/HFsopkMB5T5/yTAqUfqYEJ6tqdDBwpSXhAJyCAC/ZMjEf4+7e6IvgnRlryUfuUbhcAUX9MldS+fK6UvQ+N5Lz1nqrqw3p2NmxXnSdNWqPa2HhDnqfOCwpzo7b6FSnDn4IgBlqaYjGepZ/iN3OFdCHqKlfb36zaVWD2X4e19pHT405bdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1G5WcUYOumMJ48iLn6ocelyeXBMci9yoLL2bozJbBhk=;
- b=VfoSStn09D1LyGijG7GRCVf9hiO1gZmO4G/dxnoh5BKl9xaw+1s2FrDxKFyi3G9ogCXXPwQtMgAx7wUF0E6iSVHVo+SwHRsdCSPbePbC9BbCSR0m2ZXTn4Ft63ZenJN6y0DU/Sz6hIazIE/onO4T4uOLLwzMoqGq0ILCxpcqtMM=
-Received: from BL1P221CA0025.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::13)
- by DM4PR12MB6061.namprd12.prod.outlook.com (2603:10b6:8:b3::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.592.8; Wed, 4 Nov 2026 14:08:17 +0000
-Received: from IA0PEPF00000040.namprd04.prod.outlook.com
- (2603:10b6:208:2c5:cafe::42) by BL1P221CA0025.outlook.office365.com
- (2603:10b6:208:2c5::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.10 via Frontend Transport; Wed, 4
- Nov 2026 14:08:17 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- IA0PEPF00000040.mail.protection.outlook.com (10.167.249.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.592.5 via Frontend Transport; Wed, 4 Nov 2026 14:08:17 +0000
-Received: from [192.168.86.113] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Wed, 4 Nov
- 2026 08:08:15 -0600
-Message-ID: <9535d4f1-d418-40d1-924d-df35f85a8e99@amd.com>
-Date: Wed, 4 Nov 2026 08:08:15 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119AB6082BE5
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Nov 2026 15:16:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 119AB6082BE5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linux-cxl@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=Y5MODlRDl3QiqtxOx5uVZzRjMa3zrlbQrFa1R/TJtnc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793805368; v=1; x=1794410168;
+ b=NwrHw1LpmsBIwswo5wKeYjRD/cJXqjYbwgfklMVriQ9oURLjlDTfl/zLggxdnvTYym/OnKq1
+ 0ax6B6z/14WfVvEc4TcGopfGKXxJiVbo00QdorFvXj0s8F/6G2IoPSpEn0xuxlFtmrdc2kI90p5
+ JXzmGZYYZB9EOGWk8F536pXA=
+X-Envelope-To: linux-cxl@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id b99bb3eec717c0ce;
+	Wed, 04 Nov 2026 15:16:07 +0000
+X-Mizu-Trace-ID: b99bb3eec717c0ce
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <bb136360-bbeb-41e2-9dc3-96d783e6dc81@linux.dev>
+Date: Wed, 4 Nov 2026 23:15:36 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -99,92 +56,47 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/port: Fix endpoint RAS error unmasking
-To: Dave Jiang <dave.jiang@intel.com>, Richard Cheng <icheng@nvidia.com>,
-	<dave@stgolabs.net>, <jic23@kernel.org>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>
-CC: <iweiny@kernel.org>, <ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kaihengf@nvidia.com>, <kobak@nvidia.com>,
-	<newtonl@nvidia.com>, <kristinc@nvidia.com>
-References: <20261103063409.18275-1-icheng@nvidia.com>
- <aaa772ba-554a-4bef-8910-e271580c2a5b@amd.com>
- <f1e51d7f-645b-490e-b67c-36732b6db644@intel.com>
+Subject: Re: [PATCH v3 43/47] mm/huge_memory: split huge PUDs when adjusting
+ VMA boundaries
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
+ qi.zheng@linux.dev, shakeel.butt@linux.dev, ljs@kernel.org,
+ kasong@tencent.com, baohua@kernel.org, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, baoquan.he@linux.dev,
+ baolin.wang@linux.alibaba.com, liam@infradead.org, vbabka@kernel.org,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org,
+ peterz@infradead.org, jannh@google.com, pfalcato@suse.de, hughd@google.com,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, willy@infradead.org,
+ jack@suse.cz, ziy@nvidia.com, riel@surriel.com, harry@kernel.org,
+ apopple@nvidia.com, nico.pache@linux.dev, ryan.roberts@arm.com,
+ dev.jain@arm.com, usama.arif@linux.dev, kas@kernel.org,
+ matthew.brost@intel.com, jhubbard@nvidia.com, peterx@redhat.com,
+ will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ osalvador@suse.de, minchan@kernel.org, muchun.song@linux.dev,
+ xu.xin@linux.dev, chengming.zhou@linux.dev, chrisl@kernel.org,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, youngjun.park@lge.com,
+ gourry@gourry.net, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+ ying.huang@linux.alibaba.com, jgg@ziepe.ca, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-cxl@vger.kernel.org, stable@vger.kernel.org, usama.anjum@arm.com
+References: <20261031-fixes_core-v3-43-d6437171ecc3@kernel.org>
+ <20261104031245.9524-1-lance.yang@linux.dev>
+ <45508a75-7549-40e2-a71a-807a824ea026@kernel.org>
 Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <f1e51d7f-645b-490e-b67c-36732b6db644@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <45508a75-7549-40e2-a71a-807a824ea026@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PEPF00000040:EE_|DM4PR12MB6061:EE_
-X-MS-Office365-Filtering-Correlation-Id: 048a8597-d01a-4ad3-58e9-08df3a7d132b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|23010399003|376014|7416014|10067099003|22082099003|18002099003|56012099006|4143699003|11063799006|261026121527099003;
-X-Microsoft-Antispam-Message-Info:
-	wP5QS7NLqSmzxQwEsGkqzUCvDZTHqJ7JGXEFsrdmZslZp1/fmdOWBw3zS01xgBDEF9TY+sj9rR9RNYYH7LZDYMAAOoZUwNxSHZf86Ke9G8e+aiGSlqyLRtE8dsO+Ts3xQEKDWtqnazMgnHejlq3iSwgPUGykjiP0Bd+NEHLRKxffb09glmR5T9B3yZjkmIhu+CA7vlqO0RT/UAFZDwE0y5XYbsv3bTVnc49e7B4aSmb7k7s3O127AK+YVTtphU0hzduUB2pxQfp4hRwCxdZltyc7ockCk9/VYm3uL2x5slMqlurs32dgS/aWinAj1W19/xgFPaghs7oK6R6Uw4KSeSz/SDoWdDV6LZx/VrzoWCMMms0ReQ0oPoR7jYIZEysGhXfXPF14ZcMeNtjSy+GHf0vQ/ako4MeX0ddF424iJ4gsI72NC8P/3pM/XBBYx3bIJY8FiqhFqLIFExTpE6qHQa3HvHo/XAWFlx6969kMzaioHqC6oLxF7Z0IzDYlecdAyYqBNhXLMGy3qfluLLfOlGEe4Fl35InfZNwYPtJUpr1TOe8a6WYy+KkRxPqFUtrh43Sbd9ywvUfCjhJDcaQ2C1FJkBQ5lWD7PhcDhsyrRSzu9ZOHGiuqy2Nd6pvJbl/9VdtJgyEHNkdXeb1hCmAOvfrsWH23NMEzbsfMCozqlqEVyntxOQQpSW09PcY2flyaDqz7rurXnKb8yRS5raXXaA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(23010399003)(376014)(7416014)(10067099003)(22082099003)(18002099003)(56012099006)(4143699003)(11063799006)(261026121527099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	KjKOMqMPSSJKWry8BekTT+OlplZWlHpeXUOjUbTyKKJqPUXYtQPvB3tzanJLq3+pI/VU7uO91K+Wxg9y3cD5CK33ZxmTZQZTM+v8qHU2kHg7577wFSKeZLGmwF9ixnPrDi6E7rTyo72z+fwiUJmX8lvCL9rvAexbsu0CmyJyPAaV8Hq2dKTDxDW9u0dSB7IHk86j3A2RxbTADlo6p69CwYipCg2Xi/XhuU+xJ3hXCgu6MtuG6coIqVwadcsw6R9HLObX8Nb4ud+4WF4IY5WE2x7H2H2k9sbVQhYjwe2vSCWuhUJD4nXuYsbsE1R4ep7QEfH6yCOwAkurr38emSmL0eSLk9OZtT5/ZjXil2CGNzlnRCpVCSXRa3UVprZXNGnL9EZBwsDx04uQKgzx9GexN5ztBepY/TEngNWvO9H1jC9kpaErE07pklfzsp1l+tHr
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 14:08:17.6383
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 048a8597-d01a-4ad3-58e9-08df3a7d132b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	IA0PEPF00000040.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6061
 
 
 
-On 11/3/2026 5:15 PM, Dave Jiang wrote:
+On 2026/11/4 17:11, David Hildenbrand (Arm) wrote:
 > 
-> 
-> On 11/3/26 11:35 AM, Cheatham, Benjamin wrote:
->> On 11/3/2026 12:34 AM, Richard Cheng wrote:
->>> Moving endpoint RAS handling from cxl_pci to cxl_port left
->>> cxl_ras_unmask() checking whether port->uport_dev is a PCI device.
->>> Endpoint ports always use a cxl_memdev as uport_dev, so this check
->>> returns early and leaves the CXL RAS error masks unchanged.
->>>
->>> Resolve the PCI device directly through the memdev's parent. Rename
->>> helper to cxl_endpoint_ras_unmask() and its param to endpoint to make
->>> its endpoint-only scope explicit.
->>>
->>> Fixes: dab7162d0ae7 ("cxl/port: Move endpoint component register management to cxl_port")
->>> Signed-off-by: Richard Cheng <icheng@nvidia.com>
->>> ---
->>
->> ...
->>
->>> -static int cxl_ras_unmask(struct cxl_port *port)
->>> +static int cxl_endpoint_ras_unmask(struct cxl_port *endpoint)
->>>  {
->>> +	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
->>> +	struct device *parent = cxlmd->dev.parent;
->>
->> Two small nits:
->>
->> 1. Maybe just use endpoint->uport_dev.parent directly and drop the cxlmd part? It's less
->> readable, but it's future proofing for when/if CXL.cache devices come along.
->>
->> 2. I don't think you need to rename the port parameter if you change the name to endpoint. It's
->> self-explanatory at that point and cuts down on the diff.
-> 
-> I asked for that change. Since we are making changes on that line already, may as well make it explicit for readability. Or at least satisfies my OCD :)
-> 
-> DJ
-> 
+> Thanks for the review! Please do keep reviewing, but note that more trailers
+> (including this one) will likely not make it upstream as I am about to prepare
+> the PR to get most of these things here upstream.
 
-Ahh ok, then that's fine with me.
+All good, no big deal :D
 
-Thanks,
-Ben
+Cheers, Lance
