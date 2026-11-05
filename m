@@ -1,55 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793866873;
-	b=ZgoSXJx923CzZKloQP7k7yVkcTHHDOeAdOm75riJCdb/Hwft/+L/NiIsH5NHaP37t9xc
-	 24eaPA9mzudK0zI/siV5kgkvJG98Ge0ANAMS6VEyBdiBRnQBgruPgUgjOi060ZDZKfVw9
-	 +l23tofmIPJNg91OxVhrfgyh/qkrC2qkVBACin5M1+ION5vLH0cDkondnjNN6Tn4Da/fZ
-	 NzSANg40psxQsVR6d5YrDBjWAXU6ZtsJPU1C5620r1RTHOuZCUmHcwH4Str7rWb0t66Fs
-	 q0XhvMMtrBNZegDfgCiquStafDSq4ZEYltObkbJDu53JbvVtj/qO/Rg7BZNJkGTiR+A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793866873;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
-	 X-ZohoMailClient;
-	bh=MhqTaeYg8C0cA2ARimiJcpcf7M5ITCUmL70CiSxA+7I=;
-	b=xzoCPp/1yoQW2j80W+nwfz5A0C0cgObltCTL7HuGhfZhNkBelCI9fXhuH7J9ymHOsG5q
-	 QYjuWzWmaBqQwponjIclzYKVCaF/SKc67RMteH+AVw2FDhx8EyNdsI/WM+sV5q7BSD9QB
-	 tQ87jEx7JPcNh2jFiBn2hJ1LvbQT2HcAZpcpUNxAK3XHiZwyumm+jBG/vXIr5OIu4OFoL
-	 1eMZRKB0j/8n1gjdlxMUd2+OVVUYuMpkrEjGGUrICfrOszU1jr3h4X7eyHBjctNWBrqt5
-	 P9ewL/+CaVGTpl9E0nn/43hbt+S1PKZMqOZgnAhRC7wbuVpv+P2YmK4FOPXQtcvXwfw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zohomail.com;
-	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=VsEfUwTV;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.179
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793868143;
+	b=vlIUoB0i6UTK7kOBN9tIAoCNv4XUkF+7rO/Gba3Uhbey3tIG1KOq17iQGL3ARujA40qs
+	 DiWuCBC7RYsq4Y024P22jWoc3W0hmSCbyj9zjcFSflean/oP6NKd3bqt+Bus+jdEJQTma
+	 AcpcTE480ddh5drW1Q7p4AQdfQvxmUiq5wtWrb9taWdeGgBWn7iYGeVtQ/mwQ/FhDjfu7
+	 TPgl2mtaAlJPl9SjJQAJOlIwn/5DgdlKyurqX/OKtf5rafszh7se72G4ZKaOjywpR38iH
+	 G/bSvVP/9pU7NYDXN1M1F4cw9sxb2ePM7t2dSp6M7BlY7Qq9eRcNhfDv6fcIa4Hun4g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793868143;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=BY5SPkqBUC/LVpn0704Yh687udlFm9JNFJUu9ANrPdI=;
+	b=Dw5RS23lmiHnkxnVESeBafaH4U+sunvfW59N6x+nHp1VZ6aj82COA9GqjJsiKMCtMWSn
+	 ZKaiN5AvDdsIG3LTWW77tW2SVEnk7Cvc0NB+uTXCfvb2X0VLwFLpD3tcH1qD4s7FnQ5YZ
+	 DFIQZnMWRUjvyKp9h3nEVyartpJFZQWl+9DmtL9yhD/qAZdY9E02KizNC+1MgYyvfXxAL
+	 rMc9b0xpxh54EccDHx7ojYz17MGK5xttDVHfTnbaURtBCPm5Ono/2c3c8uOKlJSTa0pGP
+	 5EtlANZImL7bcw0UO9WSyMLF3Deh+eC/kgQpWPp/AE+WWaooYhkTkRUZjtqohM1XHDw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=fail header.from=linux.com;
+	spf=pass smtp.mailfrom=korea.io;
+	arc=none smtp.remote-ip=209.85.215.179
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC945606A31B;
-	Thu,  5 Nov 2026 08:21:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC945606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=VsEfUwTV
-ARC-Seal: i=1; a=rsa-sha256; t=1793866864; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eETmFpCRCWoRk1ooHqCzu0HoTfYD4SEtwaNU3JzCqInnu6AuV7ynOSblFWiX6sewRIL2iw+FtigYb1EMJ5E7Nu2WdbRIzHlWeVNumA5C5RdcJKrXc+Oyoz44bJqaEKQouWjyEyobSdhdBwF2Jehwla0tiapA7o86hO4hAC6JRVU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793866864; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=MhqTaeYg8C0cA2ARimiJcpcf7M5ITCUmL70CiSxA+7I=; 
-	b=OtCT+TRFsgfon0WIyWOKMZu9cfMa9OVfk6ZmxwjHCSV5bklMJBPVKXnYktYSq2lGYi3v8dBQ/C8IE7t1hOiMeR+B2iqkjVEnv5gDoisnRnlX0F541aXFrrtZdfEw0yzPz8Et9bgAnk3UvKr+AATHPLzBUxX6nWvL5M5OOVjYMRo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: a=rsa-sha256; b=VsEfUwTVea0kiINsjl2vk0cEm3agjhR3bCuzZ3bYWQsm1EuCa2Q2mWOhkkMQo+bfCn1QdqQQ/bm84tQFSX5hx2Ukr70Zv2Z98GfbQvFtKAwBnvsaBZx5UjijRVa1SSUs4RjkJaW3jdvaY66gCuotIzEFXd+UT96+cu6lyrrVC2U=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=MhqTaeYg8C0cA2ARimiJcpcf7M5ITCUmL70CiSxA+7I=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793866863229960.8149995318363;
-	Thu, 5 Nov 2026 00:21:03 -0800 (PST)
-Message-ID: <f4be9108-e5ea-4e6d-bd6d-0af14f28951d@zohomail.com>
-Date: Thu, 5 Nov 2026 16:20:57 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A40606A334
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Nov 2026 08:42:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 99A40606A334
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-cdab938dc83so715048a12.3
+        for <linux-cxl@vger.kernel.org>; Thu, 05 Nov 2026 00:42:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793868142; x=1794472942;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BY5SPkqBUC/LVpn0704Yh687udlFm9JNFJUu9ANrPdI=;
+        b=H6/Z/D7b4UrH77Oih26yRFHEv1g+2OkpqW5YduMmkgS8whmD8m+pTYU9rRARXspeyR
+         G4Ydu0uwGAjYGiJzGs6s5gQqJXUcZGeSCN5xhWx+Qp46FBt1kz6u2elpVSIFu655YJdZ
+         BUvCnkHs/ZCz47Yj+SFJDRoYqAR8h0eIbijFNPvw4/wtONd6u0HYRWZR6aOAifSn/UQk
+         hJu4kSwnRuFtcywLj285iC/U4YBp1WZ0dIk/Zy1uWXqbt7D9TPFmL6r+P+sgpfUo7OE4
+         88hUHY/WWP9rB3coPnWfwQQio68DqOHtd/aEwbr9jfYJiGdaB3Cuhhlt9duej3VRxvT6
+         YyWg==
+X-Forwarded-Encrypted: i=1; AKwUvBwIhNFX9GHzmJIToDsRAwXKs4zehpOo5rp5sBhq54dG7LugVho6dibZ9755zBJ4pfobhIwRG7DssXQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+8Iva7JySnNrEq7u1QcLy7NtKKmqoDqzqWAxw4oBxZYi/DjTYd
+	GQOot0eSJ+j02MqXTCms+sZ/hJH+WuXNYetHBm2UR5rPiK1Qry18u33NFP6QiNN35DCP
+X-Gm-Gg: AYBFou2MLJmBzGuF7Rw1+3Wm5KWziqaR+02QdOT1s+ogPJcmNGHXF5o9waaEXHWmeTI
+	QCGvV3zqdlITDoyW0Br9ZiCv609B8OEgx10un1ftZclx7aG7468S68QxbUgW5EY4ELaiHCqPIIt
+	dCgMdleFHBZ+Os4487s0SBtSegoSiFxUWYpuXBKkvJs8TbfJIBEDKH018e/aYxW/wyaRUt2353Q
+	XzirSNZVBWgXg6n35a2+KUwJ5dSMCd7daecqck7eebOGYRyt0JKz9BJczWv13nDv58n6kz5Wpom
+	3bdJz23G/0Z4JVg9hfJVyUKMy6KGqoSgCMQhgX0KQsfGElAsKwRFfO+ijALQZhNXXUtIQv3fHYb
+	/Ofwppcu+6yOY5yHfghYfyUkIiPCoyQwKocVNaCskUoIVCr96ZdIF2QbUcD2nI3oUPJZdtkqiDf
+	N40e8m1ZloMtdiYafdGB3D/OwbhltRo4hyosfaWyrim+OVTgf1a/lOE3mPNcxmL3uEEQYcfp4Bq
+	apTm06xQsmOhdGH67TcXBPQwIjOgiaeUSAjkvnb9GBvCOvOMXXZ6yjhvfM2o6sMBNVK3K+sO1+o
+	jiyn5b3l0Kcc0kPBPQQ66EloUVJa4k1P+z0usUlaUgGwH+gAjyRmk5UkfX5+8rwYmC7ZRkQVUEn
+	Icr/4j8CdmzTdbE5VupJH5U8uNkwiLllNgvZELm4e
+X-Received: by 2002:a17:90b:57cb:b0:3a8:c0cd:57f9 with SMTP id 98e67ed59e1d1-3ae89744ca2mr15840169a91.25.1793868141815;
+        Thu, 05 Nov 2026 00:42:21 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0b32812a6sm2720088a91.11.2026.11.05.00.42.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Nov 2026 00:42:21 -0800 (PST)
+From: Jongwon Lee <ai@linux.com>
+To: Li Ming <ming.li@zohomail.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v4 2/2] cxl/edac: Mask DPA flags in the event record cache key
+Date: Thu, 05 Nov 2026 17:42:13 +0900
+Message-ID: <20261105084212.55292-lm2-ai@linux.com>
+In-Reply-To: <f4be9108-e5ea-4e6d-bd6d-0af14f28951d@zohomail.com>
+References: <20261102123233.74598-1-ai@linux.com>
+ <20261102123233.74598-3-ai@linux.com>
+ <f4be9108-e5ea-4e6d-bd6d-0af14f28951d@zohomail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,150 +92,44 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] cxl/edac: Mask DPA flags in the event record cache
- key
-To: Jongwon Lee <ai@linux.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>
-Cc: Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261102123233.74598-1-ai@linux.com>
- <20261102123233.74598-3-ai@linux.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20261102123233.74598-3-ai@linux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu0801122706e1e922292410484dd909d50000064883799090bb172ba4cbe04a354fc87666834b4b216388b1:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
+Hi Ming,
 
-在 2026/11/2 20:32, Jongwon Lee 写道:
-> The low bits of the DPA in a General Media or DRAM event record are
-> flags: bit 0 is VOLATILE and bit 1 is NOT_REPAIRABLE. The trace events
-> report the DPA with CXL_DPA_MASK applied, but cxl_store_rec_gen_media()
-> and cxl_store_rec_dram() use the raw value as the xarray key.
->
-> User space reads the DPA from the trace event and writes it to the
-> mem_repair dpa attribute. If the record had any flag set, xa_load()
-> misses it and the repair fails with -EINVAL. The raw key also lets a
-> repair go through for a record the device marked NOT_REPAIRABLE, if the
-> DPA is written with bit 1 set.
->
-> Key the records by the masked DPA and skip records marked
-> NOT_REPAIRABLE. cxl_find_rec_gen_media() now reads the record, so do
-> the lookup under the xarray lock as cxl_find_rec_dram() does, and
-> return a bool since its only caller tests the result.
->
-> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-> Signed-off-by: Jongwon Lee <ai@linux.com>
-> ---
->   drivers/cxl/core/edac.c | 43 ++++++++++++++++++++++++++---------------
->   1 file changed, 27 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-> index c5c8dda20e..a5f198b561 100644
-> --- a/drivers/cxl/core/edac.c
-> +++ b/drivers/cxl/core/edac.c
-> @@ -918,24 +918,37 @@ struct cxl_mem_repair_attrbs {
->   	enum cxl_mem_repair_type repair_type;
->   };
->   
-> -static struct cxl_event_gen_media *
-> -cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
-> -		       struct cxl_mem_repair_attrbs *attrbs)
-> +/*
-> + * The low bits of the event record DPA are flags (VOLATILE, NOT_REPAIRABLE).
-> + * Records are looked up by the DPA user space writes back, which comes from
-> + * the trace event and has the flags masked off, so key them the same way.
-> + */
-> +static inline unsigned long cxl_rec_key(const struct cxl_event_media_hdr *hdr)
-> +{
-> +	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_MASK;
-> +}
+Thanks for the careful review.
 
-This function actually returns the real DPA of the event record, I think 
-the name should be cxl_rec_dpa()? xa_load() uses attrbs->dpa as the 
-index, but xa_store() uses cxl_rec_key() as the index, that could make 
-readers confused.
+On 11/5/26 16:20, Li Ming wrote:
+>> +static inline unsigned long cxl_rec_key(const struct cxl_event_media_hdr *hdr)
+>> +{
+>> +	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_MASK;
+>> +}
+> This function actually returns the real DPA of the event record, I think
+> the name should be cxl_rec_dpa()? xa_load() uses attrbs->dpa as the
+> index, but xa_store() uses cxl_rec_key() as the index, that could make
+> readers confused.
 
+Agreed, cxl_rec_dpa() says what it returns. I'll rename it in v5.
 
-> +
-> +static inline bool cxl_rec_not_repairable(const struct cxl_event_media_hdr *hdr)
-> +{
-> +	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_NOT_REPAIRABLE;
-> +}
-> +
-> +static bool cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
-> +				   struct cxl_mem_repair_attrbs *attrbs)
->   {
->   	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
->   	struct cxl_event_gen_media *rec;
-> +	bool found;
->   
-> -	if (!array_rec)
-> -		return NULL;
-> +	if (!array_rec || attrbs->repair_type != CXL_PPR)
-> +		return false;
->   
-> +	xa_lock(&array_rec->rec_gen_media);
->   	rec = xa_load(&array_rec->rec_gen_media, attrbs->dpa);
-> -	if (!rec)
-> -		return NULL;
-> +	found = rec && !cxl_rec_not_repairable(&rec->media_hdr);
-> +	xa_unlock(&array_rec->rec_gen_media);
->   
-> -	if (attrbs->repair_type == CXL_PPR)
-> -		return rec;
-> -
-> -	return NULL;
-> +	return found;
->   }
+> I think the implementation of skipping unrepairable records should be
+> moved into a separate patch, and this patch focuses on using real DPA as
+> the index parameter of the xarray.
 
-I think the implementation of skipping unrepairable records should be 
-moved into a separate patch, and this patch focuses on using real DPA as 
-the index parameter of the xarray.
+Makes sense, I'll split it out. I would like to put that patch before
+the masking one, though. Once the key is masked, the DPA from the trace
+event matches a NOT_REPAIRABLE record, so if the masking went in first,
+those records could be repaired at that commit.
 
-My first feeling is that we should not simply ignore unrepairable 
-records without any logs. But I am not very familiar with this area, not 
-sure if we should report this repairable bit in trace log or output a 
-kernel log while finding an unrepairable record.
+> My first feeling is that we should not simply ignore unrepairable
+> records without any logs. But I am not very familiar with this area, not
+> sure if we should report this repairable bit in trace log or output a
+> kernel log while finding an unrepairable record.
 
-Let us see if maintainers have more comments on that.
+Good point. The trace events already carry the flag: cxl_general_media
+and cxl_dram print dpa_flags='NOT_REPAIRABLE' for such a record, so user
+space can see it before it requests a repair, and the request then fails
+with -EINVAL. If the maintainers would like a message on that path as
+well, I can add a dev_dbg() in v5.
 
+I'll wait a few days for other comments before sending v5.
 
-Ming
-
->   
->   /* Caller holds the xarray lock. The record may be freed once it is dropped. */
-> @@ -949,7 +962,7 @@ __cxl_find_rec_dram(struct xarray *rec_xarray,
->   	lockdep_assert_held(&rec_xarray->xa_lock);
->   
->   	rec = xa_load(rec_xarray, attrbs->dpa);
-> -	if (!rec)
-> +	if (!rec || cxl_rec_not_repairable(&rec->media_hdr))
->   		return NULL;
->   
->   	validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
-> @@ -1130,8 +1143,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
->   		return -ENOMEM;
->   
->   	old_rec = xa_store(&array_rec->rec_gen_media,
-> -			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
-> -			   GFP_KERNEL);
-> +			   cxl_rec_key(&rec->media_hdr), rec, GFP_KERNEL);
->   	if (xa_is_err(old_rec)) {
->   		kfree(rec);
->   		return xa_err(old_rec);
-> @@ -1160,8 +1172,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
->   		return -ENOMEM;
->   
->   	old_rec = xa_store(&array_rec->rec_dram,
-> -			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
-> -			   GFP_KERNEL);
-> +			   cxl_rec_key(&rec->media_hdr), rec, GFP_KERNEL);
->   	if (xa_is_err(old_rec)) {
->   		kfree(rec);
->   		return xa_err(old_rec);
+Thanks,
+Jongwon
