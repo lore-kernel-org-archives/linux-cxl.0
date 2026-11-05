@@ -1,82 +1,46 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793849320;
-	b=IXeaNqC+2QY4WNmoXCF6Gmjy1uO+fuJHHo2NZZ7VuAX5q2cY69AQk81el+nKE/LBsE4B
-	 yyrGTuqyG0nC6jDxVW8kt/E7ANtbIUJSj4Ma9Eeo+nDy0fbpP5FYuxY8C22arV+PDCidD
-	 m+3KMrR8jlMGEVsSw9uD4jzJ3iPsMr9PlXnnuEpoN+QfBr4mj8wa12htJNsKxqdOZhWXP
-	 ++/6IRD0rAP7IjXxoRGgDHb2zaw8fQfAU5peRJXXwP9jd4LCgkVhMaftlBBKeE5SUnjl2
-	 4Z1jqXCLXZ5jA++BEIsb52g+qNd503vgZuhd9Cv72sR+J2e+kjCKVMOPl4GutmTGcSQ==
+	t=1793850225;
+	b=MofcxFJQ8ofUSNIWc93rKZ8VuoB8rQs8zsruLTVvwt2p7H5eyeR4UAPr+WV6p/ssqVUA
+	 CA6AW22WgW9S9kZ3dKI6QFeUsWxT2+/0Ja12XapjhmE6uQhZsmdLBmwuHdwT4bPOKkQZf
+	 EVCXlsYrWE8844s86t97U1LqiIgyEl6ryv43C0rcIsVwomowJ1MYyZdMHGOLpu3V164bT
+	 qInQN/1gYV/KJRkhxwg+eaB8ajSjqr2oY6rjy5o/IJj8kwERTqGtUMbfZmlzsArAyeTfx
+	 a43rNd4htudeOX5gr1LaY66ejKeGBeulhS4ZGtA2ls4TyKk1tfaSJ9Y3UVpjLfzZ/vA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793849320;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=hcw/Sk9bVTAyjh92DQBQNIEqzwf8IwBspSzfo9kDJgk=;
-	b=mHxzKaJ41cJSQxsFnUyqgMxG9H/KSJ6VwQs7fW8V5B3RgTU3SdQBrfoNn/H5ppV6qo0N
-	 rvYA4T29EhqEJA3kJbx2kgS2nO2xArd8UAQOs2vArj7JgarPzPJ3HYamiiED9DFwxS5Np
-	 fxRYBAbEOZyIYumDXzsopFivdGxs2y+xXk43TSbbjIFftk8V2gIEAG4mw7WQYYT5KOhtp
-	 lqMzf2QH0sezZPW6Rm2NR8GEnGTjIGkiOKFXLXICwURhIaTVEAOp/2mGP73tni8MESTEl
-	 djBKl1eFL4+nOi8SJEVMgDLL9Ft47mTHIGkud2xHoHSyPEJ0wVP8BYuHwKk6iHlrPXg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793850225;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=VPL6FGJI6mYbfWVdagRDwQTQgREcZN8JpaFK/cgIs8Y=;
+	b=1aReeW8dRjkVkXcrwDwSKpNwR4MweNc4pIVWUXKZMyT7Ilet13V2Z55H4UoEG4t9fmjU
+	 saDn4H3QLJelql5wJ+QwcxL47uSBSyOGZs7rUpcY/+0i3ojfnPSYSXNXr53ljpMUilp3S
+	 H1u0eYItTi/Fbao/9hcEtKVBdxeb6/HkHmbYkk2/aQC1eAtQiNPvs+AwoO9/ef3Zb0mZ4
+	 6zF9+V3OdbiSJlU670fokiBr3VTWBrUn8kGU1u/0P+38jW7gJWAI82I6/spPAsXu1Y6wq
+	 2hTzidyOu6d3Vu+pFK8BPRjABudwyHLqVKVt0SXC99zl4N7zE+PQjpW4cqNm2QlknCA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QbvxoCtp;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	arc=none smtp.remote-ip=115.124.30.119
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE5D606A328
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Nov 2026 03:28:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ACE5D606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QbvxoCtp
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793849320; x=1825385320;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=n9cG0hyPL6HV3wKC8eCySI0CKXyOIPbvgf7sMH+qZUI=;
-  b=QbvxoCtp8XPU3rp4OahLhcxzGayTv0++MH8CHrYqbL2a/5f6QJ8Paa87
-   3zzioRm77/0jHKAT076Tgv3dtqLjkxbj2IpTMfutEpI0HcOBRZT6/gxSA
-   /vA/DO8XF0UDlpFdEJ2ir1iNjhTd2BLGdEnwHLSd41uuxr2brMCs6y297
-   eneTzQ09InEzYCG+AhVgqdo5/awOwxV7T/N5EZB1y1m1cqFrQi+tbb/mb
-   l9Wi/Lm5i26Bo5bU8rsRfBQHYw7kVR3YPGPOmZ1Fk7KoLwy3EzaY9qAF2
-   iwOfZA/Sq51K4g6P9XLhBGoviv5svRcpGGW95Cs5FB2ynV9jq5tCKVaP9
-   w==;
-X-CSE-ConnectionGUID: ayLolQvASDi98gV2gCUJuQ==
-X-CSE-MsgGUID: v3RBuH5ZS6Ol8X87vGpBVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2511502"
-X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="2511502"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:28:40 -0800
-X-CSE-ConnectionGUID: nrJa9Qk3RZaE5z6kT9lWnw==
-X-CSE-MsgGUID: vSGhYZ6ESM6DgJFy8sM2Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="6913293"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.56])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:28:39 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 4/4] cxl/test: Give each mock memdev its own performance data
-Date: Wed,  4 Nov 2026 19:28:31 -0800
-Message-ID: <a078fadc9d039a34645ab8778fbf17faa3c85f27.1793847269.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1793847269.git.alison.schofield@intel.com>
-References: <cover.1793847269.git.alison.schofield@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F923606A31B;
+	Thu,  5 Nov 2026 03:43:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3F923606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793850209; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VPL6FGJI6mYbfWVdagRDwQTQgREcZN8JpaFK/cgIs8Y=;
+	b=df7ctmeMETF2xxJwENMAiPw5tB/yyYrAVCP9Ji9c/Agd9scTxdOcVj2cILeacTPjQ68gD4yEHtiCiDxFR/C1UjO9Nj6uhsYO8P3rnc+2SkTZn8BBKH8Qy8wKs5FijRqp9tpIy377D2X9GWps7SuCH0Chdn4NTV4kCewHhVkv5Xc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=64;SR=0;TI=SMTPD_---0XE7Nmrn_1793850203;
+Received: from 30.74.144.136(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XE7Nmrn_1793850203 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Nov 2026 11:43:26 +0800
+Message-ID: <d0f78f0f-c883-4919-a416-fe738eb7323a@linux.alibaba.com>
+Date: Thu, 5 Nov 2026 11:43:22 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -86,66 +50,121 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 18/47] mm/khugepaged: check if PTE table is empty in
+ try_collapse_pte_mapped_thp()
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Hugh Dickins <hughd@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Lance Yang <lance.yang@linux.dev>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Alistair Popple <apopple@nvidia.com>, Nico Pache <nico.pache@linux.dev>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Oscar Salvador <osalvador@suse.de>,
+ Minchan Kim <minchan@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Youngjun Park <youngjun.park@lge.com>,
+ Gregory Price <gourry@gourry.net>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Muhammad Usama Anjum <usama.anjum@arm.com>
+References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
+ <20261031-fixes_core-v3-18-d6437171ecc3@kernel.org>
+ <62268831-f6f3-4666-a32f-a77546b95432@linux.alibaba.com>
+ <979fb046-32dc-4af8-b6a3-177c78f1e557@kernel.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <979fb046-32dc-4af8-b6a3-177c78f1e557@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Assign distinct and predictable latency and bandwidth values to mock
-memdevs so region performance calculations can be tested against the
-expected contributions of individual targets.
 
-Derive each memdev's performance data from its memdev id:
-  latency   = 100 + 10 * id     (nanoseconds)
-  bandwidth = 1000 + 100 * id   (MB/s)
 
-These values allow tests to detect stale or duplicate contributions from
-targets that are not members of the completed region. Since mock memdevs
-are not PCI devices, the shared-upstream bandwidth calculation is skipped.
-Region bandwidth in cxl_test will be the sum of the individual memdev
-bandwidths, providing a predictable result for testing.
+On 11/4/26 5:13 PM, David Hildenbrand (Arm) wrote:
+> On 11/2/26 09:20, Baolin Wang wrote:
+>>
+>>
+>> On 10/31/26 5:39 PM, David Hildenbrand (Arm) wrote:
+>>> The existing code is rather horrible and already resulted in bugs in the
+>>> past: we special-case UFFD inserting anonymous folios by grabbing the PMD
+>>> lock early, but ignore any other markers (guard, poison through uffd) that
+>>> could have been inserted into the page table in the meantime, effectively
+>>> dropping them.
+>>>
+>>> Let's just unify and simplify the locking: try to grab the PMD table
+>>> lock and if that fails, flush the TLB, drop the PTE lock, take PT locks in
+>>> the right order and check if the page table is still empty.
+>>>
+>>> We still perform the heavy lifting (zapping the folio ptes) under PTE table
+>>> lock only.
+>>>
+>>> Include <linux/hugetlb.h> for now, as x86's flush_tlb_range() macro
+>>> depends on hugetlb helpers. This dependency needs a separate cleanup.
+>>>
+>>> Both issues this fixes are rather corner cases. Let's not CC stable for
+>>> now.
+>>>
+>>> Fixes: f807123d578d ("mm: allow guard regions in file-backed and read-only
+>>> mappings")
+>>> Fixes: 1043173eb5eb ("mm/khugepaged: collapse_pte_mapped_thp() with
+>>> mmap_read_lock()")
+>>> Tested-by: Gregory Price (Meta) <gourry@gourry.net>
+>>> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+>>> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+>>> ---
+>>>    mm/khugepaged.c | 64 ++++++++++++++++++++++++++++-----------------------------
+>>>    1 file changed, 31 insertions(+), 33 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index ce794d9760a87..ad07c8caa3bd9 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -10,6 +10,7 @@
+>>>    #include <linux/mm_inline.h>
+>>>    #include <linux/kthread.h>
+>>>    #include <linux/khugepaged.h>
+>>> +#include <linux/hugetlb.h>
+>>>    #include <linux/freezer.h>
+>>>    #include <linux/mman.h>
+>>>    #include <linux/hashtable.h>
+>>> @@ -1832,6 +1833,17 @@ static enum scan_result set_huge_pmd(struct
+>>> vm_area_struct *vma, unsigned long a
+>>>        return SCAN_SUCCEED;
+>>>    }
+>>>    +static bool pte_table_empty(pte_t *pte)
+>>> +{
+>>> +    int i;
+>>> +
+>>> +    for (i = 0; i < HPAGE_PMD_NR; i++, pte++) {
+>>
+>> Using PTRS_PER_PTE to iterate PTEs seems more straightforward? Otherwise LGTM.
+> 
+> As I pulled this patch out from the stable fixes, I fixed it up.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- tools/testing/cxl/test/cxl.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+Thanks.
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 3eb1051b1ee8..762c8b9ed4dd 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1629,18 +1629,29 @@ static struct cxl_dport *mock_cxl_add_dport_by_dev(struct cxl_port *port,
- }
- 
- /*
-- * Faking the cxl_dpa_perf for the memdev when appropriate.
-+ * Derive mock performance data from the memdev id so tests can identify
-+ * each memdev's contribution to region performance.
-+ *
-+ *   latency   = 100 + 10 * id     (nanoseconds)
-+ *   bandwidth = 1000 + 100 * id   (MB/s)
-+ *
-+ * Keep the values nonzero so the region access attributes are visible.
-+ * The ndctl cxl-perf-data.sh test relies on these formulas.
-  */
- static void dpa_perf_setup(struct cxl_port *endpoint, struct range *range,
- 			   struct cxl_dpa_perf *dpa_perf)
- {
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
-+	unsigned int bandwidth = 1000 + 100 * cxlmd->id;
-+	unsigned int latency = 100 + 10 * cxlmd->id;
-+
- 	dpa_perf->qos_class = FAKE_QTG_ID;
- 	dpa_perf->dpa_range = *range;
- 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
--		dpa_perf->coord[i].read_latency = 500;
--		dpa_perf->coord[i].write_latency = 500;
--		dpa_perf->coord[i].read_bandwidth = 1000;
--		dpa_perf->coord[i].write_bandwidth = 1000;
-+		dpa_perf->coord[i].read_latency = latency;
-+		dpa_perf->coord[i].write_latency = latency;
-+		dpa_perf->coord[i].read_bandwidth = bandwidth;
-+		dpa_perf->coord[i].write_bandwidth = bandwidth;
- 	}
- }
- 
--- 
-2.37.3
+> I realized that this helper should likely move to some header later and be
+> reused elsewehere (zap_pte_table_if_empty), but that's something for a later
+> cleanup.
 
+Indeed.
