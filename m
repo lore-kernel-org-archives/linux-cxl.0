@@ -1,56 +1,136 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793907036;
-	b=n06fRKouFoyULYW26KJIDB0gj/vH6qEvMrVV0eDFkWgQdGm1w98NiZPJ36uqquGXS4o6
-	 ilrS6yuSnwSaYUZD88mkbCU8ELRA1FB6iYPNqi9UGBbj7gR1K4NgOhmwy/2TFl3+fT/u9
-	 YmUdHZMxI6gBIssYbmHPJdQbRmdWuhPyoPMaHo2hhYYHCQp1ZvCxUcW1fU0Ots/ay5t/N
-	 z3NA++TGVBmFKwZkkdmrgELHK6lY2WixavPQrij7+BRystv5OYlV0PvQq4ISDoJPTd5oC
-	 TCPUdt1du5ZFAIxWylfPAb0dB75+aGoelzoxvdvfM97dXOcccHtrzJbIQViIkWZDE+A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793907036;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mCn804oSbPAZIaCJd8NrPaiC5vscWB9oRKTsCfdqY7U=;
-	b=Zg54avaSS1V6EsdRzOPZYy+x43I5KeqzqnfSTSahAlgHa8zm2YyI6zviHaa2VCAXR9CC
-	 BFZrXDdEWdPmYfUKwUomrEKRH8rfk31De5nQFqo/uyk+hSXck7V3phC9ao+VEwdlpMilt
-	 LE/pDylM2dqRql6bN/d4VfNsYRwUGEtz0XzDz1ZsX6e0tv/BD3GjCVbXcsxNfAX0MYZx6
-	 G758lmhkVJI3EmxouNAUN8VU2koeAF9Y2vw8OQC0j4fbnT1rW8hHtyQ7zEIOKsPKbnjQw
-	 jzDSxm7ZsdU4OoE3HtLMhyy+QUeZdBEhKtbYyVfz+xjKgOOA/QFjiAJJzaD81qpjCEA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="mm/i53RK";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=198.175.65.21
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793907118;
+	b=kEnGUTz5QLzUafd40H2WdJrlyQAoAQdcFvVfT/vBGwRlepsEpV4//tYoFcixMfpsR5es
+	 4S9o4DzzJkCo6xrXJ+gIn5MpNCZT1KPKv6hPRLeUgUUWFgRwe5J+0H9uj89moT8dVIHWV
+	 7SO/wE+fYspckUbbz7NZvxaQuS4t9vEWs9hYwEYyVbx/9sb9HrKyMzit68+vbGqBhGCO1
+	 WLC39Nx5jtghfqzF1wHcOSGX2BpdddO5lQTYwM2QQaENSd3SfVfj2bENgGVX1W6ewO8+i
+	 dsBX1FgbuFUobFtt7JhjXKz2KpAbhGUOz8ON/rBJCi4s2PPo0ySLdMbPUERkwYsi+hA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793907118;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
+	 Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
+	 References:Content-Type:Content-Disposition:In-Reply-To:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-LD-Processed:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=HyA6OZZ6N7dgKGpUAVpgEVuegbPPq/wy6smKJZEn+FQ=;
+	b=3TrJKf6DyQtg8eI9Rlse5xnFwwXOGbhlBTdHvMmfpf9eb4JgogkjvywqSOvxx1tCqgSw
+	 mjN0IcO36/rQKYzSRkivE/BvVcJfegzz7oyoCVc1geedInE4v50LQAnWsrlhF3/dlLgRn
+	 uLM+HOIeRtjYcNgNrpOsPgb0zv6mNuYrSeGUUvv8ogJxoBnma7BIx2qNitK7akUSWoZs6
+	 1Nj3cOEOfOY6RZUsHaRGRrXLbYWTr3An92L6jMStXNrvjmoIdSEWarDNWTomwauO3tY+q
+	 rivdhBol84gJ8RQzU4rjRJS4nEHqgxgvAZa4y6pjqNptxNh/+JM/Dz+YkQoEyg9MKXQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=g5lCKslG;
+	arc=fail smtp.remote-ip=198.175.65.21
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0353A6083609;
-	Thu,  5 Nov 2026 19:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0211E606D834;
+	Thu,  5 Nov 2026 19:31:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0211E606D834
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mm/i53RK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5A21F00A1A;
-	Thu,  5 Nov 2026 19:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793907035;
-	bh=mCn804oSbPAZIaCJd8NrPaiC5vscWB9oRKTsCfdqY7U=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=mm/i53RKdc7nEAeD36f+eUEuMPFcqL6vkhi5PQdavukMOlVp+Jk4F42iNrsHrun1v
-	 i3IwsutJ6s0NZ7T1t/HhD4zJ/afclu7ihGDZ6MBj3XIr8gz9ZrHAfXxCqNeG004vR6
-	 S1DJ57nNWGFAXaGM2Ntw1kd4Bkg+/PNgaMDN/iVCsFwEan3kuBoFYWl/nIH9hpM4wr
-	 cqizsLZyWD7keR4Q2Dh0KAU4W7GnwnxAMHU+dp1JPqySUfEcN2gUG9V/P1M1nPHa0Z
-	 OBeR7MeL2kzVs6ihugUzEtCpBQy1HQBZw8v4APiQOl7aKcKNelAX3PcDivJzcZ9QwZ
-	 oNYD1rkmQ1/vA==
-Message-ID: <sashiko-outbox-199916@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 11/19] PCI/CXL: Cache endpoint HDM state during PCI
- enumeration
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Srirangan Madhavan" <smadhavan@nvidia.com>, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20261105185917.2667656-12-smadhavan@nvidia.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=g5lCKslG
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793907116; x=1825443116;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=PBlrdU4vOtqhIHolc4etLupQ/LxCekWuYhxPkSgClEg=;
+  b=g5lCKslGL7GufUdWd+LZnrptmTjFv68tLFZ8XKKbgiNctUkGRQN9atb4
+   +e3rL1pA0zMv5k7vM4uqDO0/REovrR4Viuocsi3Ksv8Ero4eJ+F1gnaEh
+   Yooo/IlvQtP4yV2tGuMSabszzXj1pVHAGMtQiQ0kZIZzt1GaPqev4ZzDc
+   g02aIIPX4630RPbVxy9qQ/0rPpAyTsFWeUcgpkazDW8PqeR0fwUm/QHhq
+   /ZBI2mjquvzm+b9SRxrQZNA+gui+dwHp3qldFcaWgEvpFrImIjNteB3UC
+   n8fJy36O0/Hjt0WDBS0fQNUKhBHEu9HeYwu0Rt7bzRw3xt+dbT6a1OFT0
+   g==;
+X-CSE-ConnectionGUID: RPv55hywTCWeRNAo15HxRg==
+X-CSE-MsgGUID: RFs2gsG9SmKt2Ym6E8F0Xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2803293"
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="2803293"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 11:31:49 -0800
+X-CSE-ConnectionGUID: kMm66g8NRF6+ahdlf3eIOQ==
+X-CSE-MsgGUID: kcjQwU37RMSjGXE9WWfeAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="7411661"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 11:31:48 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Thu, 5 Nov 2026 11:31:47 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56 via Frontend Transport; Thu, 5 Nov 2026 11:31:47 -0800
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.33) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Thu, 5 Nov 2026 11:31:47 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cFcLbJtwdaWeJod3/L2ZYfXdDbiQA11WBom0NdyvwkOzTKq8QDlisRy7IXjYM5Zq8THLkJeB+QBeQBnFSrjuvNVneLiQ1+sG3QDkU4W39zSlu+FUyk4iXZqtWyGaAaig2uJGBuX8mRPIjTXxWq+hFDdAU6OlX5CPCm+epjVYnnL9bozbNOuyOz2OHD8Wmo+sdt2XJLv3Y1SeVHF05zEUoT5vfdwVEr1DTCRJBg17Y/MZR11wOXVGw9py0syxBpD6cxIBzKsOcq2KNy/TJ6w3oxydb+fV62oUk4V92y5IHlV4J4c40zldz5J/8LWDxo+AJrIkn4GAFaKScBeyDSMw4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HyA6OZZ6N7dgKGpUAVpgEVuegbPPq/wy6smKJZEn+FQ=;
+ b=Lu/RmLbN0nS105/gsUHti1YjUVwtwFHNnfePRIIWnc3sM/5mOVIlfG76ARDEp8OmSUEoJd9EZo5ALcEDT5NaRzL8VmsCZIwrCRZNYmMbWFEGumJZFudMFXHvtBx4+UoP4sbUAt8bEi+TtjDy0RMtJNq4Qn6UoBCl+VSc+W815FuXpDsTwpfhu2n+GBHdYaNfb1Bvft7aCdIDMsy990UiKJiHpKubK76MyQudjhpeVjO7MIvygcgG6nbEhwKCuBD3rH9LT/ZWfCmhtyGMxyLbd7cItmiKbUlbK8AupDE6ijBVofhzJB574LeO9qONt7PND1ND3pkQsy+KmhRfMUzF+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SAWPR11MB9922.namprd11.prod.outlook.com (2603:10b6:806:54c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.10; Thu, 5 Nov
+ 2026 19:31:45 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0592.009; Thu, 5 Nov 2026
+ 19:31:45 +0000
+Date: Thu, 5 Nov 2026 11:31:40 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Srirangan Madhavan <smadhavan@nvidia.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>, "Jonathan
+ Cameron" <jic23@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Li Ming <ming.li@zohomail.com>, "Joshua
+ Machauer" <machaujo@amazon.de>, Alex Williamson <alex.williamson@redhat.com>,
+	<vsethi@nvidia.com>, <alwilliamson@nvidia.com>, Sai Yashwanth Reddy Kancherla
+	<skancherla@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>, Manish Honap
+	<mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, Richard Cheng
+	<icheng@nvidia.com>, <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v17 00/19] PCI/CXL: Add CXL reset support for Type 2
+ devices
+Message-ID: <auzZnE9zYEpjutiX@aschofie-mobl2.lan>
 References: <20261105185917.2667656-1-smadhavan@nvidia.com>
- <20261105185917.2667656-12-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 19:30:35 +0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20261105185917.2667656-1-smadhavan@nvidia.com>
+X-ClientProxiedBy: MW3PR06CA0024.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::29) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,304 +139,71 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SAWPR11MB9922:EE_
+X-MS-Office365-Filtering-Correlation-Id: e73b7912-abdf-4ed3-7e84-08df3b736d60
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|18002099003|22082099003|11063799006|10067099003|261028144727099003|261026140227099003|56012099006|261009223027099003|261022105027099003;
+X-Microsoft-Antispam-Message-Info: CsEJFiYWjL6wRciZMemaQRJOSQMyPLk78RDyWa6/Rbr2cy7MrIy+Mm6lIUNy52VPUXY7enzh+wgr/XcNgCZi1ndYqbtFhjqHQo7Qc7OyU6BKTIHmmeoMgEMIQ05/H0HHh1p5sq+Xzl/go4OKFuGxzb5Ww103hGJh4LoyL+y1LsyZfLtC/svWREONv/taGPgANisqUZr5UlhC6zYcyeGfjEACYT5WUoahERe8906StlL3Trb8nKPsE8YTHp1oI3XJyOqTwej5NCu4wkc0hHTCq+51CWriQMTPIZZQCBkZh85XuA+K7vhkx2bM/YeQtbR63bC+NepRCeyqsnnMZbhEv2Atmugz+WU0HeW24HaW51YXxCsNwBV+TTRT4IjwUPnqYSlBEpAO57KzhVGmjF7XVB4h8+RWpNpFw0u1uXterSs9Vt2Y+2rzyNEsfiO6DYNAvjBbbJS6jDAaNIlGYQMJQhLV0fJIBcK4FiQ+lDaKxMw/JODBKcTT6lgooBvsMzLtKi57mb6XHRge8zRkgk4d2+/R/OVuHlBCfDlxJx6VnncFKtE1mS1alzu1/LGi9cUTd76ltvHXEAjZ8yfgpWUV5o5Ox1QSLMsxJWBJ9eIDVefIm11KhB5eVhtXXJRmBAwd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(18002099003)(22082099003)(11063799006)(10067099003)(261028144727099003)(261026140227099003)(56012099006)(261009223027099003)(261022105027099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?26bXPkPEg/KYUSwQffdSOMflumoTbIIYpe8iEi9iejfdB8QaqpN1s2c/yaTy?=
+ =?us-ascii?Q?TyqlCu+2zYSeA9l9VYmCvozpJFeTNtwPMoVMT3xmHeTeYtmEIInHWuJI2oBW?=
+ =?us-ascii?Q?w0FGLjKcGDn31U31pmJqrlW6DbaIClXOGtu5vvtecbq272f7r9y+NsCruFXs?=
+ =?us-ascii?Q?v6XArahWaLDgqprQl0TMbcpSv7vukBbNH4s2kVH47l/sHs0/FVrENz2jLzuM?=
+ =?us-ascii?Q?Zct5uTFBwpeGsrpn1O/kHP0w7qzuMb19P2WJUArriQKwq/TgLZ3NHFHl0tQE?=
+ =?us-ascii?Q?EAs7FQlrqFQapIjc0opmt/1cuFWs0EuLqLb8sG8LnGIxDoFrWJwvBOOMuyfG?=
+ =?us-ascii?Q?FWLKhuomoMyTx4oHHS+vBThhg2ItKIS/mRxYmY2BkFAyUm09qswp9FVFn+Oa?=
+ =?us-ascii?Q?ZpXYFTSjg5CJ9CBGuTn0ut43oGFnovieD/XdT9cIj4HX7fM62iZY92VzsHv8?=
+ =?us-ascii?Q?5KUcb/gHPF/58f7LxBOa3uM08Wcs7JxcfUom0DhJ05rJ8yE3BzorV3EKu26p?=
+ =?us-ascii?Q?KC8OVAcBuf0peehhC4vDOFeYXx0M7Pzw2+ANUWMq+kKCkiMhEC1Jin/PNeoY?=
+ =?us-ascii?Q?RXsR2h4Vy1TDjy/mz5YTCCXTkF5oGRdVGZr7kB78K/kEmDZtwxAXWgw5j7IB?=
+ =?us-ascii?Q?5Wbda7opwi1ZjlYcgnCw65deyEHfcMMNZPiDJkJ8w4iW6P6VHt3YsJ/1nXqz?=
+ =?us-ascii?Q?zp8ZF+ixyZePEKXdiAmr61yVQJMncEgZ8TbS+nNEQlyua5fL2LFQrIcv0oKp?=
+ =?us-ascii?Q?BG6U5UHcCydm+ijhSOL8Xc7UA1qpYRNwP0khWTBWSer9GzqQPHV1iBlNNX99?=
+ =?us-ascii?Q?roN0e31NJ3A1F7X6a8sNfTeWu5vMax1uk8jGY8FWRtWlVnkz4EByp/fW9wth?=
+ =?us-ascii?Q?UzCam33q4gJHNw3PuuXweTkpewAkwEB7HZW3aoynth6nI9UPz/gNpwGrayEx?=
+ =?us-ascii?Q?Di9UEitRRn3M4GPEoIoay6lf3w5xvi0qhtPWIHFH3eb3dlyZouvrms1FJHn1?=
+ =?us-ascii?Q?nZe2NrMEaQs+ADMrlBCpznuSZZVckYpLMNFyH1w5hrVzD3CXvayj9z1k18W7?=
+ =?us-ascii?Q?z4rU7552hnv+0y/CogePqYXZrJotCoYnMFmthm9Z6rPfBvxhIx6/j0s9IMfa?=
+ =?us-ascii?Q?JSpWbol4Po8oNzjar62k43pFBtg4XPPpFhXaPO/ytkX96+QjMMgMTjQCk5pP?=
+ =?us-ascii?Q?pirzEB3Mi50qh5Ty+cUEhObdNwBwjUIq3omL1XARPl29/kbWgVml4HEW6pRx?=
+ =?us-ascii?Q?ulak+cQTKh6IS0WnpftLyhpp5fNbp/fiK+YGkBfalm16JrlfNSF98jMlHEDo?=
+ =?us-ascii?Q?XC8PkS9HZS++49PD+hubkq6isLBSj34pDPZSnpwh+VnYSZi0JbqUBjf0WpAx?=
+ =?us-ascii?Q?54lgxZw/BsJWPYt2wLIOi38uPVPIxqZLglySjpR1eDj4Wr5nnn87V9KA2Bwo?=
+ =?us-ascii?Q?k+5JzXPcEE6ZXhUl+bHwTutMu/EBYfuwhHd30CfJ39R8Rh2OFzj7938Qwzg1?=
+ =?us-ascii?Q?YDvOMZumH1shsCelbkc4mY610Gxo5nQQEABT7dnV1UMcvV/+O5UYl1Xg2Xoo?=
+ =?us-ascii?Q?bdJsg6F8eGQl05dDqeb6lkYcT1cOTVP+6lsGdOa7QKUD5t9qlnqsDRexTpj6?=
+ =?us-ascii?Q?tdAuBeNuiBwI/hYGkA+E1ZWNvd3IqOok/ELKhMJWUB0Wje6WkHJ/LsdK80b/?=
+ =?us-ascii?Q?JrDomxATQDNZVfZOO1KHF/NdM5lROQ+TjNEO14tTF/igt5+Jx0pZF858DwJG?=
+ =?us-ascii?Q?EnLMFuWEsJGmGZeWN8o8aaRnS3xziUs=3D?=
+X-Exchange-RoutingPolicyChecked: LyFgTr6he4vB+noRTychFFkLnkZQZT27p4wW0rLza2PVUNcITgu3vynx/1GQYRjqa72bLaAjgLSqImV2aPIBxBBbq3WSHC8Z7Rjg848dIbe8UvzHRWBrgk/Jj4FmJ2n62gMCSRpSjbzbziYmxyPSuaRX4Lf42hnKNtuJqiq2mrJzIA9X0lEp5Y2MiD7wgpNd5bKzHSPep9jECNPg9FIRFfjGvbECVNYVLBYHVk6tb2dgesqGC7jZNqnpZn9MwmC774wy0FxdZsjB3NobKfes+1gdIiNLWab4sO69rutBoZ4yAq/lhblkesRreYczy5kNw1hnXkblOGaW6RjMNn/TRA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: e73b7912-abdf-4ed3-7e84-08df3b736d60
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2026 19:31:45.4100
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: inJrzzr48NEK90xBReepGlS6PFKnzONkHJzZrObKQr04RxfLdK5QQ7TwoXZg9ptdq7j5HWWCtE8xMiMekk89wATZ5k/xiiTrBbyaMzQ+No4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAWPR11MB9922
+X-OriginatorOrg: intel.com
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] PCI/CXL: missing all-ones checks when caching HDM and DVSEC contro=
-l state
-- [High] PCI/CXL: out-of-bounds MMIO read and size underflow in cxl_pci_hdm=
-_map_regs()
-- [High] PCI/CXL: pci_cxl_hdm_cache_init() runs before BAR survey and bridg=
-e enable
-- [Medium] cxl/pci: disable_hdm() leaves stale CXL_HDM_DECODER_ENABLE in ca=
-ched state
---
+On Thu, Nov 05, 2026 at 06:58:58PM +0000, Srirangan Madhavan wrote:
+> Hi folks,
 
-commit e053ed26c570120750868c635b177e4dbb11e00d
-Author: Srirangan Madhavan <smadhavan@nvidia.com>
+snip
 
-PCI/CXL: Cache endpoint HDM state during PCI enumeration
+> 
+> The KUnit suite checks HDM range boundaries, zero-size and uncommitted
+> state, lock and target-type decoding, and 12-way interleave.
 
-This commit caches CXL endpoint HDM register locations, decoder settings,
-and Device DVSEC state in pci_dev->hdm during PCI enumeration so that reset
-paths can restore HDM state without a bound CXL driver.
+There is a KUnit branch available now to base on: for-7.5/cxl-kunit
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 5272013548c73..ea5327cd627fc 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -209,22 +209,31 @@ static int cxl_set_mem_enable(struct cxl_dev_state =
-*cxlds, u16 val)
+-- Alison
 
-[ ... ]
-
-> +	/*
-> +	 * Refresh the PCI-core cache from the live register even when
-> +	 * MEM_ENABLE already matched: a reset restores the cached value.
-> +	 */
-> +	cxl_hdm_cache_set_dvsec_ctrl(pdev, ctrl);
-> +	return ret;
->  }
-> =20
->  static void clear_mem_enable(void *cxlds)
-
-[Severity: Medium]
-As reported by Sashiko on v16 [1], when the CXL driver unbinds or unwinds
-probe, can disable_hdm() leave a stale CXL_HDM_DECODER_ENABLE bit set in
-pdev->hdm->global_ctrl?
-
-When the CXL driver binds and platform firmware did not pre-enable HDM,
-devm_cxl_endpoint_decoders_setup() runs:
-
-  cxl_hdm_decode_init()
-    devm_cxl_enable_hdm()      /* sets CXL_HDM_DECODER_ENABLE in MMIO */
-    devm_cxl_enable_mem()
-      cxl_set_mem_enable()     /* updates pdev->hdm->dvsec_ctrl */
-  devm_cxl_enumerate_decoders()
-    cxl_hdm_refresh_decoder()
-      cxl_hdm_cache_refresh_decoder()
-        info->global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-
-which latches CXL_HDM_DECODER_ENABLE into pdev->hdm->global_ctrl.
-
-On driver unbind or probe failure, devres runs clear_mem_enable(), which
-clears PCI_DVSEC_CXL_MEM_ENABLE in both hardware and pdev->hdm->dvsec_ctrl,
-and then runs disable_hdm():
-
-  static void disable_hdm(void *_cxlhdm)
-  {
-          u32 global_ctrl;
-          struct cxl_hdm *cxlhdm =3D _cxlhdm;
-          void __iomem *hdm =3D cxlhdm->regs.hdm_decoder;
-
-          global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-          writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
-                 hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-  }
-
-Because disable_hdm() clears CXL_HDM_DECODER_ENABLE in hardware without
-updating pdev->hdm->global_ctrl, a subsequent reset while unbound will
-restore CXL_HDM_DECODER_ENABLE in hardware while PCI_DVSEC_CXL_MEM_ENABLE
-remains disabled, and a later driver re-bind in cxl_hdm_decode_init() will
-see global_ctrl & CXL_HDM_DECODER_ENABLE set and assume firmware enabled it.
-
-Should disable_hdm() (or devm_cxl_enable_hdm()) also update the cached
-global_ctrl in pdev->hdm?
-
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 655ed53436d3e..aad567fb7c560 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -359,6 +359,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> =20
->  	/* Save config space for error recoverability */
->  	pci_save_state(dev);
-> +	pci_cxl_hdm_cache_init(dev);
-
-[Severity: High]
-As reported by Sashiko on v16 [2], does calling pci_cxl_hdm_cache_init() in
-pci_bus_add_device() run too early during boot and miss upstream bridge
-enablement?
-
-On x86 ACPI boot, subsys_initcall(acpi_init) calls:
-
-  acpi_pci_root_add()
-    pci_bus_add_devices()
-      pci_bus_add_device()
-        pci_cxl_hdm_cache_init()
-
-before subsys_initcall(pci_subsys_init) runs pcibios_resource_survey() and
-before fs_initcall(pcibios_assign_resources) runs
-pci_assign_unassigned_resources().
-
-In addition, cxl_pci_bar_assigned() in drivers/pci/cxl.c checks only
-res->start and res->end without verifying res->parent, and
-cxl_pci_hdm_read_info() sets PCI_COMMAND_MEMORY only on the endpoint pdev
-without ensuring upstream PCI-to-PCI bridges have memory decoding enabled.
-
-Can this cause cxl_pci_hdm_read_info() to enable PCI_COMMAND_MEMORY on an
-unclaimed or conflicting BIOS BAR address before pcibios_resource_survey()
-validates it, or fail to populate pdev->hdm permanently when BARs or bridge
-windows are assigned later or upstream bridges do not yet have
-PCI_COMMAND_MEMORY enabled?
-
-> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-> new file mode 100644
-> index 0000000000000..a0d20f4210a52
-> --- /dev/null
-> +++ b/drivers/pci/cxl.c
-> @@ -0,0 +1,225 @@
-
-[ ... ]
-
-> +static void __iomem *cxl_pci_hdm_map_regs(struct pci_dev *pdev,
-> +					  struct cxl_register_map *map,
-> +					  resource_size_t *hdm_offset,
-> +					  int *decoder_count)
-> +{
-> +	struct cxl_reg_map *hdm_map =3D &map->component_map.hdm_decoder;
-> +	void __iomem *hdm;
-> +	int rc;
-> +
-> +	/* cxl_setup_regs() populates hdm_map, including its valid bit. */
-> +	rc =3D cxl_setup_regs(map);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +	if (!hdm_map->valid)
-> +		return ERR_PTR(-ENODEV);
-> +	if (hdm_map->offset > map->max_size ||
-> +	    hdm_map->size > map->max_size - hdm_map->offset)
-> +		return ERR_PTR(-ENXIO);
-> +	if (check_add_overflow(map->bar_offset,
-> +			       (resource_size_t)hdm_map->offset, hdm_offset))
-> +		return ERR_PTR(-EOVERFLOW);
-> +
-> +	hdm =3D ioremap(map->resource + hdm_map->offset, hdm_map->size);
-> +	if (!hdm)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	*decoder_count =3D cxl_hdm_decoder_count_mapped(&pdev->dev, hdm,
-> +						      hdm_map->size);
-
-[Severity: High]
-As reported by Sashiko on v16 [3], can cxl_pci_hdm_map_regs() perform
-out-of-bounds MMIO reads inside cxl_setup_regs() before the map->max_size
-bounds check runs, and underflow hdm_map->size when the HDM capability
-header has an invalid decoder count?
-
-In __pci_cxl_hdm_cache_init(), cxl_find_regblock() populates map via
-cxl_decode_regblock(), which only checks offset <=3D pci_resource_len(pdev,=
- bar)
-and sets map->max_size =3D pci_resource_len(pdev, bar) - offset.
-
-When cxl_pci_hdm_map_regs() calls cxl_setup_regs(map):
-
-  cxl_setup_regs()
-    cxl_map_regblock()         /* ioremap(map->resource, map->max_size) */
-    cxl_probe_regs()
-      cxl_probe_component_regs()
-
-cxl_probe_component_regs() immediately reads from map->base + CXL_CM_OFFSET
-and map->base + CXL_CM_OFFSET + offset before cxl_pci_hdm_map_regs() checks
-hdm_map->offset > map->max_size. If map->max_size is smaller than those
-offsets, the read can fault past the ioremap() window.
-
-Furthermore, in cxl_probe_component_regs():
-
-  case CXL_CM_CAP_CAP_ID_HDM: {
-          int decoder_cnt;
-
-          decoder_cnt =3D cxl_hdm_decoder_count(hdr);
-          length =3D 0x20 * decoder_cnt + 0x10;
-          rmap =3D &map->hdm_decoder;
-          break;
-  }
-
-If hdr contains a reserved decoder count encoding (such as 0xffffffff from a
-failed MMIO read), cxl_hdm_decoder_count() returns -ENXIO (-6), underflowing
-u32 length to 0xffffff50 (~4 GiB) while still marking hdm_map->valid =3D tr=
-ue.
-If the BAR has at least 4 GiB remaining, cxl_pci_hdm_map_regs() passes
-hdm_map->size (0xffffff50) to ioremap() before cxl_hdm_decoder_count_mapped=
-()
-checks the decoder count.
-
-> +	if (*decoder_count < 0) {
-> +		iounmap(hdm);
-> +		return ERR_PTR(*decoder_count);
-> +	}
-> +
-> +	return hdm;
-> +}
-> +
-> +static struct cxl_hdm_info *__cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +						    struct cxl_register_map *map,
-> +						    int dvsec)
-> +{
-> +	struct cxl_reg_map *hdm_map =3D &map->component_map.hdm_decoder;
-> +	struct cxl_hdm_info *info;
-> +	resource_size_t hdm_offset;
-> +	void __iomem *hdm;
-> +	int decoder_count;
-> +	u16 dvsec_ctrl;
-> +	int rc;
-> +
-> +	hdm =3D cxl_pci_hdm_map_regs(pdev, map, &hdm_offset, &decoder_count);
-> +	if (IS_ERR(hdm))
-> +		return ERR_CAST(hdm);
-> +
-> +	rc =3D pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL,
-> +				  &dvsec_ctrl);
-> +	if (rc) {
-> +		rc =3D pcibios_err_to_errno(rc);
-> +		goto out_unmap;
-> +	}
-
-[ ... ]
-
-> +static struct cxl_hdm_info *cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +						  struct cxl_register_map *map,
-> +						  int dvsec)
-> +{
-> +	struct cxl_hdm_info *info;
-> +	u16 command;
-> +	int rc;
-> +
-> +	rc =3D pci_read_config_word(pdev, PCI_COMMAND, &command);
-> +	if (rc)
-> +		return ERR_PTR(pcibios_err_to_errno(rc));
-> +
-> +	if (!(command & PCI_COMMAND_MEMORY)) {
-> +		rc =3D pci_write_config_word(pdev, PCI_COMMAND,
-> +					   command | PCI_COMMAND_MEMORY);
-> +		if (rc)
-> +			return ERR_PTR(pcibios_err_to_errno(rc));
-> +	}
-
-[Severity: High]
-Can all-ones config and MMIO error responses (0xffff / 0xffffffff) corrupt
-the cached state or bypass enabling PCI_COMMAND_MEMORY here?
-
-In cxl_set_mem_enable() and cxl_pci_device_dvsec(), pci_read_config_word()
-is followed by a PCI_POSSIBLE_ERROR() check because PCI config reads to a
-non-responding device typically return PCIBIOS_SUCCESSFUL with an all-ones
-value.
-
-However, in several paths here, all-ones reads are not checked:
-
-1. In __cxl_pci_hdm_read_info(), pci_read_config_word(pdev,
-dvsec + PCI_DVSEC_CXL_CTRL, &dvsec_ctrl) does not check
-PCI_POSSIBLE_ERROR(dvsec_ctrl) before storing info->dvsec_ctrl =3D dvsec_ct=
-rl
-and info->dvsec_ctrl_valid =3D true. Per CXL r4.0 sec 8.1.3.2, bits 15, 13:=
-12,
-and 6:3 of DVSEC CXL Control are RsvdP, so 0xffff is never valid, and cachi=
-ng
-it would cause reset recovery to write 0xffff back to PCI_DVSEC_CXL_CTRL.
-
-2. In cxl_pci_hdm_read_info(), pci_read_config_word(pdev, PCI_COMMAND,
-&command) does not check PCI_POSSIBLE_ERROR(command). Because 0xffff has
-PCI_COMMAND_MEMORY set, an all-ones read is treated as memory space already
-being enabled and proceeds directly to MMIO reads.
-
-3. In cxl_hdm_read_state() in drivers/cxl/core/hdm_regs.c:
-
-  info->global_ctrl =3D readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-
-global_ctrl is stored without checking for U32_MAX, unlike
-cxl_hdm_cache_refresh_decoder() in drivers/cxl/core/hdm_state.c which checks
-global_ctrl !=3D U32_MAX, and settings->skip in cxl_hdm_read_decoder_settin=
-gs()
-is not checked for U64_MAX (unlike base and size in
-cxl_hdm_unpack_decoder()).
-
-Should these reads also reject all-ones values before caching them or using
-command to gate PCI_COMMAND_MEMORY?
-
-[1] https://lore.kernel.org/r/20261029145703.2185231-12-smadhavan@nvidia.com
-[2] https://lore.kernel.org/r/20261029145703.2185231-12-smadhavan@nvidia.com
-[3] https://lore.kernel.org/r/20261029145703.2185231-12-smadhavan@nvidia.com
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105185917.2667=
-656-1-smadhavan@nvidia.com?part=3D11
