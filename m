@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.57
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.50
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793892576;
-	b=qpCIltnBPHxpq1GS2wAB7moOelpDI37YsmqnPxF2UNKuPhc6MQQW+BkJel4XTQHTfNor
-	 viNW0/PzcJnFmKabCnpWAWu8WW8LexQLJbyJIBdDQWFscLgYQmxOu6GGFQiLGn11PdAZg
-	 oiPOeYAMBrP3c175hGEjoo8A6sOLZUWnKFBtDJtKxNh/DzZkhufXaRuUszV5PhL3B7w6o
-	 pMjnMo15pih0udwu3PTU0pOk/bi9p4FRMgMRL0rbtQbu5I1yT7dx6ta1FSd+A5+uSV5ny
-	 VJr/QLuWIJjxxD9xLqJaGe9wc1FTppRsslRVw+rafQ5aGhEnAK6h1giBQhMx6thMbog==
+	t=1793892585;
+	b=ipywr4LaOipUGMeQTxnCWafg2YB8BE5WLpfDpvJv6PcKFO+/gh2+4TZPdbE9cATvOn17
+	 HcCzX99aKRAZznuTFeDwFuQJn3WM2Y2fZTTjO9uqRmBEnyfIrPhDOYAX+BEZYBdkKGMCP
+	 +MWTitHi7AittjE8TNgxwkkK5gGKpn2K8h7na34/9As8KpirVlev36qCNUCRiyKTeRe2h
+	 l8If7wqpBaGiMJ/dg8YPV4BvcMgKauQ70mSBv4cUes2nnrjZIMAiwfX3KJ6POfzfct25P
+	 eA3QaFD8pEwVYzqWYoVvRAlm8a8bSoG8C3ZaoubUJlc3iv188Rdv/j9m7a1Hn0KTI2g==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793892576;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793892585;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
 	 Received:Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:
@@ -26,76 +26,76 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=OdSyAVizp7sbcE1fxXSbMqb3JMkq0m8Mv/3jzTYhM1c=;
-	b=zOFADI0BnwreP/Xsy+c9XmjILF+7EGAsz/Kk6pJ7oqeB9XursnaZRwbkZ+YAkBAS17FT
-	 FVc966TXmrtcBH97PP6kLOlsRYqaqRgiDFZpwjguPEq2eb2JP8owq4JX9HmI9r+QrTEgJ
-	 Frs3fWuha2PbTmWy/YedsNHbSTrev48MowMol9dJMFwUmBlqe/leAXY190O1xpqV+Nw4o
-	 2sU0KyhnZbRzSqhbAbZk8du8LJ7MqjjdM3Ufb2ubJ0e9D2wACtN800Z62bLdgP5HF2k92
-	 zb1R6kHT16SDrujQpYeKRblAqeirGT680Res/9pfDOJ9R0jFTPV6i3OM424OuSr9t+Q==
+	bh=qDGsxnsID9JABLE6+VvkbPhVMdX+4zcbNLKGiAy6DMU=;
+	b=eey3nC/vOSOVuYxvMfPCR4xpATn9j4taVWqmFj2tY5+UwE3q701Hx6tQlptmw5e4a/GE
+	 k5Evw6/JNyRpCn9A4y4QpIDwEHZcLWxe+0XhGQ2W3uPQE+u1g1fcT96IPshz1ZD0X4LcC
+	 FWOiebuZqoU8E5Lnqrepz0cIUbspg4Q12LbVV2sQ2RnHyzSjYcLARjCnGouGuGfmZsnTw
+	 Bbqcq5CSSRcyyhHb+GR/qk1wvStlt57k+KdaE8/YY3wAaZcjyWf6y9IXu9iaFJDPrHn3F
+	 Udi/848xhcJzeBqXfbDhXgO7qnJdjDTluYiB0pw8Us5ttuQuKhsfsXi0oQj/10rUYQQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=TLoNAZC3;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.57
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010057.outbound.protection.outlook.com [52.101.46.57])
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RZiCvPWa;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.50
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010050.outbound.protection.outlook.com [52.101.61.50])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC2D606D813;
-	Thu,  5 Nov 2026 15:29:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4AC2D606D813
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C4F606EEAB;
+	Thu,  5 Nov 2026 15:29:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5C4F606EEAB
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=TLoNAZC3
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RZiCvPWa
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TNz9hSFklFSAsidiUQ2ody8ENQ/4WrBd84EIvbQX6zQG8pestwRi1uQ6gBjQ8SiBbZCWm/NAu8AxqRMiR3uK2RtynOT4KPjQ4j9lsBpf7SqMXNGL+9H7BM2vInSJLq3clEEmWzGpWZ6jXmJ8un9wOKjtkYosGMWP876QkdYXpAJ6KEMXdRG4pxsAeor4U+jS1mYaN63zBs3xzK+tST6MidwDR03l06m9K1k8P/mq/LlCySckrLOyjGJHNhXWuHcwIM1MR5UgQMw1H3oO12vKPWM/HkmcUHM8ikSO0BYDgVd+Az3x4bQtSzJUzXzhrS2TNm2StIOoQasjKMYXP1NJGw==
+ b=nlIzZZ+L63ce18tJUjLtriLWLYxE5OXKfPQ7aFOCJypxwph8UxLPiNOE1jLO4rLGS23w6L9TqeXQx1fcpo/F73bydVKQx056pXFMM7/CifZqGl9YNwmAB0B+9qR5YKP+xy5Bz7LWVfRJ+AU2XOG+kwWnhYzTcjSQZRgqQTQpwUK2e+gtsMfCTu7Y9tNp91r79oimgxZ2IOkOQ7xJlSxfL4LmUr6tb4m05k68NPQPqHomy75B+P19XjFqmDHXbqxnXnmc3hr9ONupDlM0JBJFYWj9vA7wNFPrIR6rgzKdpT02Gjlse1H7S0vgShFvm8p/PjRN2bBs0tuhIlfrEkk6uA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OdSyAVizp7sbcE1fxXSbMqb3JMkq0m8Mv/3jzTYhM1c=;
- b=IU8N7nlHPPY70nf51GZhDsYbvaBwjtMBG+SFWLVYKYY6V2pwP6aGxDI3TyC0msfZyN/OA+5RCQUrGu7iCQ6MCQVpbsFotK1y10iWPGVIMC5enwro7Ngac5JmTv0Btrr+pP14am8an89cgK7Qt+yibYW8Pi03rCP6bIEuj8fcCWA2W313/Xzjm7trB9/W1kR2sBx1D8TEeRnBKxCpRmk1nmBZkig9FZ2KHuqrKuIsHLsD+PJhQD+HrjxPJmW/bY0PkllIrXsHjypjAFxPTeSkYTZIhycovr6xjkWAuWNvEND4KkElvLVbzc4fUFLN8HDz3p1RqQ+vpWANdLEtm+pqTw==
+ bh=qDGsxnsID9JABLE6+VvkbPhVMdX+4zcbNLKGiAy6DMU=;
+ b=SfXXN2QmjzikDnxzU9OQvYI0QOwRyHtdJUOwN9CJ+GhJJpxwERB2jYnYF/gUG39SoICuxa/OJ1eHwQHNC7nE3FnygzV+yfnJcRDv8K54o9AQcpDMR/XbFWRnQ/UC90MJdXeIGcNiCyQDqIRujxR2Veq6X/MKuOvkEUMK76Yf/BMlLPYGSK6SxpE95o66XA3tHAmlBoZOAKxqtGnTW5cnV/jj4gZmUbVzkH9BpVMZqrlV4j68tO38tpNUZjIlpHoFoItoA8qD4gtYwjpeW5b04HzSOKDRa6Ji8fUR108OgH1E4u4StbEXmiNZptWV/IMDJse/xw2MeLKUHbA+FCn+Zw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OdSyAVizp7sbcE1fxXSbMqb3JMkq0m8Mv/3jzTYhM1c=;
- b=TLoNAZC3GP/MP7OwLCSDtAfHyHFRt7/Xt8DZyfsIX9m+ZOH2lSL/859NOgvF5s1hDEWyi6V40SRxBuF7Ahw176r4jO5/XBAeMuJLt99iwmMHkQmh0gGoH1nnDf8V0fAC0qe5YxQGvAXuHO9tD327x5zjm3dK1tI2m0xyV9OYHn6IgHbQKiRJtmi5pZDgqCS6X3wz7ta0Ky0Srh96XmfYOyfHmUJwOEajaCpgsmFOV0pP8Tuk/fpL9kgdyGmkpHzdxPP2nv2/NC/IFeJdO4gzxkzHx3K2wGpVO8P1JskFzwUquRtuhkN0YfL0Md8AKCuhV4f32rnVk3T02Jw8IzppKw==
-Received: from CH2PR18CA0055.namprd18.prod.outlook.com (2603:10b6:610:55::35)
- by CY8PR12MB7659.namprd12.prod.outlook.com (2603:10b6:930:9f::20) with
+ bh=qDGsxnsID9JABLE6+VvkbPhVMdX+4zcbNLKGiAy6DMU=;
+ b=RZiCvPWaJyJbiZQHQ6ibHNNawDqSmi/lTfqMoC3wZ52irBpKTJksT03IMu78eTHN99vE1uo5oQlAZ2P9bk3aTzFrLt++Mnqpi94Z0dBLkQv7qO2C8uEClX0Kd2itUO/LejbQifVQYHjYfvT5mGj7tbRf/v7v1gOj5CuH5EEzhYhgqTi6RmcOqFBXbAWeqETr+aY7iAa4G3Pis+zL8odZBv90QDCOMxPqMeSaphzntM3ObBghUvRVnG3Co/iMteKZF5CWMSTWR00ILBS8/i0kjrl1w4N/NOUjFB1GvgYc0t1PKXdN1xiUy859ivTM6oMMxLk/Q4MJNfIBQw5TLISiLw==
+Received: from BLAPR03CA0030.namprd03.prod.outlook.com (2603:10b6:208:32b::35)
+ by CH3PR12MB9079.namprd12.prod.outlook.com (2603:10b6:610:1a1::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Thu, 5 Nov
- 2026 15:29:26 +0000
-Received: from CH2PEPF000166C5.namprd04.prod.outlook.com
- (2603:10b6:610:55:cafe::6e) by CH2PR18CA0055.outlook.office365.com
- (2603:10b6:610:55::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.10 via Frontend Transport; Thu, 5
- Nov 2026 15:29:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.10; Thu, 5 Nov
+ 2026 15:29:33 +0000
+Received: from BN2PEPF000044A8.namprd04.prod.outlook.com
+ (2603:10b6:208:32b:cafe::10) by BLAPR03CA0030.outlook.office365.com
+ (2603:10b6:208:32b::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.569.12 via Frontend Transport; Thu, 5
+ Nov 2026 15:29:33 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 216.228.118.232) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ is 216.228.118.233) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CH2PEPF000166C5.mail.protection.outlook.com (10.167.244.235) with Microsoft
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN2PEPF000044A8.mail.protection.outlook.com (10.167.243.102) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Thu, 5 Nov 2026 15:29:26 +0000
+ 15.21.592.5 via Frontend Transport; Thu, 5 Nov 2026 15:29:33 +0000
 Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Thu, 5 Nov
  2026 07:29:11 -0800
 Received: from drhqmail202.nvidia.com (10.126.190.181) by
  drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Thu, 5 Nov 2026 07:29:10 -0800
+ 15.2.2562.56; Thu, 5 Nov 2026 07:29:11 -0800
 Received: from localhost (10.127.8.12) by mail.nvidia.com (10.126.190.181)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56 via Frontend
- Transport; Thu, 5 Nov 2026 07:29:10 -0800
+ Transport; Thu, 5 Nov 2026 07:29:11 -0800
 From: Ankit Agrawal <ankita@nvidia.com>
 To: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
@@ -108,9 +108,9 @@ CC: <dave@stgolabs.net>, <jic23@kernel.org>, <dave.jiang@intel.com>,
 	<andriy.shevchenko@linux.intel.com>, <linux-coco@lists.linux.dev>,
 	<terry.bowman@amd.com>, <nik.borisov@suse.com>, <brads@mainlining.org>,
 	<lukas@wunner.de>, <rrichter@amd.com>, <gourry@gourry.net>
-Subject: [RFC PATCH v2 2/5] PCI/CXL: Populate and insert/remove pdev->coh_resource[]
-Date: Thu, 5 Nov 2026 15:29:06 +0000
-Message-ID: <20261105152909.53452-3-ankita@nvidia.com>
+Subject: [RFC PATCH v2 3/5] PCI/TSM: Derive the coherent-range IPA from CXL
+Date: Thu, 5 Nov 2026 15:29:07 +0000
+Message-ID: <20261105152909.53452-4-ankita@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261105152909.53452-1-ankita@nvidia.com>
 References: <20261105152909.53452-1-ankita@nvidia.com>
@@ -128,170 +128,377 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF000166C5:EE_|CY8PR12MB7659:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4621045c-b461-4e4f-cf49-08df3b5193ce
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A8:EE_|CH3PR12MB9079:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2dc598b-648f-4adc-8c07-08df3b5197dd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|82310400026|36860700016|261009223027099003|261021123027099003|261021121427099003|11063799006|56012099006|261026121527099003|10067099003|18002099003|261102123227099003|22082099003;
+	BCL:0;ARA:13230040|82310400026|23010399003|36860700016|1800799024|7416014|376014|56012099006|11063799006|261009223027099003|261102123227099003|261021123027099003|261022105027099003|261028144727099003|261102130727099003|261021121427099003|261026121527099003|261026140227099003|10067099003|18002099003|22082099003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	TLnxKsXCb5bWNBLIHPPXcY30C0s+ZMfeUYA1ORHBgCkD5Iv34xc1nny+axyCUkxDVCQd/1qW2YhZxNtR7vgWirqeh7k4YcjSJoPMvzTJsmjBuAVz9mWbuOXrckXKbJHG6yLCVoqEfVE7QPFYVxYZGQEAskN71tuDuYhpPymAr5llveMeot2H7q9qj+056Rd8I+mzuc2qOgHp5iCHMAtVb1nvLAMSch5upex4Nf3MRtmoNZbnKu2UfnYaazz7y2ylb6Vwn5Oe8oScDzUDMLzxRVwW/6nSaT2HOt7Wcs90RQPLGk45sUxmnvraR0dwaAeB7Iowtse1YO27MlUWIsBk/7DXy2Xp2QQamzAhk1cOpqOFG5IocfTXzsTtbbuR+seutEJIjF+jzZaYiHZTce49s2pS0w8+m/jhX0rQlJiGF9SC83/CMmIXwjeMa/IIbyjcXhgLe5lKbv5QzmqcpoQpHaOPNMhKc2llSVczu3yAFjPfKU507QBgbSGhCSH+/vIa3aHtOkLsauI33ksPaHGGv1Gc01cWQBBJzo/GxKZIFVeFEHmSIogWjRjxXAg5YVOhFpvIQ2VAzRC/FLfJdsnjpIP6iznj2HWggOKA3iIcwtc4zxE2jpBCwRiwOV/0Dsh/o2GNgOZYl0iKMh50RBezPbwzJeTGG4hQpfwMFVfxfaDDfm6lOcahpdQYP6+AW/aNiYAAI9/OeeZJRuQJSYGlEA==
+	kIPzmFrnY/biY+tNHZzCHi/GsWAYgjXNLQwONhSUGbxSQ0PUJoLWqwItcpQDwLjflf66ij4uZetMeHN5/e1/ONKxRbSPPiyRHlDU6ZZAcQ8+FiXmi2lXPxfL5MSwxOgzQeN7p5xNC6DpSONoGYpuRWIK12ujhKC3kV7fw5yVpUZh6WLAchX7yJ15BpVNWVsjr0wkJ10lBMBglAsY5Px3i+bWg9OrtZUWWPvCZm3J8W3iaplowONKhZE9DaLVaWLEeEPuTLzTbCRwVOpa+UNZ42vn17d2E0Dcmq8AFkjbfFD38umua/HdcubjLmfwUv0DK326Cn/1SLlliTa5McepgzfdyIWbfE1fLQXWoUz5r/jqCvPhGRnhWV7GPDBYroqxmbaK4ObwdAL/eulkIt4LytG9XCEG8mYvfjoWVbPnenF66K1DIMcKFRZxdWEaZwJgcPgaqjMbOhkM9J/6U0v93AN24EtYk2vKdi1HwSobVjqrm2kAnBBL9RIC5I4YW6KNKUGu4UIPTFMAW9Suq7DlFqTXJpzbom0frn6jlNTLYMJVz0he9i0fKGTrl0yCRRXbN/N1IS1lAHXlwDL+DPiNxsnm3mG4IDYKRLYvRiykCT43NxJyptxZkdnbZxlrh0ql/eZKhPCc35vDD1oRuZiVKMuWU+YQPReegmxi40v4TVKtmn9kbHgL9EinNe/zLH4SAVoi1IFq19NZWW4bUyhTFQ==
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(82310400026)(36860700016)(261009223027099003)(261021123027099003)(261021121427099003)(11063799006)(56012099006)(261026121527099003)(10067099003)(18002099003)(261102123227099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(36860700016)(1800799024)(7416014)(376014)(56012099006)(11063799006)(261009223027099003)(261102123227099003)(261021123027099003)(261022105027099003)(261028144727099003)(261102130727099003)(261021121427099003)(261026121527099003)(261026140227099003)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	/tGnlafeGEmQuRJ18si+bL9QRfxLNc52HT20FfEtDevwssXrN7p2dMUW2WVDLO0EFdQuPaij147jouCkV73C9Bxzaz4MxJaSfIivES3Z8sAbabNyY5CfWiZuMfELT5ZitvsQvMFx1DjEdl0jmngcbZQkIqsIrcnZJMtbGaR5zFTLSboCHhAFcoQUp22m+9As7d08JJP9qkhosJMziQPbDtBsrm6nG8WlpomprR34r9PwhaVYEDJZIyM2ZT1MSeqbSRmxCKyQI39LF+3ACUC/BPNXho7w03LW5aDuJb2tlsho52BbHzXLPdi4dzIaLliSr3D6dEP+WO1HyWCjtsuenspVr0h6D5wiW6e5TPzu+vMtnMH+XuLtKZ+5mpttydFSCosK5ucwhp08u3GzI5vezFjCqYndWPyuH1wgomvNlA226Qq8Pzf0DP3HvVbpxega
+	ZdZ4z22lx/y3Rd3o9Gvl7wXr9/29icgg793BvCnoJcRgqK4K0yqo+yVGqNxAYp+eyX2WGMuJDG0SgiwRt35ahNrrWCzMvcW2QD9L5OZTqb2zTGfXMr1zUPcSPVae1lmI7fk8fVfBLTr0WbvO1uLEw0WMWNc+mOlZfrCw5rhJNbz86pr8Gw5jnt5AbQDeHfrEtTKSxGq0JKMbJwGwiNxMbEu6pgHsNI2RaMS4UkQ5LYtfbDld5jDJw7jf3Dnx/tuJ+pHcSpJD7PRr8j+2A4luraMXn7yfUP/Yd+5WktduQzhr+e+NHKLkHkzw801g2CMClaaZifxk5QnWz/kPO7w+x6FPLS1ep6x5xN5yxR7hMtyayc4h3uy/XvRq8ljxzgJ1yix3H+NaRZzzT/WIKDidn2M8UiMPQ+1YBhHl1OLUDCLuBWl22DgFEK2sqvcYVhO0
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2026 15:29:26.6646
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2026 15:29:33.4147
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4621045c-b461-4e4f-cf49-08df3b5193ce
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2dc598b-648f-4adc-8c07-08df3b5197dd
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF000166C5.namprd04.prod.outlook.com
+	BN2PEPF000044A8.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7659
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9079
 
-On systems with precommitted HDM decoders, the firmware programs
-the decoders before any software runs. This range also stays constant
-over the runs.
+The DevIf report range with range ID 0xffff describes the device's
+coherent (CXL) memory window and unlike every other reported range
+carries no BAR number. Recognize
+PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT and recover that window's
+address from the CXL side of the device instead of treating it as a
+BAR-relative offset.
 
-Snapshot precommitted CXL HDM decoder ranges into a new
-pdev->coh_resource[] array, so later code has a known-good source for
-a device coherent (CXL) windows without re-scanning decoder
-registers.
+pci_tsm_retrieve_coherent_range() resolves the window from
+pdev->coh_resource[], snapshotted once with the committed CXL HDM
+decoders range. The range to IPA conversion is applied onto
+range_base/range_len using pdev->coh_resource[]. The ascending BAR order
+checks stay on the BAR path only. The coherent range is required to be
+the last report entry and is not part of the BAR sequence.
 
-Only decoders that are enabled and locked are recorded, since an
-unlocked decoder can be reprogrammed and leave the snapshot stale.
-Zero-sized decoders are skipped. Decoders found to use Normalized
-Addressing (a DPA rather than an HPA) are dropped later, once the flag is
-known in a follow-up patch.
+An HDM decoded window lives in the CXL Fixed Memory Window and is not
+part of a BAR. So by construction, no pci_dev resource contains it. So
+the function pci_tsm_coh_resource_contains() validates the range against
+pdev->coh_resource[] instead; the same known-good snapshot
+pci_tsm_retrieve_coherent_range() already trusts.
 
 Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
 ---
- drivers/cxl/core/resource.c | 60 ++++++++++++++++++++++++++++++++++++-
- include/linux/pci.h         | 14 +++++++++
- 2 files changed, 73 insertions(+), 1 deletion(-)
+ drivers/pci/Kconfig     |  12 ++++
+ drivers/pci/tsm.c       | 119 ++++++++++++++++++++++++++++------------
+ include/linux/pci-tsm.h |  75 +++++++++++++++++++++++++
+ 3 files changed, 170 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-index 3422139ae3ab..d837f8e952a9 100644
---- a/drivers/cxl/core/resource.c
-+++ b/drivers/cxl/core/resource.c
-@@ -404,6 +404,54 @@ static struct cxl_hdm_info *cxl_pci_hdm_read_info(struct pci_dev *pdev,
- 	return ERR_PTR(pcibios_err_to_errno(rc));
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 16fbd4212e0f..22c416c84a6f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -139,6 +139,18 @@ config PCI_TSM
+ 
+ 	  Enable a platform TSM driver to use this capability.
+ 
++config PCI_TSM_CXL_COHERENT
++	bool "PCI TSM: CXL coherent range support"
++	depends on PCI_TSM && CXL_RESET
++	default y
++	help
++	  Enables helper functions to manage coherent regions on CXL devices
++	  for TSM. The device CXL coherent (CXL.mem) ranges could be tracked
++	  and fetched across subsystems to be reported in a TDISP Device
++	  Interface Report.
++
++	  If unsure, say Y.
++
+ config PCI_DOE
+ 	bool "Enable PCI Data Object Exchange (DOE) support"
+ 	help
+diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+index d074bfd18d40..bc3218c58ff0 100644
+--- a/drivers/pci/tsm.c
++++ b/drivers/pci/tsm.c
+@@ -939,8 +939,9 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+ 		return -EBUSY;
+ 
+ 	for (i = 0; i < mmio->nr; i++) {
+-		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+-		int j;
++		struct pci_tsm_mmio_entry *entry = pci_tsm_mmio_entry(mmio, i);
++		struct resource *res = &entry->res;
++		bool coherent = entry->flags & PCI_TSM_MMIO_F_COHERENT;
+ 
+ 		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+ 			break;
+@@ -950,13 +951,28 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+ 					     pci_name(pdev), IORESOURCE_MEM,
+ 					     IORES_DESC_ENCRYPTED);
+ 
+-		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+-			if (resource_contains(pci_resource_n(pdev, j), res))
++		/*
++		 * The coherent (CXL.mem) range isn't BAR-backed, so check it
++		 * against pdev->coh_resource[] instead of pci_resource_n().
++		 */
++		if (coherent) {
++			if (!pci_tsm_coh_resource_contains(pdev, res))
+ 				break;
+-
+-		/* Request is outside of device MMIO */
+-		if (j >= PCI_NUM_RESOURCES)
+-			break;
++		} else {
++			struct resource *r;
++			bool contained = false;
++
++			pci_dev_for_each_resource(pdev, r) {
++				if (resource_contains(r, res)) {
++					contained = true;
++					break;
++				}
++			}
++
++			/* Request is outside of device MMIO */
++			if (!contained)
++				break;
++		}
+ 
+ 		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+ 			break;
+@@ -988,6 +1004,7 @@ EXPORT_SYMBOL_GPL(pci_tsm_mmio_teardown);
+ #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE BIT(2)
+ #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_UPDATABLE BIT(3)
+ #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID GENMASK(31, 16)
++#define PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT 0xffff
+ 
+ /* An interface report 'pfn' is 4K in size */
+ struct pci_tsm_devif_mmio {
+@@ -1043,6 +1060,7 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+ 		return NULL;
+ 
+ 	for (i = 0; i < mmio_range_count; i++) {
++		struct range window;
+ 		u64 range_off;
+ 		struct range range;
+ 		const struct pci_tsm_devif_mmio *mmio_data = &devif_report->mmio[i];
+@@ -1053,33 +1071,58 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+ 		u32 attr = __le32_to_cpu(mmio_data->attributes);
+ 		int bar = FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID,
+ 				    attr);
++		bool coherent =
++			bar == PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT;
+ 
+-		if (bar >= PCI_STD_NUM_BARS ||
+-		    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+-		    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+-			pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+-			return NULL;
+-		}
+-
+-		if (last_bar > bar) {
+-			pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+-			return NULL;
+-		}
+-
+-		if (last_bar < bar) {
+-			resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+-
+-			/* Transition to a new bar */
+-			last_bar = bar;
++		if (coherent) {
++			if (i != mmio_range_count - 1) {
++				pci_dbg(pdev, "Coherent reporting range is not last\n");
++				return NULL;
++			}
+ 
+ 			/*
+-			 * Determine the obfuscated base of the BAR. BAR
+-			 * offsets are never obfuscated.
++			 * No BAR names the coherent range, so fail closed if
++			 * neither a CXL region nor a committed HDM decoder
++			 * resolves its address.
+ 			 */
+-			reporting_bar_base = tsm_offset & ~mask;
+-		} else if (tsm_offset < last_reporting_end) {
+-			pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+-			return NULL;
++			if (pci_tsm_retrieve_coherent_range(pdev, &window)) {
++				pci_dbg(pdev, "No CXL region or committed HDM decoder for coherent reporting range\n");
++				return NULL;
++			}
++
++			reporting_bar_base = tsm_offset &
++					     ~((u64)range_len(&window) - 1);
++		} else {
++			if (bar >= PCI_STD_NUM_BARS ||
++			    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
++			    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
++				pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
++				return NULL;
++			}
++
++			if (last_bar > bar) {
++				pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
++				return NULL;
++			}
++
++			if (last_bar < bar) {
++				resource_size_t mask = pci_resource_len(pdev, bar) - 1;
++
++				/* Transition to a new bar */
++				last_bar = bar;
++
++				/*
++				 * Determine the obfuscated base of the BAR. BAR
++				 * offsets are never obfuscated.
++				 */
++				reporting_bar_base = tsm_offset & ~mask;
++			} else if (tsm_offset < last_reporting_end) {
++				pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
++				return NULL;
++			}
++
++			window.start = pci_resource_start(pdev, bar);
++			window.end = pci_resource_end(pdev, bar);
+ 		}
+ 
+ 		/* Per spec the tsm_offset never results in overflow / underflow */
+@@ -1090,19 +1133,21 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+ 		}
+ 
+ 		range_off = tsm_offset - reporting_bar_base;
+-		if (pci_resource_len(pdev, bar) < range_off + size) {
+-			pci_dbg(pdev, "Reporting range larger than BAR size\n");
++
++		if (range_len(&window) < range_off + size) {
++			pci_dbg(pdev, "Reporting range larger than %s size\n",
++				coherent ? "coherent range" : "BAR");
+ 			return NULL;
+ 		}
+ 
+-		range.start = pci_resource_start(pdev, bar) + range_off;
++		range.start = window.start + range_off;
+ 		range.end = range.start + size - 1;
+ 
+ 		/* Only record the TEE ranges for later consideration by ioremap() */
+ 		if (FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE,
+ 			      attr)) {
+-			pci_dbg(pdev, "Skipping non-TEE range, BAR%d %pra\n",
+-				bar, &range);
++			pci_dbg(pdev, "Skipping non-TEE range, %s %pra\n",
++				coherent ? "coherent range" : "BAR", &range);
+ 			continue;
+ 		}
+ 
+@@ -1110,6 +1155,8 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+ 		entry->res.end = range.end;
+ 		entry->res.flags = IORESOURCE_MEM;
+ 		entry->tsm_offset = tsm_offset;
++		if (coherent)
++			entry->flags |= PCI_TSM_MMIO_F_COHERENT;
+ 		mmio->nr++;
+ 	}
+ 
+diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+index e54ad057fa8e..7c29f10e7795 100644
+--- a/include/linux/pci-tsm.h
++++ b/include/linux/pci-tsm.h
+@@ -1,8 +1,10 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __PCI_TSM_H
+ #define __PCI_TSM_H
++#include <linux/bits.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
++#include <linux/range.h>
+ #include <linux/sockptr.h>
+ 
+ struct pci_tsm;
+@@ -199,15 +201,20 @@ enum pci_tsm_req_scope {
+ 	PCI_TSM_REQ_DEBUG_WRITE = 3,
+ };
+ 
++/* The range is the device's CXL coherent (CXL.mem) window, not BAR-backed */
++#define PCI_TSM_MMIO_F_COHERENT BIT(0)
++
+ /**
+  * struct pci_tsm_mmio_entry - an encrypted MMIO range
+  * @res: MMIO address range (typically Guest Physical Address, GPA)
+  * @tsm_offset: Host Physical Address, HPA obfuscation offset added by the TSM.
+  *		Translates report addresses to GPA.
++ * @flags: PCI_TSM_MMIO_F_* attributes for the range
+  */
+ struct pci_tsm_mmio_entry {
+ 	struct resource res;
+ 	u64 tsm_offset;
++	u32 flags;
+ };
+ 
+ struct pci_tsm_mmio {
+@@ -227,6 +234,74 @@ static inline struct resource *pci_tsm_mmio_resource(struct pci_tsm_mmio *mmio,
+ 	return &mmio->mmio[idx].res;
  }
  
++#ifdef CONFIG_PCI_TSM_CXL_COHERENT
 +/*
-+ * Snapshot committed decoders into pdev->coh_resource[] which is called
-+ * once per pdev before any driver can bind, so a populated entry is
-+ * always firmware-committed and not driver-committed.
++ * pci_tsm_coh_resource_contains() - check a coherent range against the
++ * PCI-core coh_resource[] snapshot
++ * @pdev: device owner of @res
++ * @res: candidate coherent MMIO range to validate
 + *
-+ * Insert each entry into iomem_resource for /proc/iomem visibility and
-+ * conflict detection.
++ * The coherent (CXL.mem) range isn't BAR-backed. So pci_resource_n()
++ * containment doesn't apply. Check against pdev->coh_resource[] instead.
++ *
++ * Return: true if @res falls within a populated coh_resource[] entry.
 + */
-+static void cxl_populate_coh_resource(struct pci_dev *pdev,
-+				      struct cxl_hdm_info *info)
++static inline bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
++						 const struct resource *res)
 +{
-+	int count = min(info->decoder_count, PCI_CXL_MAX_COHERENT_RANGES);
++	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
++		struct resource *coh_res = &pdev->coh_resource[i];
 +
-+	for (int i = 0; i < count; i++) {
-+		struct cxl_decoder_config *config = &info->settings[i].config;
-+		struct resource *res = &pdev->coh_resource[i];
-+		struct resource *conflict;
-+		u64 size = range_len(&config->hpa_range);
-+
-+		/*
-+		 * Only a decoder that is both enabled and locked has a fixed
-+		 * mapping that won't change under the snapshot. Also skip a
-+		 * zero-sized decoder, whose resource end would wrap.
-+		 */
-+		if ((config->flags &
-+		     (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK)) !=
-+			    (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK) ||
-+		    !size)
-+			continue;
-+
-+		*res = DEFINE_RES_NAMED_DESC(config->hpa_range.start, size,
-+					     "CXL coherent memory",
-+					     IORESOURCE_MEM, IORES_DESC_NONE);
-+
-+		conflict = insert_resource_conflict(&iomem_resource, res);
-+		if (conflict) {
-+			pci_warn(pdev,
-+				 "CXL coherent range: decoder%d %pR conflicts with %s %pR, leaving unpopulated\n",
-+				 i, res, conflict->name, conflict);
-+			memset(res, 0, sizeof(*res));
-+			continue;
-+		}
-+
-+		pci_info(pdev, "CXL coherent range: decoder%d precommitted, populated %pR\n",
-+			 i, res);
++		if (resource_type(coh_res) == IORESOURCE_MEM &&
++		    resource_contains(coh_res, res))
++			return true;
 +	}
++
++	return false;
 +}
 +
- static int __pci_cxl_hdm_cache_init(struct pci_dev *pdev)
- {
- 	struct cxl_register_map map = { };
-@@ -442,8 +490,10 @@ static int __pci_cxl_hdm_cache_init(struct pci_dev *pdev)
- 	struct cxl_hdm_info *info __free(kfree) = read_info;
- 	guard(rwsem_write)(&cxl_rwsem.dpa);
- 	/* Another initializer may have published while we read MMIO. */
--	if (!pdev->hdm)
-+	if (!pdev->hdm) {
-+		cxl_populate_coh_resource(pdev, info);
- 		pdev->hdm = no_free_ptr(info);
-+	}
- 
- 	return 0;
- }
-@@ -466,6 +516,14 @@ void pci_cxl_hdm_cache_release(struct pci_dev *pdev)
- 	info = pdev->hdm;
- 	/* Unpublish before freeing so subsequent readers cannot use stale state. */
- 	pdev->hdm = NULL;
-+
++/*
++ * pci_tsm_retrieve_coherent_range() - resolve the device's coherent CXL window
++ * @pdev: device owner of the reported ranges
++ * @out: host physical (guest IPA) range of the coherent window
++ *
++ * The coherent range carries no BAR number, so its address comes from
++ * pdev->coh_resource[], a pre-driver-bind snapshot of committed CXL HDM
++ * decoders.
++ *
++ * Return: 0 with *@out set from the first populated entry, or -ENODEV if no
++ * entry is populated.
++ */
++static inline int pci_tsm_retrieve_coherent_range(struct pci_dev *pdev,
++						  struct range *out)
++{
 +	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
 +		struct resource *res = &pdev->coh_resource[i];
 +
-+		if (res->parent)
-+			remove_resource(res);
++		if (resource_type(res) != IORESOURCE_MEM)
++			continue;
++
++		out->start = res->start;
++		out->end = res->end;
++		return 0;
 +	}
 +
- 	kfree(info);
- }
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 0d24fc65c049..ad7917895f4c 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -148,6 +148,13 @@ enum {
- 	DEVICE_COUNT_RESOURCE = PCI_NUM_RESOURCES,
- };
- 
-+/*
-+ * Max CXL HDM decoders tracked per endpoint in pci_dev->coh_resource[].
-+ * CXL 3.1 spec section 8.2.4.20.1 - CXL HDM Decoder Capability Register,
-+ * mention a max of 10 decoders for a CXL device.
-+ */
-+#define PCI_CXL_MAX_COHERENT_RANGES 10
++	return -ENODEV;
++}
++#else
++static inline bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
++						 const struct resource *res)
++{
++	return false;
++}
 +
- /**
-  * enum pci_interrupt_pin - PCI INTx interrupt values
-  * @PCI_INTERRUPT_UNKNOWN: Unknown or unassigned interrupt
-@@ -573,6 +580,13 @@ struct pci_dev {
- #endif
- #ifdef CONFIG_CXL_RESET
- 	struct cxl_hdm_info *hdm;	/* CXL HDM decoder state */
-+	/*
-+	 * Precommitted CXL HDM decoder coherent ranges, snapshotted before
-+	 * any driver binds. One entry per decoder index. Only written by
-+	 * pci_cxl_hdm_cache_init()/_release(), outside any bound driver's
-+	 * read window.
-+	 */
-+	struct resource coh_resource[PCI_CXL_MAX_COHERENT_RANGES];
- #endif
- #ifdef CONFIG_PCI_NPEM
- 	struct npem	*npem;		/* Native PCIe Enclosure Management */
++static inline int pci_tsm_retrieve_coherent_range(struct pci_dev *pdev,
++						  struct range *out)
++{
++	return -ENODEV;
++}
++#endif /* CONFIG_PCI_TSM_CXL_COHERENT */
++
+ #ifdef CONFIG_PCI_TSM
+ int pci_tsm_register(struct tsm_dev *tsm_dev);
+ void pci_tsm_unregister(struct tsm_dev *tsm_dev);
 -- 
 2.53.0
 
