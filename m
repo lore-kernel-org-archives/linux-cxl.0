@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793851075;
-	b=2DN2a1H6CMM9+HsvTywsn/k+FipZaNQKtqs7URb7vJaUAiQWOJ/kbPZ8Qx3K98BRQCj8
-	 y3FPffvwVn3F47UTYKMXF6/zM6pwosGctf5gfJ23sbYoVKbjRqrrWL+GFNaVaExnR/A0F
-	 x7EDcXKpFaSImpTuUQGKhplkTWAngXXqpZfeD4KqPRaXi+nw+4dm1u3fN33hoHc8DiAEk
-	 mGXAjT3w+bPt77D+h/bP85ABYCscqSEPXhqOyEJW2VAwIaTbDJEP1f+eCWX706QvfH6GN
-	 KoFnTdlcwvhBhT6k7sBdWDnFDB1fRG7ndAVbZrw5dVNtF7IAgQx2mggwXc8sRevvYjg==
+	t=1793851076;
+	b=XZq99hIiZ4B2bfJTM0YVBJMFHZeoVGmdRss+lNG9qw1KKitcv7etWzAjJLChw9lpIf+7
+	 hCalDohOokDoovotHtdHzEy4/HeDW1j+Ui41+Xa3jpLpZlEJfJwzuSoVAI5gqTIygB6UJ
+	 m3qO9nqLYnkDaoocAzyxkjnoUKzhDAMt6BfdPfn+pUoTS4ONk8Uq3xi/YlLwHQsc2zNWM
+	 QaZrvH9HQicNU761widv4uYUyeOrQWQFRT/5HrOx/A/QlfKZHEx4oSNGj3v7we+0q3l3J
+	 ZJDHZUiPyC1H8SK1whXWx7a9k8UTKiHzBermZd3WrrYf9NAs3onv8mmsLvE+bi/EltQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793851075;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793851076;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=FXfPFG2J9pueg32pCmr29fJyTDsWWKlwI8cye3tjdpE=;
-	b=apl40i+fAdCH7F+em9rPb5kKa3sBtkMeEsEYkWGrUwQCVDleAMXkz0kdv0YOjBX39z0b
-	 tc6GTX2sn9j38siQBiqV6rvnUQP46w3n4gWwQ1p94ZUOGlDta66KrB5GX2UvzrH+YaNWr
-	 frfhysq7Xq5sI7EgNK1Xcvw2c8xSm5ZuedZeXWAelCtzcAaMeoKfL9DSZIq5fPmIFWyVz
-	 EN/qSD6iuhCaENrSmTsY91gKZ+qOGexnVq/gIVUBLOEmAAxV9lC3GADyPCLXkG8y9DFgB
-	 ZD+p9rl0fzbWgdxOMfcoOKXNZDVBQmNaCLMR9xd1JNKqyma8x1jiAqQJlzevP8gtRLg==
+	bh=7Ituk/+Ar081RCQfmI6hMZ/FOrTHgYG6L75cTXLh9vM=;
+	b=4Jlc39GuZQSb3+EJ39ZVvm1f6q326Y/BZ4ugT4bZ0x0gBDH8oV7hg9dlAabZo/3KJ6sl
+	 JtkTOsawif7RMu/Ktelpm/amlPbDtNZuj4LzxChAdnD7GVvgNj7Z05bYZKHC13CLZ3/hH
+	 zUXypsnR5SSYp0cZILT1UE8LAudrS/ETOmxSIfPzqH3gbJuxeZZGARRXXc474d26CF6GF
+	 Rbxgfb4W3MDxYRxoluOEzkUwkE3Kcwf3NLS2PnmN2Ut7MHSb3q0Jhd3mTE5zUGvAihDgT
+	 KAb5Rq4gHHeM+4oxZ2zJCaJ+5Y19XgUfL1+GxGLCtgU89WWsPqHrpsv4cL7QJGbTHMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dqrprb+w;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KpPRtvgp;
 	arc=none smtp.remote-ip=192.198.163.16
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8677E606A329
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Nov 2026 03:57:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8677E606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CA9606A32E
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Nov 2026 03:57:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4CA9606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dqrprb+w
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KpPRtvgp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793851074; x=1825387074;
+  t=1793851075; x=1825387075;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BthJSsiKJGSDiQEfjqAkya6Al/YRk92tGzI64uMuyqQ=;
-  b=dqrprb+wJ4bVlvawv/gOe/zkvIgMkhOy1CSKmnNE6sHRK7fH2hxhyBQT
-   ofvcs3+ToclDk/YO8wVsS8e3inoRVdDGtjOi1BbPZ58rbMuLzkvSBq4S6
-   EFml6tAVPBCVrjiqvmgj+lrnKj5b0I71X2o2aVlS/JQsgvb7cjblhnZX/
-   9metGxb4So3gLptjH/zlJLYOkQZ/YmsbuNIY7R1AuSnIi/mZe4ol2NDBQ
-   mSNcRLgPU9oqEIzVfEcjkhmSoqAC6ocMx2xJTickafVAxDBit+RrNARui
-   WAcyLQ95N310cflo1DZh4qH3bsxeudOSzPYrKtqqKKECGWcrNXS2xPO0U
+  bh=ri+PuFg19hSG0w6tDahlxtWiT5t/PZ5HT3YSfeIHJCk=;
+  b=KpPRtvgpRz6fLJhbRX7rhrmxLsAsO9lRc3vCahgk/J8wpmhrM1xDVKZ+
+   9KOVKMMosqVat2txJ7wT2eJlynaMCkc2dzZHQ8xxO/CfEf2qZXC6tFkiu
+   MU0NqvC1aHhDHQaqPMBf8OGI1VIG5iDd/0+SyZNl4rwQUkdmeWuR23fCj
+   IH2I5VHhr6Sh2HQ+Dlo2iS5R7abbNeNGsgOTYy7u5rg1Ap6OOME/kYFLT
+   nt0nfbkyVTV28xap6a/55JeJ82UGkfuCMuV/Mamux0ZufFXEEJHVFe0WN
+   pOMBikAxxY+6JP5vW53uOG8m0HhMnncfz8WftQ3S7gegTCQG7ELjqXYmG
    w==;
-X-CSE-ConnectionGUID: oQMAiSv5S3GrIK4vw169eQ==
-X-CSE-MsgGUID: JQ3ha7bsSiKijrtUrXQKFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2643978"
+X-CSE-ConnectionGUID: Y8R8YtzqRUiHUNLLmvF5Ug==
+X-CSE-MsgGUID: CgYyqvYFTO2H+QGXGEiJsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2643983"
 X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="2643978"
+   d="scan'208";a="2643983"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:57:53 -0800
-X-CSE-ConnectionGUID: hvyrBTqBRtS4uFoSyirNbg==
-X-CSE-MsgGUID: BhqbSS5cRsGFmdrLMNnvjg==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:57:54 -0800
+X-CSE-ConnectionGUID: nzH84aG2SCCUBOQ3ZuatAQ==
+X-CSE-MsgGUID: PzewdYUbQ1eWjY/CKUJ5iA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="6741087"
+   d="scan'208";a="6741090"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.56])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:57:52 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 19:57:53 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -70,10 +70,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Li Ming <ming.li@zohomail.com>,
 	Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 2/3] tools/testing/cxl: Skip the auto region when no volatile window is active
-Date: Wed,  4 Nov 2026 19:57:47 -0800
-Message-ID: <aabf868d7cc2bb2793acaaac3c358de5c87a38e2.1793850480.git.alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [PATCH v3 3/3] tools/testing/cxl: Add CFMWS windows for region selection tests
+Date: Wed,  4 Nov 2026 19:57:48 -0800
+Message-ID: <89e8d2cfde4f1054f37a4f48f2b206a7f05108f7.1793850480.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1793850480.git.alison.schofield@intel.com>
 References: <cover.1793850480.git.alison.schofield@intel.com>
@@ -88,128 +89,159 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The mock auto region always uses CFMWS0. With XOR interleave arithmetic
-that window is inactive, so its HPA base is never assigned and the
-endpoint decoders are programmed at HPA 0.
+Region selection needs topologies where multiple root decoders can
+satisfy a request and where a decoder supports both RAM and PMEM. The
+mock topology provides neither.
 
-No root decoder matches that range, leaving DPA allocated to endpoint
-decoders that are not part of a region.
+Add two x1 windows, one PMEM only and one supporting both RAM and PMEM,
+while preserving the existing modulo decoder identities.
 
-Set up the auto region only when a volatile window is active.
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ tools/testing/cxl/test/cxl.c | 71 ++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 15 deletions(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 6819143640a9..d0793961b0ee 100644
+index d0793961b0ee..7fae489d00e9 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -424,6 +424,18 @@ struct acpi_cedt_cxims *mock_cxims[1] = {
- 	[0] = &mock_cedt.cxims0.cxims,
+@@ -185,12 +185,20 @@ static struct {
+ 	} cfmws6;
+ 	struct {
+ 		struct acpi_cedt_cfmws cfmws;
+-		u32 target[2];
++		u32 target[1];
+ 	} cfmws7;
+ 	struct {
+ 		struct acpi_cedt_cfmws cfmws;
+-		u32 target[3];
++		u32 target[1];
+ 	} cfmws8;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[2];
++	} cfmws9;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[3];
++	} cfmws10;
+ 	struct {
+ 		struct acpi_cedt_cxims cxims;
+ 		u64 xormap_list[2];
+@@ -325,22 +333,20 @@ static struct {
+ 		},
+ 		.target = { 3 },
+ 	},
+-	/* .cfmws6,7,8 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
+ 	.cfmws6 = {
+ 		.cfmws = {
+ 			.header = {
+ 				.type = ACPI_CEDT_TYPE_CFMWS,
+ 				.length = sizeof(mock_cedt.cfmws6),
+ 			},
+-			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+-			.window_size = SZ_256M * 8UL,
++			.window_size = SZ_256M * 4UL,
+ 		},
+-		.target = { 0, },
++		.target = { 2 },
+ 	},
+ 	.cfmws7 = {
+ 		.cfmws = {
+@@ -348,16 +354,17 @@ static struct {
+ 				.type = ACPI_CEDT_TYPE_CFMWS,
+ 				.length = sizeof(mock_cedt.cfmws7),
+ 			},
+-			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+-			.interleave_ways = 1,
+-			.granularity = 0,
++			.interleave_ways = 0,
++			.granularity = 4,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+-			.window_size = SZ_256M * 8UL,
++			.window_size = SZ_256M * 4UL,
+ 		},
+-		.target = { 0, 1, },
++		.target = { 1 },
+ 	},
++	/* .cfmws8,9,10 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
+ 	.cfmws8 = {
+ 		.cfmws = {
+ 			.header = {
+@@ -365,6 +372,38 @@ static struct {
+ 				.length = sizeof(mock_cedt.cfmws8),
+ 			},
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 0,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, },
++	},
++	.cfmws9 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws9),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 1,
++			.granularity = 0,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, 1, },
++	},
++	.cfmws10 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws10),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 8,
+ 			.granularity = 1,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+@@ -407,18 +446,20 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
+ 	[3] = &mock_cedt.cfmws3.cfmws,
+ 	[4] = &mock_cedt.cfmws4.cfmws,
+ 	[5] = &mock_cedt.cfmws5.cfmws,
+-	/* Modulo Math above, XOR Math below */
+ 	[6] = &mock_cedt.cfmws6.cfmws,
+ 	[7] = &mock_cedt.cfmws7.cfmws,
++	/* Modulo Math above, XOR Math below */
+ 	[8] = &mock_cedt.cfmws8.cfmws,
++	[9] = &mock_cedt.cfmws9.cfmws,
++	[10] = &mock_cedt.cfmws10.cfmws,
  };
  
-+static struct acpi_cedt_cfmws *mock_auto_region_cfmws(void)
-+{
-+	for (int i = cfmws_start; i <= cfmws_end; i++) {
-+		struct acpi_cedt_cfmws *window = mock_cfmws[i];
-+
-+		if (window->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
-+			return window;
-+	}
-+
-+	return NULL;
-+}
-+
- struct cxl_mock_res {
- 	struct list_head list;
- 	struct range range;
-@@ -1124,7 +1136,8 @@ enum cxld_init_type {
- static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 						 struct platform_device *pdev,
- 						 bool hb0,
--						 struct cxl_test_decoder **td)
-+						 struct cxl_test_decoder **td,
-+						 struct acpi_cedt_cfmws **window)
- {
- 	struct cxl_test_decoder *found_td = cxld_registry_find(cxld);
+ static int cfmws_start;
+ static int cfmws_end;
+ #define CFMWS_MOD_ARRAY_START 0
+-#define CFMWS_MOD_ARRAY_END   5
+-#define CFMWS_XOR_ARRAY_START 6
+-#define CFMWS_XOR_ARRAY_END   8
++#define CFMWS_MOD_ARRAY_END   7
++#define CFMWS_XOR_ARRAY_START 8
++#define CFMWS_XOR_ARRAY_END   10
  
-@@ -1134,6 +1147,7 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	}
- 
- 	*td = NULL;
-+	*window = NULL;
- 
- 	/*
- 	 * The first decoder on the first 2 devices on the first switch
-@@ -1147,6 +1161,11 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	    pdev->id > 4 || cxld->id > (mock_zero_size_decoders ? 2 : 0))
- 		return MOCK_DECODER_INIT_DEFAULT;
- 
-+	/* XOR windows are all pmem, no window to host the RAM region */
-+	*window = mock_auto_region_cfmws();
-+	if (!*window)
-+		return MOCK_DECODER_INIT_DEFAULT;
-+
- 	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
- 			    MOCK_DECODER_INIT_TYPE3_AUTO;
- }
-@@ -1168,9 +1187,9 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
- }
- 
- static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
--				      struct cxl_port *port)
-+				      struct cxl_port *port,
-+				      struct acpi_cedt_cfmws *window)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
-@@ -1243,9 +1262,9 @@ static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
- static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
- 				      struct cxl_port *port,
- 				      struct platform_device *pdev,
--				      bool hb0)
-+				      bool hb0,
-+				      struct acpi_cedt_cfmws *window)
- {
--	struct acpi_cedt_cfmws *window = mock_cfmws[0];
- 	struct cxl_decoder *cxld = &cxled->cxld;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport;
-@@ -1396,6 +1415,7 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- {
- 	struct cxl_endpoint_decoder *cxled = NULL;
- 	struct platform_device *pdev = NULL;
-+	struct acpi_cedt_cfmws *window;
- 	struct cxl_test_decoder *td;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_port *port;
-@@ -1424,7 +1444,7 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		port = to_cxl_port(cxld->dev.parent);
- 	}
- 
--	switch (get_decoder_init_type(cxld, pdev, hb0, &td)) {
-+	switch (get_decoder_init_type(cxld, pdev, hb0, &td, &window)) {
- 	case MOCK_DECODER_INIT_SAVED:
- 		if (WARN_ON(!td))
- 			return false;
-@@ -1437,10 +1457,10 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		default_mock_decoder(cxld);
- 		return false;
- 	case MOCK_DECODER_INIT_TYPE3_AUTO:
--		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0);
-+		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0, window);
- 		return false;
- 	case MOCK_DECODER_INIT_TYPE2_AUTO:
--		mock_init_hdm_type2_cxled(cxled, port);
-+		mock_init_hdm_type2_cxled(cxled, port, window);
- 		return false;
- 	default:
- 		return false;
+ struct acpi_cedt_cxims *mock_cxims[1] = {
+ 	[0] = &mock_cedt.cxims0.cxims,
 -- 
 2.37.3
 
