@@ -1,79 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793911844;
-	b=q/5A4uRDRWMh38xag178uLZZQcAdrMesL6WT/gbhe5a4hNCGbJJRa9dSLPx2L6tPDIS/
-	 JbbKlBUcRm8GT86KGS2ysTfY8XW6rFfgUzZnO+akh37+MizrocDZpkA7VonMwB9PErfBk
-	 toFefFC5U7mAPLkI4H8K3V11AwRJzuaRJq3PJB/ol6GwfI+kXsM+s5h10ypHIgjXr5F0B
-	 sbeFwROOJOTCg3OeLGkrTCZaFOh8NTtXlWcaRYSIVxklW9137lp58I1QI85MDQa04VzZa
-	 a5mvTxu44Mn/ZcrB5AyX+FomVSWt3s23+9A5ongxQms1HVBhUZvfEM6v+5lldUfiuSA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793911844;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=n+pRwyM6jtw/t99MRAyQwbNSY1kY6+Y063USIMO4Eek=;
-	b=hli9YpJwtRr2rp+QTea9Cvkt9ckeRgWjYaVh6GkWGYcBKdsQ4ivIPiBXU3+iEGancDhM
-	 ySfMrc9IRxMVZf4pMYpM8HjTcsN4N4kCvDna7C3T7oV26ndfiE8MaK+4guYjbiFPHttab
-	 ut8UKOT54dz0XFtmQPvykluR2agqehlUJWHRQpNhVcZ7ABHWzDyiHT3EGj/uNCrGX54+v
-	 z0iozTLheE6AcsApcSw6JQEBAADB3C9CCENt4DRaM93D+i0OJPmA8tJ4xqnsinb66rUYv
-	 G8ngkA/XEcYSA2mlDJs+mJeXOn3UhtCaNexW86E02iLmcroSvZrtPRlAcX1eAv5xT8w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m92f5nis;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793915662;
+	b=3AgNwov5XaIYPgAc6A9zfl/n/1FmXK1T3tM2Bsy8mjb1DVDEOmjcMA4xlK6kZUPGXwC2
+	 ov3iguKg71oSFyrNVAR4y3WWe2PIrds9m7yLEFcHFJ2FH4a9pMI3QFpBet8nJI43BVNzt
+	 Nh54pf3/YhaBFWGe6GijjzKwm4FiHjSy9lVetFYmlY4XpONGArVsOl0esxuUGrh6y6KAA
+	 Pa9p3YxqVkbWgWc/hC19ZE/tg4CTXQm/9U0ziYwrjkpD0cUdYSH2sIcUYGmpbkNmZ+yeb
+	 5BA0AxRjme64fRnVmsKrj44YoX0CtehjGtiL6ePFtBJjJ6zF1qBMwfvClFLC3pSGHBQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793915662;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=f0BXtlO5isR7BWmVVog+NbaRGTqva+7c+4SZBVTPkl8=;
+	b=f+JXLmEnlrnvVbO20hi1RiKqUZU1knMGS98c1lqg8ZzhsZrh+Z+vs5ncQx8Jx9hYyZVj
+	 UpM8w+cAlbvKqvOqVfjUTx7hQg3Y+MpJt2L9705mj47tNkWgWH5V1EPOZj/uWZBs/nSLP
+	 He/K6J24HdC0E5lT0x1dMLI5YM72Ytzqrf+8UxX2goNAqrnu2GOgSyBL1VGoFJ7hISADX
+	 nfqZJCWlGibMWeCp2wsZPpgH7nociizy8+aHxbbT3o3JAHApYRr3xEamsKzXO6sAEAs8A
+	 2pmEf4EeJYMsSZO+wq/l7USIlE0ylZdGFA9iAAD57sL5aVkCZxrY98T84cr1AZqVcjg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ok+z+nHh;
+	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE6A606A31B;
-	Thu,  5 Nov 2026 20:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EE2606A31B
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Nov 2026 21:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m92f5nis
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1793911843;
-	b=ow09mkwMzDhHxhVGEwyG3VLSwsx8axmbdvMwjYPv/jzLlAu930xRaG+QEq0cNaowWEHB
-	 1D3ilriiDMKr99ekeo/4/1s5dZCPxsgAW8hRTusT12qGOkX2qrQXB0J7qCnQqJ3UL+Yo2
-	 LjkKdpGB5FfT0AvMP+xY6Pjx5NXomJ3zNsjCff1EaxaKweTj6FPD8AIw6b1d/HXFX3H3N
-	 yslzvQVcnBqsYaR5ge3pWUmbbM1NL/6QCiPREQBNq9rs01usCWef1QJUzw/IPOPArfVtM
-	 gpAuPQTYNqQjgc9wZJZXN1I2Iftl6Hd+01VrHXN3WFWT0UR5yJfv9vyBXWbVAo9toKw==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1793911843;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=n+pRwyM6jtw/t99MRAyQwbNSY1kY6+Y063USIMO4Eek=;
-	b=LWeN8HUWDyG5bIcbqiW0qPFT9XaZI+1lCCWvOCPAw3nDQpxx+ADK2ojgbYFPuZUsDlpZ
-	 9tE27G2/JZ55ZrWjEMrwv+tB4M6d3RXjiWyKlys5vUi/TJp/GKa91a26vNsRkIljcn3Kl
-	 9BfQu+ZWyHNV4iDoJzQL3VxMTVaXvfAuM9hiN2cqeTtEd1ZLCSIpxOei3yKAR7jDFax5r
-	 XDC+aaS5uJeScblanvxR3mx5Nho8QfhuTYKcSnAIDSUV/C3xHNn0XzH9YQRsSPOt9nRBH
-	 IZCK/+OS6iJ2OkwFgNp5ul0BozTNLloIo+02WBaTqzM/aS7x6QH34ybfbhhlgsAjFqQ==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 0F3921F0089F;
-	Thu,  5 Nov 2026 20:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ok+z+nHh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866191F0089F;
+	Thu,  5 Nov 2026 21:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793911843;
-	bh=n+pRwyM6jtw/t99MRAyQwbNSY1kY6+Y063USIMO4Eek=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=m92f5nis4R5MrfdYJx3SaQAv9iq/Q0lQnchFK/s8iYOWbqXMEl8mlITHNGnylGb+M
-	 7EHFDoGg+fhYFkIO5IE3AJtMPpcUICBaEy7sTCy9t8NQs7mSr2gH9xtHne7i6BNoT/
-	 2GFyaWw7zyoL35031gdemiDXo8ugpUOr5OKk05HqxFL7yJ3vuAYhUf98tuPWzhej6h
-	 u2zC8kr1bl8PXeqkyZ8RX9cZLZemXIx47uZRlvM1v3INMzF0sXkT+LrYUIJ77dwA9l
-	 bQwn8XCiZypd8kxkIaT+Nc+vjiRg7GRVYzXwvBEsjxKOscHWgtHf3nD96wE8+az/00
-	 F3LTKydaH4uHA==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 614C640753;
-	Thu,  5 Nov 2026 20:50:42 +0000 (UTC)
-From: Mani Tofigh via B4 Relay <devnull+mt4022.columbia.edu@kernel.org>
-Date: Thu, 05 Nov 2026 15:50:42 -0500
-Subject: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
- still in the page cache
+	s=k20260515; t=1793915661;
+	bh=f0BXtlO5isR7BWmVVog+NbaRGTqva+7c+4SZBVTPkl8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ok+z+nHhRF5vWIv9pcrdntNwrEBoYsNUIa2XugRuNNbRkLX+QrgaK8nMzUZs8i3Bf
+	 Hqcq/1rof+ToQNuzmPNBeCzYU8+N2Ixts0RxE3V0AYVodg0gVwgYAzMDOF5kKRJIOh
+	 VeiXlBU1ZzFMXz6VXmSxR/CEV8RZlZNft/HjaDUKdj/wncbwSoY/ZvXFkMeFnROH3x
+	 YpfNaPQEDtLl1tuFkKK8SGrpOskkwGPMORiuJUALFOAtdNzQiT9kOxK0EYWbhcmn0t
+	 YmHxPJOKCrYqxZopcul/7qOvtwS5Xs/qg5l7cRdKWtzSKRg8o8GWWcvsnbullXpjOb
+	 v7rOrn1qKauRg==
+Date: Thu, 5 Nov 2026 21:54:11 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Yukiya Takaki <fj2110jc@fujitsu.com>
+Cc: qemu-devel@nongnu.org, "Michael S. Tsirkin" <mst@redhat.com>, Ani Sinha
+ <anisinha@redhat.com>, Anisa Su <anisa.su@samsung.com>, Igor Mammedov
+ <imammedo@redhat.com>, Junjie Cao <junjie.cao@intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Peter Maydell <peter.maydell@linaro.org>, Richard
+ Henderson <richard.henderson@linaro.org>, linux-cxl@vger.kernel.org,
+ qemu-arm@nongnu.org, "Wolski, Tomasz" <tomasz.wolski@fujitsu.com>,
+ lizhijian@fujitsu.com, y-goto@fujitsu.com, yukiya.takaki@gmail.com
+Subject: Re: [PATCH RFC 0/7] QEMU/hw/cxl: Allow CXL Type 3 memory regions to
+ be initialized at guest boot
+Message-ID: <20261105215411.33262db7@jic23-hlaptop>
+In-Reply-To: <cover.1793003983.git.fj2110jc@fujitsu.com>
+References: <cover.1793003983.git.fj2110jc@fujitsu.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,190 +65,292 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNyw6CMBBFf4V0bU1bnrryPwyLoYx0jLRNC6gh/
- Ls81i5Pcu85M4sYCCO7JjMLOFEkZ1dQp4RpA7ZDTu3KTAlVSKEuvMfeeG7e3lF0lnvoUIM2yKH
- AFHKVQVoKtt59wAd9dvW9PjiOzRP1sPm2haE4uPDd25PcdkdGCvk/M0kuObZVWeUasgybm3avs
- W8IztiOrF6W5QcbMN/m1QAAAA==
-X-Change-ID: 20261029-memhp-hwpoison-pagecache-a6e3a524a370
-To: David Hildenbrand <david@kernel.org>, 
- Oscar Salvador <osalvador@suse.de>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, 
- Naoya Horiguchi <nao.horiguchi@gmail.com>, 
- Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>, 
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- tz2294@columbia.edu, stable@vger.kernel.org, 
- Mani Tofigh <mt4022@columbia.edu>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793911842; l=6645;
- i=mt4022@columbia.edu; s=20261026; h=from:subject:message-id;
- bh=LcESJSofCaj5hhsA+wo/1wUjY9ar4+NtuF2td4wtlmY=;
- b=L6SShOaykmI6dCci4Iy1FG7sziKGM25QC0E0mxJNfwPNCYkScmr7PKCl2ukaPWDTZ8RA8L9fU
- czAA+IwmvnrB3pXpqIFkAfhsj5sEa///R1+XfVVYQNXRgEsXOnfQb96
-X-Developer-Key: i=mt4022@columbia.edu; a=ed25519;
- pk=gljCMQDuxyKPmd5y37CRpEJGSPXDV1MyAnHBhCgXl0I=
-X-Endpoint-Received: by B4 Relay for mt4022@columbia.edu/20261026 with
- auth_id=1322
-X-Original-From: Mani Tofigh <mt4022@columbia.edu>
-Reply-To: mt4022@columbia.edu
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Mani Tofigh <mt4022@columbia.edu>
+On Mon, 26 Oct 2026 19:03:21 +0900
+Yukiya Takaki <fj2110jc@fujitsu.com> wrote:
 
-Memory offline skips hwpoisoned pages, assuming nobody uses them
-anymore.  memory_failure() however sets PG_hwpoison before it takes the
-page, and taking it waits on pcp_batch_high_lock, which offline_pages()
-holds for the whole offline.  A memory error during the offline thus
-marks the page and then waits while the offline skips it:
+> Hello everyone,
+>=20
+> I=E2=80=99m a student intern, and this is my first time sending patches t=
+o an open source mailing list.
+>=20
+> This patch series configures QEMU=E2=80=99s CXL Type 3 devices so that gu=
+est operating systems can automatically discover
+> and create CXL regions during boot, aligning QEMU=E2=80=99s behavior with=
+ real hardware.
 
-  Task A (offline_pages)               Task B (memory_failure)
-  zone_pcp_disable()
-                                       TestSetPageHWPoison(P)
-                                       get_hwpoison_page()
-                                         /* waits for Task A */
-  do_migrate_range()
-    /* P is poisoned (not migrated) */
-  test_pages_isolated()
-    /* P is poisoned (accepted) */
-  zone_pcp_enable()
-                                       /* P is off the LRU (Ignored) */
+Hi Yukiya,
 
-The block goes offline while the file still points to P, and the next
-walk of the file's pages (here drop_caches on ext4) crashes on a struct
-page of offlined memory:
+Interesting project.
 
-  [   11.710348] Memory failure: 0x24224: unhandlable page.
-  [   11.710372] Memory failure: 0x24224: recovery action for get hwpoison page: Ignored
-  [   11.765371] page:000000008c304eee is uninitialized and poisoned
-  [   11.765389] page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-  [   11.765440] kernel BUG at include/linux/mm.h:1990!
-  [   11.765458] Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-  [   11.772284] CPU: 3 UID: 0 PID: 85 Comm: mfoffline Tainted: G        W            7.3.0-17087-gd865f2677c44 #1 PREEMPT
-  [   11.777970] RIP: 0010:find_lock_entries+0x8ee/0xad0
-  [   11.798761] Call Trace:
-  [   11.799297]  <TASK>
-  [   11.803284]  mapping_try_invalidate+0xfd/0x2c0
-  [   11.810571]  drop_pagecache_sb+0x111/0x330
-  [   11.811572]  __iterate_supers+0x2e2/0x370
-  [   11.815863]  drop_caches_sysctl_handler+0x74/0xb0
-  [   11.816994]  proc_sys_call_handler+0x2ec/0x440
-  [   11.821360]  vfs_write+0x545/0x1250
-  [   11.825220]  ksys_write+0xfa/0x200
-  [   11.830202]  do_syscall_64+0xfb/0x590
-  [   11.832084]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  [   11.848423]  </TASK>
+>=20
+> Background and motivation
+>   Currently, during guest boot QEMU does not provide the information or r=
+egister programming needed for the guest OS
+>   to initialize CXL Type 3 memory, so using it still requires an explicit=
+ action in the guest (for example, running the cxl create-region command).
+>   By contrast, on some physical systems the firmware automatically alloca=
+tes CXL memory ranges and exposes them to the OS,
+>    allowing the Linux CXL driver to discover and create regions during bo=
+ot.
+>   This patch series is a first, experimental attempt to reproduce that be=
+havior in QEMU.
+>=20
+>   Some parts of this implementation are based on Li, Zhijian=E2=80=99s wo=
+rk in:
+>   https://github.com/zhijianli88/qemu/tree/program-decoder-v2
+>=20
+>   I would like to ask for feedback on whether this approach makes sense a=
+nd whether I should continue to enhance it.
+>=20
+> Approach
+>   This patch first adds a program_hdm_decoder option to cxl-type3.
+>   When program-hdm-decoder is enabled on cxl-type3, QEMU will:
+>     1) program endpoint/host-bridge HDM decoder state,
+>     2) expose Type 3 ranges as E820_SOFT_RESERVED on x86,
+>     3) create memory-only NUMA nodes for those ranges,
+>     4) emit SRAT memory-affinity entries mapping each Type 3 HPA range to=
+ its node ID
+>=20
+>   On real hardware, HDM decoder programming and memory layout are typical=
+ly handled by firmware, so they would ideally be managed by SeaBIOS.
+>   However, in the current QEMU/SeaBIOS model, E820 and SRAT are built on =
+the QEMU side, and pushing HDM decoder programming
+>   into SeaBIOS would introduce additional complexity and risk inconsisten=
+cies.
 
-Once the memory is also removed it's a use-after-free of the memory map.
-tmpfs and the swap cache can end up the same way without the race.
-Since commit a76054266661 ("mm: shmem: don't truncate page if memory
-failure happens"), memory_failure() leaves a poisoned tmpfs folio in the
-page cache on purpose, and it does the same for a dirty folio in the
-swap cache.
+So, did you explore doing this in a similar fashion to PCI enumeration?
 
-Treat a hwpoisoned page whose folio is still in a page cache or swap
-cache as busy in scan_movable_pages() and
-__test_page_isolated_in_pageblock() so that the offline fails and a
-waiting memory_failure() can go on.  Also have do_migrate_range() leave
-such a folio alone instead of taking it off the LRU, so that
-memory_failure() can still remove it from the cache.  A later offline
-succeeds once the page is out of the cache.  With the fix, the offline
-fails with -EBUSY and the file doesn't point to offlined memory anymore.
+That's done the bios and is very similar in that there is a mix of
+policy and rules in how it is configured that we really don't want
+in qemu.  With that ACPI tables are then built in QEMU that contain
+values read back from what was setup. The main thing I'm thinking of
+here is the PXB handling that relies on the bios having done the
+PCI enumeration first rather than doing it in qemu.
+The arm code is here
+https://elixir.bootlin.com/qemu/v11.1.3/source/hw/pci-host/gpex-acpi.c#L103
+x86 probably this:
+https://elixir.bootlin.com/qemu/v11.1.3/source/hw/i386/acpi-build.c#L1038
 
-This bug was identified and confirmed with the help of a deterministic
-hypervisor currently under development.  The C reproducer below however
-hits it within about 10s.
+My immediate instinct is that would look more like a conventional bios
+flow.  It would also have the significant benefit of putting the enumerating
+and configuration code into an open source bios, something I hoped would co=
+me out
+early ARM work on this (see linux plumbers - I think this is right session)
+https://lpc.events/event/16/contributions/1254/attachments/1113/2136/CXL%20=
+Type-3%20device%20discovery,%20configuration%20in%20firmware%20and%20prepar=
+e%20ACPI%20tables%20for%20kernel%20usage.pdf
 
-Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mani Tofigh <mt4022@columbia.edu>
----
-Changes in v2:
-- Leave a hwpoisoned folio that is still in a page cache or swap cache
-  alone in do_migrate_range(), so that a waiting memory_failure() can
-  still remove it from the cache (Sashiko)
-- Rebase onto current mm-new
-- Link to v1: https://lore.kernel.org/all/20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu/
+Then we'd regenerate the SRAT, HMAT etc before handling to the OS.
+(I'm not sure this works for e820 having never touched that flow).
 
-A pinned hwpoisoned page still isn't covered.  I'll send the refcount
-check David suggested as a follow-up.
+There is a lot of policy involved in CXL configuration and I'd not
+want to replicate that part in QEMU. At best we'd want to pass
+some hints to the bios.
 
-Taking get_online_mems() in memory_failure(), as in Gregory's series
-[1], would close only the race and not the tmpfs or swap cache case.
+Flow wise that would mean adding to acpi_build_update() some code
+to do the necessary srat and other table updates.  That would
+definitely work for the actual ACPI tables, but I gather e820 is
+rather different...  However, e820 real table is I think
+actually constructed by seabios so can that just make the
+necessary updates after programming the CXL decoders etc?
 
-[1] https://lore.kernel.org/all/20261027042204.3741307-4-gourry@gourry.net/
+Now if you did this on SBSA-ref and arm you'd have to do it
+all in the bios (as that generates everything) and the whole
+problem would be much more standard.
 
-Reproducer: https://github.com/manitofigh/files/blob/main/linux-repros/mfoffline.c
----
- mm/internal.h       | 9 +++++++++
- mm/memory_hotplug.c | 5 +++++
- mm/page_isolation.c | 2 +-
- 3 files changed, 15 insertions(+), 1 deletion(-)
+Given we have that option on arm/sbsa-ref I don't currently
+see a reason to explore the bios flows on arm/virt.
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 78a7f17b9934..35c6d30537f0 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1168,6 +1168,15 @@ static inline bool node_reclaim_enabled(void)
- 	return node_reclaim_mode & (RECLAIM_ZONE|RECLAIM_WRITE|RECLAIM_UNMAP);
- }
- 
-+/*
-+ * A hwpoisoned page can be skipped by memory offline only once no page
-+ * cache or swap cache can find it anymore.
-+ */
-+static inline bool hwpoison_page_offlineable(const struct page *page)
-+{
-+	return !folio_mapping(page_folio(page));
-+}
-+
- extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
-         unsigned long, unsigned long,
-         unsigned long, unsigned long);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 1bfd1f4daeb2..c5cfaa24b41b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1821,6 +1821,8 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- 		struct folio *folio;
- 
- 		page = pfn_to_page(pfn);
-+		if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
-+			return -EBUSY;
- 		if (PageLRU(page) || page_has_movable_ops(page))
- 			goto found;
- 
-@@ -1887,6 +1889,9 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 			 */
- 			if (folio_test_large(folio) && !folio_test_hugetlb(folio))
- 				goto put_folio;
-+			/* The offline fails on it anyway, leave it to memory_failure() */
-+			if (!hwpoison_page_offlineable(page))
-+				goto put_folio;
- 			if (folio_test_lru(folio) && !folio_isolate_lru(folio))
- 				goto put_folio;
- 			if (folio_mapped(folio)) {
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 5aaad037384e..beb09ef345ee 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -593,7 +593,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
- 			 */
- 			pfn += 1 << buddy_order(page);
- 		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
--			 PageHWPoison(page))
-+			 PageHWPoison(page) && hwpoison_page_offlineable(page))
- 			/* A HWPoisoned page cannot be also PageBuddy */
- 			pfn++;
- 		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
+I also gather (from asking an LLM so might be wrong) that there
+are options that boot qemu on x86 with tables generated
+by the bios, not qemu.  Legacy path in seabios, coreboot and
+and ovmf path used with xen.  Maybe working with them avoids
+the extra complexity of bounce backwards and forwards between
+qemu and the firmware (though I think I'd probably avoid these).
 
----
-base-commit: dba8aba0a9a00ff781c03d82ae534fc6f8c2e263
-change-id: 20261029-memhp-hwpoison-pagecache-a6e3a524a370
+Anyhow, interested to see where you go with this.
+Definitely useful for those of us working with platforms that
+never do the bios programmed flow but have to test it when
+making changes!
 
-Best regards,
---  
-Mani Tofigh <mt4022@columbia.edu>
+Jonathan
 
+>=20
+> Testing
+>   We ran tests in the following environment and confirmed that CXL region=
+s were created at boot, NUMA nodes were set up,
+>   and E820_SOFT_RESERVED entries appeared in the E820 table:
+>=20
+>   - BIOS: SeaBIOS c2a33ad9ad1452e23b41c4ac44a3bc6be8ebc4cf
+>   - CXL memory: 4 GB
+>   - CFMWS: 4 GB
+>   - Host bridge: 1
+>=20
+>   The following is the startup script.
+>=20
+>   sudo /path/to/qemu/build/qemu-system-x86_64 \
+>     -name guest=3Dcxl \
+>     -nographic \
+>     -machine q35,accel=3Dtcg,nvdimm=3Don,cxl=3Don \
+>     -cpu max -smp 4,sockets=3D4,cores=3D1,threads=3D1 \
+>     -m size=3D4G,slots=3D10,maxmem=3D20G \
+>     -drive file=3D/path/to/image.qcow2,format=3Dqcow2,index=3D0,media=3Dd=
+isk,id=3Dhd \
+>     -bios /path/to/seabios/out/bios.bin \
+>     -nic bridge,br=3Dvirbr0,model=3De1000e,mac=3D52:54:00:b5:4e:7c \
+>     -object memory-backend-ram,size=3D2G,id=3Dm0 \
+>     -object memory-backend-ram,size=3D2G,id=3Dm1 \
+>     -numa node,nodeid=3D0,cpus=3D0-1,memdev=3Dm0 \
+>     -numa node,nodeid=3D1,cpus=3D2-3,memdev=3Dm1 \
+>     -device pcie-root-port,id=3Dpci-root,slot=3D4,bus=3Dpcie.0,chassis=3D=
+0 \
+>     -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1,hdm_for_passthrou=
+gh=3Dtrue \
+>     -device cxl-rp,port=3D0,id=3Droot_port13,bus=3Dcxl.1,chassis=3D0,slot=
+=3D2 \
+>     -object memory-backend-ram,size=3D4G,share=3Don,id=3Dvmem0 \
+>     -device cxl-type3,bus=3Droot_port13,volatile-memdev=3Dvmem0,id=3Dcxl-=
+vmem0,program-hdm-decoder=3Dtrue \
+>     -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G,cxl-fmw.0.interlea=
+ve-granularity=3D4k
+>  =20
+>   Furthermore, we conducted the experiment in which we added two CXL Type=
+3.
+>=20
+>   - CXL memory: 4 GB =C3=97 2
+>   - CFMWS: 4 GB =C3=97 2
+>=20
+>   The following is the startup script.
+>    =20
+>   sudo /path/to/qemu/build/qemu-system-x86_64 \
+>     -name guest=3Dcxl \
+>     -nographic \
+>     -machine q35,accel=3Dtcg,nvdimm=3Don,cxl=3Don,hmat=3Don \
+>     -cpu max -smp 4,sockets=3D4,cores=3D1,threads=3D1 \
+>     -m size=3D4G,slots=3D10,maxmem=3D20G \
+>     -drive file=3D/path/to/image.qcow2,format=3Dqcow2,index=3D0,media=3Dd=
+isk,id=3Dhd \
+>     -bios /path/to/seabios/out/bios.bin \
+>     -nic bridge,br=3Dvirbr0,model=3De1000e,mac=3D52:54:00:b5:4e:7c \
+>     -object memory-backend-ram,size=3D2G,id=3Dm0 \
+>     -object memory-backend-ram,size=3D2G,id=3Dm1 \
+>     -numa node,nodeid=3D0,cpus=3D0-1,memdev=3Dm0 \
+>     -numa node,nodeid=3D1,cpus=3D2-3,memdev=3Dm1 \
+>     -device pcie-root-port,id=3Dpci-root,slot=3D4,bus=3Dpcie.0,chassis=3D=
+0 \
+>     -device pcie-root-port,id=3Dpci-root-net,chassis=3D5,slot=3D5,bus=3Dp=
+cie.0 \
+>     -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1,hdm_for_passthrou=
+gh=3Dtrue \
+>     -device cxl-rp,port=3D0,id=3Droot_port13,bus=3Dcxl.1,chassis=3D0,slot=
+=3D2 \
+>     -device cxl-rp,port=3D3,id=3Droot_port14,bus=3Dcxl.1,chassis=3D2,slot=
+=3D4 \
+>     -object memory-backend-ram,size=3D4G,share=3Don,id=3Dvmem0 \
+>     -object memory-backend-ram,size=3D4G,share=3Don,id=3Dvmem1 \
+>     -device cxl-type3,bus=3Droot_port13,volatile-memdev=3Dvmem0,id=3Dcxl-=
+vmem0,program-hdm-decoder=3Dtrue \
+>     -device cxl-type3,bus=3Droot_port14,volatile-memdev=3Dvmem1,id=3Dcxl-=
+vmem1,program-hdm-decoder=3Dtrue \
+>     -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G,cxl-fmw.0.interlea=
+ve-granularity=3D4k,cxl-fmw.1.targets.0=3Dcxl.1,cxl-fmw.1.size=3D4G,cxl-fmw=
+.1.interleave-granularity=3D4k
+>=20
+>=20
+> How to use
+>   Specify the following parameters when starting QEMU:
+>=20
+>   - bios <SeaBIOS binary that includes commit c2a33ad9ad1452e23b41c4ac44a=
+3bc6be8ebc4cf> to ensure that E820_SOFT_RESERVED entries are exposed
+>   - Add hmat=3Don to the -machine option [1]
+>   - Add program-hdm-decoder=3Dtrue to each -device cxl-type3 option
+>     [1] On Linux, the kernel first checks E820_SOFT_RESERVED ranges. When=
+ multiple CXL Type 3 devices share a contiguous HPA range,
+>         these ranges tend to be merged into a single region, so the CXL d=
+river cannot reliably initialize per=E2=80=91device regions based on E820 a=
+lone.
+>         SRAT entries for CXL memory are therefore needed, and the guest s=
+eems to discard SRAT when `hmat=3Don` is not specified,
+>         so HMAT must be enabled.
+>=20
+> QEMU base commit: bddb785e791e415db38884848d068457e226f5e3
+>=20
+> TODO
+>   With the current implementation of this patch, the following configurat=
+ions are either not supported or have not been sufficiently tested.
+>   As a result, automatic creation of CXL regions in the guest OS may fail:
+>=20
+>   - A CXL persistent memory device is included
+>   - Interleaved configurations
+>   - Cases where the memory size specified by CFMWS does not match the siz=
+e of the CXL Type 3 backend memory
+>   - Configurations where CXL memory is attached via a switch
+>   - Multi-target CFMWS environments
+>   - ARM environments
+>   - HMAT does not yet include information about CXL memory devices
+>=20
+>   The following behaviors are also provisional implementations and may ne=
+ed further refinement:
+>    - A new NUMA node ID is assigned to each CXL memory device. This shoul=
+d be improved either to reflect more accurate NUMA distances for CXL memory,
+>      or to allow the NUMA node IDs to be specified by the user.
+>    - Assignment of CXL Type 3 devices to CFMWS address ranges. On physica=
+l systems, platform firmware typically generates CFMWS entries
+>      based on the detected CXL topology and its address-space allocation.=
+ In QEMU, however, CFMWS entries are configured explicitly
+>      through machine options. The current implementation therefore has to=
+ infer which CFMWS range should be used for each Type 3 device.
+>      This selection logic may need further refinement. Possible approache=
+s include improving the selection and validation logic,
+>      adding an explicit option to associate each Type 3 device with a CFM=
+WS entry,
+>      or generating CFMWS entries automatically from the configured CXL to=
+pology and devices.
+>    - HDM decoder reset sequencing and state reconstruction.
+>      The current implementation prevents the host bridge HDM decoder conf=
+iguration from being overwritten later in the same reset
+>      by moving the common initialization of the host bridge component reg=
+isters from the reset path to the realization path.
+>      However, ideally, after the registers have been restored to their re=
+set values, the host bridge HDM decoder configuration
+>      automatically programmed by QEMU should be reconstructed as part of =
+reset processing.
+>=20
+> Thanks,
+>=20
+> ------
+>=20
+> Yukiya Takaki (7):
+>   QEMU/hw/cxl: add program-hdm-decoder option for CXL Type 3 devices
+>   QEMU/hw/cxl:add HPA offset tracking for CXL Type 3 devices
+>   QEMU: hw/cxl: add helper to get HPA range for CXL Type 3
+>   QEMU/hw/cxl: auto=E2=80=91program HDM decoders for CXL Type 3
+>   QEMU/hw/cxl: expose CXL Type 3 ranges as E820_SOFT_RESERVED on x86
+>   QEMU/hw/cxl: Create NUMA nodes for CXL Type 3 memory
+>   add CXL Type 3 memory ranges to SRAT
+>=20
+>  hw/acpi/cxl_type3.c                 |  30 +++++
+>  hw/acpi/meson.build                 |   1 +
+>  hw/arm/cxl.c                        |  10 ++
+>  hw/arm/meson.build                  |   2 +
+>  hw/cxl/cxl-host.c                   |  63 ++++++++++
+>  hw/i386/acpi-build.c                |   7 ++
+>  hw/i386/cxl.c                       |  11 ++
+>  hw/i386/meson.build                 |   1 +
+>  hw/i386/pc.c                        |   2 +
+>  hw/mem/cxl_type3.c                  | 177 ++++++++++++++++++++++++++++
+>  hw/pci-bridge/pci_expander_bridge.c |  13 +-
+>  include/hw/cxl/cxl.h                |   2 +
+>  include/hw/cxl/cxl_device.h         |   6 +
+>  include/hw/cxl/cxl_host.h           |   3 +
+>  include/hw/mem/cxl_type3.h          |   8 ++
+>  15 files changed, 334 insertions(+), 2 deletions(-)
+>  create mode 100644 hw/acpi/cxl_type3.c
+>  create mode 100644 hw/arm/cxl.c
+>  create mode 100644 hw/i386/cxl.c
+>  create mode 100644 include/hw/mem/cxl_type3.h
+>=20
 
