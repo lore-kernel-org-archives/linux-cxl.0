@@ -1,55 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793858574;
-	b=Awx8QufYUYtBQNJkaPDXo7pM/ZloZwvMarXIxFS9wfIkRBa8N49iR7gglhtdx7bso5U7
-	 Q3XBUJys9viOv8Gea+Nn2cIEAbJJACy0hD6wLuW+HAoouUx0BxDZs7CxBUo87vukqNJJF
-	 GJMv5JQlTqcj6bkG88iJ00thkCyKaCTOgJJrzhevR6Mvt+dfvZTBdOssP5oOuc0TAZh8j
-	 AptZQ1hJUZroujb9Oxsp+wvbcV2QZOvHWNCKZuLPXgFshd0TrcFqFR3lf97o+SFINlAuo
-	 FMMiLtCjXjRTgKBclnt/lmQgMxJ/hsIfHDJXajamJPHlnWyNl+RzFMvuOQt5UOErgBw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793858574;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
-	 X-ZohoMailClient;
-	bh=Je+pxxclclWOzMYv/ZDExoy2DE7Cbpmv5nO2YtyInVE=;
-	b=1RUDc2YoweenHyZiMPCFI3y1zdPGix58OxgDDccujxx7mDwZcDb1MJ/XFfu8EVYW3Meu
-	 /vl9rOfRf7kNktZynP3F+emYnD41yaJjrYpudiLeb4QKW527Ogierq3OA6ZDUxIdqIIPa
-	 skEWVOkzoBdMqeo/pM9om0XosHM6gE10MqSdn0FlW6OcfLl8GAfNt0hf3DJk6bOUOO3nN
-	 s7EprNo874nbZCEf7QQFP4ijzOMkHyDlw6Fj13hCTTJMNN+t2MbCNHhkpfOlHEaTgbo5D
-	 Mfcr8F2EN0TzUcczW/LGJvwLBb7CUYCjB4WwYs9U2LDjHQaibsziAPrFquc9sHkKH0w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zohomail.com;
-	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=HE6Qx8Sl;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
-Received: from sender5-pp-o94.zoho.com (sender5-pp-o94.zoho.com [165.173.182.94])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793864313;
+	b=O+CdD/e9mnvuVYs7f9ad1XopD3yIqUL5llNB8Onh8SNxtfitTUZx81vijoJx5Spjrhr2
+	 vxbOMrBXYkcxRf8UPrjPMa5mzQF0+z1VOggc0PqXYjnhGRhEnuXFXIP2dwWxxM4jRcqBv
+	 KwfrSu0qO93Q8zcySZ/yqD8n1lIuHsyobUfQzs8AC4tUl+zx4pp63Ap3VQXZX02o1D0Nu
+	 6w7J3owzFqG9q7haEd+d+hZ0KgTZuhFW37152IGrX6JFAivVIv0s3s0jTffHqPt9tTvAf
+	 Xl5cBP88uRgTYvD5US88zPIM7tQdzdw4uT1W31bS7vETvsvQ7jAsqJnHtoExM2n9ETw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793864313;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=WtxZIHT7OSRlVekSLEKMKnbDe94Yb+d+zJ7oVfsal88=;
+	b=pixJ7/G5TrSu1IemALZHNMwTtI7G8Yy+gTx4AA5wmhr947AX+PR0d6HM/rhtyRhcQsXI
+	 N8lkTklvCF3sjVn+KgTgB/pL/ts1/ytBY/9Pvsht4rBpTTqtDJJd5Li1Bh/qJBIJ1/vHc
+	 HM5/rJ3nty/PAullbRWRT0uRLIWRmP+majy9E7rbM6tAtrOm1ibrreUgGOTFBGMiBc8RP
+	 LWS2MwUHb8WFus4yPHRl1z5nL6tC7oasyP3bm/XuRZIDx4tlt/IOYf9X/OIcLua2IoYyA
+	 rc6j22BlB85q4514OTVwmOC1hyUA8z4sPqeUwbOEpNm4oZh0ToJ7Hxh7rlrWKcs5yxw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=STk28X0f;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D3F606A31B;
-	Thu,  5 Nov 2026 06:02:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19D3F606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3A2606A31B;
+	Thu,  5 Nov 2026 07:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=HE6Qx8Sl
-ARC-Seal: i=1; a=rsa-sha256; t=1793858564; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UUbtslUHyo7v+DmWQ0tAhKbZqTP2FV8d9FUucA/ZxPU6IJw0njakJItVKNA7zgNQ2iSwpjzw8n0IWUHFi483MFXlOjau1Md6xppRvZSfnnO0WS7Yv3spWU50DLdeawr/5W67qNMjEvHKGP5qUmTfH8UgOo7Umf5Rgh62jyeXWro=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793858564; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Je+pxxclclWOzMYv/ZDExoy2DE7Cbpmv5nO2YtyInVE=; 
-	b=A4T10RbgY25DZ1giPQssorpjxJaHiNEIVMlNVphMG6OV8MY4Esk9uQ1FWJcVp0XYj+cDaOEjh43y0HaVjlWayCQ22r+njl/0XCcHngBzVMesGYij2G2EdpSPboazWlJ30NUgyOH8eknast57iFWMr+UqtdvGnR5Yv6DgAnaxs64=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: a=rsa-sha256; b=HE6Qx8SlPEgjMHx4iVCgzSkyTI8+snmdIp7AqMjBprtohlRzGxr9gtZssPhXcRR/NV27qIaLWHHnrM4i8CHfRzKcIT3kD8B1rFIFvSD1lAfz6ED3DjLp1vg/7f/Iln+WdF6yteAxFZ784ai3GrI9abySImlX3AbakwTzWfzR0QY=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=Je+pxxclclWOzMYv/ZDExoy2DE7Cbpmv5nO2YtyInVE=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793858563308258.37950983087626;
-	Wed, 4 Nov 2026 22:02:43 -0800 (PST)
-Message-ID: <8a49b7c8-3be3-4c46-a5ee-6cdaefecea14@zohomail.com>
-Date: Thu, 5 Nov 2026 14:02:37 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=STk28X0f
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9173B1F000C1;
+	Thu,  5 Nov 2026 07:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793864312;
+	bh=WtxZIHT7OSRlVekSLEKMKnbDe94Yb+d+zJ7oVfsal88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=STk28X0fF6Y909TJuiOHUWcubijSHv9nAkp7aeBbfatLxW3q3DdEJaPDaTpMInw4h
+	 e1snbhiu48GpKc00lTPFIrmHdv8Bw6prdaZHWXbjYw2qUTAQ+Bf8rJCxuVyol7DAnU
+	 pij1fHUfR5rzYK2AKZZiP79iXkCz8iNyjbC2rCrpPCy+PrrfiKdWlJJrHl99RBG5dc
+	 uTFcrvw93TpcQEFs1pEg04FlYOSngrezMHDSlvY1c1vdM67z4BfSOA4Ir6DD1LGM0v
+	 uZO5MWs11lVV6DMHl8g/0fOApbMcLt7wvE4Il7iKqSrOEih5hDnYiYvhXI1XrIwrOv
+	 nPHmRmaMwxNpA==
+Date: Thu, 5 Nov 2026 09:38:19 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin@linux.dev>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Zi Yan <ziy@nvidia.com>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>,
+	Lance Yang <lance.yang@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] mm: split out memory-failure declarations from internal.h
+Message-ID: <auwya6Y_jAkTmt79@kernel.org>
+References: <20261104-memory-failure-split-v1-1-3b0a85f0b7e7@debian.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,98 +78,45 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] cxl/mbox: Use mapped errno to determine command
- status
-To: Alison Schofield <alison.schofield@intel.com>, dave@stgolabs.net
-Cc: jic23@kernel.org, dave.jiang@intel.com, vishal.l.verma@intel.com,
- djbw@kernel.org, iweiny@kernel.org, icheng@nvidia.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261103024305.2333508-1-ming.li@zohomail.com>
- <20261103024305.2333508-2-ming.li@zohomail.com>
- <auwI9iLC0NCRvp9R@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <auwI9iLC0NCRvp9R@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu080112271c1c7e0f77a06ee78d49f1320000b090f3fa3a2fc1b7162068d450fccb2ea7dd09f2f0c46cb9f0:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104-memory-failure-split-v1-1-3b0a85f0b7e7@debian.org>
 
+On Wed, Nov 04, 2026 at 08:45:34AM -0800, Breno Leitao wrote:
+> mm/internal.h carries the memory failure declarations, but only seven
+> of the 81 .c files that include it use them.
+> 
+> Move memory failure declarations to a new mm/memory-failure.h and
+> include that from those seven files that need them.
+> 
+> Move the block as is, including take_page_off_buddy(),
+> put_page_back_buddy() and page_mapped_in_vma(): they live in
+> page_alloc.c and page_vma_mapped.c, but are built only for
+> CONFIG_MEMORY_FAILURE and called only from memory-failure.c.
+> 
+> Keep the declarations private to mm/.
+> 
+> No functional change.
+> 
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Link: https://lore.kernel.org/all/aumt-4kfGGtoXuh-@kernel.org/
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-在 2026/11/5 12:41, Alison Schofield 写道:
-> On Tue, Nov 03, 2026 at 10:43:05AM +0800, Li Ming wrote:
->> cxl_mbox_cmd_rctable already maps all mailbox command return codes to
->> errno values. Use the returned errno directly instead of checking
->> mailbox return codes separately to determine whether a command succeeded
->> or failed.
->>
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->> v2:
->> - New patch.
->> ---
->>   drivers/cxl/core/mbox.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 55828a836c01..bd91b03c4d21 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -270,9 +270,9 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->>   	if (rc)
->>   		return rc;
->>   
->> -	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
->> -	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
->> -		return cxl_mbox_cmd_rc2errno(mbox_cmd);
->> +	rc = cxl_mbox_cmd_rc2errno(mbox_cmd);
->> +	if (rc)
->> +		return rc;
-> Hi Ming,
->
-> The existing code really seemed to want BACKGROUND as a special case, so
-> I searched the history on this one,  Davidlohr and you discussed this in
-> 2023 around sanitize[1] .
->
-> I do think it is confusing and if we can just follow the table codes,
-> that would be easier.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Hi Alison,
+> ---
+>  MAINTAINERS          |  1 +
+>  mm/hwpoison-inject.c |  1 +
+>  mm/internal.h        | 29 -----------------------------
+>  mm/ksm.c             |  1 +
+>  mm/memory-failure.c  |  1 +
+>  mm/memory-failure.h  | 36 ++++++++++++++++++++++++++++++++++++
+>  mm/memory_hotplug.c  |  1 +
+>  mm/page_alloc.c      |  1 +
+>  mm/page_vma_mapped.c |  1 +
+>  mm/vmscan.c          |  1 +
+>  10 files changed, 44 insertions(+), 29 deletions(-)
 
-Thanks for your review.
-
-I checked the link you shared, it is about the return code of a 
-BACKGROUND cmd handling inside __cxl_pci_mbox_send_cmd(), because 
-__cxl_pci_mbox_send_cmd() needs to handle both non-BACKGROUND and 
-BACKGROUND cmds and returns the result. but in cxl_internal_send_cmd(), 
-I think we can consider the cmd done whether it is a BACKGROUND command 
-or not.
-
->
-> I'll let Davidlohr dig in on this one.
-Thanks.
->
-> I read both these patches as cleanups but no bug to be fixed.
-
-Sure, will drop the fixes tag.
-
-
-Ming
-
->
->
-> [1] https://lore.kernel.org/linux-cxl/mw5bsc5u72fdrgo7qovj6u2npg2asftzp3jeprwtmnvbvg7vet@fayzcxpurjl6/
->
-> -- Alison
->
->
->
->
->
->>   
->>   	if (!out_size)
->>   		return 0;
->> -- 
->> 2.43.0
->>
+-- 
+Sincerely yours,
+Mike.
