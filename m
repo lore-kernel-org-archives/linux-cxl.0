@@ -1,112 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.48
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.92
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793937692;
-	b=UqNunsmjahJTRAuIp8nuzpnHOLIj4LlxD98g8nN/8y04QJFA7UufRWUGXtBKPENZXY8m
-	 HQr8InqeZ6b3ZrzUGILYqbK4aZe7WBDwMPBQvXFo6zSr5HNTSvjWHgIhSUZlx3IXuq41a
-	 zE1/wfNw3mpL3N5EGneV+VuDbQWha+bUEpmkggVLikbvZRnW3cP4SO1xkODUEu2PEQdl3
-	 AvgDzWoWM+MKZbMxtY3HblbJgh0APZOtiy/ts2BRRcKRRysDr+FO7jFLO9EApdVDvbwtD
-	 7s78oepyqH0qcbX6tMi63RHMvKwpWWNJr8XOaqQuHue5+/X2VeSkc4AOfLSLz/JexSw==
+	t=1793943464;
+	b=WNWSjg3yFFzyYLvUOuNNyA9iRg6qF1Uvm6c8PSyr50PXjmJzgSd7f+TAcKxCp/fNYjDz
+	 riOsd3JBdvgKFvTiaip+prBikct8/VyeKtubvd24VJwTUeOWpwD0MASBL3hwbjIcIuN4Q
+	 Zwb5BDc146u6g9SxUAdwXdEW6UilrWGjOecTIKhDlwfgbG4RT03bcKlP86ezybVRsBE9s
+	 ZLP/IgDvPcOxh32Rgb2Q9ve9HhZfdBbHn93H7XWnMvlpKJHkaKqASq5opJeLYJ+bIW1rz
+	 k4OMv0/q9s4TMPl+noiL70usW6cDkdoKO45SLPcwh41t2KoCMjduIQBM6hUHp5O/yJw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793937692;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:
-	 X-Originating-IP:X-ClientProxiedBy:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=qMkpQpdpOM5j55X7AZ/ANf2xFdgq1TuxAGzEHriNSBs=;
-	b=wC3ES13OSd9yln+UteICQ7hij+1sk/3PwGsfYgMtSqpL0QvL+T6DtjI/4ohfsOG8/WdT
-	 XIpyLXif1JRejjMg3NRFeB+E86nezA1LskZA4LGbgNpo5nQhAQ9At6WpD0OlzBw3V/E3C
-	 /6yzR1gF/2FRVqnKqa1u9aeps0JtLsJ8rqLw7sTaPdNOWCr+gEWYWJICiK5YwyyYWQrir
-	 Tj56BrooiojEUKh58zwPI6pb1ythAO6UmCBNrLnh647y1uf+P+JuveOkMGykFdHXBueco
-	 Y2Bjx3/3gZ3RfEaQ1O0Z8BmORi8sFiTtNud638jbRjN6Qqfr7VRxYV0Rwi3Pl9BIRvA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793943464;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=OHoYg2E45BTgUddWtg/8lSCBTiZ+0wRR3Gkvs0TrpmU=;
+	b=yZc1HT9i5x4KoUON0YgcGc4vJJVbdEgCGMoLTNCOa7ARA+oTKfircsmY09hlW3MW6lAa
+	 RjfHjqISIDUVpTPhU8DO9JIqK7CO3OtrTdI2rzG1fiOhYhXyqgGcL8WZ4j9BAoZXynGRv
+	 +cXgxnUwjJ+xSFSBoMJsqYJnkXb5EnQxgq9oA8AF7AABDhgPKOpAoEX6+AtHWGni9Vjqp
+	 cIBVV8QlmUbjFLrWoYgSy83E+o4sP3KGkWMzSlumw9h+464SarV0VY9uWabklNWvYSmsq
+	 Uu5sst7YGHm+NxuUw/gB4vqkmeOcO45w/LXxzXWNeMFDlH6a5QvHcirZHxR54zWvw1w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=Bms2dao7;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.48
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012048.outbound.protection.outlook.com [52.101.43.48])
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=Yr8L0raP;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.92
+Received: from sender6-pp-o92.zoho.com (sender6-pp-o92.zoho.com [165.173.180.92])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFDA606A31B
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 04:01:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCFDA606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9729A606A326
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 05:37:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9729A606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=Bms2dao7
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ky5Jy090I0LdFlVuDZaIJU+S4api4QvDv7ZTBMnwgKtFl8hU77HNrlqm7dUWZPLBOWZ02lDf03PsGYD/Hx3NJNfMtUH3sTV8ftjj8SsRK1iRLIgPvuFHiDCWhgSPVYebPn1CB55bT47DOYteHkTPtnGvEBy8lHfd/EdNix//0mXSKr4l1PtejXCMe7nXoQ8xXtzDz1nbTY1dM8ObwSEf6qn2MNQLBDW6SaVL2tT4WAKCXteRp1TrC0Jol4CdKpaqipVj439s3d30zLhJWZ/Q4XBUz8cZiuhWf47G73TdD69cOXg3QKqTEkCpvLatF+JjmfD8kYwpDRAXpaBrlb2P+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qMkpQpdpOM5j55X7AZ/ANf2xFdgq1TuxAGzEHriNSBs=;
- b=sPwvb7o7gr6UAubjHxPzbqMXKZ8RillOBfw92umVPqgskA/ydPBYlrmHyl4H8dpgTAQRYYgcGRXx+Enbn+rSSca1pfVMxu0Mh+Xl2QrBJ6zTkJwJt2/uD91PLQEdzR5RhyhA2QfExCAxujj/YDa/p3aF7cBGPoa2abY4tSjU0IZ9vsuYs0p3wLlxRgHC0eBb+Lq40trUtKLX+vCuUwH3r78C71fKSyttgOZzYtImhlvqy+FjqdpWmh6ilV0O1vvEZCLN5HKQTjmvFUUT6cjL40Vhdxgqq8/DsQ3uHesLCgy/F27AkpRBMn1y4OBwykbA+msOtDHe/KEE6IBIzw1DAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qMkpQpdpOM5j55X7AZ/ANf2xFdgq1TuxAGzEHriNSBs=;
- b=Bms2dao7V1/4U1gxr23pOiIGKWCEN/tYmAjemt9qiY9q0DGYcDKlXiVW/V6gb9bGKX08NJcdfbKbY/ByoBcqTjtmlCkPK1oNBRlUxI5y9VC6vlCO68IEpMX2i7T/KtuUtsnwLJjyJAvJbtolAahdDqo7dwK+dTHfXlXyXa6ahVRB537S5qPQVGDdG6bFI0w6wBoTDW9OyIUKDpR8HrAFbRcB0hgVRsyqFayR7J6w4gZ6pOLmWijKskH8Wsl1eHeQa2/cmyASf+thF12WmS0xcPRsucBZqm/8UwN1e8JbKa/CoHjQRpcjGYb/nHIrMdPA+BQqR8Q1qQRtMOYem1dw7w==
-Received: from MW4P222CA0019.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::24)
- by SN7PR12MB7936.namprd12.prod.outlook.com (2603:10b6:806:347::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Fri, 6 Nov
- 2026 04:01:28 +0000
-Received: from MWH0EPF000C6184.namprd02.prod.outlook.com
- (2603:10b6:303:114:cafe::89) by MW4P222CA0019.outlook.office365.com
- (2603:10b6:303:114::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.10 via Frontend Transport; Fri, 6
- Nov 2026 04:01:27 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 216.228.117.160) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000C6184.mail.protection.outlook.com (10.167.249.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Fri, 6 Nov 2026 04:01:27 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Thu, 5 Nov
- 2026 20:01:12 -0800
-Received: from cxlgalaxy.nvidia.com (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Thu, 5 Nov
- 2026 20:01:06 -0800
-From: <mhonap@nvidia.com>
-To: <jic23@kernel.org>, <alwilliamson@nvidia.com>, <clg@redhat.com>,
-	<xueshuai@linux.alibaba.com>, <ira.weiny@intel.com>, <zhiw@nvidia.com>,
-	<mst@redhat.com>, <pierrick.bouvier@oss.qualcomm.com>,
-	<junjie.cao@linux.dev>, <anisa.su@samsung.com>, <pbonzini@redhat.com>,
-	<ankita@nvidia.com>, <vsethi@nvidia.com>, <skolothumtho@nvidia.com>,
-	<mochs@nvidia.com>
-CC: <cjia@nvidia.com>, <mhonap@nvidia.com>, <kjaju@nvidia.com>,
-	<qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: [RFC 18/18] docs/cxl: Document the CXL Type-2 device
-Date: Fri, 6 Nov 2026 09:29:11 +0530
-Message-ID: <20261106035911.1280066-19-mhonap@nvidia.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261106035911.1280066-1-mhonap@nvidia.com>
-References: <20261106035911.1280066-1-mhonap@nvidia.com>
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=Yr8L0raP
+ARC-Seal: i=1; a=rsa-sha256; t=1793943458; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mUeTqa3lClXS/MSkQobS6Var6GYr4ah+PpnsjASdhLymALR93ENHRohNFjEH/rg/nUPb0q1qOZI6KiIUdBVoCj3UmF6gup7xJSWIvBge/KFZRN3C00Q7At7R6c/3jwHoLPYQrRXffLhrvB8GOTsIjLNM5MmaJA+FxeI7oudSrjo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793943458; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=OHoYg2E45BTgUddWtg/8lSCBTiZ+0wRR3Gkvs0TrpmU=; 
+	b=Iixm7GC9IPUhjsUFIcIr5pUq2GEUOZ+ArMEHGddtgpA8d2ifyLg11vhU3UJ/rruydIQfisouSDc70OxsIe+jDaX1vX7d3ZJO6AdqpFL2ywT2b09DhGbJii5d7OqtJc8ZdVRAegi9E6OHn5Qk0n2ADvcndDcWESAqJNCVhMgyGEA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: a=rsa-sha256; b=Yr8L0raPcoQmFeI4NBEdmM8W+VsoBprR5V4kptSvcjuAumUcbvvttdIBeUQWozpKHBe7V5tYVhHJ/UPVgNoh0vLIN9JJU4ZaF0i0dwCr0ah4PxI9xaKuZ5ptwCS4N5WSuSXfopCxP572bZvVQfCWiZbYr0iDQ8pAS6r+40zK9LY=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=OHoYg2E45BTgUddWtg/8lSCBTiZ+0wRR3Gkvs0TrpmU=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793943456873645.9635994778267;
+	Thu, 5 Nov 2026 21:37:36 -0800 (PST)
+Message-ID: <b049abad-dd7c-4169-9bc5-3158b8e939de@zohomail.com>
+Date: Fri, 6 Nov 2026 13:37:33 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -116,135 +59,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] test/cxl-destroy-region.sh: create RAM regions
+ explicitly
+To: linux-cxl@vger.kernel.org
+References: <20261106014848.938714-1-alison.schofield@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20261106014848.938714-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C6184:EE_|SN7PR12MB7936:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6a97dfd-7fd6-428f-bc69-08df3bbaa1e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|23010399003|1800799024|376014|82310400026|36860700016|261009223027099003|921020|261021123027099003|261021121427099003|11063799006|56012099006|261028144727099003|261022105027099003|261026121527099003|261026140227099003|10067099003|18002099003|261102123227099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	LzEsvsrtzlZdUxKWgDyH5Ix31EYDlbEoUdw0T17N+LebNb7GczaH15yJU4DK8QoJR88pusKRAq9eOO+sQ9t/oyKU2N+STFHUh9hK7q5qGRo2Hr+qd5YlEITN1xN0r6dHaV8fahWXyOCplWMgbCdgbMrOyAPMWaHQM5OGyh6K6QjdDPi2BL4ARIIYYX7JSD2BXbI9/uTWdlEbDe9D8zw21gDZp0sAwVOz6fsuzLv1Qo1WSP29MOOq9DMr/9/F2BvG45mY6CAMfIac/toA5MUFBsotgq6iFeYYDga4RZMNwNAouSgbrTnnrJETJ76OcNV/t8+Q92gWIXh2+pyryzWGfMN/L87hMuVnrNN//jp9MbtyYE5Yv649RI+IoSGGmMG7X8LNg8XwIkK1Gs9QgE/f4lSi3FHDjaT6aAelsvtjgoOyQ+9SlWG5nwp9ph3H79B33nWEb9xPItF+oa5MbJ7mSW7xeUyGcHg+3NXDuPA02pMDbdSQ4OfBaekkTK71aWAKfSl1m0gmuqQykHpjwxW42S1dZYs8Pot+gWLIG/DNwf7ObrFSytaJfcDywbMhLHez4j8/nv5+ytc+SdmkyKiKvECZH4jXKmSQKPHumeaCt2XNrvjHgw10934TaBumiowAl0ZQCzWqJeBeE9G5dcoenaxiqF5JzM5db+PytJX68MPiDdP4ePeW8nd2JxUBt55Nj3lLLJf6EYMMFqPyuvv+NWBNYr29QnRJSJySEzlRwegM8bAtauzagVmmCTqVCEA8
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(1800799024)(376014)(82310400026)(36860700016)(261009223027099003)(921020)(261021123027099003)(261021121427099003)(11063799006)(56012099006)(261028144727099003)(261022105027099003)(261026121527099003)(261026140227099003)(10067099003)(18002099003)(261102123227099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	H6o+IgXKjdtzI4bJbQDeRX6zFwAsX8qfdPSU27JC43bcTZn+Uk0P2lAsXDApzYA5L9vODk+3XqzQWeoKeWHIWeTynuGdKRiOvSQRgT+R9FiqNAzJ8XCYZF6oR/PlMmz1OA2/Se8TCf91DmDmVdCDSCtjViXbVEAufaEmXxcAWqsDTiJBRJS42VM8g9wF+J/z8Yy0lioDrCnzd0Y9eVPQvfBNd1HIvkOV1mrRToB25Fz/nNrXGCjX59ryGGCktvmkbHiIv4fn/ervTPSGzvnTQPuzw9JYoNNYro/5cnwXfAQJXB57oTj7IbgahTepcBQnvXelja/R+sRBuoCAkQgmVwpOAz/w0vPlDrkimqn7OMPv7W9KInPKc6243t++80alB6g814CIZlhd7GVI0ZuiUuT2Qxju84cUcJFQbSR8RiONzbz7jIvdrVUl5cHjMAFv
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2026 04:01:27.4957
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6a97dfd-7fd6-428f-bc69-08df3bbaa1e5
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000C6184.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7936
+Feedback-ID: zu0801122795b4757f0fe001e2f806ca6500004ec310427b4025bbe2795daf1bb4ca29203636b59f442c9238:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-From: Manish Honap <mhonap@nvidia.com>
 
-Describe cxl-type2, how a guest uses it, its CXL.cache support, where
-it can be placed, the decoder state it gets at reset, CXL Reset, and
-example command lines for q35 and virt.
+在 2026/11/6 09:48, Alison Schofield 写道:
+> The test creates regions it expects to be RAM without passing a type.
+> create-region defaults to pmem when the root decoder supports both RAM
+> and PMEM, so the test fails when it picks such a decoder.
+>
+> cxl_test has one such decoder. Whether the test picks it depends on the
+> memdev order, which changes when other CXL devices, such as QEMU-emulated
+> ones, are present.
+>
+> Use the '-t ram' option so both checks create RAM regions regardless of
+> which decoder is selected.
+>
+> This issue appeared while the CXL kernel patch[1] was being tested. It
+> changes the cxl_test created x1 volatile window to one that support both
+> RAM and PMEM.
+>
+> [1] https://lore.kernel.org/linux-cxl/89e8d2cfde4f1054f37a4f48f2b206a7f05108f7.1793850480.git.alison.schofield@intel.com/
+>
+>
+> Reported-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 
-AI-used-for: code (prototype)
-Signed-off-by: Manish Honap <mhonap@nvidia.com>
----
- docs/system/devices/cxl.rst | 68 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index 6bee339cea..b98a066919 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -147,6 +147,53 @@ though in these EP devices, the decoder is responsible not for
- routing but for translation of the incoming host physical address (HPA)
- into a Device Physical Address (DPA).
- 
-+CXL Devices - Type 2
-+~~~~~~~~~~~~~~~~~~~~
-+``cxl-type2`` is a CXL Type 2 device with volatile device memory. It
-+emulates the registers that host software uses to find and set up such
-+a device.
-+
-+The device uses the processing accelerator class code 0x1200, so the
-+generic CXL memory device driver does not bind to it, and no other Linux
-+driver claims it on its own. A guest uses it through vfio-pci, which
-+hands a CXL Type 2 device to the proposed vfio-cxl driver, or through a
-+driver of its own that calls the Linux CXL core Type 2 interface. Its
-+Device DVSEC reports CXL.cache, CXL.mem, one HDM range, cache write-back
-+and invalidate, and CXL Reset with memory clear.
-+
-+CXL.cache is advertised but not modelled. The device does not send
-+CXL.cache requests, and its memory is host RAM. A cache write-back and
-+invalidate request completes at once and reports Cache Invalid. The
-+capability is set because vfio-cxl takes a device as CXL Type 2 only when
-+it reports both CXL.cache and CXL.mem.
-+
-+The device must be at slot 0, function 0, directly below a CXL root
-+port of a pxb-cxl, and cannot be hotplugged or hot-unplugged. A pxb-cxl
-+can have one ``cxl-type2`` below it. The size of its ``volatile-memdev``
-+must be a multiple of 256 MiB. ``fmw-index``, 0 by default, selects the
-+fixed memory window. That window must target only the device's pxb-cxl,
-+allow device-coherent memory and hold the whole memory backend.
-+
-+At every reset QEMU does what platform firmware does at boot. It
-+commits the host bridge HDM decoder for the device memory, enables
-+CXL.cache and CXL.mem, and commits the device HDM decoder at the window
-+base with Lock On Commit set. The locked decoder is read only until the
-+next system reset.
-+
-+The device memory is reachable only while Mem_Enable in DVSEC Control
-+and HDM Decoder Enable in HDM Decoder Global Control are both set.
-+Otherwise the direct mapping is disabled and accesses through the
-+window fail.
-+
-+Software starts a CXL Reset through DVSEC Control2. The locked decoder
-+stays committed. DVSEC Control and the range bases return to their
-+defaults unless CONFIG_LOCK is set, and HDM Decoder Global Control
-+returns to 0, so the memory is not reachable until software sets
-+Mem_Enable and HDM Decoder Enable again.
-+A CXL Reset does not repeat the firmware setup, and it leaves the PCI
-+Command register and the BARs as they were. With CXL Reset Mem Clr Enable
-+set, the reset zeroes the memory backend.
-+
- CXL Memory Interleave
- ---------------------
- To understand the interaction of different CXL hardware components which
-@@ -332,6 +379,27 @@ The same volatile setup may optionally include an LSA region::
-   -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,lsa=cxl-lsa0,id=cxl-vmem0 \
-   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
- 
-+A CXL Type 2 device directly attached to a CXL root port. The fixed
-+window holds its 256 MiB of memory::
-+
-+  qemu-system-x86_64 -M q35,cxl=on -m 4G -smp 4 \
-+  ...
-+  -object memory-backend-ram,id=t2mem0,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-+  -device cxl-type2,bus=root_port13,volatile-memdev=t2mem0,id=cxl-t2 \
-+  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=256M
-+
-+The same device on an Arm virt machine::
-+
-+  qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4G -smp 4 -cpu max \
-+  ...
-+  -object memory-backend-ram,id=t2mem0,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-+  -device cxl-type2,bus=root_port13,volatile-memdev=t2mem0,id=cxl-t2 \
-+  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=256M
-+
- A setup suitable for 4 way interleave. Only one fixed window provided, to enable 2 way
- interleave across 2 CXL host bridges.  Each host bridge has 2 CXL Root Ports, with
- the CXL Type3 device directly attached (no switches).::
--- 
-2.53.0
-
+> ---
+>   test/cxl-destroy-region.sh | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/test/cxl-destroy-region.sh b/test/cxl-destroy-region.sh
+> index 5c3395e530b0..b07589fbbe39 100644
+> --- a/test/cxl-destroy-region.sh
+> +++ b/test/cxl-destroy-region.sh
+> @@ -60,7 +60,7 @@ check_destroy_ram()
+>   	mem=$1
+>   	decoder=$2
+>   
+> -	region="$("$CXL" create-region -d "$decoder" -m "$mem" | jq -r ".region")"
+> +	region="$("$CXL" create-region -t ram -d "$decoder" -m "$mem" | jq -r ".region")"
+>   	if [[ ! $region ]]; then
+>   		err "$LINENO"
+>   	fi
+> @@ -76,7 +76,7 @@ check_destroy_devdax()
+>   	mem=$1
+>   	decoder=$2
+>   
+> -	region="$("$CXL" create-region -d "$decoder" -m "$mem" | jq -r ".region")"
+> +	region="$("$CXL" create-region -t ram -d "$decoder" -m "$mem" | jq -r ".region")"
+>   	if [[ ! $region ]]; then
+>   		err "$LINENO"
+>   	fi
