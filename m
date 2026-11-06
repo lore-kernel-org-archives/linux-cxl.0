@@ -1,134 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793997567;
-	b=i8C04zkHWrSrJMG/Z+a5Fwm5qrB9sFYlxFUQ9H2R/nQUHy9K+f+fXFXqCC4G2qY5zMpm
-	 JBNKDyFfGhsSgkMswzENO5qZZZf2gFSRbT9fD6qWYy7+RKMayECcMpDQtfOSh0/3BNDBM
-	 VZaWmJbC7Wu9/s6wfsZ4aXZWUjLucLEEljDyPLwFeLcUo8QVEKRm84QWUMA/ZetnRg02x
-	 QCFUSrfq2r24A3If8elMdKp2amb7qK8eWrwoT/U7VkbnHccEIsgPXYeUPYUmYI4wJexkl
-	 4vd03c542Pykzxxvd0TsPZqhDw7ETF//S/1OuYuNxq1ZLFaobyUdHKJqKMNjvcYJmEg==
+	t=1793998264;
+	b=cklnzmK1drdeHHfoKW6QmhLHss/uNka05y6miV8KVdh5gl38mtW+im7U/nCHH8mb7wVr
+	 mXZCvt4TrmlVIHCx39jBQEGt1DTnuuXMspBvSvjpdfvmRDu02oXUTpRNal1auZm9Dg0T8
+	 EGXeD6SvKzo4YzysT+jsjZ9rsHNx7MVeXT0XRUNeou/VJqui870k60Sx3LIQYbVVrDCkd
+	 PdeSWa5/W9wx7DoH3pzrb9mFsE7Ngqx+vGNZvLas4taqnmJBl4392m/8DkS566vMyyp+0
+	 /UIK/SrAQAeQZErvkBjjapPjMbGSJZRooHMFKicMGHNuebGZ9HxvgJmPjlxscZUz++w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793997567;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=y0BVziaquUjVVAPoh4llDs6v2FQ9OhndML7IsF84gsc=;
-	b=JnrhvlY5ODJvmAO+MsPIZ95GiTXbFkE03EMPSMxXCUSjjFtfqabAJ2LLHKYS6qBv5JvZ
-	 02kRyTOxMr9J9NIZyee9HPfHQS85HtRBjRiXwqCRckpdbw/9WlltYanqnRsTDb9H0Zn2V
-	 zEJCB5Pd7IZQRntmv6mU0Eb4I5lhhDOqlAxW7t/DRPESL8c1rhqxZzVapKKX5KIlGon5h
-	 qqt77twHpUjAJdDjK+6crYH0UHrl+hPA0UHCSd0akF6XeF1wrXAzh7XNk5eeTSrLDBddw
-	 kXI9wxPmfyVAXmB92EuVQhi385uBsNrNaqaR8tR5UFhI8vejVNEqCa0mYN7ec9k/g3Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793998264;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=/Z43IGhuspYCfpzuAAw8swVktLNXQHUFUy1aOvlU79o=;
+	b=Pac/hcWLO0H7AoexORNFSscf1mWq8cTT57ZSeNQcSxAyX4V6KjJ5yvRTrhtsbBgL1yqO
+	 M7+fwTBjVCG0eSQjWZuQAcsPXhOZjyxqJvkJr8412fKjfokoWHNwYDMtbHrQibvGh3eZ1
+	 aFi7MPyP2GIXeyFAECwDHS1cjeuYWEMTAYqIkRlPtGV5zv/3S2NXM2VQSEX389VRfG/pX
+	 78gClwRCLm0ojUORu8ED3nT8m9GKr3P5jBuziikYifbbwNZS0bB/miB10wWOHPcRMlMye
+	 qEB2tNHjo9DEO8Imy2NZ37YVM2AHdvf44s3rAVf6m9m7/+hFWYMlkV3I0myf3l7h51w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=shazbot.org;
-	spf=pass smtp.mailfrom=shazbot.org;
-	dkim=temperror header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=QFns8ebX;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=jnaNMHw6;
-	arc=none smtp.remote-ip=103.168.172.146
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KfIZaFeC;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7AC606A329
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 20:39:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D7AC606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02802606A32C
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 20:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=QFns8ebX;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=jnaNMHw6
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 7B108EC01DD
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 15:39:24 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Fri, 06 Nov 2026 15:39:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1793997564;
-	 x=1794083964; bh=y0BVziaquUjVVAPoh4llDs6v2FQ9OhndML7IsF84gsc=; b=
-	QFns8ebXFo0UFvT6+ZHPsjuq+ghcluonVEII3xNwxed3tzNZSMo0BDnZS3wq9lKo
-	0t5PE6BPBfCVD/nTpgG5nwaqP6/OX3R5qJ6KDfKf1RgOt86qNBb+s7sM0+uWuMIZ
-	H1+IEctvDJOBnF2LcVuu1jVTd2xWcB61EbuTFQIQIY6cKRq611Yhpo1ZXcNt2Xis
-	2v3z+2PCZgSpn0JazvwAKLS6Iw3/OgxnSfXbPL6M5J2U2zc2E3qYoNejg1j7oTJo
-	Yui5sKMjD7NzhcqC60CUNh3OL5V5TQjQ1hySMnCfJlm8QSwulyGCXh8F9s2KAaGF
-	Ghwbe1SB3VWQSdmDM4MrIw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1793997564; x=
-	1794083964; bh=y0BVziaquUjVVAPoh4llDs6v2FQ9OhndML7IsF84gsc=; b=j
-	naNMHw6TOkiuBhQIxtaTCEmuvzmoa6wH6SL5N5kjy38vB1ucE+V8i3AQd0q9rb+h
-	dldrUfO0DPZZ7Xxim5fi08xJdLrHF71dihHNdTahXafS5oWt/OIW2/CRNjJyR2Th
-	Ceg0bMTZN1v2YKd3FqFuqnqqlF9W6ZQzYhUtp1OXeqCOD6tO6r207r/Pyp9eCoUi
-	Uw55yiI876gdEhjtzdmyFfHYJsoi75/Puatt0AasECt38B/r3sLUaKb69pATEuwf
-	CHPVG9LA3cl1um+RnAOjwiWRYFvutWcLPZc6M1LqemJvgeeZDdEVSBXXLQ7IQNtS
-	GZ5G+BAFYDz01NzSmuuAQ==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=shazbot.org a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1793997564; d=shazbot.org;
-	mf=PGFsZXhAc2hhemJvdC5vcmc+;
-	rt=PGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:GDBcVlFBNoRlWHZi1OhtUIERp2/eFf0xHfudCLCC67QfTzq
-	RwVIIa+HALCHHva6YKq+vv18EZg4+eirLaxev1FiP3z+Zm/JtDwskWeirsIJJF5U
-	QvzDtsYgSzKKvHU+uQASX1sdSxWQAueC8tCkQTXqzRouESAKk2G7mfo/TFKJstVU
-	RrCQnjNBReTAmmc/3bWWnc2B+4R6d1Zv60kGK+urOZBfl8syQVdew1D2wl3mwOOB
-	rdUKUQh/Y7B9WrryJ8O4FgIR35KRRvLM49BXGaT23sVAEGeZ1WbH78UK7ecOO2t6
-	aZj8WV2jHNWuWlN7an9NbjKivWgd0Cj4IOafkiQ==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:TC2OAASFXc/kqGL+CunvWFfjUQDUXEFfcgl8mkejbCw=:KLM1XTdGORKLzVXxMM2+MBqBSSgPSj1LNFXBZwNORQc=;
-X-ME-Sender: <xms:-zruapswx845re28jK7E-OISiOWhgLdGEzbA0gYJ4Jaukh4q8ERM5w>
-    <xme:-zruagGv_oYl0JasYwTqNuMV9YfG4cqnE57Xk0ZmwUhwx4wfvWkkZcKjTNiOcHNH5
-    f1ObK33XWf7tyXP_cUBksnGPcFiyply7mFddvMfjxbMyfhNaK9-Rg>
-X-ME-Received: <xmr:-zruakL7z03VZTgAiqT4Blwr0mVgipsBhSTSBlaAlE-iTpTJR0DAEzose6zAjw>
-X-ME-Proxy-Cause: dmFkZTGIbL7eiEY7X8p/l+CeUB7m44a61PuMeL+fbY3aREjzPUsLlzqVekELJvtGSYzY/I
-    nO/9fOkHagfaTDpr/q7Hu4ec1OgxpJzeR1b+u+/9ylFLL0hiPQ7Q5WGOti0WTlU639UET8
-    W0OANyCth0cdOR2e7W6mWO1PJHdl/BResgCHiTxzvLlqq3zCDX3wvzLg16WhpWjXSqlvxH
-    89LRMj0xWkNEZ4qN6TB296bhwMUVIMYXaAmu9mgVoI4iM8H8vundo/2ymieM+LgoFiwTPq
-    IhQxBsWs0Ga7dr1x8oM6/9wnzhBZVCQvByhcFz33jTVizQNgL5tYw3VmrPQxyPhLIvxifv
-    H7QY9kPySOCsFJrhxoC6uqsSDc1GcMOACH3r7Wrmfr/jnoMJGP58FMF4t2RcELJnfT33jD
-    je5SutMzSelw6oN50vcX7lIELIN9R0dR9ohFPMT4pfg+q7rmzgKEPWOhidL3uG4rHDfx8E
-    bdsoBTFLWpPoCvbhqBhLI+776dylwZRjCQk6W/hoGKw0YgFB8jgrcJoIK9CA/qxfCdKgtu
-    VpseP5mr6Y0vLjZMqZAROvOolYbNFuQE9hVhhbAwSnSVTI/Gge+4z1RvnWcKgImEeF39T+
-    OWgDl/6GYLI6UCeWNQ2UCfPZamPvO1USkUaKy4natYDrfR6Un0JmtJhr1VyA
-X-ME-Proxy: <xmx:-zruaoYTS6zaXrUnuamRBu1QXRKhqDl6CLVkSZ2bn8QMmD4Yem2QHw>
-    <xmx:-zruahps8Qx_fewfGVvHRM6AEFA-RYq-3pHwGw9P3jodAEu4HSumLg>
-    <xmx:-zruagHkcYHQpi7Qlk7TjgwSxyJUT48sIqyc-BBi0duFKzQbget_zg>
-    <xmx:-zrualdFIYqEPdPn5BJgS0ePxXMEsDJW9LK7HWSjS1lZq1TJQzK-pA>
-    <xmx:_DruatZac4csxBguHlwKZ6baZZokuGozy6Fj434FxEBTDO-Hb4g6MpQ1>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Nov 2026 15:39:21 -0500 (EST)
-Date: Fri, 6 Nov 2026 13:39:20 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v6 09/31] vfio/pci: Advertise the mmap areas around
- excluded ranges
-Message-ID: <20261106133920.144f0665@shazbot.org>
-In-Reply-To: <20261016161839.2765592-10-mhonap@nvidia.com>
-References: <20261016161839.2765592-1-mhonap@nvidia.com>
-	<20261016161839.2765592-10-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KfIZaFeC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A3A1F0089F;
+	Fri,  6 Nov 2026 20:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793998263;
+	bh=/Z43IGhuspYCfpzuAAw8swVktLNXQHUFUy1aOvlU79o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KfIZaFeCkJp7t3ZgcF9I8MLKGYc9Yyh9Dr3hYZ+f9zxxY2rTDnuTu6/ce2JXKui/Z
+	 f+6UxSMb8x8sf/0rDn+SWJLAOwP1qCvdTSNg0A/2LdPviCpV0A3hR5p6WTXLqJjV8z
+	 btx2wnG7sD5YTiZ3Myi94TdbXcpzSnFWMbefaGu66KRBr1GeRcerNCQIr5Y0G66Lg3
+	 F3WR76yAQGGQd3Fj0gcaw8fqwnP9IjoPnmz3y+BYc+/ju2ohYpgamMlNGFdiWsQFWd
+	 x/cfXTI95AJFogD+/N5yTO1wjdZBz9AVAcLxYMHCrZTN75bsdZtrb+LrLaQtiZYH/A
+	 aJs3uqM7zXPCQ==
+Message-ID: <sashiko-outbox-202255@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
+ still in the page cache
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mani Tofigh" <mt4022@columbia.edu>, "David Hildenbrand" <david@kernel.org>, "Oscar
+ Salvador" <osalvador@suse.de>, "Andrew Morton" <akpm@linux-foundation.org>
+Cc: "Miaohe Lin" <linmiaohe@huawei.com>, "Naoya Horiguchi" <nao.horiguchi@gmail.com>, "Vlastimil
+ Babka" <vbabka@kernel.org>, "Gregory Price" <gourry@gourry.net>, linux-mm@kvack.org, linux-cxl@vger.kernel.org, tz2294@columbia.edu
+In-Reply-To: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
+References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 20:51:02 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -137,164 +61,122 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Oct 2026 21:48:16 +0530
-<mhonap@nvidia.com> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [High] mm/memory_hotplug: scan_movable_pages() misses poisoned tail
+  pages of folios
+--
 
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> A range excluded from mmap must not be reachable through an mmap of its
-> BAR. Refuse an mmap that overlaps such a range, and advertise the BAR
-> with a sparse mmap capability that lists the areas between the excluded
-> ranges, so a VMM maps those and traps the rest.
-> 
-> mmap is page granular, so each range is rounded out to whole pages, and
-> ranges that meet after rounding form one hole. The sorted list gives the
-> areas in two walks: the first counts them and the second fills them.
-> 
-> A BAR without mmap-excluded ranges gets no new capability. The MSI-X
-> table is excluded from read and write only, so the MSI-X BAR is
-> unchanged.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 91 ++++++++++++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index bee3d1b4d8d2..f099a294af34 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -1106,6 +1106,88 @@ static void vfio_pci_free_excluded_ranges(struct vfio_pci_core_device *vdev)
->  	}
->  }
->  
-> +/* True when [start, start + len) on @bar overlaps a range with any of @flags. */
-> +static bool vfio_pci_bar_range_excluded(struct vfio_pci_core_device *vdev,
-> +					int bar, u64 start, u64 len, u32 flags)
-> +{
-> +	struct vfio_pci_excluded_range *range;
-> +
-> +	/* Only BARs have excluded ranges; a device-specific region has none. */
-> +	if (bar >= PCI_STD_NUM_BARS)
-> +		return false;
-> +
-> +	list_for_each_entry(range, &vdev->excluded_ranges[bar], entry) {
-> +		if (range->start >= start + len)
-> +			break;
-> +		if ((range->flags & flags) &&
-> +		    start < range->start + range->size)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * Advertise a BAR with mmap-excluded ranges as the mmap-able areas between
-> + * them. mmap is page granular, so each range is rounded out to whole pages;
-> + * ranges that meet after rounding merge into one hole. The first walk counts
-> + * the areas and the second fills them.
-> + */
-> +static int vfio_pci_excluded_sparse_cap(struct vfio_pci_core_device *vdev,
-> +					int bar, struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_region_info_cap_sparse_mmap *sparse __free(kfree) = NULL;
-> +	u64 bar_len = pci_resource_len(vdev->pdev, bar);
-> +	struct vfio_pci_excluded_range *range;
-> +	u32 nr_areas = 0;
-> +	bool holes = false;
-> +	u64 pos = 0;
-> +	u32 i = 0;
-> +
-> +	list_for_each_entry(range, &vdev->excluded_ranges[bar], entry) {
-> +		if (!(range->flags & VFIO_PCI_EXCLUDE_MMAP))
-> +			continue;
-> +		holes = true;
-> +		if (ALIGN_DOWN(range->start, PAGE_SIZE) > pos)
-> +			nr_areas++;
-> +		pos = max(pos, ALIGN(range->start + range->size, PAGE_SIZE));
-> +	}
-> +	if (!holes)
-> +		return 0;
-> +	if (pos < bar_len)
-> +		nr_areas++;
+commit 3a170d5683c399929cdc4fe6d9523b3ecee4c1c1
+Author: Mani Tofigh <mt4022@columbia.edu>
 
-The number of sparse ranges is bounded by (num_mmap_excluded_ranges +
-1).  We're dealing with a very low number of excluded ranges, bounded by
-insertion via kernel drivers and core.  It seems worthwhile to avoid
-the duplication with a simple list walk that counts the mmap excluded
-ranges, then all of the alignment happens once, and the resulting
-nr_areas is calculated as we fill.
+mm/memory_hotplug: don't offline a hwpoisoned page still in the page cache
 
-Note that with the use of __free, it's generally recommended to
-allocate at the point it's declared and mixed declarations and
-statements are allowed for this.  We can therefore do the declaration
-and allocation after we've done the simple version of the counting loop.
-Thanks,
+This commit prevents memory offlining from skipping hwpoisoned pages whose
+folios are still in the page cache or swap cache by introducing
+hwpoison_page_offlineable(). It updates scan_movable_pages(),
+do_migrate_range(), and __test_page_isolated_in_pageblock() so that
+offline_pages() fails with -EBUSY instead of offlining memory still
+referenced by a mapping or racing with memory_failure().
 
-Alex
+[ ... ]
 
-> +
-> +	sparse = kzalloc_flex(*sparse, areas, nr_areas);
-> +	if (!sparse)
-> +		return -ENOMEM;
-> +
-> +	sparse->header.id = VFIO_REGION_INFO_CAP_SPARSE_MMAP;
-> +	sparse->header.version = 1;
-> +	sparse->nr_areas = nr_areas;
-> +
-> +	pos = 0;
-> +	list_for_each_entry(range, &vdev->excluded_ranges[bar], entry) {
-> +		u64 hole = ALIGN_DOWN(range->start, PAGE_SIZE);
-> +
-> +		if (!(range->flags & VFIO_PCI_EXCLUDE_MMAP))
-> +			continue;
-> +		if (hole > pos)
-> +			sparse->areas[i++] = (struct vfio_region_sparse_mmap_area) {
-> +				.offset = pos,
-> +				.size = hole - pos,
-> +			};
-> +		pos = max(pos, ALIGN(range->start + range->size, PAGE_SIZE));
-> +	}
-> +	if (pos < bar_len)
-> +		sparse->areas[i] = (struct vfio_region_sparse_mmap_area) {
-> +			.offset = pos,
-> +			.size = bar_len - pos,
-> +		};
-> +
-> +	return vfio_info_add_capability(caps, &sparse->header,
-> +					struct_size(sparse, areas, nr_areas));
-> +}
-> +
->  int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vdev,
->  				      unsigned int type, unsigned int subtype,
->  				      const struct vfio_pci_regops *ops,
-> @@ -1254,6 +1336,10 @@ int vfio_pci_ioctl_get_region_info(struct vfio_device *core_vdev,
->  				if (ret)
->  					return ret;
->  			}
-> +			ret = vfio_pci_excluded_sparse_cap(vdev, info->index,
-> +							   caps);
-> +			if (ret)
-> +				return ret;
->  		}
->  
->  		break;
-> @@ -1947,6 +2033,11 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
->  	if (req_start + req_len > phys_len)
->  		return -EINVAL;
->  
-> +	/* An excluded sub-range is reachable only through its trap, not mmap. */
-> +	if (vfio_pci_bar_range_excluded(vdev, index, req_start, req_len,
-> +					VFIO_PCI_EXCLUDE_MMAP))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * Ensure the BAR resource region is reserved for use.
->  	 */
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 1bfd1f4daeb20..c5cfaa24b41b7 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1821,6 +1821,8 @@ static int scan_movable_pages(unsigned long start, =
+unsigned long end,
+>  		struct folio *folio;
+> =20
+>  		page =3D pfn_to_page(pfn);
+> +		if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
+> +			return -EBUSY;
+>  		if (PageLRU(page) || page_has_movable_ops(page))
+>  			goto found;
+> =20
+> @@ -1887,6 +1889,9 @@ static void do_migrate_range(unsigned long start_pf=
+n, unsigned long end_pfn)
+>  			 */
+>  			if (folio_test_large(folio) && !folio_test_hugetlb(folio))
+>  				goto put_folio;
+> +			/* The offline fails on it anyway, leave it to memory_failure() */
+> +			if (!hwpoison_page_offlineable(page))
+> +				goto put_folio;
+>  			if (folio_test_lru(folio) && !folio_isolate_lru(folio))
+>  				goto put_folio;
+>  			if (folio_mapped(folio)) {
 
+[Severity: High]
+As reported by Sashiko on v1 [1], what happens here when a tail page of a
+large page-cache or swap-cache folio is hwpoisoned?
+
+Because PG_hwpoison uses PF_ANY while PageLRU() uses PF_HEAD, a large LRU
+folio with a poisoned tail page has PageHWPoison(page) false and
+PageLRU(page) true on its head page. Since scan_movable_pages() scans PFNs =
+in
+ascending order, it encounters the head page first and takes the PageLRU(pa=
+ge)
+branch:
+
+    page =3D pfn_to_page(pfn);
+    if (PageHWPoison(page) && !hwpoison_page_offlineable(page))
+        return -EBUSY;
+    if (PageLRU(page) || page_has_movable_ops(page))
+        goto found;
+
+returning 0 with *movable_pfn set to the head PFN without ever scanning the
+poisoned tail PFN.
+
+In offline_pages(), the inner loop then passes that head PFN by value to
+do_migrate_range():
+
+    do {
+        ...
+        ret =3D scan_movable_pages(pfn, end_pfn, &pfn);
+        if (!ret) {
+            do_migrate_range(pfn, end_pfn);
+        }
+    } while (!ret);
+
+Inside do_migrate_range(), pfn is advanced past all tail pages of the large
+folio:
+
+    if (folio_test_large(folio))
+        pfn =3D folio_pfn(folio) + folio_nr_pages(folio) - 1;
+
+    if (folio_contain_hwpoisoned_page(folio)) {
+        if (folio_test_large(folio) && !folio_test_hugetlb(folio))
+            goto put_folio;
+        if (!hwpoison_page_offlineable(page))
+            goto put_folio;
+
+This appears to leave two regressions for large folios:
+
+First, if PG_has_hwpoisoned is already set on the large folio (and it was n=
+ot
+split, for instance because min_order_for_split() > 0 or split failed),
+do_migrate_range() takes goto put_folio without isolating the folio from the
+LRU. On the next iteration in offline_pages(), pfn is still the head PFN, so
+scan_movable_pages() stops at the head page again and offline_pages() spins
+in an infinite loop while holding mem_hotplug_lock and pcp_batch_high_lock.
+
+Second, if memory_failure() on a tail page has called TestSetPageHWPoison(p)
+and is blocked in get_hwpoison_page() waiting on zone_pcp_disable() before
+reaching folio_set_has_hwpoisoned(folio), folio_contain_hwpoisoned_page(fol=
+io)
+is still false. In that window, do_migrate_range() skips the tail PFNs and
+isolates and migrates the folio instead of leaving it to memory_failure().
+
+Should scan_movable_pages() and do_migrate_range() check for poisoned
+subpages across the folio (or check folio_contain_hwpoisoned_page() in
+scan_movable_pages()) so large folios with poisoned tail pages also return
+-EBUSY?
+
+[1] https://lore.kernel.org/r/20261101-memhp-hwpoison-pagecache-v1-1-ed8785=
+ca44eb@columbia.edu
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-memhp-hwpo=
+ison-pagecache-v2-1-029d35634d42@columbia.edu?part=3D1
