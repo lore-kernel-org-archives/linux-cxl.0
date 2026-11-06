@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794002241;
-	b=3/vTt56j9HMavro22rCRBvtocDcoO+D5D/Ybqpjtk3MG5zAy/DXX2Dz0zoO2sqUJDmc5
-	 gJ4GaW/o44wxh5gH/IEbvVkakKY+oTuVTDpehgl6pWBAUlgi1h1QAEjgJvIMw2OxXxr3w
-	 yVC9eOehzvLmN7NMDzDugyadpq/bNGMEoMjJr8r0CJeu0df9FTRX0yV1SOwD1WVJVZNF7
-	 +riKmHoQ8a6nS+hIJplJhiCQ6eDNqp8oXD0KcS82G2coB3K3VdaXSxWRHRDZwbnwDwnmm
-	 vWWjIer74PdbBk5wCnZ9uJKaONc/dwTUbib1xardRS5iq5oa3RSnja2Jr/Nr4oXhBXA==
+	t=1794002242;
+	b=YmAI64eVAhsIYWkFWBbe14mxlNEzIwsdP2DWWh8pDvyx1Jc3dqw1eoiAP+Ao8TrzPxm3
+	 topnzRJemRUS86BroFSajEM8QQgEnM7NcwQkguF6CHVhonEQ1zsllr2GmuzjOnM6rIVWz
+	 94GeEYysTCv+cxQlHj7hBk24Hg1CMlb/q3wEAy9mWdVr7O4NhwRsJyZQ7hk7vXtK+aOdE
+	 /Q/k9F21ScR3CyXu7lpQDWag3Yu0eU/XSKRGKZCvbi73CQZW/iir2LOxHKDw+Au/M3Eil
+	 xuR4KAeVkNMHlsWt54VTlTP3by1wFz3NJ/0Jl2dpt7HoJvEZwpxhYxKFfJP8fgD/G5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794002241;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794002242;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=SdfqBEu5pXKRJLvJm0LuJkwuw/kjXM14L+bib3wEYNQ=;
-	b=u8nxfXCUho7h12NBN0Kzmoa8bQ22o67pLuozvTwSwCHmg+A+3XCetg4qGKrDsyRUaobX
-	 cNNyumkijtMiddIel7yi8YcET57hGoFnE6xI/LesKfzmD6n19PIy2Rmzxyu/ZJJYSKigZ
-	 apvczXQyRwIIXjTmNkhXwqiQ5Dh3kKJd3mNfOgF30HNeMpqjMpuH+H28+CmeqCm2QeX6d
-	 OZdMc+A7RFAp4R9yMNdTb1zh552dCCdghMkVxHkDg9ZI3kA+wybWpb/BI2uETjrnRP6+5
-	 ahYcdGx6Yc6LIlsK9FfWqIoFz6CDji0HuqJhu1/U4pZxQXHUHUphw81iceAyAqijNsA==
+	bh=MNvBgk24RvdzPcJVpWYDVHIIAfimyfyDLIXy0IqaND0=;
+	b=gVLbEJivy+N9qKVf38vKYnVSTzeRwsM0O/Bu1ImNvfyNWSCN5e8RsKJYaCnERNqsDIaA
+	 cRm7eG+ebMeh5uvVZZg6bIL1hiF19JQJExD4718iyk3xA0GlakZ2UQTK5ELwSx2sXNhT9
+	 CGnKsJXUR7YAtG6nSQ0eOw5A7A9nDUaeKnzGEGjVtpg5VuCUKQz4Md5b+VMiOLbFRDqMY
+	 LdgKecsPTB//0DZFgVcQndqjsiNvcUCTuXF4c2MZxJpX+b9vLN/JQgULyyGT8pEdUu8ry
+	 LEuR0XqKZFEvICIc2flJEVUA5YOAsf17FFMZhq6E7jw3J/noBv/Ykqa4EyJyXB5vGmw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kezDCjH2;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NR5L6vHs;
 	arc=none smtp.remote-ip=192.198.163.13
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9E0606A32D
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 21:57:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E9E0606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE868606A32D
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 21:57:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE868606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kezDCjH2
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NR5L6vHs
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794002240; x=1825538240;
+  t=1794002242; x=1825538242;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8PigV5WQsYMRER1oqPdeT1NzfHZ7U0X9lcD4hEObjFY=;
-  b=kezDCjH2tj8NONDsmcoPQRM0Iu6i74PqJihIUihuTWuAiZD/IPOHmB+v
-   /6zMnfufm3Omri3j4VAUZ4Nkgy76ZsPlcZpIihQd2RLQ9NKx8WmMHNQNf
-   kYzkXigeJ6TysuyhBMRBHbYvGD1gAEKaPwvUUAiHrEZwFNTdISeByKuZr
-   dP+XljFMZq55LbfFVJIC8PwxO1XOkZvbjoKMckVZxoHnsvM6J6vkveKnp
-   plsN4Mg2gBvnJlcYlx4qo1YwUf6D4hShVhc7Tj7k9nQLW5Be1+lMBPVMR
-   MPmaSMlwDS2jkAN+3i/7uLZP6fbUys4ybAdqnBbLgCVstfC2B50AxdtKH
+  bh=YbPxwBKA7rUhiqDyIs+owk7rui4mXdxsZA0g0N1WNyM=;
+  b=NR5L6vHsDkYFw7WrGSJB+Jn4MQDi547zKEMFAOjZDvT528hO8VcqSlNF
+   GzwYm2TOZH/ZwHSB9spdWqC7Qibxpf1zAbjygUx+ZuYh01x31qMalxNFi
+   duToFrWkqYm6uRDXtvWg05I1AhjGWOzCmrZ8RmT8UKUOyumdc4anrZ9JQ
+   7Wxp9EyPow6m7ZVbbICGC3VhvizuCkt+rr2k7ZkfgR9fjJ2MdgsK3jU2t
+   d2facpEbueo7IqghB1p6Mbv+6w9dXAup0UdwFKl5xiVplIvqJdnXkwhKO
+   94kB6uZMT2qUXXb9NiSgbtD3pOCeuF+VS1okduKtjpcjsbv74cQ/MQPme
    g==;
-X-CSE-ConnectionGUID: pZBpKCcKTQiG6y3NOtwIKw==
-X-CSE-MsgGUID: cwwKddOQTUWudWckh7sYMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11958"; a="2812927"
+X-CSE-ConnectionGUID: mk293U2WQQ+qOvW93ZIGQw==
+X-CSE-MsgGUID: QnfqYf7zRPu1+frvThd6LQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11958"; a="2812943"
 X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
-   d="scan'208";a="2812927"
+   d="scan'208";a="2812943"
 Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:19 -0800
-X-CSE-ConnectionGUID: nlyu/qS2Qty3Yq+xm2TIbg==
-X-CSE-MsgGUID: yfe2o/nPTt286BZT73ZJBw==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:21 -0800
+X-CSE-ConnectionGUID: DNqiM8P2RJWJXkPicSIt0A==
+X-CSE-MsgGUID: FPINRRiPS4aVO34ccSb5NQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
-   d="scan'208";a="9147239"
+   d="scan'208";a="9147252"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.188])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:19 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:21 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -74,9 +74,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ben Cheatham <benjamin.cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v7 3/5] cxl/region: Support auto region granularity finer than the root
-Date: Fri,  6 Nov 2026 13:57:10 -0800
-Message-ID: <15338cf5f174c87f414e4518b24edb3c1f8371bd.1794000806.git.alison.schofield@intel.com>
+Subject: [PATCH v7 5/5] cxl/test: Add a topology for region granularity finer than the root
+Date: Fri,  6 Nov 2026 13:57:12 -0800
+Message-ID: <250e0de89bed7a7348c25779c4700210a1324bab.1794000806.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1794000806.git.alison.schofield@intel.com>
 References: <cover.1794000806.git.alison.schofield@intel.com>
@@ -91,220 +91,682 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CXL Specification permits a region's interleave granularity to differ
-between levels of the decoder hierarchy. For an auto region, the CXL driver
-reconstructs that hierarchy from the decoder configuration programmed by
-platform firmware.
+Add a cxl_test topology for testing regions whose granularity is finer
+than the root granularity.
 
-The CXL driver currently requires the interleaving root to have the same
-granularity as the region, with each successive interleaving level becoming
-coarser toward the endpoints. The driver cannot assemble a region whose
-interleave granularity is finer than the granularity of its interleaving
-root decoder.
+modprobe cxl_test finer_gran_regions=1 creates three host bridges, two
+root ports per host bridge, one switch per root port, and two endpoints
+per switch, for twelve endpoints total.
 
-Support auto regions with a granularity finer than the root, restricted to
-configurations whose granularity refines monotonically toward the
-endpoints. Derive each interleaving decoder's granularity from its parent:
+Selecting different endpoint combinations allows interleaving at the host
+bridge, at the switch, or at both, without requiring separate topologies.
 
-        ig = parent_ig / iw
+Three CFMWS windows are added:
 
-A same-granularity region keeps the existing derivation, which coarsens
-toward the endpoints:
+1) A 2-way window at 4K over two host bridges, hosting an 8-way region
+at 1K and a 4-way region at 2K.
 
-        ig = parent_ig * parent_iw
+2) A 3-way window at 512 over three host bridges, hosting a 6-way
+region at 256: CXL 4.0 Table 9-7 rows 2 and 3.
 
-The topology determines each decoder's interleave ways, so the parent
-granularity and the decoder's ways determine its granularity. Use that
-relationship to validate the decoder geometry while assembling an auto
-region. Only the interleaving levels are compared; a passthrough level,
-iw == 1, keeps its granularity exemption.
+3) A 3-way window at 1K over three host bridges, hosting a 12-way
+region at 256: CXL 4.0 Table 9-6 row 7.
 
-Refuse a derived granularity finer than the region granularity. Each
-interleaving level consumes part of the region interleave, and the deepest
-interleaving level must not refine beyond the region granularity.
+NULL-check the legacy topology arrays in the mock device and mock port
+lookups, which are left empty when finer_gran_regions=1 selects the new
+topology.
 
-For the layouts Linux supports, require the root and region to interleave
-over the same span, the address range in which the interleave pattern
-completes one full pass:
-
-        root_iw * root_ig == region_iw * region_ig
-
-The same span relationship covers the CXL Specification's Mod3
-configurations. For example, a 6-way region at IGB across three host
-bridges uses a 3-way root interleave at 2 * IGB and a 2-way interleave at
-IGB below it, as described in CXL 4.0 Section 9.13.1.1.
-
-Use the region granularity and ways when translating unaligned region
-offsets to DPA, so poison injection and clearing work with the new layouts.
+The default and existing special module params are unaffected.
 
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/region.c | 106 +++++++++++++++++++++++++++++++-------
- 1 file changed, 87 insertions(+), 19 deletions(-)
+ tools/testing/cxl/test/cxl.c | 420 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 400 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 1594bec3930b..0a39e634b4b0 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1432,6 +1432,52 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
- 	return 0;
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 3eb1051b1ee8..ffad0867f1df 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -19,6 +19,7 @@ static bool extended_linear_cache;
+ static bool fail_autoassemble;
+ static bool type2_test;
+ static bool mock_zero_size_decoders;
++static bool finer_gran_regions;
+ 
+ #define FAKE_QTG_ID	42
+ 
+@@ -28,9 +29,33 @@ static bool mock_zero_size_decoders;
+ #define NR_CXL_ROOT_PORTS 2
+ #define NR_CXL_SWITCH_PORTS 2
+ #define NR_CXL_PORT_DECODERS 8
+-#define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
+ #define NR_CXL_TYPE2_ACCEL 1
+ 
++/*
++ * finer_gran_regions=1: three host bridges, two root ports each, and one
++ * switch per root port, reaching twelve endpoints. Two root ports per host
++ * bridge let a region interleave at the host bridge, at the switch, or at
++ * both, so a single topology covers the power-of-2 and 3-way-family region
++ * layouts that the CXL Specification permits.
++ */
++#define NR_CXL_FINER_GRAN_HB 3
++#define NR_CXL_FINER_GRAN_RPS_PER_HB 2
++#define NR_CXL_FINER_GRAN_RPS \
++	(NR_CXL_FINER_GRAN_HB * NR_CXL_FINER_GRAN_RPS_PER_HB)
++#define NR_CXL_FINER_GRAN_SWITCHES NR_CXL_FINER_GRAN_RPS
++#define NR_CXL_FINER_GRAN_DPORTS \
++	(NR_CXL_FINER_GRAN_SWITCHES * NR_CXL_SWITCH_PORTS)
++
++#define NR_DEFAULT_BRIDGES \
++	(NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
++#define NR_BRIDGES (NR_DEFAULT_BRIDGES + NR_CXL_FINER_GRAN_HB)
++
++/* CHBS index ranges within mock_cedt.chbs[] */
++#define CHBS_DEFAULT_START 0
++#define CHBS_DEFAULT_END (NR_DEFAULT_BRIDGES - 1)
++#define CHBS_FINER_GRAN_START NR_DEFAULT_BRIDGES
++#define CHBS_FINER_GRAN_END (NR_BRIDGES - 1)
++
+ #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
+ static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
+ 
+@@ -55,6 +80,12 @@ struct platform_device *cxl_mem_single[NR_MEM_SINGLE];
+ static struct platform_device *cxl_rch[NR_CXL_RCH];
+ static struct platform_device *cxl_rcd[NR_CXL_RCH];
+ 
++static struct platform_device *cxl_finer_gran_hb[NR_CXL_FINER_GRAN_HB];
++static struct platform_device *cxl_finer_gran_root_port[NR_CXL_FINER_GRAN_RPS];
++static struct platform_device *cxl_finer_gran_uport[NR_CXL_FINER_GRAN_SWITCHES];
++static struct platform_device *cxl_finer_gran_dport[NR_CXL_FINER_GRAN_DPORTS];
++static struct platform_device *cxl_mem_finer_gran[NR_CXL_FINER_GRAN_DPORTS];
++
+ /*
+  * Decoder registry
+  *
+@@ -118,6 +149,19 @@ static struct acpi_device host_bridge[NR_BRIDGES] = {
+ 		.handle = &host_bridge[3],
+ 		.pnp.unique_id = "3",
+ 	},
++	/* Dedicated finer-than-root granularity topology */
++	[4] = {
++		.handle = &host_bridge[4],
++		.pnp.unique_id = "4",
++	},
++	[5] = {
++		.handle = &host_bridge[5],
++		.pnp.unique_id = "5",
++	},
++	[6] = {
++		.handle = &host_bridge[6],
++		.pnp.unique_id = "6",
++	},
+ };
+ 
+ static bool is_mock_dev(struct device *dev)
+@@ -125,15 +169,18 @@ static bool is_mock_dev(struct device *dev)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++)
+-		if (dev == &cxl_mem[i]->dev)
++		if (cxl_mem[i] && dev == &cxl_mem[i]->dev)
+ 			return true;
+ 	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++)
+-		if (dev == &cxl_mem_single[i]->dev)
++		if (cxl_mem_single[i] && dev == &cxl_mem_single[i]->dev)
+ 			return true;
+ 	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++)
+-		if (dev == &cxl_rcd[i]->dev)
++		if (cxl_rcd[i] && dev == &cxl_rcd[i]->dev)
+ 			return true;
+-	if (dev == &cxl_acpi->dev)
++	for (i = 0; i < ARRAY_SIZE(cxl_mem_finer_gran); i++)
++		if (cxl_mem_finer_gran[i] && dev == &cxl_mem_finer_gran[i]->dev)
++			return true;
++	if (cxl_acpi && dev == &cxl_acpi->dev)
+ 		return true;
+ 	return false;
+ }
+@@ -191,6 +238,18 @@ static struct {
+ 		struct acpi_cedt_cfmws cfmws;
+ 		u32 target[3];
+ 	} cfmws8;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[2];
++	} cfmws9;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[3];
++	} cfmws10;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[3];
++	} cfmws11;
+ 	struct {
+ 		struct acpi_cedt_cxims cxims;
+ 		u64 xormap_list[2];
+@@ -235,6 +294,31 @@ static struct {
+ 		.uid = 3,
+ 		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL11,
+ 	},
++	/* Dedicated finer-than-root granularity topology */
++	.chbs[4] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 4,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.chbs[5] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 5,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.chbs[6] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 6,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
+ 	.cfmws0 = {
+ 		.cfmws = {
+ 			.header = {
+@@ -374,6 +458,51 @@ static struct {
+ 		},
+ 		.target = { 0, 1, 2, },
+ 	},
++	.cfmws9 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws9),
++			},
++			.interleave_ways = 1,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_512M * 4UL,
++		},
++		.target = { 4, 5, },
++	},
++	.cfmws10 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws10),
++			},
++			.interleave_ways = 8,
++			.granularity = 1,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_512M * 6UL,
++		},
++		.target = { 4, 5, 6, },
++	},
++	.cfmws11 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws11),
++			},
++			.interleave_ways = 8,
++			.granularity = 2,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_512M * 6UL,
++		},
++		.target = { 4, 5, 6, },
++	},
+ 	.cxims0 = {
+ 		.cxims = {
+ 			.header = {
+@@ -411,6 +540,10 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
+ 	[6] = &mock_cedt.cfmws6.cfmws,
+ 	[7] = &mock_cedt.cfmws7.cfmws,
+ 	[8] = &mock_cedt.cfmws8.cfmws,
++	/* Dedicated finer-than-root granularity topology */
++	[9] = &mock_cedt.cfmws9.cfmws,
++	[10] = &mock_cedt.cfmws10.cfmws,
++	[11] = &mock_cedt.cfmws11.cfmws,
+ };
+ 
+ static int cfmws_start;
+@@ -419,6 +552,8 @@ static int cfmws_end;
+ #define CFMWS_MOD_ARRAY_END   5
+ #define CFMWS_XOR_ARRAY_START 6
+ #define CFMWS_XOR_ARRAY_END   8
++#define CFMWS_FINER_GRAN_ARRAY_START 9
++#define CFMWS_FINER_GRAN_ARRAY_END   11
+ 
+ struct acpi_cedt_cxims *mock_cxims[1] = {
+ 	[0] = &mock_cedt.cxims0.cxims,
+@@ -497,12 +632,26 @@ static void update_type2_cfmws(void)
+ 	memcpy(&mock_cedt.cfmws0.cfmws, &type2_cfmws0, sizeof(type2_cfmws0));
  }
  
-+static int check_root_interleave(struct cxl_region *cxlr)
++/* CHBS entries belonging to the topology this load selected */
++static void chbs_range(int *lo, int *hi)
 +{
-+	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
-+	struct cxl_region_params *p = &cxlr->params;
-+	int root_ig = cxld->interleave_granularity;
-+	int root_iw = cxld->interleave_ways;
++	if (finer_gran_regions) {
++		*lo = CHBS_FINER_GRAN_START;
++		*hi = CHBS_FINER_GRAN_END;
++	} else {
++		*lo = CHBS_DEFAULT_START;
++		*hi = CHBS_DEFAULT_END;
++	}
++}
 +
-+	if (root_iw == 1)
+ static int populate_cedt(void)
+ {
+ 	struct cxl_mock_res *res;
++	int chbs_lo, chbs_hi;
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
++	chbs_range(&chbs_lo, &chbs_hi);
++	for (i = chbs_lo; i <= chbs_hi; i++) {
+ 		struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
+ 		resource_size_t size;
+ 
+@@ -563,12 +712,16 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+ 	if (!is_mock_port(dev) && !is_mock_dev(dev))
+ 		return acpi_table_parse_cedt(id, handler_arg, arg);
+ 
+-	if (id == ACPI_CEDT_TYPE_CHBS)
+-		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
++	if (id == ACPI_CEDT_TYPE_CHBS) {
++		int chbs_lo, chbs_hi;
++
++		chbs_range(&chbs_lo, &chbs_hi);
++		for (i = chbs_lo; i <= chbs_hi; i++) {
+ 			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
+ 			end = (unsigned long)&mock_cedt.chbs[i + 1];
+ 			handler_arg(h, arg, end);
+ 		}
++	}
+ 
+ 	if (id == ACPI_CEDT_TYPE_CFMWS)
+ 		for (i = cfmws_start; i <= cfmws_end; i++) {
+@@ -592,13 +745,16 @@ static bool is_mock_bridge(struct device *dev)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++)
+-		if (dev == &cxl_host_bridge[i]->dev)
++		if (cxl_host_bridge[i] && dev == &cxl_host_bridge[i]->dev)
+ 			return true;
+ 	for (i = 0; i < ARRAY_SIZE(cxl_hb_single); i++)
+-		if (dev == &cxl_hb_single[i]->dev)
++		if (cxl_hb_single[i] && dev == &cxl_hb_single[i]->dev)
+ 			return true;
+ 	for (i = 0; i < ARRAY_SIZE(cxl_rch); i++)
+-		if (dev == &cxl_rch[i]->dev)
++		if (cxl_rch[i] && dev == &cxl_rch[i]->dev)
++			return true;
++	for (i = 0; i < ARRAY_SIZE(cxl_finer_gran_hb); i++)
++		if (cxl_finer_gran_hb[i] && dev == &cxl_finer_gran_hb[i]->dev)
+ 			return true;
+ 
+ 	return false;
+@@ -612,27 +768,42 @@ static bool is_mock_port(struct device *dev)
+ 		return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++)
+-		if (dev == &cxl_root_port[i]->dev)
++		if (cxl_root_port[i] && dev == &cxl_root_port[i]->dev)
+ 			return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++)
+-		if (dev == &cxl_switch_uport[i]->dev)
++		if (cxl_switch_uport[i] && dev == &cxl_switch_uport[i]->dev)
+ 			return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++)
+-		if (dev == &cxl_switch_dport[i]->dev)
++		if (cxl_switch_dport[i] && dev == &cxl_switch_dport[i]->dev)
+ 			return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_root_single); i++)
+-		if (dev == &cxl_root_single[i]->dev)
++		if (cxl_root_single[i] && dev == &cxl_root_single[i]->dev)
+ 			return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_swu_single); i++)
+-		if (dev == &cxl_swu_single[i]->dev)
++		if (cxl_swu_single[i] && dev == &cxl_swu_single[i]->dev)
+ 			return true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cxl_swd_single); i++)
+-		if (dev == &cxl_swd_single[i]->dev)
++		if (cxl_swd_single[i] && dev == &cxl_swd_single[i]->dev)
++			return true;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_finer_gran_root_port); i++)
++		if (cxl_finer_gran_root_port[i] &&
++		    dev == &cxl_finer_gran_root_port[i]->dev)
++			return true;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_finer_gran_uport); i++)
++		if (cxl_finer_gran_uport[i] &&
++		    dev == &cxl_finer_gran_uport[i]->dev)
++			return true;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_finer_gran_dport); i++)
++		if (cxl_finer_gran_dport[i] &&
++		    dev == &cxl_finer_gran_dport[i]->dev)
+ 			return true;
+ 
+ 	if (is_cxl_memdev(dev))
+@@ -703,7 +874,15 @@ static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
+ 	[3] = {
+ 		.bus = &mock_pci_bus[3],
+ 	},
+-
++	[4] = {
++		.bus = &mock_pci_bus[4],
++	},
++	[5] = {
++		.bus = &mock_pci_bus[5],
++	},
++	[6] = {
++		.bus = &mock_pci_bus[6],
++	},
+ };
+ 
+ static bool is_mock_bus(struct pci_bus *bus)
+@@ -1413,7 +1592,8 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 		/* check is endpoint is attach to host-bridge0 */
+ 		port = cxled_to_port(cxled);
+ 		do {
+-			if (port->uport_dev == &cxl_host_bridge[0]->dev) {
++			if (cxl_host_bridge[0] &&
++			    port->uport_dev == &cxl_host_bridge[0]->dev) {
+ 				hb0 = true;
+ 				break;
+ 			}
+@@ -1461,6 +1641,8 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 
+ 	if (is_cxl_endpoint(port))
+ 		target_count = 0;
++	else if (finer_gran_regions && is_cxl_root(parent_port))
++		target_count = NR_CXL_FINER_GRAN_RPS_PER_HB;
+ 	else if (is_cxl_root(parent_port))
+ 		target_count = NR_CXL_ROOT_PORTS;
+ 	else
+@@ -1560,6 +1742,24 @@ static int get_port_array(struct cxl_port *port,
+ 	struct platform_device **array;
+ 	int array_size;
+ 
++	if (finer_gran_regions) {
++		if (port->depth == 1) {
++			array_size = ARRAY_SIZE(cxl_finer_gran_root_port);
++			array = cxl_finer_gran_root_port;
++		} else if (port->depth == 2) {
++			array_size = ARRAY_SIZE(cxl_finer_gran_dport);
++			array = cxl_finer_gran_dport;
++		} else {
++			dev_WARN_ONCE(&port->dev, 1, "unexpected depth %d\n",
++				      port->depth);
++			return -ENXIO;
++		}
++
++		*port_array = array;
++		*port_array_size = array_size;
 +		return 0;
-+
-+	if (p->interleave_granularity > root_ig) {
-+		dev_dbg(&cxlr->dev,
-+			"granularity %d exceeds root decoder granularity %d\n",
-+			p->interleave_granularity, root_ig);
-+		return -ENXIO;
 +	}
 +
-+	/*
-+	 * A same-granularity region below a power-of-two root may repeat
-+	 * the root targets, spanning a multiple of the root span.
-+	 */
-+	if (is_power_of_2(root_iw) && p->interleave_granularity == root_ig)
-+		return 0;
+ 	if (port->depth == 1) {
+ 		if (is_multi_bridge(port->uport_dev)) {
+ 			array_size = ARRAY_SIZE(cxl_root_port);
+@@ -1953,11 +2153,142 @@ static void cxl_single_topo_exit(void)
+ 	}
+ }
+ 
++#define FINER_GRAN_RP_ID_BASE	(NR_MULTI_ROOT + NR_CXL_SINGLE_HOST)
++#define FINER_GRAN_USP_ID_BASE	FINER_GRAN_RP_ID_BASE
++#define FINER_GRAN_DSP_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE)
++#define FINER_GRAN_MEM_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE + NR_CXL_RCH)
 +
-+	/* Span is one complete pass through the interleave pattern */
-+	if (root_iw * root_ig != p->interleave_ways * p->interleave_granularity) {
-+		dev_dbg(&cxlr->dev,
-+			"region span %d (%d ways at %d) does not match root span %d (%d ways at %d)\n",
-+			p->interleave_ways * p->interleave_granularity,
-+			p->interleave_ways, p->interleave_granularity,
-+			root_iw * root_ig, root_iw, root_ig);
-+		return -ENXIO;
++static void cxl_finer_gran_topo_exit(void)
++{
++	int i;
++
++	for (i = NR_CXL_FINER_GRAN_DPORTS - 1; i >= 0; i--) {
++		platform_device_unregister(cxl_finer_gran_dport[i]);
++		cxl_finer_gran_dport[i] = NULL;
++	}
++	for (i = NR_CXL_FINER_GRAN_SWITCHES - 1; i >= 0; i--) {
++		platform_device_unregister(cxl_finer_gran_uport[i]);
++		cxl_finer_gran_uport[i] = NULL;
++	}
++	for (i = NR_CXL_FINER_GRAN_RPS - 1; i >= 0; i--) {
++		platform_device_unregister(cxl_finer_gran_root_port[i]);
++		cxl_finer_gran_root_port[i] = NULL;
++	}
++	for (i = NR_CXL_FINER_GRAN_HB - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_finer_gran_hb[i];
++
++		if (!pdev)
++			continue;
++		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
++		platform_device_unregister(pdev);
++		cxl_finer_gran_hb[i] = NULL;
++	}
++}
++
++static __init int cxl_finer_gran_topo_init(void)
++{
++	int i, rc;
++
++	for (i = 0; i < NR_CXL_FINER_GRAN_HB; i++) {
++		struct acpi_device *adev = &host_bridge[NR_DEFAULT_BRIDGES + i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_host_bridge",
++					     NR_DEFAULT_BRIDGES + i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err;
++		}
++
++		mock_companion(adev, &pdev->dev);
++		rc = cxl_mock_platform_device_add(pdev, &cxl_finer_gran_hb[i]);
++		if (rc)
++			goto err;
++
++		mock_pci_bus[NR_DEFAULT_BRIDGES + i].bridge = &pdev->dev;
++		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
++				       "physical_node");
++		if (rc)
++			goto err;
++	}
++
++	/* 2 root ports per host bridge */
++	for (i = 0; i < NR_CXL_FINER_GRAN_RPS; i++) {
++		struct platform_device *bridge =
++			cxl_finer_gran_hb[i / NR_CXL_FINER_GRAN_RPS_PER_HB];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_root_port",
++					     FINER_GRAN_RP_ID_BASE + i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err;
++		}
++		pdev->dev.parent = &bridge->dev;
++
++		rc = cxl_mock_platform_device_add(pdev,
++						  &cxl_finer_gran_root_port[i]);
++		if (rc)
++			goto err;
++	}
++
++	/* 1 switch uport per root port */
++	for (i = 0; i < NR_CXL_FINER_GRAN_SWITCHES; i++) {
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_uport",
++					     FINER_GRAN_USP_ID_BASE + i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err;
++		}
++		pdev->dev.parent = &cxl_finer_gran_root_port[i]->dev;
++
++		rc = cxl_mock_platform_device_add(pdev,
++						  &cxl_finer_gran_uport[i]);
++		if (rc)
++			goto err;
++	}
++
++	/* 2 dports per switch */
++	for (i = 0; i < NR_CXL_FINER_GRAN_DPORTS; i++) {
++		struct platform_device *uport =
++			cxl_finer_gran_uport[i / NR_CXL_SWITCH_PORTS];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_dport",
++					     FINER_GRAN_DSP_ID_BASE + i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err;
++		}
++		pdev->dev.parent = &uport->dev;
++
++		rc = cxl_mock_platform_device_add(pdev,
++						  &cxl_finer_gran_dport[i]);
++		if (rc)
++			goto err;
 +	}
 +
 +	return 0;
++err:
++	cxl_finer_gran_topo_exit();
++	return rc;
 +}
 +
-+/* Region IG is finer than the IG of its interleaving root decoder */
-+static bool cxl_region_is_finer_than_root(struct cxl_region *cxlr)
-+{
-+	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
-+
-+	return cxld->interleave_ways > 1 &&
-+	       cxld->interleave_granularity > cxlr->params.interleave_granularity;
-+}
-+
- /*
-  * The "distance" between peer downstream ports represents which
-  * endpoint positions in the region interleave a given port can
-@@ -1449,6 +1495,14 @@ static int cxl_port_peer_distance(struct cxl_port *port, struct cxl_region *cxlr
- 	struct cxl_port *iter = port;
- 	int distance = 1;
- 
-+	/*
-+	 * A finer-than-root region refines toward the endpoints, so peer
-+	 * targets at the finest interleaving level occupy consecutive region
-+	 * positions.
-+	 */
-+	if (cxl_region_is_finer_than_root(cxlr))
-+		return 1;
-+
- 	do {
- 		cxl_rr_iter = cxl_rr_load(iter, cxlr);
- 		distance *= cxl_rr_iter->nr_targets;
-@@ -1476,15 +1530,17 @@ static int cxl_port_parent_interleave(struct cxl_port *port,
- 	int parent_iw, parent_ig;
- 
- 	if (is_cxl_root(parent_port)) {
--		/*
--		 * Root decoder IG is always set to value in CFMWS which
--		 * may be different than this region's IG.  We can use the
--		 * region's IG here since interleave_granularity_store()
--		 * does not allow interleaved host-bridges with
--		 * root IG != region IG.
--		 */
--		parent_ig = p->interleave_granularity;
- 		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
-+		if (parent_iw > 1) {
-+			parent_ig = cxlrd->cxlsd.cxld.interleave_granularity;
-+		} else {
-+			/*
-+			 * A single-way root does not interleave, so its
-+			 * granularity does not constrain the region interleave.
-+			 * Use the region granularity instead.
-+			 */
-+			parent_ig = p->interleave_granularity;
-+		}
- 		if (!is_power_of_2(parent_iw))
- 			parent_iw /= 3;
- 	} else {
-@@ -1521,7 +1577,7 @@ static int cxl_port_calc_interleave(struct cxl_port *port, struct cxl_region *cx
- 				    struct cxl_region_ref *cxl_rr, int *out_iw,
- 				    int *out_ig)
+ static void cxl_type3_mem_exit(void)
  {
--	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
-+	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_decoder *cxld = cxl_rr->decoder;
- 	int parent_iw, parent_ig, iw, ig, rc;
- 	struct cxl_switch_decoder *cxlsd;
-@@ -1537,16 +1593,24 @@ static int cxl_port_calc_interleave(struct cxl_port *port, struct cxl_region *cx
- 		return -EINVAL;
- 	}
+ 	struct platform_device *pdev;
+ 	int i;
  
--	/*
--	 * Interleave granularity is a multiple of @parent_port granularity.
--	 * Multiplier is the parent port interleave ways.
--	 */
--	ig = parent_ig * parent_iw;
-+	/* Finer-than-root regions refine granularity toward the endpoints */
-+	if (cxl_region_is_finer_than_root(cxlr)) {
-+		ig = parent_ig / iw;
-+
-+		if (ig < p->interleave_granularity) {
-+			dev_dbg(&cxlr->dev,
-+				"%s:%s: granularity %d is finer than region granularity %d\n",
-+				dev_name(port->uport_dev), dev_name(&port->dev),
-+				ig, p->interleave_granularity);
-+			return -ENXIO;
++	if (finer_gran_regions) {
++		for (i = NR_CXL_FINER_GRAN_DPORTS - 1; i >= 0; i--) {
++			if (cxl_mem_finer_gran[i])
++				platform_device_unregister(cxl_mem_finer_gran[i]);
 +		}
-+	} else {
-+		ig = parent_ig * parent_iw;
++		return;
 +	}
- 
- 	if (!granularity_valid(ig)) {
--		dev_dbg(&cxlr->dev,
--			"%s: invalid granularity calculation (%d * %d)\n",
--			dev_name(&parent_port->dev), parent_ig, parent_iw);
-+		dev_dbg(&cxlr->dev, "%s:%s: invalid granularity: %d\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev), ig);
- 		return -EINVAL;
- 	}
- 
-@@ -2186,6 +2250,10 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
- 
-+	rc = check_root_interleave(cxlr);
-+	if (rc)
-+		return rc;
 +
- 	if (p->nr_targets >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
- 			p->nr_targets);
-@@ -3590,8 +3658,8 @@ static int unaligned_region_offset_to_dpa_result(struct cxl_region *cxlr,
- 	 * a dpa_offset independent of the target device and then enumerate
- 	 * and test that dpa_offset against each candidate endpoint decoder.
- 	 */
--	gran = cxld->interleave_granularity;
--	interleave_width = gran * cxld->interleave_ways;
-+	gran = p->interleave_granularity;
-+	interleave_width = gran * p->interleave_ways;
- 	interleave_index = div64_u64(offset, interleave_width);
- 	gran_offset = do_div(tmp, gran);
+ 	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--) {
+ 		pdev = cxl_rcd[i];
+ 		if (!pdev)
+@@ -2030,10 +2361,44 @@ static int cxl_type2_mem_init(void)
+ 	return rc;
+ }
  
++static int cxl_finer_gran_mem_init(void)
++{
++	int i, rc;
++
++	for (i = 0; i < NR_CXL_FINER_GRAN_DPORTS; i++) {
++		struct platform_device *dport = cxl_finer_gran_dport[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_mem",
++					     FINER_GRAN_MEM_ID_BASE + i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err;
++		}
++		pdev->dev.parent = &dport->dev;
++		set_dev_node(&pdev->dev, numa_map_to_online_node(i % 2));
++
++		rc = cxl_mock_platform_device_add(pdev, &cxl_mem_finer_gran[i]);
++		if (rc)
++			goto err;
++	}
++
++	return 0;
++err:
++	for (i = NR_CXL_FINER_GRAN_DPORTS - 1; i >= 0; i--) {
++		if (cxl_mem_finer_gran[i])
++			platform_device_unregister(cxl_mem_finer_gran[i]);
++	}
++	return rc;
++}
++
+ static int cxl_type3_mem_init(void)
+ {
+ 	int i, rc;
+ 
++	if (finer_gran_regions)
++		return cxl_finer_gran_mem_init();
++
+ 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
+ 		struct platform_device *dport = cxl_switch_dport[i];
+ 		struct platform_device *pdev;
+@@ -2148,6 +2513,8 @@ static bool __init have_multiple_modparms(void)
+ 		count++;
+ 	if (mock_zero_size_decoders)
+ 		count++;
++	if (finer_gran_regions)
++		count++;
+ 
+ 	/* Zero-size decoders require decoder[0] to preserve commit order. */
+ 	if (fail_autoassemble && mock_zero_size_decoders)
+@@ -2421,6 +2788,11 @@ static int cxl_type3_topo_init(void)
+ 
+ static void cxl_topo_exit(void)
+ {
++	if (finer_gran_regions) {
++		cxl_finer_gran_topo_exit();
++		return;
++	}
++
+ 	if (type2_test) {
+ 		cxl_type2_topo_exit();
+ 		return;
+@@ -2431,6 +2803,8 @@ static void cxl_topo_exit(void)
+ 
+ static int cxl_topo_init(void)
+ {
++	if (finer_gran_regions)
++		return cxl_finer_gran_topo_init();
+ 	if (type2_test)
+ 		return cxl_type2_topo_init();
+ 	return cxl_type3_topo_init();
+@@ -2473,7 +2847,10 @@ static __init int cxl_test_init(void)
+ 	if (rc)
+ 		goto err_gen_pool_add;
+ 
+-	if (interleave_arithmetic == 1) {
++	if (finer_gran_regions) {
++		cfmws_start = CFMWS_FINER_GRAN_ARRAY_START;
++		cfmws_end = CFMWS_FINER_GRAN_ARRAY_END;
++	} else if (interleave_arithmetic == 1) {
+ 		cfmws_start = CFMWS_XOR_ARRAY_START;
+ 		cfmws_end = CFMWS_XOR_ARRAY_END;
+ 	} else {
+@@ -2563,6 +2940,9 @@ MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
+ module_param(mock_zero_size_decoders, bool, 0444);
+ MODULE_PARM_DESC(mock_zero_size_decoders,
+ 		 "Mock committed, locked, empty decoders under host-bridge0");
++module_param(finer_gran_regions, bool, 0444);
++MODULE_PARM_DESC(finer_gran_regions,
++		 "Topology for region granularities finer than the root");
+ module_init(cxl_test_init);
+ module_exit(cxl_test_exit);
+ MODULE_LICENSE("GPL v2");
 -- 
 2.37.3
 
