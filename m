@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793944281;
-	b=BkhJ4i7QB+XT+fH5EaGP9E1cA5c5GTbWB7hWfd0XsJGneKWw1IR5dW+BU4f12ptevKGA
-	 jVNEbB+uap3ZI+I68v7A0V7iQ7YsgsLrSS1Gpgv885wN1J3FUxMO6e2XKvWgjbS+QC7jw
-	 omX5YqwggNeqzpklK17nuLuxuHBlI+hjY3rbVf4KsaT0uh+fJx7Tfyh+eG/iwhi/2MMiI
-	 3vyl8uEAWez6wDNIH04xdaMawzKkockvLCwJfXFgmJWKhrlEzNU/mpsqmHAF2J7mgYZjN
-	 D8nQZ/RDIuLg/jfpKoDRRcz+SJyHIKhc631LuIiuUOfMUbFC9xSHsqe5qQSq7jNJgFQ==
+	t=1793945483;
+	b=x2El+QEmL9I/jOHWdrask8q6KqSILNkVMdxN8kk8r4O5CeI2aaFzkSjoRM4O8xsqe5nm
+	 HvmWeUpvcLcaAhvFTEG2Q0dAGcqKU6GX9pV+McUwzRiRxkdGfo9PXc85UQKpAg4fhWP/k
+	 c/jo+jJUCGQsE6c2ZO4BBb2/1C6oiHSoD2w8d0SwK2jvZ61HrBPsDBnsSLJ3oRhTxX3oC
+	 uYbO7MOJ6cfFNOi8fgXc3v2TnnuPWxAt+4KUdEovsjXDVFF4JvIAuLKBiEIWbM4ZGOmA1
+	 7iPZqkXNDdVHLR9FcvbDPEDJK5aRwI983r3uqmmWU1R4zl7vNHQm0VTp4YtFAHepB4A==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793944281;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793945483;
 	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
 	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
 	 X-ZohoMailClient;
-	bh=ISi1JFk0rUr/qH5yiUNDWFl9Yj1qbBPyLSyaOnYK0GM=;
-	b=I3P+GeW2SHbDRqx+dRaNiPSx2Yi++XKzjcvTQcifZgMphjIPspYjmBS52LWPg0vC1sqM
-	 B0aS8ojxJWhIXHHr6+OxhRv7zUoDQUarq+7ZjE2D5oWC+GlO3HMflBZqBl1auQuiqq744
-	 Vbn8/T9xlWSaJWh0JLo6FyT+IKhNBD4kAU3bHm19ulOLCes5jb4ghMOywg1C1nybxvIDv
-	 TqdTNvMnWhy0rTmIgEGU93NUZcsfnTHMz/XxH7aWgmXrLxB8GjtDgHspfXuCKsovrrGeB
-	 3ZS6MPZYHENjqhns95mAmIcu54zhtTHEUOyZebMK9jpZOIr6IoRPlYtNeup9X/YTVyg==
+	bh=p93KlAbb8+9aaTRa2e6XPglDextBPEuIe0qrzUAdZkY=;
+	b=bHeRn+10KGM2dUvP5JgUkKQUTMkAympRgyJrLNUfurJUKwY0VHXavs+IIa1Pj38i+IPo
+	 ATHhsQ5jzF0SFOUSzhPD3UoSmIJ+ksPag2oBjcDh5TxWZSoirCSIbF1pab8vrg2/EogWo
+	 Fp1FhfKsbUzk4Kh9/Bw7ueSDQXQf22JUbZ6C0Zc8FTit8FBUXSc4vrjYxdbggPnw/LcGO
+	 02nt/lGutP4n04VCm0jj3LnRKkKLHrrBpp3p6YsN6yF+QDDCLibZs48OPd34WlQfK5vKm
+	 /u/XKS2y1B5lIiH4GIxkb2cm9nROPWiOuFOGxNoU0m9/CU2DUMH85MWehy2k6Oq9kDg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=zohomail.com;
 	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=PFZvHna6;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=W46QuDBK;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.94
 Received: from sender5-pp-o94.zoho.com (sender5-pp-o94.zoho.com [165.173.182.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE646606A332
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 05:51:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE646606A332
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16414606A330
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 06:11:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16414606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=PFZvHna6
-ARC-Seal: i=1; a=rsa-sha256; t=1793944274; cv=none; 
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=W46QuDBK
+ARC-Seal: i=1; a=rsa-sha256; t=1793945475; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=CeqTSRKl18hbJ9j+eKMc2H1vl8n6VUZar8RIzi5w+bJvQfWsy9Ge7xbSs4pRMd5j06IDbTKEwmWoKsnskV61BRU3R30Eub6nKKZHlggqgo/h64OT8wLBzHr1cHtlvNucZzumkNEUGvP7PdJjmcKAtxKZE9/x6G5BeTuzL9kDFnM=
+	b=hoNLCHTzr7V/lOpCONe2uZDY6FdS6N8BcvfEtXPBEFLwwFsZDrJWC9n5HtrJD6h/juyCzxgntB/TtxOhI/ln7q3DxuJRWEttrzqw5O3lsNOz9Xw+rnzkZhRDE9tFkX+i6gj6w8YS5NGKbREabUPdZI5O/YlCoihO7SP7lhTUB3M=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793944274; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ISi1JFk0rUr/qH5yiUNDWFl9Yj1qbBPyLSyaOnYK0GM=; 
-	b=KLIdRKZu+0lxERv9RvVG9k7ooLd1lay+ZaoZkbnKcPAHvmqQlgEEeFhwDvG8LxQX9iT4jh+GFSyzBn4WyIfF0B8czmuPWQiXsl26kNp0GOCSnKRJnt14QVkPiW6ivf910AYfnFSVQ+pwOAF+HUmnQDycCmeiR1RJkKFVedHnrBc=
+	t=1793945475; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=p93KlAbb8+9aaTRa2e6XPglDextBPEuIe0qrzUAdZkY=; 
+	b=Jh7qFDoA3290ITNYPje+CSdsElGIqY7AXKEjRgfW2eaQJ8Xc2n2kdrSX7EFnq9wN7LqVf5MPWkqZkcsFVkf+ECODH+TsPC0/iqOhiq/bBVYibzuMBTH0zu4cDhc6SlrfgjxHc8G9yi2kuWMfcsRQJERvCz4QC27eTb974tVT0dg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: a=rsa-sha256; b=PFZvHna6uZ7FEvrwRDQCDN3mKLogOUsr+uJFnq4gyziW60a05zAljVXjOttvQaHCjFivV1MJ882WzboHj1I9iT2NBy+1YjCw5w7bUtFuFq974tv2EvGVuGE4NTM9gqzjq0xnGH4vXCOplcIyisJcTgIOGRoeYxNdCrbQo1zrDFg=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=ISi1JFk0rUr/qH5yiUNDWFl9Yj1qbBPyLSyaOnYK0GM=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793944274243370.1345627042299;
-	Thu, 5 Nov 2026 21:51:14 -0800 (PST)
-Message-ID: <e008f701-757c-4337-a96b-3a3282d4d86b@zohomail.com>
-Date: Fri, 6 Nov 2026 13:51:10 +0800
+DKIM-Signature: a=rsa-sha256; b=W46QuDBKQXkM3443uxXqL2C2K80hI0S8qyZ22YNOwOVpjxQSQPf0UxuAzk/WkiRMiQXwhzu3vMImWB3fVPO4p5i1EG1/F9UX26ErHPxpI66c7N3GFqokfgCgX1AFTPQMgnTYbnkOaUdWPBbLE3EmlIZ9MLBMvTboubd0E7DqG+w=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=p93KlAbb8+9aaTRa2e6XPglDextBPEuIe0qrzUAdZkY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793945473363690.5088060186878;
+	Thu, 5 Nov 2026 22:11:13 -0800 (PST)
+Message-ID: <e18a6dba-159b-433b-b9cc-4e71844e995b@zohomail.com>
+Date: Fri, 6 Nov 2026 14:11:06 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -60,125 +60,112 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] cxl/region: Calculate performance data once all
- targets are attached
+Subject: Re: [PATCH 2/4] cxl/region: Show access attributes once performance
+ data is calculated
 To: Alison Schofield <alison.schofield@intel.com>,
  Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
  Ira Weiny <iweiny@kernel.org>, Richard Cheng <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
 References: <cover.1793847269.git.alison.schofield@intel.com>
- <2d2cd95e7e415c785dbd0cd627141a5a9f0731d6.1793847269.git.alison.schofield@intel.com>
+ <eb2b648a7b0446f65d6ac2db6eb4f247ee72cea6.1793847269.git.alison.schofield@intel.com>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <2d2cd95e7e415c785dbd0cd627141a5a9f0731d6.1793847269.git.alison.schofield@intel.com>
+In-Reply-To: <eb2b648a7b0446f65d6ac2db6eb4f247ee72cea6.1793847269.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu080112276ce3c41672d10fba5cbbb0df0000bb61702c5fd85c51dbfd061ef1d2c867e964ed44ef50525aaa:ZohoMail
+Feedback-ID: zu080112270d420ff099ccf3a1f1cb95a800009a54302b1f759a8778ecd0902835c5f76443b4a15059121aaf:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
 
 在 2026/11/5 11:28, Alison Schofield 写道:
-> Region performance data is accumulated as endpoint decoders attempt to
-> join a region. Failed attachments and subsequently removed targets can
-> leave stale contributions in the region's performance coordinates.
+> Region access attributes expose calculated latency and bandwidth to
+> userspace, allowing the performance of individual CXL regions to be
+> inspected independently of their use as system RAM.
 >
-> Latency reflects the worst of all attempted targets, potentially
-> misreporting the region's access coordinates and affecting NUMA memory
-> tier placement. Bandwidth is normally recalculated when the region
-> completes, but if that calculation cannot be performed, the accumulated
-> bandwidth remains. Rebuilding a region can inflate it further.
+> Currently, attribute visibility is refreshed only when performance data is
+> propagated to a NUMA node. Regions whose memory is not onlined as system
+> RAM, such as pmem and devdax regions, can have valid performance data that
+> userspace cannot inspect.
 >
-> Calculate performance data from the attached targets when the region
-> completes, for both user-created and autodiscovered regions. Reset the
-> coordinates before each calculation so only current members contribute.
-> Perform this calculation before the shared-upstream bandwidth update,
-> preserving the sum of member bandwidths if that update cannot complete.
+> Refresh attribute visibility when the region completes and its performance
+> data has been calculated. The existing visibility checks continue to hide
+> attributes without valid values, and NUMA node performance updates remain
+> unchanged.
 >
-> Fixes: 3d9f4a197230 ("cxl/region: Calculate performance data for a region")
+> Fixes: c20eaf44113e ("cxl/region: Add sysfs attribute for locality attributes of CXL regions")
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
 
 > ---
->   drivers/cxl/core/cdat.c   | 19 +++++++++++++++++--
->   drivers/cxl/core/region.c |  4 ++--
->   drivers/cxl/cxl.h         |  3 +--
->   3 files changed, 20 insertions(+), 6 deletions(-)
+>   drivers/cxl/core/region.c | 29 ++++++++++++++++-------------
+>   1 file changed, 16 insertions(+), 13 deletions(-)
 >
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index f5f86b69c86d..7acc516ae9fa 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -1124,8 +1124,8 @@ void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
->   	cxl_region_update_bandwidth(cxlr, usp_xa);
->   }
->   
-> -void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> -				    struct cxl_endpoint_decoder *cxled)
-> +static void cxl_region_perf_data_add(struct cxl_region *cxlr,
-> +				     struct cxl_endpoint_decoder *cxled)
->   {
->   	struct cxl_dpa_perf *perf;
->   
-> @@ -1147,3 +1147,18 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
->   		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
->   	}
->   }
-> +
-> +/**
-> + * cxl_region_perf_data_update - Recalculate region performance data
-> + * @cxlr: region with all targets attached
-> + *
-> + * Reset the access coordinates and calculate them from the current targets.
-> + */
-> +void cxl_region_perf_data_update(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +
-> +	memset(cxlr->coord, 0, sizeof(cxlr->coord));
-> +	for (int i = 0; i < p->nr_targets; i++)
-> +		cxl_region_perf_data_add(cxlr, p->targets[i]);
-> +}
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index a048bd5c06cb..34d42559e33e 100644
+> index 34d42559e33e..50cd483d710d 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -2130,8 +2130,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->   		return -EINVAL;
->   	}
+> @@ -144,6 +144,19 @@ static const struct attribute_group *get_cxl_region_access1_group(void)
+>   	return &cxl_region_access1_coordinate_group;
+>   }
 >   
-> -	cxl_region_perf_data_calculate(cxlr, cxled);
-> -
->   	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->   		int i;
->   
-> @@ -2171,6 +2169,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->   		 * then the region is already committed.
->   		 */
+> +/*
+> + * Region access attributes depend on calculated performance data, not
+> + * NUMA node onlining. Re-evaluate visibility after region completion.
+> + */
+> +static void cxl_region_update_access_groups(struct cxl_region *cxlr)
+> +{
+> +	if (sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_access0_group()))
+> +		dev_dbg(&cxlr->dev, "Failed to update access0 group\n");
+> +
+> +	if (sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_access1_group()))
+> +		dev_dbg(&cxlr->dev, "Failed to update access1 group\n");
+> +}
+> +
+>   static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
+>   			 char *buf)
+>   {
+> @@ -2171,6 +2184,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 >   		p->state = CXL_CONFIG_COMMIT;
-> +		cxl_region_perf_data_update(cxlr);
+>   		cxl_region_perf_data_update(cxlr);
 >   		cxl_region_shared_upstream_bandwidth_update(cxlr);
+> +		cxl_region_update_access_groups(cxlr);
 >   
 >   		return 0;
-> @@ -2193,6 +2192,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->   		if (rc)
->   			return rc;
+>   	}
+> @@ -2194,6 +2208,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 >   		p->state = CXL_CONFIG_ACTIVE;
-> +		cxl_region_perf_data_update(cxlr);
+>   		cxl_region_perf_data_update(cxlr);
 >   		cxl_region_shared_upstream_bandwidth_update(cxlr);
+> +		cxl_region_update_access_groups(cxlr);
 >   	}
 >   
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index baa6df2d362a..2cd1842ce1ad 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -932,8 +932,7 @@ void cxl_switch_parse_cdat(struct cxl_dport *dport);
+>   	cxled->cxld.interleave_ways = p->interleave_ways;
+> @@ -2629,7 +2644,6 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+>   static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
+>   {
+>   	int cset = 0;
+> -	int rc;
 >   
->   int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->   				      struct access_coordinate *coord);
-> -void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-> -				    struct cxl_endpoint_decoder *cxled);
-> +void cxl_region_perf_data_update(struct cxl_region *cxlr);
->   void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr);
+>   	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
+>   		if (cxlr->coord[i].read_bandwidth) {
+> @@ -2650,18 +2664,7 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
+>   		}
+>   	}
 >   
->   void cxl_memdev_update_perf(struct cxl_memdev *cxlmd);
+> -	if (!cset)
+> -		return false;
+> -
+> -	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_access0_group());
+> -	if (rc)
+> -		dev_dbg(&cxlr->dev, "Failed to update access0 group\n");
+> -
+> -	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_access1_group());
+> -	if (rc)
+> -		dev_dbg(&cxlr->dev, "Failed to update access1 group\n");
+> -
+> -	return true;
+> +	return cset > 0;
+>   }
+>   
+>   static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
