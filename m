@@ -1,57 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794003758;
-	b=ZWU/t8xUtKpi7zrevleJssMCF+Q7jFHGvnKfrB2cfjcx8mJ3Q5K8LNzl3E9VJrM6j/FK
-	 AiISgblXCadU8BUmP13AfpWTQ65n9Am2oBOl84KLdV+Pt++xwUTzFrQuMpXcixrXU33c+
-	 8kHm0+BJFwnrHv80CI3/Y6B1b3naA24+zw5oPiWhm+Q+zJnxtYZbKpssftYVvi2mDNXAY
-	 CKKPVyl+GY/qSzpNJjHLiuv/AjVRLqfHTQuOyiqyCdnLB2ACEIlhYOyAqVnt/meDC4psn
-	 94vizLS4+EQZg2yztq9DE+iF4cNNe14pdFU4gdM3vQpsvc34duMDRTFEXZOX6HY/pkA==
+	t=1794003765;
+	b=zTUMSAF7B4JaLHMC9qm1Ts/v+MM5JeyE9ns/pu4SL+P4eGVpGY0PbASjIFsvJChjf5De
+	 NMwnt6ImkOU+YcBrfYWV/YQrjZDY8C+V3E8RC9CrSAivJpdIw3U22GGISNHgbpYDD4mqg
+	 FNFxXYVKlEMoqRkVcsyKNH5G6xyQyqLCV8SBwvpi3a32SJXxtLaqLWTjfB4PPMCZZxjDS
+	 OXZA8a3eLRmtZIbuvbY5LlIXuAh/jIW2vUDtGA33648LJP1l8UHFEz1bN2hJ7IBgqk8TZ
+	 E16wT5OU11XX/hjVHZHETkBbKNhR+JfnxWiw1M40hLl8O18GzV/0oT+OExUsmImzp1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794003758;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=tWCsU6H3CjztQNT0AJxZxWnMLbC9Rif4oAlccU6FPCA=;
-	b=nwJIH0LMuf68aaYldZnmEjT3n44NYJpSn2tfdlE3b31hAgQVC9CpTlUDZqw5fSlB/NKo
-	 d1WaPPtQBmxwwZferk918Rc29krdLRvKYZfcF5JNHx+00B88fkTxKxiBP/GKqZppYL3+C
-	 0UKH3E71gKhDyfbsdiSlPF2t+JgaLLAzLazWM+AVIHqyNuMXjkbauKJbR4kjQ2wTx1520
-	 ohXQczdzrgm1o18NNI2GzE13WGnHBjLTEkGhEWy/XrF5FAK6/09ZUhnKDsSE261yhUYVU
-	 pnGPDUIdCN6sDxM78ovffsT9+A4neesec3DTF9SCJCwEAeFknjlZe0+YuHvQa5rxV8A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794003765;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=KTW2jMMFVT+3SfdjeATjW0ff20zAcZVB8yPjv1/9eZk=;
+	b=fDef5iHCqQvsVFhrGRKibENQfbqs9CrzKBayWd6OFEeb4z//ZxS3r44kd5D7IXrB6CJg
+	 tReeAoIpMxfJPzj/njXjBeyH4N4eN5H6CjOsegfXrQ8WnZxxA4kQ0KOthHao/A5LLj4rN
+	 Ao9Ni81cQj5DxDknCJFR6I+dl6sHDn1t9cf6UyBVvOvHL/Tn0gicThzsVeHvvjcPFzwX2
+	 ySYvM1rILm74CogrgIKB3ANMkLtzFc2BpybzE4qpMj60/mJ622REmJ/RW5GMAGzjiLSjJ
+	 G7Sz8ymKITK/+gGpEThfsFb3/eMUEvh7E+3e5jegHY3HW92LQ9zxz0Nf4did8jXajFQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QJA+xZUm;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cZOmhXbc;
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A804606A32C
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 22:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D320606A326
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 22:22:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D320606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QJA+xZUm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4A71F008A1;
-	Fri,  6 Nov 2026 22:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794003758;
-	bh=tWCsU6H3CjztQNT0AJxZxWnMLbC9Rif4oAlccU6FPCA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QJA+xZUmCKnRNaQDHIaO4uPDoXWDpkGtBaFi2M64HJqaqGrkjLqfKSndhxZoBVVmq
-	 rftkfKJxnWuLBQ87E0EHEqvc+7uCahcvBu7tb67Z0799fih+m7uvuBlFAM+ojgGY1h
-	 R0oXGNzKPYP7OrWPB3v1kJO0EQCz1ro2MJr237a+f5+FlpgXysWbcqCS0zx/IlPdfg
-	 5ly+2w+AzJIJA81ZSMtXpuhjHpHCMHynzqKIH6M/yPxja0HbseLCyBIyUj1mx+SCqV
-	 66cLBEIRIMOj4YBdCPLiKq/OdrhGu8W/7B6vIWGKI7bTQG/viN5krPvQgD5QFb5W0i
-	 sR/KXTwdHMlCw==
-Message-ID: <sashiko-outbox-202327@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 3/5] cxl/region: Support auto region granularity
- finer than the root
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alison Schofield" <alison.schofield@intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cZOmhXbc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794003763; x=1825539763;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JGS3cYhpBYCrtZHN8xUiu64ldW0BtV06e6rvPlVAww8=;
+  b=cZOmhXbcctdK94S+nIdmeBQCR1MgSrrw8PqQMFdglKMk/9IrPYXgr4JB
+   9AaMKyEX8aGcIzlLIKrWDjE+dzWS037r4tTsvgy9bFLIaBpQb2n2qut1s
+   vQQ0eS/MQUUp4i+HDLMcPH3m9WP2lZ53QZi/DWRHfkL4iks48RcINLWR/
+   mkLZixxHuolkhW0QcoKyRIlE6nvRlQbzT9onSlE4ZLO1aB9RuSuVGqj3s
+   /LSrqt6xUy2x/cMbDQqg3zJ/ssxIfGlQVc26O3+f5+p8ISam2i2R82IT4
+   m2WHoKb+BMtPdbFj8w5ePTkksT9U8qVDV+n6t/DwVI6rfMyshYcS71qt7
+   A==;
+X-CSE-ConnectionGUID: bPfVxD2JTlyVQ/l0CGRJkw==
+X-CSE-MsgGUID: sjj328apSaGe6h4awpf8KA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11958"; a="2814699"
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="2814699"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 14:22:43 -0800
+X-CSE-ConnectionGUID: WIvTyNgJQUus5vu7pgQoNg==
+X-CSE-MsgGUID: oC+qtjjMRmOLPHsNiLucag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="9151326"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.188])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 14:22:42 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <15338cf5f174c87f414e4518b24edb3c1f8371bd.1794000806.git.alison.schofield@intel.com>
-References: <cover.1794000806.git.alison.schofield@intel.com>
- <15338cf5f174c87f414e4518b24edb3c1f8371bd.1794000806.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 22:22:37 +0000
+Subject: [PATCH] cxl/test: Free the decoder registry when cxl_test_init() fails
+Date: Fri,  6 Nov 2026 14:22:37 -0800
+Message-ID: <20261106222240.958402-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -60,192 +83,69 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [High] cxl/region: passthrough parent granularity used in
-  cxl_port_calc_interleave()
-- [Medium] cxl/region: unvalidated endpoint positions in
-  cxl_region_sort_targets()
---
+Decoder registry entries persist across mock device removal to support
+topology replay. Sashiko review found that if cxl_test_init() fails after
+decoders are enumerated, the entries leak because cxl_test_exit() is never
+called.
 
-commit d69ce1cc3e00f111d2894f426382e5b9afaa5815
-Author: Alison Schofield <alison.schofield@intel.com>
+Free the registry entries and destroy the xarray during error unwind.
 
-cxl/region: Support auto region granularity finer than the root
+Fixes: f3b1d2260703 ("tools/testing/cxl: Enable replay of user regions as auto regions")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ tools/testing/cxl/test/cxl.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-This commit adds support for assembling auto-discovered CXL regions whose
-interleave granularity is finer than the interleaving root decoder, and
-updates unaligned region offset-to-DPA translation to use the region
-granularity and ways.
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 3eb1051b1ee8..e3bed17ae253 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -2436,6 +2436,17 @@ static int cxl_topo_init(void)
+ 	return cxl_type3_topo_init();
+ }
+ 
++static void free_decoder_registry(void)
++{
++	unsigned long index;
++	void *entry;
++
++	xa_for_each(&decoder_registry, index, entry) {
++		xa_erase(&decoder_registry, index);
++		kfree(entry);
++	}
++}
++
+ static __init int cxl_test_init(void)
+ {
+ 	struct range mappable;
+@@ -2525,20 +2536,11 @@ static __init int cxl_test_init(void)
+ 	gen_pool_destroy(cxl_mock_pool);
+ err_gen_pool_create:
+ 	unregister_cxl_mock_ops(&cxl_mock_ops);
++	free_decoder_registry();
++	xa_destroy(&decoder_registry);
+ 	return rc;
+ }
+ 
+-static void free_decoder_registry(void)
+-{
+-	unsigned long index;
+-	void *entry;
+-
+-	xa_for_each(&decoder_registry, index, entry) {
+-		xa_erase(&decoder_registry, index);
+-		kfree(entry);
+-	}
+-}
+-
+ static __exit void cxl_test_exit(void)
+ {
+ 	hmem_test_exit();
 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1594bec3930bf..0a39e634b4b0a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.37.3
 
-[ ... ]
-
-> @@ -1449,6 +1495,14 @@ static int cxl_port_peer_distance(struct cxl_port =
-*port, struct cxl_region *cxlr
->  	struct cxl_port *iter =3D port;
->  	int distance =3D 1;
-> =20
-> +	/*
-> +	 * A finer-than-root region refines toward the endpoints, so peer
-> +	 * targets at the finest interleaving level occupy consecutive region
-> +	 * positions.
-> +	 */
-> +	if (cxl_region_is_finer_than_root(cxlr))
-> +		return 1;
-> +
->  	do {
->  		cxl_rr_iter =3D cxl_rr_load(iter, cxlr);
->  		distance *=3D cxl_rr_iter->nr_targets;
-
-[Severity: Medium]
-Can check_last_peer() index out of bounds or dereference NULL in
-p->targets[] when cxl_port_peer_distance() returns 1?
-
-During auto-region assembly in cxl_region_attach(),
-cxl_region_sort_targets() runs before cxl_region_setup_targets() validates
-intermediate decoder granularities.  cxl_port_interleave_pos() scales pos
-by gran / region_gran using the unvalidated decoder granularity, and
-cxl_region_sort_targets() only checks cxled->pos < 0 without verifying
-that the sorted positions match 0 .. p->nr_targets - 1:
-
-drivers/cxl/core/region.c:cxl_region_sort_targets() {
-	for (i =3D 0; i < p->nr_targets; i++) {
-		struct cxl_endpoint_decoder *cxled =3D p->targets[i];
-
-		cxled->pos =3D cxl_calc_interleave_pos(cxled, cxlr);
-		...
-		if (cxled->pos < 0)
-			rc =3D -ENXIO;
-	}
-	/* Keep the cxlr target list in interleave position order */
-	sort(p->targets, p->nr_targets, sizeof(p->targets[0]),
-	     cmp_interleave_pos, NULL);
-}
-
-If firmware programs a bogus granularity on an intermediate decoder,
-cxled->pos can exceed p->nr_targets or CXL_DECODER_MAX_INTERLEAVE (or
-produce duplicate positions).  When cxl_region_setup_targets() then calls
-check_last_peer() with distance =3D=3D 1 at an upper port, pos < distance o=
-nly
-rejects pos < 1 before indexing p->targets[pos - 1] and dereferencing
-cxled_peer.  Because cxl_region_attach_position() attaches endpoints using
-the loop index i while cxled->pos !=3D i, later teardown in
-__cxl_decoder_detach() also hits dev_WARN_ONCE() and fails to detach the
-endpoint.
-
-Validating that p->targets[i]->pos =3D=3D i for all targets after sort() in
-cxl_region_sort_targets() would catch both out-of-range and duplicate
-positions before attachment and target setup proceed.
-
-> @@ -1476,15 +1530,17 @@ static int cxl_port_parent_interleave(struct cxl_=
-port *port,
->  	int parent_iw, parent_ig;
-> =20
->  	if (is_cxl_root(parent_port)) {
-> -		/*
-> -		 * Root decoder IG is always set to value in CFMWS which
-> -		 * may be different than this region's IG.  We can use the
-> -		 * region's IG here since interleave_granularity_store()
-> -		 * does not allow interleaved host-bridges with
-> -		 * root IG !=3D region IG.
-> -		 */
-> -		parent_ig =3D p->interleave_granularity;
->  		parent_iw =3D cxlrd->cxlsd.cxld.interleave_ways;
-> +		if (parent_iw > 1) {
-> +			parent_ig =3D cxlrd->cxlsd.cxld.interleave_granularity;
-> +		} else {
-> +			/*
-> +			 * A single-way root does not interleave, so its
-> +			 * granularity does not constrain the region interleave.
-> +			 * Use the region granularity instead.
-> +			 */
-> +			parent_ig =3D p->interleave_granularity;
-> +		}
->  		if (!is_power_of_2(parent_iw))
->  			parent_iw /=3D 3;
->  	} else {
-> @@ -1521,7 +1577,7 @@ static int cxl_port_calc_interleave(struct cxl_port=
- *port, struct cxl_region *cx
->  				    struct cxl_region_ref *cxl_rr, int *out_iw,
->  				    int *out_ig)
->  {
-> -	struct cxl_port *parent_port =3D to_cxl_port(port->dev.parent);
-> +	struct cxl_region_params *p =3D &cxlr->params;
->  	struct cxl_decoder *cxld =3D cxl_rr->decoder;
->  	int parent_iw, parent_ig, iw, ig, rc;
->  	struct cxl_switch_decoder *cxlsd;
-> @@ -1537,16 +1593,24 @@ static int cxl_port_calc_interleave(struct cxl_po=
-rt *port, struct cxl_region *cx
->  		return -EINVAL;
->  	}
-> =20
-> -	/*
-> -	 * Interleave granularity is a multiple of @parent_port granularity.
-> -	 * Multiplier is the parent port interleave ways.
-> -	 */
-> -	ig =3D parent_ig * parent_iw;
-> +	/* Finer-than-root regions refine granularity toward the endpoints */
-> +	if (cxl_region_is_finer_than_root(cxlr)) {
-> +		ig =3D parent_ig / iw;
-> +
-> +		if (ig < p->interleave_granularity) {
-> +			dev_dbg(&cxlr->dev,
-> +				"%s:%s: granularity %d is finer than region granularity %d\n",
-> +				dev_name(port->uport_dev), dev_name(&port->dev),
-> +				ig, p->interleave_granularity);
-> +			return -ENXIO;
-> +		}
-> +	} else {
-> +		ig =3D parent_ig * parent_iw;
-> +	}
-> =20
->  	if (!granularity_valid(ig)) {
-> -		dev_dbg(&cxlr->dev,
-> -			"%s: invalid granularity calculation (%d * %d)\n",
-> -			dev_name(&parent_port->dev), parent_ig, parent_iw);
-> +		dev_dbg(&cxlr->dev, "%s:%s: invalid granularity: %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev), ig);
->  		return -EINVAL;
->  	}
-
-[Severity: High]
-Does cxl_port_calc_interleave() use an unvalidated passthrough decoder
-granularity when an interleaving switch sits below a 1-way host bridge or
-parent switch?
-
-In cxl_port_setup_decoder(), an auto-region passthrough decoder (iw =3D=3D =
-1)
-is exempted from matching ig and its cxld->interleave_granularity is left
-at whatever raw value firmware programmed in the hardware register (such
-as 256B):
-
-drivers/cxl/core/region.c:cxl_port_setup_decoder() {
-	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-		if (cxld->interleave_ways !=3D iw ||
-		    (iw > 1 && cxld->interleave_granularity !=3D ig) ||
-		    !spa_maps_hpa(p, &cxld->hpa_range) ||
-		    ((cxld->flags & CXL_DECODER_F_ENABLE) =3D=3D 0)) {
-			...
-			return -ENXIO;
-		}
-	}
-}
-
-When cxl_region_setup_targets() then descends to a downstream interleaving
-switch port (for example, a 3-way root at 2 * IGB -> 1-way host bridge ->
-2-way switch at IGB), the non-root branch of cxl_port_parent_interleave()
-reads parent_ig =3D parent_cxld->interleave_granularity directly from that
-passthrough host bridge decoder.  cxl_port_calc_interleave() then divides
-that raw passthrough granularity by iw instead of using the granularity
-from the nearest upstream interleaving decoder, causing auto-region
-assembly to fail with -ENXIO.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794000806.gi=
-t.alison.schofield@intel.com?part=3D3
