@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.19
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.196.61
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793946345;
-	b=F3FCP7gmtR/sdxmKIv3M55ZB/3wuMNmPfQh2AJSr/9BneUbkPdJATHvRokfToIidpbfY
-	 5/CwlPEGTERlgACpo5p7zr4dMinUXiPWwZzEZE05GLS37dHVwiW83fxGSTZ+BxmK9r6Au
-	 RBtl2b2tbQbkrY+wsZQOdSwWi60ulpOtihlCa6cnutr539+CbIzkC44AtLauc8K2xzp5y
-	 AmIQnM5u1Zp/PAB3eKlJZODRIWt6WIFxadRao/NicsXcAdLDO6G3W6G5Zzt5GqqpY85IA
-	 V1qV9ghQoZWBgw1UFTuw5I4XhBVdTNFbRwwHKFf3hkBxyPROoEBv+iCLbUS+05P34mQ==
+	t=1793959607;
+	b=RHKb21SOjtRS1hF6f7I8qeRAGlxCaEs9/1tkcO4jL/0N4KnVvkvBmp78f7PHEn5hkW4v
+	 SQfNdQbqmdlMOBFuexJqmcdxW87OmNJSJSkCjKmH7ZY1Mh/lqhL21AxsiD/0KM0ZJc8Xn
+	 SPXTxMQ+z5Mw0zyT/GFSo5ghSCi52dtWFHpJt/g1ziVPx0x81epbagFgbupJi/GWJmVaU
+	 XKBDA1OEcTYDjxE2Wp5wrAQK+dYC3GnxFcAlm4I8eX9hxORBqKofiPuMWFGvme2he0syr
+	 X/AnFD2EDR2ysFmtoyDejcmg5wnPk0EEyuXkjjA6ejgc0PC5gwE5ulzxRG20mhBfq9Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793946345;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793959607;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:Content-Type:Content-Disposition:
 	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,72 +24,76 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=CywTj5VjmHeTvWjCmwUDgmN/ksA7pB6+xWdBrF5q/dQ=;
-	b=4w4VJKOLLRgbyG6k7OD6/DPejF2bGGG04b/bs8muxCWrenYqNY007HCgZjOjJyckAMMb
-	 WaZ2PQerEebPEigj5T2AF8ymqkyZVEZZC8YETzOGo+w26+Ifnod98QEH3fTl2qtxgUg3A
-	 XOG1jyEm7Cdn3zUgUTFRthimYOPl0XFabE5N4y79GZLSDdKdrFVFvsMLX/ZYKNhbSK0n/
-	 ihd2LwqyUOwlx6jUP6v9JmkjNRPUSQxP+NDQT+/SYBGCRwg4TtPtxWwRrWYV2+8IhZI4m
-	 Guvs9QmpaGVl5Q4CUgIoE3pOLGPQkEwW9N3arsxOHsCA458+ZlOLY/onJZAdLpc+e0w==
+	bh=6mCRfscbXK6E/EFyXm6m9CSv3sGCafwrGklUTr+5/iY=;
+	b=ry+f3S5Q4nHboJAWKn8mRszZ94yX62UIkuYkEozJ2Hl8a4Oc8TLOSrTnE4d7oBuQ0EYu
+	 dTjKYTSKMkQSRZXYmQxouyF6e5w0VWYWyoe2uN724JJElSQPV9VpZrQGtk3J65ZbA2DfB
+	 KH6vmTxzDc9Lmkq4WYt1LrYJxzuUvjKTQGmYivG7m8unBhkO5GJhAL+PRBkS4a7UzGOd+
+	 W5ETuMmd4JuD/82xbEAHQfF2IGn+PBPQp/xeAN6jANTvckoKDR5wlbaIB2OTvsTuKcZSI
+	 G8c6wDzoy7pTQBdTWnooH4FNRlFgKnJNW1e6CFV+GBxkyEZm1aaQ1duElTSYaojvFJQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=KJ2qhYGR;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.19
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010019.outbound.protection.outlook.com [52.101.61.19])
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=pqNwFoRj;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.196.61
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013061.outbound.protection.outlook.com [40.93.196.61])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5352606A326;
-	Fri,  6 Nov 2026 06:25:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5352606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131BD606A326;
+	Fri,  6 Nov 2026 10:06:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 131BD606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=KJ2qhYGR
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=pqNwFoRj
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vRZE4maQBiZ5r0+9LfxemNvqAVsS22V2aTfUZumB89kfpQVyZCqJioRJ1/jIXio2rvdzNPN9RWbOBNaj1ndc1sFM4GtHHk+IhZ+oSCfFUFH5UyqAj2moedoGkvDUgSG5hL8PqUwdU8AIlHQ9cHbLMBO1BlGmeVIRzuP+MesKjXXJ0FVRlHY+xMbg3J0wPfNRFgHBCbbHNoxUlJcGdk7LvIBfhSscr16J6rvOeKatKNGX0DhoCnSqoN3CvrZ4dIhGHwU+z4IhckigBpbocGjShBFgx1h82KZfCSl6a8pzeft49Lt+ruYg+IBcinQSLN72BHB4bh0/0R/E3yjq35AL0g==
+ b=XOQ08xHwT/w0LYggYXbbSgqmFI7U+hOVB1XpGohETFqtCV8aulKghzajI8dB/4sLcfgtRsWbfWin2CzQ67Pax8UYyIcYphJn+YPqYetD6i265g4PQCo5orqFANWnCN8wX17AhhSikOwYKbkr0cmCmyYY3uKmDejwLTdIONfsq2le75LrZ1l6UNyghYGDiqGv1HmOT6h30gux7GXp94kYjFA03G/WiLwmgBwmMSj8D3XcY2bjt8Di6xpksxkacWWTYMx6VmHUSTMbE9AxoG6SNpe4713R80SgfbbHYvmuZO7xcEKlhJdgw2UA98f1DPXR/9octpqK3TF5USu5eoyE0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CywTj5VjmHeTvWjCmwUDgmN/ksA7pB6+xWdBrF5q/dQ=;
- b=lo0QZW2EC2E5gxTTwcUBcXanvp7GwEieDok9EzuuhH5qEsnzRCnezcpazK2wAZcTT5o9pjxrkRbwUJBkuHkPBPt5cG6kgafs+Po4tqaBERKcTKoRpSafu3stOOdYnu61UcjMB53b9N4qoPaVsHIH4yY9H0qhk0XHpw9W1fA6m0BzNzjArr8x6LbX9AAdF1ed3KmsHdfLr5z/zj5eFvC+WuXtcE7N8xTo0qyVQzvn6JMc5VmG0KwWVselZRqiOxzKYPovVQJc+aA2tYZqOvgA8Ma83rheTmDVrrWttJoLLIJmx+4t5bfQa/vD9gJz6PuQ3hbt8hiw0/HfL/PeNu6XdQ==
+ bh=6mCRfscbXK6E/EFyXm6m9CSv3sGCafwrGklUTr+5/iY=;
+ b=DYcDcPz4KJnmQWkXbKxeDXcw3BKcCYeFyzDdHxA+kRyF7GZgAzn2GNpzt/GRHc/dUTVBjrByqTZZcvrMDHnlUq57wtQRwAzbmBjUjxuHYJ88DkA5BcxYYmGJy8P+slFgEG73yCK9X/TONSvw/i1rDMoXvPfXULXDcQ6YH3KpkxfEW+kOEbNF0b9hTq+PQsLv740mj6MrUnO7bXyEjTMXkIpY5pijsOO8+JRWOqZ961lUgqELwjFrYVegyB/Qb3Dd5GdJTaEGe+O0zjFp1DcBoB0GhyI3Wc/fp5fwsMqXDRmLqaJNf2dwXgmDdMpbmrZaYQndArK/9u9ScD7Rcdih6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CywTj5VjmHeTvWjCmwUDgmN/ksA7pB6+xWdBrF5q/dQ=;
- b=KJ2qhYGRLZKpEWcXPpeB1B79bnv29/5c1eLfAyvXnUpxOCUpKKw5OtCpiLPc8XnaAgyDDlia/g6G4WSJYHP4Zzb1m3wTSpBEGBWm/vQVwXlmsphfHegYcXU3gJGHcJbuGAF1GJxloto6BNiHQsu594griL33v3BM+XMMiSEJ/NRpl4+vcuyRmJ77ldFJJRAnddKUZVWiwk9YgAtko/ZKUHl+ceNqhMcCwBzhkkJCd0iQDE3vh4MfaEu4g8W/+Fl5/o+/KVSLRmMId71AuVOlT2FH8m1WrPJRTxWT8GJCVc/vVjL7IFSEe96EifpgnhuvPHziBpZdnZZU3uGHCQbtsQ==
+ bh=6mCRfscbXK6E/EFyXm6m9CSv3sGCafwrGklUTr+5/iY=;
+ b=pqNwFoRjXLjHTZ3xCgTcf+EX7eNqIbm2v1CVHoO0gEM3CjK/4br4zBzgHqGGhK0bBwSheuRSFhrF4ArZuTvdbAWWWziH9ExvW9+5pIDCNM5/CMKP+KK8E5WremkzVzGnPqdEqKsF1HeMY8xZWfV8caJyHZpvCzgn84fiEsU+Iqr2f6QT8ZyC5aC653GneT0+CRLtPiTyGIFS6YWd3lk1UjoUjHDmdboHLQtd0EmNIpdDnp+ouqOv7H79gfxn7pPMJ4zZO/LE8YEn8/E/Ye/3FIUMjGAy6w0mAVGTP0ZTHthCD6itoQ8xbHbPkTM9ALR+UVGMbHY6Nshpchp+JGyjvQ==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by SA0PR12MB4399.namprd12.prod.outlook.com (2603:10b6:806:98::17) with
+ by SA1PR12MB8967.namprd12.prod.outlook.com (2603:10b6:806:38b::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.10; Fri, 6 Nov
- 2026 06:25:41 +0000
+ 2026 10:06:43 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0592.009; Fri, 6 Nov 2026
- 06:25:41 +0000
-Date: Fri, 6 Nov 2026 14:25:35 +0800
+ 10:06:43 +0000
+Date: Fri, 6 Nov 2026 18:06:35 +0800
 From: Richard Cheng <icheng@nvidia.com>
-To: "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-Cc: jic23@kernel.org, dave@stgolabs.net, dave.jiang@intel.com, 
-	alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org, 
-	ming.li@zohomail.com, kaihengf@nvidia.com, kobak@nvidia.com, newtonl@nvidia.com, 
-	kristinc@nvidia.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/3] cxl/mem: Separate provider registration from
- region attachment
-Message-ID: <au1yQOR0-vNj27NJ@MWDK4CY14F>
-References: <20261007090540.43817-1-icheng@nvidia.com>
- <20261007090540.43817-2-icheng@nvidia.com>
- <fb16beb4-5816-45ed-ad74-3338ee698791@amd.com>
+To: Ankit Agrawal <ankita@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, jgg@nvidia.com, 
+	aneesh.kumar@kernel.org, aik@amd.com, yilun.xu@linux.intel.com, iweiny@kernel.org, 
+	ming.li@zohomail.com, bhelgaas@google.com, smadhavan@nvidia.com, 
+	ilpo.jarvinen@linux.intel.com, Smita.KoralahalliChannabasappa@amd.com, 
+	andriy.shevchenko@linux.intel.com, linux-coco@lists.linux.dev, terry.bowman@amd.com, 
+	nik.borisov@suse.com, brads@mainlining.org, lukas@wunner.de, rrichter@amd.com, 
+	gourry@gourry.net
+Subject: Re: [RFC PATCH v2 3/5] PCI/TSM: Derive the coherent-range IPA from
+ CXL
+Message-ID: <au2j8EmUZmyeNs1h@MWDK4CY14F>
+References: <20261105152909.53452-1-ankita@nvidia.com>
+ <20261105152909.53452-4-ankita@nvidia.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fb16beb4-5816-45ed-ad74-3338ee698791@amd.com>
-X-ClientProxiedBy: SI2PR02CA0007.apcprd02.prod.outlook.com
- (2603:1096:4:194::23) To BL0PR12MB2370.namprd12.prod.outlook.com
+In-Reply-To: <20261105152909.53452-4-ankita@nvidia.com>
+X-ClientProxiedBy: SG2PR01CA0193.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:189::18) To BL0PR12MB2370.namprd12.prod.outlook.com
  (2603:10b6:207:47::27)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -101,454 +105,437 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA0PR12MB4399:EE_
-X-MS-Office365-Filtering-Correlation-Id: a604f010-3db5-4fcd-eb3f-08df3bcec7ee
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA1PR12MB8967:EE_
+X-MS-Office365-Filtering-Correlation-Id: 977b56b1-71cf-4b14-c0d3-08df3beda830
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|7416014|261022075727099003|261022113327099003|261026121527099003|4143699003|11063799006|261102123227099003|261021123027099003|261021135927099003|261021121427099003|261021130227099003|261009223027099003|56012099006|261028144727099003|261026130827099003|261022115727099003|261026140227099003|261022105027099003|261102130727099003|10067099003|6133799003|18002099003|22082099003|3023799007;
+	BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|6133799003|10067099003|18002099003|22082099003|261026121527099003|56012099006|11063799006|4143699003|261009223027099003|261022105027099003|261028144727099003|261021123027099003|261102123227099003|261026140227099003|261021121427099003|261102130727099003|261022075727099003;
 X-Microsoft-Antispam-Message-Info:
-	Nea/o1olJ5q/eO04wpv8K42/SpinQGPHOLMXd9U/PSNABFI/ZLmbxBqJJtsaD285dq0JuQewxAfY2FO4w6lx9gc56soD25alYWkgS4EJ06gNeytspksLANcCzaeVpDhQ8BCBwPp4hmlP1mbzSBfgfhiFepug+m5EcIgGMBzWn+FwaRvhwqXeo9ntD7szx7T1wQuoRwqf4Bt+AU7H41BhZPAqeOik8yJy2ZWdtARY3Bd+vD2bCU2gKZksxWcIevC9kUXvZRprrthMLJY+gUfdAQg/it0mGzKyRU0WBYBjxyFrKX4qrg3jpNsRZjF4SxdYCUlHW9o0F1UC6trHWIOKpsTtBLKN3gJDZa7JxHc6v+cVaIHP3F0zbQfQs0vNLxh1X7IiJ/l7RmGa0mQUAA0JIdOxia3lq++RelaTcU/mtM7VWxtz6ZTG0jTS1fSDy8EB2Jx6QZIzCOCqPovstf1PKUcKM8mCvX4YGWX3GNK8yRegUBaiD22i6VYqFRRqE3gST8z63jrXjiTc1jjfqeVtPvc4sxDMkI/d973t5wrpt3117IvlL2GmNbWthjVuhM3a14yvy5uU2h6opVPpSY/4zfn1UXXPXAac6oOmONkKN2bBCc3IhnY0cM7w0Ai6rZBE3rrClqdvx0ZKp3SEWfxGW5gGeqBMnOOoNi56RYObBFI=
+	dqc80GCcs8Jwi/Z9vLDX0Am/V+t9tlPuGp+YlTItViOe/d/rM7PJ8V0pgvyQ+V5Ud4FZmsfj99PXuFGy2wV1sZx/m9LTheL+/ckZ2NPr7/o3oMvhVuxBIMvZysh8zzSbYZVT9GNDwXYvCOL09xq+qU6ELlTDsQ+q/8Xwn/4ZLJ2vL2zKoX5CLvF17SeiSCELpnvCV0upx0JV4SDzHCLKWfNLf1Le6E4C1t1HaTInUm6GAS24DUDrA8HcBnfsXsPXSjwCUxo5qrj5ezlUQMPvXkMqZxh9rf0Mom/6yRWZFp/uWQNSgpJc4DXebjKnfPGSj1CvtB8c2/kMnLiM94dI1et3SGL35BNVCY3eCYhXV/wX4E1b3dmW4/W/CoR5tBRl8cEK9GKZ4XXMngYwykVXXXbOUQ276o9xQ4y5p9NoKfWjP2Rd062g9iOTaqxSotJhrGWGschQRBVXvaSPIhh1TYY17wmxJtzxpvy34nsMIE/yRbkytQd9aBb0Gc8aksT1KqbopZRUlA8ZlUDL4gsBWJ0xCspF77hofY7Q/eiNsh/Zv6nMFbt+ksd2QQkhSpXfRmh5UCMcPwffni9PB0G6rHqKXrlw6sMKcbUvZbfSbTYknhk0gh1oy6lqao5OGfjj6PalWhft+A7w8bru+C0ZiKGACzLMRIIGS69FEyct//8=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(7416014)(261022075727099003)(261022113327099003)(261026121527099003)(4143699003)(11063799006)(261102123227099003)(261021123027099003)(261021135927099003)(261021121427099003)(261021130227099003)(261009223027099003)(56012099006)(261028144727099003)(261026130827099003)(261022115727099003)(261026140227099003)(261022105027099003)(261102130727099003)(10067099003)(6133799003)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(6133799003)(10067099003)(18002099003)(22082099003)(261026121527099003)(56012099006)(11063799006)(4143699003)(261009223027099003)(261022105027099003)(261028144727099003)(261021123027099003)(261102123227099003)(261026140227099003)(261021121427099003)(261102130727099003)(261022075727099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Dwbom89HzDrlmhwKMvs84HHyKpVoJcGcsEwbbh/3oGI1oQ7q6w+hG+a+xLEg?=
- =?us-ascii?Q?IgdHbbrKwEzkUHxHg/nrokxJ2LrIV3+GmxEyQ5GfGIUXjbKgFR4wcGSN/vlR?=
- =?us-ascii?Q?+aVbfg4/dMYeYkwdWI9Tb2CZpQGnMmfUJJU/SX5NQLqf2c33Kl/0HsQOAgek?=
- =?us-ascii?Q?+IlYbRiEudbOp7WZsZJxFpJ5dfx3LEfcTXAfH8DEQwW3m9scbQonh7zyV3qA?=
- =?us-ascii?Q?h+srCHgq3GXuIP7iTMRwyUACg4bib+r3ehgQ/7A7Ulf9Q6IhFbFLmFEM3IHB?=
- =?us-ascii?Q?ofXB1hWdSjL+fPtOE5eCPsD6Oq8d3phdmo8vwuK5tTi7k2BihlOyZvebrC1A?=
- =?us-ascii?Q?h3TlzvlF1HfVifLovzPBNDR3iEowmsFVPwGx5/mwz+l+XDRC0j0fzCI7Hd+T?=
- =?us-ascii?Q?n76M9WAR464kCc9LIDjs2eRsPF/6D3AMGZ/+++DyOdh6tQRrykK2rHMnKA/J?=
- =?us-ascii?Q?8bnp5tO79tvsGofuqyFADIytv43wT01/sHkvCmsQQgaAqMopxRMvCPA84NOt?=
- =?us-ascii?Q?gp9K6imhHyhMhWZtLC/NysJM1D0eHeKqygva8KKmJFyGvWZHJKGoeKC33XNY?=
- =?us-ascii?Q?6BmvhUVraGPjLaSvHN7mddEwONMAzaA/s/z6E41jZCMSswkmhgcScXrdLarA?=
- =?us-ascii?Q?qVuJAOgrvjXxafrsoC2vFNAkNAkHYmMgSoUuRS6Y2V9Gv0TmSTUjeLH27mMt?=
- =?us-ascii?Q?8vGYL+9RvibA3IyTsJRVWpywIdbNb4/MR4qLs1NPRqJPcYugGfBHCzG3Citz?=
- =?us-ascii?Q?NfUgl/LcR/K/A7JiH8jLLP1fE2RBVFzTidBZDeOpL3LzopPjpCwwv4WCdYIC?=
- =?us-ascii?Q?Z3B6xbs5F+Z3bdq/SSq1rQZVILINjG4Po+vpaaY6pVJ4Z4dIUxuOi9zbxGb9?=
- =?us-ascii?Q?mSi4wtP52jk5fgrQUvCyMaj5p8jHK35ebu8t+dr1IlknRNcPYaeHPYLKgtSN?=
- =?us-ascii?Q?yrBjxVR+x0SfhHVOSTE4FvkuYY/d+KSkwxc0n7al9viuAZkfdmoRw5xm6oAx?=
- =?us-ascii?Q?0PqWJtrjGAP7TnMPSE8suLf3ZHF7p+6hOW2eiwqUPM0r12/K1pNtNUsAToO6?=
- =?us-ascii?Q?qIn0hdWNwCRKI/NMwYdx8rID9yiY8eGfxgoIJteYOTDtWqA0T3ixX4mIfKkR?=
- =?us-ascii?Q?9DQWNokD9weQoUVXYo+fXV6b5QrH+QXdyZSVdUUNrWuv/fDhbb81hNc4V+qO?=
- =?us-ascii?Q?yeakYrtUHhYTsn2qMijCscavzRBu5GyuTm3SBLwGeWCPEr3ThfbNksifNd9r?=
- =?us-ascii?Q?JU8bWIZA7gySX04Apox0ZwD2uniKBzQaHmi2JADWBV6UrwqcfolVWtmpAUw4?=
- =?us-ascii?Q?rbGwe5BrANP+2ygJkeA2ZKm2H1RXV7N7fIGEsXRrx+1ThUzwC/Fi5YkqIYWH?=
- =?us-ascii?Q?payyeSRP6E98Bt6iTs9SkF+jzwisFadPzlON/0ziTdviU/2zVbK3Qa6Hu4b5?=
- =?us-ascii?Q?pUF3ksUEgSycB+g8jhhRTfIuZEsnA+iwndlfWfu40WjJf3NRzd6qQ187exrY?=
- =?us-ascii?Q?voimOGZ6tLsg2Z11XA81QsyavAFsz1gz8pKqSo9n8zCrnZjEn8OVXVB4KLFS?=
- =?us-ascii?Q?WIiU4sJyFwG5eBLnG/H2Cx4Pam/Yl9D0BPSZ77CjpGeTXvQbwIstiRIreAiu?=
- =?us-ascii?Q?sOOIz/nd94W/H2U81Ipjwc6mJdursz1lbqCoEvvRdQffW/HuatyxxKWqZkhv?=
- =?us-ascii?Q?W98+H/qOZIbMFcPgS+dl+G2HeftTasHoZw0Wc4V5i8tFcu2SflLnkTqbykTO?=
- =?us-ascii?Q?etgUGBfcjA=3D=3D?=
+	=?us-ascii?Q?Pca4tF//ygUmvVV61kdeQD2NngcE2GtMXHBx3WGeWlSNgE9Rv3fWjnEo4u4J?=
+ =?us-ascii?Q?B1nDTyXUiMa+zMxmpBuxZQcyDqX3MY8V0K/X3msThaqSlXsnwUCoP7zhqpMY?=
+ =?us-ascii?Q?Gv3HsferuPWmQNx9lCXe1WHyfkmWucrX5wEAWOvnoCLO+ilPo6MHFJl7hHMS?=
+ =?us-ascii?Q?Lov5vqZi8yG6pNHWi7HOjpyft66csD9A5HclhbBOuban60SPzUjBnyPAgdH4?=
+ =?us-ascii?Q?RO1n3rf88gZh6ylAbL/2Hiijpxo+FWi79aUtBUZcPekoVapcn8QXo7dlEMoc?=
+ =?us-ascii?Q?C1fgJ4krjtlYEPS8q7Fv+bkqNanpVx+tsmuGTDUtfZNG7VBNSEFTA3u2p54d?=
+ =?us-ascii?Q?2TQWIvwBn1JtjdIZbF/8pUmpJM/IEXxOgi5A7sRlA5rL6XnvTllwDqLt0AuT?=
+ =?us-ascii?Q?kXzSSuEQtGf/r2ztbMKMM3HYJb2xMOT0FduCwdiUGbP7KqUdRWJ8LQbZw/lF?=
+ =?us-ascii?Q?gNoJva5bDOoYQAVVmlsuowoRFikdo/VlhWIjxIgyVi6tAv+YOp6KPWUBFFST?=
+ =?us-ascii?Q?QWpHLJKjnREG4UtSo3UVKfug1yXWtHnX9j0e34dGlo5TyyvOwrWnbDfDMuEU?=
+ =?us-ascii?Q?2rohWEANrHDEKHZFdb+hGOjTiJsF+dpybwCv2pJktRTSB8blVggTHdByEc81?=
+ =?us-ascii?Q?qdM5E7wLfH28bvec/Jkbm0kAWs35ZCFT76w9HKSclJMAVpern6oQQjcEQ00P?=
+ =?us-ascii?Q?ltsZTCyrBPk5aHQblQ1R/C99p+wZEueH/Yk5ZccAWPgM0Xp6BNfBfZqGqHu6?=
+ =?us-ascii?Q?GYs9XzjOKpozWtQ+DZNpNUb8J6PSwwa5cIoRcPSwKZ34BLAbgekZ9Ra4B5eM?=
+ =?us-ascii?Q?bkg6ikZhMvarzacD2/+wo5E53Kb9oqJmVXzv5r31W9GinT3ODMS93E2WKBMv?=
+ =?us-ascii?Q?XdBRfFRJYVkMrp4wGKMaqQHUKdh+ePcjqAVYB+JlhyL8PGwjkAiiql7jgIBd?=
+ =?us-ascii?Q?+N24Fnr6Ube7PDbBCdgaeZfsdLO3yU9wug1Dvqr7yYqem3BsDfQef73iKsCa?=
+ =?us-ascii?Q?3apuIbeduIA+m3VhYh312s/9OBFu73enRZiDD9B2YkV9OrQCmo+s+pfqk7xI?=
+ =?us-ascii?Q?+V88kXjXb+WNKJcdaz5M2+e+daXrpK/FM0H336rW2celwKm0AKtnRgeC75ws?=
+ =?us-ascii?Q?U1KW2gm7Orf8os3Vj/nW0ft3bxbG6+W1n89RAtPypFB1L3B6DC4yUw7khCxM?=
+ =?us-ascii?Q?W3W6srU3vFqwlhffBUT4feQNTyZQ1m7+4yAhfa+jmdn0U0ft0Wg0jYSBxpau?=
+ =?us-ascii?Q?IWJU/7u9glcsNTsnwvxdwMcWCTeF2KhfKm3iFRTltrmU4bE8D0dXJUBLDEoK?=
+ =?us-ascii?Q?lvCemXL48eFKBPWnbbWlxv4T09HiC0cg+uorFj+pnV+rpSBOv1jfy8o+Myk5?=
+ =?us-ascii?Q?zrAFp6SWPgaCKb897R+7Z3y2/Y6ESMJLv2Fvm1TAQf/7mJSCHLVNx5z8o5YI?=
+ =?us-ascii?Q?dIEApDsZebH32g94FFqbmeJF5k/XzIVUsEau8hfVcteorK3vIvs6KrIDXp6b?=
+ =?us-ascii?Q?AMiVHguqgAx6jBSVOqRcomYIVIZmBHbkVwP0zaw6rUSoEWqRStn6Kyi+jR+W?=
+ =?us-ascii?Q?k3JRg9pxV+jMlvHP6517Cu+hqyO9QPoi2I6fx/ooPo7e+K57LzNvvQU+l3qR?=
+ =?us-ascii?Q?JQRBUPQACY2duhEDpylm2WbtklezNNmHfs7fXshwqHGAj8SZqL5j14YiqhJP?=
+ =?us-ascii?Q?pEeUPHlb6RT0uLHKgk030Je49lby/3HV/cXhwSpST4JPQ+9ztmzIKso2R2A7?=
+ =?us-ascii?Q?81bXEiSx9w=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a604f010-3db5-4fcd-eb3f-08df3bcec7ee
+X-MS-Exchange-CrossTenant-Network-Message-Id: 977b56b1-71cf-4b14-c0d3-08df3beda830
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2026 06:25:41.6638
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2026 10:06:43.1008
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3eseJDHLEOt+D1q4Ki2hQP9dNWi19xUQXCiK0W5wfqoKh8RunEanZCh9sSC2vKVwu7TUAKaPx32qhiZDlKA4UQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4399
+X-MS-Exchange-CrossTenant-UserPrincipalName: UCLSk+C+CNK0LcpweWxYkOKf3xE0KIMZ50c4LV5Uf/uVrpYehLgxNMV6V1hDSKu++S+9R8RqvdHcWq89vkRgyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8967
 
-On Wed, Oct 14, 2026 at 06:17:44PM +0800, Lucero Palau, Alejandro wrote:
-> Hi Richard,
+On Thu, Nov 05, 2026 at 03:29:07PM +0800, Ankit Agrawal wrote:
+> The DevIf report range with range ID 0xffff describes the device's
+> coherent (CXL) memory window and unlike every other reported range
+> carries no BAR number. Recognize
+> PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT and recover that window's
+> address from the CXL side of the device instead of treating it as a
+> BAR-relative offset.
 > 
+> pci_tsm_retrieve_coherent_range() resolves the window from
+> pdev->coh_resource[], snapshotted once with the committed CXL HDM
+> decoders range. The range to IPA conversion is applied onto
+> range_base/range_len using pdev->coh_resource[]. The ascending BAR order
+> checks stay on the BAR path only. The coherent range is required to be
+> the last report entry and is not part of the BAR sequence.
 > 
-> I think this is good stuff. Just some comments below.
+> An HDM decoded window lives in the CXL Fixed Memory Window and is not
+> part of a BAR. So by construction, no pci_dev resource contains it. So
+> the function pci_tsm_coh_resource_contains() validates the range against
+> pdev->coh_resource[] instead; the same known-good snapshot
+> pci_tsm_retrieve_coherent_range() already trusts.
 > 
-> Thanks!
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> ---
+>  drivers/pci/Kconfig     |  12 ++++
+>  drivers/pci/tsm.c       | 119 ++++++++++++++++++++++++++++------------
+>  include/linux/pci-tsm.h |  75 +++++++++++++++++++++++++
+>  3 files changed, 170 insertions(+), 36 deletions(-)
 > 
-> 
-> On 07/10/2026 10:05, Richard Cheng wrote:
-> > devm_cxl_probe_mem() requires a committed region when registering a
-> > provider-owned memdev. If FW has not created a region
-> 
-> 
-> This is mixing kernel parlance with BIOS potential actions like setting HDM
-> decoders.
-> 
->
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 16fbd4212e0f..22c416c84a6f 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -139,6 +139,18 @@ config PCI_TSM
+>  
+>  	  Enable a platform TSM driver to use this capability.
+>  
+> +config PCI_TSM_CXL_COHERENT
+> +	bool "PCI TSM: CXL coherent range support"
+> +	depends on PCI_TSM && CXL_RESET
+> +	default y
+> +	help
+> +	  Enables helper functions to manage coherent regions on CXL devices
+> +	  for TSM. The device CXL coherent (CXL.mem) ranges could be tracked
+> +	  and fetched across subsystems to be reported in a TDISP Device
+> +	  Interface Report.
+> +
+> +	  If unsure, say Y.
+> +
+>  config PCI_DOE
+>  	bool "Enable PCI Data Object Exchange (DOE) support"
+>  	help
+> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> index d074bfd18d40..bc3218c58ff0 100644
+> --- a/drivers/pci/tsm.c
+> +++ b/drivers/pci/tsm.c
+> @@ -939,8 +939,9 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>  		return -EBUSY;
+>  
+>  	for (i = 0; i < mmio->nr; i++) {
+> -		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+> -		int j;
+> +		struct pci_tsm_mmio_entry *entry = pci_tsm_mmio_entry(mmio, i);
+> +		struct resource *res = &entry->res;
+> +		bool coherent = entry->flags & PCI_TSM_MMIO_F_COHERENT;
+>  
+>  		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+>  			break;
+> @@ -950,13 +951,28 @@ int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
+>  					     pci_name(pdev), IORESOURCE_MEM,
+>  					     IORES_DESC_ENCRYPTED);
+>  
+> -		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+> -			if (resource_contains(pci_resource_n(pdev, j), res))
+> +		/*
+> +		 * The coherent (CXL.mem) range isn't BAR-backed, so check it
+> +		 * against pdev->coh_resource[] instead of pci_resource_n().
+> +		 */
+> +		if (coherent) {
+> +			if (!pci_tsm_coh_resource_contains(pdev, res))
+>  				break;
+> -
+> -		/* Request is outside of device MMIO */
+> -		if (j >= PCI_NUM_RESOURCES)
+> -			break;
+> +		} else {
+> +			struct resource *r;
+> +			bool contained = false;
+> +
+> +			pci_dev_for_each_resource(pdev, r) {
+> +				if (resource_contains(r, res)) {
+> +					contained = true;
+> +					break;
+> +				}
+> +			}
+> +
+> +			/* Request is outside of device MMIO */
+> +			if (!contained)
+> +				break;
+> +		}
+>  
+>  		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+>  			break;
+> @@ -988,6 +1004,7 @@ EXPORT_SYMBOL_GPL(pci_tsm_mmio_teardown);
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE BIT(2)
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_UPDATABLE BIT(3)
+>  #define PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID GENMASK(31, 16)
+> +#define PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT 0xffff
+>  
+>  /* An interface report 'pfn' is 4K in size */
+>  struct pci_tsm_devif_mmio {
+> @@ -1043,6 +1060,7 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		return NULL;
+>  
+>  	for (i = 0; i < mmio_range_count; i++) {
+> +		struct range window;
+>  		u64 range_off;
+>  		struct range range;
+>  		const struct pci_tsm_devif_mmio *mmio_data = &devif_report->mmio[i];
+> @@ -1053,33 +1071,58 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		u32 attr = __le32_to_cpu(mmio_data->attributes);
+>  		int bar = FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_RANGE_ID,
+>  				    attr);
+> +		bool coherent =
+> +			bar == PCI_TSM_DEVIF_REPORT_MMIO_RANGE_ID_COHERENT;
+>  
+> -		if (bar >= PCI_STD_NUM_BARS ||
+> -		    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+> -		    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+> -			pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+> -			return NULL;
+> -		}
+> -
+> -		if (last_bar > bar) {
+> -			pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+> -			return NULL;
+> -		}
+> -
+> -		if (last_bar < bar) {
+> -			resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+> -
+> -			/* Transition to a new bar */
+> -			last_bar = bar;
+> +		if (coherent) {
+> +			if (i != mmio_range_count - 1) {
+> +				pci_dbg(pdev, "Coherent reporting range is not last\n");
+> +				return NULL;
+> +			}
+>  
+>  			/*
+> -			 * Determine the obfuscated base of the BAR. BAR
+> -			 * offsets are never obfuscated.
+> +			 * No BAR names the coherent range, so fail closed if
+> +			 * neither a CXL region nor a committed HDM decoder
+> +			 * resolves its address.
+>  			 */
+> -			reporting_bar_base = tsm_offset & ~mask;
+> -		} else if (tsm_offset < last_reporting_end) {
+> -			pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+> -			return NULL;
+> +			if (pci_tsm_retrieve_coherent_range(pdev, &window)) {
+> +				pci_dbg(pdev, "No CXL region or committed HDM decoder for coherent reporting range\n");
+> +				return NULL;
+> +			}
+> +
+> +			reporting_bar_base = tsm_offset &
+> +					     ~((u64)range_len(&window) - 1);
 
-Hi Alejandro,
+Hi Ankit,
 
-I see, I'll rephrase them to be more precise in v3.
- 
-> > , registration
-> > fails before the provider can use the endpoint topology to provision
-> > one.
-> > 
-> > Make the attachment probe callback optional while retaining a non-NULL
-> > descriptor to preserve provider ownership and handling of CXL link loss.
-> > Install endpoint cleanup for FW-discovered provider regions even when
-> > the provider never requests attachment.
-> > 
-> > This establishes the registration and attachment APIs needed for
-> > explicit region provisioning without introducing region creation or
-> > allocation policy.
-> > 
-> > Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> > ---
-> > Changelog:
-> > 
-> > v1 -> v2:
-> > - Rework the patch into a registration/attachment refactor, following
-> >    Alejandro's request to separate region provisioning from memdev
-> > registration.
-> > - Add devm_cxl_register_mem() to establish a provider-owned memdev and
-> >    its endpoint without requiring a comitted region.
-> > - Add devm_cxl_attach_mem_region() to obtain the HPA range of an
-> >    existing committed, single-target region after registration.
-> > - Make the region probe callback optional while preserving provider
-> >    ownership, synchronous endpoint setup, and hdling of CXL link loss.
-> > ---
-> >   drivers/cxl/core/region.c | 146 ++++++++++++++++++++++++++------------
-> >   drivers/cxl/cxlmem.h      |  22 ++++--
-> >   drivers/cxl/mem.c         |  69 +++++++++++++++++-
-> >   include/cxl/cxl.h         |   2 +
-> >   4 files changed, 188 insertions(+), 51 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 5ef0ca0694ff..7a64a730587d 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -4111,67 +4111,123 @@ static int first_mapped_decoder(struct device *dev, const void *data)
-> >   	return 0;
-> >   }
-> > -/*
-> > - * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
-> > - * simple case of single mapped decoder per memdev.
-> > - */
-> > -int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-> > +static int unregister_memdev_region(struct device *dev, void *data)
-> >   {
-> > -	struct cxl_attach_region *attach =
-> > -		container_of(cxlmd->attach, typeof(*attach), attach);
-> > -	struct cxl_port *endpoint = cxlmd->endpoint;
-> >   	struct cxl_endpoint_decoder *cxled;
-> >   	struct cxl_region *cxlr;
-> > -	int rc;
-> > -	/* hold endpoint lock to setup autoremove of the region */
-> > +	if (!is_endpoint_decoder(dev))
-> > +		return 0;
-> > +
-> > +	cxled = to_cxl_endpoint_decoder(dev);
-> > +	scoped_guard(rwsem_read, &cxl_rwsem.region) {
-> > +		cxlr = cxled->cxld.region;
-> > +		if (!cxlr)
-> > +			return 0;
-> > +		get_device(&cxlr->dev);
-> > +	}
-> > +
-> > +	/* Unregistration needs the region write lock. */
-> > +	endpoint_unregister_region(cxlr);
-> > +	return 0;
-> > +}
-> > +
-> > +static void endpoint_unregister_regions(void *data)
-> > +{
-> > +	struct cxl_port *endpoint = data;
-> > +
-> > +	device_for_each_child(&endpoint->dev, NULL, unregister_memdev_region);
-> > +}
-> > +
-> > +int cxl_memdev_setup_region_cleanup(struct cxl_memdev *cxlmd)
-> > +{
-> > +	struct cxl_port *endpoint = cxlmd->endpoint;
-> > +
-> > +	device_lock_assert(&cxlmd->dev);
-> > +	if (IS_ERR_OR_NULL(endpoint))
-> > +		return -ENXIO;
-> > +
-> >   	guard(device)(&endpoint->dev);
-> > -	if (!endpoint->dev.driver)
-> > +	if (!endpoint->dev.driver || endpoint->dead)
-> >   		return -ENXIO;
-> > -	guard(rwsem_read)(&cxl_rwsem.region);
-> > -	guard(rwsem_read)(&cxl_rwsem.dpa);
-> >   	/*
-> > -	 * TODO auto-instantiate a region, for now assume this will find an
-> > -	 * auto-region
-> > +	 * Endpoint probe may discover provider-owned firmware regions even if
-> > +	 * the provider never requests their HPA range. Run before decoder
-> > +	 * teardown so those regions are unregistered, not just detached.
-> >   	 */
-> 
-> 
-> I would put this as a description for the function instead of a comment
-> here.
-> 
-> 
+HDM decoder window can have non-power-of-2 sizes, why do we assume a power-of-2 size for
+coherent window?
 
-Sure thing.
+E.g. if we have something like the following
+Window start: 4GB
+Window size: 768 MB
+Reported address: 4GB + 256 MB
 
+Assume MMIO_REPORTING_OFFSET is 0, so no address obfuscation needs to be removed.
+The reported page is simply 256 MB into the window.
 
-> > -	struct device *dev __free(put_device) =
-> > -		device_find_child(&endpoint->dev, NULL, first_mapped_decoder);
-> > -
-> > -	if (!dev) {
-> > -		dev_dbg(cxlmd->cxlds->dev, "no region found for memdev %s\n",
-> > -			dev_name(&cxlmd->dev));
-> > -		return -ENXIO;
-> > -	}
-> > +	return devm_add_action_or_reset(&endpoint->dev,
-> > +				      endpoint_unregister_regions, endpoint);
-> > +}
-> > +EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_setup_region_cleanup, "cxl_mem");
-> > -	cxled = to_cxl_endpoint_decoder(dev);
-> > -	cxlr = cxled->cxld.region;
-> > +/* Caller holds the memdev lock; attach to a single mapped decoder. */
-> > +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd, struct range *hpa_range)
-> > +{
-> > +	struct cxl_port *endpoint = cxlmd->endpoint;
-> > +	struct cxl_endpoint_decoder *cxled;
-> > +	struct cxl_region *cxlr;
-> > +	int rc;
-> > -	if (cxlr->params.state < CXL_CONFIG_COMMIT) {
-> > -		dev_dbg(cxlmd->cxlds->dev,
-> > -			"region %s not committed for memdev %s\n",
-> > -			dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
-> > +	device_lock_assert(&cxlmd->dev);
-> > +	if (IS_ERR_OR_NULL(endpoint))
-> >   		return -ENXIO;
-> > -	}
-> > -	if (cxlr->params.nr_targets > 1) {
-> > -		dev_dbg(cxlmd->cxlds->dev,
-> > -			"Only attach to local non-interleaved region\n");
-> > +	/* hold endpoint lock to setup autoremove of the region */
-> > +	guard(device)(&endpoint->dev);
-> > +	if (!endpoint->dev.driver || endpoint->dead)
-> >   		return -ENXIO;
-> > -	}
-> > -	/* Only teardown regions that pass validation, ignore the rest */
-> > -	get_device(&cxlr->dev);
-> > -	rc = devm_add_action_or_reset(&endpoint->dev,
-> > -				      endpoint_unregister_region, cxlr);
-> > -	if (rc)
-> > -		return rc;
-> > +	scoped_guard(rwsem_read, &cxl_rwsem.region) {
-> > +		guard(rwsem_read)(&cxl_rwsem.dpa);
-> > -	attach->hpa_range = (struct range) {
-> > -		.start = cxlr->params.res->start,
-> > -		.end = cxlr->params.res->end,
-> > -	};
-> > -	return 0;
-> > +		struct device *dev __free(put_device) =
-> > +			device_find_child(&endpoint->dev, NULL,
-> > +					  first_mapped_decoder);
-> > +		if (!dev) {
-> > +			dev_dbg(cxlmd->cxlds->dev,
-> > +				"no region found for memdev %s\n",
-> > +				dev_name(&cxlmd->dev));
-> > +			return -ENXIO;
-> > +		}
-> > +
-> > +		cxled = to_cxl_endpoint_decoder(dev);
-> > +		cxlr = cxled->cxld.region;
-> > +		if (cxlr->params.state < CXL_CONFIG_COMMIT) {
-> > +			dev_dbg(cxlmd->cxlds->dev,
-> > +				"region %s not committed for memdev %s\n",
-> > +				dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
-> > +			return -ENXIO;
-> > +		}
-> > +
-> > +		if (cxlr->params.nr_targets > 1) {
-> > +			dev_dbg(cxlmd->cxlds->dev,
-> > +				"Only attach to local non-interleaved region\n");
-> > +			return -ENXIO;
-> > +		}
-> > +		if (!cxlr->params.res)
-> > +			return -ENXIO;
-> > +
-> > +		/* Only teardown regions that pass validation, ignore the rest. */
-> > +		if (!devm_is_action_added(&endpoint->dev,
-> > +					  endpoint_unregister_region, cxlr)) {
-> > +			get_device(&cxlr->dev);
-> > +			rc = devm_add_action(&endpoint->dev,
-> > +					     endpoint_unregister_region, cxlr);
-> > +			if (rc)
-> > +				break;
-> > +		}
-> > +
-> > +		*hpa_range = (struct range) {
-> > +			.start = cxlr->params.res->start,
-> > +			.end = cxlr->params.res->end,
-> > +		};
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* devm_add_action() failed; teardown needs the region write lock. */
-> > +	endpoint_unregister_region(cxlr);
-> > +	return rc;
-> >   }
-> >   EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index c401e3a1af06..8c050bc308bd 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -97,6 +97,13 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
-> >   	return is_cxl_memdev(port->uport_dev);
-> >   }
-> > +/**
-> > + * struct cxl_memdev_attach - provider ownership and CXL link requirements
-> > + * @probe: optional region probe callback, called with the memdev locked
-> > + *
-> > + * A non-NULL descriptor requires successful synchronous endpoint setup and
-> > + * preserves provider ownership even when no region probe is requested.
-> > + */
-> >   struct cxl_memdev_attach {
-> >   	int (*probe)(struct cxl_memdev *cxlmd);
-> >   };
-> > @@ -107,8 +114,8 @@ struct cxl_memdev_attach {
-> >    * @hpa_range: physical address range of the region
-> >    *
-> >    * For the common simple case of a CXL device with private (non-general purpose
-> > - * / "accelerator") memory, enumerate firmware instantiated region, or
-> > - * instantiate a region for the device's capacity. Destroy the region on detach.
-> > + * / "accelerator") memory, enumerate a firmware-instantiated region and
-> > + * report its range. Destroy the region on detach.
-> >    */
-> >   struct cxl_attach_region {
-> >   	struct cxl_memdev_attach attach;
-> > @@ -116,12 +123,19 @@ struct cxl_attach_region {
-> >   };
-> >   #ifdef CONFIG_CXL_REGION
-> > -int cxl_memdev_attach_region(struct cxl_memdev *cxlmd);
-> > +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd, struct range *hpa_range);
-> > +int cxl_memdev_setup_region_cleanup(struct cxl_memdev *cxlmd);
-> >   #else
-> > -static inline int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-> > +static inline int cxl_memdev_attach_region(struct cxl_memdev *cxlmd,
-> > +					   struct range *hpa_range)
-> >   {
-> >   	return -EOPNOTSUPP;
-> >   }
-> > +
-> > +static inline int cxl_memdev_setup_region_cleanup(struct cxl_memdev *cxlmd)
-> > +{
-> > +	return 0;
-> > +}
-> >   #endif
-> >   struct cxl_memdev *devm_cxl_add_classdev(struct cxl_dev_state *cxlds);
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 3959ec963026..aa08d88ab104 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -172,7 +172,10 @@ static int cxl_mem_probe(struct device *dev)
-> >   	}
-> >   	if (cxlmd->attach) {
-> > -		rc = cxlmd->attach->probe(cxlmd);
-> > +		if (cxlmd->attach->probe)
-> > +			rc = cxlmd->attach->probe(cxlmd);
-> > +		else
-> > +			rc = cxl_memdev_setup_region_cleanup(cxlmd);
-> >   		if (rc)
-> >   			return rc;
-> >   	}
-> > @@ -215,6 +218,68 @@ struct cxl_memdev *devm_cxl_add_classdev(struct cxl_dev_state *cxlds)
-> >   }
-> >   EXPORT_SYMBOL_NS_GPL(devm_cxl_add_classdev, "CXL");
-> > +/**
-> > + * devm_cxl_register_mem - Register a provider-owned CXL memory device
-> > + * @cxlds: CXL device state to associate with the memdev
-> > + *
-> > + * Establish the CXL port topology and endpoint synchronously, without requiring
-> > + * a committed region. The provider retains ownership of its memory, including
-> > + * any firmware-discovered regions, and must detach if the CXL link is lost.
-> > + *
-> > + * The parent of the resulting device and the devm context for allocations is
-> > + * @cxlds->dev. Returns the registered memdev or an ERR_PTR() on failure.
-> > + */
-> > +struct cxl_memdev *devm_cxl_register_mem(struct cxl_dev_state *cxlds)
-> > +{
-> > +	struct cxl_memdev_attach *attach;
-> > +
-> > +	attach = devm_kzalloc(cxlds->dev, sizeof(*attach), GFP_KERNEL);
-> > +	if (!attach)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	return __devm_cxl_add_memdev(cxlds, attach);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_register_mem, "CXL");
-> > +
-> > +/**
-> > + * devm_cxl_attach_mem_region - Attach a registered memdev to its region
-> > + * @cxlmd: provider-owned memdev returned by devm_cxl_register_mem()
-> > + * @hpa_range: CXL.mem physical address range result
-> > + *
-> > + * Attach to an existing committed, single-target region. This does not create
-> > + * or program a region. Repeated attachment to the same region returns the same
-> > + * range without adding another cleanup action. Failure leaves the memdev
-> > + * registered so that the provider can decide how to proceed.
-> > + *
-> > + * The region is removed when the endpoint detaches. Returns zero on success or
-> > + * a negative errno; @hpa_range is empty on failure.
-> > + */
-> > +int devm_cxl_attach_mem_region(struct cxl_memdev *cxlmd,
-> 
-> 
-> is this devm prefix required here?
-> 
-> 
+For this size, the mask leaves the reported address unchanged.
 
-I do think so, the helper here can install an EP-managed region-unregistration
-operation, so attachment has a managed lifetime side effect in addition to
-just returning the HPA range. That's why I used the devm_ prefix.
+0x110000000 & ~(0x30000000 - 1) = 0x110000000
 
-Is that acceptable ?
+reporting_bar_base becomes 4GB + 256 MB, rather than actual window base of 4 GB, so
+range_off is 0.
+
+The fianl address will be window.start + range_off = 4GB + 0
+
+A KUnit test against your patch series can reproduce this.
+Furthermore, pci_tsm_mmio_setup() accepts the wrong result, because the incorrect address
+is still insdie the window.
 
 Best regards,
 Richard Cheng.
 
-
-> > +			       struct range *hpa_range)
-> > +{
-> > +	if (!hpa_range)
-> > +		return -EINVAL;
-> > +	*hpa_range = DEFINE_RANGE(0, -1);
-> > +
-> > +	if (!cxlmd->attach)
-> > +		return -EINVAL;
-> > +
-> > +	guard(device)(&cxlmd->dev);
-> > +	if (!cxlmd->dev.driver || !cxlmd->cxlds)
-> > +		return -ENXIO;
-> > +
-> > +	return cxl_memdev_attach_region(cxlmd, hpa_range);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_attach_mem_region, "CXL");
-> > +
-> > +static int cxl_probe_mem_region(struct cxl_memdev *cxlmd)
-> > +{
-> > +	struct cxl_attach_region *attach =
-> > +		container_of(cxlmd->attach, typeof(*attach), attach);
-> > +
-> > +	return cxl_memdev_attach_region(cxlmd, &attach->hpa_range);
-> > +}
-> > +
-> >   /**
-> >    * devm_cxl_probe_mem - Add a CXL memory device and probe its region
-> >    * @cxlds: CXL device state to associate with the memdev
-> > @@ -242,7 +307,7 @@ struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
-> >   	*attach = (struct cxl_attach_region) {
-> >   		.attach = {
-> > -			   .probe = cxl_memdev_attach_region,
-> > +			   .probe = cxl_probe_mem_region,
-> >   		},
-> >   		.hpa_range = { 0, -1 },
-> >   	};
-> > diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> > index 802b143de83d..3019e3ea5f09 100644
-> > --- a/include/cxl/cxl.h
-> > +++ b/include/cxl/cxl.h
-> > @@ -224,6 +224,8 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
-> >   						      sizeof(drv_struct), mbox);	\
-> >   	})
-> > +struct cxl_memdev *devm_cxl_register_mem(struct cxl_dev_state *cxlds);
-> > +int devm_cxl_attach_mem_region(struct cxl_memdev *cxlmd, struct range *hpa_range);
-> >   struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
-> >   				      struct range *range);
+> +		} else {
+> +			if (bar >= PCI_STD_NUM_BARS ||
+> +			    !(pci_resource_flags(pdev, bar) & IORESOURCE_MEM) ||
+> +			    (pci_resource_flags(pdev, bar) & IORESOURCE_UNSET)) {
+> +				pci_dbg(pdev, "Invalid reporting bar ID %d\n", bar);
+> +				return NULL;
+> +			}
+> +
+> +			if (last_bar > bar) {
+> +				pci_dbg(pdev, "Reporting bar ID not in ascending order\n");
+> +				return NULL;
+> +			}
+> +
+> +			if (last_bar < bar) {
+> +				resource_size_t mask = pci_resource_len(pdev, bar) - 1;
+> +
+> +				/* Transition to a new bar */
+> +				last_bar = bar;
+> +
+> +				/*
+> +				 * Determine the obfuscated base of the BAR. BAR
+> +				 * offsets are never obfuscated.
+> +				 */
+> +				reporting_bar_base = tsm_offset & ~mask;
+> +			} else if (tsm_offset < last_reporting_end) {
+> +				pci_dbg(pdev, "Reporting ranges within BAR not in ascending order\n");
+> +				return NULL;
+> +			}
+> +
+> +			window.start = pci_resource_start(pdev, bar);
+> +			window.end = pci_resource_end(pdev, bar);
+>  		}
+>  
+>  		/* Per spec the tsm_offset never results in overflow / underflow */
+> @@ -1090,19 +1133,21 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		}
+>  
+>  		range_off = tsm_offset - reporting_bar_base;
+> -		if (pci_resource_len(pdev, bar) < range_off + size) {
+> -			pci_dbg(pdev, "Reporting range larger than BAR size\n");
+> +
+> +		if (range_len(&window) < range_off + size) {
+> +			pci_dbg(pdev, "Reporting range larger than %s size\n",
+> +				coherent ? "coherent range" : "BAR");
+>  			return NULL;
+>  		}
+>  
+> -		range.start = pci_resource_start(pdev, bar) + range_off;
+> +		range.start = window.start + range_off;
+>  		range.end = range.start + size - 1;
+>  
+>  		/* Only record the TEE ranges for later consideration by ioremap() */
+>  		if (FIELD_GET(PCI_TSM_DEVIF_REPORT_MMIO_ATTR_IS_NON_TEE,
+>  			      attr)) {
+> -			pci_dbg(pdev, "Skipping non-TEE range, BAR%d %pra\n",
+> -				bar, &range);
+> +			pci_dbg(pdev, "Skipping non-TEE range, %s %pra\n",
+> +				coherent ? "coherent range" : "BAR", &range);
+>  			continue;
+>  		}
+>  
+> @@ -1110,6 +1155,8 @@ struct pci_tsm_mmio *pci_tsm_mmio_alloc(struct pci_dev *pdev,
+>  		entry->res.end = range.end;
+>  		entry->res.flags = IORESOURCE_MEM;
+>  		entry->tsm_offset = tsm_offset;
+> +		if (coherent)
+> +			entry->flags |= PCI_TSM_MMIO_F_COHERENT;
+>  		mmio->nr++;
+>  	}
+>  
+> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> index e54ad057fa8e..7c29f10e7795 100644
+> --- a/include/linux/pci-tsm.h
+> +++ b/include/linux/pci-tsm.h
+> @@ -1,8 +1,10 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #ifndef __PCI_TSM_H
+>  #define __PCI_TSM_H
+> +#include <linux/bits.h>
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+> +#include <linux/range.h>
+>  #include <linux/sockptr.h>
+>  
+>  struct pci_tsm;
+> @@ -199,15 +201,20 @@ enum pci_tsm_req_scope {
+>  	PCI_TSM_REQ_DEBUG_WRITE = 3,
+>  };
+>  
+> +/* The range is the device's CXL coherent (CXL.mem) window, not BAR-backed */
+> +#define PCI_TSM_MMIO_F_COHERENT BIT(0)
+> +
+>  /**
+>   * struct pci_tsm_mmio_entry - an encrypted MMIO range
+>   * @res: MMIO address range (typically Guest Physical Address, GPA)
+>   * @tsm_offset: Host Physical Address, HPA obfuscation offset added by the TSM.
+>   *		Translates report addresses to GPA.
+> + * @flags: PCI_TSM_MMIO_F_* attributes for the range
+>   */
+>  struct pci_tsm_mmio_entry {
+>  	struct resource res;
+>  	u64 tsm_offset;
+> +	u32 flags;
+>  };
+>  
+>  struct pci_tsm_mmio {
+> @@ -227,6 +234,74 @@ static inline struct resource *pci_tsm_mmio_resource(struct pci_tsm_mmio *mmio,
+>  	return &mmio->mmio[idx].res;
+>  }
+>  
+> +#ifdef CONFIG_PCI_TSM_CXL_COHERENT
+> +/*
+> + * pci_tsm_coh_resource_contains() - check a coherent range against the
+> + * PCI-core coh_resource[] snapshot
+> + * @pdev: device owner of @res
+> + * @res: candidate coherent MMIO range to validate
+> + *
+> + * The coherent (CXL.mem) range isn't BAR-backed. So pci_resource_n()
+> + * containment doesn't apply. Check against pdev->coh_resource[] instead.
+> + *
+> + * Return: true if @res falls within a populated coh_resource[] entry.
+> + */
+> +static inline bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
+> +						 const struct resource *res)
+> +{
+> +	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
+> +		struct resource *coh_res = &pdev->coh_resource[i];
+> +
+> +		if (resource_type(coh_res) == IORESOURCE_MEM &&
+> +		    resource_contains(coh_res, res))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * pci_tsm_retrieve_coherent_range() - resolve the device's coherent CXL window
+> + * @pdev: device owner of the reported ranges
+> + * @out: host physical (guest IPA) range of the coherent window
+> + *
+> + * The coherent range carries no BAR number, so its address comes from
+> + * pdev->coh_resource[], a pre-driver-bind snapshot of committed CXL HDM
+> + * decoders.
+> + *
+> + * Return: 0 with *@out set from the first populated entry, or -ENODEV if no
+> + * entry is populated.
+> + */
+> +static inline int pci_tsm_retrieve_coherent_range(struct pci_dev *pdev,
+> +						  struct range *out)
+> +{
+> +	for (int i = 0; i < PCI_CXL_MAX_COHERENT_RANGES; i++) {
+> +		struct resource *res = &pdev->coh_resource[i];
+> +
+> +		if (resource_type(res) != IORESOURCE_MEM)
+> +			continue;
+> +
+> +		out->start = res->start;
+> +		out->end = res->end;
+> +		return 0;
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +#else
+> +static inline bool pci_tsm_coh_resource_contains(struct pci_dev *pdev,
+> +						 const struct resource *res)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline int pci_tsm_retrieve_coherent_range(struct pci_dev *pdev,
+> +						  struct range *out)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_PCI_TSM_CXL_COHERENT */
+> +
+>  #ifdef CONFIG_PCI_TSM
+>  int pci_tsm_register(struct tsm_dev *tsm_dev);
+>  void pci_tsm_unregister(struct tsm_dev *tsm_dev);
+> -- 
+> 2.53.0
+> 
