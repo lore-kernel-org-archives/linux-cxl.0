@@ -1,47 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793998736;
-	b=RTalkc+kB36E3KwYtx6B/1Ss7NxtV+NN9LDoZvaEXrjRv4WzUQS/coSd815CSF0MHR6V
-	 /szZLY/Aj21hCW4ydcislWALAMC5YeX984y74dfobh6TVNFaYPbrOg0I2rxMzDx0wYI1w
-	 Ob+zdiThiixOovrEuwyc6dHUT1lvKm0pGVwXkKKBqxFYttwlLqttJJ/pX+Kbpqj6mDVKz
-	 Za9UcmUk6jWRYlkesFgdMu32twa5yVM3Fzan1rhYU3Rfz4M409sa0tN+Y7yYs8OG+U0Sk
-	 34mlnQkuYP8ajkEfTkCF9BhwIzRT/ceSaR0dQA56ufilRzDADgVAv9lcbx8uRbGEihA==
+	t=1794002237;
+	b=rCJQpduArx+P+BvbFpaBuNUQ6Xg3MEOl29C3LZq07GTuZkT3ZaGI2xLxhI+s2EM4z+Ls
+	 FV+Z207eiwRAsbTY13gmDBEgXl+7BiNZdR81b3BJNBK5Xp5E614fDsonQRXvE/gce3rBT
+	 oTISQs5TUzlnLomaazAxEXCrC3RZLkbkGbgcFo83va/bx9uioj5Ij0+ew2k3qfMVu8EfD
+	 KxhdSZpDJtm5XMACS+2CZwKQuc/ftiOGnRg2iDO33L2R6f4LG74hz+RrtxW0KSpKvNWF5
+	 HVQ8RbBXY19ipZNLpWY5CI2xioomkXoxo/0dIoue3soQ2llD7OuwU7mQvz52eS+Z6pQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793998736;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=ts4CDaprMowxWHfO4PT+4syTNjSDN3DCqaoaeja+YDo=;
-	b=kNldj0DrfSEszuJ4oG6PbjPQehkCDO5ekAp/Kh0+/F6F0hBNI3S9nTfW9YRWL4oM0IlH
-	 p3ZwzZSwr3Td9c3AiXzHliKdqLTZIyP5n6D02YS43Y5Ncr+GZFj1N43yHtfe9geiZqw1Q
-	 s7qb5nW8gkD4saSfzHEUL+dBPHfIn2UEsCfzgq6pmtse05CaSPU85OKu42aAeTTFo0PUP
-	 IfL7KprQs6TJpCoVV30Fyrilp8XLW+Omq5SPEsVUMEwPkxL8QQEqjMEXHGITWniuVVjGu
-	 FyVmQ3O5vkvZllqSzPuFPX+KvnOm9HPdr0VPnBTh4sg8aQq92D24N3/2j8kzLigyWLQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794002237;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=CxmJMRFtIL0hk1OxlksLXmSaPdmSVYeymd6MjW5nQX8=;
+	b=SVYNE+8/pOa2d2zU/xgWBbdJGPgpCVBImPjp8zHyDIW9iDjvqfb3DoO3s+G7YynUTfNs
+	 F5gbnV1G1SR70RUYNcIuPyHKzghUJlidxuNhf/1q4ZOTS/xANmdqVy0DUc7GaVjt0AnCH
+	 bDpy7DD+7tj1h1dzJVz4GZ8QBRDJ9vzKtEv9cSujtUy1u/3wdOGrYd58ZFBIe2WrhSj7H
+	 3lrh/nNeRzVOu/BiuzwSWKS8GAun9bYIlroHEc1JKobdP5SMPyDZ6NEZ+ej43sEmIyv8F
+	 lga5VFJEJukJi53JWvydMnIsnQKHYvlREdAHPM7PWtISVxRgSdMdZAoimPb0UuVUDNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ixV/2IIx";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kFJxrw6c;
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01A0606A329;
-	Fri,  6 Nov 2026 20:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B8C606A326
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Nov 2026 21:57:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 44B8C606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ixV/2IIx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B98F1F0089F;
-	Fri,  6 Nov 2026 20:58:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793998735;
-	bh=ts4CDaprMowxWHfO4PT+4syTNjSDN3DCqaoaeja+YDo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ixV/2IIxtyoMfQ4XY/DicKZo88+pkjPXzsU02Qi9R0BXW9GY1+LyVbI+Y3PTz6PHV
-	 OWvf4Jg3HGprZ3yx8gHHu3OUatkGnGjgSx4n0rChHDspyH70WZyHUwr/pQHFs0QYh3
-	 zxXIxhqGqN8p7QcujIGzCQ4e0RKFj43VPenPPUvqMNpXvWWTyX9XQChUrudvaxHonT
-	 k2S4YTXioJCyF+QuLEVcI7pmC+e3VhXrFqj8/IFcna4/pitkTsupLtJCQziB7/UlLZ
-	 9YNUC8h5RCNSAlCKwSWcFftx7GctOKkRQ11A7i/APwnObeXr/EwG8isa2T4+wu4Kvt
-	 LPrDkclzmTq6w==
-Message-ID: <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
-Date: Fri, 6 Nov 2026 21:58:49 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kFJxrw6c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794002237; x=1825538237;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P7VEyGWPPy3YRUlRStJ12M5S2WCyuJ0W4wdcpe+DB4s=;
+  b=kFJxrw6c8wIeg0BzRxQlT2zm2Kh3O5SUVvAWCH6USIBUZ8OeSU0QpyME
+   nXEzDEtBffc4PTO0IvUJjxWf0Qp3sMVLaucpaU72+gEN0F7wwh107mDmc
+   dsErYf5G0C5E8Y2WSEL1XevIsoBg6uvUhxjCNEpaF6hNoE/9Pj9vltsF1
+   +eHEl10JR/xwqbs28DFJVMDobsSMAQsA0a/RgTXeCJBvy2rh09zvtteGA
+   XZJN4t3XQ98rT7bHHcx/XXDbc20u/yUZw2g8N/66qQQrZ9kij1h0lV3o6
+   udAVD4P4SQ59GJvSOigtqLe2DOockOsiYh7kngteEILbmdDdSUSjf86Rq
+   Q==;
+X-CSE-ConnectionGUID: aLzdnyXYQ7yG/WhsyRgk7w==
+X-CSE-MsgGUID: C9JRhnUSQ3GBTNjh2BBRSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11958"; a="2812903"
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="2812903"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:16 -0800
+X-CSE-ConnectionGUID: VHV/Anj4TfOwOwO+/reOTg==
+X-CSE-MsgGUID: UQv88UvGQ4C4AVUPe8AEcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="9147225"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.188])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 13:57:15 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Robert Richter <rrichter@amd.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v7 0/5] CXL: Support region granularities finer than the root
+Date: Fri,  6 Nov 2026 13:57:07 -0800
+Message-ID: <cover.1794000806.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -51,158 +85,85 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
- still in the page cache
-To: mt4022@columbia.edu, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>,
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- tz2294@columbia.edu, stable@vger.kernel.org
-References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/5/26 21:50, Mani Tofigh via B4 Relay wrote:
-> From: Mani Tofigh <mt4022@columbia.edu>
-> 
-> Memory offline skips hwpoisoned pages, assuming nobody uses them
-> anymore.  memory_failure() however sets PG_hwpoison before it takes the
-> page, and taking it waits on pcp_batch_high_lock, which offline_pages()
-> holds for the whole offline.  A memory error during the offline thus
-> marks the page and then waits while the offline skips it:
-> 
->   Task A (offline_pages)               Task B (memory_failure)
->   zone_pcp_disable()
->                                        TestSetPageHWPoison(P)
->                                        get_hwpoison_page()
->                                          /* waits for Task A */
->   do_migrate_range()
->     /* P is poisoned (not migrated) */
->   test_pages_isolated()
->     /* P is poisoned (accepted) */
->   zone_pcp_enable()
->                                        /* P is off the LRU (Ignored) */
-> 
-> The block goes offline while the file still points to P, and the next
-> walk of the file's pages (here drop_caches on ext4) crashes on a struct
-> page of offlined memory:
-> 
->   [   11.710348] Memory failure: 0x24224: unhandlable page.
->   [   11.710372] Memory failure: 0x24224: recovery action for get hwpoison page: Ignored
->   [   11.765371] page:000000008c304eee is uninitialized and poisoned
->   [   11.765389] page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
->   [   11.765440] kernel BUG at include/linux/mm.h:1990!
->   [   11.765458] Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
->   [   11.772284] CPU: 3 UID: 0 PID: 85 Comm: mfoffline Tainted: G        W            7.3.0-17087-gd865f2677c44 #1 PREEMPT
->   [   11.777970] RIP: 0010:find_lock_entries+0x8ee/0xad0
->   [   11.798761] Call Trace:
->   [   11.799297]  <TASK>
->   [   11.803284]  mapping_try_invalidate+0xfd/0x2c0
->   [   11.810571]  drop_pagecache_sb+0x111/0x330
->   [   11.811572]  __iterate_supers+0x2e2/0x370
->   [   11.815863]  drop_caches_sysctl_handler+0x74/0xb0
->   [   11.816994]  proc_sys_call_handler+0x2ec/0x440
->   [   11.821360]  vfs_write+0x545/0x1250
->   [   11.825220]  ksys_write+0xfa/0x200
->   [   11.830202]  do_syscall_64+0xfb/0x590
->   [   11.832084]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->   [   11.848423]  </TASK>
-> 
-> Once the memory is also removed it's a use-after-free of the memory map.
-> tmpfs and the swap cache can end up the same way without the race.
-> Since commit a76054266661 ("mm: shmem: don't truncate page if memory
-> failure happens"), memory_failure() leaves a poisoned tmpfs folio in the
-> page cache on purpose, and it does the same for a dirty folio in the
-> swap cache.
-> 
-> Treat a hwpoisoned page whose folio is still in a page cache or swap
-> cache as busy in scan_movable_pages() and
-> __test_page_isolated_in_pageblock() so that the offline fails and a
-> waiting memory_failure() can go on.  Also have do_migrate_range() leave
-> such a folio alone instead of taking it off the LRU, so that
-> memory_failure() can still remove it from the cache.  A later offline
-> succeeds once the page is out of the cache.  With the fix, the offline
-> fails with -EBUSY and the file doesn't point to offlined memory anymore.
-> 
-> This bug was identified and confirmed with the help of a deterministic
-> hypervisor currently under development.  The C reproducer below however
-> hits it within about 10s.
-> 
-> Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mani Tofigh <mt4022@columbia.edu>
-> ---
-> Changes in v2:
-> - Leave a hwpoisoned folio that is still in a page cache or swap cache
->   alone in do_migrate_range(), so that a waiting memory_failure() can
->   still remove it from the cache (Sashiko)
-> - Rebase onto current mm-new
-> - Link to v1: https://lore.kernel.org/all/20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu/
-> 
-> A pinned hwpoisoned page still isn't covered.  I'll send the refcount
-> check David suggested as a follow-up.
-
-I didn't understand why just checking for the refcount is not sufficient. Can
-you elaborate once more (and please not send a new revision before the
-discussion is over).
-
-Memory poisoning must grab a reference when setting the folio hwpoison. Any
-other reference (pin, pagecache, swapcache, mapping) keeps it alive.
-
-Why can't we build on and?
+Changes in v7:
+- Rebase onto for-7.5/cxl-port-refactor
+- Patch 3: adjust unaligned translate to work w new layouts (Sashiko)
+- Patch 4: commit log wordsmith only
+v6: https://lore.kernel.org/linux-cxl/cover.1791863201.git.alison.schofield@intel.com/
 
 
+Begin Cover Letter:
+
+Linux requires a region's interleave granularity to equal the interleave
+granularity of its interleaving root decoder. This series relaxes that one
+restriction: a region granularity may be finer than the root granularity,
+provided the interleave levels between them refine monotonically toward
+the endpoints.
+
+This series does not add general support for every granularity arrangement
+the CXL Specification permits. A region granularity coarser than the root
+remains invalid, and configurations whose granularity refines and then
+coarsens along the decoder path remain unsupported. Of the Mod3
+configurations listed in CXL 4.0 Section 9.13.1.1, all are supported
+except Table 9-6 row 6, the refine-then-coarsen 12-way composition.
+
+The use case driving this series is 6- and 12-way regions behind a 3-way
+host bridge interleave, CXL 4.0 Tables 9-6 and 9-7, which have no
+same-granularity alternative. Power-of-two regions finer than the root
+fall out of the same implementation.
+
+Support applies to both firmware programmed auto regions and user created
+regions.
+
+Two prior proposals addressed parts of this gap:
+
+AlisonS introduced position arithmetic and sysfs gating for auto and
+user-created regions to support the 6- and 12-way interleave configurations
+without a same-granularity alternative [1].
+
+RobertR introduced an HPA selector-bit model for auto regions that allows
+multi-level power-of-two interleaves regardless of granularity ordering [2].
+
+Series structure in v7:
+-----------------------
+Patch 1 documents which region granularities Linux supports relative to the
+root and the monotonic refinement model.
+
+Patch 2 generalizes endpoint position calculation to account for granularity
+changes between decoder levels.
+
+Patch 3 enables auto regions with a granularity finer than the root and
+validates their decoder geometry.
+
+Patch 4 enables user created regions with a granularity finer than the root
+by relaxing the existing root/region granularity restriction.
+
+Patch 5 adds a cxl_test topology and coverage for region granularity finer
+than the root.
+
+The companion NDCTL patchset that allows these regions in 'cxl create-region'
+and adds the unit test support is posted [3].
+
+[1] https://lore.kernel.org/all/20250306232239.2609017-1-alison.schofield@intel.com/
+[2] https://lore.kernel.org/all/20251028094754.72816-1-rrichter@amd.com/
+[3] https://lore.kernel.org/linux-cxl/cover.1791863817.git.alison.schofield@intel.com/
+
+
+Alison Schofield (5):
+  Documentation/cxl: Describe region granularity finer than the root
+  cxl/region: Generalize endpoint position mapping
+  cxl/region: Support auto region granularity finer than the root
+  cxl/region: Support user region granularity finer than the root
+  cxl/test: Add a topology for region granularity finer than the root
+
+ .../driver-api/cxl/linux/cxl-driver.rst       | 119 +++++
+ drivers/cxl/core/region.c                     | 224 +++++++---
+ tools/testing/cxl/test/cxl.c                  | 420 +++++++++++++++++-
+ 3 files changed, 683 insertions(+), 80 deletions(-)
+
+
+base-commit: 0e3e8b653ca3ab145aced729861cf0d1a06da69e
 -- 
-Cheers,
-
-David
+2.37.3
