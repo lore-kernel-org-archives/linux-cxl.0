@@ -1,101 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794020504;
-	b=Yy6wmqFMxTD9R83kxRb9vlLfbR+sCMtRPTVlm7PN1H6P3JyhTE1YchijM3SQzWI7VT/p
-	 IXs21+BdFMByxUIIEzIc610GMQKwYqVZLWvLUUgV5ZzOzsqCofzJYLJ06LDFpu+gXNkRd
-	 AyLv+YWF7xiLiqzNRf/JjvV1Zom24WM9dDK5BHT+w1bwP5w3SZZIHVOs9gumIklyaigEl
-	 UAs05FwoZhSO4v1X9wn2+8qLLipKE/Omcjyq/DKAKKHpN4LcXvcLUrTn11i2Wbx2CYWiA
-	 ptHeQc7Z8j7lg4Eq4gJBZIwvAM/frnEXYeYzfIPriuheyJLrxnU2cMTsSfBxqxfie8Q==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794020504;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=c7RdJd1ac0ZTEx+/NYzXEY+S8dr+3ZAZRK/h78/Mnrs=;
-	b=Y+cv0pqpliH8XDUClXArS5uZQn87KQMKsboVWNNIXk6ze2EZfXXia4HEGBZgKUMYDCRS
-	 u5wCXfIE8OOyx4j/iZUyX4yCpCFXdhgRGQsXFJ1earsNCrx8yDN7Rpr8f1vv/C5aq8Nz6
-	 xFUdScgTd7Uy0Am86yFwQ3KQqmIjYQLrSCR1hAYvJtggOn9c9VYObkbP7kMFxeuENlqEJ
-	 4aUWhOoMHIH8VUyk7nasuc/Y0OmM6GXWzuHJDO47HHx4wDErEOm0Eh79Pkpc2KB0NOITd
-	 4vJtPizxu8qifZR04VLPvYsrnHGdi5sCtBs/ZDLCPuCsHbi+AGcWxxZ3MDbJnT5Rj7A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bytedance.com;
-	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=EXL7qNvo;
-	arc=none smtp.remote-ip=74.125.82.54
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794036530;
+	b=CtbGqn4nQJaLpCJlZ9fEjuV3r8s/z0Qf9ziLmdNjyqF4jiFmfv1JkEJMcYHaK2OKlmBF
+	 WhGGawhL76tFlsW1Fx4bboCimlxweeCuTRbSjO7xWv+TkDB4MXvVeDbjBk3DvX/OBM91J
+	 c2rDr5yIpvSC5R8a8L7r6Abug21o2f3xYSXoyA2L6Vpq2TALAXUGykmEwlumHIP5R6oTi
+	 LsgcmKprHLaNWMwHCzSq2Yfz64DaEpUN4t/IApbjeaheE9AWrCvJWdHceV2mQsTgOZHyP
+	 By0dpTqVJt3yGIBqMN4mVMQviADW2312b8GufWR/NhtYy3+4pal7iT6L5L5BtDCYi/w==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794036530;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=3HWUg5FNjyVay3O5xAbrgZ/pPYrYvOt4d7ooGVwU3ac=;
+	b=a92SQEwQl23YkFPHejQ5QarKv6ugN85a7+dhXkUowQoCQ2rahhKF7C+kMOWT3Tvu7/qi
+	 IzIzmoZhuIvLiaYBwbwaUlTh9nHoLbl7EWn5xFmYO8yYbQ5RIeC90FlsKAoReaeDzIM5Y
+	 UxgQSWMJTg+5oCsLmYPPjJRQdtLiudwtbIqJLmEhsuVlnzgOrPYFOLEPBlbYsMuYbplwR
+	 GgRM9B3B78XKcvIJP2Yjc5at/U1JlusZy/tao17kKeYcAgMuwDK9uHtVRWInj+3//5ARj
+	 FFsNELm5J9wMkA/YUCVOFdaE/YnfdOuPzCVaG7+yNEQnuhDHw9NLN1JaGeAOrgPrVnQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VCPwVL3G;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298E8606A326;
+	Sat,  7 Nov 2026 07:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VCPwVL3G
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794036530;
+	b=l3TyIj+jAMZpwOrVg7wIyUd4XU0xzGuybh5HImfWpwF/mjCvfkFz3yLYxYsPlrVnr1zv
+	 YGR+CO39s4eWpvraxkoz9fSRnRaq6/2/78kNX0pZVuZo7oFGc7YK66T8VD1cq21LGVDVo
+	 8W70U31gJ1OSDWAFMF5BR5SH6zww3acPcdgXu2xlnFt01YWbskstIihpzNgQFWFnD9zoq
+	 /yH8TeD0Taw7CR2UePknBSU7oWMeqlKVOikofRljkDfyipc96NscBfr/zg4jZLWzh9QoB
+	 /GfvapYIKTCpvgEj+ZItJHJpEh4DtBPluJuauwoJYUhOnnGapfy7C2ucyzFpp87eWxA==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794036530;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=3HWUg5FNjyVay3O5xAbrgZ/pPYrYvOt4d7ooGVwU3ac=;
+	b=TJyjeWPooVdgcZfZqMYvwZPAssFdVo+bH9jUchZxT5VCLf8hpyOl/K4hj9En7Bad+a4d
+	 ZUIm0j1bzY3DEs/LNDFtYhidaknkNFfDvbIq+KGNOXWl3Pqc8oFIlvpSWvR+PhiHbuntE
+	 4mp4WlgDt/Uu3yJCYJeK67xIt7W4YIyDqZWrqXpoYcDKN2SLBDQZASe6TsKGa/dcY/Hv7
+	 QlonUVI9hDjhir5UObYsXjJeV04rYnZvXO94FSH1LJoZu+iysDZZtgW3oGrPQvPLRxFCa
+	 fYsHDTGiC84jAl2jzrGF4ixAXEiKVCiJbgZ1f+uS6E/pm95ym7qrCKKFWayPCgESvwQ==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B6606A32F
-	for <linux-cxl@vger.kernel.org>; Sat,  7 Nov 2026 03:01:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 983B6606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=EXL7qNvo
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1ae18eb9b69so1512253c88.0
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Nov 2026 19:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1794020503; x=1794625303; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=c7RdJd1ac0ZTEx+/NYzXEY+S8dr+3ZAZRK/h78/Mnrs=;
-        b=EXL7qNvoixipFHmUbTzJDnVPsqgi4j4biZQDDbJ1xQAQJHf2NXHxgCekVjOp/+aZVb
-         yp6VqeTgewe26Myz7al0S2vSkb77+amT1dxIRHwQ2MBO2lT6wQK6EdXfpzk6bOnKZFHf
-         1FPyaVZYqU9QWAvjgfe0vPkEPQW+O0CUwWAB8c3jRbLOHFBBIig3mpQure4oPc+30D/W
-         gDsmH7CpNhQ1Hs8QtINZSFd9o/aReNI9OLi0R1eyEFjaIJ/npVDPGcNoOm/sW+CjDmro
-         EXWj1yBbGE43wfG7YU7UZNX/c730VtWabz1UQ+x6vtpqvv5/1OErICSYMxBJqWtH2VZX
-         QhQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794020503; x=1794625303;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=c7RdJd1ac0ZTEx+/NYzXEY+S8dr+3ZAZRK/h78/Mnrs=;
-        b=gz86+0eB4cCRn8EQHjuuxtVpnkkkWwZW/DMaELFA2L7I+8ZlPBm+KaFzI8EslmGJNJ
-         bZXG+65KnM6Tvb3YsEAe3QHCyNkPpxMrOfJl0zgb+Py/rwdOyzEnMVguhXg6VrHUnJjr
-         eMZoMXVnAmqMx7HMKp/GHtsOv9fzwvzWpXA2PG7p7NF6UqyXpwtYt+V/0fmIm0d6Q0FL
-         BxzSpbGMBQzWb2VshUhXgwD7pfnB6cVMTimZs6KyUsvKA23em3LRznH3gIi0kNkQygPB
-         6hZxyfvgMW7f98kOi45RO7mqdxQSjHX+BR8KrNl8NWc4e4+JQJAOpAeTXaIBxtie/uOA
-         8w9w==
-X-Forwarded-Encrypted: i=1; AKwUvByvoRMY8nP/egqGRGS1BsjZJlDSt8aazbRgdlL0oCg5iIt9sA5vsMh88zLLWSHC+a6yC92NfeStMdM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8uCldRIMYfAwhLZyFNVQAQU2eIqHfw+ZMmaDTmVpKm78k4+Gcu
-	LYvn1zytYqaoTZL30jkDNgUmjwviIa/EI2DcDy5ZRLBLqFpCW1Zq5YBOb6N2MlCnc/8=
-X-Gm-Gg: AYBFou1pa7AS/g4wwqIokvtTk63t6mCuQRrUenKrQ/3F9/QcUGMXnTlZqFM3NZWmCUa
-	5MmB7qs3MYbaF83hLBw1W+N555W0X0uUnVLieHfRY0WHz0uIQilWYTXQBJfmqCm33S7H/I1KoMj
-	GBW6iBjHfv4zFgTWf8j8EBaf6Hxye6LyCbFnFkd7afzKOGQy0YFd8yQnwwGWwKLIf6zAD5iIBxg
-	I4WVqtT7zm0ahigVVjaAR7z8USRWe3NwYYwax6FD4uq6VPerYBP/NXk2m8zfpt1q/DXrLoq3qPN
-	mYORvoM7mpuoeCeADzpF0ES5QQvortHI4Mw4cI0dgEEcTAnOeqSUldMzU4oXhJc+2tfQ8Wk/MD3
-	qIEWfFhWlMmeYkWDkt716h3BN4f9KO0rKVX5pa/tW2YvBaSoPViCRB8tdR4LOgbyRLOFllNDKMp
-	Y8RC1HkMqBiPdPCtLssRNeT14stBm1ooACbWg1H+JhruMRKkcXguvbNhkXrfcmEBLxuIPq5pSRk
-	W3cAP8zvFTpaqt1rf4aJp2WfmKI1iCor8EJk+2p+Y9v+hGfzFb+qvPrUyAodQtp08XOLi0e9uJe
-	esn/ZxnjABFzUNNMBYFavMWONJUmloDfGtN6pwkRxhk7RX8tk6Z5a2BRDHKMGg==
-X-Received: by 2002:a05:7023:a5a:b0:1a0:e3e2:22a3 with SMTP id a92af1059eb24-1b25d33a590mr5333663c88.31.1794020502203;
-        Fri, 06 Nov 2026 19:01:42 -0800 (PST)
-Received: from G6L4RL2QG9 ([2409:8a00:1832:6900:c8de:13da:804b:a0fa])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b25e4b4aa7sm9534473c88.13.2026.11.06.19.01.35
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 06 Nov 2026 19:01:40 -0800 (PST)
-From: Muchun Song <songmuchun@bytedance.com>
-To: Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Pavithra Prakash <pavrampu@linux.ibm.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	stable@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v2] dax/pmem: fix unaligned compound devmap initialization
-Date: Sat,  7 Nov 2026 11:01:26 +0800
-Message-ID: <20261107030126.90894-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.54.0
+	by smtp.kernel.org (Postfix) with ESMTPS id 7746A1F0089F;
+	Sat,  7 Nov 2026 07:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794036530;
+	bh=3HWUg5FNjyVay3O5xAbrgZ/pPYrYvOt4d7ooGVwU3ac=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=VCPwVL3GRJN0QEm7IfPsFymYB76ChJ8KYnYtDAGmX+3GezcauUq5p3h9/Otvhamwe
+	 sBtKapahdQhPhxrq3B9+if7HijkSGbcOtQVMybOPlR4aEo4NUcVemtYhqjB8frLROo
+	 7J38vN6J3fo41V/8x/3UmtjYQZMu6hNZVv1b7sBs5YahFL+AfSgP2Dns3aznXrQI1+
+	 1NOX3GCjYHuFx3A1GYXGW64MiX5TWG6o2lbXpKuQF+bg77hWLH92qtIJYRzfXuXemd
+	 js8Owf3YSnktW/ExdSRYLL2D29xcebdmIo/+50LAzrw4WRQlt+ZXive6rli+Ze/Ti6
+	 7iaJKi+rgpnUA==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 07E8E47AF9;
+	Sat,  7 Nov 2026 07:28:49 +0000 (UTC)
+From: Ahmed Abdelfattah via B4 Relay <devnull+me.ahmedabdelfattah.dev@kernel.org>
+Date: Sat, 07 Nov 2026 09:28:46 +0200
+Subject: [PATCH 6.18.y] cxl/features: Ensure that count is set before
+ access to ent[] __counted_by()
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -105,67 +83,114 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261107-cxl-features-6-18-y-v1-1-2607e151ffc2@ahmedabdelfattah.dev>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ6CQAwAv0J6tmS7wkL8CvGwlqI1Bs0WDITwd
+ 1c9ziQzG5gkFYNTsUGSt5o+xwx0KIBvcbwKap8ZvPOByDXIywMHidOcxDAgtbii830d64q5qY6
+ Qy1eSQZfftYNQUluucP57my934em7hH3/AKUozVp/AAAA
+X-Change-ID: 20261107-cxl-features-6-18-y-02d5a54cc743
+To: stable@vger.kernel.org
+Cc: Ashok Raj <ashok.raj@oss.qualcomm.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>, 
+ linux-cxl@vger.kernel.org, Ahmed Abdelfattah <me@ahmedabdelfattah.dev>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794036528; l=3408;
+ i=me@ahmedabdelfattah.dev; s=20261106; h=from:subject:message-id;
+ bh=kGxIhmutMPB0t26HBZzy5K5cqXcRM4FNrQBpPeExzXU=;
+ b=PwQHc1r8VxRJDZam1vDQ4PStYycWRpoRAjshq4AdXhb/xvZBBP2SCA/cVsyq1jQEoXYGXGQyh
+ pJwZJzcOj9TB+Vqkqe6FLNRd+bhEwH6bJQ4F8rFoc5+495VKvl/2WPz
+X-Developer-Key: i=me@ahmedabdelfattah.dev; a=ed25519;
+ pk=DHEHKU4PddrkJ/iYMZpwyyXsFyIQ6ySjTttKLrt9YqI=
+X-Endpoint-Received: by B4 Relay for me@ahmedabdelfattah.dev/20261106 with
+ auth_id=1438
+X-Original-From: Ahmed Abdelfattah <me@ahmedabdelfattah.dev>
+Reply-To: me@ahmedabdelfattah.dev
 
-Static pmem Device DAX namespaces reserve space for namespace metadata
-before the user-visible data range, and may also include padding needed
-to satisfy the Device DAX alignment. __dax_pmem_probe() adjusts the
-dax_region range to start at the data range, but the dev_pagemap range
-still starts at the beginning of the namespace.
+From: Ashok Raj <ashok.raj@oss.qualcomm.com>
 
-That is not valid for compound devmap mappings whose memmap is stored in
-system RAM. Compound page initialization requires the start PFN to be
-naturally aligned to the compound page size, because the head and tail
-struct pages are initialized according to that geometry. If the pgmap
-starts before the aligned data range, memmap_init_zone_device() can build
-compound page metadata from an unaligned PFN.
+commit c1031c2474f73261d8d5e4deef2b5dc20fb964f5 upstream.
 
-The resulting struct page layout is inconsistent with the Device DAX
-mapping. A later mmap fault can then resolve the user-visible PFN through
-invalid compound page metadata and hit a kernel panic while inserting the
-DAX folio.
+get_supported_features() assigns entries->num_features only after the
+memcpy() loop that fills entries->ent[] has already run. Since ent[]
+is __counted_by(num_features), the compiler's bounds instrumentation
+sees a 0-length array during that loop and FORTIFY_SOURCE trips on
+the memcpy. Set @num_features right after allocation, before any
+write into ent[], so the bound is correct for the whole lifetime of
+the array.
 
-Fix this by rounding the pgmap start up to the Device DAX alignment for
-non-altmap mappings. This gives compound mappings the required naturally
-aligned start while retaining full-section vmemmap savings when the
-original start is already aligned. The altmap path remains unchanged
-because memmap_init_zone_device() skips the altmap reservation itself.
+This was found via a fortify panic:
 
-Fixes: 14606001efb4 ("device-dax: compound devmap support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Reported-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Closes: https://lore.kernel.org/r/wlrkqqvg.ritesh.list@gmail.com
+ memcpy: detected buffer overflow: 384 byte write of buffer size 0
+ WARNING: lib/string_helpers.c:1035 at __fortify_report+0x54/0xa0
+ kernel BUG at lib/string_helpers.c:1043!
+ Call trace:
+  __fortify_panic+0x10/0x18
+  get_supported_features.isra.0+0x4a0/0x4d0 [cxl_core]
+  devm_cxl_setup_features+0x84/0x120 [cxl_core]
+  cxl_pci_probe+0x254/0x5e0 [cxl_pci]
+
+Same class of bug, same fix shape as commit 6c9d2e87df40
+("cxl/fwctl: Fix __fortify_panic"), which fixed the analogous issue
+in cxlctl_get_supported_features() but missed this one.
+
+[ dj: Fixed up title typo per Jonathan. ]
+
+Fixes: f0e6a2329bf9 ("cxl: Add Get Supported Features command for kernel usage")
+Signed-off-by: Ashok Raj <ashok.raj@oss.qualcomm.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Link: https://patch.msgid.link/20260911215304.1816467-1-ashok.raj@oss.qualcomm.com
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ahmed Abdelfattah <me@ahmedabdelfattah.dev>
 ---
-v2:
-- Round the pgmap start up to the Device DAX alignment to retain
-  full-section vmemmap savings (suggested by Alison Schofield)
-- Update the commit message to describe the alignment approach
+On 6.18.y, cxl_pci BUG()s in __fortify_panic() while probing any device
+that reports CXL Features, such as QEMU's cxl-type3, when the kernel is
+built with CONFIG_FORTIFY_SOURCE and a compiler that supports
+__counted_by (GCC 15 or newer, clang 20.1 or newer). I hit it with the
+Arch Linux LTS kernel (6.18.44, GCC 16) in a QEMU guest.
 
-v1: https://lore.kernel.org/20261016054914.2601510-1-songmuchun@bytedance.com/
+Tested on 6.18.62 (GCC 16.2) in a QEMU q35 guest with a cxl-type3
+device. Without the patch the probe BUG()s the same way as in the log
+above, and with cxl_pci built in the boot then hangs. With it, cxl_pci
+binds and mem0 shows up.
+
+Please also queue it for 7.3.y, where it applies cleanly. There
+kvmalloc_flex() already sets num_features at allocation, but only when
+__builtin_counted_by_ref is usable, so builds with clang 20 or 21 are
+still affected.
 ---
- drivers/dax/pmem.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/cxl/core/features.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-index bee93066a849..d54d23f1cc58 100644
---- a/drivers/dax/pmem.c
-+++ b/drivers/dax/pmem.c
-@@ -51,6 +51,12 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 	/* adjust the dax_region range to the start of data */
- 	range = pgmap.range;
- 	range.start += offset;
-+	/*
-+	 * When the memmap is stored in RAM, compound page initialization
-+	 * must start at a naturally aligned address.
-+	 */
-+	if (!pgmap_altmap(&pgmap))
-+		pgmap.range.start = ALIGN(pgmap.range.start, nd_pfn->align);
- 	dax_region = alloc_dax_region(dev, region_id, &range,
- 			nd_region->target_node, le32_to_cpu(pfn_sb->align),
- 			IORESOURCE_DAX_STATIC);
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index bb73f205f16c..0ea5a31275d3 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -97,6 +97,7 @@ get_supported_features(struct cxl_features_state *cxlfs)
+ 		kvmalloc(struct_size(entries, ent, count), GFP_KERNEL);
+ 	if (!entries)
+ 		return NULL;
++	entries->num_features = count;
+ 
+ 	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) =
+ 		kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+@@ -174,7 +175,6 @@ get_supported_features(struct cxl_features_state *cxlfs)
+ 		start += num_entries;
+ 	} while (remain_feats);
+ 
+-	entries->num_features = count;
+ 	entries->num_user_features = user_feats;
+ 
+ 	return no_free_ptr(entries);
 
-base-commit: a91337fb5e8e0127c8b5be87be9f3027f95b48bc
--- 
-2.54.0
+---
+base-commit: c3f63d70f236bb7685e6d11d1d9b5b351552e600
+change-id: 20261107-cxl-features-6-18-y-02d5a54cc743
+
+Best regards,
+--  
+Ahmed Abdelfattah <me@ahmedabdelfattah.dev>
+
 
