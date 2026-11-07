@@ -1,90 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.222.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794009288;
-	b=GKeDPL8kW2zoWyYC/p5330udTxR8LDD8fst/AcZcsKFM/ICusQau6kd8Nfcx5LlmsT9E
-	 Bv1LTRDlQnhm5jVVBzuDo6hQSPXEfK42WQTJonbVUsUjgb1jye7xIaiPbfRIW7Z+Irtit
-	 hHn+JGhXNzADiEOAPrhWLoP9rj3VWQV4OpIBlVkHzg8mexRu6v4qAPJrRz6NjdyQq0Z1K
-	 1GG/O1lGmSUJQ/FsPfUbYSvxaOE1HHD6sqUhO1N/7hKkZAtFYSDCZiTVaKdnCchYSjIa7
-	 J0QqOiytXR0MY7Y5TaUpqRGAi1bv0X49jW1XsuLgB6UTvNh+b10KE1LMCV7fK5XHF+g==
+	t=1794011709;
+	b=FE9wDjuN0Y/B08Y3I/KrVk404GnxuICa40Ufk8HcOZGCwEqRSJjLh1b3ZGlXYniW0k9b
+	 Z+D6A+SUDz+zq54v2CTG1CdCkXc4qxnUitEVTXmdWxcxUTp+r+uqFlh+Czuxtm+KYmF5a
+	 nrDEfeLRb9FaMD+iXCiOGKPjXyCTJaDC0uInOBZWRs06QJH8+TEro+0wf2TK77toyCUN4
+	 JuAg6Mq/dm1znFI88ZJEC6IyMindS2pPbRscMPtaeF5E4rX7ap2cLLWBaMfy8chdLMl8K
+	 YqhBn/ihG6Mxq6yRNlmH6Sc0uw+4E86Sw/BlLnugbBTfrNauYODa6jCz1GjqGbFmOGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794009288;
-	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Shelf-Imminent:
-	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
-	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=LEIiF6m5nfC9Ad84lModldGENvWoLDBpFpzsIM0j77E=;
-	b=iZZYTqsI5J5DFzU5cwwx4Xq0KZjqG1tbWB6S9eQLn4f1+sYmBH65HMj/jZU9X4+sbsvS
-	 JaDF5wUVr7Qn8zwn6S48JMKmhjMK6606oKMaxG1yVUgy5uFbuTq8xazE0wiUdTHqSOt21
-	 +8US6t/AqQ3gIsox+0ZVGw4aGOWtx2luq5+rJ0XUNgmPWDDuzQ6AtFLLhCnrRHp0VIHAo
-	 FKVlq45zty7TiHlvHL4m4Ica46tcxvwnSaHbT0zCujPLFxx0rhVws0BVGeT6bxX1Xfpte
-	 Vzwv/tjLXGI7dBOt7ilq1OlBjb6T+Rz7SdTRVyIxZW08qiUymtb1o4yJpgLf3KMNkSA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794011709;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=DAn19e2IDa9wibxdKQ6U5QOgXyWTBQrGU00hLIqhkT0=;
+	b=4LL7FFfNAGy2B1DkHy9UoCM798x14w5JrKz9EV9f4OAf6HyXkg8IdbfMQFVAni29DYXY
+	 J4P1QGwrOUtEpNoL2MvabqeIZIwd1nrpdR88iyBECV3E47CqrJ2e0OqhJRRRzZdQD+l0B
+	 uU3+X3woc7ymOdDGs5Y3iZ9zwkHWpe19iHyNwkjDp+BAAUv3phd2F+6wr8i7cO4+YhM1I
+	 a6C3wbPlMk9rm8KLKlwqPoXtdKxgPYfSQfbr1SIUW7KRvY7z/DOOnWyUHi33lNGHM8zNx
+	 zcmkNZjCIC9740T3nuN293PsTsmMFWmh2G+7VhFHzZJwN/3NkxkNCeDG6iemFKiJb4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=stgolabs.net;
-	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=LBH+URf+;
-	arc=none smtp.remote-ip=23.83.222.52
-Received: from duck.ash.relay.mailchannels.net (duck.ash.relay.mailchannels.net [23.83.222.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GMkpB58R;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D771606A32C;
-	Fri,  6 Nov 2026 23:54:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D771606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77465606A326
+	for <linux-cxl@vger.kernel.org>; Sat,  7 Nov 2026 00:35:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77465606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=LBH+URf+
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4BFA6801E5D;
-	Fri, 06 Nov 2026 23:54:41 +0000 (UTC)
-Received: from pdx1-sub0-mail-a248.dreamhost.com (100-99-188-114.trex-nlb.outbound.svc.cluster.local [100.99.188.114])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id CE3B98004B5;
-	Fri, 06 Nov 2026 23:54:36 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Shelf-Imminent: 52b676f1385e26a1_1794009281086_2729413475
-X-MC-Loop-Signature: 1794009281086:3480117955
-X-MC-Ingress-Time: 1794009281086
-Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.188.114 (trex/8.0.2);
-	Fri, 06 Nov 2026 23:54:41 +0000
-Received: from offworld (unknown [172.56.210.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4jLwyM55yvz105H;
-	Fri,  6 Nov 2026 15:54:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1794009276;
-	bh=LEIiF6m5nfC9Ad84lModldGENvWoLDBpFpzsIM0j77E=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=LBH+URf+ZPVacprMvsgY9NpWwYehAO6xrq1xINLH614Tf3RI/FRhPaznfWKKvO4or
-	 JAy5o6zsIhcWVKEXWGq2RxS1WKajK1hNytU3LLpDJ44wjEje8lo45KSrvgMM11QLoS
-	 xpDLDK5F25P10douOMAuCS0f3JU9rUNbEZYicuVRyfRGZx4ZgbTulMcq47g+StqE4/
-	 jmSFF2xzco96xwrpkTZrjxZRe+kvZH0JnqLZ8N4Rd2CSFD45cnBKDmqzZBoyJAPbF4
-	 HcrJ43puHv9/zJMnOaSew3ZkS/5fJaeR7jde60i2EP8qbxKrKwetC3tpfQk4KX/Ewv
-	 yCzgbvF0rxKSw==
-Date: Fri, 6 Nov 2026 15:54:29 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Li Ming <ming.li@zohomail.com>, jic23@kernel.org, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, djbw@kernel.org, iweiny@kernel.org,
-	icheng@nvidia.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] cxl/mbox: Use mapped errno to determine command
- status
-Message-ID: <20261106235429.lsdaj4wh6rvam6ng@offworld>
-References: <20261103024305.2333508-1-ming.li@zohomail.com>
- <20261103024305.2333508-2-ming.li@zohomail.com>
- <auwI9iLC0NCRvp9R@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GMkpB58R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794011707; x=1825547707;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Kpkm0Tv2osOQ5wK8OpkK4Hr+4aAORy7yW1esOmFsAn0=;
+  b=GMkpB58RzYbz1AxY69ftlSGKY/I1UhdlLgz87lFRqNtcaCvNE00ayQZa
+   dFs/w7LY+FKscpRFuLBf6J5XdtTb7+EI5pWkG+7Z+njl8BxFO5kaBoWys
+   NSfL5AFd6L2ce+APNHOfeMHgBCKHyFh4jrDgfAyRqPFqmSxo4N9hYURRW
+   rTd8AhLOOZu24+HVxIipEWdh9+8G727B4cDpNvHkcmpmc5k0HjgIwNH+0
+   YYX0c29AkK7JWtqBwq39P5yrudjDC1n4Fc91AqhgaeSl/RFAKkUdi+dpf
+   ggSTNkbFKB9fZHzZiOwZWdCDnTudOY4z2FP2uc+8a7Bjm0i+vLUiIl3ix
+   Q==;
+X-CSE-ConnectionGUID: +YZIHoITQFG44OImKUzKmg==
+X-CSE-MsgGUID: Vmh8EeKWQOOIzDFibSJBBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11958"; a="2710305"
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="2710305"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 16:35:06 -0800
+X-CSE-ConnectionGUID: 7FbYSqJXSTWGSBa/N/+SBw==
+X-CSE-MsgGUID: tcg4j1xLTBmOiuUTvPr/7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,199,1787036400"; 
+   d="scan'208";a="9176220"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.188])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2026 16:35:06 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH 0/3] cxl/region: Carry the effective interleave state through target setup
+Date: Fri,  6 Nov 2026 16:34:59 -0800
+Message-ID: <cover.1794010889.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -94,59 +84,39 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <auwI9iLC0NCRvp9R@aschofie-mobl2.lan>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
 
-On Wed, 04 Nov 2026, Alison Schofield wrote:
+This replaces "cxl: Allow passthrough decoders with >16K granularity"[1]
 
->On Tue, Nov 03, 2026 at 10:43:05AM +0800, Li Ming wrote:
->> cxl_mbox_cmd_rctable already maps all mailbox command return codes to
->> errno values. Use the returned errno directly instead of checking
->> mailbox return codes separately to determine whether a command succeeded
->> or failed.
->>
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->> v2:
->> - New patch.
->> ---
->>  drivers/cxl/core/mbox.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 55828a836c01..bd91b03c4d21 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -270,9 +270,9 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->>  	if (rc)
->>  		return rc;
->>
->> -	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
->> -	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
->> -		return cxl_mbox_cmd_rc2errno(mbox_cmd);
->> +	rc = cxl_mbox_cmd_rc2errno(mbox_cmd);
->> +	if (rc)
->> +		return rc;
->
->Hi Ming,
->
->The existing code really seemed to want BACKGROUND as a special case, so
->I searched the history on this one,  Davidlohr and you discussed this in
->2023 around sanitize[1] .
->
->I do think it is confusing and if we can just follow the table codes,
->that would be easier.
->
->I'll let Davidlohr dig in on this one.
->
->I read both these patches as cleanups but no bug to be fixed.
+Review of that series showed the >16K failure was actually a symptom of a
+pre-existing problem. The switch decoder setup used the parent decoder
+object to carry the interleave state down the hierarchy, and a passthrough
+decoder's granularity is a hardware don't-care.
 
-Exactly, the Fixes tag in patch 1 should be dropped, but otherwise
-for the series:
+Patch 1 carries the effective interleave ways and granularity in each
+port's region reference. The approach was discussed here [2].
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Patches 2 and 3 add support for cxl_test coverage.
 
-(this patch reminds me that I want to create a cxl-bg-tests + the
-abortable bg semantics)
+Based on cxl/for-7.5/cxl-port-refactor
+
+[1] https://lore.kernel.org/linux-cxl/cover.1788487020.git.alison.schofield@intel.com/
+[2] https://lore.kernel.org/linux-cxl/aqnWLH-nrXk6BYqM@aschofie-mobl2.lan/
+
+
+Alison Schofield (3):
+  cxl/region: Carry the effective interleave state through target setup
+  cxl/test: Add a 2-way 16K root decoder for passthrough testing
+  cxl/test: Program a don't-care granularity into the passthrough host
+    bridge
+
+ drivers/cxl/core/region.c    | 28 +++++++++++++----
+ drivers/cxl/cxl.h            |  5 +++
+ tools/testing/cxl/test/cxl.c | 61 +++++++++++++++++++++++++++++++-----
+ 3 files changed, 81 insertions(+), 13 deletions(-)
+
+
+base-commit: 0e3e8b653ca3ab145aced729861cf0d1a06da69e
+-- 
+2.37.3
+
