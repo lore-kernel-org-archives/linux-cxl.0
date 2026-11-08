@@ -1,47 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794080489;
-	b=LHRlTd7QmI7+maphuLnoFLxsbRdmt2DFi9QAao98dHYMn/XbfBehuyauaEhL6JQMJKYj
-	 izzizp4upbo71Ftt8UujpBijYdLC65Ychum55wo1x/wcW0t1wFd8spX610kzHdvM4bHjz
-	 rlByFWovRHTYeLYxaxe+wHrIowq3nKrazBTHckqkz20sH9E7JdTolkOPB6ltaZ+uVJ54k
-	 ZenfrIQQGDZL1cd9DAzavVMchuOuEVxe2XqgladsxCd81E69KMYWhRSnrd5AJ+fHeAQWA
-	 39WjTPp8byrsPU9Cj/JowV19hAzvufbMS2YcQaivbPEaZU0ioa6H33F93ujW+HKQwYw==
+	t=1794104428;
+	b=t1Kf+igX2cOHH3xv1qMAFKrqipZv7Wm7WDKF4HcNYBVcDCwmj1ZpT8u9XBBvKMsjhJxz
+	 +Fj5jff+xY+7ybrf4UyPs7D5VHyVzBOn/srqc/63CYQ/tby53KhC2xUnv6rujjOdkTnEC
+	 +7OkrxHe5jL8pIu8W7FmTzcLLL7M0G+o6HonpxIDdz7mT+s1fELZmlvigDXfECBRmVylj
+	 LpVA16aBI/buzRXdyZ0X0GcWo+ESPxYoy1zwx6kayDkjNiQMgv2g162gptiT+UJR980V7
+	 nK6xFekZNsQPcyY4+wqYS+dmJemSMdXMjI3hPj4K+Mj2kjESyHT1rbbGQuiIqcichrg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794080489;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=qrayV5HgmTcSMMMhveHmxbWzQ03GCDulO+jtmHjEwSs=;
-	b=D8ToVfB6ha4PXjbRYsqkejdupw/CqTY+CR8eqA9GlhsR+JnptMk+V8QrZ4C0QWhHOvri
-	 /825gszztdhcinLnRADuYpbISKXoVohRwqXD05+V3nNwLNfVwPA8nWnLb7gJwOUFFDmAP
-	 GvV+igPQ1T/3xBmEXwB1atvU7JUTuG9+b7Hq5sjlcQY4mpEgy1/n48wA9z0CmoC5TX43D
-	 10YEqT9poRfod1SLtmtnXkFdDsd0d3QVAt4U9f86JTmm5khGyUDojKp/q88zRvHq71c9r
-	 NBDeBzXWt1EdVGWbsbBbSNdd8PQNQsceqZVoE6keWJXA8BNzC4fPJ0dNuTgCR2r4fMw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794104428;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	bh=HRpb0ZNgMoAuUWmIwHiaFI9curVX3i22DFTskIwhq1w=;
+	b=XF+PtainbS283RDQ2sSHNBHEwUMT9nDQ7Qkz/0kIkXbA9GB7KOt+Db092ocsZFjEs1Dp
+	 1YoJKHio4clkIWFK4RrJYG59yOWkHlzqthpFco/KvU9XltU2pKTELwUDUI82AdboyUDaC
+	 fh+xuML1Ar2zkXDuIjxiSFTW7DH4N5t3KbchXxbpEVxx/pRjy9XopGL1aNXb64kp+iqph
+	 9YK8wQwOOYNx1mhnt64wSulGPpc0JQJsO1jEij/p3WCxRbP0K8iUD0z92Shu+eCSMP2SH
+	 nzkMwY820H92/lVQKxJz4GHe9ifF1JhHTUIg56qMI+SgSQBfHidajlZaIW5O0a+6FAw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R7xKMfQW;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=fail header.from=linux.com;
+	spf=pass smtp.mailfrom=korea.io;
+	arc=none smtp.remote-ip=74.125.82.177
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF84606A326;
-	Sat,  7 Nov 2026 19:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R7xKMfQW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C4C31F0089F;
-	Sat,  7 Nov 2026 19:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794080488;
-	bh=qrayV5HgmTcSMMMhveHmxbWzQ03GCDulO+jtmHjEwSs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=R7xKMfQWAmEBP+7jr8m/rTZ0qcf3cHfKaGgUQmL4AL+Jj4Q2KlaWLJPKn2wxc/iKK
-	 w9lZQcb/W0uS33hvwpHeyja1a1AQGSExELOIHIA+c/XPHnmuVxQ56RTUbkNWaePdN+
-	 SB78P3uixsTGMMZNrngsUP4hm6/kMzANIxudL81PFPRxkj4MztpEE7T1Kn7dxsTZmz
-	 PhkVPpKh/5AYLInaD/Ev+Y+vUawgIT+MO67PN3fHo5eAvvaSeA2gbcEXbMlKgwbKUS
-	 MozNuMr9XlaQ1OoA7p69wSmY1N6ilueUU+3XjSJknb7Y7qum6Wb/FLvYPYvJ3s1Wzf
-	 Ll0jmq/T6D4tw==
-Message-ID: <a2ec6814-d3d3-425a-b379-f99b219aa55e@kernel.org>
-Date: Sat, 7 Nov 2026 20:41:20 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C968606A31A
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Nov 2026 02:20:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C968606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-33bf40b0c8bso655626eec.0
+        for <linux-cxl@vger.kernel.org>; Sat, 07 Nov 2026 18:20:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794104427; x=1794709227;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HRpb0ZNgMoAuUWmIwHiaFI9curVX3i22DFTskIwhq1w=;
+        b=yw92UXdMQJ9ajFlkEXvv/aasct+EIhM3OL7T0h2lurygmy87T8YzI1mhArLQZ7zWU4
+         iC0Jg/WV0X947jTm2qHF4o+vaiQa0Ha81l41BkqY/8peikrXW/1gvTu5AC2fADD1f6Me
+         eVsTdFtZSAeyNgC5lzCQdXSwFfZdhGIX0q/aXGlYRpY0lB60KvsueDeQJD6ZMhnnx5+Y
+         GET1lmDfD6RYhvu9/pS/Nn/Ix8MoGlZ56zbrazr7ncvEIjRvTPFu74+jmTcvp7jpK3dE
+         yS8SR0C0NyI8myD73A8CsWEgezziAr7Y8c2DFh1dkTKUDHUtujUW9fVXPE+VXkT05SWN
+         0kog==
+X-Forwarded-Encrypted: i=1; AKwUvByRKG1txW5/8VAvPMjaYJ4faR8YngtfhsHmFArX4f8729kedRJO8ifbl9WPrI5gIIcaMN3+G3sMauk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+4f+IBf+QpMpTe9Yn63nwXDqdWCl6ItdnsOeXft1Xe2qAbtOQR
+	U5nOSNevCEtpq4BQ4DUgnQ5ZTEvlu1klqYbd3S0bM8JkUJap4Cbn8XEIb7L/Brmdb/xVRrtCqUc
+	NlrjzXb+i
+X-Gm-Gg: AYBFou1+hdB5UFxNiPNymPuU4NAKPe6Oj4HVsdSfVfB7Yse2eiiMFlkPU0Ufs7tim2T
+	/Wzb3pNpBknzk2kb/YgWHnxgw773TldAmaWdp234ffSdO/O85gt7GBSfJ+p9Llr5nGsf9zUteqy
+	7yzw5oBlMJbTW/q9FaAA/zImg17buKJtPhGmaXPo1ms5zXFBwg4J/57D4rfbkCADBHkZJluB43z
+	kZ2M/h48HWtzguC9RWNIVIsgJ9TmHlpBXNKt6wloPXygjUY17tS80oLIu9AJmjVvMJ74qjIcSOi
+	ykO98l/di4LZp9OsfVYaF/i6XwdcQ9EWqd22X6tfWyHRRQ7boQbb9LGhad0wyGAcnNShwbFDKq8
+	nqrw57B7D2L8G8VHAaDAwDVcRh3xgBc3BHOwR+A3yNSX2NUtPbp7OJo8oLQiaJtRum2roU/4MAp
+	7yxpOLT1Ybebt/ku5q4RAPekzRI/nk1+ByAjg+J5g4gUUUX7Hprk1jq0DRpREb504JN4zaR9yxj
+	p6DQHw8o1xjbw64UR2d1WfJaSyP2nZG9eV8g7in0cxPsvs4ajcTJGKxgkYZq/Bp7v14QBLvBQ2M
+	f/DJeAPgEaVSO/80plzBjTA4LQIgIx/sD5TCKEqUnkDvShyS7mM/aUdGyHErveOnk0CD9Ps7bsb
+	3wBOrQ2m+4bNz+v81USKmbyJhcIOrFzR9ux1vulY=
+X-Received: by 2002:a05:701b:290e:b0:152:3812:496a with SMTP id a92af1059eb24-1b39ff278bcmr407982c88.43.1794104426444;
+        Sat, 07 Nov 2026 18:20:26 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b37314626dsm3027961c88.1.2026.11.07.18.20.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 07 Nov 2026 18:20:26 -0800 (PST)
+From: Jongwon Lee <ai@linux.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>
+Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] cxl/edac: Fix event record lookups for memory repair
+Date: Sun, 08 Nov 2026 11:20:22 +0900
+Message-ID: <20261108022022.3352-1-ai@linux.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -51,95 +86,119 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/memory_hotplug: don't offline a hwpoisoned page still
- in the page cache
-To: Mani Tofigh <mt4022@columbia.edu>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>,
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- tz2294@columbia.edu, stable@vger.kernel.org
-References: <20261101-memhp-hwpoison-pagecache-v1-1-ed8785ca44eb@columbia.edu>
- <1b6a6d13-8a01-414b-9bbe-cd194af1f539@kernel.org>
- <a002901b-715a-4adc-bdcb-7a6fcda67711@columbia.edu>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <a002901b-715a-4adc-bdcb-7a6fcda67711@columbia.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 11/3/26 20:59, Mani Tofigh wrote:
-> On 11/2/26 1:56 AM, David Hildenbrand (Arm) wrote:
->>
->> What if we still have the page pinned somehow? (vmscplice etc).
->>
->> Wouldn't it be better to make sure that poisoning code holds exactly one
->> reference (whoever set hwpoison) and check here that the refcount is 1 ?
->>
->> Pagecache references would turn it > 1.
-> 
-> 
-> Yes right, a pin isn't covered (neither before nor with this patch).
-> 
-> I don't think refcount == 1 can replace the mapping check though. In the
-> race from the changelog memory_failure() has set PG_hwpoison but is 
-> still waiting in get_hwpoison_page(), so it doesn't hold its reference 
-> yet, and a clean page-cache folio then has just the one reference from 
-> the page cache. memory_failure() also doesn't take a reference on the 
-> kernel pages it ignores, and a poisoned page that gets freed later sits 
-> at 0.
+This series fixes how the memory repair path looks up cached event
+records.
 
-So the right fix is to fix that then.
+Patch 1 fixes a use-after-free between the repair path and the event
+path. Sashiko's review of v2 found that the repair path reads cached
+DRAM event records without any lock that stops the event path from
+freeing them [1]. This race was already there in cxl_find_rec_dram()
+and cxl_mem_perform_sparing(). Patch 1 does the DRAM lookup under the
+xarray lock, and copies the record out for the sparing path.
 
-We'd need to sync memory_failure() with memory offlining, correct?
+Patch 2 makes both lookups skip records that the device marked
+NOT_REPAIRABLE. Since the General Media lookup now reads the record, it
+also takes the xarray lock.
 
+Patch 3 is the DPA flag masking fix from the earlier versions. It has to
+come after patch 2. With the masked key, the DPA from the trace event
+matches a NOT_REPAIRABLE record, so masking alone would let such a
+record be repaired.
+
+I used xa_lock() for the race. kfree_rcu() would need a wrapper struct
+with an rcu_head, since the cached records are copies of the event
+structures from the spec. The lookups only compare a few fields, so the
+lock is held for a short time. Taking device_lock() in the repair path,
+like the event path does, looked like it could deadlock with unbind.
+Unbind removes the EDAC sysfs files while holding device_lock().
+
+Changes in v5:
+- New patch 2: the NOT_REPAIRABLE check, split out of v4 patch 2 and
+  placed before the masking patch (Li Ming)
+- Patch 3: rename cxl_rec_key() to cxl_rec_dpa() (Li Ming)
+- Patch 1: drop the found variable in cxl_find_rec_dram() (Li Ming).
+  It now returns rec. I said rec != NULL in my reply, but checkpatch
+  --strict warns about that.
+- No message is printed when a NOT_REPAIRABLE record is skipped. The
+  trace events already show dpa_flags='NOT_REPAIRABLE' for it. I can
+  add a dev_dbg() there if that is preferred.
+- Richard's Reviewed-by on v4 2/2 is not carried over to patches 2 and
+  3, since that patch was split.
+- Rebased on cxl/next (e44dc3a303), no conflicts.
+
+Changes in v4:
+- Patch 1: copy the whole struct cxl_event_dram out instead of only
+  validity_flags (Richard Cheng)
+- Patch 2: make cxl_rec_key() and cxl_rec_not_repairable() static
+  inline (Richard Cheng)
+- Cover letter: describe patch 1 first (Richard Cheng)
+
+Changes in v3:
+- New patch 1 for the record lifetime race (Sashiko)
+- Patch 2: General Media lookup under the xarray lock, returns bool
+
+Changes in v2:
+- Moved the Claude Code note below the --- (Dave Jiang)
+
+v4: https://lore.kernel.org/r/20261102123233.74598-1-ai@linux.com
+v3: https://lore.kernel.org/r/20261101013418.87326-1-ai@linux.com
+v2: https://lore.kernel.org/r/20261031161121.15948-1-ai@linux.com
+v1: https://lore.kernel.org/r/20261030072721.31970-1-ai@linux.com
+
+Testing was done in QEMU master (b574eaf) with a CXL type 3 device and
+a committed region, on top of d89e1d186e. Debug options: KASAN,
+PROVE_LOCKING, PROVE_RAW_LOCK_NESTING, PROVE_RCU, DEBUG_ATOMIC_SLEEP,
+DEBUG_LIST, UBSAN_BOUNDS, KMEMLEAK, hung task and soft lockup detection,
+booted with preempt=full. The unpatched results are from the v4 runs on
+the same base. Not tested on real CXL hardware.
+
+- Repair table: DRAM events at 0x1001, 0x2000 and 0x3002 and General
+  Media events at 0x5001 and 0x6002, then a repair request on all five
+  mem_repair devices for eight DPAs. With the series, 0x1000 and 0x2000
+  succeed for all five repair types, and 0x5000 succeeds for PPR only.
+  0x3000 and 0x6000 (NOT_REPAIRABLE set), 0x7000 (no record), 0x1001
+  and 0x3002 fail with -EINVAL, same as v4. With only patches 1 and 2,
+  0x3002 is rejected, 0x1001 is accepted, and 0x1000 and the PPR
+  request at 0x5000 still fail. Unpatched, 0x1000 and the PPR request
+  at 0x5000 fail, and 0x1001 and 0x3002 are accepted.
+- Race test with a test-only mdelay(20): the host injects DRAM and
+  General Media events back to back. Some DPAs repeat, so xa_store()
+  replaces and frees records, and there are enough distinct DPAs to hit
+  the overflow path. Four guest loops request repairs on all five
+  devices at the same time. Unpatched, with the delay after xa_load()
+  and after the lookup in the sparing path, KASAN reported a
+  slab-use-after-free in cxl_do_mem_sparing() after 120 s. With v5 and
+  the delay after both xa_load() calls inside the locked section and
+  after the lookup in the sparing path: 600 s, 10650 repair requests,
+  241298 events, no report.
+- The same race test without the delay: v5 ran for 1800 s, 67830
+  repair requests and 988817 events, no report.
+- Unbind test: two repair loops and the same event injection for 600 s,
+  while another loop unbinds cxl_mem, waits 2 s, binds it again and
+  waits 3 s. v5: 82 unbind/bind cycles, 8838 repair requests, no
+  report, and mem0 was still bound at the end.
+- kmemleak scan at the end of each run: no unreferenced objects.
+- Builds: the x86_64 test kernel with gcc. For drivers/cxl/core/edac.o:
+  W=1 after each patch, sparse, clang W=1 for x86_64 and arm64, and
+  CONFIG_CXL_EDAC_MEM_REPAIR=n, with no new warnings. The series
+  applies to cxl/next (e44dc3a303) and edac.o builds there after each
+  patch with W=1 and no new warnings.
+
+This series was developed with Claude Code.
+
+[1] https://lore.kernel.org/r/sashiko-outbox-192042@kernel.org
+
+Jongwon Lee (3):
+  cxl/edac: Read cached DRAM event records under the xarray lock
+  cxl/edac: Skip event records marked NOT_REPAIRABLE
+  cxl/edac: Mask DPA flags in the event record cache key
+
+ drivers/cxl/core/edac.c | 113 ++++++++++++++++++++++++++--------------
+ 1 file changed, 74 insertions(+), 39 deletions(-)
+
+
+base-commit: e44dc3a3037346354ac0dcd70415a7e049fab059
 -- 
-Cheers,
+2.55.0
 
-David
