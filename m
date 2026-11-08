@@ -1,77 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.222.62
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.222.66
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794175696;
-	b=JwvEkQ3VK+pBQ/h22fKDvGBTeWNX9LdmwvPefb5bTRcbrQ8UbPY0o5kQCCTRGD5OBbK2
-	 63cgCUZCI5DRlAM3FxglNBRJ1BFzB0NbCixpXF8TidxZEsZoZBpRq5d0viZIR5e3zhpkI
-	 3A2H+ZYyVpXMpi2vFJgPWsMi8Nu3oytCumpl6xhQmHtF4S6WQdtmU2D2Kyg9pSYMy39uO
-	 3hON7nf5dom2peapk0CWzKSSoh1tdWyETs5oTnVivm2NJORGt5oZrJV5m6eFgPaOn6MIe
-	 p1+LJD/aKH2K2DtA4QB/HfZX7QU8k6F7xn458cR+o6sKwj19pF2/iLioIileVIpCG2g==
+	t=1794175697;
+	b=qTR73i5I9ih4WGk+kEsMpeVQCXMTcsGKMNRBKZC3Vkijhy/HvK2xxvDyZJVXYBlahTNa
+	 35ZFNh4hE6rqBqkLPugWRiTrstNjGwfUATiyckW3Piv0Lwwk9ujbf8U6AVYAT5uIzo6d6
+	 9X91i1Yft9aer0ZNUGSdqnlifbbj1OGm3jiO21P/Tn6ivcNR6nyn4ar3tH6W9q7i8AoPa
+	 vDhOWouUouEXTcMjJSqANprrO+FvX7colikUi4CMx/WonfjTeZEht3wkXB/A1Ep+A9Kzj
+	 z+T82WfFHp88Uhjz+zvhUhch7z0UfLMR+rdPuW2HiGPr6kCfEfep2VDuApw0TvaY2TQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794175696;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794175697;
 	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
-	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Wiry-Macabre:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Fearful-Zesty:
 	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
 	 DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=heKkH6aJCRh3otutKvgUI0JyMcE6VtihxCEtvJRGgTI=;
-	b=tqndMN/RaltmY7CELJvFrL638ZepsjFc3GQU1Nx3OobWJA9j2Yp+tVtIXRudpESfoqS8
-	 SgAXqcCgJY4d7IlPSotgyI8T2cWOKzwTBwvEjjZQ3S4afrkZGj0apeWuQo4mY9tlTNRQS
-	 iRyta6y1FNJE5AOnoRimJRAQCtX9eSAc2rct/RoDUr5Ku7/a/k5tbqEyIUq8Im6hdxj5P
-	 I2jyQLWxf5kaEO5AZoJULbjolEbV69myUiu38nVN2YkwFzxakO05NO4VUm4AxY2T+zI63
-	 Xz0ql2HiXoJNNwCdb13z7X4YpYqHeaNAUHkQ5S6alxagFE8unjNFK4TkYTucb2cEGHQ==
+	bh=tgFWH4UIVWQMeLytVnhZieog+ysNgZ0ujg4Qitqn7NI=;
+	b=vgB7+qzeUvH+XqhE9weqH7O500XBIBVBLayH5h0AC3fRNfJ25FO71YYMo260HaCcMHMe
+	 kq/M3kB0WSOW05fedZjo4+5QzfjturqvtZhEPzVvupIO4+8euukBUiRcjIBiL1PqRnD+4
+	 VA8QX/Khhgt7G1Lw+j0dOe3zFxz50o/2nWH4YhXQ4yiPN5apIvYrDpojFDRaHIlkJHnLu
+	 cgnQJxbKGc2di/5NFh6r6PVCsoKglUdYvuEH5rXWGO+DYH2aS4Yb8dw+Ps4lRIoGMQ/j0
+	 +rgRp1543tx5v8sUa081TWUoEX89KWQNBKpYgWh4RpXOz1P566kzCtWjP4FpBo35y4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=stgolabs.net;
 	spf=fail smtp.mailfrom=stgolabs.net;
-	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=OlCZJkIe;
-	arc=none smtp.remote-ip=23.83.222.62
-Received: from fossa.ash.relay.mailchannels.net (fossa.ash.relay.mailchannels.net [23.83.222.62])
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=fyCNTQWB;
+	arc=none smtp.remote-ip=23.83.222.66
+Received: from gecko.ash.relay.mailchannels.net (gecko.ash.relay.mailchannels.net [23.83.222.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9A1606A31C
-	for <linux-cxl@vger.kernel.org>; Sun,  8 Nov 2026 22:08:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DB9A1606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04432606A31C
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Nov 2026 22:08:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04432606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=OlCZJkIe
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=fyCNTQWB
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 5E5AD401FA0;
-	Sun, 08 Nov 2026 22:08:09 +0000 (UTC)
-Received: from pdx1-sub0-mail-a246.dreamhost.com (100-99-178-124.trex-nlb.outbound.svc.cluster.local [100.99.178.124])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8AB3E64083F;
+	Sun, 08 Nov 2026 22:08:10 +0000 (UTC)
+Received: from pdx1-sub0-mail-a246.dreamhost.com (100-99-186-37.trex-nlb.outbound.svc.cluster.local [100.99.186.37])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 1FB33402353;
-	Sun, 08 Nov 2026 22:08:09 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 601716402C0;
+	Sun, 08 Nov 2026 22:08:10 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Wiry-Macabre: 30d1e65b0d297bd9_1794175689223_3159869805
-X-MC-Loop-Signature: 1794175689223:1891338844
-X-MC-Ingress-Time: 1794175689223
+X-Fearful-Zesty: 0af4d3594b2c82d2_1794175690490_3002158979
+X-MC-Loop-Signature: 1794175690490:4219364879
+X-MC-Ingress-Time: 1794175690490
 Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.178.124 (trex/8.0.2);
-	Sun, 08 Nov 2026 22:08:09 +0000
+	by 100.99.186.37 (trex/8.0.2);
+	Sun, 08 Nov 2026 22:08:10 +0000
 Received: from offworld.tailf5af7a.ts.net (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4jN6Vc2QCkz1056;
-	Sun,  8 Nov 2026 14:08:08 -0800 (PST)
+	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4jN6Vd5LC7z1056;
+	Sun,  8 Nov 2026 14:08:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1794175688;
-	bh=heKkH6aJCRh3otutKvgUI0JyMcE6VtihxCEtvJRGgTI=;
+	s=dreamhost; t=1794175690;
+	bh=tgFWH4UIVWQMeLytVnhZieog+ysNgZ0ujg4Qitqn7NI=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=OlCZJkIekyg+yf8UtPuj8ZUiEDsNRcozXMysEfGinhGeTQmhcqBYIIzaw5Yjod7d0
-	 7rFpaUv9aNlh8A5j5+tZwUUNyG+RiF/35Mfjc8vn5Vb5ytMDpsF6KJOSSfJ+XQx/vy
-	 EtbEesoPBkGMGa09dAVYmfR2JpGsLzHNXp51R4UJYoTZkBgzB4Q6REPSNHk5OhH33/
-	 kr53dSvHMWaEpn5q+6n/B55+mp7PpClP8PAqW5z6oJNOwAe9O1e5XCj2xIJjfLeI+s
-	 jN3Oe+Nnh/CZll7EzCHLIxDuPNYD0pOriGDxkygK+z3urVf+VscUOr6z/z3LpJrzXL
-	 jolxDt9iX1ReQ==
+	b=fyCNTQWBP3EoRJtElUWhpd+CgnOvnqaefeS+DqwOp9s3S1Wp7ZkuzBUluZ2uCZXr1
+	 h8vcdem6xbYOkX73DxjC0uzk967iwe5p+LhccWeFwiyGua+W0b9RNYPHau1otXweSe
+	 4O7jB6yL7w327HvHByLweaKYx0njsQtNhSQvaKSH4ZMG07Q5cznlQ5SiM29hHBDDnw
+	 vtCweRKLgOo/i6AiPQFGa92nVg+RpYdliGJTkB2XWywUZZrafRYdxJJosajLHANgTx
+	 Ls3sO+31x8HjGivg6cEffVLKhG0TD96o3KUeP1WRufrIMT8t21U/DbUpCmsJ/xAaHt
+	 ja20Xjzz51T1g==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: dave.jiang@intel.com
 Cc: jic23@kernel.org,
@@ -82,9 +82,9 @@ Cc: jic23@kernel.org,
 	linux-cxl@vger.kernel.org,
 	dave@stgolabs.net,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v11 03/10] cxl/hdm: Add BI coherency support for endpoint decoders
-Date: Sun,  8 Nov 2026 14:07:32 -0800
-Message-Id: <ffffd67bc63fe0b6fcd60f9d64d8e5467a5eff1c.1794172701.git.dave@stgolabs.net>
+Subject: [PATCH v11 05/10] cxl/hdm: Rename decoder coherency flags
+Date: Sun,  8 Nov 2026 14:07:34 -0800
+Message-Id: <454f4d2ae6dbb731c405763303316091b5db0138.1794172701.git.dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <cover.1794172701.git.dave@stgolabs.net>
 References: <cover.1794172701.git.dave@stgolabs.net>
@@ -99,135 +99,104 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cache the HDM decoder's Supported Coherency Models on struct cxl_hdm.
-A later patch has region attach consult it to verify the HDM supports
-the region's coherency type.
+Align with the ACPI CXL Window restriction naming and convert
+CXL_DECODER_F_TYPE2/F_TYPE3 to F_DEVMEM/F_HOSTONLY. Type2 and
+Type3 coherency models were named prior to Back-Invalidate.
 
-For uncommitted endpoint decoders, init_hdm_decoder() defaults
-target_type from supported_coherency: Type 3 devices default to
-HDM-DB when the HDM is device-coherent-only, HDM-H otherwise.
-
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/core/core.h |  1 +
- drivers/cxl/core/hdm.c  | 27 ++++++++++++++++-----------
- drivers/cxl/cxl.h       |  7 ++++++-
- drivers/cxl/cxlmem.h    |  2 ++
- 4 files changed, 25 insertions(+), 12 deletions(-)
+ drivers/cxl/acpi.c        |  4 ++--
+ drivers/cxl/core/port.c   | 12 ++++++------
+ drivers/cxl/core/region.c |  2 +-
+ drivers/cxl/cxl.h         |  4 ++--
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 72be96df57f5..041c86c43d19 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -218,6 +218,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 			struct cxl_endpoint_dvsec_info *info);
- bool cxl_hdm_bi_committed(struct cxl_port *endpoint);
- int cxl_port_get_possible_dports(struct cxl_port *port);
-+enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled);
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 3f43c957ea58..e5533af2e45b 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -143,9 +143,9 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
+ 	unsigned long flags = CXL_DECODER_F_ENABLE;
  
- #ifdef CONFIG_CXL_FEATURES
- struct cxl_feat_entry *
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index f8fe1b12de3d..0fe86a3e187c 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -90,6 +90,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
- 		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
- 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
- 		cxlhdm->iw_cap_mask |= BIT(16);
-+	cxlhdm->supported_coherency =
-+		FIELD_GET(CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK, hdm_cap);
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)
+-		flags |= CXL_DECODER_F_TYPE2;
++		flags |= CXL_DECODER_F_DEVMEM;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM)
+-		flags |= CXL_DECODER_F_TYPE3;
++		flags |= CXL_DECODER_F_HOSTONLY;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
+ 		flags |= CXL_DECODER_F_RAM;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM)
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 6f12c1d21c92..fffcb9954dde 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -129,8 +129,8 @@ static DEVICE_ATTR_RO(name)
+ 
+ CXL_DECODER_FLAG_ATTR(cap_pmem, CXL_DECODER_F_PMEM);
+ CXL_DECODER_FLAG_ATTR(cap_ram, CXL_DECODER_F_RAM);
+-CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_TYPE2);
+-CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_TYPE3);
++CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_DEVMEM);
++CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_HOSTONLY);
+ CXL_DECODER_FLAG_ATTR(locked, CXL_DECODER_F_LOCK);
+ CXL_DECODER_FLAG_ATTR(cap_back_invalidate, CXL_DECODER_F_BI);
+ 
+@@ -374,8 +374,8 @@ static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
+ 	unsigned long flags = cxlrd->cxlsd.cxld.flags;
+ 	unsigned long hdm_h, hdm_db;
+ 
+-	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
+-	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
++	hdm_h = CXL_DECODER_F_HOSTONLY | CXL_DECODER_F_PMEM;
++	hdm_db = CXL_DECODER_F_DEVMEM | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
+ 
+ 	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
  }
+@@ -385,8 +385,8 @@ static bool can_create_ram(struct cxl_root_decoder *cxlrd)
+ 	unsigned long flags = cxlrd->cxlsd.cxld.flags;
+ 	unsigned long hdm_h, hdm_db;
  
- static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-@@ -1054,6 +1056,19 @@ static int cxl_setup_hdm_decoder_from_dvsec(
- 	return 0;
+-	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
+-	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
++	hdm_h = CXL_DECODER_F_HOSTONLY | CXL_DECODER_F_RAM;
++	hdm_db = CXL_DECODER_F_DEVMEM | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
+ 
+ 	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
  }
- 
-+enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled)
-+{
-+	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-+
-+	if (cxlds->type == CXL_DEVTYPE_CLASSMEM &&
-+	    cxlhdm->supported_coherency != CXL_HDM_DECODER_COHERENCY_DEV)
-+		return CXL_DECODER_HOSTONLYMEM;
-+
-+	return CXL_DECODER_DEVMEM;
-+}
-+
- static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			    void __iomem *hdm, int which,
- 			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
-@@ -1117,17 +1132,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		port->commit_end = cxld->id;
- 	} else {
- 		if (cxled) {
--			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--			struct cxl_dev_state *cxlds = cxlmd->cxlds;
--
--			/*
--			 * Default by devtype until a device arrives that needs
--			 * more precision.
--			 */
--			if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
--				cxld->target_type = CXL_DECODER_HOSTONLYMEM;
--			else
--				cxld->target_type = CXL_DECODER_DEVMEM;
-+			cxld->target_type = cxled_default_type(cxled);
- 		} else {
- 			/* To be overridden by region type at commit time */
- 			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 9a3d36a6dd09..d7f605beaa49 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3904,7 +3904,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 	 * restrictions can.
+ 	 */
+ 	need = cxled->cxld.target_type == CXL_DECODER_DEVMEM ?
+-	       CXL_DECODER_F_TYPE2 : CXL_DECODER_F_TYPE3;
++	       CXL_DECODER_F_DEVMEM : CXL_DECODER_F_HOSTONLY;
+ 	if (!(cxlrd->cxlsd.cxld.flags & need)) {
+ 		dev_dbg(&cxlrd->cxlsd.cxld.dev,
+ 			"%s:%s range type not permitted by the window\n",
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f22478c340bd..176c359bd68c 100644
+index b34f25dee019..7e2112d7ca96 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -53,7 +53,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
- #define CXL_BI_RT_CAPABILITY_LENGTH 0xC
- #define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
- 
--/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
-+/* HDM decoders CXL 4.0 8.2.4.20 CXL HDM Decoder Capability Structure */
- #define CXL_HDM_DECODER_CAP_OFFSET 0x0
- #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
- #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-@@ -61,6 +61,11 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
- #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
- #define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
- #define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
-+#define   CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK GENMASK(22, 21)
-+#define     CXL_HDM_DECODER_COHERENCY_UNKNOWN 0x0
-+#define     CXL_HDM_DECODER_COHERENCY_DEV 0x1
-+#define     CXL_HDM_DECODER_COHERENCY_HOST 0x2
-+#define     CXL_HDM_DECODER_COHERENCY_BOTH 0x3
- #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
- #define   CXL_HDM_DECODER_ENABLE BIT(1)
- #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 35268d1c387c..348e63aef804 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -933,6 +933,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
-  * @target_count: for switch decoders, max downstream port targets
-  * @interleave_mask: interleave granularity capability, see check_interleave_cap()
-  * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
-+ * @supported_coherency: HDM Decoder Capability supported coherency models
-  * @port: mapped cxl_port, see devm_cxl_setup_hdm()
+@@ -305,8 +305,8 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
   */
- struct cxl_hdm {
-@@ -941,6 +942,7 @@ struct cxl_hdm {
- 	unsigned int target_count;
- 	unsigned int interleave_mask;
- 	unsigned long iw_cap_mask;
-+	unsigned int supported_coherency;
- 	struct cxl_port *port;
- };
- 
+ #define CXL_DECODER_F_RAM   BIT(0)
+ #define CXL_DECODER_F_PMEM  BIT(1)
+-#define CXL_DECODER_F_TYPE2 BIT(2)
+-#define CXL_DECODER_F_TYPE3 BIT(3)
++#define CXL_DECODER_F_DEVMEM BIT(2)
++#define CXL_DECODER_F_HOSTONLY BIT(3)
+ #define CXL_DECODER_F_LOCK  BIT(4)
+ #define CXL_DECODER_F_ENABLE    BIT(5)
+ #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
 -- 
 2.39.5
 
