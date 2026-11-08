@@ -1,85 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794104441;
-	b=gy+Giem7ksZwHb49FcPRmHsHmHX79rpWw0IYbe+Y8rN5ePZJafojOpEPkGR2mT5LShkc
-	 Xt7oNUTPn1OQv2yrPiTlV4C9NlZAYPaqNJ3KiSVa5O0yNSu335aQgjGrIbPUI8EYx8Hyh
-	 ZVky6mX6VOWwE0BQDfaCcH2H/Xkq7ZFpJYiA0UjMK0dXyYPzUqug+LX2HYur4ho+/7U66
-	 9EtmAu0y88ubr+s1hY8vYp9b/jpkwTOPDl2mYTKqLdFQa0/Z/756K7K6yuI9S8E423Qft
-	 5tSopv32mX1EaGwZOH8q/Y0suiqTMEdFLHOeJYv9aXPJhIRyVkqcEVvxVoqXLidi/tg==
+	t=1794106856;
+	b=BGdGri0AJaMJ6Cuarzy25+DFnlUAOgpWBTJbSInaaYR5p+BZfc68iBpiTUBH5fvuyfBj
+	 wTTf3Cq8MBpA6c4YIVldN6iLLzdQ2xVrenvllt+mWLEeTxWpEARx/q3B0Exfv9V+Tm7DF
+	 J3h4L3ArY2LkBLiZXCvZB1IMGXUlUFnc1svcBcVZ5qwoafSXn5Doq9IHzXastcaqtr9Z3
+	 WIHMQRbhAgIhWw8oTNPTAOpRQERdvt8wRZCkukzQh/Fxw1LLqVqXTaoi5f3fBqXUteh0m
+	 EK635+ytjNXI1Hg7WoDT2LmZNtncL7TlX5Zp4VtL/2/R9NqP0otaTnNi/4WZV8UK3fQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794104441;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=SrIhumD197mx4pl6yQkiB2jctqSFaHU4JKWvTq2PlBQ=;
-	b=C/ZZ/Tc2vc8Iu9tevF2nP6gdVLb/ICDu2xJSS5oMDj4zLnqmkAu4SRzfhw9R2sNpf0wb
-	 e+mrvBiOJ7UmvE/cW3hvwhzsRBFLRy8PnbPrMx4K6deXF13i/wvTRFbyYrdOtux4sOsaW
-	 xKwfDcfi2PspXwPF+sGW8BhQ0nZwTBTV1MK4+GWMx1+0HHExVH4NITRlQFq7e1Cu81HVj
-	 YM7SS11i+d/o9BzxHhY2xkrNFGdSJXVhVokhU1a/Oz5QTvjKIx7jvr+MBCwSp47zmSRlo
-	 2CiQ+DIHgqpKgubzXeUTRvxtP5sSDpft23JvhXu64hiyxArBinPi8Tc8MvIp+VrJZzA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794106856;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:User-Agent;
+	bh=oV9FUG6VESiIfJwch77l0Tjfsp36eT+2bRCqqkXn6FY=;
+	b=4FA0EutmPTUFQ1XSgujLKOh2aaTd38ixmUNj9LB6JBKPjbIjUAgCOKzkuAD0rKHayKWp
+	 d72HqNc30+6X1zw+es37Nds03heBOcmjGBDdndcoV93+1QpMmupADLTOGvfODec04zUqM
+	 3XoPqUvMRxmz7ivK138Sy8Nog5NvuHX3piWfbcnTBwpi7XgvU3xlHXvDj4u5dw9GpUdPf
+	 fr2zz/HlYlsH1fEi1CLZ8rFNYod7npeU2vjP0Fba9bMQUwoSPprofjPgSxhkOSXwTm4gG
+	 ItZyykfRVRUXQAQ61us1RkkhCzl1SazOmUgUnYMzY9KsYGkXmFsdqk1pscjtKuoo5+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=fail header.from=linux.com;
-	spf=pass smtp.mailfrom=korea.io;
-	arc=none smtp.remote-ip=74.125.82.43
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	dmarc=pass header.from=chrisdown.name;
+	spf=pass smtp.mailfrom=chrisdown.name;
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=la42Wdo6;
+	arc=none smtp.remote-ip=209.85.215.175
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732BA606A31C
-	for <linux-cxl@vger.kernel.org>; Sun,  8 Nov 2026 02:20:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 732BA606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-14394530ec6so123747c88.1
-        for <linux-cxl@vger.kernel.org>; Sat, 07 Nov 2026 18:20:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794104441; x=1794709241;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50A606A31D
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Nov 2026 03:00:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD50A606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=la42Wdo6
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cd62c570b5dso67141a12.2
+        for <linux-cxl@vger.kernel.org>; Sat, 07 Nov 2026 19:00:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google; t=1794106855; x=1794711655; darn=vger.kernel.org;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=SrIhumD197mx4pl6yQkiB2jctqSFaHU4JKWvTq2PlBQ=;
-        b=q/XNwjFJ6kMKF3ifEBa8Bmbp1fbFFYdxs+tVbP3DbuVt91SysLgLStxcbmL8nrNCnx
-         yiEfAbsDfUyJLpAdI82lTuAT28yHFb5m+1FM0aQlMgwb0DO2IoRU2ATo6tg5hzWk7zs8
-         3n6KE4iap9SBe8/hbE/FpQ/R9Fm0e4KkuoSz7o/5X1zE0VDvbzbkEQPkfX5M2O1UnRhF
-         bt16gjXFDlhvjUwld08wVjPwP9QGMr+tS6gX/pjPXygO0rgcmggvYPNT48sagQVLE4Dm
-         6Ir0OBPBltSZny3XYhtayk/KVqFqdoET7qEj8+1UkYerT4S+5iUc4KpZzp3cOkJYbmve
-         QKtA==
-X-Forwarded-Encrypted: i=1; AKwUvBxMC/ryAbAFBiuebA/ZBK3MwSnFop/8Pz5katvmuDhUf+0cgp1HAQPm5CZsdB5OiKdBczSW2zuQqx8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+FhzmjmOTISrKvCUqMWJfvZScLUCG6p/tXlzJPwCPaqcKCwmOs
-	vktu2VeJ4W8fjIqhrgIfRpb2nGMDILiu7NKwc8VXC4ZmVqH4ZcR/J8IMofuTygn1S1/Z
-X-Gm-Gg: AYBFou0i+ceqfvAWv6TKJZfIUfyoSWu6y1P1ivYsBv4SxsvejFFJCznvushzX+wXAP6
-	jsPhbd7jjTG4D3phfH4rXXQJ6wg5ipotgoH9keUkvXgxO8O5TUbzO2vF+naVxXvD4vJ3gzSGt2M
-	72nwj0iwWz51OiktaFgSbXGRvFdwAtJQuLuGT3/N+OdZsqe8dumTgOmMsu250ScylE+aTc6Nrrg
-	7Ot6q9YjybDKq+27x8sxAJFL8cl9ydHoUzyIx5IVHrCNIAStkSsNEQYeiX9YuiRbyoWaZ+dhelQ
-	s6nRAdTabxyH+WiHIgO6pOZrdwKAO0o0ilGx4nARmi4kanKlOMuY/ZeDE/rQEJXioqryneGkyGF
-	XqF7wwLgWo/Sm5rA0RXWzYnRKJegkuXBC97IjnDrfLkBU6tRZuJg4lNfLG298krVFCssvIGgw7r
-	X3eCKs0KltdWMedy/XXU+m+H4xYuaZWDdUETnlRmSnW8dHBGeorfZ1ZK+ngoI0IGk9Cd9A3cePu
-	ZhHUGARYQJMo8bOcg/A1TSr1xGVswl8q8na8Tjo3DKDMA5HmJvObvj5jK0pPQhKfRgE2XQllbjB
-	TBQ26oMsjYWJ20/3OIj4qOmcfs1ksiutUNJEu1CyFgUyIxEy9BkvTsrzPA/DZzeVeKun3GDg/Zy
-	qAuJ9/1b2Yz+8By/wFqcZHutRHc4Trge6cHqIXPE=
-X-Received: by 2002:a05:7022:1586:b0:1a8:b566:80c2 with SMTP id a92af1059eb24-1b39fed11a6mr498579c88.17.1794104440609;
-        Sat, 07 Nov 2026 18:20:40 -0800 (PST)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([118.217.70.161])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b37314626dsm3027961c88.1.2026.11.07.18.20.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 07 Nov 2026 18:20:40 -0800 (PST)
-From: Jongwon Lee <ai@linux.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>
-Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] cxl/edac: Mask DPA flags in the event record cache key
-Date: Sun, 08 Nov 2026 11:20:25 +0900
-Message-ID: <20261108022022.3352-4-ai@linux.com>
-In-Reply-To: <20261108022022.3352-1-ai@linux.com>
-References: <20261108022022.3352-1-ai@linux.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        bh=oV9FUG6VESiIfJwch77l0Tjfsp36eT+2bRCqqkXn6FY=;
+        b=la42Wdo60aEv9noJX4RYkrzhWR92noa/K6+aiBlTYklVvFHpGLAE6uS7o1dbj6NJ4Z
+         I//CK2o0Gs3vv8DEuPf7hNJUJFwjW6tUwuoQsMT7j82RJ6dFarJjDfmkIKJFZ1ivOwrk
+         01luqCDLXt+SaupEkqGupxKY29BH2wXMYUkyU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794106855; x=1794711655;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oV9FUG6VESiIfJwch77l0Tjfsp36eT+2bRCqqkXn6FY=;
+        b=lVEa3OayST8vDZhmrDSqAzJv+9G26DQc3kQLx+eM0kmnDML0hLyz0h1k29YP6og7B9
+         3U5Lw7Y5FjJvmQshcphRmV1cqDkUEQCGaJW9bo6YQOoY+UycuzrvC6Y5KMIOMTAOsw+G
+         bbXcK0G8llp02yoCmgJVAeRIG6nSwO+3z6GZd7r8SYstYDxXj46cWhjWqUCFnqB/zPRI
+         J76vBNruWECYcdIKouVTgyJYvNK072h2AWDiEi9BFcbgPSUb5gQh0SGVKLcE4skvNHV9
+         w3oN2OwX2uze7TkvS8KRl2ZWBcBtc4tWym8MyQ/8xsyA7KqOVebfjNh5G6OwkJRRr9S8
+         79hQ==
+X-Forwarded-Encrypted: i=1; AL+hErF6hy8Rth540yzKQGFoM/HfX9Nlwdkd3T+Lp2KZKIMkQdNb6BDwD/5wEZughjlCEoh6q9A4yHg6ETQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+GecWJq96uTd9pGVgblJoC+8aCwLtMWnCpaZK8jjZTheppyths
+	tRsxRy0U95PorS0mWe9t5J1DOJ+cLpalPRsX+MvFpJkm66t5pYblvEGAK4yjAuUKm+w=
+X-Gm-Gg: AYBFou3YZhjoPQEF/oFxk8Ne7qh36J58vHX27DlcC5Wp26J1dwN1jW2AI3hoMj9P181
+	pRp5ECmnY8OjOTc86AZRJL/tem4Y1YJCukcWSCVftGEf/mCfRpaXR88KPxsPoxaS4SMNjOSZM9R
+	v1f4bKAZ3Mr/EvTfht1aiZ6eW3hB4HH2LsZB8hVVqArJ612wx2DhB5mmsWOn/HbGEQENAtr1YCv
+	lhhJa95RclDPtV0SFIc0R6+or40iuGq5TJm3j/OKFl+Req6pJsiJGRfe88wxK2rGKQ4dW6/figa
+	SEV40pGvrwTlg8fJEzPACcAPpw2PzPx7K8q6b47rxDE9Zm3kvq8Ai64Sdj+USHdKFjhBMh2eR8+
+	6lNLKbTI1LJpK0VrhlrDVAVAmBJ3vUnwC3sFGt2s/X7q98xjGNHigCUDWYEo2DpZnKMo3wccSM/
+	vOF0gjE4j4cupUsnlI3JJEsj+yUEDCSWY2KB8US+BiAbsFG6wWhl1SUuNOXAaXCjahuIIooLtVv
+	KsGBwtAB3RP/fIJlgpchqAx511fDZHEXCGZ4E40eLOr1Yv4FeLoC+AyPpXQN8hEHuUn6Xg6wcq8
+	aeakG+J0gbomQG4Hi+Lp1R0ijgPxexeNH5eLfIelizqXbSjIe2f+j6O/g8TBGJ52KR6JxFTktN+
+	WVkrbvBNQTumJypWBR8L472ZrNE+eJGxXVbodHgPKO8GFpEbMNJMeYR65zAtN1mglDU6p0QUQYP
+	rySLVCLBhW0Gu3tekQInXX10KdtEYkAYKig7DLWZ5GCMtNpmRyeHqG
+X-Received: by 2002:a17:90b:39c4:b0:3ab:e588:c29b with SMTP id 98e67ed59e1d1-3b12d0f9293mr422730a91.5.1794106854935;
+        Sat, 07 Nov 2026 19:00:54 -0800 (PST)
+Received: from localhost ([50.175.87.158])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b127891fa4sm1216393a91.4.2026.11.07.19.00.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2026 19:00:54 -0800 (PST)
+Date: Sat, 7 Nov 2026 19:00:52 -0800
+From: Chris Down <chris@chrisdown.name>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>, David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH] x86/mm: Tear down the direct map when memory hot add fails
+Message-ID: <au_l5MRyDbYfsUVe@chrisdown.name>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -89,67 +102,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-The low bits of the DPA field in General Media and DRAM event records
-are flags. Bit 0 is VOLATILE and bit 1 is NOT_REPAIRABLE. The trace
-events print the DPA with CXL_DPA_MASK applied, while
-cxl_store_rec_gen_media() and cxl_store_rec_dram() use the raw value as
-the xarray key.
+arch_add_memory() sets up the direct map before calling add_pages().
+If add_pages() fails, the range stays mapped and any page tables
+allocated for it are leaked. A later hot add can reuse the stale
+mapping.
 
-User space takes the DPA from the trace event and writes it to the
-mem_repair dpa attribute. If the record has any flag set, xa_load() does
-not find it and the repair fails with -EINVAL.
+Remove the direct mapping on failure.
 
-Use the masked DPA as the key. Records marked NOT_REPAIRABLE are still
-rejected, because the lookup skips them.
-
-Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-Signed-off-by: Jongwon Lee <ai@linux.com>
+Fixes: 45e0b78b0532 ("[PATCH] hot-add-mem x86_64: use CONFIG_MEMORY_HOTPLUG_RESERVE")
+Signed-off-by: Chris Down <chris@chrisdown.name>
 ---
- drivers/cxl/core/edac.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/x86/mm/init_64.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 42683b7c54..f627c73ff6 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -918,6 +918,16 @@ struct cxl_mem_repair_attrbs {
- 	enum cxl_mem_repair_type repair_type;
- };
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8b6d86fb5a42..846cb34b38dd 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -989,15 +989,23 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+ 	return ret;
+ }
  
-+/*
-+ * The low bits of the event record DPA are flags (VOLATILE, NOT_REPAIRABLE).
-+ * Records are looked up by the DPA user space writes back, which comes from
-+ * the trace event and has the flags masked off, so key them the same way.
-+ */
-+static inline unsigned long cxl_rec_dpa(const struct cxl_event_media_hdr *hdr)
-+{
-+	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_MASK;
-+}
++static void __meminit kernel_physical_mapping_remove(unsigned long start,
++						     unsigned long end);
 +
- static inline bool cxl_rec_not_repairable(const struct cxl_event_media_hdr *hdr)
+ int arch_add_memory(int nid, u64 start, u64 size,
+ 		    struct mhp_params *params)
  {
- 	return le64_to_cpu(hdr->phys_addr) & CXL_DPA_NOT_REPAIRABLE;
-@@ -1131,8 +1141,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 		return -ENOMEM;
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
++	int ret;
  
- 	old_rec = xa_store(&array_rec->rec_gen_media,
--			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
--			   GFP_KERNEL);
-+			   cxl_rec_dpa(&rec->media_hdr), rec, GFP_KERNEL);
- 	if (xa_is_err(old_rec)) {
- 		kfree(rec);
- 		return xa_err(old_rec);
-@@ -1161,8 +1170,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 		return -ENOMEM;
+ 	init_memory_mapping(start, start + size, params->pgprot);
  
- 	old_rec = xa_store(&array_rec->rec_dram,
--			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
--			   GFP_KERNEL);
-+			   cxl_rec_dpa(&rec->media_hdr), rec, GFP_KERNEL);
- 	if (xa_is_err(old_rec)) {
- 		kfree(rec);
- 		return xa_err(old_rec);
--- 
-2.55.0
+-	return add_pages(nid, start_pfn, nr_pages, params);
++	ret = add_pages(nid, start_pfn, nr_pages, params);
++	if (ret)
++		kernel_physical_mapping_remove(start, start + size);
++
++	return ret;
+ }
+ 
+ static void __meminit free_pagetable(struct page *page)
 
+base-commit: fa4ad798f6f681031775266044ba1b0cf3c670bd
