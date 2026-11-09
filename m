@@ -1,47 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794228493;
-	b=hQxmBY/U+Jnt0TKX7UAPolaCbfnObWoYNY+hlSxxC9ae5ssT/QaWg1MUQ2gVugiie/gz
-	 yjudggUSOVz9ibirtHGuPkgGdirwpcCSYz5oXrhnNd9JRb6paRCE+WhwNoCxBONxckhwn
-	 NoTi9T9xdQYh5WCg1lVYhnAc3VNO9dqcXd4/tuDk//DJ7BO56qhIX7dmw0Q/hAyFznH0z
-	 YH5Rjr3jcgFIi4Fm0QD5cZtvvDZHNOLAZ5Y5i8j2LcMDsxwqzx9FuuafRI2hfHvg99X1f
-	 +Ay04yewAMO7As0g9Uux6k/TWNR4y+jDKqV1zFzc/QvRa/KZOVu5QKZQEArx4oMhJhg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794228493;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=tR2fXYvbYzceYpXDplcuWbUFZ68vlDLDkowV6ErqxpA=;
-	b=RFLjAQPa+NntzDb8LVAzb8v976HaC/5XP/SJRR7yVPOtGJvNvdsfd7MByViijg4kjlXR
-	 Mu6oaqcc1mAnNft/MLtIDMN3YC/g60sthvrxq8Z/3l5hM5m8EyK2ssoitrzHchYmvRTEh
-	 OP5yvE0oj1//UUyHYdhcw0TlGjbTjqLInHj6qHOyeiCdzAoYXvr0Uf4eOwRrj6TLKEOlz
-	 VuApzYppwUrh4Cf+qoIyEguOst7QF/cn86dcQIG97mHSDUlETwW5Y5VcNS27Rjn4XWKrD
-	 GbL13XOFpp8CXxHW4OWl/dtAHF3ulP8Zve6ZZPbLAJLkAtEPW31Hr5xPTW+reRDnwVw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HtVoaHDo;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.32
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794242727;
+	b=ZXzSP7FtzedJ9z0sBbQMUTZ39JrUKAqY4Y/9QkNTmSTKVIj28i931Gc0q19H862cmu2y
+	 JGJa4s9YOGWFVcKjryhx69J3ztslvCUpclRrpyW7V1UQLpy9zHAptN8SqZF2zGUAUhZWG
+	 Ls1T5675ITfCyQE5hUrykO/Bc4RcROPDdYvkXEpJdSgKDb2wlHlO64Rn3Bb5iIjVYP5Ng
+	 P3z+uCBjMnJd27TbGmXyTvStEuVmCZ4fr+6xhU9rSo7cJ70OG6029VX9hm7DVLTM2y5Z9
+	 ZtY4/CxnWg4ujbgLoiNyvqoE0SllOnZrU8uaOzB9smPEqSAjD1ihTSTyx4Z04CN/36w==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794242727;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy:
+	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=jeVqf209OTH/iX3ExWorI6GCfUJ5Wu/iTn7x5+54R6Q=;
+	b=XaD6jqHrF9qn1Yf8gpW2wm+RwbTYvtFMLksxbkfttPvnCzt62/V3SnbLrqyh887vsabU
+	 LbuBlgXB7626/YS3OeeUTf2KH3ljOHIjXUCeJWAfwvVMZKUiqE5V7MQxeKOLQJJ+KlmlB
+	 89QXQRp+pU7fUWDto2zbMYhUykAIz2CLxClRQrKy2VNihKfopcVZx3RIvckDUIeaBlm2u
+	 j2vBGfV7ZInAHoR9TF9TPyhmROsnQNLUUwTmR8zpf3G52ja+OTPwTxTEcfz0h8WWhWo7K
+	 GnEZ5uBxNk4pNFj2xVm6dr/Lx35ri3gB2viCIsl33Hay5MMHEaX31y+o1miR/L4LN4w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b="F/74SQYY";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.32
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011032.outbound.protection.outlook.com [40.93.194.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D3F606D80D;
-	Mon,  9 Nov 2026 12:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99A6606A31C
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Nov 2026 16:45:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A99A6606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HtVoaHDo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392511F008A1;
-	Mon,  9 Nov 2026 12:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794228493;
-	bh=tR2fXYvbYzceYpXDplcuWbUFZ68vlDLDkowV6ErqxpA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=HtVoaHDoc1kU+xDJjyUeaPgKzzK84HWxKjWBFjieuSF10g9LLyEHGl9ozCguORLVJ
-	 d/Ucx214bDxbbrIK/uR0dBY3S5DNSioDHu+ldgPkQOTfZyMLyO3jsWIh38SfW31/96
-	 Qwcf6J8TgeevGbjgPWsbpmOldWrrva7tJqkcTwpvPYSlDuC9jd+YHfTNrgmywKzI9m
-	 rlWPOqnZSFdK2pD7Cr57Xgex87oxYNg7YZMPZRRgXHY/UIQhieLLx4h80U5R6pWK6C
-	 1OqX6SZuQ22bSvpkrLi23gfRgQScLjZ/QH+B6BSHGByojnfnj4lV686wReK9fmXRK2
-	 YvSckuZNyzZ6g==
-Message-ID: <e5045cba-d7b7-40f4-b0e3-93f919617a23@kernel.org>
-Date: Mon, 9 Nov 2026 13:47:54 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=F/74SQYY
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U/5iqK9kUdqf2vx+dKYRTUHFksGtjIU5NrtSfzQUadI7G6lNB57MaxPwlX42tXRC1dAbWhZoWNpARLOY/1VAjBXdTBsSk38pg4F0ZcP9gSqM9XaKSWpjZH0HsAHu/0LMPpm+2gEA38tXl4PkqMOwcq7Au72gzem4L0KRKuEACRm4dyDkCZRP+B/6gI5Aul3d7ozusmiknBDlsILcYL0E7uR5rG6HESdGACfFN7mnPgNkBCry+aZbf3nYUo4yZqXm4Fs2Id0t3BfIZCcX8c6vmKYNbE9UJZ0cO2ZpBA1JaWAAYckBFogAewBH6SNPhtmGDSF1Ote/oyUuTZd4cdAjzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jeVqf209OTH/iX3ExWorI6GCfUJ5Wu/iTn7x5+54R6Q=;
+ b=y2IeWVGufBLJCIWSJ2MS4yimpuCBRT8/M8v2C0bzX8WwaovDKGD/+Xg2sKoB3Tcx+yTVNBsMoX0uIEXLYFI8PNhjkO+UFhIhi7Zd50QhA/7td8DvbSEyC4Y6u1NAoU5zp9wlUV2831qpAbpCDgsp1Opobsm0RtmseVZhXT3uwaFsMziwDtGsYbIDs1DNzdIshs1GsCUTj75MQRYCQCwz3BPXZkiLV82VYAjwushcjx9fOyUjgp8qR/le1hY35y1WgQ6PVdKKjFkpCumHQvrRlwNAN0Ce6FXSAKhqitDyRjb8AyQpSVWwfxt5iu2fMakZdX0IPbfxEw+2/+J5lzGW1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jeVqf209OTH/iX3ExWorI6GCfUJ5Wu/iTn7x5+54R6Q=;
+ b=F/74SQYYO+FaApyRU+EwtsPiT5fnDqL2R0gOs5z2vAialRQaIFudZm7CSJLzfVJJ7cDKisuQgdkY/BBUYTbyRabiw5b6dAd1C53YbohYmBBXlNBSjKPdQDaGqr7tjca1rgwyt+DoFdBvgaPfJjf1MfZduJp721LqSd284ypRLMM=
+Received: from BY3PR10CA0017.namprd10.prod.outlook.com (2603:10b6:a03:255::22)
+ by MN0PR12MB5977.namprd12.prod.outlook.com (2603:10b6:208:37c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.12; Mon, 9 Nov
+ 2026 16:43:07 +0000
+Received: from CO1PEPF00018861.namprd02.prod.outlook.com
+ (2603:10b6:a03:255:cafe::70) by BY3PR10CA0017.outlook.office365.com
+ (2603:10b6:a03:255::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.13 via Frontend Transport; Mon, 9
+ Nov 2026 16:43:07 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF00018861.mail.protection.outlook.com (10.167.249.250) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.615.4 via Frontend Transport; Mon, 9 Nov 2026 16:43:06 +0000
+Received: from [192.168.86.119] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Mon, 9 Nov
+ 2026 10:43:05 -0600
+Message-ID: <3e4d36ae-fc94-4148-a6b2-09a0a60bbda3@amd.com>
+Date: Mon, 9 Nov 2026 10:43:04 -0600
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -52,142 +100,80 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/47] mm/rmap: handle device-exclusive entries in
- folio_referenced_one()
-To: "Garg, Shivank" <shivankg@amd.com>,
- "pratyush@kernel.org" <pratyush@kernel.org>,
- "ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
- "xu.xin@linux.dev" <xu.xin@linux.dev>,
- "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
- "baoquan.he@linux.dev" <baoquan.he@linux.dev>,
- "riel@surriel.com" <riel@surriel.com>,
- "usama.arif@linux.dev" <usama.arif@linux.dev>,
- "mhocko@suse.com" <mhocko@suse.com>,
- "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
- "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
- "pfalcato@suse.de" <pfalcato@suse.de>,
- "kasong@tencent.com" <kasong@tencent.com>, "jack@suse.cz" <jack@suse.cz>,
- "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
- "weixugc@google.com" <weixugc@google.com>, "kees@kernel.org"
- <kees@kernel.org>, "liam@infradead.org" <liam@infradead.org>,
- "gourry@gourry.net" <gourry@gourry.net>,
- "lance.yang@linux.dev" <lance.yang@linux.dev>,
- "jannh@google.com" <jannh@google.com>, "chrisl@kernel.org"
- <chrisl@kernel.org>, "yuanchu@google.com" <yuanchu@google.com>,
- "youngjun.park@lge.com" <youngjun.park@lge.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "rakie.kim@sk.com" <rakie.kim@sk.com>,
- "joshua.hahnjy@gmail.com" <joshua.hahnjy@gmail.com>,
- "rppt@kernel.org" <rppt@kernel.org>,
- "axelrasmussen@google.com" <axelrasmussen@google.com>,
- "jgg@ziepe.ca" <jgg@ziepe.ca>, "willy@infradead.org" <willy@infradead.org>,
- "osalvador@suse.de" <osalvador@suse.de>,
- "surenb@google.com" <surenb@google.com>,
- "peterx@redhat.com" <peterx@redhat.com>,
- "matthew.brost@intel.com" <matthew.brost@intel.com>,
- "minchan@kernel.org" <minchan@kernel.org>,
- "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
- "will@kernel.org" <will@kernel.org>, "hughd@google.com" <hughd@google.com>,
- "nico.pache@linux.dev" <nico.pache@linux.dev>,
- "qi.zheng@linux.dev" <qi.zheng@linux.dev>,
- "baohua@kernel.org" <baohua@kernel.org>,
- "muchun.song@linux.dev" <muchun.song@linux.dev>,
- "harry@kernel.org" <harry@kernel.org>, "nphamcs@gmail.com"
- <nphamcs@gmail.com>, "dev.jain@arm.com" <dev.jain@arm.com>,
- "apopple@nvidia.com" <apopple@nvidia.com>,
- "chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
- "vbabka@kernel.org" <vbabka@kernel.org>, "ziy@nvidia.com" <ziy@nvidia.com>,
- "shikemeng@huaweicloud.com" <shikemeng@huaweicloud.com>,
- "npiggin@gmail.com" <npiggin@gmail.com>, "ljs@kernel.org" <ljs@kernel.org>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
- "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
- "kas@kernel.org" <kas@kernel.org>, "mhocko@kernel.org" <mhocko@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "josef@toxicpanda.com" <josef@toxicpanda.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "usama.anjum@arm.com" <usama.anjum@arm.com>
-References: <20261031-fixes_core-v3-0-d6437171ecc3@kernel.org>
- <20261031-fixes_core-v3-9-d6437171ecc3@kernel.org>
- <50c50262c50da19f6a2b27f848324772b0e3c707.camel@amd.com>
- <db93735f-2452-453f-bfe2-f1cef00f143a@kernel.org>
- <7194ff7d170f8b47eec8361fa9e195ff2d1581c9.camel@amd.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [PATCH v2] cxl/region: Restore a target's position from its slot
+ after sorting
+To: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>
+CC: <jic23@kernel.org>, <alison.schofield@intel.com>, <icheng@nvidia.com>,
+	<ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>
+References: <20261106233711.2654827-1-dave@stgolabs.net>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <7194ff7d170f8b47eec8361fa9e195ff2d1581c9.camel@amd.com>
-Content-Type: text/plain; charset=UTF-8
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <20261106233711.2654827-1-dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF00018861:EE_|MN0PR12MB5977:EE_
+X-MS-Office365-Filtering-Correlation-Id: 359808d5-9e14-44c3-ee72-08df3e808819
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|36860700016|82310400026|1800799024|22082099003|18002099003|6133799003|10067099003|11063799006|261009223027099003|261028144727099003|261102123227099003|261021123027099003|261022105027099003|261021121427099003|56012099006|261026140227099003;
+X-Microsoft-Antispam-Message-Info:
+	JHgpht0NwX2nWcCEtcBXyrbx8Cm8wjyTl0oesjv8BdD5vEuIqltX71TnFUiSof7LShXVDaz8wPvD0R72agIopVDiwJvnkpcyp3lt3ZUETQPZWG4dJSZ0wzAUg8Ih8gzetL3xT8vqU+gDIYrUdkGutrprK2qzP0flFYgmtdMaPppzEAgk79lAWrw2JIoea/VvNH7WbTBiF7c6WSqUKWb96bIYRCknmOq3Jp9raIBgNbHAMR1oBdzo6ELZAW2Pwz4Yaf6eRFn8LmdxRKg/nUVN9Zs63G1Wba9cfZdgnmM5649aYzv5lhzYjlfdObZtspe5FX6yErbT8iqmncCCRCDcj/YzIZpJvwNolqNpVqYO5vLjR8z6XKNKUW1Qfvx+hjGQJu82wfBjdgpN3AriKFlQzRd6fMzaqWsOhHaX4Uxm/C3qi+p8qYBuIIhrbqqeu85q3roK5LG6ZFH6ygSCj/JsEcoon/B496T5znclr8zhF41xQnfiblx8YavalugdMLr0RY/gv+f5Odyx1TgciQiEKP2AApuMdAsDpt7+7bXoRha2D8yFc2cJyXm8wwfelcMCLepRdVa2kM67WwqORmrfuIcEt3wTGkBvpicaSrSuzQzJJDY+pKIftLuNEGbD8XcMEEZlAzO7if5AO3eaNXEDjLreaLy8c5JOKneolBWp5oFngjHkaVox2g2G8ZYmfoGacZoLyeHvxwrBZb+Qiir6Ig==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(36860700016)(82310400026)(1800799024)(22082099003)(18002099003)(6133799003)(10067099003)(11063799006)(261009223027099003)(261028144727099003)(261102123227099003)(261021123027099003)(261022105027099003)(261021121427099003)(56012099006)(261026140227099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	iiweaMMXH4KGBf5iBOPYwDqJKJtTp+U/yDZYB75imDVKlkaN+ly2sB+1IGDttOzhu9B7Z9XivFRflFn4OhRr4SYRAxMj1L9WOpnbwmWM/mwNYuHM5zflK1iVJEk5hDMgLiLyQARqkzxYfhh03Hyp36kA0BDnmzeVs5iMcLRYWc6AlAXdTiWuxRgH7r8bMqtAVavRjizsuBuNVlw7S4tQRVlycfCJgNRFDhtRglSCtzhWzm7rspTP/oOVGDgqA7LbxllF6ztMPu5/qmr1RstNxXrx5nVlQ3xL/6rW1liZuXmRjvI/lgTGNek1ahTDOc1fDgj9EvXKXi4U3+fCQcpte10kKAXN7f1Ji+fzaG6tXbJMe02u7c+h7VGHTUIAA64vSi4sxNjJzHjnMA8kd1S6aAxXo6wDoIyiKYAOI0b/JkBoAbG7hQVNYBAVYSVfbhj3
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2026 16:43:06.8669
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 359808d5-9e14-44c3-ee72-08df3e808819
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF00018861.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5977
 
-On 11/9/26 11:30, Garg, Shivank wrote:
-> On Mon, 2026-11-09 at 10:51 +0100, David Hildenbrand (Arm) wrote:
->> On 11/9/26 06:22, Garg, Shivank wrote:
->>>
->>> This was the only caller of clear_flush_young_ptes_notify(), so this
->>> leaves both definitions in mm/internal.h unused.
->>>
->>> Would you prefer to remove them, or keep them for company with their
->>> still used test_and_clear_young_ptes_notify friend?
->>
->> Can you send a cleanup? Thanks!
+On 11/6/2026 5:37 PM, Davidlohr Bueso wrote:
+> Region auto-discovery records each arriving endpoint decoder in the
+> first free @targets slot and sets cxled->pos to that slot. Once every
+> member has arrived, cxl_region_sort_targets() calculates each one's
+> interleave position and sorts the array by it. The original version of
+> that function then restored cxled->pos from the member's slot in the
+> sorted array, so that follow-on code could rely on
+> p->targets[cxled->pos] naming the member, failed sort or not.
 > 
-> Sure, thanks. Will do.
+> Commit 0cf36a85c140 ("cxl/region: Use cxl_calc_interleave_pos() for
+> auto-discovery") dropped that restore. cxled->pos now keeps whatever
+> cxl_calc_interleave_pos() returned, which on failure is a negative
+> errno. A member that could not be placed is left in a region it cannot
+> be detached from by position: deleting that region runs
+> __cxl_decoder_detach(), which finds pos < 0 and triggers:
 > 
-> I'll include it in V2 of my previous series [1].
+>   cxl region0: expected mem0:decoder3.0 at position -6
+>   WARNING: drivers/cxl/core/region.c:2314 at __cxl_decoder_detach+0x483/0x910
+> 
+> A decoder committed by firmware behind a switch whose own decoders
+> were not committed for the range is enough to get there
+> 
+> The same stale position is what commit cbda6a2c2bec ("cxl/region: Fix
+> out-of-bounds access in cxl_cancel_auto_attach()") had to work around
+> by walking the array instead of indexing it.
+> 
+> Restore cxled->pos from the member's slot after the sort.
+> 
+> Fixes: 0cf36a85c140 ("cxl/region: Use cxl_calc_interleave_pos() for auto-discovery")
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
 
-Please send this one separately against the core.git/for-next branch. Likely,
-the other series would best be split up for MM components to pick them (some
-stuff can go through the page_alloc tree, for example).
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 
--- 
-Cheers,
-
-David
+Thanks,
+Ben
