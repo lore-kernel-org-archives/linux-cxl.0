@@ -1,68 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794341962;
-	b=ACx/vszT03UI4Zk+qir3uI8gy3es1jC1ndGQMoZs1oum5jaafar5+Qs5amRedO8FFMfT
-	 7dUL7DqTtNSfPVMIkA/geOY7fLEVrpQcC1ICEfAMw0llO9mWYw5K2DoEwTaARURpqCrGd
-	 8xxCfmRSSecqp1oqekakGaqMaUjnwKsxqk23Gv2ijHJRt0bl6UqFXoVuJQDeOVFO5SH/S
-	 yK3VPEKufuSxoM/UahL68xzkgbwkh9Vbq84Df/ysYQI0ky0g0ZyTT191ZzqXMYOkdTUwB
-	 maAYUsOkuk6Nwk8438/anNdG8U8HxfxGsqm9bC1nniN1k2saXPwH3JUdwNWjcjx2XvA==
+	t=1794344528;
+	b=Y0KH3MtN7EKN7G7Nhw4NyWKHJ71le6gReIjNPrJ2/9gTNbYd6FUC6gbRSXeGjOj3D6Bx
+	 ZfjMvFUGaO39yU+5WoXtxkk0ZJbEzizpoWZJRE0jR7Dgc0IUA0VZSc7Ist5IVA/U3FiXg
+	 qJtKRECB4xqhW8VjOvJ9rCnfhm5qw+SdSgi0057XYeLzvqY7PEcUUUd/cbl0Oj3/qNqXY
+	 2FzzNUbT4YqisDwaPgj6656lIGeUGV6kJxf9dNLmSsPw7szcOLQfdo7qs6V2EdZI47Bkp
+	 64QAnDvhcnmbJAjTEpQEJJoPl3jhI/H6QcLadkxiDNJ7BbDGJfVlDfwYYwodGo6bUfA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794341962;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=bxC0tQjvGJ32LOVAJGqs1v9Nn1bokk2GzxMcNXzGygw=;
-	b=OIV+ZNK0na7KDbJAKMgv9fow8zCvYh/SuOLmlBADUj0bpG8X6aywSzOIQ75wCdTaBT2a
-	 y3U5xFuc3J8ZyM7VBoZlTegxpTDcu/nw+blbtQV/InrU+mqytZdBUwBl8KXLQWWyu2cTN
-	 602NJjvXN123Ott5qHQgm7qR3MHMESyPtbQf90b+cIRriFmfJ/Fcn07pkK2eSVMAd34Ff
-	 rr2ZX6WH+uv9DixQfkUlmzg04ckp2ERy0jE6AuaUbU23Zsv3aEtA1N9gmMQXKEv+9bDSj
-	 oKkDIma0UKR9usxe0L0RDP6Ngdi016TKp/Nsmq878tIsz8drU2pTpNB/3P9szrGtwuQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794344528;
+	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=TYw+lTDw9uZUPVqkSCGZ4s7jhz0x5pD5eMZjD1rHixE=;
+	b=ryviXmyibKtB3Hh4TfypNislBJgzglgt+0VJmUdfggqyyl4oB0JLABOtEDPdvSJFdH37
+	 kUGIe/TdyQHw4Urj/FGcsGodc4TDIn8G0T0czWwuPfJRvAw2yh3pDepIanCFACNuT0la6
+	 W5bORA8nSr3w7ctQhFH4cMWj83hl0IAOWU8u0R6zmlgfvM7rTOxiMxTH+M5umeJXRGRJh
+	 mu8mvddcjVg6AoNOURbSzxReIT13aRox8WPCOatVGrBxX5Qmk8CsTQbMucqNHmtvr+5Is
+	 kdhviFKb45gdIQ8OPEMTD36ghHO1nopq3uKP8geO/1ZlWtZulCwgH4eu5N+QOXxFqmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YHK4jkTn;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D78B606A31C;
-	Tue, 10 Nov 2026 20:19:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D78B606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YHK4jkTn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794341961; x=1825877961;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aIZoJnWUZZabiGIlVqkG56XCJTn8DALqmx3ZpU6AjV4=;
-  b=YHK4jkTnjPHIgtN4eD41Nwi66wIVYa8poVSOlCHQ/XUsFv771nv5OoNu
-   GHGuEmirVHjiUNMjY1a8vGFYr37iUrO3lIcuZJaQjnIXSnrdVCkxWVGD0
-   h2unc6qoM0KCBpCEEjISe5oQjhdI8RUdo7afzEy8eFq1NoHc1yCdMYnZk
-   qIimagMuq3mZqYqyixIWcHSSJSK1FUYNY7vNnij3CZ8khbiiML8qrURkL
-   DbZYJ48ScvAjf1gYqMy/qXkEOdjz/Ka8mJUW9oBgOwM7J35j6HYLmgn+k
-   YqVv4GND3VbmF5f/tzzjZJ+4YaXgoWXRAc7KA3bCQiPf+h0lqSPdlpkGy
-   A==;
-X-CSE-ConnectionGUID: TAl5hdIWRg6IGjPgboCpCw==
-X-CSE-MsgGUID: VGe0upFBR5G48gBfVnTasw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3108146"
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="3108146"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 12:19:21 -0800
-X-CSE-ConnectionGUID: fGyPdhbBTxizbrmChbo/Dg==
-X-CSE-MsgGUID: LtZUAXl/Q1KP1k8Q8sIhMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="8573422"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.75]) ([10.125.111.75])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 12:19:19 -0800
-Message-ID: <eef1fcd1-1827-4303-a960-68d6748f68e7@intel.com>
-Date: Tue, 10 Nov 2026 13:19:18 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E7606A320;
+	Tue, 10 Nov 2026 21:02:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C901F008A4;
+	Tue, 10 Nov 2026 21:02:08 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [PATCH v2] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for djbw
+Date: Tue, 10 Nov 2026 14:01:52 -0700
+Message-ID: <20261110210152.3494345-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -72,44 +55,118 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/edac: Mask DPA flags in the event record cache key
-To: Jongwon Lee <ai@linux.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261030072721.31970-1-ai@linux.com>
- <8afa233c-13c3-478e-89d2-1d3f87ec7c08@intel.com>
- <179340826284.3478.8780635809480680434@linux.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <179340826284.3478.8780635809480680434@linux.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Dan is no longer with us. Removing entries in MAINTAINERS to prevent
+people from keep emailing his address.
 
+Frank will take over for async_tx until the feature is removed.
 
-On 10/30/26 5:57 PM, Jongwon Lee wrote:
-> On 10/30/26 10:44 AM, Dave Jiang wrote:
->>> Co-developed with Claude Code.
->>
->> You can drop this now. Or just put it under ---
-> 
-> Moved it under --- in v2.
-> 
->>> Signed-off-by: Jongwon Lee <ai@linux.com>
->>
->> Is this a real email address? Please use your actual email.
-> 
-> Yes, it's my own address and I read it. It's a linux.com alias
-> that forwards to my inbox, and it's the one I use for my other
-> upstream work (rasdaemon). Happy to change it if it's a problem.
+Alistair will take over on fsdax with Alison continue to wrangle patches
+for DAX overall patches.
 
-If it's your own address it's fine for me. Although you can understand ai@linux.com would raise some eyebrows with the increased instances of bots sending patches to linux mailing lists. I hope Linus won't give us grief over this email address.
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Frank Li <Frank.Li@kernel.org>
+Cc: Alistair Popple <apopple@nvidia.com>
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+Acked-by: Vishal Verma <vishal.l.verma@intel.com>
+Acked-by: Alison Schofield <alison.schofield@intel.com>
+Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-> 
-> Thanks for the review. I'll send v2 shortly.
+---
+
+v2:
+- Add Frank as reviewer for async_tx.
+- Alistair has been working on fsdax and agreed to be maintainer.
+---
+ MAINTAINERS | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 93abbb315065..58bdd5eff5c2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4294,7 +4294,7 @@ S:	Maintained
+ F:	crypto/rsa*
+ 
+ ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
+-R:	Dan Williams <djbw@kernel.org>
++R:	Frank Li <Frank.li@oss.nxp.com>
+ S:	Odd fixes
+ W:	http://sourceforge.net/projects/xscaleiop
+ F:	Documentation/crypto/async-tx-api.rst
+@@ -6726,7 +6726,6 @@ M:	Jonathan Cameron <jic23@kernel.org>
+ M:	Dave Jiang <dave.jiang@intel.com>
+ M:	Alison Schofield <alison.schofield@intel.com>
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+-M:	Dan Williams <djbw@kernel.org>
+ R:	Ira Weiny <iweiny@kernel.org>
+ R:	Li Ming <ming.li@zohomail.com>
+ R:	Richard Cheng <icheng@nvidia.com>
+@@ -7621,7 +7620,6 @@ S:	Maintained
+ F:	scripts/dev-needs.sh
+ 
+ DEVICE DIRECT ACCESS (DAX)
+-M:	Dan Williams <djbw@kernel.org>
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+ M:	Dave Jiang <dave.jiang@intel.com>
+ M:	Alison Schofield <alison.schofield@intel.com>
+@@ -10315,12 +10313,12 @@ F:	include/linux/fcntl.h
+ F:	include/uapi/linux/fcntl.h
+ 
+ FILESYSTEM DIRECT ACCESS (DAX)
+-M:	Dan Williams <djbw@kernel.org>
++M:	Alistair Popple <apopple@nvidia.com>
+ R:	Matthew Wilcox <willy@infradead.org>
+ R:	Jan Kara <jack@suse.cz>
+ L:	linux-fsdevel@vger.kernel.org
+ L:	nvdimm@lists.linux.dev
+-S:	Supported
++S:	Maintained
+ F:	fs/dax.c
+ F:	include/linux/dax.h
+ F:	include/trace/events/fs_dax.h
+@@ -13455,7 +13453,6 @@ F:	drivers/platform/x86/intel/hid.c
+ 
+ INTEL I/OAT DMA DRIVER
+ M:	Dave Jiang <dave.jiang@intel.com>
+-R:	Dan Williams <djbw@kernel.org>
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-dmaengine/list/
+@@ -15278,7 +15275,6 @@ K:	libie
+ 
+ LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+-M:	Dan Williams <djbw@kernel.org>
+ M:	Dave Jiang <dave.jiang@intel.com>
+ M:	Alison Schofield <alison.schofield@intel.com>
+ L:	nvdimm@lists.linux.dev
+@@ -15288,7 +15284,6 @@ P:	Documentation/nvdimm/maintainer-entry-profile.rst
+ F:	drivers/nvdimm/btt*
+ 
+ LIBNVDIMM PMEM: PERSISTENT MEMORY DRIVER
+-M:	Dan Williams <djbw@kernel.org>
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+ M:	Dave Jiang <dave.jiang@intel.com>
+ M:	Alison Schofield <alison.schofield@intel.com>
+@@ -15307,7 +15302,6 @@ F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
+ F:	drivers/nvdimm/of_pmem.c
+ 
+ LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
+-M:	Dan Williams <djbw@kernel.org>
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+ M:	Dave Jiang <dave.jiang@intel.com>
+ M:	Alison Schofield <alison.schofield@intel.com>
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.54.0
 
