@@ -1,55 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794282787;
-	b=ZknR9eoZUqom52ZL9VI6hki0FBU4wb894fE8i+Dqz0hgg6/WWO7ZLk+qbuE2rqgUtZCx
-	 ahnAlDNvD1kChMxIBDJTk/jcUwHnSOmldw/xtOgNBA07iAGyNLPu1r3gdFz4diNS/c69s
-	 ABiO8uuZD+18Awfe0dtXUR5ThrTi6fjFHmmMGYW7GrUSjPMw4QvdJNUOyZX6/Em6HwFa6
-	 e+81SdkJWWKU0uisLS/jg9suJM6QU+iDv6Ia1qPTrX4XM8tL1JRpYtv7W3fFA91sJsHTL
-	 FuRUdaCKcIetpd2uYQbfq3ShyBfK3OTgDU01ABUGZc++M9KWFvf4+uJ8+14Etzq+m4Q==
+	t=1794282866;
+	b=OTtB7YR2X8wgAviLM+rxZ2beYjhB5o/IOxG21W2ZQPBhmC5QVC1IXKF3eyFt2IpqAsSV
+	 TLG07GE+M8cBN2PUGiL9dNWFXYBEFh7S/5FaaYiwocFrkQYP3qC8QJ4ixiE8Og5qRoSy8
+	 KctHAxBGsPNrrBCo9SdfCijzyNn5QgZpzHola+s2wTYOx8BjIBdGHS7U7i0FUYxYt5w4f
+	 He2xfdFRwySkHJ/bzc+JjXHiuVtwFoOorEwURh2ovLUMVt4JSHYqRLhU6msKTCOg0gZGO
+	 ttzsZfdQQjcYFyJNXB/Y8DE+Eoj4mCR3xdeuJNvxBMvojpHletXuuZaVQDngi0l1pwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794282787;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794282866;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=prUUmFgIbRozxnG45CnPivtZIu1z7ZnqJIdDDicE5Sw=;
-	b=R/rDuQNGBk9sH2cMCHcAmJ5+owUeJ1sY1fryoQhZlpVEF4MJqKDvMm+yf0LSu4efl89S
-	 xAP2WxdZ8ZgDBugpuc03Z5Ctmpdr5bzW1G5fKlIVS5eHYWNdnA4SG6dfqg6/3q+dSdfkz
-	 inF6K8+YJ6r/gl+wnwwTLt8LRubp0gOKQhsgtQ/H4HcG73xWDNQr0K6PA8glkXAUUchv1
-	 GVuo1bjBOGXUE3FBObIXzHZetebkVEMsMFlPSVezPloYixiFNtudnakapU+1pNSf9JwTj
-	 48gFw0XiUAevP6F2awmBE19wl6aHWMslE785o8U0x5InGM8vdWFmDRLStcOJqoApyiA==
+	bh=8o+szAQ34oEkzo5LUxZyRjaESjeRqlTdKNM6n0ldHtk=;
+	b=eV5MbvLL4/HmCjgtmcQtdPQEklElly6+ptMLNZret3QN6FhZ0Znd2EDJcXYFYpN4aGnQ
+	 uw01+8JRIbBWRtXNUXOKnXHWdcbta5OUDKmcjSUlecITF3Ab6AAcNiBvPDCvYppvBwZ9v
+	 tOfPFwfp4g85UW/0Ce0/rRAEh8055A6SMljlpzSQ9T4ijn4W+sxplvFCoZHT09D/ycuiO
+	 RSpZYvImn3lWmn5lFnQ71NM6jYNLI6/unxzeKEXOGrdzIo/dovFbkY3CyKZaF+UMDSJdS
+	 sSbhi7hUCx5ZIXcVvd56ZtcM8Un+TwTYzU/ZA1rm38UQrL4hO1k8VXxreyK2ZzEIAIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TWZcQ0bw;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CKlpVCtQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C141606A321;
-	Tue, 10 Nov 2026 03:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ED7606A31C;
+	Tue, 10 Nov 2026 03:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TWZcQ0bw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DD91F0089F;
-	Tue, 10 Nov 2026 03:53:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CKlpVCtQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 663241F0089F;
+	Tue, 10 Nov 2026 03:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794282787;
-	bh=prUUmFgIbRozxnG45CnPivtZIu1z7ZnqJIdDDicE5Sw=;
+	s=k20260515; t=1794282866;
+	bh=8o+szAQ34oEkzo5LUxZyRjaESjeRqlTdKNM6n0ldHtk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=TWZcQ0bwuxPTraT13m/rvH/B9NpaeOVfkvHS1EU6pHsv/cCEoFlPU5qD1oF6xbgja
-	 7y37dAvwA+h7orKtdFIcl5EweVFPQ2A82Y2Jw2B/gWrlVPgnz1RKkiB6ETGC4Qy5a+
-	 rFvmZ/ifs9NjBdMb+qHus/xG7i9XXQIK7tAzpMUrt7UGn7raaVgPusxLlBS8w06Nbd
-	 ymSokfYa2f7jlmduMsGr+XWTgYmo1Yf9Jeqm0Fm/YOgC25PFwhNY96WXVNiucpFty5
-	 Wdcsy8zDDmGwtA5Qnoo/RyHWqdCN6gaqZHfTk52HtFL2NaRRHCQdHX4hWf0bNB8Zd8
-	 1nOzeXCFzItgA==
-Date: Tue, 10 Nov 2026 03:52:59 +0000
+	b=CKlpVCtQ6mZaCuix8N8Y+4yyLAMzS5z1M9LTQKSqZxIwjWGpIvdDz8QMnXp2+mT/o
+	 UO/3xeVl/r3tKUCzqS2Ojj9jZt95BC1u0IjuKIxrMvmEzePEkq5LbQB5RQns2RPV+Z
+	 0aKQlWttU1jOpVqIgsHqaw8z/p70DW36WsF4I24cZfsPT58sj4LRgT3j8zXxa6BdrD
+	 f1GHJhlreQx+f2SHZTlUIPDFG2e67RGYIPEUqK7a0/tWrhFaWrsHXN9in7WpXlDLn4
+	 oGbsTbpq/cKgqk8faXNKz0Uz8Z5XbpqPc1hGE3pZLYGDs+VPYut3AONr2tVfhrIxSL
+	 WHtbuZTFb0zsA==
+Date: Tue, 10 Nov 2026 03:54:17 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Davidlohr Bueso
- <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH] MAINTAINERS: Add CXL reviewer Ben Cheatham
-Message-ID: <20261110035259.052c92b0@jic23-hlaptop>
-In-Reply-To: <20261104175003.297974-1-dave.jiang@intel.com>
-References: <20261104175003.297974-1-dave.jiang@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Matthew Wilcox <willy@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for
+ djbw
+Message-ID: <20261110035417.736a05a6@jic23-hlaptop>
+In-Reply-To: <20261103201547.4079847-1-dave.jiang@intel.com>
+References: <20261103201547.4079847-1-dave.jiang@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,37 +67,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  4 Nov 2026 10:50:03 -0700
+On Tue,  3 Nov 2026 13:15:47 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Adding Ben as a reviewer for the CXL subsystem.
+> Dan is no longer with us. Removing entries in MAINTAINERS to prevent
+> people from keep emailing his address.
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
+> async_tx will be essentially orphaned. There has been discussion of
+> deprecation for the feature on the dmaengine mailing list.
+> 
+> fsdax will no longer have a maintainer. But there are reviewers still
+> and Alison Schofield will continue to wrangle patches for DAX overall.
+> 
 > Cc: Alison Schofield <alison.schofield@intel.com>
 > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ben Cheatham <benjamin.cheatham@amd.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Frank Li <Frank.Li@kernel.org>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
 Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2a955a626784..edaf70961cba 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6729,6 +6729,7 @@ M:	Vishal Verma <vishal.l.verma@intel.com>
->  R:	Ira Weiny <iweiny@kernel.org>
->  R:	Li Ming <ming.li@zohomail.com>
->  R:	Richard Cheng <icheng@nvidia.com>
-> +R:	Ben Cheatham <benjamin.cheatham@amd.com>
->  L:	linux-cxl@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/driver-api/cxl
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-> prerequisite-patch-id: 57bdcea37c2a480531ec5d1022422748e462077a
 
