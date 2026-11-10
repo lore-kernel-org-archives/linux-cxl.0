@@ -1,116 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794284538;
-	b=aGTaxxhk/H0FLRVbdxQXt8lECosgJz/n/Mn4r5TRjBe0o5fWWrjyxj+hDcOZ01uvXDjH
-	 vlPigVXiR/+Dj/bNcgwORF5C3zZmi/5U2TuINtaxephRtiXR10dtWueulZFVpzLhKXdj5
-	 ZfQXb7Mm8xHhBpA3btvTBxHIGy4FVwPtjdG5fSwu4XEgy/vY0CFVxSnOgXEpJ0VPCCxqD
-	 XQDLm4ZkhumqLdWY8KhQmGuuDZdeJZ6VCkvEhcVddS6CrYkZOxNuo9FaRPLwQXLCA1jKw
-	 Ytl3TTOP+QLc0C/nwYKwF5OF3uFUJJaRefH++9HrYmQuUvW+NkWQAwYTJNJUv2/d1wQ==
+	t=1794285658;
+	b=PbRG+gfrKf81H/w/xl1jErNX6tNQdPA3i7prKqPgdSqKm05GdN7MelfwijrbEk5Dad1r
+	 2Pwcy/fjAYq82yqHFyBkZedpPKe9jNsGfYtVLYNvqV9oxkSucGrAHs5yj9vHV7ZeQXtII
+	 IPrVdi1Wrd63U2BOz+hOVzu9XaYrmJrGkY3ul3wr5F8FQNhk04fq6hCkq19ibEIpWEYO/
+	 e+Lz5SK2WRsRQuR3pTSQk1qmQIHGq9rnzY/ARVS+bHpmExmN55j6ALAAC0puXzP4RnBnp
+	 bL2Gs9PyuRHQwhVc4mFKDv0KTeRkEXdCbeAWkJOvldv0mfXgpZPSY5WgN1T3ROfo3BQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794284538;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=uPNBoQQW3WB02TBAF3BzFuV2QfVhO4wd2JVa30h/5s0=;
-	b=IHj2lgQvk13ZAofHd4ArlkA30g+kkZRqqFVGSQWr7A8CB4+yqzwMz4vIQPwLPMt2gvwi
-	 rHlGLWi7N+DaR2HZgCrAW2H2/SqW7+7j40LWLSphpFUS2p+sKKWzDwXXgtqv5WT1qO+ip
-	 DbH9wBE8BFT7/YBJXkpCWZDoIvEuIyvYIAj6FD9xW6ZIwfwA1EFVjG2/kVAfkStV8pbN+
-	 61X3ryzNoykyhAzH4Qa9Ft7ZBMhOw1JSXYEzp1MgON5UXwlKjNWTvD3VShkRRtK7FWTB1
-	 2Gq8Mw/f5mjrizABouFWDJKVTbBJr6UKXMu02ilRkROBM0lazwQs6Gl8DAPw2f1KURA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794285658;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=d7x+S4elYr/Mgg64noOeLmSanOq0SHc7AkmIX1M8LpU=;
+	b=Y5+SOeN68ofVWB3RdDK6KZqYVECFWOKdnDnGf/KMixzuDwCDhVtw8e5DTXz25W2mu0zS
+	 5CfufBVnZ4m2agjN7G97SxTzU+DzAS7UJCElr56j57XWWl2FG/w1qg7hWU4dL+wLDv5T1
+	 ZbubfYT9nG5zgWNII9bZtUC79rr4c0GwrYtARoHaQYGBhorCz6X/9tDCa4ybz82BetF4h
+	 nSXnHkSN+qYlsQqazhfbDT3AeZLz/sokYMn3pVs2KqJfBbj7fNuSNg4UI4NRodSNw3h7d
+	 NyPWnkDk1vG91o2OIBK20juqRbczINomNeKMUQVDbWK7bi88uIMK2i7SFY7Q4O7pnkQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Y6GcAIoM;
-	arc=none smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SVoG7pqb;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8C0606A734
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Nov 2026 04:22:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D8C0606A734
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A494F60A2619;
+	Tue, 10 Nov 2026 04:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Y6GcAIoM
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1ae58d17cd9so1157337c88.1
-        for <linux-cxl@vger.kernel.org>; Mon, 09 Nov 2026 20:22:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794284537; x=1794889337; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=uPNBoQQW3WB02TBAF3BzFuV2QfVhO4wd2JVa30h/5s0=;
-        b=Y6GcAIoMky3oeSIHUgB2Mjm010BlPmVQ7t0ba1wxD4W/1igjfnN3/JlTXkToWSFml0
-         ptSyuFK2E1l5miKEorIz2pgNYUJoq0fEtnt26LVxvTM8Qe+BfKtQjzV7Z0iNTw6E8yG2
-         CVqoAmzAf2FUiL5HMEQhKo0lFFTtr560hbQblk0AOZVH25CD7COwhtYObutS+4k1azhG
-         lAMOIRxuiXoo6udBIn9pguQULxNKBlZV0nMNhCCELShYjJlth6FX6nBJh+XmjMs5nLU3
-         pmZNpyheJdNuFvjLptOu+HQde5wVjpqTRn6suCUh0DV6+yLUK8R12xAtehl45jFtw/jK
-         4UHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794284537; x=1794889337;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=uPNBoQQW3WB02TBAF3BzFuV2QfVhO4wd2JVa30h/5s0=;
-        b=fyvDZhV3smjG9fbg64iWuBM0EIuTspKtDt80anwVZu9GugpehyNS1LCLgmzmMph9Bf
-         9dgiue/3xSZBiaAAspbIaQ3RP/SW/C4uyY+v6rmd+0u2pV7V/n+ieGiUxvCvRPqLxlvh
-         8Np8ju8n2L76KtJ1Mw1wUHtxRwABriEygYyTF8ZWm4AAG567h6k83+bOVhid3ciLcTxv
-         GlJ2NvF/9xGTMNjyXdbBqPyDUttPehx9SbHp++/vG5mxezNHOzeqsY8Mf4cH2aEw8wrA
-         U3Y9PxWI36xqRYLNgfE1O+rpFUs33X9IDj8FZo2Fj/kTn9MuTIB/hMOitLJO/p4Wrg6y
-         mcNA==
-X-Forwarded-Encrypted: i=1; AL+hErEzP1TXuRCBEZN/yIgO5hmxt2DKcePc3XNKOEtfS3Hv5Mso0sT2hyzhzoo3vekb23kxSmrZKiHgSsY=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9sWXXW64yqkRkmq2YsOGa//aLKmDFIT3gqVYwdChREAVZypRcS
-	sQCuFhxtAfgFbgJqMp3n5q2BYZ/4x/rQ0uiOAu/GndurY5KrLl9nE6LX
-X-Gm-Gg: AYBFou1LHCEw3f4aU3ckfaBnFHUdc9snTh9gUE5Nn8SzOrOTwBSWPQ69k5U0Cgl4XS3
-	evYUatTtXnMGMXxl5W6gagOPaFrZPtP8JghuO8tmbkuAyZowExdgMUWprU1yPn0AGX7tKsqL02z
-	B9a6QWVI1cclBAd5roQ1eEtxKoOrvBOlK2c7Ak8ux+BpZLgTfCoZ1nBC+lem07ypgRoinMukVhF
-	20MbW6Cq8yH7xAlfprZ/T7p9ytw2hJWZPAtivV5g/c/kbc90GL3Noz7/oa98/xt9kzv9BgyqZH7
-	KA4/ggjc+8GbhjusmZQ0YeKUnFrMRmxOrPDX9AbjSZHTgXVmyR06QNepy+M56NmI/wf+zKGcR3u
-	yA85tIzDwy13u2PWALFiMMLcNkATVOqR+kl99SbGg2vG3ubBiiuiMtIfR7ardlYOvoW4zLFuvGs
-	zG/cYY7EK0GluJMNvH7ZGgPZt4A6w3p/58SweWBUomKCIGvG/GSBftRTXNJUO9T+NMXgMNKsi8X
-	OowhVu2cdd1voxxCzW/f6sI2AmN9hFKy3EvoaK7CmU/GmHyqkeB4yUYcTW9+uzwNo+aZsS+ak5J
-	VHEPFkPGoEqrzHnK5wOSIwd2WgNW7cHXgMIqicYBf9gxCns=
-X-Received: by 2002:a05:701b:270c:b0:14a:5284:1bf5 with SMTP id a92af1059eb24-1b3b5fda3bfmr2024081c88.13.1794284537372;
-        Mon, 09 Nov 2026 20:22:17 -0800 (PST)
-Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:13b2:851f:d9cb:44c5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5b7ba88sm3540459c88.22.2026.11.09.20.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 20:22:16 -0800 (PST)
-From: alistair23@gmail.com
-X-Google-Original-From: alistair.francis@wdc.com
-To: bhelgaas@google.com,
-	lukas@wunner.de,
-	bvanassche@acm.org,
-	linux-pci@vger.kernel.org,
-	alistair@alistair23.me,
-	linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	jic23@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	jgg@nvidia.com,
-	akpm@linux-foundation.org
-Cc: gary@garyguo.net,
-	a.hindborg@kernel.org,
-	wilfred.mallawa@wdc.com,
-	tmgross@umich.edu,
-	ojeda@kernel.org,
-	boqun.feng@gmail.com,
-	alistair23@gmail.com,
-	gregkh@linuxfoundation.org,
-	aliceryhl@google.com,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	alex.gaynor@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v6 25/25] lib: rspdm: Expose public Rust API
-Date: Tue, 10 Nov 2026 14:18:32 +1000
-Message-ID: <20261110041832.1730924-26-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261110041832.1730924-1-alistair.francis@wdc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SVoG7pqb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6CB1F008A5;
+	Tue, 10 Nov 2026 04:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794285657;
+	bh=d7x+S4elYr/Mgg64noOeLmSanOq0SHc7AkmIX1M8LpU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SVoG7pqbAmaN4xweyll/NEdSZO8kmEUlZxPvCbMPCncMUpNSuoz3qQWURP3iq5BPD
+	 rIhzcvyWYsx0nrJP/Reh1dJnE4HVpJa82W5MBxFkKaZ50NaqwD8znY6JejPXslHrIF
+	 hjxub9wX3d0JxTavlPUnmMnLODVV12TA/DomuCPeJXHMCAm80IxfCON8Diuu4OF91x
+	 Md3SGjA94MmIwmC7hQ0EMCiZStkVcHzLZHfoHTJ+iWRiCCBKTq3Udxxum/8aYXdatZ
+	 YVUUn91o07UEFCGwCdXBHpGYX7RhZh1paBChdaylnXkp6W3HL4dM1rhZWjRcsWIYqa
+	 blBjJdCjCD9Qg==
+Message-ID: <sashiko-outbox-206225@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 19/25] lib: rspdm: Support SPDM get_certificate
+Reply-To: sashiko-reviews@lists.linux.dev
+To: alistair23@gmail.com, linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: ojeda@kernel.org, gary@garyguo.net
+In-Reply-To: <20261110041832.1730924-20-alistair.francis@wdc.com>
 References: <20261110041832.1730924-1-alistair.francis@wdc.com>
+ <20261110041832.1730924-20-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Nov 2026 04:40:56 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -119,189 +59,130 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Alistair Francis <alistair.francis@wdc.com>
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [High] lib: rspdm: u16 length truncation in get_certificate() on 64K+
+  page kernels
+- [Low] lib: rspdm: duplicated initial exchange and missing check in
+  get_certificate()
+--
 
-Expose a public Rust API and an example that can be used to authenticate
-an SPDM responder.
+commit af8f6804281e40cfc39810cbc243efa8a576944b
+Author: Alistair Francis <alistair.francis@wdc.com>
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
----
- lib/rspdm/lib.rs   | 69 ++++++++++++++++------------------------------
- lib/rspdm/state.rs | 43 +++++++++++++++++++++++++++--
- 2 files changed, 63 insertions(+), 49 deletions(-)
+lib: rspdm: Support SPDM get_certificate
 
-diff --git a/lib/rspdm/lib.rs b/lib/rspdm/lib.rs
-index 6bfe1eedc4121..6b1f864fe7266 100644
---- a/lib/rspdm/lib.rs
-+++ b/lib/rspdm/lib.rs
-@@ -9,6 +9,26 @@
- //!
- //! Top level library, including C compatible public functions to be called
- //! from other subsytems.
-+//!
-+//! ```rust,ignore
-+//! struct MyTransport { }
-+//!
-+//! impl Transport for MyTransport {
-+//!     fn exchange(
-+//!         &self,
-+//!         dev: &Device,
-+//!         request: &[u8],
-+//!         response: &mut [u8],
-+//!     ) -> Result<usize, Error> {
-+//!         todo!()
-+//!     }
-+//! }
-+//!
-+//! fn authenticate_device(dev: &Device, transport: &MyTransport) -> Result {
-+//!     let mut state = SpdmState::new(ARef::from(dev), transport, 512, None);
-+//!     state.authenticate()
-+//! }
-+//! ```
- 
- use crate::bindings::{
-     spdm_state, //
-@@ -30,7 +50,7 @@
- };
- 
- use crate::consts::SPDM_MIN_DATA_TRANSFER_SIZE;
--use crate::state::{
-+pub use crate::state::{
-     SpdmState,
-     Transport, //
- };
-@@ -263,51 +283,8 @@ fn from(code: SpdmErrorCode) -> Self {
- 
-     let mut state = mutex.lock();
- 
--    if let Err(e) = state.get_version() {
--        return e.to_errno() as c_int;
--    }
--
--    if let Err(e) = state.get_capabilities() {
--        return e.to_errno() as c_int;
--    }
--
--    if let Err(e) = state.negotiate_algs() {
--        return e.to_errno() as c_int;
--    }
--
--    if let Err(e) = state.get_digests() {
--        return e.to_errno() as c_int;
--    }
--
--    if state.provisioned_slots == 0 {
--        return -(bindings::EIO as c_int);
--    }
--
--    let mut provisioned_slots = state.provisioned_slots;
--    while (provisioned_slots as usize) > 0 {
--        let slot = provisioned_slots.trailing_zeros() as u8;
--
--        if let Err(e) = state.get_certificate(slot) {
--            return e.to_errno() as c_int;
--        }
--
--        provisioned_slots &= !(1 << slot);
--    }
--
--    let mut provisioned_slots = state.provisioned_slots;
--    while (provisioned_slots as usize) > 0 {
--        let slot = provisioned_slots.trailing_zeros() as u8;
--
--        if let Err(e) = state.validate_cert_chain(slot) {
--            pr_err!("Certificate in slot {slot} failed to verify: {e:?}\n");
--            return e.to_errno() as c_int;
--        }
--
--        provisioned_slots &= !(1 << slot);
--    }
--
--    let provisioned_slots = state.provisioned_slots.trailing_zeros();
--    if let Err(e) = state.challenge(provisioned_slots as u8) {
-+    if let Err(e) = state.authenticate() {
-+        dev_err!(&state.dev, "Authentication failed: {e:?}\n");
-         return e.to_errno() as c_int;
-     }
- 
-diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-index 059398e95b92d..0fe99caf27958 100644
---- a/lib/rspdm/state.rs
-+++ b/lib/rspdm/state.rs
-@@ -96,7 +96,7 @@
- ///
- /// This trait abstracts the bus-specific message transport (for example
- /// a DOE mailbox for PCIe CMA) from the SPDM session logic.
--pub(crate) trait Transport {
-+pub trait Transport {
-     /// Perform a single SPDM message exchange.
-     ///
-     /// Send `request` to the responder and write the response into
-@@ -115,7 +115,7 @@ pub(crate) trait Transport {
- /// it does not need to stay bound to its driver. `T` is data and an
- /// exchange function owned by the caller, so the borrow checker enforces
- /// that the transport data outlives `SpdmState`.
--pub(crate) struct SpdmState<T: Transport> {
-+pub struct SpdmState<T: Transport> {
-     /// Responder device (reference counted). Used for error reporting and
-     /// passed to `transport`.
-     pub(crate) dev: ARef<Device>,
-@@ -194,7 +194,7 @@ impl<T: Transport> SpdmState<T> {
-     ///
-     /// `transport_sz` is the maximum message size the transport can carry,
-     /// and must be at least the SPDM minimum data transfer size (42 bytes).
--    pub(crate) fn new(
-+    pub fn new(
-         dev: ARef<Device>,
-         transport: T,
-         transport_sz: u32,
-@@ -232,6 +232,43 @@ pub(crate) fn hash_len(&self) -> usize {
-             .unwrap_or(0)
-     }
- 
-+    /// Authenticates the responder through a sequence of GET_VERSION,
-+    /// GET_CAPABILITIES, NEGOTIATE_ALGORITHMS, GET_DIGESTS, GET_CERTIFICATE
-+    /// and CHALLENGE exchanges.
-+    pub fn authenticate(&mut self) -> Result {
-+        self.get_version()?;
-+        self.get_capabilities()?;
-+        self.negotiate_algs()?;
-+        self.get_digests()?;
-+
-+        if self.provisioned_slots == 0 {
-+            return Err(EIO);
-+        }
-+
-+        let mut provisioned_slots = self.provisioned_slots;
-+        while (provisioned_slots as usize) > 0 {
-+            let slot = provisioned_slots.trailing_zeros() as u8;
-+
-+            self.get_certificate(slot)?;
-+
-+            provisioned_slots &= !(1 << slot);
-+        }
-+
-+        let mut provisioned_slots = self.provisioned_slots;
-+        while (provisioned_slots as usize) > 0 {
-+            let slot = provisioned_slots.trailing_zeros() as u8;
-+
-+            self.validate_cert_chain(slot)?;
-+
-+            provisioned_slots &= !(1 << slot);
-+        }
-+
-+        let provisioned_slots = self.provisioned_slots.trailing_zeros();
-+        self.challenge(provisioned_slots as u8)?;
-+
-+        Ok(())
-+    }
-+
-     /// Start a SPDM exchange
-     ///
-     /// The data in `request_buf` is sent to the device and the response
--- 
-2.56.0
+This commit adds support for the SPDM GET_CERTIFICATE command to retrieve
+and store certificate chains for each provisioned slot from the responder.
 
+> diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
+> index a44f98a941cd0..f1a55da1f1cfa 100644
+> --- a/lib/rspdm/state.rs
+> +++ b/lib/rspdm/state.rs
+
+[ ... ]
+
+> @@ -500,4 +505,97 @@ pub(crate) fn get_digests(&mut self) -> Result<(), E=
+rror> {
+> =20
+>          Ok(())
+>      }
+> +
+> +    pub(crate) fn get_certificate(&mut self, slot: u8) -> Result<(), Err=
+or> {
+> +        let mut request =3D GetCertificateReq::default();
+> +        request.header.version =3D self.version;
+> +        request.header.param1 =3D slot;
+> +
+> +        // Bound the per-chunk allocation to one page
+> +        let rsp_sz =3D (GET_CERTIFICATE_RSP_HDR_SZ + PAGE_SIZE).min(self=
+.data_transfer_sz as usize);
+> +
+> +        request.offset =3D 0;
+> +        request.length =3D (rsp_sz - GET_CERTIFICATE_RSP_HDR_SZ) as u16;
+
+[Severity: High]
+Does casting rsp_sz - GET_CERTIFICATE_RSP_HDR_SZ to u16 truncate
+request.length to 0 on 64K and 256K page kernels?
+
+When self.data_transfer_sz is at least GET_CERTIFICATE_RSP_HDR_SZ +
+PAGE_SIZE (such as with PCI_DOE_MAX_PAYLOAD), rsp_sz -
+GET_CERTIFICATE_RSP_HDR_SZ equals PAGE_SIZE (0x10000 on 64K-page kernels),
+which wraps to 0 when cast to u16 and causes certificate retrieval and
+device authentication to fail.  Adding GET_CERTIFICATE_RSP_HDR_SZ to
+PAGE_SIZE also makes rsp_sz equal PAGE_SIZE + 8, so KVec::from_elem()
+allocates two pages instead of one.
+
+Bounding rsp_sz to PAGE_SIZE.min(self.data_transfer_sz as usize) and
+clamping the requested length to u16::MAX avoids the truncation and keeps
+the buffer within a single page.
+
+> +
+> +        let response_vec: KVec<u8> =3D KVec::from_elem(0u8, rsp_sz, GFP_=
+KERNEL)?;
+> +
+> +        let mut request_buf =3D request.to_bytes()?;
+> +        let response: GetCertificateRsp =3D self
+> +            .spdm_exchange(request_buf.as_mut_slice(), response_vec)?
+> +            .validate(&*self)?;
+> +
+> +        if (response.header.param1 & 0xF) !=3D slot {
+> +            dev_err!(&self.dev, "Invalid slot response\n");
+> +            return Err(EPROTO);
+> +        }
+> +
+> +        let portion_length =3D response.portion_length;
+> +        let rem_length =3D response.remainder_length;
+> +
+> +        let total_cert_len =3D portion_length as usize + rem_length as u=
+size;
+> +
+> +        let mut certs_buf: KVec<u8> =3D KVec::new();
+> +
+> +        certs_buf.extend_from_slice(&response.cert_chain, GFP_KERNEL)?;
+> +
+> +        let mut offset: u16 =3D portion_length;
+> +        let mut remainder_length =3D rem_length as usize;
+> +
+> +        while remainder_length > 0 {
+> +            request.offset =3D offset;
+> +            request.length =3D (remainder_length.min(rsp_sz - GET_CERTIF=
+ICATE_RSP_HDR_SZ)) as u16;
+> +
+> +            let mut request_buf =3D request.to_bytes()?;
+> +
+> +            let response_vec: KVec<u8> =3D KVec::from_elem(
+> +                0u8,
+> +                request.length as usize + GET_CERTIFICATE_RSP_HDR_SZ,
+> +                GFP_KERNEL,
+> +            )?;
+> +
+> +            let response: GetCertificateRsp =3D self
+> +                .spdm_exchange(request_buf.as_mut_slice(), response_vec)?
+> +                .validate(&*self)?;
+> +
+> +            let portion_length =3D response.portion_length;
+> +            let rem_length =3D response.remainder_length;
+> +
+> +            if portion_length =3D=3D 0
+> +                || (response.header.param1 & 0xF) !=3D slot
+> +                || offset as usize + portion_length as usize + rem_lengt=
+h as usize !=3D total_cert_len
+> +            {
+> +                dev_err!(&self.dev, "Malformed certificate response\n");
+> +                return Err(EPROTO);
+> +            }
+
+[Severity: Low]
+Can the initial exchange before the while loop be folded into the loop so
+that the first response also checks portion_length =3D=3D 0 and avoids
+duplicating the request/response sequence?  Right now, if a responder
+returns portion_length =3D=3D 0 with a non-zero remainder_length on the fir=
+st
+chunk, or a total_cert_len exceeding u16::MAX, get_certificate() performs
+an extra exchange before failing.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110041832.1730=
+924-1-alistair.francis@wdc.com?part=3D19
