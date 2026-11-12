@@ -1,100 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.16
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794459063;
-	b=HBBmVa2E9XElMAbk33dfUZCP5wj0hoRpsZRp2aTd9Iy+ZWnjqK09Hqf/91AFfyQJqFdH
-	 JY36qVYLfwFilPDF1RFrrHwsEiiygnpaqtUBdUkV9l09znfMZkLu6HC9Aiutmk94MHwDg
-	 q7OubF07Lg5+jAaZEaTHKsYKxeeMJ7n57zOVtDM+Td1gAaLNMZPVGSZCmO53WCTJUpWqF
-	 KNI9IgXETePa/ykhORC/Omioiy7hb1PtH86W7kfuZp1RBs+fG8pUl5/8tL6nIa90BHm0b
-	 uqngCjznWQfj0csQ4oRPm1TSbELAiLImu2lhdYUz6UlWV0yw4soLutQo7cvol8LKviw==
+	t=1794468973;
+	b=1/ocpagsErgooLkzpMGNpbZ3JjEh5gCPc6zMDA/XWE5jN5XSD7tuT++RpIBK8ywCwtqA
+	 EU/yIBcAEkAXc8yjj7CdjRQg26wMzwd0j6EGWAPU/Y1PRqbSvWl5Oc4BQYPALlkmkaYtp
+	 ekS4FUXKCOJQXcbWbcK6hEX6heRKcLXasIy7F3UpnLfmyYI4fgkWSsseEjOfPu9/5r/CI
+	 PfgKk52AwV0Ubfx0TszlV+PBhSAvXnCwfZ3gzRt8K4Y0CJkj13y/fwgNL+tg6hCcgfUJJ
+	 wqkxzoAwHXIGkvrPBItWLzjkqF0H9u8mWUbdsSr0nUPO1STRGjy9VE/SGIar86WlhRg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794459063;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=aCR4+4F4D0AC9cGsRZ13mMFu9/arHyThIEzuRiyV5r8=;
-	b=Jnc8pVWULilTU8OriRNhRcPf5hK1YnruJLGfcixWu9p+DXw9Qz6MHNLfupexH4eOp1IJ
-	 s2SprH55YeyCvPuj6hQ+oL0JndG7/YDveMp+QbNmE4vd0IG4stvgG6R7zZFqvryilYLwu
-	 AnlbMtTy/NuBft8+1o1xaN5yg/HtiBj20jK3Bvq0avtAND6tK30xK+JZwoeEqNUfkTfVg
-	 7EdwqN5I2SHwf+GhA48yictOclP24riWT4p9ATSPBXkh94iPmWH2pXeQ2/X3Gd/Yww/9+
-	 HwJIlAMhR8DVWP+zpcgMeyUVKbzUm/HgdY2F73km+DhvFkmrny2+pfvATmwxIHHdesg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794468973;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=9VEku7pG0fNpoIyAAbpgzSLUl5pTdO9GdkpKtQStI5Q=;
+	b=Wv/4hxXN2r2XsO4ROGCfrJZS4j+uCaGnckQtJQdYkQ1lvPm10qNlkRtGSWeZffYS46kh
+	 PUGZoZHVFHLsQSapLAv5Pd/vodfhxL4Ci8dYr9vxVUvsqEN/cBXDT/eqC7JRIubIztUgw
+	 0SbT2a5wDHOYfbZ4Q0uF970IHJDU/BYbhRg4dfV/CY8b85sZSZoiZuMDGJqFLnSunDxxN
+	 HGfK0WB4n8fxZA8MlRQHrzLJTUxhXTLBhkAMw8/IAWnBQwPT1Q9wwBWGbPSkdyswMTgyO
+	 l2szKkQAK9x0Ir/FULPQinaO4/IUkfF4ieSVZnEzglQlyHWyFvZ/AN0usWQEzcUuDjQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bQzfD5Ca;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.44
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="NJtxx/EO";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.16
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011016.outbound.protection.outlook.com [40.107.208.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5374606A323
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Nov 2026 04:51:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5374606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D991606A31C;
+	Thu, 12 Nov 2026 07:36:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D991606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bQzfD5Ca
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c3f04e0e65fso568764966b.2
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Nov 2026 20:51:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794459061; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Un8Ct1TgeTDMaj8A+AsO6Yd5OfXVqMXLMwBPbcFcHLWrGFRjzdOQcMnDpvzxQLPRvN
-         EcMhv+BZrpfV+dhENxftVZ/QHAocUuoJdqtjGh+vdOIzsJZBsZe3UdJHFblchWjhm2MH
-         nAH5wwA5Xow9bKxVfdubLOq14ZT4eQmwmRYlf0leKceRHtkj6bBZHUDVce/6Qkd7vrpT
-         us3CPgarjLTiktkyrEDaO9ZGsi1Ea38dTsCgABW9kjEXYbCIji0T7RPj2PjIbqVgzJ9V
-         ShgQ0wxyeAP1QDg8v7U8xXaK2g+w1WmE/Mxmjwz2f7rj1Aq+p0GhRS7nI16vLD9bWRd3
-         jT+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=aCR4+4F4D0AC9cGsRZ13mMFu9/arHyThIEzuRiyV5r8=;
-        fh=ukmL1bdwlwEQE7DWc7HA6aybcI1fhH9XdUTjWN9FSTg=;
-        b=UQdC67nUXBOmDvv2BwW8uiE1jZhj+HkQnerdiLTjVmUdj7lW1K6ApjbD20a7deoTDL
-         ZiqoJu42vvAx9k9p66Xh0Km9br8dEpKRrdDnlOwe9ZcWfnhwuwMsgwgGgvuYGvyRQCIc
-         xL8Qb2gBPY2zaBr3tQbO9o9n5amokXDKQExUzumC1WeGHfCfdCHIcrtEgb1yzd1NpGRo
-         XAWjsQ4tDsa4wyx4gpQG2Iv7p8Fenr3IQrkxMDQjVuuywY/wi/zgX00gpubVg90E/1og
-         UVlbXSBN/l9/43l3aKjSOjXv65j0VAU+VNGEVTM7f+mPI1daQjbfZ5pIJf9Xb1d73zch
-         kCvw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794459061; x=1795063861; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=aCR4+4F4D0AC9cGsRZ13mMFu9/arHyThIEzuRiyV5r8=;
-        b=bQzfD5CaK4WDR4MvMf7uIsGcfYpEw8h0GGuppnzS3K4+WGGepsz6qr3low/gWj6uBX
-         8VtyTqZhYX9T/mybPe3ku9DYSjBQ3fjy14B/jxQOA4ZnUPuPUTpcTSUeaSOetSSJCSBL
-         KAHlJ3mf0wU0XwShXVWqfPggPYu1Ba8ijIhCehqkw0Xf3ddanEEv2TMVsOrLhSbdnYL6
-         FNcFwKdOqFfi8k78KwxPZZlynCzpRyVyNtausrtKn0sk8GmYU1pvnbQmq40+YtuXn5D+
-         C+e4Mv0fP080HUtfLHO+Wy0pIeMLFHHKepUyp0RPTjF8t7sdoUZyMASNlMUA3phrqxp4
-         279g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794459061; x=1795063861;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aCR4+4F4D0AC9cGsRZ13mMFu9/arHyThIEzuRiyV5r8=;
-        b=E+Avij7K+QREyLovhU2HbBqqxuG00D9G8ucR14pgmCC3fCrtcdrIag/A3edpu+u7GH
-         Q+FFSKfZIf9DwOex+DUQ1BuKNW8yl113P/7FPNElDDVdmCbTjoS8IQLxBzl8+s6qsoX1
-         mVt7CjrFq1VONBgNUiwMZ7MXzsX3cKz5pkpDXb7TeEfKM/Y1AG22F8felS6qhA2gnYnQ
-         9x0SSiYpAajb//X+KocFUV4OyilHGjNGsSRWdEB8rmu+W0Ca0ZAVFZaERErqdLcUKr61
-         d4fcr3Da6vzZMhArat2d334pbpcqd3YbS3HZi4bSKPXYFT4FSF2EqoNjm1EAzVANtGm9
-         Yu5Q==
-X-Forwarded-Encrypted: i=1; AL+hErHJ6ovrinhAWyUrF5QKGLQBlG4ipvuv7FYDCpjfpj0ro5D7of1LII9gmen5mTEfIhd6VkTBWaKmJc4=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/SmfDnASaEoUB4JwMi/H8kfYULOiWmU8t6PHjdyxFCA6kFBeRU
-	OmZIan6/INl3sk+Ey7HL1lxBtUQb/ftmLt9zQtjLLWnxNr1GKmPfDea6XJElu9AK+SFU1xI7dWI
-	sGFwxXeqTy9RGgUBLxodohH6csfUCj70=
-X-Gm-Gg: AYBFou1JHePG8jatIr3UGLhlSEESm7CU83Glmrn0qwKx3NUqvUYg0ODDf4MYhlDMyil
-	4JXTdI6sPGsrSh+bQV6Y/LHIUXaMeOOqoBcnRJfBoZ96WwkxXT3NGqcRZNsy8wb3AVSXrex1BRd
-	C3bgg3Vxa8CBehLWQNnzS6o8rXV4y7k6RnpCO9u+yer9G+0Xm0HOtgwUCEGnDI1cdtRCg1LjpxC
-	Iszr0mKCfkDjG5qIjGOfmEQBe7PBqEy0jvoJmZ7dtvWolhFZyAwLUwh6PdFkEEkjw2LQjpODKnG
-	opx8fKVDLu5pLQDTOw2sduAYruTUUXkeZ2MxPOyXzjXTFAbd2a+cShQSEyzgwmAul+VXlojBIEC
-	AXwZ62svjIZQ8iJieHroKRQmTasZLCJg7NAvF8XvNHjavA4YlZKYHX8pJYKubuFeRqmmm
-X-Received: by 2002:a17:907:6c17:b0:c29:4915:83cb with SMTP id
- a640c23a62f3a-c5066d6947dmr397522366b.39.1794459060886; Wed, 11 Nov 2026
- 20:51:00 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=NJtxx/EO
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gOV1TPt33vD0BCmsejhLWc1MSppcuN0U7YoVuhNDsqJpJyd9IXYnV1gTwTOGV3yaVzNn8EdF/Dl1ZCbIiKddDhoymh44++CBmPrynjxNdGIysFU2mvAE3EHfsyDDyC9UF/hzHEsA2i6HFXI6o7/WiUHoNHmMJWFH6/aonCLomcnI16N8zcfIfjkASgep8VFumHFmKTHv0/k2CTUQX9XFvFwFOg7YjecQuk8nVapyrRfqghJ+4vQ4Tsmzg0t2y/HcqAXKb6V3qNF24PApuXDZt+Bxa4U3rL3o46CwFLhyfor+1Nia9UGDPznYAU4XgJtxFPHIsCBgEN2W6xJk4/zClg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9VEku7pG0fNpoIyAAbpgzSLUl5pTdO9GdkpKtQStI5Q=;
+ b=MyxAKYPOrIg4Fj//g1tRCIFftD1EeCFzPemuVhhDzuafvVCzpbIwXg2pNwQ0kiGd8rgTreV838ajt1xQvE2kLLS8obu28/ddXt92byy4xI+QeNFoEnVcVz1nX1CNmoQU34+qLVOQCdNjE1SG3vM0jev45HVaR/w7GdAcgnBkPavjhH710sD7nfjf5mXz1eMtQmdIHXMqG5iolPD4loHIaqr0JWDa+JpZ4dNSFfR2lAeHnW1P+wJnXci/V51expLYTb1NQi+irLPgJpfuPEw95tg4bTyeSnIGbjVHk5CTD47B2PBnYKsGE6AP80pZyjtfT486HmUV4lEUkdqGdCFdVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9VEku7pG0fNpoIyAAbpgzSLUl5pTdO9GdkpKtQStI5Q=;
+ b=NJtxx/EOe6Yusuyb0nNPk47Ld0Tm1nvxNsM32V66sU0dawKXNCVK+9jtum+2nisZUu29eki9pvL4Qso5+k5NmP719vVaENBHPwIqWKHUL0C61ZMb1EQfhjCkUfMRd62CYn4t853nSdQPSdXs3NKdggsJi8FsrAqxg7bjV95MAhqLTjuviQSYVaB1BxVKFurd4sL6iCTvaE3+qHQtx3nxwp+4t2aNQ5m7dkNcuIlc5LLjyyab3L4tEBE4E+UiBAP1Yfc0qTiwdDHEj555cOBQsmQzrHc88irScdfE0F527Fz5GcNs13goP6tPweinApYP0DWh9jweUCKEqLbzho2rHQ==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by IA4PR12MB429550.namprd12.prod.outlook.com (2603:10b6:207:128::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.9; Thu, 12 Nov
+ 2026 07:34:09 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0615.007; Thu, 12 Nov 2026
+ 07:34:09 +0000
+Date: Thu, 12 Nov 2026 15:34:03 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Fan Ni <nifan.cxl@gmail.com>, Li Ming <ming.li@zohomail.com>, 
+	Benjamin Cheatham <benjamin.cheatham@amd.com>, Gregory Price <gourry@gourry.net>, 
+	Anisa Su <anisa.su@samsung.com>
+Subject: Re: [PATCH v1 11/14] cxl/extent: Handle DC Release Capacity events
+Message-ID: <avVq11dobEgbxaC_@MWDK4CY14F>
+References: <20261104230445.66625-1-anisa.su@samsung.com>
+ <20261104230445.66625-12-anisa.su@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104230445.66625-12-anisa.su@samsung.com>
+X-ClientProxiedBy: TPYP295CA0050.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:8::12) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -104,215 +101,413 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261110041832.1730924-1-alistair.francis@wdc.com>
- <20261110041832.1730924-18-alistair.francis@wdc.com> <sashiko-outbox-206231@kernel.org>
-In-Reply-To: <sashiko-outbox-206231@kernel.org>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Thu, 12 Nov 2026 14:50:34 +1000
-X-Gm-Features: AclHuK-9VHicJV1Vi_F_TXRxI13n5FCeFli60f1unwNFJ7VY-Njj1MkgHyWgv9E
-Message-ID: <CAKmqyKMa7p6hkD1_NrABuaxxv3c=MQ0cDMUcAcYbPjtfOmJ4gQ@mail.gmail.com>
-Subject: Re: [PATCH v6 17/25] lib: rspdm: Support SPDM negotiate_algorithms
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, ojeda@kernel.org, 
-	gary@garyguo.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|IA4PR12MB429550:EE_
+X-MS-Office365-Filtering-Correlation-Id: 797bc20b-2c6f-4f16-8c66-08df408f56ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|23010399003|376014|22082099003|18002099003|6133799003|261009223027099003|3023799007|5023799004|11063799006|56012099006|4143699003|261028144727099003|261021121427099003|261102123227099003|261026140227099003|261026121527099003|261021123027099003|261022113327099003|261022105027099003|261022075727099003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	eJt5HvPfMTMpY65XqznZ2zI34NBOYhFOkkD0uLM2d1aOxajFpDL0giV9XcYVkTykF5Ek2to5IDywoadjoQpJ1yFqSs0sFn65rHdktmyovt7t66Ptw9qbn/72FCKDR9yzBKayCDyaextM3o8gUn/G1i6DnIUJM2UOOAzT4MmNs6iKPkYbvZRhoQW4AAtZPupGk1x7SGIbyiZErLI8wOqbPD0n86NekvxbSVQ4jCS/DqsVi2+yhFNkMz19b+13Ml+QzuO90emY46NapQXLLCh/S7Q1NXPGvt9CG9XLn/5wE/i2dU2CDj/EfM22f0bJDd1mJb+fO3jdeWod4EBqQo9EBcDciVFjoT00AV/pG3FEr9/v3j/o7nYEhhLQBny26+wYxvZEtfSw1h9MRiAKTaJx9oglgWOm28dA9p6UPyeRp4cgLypye4lEgPDOiu9c7pSJ6xIYQnm773RhvylxKnL4Md2vAKWi0ntrL0mcdeBhitYeoP9KjNG9GVdxmd45sxcAAHIN0r5QOGuTKAoYUQiiegwBtXU/jNkESr1pvJD/zN6J+s+ggP1tcLbthn8PPseVpMbPg7aPA3bChiG4bwD/BAfTCPzUvn7d49hUnChBY1c3Ouhi/OfHqQSrHG/uMLQtMar5kak/34f+YH1hoOWbxhZR0/l7Muk8Eaph3Y4fVLw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(23010399003)(376014)(22082099003)(18002099003)(6133799003)(261009223027099003)(3023799007)(5023799004)(11063799006)(56012099006)(4143699003)(261028144727099003)(261021121427099003)(261102123227099003)(261026140227099003)(261026121527099003)(261021123027099003)(261022113327099003)(261022105027099003)(261022075727099003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KYnLkN1BnIQ5qHCRiNM4e4c8eKQIDeWneKgYI5NqZd9v7kg3mY7FcbbXVq62?=
+ =?us-ascii?Q?KLvCJRzKUdDEoDm7jvs1ObC36VmLK99b3CwnbfcDfWNxSDnrHv05VWtsUH4W?=
+ =?us-ascii?Q?HbnyxMlqpcMD7Wf7vyL3CWYCLuu7qdKrcvomagTmGSmO5gLrZX/BzPXAUhEB?=
+ =?us-ascii?Q?uAuMqGMOoihEgEauxkGBmq0+5DhPQxJpzSAbRixSRmoKXEnOG8llcCHq8EB3?=
+ =?us-ascii?Q?kiU8CJZs9HQ2IZjSHPjjuKG04i4PpFFSV83nbXDnGCK495RSroWii8tbJhRp?=
+ =?us-ascii?Q?sdGMZi/cLju7BHKjRvvjxzVeQzI2D7OQNnUB6stX/cO6jfU1JVvpXLC274hG?=
+ =?us-ascii?Q?qf5RvVu3iV7rz+ZWGBlcMoc1eYHWofLFMxMc9tCeOUI0BnhjUAG6BayDl35X?=
+ =?us-ascii?Q?9hQay7ETYxEbz8jlCjvdz14U8wF+h1j6nIRBJ5opV1ftTFeie17dmc0nDey9?=
+ =?us-ascii?Q?vp665di1qySxTsdhGCp8RQ8+rccsKEi1nD806k0RWnnEUV2mlQC/x++Cyuhx?=
+ =?us-ascii?Q?tcDU95GhlKbeJ2HdKaMGxzggaBMoaKcyqpyojh7SHCgKLkgBNXZbvi+HX5a0?=
+ =?us-ascii?Q?uQXcAWJNdPUdAVCMrCS8hEP7CQwusYXEoSy6pHL57WvX11p4H6jRrumrAgaX?=
+ =?us-ascii?Q?7CP5Br4nF4MfJf1Q2lenfgKYLctwvDda38W+vZ68PWo6AvmQVSiRUcXQQtV8?=
+ =?us-ascii?Q?S94eF+aXLoFq/UjHWuDwPeVwAj/96uVvtlxx5fhGRYkEyeK7zX1lsFodw5/v?=
+ =?us-ascii?Q?9RfZxVj2JNVn+kl2tbii42bET3j57s2CXVX7rtEHxWux+J9ALXNtj7TMtr+G?=
+ =?us-ascii?Q?2mHvL/pRtOPL/xwTE3teO3u+3dx3zJ0Nx5aXTv2XPQJFpVLt3nB/pEmthqug?=
+ =?us-ascii?Q?R79SGq8JAZmg5VVrP7nSkkLL1cOX5ykT/DuyaX7GUEgJI0VWwpEtBCpl3UV5?=
+ =?us-ascii?Q?eeotHCEo9AAaftOKV9QXDLgdoy45Pe9o1l3U1Pq+xpnNYG3IbGprioeUilx0?=
+ =?us-ascii?Q?PhemPbNIehMEiW9ab4i1DpSWs4CSxbpjSXkEUmxbBCe7DYoQ4B2AgRblQJrg?=
+ =?us-ascii?Q?p7jRFGpaDvj31adQK5DktVt41F5wpRtW47alhdgzgxKZ1MvI3nvKeo3K6xDI?=
+ =?us-ascii?Q?SQ5fxwersH6/hsOZcqtbF9KGSc5RWPK4qQx8PX849/Zjk2Dym8/z7iBDgl94?=
+ =?us-ascii?Q?av/qGXn/1EA7IIuUGa+iel/e5HrTFt89SM2lqrklfLse+ztxaPDNioYk/+6x?=
+ =?us-ascii?Q?WPycROORpOfgaPRjoHAf33kGURT//eXNz1cZnnWUyG4xNlGoXprNLzfDCU7y?=
+ =?us-ascii?Q?pR30R9ub2Bye0BGmrdg5UlWyUXr58MqnuoFF+iFR0qHfk0kMAv/4DMSq5jbC?=
+ =?us-ascii?Q?PxtbIJxdiTGFEYdt8Ug6lPpb49/FMK3W/N/1FkpC5gjalU7ibTsPunCN88zD?=
+ =?us-ascii?Q?gIxWBs8wZjtBsS36wTjWMkktuBMuxQWNbQrrysrg03USlpbvyYIl1+ysTo/M?=
+ =?us-ascii?Q?1JSdB1sDO2YZeqbs/ZyFvcr8bKOd06ujb2YypJbWJcK1Ci8hhpq/+cyi5nmB?=
+ =?us-ascii?Q?ttLKTFyFjZB0eTnxbL6MyEsOmOL7BmYAXhQlJg+FDNz+MMV0N9/uaB3GsbpA?=
+ =?us-ascii?Q?4qLxh9jA0opfFID+lxiwmvnyh+dOMm5SqscO7OvefwBbZqMDoe2BmcYzXzUs?=
+ =?us-ascii?Q?cYJpFkFYdjp9gGo4X1oxUDoK2wxmwPRchNtCsIN/XknejldXIfAx1lqQVKb9?=
+ =?us-ascii?Q?bufCo+Ak6Q=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 797bc20b-2c6f-4f16-8c66-08df408f56ba
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2026 07:34:09.1352
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0fJKl9DIzBzdmBLkZKAdELLk1ki/K16PB3DhRuSj7JdU6KyFdv8crpUW/4T/bVAjDeXmaz0Inl6DdIVl9n8USw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR12MB429550
 
-On Tue, Nov 10, 2026 at 2:42=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issues to consider:
-> - [Medium] lib: rspdm: build failure in update_response_algs() without
->   crypto Kconfigs
-> - [Low] lib: rspdm: unreachable extended algorithm loops in
->   NegotiateAlgsRsp::validate()
-> --
->
-> commit 69781025c793b90efaa465da8436c6f48e861229
-> Author: Alistair Francis <alistair.francis@wdc.com>
->
-> lib: rspdm: Support SPDM negotiate_algorithms
->
-> This commit adds support for the SPDM NEGOTIATE_ALGORITHMS command,
-> including request construction, response validation, and algorithm state
-> selection.
->
-> > diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> > index cb6a351fe6085..169d0d3fee9bd 100644
-> > --- a/lib/rspdm/state.rs
-> > +++ b/lib/rspdm/state.rs
-> [ ... ]
-> > @@ -265,4 +323,113 @@ pub(crate) fn get_capabilities(&mut self) -> Resu=
-lt<(), Error> {
-> >
-> >          Ok(())
-> >      }
-> > +
-> > +    fn update_response_algs(&mut self) -> Result<(), Error> {
-> > +        match self.base_asym_alg {
-> > +            #[cfg(CONFIG_CRYPTO_RSA)]
-> > +            SPDM_ASYM_RSASSA_2048 =3D> {
-> > +                self.sig_len =3D 256;
-> > +                self.base_asym_enc =3D c"pkcs1";
-> > +            }
-> > +            #[cfg(CONFIG_CRYPTO_RSA)]
-> > +            SPDM_ASYM_RSASSA_3072 =3D> {
-> > +                self.sig_len =3D 384;
-> > +                self.base_asym_enc =3D c"pkcs1";
-> > +            }
-> > +            #[cfg(CONFIG_CRYPTO_RSA)]
-> > +            SPDM_ASYM_RSASSA_4096 =3D> {
-> > +                self.sig_len =3D 512;
-> > +                self.base_asym_enc =3D c"pkcs1";
-> > +            }
-> > +            #[cfg(CONFIG_CRYPTO_ECDSA)]
-> > +            SPDM_ASYM_ECDSA_ECC_NIST_P256 =3D> {
-> > +                self.sig_len =3D 64;
-> > +                self.base_asym_enc =3D c"p1363";
-> > +            }
-> > +            #[cfg(CONFIG_CRYPTO_ECDSA)]
-> > +            SPDM_ASYM_ECDSA_ECC_NIST_P384 =3D> {
-> > +                self.sig_len =3D 96;
-> > +                self.base_asym_enc =3D c"p1363";
-> > +            }
-> > +            #[cfg(CONFIG_CRYPTO_ECDSA)]
-> > +            SPDM_ASYM_ECDSA_ECC_NIST_P521 =3D> {
-> > +                self.sig_len =3D 132;
-> > +                self.base_asym_enc =3D c"p1363";
-> > +            }
-> > +            _ =3D> {
-> > +                dev_err!(&self.dev, "Unknown asym algorithm\n");
-> > +                return Err(EPROTO);
-> > +            }
-> > +        }
-> > +
-> > +        let hash_name =3D match self.base_hash_alg {
-> > +            #[cfg(CONFIG_CRYPTO_SHA256)]
-> > +            SPDM_HASH_SHA_256 =3D> c"sha256",
-> > +            #[cfg(CONFIG_CRYPTO_SHA512)]
-> > +            SPDM_HASH_SHA_384 =3D> c"sha384",
-> > +            #[cfg(CONFIG_CRYPTO_SHA512)]
-> > +            SPDM_HASH_SHA_512 =3D> c"sha512",
-> > +            _ =3D> {
-> > +                dev_err!(&self.dev, "Unknown hash algorithm\n");
-> > +                return Err(EPROTO);
-> > +            }
-> > +        };
-> > +
-> > +        self.crypto =3D Some(Shash::new(hash_name)?);
-> > +
-> > +        Ok(())
-> > +    }
-> > +
-> > +    pub(crate) fn negotiate_algs(&mut self) -> Result<(), Error> {
-> [ ... ]
-> > +        self.base_asym_alg =3D response.base_asym_sel;
-> > +        self.base_hash_alg =3D response.base_hash_sel;
-> > +        self.meas_hash_alg =3D response.measurement_hash_algo;
-> > +
-> > +        if self.base_asym_alg & SPDM_ASYM_ALGOS =3D=3D 0 || self.base_=
-hash_alg & SPDM_HASH_ALGOS =3D=3D 0 {
-> > +            dev_err!(&self.dev, "No common supported algorithms\n");
-> > +            return Err(EPROTO);
-> > +        }
->
-> [Severity: Medium]
-> Does this fail to build when CONFIG_RSPDM=3Dy is enabled without any asym=
-metric
-> crypto option (CONFIG_CRYPTO_RSA and CONFIG_CRYPTO_ECDSA both disabled) o=
-r
-> without any hash option (CONFIG_CRYPTO_SHA256 and CONFIG_CRYPTO_SHA512 bo=
-th
-> disabled)?
+On Thu, Nov 05, 2026 at 08:02:35AM +0800, Anisa Su wrote:
+> From: Ira Weiny <iweiny@kernel.org>
+> 
+> Replace the ack-all stub for Release Capacity chains with the real
+> teardown.
+> 
+> Similar to add capacity events, Release Capacity records arrive as a
+> More-chain and are staged in mds->dc_chain until the chain closes;
+> a chain whose closing record never arrives is dropped by the 20s
+> watchdog without a response.
+> 
+> A tag group is one logical allocation, so a well-behaved fabric manager
+> is expected to release all members of a tag group together.  However,
+> CXL r4.0 Section 8.2.10.9.9.4 permits the host to issue an "unsolicited
+> release" of extents not corresponding to any event.  So as a generous
+> policy, the kernel releases all members of a tag group upon receiving a
+> Release Capacity record containing any member of the group.
+> 
+> Extents are matched to what the host owns by DPA range and tag.  An
+> extent not matching any host-owned extent is acknowledged for release
+> so the device knows the host is not using it.  An extent that overlaps
+> owned capacity without matching any host-owned extent by tag and DPA is
+> left out of the response so the device keeps the capacity for the host
+> and must retry.
+> 
+> Extents are not usable until exposed through DAX.  The DAX series that
+> adds that capability also adds the check that an extent is not in use
+> before it is released.
+> 
+> Everything a chain releases is acknowledged in the Release Dynamic
+> Capacity response (opcode 4803h), split across several commands chained
+> with the More flag when the extent list outgrows the mailbox payload.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Signed-off-by: Ira Weiny <iweiny@kernel.org>
+> Co-developed-by: John Groves <John@Groves.net>
+> Signed-off-by: John Groves <John@Groves.net>
+> Co-developed-by: Anisa Su <anisa.su@samsung.com>
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+> Tested-by: Junhee Park <jh9934.park@samsung.com>
+> Tested-by: Heesoo Kim <habil.kim@samsung.com>
+> ---
+>  drivers/cxl/core/core.h   |  21 ++++++++
+>  drivers/cxl/core/extent.c | 103 +++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/mbox.c   | 109 ++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 229 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index b7f8886db498..f0edd0100c72 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -79,6 +79,11 @@ void kill_regions(struct cxl_root_decoder *cxlrd);
+>  
+>  int cxl_add_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
+>  		   u16 seq_num);
+> +int cxl_resolve_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
+> +		       struct cxl_region **cxlrp,
+> +		       struct cxl_dc_tag_group **groupp);
+> +int cxl_release_tag_group(struct cxl_region *cxlr,
+> +			  struct cxl_dc_tag_group *group);
+>  bool cxl_tag_already_committed(const uuid_t *tag);
+>  int online_tag_group(struct cxl_dc_tag_group *group);
+>  bool rm_tag_group(struct cxl_dc_tag_group *group);
+> @@ -101,6 +106,22 @@ static inline int cxl_add_extent(struct cxl_memdev_state *mds,
+>  	return -ENXIO;
+>  }
+>  
+> +static inline int cxl_resolve_extent(struct cxl_memdev_state *mds,
+> +				     struct cxl_extent *extent,
+> +				     struct cxl_region **cxlrp,
+> +				     struct cxl_dc_tag_group **groupp)
+> +{
+> +	*cxlrp = NULL;
+> +	*groupp = NULL;
+> +	return -ENXIO;
+> +}
 
-Probably, but that would be an invalid option and probably should fail to b=
-uild
+Hi Anisa, Ira,
 
-Alistair
+Release lookup should be able to distinguish "no owned capacity" from
+"teardown ist still in progress".
 
->
-> When both options in either pair are disabled, the corresponding match in
-> update_response_algs() collapses to the diverging wildcard arm alone, whi=
-ch
-> triggers rustc unreachable_code and unused_variables errors as well as
-> clippy::match_single_binding.  In addition, SPDM_ASYM_ALGOS or
-> SPDM_HASH_ALGOS evaluates to 0, so the bitmask check in negotiate_algs()
-> triggers clippy::bad_bit_mask.
->
-> > diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
-> > index 66212f0faf5f1..335f2f43dc07c 100644
-> > --- a/lib/rspdm/validator.rs
-> > +++ b/lib/rspdm/validator.rs
-> [ ... ]
-> > +        // We currently never request extended algorithms or algorithm=
- structures
-> > +        if header.param1 !=3D 0 || ext_asym_sel_count !=3D 0 || ext_ha=
-sh_sel_count !=3D 0 {
-> > +            dev_err!(
-> > +                &context.dev,
-> > +                "Responder selected unsupported extended algorithms\n"
-> > +            );
-> > +            return Err(EPROTO);
-> > +        }
-> > +
-> > +        let mut offset =3D NEGOTIATE_ALGS_RSP_SZ;
-> > +
-> > +        let mut ext_asym =3D KVec::new();
-> > +        for _ in 0..ext_asym_sel_count {
-> > +            ext_asym.push(read_le32(offset)?, GFP_KERNEL)?;
-> > +            offset +=3D mem::size_of::<u32>();
-> > +        }
-> > +
-> > +        let mut ext_hash =3D KVec::new();
-> > +        for _ in 0..ext_hash_sel_count {
-> > +            ext_hash.push(read_le32(offset)?, GFP_KERNEL)?;
-> > +            offset +=3D mem::size_of::<u32>();
-> > +        }
-> > +
-> > +        let mut resp_alg_struct =3D KVec::new();
-> > +        for _ in 0..header.param1 {
-> > +            let alg_type =3D *unvalidated.get(offset).ok_or(EPROTO)?;
-> > +            let alg_count =3D *unvalidated.get(offset + 1).ok_or(EPROT=
-O)?;
-> > +            let fixed_alg_count =3D (alg_count >> 4) as usize;
-> > +            let ext_alg_count =3D (alg_count & 0xf) as usize;
-> > +            offset +=3D 2;
-> > +
-> > +            let mut alg_supported =3D KVec::new();
-> > +            alg_supported.extend_from_slice(
-> > +                unvalidated
-> > +                    .get(offset..offset + fixed_alg_count)
-> > +                    .ok_or(EPROTO)?,
-> > +                GFP_KERNEL,
-> > +            )?;
-> > +            offset +=3D fixed_alg_count;
-> > +
-> > +            let mut alg_external =3D KVec::new();
-> > +            for _ in 0..ext_alg_count {
-> > +                alg_external.push(read_le32(offset)?, GFP_KERNEL)?;
-> > +                offset +=3D mem::size_of::<u32>();
-> > +            }
-> > +
-> > +            resp_alg_struct.push(
-> > +                RespAlgStruct {
-> > +                    alg_type,
-> > +                    alg_count,
-> > +                    alg_supported,
-> > +                    alg_external,
-> > +                },
-> > +                GFP_KERNEL,
-> > +            )?;
-> > +        }
->
-> [Severity: Low]
-> This isn't a bug, but since NegotiateAlgsRsp::validate() returns Err(EPRO=
-TO)
-> above whenever header.param1, ext_asym_sel_count, or ext_hash_sel_count i=
-s
-> non-zero, the three loops that follow can never execute (and duplicate th=
-e
-> parsing in SupportedAlgorithms::from_bytes()).
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110041832.17=
-30924-1-alistair.francis@wdc.com?part=3D17
+In patch 6, it clears "cxlr->cxlr_dax" before driver cleanup finishes.
+During that window, cxl_resolve_extent() returns -ENXIO, and cxl_rm_pending()
+treats the extent as untracked and ack its release. The missing pointer
+doesn't establish that DAX has finished stopping access to the memory.
+
+CXL should remain responsible for the capacity until it's safely returned.
+DAX should stop new claims and finish stopping existing access.
+
+The release path needs to recognize that teardown is in progress and leave
+the release to the teardown owner. Removing the lookup entry alone must
+not authorize returning the capacity.
+
+Best regards,
+Richard Cheng.
+
+
+
+> +
+> +static inline int cxl_release_tag_group(struct cxl_region *cxlr,
+> +					struct cxl_dc_tag_group *group)
+> +{
+> +	return -ENXIO;
+> +}
+> +
+>  static inline int online_tag_group(struct cxl_dc_tag_group *group)
+>  {
+>  	return 0;
+> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+> index 4a59db823af4..1873a3dfe8e0 100644
+> --- a/drivers/cxl/core/extent.c
+> +++ b/drivers/cxl/core/extent.c
+> @@ -449,6 +449,109 @@ int cxl_add_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
+>  	return cxlr_add_extent(mds, cxlr_dax, dc_extent);
+>  }
+>  
+> +/**
+> + * cxl_resolve_extent() - locate the tag group a released extent belongs to
+> + * @mds: memdev state
+> + * @extent: extent from a DC Release-Capacity record
+> + * @cxlrp: returns the region owning the group
+> + * @groupp: returns the matching tag group
+> + *
+> + * Pure lookup, no side effects.  A record names the dc_extent that contains
+> + * its range: the host cannot split an extent.
+> + *
+> + * Return: 0 when @extent matches an extent the host owns.  -ENXIO when the
+> + * extent doesn't match anything on the host (no region, no dax region, or a
+> + * range that has no overlap with host-owned extents), so the release can
+> + * simply be acknowledged.  -EINVAL when it overlaps owned capacity without
+> + * matching any single host-owned extent: it straddles multiple extents, or
+> + * the tag doesn't match.
+> + */
+> +int cxl_resolve_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
+> +		       struct cxl_region **cxlrp,
+> +		       struct cxl_dc_tag_group **groupp)
+> +{
+> +	u64 start_dpa = le64_to_cpu(extent->start_dpa);
+> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_dax_region *cxlr_dax;
+> +	struct dc_extent *dc_extent;
+> +	struct cxl_region *cxlr;
+> +	struct range dpa_range;
+> +	unsigned long idx;
+> +	uuid_t tag;
+> +
+> +	*cxlrp = NULL;
+> +	*groupp = NULL;
+> +
+> +	dpa_range = (struct range) {
+> +		.start = start_dpa,
+> +		.end = start_dpa + le64_to_cpu(extent->length) - 1,
+> +	};
+> +
+> +	cxlr = cxl_dpa_to_region(cxlmd, start_dpa, &cxled);
+> +	if (!cxlr)
+> +		return -ENXIO;
+> +
+> +	cxlr_dax = cxlr->cxlr_dax;
+> +	if (!cxlr_dax)
+> +		return -ENXIO;
+> +
+> +	import_uuid(&tag, extent->uuid);
+> +
+> +	/* RCU keeps entries live during the walk; teardown happens later. */
+> +	scoped_guard(rcu) {
+> +		xa_for_each(&cxlr_dax->dc_extents, idx, dc_extent) {
+> +			if (dc_extent->cxled != cxled)
+> +				continue;
+> +			if (!range_overlaps(&dc_extent->dpa_range, &dpa_range))
+> +				continue;
+> +			if (!range_contains(&dc_extent->dpa_range, &dpa_range))
+> +				return -EINVAL;
+> +			if (!uuid_equal(&dc_extent->group->uuid, &tag))
+> +				return -EINVAL;
+> +			*cxlrp = cxlr;
+> +			*groupp = dc_extent->group;
+> +			return 0;
+> +		}
+> +	}
+> +	return -ENXIO;
+> +}
+> +
+> +/**
+> + * cxl_release_tag_group() - tear a tag group down for a device release
+> + * @cxlr: region owning the group
+> + * @group: the group to release
+> + *
+> + * The caller acknowledges the group to the device as a whole; the group is
+> + * dropped without a Release DC of its own.
+> + *
+> + * Return: 0 when the group is gone, negative when the caller must leave it
+> + * intact and let the device retry.
+> + */
+> +int cxl_release_tag_group(struct cxl_region *cxlr,
+> +			  struct cxl_dc_tag_group *group)
+> +{
+> +	int rc;
+> +
+> +	/*
+> +	 * Invalidate CPU caches for the region before releasing the capacity
+> +	 * back to the device so it cannot reassign the range while stale
+> +	 * cached data lingers.  On failure do not release: leave the tag
+> +	 * group intact and let the device retry.
+> +	 */
+> +	rc = cxl_region_invalidate_memregion(cxlr);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * An unbinding dax region has already collected the group's devres
+> +	 * teardown; let that finish the release rather than race it.
+> +	 */
+> +	if (!rm_tag_group(group))
+> +		return -EBUSY;
+> +	return 0;
+> +}
+> +
+>  /* The group's device may already be visible: readers walk the xarray under RCU */
+>  static void cleanup_pending_dc_extent(struct dc_extent *dc_extent)
+>  {
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 0fa501f5800c..c3236fe9e7c5 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1747,6 +1747,109 @@ static int cxl_add_pending(struct cxl_memdev_state *mds,
+>  				    pending, total_accepted);
+>  }
+>  
+> +/*
+> + * Tear @group down and queue every member on @acks.  Members are queued
+> + * before rm_tag_group() frees them; on failure nothing is queued and the
+> + * group stays intact for the device to retry.  Returns the number queued.
+> + */
+> +static int cxl_release_group(struct cxl_region *cxlr,
+> +			     struct cxl_dc_tag_group *group,
+> +			     struct list_head *acks)
+> +{
+> +	LIST_HEAD(members);
+> +	int cnt, rc;
+> +
+> +	cnt = stage_group_release(group, &members);
+> +	if (cnt < 0)
+> +		return cnt;
+> +
+> +	rc = cxl_release_tag_group(cxlr, group);
+> +	if (rc) {
+> +		drop_extent_group(&members);
+> +		return rc;
+> +	}
+> +
+> +	list_splice_tail(&members, acks);
+> +	return cnt;
+> +}
+> +
+> +/*
+> + * Flush a staged Release chain.
+> + *
+> + * A tag group is one logical allocation: naming any extent of a group
+> + * releases the whole group, and members the chain did not name go back as
+> + * an unsolicited release (CXL r4.0 9.13.3).  Each extent is decided on its
+> + * own, so a group that refuses teardown, or an extent that overlaps owned
+> + * capacity without naming an owned extent, is held for the device to retry
+> + * while the rest proceed.  Extents the host is not tracking at all (no
+> + * region, no dax region, or nothing owned in range) hold no capacity here
+> + * and are acknowledged as named.
+> + *
+> + * Everything released is acknowledged together in the Release DC response
+> + * once the chain is flushed (split across More-chained commands when the
+> + * list outgrows the mailbox payload), so a sharable tag is always returned
+> + * whole (CXL r4.0 8.2.10.9.9.4).
+> + */
+> +static int cxl_rm_pending(struct cxl_memdev_state *mds)
+> +{
+> +	struct list_head *pending = &mds->dc_chain.pending_extents;
+> +	struct device *dev = mds->cxlds.dev;
+> +	struct cxl_extent_list_node *pos, *tmp;
+> +	LIST_HEAD(acks);
+> +	int cnt = 0, rc;
+> +
+> +	/* cxl_resolve_extent() -> cxl_dpa_to_region() walks every decoder's dpa_res */
+> +	guard(rwsem_read)(&cxl_rwsem.region);
+> +	guard(rwsem_read)(&cxl_rwsem.dpa);
+> +
+> +	/* Untracked first, before a teardown below makes a sibling look untracked */
+> +	list_for_each_entry_safe(pos, tmp, pending, list) {
+> +		struct cxl_dc_tag_group *group;
+> +		struct cxl_region *cxlr;
+> +
+> +		if (cxl_resolve_extent(mds, pos->extent, &cxlr, &group) != -ENXIO)
+> +			continue;
+> +		list_move_tail(&pos->list, &acks);
+> +		cnt++;
+> +	}
+> +
+> +	list_for_each_entry(pos, pending, list) {
+> +		struct cxl_dc_tag_group *group;
+> +		struct cxl_region *cxlr;
+> +		struct range r;
+> +
+> +		rc = cxl_resolve_extent(mds, pos->extent, &cxlr, &group);
+> +		if (rc == -ENXIO)	/* sibling of a group released above */
+> +			continue;
+> +		if (rc) {
+> +			r.start = le64_to_cpu(pos->extent->start_dpa);
+> +			r.end = r.start + le64_to_cpu(pos->extent->length) - 1;
+> +			dev_warn_ratelimited(dev,
+> +					     "DC release %pra (%pUb) names no owned extent; holding for retry\n",
+> +					     &r, pos->extent->uuid);
+> +			continue;
+> +		}
+> +
+> +		rc = cxl_release_group(cxlr, group, &acks);
+> +		if (rc < 0) {
+> +			dev_dbg(dev, "DC release of tag %pUb deferred: %d\n",
+> +				&group->uuid, rc);
+> +			continue;
+> +		}
+> +		cnt += rc;
+> +	}
+> +
+> +	/* Updated Extent List Size shall be > 0 (CXL r4.0 Table 8-352) */
+> +	rc = 0;
+> +	if (cnt)
+> +		rc = cxl_send_dc_response(mds, CXL_MBOX_OP_RELEASE_DC, &acks,
+> +					  cnt);
+> +
+> +	/* The caller frees @pending; hand the acknowledged entries back */
+> +	list_splice(&acks, pending);
+> +	return rc;
+> +}
+> +
+>  static int handle_dcd_chain_event(struct cxl_memdev_state *mds,
+>  				  struct cxl_event_dcd *event)
+>  {
+> @@ -1793,10 +1896,8 @@ static int handle_dcd_chain_event(struct cxl_memdev_state *mds,
+>  
+>  	if (event->event_type == DCD_ADD_CAPACITY)
+>  		rc = cxl_add_pending(mds, &chain->pending_extents);
+> -	else	/* Nothing is tracked yet: acknowledge every release */
+> -		rc = cxl_send_dc_response(mds, CXL_MBOX_OP_RELEASE_DC,
+> -					  &chain->pending_extents,
+> -					  list_count_nodes(&chain->pending_extents));
+> +	else
+> +		rc = cxl_rm_pending(mds);
+>  	clear_pending_extents(mds);
+>  	return rc;
+>  }
+> -- 
+> 2.43.0
+> 
