@@ -1,47 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794474513;
-	b=X/3ldPmf4+T3agnoOOUudnixOyx81p0AvhN7gxbrfwBtt8DFELuL4DjAixSozG4hhBXm
-	 +ILlBV5Nkap51DWtRn01edoXSPZr43FmZr7mJ4hewIaedFbI7nYW35AtjsMYN2dGvEu0+
-	 cXPV+MLzUO5qnUFclLsKkvGsNmEuWKWRVxAF1+6qY8BbHumwOcp8y480JvZgYgMdwVDFB
-	 6ja0So8H6WvO7qJjb43dmP0tTwltnaKsBIYQmlG+3ujrBG1LwosBoRYeHoHEtj6ayGUfK
-	 l+w3QKR0T5K04Iq/qMu3aerOot4DlMt9W47r0ekOQ9vsJ/UgzxWTG4hNDZJPJ1nMKDA==
+	t=1794505981;
+	b=U7NmVDQ6NQiNOAv+E0q0BKUVGBZX6exiUqRVp/4yNeDoXiGvucyc/EHrn9eR/y3+HKdG
+	 16M1siqsVbxOr34TB65wJK5IBfC/hExQR4+60tBO0PaG+HDzx/+CyxM2MCxZSE9bYj9Gx
+	 w3ZQlG0WJ4g0GwPVVr7/ReSZgkh0IcY6f6UIRulhXsRoeDrUr8EEVK863rc1qZd/kHq78
+	 SBM2wdPRJxP75iRM6q+hPJvDHHuhgEa32Yx1zG3gv2zYVzm2vGqKDJX2JfWort7YPNpkr
+	 dRFBpYU5CECdEV4QWaTrkvKtHPP+LoOGeLJVcawBcTLD6DoAZwQYuqpdcTDGJfbTG/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794474513;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=d0TW5g+5gf+ItcPdOWLfpHX4VmIPTaVn9u8r31nhF/E=;
-	b=RMz2CA4KqxDxAcxzQqcHRhxk6bvOh/IcZldR1fJeSDguamB0KzaEckIQ1E+ayw00WvHc
-	 Qnvq50zEdvcYcmwyQz8DdHWoEICernFB5608TaKfltmI6CHRE44LlnKt+I5gDZ8n+Mtkp
-	 UpVqbJ2II//+FegvqrEQBnPkxIqyQT171+/OjI/jXaUjQaEEPUyOckJOXdQvHndATAVC3
-	 r3YdxdYu/IyGaTs903t9eRQ6+7lYMSPaELNjy9c+DIwqq9YwyLdJZP3Ru6f+oHqQKzvN2
-	 wTaB8RiO1CxOSHDTEebVP0r80i0/f8PCqvQICyx9Yc9tCwkPLmtlaaudrr+eHz9piWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794505981;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=F2YnP0s7EXjVFhqc1+OhYJjUXanL7Ulcltk2cgVR7UY=;
+	b=H15BEPh+sY4EKF3f7XCBy+zUl78ed1H5EMBGu548VPJj9D214PbsqJ09u2YnUbsSxm3A
+	 q5F1+5M6+GrYLXnpPlvAoaEMLQgXlTdoGv5qZfRn7gsbid72w52H/oNVm5zIG5hJNhBHz
+	 irJntBKmivRbfhTouw7ct5DFXxeCfIWGH+molvAeUf5t2Jwbu9yOlFC3pMMtuCPd+Ldm2
+	 GW1BtxMtTBrriyi+rRBKx0jq17wZZRsrTORaL6ptNO+WMctNprH7XKqpkzUJAUOAWJus8
+	 jp0YaNTTPmxZjcHbOb32P0hGwlKGLruR2Y05oBgoWgoO9TII3vWo7fCStMTuqq00N0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIE+jqZK;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SugGLgMq;
+	arc=none smtp.remote-ip=209.85.160.51
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C60606A32A;
-	Thu, 12 Nov 2026 09:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682FA606A31C
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Nov 2026 17:53:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 682FA606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIE+jqZK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01011F00A0A;
-	Thu, 12 Nov 2026 09:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794474513;
-	bh=d0TW5g+5gf+ItcPdOWLfpHX4VmIPTaVn9u8r31nhF/E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=UIE+jqZKYrrfRzCUJkrZMjAZk2iT+4AzaK39M6M3D3/SLhCgj65MkGDvs6u/InuwL
-	 p+SYWAtprInI/uTpnJZV/liEHwPI7EbU3xx7gP0pXYpGErDjbACmssL2pTRG91pJ7X
-	 DL/d4ADFb+TDAmC8EFy05ixD1V2CzAsINhjWcHRTbRlZfbkkGlnv924ADJldjo9P2l
-	 tz9iY/ErTV1OUvZVIiDUK972hNZ3t3Y5WLpgX9L00ZyuWOjaHfY0XaR8qLObnYnnFq
-	 0590rXJS85TJ9/5fIc2IPUjFjNC7pDzMgUJrIGSVMYlu/dZ+D9a0E+n+sl/xG1rVt9
-	 bdYucvLcBMoSA==
-Message-ID: <094479b1-a982-48f7-ac70-75260edc505f@kernel.org>
-Date: Thu, 12 Nov 2026 10:08:16 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SugGLgMq
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-4a77761ff8aso14210fac.2
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Nov 2026 09:53:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794505979; x=1795110779; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=F2YnP0s7EXjVFhqc1+OhYJjUXanL7Ulcltk2cgVR7UY=;
+        b=SugGLgMqr4Y1Ti5Xib+/ATK92e2GDZMv2n22agwPu48FC2EeHR7UwnNKp9zVrJ7IIB
+         gFsFhhyyZTN98O/l+F7PJ+8ZLM0ENhRV4HayV6qD6LyOkS4c15VVTKGpvdmjp6unDTXc
+         221+gBFcNZxgCV0J1Pu+ttRyIZKVLiqaU84FWLLSTcWbvlIQAiBZvSP+ekt75poyihuh
+         RlsgeMhRDS533GLeEcQmycWUvhhDg7Dfdo8RwfBO9F+kqCSXoQXPStvLRvVuxOyJjNQf
+         aOZobM+2fPBuyB8zF7t3PPjI3ZTJQcNBMXPfQhfrmBUy2kRTy86Oc8Hlxfs0Z2+0A/30
+         Wz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794505979; x=1795110779;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=F2YnP0s7EXjVFhqc1+OhYJjUXanL7Ulcltk2cgVR7UY=;
+        b=ixRZI43kcII6C2bz9TAxKIy6C7oFW28a057huF09/seLGulygx7ekXS7kkEa5GxPJI
+         w2uILt7zDKcFJr8BYmjdKjJCJl9DKc2oZlgpDZNZjpiv13cn7VYoklMH1wiXZAiwheJ/
+         4NPQYMHXxzo1gCj4abvkuM5lxAwU49r92uvmwpYScjdX2VyCUrAA5C16VBQbP4SsxFWp
+         SSspPTZFRz2oJ4AXJjlZYCzWz1p1uBBij+4I7QJ4fZtt0e/atPnvMkMLlCi8+Kc0/cmR
+         YMUCGlHcpyCWJqEb1HYWK0jD66MpRgR0uJScyTWlKSV931tWo4vTLsN1NpyAFIgPuIgm
+         /1zA==
+X-Forwarded-Encrypted: i=1; AL+hErEvScxilpsT3TJqcYgXSEY1UmKmWq8xENyH64EJktJKNlOasuYk1m0hg+nWY6O9JFmyy7CdHqn/Ep0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+RBT1WEIFkM5yeQWyNyuzyvvzJWBgXL1yv1s+f5Q3w7SjjgcZ4
+	cEx06TjmMEJ6ByINPdIYR9LJ6Q7d07gox3hvv68hr8rf/8ZQj37lgL1G
+X-Gm-Gg: AYBFou1vPkCVX4oV5G91UsdVu9Wk+aAMylk+KGcGyS8N3ZW/LiXN4y0VFjYH6CDyCuQ
+	Us/q8aceVYIq6JJpe+zJqoBTiLslyI2rAwOglnbDpmlJnczJP6hJAqkYWepn4U7kDNLPt7uRa57
+	gD6KLdvFj9L+3Oj8NJL+Zmnz5eyCSPK4BtM7FckcinIF+8YmMDa8O5KBfbJ9mYdwSBaGZjD1Sn2
+	z9lNKt0PXoZHcl6+V6lXQtf0KHNVfz17ZEL7haMgpokU5yytjTTBqibL6dDmoMt4dQ52Bmn974r
+	FMxf6H010a0rjdPWkRzwQm7t+f/HuFbAlfnTWeQ5TsHUk3iVh1996ltw0oXcr3w+8zKplrreQKy
+	0DsGCibkL2C+nyQp2heUjSFP0prbziyK/oFD62bB6ktbJGOp4acuHT0hE3CghzGnX1yCvhHYj17
+	XrptXOamktdWLBXIl6MqxezPQkIa3a2Cp84JoOXCZDcwmO90Io/HYa3CXv7puAb0FIQ1NNMbtch
+	ZiyOuK1B7CLW5yU7tw4rSmdXq4Y8Hs+Bk4YIFhOkuHfzoh3cj1obOmLWH8n/CcFvYhW43b2IEsE
+	MRF2lN3/EoVHMDXXxSbtqIN4owXjJl+XfADZ
+X-Received: by 2002:a05:6870:9f11:b0:494:76db:2aa8 with SMTP id 586e51a60fabf-4afdf191441mr400506fac.5.1794505979154;
+        Thu, 12 Nov 2026 09:52:59 -0800 (PST)
+Received: from [172.31.11.98] ([209.52.143.85])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4ae22f6a1aesm6023059fac.4.2026.11.12.09.52.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Nov 2026 09:52:58 -0800 (PST)
+Message-ID: <fd4eaf33-363b-4f14-88d6-9723d1bf0f16@gmail.com>
+Date: Thu, 12 Nov 2026 10:52:54 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -52,146 +93,186 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] mm/page_alloc: Keep pre-online poison out of the
- buddy allocator
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>,
- Breno Leitao <leitao@debian.org>
-Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Oscar Salvador <osalvador@suse.de>, Kiryl Shutsemau <kas@kernel.org>,
- Harry Yoo <harry@kernel.org>
-References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
- <20261010162017.62506-5-shaikhkamal2012@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [RFC 00/18] hw/cxl: Add a CXL Type-2 device
+To: mhonap@nvidia.com, jic23@kernel.org, alwilliamson@nvidia.com,
+ clg@redhat.com, xueshuai@linux.alibaba.com, ira.weiny@intel.com,
+ zhiw@nvidia.com, mst@redhat.com, pierrick.bouvier@oss.qualcomm.com,
+ junjie.cao@linux.dev, anisa.su@samsung.com, pbonzini@redhat.com,
+ ankita@nvidia.com, vsethi@nvidia.com, skolothumtho@nvidia.com,
+ mochs@nvidia.com, Weqaar Janjua <weqaar.janjua@packetfive.com>,
+ Gerd Hoffmann <kraxel@redhat.com>
+Cc: cjia@nvidia.com, kjaju@nvidia.com, qemu-devel@nongnu.org,
+ linux-cxl@vger.kernel.org
+References: <20261106035911.1280066-1-mhonap@nvidia.com>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261010162017.62506-5-shaikhkamal2012@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Akihiko Odaki <akihiko.odaki@gmail.com>
+In-Reply-To: <20261106035911.1280066-1-mhonap@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10/10/26 18:20, Shaikh Kamaluddin wrote:
-> The inherited-poison path checks initialized blocks before releasing
-> them to the buddy allocator. CXL device poison discovered before
-> hot-added memory is onlined is recorded separately in the pre-online
-> poison registry.
+On 2026/11/05 20:58, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
-> Extend __free_pages_core() to send a block to free_poisoned_block() when
-> it intersects either poison source. In free_poisoned_block(), withhold a
-> page when its PFN is registered as pre-online poison or its physical
-> address is present in the inherited-poison table.
+> Hello,
 > 
-> Pages identified by either source continue through
-> hwpoison_boot_page(), while clean pages are released through
-> accept_and_free_block().
+> This series adds cxl-type2, an emulated CXL Type-2 device with volatile
+> device memory. It is emulated in such a way that all the Linux checks
+> are satisfied so that CXL passthrough using vfio-pci (vfio-cxl) can be
+> developed and tested in a guest without Type-2 hardware.
 > 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> ---
->  mm/page_alloc.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> This series builds on the Type-2 model from Zhi's series (carried in
+> Cédric's tree) and carries one fix from Shuai's tree. Shuai's tree also
+> set up the decoders through device properties and stubbed CXL Reset; the
+> firmware setup and CXL Reset here are new code.
+> Carried patches keep their authors, with a note for each change.
 > 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cca67a2702a4..57843df01b2a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -33,6 +33,7 @@
->  #include <linux/cpuset.h>
->  #include <linux/folio_batch.h>
->  #include <linux/memory_hotplug.h>
-> +#include <linux/memory-failure.h>
->  #include <linux/nodemask.h>
->  #include <linux/vmstat.h>
->  #include <linux/fault-inject.h>
-> @@ -1601,12 +1602,14 @@ static void __meminit free_poisoned_block(struct page *page, unsigned int order,
->  					  enum meminit_context context)
->  {
->  	unsigned long i, nr_pages = 1UL << order;
-> +	unsigned long pfn = page_to_pfn(page);
->  
->  	for (i = 0; i < nr_pages; i++) {
->  		struct page *p = page + i;
->  		phys_addr_t phys = page_to_phys(p);
->  
-> -		if (range_contains_poisoned_memory(phys, PAGE_SIZE)) {
-> +		if (range_contains_poisoned_memory(phys, PAGE_SIZE) ||
-> +		    preonline_hwpoison_contains(pfn + i)) {
->  			hwpoison_boot_page(p, context);
->  			continue;
->  		}
-> @@ -1652,7 +1655,8 @@ void __meminit __free_pages_core(struct page *page, unsigned int order,
->  
->  	/* First: a block parked by __free_unaccepted() never returns here. */
->  	if (range_contains_poisoned_memory(page_to_phys(page),
-> -					   PAGE_SIZE << order)) {
-> +					   PAGE_SIZE << order) ||
-> +	    preonline_hwpoison_intersects(page_to_pfn(page), nr_pages)) {
+> The device:
+> - PCI ID 1b36:0017 and the processing accelerator class 0x1200;
+> - PCIe DVSEC for CXL Devices with CXL.cache, CXL.mem, one HDM range,
+>    cache write-back and invalidate, CXL Reset and Mem Clr; Register
+>    Locator and Flex Bus Port DVSECs;
+> - CXL.cache advertised but not modelled. The device sends no CXL.cache
+>    requests, and its memory is host RAM, which is coherent already. A
+>    cache write-back and invalidate completes at once. The capability is
+>    set because vfio-cxl takes a device as Type-2 only when it reports
+>    both CXL.cache and CXL.mem;
+> - component registers with one HDM decoder;
+> - slot 0, function 0 below a CXL root port of a pxb-cxl, memory in one
+>    fixed memory window selected with fmw-index, cold plug only (no
+>    hotplug or unplug), not migratable.
+> 
+> No Linux driver claims the device on its own. cxl_pci does not bind to
+> the accelerator class, and sfc, the other driver that calls the CXL
+> core Type-2 interface, matches only its own devices. A guest binds
+> cxl-type2 to vfio-pci, which hands it to vfio-cxl. Testing the CXL core
+> Type-2 interface without vfio-cxl needs a driver for 1b36:0017 that
+> calls it. There is none yet.
+> 
+> QEMU has no firmware that commits the HDM decoders of a CXL route at
+> boot, and Linux attaches a Type-2 device only to a committed region
+> (devm_cxl_probe_mem()). So QEMU does that step itself. cxl-type2
+> registers its range with its pxb-cxl at realize (patch 13). At every
+> reset the pxb-cxl commits HDM decoder 0 for it (patch 12), and the
+> device commits its own decoder with Lock On Commit and enables
+> CXL.cache, CXL.mem and HDM decoding (patch 14). A pxb-cxl with a
+> registered range keeps its HDM decoder even with a single root port,
+> where it would otherwise pass accesses through. Type-3 devices, and
+> pxb-cxl without a registered range, are not affected.
+> 
+> A CXL Reset keeps the locked decoder committed, as RWL fields are not
+> affected by CXL Reset once locked (CXL r4.0 Table 8-1). DVSEC Control,
+> the range bases and HDM Decoder Global Control return to their
+> defaults, which leaves Mem_Enable and HDM Decoder Enable at 0. While
+> either is 0 the device drops CXL.mem, so guest accesses to its memory
+> fail until software sets both bits again. The CXL.io part of the reset
+> is not emulated. CONFIG_LOCK makes the RWL DVSEC fields read only until
+> a system reset.
+> 
+> Patches:
+> - 1-7:   Shared CXL code: read-0 ops for the CXL.io range of the
+>           component registers, helpers from Zhi, an HDM decoder count,
+>           DVSEC bit names, a device-neutral view for the direct mapping
+>           code, PCI IDs;
+> - 8-17:  The device; patch 16 also exports the default component
+>           register write handling, so the device can check the enable
+>           bits after a write;
+> - 18:    Docs;
+> 
+> Left for later series:
+> - The CXL device registers with the mailbox, event logs and MSI-X, and
+>    the CDAT;
+> - Direct mapping lifecycle fixes for Type-3 and switch topologies, and
+>    Lock On Commit in host bridges and switches;
+> - Fixes for guest-triggered aborts on 1 and 2 byte mailbox writes and a
+>    repeated DOE Go;
+> - Software-programmed decoders, for Linux-created Type-2 regions;
+> - A Type-2 device below a CXL switch, and migration.
+> 
+> Testing:
+> - Build every commit for x86_64 and aarch64, checkpatch for style.
+> - vfio-cxl selftest (vfio_cxl_type2_test) in an Arm L1 guest on KVM,
+>    with the device below a CXL root port and an SMMUv3: 19 of 19 pass
+> 
+> - Not tested: x86_64 L1, a build without CONFIG_CXL_TYPE2_DEVICE.
+> 
+> The Linux vfio-cxl series(v5) this was tested with:
+> https://lore.kernel.org/r/20260916183540.3813685-1-mhonap@nvidia.com
+> 
+> Sent as RFC to get comments on the series structure and to request
+> 1b36:0017 devid for cxl-type2 device allocation.
 
-That looks rather hacky as well.
+Note: that device ID has already been requested for a device called 
+CnuasNIC:
 
-I really don't want us to have various source of poison information that the
-page allocator + core-mm has to mess with. It's just very bad design.
+("[PATCH v3 0/6] hw: Add Cnuas virtual devices")
+https://lore.kernel.org/qemu-devel/20260929202358.725310-1-weqaar.janjua@packetfive.com/
 
-I made that clear in the last kexec attempt to do something similar.
+Regards,
+Akihiko Odaki
 
-This likely belongs into memory onlining, which could online only the relevant,
-un-poisoned pageblocks.
+> 
+> References:
+> [PATCH RFC 0/5] hw/cxl: Type 2 Device RFC
+> https://lore.kernel.org/linux-cxl/20230517-rfc-type2-dev-v1-0-6eb2e470981b@intel.com/
+> 
+> Type-2 emulation trees:
+> 
+> [1] Zhi Wang
+> https://github.com/zhiwang-nvidia/qemu/commits/zhi/qemu-type2-emulation-for-review
+> 
+> [2] Cédric Le Goater
+> https://github.com/legoater/qemu/tree/cxl-type2
+> 
+> [3] Shuai Xue
+> https://gitee.com/axiqia/qemu-kvm/tree/cxl-type2-test
+> 
+> Manish Honap (12):
+>    hw/cxl: Make HDM decoder initialization count-aware
+>    hw/cxl: Define the CXL Device DVSEC capability and control bits
+>    hw/cxl: Find the memory of a CXL device through one helper
+>    hw/pci: Add PCI IDs for the CXL Type-2 device
+>    hw/mem: Require a CXL root port of a pxb-cxl for cxl-type2
+>    hw/pci-bridge: Add firmware HDM decoder state to pxb-cxl
+>    hw/mem: Bind cxl-type2 to a fixed memory window
+>    hw/mem: Commit the cxl-type2 HDM decoder at reset
+>    hw/mem: Add CXL.cache with cache write-back and invalidate to
+>      cxl-type2
+>    hw/mem: Implement CXL Reset for cxl-type2
+>    hw/mem: Clear the cxl-type2 volatile memory on a CXL Reset request
+>    docs/cxl: Document the CXL Type-2 device
+> 
+> Shuai Xue (1):
+>    hw/cxl: Give the component register .io sub-region read-0 ops
+> 
+> Zhi Wang (5):
+>    hw/cxl: Factor out cxl_host_addr_to_dpa()
+>    hw/cxl: Introduce cxl_component_update_dvsec()
+>    hw/cxl: Introduce CXL type-2 device emulation
+>    hw/cxl: Add the CXL type-2 DVSECs and component registers
+>    hw/cxl: Map the CXL type-2 device memory through the fixed windows
+> 
+>   MAINTAINERS                             |   1 +
+>   docs/specs/pci-ids.rst                  |   2 +
+>   docs/system/devices/cxl.rst             |  68 +++
+>   hw/cxl/cxl-component-utils.c            | 227 +++++++++-
+>   hw/cxl/cxl-host.c                       | 130 ++++--
+>   hw/mem/Kconfig                          |   5 +
+>   hw/mem/cxl_type2.c                      | 580 ++++++++++++++++++++++++
+>   hw/mem/cxl_type2_stubs.c                |  20 +
+>   hw/mem/cxl_type3.c                      |  68 +--
+>   hw/mem/meson.build                      |   2 +
+>   hw/pci-bridge/pci_expander_bridge_cxl.c |  27 +-
+>   include/hw/cxl/cxl.h                    |   1 +
+>   include/hw/cxl/cxl_component.h          |  26 ++
+>   include/hw/cxl/cxl_device.h             |  27 ++
+>   include/hw/cxl/cxl_pci.h                |  31 ++
+>   include/hw/pci/pci.h                    |   1 +
+>   include/hw/pci/pci_bridge.h             |   6 +
+>   include/hw/pci/pci_ids.h                |   3 +
+>   18 files changed, 1102 insertions(+), 123 deletions(-)
+>   create mode 100644 hw/mem/cxl_type2.c
+>   create mode 100644 hw/mem/cxl_type2_stubs.c
+> 
+> 
+> base-commit: f71afb409a87c4ecd0f9d63a5963eb645dfab780
 
-Not sure how it would best retrieve that information, but we should definitely
-not add more shaky hwpoison sources to random pieces of core kernel code.
-
--- 
-Cheers,
-
-David
