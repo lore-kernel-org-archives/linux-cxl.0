@@ -1,60 +1,63 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794448348;
-	b=H57XEQPePtCIVAnwr1D9KcZ3u60P34gQXk/GQefUcvoNFBM2YP4Ayp0xjudMImE6Q3df
-	 MrF1n4NaO6DII6NkACiht1BE2kG7hFw87AlkLTq4cIXYJP/Fls5mD+DpFzpUSG7N9iIzJ
-	 UPKasBZsnp1sYkT+3+stiXLj0/3VTCsFYQ8cHClhwQ2PFZ51z19P78TNx9cWE6YS6jael
-	 XJBuDO83vmLz/ojXeWM2ermTbDalF3GX916mSvFLJ1BGBgfk6dtvUvG9GL1uU2JUVrPNU
-	 lkJEVxlPJoZkWt1dQZbFBjp5T7wm9BGcdqfDRGvcvwHnfE3g7S7ThL+wVBhsnJapkaw==
+	t=1794451198;
+	b=4UTaDbQQyFNk0C75lWCdMUbfjKBrCYFcm/4nvo1c710XWPVY774j2oGnB3Jw8EwLN8+6
+	 4nQStwvm+RpmICrIR1iBdeBp7vT6aah134GJi9SkRWlym5wZVW4NJzBH1Wv+2eGaOVsyt
+	 GssoHQFpbLXI3oSxOzjx2uZizR72AgdBm1jWEDD8grXeW/FRH9fVvq36NoXcp59fk8+7R
+	 qDGtX4ldYPAD1KPc4q6Pex1ZCDxxShwQmiSYpmqG3v0XIH6Lv7znf9z7O6R1C156eVliz
+	 ZXJSYJjtciEb6nop3S9cFjFJ7uD0/DVmztN42KhuZTenEs1i8DpoZKFzk/eN2LhgMSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794448348;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794451198;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ex5Qom/Novcw2Ezs+0SDNP42YlQeSwGPdXGV5r3koP8=;
-	b=dLMnv/chXX8UiOoODZq0kRMtdCIkPER9ZAz2I29bULxR5hlaNjMXnrcP75XFdVl1LG5V
-	 pGV3CFO0rkZUK/HpzPRpsIewwTw9eAfxbqGJvZ4W8P9lWsF6Kncw387CEyPu4/y3E08M+
-	 fY1VsqTgYPRRrJo11XpJLk8/VWfjOV7mXif3LXEnstPmUBGRtdBD52W5YAryWizo4UZH8
-	 kC9jl0XbxUidZVRqK+QIVRLTCwoYF3QpWnz9JLzRgHCMm2ZtHF7YyD3ZNAYrbOrcGvEsz
-	 ZrVg2eyPGTyxQKSh2Ilg2cW4VTl9PEPj3EwkP9O7o5zjUQmC2097MOnLDuMUC+ARvaQ==
+	bh=RK4bEwQrHPG0m48W79BxWmrKFoNEpmeSjwkpwePfQyo=;
+	b=V75dDURWyKUcyeJvWVTBpf0/0yLC1Mf6ZuSTdujTBS8Rxe+2EDjskb7jo21M4LWvZloH
+	 jArHoxs/kbb4O7h55cZJZ5fSbI7iaMuvLV6lraaD2uSLmaa+z5pL5QYWzIBh3Ux+FPWDK
+	 FCzpSmn6i3RHwzeT3TnQTv2MPdyR1SzVMmTEwVukXrRNNb2N6YIA6vrxsOWwO0bwvFwae
+	 a78lDu9gkCvoa0ZwNVwQ+DFgTrhX6el1lT6rkBk5+oI3tD0N2HSbSgbBs6yF8dF6gIx3G
+	 JI0VU0RnvITajKGS85aGtKptqX0SiTaFjsNBk7KJJxxzLf/NFsuD0QDHyIiCsPGHBlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gSIaqQvS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z40IR0Hr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22465606A31C
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Nov 2026 01:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48680606A31C;
+	Thu, 12 Nov 2026 02:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gSIaqQvS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5EC1F00A05;
-	Thu, 12 Nov 2026 01:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z40IR0Hr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715711F00A0A;
+	Thu, 12 Nov 2026 02:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794448347;
-	bh=ex5Qom/Novcw2Ezs+0SDNP42YlQeSwGPdXGV5r3koP8=;
+	s=k20260515; t=1794451198;
+	bh=RK4bEwQrHPG0m48W79BxWmrKFoNEpmeSjwkpwePfQyo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gSIaqQvSPrLL8zNH9NJpDDzGrryhZ0GQ2b5ZSQvEYAohsRxPqKVIC2zOKfQVf+TUA
-	 AkM7mYcWgzumnleNwrQ2oeVMHcRIqcRq1Hm+QJ/vL1yACebHcWGYY2ZhfWRPBYmu9v
-	 q0DiUhyIPxCN3FbJt/YWXY7sOzHqvPmeVcC2Dmzldr1CzrJb4RHIJLTKUJPujzNDuS
-	 JU/hk1SR5tfMPmeSPXSckkV2rk5Ylg/7/mCuLm5yqRhtgu/nu9r7OLuspIRXhmNNgQ
-	 DF5kfwmguvFfuNoiEAStTLxMV2KoTTgQA+sdvgQhm1fVjTMJfltzqa854K+K/5b3GE
-	 W2Hh+kso5tKGA==
-Date: Thu, 12 Nov 2026 01:52:19 +0000
+	b=Z40IR0HrewToDIjR1nvLv5q/raoqrLKgeZMexbyGp/FwhhGqnsQPZatv5a/eEDr8v
+	 +IQQ2en8X3C500qt9zU8Jy5je5bg+NQsfZwsRIILJEhRrsLizGRAW/0HdAooktxOIY
+	 SuKGMu1xWS/CbXcZw+u0vO75W8Y8qKu4kRtSChop7OA/lDm36VOCGTtU04urzuUB9L
+	 jEQrMqs1pPDPumF4uZRbM6HzE6rbqbuvzSVqqwPZD5rJX5oN078JK5z6s3eePKxZMV
+	 jsOFQ9RpXkao9K519ogdK1yRROjS0oXkJBfrpsTGJaj75vSbh8iWwpMPozoM2uNFPL
+	 LEVDLWV/hLvqw==
+Date: Thu, 12 Nov 2026 02:39:48 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: <mhonap@nvidia.com>
-Cc: <alwilliamson@nvidia.com>, <clg@redhat.com>,
- <xueshuai@linux.alibaba.com>, <ira.weiny@intel.com>, <zhiw@nvidia.com>,
- <mst@redhat.com>, <pierrick.bouvier@oss.qualcomm.com>,
- <junjie.cao@linux.dev>, <anisa.su@samsung.com>, <pbonzini@redhat.com>,
- <ankita@nvidia.com>, <vsethi@nvidia.com>, <skolothumtho@nvidia.com>,
- <mochs@nvidia.com>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Yukiya Takaki
- <fj2110jc@fujitsu.com>
-Subject: Re: [RFC 00/18] hw/cxl: Add a CXL Type-2 device
-Message-ID: <20261112015219.55bb312a@jic23-hlaptop>
-In-Reply-To: <20261106035911.1280066-1-mhonap@nvidia.com>
-References: <20261106035911.1280066-1-mhonap@nvidia.com>
+To: alistair23@gmail.com
+Cc: bhelgaas@google.com, lukas@wunner.de, bvanassche@acm.org,
+ linux-pci@vger.kernel.org, alistair@alistair23.me,
+ linux-cxl@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ jgg@nvidia.com, akpm@linux-foundation.org, gary@garyguo.net,
+ a.hindborg@kernel.org, wilfred.mallawa@wdc.com, tmgross@umich.edu,
+ ojeda@kernel.org, boqun.feng@gmail.com, gregkh@linuxfoundation.org,
+ aliceryhl@google.com, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ alex.gaynor@gmail.com, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v6 01/25] virt: coco: change tsm_register() to use a
+ const struct
+Message-ID: <20261112023948.75462a02@jic23-hlaptop>
+In-Reply-To: <20261110041832.1730924-2-alistair.francis@wdc.com>
+References: <20261110041832.1730924-1-alistair.francis@wdc.com>
+	<20261110041832.1730924-2-alistair.francis@wdc.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,70 +68,79 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 6 Nov 2026 09:28:53 +0530
-<mhonap@nvidia.com> wrote:
+On Tue, 10 Nov 2026 14:18:08 +1000
+alistair23@gmail.com wrote:
 
-> From: Manish Honap <mhonap@nvidia.com>
->=20
-> Hello,
->=20
-> This series adds cxl-type2, an emulated CXL Type-2 device with volatile
-> device memory. It is emulated in such a way that all the Linux checks
-> are satisfied so that CXL passthrough using vfio-pci (vfio-cxl) can be
-> developed and tested in a guest without Type-2 hardware.
->=20
-> This series builds on the Type-2 model from Zhi's series (carried in
-> C=C3=A9dric's tree) and carries one fix from Shuai's tree. Shuai's tree a=
-lso
-> set up the decoders through device properties and stubbed CXL Reset; the
-> firmware setup and CXL Reset here are new code.
-> Carried patches keep their authors, with a note for each change.
->=20
-> The device:
-> - PCI ID 1b36:0017 and the processing accelerator class 0x1200;
-> - PCIe DVSEC for CXL Devices with CXL.cache, CXL.mem, one HDM range,
->   cache write-back and invalidate, CXL Reset and Mem Clr; Register
->   Locator and Flex Bus Port DVSECs;
-> - CXL.cache advertised but not modelled. The device sends no CXL.cache
->   requests, and its memory is host RAM, which is coherent already. A
->   cache write-back and invalidate completes at once. The capability is
->   set because vfio-cxl takes a device as Type-2 only when it reports
->   both CXL.cache and CXL.mem;
-> - component registers with one HDM decoder;
-> - slot 0, function 0 below a CXL root port of a pxb-cxl, memory in one
->   fixed memory window selected with fmw-index, cold plug only (no
->   hotplug or unplug), not migratable.
->=20
-> No Linux driver claims the device on its own. cxl_pci does not bind to
-> the accelerator class, and sfc, the other driver that calls the CXL
-> core Type-2 interface, matches only its own devices. A guest binds
-> cxl-type2 to vfio-pci, which hands it to vfio-cxl. Testing the CXL core
-> Type-2 interface without vfio-cxl needs a driver for 1b36:0017 that
-> calls it. There is none yet.
->=20
-> QEMU has no firmware that commits the HDM decoders of a CXL route at
-> boot, and Linux attaches a Type-2 device only to a committed region
-> (devm_cxl_probe_mem()). So QEMU does that step itself.
+> From: Alistair Francis <alistair.francis@wdc.com>
+> 
+> The tsm_register() function takes a struct pci_tsm_ops *ops argument.
+> This eventually is stored in struct tsm_dev as a const, so we should
+> just change the tsm_register() register function argument to be a const.
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+An ops structure that is just function pointers definitely wants to
+be const (and it would be a less than ideal design if it mixed
+other things with those function pointers!).
 
-Just in case you missed it, Yukiya Takaki is looking at bios programmed
-flows.  https://lore.kernel.org/all/cover.1793003983.git.fj2110jc@fujitsu.c=
-om/
+Makes sense as a stand alone change.  Maybe one that can be picked
+up sooner than the rest?   
 
-My immediate thought is follow a similar flow to the one I suggested
-in that patch. Doing CXL setup in QEMU but the PCI enumeration in the bios
-doesn't seem like a sustainable model to me. I'd much prefer to see a bios
-flow with just the QEMU generate tables updated in a similar fashion to
-how DSDT is updated for PXBs.
-
-Alternative for you (assuming you care more about arm than x86) might
-be to just use the SBSA model and do the full enumeration in firmware.
-
-Unfortunately I have quite a large backlog so might be a while before
-I get a chance to take a close look at this series (or the kernel ones!)
-
-Jonathan
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+> ---
+>  drivers/crypto/ccp/sev-dev-tsm.c | 2 +-
+>  drivers/virt/coco/tsm-core.c     | 4 ++--
+>  include/linux/tsm.h              | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/crypto/ccp/sev-dev-tsm.c b/drivers/crypto/ccp/sev-dev-tsm.c
+> index 46f2539d2d5ab..48df8c579c74d 100644
+> --- a/drivers/crypto/ccp/sev-dev-tsm.c
+> +++ b/drivers/crypto/ccp/sev-dev-tsm.c
+> @@ -339,7 +339,7 @@ static void dsm_disconnect(struct pci_dev *pdev)
+>  	streams_teardown(dev_data->ide);
+>  }
+>  
+> -static struct pci_tsm_ops sev_tsm_ops = {
+> +static const struct pci_tsm_ops sev_tsm_ops = {
+>  	.probe = dsm_probe,
+>  	.remove = dsm_remove,
+>  	.connect = dsm_connect,
+> diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
+> index e784993353d8f..6b735ac2a814e 100644
+> --- a/drivers/virt/coco/tsm-core.c
+> +++ b/drivers/virt/coco/tsm-core.c
+> @@ -57,7 +57,7 @@ static struct tsm_dev *alloc_tsm_dev(struct device *parent)
+>  }
+>  
+>  static struct tsm_dev *tsm_register_pci_or_reset(struct tsm_dev *tsm_dev,
+> -						 struct pci_tsm_ops *pci_ops)
+> +						 const struct pci_tsm_ops *pci_ops)
+>  {
+>  	int rc;
+>  
+> @@ -78,7 +78,7 @@ static struct tsm_dev *tsm_register_pci_or_reset(struct tsm_dev *tsm_dev,
+>  	return tsm_dev;
+>  }
+>  
+> -struct tsm_dev *tsm_register(struct device *parent, struct pci_tsm_ops *pci_ops)
+> +struct tsm_dev *tsm_register(struct device *parent, const struct pci_tsm_ops *pci_ops)
+>  {
+>  	struct tsm_dev *tsm_dev __free(put_tsm_dev) = alloc_tsm_dev(parent);
+>  	struct device *dev;
+> diff --git a/include/linux/tsm.h b/include/linux/tsm.h
+> index 381c53244c835..6ac12de8c4d36 100644
+> --- a/include/linux/tsm.h
+> +++ b/include/linux/tsm.h
+> @@ -120,7 +120,7 @@ DEFINE_FREE(put_tsm_dev, struct tsm_dev *,
+>  
+>  int tsm_report_register(const struct tsm_report_ops *ops, void *priv);
+>  int tsm_report_unregister(const struct tsm_report_ops *ops);
+> -struct tsm_dev *tsm_register(struct device *parent, struct pci_tsm_ops *ops);
+> +struct tsm_dev *tsm_register(struct device *parent, const struct pci_tsm_ops *ops);
+>  void tsm_unregister(struct tsm_dev *tsm_dev);
+>  struct tsm_dev *find_tsm_dev(int id);
+>  #endif /* __TSM_H */
 
