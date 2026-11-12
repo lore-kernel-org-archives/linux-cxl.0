@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794474506;
-	b=nUY4MwpeQVegPYOBseItr+T/E4A13xIELjs9Ch82CD4h3Jxo5CSRZ3oQ09ds51zuzPnw
-	 Om8zi3adG1CLhtfCI1rsLOQeMEW5/ql2vvVDKIwAN/hZRiEvGArQcsuJ7zeyGr4EiAgZI
-	 Z3VXTmR+dpcRwtcrwc4SnBQiLLdrALC4oJW7h89/h5xMJv0xUMe4AujMMen2o+gNTuYYb
-	 4VRZ6dMTjG8j7RBceAYCVTPph42RC6vewm8WBjslbYZg4x7wfHXyro03gChNfhx2qbbL4
-	 pNZCa9OVIzWXNNaeb7C4MUSTPVOqKoYd4lBE9qjVMrjeTmoLJ5ohHYAqCriX1AM7FxQ==
+	t=1794474513;
+	b=X/3ldPmf4+T3agnoOOUudnixOyx81p0AvhN7gxbrfwBtt8DFELuL4DjAixSozG4hhBXm
+	 +ILlBV5Nkap51DWtRn01edoXSPZr43FmZr7mJ4hewIaedFbI7nYW35AtjsMYN2dGvEu0+
+	 cXPV+MLzUO5qnUFclLsKkvGsNmEuWKWRVxAF1+6qY8BbHumwOcp8y480JvZgYgMdwVDFB
+	 6ja0So8H6WvO7qJjb43dmP0tTwltnaKsBIYQmlG+3ujrBG1LwosBoRYeHoHEtj6ayGUfK
+	 l+w3QKR0T5K04Iq/qMu3aerOot4DlMt9W47r0ekOQ9vsJ/UgzxWTG4hNDZJPJ1nMKDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794474506;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794474513;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=sT5JORa4hluQX/UGABU9ltevF9DMtn7AClnTuZFBi64=;
-	b=mQH1DaW0tmiA2X/mkFNlrUzSbzBdMkEs3uvitdrwX7jx2AcYr/WQ3zfmLOcQzza+zb7D
-	 DGm4/een6romcsXW5ENxI84Mh+/8ovaq6OfSXoNdOLwhd8+8dNx8i71d1jJYihmRrWL5h
-	 BOfW1jG2Wd0LYh4RIOomlb4x915ci0K+lARp8RvpAHEWhx9oT1bo7trbJ7ltSexpMfXOo
-	 RApD5O36aKpm+GP6Hzx1H5w1t91Box4NC5wtuigC/id0t3fnukKohi7O5jjpG/q0jsTr7
-	 ydYMZs5GELUvbXQKFOWBag+buUAjJsdS52SCfA7ogPyRQwtVvLi8/df7Jkbj6tmdWEg==
+	bh=d0TW5g+5gf+ItcPdOWLfpHX4VmIPTaVn9u8r31nhF/E=;
+	b=RMz2CA4KqxDxAcxzQqcHRhxk6bvOh/IcZldR1fJeSDguamB0KzaEckIQ1E+ayw00WvHc
+	 Qnvq50zEdvcYcmwyQz8DdHWoEICernFB5608TaKfltmI6CHRE44LlnKt+I5gDZ8n+Mtkp
+	 UpVqbJ2II//+FegvqrEQBnPkxIqyQT171+/OjI/jXaUjQaEEPUyOckJOXdQvHndATAVC3
+	 r3YdxdYu/IyGaTs903t9eRQ6+7lYMSPaELNjy9c+DIwqq9YwyLdJZP3Ru6f+oHqQKzvN2
+	 wTaB8RiO1CxOSHDTEebVP0r80i0/f8PCqvQICyx9Yc9tCwkPLmtlaaudrr+eHz9piWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="dK91/CBD";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIE+jqZK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DADB606A889;
-	Thu, 12 Nov 2026 09:08:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C60606A32A;
+	Thu, 12 Nov 2026 09:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dK91/CBD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4979C1F00A05;
-	Thu, 12 Nov 2026 09:08:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIE+jqZK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01011F00A0A;
+	Thu, 12 Nov 2026 09:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794474506;
-	bh=sT5JORa4hluQX/UGABU9ltevF9DMtn7AClnTuZFBi64=;
+	s=k20260515; t=1794474513;
+	bh=d0TW5g+5gf+ItcPdOWLfpHX4VmIPTaVn9u8r31nhF/E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dK91/CBDUKHnx4fnxpXkYT6g6EjYNWdbEfh28QaH4eiXnsV7Q65lDqVP7CnvE/zD7
-	 3PL8LPJSkPlTXKqXQzkgMcC6n9oadyiqPqaJ9OF34qhg86EiHvtApGY8+jOLYvnrYx
-	 qly7FN3cuvvW7NQV/qLx8+0BJlyHWHjTc5Iar9JQ0rKVKYAR9Bfm8GlYty1323KO0S
-	 J04aUVbMlpTo5op0oUgccIMziBFU87+0zggpYiSVWSQCj2jUOHloi27gGFT/Nd/ysB
-	 QdHoyqzJDffQdW6oAxuFCBOd4NijXG9eV0U6VyzlVUDPyQwZO+dbO9y81oIC2gPQRL
-	 gbnVwvLiJ/FEA==
-Message-ID: <a6da0f9b-c292-471e-8bf6-5f67b735591a@kernel.org>
-Date: Thu, 12 Nov 2026 10:04:51 +0100
+	b=UIE+jqZKYrrfRzCUJkrZMjAZk2iT+4AzaK39M6M3D3/SLhCgj65MkGDvs6u/InuwL
+	 p+SYWAtprInI/uTpnJZV/liEHwPI7EbU3xx7gP0pXYpGErDjbACmssL2pTRG91pJ7X
+	 DL/d4ADFb+TDAmC8EFy05ixD1V2CzAsINhjWcHRTbRlZfbkkGlnv924ADJldjo9P2l
+	 tz9iY/ErTV1OUvZVIiDUK972hNZ3t3Y5WLpgX9L00ZyuWOjaHfY0XaR8qLObnYnnFq
+	 0590rXJS85TJ9/5fIc2IPUjFjNC7pDzMgUJrIGSVMYlu/dZ+D9a0E+n+sl/xG1rVt9
+	 bdYucvLcBMoSA==
+Message-ID: <094479b1-a982-48f7-ac70-75260edc505f@kernel.org>
+Date: Thu, 12 Nov 2026 10:08:16 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -52,8 +52,8 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/5] mm/memory-failure: Add a pre-online poison
- registry
+Subject: Re: [RFC PATCH 4/5] mm/page_alloc: Keep pre-online poison out of the
+ buddy allocator
 To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>,
  Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Dave Jiang <dave.jiang@intel.com>,
@@ -71,7 +71,7 @@ Cc: Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
  Oscar Salvador <osalvador@suse.de>, Kiryl Shutsemau <kas@kernel.org>,
  Harry Yoo <harry@kernel.org>
 References: <20261010162017.62506-1-shaikhkamal2012@gmail.com>
- <20261010162017.62506-4-shaikhkamal2012@gmail.com>
+ <20261010162017.62506-5-shaikhkamal2012@gmail.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -118,44 +118,78 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261010162017.62506-4-shaikhkamal2012@gmail.com>
+In-Reply-To: <20261010162017.62506-5-shaikhkamal2012@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/10/26 18:20, Shaikh Kamaluddin wrote:
-> A frame can be known bad before its backing memory is onlined. A CXL
-> Type-3 device retains poison as DPA-based Media Error Records and can
-> report those records through GET_POISON_LIST after a reboot, kexec, or
-> device hotplug.
+> The inherited-poison path checks initialized blocks before releasing
+> them to the buddy allocator. CXL device poison discovered before
+> hot-added memory is onlined is recorded separately in the pre-online
+> poison registry.
 > 
-> CXL poison can be retrieved while a region is being prepared, before
-> dax/kmem calls add_memory_driver_managed() for the range. At that point
-> there is no initialized struct page on which memory_failure() can
-> operate. The poison information must therefore be retained until the
-> corresponding pages pass through memory initialization.
+> Extend __free_pages_core() to send a block to free_poisoned_block() when
+> it intersects either poison source. In free_poisoned_block(), withhold a
+> page when its PFN is registered as pre-online poison or its physical
+> address is present in the inherited-poison table.
 > 
-> Add a registry of sorted, nonoverlapping poisoned PFN ranges. Each
-> registration represents one owner and its independently managed memory.
-> For example, a CXL region registers the poisoned PFN ranges translated
-> from its device poison records and receives an opaque handle for that
-> range set. A second CXL region receives a separate handle for its own
-> ranges.
-> 
-> The owner uses its handle to remove exactly its registration after the
-> associated memory can no longer enter the allocator. Removing one CXL
-> region's registration does not affect poison ranges registered by
-> another region.
-> 
-> Keep each registered range set immutable and protect the registration
-> list with RCU. This keeps allocator-side lookups lockless while allowing
-> a registration to be removed safely after an RCU grace period. A later
-> patch will consult the registry before initialized pages are released
-> to the buddy allocator.
+> Pages identified by either source continue through
+> hwpoison_boot_page(), while clean pages are released through
+> accept_and_free_block().
 > 
 > Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
 > ---
+>  mm/page_alloc.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index cca67a2702a4..57843df01b2a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/cpuset.h>
+>  #include <linux/folio_batch.h>
+>  #include <linux/memory_hotplug.h>
+> +#include <linux/memory-failure.h>
+>  #include <linux/nodemask.h>
+>  #include <linux/vmstat.h>
+>  #include <linux/fault-inject.h>
+> @@ -1601,12 +1602,14 @@ static void __meminit free_poisoned_block(struct page *page, unsigned int order,
+>  					  enum meminit_context context)
+>  {
+>  	unsigned long i, nr_pages = 1UL << order;
+> +	unsigned long pfn = page_to_pfn(page);
+>  
+>  	for (i = 0; i < nr_pages; i++) {
+>  		struct page *p = page + i;
+>  		phys_addr_t phys = page_to_phys(p);
+>  
+> -		if (range_contains_poisoned_memory(phys, PAGE_SIZE)) {
+> +		if (range_contains_poisoned_memory(phys, PAGE_SIZE) ||
+> +		    preonline_hwpoison_contains(pfn + i)) {
+>  			hwpoison_boot_page(p, context);
+>  			continue;
+>  		}
+> @@ -1652,7 +1655,8 @@ void __meminit __free_pages_core(struct page *page, unsigned int order,
+>  
+>  	/* First: a block parked by __free_unaccepted() never returns here. */
+>  	if (range_contains_poisoned_memory(page_to_phys(page),
+> -					   PAGE_SIZE << order)) {
+> +					   PAGE_SIZE << order) ||
+> +	    preonline_hwpoison_intersects(page_to_pfn(page), nr_pages)) {
 
-Oh no, another source of poison information. That doesn't sound like a good design.
+That looks rather hacky as well.
+
+I really don't want us to have various source of poison information that the
+page allocator + core-mm has to mess with. It's just very bad design.
+
+I made that clear in the last kexec attempt to do something similar.
+
+This likely belongs into memory onlining, which could online only the relevant,
+un-poisoned pageblocks.
+
+Not sure how it would best retrieve that information, but we should definitely
+not add more shaky hwpoison sources to random pieces of core kernel code.
 
 -- 
 Cheers,
