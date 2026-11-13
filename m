@@ -1,68 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794530335;
-	b=Yw+ShyTRkkcnkUeFkKky381KU+jyfkvlZxPQpRZ7LqvtvbGhYFgyTXLT/YzvLtU2qaOF
-	 hotCAeHCLGk2+6B4/39uWqVitN/oWmmMR88MWCGEHcHZanYVshQBrCGz3DjwTNQVjjAbS
-	 GkpfMb2EN7yJIfXtUdtvITh/IMBTkySBcLKcMw0G+33RVaT7FM5CAWQaXGylJ9O5g4Pa2
-	 NzzCUZsG80jgAsBvNBlz4js651nrhrzVd4Egsw5jSvLPMjVmV8ydx0jRtDskODcAePFR9
-	 R5L9md0IXJZLku13gmXFYC4TPBmROY5oIEjI8TLzrn64w0pHQKgaHl8T06z90Kru2rw==
+	t=1794576365;
+	b=RfpV+RwbtV5yYU3z+bBhazQzOlJanQJggAyQIl20S++v2q4er5orDNTeaKAFL2fF1ptG
+	 XB/BlIOl3H3uWdghOnHa4ZKP1lx3Ft7cRxXcp4gSdVcFY1VFLpyjZGprEi7Jx9rrTD0bq
+	 wi/a9ltSQoU4PmycO8r+3efk4vrNQP+V7fmFYs487GG3+K96OIpWHkVzfSQ7TfiuJuw8L
+	 p9yaex3vGD7mIEjQ2MlZjTpCvgzq1MPv0y1fynTV6BOkbFuSWEIwrFT6s7X8uw2Zcc5nd
+	 Fqxa8lU5OSCPwWM2lrGR9Gl+pCgnnSzxpV6w33iM0tuJZKYTu5tn8RLmOhDTZ8KG/Lw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794530335;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794576365;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=canG37aXR5mJ6g5b5cttvc/Do4ZF3im4aNWYzqLWQXA=;
-	b=JgVv7T83BOFzibJ5WVaATrt7+xxYSUnk5FaR3PHVHL+6X3fsxOZNI709Y22iQ3zmsIJ8
-	 fIKehbNDHN1ddh4Q9jN1ItFawD2J0yafTwIvrzCmTyeBemuAJ7LEFfMfUZ1yg3UPB3Lz6
-	 Mgl/3dIa2CXQUFTVDCSIpNstLm/hEwXDe/R79GJXQz17wT1LSuvZXoOJxIHui8+CGb/LD
-	 w4DvYeI8v3w6iP4rwk0SvMCyrqnkQ6for71qrMTPMpJr1O7Q35Khht6blrmI4/yJe78gE
-	 62c8DyqL5eDqjUeQy7X1z7NvNsRE6iuRazjfwzZGYeoBWG3TppKgFq0tK2k8/y+btdg==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=uozLgHIJcCRVIWGDkYXRUzxamxNdBt+/LrMuLz+mwMI=;
+	b=kQjOyHovK9lNfsXUsjbxEWupYeq6V+xhTpVDUZfdbp+REmgyUn92+Y94mh5RSqGfbPNU
+	 VDgsMrLhlkt4E7YW/HxS7g5VFg3nNvUF08tlNxfjexXltCV0Ok+9BdP9CNJiGmuOz2UJC
+	 dP+WCf2cIgJV2+7fmOCuj4yWk0qwzlERDj/cA1akXAszsye2FlRj/3SSMP6KCazCaTAee
+	 MZolefCFIISvMrWInO/Id89NvXI2w9LE9Y3xK4SvMAgyyxUZGDKxEvEoosvXOrcxZS28b
+	 qRxN815+t02bMv5vK5e46wS/fN3gETDsGIYKnhCObjo4W9B4EdjxEQ3tm2HhYbR/7Zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=c00IwH8z;
-	arc=none smtp.remote-ip=198.175.65.16
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gduD1r5A;
+	arc=none smtp.remote-ip=198.175.65.17
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA530606B7C8;
-	Fri, 13 Nov 2026 00:38:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA530606B7C8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDA3606A339;
+	Fri, 13 Nov 2026 13:26:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8BDA3606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=c00IwH8z
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gduD1r5A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794530335; x=1826066335;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=M1TWvgEtRHxXH+HX2eeBzztaslUSiVAUKNjFskSfCH4=;
-  b=c00IwH8z5DDgqUE25ROR4dqx596dTGte5NLOH38nnrTqiuxVBi6D3tTg
-   IkWPTgbhNcOzlr4VxOMdhqZOm64u3PFupW2r5EY6ZrZds/Rt2xFO5jjfo
-   SFKMCnns4eoOiObEwy/xF+rb1nSnKMU1lQd1nWb1Mb1q/SxzSGG2nHgMg
-   xlWcXpeyuIkPlwGzEHAXiJTOyIpGbnWvA/8/HF9lSLokfQNfzrS5BtfqN
-   p5EyFmcaUGq4Rb1LCMBT0JDTEt6vIUbCoDX6l2xMTrRhV98hCstmBqzhE
-   cGQZdI4NfQaC593un9jvcIGNgvigz36n310aTgQaBAUuHb7sGIqC9ZXlZ
-   w==;
-X-CSE-ConnectionGUID: q4y6hcGuTFqRBAxnZ+Nr/A==
-X-CSE-MsgGUID: fN4uGcVxRBucAKi1lZTtHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11964"; a="3317360"
-X-IronPort-AV: E=Sophos;i="6.27,210,1787036400"; 
-   d="scan'208";a="3317360"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 16:38:54 -0800
-X-CSE-ConnectionGUID: C7LLPPGbSSau07vLky1Fgw==
-X-CSE-MsgGUID: s8E7UBIMTeqW99TaqSmMcA==
+  t=1794576364; x=1826112364;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JHDAA9GQ4cle8mcEUojmH66XcPzPvCOf30Osct56EHk=;
+  b=gduD1r5AnvwflVvtZveQnXzKMIvXEzKXzhs1ZHf/HFwdsNAyr8Wzk4BE
+   JnKkBXo78AVaPLvrkmxvV//e/rqyaBy+9JVEaWoAJUWzTEUahOelGJ9u3
+   iJUYG9cmrWHaYElzCJXMs/MEnMAMRbRPekPYH3y467QmpUbyjRDIcjTE0
+   QO4CjYDddHiw5ODVLLXaiRBnBLw9QJ9n9o3WJ3+lWzbwJdNJk/TBfeO2m
+   ijmFYeuLy4KyOUPBt6oEaw66BRPdTU9xW6e9mSbKHhHQB3QVUUQwud1HE
+   VxKvvOE4Ctaiz1z7xFHXrTQzXDVxR4j1q9BBGqL6j+nefvJ7D165m9plB
+   A==;
+X-CSE-ConnectionGUID: ryXcCur4T5+hrAx54OAOCA==
+X-CSE-MsgGUID: 1hzw80O1TyqbC3PdSyI3ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3391427"
+X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
+   d="scan'208";a="3391427"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 05:26:04 -0800
+X-CSE-ConnectionGUID: Er+W26QyRNC/UrHD4NE/dg==
+X-CSE-MsgGUID: QkWApvgoRmGXBcHIZhw0QA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,210,1787036400"; 
-   d="scan'208";a="8783891"
-Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.111.216]) ([10.125.111.216])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 16:38:52 -0800
-Message-ID: <6e795d77-081e-4c32-87ab-931d031a419c@intel.com>
-Date: Thu, 12 Nov 2026 17:38:51 -0700
+X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
+   d="scan'208";a="10698097"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.47.46])
+  by fmviesa011.fm.intel.com with ESMTP; 13 Nov 2026 05:25:58 -0800
+Date: Fri, 13 Nov 2026 21:17:42 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Ankit Agrawal <ankita@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, jgg@nvidia.com, aneesh.kumar@kernel.org,
+	aik@amd.com, iweiny@kernel.org, ming.li@zohomail.com,
+	icheng@nvidia.com, bhelgaas@google.com, smadhavan@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	Smita.KoralahalliChannabasappa@amd.com,
+	andriy.shevchenko@linux.intel.com, linux-coco@lists.linux.dev,
+	terry.bowman@amd.com, nik.borisov@suse.com, brads@mainlining.org,
+	lukas@wunner.de, rrichter@amd.com, gourry@gourry.net
+Subject: Re: [RFC PATCH v2 1/5] PCI/TSM: Create MMIO descriptors via TDISP
+ Report
+Message-ID: <avcN9pz4mCRKA5zM@yilunxu-OptiPlex-7050>
+References: <20261105152909.53452-1-ankita@nvidia.com>
+ <20261105152909.53452-2-ankita@nvidia.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -72,393 +89,169 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 09/19] cxl: Refresh cached PCI HDM decoder settings
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Ira Weiny <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Li Ming <ming.li@zohomail.com>, Joshua Machauer <machaujo@amazon.de>,
- Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20261105185917.2667656-1-smadhavan@nvidia.com>
- <20261105185917.2667656-10-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20261105185917.2667656-10-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261105152909.53452-2-ankita@nvidia.com>
 
+On Thu, Nov 05, 2026 at 03:29:05PM +0000, Ankit Agrawal wrote:
+> After pci_tsm_bind() and pci_tsm_lock() the low level TSM driver is
+> expected to populate the TDISP GET_DEVICE_INTERFACE_REPORT response
+> payload for the device.
+> 
+> Add pci_tsm_mmio_alloc()/pci_tsm_mmio_free() to parse that report into
+> a set of encrypted MMIO ranges, and pci_tsm_mmio_setup()/
+> pci_tsm_mmio_teardown() to mark those ranges as encrypted in iomem via
+> a new encrypted_iomem_resource tree (IORES_DESC_ENCRYPTED). With those
+> descriptors the TSM driver can use pci_tsm_mmio_setup() to inform
+> ioremap() how to map the device per the device expectations. The VM
+> is expected to validate the interface with the relying party before
+> accepting the device for operation.
+> 
+> pci_tsm_mmio_alloc() also recovers the obfuscated starting address for
+> each encrypted MMIO range, since the VM is never disclosed the HPA
+> that correlates to the GPA of the device's MMIO. The obfuscated
 
+I think we need to make clear why we need to parse the obfuscated
+addresses like this. IIUC what the guest really needs are the BarID &
+the offset within the Bar, so that it knows exactly where the MMIO range
+lies. That requires the obfuscation never affects the address bits
+for the in-Bar offset. Thus the MRO should be Bar aligned. And since
+there is only one MRO across all MMIO ranges, it has to be aligned to the
+largest Bar size.
 
-On 11/5/26 11:59 AM, Srirangan Madhavan wrote:
-> Early PCI discovery creates the HDM cache, while later CXL enumeration and
-> decoder operations provide updated programming state.
+> address is BAR aligned.
+
+The obfuscated address is not BAR aligned, the MRO should be Bar aligned.
+
 > 
-> Refresh the PCI snapshot when decoders are enumerated, committed, or reset
-> so reset recovery need not walk the CXL topology. Keep cache access and
-> locking in the built-in HDM state helpers. Ignore updates when no cache
-> exists and reject decoder-count mismatches.
+> BAR alignment is not mandated by the PCI TDISP specification. So this
+> relies on the TSM implementation: the MMIO reporting offset (MRO) it
+> programs must be a multiple of the largest BAR size so that the
+> in-BAR offset of a reported range can be recovered as
+> (reported address % BAR size). Arm CCA specifies this in DEN0137
+> section A9.6.2 ("This algorithm assumes that the MRO value is a
+> multiple of the BAR size") and recommends the RMM pick
+> MRO = x * 2^n with 2^n >= the largest BAR size.
 > 
-> Use CXL_RESET for the PCI HDM cache. Shared HDM register helpers do not
-> require it.
+
+I think the following doesn't belong to the changelog, could be put
+under ---
+
+> Based on an original patch by Aneesh Kumar K.V [1], and cherry-picked
+> from Dan Williams' upstream commit [2]. Major functional differences
+> from Dan's posting is due to the lack of evidence-store infrastructure
+> yet (device_evidence / DEVICE_EVIDENCE_TYPE_REPORT). The
+> pci_tsm_mmio_alloc() takes the raw report bytes directly from the caller
+> instead of pulling them from a device evidence store.
 > 
-> Skip cache checks and updates for DVSEC-emulated decoders, which do not
-> use HDM registers. Keep cached global control when MMIO reads return all
-> ones.
+> Link: https://lore.kernel.org/linux-coco/20251117140007.122062-8-aneesh.kumar@kernel.org/ [1]
+> Link: https://lore.kernel.org/all/20260705220819.2472765-15-djbw@kernel.org/ [2]
 > 
-> Non-PCI mock ports have no upstream PCI device, so the cache helpers
-> ignore them. This avoids test wrappers and a circular dependency between
-> cxl_core and cxl_mock.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> Assisted-by: LLM
-> Reviewed-by: Richard Cheng <icheng@nvidia.com>
-> 
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> Reviewed-by: Bradley Morgan <brads@mainlining.org>
 > ---
-> Reference branch: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=50a88f5194e5df38590d413f925d8d5afa8a8488
-> ---
->  drivers/cxl/Kconfig          |  5 ++++
->  drivers/cxl/core/core.h      |  1 +
->  drivers/cxl/core/hdm.c       | 34 +++++++++++++++++++--
->  drivers/cxl/core/hdm_state.c | 57 ++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c       | 24 +++++++++++++++
->  include/cxl/cxl.h            |  1 +
->  include/cxl/hdm.h            | 32 ++++++++++++++++++++
->  include/linux/pci.h          |  6 ++++
->  8 files changed, 158 insertions(+), 2 deletions(-)
+>  drivers/pci/tsm.c       | 239 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/ioport.h  |   2 +
+>  include/linux/pci-tsm.h |  33 ++++++
+>  kernel/resource.c       |   8 ++
+>  4 files changed, 282 insertions(+)
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 80aeb0d556bd..8b08bfdc4982 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -6,6 +6,7 @@ menuconfig CXL_BUS
->  	select FW_UPLOAD
->  	select PCI_DOE
->  	select FIRMWARE_TABLE
-> +	select CXL_RESET
->  	select NUMA_KEEP_MEMINFO if NUMA_MEMBLKS
->  	select FWCTL if CXL_FEATURES
->  	help
-> @@ -244,3 +245,7 @@ config CXL_ATL
->  	depends on ACPI_PRMT && AMD_NB
+> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> index 5fdcd7f2e820..d074bfd18d40 100644
+> --- a/drivers/pci/tsm.c
+> +++ b/drivers/pci/tsm.c
+> @@ -9,11 +9,16 @@
+>  #define dev_fmt(fmt) "PCI/TSM: " fmt
 >  
->  endif
-> +
-> +# CXL_BUS requires the PCI HDM cache and built-in state helpers, even when modular.
-> +config CXL_RESET
-> +	bool
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index ea539f00e55d..e34d574f6594 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -224,6 +224,7 @@ static inline void devm_cxl_dport_ras_setup(struct cxl_dport *dport) { }
->  int cxl_gpf_port_setup(struct cxl_dport *dport);
->  
->  struct cxl_hdm;
-> +int cxl_hdm_check_decoder_count(struct cxl_hdm *cxlhdm);
->  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->  			struct cxl_endpoint_dvsec_info *info);
->  int cxl_port_get_possible_dports(struct cxl_port *port);
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 85f9abf58a42..ec387070d7ad 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -725,6 +725,24 @@ static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
->  		*tgt |= FIELD_PREP(GENMASK_ULL(63, 56), t[7]->port_id);
->  }
->  
-> +static void cxl_hdm_refresh_decoder(struct cxl_hdm *cxlhdm,
-> +				    struct cxl_decoder *cxld)
-> +{
-> +	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
-> +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
-
-Move the declaration to before you use the variable. This is an exception when it comes to var declarations in the kernel. The pattern above is discouraged.
-> +
-> +	if (!hdm)
-> +		return;
-> +	if (!is_endpoint_decoder(&cxld->dev))
-> +		return;
-> +
-> +	pdev = cxl_port_get_uport_pci_dev(cxlhdm->port);
-
-As mentioned above,
-struct pci_dev *pdev __free(pci_dev_put) = cxl_port_get_uport_pci_dev(cxlhdm->port);
-
-> +	if (!pdev)
-> +		return;
-> +	cxl_hdm_cache_refresh_decoder(pdev, hdm,
-> +				      to_cxl_endpoint_decoder(&cxld->dev));
-> +}
-> +
->  static void
->  cxl_endpoint_decoder_snapshot(struct cxl_endpoint_decoder *cxled,
->  			      struct cxl_endpoint_decoder_settings *settings)
-> @@ -805,6 +823,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
->  	}
->  	port->commit_end++;
->  	cxld->config.flags |= CXL_DECODER_F_ENABLE;
-> +	cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  
->  	return 0;
->  }
-> @@ -877,6 +896,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
->  	writel(0, hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
->  
->  	cxld->config.flags &= ~CXL_DECODER_F_ENABLE;
-> +	cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  
->  	/* Userspace is now responsible for reconfiguring this decoder */
->  	if (is_endpoint_decoder(&cxld->dev)) {
-> @@ -1079,13 +1099,21 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  {
->  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
->  	struct cxl_port *port = cxlhdm->port;
-> -	int i;
-> +	/* DVSEC-emulated decoders do not describe the cached HDM registers. */
-> +	bool emulated = should_emulate_decoders(info);
->  	u64 dpa_base = 0;
-> +	int i, rc;
-> +
-> +	if (is_cxl_endpoint(port) && hdm && !emulated) {
-> +		rc = cxl_hdm_check_decoder_count(cxlhdm);
-> +		if (rc)
-> +			return rc;
-> +	}
->  
->  	cxl_settle_decoders(cxlhdm);
->  
->  	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> -		int rc, target_count = cxlhdm->target_count;
-> +		int target_count = cxlhdm->target_count;
->  		struct cxl_decoder *cxld;
->  
->  		if (is_cxl_endpoint(port)) {
-> @@ -1120,6 +1148,8 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  			put_device(&cxld->dev);
->  			return rc;
->  		}
-> +		if (!emulated)
-> +			cxl_hdm_refresh_decoder(cxlhdm, cxld);
->  		rc = add_hdm_decoder(port, cxld);
->  		if (rc) {
->  			dev_warn(&port->dev,
-> diff --git a/drivers/cxl/core/hdm_state.c b/drivers/cxl/core/hdm_state.c
-> index c9cc019902ef..d4c2be1ef833 100644
-> --- a/drivers/cxl/core/hdm_state.c
-> +++ b/drivers/cxl/core/hdm_state.c
-> @@ -1,6 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
->  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/pci.h>
->  #include <linux/rwsem.h>
->  
->  #include <cxl/hdm.h>
-> @@ -13,3 +15,58 @@ struct cxl_rwsem cxl_rwsem = {
->  	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
->  };
->  EXPORT_SYMBOL_FOR_MODULES(cxl_rwsem, "cxl_core");
-> +
-> +void cxl_hdm_cache_refresh_decoder(struct pci_dev *pdev, void __iomem *hdm,
-> +				   struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_endpoint_decoder_settings *settings;
-> +	struct cxl_decoder *cxld = &cxled->cxld;
-> +	struct cxl_hdm_info *info;
-> +	u32 global_ctrl;
-> +	int id;
-> +
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	id = cxld->config.id;
-> +	info = pdev->hdm;
-> +	if (!info)
-> +		return;
-> +	if (id < 0 || id >= info->decoder_count) {
-> +		pci_warn(pdev, "CXL HDM decoder %d exceeds cached count %d\n",
-> +			 id, info->decoder_count);
-> +		return;
-> +	}
-> +
-> +	/* Preserve the last good value when the device does not respond. */
-> +	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	if (global_ctrl != U32_MAX)
-> +		info->global_ctrl = global_ctrl;
-> +	settings = &info->settings[id];
-> +
-> +	/*
-> +	 * A disabled decoder's software object may retain its old range and
-> +	 * skip state. Leave only the decoder id in the cached settings so stale
-> +	 * state is not restored as an enabled decode.
-> +	 */
-> +	*settings = (struct cxl_endpoint_decoder_settings) {
-> +		.config.id = id,
-> +	};
-> +	if (cxld->config.flags & CXL_DECODER_F_ENABLE) {
-> +		settings->config = cxld->config;
-> +		settings->skip = cxled->skip;
-> +	}
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_cache_refresh_decoder, "cxl_core");
-
-kdoc header for exported symbol
-
-> +
-> +int cxl_hdm_cache_check_decoder_count(struct pci_dev *pdev, int count)
-
-In the end we are just looking to see if there's a match right? I think returning a bool and changing the function name to be more obvious.
-
-bool cxl_hdm_cache_decoder_count_match() maybe?
-
-> +{
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	if (pdev->hdm && pdev->hdm->decoder_count != count) {
-> +		pci_warn(pdev,
-> +			 "CXL HDM cache decoder count mismatch: cached=%d hdm=%d\n",
-> +			 pdev->hdm->decoder_count, count);
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_cache_check_decoder_count, "cxl_core");
-
-kdoc header for exported symbol. Also are you sure this symbol needs to be exported?
-
-DJ
-
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index f72cd8f50e77..5272013548c7 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -6,6 +6,7 @@
->  #include <linux/delay.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/overflow.h>
 >  #include <linux/pci.h>
 >  #include <linux/pci-doe.h>
-> +#include <cxl/hdm.h>
->  #include <cxl/pci.h>
->  #include <linux/aer.h>
->  #include <cxlpci.h>
-> @@ -180,6 +181,29 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_await_media_ready, "CXL");
->  
-> +/**
-> + * cxl_hdm_check_decoder_count() - check enumeration against the PCI HDM cache
-> + * @cxlhdm: HDM capability containing the decoder count to check
-> + *
-> + * Take cxl_rwsem.dpa for read while comparing the cached count. Call only
-> + * for hardware HDM decoders, since DVSEC-emulated ranges do not describe
-> + * the HDM registers represented by the cache.
-> + *
-> + * Return: 0 if the counts match or no upstream PCI device or cache exists,
-> + * or -ENXIO if the cached and enumerated decoder counts differ.
-> + */
-> +int cxl_hdm_check_decoder_count(struct cxl_hdm *cxlhdm)
+>  #include <linux/pci-tsm.h>
+> +#include <linux/range.h>
+> +#include <linux/sizes.h>
+> +#include <linux/slab.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/tsm.h>
+> +#include <linux/unaligned.h>
+
+Didn't find it needed.
+
+>  #include <linux/xarray.h>
+>  #include "pci.h"
+
+[...]
+
+> +int pci_tsm_mmio_setup(struct pci_dev *pdev, struct pci_tsm_mmio *mmio)
 > +{
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		cxl_port_get_uport_pci_dev(cxlhdm->port);
+> +	int i;
 > +
-> +	if (!pdev)
+> +	device_lock_assert(&pdev->dev);
+> +	if (pdev->dev.driver)
+> +		return -EBUSY;
+> +
+> +	for (i = 0; i < mmio->nr; i++) {
+> +		struct resource *res = pci_tsm_mmio_resource(mmio, i);
+> +		int j;
+> +
+> +		if (resource_size(res) == 0 || !(res->flags & IORESOURCE_MEM))
+> +			break;
+> +
+> +		/* Only require the caller to set the range, init remainder */
+> +		*res = DEFINE_RES_NAMED_DESC(res->start, resource_size(res),
+> +					     pci_name(pdev), IORESOURCE_MEM,
+> +					     IORES_DESC_ENCRYPTED);
+> +
+> +		for (j = 0; j < PCI_NUM_RESOURCES; j++)
+
+You've changed to pci_dev_for_each_resource in Patch 3, why not change
+it here? Then Patch 3 would be clearer.
+
+> +			if (resource_contains(pci_resource_n(pdev, j), res))
+> +				break;
+> +
+> +		/* Request is outside of device MMIO */
+> +		if (j >= PCI_NUM_RESOURCES)
+> +			break;
+> +
+> +		if (insert_resource(&encrypted_iomem_resource, res) != 0)
+> +			break;
+> +	}
+> +
+> +	if (i == mmio->nr)
 > +		return 0;
 > +
-> +	return cxl_hdm_cache_check_decoder_count(pdev, cxlhdm->decoder_count);
+> +	mmio_teardown(mmio, i);
+> +
+> +	return -EINVAL;
 > +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_hdm_check_decoder_count, "CXL");
+> +EXPORT_SYMBOL_GPL(pci_tsm_mmio_setup);
 > +
->  static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
->  {
->  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 6d6e564be27a..341a7c52894a 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -26,6 +26,7 @@ enum cxl_devtype {
->  };
->  
->  struct cxl_region;
-> +struct cxl_hdm_info;
->  
->  enum cxl_decoder_type {
->  	CXL_DECODER_DEVMEM = 2,
-> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
-> index 219b9bb67440..06e9aa4479c2 100644
-> --- a/include/cxl/hdm.h
-> +++ b/include/cxl/hdm.h
-> @@ -6,6 +6,9 @@
->  #include <linux/types.h>
->  #include <cxl/cxl.h>
->  
-> +struct pci_dev;
-> +struct cxl_endpoint_decoder;
-> +
->  /**
->   * struct cxl_endpoint_decoder_settings - endpoint HDM decoder programming
->   * @config: common decoder configuration
-> @@ -16,4 +19,33 @@ struct cxl_endpoint_decoder_settings {
->  	u64 skip;
->  };
->  
-> +/**
-> + * struct cxl_hdm_info - cached CXL HDM state for a PCI device
-> + * @decoder_count: number of entries in @settings
-> + * @hdm_bar: PCI BAR containing the HDM decoder capability
-> + * @hdm_offset: offset of the HDM decoder capability in @hdm_bar
-> + * @hdm_size: size of the HDM decoder register block
-> + * @global_ctrl: HDM decoder global control register
-> + * @dvsec_ctrl: CXL DVSEC control register
-> + * @dvsec_ctrl_valid: whether @dvsec_ctrl contains valid state
-> + * @settings: per-endpoint-decoder programming state
-> + *
-> + * Publication through pci_dev.hdm and all mutable fields are protected by
-> + * cxl_rwsem.dpa.
-> + */
-> +struct cxl_hdm_info {
-> +	int decoder_count;
-> +	int hdm_bar;
-> +	resource_size_t hdm_offset;
-> +	resource_size_t hdm_size;
-> +	u32 global_ctrl;
-> +	u16 dvsec_ctrl;
-> +	bool dvsec_ctrl_valid;
-> +	struct cxl_endpoint_decoder_settings settings[] __counted_by(decoder_count);
-> +};
-> +
-> +void cxl_hdm_cache_refresh_decoder(struct pci_dev *pdev, void __iomem *hdm,
-> +				   struct cxl_endpoint_decoder *cxled);
-> +int cxl_hdm_cache_check_decoder_count(struct pci_dev *pdev, int count);
-> +
->  #endif /* __CXL_HDM_H__ */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d31a8d107b1e..7bb37fcb556d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -339,6 +339,9 @@ struct pcie_link_state;
->  struct pci_sriov;
->  struct pci_p2pdma;
->  struct rcec_ea;
-> +#ifdef CONFIG_CXL_RESET
-> +struct cxl_hdm_info;
-> +#endif
->  
->  /* struct pci_dev - describes a PCI device
->   *
-> @@ -566,6 +569,9 @@ struct pci_dev {
->  #ifdef CONFIG_PCI_DOE
->  	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
->  #endif
-> +#ifdef CONFIG_CXL_RESET
-> +	struct cxl_hdm_info *hdm;	/* CXL HDM decoder state */
-> +#endif
->  #ifdef CONFIG_PCI_NPEM
->  	struct npem	*npem;		/* Native PCIe Enclosure Management */
->  #endif
 
+[...]
+
+> +/**
+> + * struct pci_tsm_mmio_entry - an encrypted MMIO range
+> + * @res: MMIO address range (typically Guest Physical Address, GPA)
+> + * @tsm_offset: Host Physical Address, HPA obfuscation offset added by the TSM.
+> + *		Translates report addresses to GPA.
+> + */
+> +struct pci_tsm_mmio_entry {
+> +	struct resource res;
+> +	u64 tsm_offset;
+
+As mentioned [1], could you replace tsm_offset by mmio_range_index
+according to this patch [2]
+
+[1] https://lore.kernel.org/all/atIY1Joa%2F%2F+hCRcr@yilunxu-OptiPlex-7050/
+[2] https://lore.kernel.org/all/20260924041032.1096569-8-zhenzhong.duan@intel.com/
+
+
+Others LGTM.
+
+BTW: Is it possible we merge this patch alone when we collect enough
+reviews? This is about PCIe TSM and several other series depend on it.
+
+
+Thanks,
+Yilun
