@@ -1,68 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794585007;
-	b=cUwmGkja8Xtt/pPfbW7gp3NXJ5S536WPDBR0HmdP+j5ArBRV82LojDAvwD+3N5cPzynF
-	 FzUE1ngM4TIE6Mi1e3STQXyiXZdzqPgkd5lPZmbuEMqe+S8dKVP/6Wwm6CUcWY9lni2GP
-	 jwjMhc/TKoCO+miaqQH0nznE3Btk38O2/6mLveSRw1yayNfKEAvsNPZQVcmxWQx1rflHQ
-	 k2FPs478LqZ28khHvDkL4vaL90g3zhjTn2SbslpD/FGxPfYoRi6dnOCLUH3LHoKrezn3h
-	 bPOMHuD1v6lOVKhsX0O6CjsK5UoR1wvcOQdJDGMsABOc7GN4mztCQhsd7Kd2xhmlk1w==
+	t=1794591480;
+	b=29FGiSj7T0n5I/Xaf/bDi1zmx8rBqKf42dS2q5KAZgL2RtuRZaDXWnXkxpGWIEYIt4q+
+	 /RtSDZHjIojYvdZDDSobUPpcP9IJH23tF0TUMU+YPnwqTqjURLktnETusBBHjQ55f1X7B
+	 GPGiAVX9cYPD3fZoWnPnjrzrhUBfSx41cshZFOzY/ZMnxWYozjlOih8c5pdBBekzIjh1t
+	 euhgjeP5ExYoENCrLX6eEM9hWjGFXA4rDj9d8tR+Z8yfKPD+QjxOftO84RYwi8n0bbVP0
+	 l391PNdF9AEVF9y9AHXMfMlhOFLkeqWqK4K5T7jcxkMvrm48oSkZbH/x5aBmbV/yKdg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794585007;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794591480;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
 	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
 	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=1fdNPQNo+zffU2XGvMztEYgcvEonGMt5d76mOcozsng=;
-	b=xh5Hrsff90mYe5h0YAY+Ecff85KYLEZjb6SDUEmjn4zDVooygxgJMIYP2DdRVxtlf5WQ
-	 1qDlU49oWPOKxRB8uhAhoo2p2hHWg8Pdjlhz+hde4FJjmxo2JigBFhSk5Sh8+ONUbXyRD
-	 BRDv3+W23Ms170cOa97+GbXXMw0Hi1N3tNd1RYnHpvflR+3vkB1hKgA3t+FyXEiw7av3W
-	 iQOQqDWwz+14gDDRB5SEMjwZv4sEzRbHhoCtFmhF308/91TL4MXIvHsgSsGAQ/dVGLg99
-	 E8ZQgUh5OAAwoKvq+WyyzpFIpnFe4Yd+dIUNtRKAsbP6F0DX5k/rrwzxZtsBZfqLAlg==
+	bh=ZKXGnrW3aWfsUdx2w/eX9rDnT5l6t0l9BEQYAFEJBiE=;
+	b=TptcGG+WOu8IO9OMCiujyadJRY3//JHTLsCFw4i8Wz1IbmKzr6E2GGa0vDvWw/u6S2jk
+	 zje8v6rHhcqlAIlMrYIA8rVzNc1nxqcohOw2CIfuj9OS3wislspAzj0kwufFdKbiV6UXw
+	 M9QLAluoo9/U5je6dyIer10BJL/mCKiGaawop5mSY9+esu5/vDp7n1dmh8Qb+n95v1ZrF
+	 Kko1ij2FA9Ydn/Vd2tlzs7QTxcGxi4TvpIidCIzuoBFlfR9KozqnbzPNj9dpEz0uEbxUo
+	 jdCep03zDyRaRdcizLiDYysroxMvGXWBCApzCESFXYDb3U26adlfs5Z99RRg4ODDnHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZZSodsM2;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="iz+fI/ox";
+	arc=none smtp.remote-ip=192.198.163.10
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19CA606A323;
-	Fri, 13 Nov 2026 15:50:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F19CA606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19293607D2E5;
+	Fri, 13 Nov 2026 17:37:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19293607D2E5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZZSodsM2
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iz+fI/ox
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794585007; x=1826121007;
+  t=1794591480; x=1826127480;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YsT24gl9bIBDYikNQDcSGfV6q4rVg9ESg3hLJA/uCQ8=;
-  b=ZZSodsM2INg30DhZG7rgqrvR75fAz5DJSb5lfn++34kpYvf0ZvBqipy+
-   0nm1BCCdeeXQ0ubAl1oRrTwj7erFoEbbSKrAwqwKbfQxL/PgXu81tObaW
-   gq67z7X5JdQOIfRTUW7NlKtJ/EqFVlQLn0LK3cZgWDlHrVASLj7u+gXnv
-   ppZK5K0qUMZCmZvn2W711PmhAgudKyK+JEQx3Kzy99/EvHWHCX0k+Chg4
-   yTGLpRVd4OmSiic8tBK27JXdsP62ru0G1BmMPBMye4Ozo4Vb1JZOfNhU7
-   C6ryIvNvTwgr6BEGIzNiGVpL4qLWs4SKZCiRFUzL2TcEpKWtA6/glIaPN
-   Q==;
-X-CSE-ConnectionGUID: EiTpJCsgSqivv87l2dyICg==
-X-CSE-MsgGUID: 4Dqdt7OcTraBkWGBhXW+Zg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3296529"
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="3296529"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 07:50:06 -0800
-X-CSE-ConnectionGUID: pHHvl0FESI25HZ01XTTXGg==
-X-CSE-MsgGUID: O/ls2e+cR82ikmCG7eZEQg==
+  bh=/8MOizMtEu6uZNHrFzA1rjLrkjmkNJIiQtwChz4Oly4=;
+  b=iz+fI/oxP/lsE6XmNLoHWBFnpfhARvFGpzAMEhgb1sDanQBYRlEwdZjc
+   MYpRFh9OwJgs2BeL3UL508d60sx7W3CfWfQwfp8YWWyac67JWt0ZlFscm
+   HJqO4z//gkWwTc63Ffm+5VUtlPhK243WKXgMnV4NgVoFu8LSBcOr/N8rV
+   EFc5hallvCz/q+W6h3k9lnhoGMihVsS4wQqmG1YGlO0LVQeDdkaN+B85f
+   t0deKqrrt3YvWds5yh/MERbkoHD51kyi+o1xzSHKvCpEj8n8y/YvYLnfI
+   ufOGMcoP06R7+oYXYMQXeyFe/4MOmD5fPxmxOOWN1HFXPrFnPhbvL03fO
+   g==;
+X-CSE-ConnectionGUID: IGTM4LaDQsW8W/LSYiQKFA==
+X-CSE-MsgGUID: uoE2MDo1TcSaI5KgLrzDNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3291774"
+X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
+   d="scan'208";a="3291774"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 09:37:59 -0800
+X-CSE-ConnectionGUID: z/CZKOFYT3qUB03JF/aT+A==
+X-CSE-MsgGUID: nEs/tNrkTb28yxMcVCWdOg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="9494890"
+X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
+   d="scan'208";a="10693270"
 Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.6]) ([10.125.108.6])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 07:50:04 -0800
-Message-ID: <70b69d4c-34b2-4166-9e3c-fbd9e21daf75@intel.com>
-Date: Fri, 13 Nov 2026 08:50:03 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 09:37:57 -0800
+Message-ID: <937131df-ac6e-4503-b495-27664a9421de@intel.com>
+Date: Fri, 13 Nov 2026 10:37:56 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -73,236 +73,309 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 02/19] cxl: Share CXL port upstream PCI device lookup
-To: Li Ming <ming.li@zohomail.com>, Srirangan Madhavan
- <smadhavan@nvidia.com>, Alison Schofield <alison.schofield@intel.com>,
+Subject: Re: [PATCH v17 17/19] PCI/CXL: Restore CXL state after CXL bus reset
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
  Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
  Ira Weiny <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
  Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
  linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Joshua Machauer <machaujo@amazon.de>,
+Cc: Li Ming <ming.li@zohomail.com>, Joshua Machauer <machaujo@amazon.de>,
  Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
  alwilliamson@nvidia.com,
  Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
  Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
  Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org,
- Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+ linux-tegra@vger.kernel.org
 References: <20261105185917.2667656-1-smadhavan@nvidia.com>
- <20261105185917.2667656-3-smadhavan@nvidia.com>
- <f67ecd0e-1eae-41b1-8a61-d06eb062e523@zohomail.com>
+ <20261105185917.2667656-18-smadhavan@nvidia.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <f67ecd0e-1eae-41b1-8a61-d06eb062e523@zohomail.com>
+In-Reply-To: <20261105185917.2667656-18-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 11/10/26 6:36 AM, Li Ming wrote:
+On 11/5/26 11:59 AM, Srirangan Madhavan wrote:
+> CXL bus reset can clear HDM decoder programming and CXL Device DVSEC
+> control state. Restore the cached state after a successful cxl_bus reset
+> while IOMMU exclusion remains active.
 > 
-> 在 2026/11/6 02:59, Srirangan Madhavan 写道:
->> read_cdat_data() resolves a CXL port's upstream device to its backing PCI
->> device. HDM cache updates need the same mapping.
->>
->> Factor the lookup into cxl_port_get_uport_pci_dev() and return a referenced
->> PCI device to make caller ownership explicit.
->>
->> Use automatic reference cleanup in read_cdat_data(), as suggested by
->> Li Ming, so early returns release the PCI device reference.
->>
->> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
->> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Richard Cheng <icheng@nvidia.com>
->> Reviewed-by: Li Ming <ming.li@zohomail.com>
->>
->> ---
->> Changes in v17:
->> - Use an explicit pci_dev_put() on a single exit path in
->>    read_cdat_data() instead of mixing __free() with goto cleanup
->>    (Sashiko)
->>    https://sashiko.dev/#/patchset/20261029145703.2185231-1-smadhavan@nvidia.com?part=2
+> Restore PCI configuration first so HDM MMIO is accessible, and preserve a
+> disabled state if restoration fails.
 > 
-> Reviewed-by: Li Ming <ming.li@zohomail.com>
+> Copy the cached state before the reset, then refresh its decoder settings
+> from the cache under the CXL region quiesce once the reset completes. A
+> region decommit during the reset updates the cache, and restoring the
+> earlier decoders would leave the endpoint decoding an HPA range that the
+> CXL core considers free. Keep global and DVSEC control from before the
+> reset, since a refresh during the reset can read them as all-ones.
 > 
+> The prepare/restore interface and decoder-refresh structure follow Dave
+> Jiang's cxl-type2-reset reference branch.
 > 
-> I still think the new goto makes the code harder to follow. But I saw your discussion in v13[1], both Jonathan and Dave agree with your current changes. I post my proposal here which can eliminate all goto labels. If there is no response from them, or if they disagree with my changes, we can continue with your implementation.
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com> # pci/pci.c
+> Assisted-by: LLM
 > 
-> [1]: https://lore.kernel.org/all/fb513893-7c6c-408c-811f-1eae20f0436c@intel.com/
+> ---
+> Changes in v17:
+> - Enable bus mastering only after the IOMMU is restored, via a separate
+>   cxl_restore_command_after_pci_reset() step (Richard)
+>   https://lore.kernel.org/linux-cxl/auRhJa-nzR0CnKf3@MWDK4CY14F/
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d807c1a002c..fbf4b56a39c4 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -573,17 +573,8 @@ void read_cdat_data(struct cxl_port *port)
->         size_t table_length, length;
->         int rc;
+> Reference branch: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/commit/?id=b93f0c8e67b198a63786fd3721b7177ab9df60be
+> ---
+>  drivers/cxl/core/hdm_state.c | 31 +++++++++++++
+>  drivers/pci/cxl.c            | 85 ++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.c            | 14 ++++++
+>  drivers/pci/pci.h            | 24 ++++++++++
+>  include/cxl/hdm.h            |  2 +
+>  5 files changed, 156 insertions(+)
 > 
-> -       if (is_cxl_memdev(uport)) {
-> -               struct device *host;
-> -
-> -               cxlmd = to_cxl_memdev(uport);
-> -               host = cxlmd->dev.parent;
-> -               if (dev_is_pci(host))
-> -                       pdev = to_pci_dev(host);
-> -       } else if (dev_is_pci(uport)) {
-> -               pdev = to_pci_dev(uport);
-> -       }
-> -
-> +       struct pci_dev *pdev __free(pci_dev_put) =
-> +                               cxl_port_get_uport_pci_dev(port);
->         if (!pdev)
->                 return;
-> 
-> @@ -606,30 +597,32 @@ void read_cdat_data(struct cxl_port *port)
->          * bytes for the DOE header. Table data starts afterwards.
->          */
->         buf = devm_kzalloc(dev, sizeof(*buf) + length, GFP_KERNEL);
-> -       if (!buf)
-> -               goto err;
-> +       if (!buf) {
-> +               dev_err(dev, "Failed to allocate CDAT buffer.\n");
-> +               return;
-> +       }
-> 
->         table_length = length;
-> 
->         rc = cxl_cdat_read_table(dev, doe_mb, buf, &length);
-> -       if (rc)
-> -               goto err;
-> +       if (rc) {
-> +               devm_kfree(dev, buf);
-> +               dev_err(dev, "Failed to read CDAT.\n");
-> +               return;
-> +       }
-> 
->         if (table_length != length)
->                 dev_warn(dev, "Malformed CDAT table length (%zu:%zu), discarding trailing data\n",
->                         table_length, length);
-> 
-> -       if (cdat_checksum(buf->data, length))
-> -               goto err;
-> +       if (cdat_checksum(buf->data, length)) {
-> +               devm_kfree(dev, buf);
-> +               dev_err(dev, "Failed to validate CDAT.\n");
-> +               return;
-> +       }
-> 
->         port->cdat.table = buf->data;
->         port->cdat.length = length;
-> -
-> -       return;
-> -err:
-> -       /* Don't leave table data allocated on error */
-> -       devm_kfree(dev, buf);
-> -       dev_err(dev, "Failed to read/validate CDAT.\n");
->  }
-> 
-> 
+> diff --git a/drivers/cxl/core/hdm_state.c b/drivers/cxl/core/hdm_state.c
+> index 51df56377f7a..7e0903ce0b78 100644
+> --- a/drivers/cxl/core/hdm_state.c
+> +++ b/drivers/cxl/core/hdm_state.c
+> @@ -182,6 +182,37 @@ struct cxl_hdm_info *cxl_hdm_cache_snapshot(struct cxl_hdm_info *const *slot)
+>  	return copy;
+>  }
+>  
+> +/**
+> + * cxl_hdm_cache_copy_decoders() - refresh the decoders of a snapshot
+> + * @slot: cache pointer owned by the device
+> + * @dst: snapshot of the same device from cxl_hdm_cache_snapshot()
+> + *
+> + * Copy only the per-decoder settings, which region commit and teardown keep
+> + * current. Leave the rest of @dst, including global and DVSEC control, as
+> + * captured: a refresh during a reset may have read those registers from a
+> + * device that returned all-ones.
+> + *
+> + * Return: 0 on success, -ENXIO when nothing is published, or -EINVAL when
+> + * @dst holds a different number of decoders.
+> + */
+> +int cxl_hdm_cache_copy_decoders(struct cxl_hdm_info *const *slot,
+> +				struct cxl_hdm_info *dst)
 
-How about something like this? I think it's cleaner:
+I think this function is a dead function for the series. By the end, nothing calls it.
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 905892cfedef..c924904faec4 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -556,6 +556,27 @@ static unsigned char cdat_checksum(void *buf, size_t size)
- 	return sum;
- }
- 
-+static int cxl_cdat_read_validate(struct device *dev,
-+				  struct pci_doe_mb *doe_mb,
-+				  struct cdat_doe_rsp *buf, size_t *length)
-+{
-+	size_t table_length = *length;
-+	int rc;
-+
-+	rc = cxl_cdat_read_table(dev, doe_mb, buf, length);
-+	if (rc)
-+		return rc;
-+
-+	if (table_length != *length)
-+		dev_warn(dev, "Malformed CDAT table length (%zu:%zu), discarding trailing data\n",
-+			 table_length, *length);
-+
-+	if (cdat_checksum(buf->data, *length))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- /**
-  * read_cdat_data - Read the CDAT data on this port
-  * @port: Port to read data from
-@@ -564,13 +585,13 @@ static unsigned char cdat_checksum(void *buf, size_t size)
-  */
- void read_cdat_data(struct cxl_port *port)
- {
--	struct pci_dev *pdev = cxl_port_get_uport_pci_dev(port);
- 	struct device *dev = &port->dev;
- 	struct pci_doe_mb *doe_mb;
- 	struct cdat_doe_rsp *buf;
--	size_t table_length, length;
--	int rc;
-+	size_t length;
- 
-+	struct pci_dev *pdev __free(pci_dev_put) =
-+		cxl_port_get_uport_pci_dev(port);
- 	if (!pdev)
- 		return;
- 
-@@ -578,14 +599,14 @@ void read_cdat_data(struct cxl_port *port)
- 				      CXL_DOE_PROTOCOL_TABLE_ACCESS);
- 	if (!doe_mb) {
- 		dev_dbg(dev, "No CDAT mailbox\n");
--		goto out;
-+		return;
- 	}
- 
- 	port->cdat_available = true;
- 
- 	if (cxl_cdat_get_length(dev, doe_mb, &length)) {
- 		dev_dbg(dev, "No CDAT length\n");
--		goto out;
-+		return;
- 	}
- 
- 	/*
-@@ -593,31 +614,15 @@ void read_cdat_data(struct cxl_port *port)
- 	 * bytes for the DOE header. Table data starts afterwards.
- 	 */
- 	buf = devm_kzalloc(dev, sizeof(*buf) + length, GFP_KERNEL);
--	if (!buf)
--		goto err;
--
--	table_length = length;
--
--	rc = cxl_cdat_read_table(dev, doe_mb, buf, &length);
--	if (rc)
--		goto err;
--
--	if (table_length != length)
--		dev_warn(dev, "Malformed CDAT table length (%zu:%zu), discarding trailing data\n",
--			table_length, length);
--
--	if (cdat_checksum(buf->data, length))
--		goto err;
-+	if (!buf || cxl_cdat_read_validate(dev, doe_mb, buf, &length)) {
-+		/* Don't leave table data allocated on error */
-+		devm_kfree(dev, buf);
-+		dev_err(dev, "Failed to read/validate CDAT.\n");
-+		return;
-+	}
- 
- 	port->cdat.table = buf->data;
- 	port->cdat.length = length;
--	goto out;
--err:
--	/* Don't leave table data allocated on error */
--	devm_kfree(dev, buf);
--	dev_err(dev, "Failed to read/validate CDAT.\n");
--out:
--	pci_dev_put(pdev);
- }
- EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
+DJ
+
+> +{
+> +	struct cxl_hdm_info *info;
+> +
+> +	lockdep_assert_held_write(&cxl_rwsem.region);
+> +	guard(rwsem_read)(&cxl_rwsem.dpa);
+> +	info = *slot;
+> +	if (!info)
+> +		return -ENXIO;
+> +	if (info->decoder_count != dst->decoder_count)
+> +		return -EINVAL;
+> +
+> +	memcpy(dst->settings, info->settings,
+> +	       flex_array_size(info, settings, info->decoder_count));
+> +	return 0;
+> +}
+> +
+>  void cxl_region_quiesce_lock(void)
+>  	__acquires(cxl_region_quiesce)
+>  	__context_unsafe(token maps to cxl_rwsem.region)
+> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
+> index c68b08f7f95b..a9aa2e1c631d 100644
+> --- a/drivers/pci/cxl.c
+> +++ b/drivers/pci/cxl.c
+> @@ -393,6 +393,91 @@ static int pci_cxl_restore_state(struct pci_dev *pdev,
+>  	return cxl_restore_state(pdev, snapshot);
+>  }
+>  
+> +/**
+> + * pci_cxl_reset_prepare() - allocate HDM state storage ahead of a bus reset
+> + * @pdev: device about to be reset
+> + *
+> + * Copy the cached HDM state before the reset, so that restoring cannot fail
+> + * for lack of memory. The decoder settings are refreshed when the state is
+> + * restored.
+> + *
+> + * Return: storage for cxl_restore_state_after_pci_reset(), to be freed with
+> + * kfree(); NULL when @pdev has no cached HDM state; or an ERR_PTR() on
+> + * failure.
+> + */
+> +struct cxl_hdm_info *pci_cxl_reset_prepare(struct pci_dev *pdev)
+> +{
+> +	struct cxl_hdm_info *snapshot;
+> +
+> +	device_lock_assert(&pdev->dev);
+> +	snapshot = cxl_hdm_cache_snapshot(&pdev->hdm);
+> +	if (IS_ERR(snapshot))
+> +		return PTR_ERR(snapshot) == -ENXIO ? NULL : snapshot;
+> +
+> +	/* Raw reset callers may not have saved the PCI state needed for restore. */
+> +	if (!pdev->state_saved) {
+> +		pci_err(pdev, "CXL bus reset requires saved PCI state\n");
+> +		kfree(snapshot);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return snapshot;
+> +}
+> +
+> +/**
+> + * cxl_restore_state_after_pci_reset() - restore CXL state after a bus reset
+> + * @pdev: device that was reset
+> + * @snapshot: storage from pci_cxl_reset_prepare()
+> + * @command: returns the saved PCI_COMMAND value to apply once the IOMMU is
+> + *	     restored
+> + *
+> + * Under the region quiesce, refresh the decoder settings in @snapshot from the
+> + * cache and restore: first the PCI configuration needed to reach HDM MMIO,
+> + * then the HDM decoder and CXL Device DVSEC state. Leave @pdev disabled on
+> + * failure.
+> + *
+> + * Bus mastering stays off, because the caller has not yet restored IOMMU
+> + * translation and a DMA request now would hit the blocking domain. The caller
+> + * calls cxl_restore_command_after_pci_reset() once the IOMMU is restored.
+> + *
+> + * Refresh the decoders now rather than rely on the copy taken before the
+> + * reset: a region commit or teardown during the reset has updated the cache,
+> + * and restoring older decoders would leave the device decoding ranges the
+> + * CXL core considers free.
+> + */
+> +int cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
+> +				      struct cxl_hdm_info *snapshot,
+> +				      u16 *command)
+> +{
+> +	int rc;
+> +
+> +	device_lock_assert(&pdev->dev);
+> +	cxl_region_quiesce_lock();
+> +
+> +	rc = cxl_hdm_cache_copy_decoders(&pdev->hdm, snapshot);
+> +	if (!rc)
+> +		rc = pci_cxl_restore_state(pdev, snapshot, command);
+> +	if (rc)
+> +		cxl_reset_save_disabled_state(pdev);
+> +
+> +	cxl_region_quiesce_unlock();
+> +	return rc;
+> +}
+> +
+> +/**
+> + * cxl_restore_command_after_pci_reset() - re-enable the device after a bus reset
+> + * @pdev: device that was reset
+> + * @command: PCI_COMMAND value from cxl_restore_state_after_pci_reset()
+> + *
+> + * Call after the IOMMU is restored: this can enable bus mastering. Save the
+> + * restored PCI state, and leave @pdev disabled on failure.
+> + */
+> +int cxl_restore_command_after_pci_reset(struct pci_dev *pdev, u16 command)
+> +{
+> +	device_lock_assert(&pdev->dev);
+> +	return cxl_reset_save_restored_state(pdev, command);
+> +}
+> +
+>  /*
+>   * CXL r4.0 sec 9.7.2 defines the reset completion timeout encodings.
+>   * Sec 9.7.3 leaves config-space access behavior undefined for 100 ms after
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 426b5ee38d04..1d4ba90a6976 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5014,8 +5014,10 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>  
+>  static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+>  {
+> +	struct cxl_hdm_info *snapshot __free(kfree) = NULL;
+>  	struct pci_dev *bridge;
+>  	u16 dvsec, reg, val;
+> +	u16 command;
+>  	int rc;
+>  
+>  	/*
+> @@ -5040,6 +5042,10 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+>  	if (rc)
+>  		return -ENOTTY;
+>  
+> +	snapshot = pci_cxl_reset_prepare(dev);
+> +	if (IS_ERR(snapshot))
+> +		return PTR_ERR(snapshot);
+> +
+>  	rc = pci_dev_reset_iommu_prepare(dev);
+>  	if (rc) {
+>  		pci_err(dev, "failed to stop IOMMU for a PCI reset: %d\n", rc);
+> @@ -5060,7 +5066,15 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+>  		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+>  				      reg);
+>  
+> +	if (!rc && snapshot)
+> +		rc = cxl_restore_state_after_pci_reset(dev, snapshot, &command);
+> +
+>  	pci_dev_reset_iommu_done(dev);
+> +
+> +	/* Enable bus mastering only once the IOMMU translates again. */
+> +	if (!rc && snapshot)
+> +		rc = cxl_restore_command_after_pci_reset(dev, command);
+> +
+>  	return rc;
+>  }
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 743e65abd758..2f819e1fbead 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -730,10 +730,16 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
+>  static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+>  #endif
+>  
+> +struct cxl_hdm_info;
+>  #ifdef CONFIG_CXL_RESET
+>  void pci_cxl_hdm_cache_init(struct pci_dev *pdev);
+>  void pci_cxl_hdm_cache_release(struct pci_dev *pdev);
+>  int cxl_reset_function(struct pci_dev *pdev, bool probe);
+> +struct cxl_hdm_info *pci_cxl_reset_prepare(struct pci_dev *pdev);
+> +int cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
+> +				      struct cxl_hdm_info *snapshot,
+> +				      u16 *command);
+> +int cxl_restore_command_after_pci_reset(struct pci_dev *pdev, u16 command);
+>  #else
+>  static inline void pci_cxl_hdm_cache_init(struct pci_dev *pdev) { }
+>  static inline void pci_cxl_hdm_cache_release(struct pci_dev *pdev) { }
+> @@ -741,6 +747,24 @@ static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
+>  {
+>  	return -ENOTTY;
+>  }
+> +
+> +static inline struct cxl_hdm_info *pci_cxl_reset_prepare(struct pci_dev *pdev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline int
+> +cxl_restore_state_after_pci_reset(struct pci_dev *pdev,
+> +				  struct cxl_hdm_info *snapshot, u16 *command)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int cxl_restore_command_after_pci_reset(struct pci_dev *pdev,
+> +						      u16 command)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_NPEM
+> diff --git a/include/cxl/hdm.h b/include/cxl/hdm.h
+> index 94a8f8a1a65a..81767f21052a 100644
+> --- a/include/cxl/hdm.h
+> +++ b/include/cxl/hdm.h
+> @@ -64,6 +64,8 @@ void cxl_hdm_cache_set_normalized(struct pci_dev *pdev, int id);
+>  void cxl_hdm_cache_release(struct cxl_hdm_info **slot);
+>  bool cxl_hdm_cache_dvsec_decode(struct cxl_hdm_info *const *slot);
+>  struct cxl_hdm_info *cxl_hdm_cache_snapshot(struct cxl_hdm_info *const *slot);
+> +int cxl_hdm_cache_copy_decoders(struct cxl_hdm_info *const *slot,
+> +				struct cxl_hdm_info *dst);
+>  
+>  /*
+>   * Region quiesce blocks CXL region commit and teardown, and with them decoder
+
