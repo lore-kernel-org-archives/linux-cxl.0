@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794640228;
-	b=x3aorUDeEGZWEB3bphGYyGHDlzkLK5WpKpMRQEzdbb6tc2hJEzFoCXDHN7iZzB340nOf
-	 DK+mGnrnDjkkz6FgRLD8pQWyuHICgLIAGBU6lJmAjF4LB/BbTgb6y2mVF31fhG1hNR5/z
-	 qOhm94yvTf+H/Wf895VbIoHAi5YBuhN+HZ75foGCyNTplobusyXSYu+hU1zW5m5q3dSTV
-	 jQaIOPl5xImM8zT1fT8+hopUiG1gyUFH64xUzGrEeqHTiq19CgA7sQRo2woXt7coqcjMf
-	 Z0Q/wKouwm2bsbumbhG3CW7NMC6WGqe7Gr6m8K2ZsI1mSdvIqJ5n7oXuU9KFq9MGwsA==
+	t=1794640230;
+	b=KPtVYYh8Yx1phEvtpj851+GyuC3gId8dHrDqR2/uRecirJjLMkXvXjUspWSVU7MXThux
+	 y+uRhrbEwoN2iEXxbPhFd5qc5oqi4wiPCxn/qhxpDJHc5xgcTrLzFZ6zIde4/b1hvC+qV
+	 0c+9OGlwUD/9daiFdNIVAkksLf5bDMZxFV+UkrMIb4f3YqiqXkRMzvfAqqfNJt/7l1f+j
+	 hvtUgdFZ9QpIviENvTirRIyM615nA7C9PdrGMyRrxLRy4y2YaOX1zF97zKi7FpfvCgrDe
+	 BgYG7PNeVhlZehNEq5AuKPo63aRcK80+i/qXBmrR3naNMlOwJ7wyUabBud/8mXSociA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794640228;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794640230;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=ug/CLwAsG6XPyYIr9OCoTcVisBprjwnxP+sIccpst3I=;
-	b=RMSqkR742gXlmeJi1afchdYsZ55Y33ZM2WVAfoXGZjzpbZ8ceHIcOmlz7ljCXH6KJiWK
-	 Y5kILFjIoF9IGP9b9Fm2/Q9Fz9E2Iu/26XGV/fZp3njL8739un6Se3yV9mB5sT02B8XaQ
-	 QiFQM0KA3Uu/Q9XiGTYVOwiSD4y76VTWdph+nJfd5muLgH1diyZzbFf8MiCkVGzr4l/so
-	 jFPII6bpKMS+oIInLCo6ZjNRqQEW30hDZRyic122YYEVJvMZ/aVKS0ZZbNdCWFCKQFCxy
-	 egovjAVCFHhjOonlmdgG3yCTNrZBd1rF0Z/nEf4cOWsGUgs6M1T7YceEBXHsHfIN0ZQ==
+	bh=WCui+DSNeboB03hP2f7maV0wOWIxjAUtx4hYmP2Ak68=;
+	b=NSHxQxNocKRpAHWPlY8zEiKsdBSm/1FzjczQukblPLTn9EQqtlxt07pBv5DvJKgWVald
+	 uXzmb49vnv1UpF+s4LxKgG95lPQaZlPXDSrCL5pEFpo5Lh4NW7D+1PrcbLx+98o/R40g7
+	 YRPc6QtgKlKt8IbhmKMCmfE3E6Ztla7rCF4iUXNntL2MFX44CqrEUdNlo1AKHmyUDf5xD
+	 rOI0MTRXS1Qx/E0XTcYEq+RhMlpqklbz6S877RPIFk9/lvUI7+6IpMr1dLR3LGPJN+hhV
+	 duaHguQl001s5YUKqw0aFbz24xOpgdQsq8drygPh91+o+/9Rar7URJ1hjZW4QxiA+Gg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=e0f1NE1E;
-	arc=none smtp.remote-ip=209.85.219.53
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=ThWtUYOE;
+	arc=none smtp.remote-ip=209.85.222.170
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B10760A6F43
-	for <linux-cxl@vger.kernel.org>; Sat, 14 Nov 2026 07:10:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6B10760A6F43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5C060A6F5B
+	for <linux-cxl@vger.kernel.org>; Sat, 14 Nov 2026 07:10:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B5C060A6F5B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=e0f1NE1E
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-91eb449364cso32557766d6.2
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Nov 2026 23:10:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=ThWtUYOE
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-949680e6d82so14950885a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Nov 2026 23:10:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1794640227; x=1795245027; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1794640229; x=1795245029; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ug/CLwAsG6XPyYIr9OCoTcVisBprjwnxP+sIccpst3I=;
-        b=e0f1NE1Exmdl9VHCTyMwen0H8NFFA5ewM0qJqz9IIPFvpUDfghWuuQsLrxK1SzRsz7
-         hUQ5k4c56+KPd+CCYf2/vIqRWl8gHz2BKZUrM5Ij4T2/PSEWok0NnE0FUoNCiSoWO8Mq
-         GMGUsUR317UBvVBakiAaXs2gi4djBungqVsPEPVmsCYYKAXaOtbrEV2mN7H/GYUItFZG
-         FKQhip0+198HqCVpa7oWo0gCnkVC8uPd0d1wG9uCGO/6pyKs254gzQjdaZ9eM/glICrr
-         l+E2ixDmEv243sGYSgL1CoNQGZsrUgbQgXYKwaNyBH+knN+wWZHgnaTTI9p959iurBvU
-         zUHw==
+        bh=WCui+DSNeboB03hP2f7maV0wOWIxjAUtx4hYmP2Ak68=;
+        b=ThWtUYOE58bojETOwoiS6cs6qdiFDpgzkHXRgjHbjxmm/AONOSeugBbicD457oiBaL
+         3kem8a/H1pX9d/FFkl6ik8me9yyXIiRnIWseOAR9CUTiE4gCSGTyPH8x2wcwHLj/wpFw
+         av3lh3aajoSLB7WMBw7STl4nb8kBzWmr0i2io4kqZUGb4DyNf0T8SwNigv21OL7iKq1R
+         2m3pPEnA/fZtCZtxcItt5v45X7mgSC073KBaThPkUuZU37zOufiZKj1oz/8Z616xJKwp
+         LYaXfzMeVQbfL6BjgCt/OsbPS+4qNbVTjASn2JD5S6sxZNk5zXDYXfSbJpd1mUMa+WdL
+         PAng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794640227; x=1795245027;
+        d=1e100.net; s=20260707; t=1794640229; x=1795245029;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ug/CLwAsG6XPyYIr9OCoTcVisBprjwnxP+sIccpst3I=;
-        b=hSpgJQfnLG21fHhXXb3BAkGsIQ/ziOr23zLFFLotHxEl4mBw0Vc/OKYnQE1G/WP+/E
-         wjroBLs6dEuRZaLeVMIKzqLllZcyZlYNGxnkTD7U2In3z0iYmIBfaBsBYSbSkImmX5AC
-         VgFj01EZq3kUZO5h1SZjLBhp9c6P+lFOLYnbutG3qo/QL2qlVw7hfUcTuS48SK3qfwzg
-         ABoqry7dYW+xRueh9el2q2lH43pWKgEY3PgPaEB6iP1YJHc7P7PP4KHBadNhrZbYyksb
-         zhQyxodhMukogog3p5SMl9BIZVShEaRfpaA8U9D4iEOVfADtFB/sGReYzYRLNeLt0ZNS
-         iggw==
-X-Forwarded-Encrypted: i=1; AL+hErEHcuR5IFZ792FrhTPD1BdZgg6pN/ZtB2nrvhK7kiVRYvq0ITlhdB2GFUgs+ynyJRb7mM6bIJ+tz/4=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+0T+4kNvBiom6pTVteOp612vVWmxA0VXyJTgBqUH6eIofhv64E
-	pbcroyjQdfdpK5b0LcCLtCv/EI/bl0PbofVuKHVTNJm/BnznMEQzLbQ1d67/YVwQZQw=
-X-Gm-Gg: AYBFou3dH/P7uLycAWWunReDSwzY0XJxdSUm7UWavE3hgavkVF+RIbOzEFdXEJhRWND
-	Psmz1rhsTCI+B7cuqW9QY47uNfwB//+xB3XIZNDfrxywOK9rkQIRnyQD9JNrbwb9Dk6uuVeFadX
-	PhBU6HKV7WUX4iOpPU+CdGaEFklXyx3Mg5cNubruhRtnL2wPi4fA0uDypPGQCcTbTEHDz7nkSV2
-	aJET1dOV9cOQyr24y/LRZu5Rr/SrRV//5hesB3O2jBd4fUyYpZ8zZJigC0jqzITfj30zyQ3/Q9E
-	Za0T84yq3zSDB493Q+wzZ0G7bzIuy+caJmnxEopPfzK6qlMuZF57EZm9wj4oK7NA2aEhgtiMYm0
-	vt9gnFiSUgzuyF2adsHLlJZxRQZE+fdX6DL9NOLBbqPwFxiVDDR2W4jFnatTmhJzUZnWghxmyqS
-	2tzEZJ7MnHcGkJGluRLquHRyB1YwzSZq9tygTUhQAkEJl1QHM5IFuByiq/KNtcQLJnn93B1+nxI
-	Rj8T6FNog9O74j1MArdjHdTSSbjtmovgAFWe6A3t7Ct/XOu4a68qo4G7jIIrkRmFlEerYfz9is/
-	JVkMV0EgHIlWdalCTlhtqglYeSBBFb70Cla4gJbbQsl1Rp2sZ4VTvIgb+h2sR3qOJ1nitTXLY+W
-	hf7HuyFe0snJoNrk=
-X-Received: by 2002:a05:6214:dc1:b0:91f:1bc7:b779 with SMTP id 6a1803df08f44-91f24251f4dmr78714166d6.56.1794640227399;
-        Fri, 13 Nov 2026 23:10:27 -0800 (PST)
+        bh=WCui+DSNeboB03hP2f7maV0wOWIxjAUtx4hYmP2Ak68=;
+        b=n0LCtfooFRLApTUIlBCf7z442mwiP5R3GjjUHw5ZqHvpK/EUCFdXfDc+2xhArFA586
+         uXdrC9KlovRJdW3Yf5eZ8T2vgc6DDY/eJMP/wbjUpVxHbtkqFjDisLpSQ3SJaAuSJN+V
+         6sL2gewBtCJMZq/jN988HgmUoRVdChydCUV2XM/u6IIT3adBhFcUkLSPQa/CIO0AWOCB
+         Xy2I0xjflrXwW0mDyFbiFBh4n7KlMWNJuHV34UwNgl7k2tGMe5CeExEyAFJXijm8yd5a
+         2RXgbgGfnL36/vlHPYjblpmrA9rd1KkCTTrt93n80OOLxLz/PRHooz2D/6AxdX3gdqgr
+         MgvQ==
+X-Forwarded-Encrypted: i=1; AL+hErEHT/IXaIe1bwOQ5HiwysUR8Op2lMPccppW4M9Y25+yCO2gNjnmTs0nHd1a3+pR+vVupZcfWxRIDQQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+6zMujtOFa/j23DPnE3WxpGmpKe1sV4cNBYke3+CRfvYtHFvMl
+	8eiXKt405u46Q45hjRpD/A4JcDM8a8PxYQ/DvWkNXOgGaFPPb+iHMN+vO9iiW9LaL6I=
+X-Gm-Gg: AYBFou1NfZRGvJK/eFmVR3dK+FnA5V4xEl6HWR/Rlj80+X05xJLWIEEnn6dyfZGiGjr
+	jp4CAVV+KLg+rtFsRIi3un6EzCx2gGpQvJq8qu1RPW+O2Elt/Jr9E83HIv63HNICIO1lWOUy+21
+	sIzjv719Q6RJ92fxgp7z6wnOJI5pdqPIxI71ibNWCFrTmZthvmGOwB36IORWUlcdmw/0p43OaDu
+	t51jZMCFk0SxIa6lqs9MRrHV0t2UcIP6kEhaBm56/smyD3JbJn7M9ZRa7YYULR/2pYdaQv9griL
+	AbI4kRGjsPyjSGdfAtUS7a2jVm4clZm5fVOGxF2RegTwCOcZAtPWPsUbeDCiLCNAJyih5BcTPJ+
+	YoAH4mR7KxlaEUR799xTODTskToLzz89sR0hgf5xb0mWNF302mAzeuKkEVyLhZEBA7VzDYBzJa3
+	A2M/eE/oAhoqKrSEk2DX/QELguwwxhEU5bLJu75aiW+4iY/Jkw8MgvPH7r2hVeuY8YX4TAgFHv8
+	2/TuF0MSigdO4O+ac2+v0XYF3A165zJRswTs2j7FuLI9k22NJTzrmvactcY3rfFEMvpcEBmP39N
+	VqTE+q3mK+s9vvfsL8DsiiK83mKQceq8O8nFERJpfgA9ahQj/v1n7QXRi/Ga4XkeLk86Lhvl163
+	UHBOE/hZVLTj87qc=
+X-Received: by 2002:a05:620a:4005:b0:940:e34a:aead with SMTP id af79cd13be357-9494b9488f8mr838653885a.5.1794640229507;
+        Fri, 13 Nov 2026 23:10:29 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91f23db3a99sm37730986d6.40.2026.11.13.23.10.26
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91f23db3a99sm37730986d6.40.2026.11.13.23.10.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 23:10:27 -0800 (PST)
+        Fri, 13 Nov 2026 23:10:29 -0800 (PST)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -139,9 +139,9 @@ Cc: linux-kernel@vger.kernel.org,
 	byungchul@sk.com,
 	apopple@nvidia.com,
 	rientjes@google.com
-Subject: [PATCH 11/22] mm/mempolicy: don't NUMA-hint folios outside common memory
-Date: Sat, 14 Nov 2026 02:09:48 -0500
-Message-ID: <20261114070959.3490008-12-gourry@gourry.net>
+Subject: [PATCH 12/22] mm/damon: restrict DAMON-native folio operations to common memory
+Date: Sat, 14 Nov 2026 02:09:49 -0500
+Message-ID: <20261114070959.3490008-13-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261114070959.3490008-1-gourry@gourry.net>
 References: <20261114070959.3490008-1-gourry@gourry.net>
@@ -156,36 +156,68 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The NUMA balancing scanner installs PROT_NONE only on folios that
-balancing may migrate.
+DAMON acquires folios to age them, check their accesses, and apply LRU
+operations and migration. Treat these as general-purpose MM services
+and restrict them to N_MEMORY_COMMON.
 
-folio_can_map_prot_numa() already skips ZONE_DEVICE folios. Skip folios
-outside the common memory pool (N_MEMORY_COMMON) as well. Do not inject
-hint faults on those folios or migrate them.
+Memory outside N_MEMORY_COMMON can still hold ordinary LRU folios, so
+it would pass the checks that keep ZONE_DEVICE memory out of these
+operations.
 
-Convert the zone_device check to a common memory check (which includes
-the zone device check explicitly).
+Treat these folios like ZONE_DEVICE memory.
+
+DAMON cannot acquire such a folio, so it never ages one and virtual
+address monitoring reports it as accessed, and DAMOS cannot isolate
+one for migration.
+
+Reject migration destinations outside N_MEMORY_COMMON.
 
 All memory is common at this point, so behavior is unchanged.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/mempolicy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/damon/ops-common.c | 7 ++++---
+ mm/damon/vaddr.c      | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 662ab420fe03c..619970f0eb954 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -863,7 +863,7 @@ bool folio_can_map_prot_numa(struct folio *folio, struct vm_area_struct *vma,
+diff --git a/mm/damon/ops-common.c b/mm/damon/ops-common.c
+index b9571f53e538c..51b4b5d572e77 100644
+--- a/mm/damon/ops-common.c
++++ b/mm/damon/ops-common.c
+@@ -17,8 +17,9 @@
+ 
+ static bool damon_folio_acceptable(struct folio *folio, bool monitor)
  {
- 	int nid;
+-	return folio_test_lru(folio) ||
+-		(monitor && folio_test_hugetlb(folio));
++	return folio_is_common_memory(folio) &&
++		(folio_test_lru(folio) ||
++		 (monitor && folio_test_hugetlb(folio)));
+ }
  
--	if (!folio || folio_is_zone_device(folio) || folio_test_ksm(folio))
-+	if (!folio || !folio_is_common_memory(folio) || folio_test_ksm(folio))
- 		return false;
+ /*
+@@ -498,7 +499,7 @@ unsigned long damon_migrate_pages(struct list_head *folio_list, int target_nid)
+ 		return nr_migrated;
  
- 	/* Also skip shared copy-on-write folios */
+ 	if (target_nid < 0 || target_nid >= MAX_NUMNODES ||
+-			!node_state(target_nid, N_MEMORY)) {
++			!node_state(target_nid, N_MEMORY_COMMON)) {
+ 		damon_putback_folio_list(folio_list);
+ 		return nr_migrated;
+ 	}
+diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
+index 1e65e7651cd98..338876559140b 100644
+--- a/mm/damon/vaddr.c
++++ b/mm/damon/vaddr.c
+@@ -830,7 +830,7 @@ static void damos_va_migrate_dests_add(struct folio *folio,
+ 	if (folio_nid(folio) == nid)
+ 		return;
+ 
+-	if (!folio_isolate_lru(folio))
++	if (!folio_is_common_memory(folio) || !folio_isolate_lru(folio))
+ 		return;
+ 	node_stat_add_folio(folio, NR_ISOLATED_ANON +
+ 			folio_is_file_lru(folio));
 -- 
 2.53.1-Meta
 
