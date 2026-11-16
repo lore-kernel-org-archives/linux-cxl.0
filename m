@@ -1,70 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794813012;
-	b=n8/IQP+8rybjxPbzCUTRBNbhmRCtGEj4/QG5ieQLLNPHUqguYQWj0ei5pCWlBCRFRHPl
-	 yTLsreB00DGHVR0dlDYO8dHzTatcqn+oRIJqlilVPVPBZRM8UjmNUERLBVRkZAz7F5SPZ
-	 yFFwN6FXdWIaoYdY+zKupXNpnIOoVRcJ8yNq/qDOt0ze8MQ9FHKe8+XtdPbUFEUQvaKEV
-	 8qcy0Wr6tMa6hkuxM2YEDI7rTmyU9ox39Zm+2dF/XkeinGresgb8llWRCagQJBebMN79a
-	 B/cf7X0LxgyTKTnOb3sM+ib0aEhbIyH0btnQktwuzXvBr3EVI3I4WYxNU5U0pY4+mgg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794813012;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
-	 X-ZohoMailClient;
-	bh=752magGq7IrvWYg97KnOkqOFQl9cdvBx3a1hDh/JWs4=;
-	b=CMS6th/PtfRvIEfKmmVGR0h9Pf1lMpCZPFn+JnBhthOcxNEBneohrSePkKjsJjYPMwU9
-	 3D/i50KKCgCJctIYTBwtfFNo6p9hpRYjCs7/co5LOHmRjuyeMF941n82mob6m3pfHdl5U
-	 SjgAe81AVi/Dn8yPzS6vp56xpKOeK/WUe0rtW6ULO+ZFVUoUjyY7tplXHjm+vfRaaWOL5
-	 nOImRSC5UP1mFlKnbB63v5hDxSfHVq1mjZXYl51StIdu0iwMvoAQzEKT0mgQra/iPdNAL
-	 NWsiLrf+N2VKJbGy0W2BQ1+sw25M8bb11KWa1+yljvPxNOc+qBO36p22L9fYH635qyA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zohomail.com;
-	spf=pass smtp.mailfrom=zohomail.com;
-	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=Aw0XO6BZ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.94
-Received: from sender6-pp-o94.zoho.com (sender6-pp-o94.zoho.com [165.173.180.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.178
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794851578;
+	b=pIofWFjtyzFDhaU8tbLKqsj42ZUKwHOAcGT+15PAkCb/c9243AArK7bPOThl60oRd4G6
+	 PLFEO18hacNz1DHg0VJQRlM2XEXDkulQ1ZhrVClYCwmsvtNe+ei4lBg9gOiq4KDOSn1LI
+	 Fhib94z0vTD2D1kgoE4IFzfeN47jyIdby5jSzazdctDTUYJu0fHwcgJjDo7uCundJYYH7
+	 AGguDWCMKpkMzCTeFx9gm5NY8gO0u8ydS+DTL3L/gjm+5lI8LZFetKCGTlchYa6Fv/wrF
+	 mvK41zjn64tFwvIUgh0HfifQzqALE35OFUZBw6M6Lzk8roMzZiGhH4veX6hWPG1XTYg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794851578;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
+	 Cc:Subject:From:To:X-Mailer:References:In-Reply-To;
+	bh=ZVha1LQJ+ZYa0pasaO7rOjBg6mtWgNhixYpeavUGJvw=;
+	b=V35mox2wiA0ii+E2xF8I6bDpjOsnweT9oR6z4Hx1VK+DR4xHsOnisPgQdjofRmVaCQqY
+	 i69071aKn1ZJSInzRr/deAbp1ObKjAHseEnSlGvsDTrs/4JFd3QUwdJ6QfhRPpojhQyRl
+	 fkWl47iirAc00FH9DWhEC0mAbSr5sHv9DcpBnJK1jjDxWhghH1jW/4jjo6uyNBiVFE1Ht
+	 t+KlNDL4Vu/1MofHs9SSJhNuA1rtxoRXfovnWPv7pIldeOS8KAy7uwSXcOqRVxlY7AQzl
+	 js+2VaGSg0CMWr6L2Lv/jCgH2VcZ3FJYnhuCk+mdSGQZ9s0l0NJbSTU2mvTu4yHzk5w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Mr0MWBAM;
+	arc=none smtp.remote-ip=209.85.214.178
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1830606A33B;
-	Mon, 16 Nov 2026 07:10:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1830606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14ABE606A885
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Nov 2026 17:52:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14ABE606A885
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=Aw0XO6BZ
-ARC-Seal: i=1; a=rsa-sha256; t=1794812999; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bLH5PxI7iQrUmkGZDwVBh8xI8PiRCu15KqSCC+QcehIrI5EXgRuG9ERyMnt44AuQT+Kns1qr1oKeVwnkWPmRjnv4ZvS/0NK5WhS5ELnr9aSm1g+ZtPkdS/VuiYje3DD9s88wdQz/YdDxcQsrGsrIVmkflFtfoyrLt/pYnnAGRLw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794812999; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=752magGq7IrvWYg97KnOkqOFQl9cdvBx3a1hDh/JWs4=; 
-	b=lexAXisJE6O+7mQDYYzRnDl1xAfN03NUIwRrkLv33yh71K1h1thz+R9y7Kj0lT7khImK/C2tzEu/JENbL5xx/yax2T4hh3FyhcRXlx4Eq1NafrhHuVEoDhlytCv9GYP83z3/U87ZI1nH7L9+a8Ai6kbnh2xIeIGzg/duXxw86rY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: a=rsa-sha256; b=Aw0XO6BZMBF08IA7G4mUAjYJhEq3wL38uOTZLv/Y8QHiyR84grnVBBNf5WZN7P8P0N+I0AmtISTFy9LPfRg2/1POLtU+EXJxjNhpbsstt4N7ImLuVDU6BjngNFU8XQVmoRbpP8jLh8vVqP070pPtMIF+vP3OXu9Kyyc+UwvdHF8=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=752magGq7IrvWYg97KnOkqOFQl9cdvBx3a1hDh/JWs4=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794812997831173.02271146337864;
-	Sun, 15 Nov 2026 23:09:57 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	djbw@kernel.org,
-	iweiny@kernel.org,
-	icheng@nvidia.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] cxl/mbox: Use mapped errno to determine command status
-Date: Mon, 16 Nov 2026 15:09:38 +0800
-Message-ID: <20261116070938.3675205-2-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261116070938.3675205-1-ming.li@zohomail.com>
-References: <20261116070938.3675205-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Mr0MWBAM
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2e987a2ba0cso21762595ad.3
+        for <linux-cxl@vger.kernel.org>; Mon, 16 Nov 2026 09:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794851577; x=1795456377; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ZVha1LQJ+ZYa0pasaO7rOjBg6mtWgNhixYpeavUGJvw=;
+        b=Mr0MWBAM4MLlHJMOKb/4Z6+dOhVz5cE+GMuRUduu9EHxuwhijBh3tXy8WJrkhaD0vh
+         PYAoy9x9sShYaRayE53yartClLeXdWk62a//vvYlSd2zLiJvKMc9TXh7Mof3XZRTu0rx
+         GxoGIFqRYzrwZ+dbFPfJk7TnrE7kr2+1NPV9kZnPO9acPHImQGPyrlGzUI/V+O9rL+lS
+         rW57l05EwtNh4ZKXuPgI4wU7DkeDNQM3yk0RZSB8ysyrRk6y/+Fsb3SJKn/X/NOmQar9
+         V386QxKbhvhnCZ98vZnrwlnUF9YPDTCdsBALgZVykIgXLyQJuXY30X/5rtUP6x7EcqzI
+         KKdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794851577; x=1795456377;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZVha1LQJ+ZYa0pasaO7rOjBg6mtWgNhixYpeavUGJvw=;
+        b=pUoKNKkm3mIdgBmHZOwfS3ddZsnpD64k5Zts7QNQW7KBwg7g9cxgs5GMg5V67NXf4h
+         0x4M26so4H2wFU5Y1CAv9qLsGBKomQwmRVOUIztIsgfHeDga348tdz2GQLArJ1A0NFyi
+         fKYTn/F08GIbwymy1DLZKpCCNlC98Q8uCcjwJtA6W04Ltti0J7xPGnCBLh2coJbLyFf/
+         AirPgTOP3H/1D8ZAbV9Lctyk70qhie98cwyLSQO8HyzSo0rwE9gSymJdgOnfMbrcL7s4
+         /Vw9y+XEkGfPsr/ZGdUM+sGOlH7k6rz7s/GNi53NS7JAoqCAVX7bwRU65/vu1cLwojoE
+         lRlw==
+X-Forwarded-Encrypted: i=1; AL+hErEbExIFRjJvRXlvXTlcofnE3v+5b9158rjvuy46LGZaHKDUVTaJpPjj8JlewmAGE+G+RLzpH4gS3p4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z92vSlFVJeKUeupMcjCZ0+erffqX4Z/V9+B0fZxRcvEleyupcgv
+	VgfPd/WB0oqzUIm5nKi7W5C4P1cPiZ5o/copbeT3sVj1NTRTyIoRv6zpjmznBxV9Sw==
+X-Gm-Gg: AZFdTZe17TFwnraljePvCl9js4RKKUxlTzxO7YzLg52vKuqnMIrs1oq0SrVLGyKl6Dx
+	oh+aknfD+v82DFGaXYuaZAax3zaHw7rvUlhI9APN9OuIl7p2W4UQnuFbPr7CIYBiq9KoCOnkpMU
+	K0J7UfgSt2154BGIjpsegYdtfuWTSjZb6hES8nrCcg4AC+EELSrHhKuhMfl5DKX0vgU+ePvcjwF
+	ENhPE8W27iOgmsHyPABUJ7ogNjiw+84jO7VyYP2vNzLZAoxTU/30Wv8xAwqv5zcIpCv4zq4c5xF
+	sZOgwrAMRe7UeVC9v5JoWKF5Sx+Bj9qgoZD9dENY8dicnJ8elsXBJBvxpE958I9QJ2NDXm2l2ne
+	VH7Swt3AjsVTpnDJFyGABJblLWpINXPm4kQzdrqyyvf1Ce6Lr2nXl3bfY4u1U1Zd6EPIK7pw8Rw
+	C4rYQ7ZwOkNU0wnWAvKY7iyedGUz+CC106Bu3o1CyIwkO9/3RPBXNF00XSAfZcC7W+/LUpw5Vtl
+	j1jIjx5WPexB5x3zN2HcKK1fYUfQNOI1UidPIVhpb9nazAc1OCLQJ0NGcib9eOAZpWwieKXJxUf
+	i1x4AVO3zaot8urQEdLgZ+GsRWx68egKeQUPCR+m1BsXxT3a7rhSlT4LbxSZ1E8H
+X-Received: by 2002:a17:90b:4c0c:b0:3a0:516d:9f87 with SMTP id 98e67ed59e1d1-3b1b0a1f01cmr12343648a91.13.1794851576505;
+        Mon, 16 Nov 2026 09:52:56 -0800 (PST)
+Received: from localhost (33.79.127.34.bc.googleusercontent.com. [34.127.79.33])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3ac296b5fsm224574a91.8.2026.11.16.09.52.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Nov 2026 09:52:55 -0800 (PST)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -73,45 +87,256 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu080112275b9909e28fd7d53acbea95190000861468830200391b36135c1ceff1f6d0a5c68d7febc9ba39c4:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 16 Nov 2026 09:52:54 -0800
+Message-Id: <DMWTS6IPSI2R.3EJQC130JYVW3@google.com>
+Cc: <cjia@nvidia.com>, <kjaju@nvidia.com>, <vsethi@nvidia.com>,
+ <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v6 31/31] selftests/vfio: Add CXL Type-2 passthrough
+ tests
+From: "David Matlack" <dmatlack@google.com>
+To: <mhonap@nvidia.com>, <alex@shazbot.org>, <jgg@ziepe.ca>,
+ <ankita@nvidia.com>, <jic23@kernel.org>, <dave.jiang@intel.com>,
+ <alejandro.lucero-palau@amd.com>, <smadhavan@nvidia.com>, <corbet@lwn.net>,
+ <skhan@linuxfoundation.org>, <dave@stgolabs.net>,
+ <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+ <iweiny@kernel.org>, <ming.li@zohomail.com>, <yishaih@nvidia.com>,
+ <skolothumtho@nvidia.com>, <kevin.tian@intel.com>, <bhelgaas@google.com>,
+ <dmatlack@google.com>, <kees@kernel.org>, <gustavoars@kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20261016161839.2765592-1-mhonap@nvidia.com>
+ <20261016161839.2765592-32-mhonap@nvidia.com>
+In-Reply-To: <20261016161839.2765592-32-mhonap@nvidia.com>
 
-cxl_mbox_cmd_rctable already maps all mailbox command return codes to
-errno values. Use the returned errno directly instead of checking
-mailbox return codes separately to determine whether a command succeeded
-or failed.
+On Fri Oct 16, 2026 at 9:18 AM PDT, mhonap wrote:
+> Exercise the vfio-cxl contract on a bound Type-2 device: the CXL
+> device-info flag and the two vendor-type regions, the HDM memory mmap
+> (including a 2 MB huge fault), the read-only trapped decoder region
+> against the live host-committed decoder, and the guest's DVSEC reset
+> doorbell and manual HDM discovery.
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
----
-v3:
-- No change.
-v2:
-- New patch.
----
- drivers/cxl/core/mbox.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I tried running this test in a VM with the emulated cxl-type2 device
+from your QEMU RFC [1], on an x86 q35 machine with intel-iommu. Out of
+the box the device binds as plain vfio-pci and the fixture skips
+everything. v6 now requires that the host can do CPU cache invalidation
+for CXL Reset, and cpu_cache_has_invalidate_memregion() returns false in
+a VM (x86 refuses it under a hypervisor, and arm64 has no cache
+maintenance provider in a guest).
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 55828a836c01..bd91b03c4d21 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -270,9 +270,9 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 	if (rc)
- 		return rc;
- 
--	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
--	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
--		return cxl_mbox_cmd_rc2errno(mbox_cmd);
-+	rc = cxl_mbox_cmd_rc2errno(mbox_cmd);
-+	if (rc)
-+		return rc;
- 
- 	if (!out_size)
- 		return 0;
--- 
-2.43.0
+The QEMU RFC reports 19/19 passing in an Arm guest, but that was against
+v5, which didn't have this requirement. How did you run the v6 version
+of this test without hardware? Did you use something like
+CONFIG_CXL_REGION_INVALIDATION_TEST? That option only covers region
+management in drivers/cxl/core/region.c, and depends on CXL_REGION, so
+it doesn't help here.
 
+I added a local test-only bypass (a CONFIG_CXL_RESET_INVALIDATION_TEST
+that skips the invalidation in cxl_reset_check() and
+cxl_hdm_quiesce_prepare()/cxl_hdm_ranges_invalidate()), I get 26 passes
+and 1 skip (pm_d3hot_restores_decoder, since cxl-type2 has no PM
+capability in QEMU). I think something like that belongs in the
+cxl_reset series. Otherwise this test can only be run by people with
+real Type-2 hardware.
+
+[1] https://lore.kernel.org/linux-cxl/20261106035911.1280066-1-mhonap@nvidi=
+a.com/
+
+> Check that the decoder register region reads fail with EIO while Memory
+> Space is disabled, and that the decoder reads back committed and HDM
+> access works after low power entry and exit.
+
+The series says a Type-2 device loses its committed HDM decoder in D3hot
+and D3cold (patches 17 and 30), but the emulated cxl-type2 device in
+your QEMU RFC has no PM capability, so on it these tests never take the
+decoder restore path in vfio_cxl_power_up(). Please make the emulated
+device behave the same way as the real hardware across D3hot (PM
+capability, No_Soft_Reset, and whether the decoder is lost), so that the
+selftest exercises the same vfio-cxl code paths in a VM as it does on
+hardware.
+
+To help get that right: what does lspci -vv show for the PM capability
+of the device you tested with (NoSoftRst+ or NoSoftRst-), and did you
+observe the decoder actually being lost?
+
+> Add a partial-mmap path to the vfio selftest library so the trapped
+> component BAR maps its sparse ranges, and an __iommu_map_file() helper fo=
+r
+> the dma-buf mapping.
+
+Please split the library changes into separate commits ahead of the
+test: __iommu_map_file(), the sparse mmap support in vfio_pci_bar_map(),
+and each of the new libvfio helpers suggested below. That way each one
+can be reviewed on its own, and the final commit only adds the test, its
+Makefile entry, and the MAINTAINERS line.
+
+This series is already quite long (31 patches), and with the library
+changes split out the selftest changes will grow to several patches.
+Consider sending all the VFIO selftests patches as a separate series
+that depends on this one.
+
+> +/* Return the sparse-mmap capability in @info, or NULL if the region has=
+ none. */
+> +static struct vfio_region_info_cap_sparse_mmap *
+> +vfio_pci_sparse_mmap_cap(struct vfio_region_info *info)
+> +{
+> +	struct vfio_info_cap_header *hdr;
+> +	u32 offset;
+> +
+> +	if (!(info->flags & VFIO_REGION_INFO_FLAG_CAPS))
+> +		return NULL;
+> +
+> +	for (offset =3D info->cap_offset; offset; offset =3D hdr->next) {
+> +		hdr =3D (void *)info + offset;
+> +		if (hdr->id =3D=3D VFIO_REGION_INFO_CAP_SPARSE_MMAP)
+> +			return (struct vfio_region_info_cap_sparse_mmap *)hdr;
+> +	}
+> +
+> +	return NULL;
+> +}
+
+This walks the region info capability chain looking for one ID, which is
+the same thing find_region_cap() does in the test. Please add one
+generic libvfio helper that looks up a region info capability by ID, and
+use it in both places.
+
+> + * Usage: ./vfio_cxl_type2_test <BDF>  (or export VFIO_SELFTESTS_BDF=3D<=
+BDF>).
+> + * The device must be bound to vfio-pci with the vfio-cxl module availab=
+le.
+
+Please document how to run this test in more detail: the hardware
+requirements, how to set up the emulated QEMU device, and the kernel
+config needed (VFIO_CXL, IOMMUFD, any test-only bypass), so others can
+reproduce your results.
+
+> +/* vfio-pci region-offset packing is kernel-internal, not UAPI; define l=
+ocally. */
+> +#ifndef VFIO_PCI_OFFSET_SHIFT
+> +#define VFIO_PCI_OFFSET_SHIFT		40
+> +#endif
+> +#ifndef VFIO_PCI_INDEX_TO_OFFSET
+> +#define VFIO_PCI_INDEX_TO_OFFSET(i)	((uint64_t)(i) << VFIO_PCI_OFFSET_SH=
+IFT)
+> +#endif
+
+As the comment says, this is kernel-internal and not uAPI, so the test
+shouldn't depend on it. Please use vfio_region_info.offset from
+VFIO_DEVICE_GET_REGION_INFO instead, as comp_bar_sparse_mmap already
+does for the BAR. Better yet, use region access helpers in libvfio that
+take a region index and apply the offset internally (see below), so the
+test never computes region offsets itself.
+
+> +/* Find a CXL region by subtype; returns the region index or -1, @buf le=
+ft holding its info. */
+> +static int find_cxl_region(int fd, uint32_t nregions, uint32_t subtype,
+> +			   void *buf, size_t bufsz)
+> +{
+> +	uint32_t i;
+> +
+> +	for (i =3D 0; i < nregions; i++) {
+> +		struct vfio_region_info *ri =3D buf;
+> +		const struct vfio_region_info_cap_type *t;
+> +		const struct vfio_info_cap_header *hdr;
+> +
+> +		memset(buf, 0, bufsz);
+> +		ri->argsz =3D bufsz;
+> +		ri->index =3D i;
+> +		if (ioctl(fd, VFIO_DEVICE_GET_REGION_INFO, ri))
+> +			continue;
+
+This is a generic lookup of a region by type and subtype. Only the CXL
+vendor ID is specific. Please make it a libvfio helper (e.g.
+vfio_pci_find_region(device, type, subtype)) built on the existing
+region info code in libvfio.
+
+More generally, please replace the raw ioctl() calls throughout the test
+with libvfio helpers: VFIO_DEVICE_GET_INFO, VFIO_DEVICE_GET_REGION_INFO,
+and VFIO_DEVICE_FEATURE for DMA_BUF and LOW_POWER_ENTRY/EXIT. Please
+follow the existing convention, e.g. __vfio_pci_device_reset() and
+vfio_pci_device_reset(): a double-underscore variant that returns -errno
+for the tests that expect failures or skip when something isn't
+supported, and a plain variant that asserts success.
+
+> +/* Walk the PCI extended capability list for the CXL Device DVSEC. */
+> +static uint16_t find_cxl_dvsec(struct vfio_pci_device *dev)
+> +{
+
+Same here, the extended capability walk and the DVSEC match aren't
+CXL-specific. Please consider vfio_pci_find_ext_capability() and
+vfio_pci_find_dvsec(device, vendor, id) helpers in libvfio, with the
+test passing in the CXL IDs.
+
+> +/* Read config space from sysfs, which is the hardware, not the vfio vie=
+w. */
+> +static int sysfs_config_read(uint32_t off, void *buf, size_t len)
+> +{
+> +	char path[128];
+> +	ssize_t n;
+> +	int fd;
+> +
+> +	snprintf(path, sizeof(path), "/sys/bus/pci/devices/%s/config",
+> +		 device_bdf);
+> +	fd =3D open(path, O_RDONLY);
+> +	if (fd < 0)
+> +		return -errno;
+> +	n =3D pread(fd, buf, len, off);
+> +	close(fd);
+> +	return n =3D=3D (ssize_t)len ? 0 : -EIO;
+> +}
+
+This and sysfs_config() further down do the same thing. Please replace
+both with one sysfs config access helper in lib/sysfs.c, modeled after
+the existing vfio config helpers: a sysfs_config_access(bdf, write,
+offset, size, data) core with sysfs_config_read{b,w,l}() and
+sysfs_config_write{b,w,l}() wrappers that assert on failure, like
+vfio_pci_config_access() and vfio_pci_config_read{b,w,l}().
+
+Taking the BDF as a parameter also gets helpers off the device_bdf
+global. Please only use device_bdf where the device is opened
+(FIXTURE_SETUP() and close_restores_open_time_command). Everywhere else
+can use self->dev->bdf.
+
+> +/* The trapped block starts at the HDM decoder registers; CTRL 0 reads b=
+ack. */
+> +TEST_F(vfio_cxl, comp_regs_hdm_read)
+> +{
+> +	uint64_t ctrl =3D self->comp_off + CXL_HDM_DECODER0_CTRL_OFFSET(0);
+> +	uint32_t val =3D 0;
+> +
+> +	ASSERT_GE(self->comp_size, CXL_HDM_DECODER0_CTRL_OFFSET(0) + 4);
+> +	ASSERT_EQ((ssize_t)sizeof(val),
+> +		  pread(self->dev->fd, &val, sizeof(val), ctrl));
+> +}
+
+Please add region access helpers to libvfio instead of open-coding
+pread()/pwrite()/mmap() on the device fd, which this test does in about
+50 places. Something modeled on the config space helpers:
+__vfio_pci_region_access(device, index, write, offset, size, data)
+returning the number of bytes or -errno, vfio_pci_region_access()
+asserting success, and typed vfio_pci_region_read{b,w,l,q}() and
+vfio_pci_region_write{b,w,l,q}() wrappers. Then this becomes:
+
+	val =3D vfio_pci_region_readl(self->dev, self->comp_idx,
+				    CXL_HDM_DECODER0_CTRL_OFFSET(0));
+
+The double-underscore variant covers the expected failures, like
+comp_regs_read_needs_memory and the unaligned and out of range tests.
+vfio_pci_config_access() could become a wrapper around the same code
+using VFIO_PCI_CONFIG_REGION_INDEX. libvfio would need to cache the
+region info for all regions, not just config space and the BARs, so it
+can apply the offset reported by VFIO_DEVICE_GET_REGION_INFO.
+
+Similarly, __vfio_pci_region_mmap() and vfio_pci_region_mmap() could
+cover the HDM region mappings and the expected mmap failures over the
+decoder block, and vfio_pci_bar_map() could be built on them.
+
+> +/* Find a standard capability through the vfio config view. */
+> +static uint8_t find_std_cap(struct vfio_pci_device *dev, uint8_t id)
+
+Please make this a libvfio helper too, e.g.
+vfio_pci_find_capability(device, cap_id).
