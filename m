@@ -1,62 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794884078;
-	b=f4e11GgTT7GiW8EP4yTCZ3cUQWKSBp5HP60SaPfjS8TBbuS90xbEua6DWCAmChilb6sd
-	 kul5yXMA6e6VIpnI0W65KAxcuFbE9/pJuT1HQBhPC6+Z1pW0J72gFZ5TB8s1WtK6BHP3C
-	 q5zX+VA2OxXzGn7yBrZf7bSFMFr5ZWmE5yEmUTcbQ3MtEV+n+SvkeuBvBszvPNr2zXEe6
-	 hw1Apwen5iAmxE08io4vi1HaNDGpCPXX3p1TaZOFQISQ19KGKMAQQ867Pj4cKW2vxSfHM
-	 WqlGGmbpU1XZlYC8anetL17LnizY22Nvfo/fW2hpo/0ou4Gtv7/G8Hg+wmriVJnatQg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794884078;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=REPG2PTjjlLBXySmbr3czUPyqylqIzZwgGf/Je96Dk0=;
-	b=draQSwPmAcf5M4LG4YV39CFlsZ8BgNyC+4NdJd90XK6vgRE/5KUNT9PP/ib/VsQau7+j
-	 IZOWWWXeH6seVjly9qWSvbfDWOSEDScvDs/vZHMAL6bwVeIyWk6mHHHcRgz1U4CzsBvXd
-	 gfCZvVew9unCYHBmtkYQC4pC9cDdpWaa0UvEz3rD2WdA+nkM5tKvDr6bAwtExzNuRXJrF
-	 aQJE4aFwCNmwiC0rkn6aW78E4v93suFLzDVWXfonPFz2NKedSRPLeOULmCS2RpI2Jj+XO
-	 GFt2jjJtReAAt7mJdrzF47uYz5J40qc2BNZ9PqSBDYswL363VmsNEM5ZyrWFr4CdD/w==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NTRaI7mJ;
-	arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794884356;
+	b=jzqz+hNEmKro6N1JG2SWoEntqZMNhW2zFf8LyVic+aSJBZo7QGKLPwAjE5FDg/2YFu0r
+	 gbq8qJgVD6EPYI/Mg9IZOCgiogiViLQzUTL7kqsPCi3JJmsY0CnlOJb7vzEFhAxYHASUk
+	 Hw1lCM80EhkAesg0I8K8CbNCCXtmH9TEkYUeZK4ynybc2pVF54NN16dvZc+1MW0Mg3j46
+	 nEVnZHP2f/I16/Y0r7aYOMTPHWm44qHHCCUKTmb9DdW+gz5LJvoIf+J25QrIuPGfGL8xF
+	 y9e4yQzF7vZwHPDL6Pbv30axtVTY3R3QM/spxiwGDDGcP136ilbqzN11qy4l7z7mvdA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794884356;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=85ZfaL/b1CxAVL1txoIzqI2DFT6VrG9Gm4gJ0pWpPGc=;
+	b=oZgb9J1HrIrBz5pDw0sNaVduDA8BsAxuWRyWb6Bm8c61pOpKhB6mskrSsqBbHSJ827AN
+	 47NKe8UqtodBn/ziQP7r832UzL6MpXJQITYUAMYHo0xGxauovp7ILDsW13F9kqCP3Guwi
+	 wxDnoNrGCOLphN3lAJHdn4M6bBZFQjpI8bFoUqj1NGFCUPV9styFaXp3lQTvgVuxROLLV
+	 WCJ+9ayZD90INTAJErvbKOr3U5sY2+DcUc2oISfRcxdGBTc2qxAaaQoSK0IByQg4HH0Md
+	 NMx3h7f0ypnCAL0K3fktbablRE8k1YITRY5xWDNt6v6gsr8+rLI2qxFyKtl8GZjmsTA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TRAayYG6;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE1F606A32A;
-	Tue, 17 Nov 2026 02:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBFA606A31C;
+	Tue, 17 Nov 2026 02:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NTRaI7mJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C0FC1F000C4;
-	Tue, 17 Nov 2026 02:54:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TRAayYG6
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794884356;
+	b=LjByDSCi1pc5jWsbbia5SvI8HCXOK2PNUQ7oZ0MwsNzCQ1Pr9BjNHWZ2SeZRQsgqPr9b
+	 s5hi5ugUGz+3FDc+iigxtkLrwmxq191XAwJ+i8fAPxs5F5loI6izTfnEzM24miGat69y0
+	 F2aSAPA0rJEbp3yMkrg4kuuekiAwHtIR+mJ7gQscTIQvRJdO26OfKXmLfDW428G6za+C8
+	 xQq+CKCDUBRuEea8rF0zlPBSfQS1V5mBiUyMjji3UsQ5jIHW4PoHaSSwRJ2jm76wkc+Tx
+	 LbWw+tkODytC/lmtENQ7LcnNnBdBgiBVS1tjQfQKbnMXUtzf4uSGiVNTazvzkQBewdw==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794884356;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=85ZfaL/b1CxAVL1txoIzqI2DFT6VrG9Gm4gJ0pWpPGc=;
+	b=eqYKL2527oYMPSdxf6/8iHMVuQZujyLFl1qt2mopMMhVHLQoXR2dFYa90tR7uYGf0EBH
+	 uf2n2Na/lkbTU3WHNSXxtdLS85Iw13PzAXl2YnIR4D4sONRiCtkTYHokgDrELnJe1+x2K
+	 +554gc/Tsu/qHj7zTuAQtDPj9Egn9Azt25NBfwZIbSse6Qli/2Tm/0bFL86tCLWYRVzJI
+	 xrHXxva8sTa5Lg793oF14FF0GylRZtcqLfADt/Bad5j0NZSaQ4+vlPeuuKuvQlI4+ZCtw
+	 mLlPD1olsZfIdh8xFU7iZlVxcjofaTeaobiC0sB3TrYJODRLuUg9TgpuVPwe+zzC8Gw==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id A09E81F000C6;
+	Tue, 17 Nov 2026 02:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794884078;
-	bh=REPG2PTjjlLBXySmbr3czUPyqylqIzZwgGf/Je96Dk0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=NTRaI7mJ5qh98ipqHqdO/ndG3EnSNDGY9CdRgJVYrwS9wfCs9E04qU/3WAlxO4yEr
-	 IqIawjyCv5B//hBTpV3FWR5y0QrXgRWBPUsS9UeMmY1r5dIXNXVzn22+BuMM7KsQ90
-	 5dVBRNakOQQfveonn5zaTOjJ47bCfdnFkEy5npjzlTBD78AxAyTaRI1n11ubYyYl8b
-	 sXquIKEpqVkbwekmmyQsojMvLcieOySDPU74MHmUQi3n2E4znCfm9jxnfFzGMUZKR1
-	 IuECUSCls4vmgDrubz92N3UyJ6+H2W1gwD8CKA4KfhoFRPavHQwnR6PVHPLtzEz8vh
-	 C81xfO/3kq78A==
-Date: Tue, 17 Nov 2026 02:54:27 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>, Vishal Verma
- <vishal.l.verma@intel.com>, Fan Ni <nifan.cxl@gmail.com>, Li Ming
- <ming.li@zohomail.com>, Benjamin Cheatham <benjamin.cheatham@amd.com>,
- Gregory Price <gourry@gourry.net>, Richard Cheng <icheng@nvidia.com>, Anisa
- Su <anisa.su@samsung.com>
-Subject: Re: [PATCH v1 04/14] cxl/mem: Introduce DC event handlers
-Message-ID: <20261117025427.48bb687d@jic23-hlaptop>
-In-Reply-To: <20261104230445.66625-5-anisa.su@samsung.com>
-References: <20261104230445.66625-1-anisa.su@samsung.com>
-	<20261104230445.66625-5-anisa.su@samsung.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=k20260515; t=1794884356;
+	bh=85ZfaL/b1CxAVL1txoIzqI2DFT6VrG9Gm4gJ0pWpPGc=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=TRAayYG6MPHu6v83ZNp4lET3RDipNFCPuUgT1ieq0bf8z3nOBEKg1IkvEBpkjkyu9
+	 VeOjCx6UPxr6Ce7vILFeYjSzqjLTGaSe/SjMt5HaB83AMLUj8M6C3wVkHGmWzeu98h
+	 5ThT5ex2c2jVvYoNir1tOk20kolNTQUCPqZ+XFz4z1vnIE1zlGYqLS9NwgnecVpbxO
+	 AmyEtlMDJBs+auLguxbXqAz8zjkFZFi1fTJTfDpplQ/N6v2cp1bKTA6/sBqf3tFM43
+	 qCjOU6Snb7FUNHHrpmiBc9t+V3uszi56i+0OvWeFKa/izPGJiBOtXvXQEL83S8PimL
+	 DrJXNSKzLWDlg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 015724A691;
+	Tue, 17 Nov 2026 02:59:14 +0000 (UTC)
+From: Junho Cha via B4 Relay <devnull+junho.cha.xcena.com@kernel.org>
+Date: Tue, 17 Nov 2026 11:59:15 +0900
+Subject: [PATCH] cxl/region: Fix self-deadlock when
+ cxl_memdev_attach_region() fails
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -66,270 +83,190 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261117-junhomax-fix-cxl-attach-region-deadlock-v1-1-f373a135edd2@xcena.com>
+X-B4-Tracking: v=1; b=H4sIAALD+2oC/yWNwQ6CMBBEf4Xs2Y20Cib+ivGwXRZaxELaYpoQ/
+ t2ixzeZebNBlOAkwr3aIMjHRTf7AupUAVvyg6DrCoOudauUuuC4eju/KWPvMnKekFIithhkKFP
+ shLpp5hf2XNNVN/1Ntw0U2xKkLH5Pj+ef42pG4XToj4ahKGgCebZHVNxnLznBvn8BNzLMoqYAA
+ AA=
+X-Change-ID: 20261113-junhomax-fix-cxl-attach-region-deadlock-fc0a425f7265
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, 
+ Li Ming <ming.li@zohomail.com>, Alejandro Lucero <alucerop@amd.com>, 
+ Richard Cheng <icheng@nvidia.com>, linux-kernel@vger.kernel.org, 
+ Junho Cha <junho.cha@xcena.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794884354; l=5381;
+ i=junho.cha@xcena.com; s=20261113; h=from:subject:message-id;
+ bh=JPQrZdtVE5CtcBfCoa+/THfa0h+zu/tnz7b6oc1BUAw=;
+ b=zwSYPM2z6GeOO7Xu1G64jVherJ9VbxyCl+Li3hwyhYX7SBrDoVxLkhKzczwqc3DBFTIkVUOHA
+ IwjE5CHUHWqD984omNVmosUHehE2GBf8f8OTl4abp8JXUIaVtjRTYcn
+X-Developer-Key: i=junho.cha@xcena.com; a=ed25519;
+ pk=OkFm4PnuJSze1AVqDdvnpHO7nnDQIheH2qYwg2a6Dyc=
+X-Endpoint-Received: by B4 Relay for junho.cha@xcena.com/20261113 with
+ auth_id=1507
+X-Original-From: Junho Cha <junho.cha@xcena.com>
+Reply-To: junho.cha@xcena.com
 Content-Transfer-Encoding: 7bit
 
-On Thu,  5 Nov 2026 08:02:28 +0900
-Anisa Su <anisa.su887@gmail.com> wrote:
+From: Junho Cha <junho.cha@xcena.com>
 
-> From: Ira Weiny <iweiny@kernel.org>
-> 
-> Add the handling skeleton for DC Add and DC Release events. Per CXL
-> r4.0 Section 8.2.10.9.9.3, the host is expected to respond to one or
-> more Add Capacity Event Record(s) with an Add Dynamic Capacity Response
-> (Opcode 4802h) to acknowledge which extents the host accepts for use.
-> Similarly, per CXL r4.0 Section 8.2.10.9.9.4, the host is expected to
-> respond to Release Capacity Event Record(s) with a Release Dynamic
-> Capacity command (Opcode 4803h), or to issue one that is not
-> associated with any event to release capacity on its own.
-> 
-> The records of one operation can be chained by the More flag. Chained
-> records are contiguous in the event log and share one event type (CXL
-> r4.0 Table 8-229), so a single staging context, mds->dc_chain, holds
-> the records of the open chain until the closing record (More=0)
-> arrives and the chain is processed and responded to as a whole. A
-> record that fails to stage, or one of the other type arriving inside an
-> open chain, drops the chain: an add is refused with an empty response,
-> a release is left for the device to retry.
-> 
-> This commit refuses all extents from Add Capacity chains and acks all
-> Release Capacity chains. Subsequent commits implement accepting and
-> releasing extents.
-> 
-> Forced Capacity Release and Region Configuration Updated events are
-> logged and ignored.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> Co-developed-by: Anisa Su <anisa.su@samsung.com>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> Tested-by: Junhee Park <jh9934.park@samsung.com>
-> Tested-by: Heesoo Kim <habil.kim@samsung.com>
-Sashiko does raise an interesting question about trailing events
-in a chain after an error.  If it's shared capacity we aren't allowed
-a partial accept. Otherwise it is fine (I think) but perhaps not complexity we
-want.  So probably need some flag to say problem occured on a record
-with more flag set. Keep dropping until we have had a closing record.
+cxl_memdev_attach_region() holds cxl_rwsem.region for read while it
+registers endpoint_unregister_region() with devm_add_action_or_reset().
+If registering the action fails, devm_add_action_or_reset() runs the
+action at once, which reaches cxl_decoder_detach() through
+unregister_region() and detach_target():
 
-For force release, I'm not sure if we should just panic() (maybe
-with a sanity check that the range was mapped) or ignore it and
-die in a storm of poison (hopefully rather than zeros).
+  cxl_memdev_attach_region()
+    down_read(&cxl_rwsem.region)
+    devm_add_action_or_reset()          /* fails with -ENOMEM */
+      endpoint_unregister_region()
+        unregister_region()
+          detach_target()
+            cxl_decoder_detach()
+              down_write_killable(&cxl_rwsem.region)
 
-> ---
->  drivers/cxl/core/mbox.c  | 246 ++++++++++++++++++++++++++++++++++++++-
->  drivers/cxl/core/trace.h |   3 +-
->  drivers/cxl/cxl.h        |   9 ++
->  drivers/cxl/cxlmem.h     |  46 ++++++++
->  drivers/cxl/pci.c        |  20 +++-
->  include/cxl/event.h      |  37 ++++++
->  6 files changed, 353 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 13a68f5cef69..3acf5ace48db 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
+The task then waits for a write lock while holding the same rwsem for
+read, and never makes progress.  Before it hangs, lockdep also reports
+a circular dependency: endpoint_unregister_region() takes
+cxlrd->regions_lock under cxl_rwsem.dpa, while cxl_add_to_region()
+takes cxlrd->regions_lock before both rwsems.
 
-> +static int cxl_send_dc_response(struct cxl_memdev_state *mds, int opcode,
-> +				struct list_head *extent_list, int cnt)
-> +{
-> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> +	struct cxl_mbox_dc_response *p;
-> +	struct cxl_extent_list_node *pos, *tmp;
-> +	struct cxl_extent *extent;
-> +	u32 pl_index;
-> +
-> +	size_t pl_size = struct_size(p, extent_list, cnt);
-> +	u32 max_extents = cnt;
-> +
-> +	/* May have to use more bit on response. */
-> +	if (pl_size > cxl_mbox->payload_size) {
-> +		max_extents = (cxl_mbox->payload_size - sizeof(*p)) /
-> +			      sizeof(struct updated_extent_list);
-> +		pl_size = struct_size(p, extent_list, max_extents);
-> +	}
-> +
-> +	struct cxl_mbox_dc_response *response __free(kfree) =
-> +						kzalloc(pl_size, GFP_KERNEL);
-> +	if (!response) {
-> +		struct cxl_mbox_dc_response empty = { };
-> +
-> +		/* An empty Release DC is invalid (CXL r4.0 Table 8-352) */
-> +		if (opcode == CXL_MBOX_OP_RELEASE_DC)
-> +			return -ENOMEM;
-> +		/* Refuse all extents rather than stall the device. */
-> +		return send_one_response(cxl_mbox, &empty, opcode, 0, 0);
-> +	}
-> +
-> +	/* Set __counted_by to capacity before populating; reset per response. */
-> +	response->extent_list_size = cpu_to_le32(max_extents);
-> +
-> +	if (cnt == 0)
-> +		return send_one_response(cxl_mbox, response, opcode, 0, 0);
-> +
-> +	pl_index = 0;
-> +	list_for_each_entry_safe(pos, tmp, extent_list, list) {
-> +		extent = pos->extent;
-> +		response->extent_list[pl_index].dpa_start = extent->start_dpa;
-> +		response->extent_list[pl_index].length = extent->length;
-> +		pl_index++;
-> +
-> +		if (pl_index == max_extents) {
-Maybe flip?
-		if (pl_index != max_extents)
-			continue;
+Hold cxl_rwsem.region and cxl_rwsem.dpa only while finding and
+validating the region, take the region reference and the HPA range
+under them, and register the action after dropping them.  The endpoint
+device lock stays held across the registration, as before.
 
-		flags = 0;
+Reproduced with cxl_test (type2_test=1) by failing the devres
+allocation through failslab, with the stack filter limited to
+cxl_memdev_attach_region().  Without this patch the probing kworker
+hangs in cxl_decoder_detach().  With it, the cxl_mem probe fails with
+-ENOMEM and lockdep stays quiet.
 
-		...
+Fixes: d8dcb0b74b04 ("cxl/region: Introduce devm_cxl_probe_mem()")
+Signed-off-by: Junho Cha <junho.cha@xcena.com>
+---
+Dave pointed at this reset path while reviewing the Type2 multipf
+series [1]. This is a standalone fix for the existing code that keeps
+the region teardown when registering the action fails.
 
-> +			u8 flags = 0;
-> +			int rc;
-> +
-> +			if (pl_index < cnt)
-> +				flags |= CXL_DCD_EVENT_MORE;
-> +			rc = send_one_response(cxl_mbox, response, opcode,
-> +					       pl_index, flags);
-> +			if (rc)
-> +				return rc;
-> +			cnt -= pl_index;
-> +			if (cnt < max_extents)
-> +				max_extents = cnt;
-> +			pl_index = 0;
-> +		}
-> +	}
-> +
-> +	if (!pl_index) /* nothing more to do */
-> +		return 0;
-> +	return send_one_response(cxl_mbox, response, opcode, pl_index, 0);
-> +}
+[1] https://lore.kernel.org/linux-cxl/6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com/
+---
+ drivers/cxl/core/region.c | 73 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 31 deletions(-)
 
-> +
-> +static int stage_pending_extent(struct list_head *pending,
-> +				struct cxl_extent *to_add)
-> +{
-> +	struct cxl_extent_list_node *node = kzalloc(sizeof(*node), GFP_KERNEL);
-> +	struct cxl_extent *extent;
-> +
-> +	if (!node)
-> +		return -ENOMEM;
-> +	extent = kmemdup(to_add, sizeof(*extent), GFP_KERNEL);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 4cd9bb5dfd61..b7471a3aca12 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -4424,55 +4424,66 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
+ 	struct cxl_port *endpoint = cxlmd->endpoint;
+ 	struct cxl_endpoint_decoder *cxled;
+ 	struct cxl_region *cxlr;
++	struct range hpa_range;
+ 	int rc;
+ 
+ 	/* hold endpoint lock to setup autoremove of the region */
+ 	guard(device)(&endpoint->dev);
+ 	if (!endpoint->dev.driver)
+ 		return -ENXIO;
+-	guard(rwsem_read)(&cxl_rwsem.region);
+-	guard(rwsem_read)(&cxl_rwsem.dpa);
+ 
+-	/*
+-	 * TODO auto-instantiate a region, for now assume this will find an
+-	 * auto-region
+-	 */
+-	struct device *dev __free(put_device) =
+-		device_find_child(&endpoint->dev, NULL, first_mapped_decoder);
++	scoped_guard(rwsem_read, &cxl_rwsem.region) {
++		guard(rwsem_read)(&cxl_rwsem.dpa);
+ 
+-	if (!dev) {
+-		dev_dbg(cxlmd->cxlds->dev, "no region found for memdev %s\n",
+-			dev_name(&cxlmd->dev));
+-		return -ENXIO;
+-	}
++		/*
++		 * TODO auto-instantiate a region, for now assume this will
++		 * find an auto-region
++		 */
++		struct device *dev __free(put_device) =
++			device_find_child(&endpoint->dev, NULL,
++					  first_mapped_decoder);
++
++		if (!dev) {
++			dev_dbg(cxlmd->cxlds->dev,
++				"no region found for memdev %s\n",
++				dev_name(&cxlmd->dev));
++			return -ENXIO;
++		}
+ 
+-	cxled = to_cxl_endpoint_decoder(dev);
+-	cxlr = cxled->cxld.region;
++		cxled = to_cxl_endpoint_decoder(dev);
++		cxlr = cxled->cxld.region;
+ 
+-	if (cxlr->params.state < CXL_CONFIG_COMMIT) {
+-		dev_dbg(cxlmd->cxlds->dev,
+-			"region %s not committed for memdev %s\n",
+-			dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
+-		return -ENXIO;
+-	}
++		if (cxlr->params.state < CXL_CONFIG_COMMIT) {
++			dev_dbg(cxlmd->cxlds->dev,
++				"region %s not committed for memdev %s\n",
++				dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
++			return -ENXIO;
++		}
+ 
+-	if (cxlr->params.nr_targets > 1) {
+-		dev_dbg(cxlmd->cxlds->dev,
+-			"Only attach to local non-interleaved region\n");
+-		return -ENXIO;
++		if (cxlr->params.nr_targets > 1) {
++			dev_dbg(cxlmd->cxlds->dev,
++				"Only attach to local non-interleaved region\n");
++			return -ENXIO;
++		}
++
++		/* Only teardown regions that pass validation */
++		get_device(&cxlr->dev);
++		hpa_range = (struct range) {
++			.start = cxlr->params.res->start,
++			.end = cxlr->params.res->end,
++		};
+ 	}
+ 
+-	/* Only teardown regions that pass validation, ignore the rest */
+-	get_device(&cxlr->dev);
++	/*
++	 * On failure the action runs immediately and detaching the region
++	 * takes cxl_rwsem.region for write, so add it without the rwsem held.
++	 */
+ 	rc = devm_add_action_or_reset(&endpoint->dev,
+ 				      endpoint_unregister_region, cxlr);
+ 	if (rc)
+ 		return rc;
+ 
+-	attach->hpa_range = (struct range) {
+-		.start = cxlr->params.res->start,
+-		.end = cxlr->params.res->end,
+-	};
++	attach->hpa_range = hpa_range;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
 
-Maybe scatter some __free() magic in here and no_free_ptr() where
-they get handed off..
+---
+base-commit: 2101c39473a06ee551a8cb4d549a1112aed324ad
+change-id: 20261113-junhomax-fix-cxl-attach-region-deadlock-fc0a425f7265
 
-> +	if (!extent) {
-> +		kfree(node);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	node->extent = extent;
-e.g.
-	node->extent = no_free_ptr(extent);
+Best regards,
+--  
+Junho Cha <junho.cha@xcena.com>
 
-> +	list_add_tail(&node->list, pending);
-
-	list_add_tail(&no_free_ptr(node)->list, pending);
-
-> +	return 0;
-> +}
-
-> +
-> +static void cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
-> +					 struct cxl_event_record_raw *raw_rec)
-> +{
-> +	struct cxl_event_dcd *event = &raw_rec->event.dcd;
-> +	struct cxl_extent *extent = &event->extent;
-> +	struct device *dev = mds->cxlds.dev;
-> +	uuid_t *id = &raw_rec->id;
-> +	int rc;
-> +
-> +	if (!uuid_equal(id, &CXL_EVENT_DC_EVENT_UUID))
-> +		return;
-> +
-> +	dev_dbg(dev, "DCD event %s : DPA:%#llx LEN:%#llx\n",
-> +		cxl_dcd_evt_type_str(event->event_type),
-> +		le64_to_cpu(extent->start_dpa), le64_to_cpu(extent->length));
-> +
-> +	switch (event->event_type) {
-> +	case DCD_ADD_CAPACITY:
-> +	case DCD_RELEASE_CAPACITY:
-> +		rc = handle_dcd_chain_event(mds, event);
-> +		break;
-> +	case DCD_FORCED_CAPACITY_RELEASE:
-> +		dev_err_ratelimited(dev, "Forced release event ignored.\n");
-
-If that actually happens to us, maybe we should panic?  All bets are off
-if we get one of these for capacity that was actually in use.
-
-> +		rc = 0;
-> +		break;
-> +	case DCD_REGION_CONFIGURATION_UPDATED:
-> +		dev_dbg(dev, "Region configuration updated event ignored.\n");
-> +		rc = 0;
-> +		break;
-> +	default:
-> +		rc = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	if (rc)
-> +		dev_err_ratelimited(dev, "dcd event failed: %d\n", rc);
-> +}
-> +
->  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  				    enum cxl_event_log_type type)
->  {
-> @@ -1136,9 +1368,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  		if (!nr_rec)
->  			break;
->  
-> -		for (i = 0; i < nr_rec; i++)
-> +		for (i = 0; i < nr_rec; i++) {
->  			__cxl_event_trace_record(cxlmd, type,
->  						 &payload->records[i]);
-> +			if (type == CXL_EVENT_TYPE_DCD)
-> +				cxl_handle_dcd_event_records(mds,
-> +							     &payload->records[i]);
-
-Just go long on that one. I wouldn't do the normal thing of flipping the condition
-because this being out of line makes sense as its an oddity in this function.
-
-> +		}
->  
->  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
->  			trace_cxl_overflow(cxlmd, type, payload);
-
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d098f7f50bef..64138e1768a1 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -12,6 +12,7 @@
->  #include <linux/node.h>
->  #include <linux/io.h>
->  #include <linux/range.h>
-> +#include <linux/xarray.h>
-
-This looks misplaces as nothing in the header changed
-that has anything to do with xarrays.
-
->  #include <cxl/cxl.h>
->  
->  extern const struct nvdimm_security_ops *cxl_security_ops;
-> @@ -557,6 +558,14 @@ struct cxl_pmem_region {
->  	struct cxl_pmem_region_mapping mapping[];
->  };
->  
-> +/* See CXL r4.0 8.2.10.2.1.6 */
-> +enum dc_event {
-> +	DCD_ADD_CAPACITY,
-> +	DCD_RELEASE_CAPACITY,
-> +	DCD_FORCED_CAPACITY_RELEASE,
-> +	DCD_REGION_CONFIGURATION_UPDATED,
-> +};
-> +
->  struct cxl_dax_region {
->  	struct device dev;
->  	struct cxl_region *cxlr;
 
