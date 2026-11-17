@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794942889;
-	b=Zy64kDpEipXSIzjHbWphuc6u5p3CC1JEVk0T8FdujmLy7IbMb9FwlV4AbfGrWvlJb4p+
-	 9FKtDIu0KtOazZYo78GZ+zLex9HfOEj4rd8bb0blzIcH/FvqR3boKhOSerXxAY306va1T
-	 zC10N1rZkX38KHqeG74eUG1VNjAEMi9EeUJMSGzxk6kgzhw/Z+jHlIDI5F53NSSaMsGhC
-	 e+a+MZagMdBRx0MXwz1BxAGWOHsoUkXcRb1bOqvf3BJ+HvUos7x7mKIrZqzK75SkG3Abh
-	 CyXVCf/toEDmtvjPtLB6s9fEvd61W+5rDAMjbRAInpyewdXo2Mf72jzymMUtmhBXcrg==
+	b=hJO61ha0SNpE75NAWEH1TvSiXXH6NYSCd+80PSv8GtHwvj7IOyDThWWCI80F3Bhy4Oa7
+	 h0LakrqwVyqfYGvZSYG32xBc4G6phSch9dkgoGj/MoJMYDDYTpFy02rMhqi/2KPGzhmfc
+	 GyC34t3oneo/+tQ1S5+M6MAWLl+XaEDc35xMyTQHSyvzUtsEofkzMt20658JYxaf6+z8H
+	 tNUou7nYi5Pbc/1f0HeVT8fYG/FQXuDOTjtDWgd4KNU9kNOPBUX7INZCZNaYU11hGW92j
+	 TS1eyhM1oBjWyw82eYhJ/Ia7MfDbWgB99K4tz7RFLcx/lkKAU3Is8fHmzCxE9bd01JQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794942889;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,54 +13,54 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=vROyAI9jxBhgG41iL+Jy2mcdqSQHaPoUUESI48+MXWw=;
-	b=ypFJCCTUq1ncZAw9rmaE1abpnnG3rfoxZg64VkW1eyN7Y5aoRtapTTwWlbasIuEhWoX3
-	 x9NG//RHzP+Ub2sTUQvrarVt8qbgHkje+djB38yBkV5dtGRTBJlFm19ijK8Q9VjXoc5Yt
-	 AcpRqQrKvtMLODedEApS6l1BnITSskR2oFWExwzKyYQYfifszjJlxs6UXk5LptJSwsncJ
-	 lwyz20GH87G3yBM4UCvPupgg9/nobfuMaOTk/Qav03CrZyys2HVKHFEyVaRLDytePUmNZ
-	 vJTbws2ifuIYW+u1pyo8GLFQfHpmky5DoAdRDI32J6HIfMaOpW20GVK51B1U/8x3dDA==
+	bh=M/kfXAAsdgrMdhHE2iQzSGjasRFpLWMrL4Ev1niUplg=;
+	b=VO68xHJXHvn5QKO5eJM1U9PV2I321zsqXPhNu9Tc3aLLM5dNaxidIZdJ/wAeoZosyIVU
+	 WPIRv5QMraVkFWA57lfiW/JWJeLB3G/KW6vf28jOWdOkhPL+0XKBsGqZeg1hjbeHeytUX
+	 Z5gOeZNQoo/OSjKnyY6ZAWHEqv60XgfNtY5BsLNFLgSpoe6fLcsGZehYaEQFOlgvsFi61
+	 3GrWmP3JmC6Gw9mj16/y8d7DhOQTrt0IoY8UDEwFY2G/adOxSWeAdh68suZpY7ZdzgK0Y
+	 H6yP9oUEOnnv1lzRxjBJQVGjMU+wYEs8aRnE1EZYVkAx+MVkTc3BLWvQe2IL64rnHeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VwOBSpTr;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=guObBjxt;
 	arc=none smtp.remote-ip=192.198.163.9
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65FB606A32F
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2026 19:14:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A65FB606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3922A606A334
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2026 19:14:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3922A606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VwOBSpTr
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=guObBjxt
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1794942889; x=1826478889;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WAYp5x74YGB/pR3SDcg1IM+U1TgST9mk4IemUadRB7g=;
-  b=VwOBSpTr56z4FqiXw8tzOK3u20Ic/BE3D62vUVB8z0Xko1X5XKFeRu0R
-   3epzmcw7oMGCNVrqgSghPSWFH4fScsk/cdlToy8mBiKcQL41HRgun517U
-   sk1wJWqBBmxECP0Jz6tgJP7YI1N+RnWJIfKg784VH0j5eLlyttL411tXn
-   h+SH1hYGFJFYdcYIdolX7lEyac6dpmMeyzZ8W58BPEbbPDzLCIRik5/7w
-   dZKjMoQPf3xvbv2d14sLKFJoxZaS6HX7UFPr4TqnJ/jgMgOVR0EwQGRBI
-   4m8lZdoW5IPdfzBUKnGIY59XupgPVfcaFz4DFQkr7mCyJoL6OPGzhTocC
-   g==;
-X-CSE-ConnectionGUID: mdf9BxijQheqaNk+3EZa5g==
-X-CSE-MsgGUID: 2PxVfX49QgSK96nLL0NClA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3612805"
+  bh=3s4RbXtiICcufOQ44DgEAYYd/EHRrguUAyRsT+17wsI=;
+  b=guObBjxt4R787rbXsNyxBRnUKE2Adqxs//XCJOSzVs4gFpHtoFdF6Ufz
+   h+zjz5wczjG+Qfv09SD6+B5MHJxIJY09yaKddyIoSNTgSr0vyapO7ElX/
+   X1T0l/XFHjVjtnDA5ZrtvJPCJ7k0wSj5f5EG7X4edklc9wvZkdJAilEuS
+   0BzSuxHAVlYflknGfbDE7X2d/QIGtBPXLeEavjzmulIYQUWbmCgYr8ZOo
+   QfkinibxBQeMFhW8LAHDiPkNkTbDe8c9C2j2j3sRqT5Lndye/M7TB8US0
+   OdfV0ISsYbcdTn9g4TmviGb4Ux1OBiwk20MVQLlHQF4W+33Vepei9J4M5
+   A==;
+X-CSE-ConnectionGUID: a/8AamsrTh6s/lME8dIAWw==
+X-CSE-MsgGUID: IOJjqSkpQvCeKdF+yUjD9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3612815"
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="3612805"
+   d="scan'208";a="3612815"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:48 -0800
-X-CSE-ConnectionGUID: AJkrl828Q7mwOQkB1wzYuw==
-X-CSE-MsgGUID: ItpVqxlsQ/azL3rbiZBBsw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:49 -0800
+X-CSE-ConnectionGUID: rPTayqGyRVmMz7vjI5s6VA==
+X-CSE-MsgGUID: cOHiMZPqQVC0Aqs2D+WVsQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="9764366"
+   d="scan'208";a="9764372"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.205])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:48 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:49 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -73,9 +73,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ben Cheatham <benjamin.cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v2 2/3] cxl/test: Add a 2-way 16K root decoder for passthrough testing
-Date: Tue, 17 Nov 2026 11:14:41 -0800
-Message-ID: <4b3bde20c5bc8fc3ed8348e8b0eec085336304f5.1794942093.git.alison.schofield@intel.com>
+Subject: [PATCH v2 3/3] cxl/test: Program a don't-care granularity into the passthrough host bridge
+Date: Tue, 17 Nov 2026 11:14:42 -0800
+Message-ID: <da2ae965fbd09d3a5861a352976f30133503eca5.1794942093.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1794942093.git.alison.schofield@intel.com>
 References: <cover.1794942093.git.alison.schofield@intel.com>
@@ -90,123 +90,47 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a 2-way root decoder at the maximum hardware granularity of 16K.
-Selecting one endpoint under each host bridge makes the intermediate
-decoders passthrough, allowing a unit test to check that they carry the
-16K interleave without exceeding the hardware granularity limit.
+The auto region mock gives the passthrough host bridge decoder the same
+4K granularity as the switch decoder below it. Hardware ignores
+granularity at 1-way, so matching values leave propagation of a firmware
+don't-care value untested.
 
-Place the window in the XOR topology set to leave the default modulo
-topology unchanged.
+Set the host bridge decoder's granularity to 256 bytes. Auto region
+assembly then fails unless target setup carries the effective interleave
+state through the passthrough decoder.
 
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 49 +++++++++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 3 deletions(-)
+ tools/testing/cxl/test/cxl.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 3eb1051b1ee8..76154c4bc15d 100644
+index 76154c4bc15d..cd4a99fface6 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -191,10 +191,18 @@ static struct {
- 		struct acpi_cedt_cfmws cfmws;
- 		u32 target[3];
- 	} cfmws8;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[2];
-+	} cfmws9;
- 	struct {
- 		struct acpi_cedt_cxims cxims;
- 		u64 xormap_list[2];
- 	} cxims0;
-+	struct {
-+		struct acpi_cedt_cxims cxims;
-+		u64 xormap_list[1];
-+	} cxims1;
- } __packed mock_cedt = {
- 	.cedt = {
- 		.header = {
-@@ -325,7 +333,7 @@ static struct {
- 		},
- 		.target = { 3 },
- 	},
--	/* .cfmws6,7,8 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
-+	/* .cfmws6,7,8,9 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
- 	.cfmws6 = {
- 		.cfmws = {
- 			.header = {
-@@ -374,6 +382,27 @@ static struct {
- 		},
- 		.target = { 0, 1, 2, },
- 	},
-+	/*
-+	 * A 2-way root at 16K, the maximum granularity encodable in
-+	 * hardware. Passthrough decoders below it must carry the 16K
-+	 * interleave through rather than multiply it.
-+	 */
-+	.cfmws9 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws9),
-+			},
-+			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-+			.interleave_ways = 1,
-+			.granularity = 6,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = FAKE_QTG_ID,
-+			.window_size = SZ_256M * 8UL,
-+		},
-+		.target = { 0, 1, },
-+	},
- 	.cxims0 = {
- 		.cxims = {
- 			.header = {
-@@ -385,6 +414,18 @@ static struct {
- 		},
- 		.xormap_list = { 0x404100, 0x808200, },
- 	},
-+	/* CXIMS for the 16K (hbig = 6) 2-way root, cfmws9 */
-+	.cxims1 = {
-+		.cxims = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CXIMS,
-+				.length = sizeof(mock_cedt.cxims1),
-+			},
-+			.hbig = 6,
-+			.nr_xormaps = 1,
-+		},
-+		.xormap_list = { 0x0, },
-+	},
- };
- 
- static struct acpi_cedt_cfmws type2_cfmws0 = {
-@@ -411,6 +452,7 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
- 	[6] = &mock_cedt.cfmws6.cfmws,
- 	[7] = &mock_cedt.cfmws7.cfmws,
- 	[8] = &mock_cedt.cfmws8.cfmws,
-+	[9] = &mock_cedt.cfmws9.cfmws,
- };
- 
- static int cfmws_start;
-@@ -418,10 +460,11 @@ static int cfmws_end;
- #define CFMWS_MOD_ARRAY_START 0
- #define CFMWS_MOD_ARRAY_END   5
- #define CFMWS_XOR_ARRAY_START 6
--#define CFMWS_XOR_ARRAY_END   8
-+#define CFMWS_XOR_ARRAY_END   9
- 
--struct acpi_cedt_cxims *mock_cxims[1] = {
-+struct acpi_cedt_cxims *mock_cxims[2] = {
- 	[0] = &mock_cedt.cxims0.cxims,
-+	[1] = &mock_cedt.cxims1.cxims,
- };
- 
- struct cxl_mock_res {
+@@ -1374,13 +1374,17 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
+ 		iter->commit_end = 0;
+ 		/*
+ 		 * Switch targets 2 endpoints, while host bridge targets
+-		 * one root port
++		 * one root port. Like some platform firmware, program the
++		 * passthrough host bridge with a granularity that differs
++		 * from the region's, since hardware ignores it at 1-way.
+ 		 */
+-		if (i == 0)
++		if (i == 0) {
+ 			cxld->interleave_ways = 2;
+-		else
++			cxld->interleave_granularity = 4096;
++		} else {
+ 			cxld->interleave_ways = 1;
+-		cxld->interleave_granularity = 4096;
++			cxld->interleave_granularity = 256;
++		}
+ 		cxld->hpa_range = (struct range) {
+ 			.start = base,
+ 			.end = base + mock_auto_region_size - 1,
 -- 
 2.37.3
 
