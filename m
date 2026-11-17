@@ -1,84 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794942889;
-	b=hJO61ha0SNpE75NAWEH1TvSiXXH6NYSCd+80PSv8GtHwvj7IOyDThWWCI80F3Bhy4Oa7
-	 h0LakrqwVyqfYGvZSYG32xBc4G6phSch9dkgoGj/MoJMYDDYTpFy02rMhqi/2KPGzhmfc
-	 GyC34t3oneo/+tQ1S5+M6MAWLl+XaEDc35xMyTQHSyvzUtsEofkzMt20658JYxaf6+z8H
-	 tNUou7nYi5Pbc/1f0HeVT8fYG/FQXuDOTjtDWgd4KNU9kNOPBUX7INZCZNaYU11hGW92j
-	 TS1eyhM1oBjWyw82eYhJ/Ia7MfDbWgB99K4tz7RFLcx/lkKAU3Is8fHmzCxE9bd01JQ==
+	t=1794942958;
+	b=FGq6kmT4beNki+dudevzkbXr0+LZectBHHZlqRbbG06peI14Yl2F1ZM91UHRzVTIU+LK
+	 Jqmr/+bW+PKtHQU0Y3nK4uVpfQDtn8G+EIwaTuI325j8h3SaBL1Fq0ogmSMpwZJIOYIUK
+	 DrFxFnV9cRKrXdSUaAA1YHxftaIip9X6plyCyxkYWkVztdLntdfd2UnvGsL7DKWCmM6D5
+	 hoZlHRa82PNxDGBE5/Jy62gNFI/9SjEEFm+j0Wjg7ycYB/pyUp3uoeYcmOf4GGBz1WBpU
+	 8nZoH3QU03hPwyqeMZ39iRSPCJ5BEwXnHY619GH4XXMbE7kVaM5aInNXQIg+N2/vXIg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794942889;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794942958;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=M/kfXAAsdgrMdhHE2iQzSGjasRFpLWMrL4Ev1niUplg=;
-	b=VO68xHJXHvn5QKO5eJM1U9PV2I321zsqXPhNu9Tc3aLLM5dNaxidIZdJ/wAeoZosyIVU
-	 WPIRv5QMraVkFWA57lfiW/JWJeLB3G/KW6vf28jOWdOkhPL+0XKBsGqZeg1hjbeHeytUX
-	 Z5gOeZNQoo/OSjKnyY6ZAWHEqv60XgfNtY5BsLNFLgSpoe6fLcsGZehYaEQFOlgvsFi61
-	 3GrWmP3JmC6Gw9mj16/y8d7DhOQTrt0IoY8UDEwFY2G/adOxSWeAdh68suZpY7ZdzgK0Y
-	 H6yP9oUEOnnv1lzRxjBJQVGjMU+wYEs8aRnE1EZYVkAx+MVkTc3BLWvQe2IL64rnHeQ==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=z1XIj3u2p+B7xtdNhsp7bEFDolOSVUBzrZKzKIAnaTY=;
+	b=a4mXga35cZ/K/nXenoiCUEr2x/leG6+ZNuSOGr//kapUTPpwcbPAc/DOqYd1C835g62M
+	 rwHTQa8BrvwPTAcrwmMKAqHrmLu8GTwI6G8wIjGR07dHoOiWqYSs6ZH9PUIAzJh9+/OOl
+	 +jDYu5EH9Pam1BmjEi8d6hTPq4KLjRqlpL5rAQCthtrxCaEG+jR0OM+qKdA2VVMDevBID
+	 S6DAGE9Abs1+ookE4Lf9BCFCb4CRP59rDMaXJOl8xW8HPlXFdkh9JkYqhOIaXWw+sxutP
+	 71nLa/rSHOKgFbRynqThuid3ud/181srcXK3DxYWa5VKaa7rfZ0qrBGMGbwK6QiM1iw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=guObBjxt;
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N79QE78p;
+	arc=none smtp.remote-ip=192.198.163.16
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3922A606A334
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2026 19:14:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3922A606A334
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E9606A32F
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2026 19:15:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 501E9606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=guObBjxt
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N79QE78p
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794942889; x=1826478889;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3s4RbXtiICcufOQ44DgEAYYd/EHRrguUAyRsT+17wsI=;
-  b=guObBjxt4R787rbXsNyxBRnUKE2Adqxs//XCJOSzVs4gFpHtoFdF6Ufz
-   h+zjz5wczjG+Qfv09SD6+B5MHJxIJY09yaKddyIoSNTgSr0vyapO7ElX/
-   X1T0l/XFHjVjtnDA5ZrtvJPCJ7k0wSj5f5EG7X4edklc9wvZkdJAilEuS
-   0BzSuxHAVlYflknGfbDE7X2d/QIGtBPXLeEavjzmulIYQUWbmCgYr8ZOo
-   QfkinibxBQeMFhW8LAHDiPkNkTbDe8c9C2j2j3sRqT5Lndye/M7TB8US0
-   OdfV0ISsYbcdTn9g4TmviGb4Ux1OBiwk20MVQLlHQF4W+33Vepei9J4M5
-   A==;
-X-CSE-ConnectionGUID: a/8AamsrTh6s/lME8dIAWw==
-X-CSE-MsgGUID: IOJjqSkpQvCeKdF+yUjD9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3612815"
+  t=1794942958; x=1826478958;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=q1kA3hci/tY3CtbqDZf3Zx6JvETK8Nf5sgH2JqYLSD8=;
+  b=N79QE78paBGHC4iDKUkfH243CeJQHKR3B0XARkH83N2PGcwzun42fYq+
+   vMLbcfHBFUT6wzJPp+zO+8/JmJ/7UWRrZ2kTl/7MVSRjXV+Qb+XGbMVg1
+   FBeLGwpXHfU8pI1M2nD11JI03r4X+md0IRoXvJEABlhP6r4Avn0oJ2Huv
+   Ky6WLOEzLF0XUUJvTIFgqZv7mxXgEWfuc0Huq99yaRC48zbjvVH2gYn3h
+   Rwd97jFltpdfYFlkj+XHhHUJhu/7ySUZZZaIX766KtcoaVRBjExln/kiF
+   MzscuwzxbCI8lfrXHkeECCi8pxo0nevwetm8/P3bAthvNFQe+tTyI7RzQ
+   w==;
+X-CSE-ConnectionGUID: zjKe7j5NQuafGhVrB3e7NA==
+X-CSE-MsgGUID: Fl6QYgX3SAqJcpwnbYxPDQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3763183"
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="3612815"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:49 -0800
-X-CSE-ConnectionGUID: rPTayqGyRVmMz7vjI5s6VA==
-X-CSE-MsgGUID: cOHiMZPqQVC0Aqs2D+WVsQ==
+   d="scan'208";a="3763183"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:15:57 -0800
+X-CSE-ConnectionGUID: FOZ5tMvuQpK3ZTnGVKSk1Q==
+X-CSE-MsgGUID: Mw6rxSepSOafbfM6OROuKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="9764372"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.205])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:14:49 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Richard Cheng <icheng@nvidia.com>,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Cc: linux-cxl@vger.kernel.org,
-	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v2 3/3] cxl/test: Program a don't-care granularity into the passthrough host bridge
-Date: Tue, 17 Nov 2026 11:14:42 -0800
-Message-ID: <da2ae965fbd09d3a5861a352976f30133503eca5.1794942093.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1794942093.git.alison.schofield@intel.com>
-References: <cover.1794942093.git.alison.schofield@intel.com>
+   d="scan'208";a="9994314"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.197]) ([10.125.108.197])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 11:15:56 -0800
+Message-ID: <815970dd-f8a1-4815-9eff-5c715441738e@intel.com>
+Date: Tue, 17 Nov 2026 12:15:55 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -88,49 +72,68 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] cxl/Documentation: Describe clearing a region
+ targetN position
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+References: <e8235faea3d75dbfd45f197fe657c467b6259705.1793724885.git.alison.schofield@intel.com>
+ <4d2fa8561a443d9859ca08c04950e6c15e168f98.1793724885.git.alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <4d2fa8561a443d9859ca08c04950e6c15e168f98.1793724885.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The auto region mock gives the passthrough host bridge decoder the same
-4K granularity as the switch decoder below it. Hardware ignores
-granularity at 1-way, so matching values leave propagation of a firmware
-don't-care value untested.
 
-Set the host bridge decoder's granularity to 256 bytes. Auto region
-assembly then fails unless target setup carries the effective interleave
-state through the passthrough decoder.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- tools/testing/cxl/test/cxl.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+On 11/3/26 10:07 AM, Alison Schofield wrote:
+> The region targetN ABI documents that writing to an occupied position
+> returns EBUSY, but does not describe how to clear the position after
+> assigning the wrong endpoint decoder.
+> 
+> Document how to clear a position by writing an empty string, how clearing a
+> position decommits a committed region, and how the region can be committed
+> again after all positions are filled.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 76154c4bc15d..cd4a99fface6 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1374,13 +1374,17 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
- 		iter->commit_end = 0;
- 		/*
- 		 * Switch targets 2 endpoints, while host bridge targets
--		 * one root port
-+		 * one root port. Like some platform firmware, program the
-+		 * passthrough host bridge with a granularity that differs
-+		 * from the region's, since hardware ignores it at 1-way.
- 		 */
--		if (i == 0)
-+		if (i == 0) {
- 			cxld->interleave_ways = 2;
--		else
-+			cxld->interleave_granularity = 4096;
-+		} else {
- 			cxld->interleave_ways = 1;
--		cxld->interleave_granularity = 4096;
-+			cxld->interleave_granularity = 256;
-+		}
- 		cxld->hpa_range = (struct range) {
- 			.start = base,
- 			.end = base + mock_auto_region_size - 1,
--- 
-2.37.3
+Applied to cxl/next:
+726d9be5f09e
+> ---
+> 
+> Changes in v4:
+> - Minor wordsmithing in commit log
+> v3: https://lore.kernel.org/linux-cxl/e87248b8d13d3f07741243a45891365450c66881.1793653629.git.alison.schofield@intel.com/
+> 
+> Changes in v3:
+> - Restore the original entry text and append how to clear a position
+> v2: https://lore.kernel.org/linux-cxl/efa1a098550077dc3571796ba0102ddabe1e9b0d.1792989098.git.alison.schofield@intel.com/
+> 
+> Changes in v2:
+> - Say that writing the endpoint decoder already at a position succeeds
+> - Split the entry into paragraphs and drop the v1 error code reordering
+> v1: https://lore.kernel.org/linux-cxl/a007c751d88ee64c9d0b7bb3c69a486c42358b36.1790829690.git.alison.schofield@intel.com/
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 7352dbd70bc7..3629c983f05c 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -568,6 +568,10 @@ Description:
+>  		not an endpoint decoder. Once all positions have been
+>  		successfully written a final validation for decode conflicts is
+>  		performed before activating the region.
+> +		To clear a position, for example to replace an endpoint
+> +		decoder, write an empty string (echo > targetX). Clearing
+> +		a position in a committed region also decommits the region.
+> +		It can be committed again after all positions are filled.
+>  
+>  
+>  What:		/sys/bus/cxl/devices/regionZ/commit
 
