@@ -1,68 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794931160;
-	b=bpdczuC+fGaSxmWp7Y/EFEFS6HLiAHGZ5vTuJRxXlqQAkbZwaAQaUNyN7SiZJFGjY3c/
-	 f3jJkOnn9IX+D+Bnvj45kpb+qMXTwgvASh/VQWhxMVztYFVBDybW5QCw9/amDGdQI0MWB
-	 G0qpdbJSGqxLlKzAbSOxEDIZdg7qBV9fb//+oWKwIN2uUK7JOgSGUmOkjks5CQdycB6sM
-	 afbtegFrVM7BtCWYwRcbvoT4DbFtxyaB/uanmdGyabvDL2zCQHukeWhHTqrYTn3Jv6t+p
-	 mvUI2TQz+zQEzzU1Bs9UqwoboISDRT+mmykLXz48aa1pciF+Q33cVepGjoCMxNN2CHA==
+	t=1794932625;
+	b=lnHW1KD6kM/oVQwyMt7g/fpWibKRHpV4DI4vYBoRztJ75FZX3bAE4b1jhJlNrApjSQA8
+	 5wo8txPv0KPgYvUm1jIjx2LgsOuFb2qFYIoIkmxDAA8B99/tQPg2HdIasb90iB9iTS3uF
+	 dYDXNVtA9c2XWQLB8jHwyT/P9xitgmjM87yOl4jGceqow733Ir2VwvMCfRKnKt7GYkZYv
+	 qSAusGmJ5hvAvsGaU1CVWqJZnA0eglnVCidag7yAdzgEvw7BYZf91KjjRvg96Tf7aIOQq
+	 rAjsztWHToOX1toWSO3yJTpUwm0cKywCtPk4M0+gtl9i/Fq+k+aqbErpI5FEHVRPnCA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794931160;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794932625;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:From:To:Cc:References:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=h/3rF4Eul2ZUedOC6ysniY/GPouHi/AlQBH3kKs+gsU=;
-	b=CRHHhMvnhG3tX0tnikj43nb+zjO/ltR4wAlqpUjtyn6sBf7j17REOmjEm6BztX/DZXXO
-	 9/pKfnXHPTYeW+fY56y8ajODOFpu76gZbwMZNdJcYtpX4gLqzbS2xf9lchbYp9Jq0NTVX
-	 DZNJ6I6mhUBm0XVOcixo2u7MEUf7JnQcJR6WjbDZQbf1bPYlonFZVitU7bPQI4aVc4Xgm
-	 oJzFB78loQlWaOogNJmlnclGTmptGhoVROXoTk7ankouSPC2iolIg4eZAoa4ucrRF+Crg
-	 s3W0FT0h5OYMFJVXkHAdF36bEM2Cepyg/+4MnVm+IMV9LxLG+y2/YKjI1bqSu9M2STg==
+	 MIME-Version:User-Agent:Subject:To:References:From:Content-Language:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=Cg/PCTMOzBzkoURpiUkp4VmcxZowTYjNTya2EamO6RM=;
+	b=Bpo2gCNIsU2oinIOEq8Pt1IAMFhn0WnHZAk0pu36sA51TlMa9lhSpHGUrIYTwcOuEJLv
+	 Jin+AA+HvumP36t6Q+I1beHiKq4gmTk5vQoVcNsNYWOfR89x8yrbwgXPfMGrjxLVTE7gF
+	 xPMLSuimFvuAHRLHSAx6udP8jp90c52/69Y7C/ChomlkjNcUbjIZbAvh27B7l6n+Uql9u
+	 ePdhBswlA/XxIH6h8Rd0tgBc9R1CRyABWmtizPkEbLf9+58MNq4WOhamD0O0iexptkfVw
+	 28d8gEQebV8sexgmcjmdOM+h3YS6HBlQsYpppQ/1ui0xPlDHtcAEgqlGkOR1PG08sKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gQhrWKfl;
-	arc=none smtp.remote-ip=198.175.65.10
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=OKChianC;
+	arc=none smtp.remote-ip=198.175.65.11
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F23606A31C;
-	Tue, 17 Nov 2026 15:59:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20F23606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35491606A31C
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2026 16:23:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35491606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gQhrWKfl
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=OKChianC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794931161; x=1826467161;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=ogO0mTz2AgaJsonmWpeYAFiZBu7kzIrrb/QfEOJdD04=;
-  b=gQhrWKflq+V/fS9kOmsJsBXjvnbkXbXTbVV8Edy7QaiNNjL+OUiPt2u2
-   zwuOp0jv2CxGW8+AQDlrPSiknZQZUhdZpN4wN5UY7FFBahMPdfKp5M6qK
-   smXMVr1Fx09ZHRXHO3Mc6Lu/8B33Hd0dbhIO1St/pYmDarz62g7+ot0az
-   3plaMCD5yZZhKvqaoZ7WpJX+9zNedikxsxy8IdIZZdaNV1XZ4Ygy5XNZk
-   n7O8hAU4tW6z8FDVBIBzXKSjZak10RkdC40KLftVKKrb7LGoUMhlaWsrf
-   c1bP5C0mmiQ2TtoO5QKxFEwU0ELX7LV3roqcorLeMKBMTNcqaQpBf5jnM
-   w==;
-X-CSE-ConnectionGUID: p/wGnStpR8SOitX6LNoSsA==
-X-CSE-MsgGUID: HyUHJGMWQqe7VgWwEwNfLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3625151"
+  t=1794932624; x=1826468624;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=LGcp9EyDPdWKiDu/TJz2h/L2dNDJ9lWOdJLmD5/abkU=;
+  b=OKChianCzNbBBf6kj4Wj4sEIDjjPMApm+F5fyNK5V//BuqhS1oH+LN5+
+   qfxOUiikm75u4GRO9EJBHqc/84ly17xYCbzXljuysIiSXtmBDXuyAO5KE
+   +jHuE639QYr8SteYd8oTLsdNuBjx8K+t8+/ZjhGFJKvv0yf37khI7zquf
+   esUKLSL39vwYdhIWwzIXOFoHZGnR7CAFnGlKAEzUIw8vla85jXE44EHAT
+   XdzaZalIb7Bg1jR+FB3ltL9uzkusHVq3KlFT/jVcAAjTeEAMgY/Ntn+5e
+   WSvdDklliznJEorRkUY45LXSH72HiHwW0zrotFTbup+gwmcW6RGVoDYWJ
+   g==;
+X-CSE-ConnectionGUID: tgAOYat5RrSDNwrocKSmlw==
+X-CSE-MsgGUID: U/gMP3cXTCy/nkIB2iSE9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3611493"
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="3625151"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 07:58:04 -0800
-X-CSE-ConnectionGUID: xExwgk48SUKFDOhmSkw7kQ==
-X-CSE-MsgGUID: WZojkiUMQy2BW7p8NZgTBA==
+   d="scan'208";a="3611493"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 08:23:43 -0800
+X-CSE-ConnectionGUID: LcN/8uGbS8apg540HDCeQg==
+X-CSE-MsgGUID: xJv72SPOQrCHRUJegp4Axw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="9930907"
+   d="scan'208";a="10196423"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.197]) ([10.125.108.197])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 07:58:01 -0800
-Message-ID: <d6a3c6a9-71f7-406d-9ae9-33b3566768eb@intel.com>
-Date: Tue, 17 Nov 2026 08:57:59 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 08:23:43 -0800
+Message-ID: <d8fe9a15-ad35-4f61-aa6f-da2dc2bf7866@intel.com>
+Date: Tue, 17 Nov 2026 09:23:41 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -73,139 +73,74 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] MAINTAINERS: Update CXL, NVDIMM, DAX, and others for
- djbw
+Subject: Re: [ndctl PATCH v3 1/3] cxl/region: round default region size within
+ root decoder extent
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+References: <cover.1791863817.git.alison.schofield@intel.com>
+ <ac53ec453608b6cc2c42648c9441c50ac94cd4b8.1791863817.git.alison.schofield@intel.com>
 From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
- Alistair Popple <apopple@nvidia.com>,
- Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-References: <20261110210152.3494345-1-dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20261110210152.3494345-1-dave.jiang@intel.com>
+In-Reply-To: <ac53ec453608b6cc2c42648c9441c50ac94cd4b8.1791863817.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/10/26 2:01 PM, Dave Jiang wrote:
-> Dan is no longer with us. Removing entries in MAINTAINERS to prevent
-> people from keep emailing his address.
+On 10/12/26 9:14 PM, Alison Schofield wrote:
+> The kernel requires a region size to be a multiple of SZ_256M * ways. The
+> cxl-cli command, cxl create-region, accepts an explicit size with -s, or
+> derives the size using ALIGN_DOWN(). The derived size is not always valid.
 > 
-> Frank will take over for async_tx until the feature is removed.
+> The calculation can fail in two ways:
 > 
-> Alistair will take over on fsdax with Alison continue to wrangle patches
-> for DAX overall patches.
+> 1) When the region interleave ways has a factor of three, SZ_256M * ways is
+> not a power of two, so ALIGN_DOWN() is not valid for the calculation. The
+> result depends on the root decoder extent and can appear correct by chance.
+> For example, a 6-way region with a 3G extent produces the expected 3G size,
+> while a 12-way region with the same extent is trimmed to 1G.
 > 
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Frank Li <Frank.Li@kernel.org>
-> Cc: Alistair Popple <apopple@nvidia.com>
-> Acked-by: Davidlohr Bueso <dave@stgolabs.net>
-> Acked-by: Vishal Verma <vishal.l.verma@intel.com>
-> Acked-by: Alison Schofield <alison.schofield@intel.com>
-> Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 2) At 16 ways, SZ_256M * ways overflows the int used for the multiplication
+> and evaluates to zero, so the trim returns zero.
 > 
+> Compute the product in u64 to avoid the overflow and round down by division
+> so that the derived size is a multiple of SZ_256M * ways. Return -ENOSPC
+> when the root decoder window is smaller than SZ_256M * ways.
+> 
+> This was found while adding 12-way region test coverage.
+> 
+> Fixes: 2904504721a6 ("cxl/region: Trim region size by max available extent")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Applied to cxl/next:
-9b5da39088f4
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
+>  cxl/region.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> v2:
-> - Add Frank as reviewer for async_tx.
-> - Alistair has been working on fsdax and agreed to be maintainer.
-> ---
->  MAINTAINERS | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 93abbb315065..58bdd5eff5c2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4294,7 +4294,7 @@ S:	Maintained
->  F:	crypto/rsa*
+> diff --git a/cxl/region.c b/cxl/region.c
+> index 85d4d9bb54f2..9d727216b9b8 100644
+> --- a/cxl/region.c
+> +++ b/cxl/region.c
+> @@ -682,8 +682,18 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+>  		return -ENOSPC;
+>  	}
 >  
->  ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
-> -R:	Dan Williams <djbw@kernel.org>
-> +R:	Frank Li <Frank.li@oss.nxp.com>
->  S:	Odd fixes
->  W:	http://sourceforge.net/projects/xscaleiop
->  F:	Documentation/crypto/async-tx-api.rst
-> @@ -6726,7 +6726,6 @@ M:	Jonathan Cameron <jic23@kernel.org>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
-> -M:	Dan Williams <djbw@kernel.org>
->  R:	Ira Weiny <iweiny@kernel.org>
->  R:	Li Ming <ming.li@zohomail.com>
->  R:	Richard Cheng <icheng@nvidia.com>
-> @@ -7621,7 +7620,6 @@ S:	Maintained
->  F:	scripts/dev-needs.sh
+> -	if (size > max_extent)
+> -		size = ALIGN_DOWN(max_extent, SZ_256M * p->ways);
+> +	if (size > max_extent) {
+> +		u64 min_size = (u64)SZ_256M * p->ways;
+> +
+> +		size = (max_extent / min_size) * min_size;
+> +		if (!size) {
+> +			log_err(&rl,
+> +				"%s: max available space (%#lx) is less than the minimum %d-way region size (%#lx)\n",
+> +				cxl_decoder_get_devname(p->root_decoder),
+> +				max_extent, p->ways, min_size);
+> +			return -ENOSPC;
+> +		}
+> +	}
 >  
->  DEVICE DIRECT ACCESS (DAX)
-> -M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
-> @@ -10315,12 +10313,12 @@ F:	include/linux/fcntl.h
->  F:	include/uapi/linux/fcntl.h
->  
->  FILESYSTEM DIRECT ACCESS (DAX)
-> -M:	Dan Williams <djbw@kernel.org>
-> +M:	Alistair Popple <apopple@nvidia.com>
->  R:	Matthew Wilcox <willy@infradead.org>
->  R:	Jan Kara <jack@suse.cz>
->  L:	linux-fsdevel@vger.kernel.org
->  L:	nvdimm@lists.linux.dev
-> -S:	Supported
-> +S:	Maintained
->  F:	fs/dax.c
->  F:	include/linux/dax.h
->  F:	include/trace/events/fs_dax.h
-> @@ -13455,7 +13453,6 @@ F:	drivers/platform/x86/intel/hid.c
->  
->  INTEL I/OAT DMA DRIVER
->  M:	Dave Jiang <dave.jiang@intel.com>
-> -R:	Dan Williams <djbw@kernel.org>
->  L:	dmaengine@vger.kernel.org
->  S:	Supported
->  Q:	https://patchwork.kernel.org/project/linux-dmaengine/list/
-> @@ -15278,7 +15275,6 @@ K:	libie
->  
->  LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
->  M:	Vishal Verma <vishal.l.verma@intel.com>
-> -M:	Dan Williams <djbw@kernel.org>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
->  L:	nvdimm@lists.linux.dev
-> @@ -15288,7 +15284,6 @@ P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  F:	drivers/nvdimm/btt*
->  
->  LIBNVDIMM PMEM: PERSISTENT MEMORY DRIVER
-> -M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
-> @@ -15307,7 +15302,6 @@ F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
->  F:	drivers/nvdimm/of_pmem.c
->  
->  LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
-> -M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+>  	if (p->mode == CXL_DECODER_MODE_PMEM) {
+>  		region = cxl_decoder_create_pmem_region(p->root_decoder);
 
