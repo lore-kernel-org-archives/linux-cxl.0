@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794878225;
-	b=aTNNU+k1bszmfdiIujXLsQsIa43Oj4wIFvQEU0hhorlluzDVjTOjDQFuWtNhUT9LLbmR
-	 v9S1ufJJSoUjvu6pQKFnkfOwc0/SroxrYh9GD8mkYNK/4eRu8T7hOktwb4hvH5l24RHlM
-	 XDzopF6vXN2mvvJh90yE5zfJ48kLCjAlR9X1EmHCNDn27sin+BSJMRfAgXa9MRbM7gBOV
-	 kB+F6d6EwOOTkqFF8Xv7Q+CY1LwVr1KteZGo2ETFZS2S8jrEF/ZsorojIUfQcGwNrabV+
-	 BsgIgz0rNzHRh5eRyD7ITRr0+Ep6ulRSODLqAsiYkdGuLJ2t5lqRym8cHQtk5neXVqQ==
+	t=1794878309;
+	b=yyIQG1Wjb+v6LmKXf+VtlSUxzxj93RPW1Otk9oVghW5NrxnLOxj1p5OoT3tV/FKaieqs
+	 jIjgd2XSQ6qq5oV5wYQeqYAy9BO+GlRS7GrB+kdRb1Z/CqTvp3Q+P40xUcQBuhs2+XVoX
+	 dUpTx/DoFCRdnKqnM5ipwnTW1HWV6jWZXRk7tv5+yPYC+vYhozl+sYts6/l3FHJSm5aQ8
+	 hBImS+CeEjL4RzwzmvrKiFFH5ErDZmrdE6iAwLKIe2YZitVCSMwCCyLA/K7w9ikAzQEJ4
+	 VZDPCajNizH4lAg20aOG+BOlEF1zGuLpBqDRvNbau5Mi6VhpQXj9F32Am9MU9YbZ0eA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794878225;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794878309;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=15GlR8BnfLmyFEAu3RtAsoYHk3PL9IGaBtlbULBhJMA=;
-	b=1mWOVGLc1obI9moEdnRphPLtVz2jSTIW+irtsPIr67oiRM7s8aU2RvJ66238A1NGix32
-	 HWdw1PUbv4DAOy8pmmMc6DhMElUIXQHC5nI2aQOMul0dooZakH+EhRJfgEokBVZRkvKW4
-	 uMQYrUpVsiguuZ1ofzw63tXeZcFYDc1kbCf37qtkEgt+++RBUcp7mlQqXFEnxwRonKhTO
-	 PfB2asX5R9T+xkYJWX4edbSz9uDCPo62ORCXjRIutA2q3Vo+8Mai2V99gKY9UFrQq7FHJ
-	 AL4ho+Nf8nna2OOx786lD7R24lX9gA0zLH9bBPvCg2l0zcRe2pHe8bc6mZN4RTLxZZQ==
+	bh=zohyb9Hd2Fd5pNE+y9AkfvwAw05Ut0e2Tnrn7bJabG8=;
+	b=tqMo4V39c5HAY8QzgSGj8SKXduSOWSx2/rQjLcVbZ5U2EShQBirvepAYgXr2LvhaR381
+	 VWOb26jfsSI8uzAAofnXt/JAMZpkGfapkatY2bHpw1xUZCL5Fpvw7Mp0kuqguXVUsODWF
+	 FmaEyfO/8eqtd0CwOjbXmAZPgKXINErav12U8Qpym4tnnyElEOZlFJNEYooXFQK8xaC/M
+	 W4sAm3TuD6Kw81T1pg9EFtC6oNcif72tsUtGDRKCxak6gJAIS7IFfC2cqfswAleqEvdqb
+	 PGcMl6+yR3deqW3WZ3VmsBGGsBM1/ymkgA12fm2Iarc9LTBbBS4xzEl6TsReaUcUYiA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gvFEOsae;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BzK80QvL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69634606A323;
-	Tue, 17 Nov 2026 01:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED000606A31C;
+	Tue, 17 Nov 2026 01:18:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gvFEOsae
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BCC1F000C4;
-	Tue, 17 Nov 2026 01:17:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BzK80QvL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D55C11F000C5;
+	Tue, 17 Nov 2026 01:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794878224;
-	bh=15GlR8BnfLmyFEAu3RtAsoYHk3PL9IGaBtlbULBhJMA=;
+	s=k20260515; t=1794878308;
+	bh=zohyb9Hd2Fd5pNE+y9AkfvwAw05Ut0e2Tnrn7bJabG8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gvFEOsaerobXfon7iItCtvxZUf2aVuy+89ZXEe84I54SP9rH6n7hLqKujXgEy0R+W
-	 pLusszmaz06IUQQl0zlR8ODOdhiuljCm+Z65+8Buxpj6Dg/27fsQSwL8TDxfUlqwfS
-	 p1JFrPIhroAMr9CVSYD1bFCbVN9NnzIzb+7buJBbt9InGYc8MgcXmcU3sVyDI/dTd9
-	 a7gPcevhqA+bXwro02t31u8u+cPXtkl2Z+tI319ClrBT2yPRxQDpXesP4w4quXidDc
-	 Ycu64SFGMRfE3QvoLl50rFcbspNDcSGsmH0oT7ELW5WXmv2jDZx+5VL8ZBINop6hG/
-	 +AVkrCoGpP9tw==
-Date: Tue, 17 Nov 2026 01:16:58 +0000
+	b=BzK80QvLY6SS9wzZFwvJYiFVdguBjSvb/qvIr/j5QKjMoHfW23D4O0kQonSdKRmTt
+	 Y2XzDppfixuRhPz/DUUTlmsv93Gp7qJySuwhjOPU1v+62po/kzR46j+ydr2Q5MHEoA
+	 dDlbVmYpU4r8mBGrIDi32sCm+uRi12xkUmSuMttb8y+/axfOLKVsLeE2EkZnHzffv+
+	 qceyvK6h3REhBMQkZ5E7IDsTAqdyyG5KtGYSs2JtFstTQPErH37eGD5tu3VWILVMt3
+	 xDVECVZGax0WelhVXS+sw7OFv44yE7re0FqQuSlmFjvf0Oj63OjIBCwKUx3DShUMaj
+	 OR9wK2BuwOWWA==
+Date: Tue, 17 Nov 2026 01:18:21 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Li Ming <ming.li@zohomail.com>
 Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
  vishal.l.verma@intel.com, djbw@kernel.org, iweiny@kernel.org,
  icheng@nvidia.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] cxl/mbox: Return success for
- CXL_MBOX_CMD_RC_BACKGROUND
-Message-ID: <20261117011658.2b1d3cc8@jic23-hlaptop>
-In-Reply-To: <20261116070938.3675205-1-ming.li@zohomail.com>
+Subject: Re: [PATCH v3 2/2] cxl/mbox: Use mapped errno to determine command
+ status
+Message-ID: <20261117011821.4cbf69e7@jic23-hlaptop>
+In-Reply-To: <20261116070938.3675205-2-ming.li@zohomail.com>
 References: <20261116070938.3675205-1-ming.li@zohomail.com>
+	<20261116070938.3675205-2-ming.li@zohomail.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,21 +65,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Nov 2026 15:09:37 +0800
+On Mon, 16 Nov 2026 15:09:38 +0800
 Li Ming <ming.li@zohomail.com> wrote:
 
-> In CXL subsystem, each mbox command hw return code is mapped to a
-> corresponding errno value. Currently, CXL_MBOX_CMD_RC_BACKGROUND is
-> mapped to -ENXIO.
-> 
-> However, per Table-8-208 in CXL r4.0 section 8.2.9.4.5.1, a BACKGROUND
-> HW return code indicates that the command has been accepted by the
-> device and continues execution asynchronously. It does not indicate a
-> command failure.
-> 
-> Return 0 instead of -ENXIO for CXL_MBOX_CMD_RC_BACKGROUND so that
-> callers do not treat a successfully started background operation as an
-> error.
+> cxl_mbox_cmd_rctable already maps all mailbox command return codes to
+> errno values. Use the returned errno directly instead of checking
+> mailbox return codes separately to determine whether a command succeeded
+> or failed.
 > 
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
 > Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
