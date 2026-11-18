@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795015080;
-	b=MaCaEgfqVSL+hJYCrdwQIVCyRqupRrQCadhLz1hmXjpJ3uYJXbuAg1CF+F1XcO/bvJ1Z
-	 eoKVMyvtwKG4ce6Xa9jVeZvg4u1y3nl4K3pAKeBdKdN1NvK0dyNyFdG714RZJVDMjrA1O
-	 O2bwvN6S5LX/i0YYLFNyTg8xKgpgfKGfnaRG6OnscQUsZ7SCVu9CFLLVMUZpSoAUYUDBl
-	 uXGzAmDb8ii4ncoCLxm0gr6SYBlvH5FQPTV5599pW6Erf5o9YA1gTAOYZHKQLfedt4TFQ
-	 0LE2oPqZ514kW0j1oYN+rOUZVdsTP3VO1lUNuL16CHu/OPOKrLmuV2lc+gUFFbDtfTQ==
+	t=1795015260;
+	b=EpzledEIJdDA9Or9HyhJVh+VqgYzvS+eGFNbbZPEpDlR7e0SYSwWGwIx/J9QyaAtQBaD
+	 rgkEIw6hDrbPm+vtOudsvJM/rN+C+MJobg1HeW627pv0WTKdE7Y9Uk0KHnghJCn0z0B+1
+	 D9ZP06+FT1gvY8+URvdqCRIZYMzSg7tt/joI1ZJI15utfFR1sPhwlBsfihjDFEAxIAxr/
+	 +KFwdSld1FXR+8+K22hq+rT5phAqs1ftfJbvjbxQ6uKmnD0jVF/t4AF7im7JA8FUQJoqx
+	 F00Yz3RXVqAmk0MJtBKSwRe5hZF5gyrYEERerkpSAGSDUqfmVXTbNn5zHYuUy8h/KJQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795015080;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795015260;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=NayqA+2VU8BL3bQ4QlYOm2bPtjimdoFBif/UfurJ/Ic=;
-	b=5URbjU+CWw2/7ivz8jE++nF8P56gYfTx3G4FtSxW1GQZ3Qb7JwpZE+wDHPMYsh50t2c2
-	 sa0POQlvjcCbZJUJe91F0+NV04BH7odl+F9jqsg45INZ5BU4OzVe0GWD1RLrVq+R+dGWB
-	 cWOjIXy3YioPX2w8FfW55SyIJ58HfEynv/K/s5/6UfftKalHtxP5eDtvA+vdPwTW/CWK2
-	 UKxLFZyUCki027+d1BYWiOTq2UOjm4CZ8JIjlcWKBJbFpNfzdb5XNRoV88zN5wxhhFT16
-	 UbNdd1Liy0faYfJYJu0Ax80LqJL5X2MVHB37krBwpjkoGhLf1Xotb4dhBYGbQE/FFnA==
+	bh=2f1/3qPELFtVfaXBFluo86ffYBKVD1HppO+tx/i4yJA=;
+	b=GYieT0uciuuRKuzArTBeuG5dQ/dRIonO32G1f9iUvozWbC7TJqgpcLD756Vv2vv9ZliB
+	 ZN9T//H7gljuOcEmA7CqVFsfUOymCQn+B9LB1TpKaoiNh8sBoEX9UTBT8mHrw+66fMH1P
+	 o/qmsMxsbfYKfa8bLHQMv3/xmV3HEWrr7UFi/Z68CfrSNWBfSu9XTTRANPo9+hHTaRD2x
+	 BGUNY1qbuOxIvAJTqLTX65HnG6D6F+O/B29fiOcXEJtR+fsVL1Im2qWFwLfkmKef8cZUG
+	 1ULQWk0HukHvniLJWTVvb6ayYskWYIx5Jh/O4SrVub/ICyCrtH0VYtCWHRn+l77VMvg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=e4KQUABj;
-	arc=none smtp.remote-ip=209.85.219.53
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=RcYjlh9r;
+	arc=none smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586D2606A332
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 15:18:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 586D2606A332
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412960A2603
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 15:20:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D412960A2603
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=e4KQUABj
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-91eb3fea2a9so9480106d6.3
-        for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 07:18:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=RcYjlh9r
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5495d549924so12040561cf.1
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 07:20:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1795015079; x=1795619879; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1795015259; x=1795620059; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=NayqA+2VU8BL3bQ4QlYOm2bPtjimdoFBif/UfurJ/Ic=;
-        b=e4KQUABj7gEeUxSS/9AWkxdW17UGKfzuGQLoVBznmZ3Gt2tw44MXP7MS7fuK4a6Xch
-         0yyAXWnxxjkzZiP8jzIwtt8wLQB5Qssy9Gb6kZK/rHIv3jESaumWf1ihxu4gqfy3WHhI
-         oFqLxTx/jKx8gn2+JTWAhEQk7YXH4RcTH2yez5MsQAFrIf799A5J/GHOpS52hUYhDizF
-         brNl3q2lSv7Y6eahBplN+1C7QJXZuPwNsoam+lFO8Uv4TSMXFVNwxTf74WshGCQjFYLx
-         AQVaoBNexrSRe/cQbkOsywEWMHGfpBC1GgvoSO70//W1ftEDbFrlxKA7Po9FCE5MnZw0
-         zQmw==
+        bh=2f1/3qPELFtVfaXBFluo86ffYBKVD1HppO+tx/i4yJA=;
+        b=RcYjlh9r4IRGrafd+j2HLcUekeO369jG4cJ8dDVzoBY8gvpxzJeyqK3ozNZlwuaNe+
+         dX9eTN+iN1SLvDXv6ZqfqHOE77V1vdoVQpS9x5MRrqE0S7mvRfL6sw/ErTChduS84etH
+         nS7jQ1GGdAXlIAaPdld5HxgPrnOoIx1uTeL6PFILkkDVhQvjQ1L/cdSpt//oQ3Sg56BU
+         7DACo0lblGCgiebYjG3dsltULlbJRKP6YYtH3AIXL4Ytr8g/kCuFnCukKTYSpuqs6WLs
+         H7LrxeAzRj7uQcJe5AdxVin1iIq0eKGTVLMXmX4R0D0sv+hVEZxbt0IeTxFEciavpACF
+         rBBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795015079; x=1795619879;
+        d=1e100.net; s=20260707; t=1795015259; x=1795620059;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NayqA+2VU8BL3bQ4QlYOm2bPtjimdoFBif/UfurJ/Ic=;
-        b=Ak6wnd0GjdQ5dubRSG/Hyosj7bZnW2ajYumTf5865U4nAe1Z6gL1qttCqmRBfYM45t
-         ynzYiq+kYphfNX6rbE+Vt7qMylckmZ+V902QqY8w0sCLHctQblWCEEvva7/V7+gjmhBa
-         YZtdtQe7jVgh/G9sLG1wGZeoP0pyyN85S8qtzSl3Fkq8T6o11t6JQ2XfH4i0pGC8aLEK
-         hkiUC+TEOEVRLu2mr15au63MXXF0iJQgBUkm1D3GzNnRbFX2Cxrz9EX0yGfQS2NK8Qr1
-         OkeLCKMuYc7L7XrofoPi0G7+iX4nBmQ4HMfEIQmb2diCdmkrc05472WbY1IKYZ/xaX0N
-         +7xA==
-X-Forwarded-Encrypted: i=1; AL+hErFwH4MG20tRXcyoigrdG7KQ4XwH9JyikmhYt1CEKV6PDnJmtgZhP1JSlnDBE1ijFtprdfFK5AAtrPM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8iVazGBJaLqrkG+OvlQc9UUgca3xbkIHJoyfemamcL1rlS4Coc
-	JqwnhrIKtXIODdx7zexQ4/RrY7bSrCO/dT6nBwj4ORhtmSHHlKmrkHPgbHMCxWA+S50=
-X-Gm-Gg: AZFdTZcI2yf33c8bPBjeV+9ylc7r6ty4ZBoeN1oYI/DnsVGN3aAroO56AisLCeUtvzO
-	rZ5irCVg/0vKcOEetBuvM8+dP7K5nrpOi+WAtIbxFTV6G7TWVq10Y7cZy+6DKh1e+8YKM5fpJkU
-	OvVh6EgSo1N91uKEMs+htVc5EVHlF3d1YyApw9H8t+QPcN8XPiNgvNaU+eq/5jp0jMC0OeKJBm5
-	y8/sds/HcKv2XXGDHuSyVnQttxi5yrt/rcQAvbyqtDTlT8NhuzljNMoAb+rR3DyOSEUfAPkZWeq
-	6PKhSj7yzzrtqJ9KnTltswpIbSRgXQl3QQMHmIzQmTSxIMZQ6GHLW+ppCAzoJ9iL/B/cpsOq/ow
-	gQSP6yYaPpsOVNAMNnGSFHpt1OdY5P5Uwt0BXkki9GUXf6J+AEzO+MYSzYMPNMx6nU/Y8UjD0A/
-	6FkFqPwEzhhEVWbAiA0ZQIKrOS4R7fKbd7tAe8hVO976Y/ziRCTUmlNQV94kbdfz3VOOHC7jH4k
-	pMZPlkKgpuV1pg1pKPlTq5qhAKv/sirFm8uHcjaV42tAyIlspwxCZhNyoRpIzGOAJCcuX916EAm
-	W7ttpr+ICjMbpPtwyhzEmb6LK2xE3HAZyIQLTtc0STPBgnq1N/vzV0n9oe/weWj7XTMcEsdZQrl
-	vjID6uHF26p59wdYfG0oxVxCfnMhX
-X-Received: by 2002:a05:6214:5d88:b0:91f:2222:b498 with SMTP id 6a1803df08f44-92114f8f66fmr40206726d6.27.1795015079071;
-        Wed, 18 Nov 2026 07:17:59 -0800 (PST)
+        bh=2f1/3qPELFtVfaXBFluo86ffYBKVD1HppO+tx/i4yJA=;
+        b=zEYSfqGHkkYwowKKZfygzO/157cv9DWS0/9vmidkHG5jLY1XxmKOX6Wm3sjTfbaw73
+         jv+UUIpIDQSmMrEjCkZPEQ5BpduHQ69A8yqlRfv1jBMjCLq9DO+2ImIyJ35OLEtlIey6
+         mjZbwTDheMOGMlHE2Xv/5ATDakMRm9bpdQn1mR1P1ksESIj2md8Wti9b0VYeRhcJVUo4
+         uMf5JUrr/rprCtFOFogvwhQ9DU9V/z/H57RSbYfHMp88R3IAFfM4PVFlI6pFXpJpM830
+         9mi37gRelXZLfKNTKK8rFM0Mm7tOoNPqV4X17fVcA92vrUKIVDq6741IUrnO7OkHPNxT
+         teSg==
+X-Forwarded-Encrypted: i=1; AL+hErEggA5CYW6xcNniHQayuy+L/fp0tDXjQULGDmGzWE/7vqSyqeGHeDVJmwCtYC1bsT7p7lwpMU4vh6I=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8obUfHpNYf6coCdryWP3TEtlpmiGl7bLDv2m5G5jYr/jmbqq3f
+	+ESU4fgVdRS/no6xhVtNzfBwwqEwdFke1ZhdQF652scu82TLekzL193Pq5iXK+tLOyM=
+X-Gm-Gg: AYBFou1SwS26Z8zQh0YyGFotigi0PUB4UOwDq9tNdYWCTzYFVp4Ks8WNCsmjQuCGZPa
+	PL7bYs07wYBliD6pBh5AVzOejY2nABGs9IYkdjvv57oUA9An43VPCGURUqcZ+n/CNBEDhks1jHj
+	91J9CoU37Uw82JV1sRTVQJidxkUoIjqKyexBctCkLF0AsOMGfvSX9dEqksXKyLHhAvVuzqNBXTY
+	eEeIdP2Q2l/txheMd/ODN3PzUepHUmItvHxXXN8DHdYzmaBoZ7W+0q6BD3uBFbwsACMFxQKCVIm
+	SaA3oWTyByMJjf8prNGW3tE9lV7f8QnAAjRnz7KESlV2oV6HJ1l4jkiq57Dn9k5b2i9mjYeGKXE
+	4hQRZFz/eOr6MJD7lHVOrnfijNl3w+Pomv0dIEbNeCE8aY5DV8we/gmgCE20XYBqC0cjm/VqgC7
+	7I0KqqURwJbL/4GcM3oVIQeFeYl64tKmKI7b8sdmr44KGid7qZc+APlY/UD0mZMx0hE8m7fIPEP
+	gnKSLkVpi9cUARE3EOhUCwk23bQlLExruvcI4qaKlnkWi1MgFd9XEoZ+SHIwvZJ08c4SOTbN2+v
+	uDfgPyoD0AdCBKqUHYOS2sYbWb/O5SHJ31/dZkP/hq1Vb6Wku84PaglsOn44y61KFlipM0rtJhV
+	rmKIHtZ4=
+X-Received: by 2002:a05:622a:a0a:b0:55c:66f0:5bf0 with SMTP id d75a77b69052e-55d5a656766mr42047121cf.39.1795015258621;
+        Wed, 18 Nov 2026 07:20:58 -0800 (PST)
 Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-92114d35dabsm23793796d6.17.2026.11.18.07.17.57
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-921167f4725sm19632976d6.44.2026.11.18.07.20.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 07:17:58 -0800 (PST)
+        Wed, 18 Nov 2026 07:20:58 -0800 (PST)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,8 +91,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 01/22] mm: add node-state-filtered zone and node
- iterators
+Subject: Re: [PATCH 02/22] mm: publish and clear node memory states via
+ helpers
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: Richard Cheng <icheng@nvidia.com>
 Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org, 
@@ -116,53 +116,35 @@ Cc: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org,
  xu.xin@linux.dev, chengming.zhou@linux.dev, joshua.hahnjy@gmail.com, 
  rakie.kim@sk.com, ying.huang@linux.alibaba.com, matthew.brost@intel.com, 
  byungchul@sk.com, apopple@nvidia.com, rientjes@google.com
-In-Reply-To: <av1hKrtcATVjCnCM@MWDK4CY14F>
+In-Reply-To: <av1ZBTpLpJC6DJqA@MWDK4CY14F>
 References: <20261114070959.3490008-1-gourry@gourry.net>
- <20261114070959.3490008-2-gourry@gourry.net> <av1hKrtcATVjCnCM@MWDK4CY14F>
-Date: Wed, 18 Nov 2026 10:17:57 -0500
-Message-Id: <179501507729.1206716.6880334614636468959.b4-reply@b4>
+ <20261114070959.3490008-3-gourry@gourry.net> <av1ZBTpLpJC6DJqA@MWDK4CY14F>
+Date: Wed, 18 Nov 2026 10:20:56 -0500
+Message-Id: <179501525661.1206716.17622543796948053737.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
-On 2026-11-18 16:29 +0800, Richard Cheng wrote:
-> On Sat, Nov 14, 2026 at 02:09:38AM +0800, Gregory Price (Meta) wrote:
-> > +/**
-> > + * for_each_zone_node_state - iterate zones in intersect(nodemask, node_state(state))
-> > + * @zone: The current zone in the iterator
-> > + * @z: The current pointer within zonelist->_zonerefs being iterated
-> > + * @zlist: The zonelist being iterated
-> > + * @highidx: The zone index of the highest zone to return
-> > + * @nodemask: Nodemask allowed by the allocator
-> > + * @state: The node state the zone's node must be in
-> > + *
-> > + * The state filter is part of the iteration rather than a trailing if, so that
-> > + * this expands to a single for statement: a macro ending in an unbraced if
-> > + * silently steals a following else from the caller.
-> > + */
-> > +#define for_each_zone_node_state(zone, z, zlist, highidx, nodemask, state)	\
-> > +	for (z = first_zones_zonelist_state(zlist, highidx, nodemask, state),	\
-> > +		zone = zonelist_zone(z);					\
-> > +		zone;								\
-> > +		z = next_zones_zonelist_state(++z, highidx, nodemask, state),	\
-> > +		zone = zonelist_zone(z))
-> > +
+On 2026-11-18 15:53 +0800, Richard Cheng wrote:
+> >  	/*
+> > -	 * Check whether we are adding normal memory to the node for the first
+> > -	 * time.
+> > +	 * Publish this node's memory states, including any newly-normal zone.
+> > +	 * Hotplug never adds highmem.
+> >  	 */
+> > -	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
+> > -		node_set_state(nid, N_NORMAL_MEMORY);
+> > +	node_set_memory_state(nid, false, zone_idx(zone) <= ZONE_NORMAL);
+> > 
 > 
-> A question on consistency. This one is a single for statement, with 2 new helper functions.
-> for_each_populated_zone_state() in the same patch uses "if (!cond) ; else" form instead.
+> Um, so I am not sure how much cache pressure this will add, I assume it's small ?
 > 
-> Both forms keep a caller's else correct. The only difference I can find is that the if/else
-> form give a -Wdangling-else warning when the loop is the unbraced body of an if.
-> 
-> Is that the reason for the 2 helper function here? If the warning doesn't matter, this could
-> use the same short form and drop the 2 functions. If it does matter, should
-> for_each_populated_zone_state() be a single statement too ?
-> 
+> Just want to point out that the old code only wrote these bits for a node's first
+> memory. THis now does up to 3 set_bit() calls on node_states[] for every onlined block.
+> The result is the same, but node_states[] is __read_mostly. A test-before-set in the helper
+> would keep the old behavior, or if you would like to keep it, please address in commit message.
+>
 
-Yeah I was getting that warning from various checks. I'd convinced
-byself this was a false-positive, but it does look very funky indeed.
-
-Let me look into this again, it's possible I can massage this better to
-use the short form still.  It's also possible that I should just use a
-different shape entirely than trying to use the existing pattern.
+Hotplug isn't on a particular hot path, but I can test N_MEMORY before
+setting any new state and just early-out.  That would keep the behavior.
 
 -- 
 ~Gregory
