@@ -1,13 +1,13 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.201.28
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795029907;
-	b=d5METa0pXRf8O5HzxIo7qrL7WlTZa1VYP/pKzKPwb7PuceHf4u5rlNf50iRQoHDwi+4m
-	 yOoBi8Xp7QNdgeSJLQI8gEzMRbS00YTfuhWqxxjTRaf3jnwSD48p0+YFY5gvBTMWhjz1X
-	 gxdr86jQXKWJ9WQE4c9J3CK+RgHQL3z+WtL7ey+gHRlzwNXwvHF2CQxaXN2Dcp+6W0qGh
-	 rO0lQVsdhUsnOFdpH14wh7I+tI8FReeCAsri59OwGv5f93Ka3G2kz6sT9BAcGFj9eQPyA
-	 bb6DX8mu4QhlkxSCWhwVky3GmZwmc0HLhOE/6ygPEtABujjBb8k1kXkOsyAmhm75CGg==
+	t=1795029902;
+	b=W+iXLMoG6NL7jqTOz5iKyRqvtF2Hu6cEek/L9waopWBh4lkLbGDcqVcN7nqNej85jQzJ
+	 3lKYXEkqZUbWZlFw2OdeLcg/1zK+300DXj/J2+oneZnvJ4vdEFt9RA/u/96aLQygQDUny
+	 1UeQu0NabCkZQ9MWweUZOj1Kc4MJmJPhWEMytGv/dOnL/4f+9cviNryh9GBZN8UNp61Os
+	 +L3OIRDR7bQ1bRzw3hteFI6bDTQkoIHO/RkT+sGiPvliX1g9eJkiQpzTbTXzRLoBnOCXK
+	 ClhyEmvwIdiivHmoTWxCdb+xDlXtotaiBdXJlfgWwEAwaK2OudtGKCL27310cEB5v7A==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795029907;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795029902;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
 	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
 	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
@@ -25,52 +25,52 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
 	 X-MS-Exchange-CrossTenant-userprincipalname:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=JcTok4/mS1r8EiPrD1iHcrGiorXO1Np5ls3LVz2jeEM=;
-	b=vljFKtPsLfWneefINr1vWBdZ5jQ0BeslVUwYN2a9INlW29FYAdJnYRqNh1M3ywiRU+84
-	 qjfZFTHgttOfxu77Svu+Luaurv9BZeIOOTvROFoH2wsmopi/QhnEF3vKQUaiQVQcqW4Yc
-	 IffBK6aeFDyP019ea1vAB6Uy5RKkPkXkPzPsMrjLTuc8v01cBzfyC/fygA83zUKB39d3+
-	 VP/XirqpzfLRDdQ/bFEcM7s4fvcZl0fE1AtdiuZKdkI3urD+4sBQ2FjFbJ/GlswFPCl0g
-	 K+jzesQTqN6lJIftaa/G10+VK6hIAZ5lda4m10q0kelCVYH2mvM7fq8YvbS5DzEgtLg==
+	bh=b7MzQMfnqHTkyO5BjqD/p3qoUShkXGHwxbtDIvEsfMM=;
+	b=dao40U8i4yF5Y5Wqm6f4eLo1Rt9nCzM8HSrm0uvpVb6XpJ8FIeJXtg3hVEBbTTfry1x1
+	 lPMdfxg8hWfZLkA0DX4a+2unEQTgMJ0zshzf60gYa7qduSsY6ZhKKXzhqidwhoefeGdHZ
+	 bqj2lzcVQrkz6dTdx5pNTfBLTd54zatgN/CuU9/r02w8skyQaQnurg+x00oieLzQLbCSY
+	 v+6AWx5ZcXgOaeNvHCgBvc1r1IKy8tdayZW/L7bUVHi8NK9VfqOmvJoTATfcSjzJBjj+s
+	 fd0GxCpMZluittB5wg1IkmkVdcPzacOy5O39PefdU6ApGVA0Bwm4LWPsETo2K5K9OQg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=gFLusLZQ;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="d/8fiuj+";
 	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.201.28
 Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013028.outbound.protection.outlook.com [40.107.201.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E915060A5BC0;
-	Wed, 18 Nov 2026 19:25:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E915060A5BC0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FE9606A325;
+	Wed, 18 Nov 2026 19:25:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21FE9606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=gFLusLZQ
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=d/8fiuj+
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aqRg0RgXpAGpB6PUhmGMNgCWoNml1T/Rc4g6u+l/hX6SmGikI02btqqLFjtjpDhs6wE6HM1oH1XaJTbOiHDRQw+/Y5mJOqJI17cxNF+gwHRS90gLGsDA/jd0jhczelY9tCXRJSo0qGtiB74JaP58HxEU2UpzscctwKgYVg0zbqvombpwvCcZHEKWCjrhc23dGNvnWe5zrobIW2CDl4TBgjdYFr4AHHTIGfNcnzJQ9nlDvHhp69G9WzRJjl3YfKd0wfdIbsHt0C76dOO4oouYABCOh7qzdtG/lBHdazKG6j+0oZ4j3AVtYEJrxw3F73td3Bx4KNaNPy93yGAFaajCsg==
+ b=CGEOyeWQAu92VWztEibyOHsAw8p1aOMk0tZmvpthwYV9Ycuu8Fa47QR3EjOsMUFtFyi9Ld39I2SqAIgESfyvdtWdeRp7MAzHvAbjUUKmnbUpene84n70TK91+HpC0bGWXO8Xckg6ZELzFAUSPpNTedEUNPxDSii1tWhhyLlOey/pRmS/pTFWDWMCQQnhRmp71T1G0L7MhLVIhGrCEOYMZqk2DWkHk0cGNGnlcz4Rq/olx4CzV2H16DL2Ibb88uWlufwWF0eOj24KKadACagyEvH3aqJdsSFxkPz4mwHSumuFeNNm9tYvNirugCEdoSFRZKrbZHI9npAMxx3rNkEv/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JcTok4/mS1r8EiPrD1iHcrGiorXO1Np5ls3LVz2jeEM=;
- b=vhHr4mzxyvpto83nMlMf/BOjez3M+rpK4hijCyPoGZPisbViqp4P77WjcC4nBIQxMCt4Z8479vUGtZh36ACrOu4hAXqARVc23X9K8DdIQSlRavndBlGWti8ka9iIgf0dDq7E1JO4CvnENOeLtw9DbAsMfs5lO+nrE7jX/XLNwYPxdbN8FESXrv56H8UVhJyShAdauf2gdcODezSoKZARJxrp/EAVG6qGGxZfilbYzdNM2PRZlpq9liweuaBPh3VoFbPXTU/6AgbJBM7otKGVTjonBdtOTDhj+HqaH574moBTAKU/nbAc8fC2/+rsRzmc/lWUV2kEaqUYpeI18kF+tQ==
+ bh=b7MzQMfnqHTkyO5BjqD/p3qoUShkXGHwxbtDIvEsfMM=;
+ b=hxPyT2W3LKwk3x1aUI7ARkBPmWW13c5O/2Lu/MmhxOHh4mgZuchETKjj4c9AYgViakDMW9y5THMCbMqeAvbz2PQfcsO7IghYNEqM2oAd2lVLLn44lY+4/d1+72dXBnLdBn1x0xWNVp+RNfSOgAe3s5hKnM3htJwCselK37g9awwHdgZdy6cvsiQzs0EOEkY02kFUcHD7UMb0V7+ffPj2/sfRci90gLsmHMXtlYIum+eGaXAay847pSTX4hCJAu/w9XhI3WNyw9+XkbgJdanhzmMm0rd3ccn2PCL9InkxNVjyDBSfXm10IHDtNQqqOndUo/Mxp5cV44s552R0YvW3wg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JcTok4/mS1r8EiPrD1iHcrGiorXO1Np5ls3LVz2jeEM=;
- b=gFLusLZQZX8EWS1EYTtkrLwNwikGXcYJlJxjmSpsRLbp+uaSmjOrCGQVgJtw+Uq+ATL/LEVkP0475FnIg9+a/HJagDtZIVvz0byFDVYnt79c3fWho6qwLwY7pvLGhASxuR9C3DlEiSur2ZKHmMRmZlJUDauegWtiaI4TGjTPRRidkFOJAAY3cfPNlyUEEWoTsEdXU310syAvDK0TU4N4ZlRmOq9Urh/7yOVgkQWxs9pJnijyvr1SHIMH7uSkN2K+mCpvwpvMMXdLPuLbTKDzGQjLFwIS6b8a6jNZ2nEnpqHgOtc9qdaExELv+JRNRdhIJaX4QGePTmgjcQAySYuq0g==
+ bh=b7MzQMfnqHTkyO5BjqD/p3qoUShkXGHwxbtDIvEsfMM=;
+ b=d/8fiuj+fuw1bLykGzpi0r0gY9Yow22f/hvvWz8Sr+QYyMtz/wLKJ2YUPTBCdjY07QPOBtqlR3cPSn1CwVKxDwSyxl/IFeKRwjVIiXYfJoj4Sz9KBu9fnzaHn18ZaNIxwP3y6hsHVtrRI0/P4p9O/xm/rJsAcsWjAo1KYGCZXc25RRwVtJ+5qUiSdS96Tc/fB+QUsNZeS62M4nPTi/MfKc0edYY1cLSH9pohs/GeSv/WhG5suzb9msBXAx8svJnQ7YOXn5WvdJ5FBaVQDBD7hVq6tvkgs1AAhB8xqix7OvMgBkGrkrNSyOePROJOmuzOSPN5V6G2iHT3YtZ3oXVghA==
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
  by CH3PR12MB9455.namprd12.prod.outlook.com (2603:10b6:610:1c1::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Wed, 18 Nov
- 2026 19:24:56 +0000
+ 2026 19:24:38 +0000
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.21.0615.013; Wed, 18 Nov 2026
- 19:24:55 +0000
+ 19:24:38 +0000
 From: Manish Honap <mhonap@nvidia.com>
 To: Alex Williamson <alex@shazbot.org>
 CC: "jgg@ziepe.ca" <jgg@ziepe.ca>, Ankit Agrawal <ankita@nvidia.com>,
@@ -95,18 +95,16 @@ CC: "jgg@ziepe.ca" <jgg@ziepe.ca>, Ankit Agrawal <ankita@nvidia.com>,
 	<linux-pci@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
 	<linux-kselftest@vger.kernel.org>, "linux-hardening@vger.kernel.org"
 	<linux-hardening@vger.kernel.org>, Manish Honap <mhonap@nvidia.com>
-Subject: RE: [PATCH v6 03/31] cxl: Move component register defines to
- uapi/cxl/cxl_regs.h
-Thread-Topic: [PATCH v6 03/31] cxl: Move component register defines to
- uapi/cxl/cxl_regs.h
-Thread-Index: AQHdXYozg3lnUnLESEiCMrXc74qPr7cetCUAgBWidNA=
-Date: Wed, 18 Nov 2026 19:24:55 +0000
+Subject: RE: [PATCH v6 08/31] vfio/pci: Add a generic excluded-range list
+Thread-Topic: [PATCH v6 08/31] vfio/pci: Add a generic excluded-range list
+Thread-Index: AQHdXYpNK/PLI2S8VUu9BLKNtGt9GLchVJOAgBD1QHA=
+Date: Wed, 18 Nov 2026 19:24:38 +0000
 Message-ID:
- <IA1PR12MB90305D1AC497D9811765D1A8BD7A2@IA1PR12MB9030.namprd12.prod.outlook.com>
+ <IA1PR12MB9030C28092AE48135D896F63BD7A2@IA1PR12MB9030.namprd12.prod.outlook.com>
 References: <20261016161839.2765592-1-mhonap@nvidia.com>
-	<20261016161839.2765592-4-mhonap@nvidia.com>
- <20261104165256.09860477@shazbot.org>
-In-Reply-To: <20261104165256.09860477@shazbot.org>
+ <20261016161839.2765592-9-mhonap@nvidia.com>
+ <20261106085939.764b6dde@shazbot.org>
+In-Reply-To: <20261106085939.764b6dde@shazbot.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -115,46 +113,46 @@ authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|CH3PR12MB9455:EE_
-x-ms-office365-filtering-correlation-id: f9acf41d-8044-479b-c37a-08df45a9a0bd
+x-ms-office365-filtering-correlation-id: 38af0f0c-017b-44f4-a98e-08df45a99699
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|23010399003|366016|22082099003|18002099003|261009223027099003|4143699003|56012099006|11063799006|261026121527099003|261028144727099003|261026140227099003|261022105027099003|261022113327099003|38070700021|10067099003;
+ BCL:0;ARA:13230040|1800799024|376014|7416014|23010399003|366016|6133799003|22082099003|18002099003|261009223027099003|4143699003|261102130727099003|56012099006|11063799006|261026121527099003|261102123227099003|261028144727099003|261026140227099003|261021121427099003|261022105027099003|38070700021|261021123027099003|261022075727099003|10067099003;
 x-microsoft-antispam-message-info:
- FonsKeLOBbvDaSRbpLUga4jHBbAuYFuqbdMvLqHXilxgk9TLKO7zE0t1YzFtP9WuPu+UeRiuNaUfPGRd6B+6kSBgqTFtF9PsFx72+nE3JNHrWqEmFgHM80Icc0jElHi1dyP+r/vm8cjAB3csvcWcbdDiBfqIxkK8kqAYN4SefIRazdxbxCUw1erTk5xihwRkttTBM4YxwdG69/FafOMaVIHRQdzrA9DVN/jhgOxJU7z1jG3b+P1ggxg+B2LINc+04IOvsFJVo17BvCo0eeuolI/pQARhxivB+TN5L91kOTtco+PsVSEBdwY1xbNMQmdNiseghudM9fg8t/ry9ZVOTfVZDrasUkMMcR4rjMfOE5lbPxdIidX2GPypBX71pjeFR5boc/ugX2enr3AxUTqdki5bDdWp21arF9frg59sVUud7U8/zlOlkpJYHtGfIm+w+bFQG+9dywEN19HWCRUtITtFK6zx66g/4In3coHqeDzFUQ8MApLymqDacSF0PVCiojuH+3vquSFVAmhQprNS+TbislEPiLO2R3w/KRozP4kn+zszSNTm5bgiFp3uJQtsapyFkg56vgEl6rXTibPeyPlGCe5xZjgFJD9siW2gRJjscSVIf4YGqQejzkDJD+Q5SohYL8KSCT4KT+QjlA4WPvbYLY7eFqVbRjOrhgTuLdrAIP+XMTHrshVEBHMv8778U1K5s/GZjIIc3h5yvX4Awtwi/X2KCNTD2poET8HQs94=
+ tHFMm6nOwdrnUilIaNawvjMpmNhP77xP12/Hdulb86f5jCD0+TleT//PUjRPlUm34WbkWyxyZbaxdmo4P5pK46u2GzGJBHVLvo7dWfb0C2VDubx0xKQ90tWQGUMZnptMP+y2d9gTitTx2IJVzuQ6kFsW81HHJgnh5pFFSnwLSwcEFIoPA/mqV+8j5ScDiM1qGV/nxr+KkT4VRiBlOeLdmUhGVlONjOj9s9X9YlJZ/AYlW73H/yW3K8jUmCvNoOUnKaG/NqgCpVR6h3LYBlAKtvVlU62W7bRR+9fx7KZk62/f1K0hClrsDLpNMPsNhFhQraiMf06cL+lSbuOBWnpT+tUf9RontOiKiW0x19SDUwPKpN7dgvJBO9QkyQAZEW5uHworGYGK0G4aymqvZV0F4496kV7vzXv9T4vwpMbxLu5XEUD+aa8nNyVG1mzBrZ2NLS/99LciWxilKl3cyRTw2RcoEVIvjH76JrMJuvL7idZ5QaEhVkNPbeq+qjA9b055gHOejxjNWmZGxXVljOQHDgwae5Es19IvX8Ca4c8PbVDNThwk3UMV6PYwpwKN4svdwTrUsmavsvpWFV7hU8LfURiHHKTs16l6qGZXEh//Wid6mzsFd8Zx29eaYtMouuUWgHOPSI6ej5Onbw5BY3H2BCda9eeQhj3B7vnomygLuw4ujyqMOS9GJxRQyGBYz70gU5WwmD9djtU6f0Gy4wK/TYglpBAKRL+fVOa24yPv1hs=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(23010399003)(366016)(22082099003)(18002099003)(261009223027099003)(4143699003)(56012099006)(11063799006)(261026121527099003)(261028144727099003)(261026140227099003)(261022105027099003)(261022113327099003)(38070700021)(10067099003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(23010399003)(366016)(6133799003)(22082099003)(18002099003)(261009223027099003)(4143699003)(261102130727099003)(56012099006)(11063799006)(261026121527099003)(261102123227099003)(261028144727099003)(261026140227099003)(261021121427099003)(261022105027099003)(38070700021)(261021123027099003)(261022075727099003)(10067099003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?AzXbLUmAdN6hacKM45rOPhZDgzrfhcKl5+7h8jWuXXmg12aJYJ5knBC2dvdQ?=
- =?us-ascii?Q?zhNrymfKj0bocVwd9kck+8YvSMqeDzk6VG8/pXEYwJsEU+eBLe6Qp0tCCwYI?=
- =?us-ascii?Q?Ixg1OqJP8EQcaGSrYtIPwD2nPfburr6K/zQRD9I+IfqDSuuoSIuN0i29Chhr?=
- =?us-ascii?Q?AJ3Ev9q156LJwxvf8M2ggTEZFWI/PLfGO/vUw3VAILOYeHmCrasf6Ae/4+Xf?=
- =?us-ascii?Q?UQBQ7G6VVxkMpNy/u5q3P3JlBH+nFVDkxH1gBXIj2xLvoW158+jApJnoA3DX?=
- =?us-ascii?Q?QSHH59WF0dnFHAcUXXBFbCM9KvCpbVEkN7n469rFsD2SGxsYLARxkiPX0iPa?=
- =?us-ascii?Q?OTQQ4AzxGa1z8raMdAEjDZ0PaqXuoWE1g8669N+9uxkmeSHjCm2oWzpUthRm?=
- =?us-ascii?Q?to92/I09uEx23jcnZXzgjoKQ+i0lQVJZPHjmJ0zNm5zlrRASnDMBdU+Puf+D?=
- =?us-ascii?Q?sPIswva3OvViosa8R6ssr8H1T2o6i7bTGgpqJbkuMrXXC3Z9usrUNttVTs7h?=
- =?us-ascii?Q?jqEziDX7mKdwr9XGaQ2CVDQvP1Jj2uUvCjX3kzgczJR0mzVw1zkrG9j9+Ouy?=
- =?us-ascii?Q?sm4xpjxXXZAPDwwtu3H4zlCrGKPimKhgyuoUCMsMylhCd3TkJiUOMKWLfoew?=
- =?us-ascii?Q?k/cWLtfqGvUsYkfXPYJdPrlGsw0DZdcpcjb8Qp2dlYp7TLgssoM0QjVb2t47?=
- =?us-ascii?Q?9/DjjgKz3uJDEVo57WuzTnEEgRtSSooiNfeTK3hqYLCA8FamxhAEiaSGCdUi?=
- =?us-ascii?Q?Ilv7TmhDCIhXO+ZP09NyKhpjZkdIedtaD5ASztpTcWUEh5I/C28dKFwQVyyR?=
- =?us-ascii?Q?ZptggyDi4PKGz0kMvxIv3OHJhWOu8OJSpioaRR2RtZoG+fzSTAFM8H93Vifj?=
- =?us-ascii?Q?C87dMMCBPAr+FlMEdy5SANNN5NJaa3ietqDYJ40kePfSE+9gUlYj3rlYE+nY?=
- =?us-ascii?Q?RRGY5yJLbSJXosoDtb3C+CIVxcBJKLjaZOuvUCxi32C+V1Eke0ZBHcDUJTxi?=
- =?us-ascii?Q?exf42wKfLVUWNR9S0W+TPPj6w6UUx/4xcf69Z6q4dWf5nLS0F97QV4u0IxGk?=
- =?us-ascii?Q?t8Bjrbpoj65/wInBbBLej6+SEQf+GCTwKomWR5kmBZclM3K7VJKgJvn/F+Aq?=
- =?us-ascii?Q?NVLSDKtLm/nBKicrom5bGqDlEeIUnOuEVZKSRa/e9m2TB1BSTERDmUUVdqlA?=
- =?us-ascii?Q?wwGC0kTJERQ4L4/G9dH4QvRkULqp8Qy0Cb5Ru/yYOp57MtK8drZOGhxqbSrs?=
- =?us-ascii?Q?/5Pdc0TRABVIIZewIcBrgi2CF1xQhUxhlWmR5TwRrQm67HsY4XGDEEDQgWlA?=
- =?us-ascii?Q?LOp2sEXOWkqCtBGh8tlzSuavzqbtNu0g1QJX3R/+mDqNSEBv6gG9sHaa1Ymh?=
- =?us-ascii?Q?71ReRscJLUFXQXyX9NVkHwsfFqun3/p96QI1dZuMt1xKQwpvdZ/MIjM9w+lr?=
- =?us-ascii?Q?Qz3UB2ATm6m4kQsgeHdtSGhT9EfB5tfd/wzrhu1YYGzgMpP8DUONN5H/Wsao?=
- =?us-ascii?Q?WsKHafIqwOQTlKM4alPCvxm0IHfvtpHH+MicJaH/OFUySE8KkzVCnZZ6XHv1?=
- =?us-ascii?Q?V4jm+G9E9rlPEhUF6tgTTOm0LNGOuntw7pIw0MM2SsAaizwaWdU4zL8u7uZZ?=
- =?us-ascii?Q?BU5RShVBDO5vnKIkXuNUmknGNbBj4WtHMZl5OmCxsxog2vv1i3UcfpGpyNA6?=
- =?us-ascii?Q?WgYd9BrKoLpYBsjU1el6r/TIafz5MrwOAoX+8KfCxWggvL1q?=
+ =?us-ascii?Q?JO+jfvipWWghacuiuzPbFt+fqx9MDEt1kbtLGlV5cFtzHdYh79baJCoFIIlS?=
+ =?us-ascii?Q?FDQ1VzDscOFq45CAHoZ8lFR+v2840hp8bE1j/yGDPjnbwQFsupf1Ziw9znQI?=
+ =?us-ascii?Q?6OVnzvzChbAsOIXnwE0Wtof99zP5fR/ftr0fsNA1O0bPXyRAohNpGBDbV0Qi?=
+ =?us-ascii?Q?4BQRCOctmL4UDBnBtQ9K7dZuWMOhggTfAot2ZySfpY6v7eur1qo+s6cFFWXa?=
+ =?us-ascii?Q?9tkhPd8LNlpUaV1b4/dHcith6+CGha8MtmKam53fp4YYi7b5MSwCqd/HkFSV?=
+ =?us-ascii?Q?ZowiWWjo3XQNOSK6sa3yV5dYV83w84zY/wLOObyxsYCsyQU8fMGaDPizigTE?=
+ =?us-ascii?Q?wYpEAE6WWbg5Tlzd2+X+d7JA3AGQu2qPLGd90VGnvB+rCtAAd2OJbMlADSxS?=
+ =?us-ascii?Q?vPSTxGXuCfMRG8CNI0m6QD5Sdym6oabLrNR6S8oW5nxGK/7e5/k7ax0MKhbS?=
+ =?us-ascii?Q?6n5wsQG9Me0I6C4q0SvGLhcsgay3dLtD1m2P6enlSnaUyAfDYg/IXIZz19+t?=
+ =?us-ascii?Q?NVqKwqvek9LbAiOlRu3ec/OrGRajBjPZ13vzUk/0cgF9GvJ6ot4NPN0N1Flt?=
+ =?us-ascii?Q?e/S3VNzWnrOLJRDerXywnsHPObBTK8iiPhVrZdBK6a2DzVYailO/4IgO6Cna?=
+ =?us-ascii?Q?v2CpHBwrQ+IL8qKtY9qfYgSlMSluhip9MMjn5kJpeMuwOyP1LA1m4U7PRPYE?=
+ =?us-ascii?Q?NQqtH+BiJbf6h4oXDWqHqQeCYtNvqRdWrXMEFlgrsIu7ReCeWH9RnqnvrqV/?=
+ =?us-ascii?Q?K9NF1nTPTlJMCz4DofMv+dlSUNnvVplxbzXKZ9RFC/LKz3mint/R+kzIG/yI?=
+ =?us-ascii?Q?e4bYDfxhvH2mTCJgK4kXTVL7loO6/nqisFt+MRqHAEjtZtvQItJH0dm68Cun?=
+ =?us-ascii?Q?Oz7LuhD83h50sQjSwx4zcb/Ac4u2f+qmYGNnPf4DHoL7wKlw5rqDOrEOHgL/?=
+ =?us-ascii?Q?WF8LkrjpnT3UkKx3b0J/wWfB9C8OtlEtBzfTnj/coBLQw39tH0hcsG9WS/at?=
+ =?us-ascii?Q?gQyJiW3xZMYtAI8VbPi6r2dc/a4lpSIiyjQdhbsjvvFK0E6J0szzgmYCRbhT?=
+ =?us-ascii?Q?54tLS0NEj3OQVNg3mTRCqql8azNWlFyBqWYYbvJlzgx5J4+iMn422UN3g4od?=
+ =?us-ascii?Q?I/grLtpTCO9RAj8/bp8jjH8fpFCTrrOfZqRQp9Y3iaTZ5+ekp26BTKzgQucK?=
+ =?us-ascii?Q?72Jc4K6Y59FZgjueIASguSHk7ToEkYtBzhPqvM8AQ4N2T4gA4z7ajCIRVF61?=
+ =?us-ascii?Q?3X4f3ZWJFVYvXg/WwI3mG9bCFd1QG1ZljENYO3PSyI/V6Us5n+6YtzbnTuQA?=
+ =?us-ascii?Q?YP7XTHJy1Rw2Q5/NxV0SgPXf1K2CejDsC1axS48B57SnQR7VXc7nBkpUzIyu?=
+ =?us-ascii?Q?9Je5vYj8L94QbsMyxILHICswTq1WvaBZStvByCol/Vy720ObJk2SqzHQpPHX?=
+ =?us-ascii?Q?IuHvEIKD66vZHgBeSWTj+vxFBKqZkxzM2tQnzFs4F+0GcNChwna1g1A2Uvu1?=
+ =?us-ascii?Q?JjyJG4/z6bAuWTi+IMNWx6Jur3SeM+7fyykKhpUEyVgP9AtJLgWtnHHzSjTc?=
+ =?us-ascii?Q?zV6mGvvMtx3w28RyA1NMpLAAPFWBg7rWcg01ve+GYaJA0eX8aKm9d6B4BbXb?=
+ =?us-ascii?Q?5p2UhkeYtCiRGQfl+YZoTWonUSbRzMWSp4PrHvAvxNR1WT4Uym7WLlZDRcBa?=
+ =?us-ascii?Q?6NQAU/dPVvIEgxaJpfWZ0PF3/T8lw5cxKrj8LAuTpG3rnm4/?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -169,20 +167,18 @@ MIME-Version: 1.0
 X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9acf41d-8044-479b-c37a-08df45a9a0bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2026 19:24:55.8010
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38af0f0c-017b-44f4-a98e-08df45a99699
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2026 19:24:38.8074
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rbLFx3US/MQ9MCQB4wOHf++u0kI3hLDdhG9dFg20JMUbFZuz5nw/a3iTqj9OOhbX17rKUZQ70Vk5MKMG15GBnQ==
+X-MS-Exchange-CrossTenant-userprincipalname: UEIwJTBkhrFLVtD5fa553Wpl4Dvw8pNpn2lAyex6K61wRhElguxTx8eeZqavNmVyUmtAHoAX+FPEfOVL3pqeZw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9455
-
-
 
 > -----Original Message-----
 > From: Alex Williamson <alex@shazbot.org>
-> Sent: Thursday, November 5, 2026 5:23 AM
+> Sent: Friday, November 6, 2026 9:30 PM
 > To: Manish Honap <mhonap@nvidia.com>
 > Cc: jgg@ziepe.ca; Ankit Agrawal <ankita@nvidia.com>; jic23@kernel.org;
 > dave.jiang@intel.com; alejandro.lucero-palau@amd.com; Srirangan
@@ -198,50 +194,538 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9455
 > linux-cxl@vger.kernel.org; linux-pci@vger.kernel.org; linux-
 > kselftest@vger.kernel.org; linux-hardening@vger.kernel.org; alex@shazbot.=
 org
-> Subject: Re: [PATCH v6 03/31] cxl: Move component register defines to
-> uapi/cxl/cxl_regs.h
+> Subject: Re: [PATCH v6 08/31] vfio/pci: Add a generic excluded-range list
 >=20
 > External email: Use caution opening links or attachments
 >=20
 >=20
-> On Fri, 16 Oct 2026 21:48:10 +0530
+> On Fri, 16 Oct 2026 21:48:15 +0530
 > <mhonap@nvidia.com> wrote:
-> > diff --git a/include/uapi/cxl/cxl_regs.h b/include/uapi/cxl/cxl_regs.h
-> > new file mode 100644 index 000000000000..276f9361c840
-> > --- /dev/null
-> > +++ b/include/uapi/cxl/cxl_regs.h
-> > @@ -0,0 +1,56 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +/* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
-> > +
-> > +#ifndef _UAPI_CXL_REGS_H_
-> > +#define _UAPI_CXL_REGS_H_
-> > +
-> > +#include <linux/bits.h>
-> > +#include <linux/const.h>
-> > +
-> > +/* CXL r4.0 sec 8.2.3 Component Register Layout and Definition */
-> > +#define CXL_COMPONENT_REG_BLOCK_SIZE 0x10000
-> > +
-> > +/* CXL r4.0 sec 8.2.4 CXL.cache and CXL.mem Registers */ #define
-> > +CXL_CM_OFFSET 0x1000 #define CXL_CM_CAP_HDR_OFFSET 0x0
-> > +#define   CXL_CM_CAP_HDR_ID_MASK __GENMASK(15, 0)
 >=20
-> A local sashiko review asks if this new uapi header should include
-> asm/bitsperlong.h since __GENMASK requires __BITS_PER_LONG.  We include
-> the other two header dependencies, but not this one, so it's a bit self-
-> inconsistent.
+> > From: Manish Honap <mhonap@nvidia.com>
+> >
+> > A provider such as vfio-cxl needs to keep sub-ranges of a BAR off the
+> > direct guest path and serve them through its own trap. vfio-pci-core
+> > already has one such window, the MSI-X table, open-coded in
+> > vfio_pci_bar_rw().
+> >
+> > Add vfio_pci_core_add_excluded_range(). Each BAR has its own list,
+> > sorted by start, and an insert that overlaps a range on the same BAR
+> > or ends past the BAR fails with -EINVAL. Ranges are added only while
+> > the device is being opened and are freed in vfio_pci_core_disable(),
+> > so readers on an open device take no lock.
+> >
+> > The MSI-X table is virtualized in vfio_pci_bar_rw() by an open-coded
+> > x_start/x_end window that fills reads with -1 and drops writes.
+> > Register the MSI-X table as a read and write excluded range when the
+> > MSI-X capability is parsed in vfio_pci_core_enable(), and walk the
+> > BAR's ranges in order in vfio_pci_bar_rw(), so an access that spans
+> > several ranges is handled in one pass. Only the part of the table
+> > inside its BAR is registered, so a device whose MSI-X capability
+> > points outside the BAR still opens, as before. The ROM BAR keeps its
+> > trailing -1 window, outside the list.
+> >
+> > No behavioral change for an MSI-X table in a standard BAR: an access
+> > to it still reads -1 and drops writes.
+> >
+> > Assisted-by: LLM
+> > Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_core.c | 97
+> > ++++++++++++++++++++++++++++++++  drivers/vfio/pci/vfio_pci_priv.h |
+> > 8 +++  drivers/vfio/pci/vfio_pci_rdwr.c | 67 +++++++++++++++++++---
+> >  include/linux/vfio_pci_core.h    | 20 +++++++
+> >  4 files changed, 185 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c
+> > b/drivers/vfio/pci/vfio_pci_core.c
+> > index e50b36751d9a..bee3d1b4d8d2 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -588,6 +588,8 @@ static const struct dev_pm_ops
+> vfio_pci_core_pm_ops =3D {
+> >                          NULL)
+> >  };
+> >
+> > +static void vfio_pci_free_excluded_ranges(struct vfio_pci_core_device
+> > +*vdev);
+> > +
+> >  int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)  {
+> >       struct pci_dev *pdev =3D vdev->pdev; @@ -644,6 +646,7 @@ int
+> > vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+> >
+> >       msix_pos =3D pdev->msix_cap;
+> >       if (msix_pos) {
+> > +             u64 bar_len =3D 0;
+> >               u16 flags;
+> >               u32 table;
+> >
+> > @@ -654,6 +657,30 @@ int vfio_pci_core_enable(struct
+> vfio_pci_core_device *vdev)
+> >               vdev->msix_offset =3D table & PCI_MSIX_TABLE_OFFSET;
+> >               vdev->msix_size =3D ((flags & PCI_MSIX_FLAGS_QSIZE) + 1) =
+* 16;
+> >               vdev->has_dyn_msix =3D pci_msix_can_alloc_dyn(pdev);
+> > +
+> > +             /*
+> > +              * Virtualize the MSI-X table through the excluded-range =
+list:
+> > +              * reads fill -1 and writes are dropped so the guest neve=
+r
+> > +              * reaches the hardware table directly. BAR access never =
+goes
+> > +              * past the BAR, so only the part of the table inside the=
+ BAR
+> > +              * needs a range; a table placed outside its BAR needs no=
+ne.
+> > +              */
+>=20
+> AI comments.
+>=20
+> > +             if (vdev->msix_bar < PCI_STD_NUM_BARS)
+> > +                     bar_len =3D pci_resource_len(pdev, vdev->msix_bar=
+);
+> > +             if (vdev->msix_offset < bar_len) {
+> > +                     u64 len =3D min_t(u64, vdev->msix_size,
+> > +                                     bar_len - vdev->msix_offset);
+> > +
+> > +                     ret =3D vfio_pci_core_add_excluded_range(vdev, vd=
+ev->msix_bar,
+> > +                                                            vdev->msix=
+_offset, len,
+> > +                                                            VFIO_PCI_E=
+XCLUDE_READ |
+> > +
+> > + VFIO_PCI_EXCLUDE_WRITE);
+>=20
+> This is not a terribly elegant flow and I think the AI comment above miss=
+es the
+> main point of what the apparently redundant BAR range and size cap test a=
+re
+> trying to accomplish, compatibility.
+>=20
+> In the current code, it doesn't matter if BIR is bogus or the offset does=
+n't land
+> in the BAR length or size overflows, those just generate non-matches when
+> we read or write.
+>=20
+> I think this would be cleaner as a separate function that wraps the new
+> function, returning success (perhaps even with a pci_warn_once) for an ou=
+t of
+> range BIR or offset, and performs silent cleanup on a range that exceeds =
+the
+> BAR, with a human generated comment explaining the compatibility
+> argument.
+
+Okay, Agreed. For v7 I will add the MSI-X range in its own helper: a bad BI=
+R
+or offset will not add and provide a warning. A table that runs past the BA=
+R
+is clipped. I will also update the comment correctly removing the AI-slop.
+
+>=20
+> > +                     if (ret) {
+> > +                             vfio_pci_free_excluded_ranges(vdev);
+> > +                             vfio_config_free(vdev);
+> > +                             goto out_free_zdev;
+>=20
+> This is mixing local cleanup with an unwind goto and it bites us later in=
+ the
+> series when we end up leaving this in place and adding:
+
+Okay, I will add a separate label in unwind for this.
+
+>=20
+> out_free_config:
+>         /* A failed first open never reaches vfio_pci_core_disable(). */
+>         vfio_pci_core_free_dev_regions(vdev);
+>         vfio_pci_core_unmap_bars(vdev);
+>         vfio_pci_free_excluded_ranges(vdev);
+>         vfio_config_free(vdev);
+>=20
+> after the cxl open.
+>=20
+> > +                     }
+> > +             }
+> >       } else {
+> >               vdev->msix_bar =3D 0xFF;
+> >               vdev->has_dyn_msix =3D false; @@ -740,6 +767,7 @@ void
+> > vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+> >       vdev->region =3D NULL; /* don't krealloc a freed pointer */
+> >
+> >       vfio_config_free(vdev);
+> > +     vfio_pci_free_excluded_ranges(vdev);
+>=20
+> Order is wrong, should be reverse of setup order.  Also doesn't match the
+> correct ordering used in the error unwind above.
+
+I will fix this in v7.
+
+>=20
+> >
+> >       for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> >               bar =3D i + PCI_STD_RESOURCES; @@ -1012,6 +1040,72 @@
+> > static int msix_mmappable_cap(struct vfio_pci_core_device *vdev,
+> >       return vfio_info_add_capability(caps, &header, sizeof(header));
+> > }
+> >
+> > +/**
+> > + * vfio_pci_core_add_excluded_range() - keep a BAR sub-range off
+> > +direct access
+>=20
+> "Exclude a BAR sub-range from user access"
+
+Okay, I will update wording.
+
+>=20
+> > + * @vdev: vfio PCI device being opened
+> > + * @bar: BAR index, below PCI_STD_NUM_BARS
+> > + * @start: offset of the range in @bar
+> > + * @size: length of the range in bytes
+> > + * @flags: VFIO_PCI_EXCLUDE_* paths the range is excluded from
+> > + *
+> > + * Call only while the device is being opened, from
+> > + vfio_pci_core_enable() or
+> > + * a provider's open hook; vfio_pci_core_disable() frees the ranges.
+> > + Ranges on
+> > + * one BAR must not overlap and must lie inside the BAR.
+>=20
+> Are we pushing an overly complicated model just to align with MSI-X?
+>=20
+> I think MSI-X is configured on open_device because it's trivial.  Just a =
+couple
+> config reads and extract the info.  Now it's becoming more complicated wi=
+th
+> allocations and lists, and I'm not sure why it doesn't at the same time m=
+ove to
+> the .init and .release callbacks instead.
+>=20
+> The AI comment also skips the important note reminding us that the exclud=
+e
+> list is lockless and must be immutable while the device is opened, wherev=
+er we
+> decide that boundary should be.
 >=20
 
-Okay, I will add it in v7.
+vfio-cxl knows its ranges at bind and the MSI-X table does not move.
+So, for v7, I will build the list in .init and free it in .release.
+The list then does not change while the device exists. I will update the co=
+mment
+accordingly.
 
-> BTW, current guidance on the Assisted-by tag: 1e035297ffda ("docs:
-> remove Assisted-by references").  Thanks,
+> > + *
+> > + * Return: 0 on success, -EINVAL for an invalid or overlapping range
+> > +or one
+> > + * that ends past the BAR, or -ENOMEM.
+> > + */
+> > +int vfio_pci_core_add_excluded_range(struct vfio_pci_core_device *vdev=
+,
+> int bar,
+> > +                                  u64 start, u64 size, u32 flags) {
+> > +     const u32 valid =3D VFIO_PCI_EXCLUDE_MMAP |
+> VFIO_PCI_EXCLUDE_READ |
+> > +                       VFIO_PCI_EXCLUDE_WRITE;
+> > +     struct vfio_pci_excluded_range *range, *pos;
+> > +     struct list_head *head;
+> > +
+> > +     if (bar < 0 || bar >=3D PCI_STD_NUM_BARS || !size ||
+> > +         start + size < start || !flags || (flags & ~valid))
+> > +             return -EINVAL;
+> > +     if (start + size > pci_resource_len(vdev->pdev, bar))
+> > +             return -EINVAL;
+> > +
+> > +     /* Keep the list sorted by start; find the first range after @sta=
+rt. */
+> > +     head =3D &vdev->excluded_ranges[bar];
+> > +     list_for_each_entry(pos, head, entry) {
+> > +             if (start < pos->start + pos->size && start + size > pos-=
+>start)
+> > +                     return -EINVAL;
+> > +             if (pos->start > start)
+> > +                     break;
+> > +     }
+> > +
+> > +     range =3D kmalloc_obj(*range);
+> > +     if (!range)
+> > +             return -ENOMEM;
+> > +
+> > +     *range =3D (struct vfio_pci_excluded_range) {
+> > +             .start =3D start,
+> > +             .size =3D size,
+> > +             .flags =3D flags,
+> > +     };
+> > +     list_add_tail(&range->entry, &pos->entry);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_pci_core_add_excluded_range);
+> > +
+> > +static void vfio_pci_free_excluded_ranges(struct vfio_pci_core_device
+> > +*vdev) {
+> > +     struct vfio_pci_excluded_range *range, *tmp;
+> > +
+> > +     for (int bar =3D 0; bar < PCI_STD_NUM_BARS; bar++) {
+> > +             list_for_each_entry_safe(range, tmp, &vdev->excluded_rang=
+es[bar],
+> > +                                      entry) {
+> > +                     list_del(&range->entry);
+> > +                     kfree(range);
+> > +             }
+> > +     }
+> > +}
+> > +
+> >  int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vde=
+v,
+> >                                     unsigned int type, unsigned int sub=
+type,
+> >                                     const struct vfio_pci_regops *ops,
+> > @@ -2317,6 +2411,8 @@ int vfio_pci_core_init_dev(struct vfio_device
+> *core_vdev)
+> >       INIT_LIST_HEAD(&vdev->dmabufs);
+> >       init_rwsem(&vdev->memory_lock);
+> >       xa_init(&vdev->ctx);
+> > +     for (int bar =3D 0; bar < PCI_STD_NUM_BARS; bar++)
+> > +             INIT_LIST_HEAD(&vdev->excluded_ranges[bar]);
+> >
+> >       ret =3D vfio_pci_core_cxl_init(vdev);
+> >       if (ret)
+> > @@ -2332,6 +2428,7 @@ void vfio_pci_core_release_dev(struct
+> vfio_device *core_vdev)
+> >               container_of(core_vdev, struct vfio_pci_core_device,
+> > vdev);
+> >
+> >       vfio_pci_core_cxl_release(vdev);
+> > +     vfio_pci_free_excluded_ranges(vdev);
+> >
+> >       mutex_destroy(&vdev->igate);
+> >       mutex_destroy(&vdev->ioeventfds_lock);
+> > diff --git a/drivers/vfio/pci/vfio_pci_priv.h
+> > b/drivers/vfio/pci/vfio_pci_priv.h
+> > index 4e7162234a2e..53544e0cbedf 100644
+> > --- a/drivers/vfio/pci/vfio_pci_priv.h
+> > +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> > @@ -44,6 +44,14 @@ ssize_t vfio_pci_config_rw_single(struct
+> > vfio_pci_core_device *vdev,  ssize_t vfio_pci_bar_rw(struct
+> vfio_pci_core_device *vdev, char __user *buf,
+> >                       size_t count, loff_t *ppos, bool iswrite);
+> >
+> > +/* A BAR sub-range kept off direct access; see
+> > +vfio_pci_core_add_excluded_range() */ struct vfio_pci_excluded_range {
+> > +     struct list_head        entry;
+> > +     u64                     start;
+> > +     u64                     size;
+> > +     u32                     flags;
+> > +};
 >=20
-> Alex
+> If we used struct range as a member here we could use range_contains() an=
+d
+> range_overlaps(), for finding a matching range below and avoiding conflic=
+ts
+> above (mind the inclusive end).
 
-Okay, I will drop this in v7 and update the cover letter as per new guidanc=
-e.
+Noted. I will update this.
+
+>=20
+> > +
+> >  #ifdef CONFIG_VFIO_PCI_VGA
+> >  ssize_t vfio_pci_vga_rw(struct vfio_pci_core_device *vdev, char __user=
+ *buf,
+> >                       size_t count, loff_t *ppos, bool iswrite); diff
+> > --git a/drivers/vfio/pci/vfio_pci_rdwr.c
+> > b/drivers/vfio/pci/vfio_pci_rdwr.c
+> > index 7f14dd46de17..93823c6391f6 100644
+> > --- a/drivers/vfio/pci/vfio_pci_rdwr.c
+> > +++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+> > @@ -198,6 +198,57 @@ ssize_t vfio_pci_core_do_io_rw(struct
+> > vfio_pci_core_device *vdev, bool test_mem,  }
+> > EXPORT_SYMBOL_GPL(vfio_pci_core_do_io_rw);
+> >
+> > +/*
+> > + * Access @count bytes of @bar at @pos, walking the BAR's excluded
+> > +ranges in
+> > + * order: a range excluded for this direction reads as -1 and drops
+> > +writes,
+> > + * and the bytes around it reach the device. The MSI-X table is one
+> > +such
+> > + * range, and a BAR can hold several, for example the MSI-X table and
+> > +a CXL
+> > + * HDM decoder block.
+> > + */
+> > +static ssize_t vfio_pci_bar_do_io_rw(struct vfio_pci_core_device *vdev=
+,
+> > +                                  int bar, bool test_mem, void __iomem=
+ *io,
+> > +                                  char __user *buf, loff_t pos,
+> > +                                  size_t count, bool iswrite,
+> > +                                  enum vfio_pci_io_width max_width) {
+> > +     u32 want =3D iswrite ? VFIO_PCI_EXCLUDE_WRITE :
+> VFIO_PCI_EXCLUDE_READ;
+> > +     struct vfio_pci_excluded_range *range;
+> > +     ssize_t done =3D 0;
+> > +     ssize_t ret;
+> > +
+> > +     list_for_each_entry(range, &vdev->excluded_ranges[bar], entry) {
+> > +             u64 end =3D range->start + range->size;
+> > +             size_t chunk;
+> > +
+> > +             if (!(range->flags & want) || end <=3D pos)
+> > +                     continue;
+> > +             if (range->start >=3D pos + count)
+> > +                     break;
+> > +
+> > +             /* Up to the end of this range; do_io_rw() fills it. */
+> > +             chunk =3D min_t(u64, count, end - pos);
+> > +             ret =3D vfio_pci_core_do_io_rw(vdev, test_mem, io, buf, p=
+os, chunk,
+> > +                                          range->start, end, iswrite,
+> > +                                          max_width);
+> > +             if (ret < 0)
+> > +                     return done ?: ret;
+> > +
+> > +             done +=3D ret;
+> > +             pos +=3D ret;
+> > +             buf +=3D ret;
+> > +             count -=3D ret;
+> > +             if (!count)
+> > +                     return done;
+> > +     }
+> > +
+> > +     ret =3D vfio_pci_core_do_io_rw(vdev, test_mem, io, buf, pos, coun=
+t, 0, 0,
+> > +                                  iswrite, max_width);
+> > +     if (ret < 0)
+> > +             return done ?: ret;
+> > +
+> > +     return done + ret;
+> > +}
+>=20
+> This is mixing fault semantics.  Currently on fault we return the errno,
+> regardless of work that's been done.  With this, we potentially return a =
+short
+> read/write on fault if later errors occur.  That short return is not nece=
+ssarily
+> representative of the length of the actual operation, a partial operation=
+ in the
+> last call to core_do_io_rw is discarded.
+>=20
+> Therefore, I think both of the above (ret < 0) return branches should jus=
+t
+> return ret, not the potentially incorrect done value.
+>=20
+
+Okay, I will update this.
+
+>=20
+> > +
+> >  ssize_t vfio_pci_bar_rw(struct vfio_pci_core_device *vdev, char __user=
+ *buf,
+> >                       size_t count, loff_t *ppos, bool iswrite)  { @@
+> > -256,13 +307,15 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_core_device
+> *vdev, char __user *buf,
+> >               }
+> >       }
+> >
+> > -     if (bar =3D=3D vdev->msix_bar) {
+> > -             x_start =3D vdev->msix_offset;
+> > -             x_end =3D vdev->msix_offset + vdev->msix_size;
+> > -     }
+> > -
+> > -     done =3D vfio_pci_core_do_io_rw(vdev, res->flags & IORESOURCE_MEM=
+,
+> io, buf, pos,
+> > -                                   count, x_start, x_end, iswrite, max=
+_width);
+> > +     if (bar =3D=3D PCI_ROM_RESOURCE)
+> > +             done =3D vfio_pci_core_do_io_rw(vdev, res->flags &
+> IORESOURCE_MEM,
+> > +                                           io, buf, pos, count, x_star=
+t,
+> > +                                           x_end, iswrite, max_width);
+> > +     else
+> > +             done =3D vfio_pci_bar_do_io_rw(vdev, bar,
+> > +                                          res->flags & IORESOURCE_MEM,=
+ io,
+> > +                                          buf, pos, count, iswrite,
+> > +                                          max_width);
+>=20
+> Seems like the wrong refactor to add a ROM specific branch, we should
+> probably instead precede the excluded range loop by a test for a standard=
+ BAR
+> and non-empty excluded range list.  That might mean the new function is
+> reduced to only the excluded range handling and all non-excluded range
+> handling falls through to a common call to the core function.
+
+Okay, for v7, only a standard BAR with ranges walks the list; everything
+else falls through to the one vfio_pci_core_do_io_rw() call.
+
+>=20
+> >
+> >       if (done >=3D 0)
+> >               *ppos +=3D done;
+> > diff --git a/include/linux/vfio_pci_core.h
+> > b/include/linux/vfio_pci_core.h index 7f3a2bcb5830..70acb03d466e
+> > 100644
+> > --- a/include/linux/vfio_pci_core.h
+> > +++ b/include/linux/vfio_pci_core.h
+> > @@ -162,6 +162,13 @@ struct vfio_pci_core_device {
+> >       struct notifier_block   nb;
+> >       struct rw_semaphore     memory_lock;
+> >       struct list_head        dmabufs;
+> > +     /*
+> > +      * Excluded BAR sub-ranges, one list per BAR, sorted by start and=
+ not
+> > +      * overlapping. The lists are filled only while the device is bei=
+ng
+> > +      * opened and emptied in vfio_pci_core_disable(); every reader ru=
+ns on
+> > +      * an open device in between, so readers take no lock.
+> > +      */
+>=20
+> I'll stop noting these, but I expect all gratuitous AI comments to be rem=
+oved
+> by default and evaluated as a human whether a comment is warranted.  AI
+> assistance doesn't relieve authors of the responsibility to perform a tho=
+rough
+> human self review.  /dismount-soapbox Thanks,
+
+Agreed. Sorry for this churn. For v7, I will recheck all the comments in th=
+e patches
+before posting.
 
 Thanks,
 Manish
+
+>=20
+> Alex
+>=20
+> > +     struct list_head        excluded_ranges[PCI_STD_NUM_BARS];
+> >  };
+> >
+> >  enum vfio_pci_io_width {
+> > @@ -172,6 +179,19 @@ enum vfio_pci_io_width {  };
+> >
+> >  /* Will be exported for vfio pci drivers usage */
+> > +/*
+> > + * A provider can keep a BAR sub-range off the direct guest path,
+> > +reached only
+> > + * through its own trap. The flags select which paths are excluded:
+> > +mmap, and
+> > + * region read and write (an excluded read fills -1, an excluded
+> > +write is
+> > + * dropped).
+> > + */
+> > +#define VFIO_PCI_EXCLUDE_MMAP        BIT(0)
+> > +#define VFIO_PCI_EXCLUDE_READ        BIT(1)
+> > +#define VFIO_PCI_EXCLUDE_WRITE       BIT(2)
+> > +
+> > +int vfio_pci_core_add_excluded_range(struct vfio_pci_core_device *vdev=
+,
+> int bar,
+> > +                                  u64 start, u64 size, u32 flags);
+> > +
+> >  int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vde=
+v,
+> >                                     unsigned int type, unsigned int sub=
+type,
+> >                                     const struct vfio_pci_regops *ops,
+
