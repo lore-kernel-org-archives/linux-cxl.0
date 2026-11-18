@@ -1,77 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795019503;
-	b=WSnEVKoliGaT3JAYaPEuAWbzeRQ7Q7djHIqXPBz9le7rV4ebxZs841+Diz19uUNozTXr
-	 URN1CVGzg1teZdnXoOdCG4R5pudH2+OjKpxS/s5OR9sdRFzACG5CAijjDg8y+UMaZS42R
-	 bZr7ZFSsb4tKqu9zgvrAjjOzcWwqW72xR4fIryFpB+plPv0cxyJzQmqu++dUVTBRuSwAb
-	 nURYrk2c5670yzVFyk0RjYTke0dUnevlRvyL725XkZXkKQo12t6QRShtf0iSv4yl+aTph
-	 JEikbo1e1/Jxfp+dSmq9RXusF47p2vzZdzM2heyb7xYKibu5XKEl6aX1TEIYIAcM3bQ==
+	t=1795019727;
+	b=vB66bZENICWDcBD1yBi7rkrGsYmTNvKhMnxXzwUKT+fMRxQqNQ1UfejDPgo0aZIMti5Q
+	 DxXc0rpFEIgDmBFr65jzXY0uYBfSH6HNh1zYWCLfOIrkvjO0gPE4A8eOg91on+FsYX3bS
+	 bMM9WSrzYjtWreVnnY7UfDIFzXAwXwycy/gg/RWy1p0SNBvRnWBv/vmxDez18pdRv2whF
+	 DJ4VRca9bxja+k3RPVA5Wjelg4qp6N/Fro+L83oEW3msG8q6IwcyH+I8eN/0SANh2uFw0
+	 WSeicc5G4C/MmjgASAE5QaPKhDhRF9LkRysD0T6Tnn09H6EucHjYvWrDyKWWiU0Pcdw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795019503;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795019727;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:User-Agent;
-	bh=GTTDqGB1ZYi6FmuXWjxbID5pkwb1cNx24NJVXxfGic4=;
-	b=zCHHNs2/7CqHQpW7LCM0Kgur9OGwstDwXZmCMImKCEnp1bk3om1yQaFl4WrE7sH/4WND
-	 q/LVX7X6gwcngPIEZbRbIw7acdKFc18sYjt7nTcFf0boQ5Tjb5emyw0sgYKU/tWI9yIXL
-	 IIAR4Z3OdC0xPaCsQcbQEZUg1SySSxkTIDCo5XV0mLUU8Liff/tGogxcZ2L3/5ufSdg33
-	 3lM6omJcxzy1aC6PeH7/dy5iDBcczEdDAy9iTP0ysTRrFC/jHx4Y4rEG7y9AgvCYW5zbr
-	 /dwqBYgLoKt6O5A7mCa6G1tZ3f16WEezr6RDwmIKLUdiX6ldzCK6RX5tf18hPC7DBZw==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=kG0ySAZAGtYkbIvxgTKMCCfHCqdTfnuBx/JWOPtX3wg=;
+	b=Ku0+xY0s3I8KA0IfbIfLAq6VM1qV9jooFtNHlTlDy1Y24m3ukzmmcpMy82fhptGm7Lvw
+	 RVe/POg+ajMNHmxKAeb19AB7sx5SWsNq1Pa0/O17fTwx+oIHg5a9EHaSWkvNG3s8Lt/nN
+	 HhliOdejgY3ugCVRlMqZu9cmAkn7+1htQayJNqrMX8kAbG8bixgZr2DQvcR16oYv8+94e
+	 MjRF3akq6aw/S/Eq92cHfjuH3dmtQg6cq9ZuBRCHELpsF8FLloxxMhx3A3C4j+bVkqZwK
+	 ul0gKC/vav1krfweQwgIDFf4EglD/f+Uiq4dyuaZfMGqyDeLOwGMhfHobs4WxvaAs/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nZQ+SJ36;
-	arc=none smtp.remote-ip=198.175.65.13
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="igDSC/hA";
+	arc=none smtp.remote-ip=192.198.163.9
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B616F606A7DF
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 16:31:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B616F606A7DF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2B2606A31C
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 16:35:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C2B2606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nZQ+SJ36
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=igDSC/hA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795019502; x=1826555502;
-  h=date:from:to:cc:subject:message-id;
-  bh=iCXjt9OaIIl0bz4ovKBkDC18/RbNykN+uiL5UkAoFH4=;
-  b=nZQ+SJ36NNiM22ocFyn4nw/cNleTl7MLAxMuRCqRRYRb4f0cR8J9xisT
-   fYkAde0Ol4Zj2AhvpMbmV+cBOom6WiVIEb2pWiy53sKhqA2Ri2XK22WDt
-   fL3OiHnbKpN7mRaRo6qWGKRzmWG4yTM3wK3DCyoIWMsIkB3ovTPVvyOLa
-   P4Zg51lXkgo+feqRO1iX6lCLxiP3YgF1GRB97ELhf0LR58kAKuxPRHBep
-   LHKfRg+pz8EmZjWQ8VSCFfE29ccJ+ayzmcrk7vpXmsqwzcoNNDRPOktx+
-   lTbSFyBB0OerW1xb7outjRumFlVz0jXA7cXi7NMKT6k2x/WG7afUKaRGR
-   Q==;
-X-CSE-ConnectionGUID: AxFz11woS5GFKvsxOATvHg==
-X-CSE-MsgGUID: CsQGsb3oQQqv4MmeqW8lxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3722495"
+  t=1795019727; x=1826555727;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tPhwvHp3xiIkm4ayESPfRzMmSZfNwHFGJLlzSnv0eEQ=;
+  b=igDSC/hA91EgzCUyyVG5FqL7owKJ5mgQX3973tssBg19qvzHX7xUU8cW
+   T5IG2pRo8cVo0DmOiDChSdEgQhxr5oek3EcfTDZWEwDPQ41zU+tcSXkS6
+   OJssREgo7TKipNvawWB3t/uOdNHH9utynpO/WmfphtUIRjrOFSMhN/vuj
+   yxaxbj6MTxEPpBE+L54MtRVrwUHHBM6jdzAJ7HNBPetaULrqRlvaX6ARG
+   5+GGdfUTeAaP0eFfbvbKAS7qevvvSq9Rg7plh4dtRob5gt0L80Vnwmo3v
+   omUTGANrf6Vu7jDhBLnusLiy8eOSKEsphM6ncH0VEzmTOzTEPnHB+SPVx
+   w==;
+X-CSE-ConnectionGUID: 8AGaOk/sRqm1kuQSXd4jmQ==
+X-CSE-MsgGUID: g7xszPKKS3KA7/B1jVL0AQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3720972"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3722495"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 08:31:41 -0800
-X-CSE-ConnectionGUID: FBHECtpbRlavbmYWbUvl3w==
-X-CSE-MsgGUID: ZWdF1MnFRmyX/AgMQoPxCg==
+   d="scan'208";a="3720972"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 08:35:25 -0800
+X-CSE-ConnectionGUID: txKfZ5L0SKed90og67xCTA==
+X-CSE-MsgGUID: /dy/8OPdTq2jdiY5MhioTw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10191481"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 18 Nov 2026 08:31:40 -0800
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xTiZN-00000001Dre-2u8c;
-	Wed, 18 Nov 2026 16:31:37 +0000
-Date: Thu, 19 Nov 2026 00:31:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 8c752d49fd6c06e0e13c6b9cdeebe458c267bcaf
-Message-ID: <20261119003121.2TkAeRTe-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+   d="scan'208";a="12127079"
+Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.109.2]) ([10.125.109.2])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 08:35:25 -0800
+Message-ID: <ef114394-23fc-45ae-8631-b1abd6ec88cb@intel.com>
+Date: Wed, 18 Nov 2026 09:35:23 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -80,223 +71,145 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] Documentation/ndctl-load-keys: document CXL
+ passphrase key recovery
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20261024011706.552346-1-alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20261024011706.552346-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 8c752d49fd6c06e0e13c6b9cdeebe458c267bcaf  Merge branch 'for-7.5/cxl-carry-interleave' into cxl-for-next
 
-elapsed time: 1125m
 
-configs tested: 203
-configs skipped: 12
+On 10/23/26 6:17 PM, Alison Schofield wrote:
+> Kernels prior to Linux 7.3 use a different serial number format
+> than ndctl when looking up CXL nvdimm passphrase keys, preventing
+> auto-unlock after reboot.
+> 
+> Document how to recover affected devices on unfixed kernels and
+> migrate existing keys after upgrading to a fixed kernel.
+> 
+> Kernel commit in v7.3: https://git.kernel.org/linus/8a80d3d65cd0
+> 
+> Closes: https://github.com/pmem/ndctl/issues/299
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-tested configs:
-alpha                              allnoconfig    gcc-16.2.0
-alpha                             allyesconfig    gcc-16.2.0
-alpha                                defconfig    gcc-16.2.0
-arc                               allmodconfig    clang-24
-arc                               allmodconfig    gcc-16.2.0
-arc                                allnoconfig    gcc-16.2.0
-arc                               allyesconfig    clang-24
-arc                               allyesconfig    gcc-16.2.0
-arc                                  defconfig    gcc-16.2.0
-arc                   randconfig-1000-20261118    gcc-10.5.0
-arc                   randconfig-1001-20261118    gcc-10.5.0
-arm                                allnoconfig    clang-17
-arm                                allnoconfig    gcc-16.2.0
-arm                               allyesconfig    clang-24
-arm                               allyesconfig    gcc-16.2.0
-arm                                  defconfig    gcc-16.2.0
-arm                           ixp4xx_defconfig    gcc-16.2.0
-arm                   randconfig-1000-20261118    gcc-10.5.0
-arm                   randconfig-1001-20261118    gcc-10.5.0
-arm                   randconfig-1002-20261118    gcc-10.5.0
-arm                   randconfig-1003-20261118    gcc-10.5.0
-arm                         realview_defconfig    clang-17
-arm                         spear3xx_defconfig    clang-24
-arm64                             allmodconfig    clang-24
-arm64                              allnoconfig    gcc-16.2.0
-arm64                                defconfig    gcc-16.2.0
-arm64                 randconfig-1000-20261118    gcc-16.2.0
-arm64                 randconfig-1001-20261118    gcc-16.2.0
-arm64                 randconfig-1002-20261118    gcc-16.2.0
-arm64                 randconfig-1003-20261118    gcc-16.2.0
-csky                              allmodconfig    gcc-16.2.0
-csky                               allnoconfig    gcc-16.2.0
-csky                                 defconfig    gcc-16.2.0
-csky                  randconfig-1000-20261118    gcc-16.2.0
-csky                  randconfig-1001-20261118    gcc-16.2.0
-hexagon                           allmodconfig    gcc-16.2.0
-hexagon                            allnoconfig    clang-24
-hexagon                            allnoconfig    gcc-16.2.0
-hexagon                              defconfig    gcc-16.2.0
-hexagon               randconfig-1000-20261118    clang-22
-hexagon               randconfig-1000-20261118    clang-24
-hexagon               randconfig-1001-20261118    clang-22
-i386                              alldefconfig    clang-17
-i386                              allmodconfig    clang-22
-i386                               allnoconfig    gcc-14
-i386                               allnoconfig    gcc-16.2.0
-i386                              allyesconfig    clang-22
-i386        buildonly-randconfig-1000-20261118    gcc-12
-i386        buildonly-randconfig-1001-20261118    gcc-12
-i386        buildonly-randconfig-1002-20261118    gcc-12
-i386        buildonly-randconfig-1003-20261118    gcc-12
-i386        buildonly-randconfig-1004-20261118    gcc-12
-i386        buildonly-randconfig-1005-20261118    gcc-12
-i386                                 defconfig    gcc-16.2.0
-i386                  randconfig-1000-20261118    clang-22
-i386                  randconfig-1001-20261118    clang-22
-i386                  randconfig-1002-20261118    clang-22
-i386                  randconfig-1003-20261118    clang-22
-i386                  randconfig-1004-20261118    clang-22
-i386                  randconfig-1005-20261118    clang-22
-i386                  randconfig-1006-20261118    clang-22
-i386                  randconfig-1007-20261118    clang-22
-i386                  randconfig-1008-20261118    clang-22
-i386                  randconfig-1009-20261118    clang-22
-i386                  randconfig-1010-20261118    clang-22
-i386                  randconfig-1011-20261118    clang-22
-i386                  randconfig-1012-20261118    clang-22
-i386                  randconfig-1013-20261118    clang-22
-loongarch                         allmodconfig    clang-19
-loongarch                         allmodconfig    clang-24
-loongarch                          allnoconfig    clang-20
-loongarch                          allnoconfig    gcc-16.2.0
-loongarch                            defconfig    clang-24
-loongarch             randconfig-1000-20261118    clang-22
-loongarch             randconfig-1000-20261118    gcc-16.2.0
-loongarch             randconfig-1001-20261118    clang-20
-loongarch             randconfig-1001-20261118    clang-22
-m68k                              allmodconfig    gcc-16.2.0
-m68k                               allnoconfig    gcc-16.2.0
-m68k                              allyesconfig    clang-24
-m68k                              allyesconfig    gcc-16.2.0
-m68k                                 defconfig    clang-24
-m68k                        m5249evb_defconfig    gcc-16.2.0
-m68k                         stmark2_defconfig    clang-24
-microblaze                        alldefconfig    gcc-16.2.0
-microblaze                         allnoconfig    gcc-16.2.0
-microblaze                        allyesconfig    gcc-16.2.0
-microblaze                           defconfig    clang-24
-mips                              allmodconfig    gcc-16.2.0
-mips                               allnoconfig    gcc-16.2.0
-mips                              allyesconfig    gcc-16.2.0
-mips                       bmips_stb_defconfig    gcc-16.2.0
-mips                 malta_qemu_32r6_defconfig    clang-24
-mips                          rt305x_defconfig    clang-24
-nios2                             allmodconfig    clang-20
-nios2                             allmodconfig    gcc-11.5.0
-nios2                              allnoconfig    clang-24
-nios2                                defconfig    clang-24
-nios2                 randconfig-1000-20261118    clang-22
-nios2                 randconfig-1000-20261118    gcc-11.5.0
-nios2                 randconfig-1001-20261118    clang-22
-nios2                 randconfig-1001-20261118    gcc-8.5.0
-openrisc                          allmodconfig    clang-20
-openrisc                          allmodconfig    gcc-16.2.0
-openrisc                           allnoconfig    clang-24
-openrisc                             defconfig    gcc-16.2.0
-openrisc                     or1ksim_defconfig    gcc-16.2.0
-parisc                            allmodconfig    gcc-16.2.0
-parisc                             allnoconfig    clang-24
-parisc                            allyesconfig    clang-17
-parisc                            allyesconfig    gcc-16.2.0
-parisc                               defconfig    gcc-16.2.0
-parisc                randconfig-1000-20261118    gcc-8.5.0
-parisc                randconfig-1001-20261118    gcc-8.5.0
-parisc64                             defconfig    clang-24
-powerpc                     adder875_defconfig    clang-17
-powerpc                           allmodconfig    gcc-16.2.0
-powerpc                            allnoconfig    clang-24
-powerpc                      asp8347_defconfig    clang-24
-powerpc                       katmai_defconfig    clang-24
-powerpc                   mpc866_ads_defconfig    clang-17
-powerpc                       pasemi_defconfig    clang-24
-powerpc               randconfig-1000-20261118    gcc-8.5.0
-powerpc               randconfig-1001-20261118    gcc-8.5.0
-powerpc                      tqm8555_defconfig    gcc-16.2.0
-powerpc64             randconfig-1000-20261118    gcc-8.5.0
-powerpc64             randconfig-1001-20261118    gcc-8.5.0
-riscv                             allmodconfig    clang-24
-riscv                              allnoconfig    clang-24
-riscv                             allyesconfig    clang-24
-riscv                                defconfig    gcc-16.2.0
-riscv                 randconfig-1000-20261118    gcc-11.5.0
-riscv                 randconfig-1001-20261118    gcc-11.5.0
-s390                              allmodconfig    clang-17
-s390                              allmodconfig    clang-24
-s390                               allnoconfig    clang-24
-s390                              allyesconfig    gcc-16.2.0
-s390                                 defconfig    gcc-16.2.0
-s390                  randconfig-1000-20261118    gcc-11.5.0
-s390                  randconfig-1001-20261118    gcc-11.5.0
-sh                                allmodconfig    gcc-16.2.0
-sh                                 allnoconfig    clang-24
-sh                                allyesconfig    clang-17
-sh                                allyesconfig    gcc-16.2.0
-sh                                   defconfig    gcc-14
-sh                         edosk7760_defconfig    gcc-16.2.0
-sh                              espt_defconfig    clang-17
-sh                           polaris_defconfig    clang-17
-sh                    randconfig-1000-20261118    gcc-11.5.0
-sh                    randconfig-1001-20261118    gcc-11.5.0
-sh                    rts7751r2dplus_defconfig    clang-17
-sh                              sh03_defconfig    clang-24
-sh                   sh7785lcr_32bit_defconfig    clang-17
-sh                             titan_defconfig    gcc-16.2.0
-sparc                              allnoconfig    clang-24
-sparc                                defconfig    gcc-16.2.0
-sparc64                           allmodconfig    clang-20
-sparc64                              defconfig    gcc-14
-um                                allmodconfig    clang-17
-um                                 allnoconfig    clang-24
-um                                allyesconfig    gcc-16.2.0
-um                                   defconfig    gcc-14
-um                              i386_defconfig    gcc-14
-um                            x86_64_defconfig    gcc-14
-x86_64                            allmodconfig    clang-22
-x86_64                             allnoconfig    clang-24
-x86_64                            allyesconfig    clang-22
-x86_64      buildonly-randconfig-1000-20261118    gcc-14
-x86_64      buildonly-randconfig-1001-20261118    gcc-14
-x86_64      buildonly-randconfig-1002-20261118    gcc-14
-x86_64      buildonly-randconfig-1003-20261118    gcc-14
-x86_64      buildonly-randconfig-1004-20261118    gcc-14
-x86_64      buildonly-randconfig-1005-20261118    gcc-14
-x86_64                               defconfig    gcc-14
-x86_64                                   kexec    clang-22
-x86_64                randconfig-1000-20261118    gcc-14
-x86_64                randconfig-1001-20261118    gcc-14
-x86_64                randconfig-1002-20261118    gcc-14
-x86_64                randconfig-1003-20261118    gcc-14
-x86_64                randconfig-1004-20261118    gcc-14
-x86_64                randconfig-1005-20261118    gcc-14
-x86_64                randconfig-1006-20261118    gcc-14
-x86_64                randconfig-1007-20261118    gcc-14
-x86_64                randconfig-1008-20261118    gcc-14
-x86_64                randconfig-1009-20261118    gcc-14
-x86_64                randconfig-1010-20261118    gcc-14
-x86_64                randconfig-1011-20261118    gcc-14
-x86_64                randconfig-1012-20261118    gcc-14
-x86_64                randconfig-1013-20261118    gcc-14
-x86_64                randconfig-1014-20261118    gcc-14
-x86_64                randconfig-1015-20261118    gcc-14
-x86_64                randconfig-1016-20261118    gcc-14
-x86_64                randconfig-1017-20261118    gcc-14
-x86_64                                rhel-9.4    clang-22
-x86_64                            rhel-9.4-bpf    gcc-14
-x86_64                           rhel-9.4-func    clang-22
-x86_64                     rhel-9.4-kselftests    clang-22
-x86_64                          rhel-9.4-kunit    gcc-14
-x86_64                            rhel-9.4-ltp    gcc-14
-x86_64                           rhel-9.4-rust    clang-22
-xtensa                             allnoconfig    clang-24
-xtensa                            allyesconfig    clang-20
-xtensa                            allyesconfig    gcc-16.2.0
+> ---
+>  Documentation/ndctl/ndctl-load-keys.txt | 96 +++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+> 
+> diff --git a/Documentation/ndctl/ndctl-load-keys.txt b/Documentation/ndctl/ndctl-load-keys.txt
+> index 70db57441820..ddb324830e05 100644
+> --- a/Documentation/ndctl/ndctl-load-keys.txt
+> +++ b/Documentation/ndctl/ndctl-load-keys.txt
+> @@ -43,6 +43,102 @@ OPTIONS
+>  	then this option will override (but not overwrite) anything that is
+>  	in the file.
+>  
+> +CXL SERIAL NUMBER KEY MISMATCH
+> +------------------------------
+> +This section applies to passphrase-protected CXL NVDIMMs that fail to
+> +auto-unlock after reboot on kernels without commit 8a80d3d65cd0, or that
+> +fail to auto-unlock after upgrading to a kernel with that fix. It does
+> +not apply to NVDIMMs without a passphrase or devices that unlock
+> +normally.
+> +
+> +Kernels without the fix look up passphrase keys using hexadecimal serial
+> +numbers, while ndctl names them using decimal. The mismatch affects
+> +serial numbers of 10 or greater. The fix, included in Linux 7.3 and some
+> +stable kernels, uses unsigned decimal for both. Devices with serial
+> +number bit 63 set may need their saved keys migrated after upgrading.
+> +
+> +The examples below use nmem0 for the affected nvdimm and the default
+> +key path:
+> +[subs="attributes"]
+> +----
+> +# keydir={ndctl_keysdir}
+> +----
+> +
+> +=== Recovery on a kernel without the fix
+> +
+> +Confirm that the device is locked:
+> +----
+> +# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
+> +locked
+> +----
+> +
+> +If it reports 'disabled', the device has no passphrase enrolled and this
+> +is a different problem. If it reports 'unlocked', there is nothing to
+> +recover.
+> +
+> +Check whether the device is affected by the serial number mismatch.
+> +Show the decimal 'id' that ndctl uses to name the key, and the
+> +hexadecimal serial number of the CXL memdev that backs nmem0:
+> +----
+> +# id=$(cat /sys/bus/nd/devices/nmem0/cxl/id)
+> +# prov=$(cat /sys/bus/nd/devices/nmem0/cxl/provider)
+> +# serial=$(cat /sys/bus/cxl/devices/${prov}/../serial)
+> +# echo "$id $serial"
+> +----
+> +
+> +If the 'id' is 10 or greater, or is negative, the device is affected.
+> +Confirm that the key blob ndctl saved exists:
+> +----
+> +# ls "${keydir}/nvdimm_${id}_$(hostname).blob"
+> +----
+> +
+> +If the blob is missing, this recovery procedure does not apply. Check
+> +that the correct key directory and hostname are being used.
+> +
+> +Copy the blob to a name that uses the hexadecimal serial number,
+> +without its 0x prefix, so that 'load-keys' also installs the key the
+> +kernel requests:
+> +----
+> +# hexid=${serial#0x}
+> +# cp "${keydir}/nvdimm_${id}_$(hostname).blob" \
+> +     "${keydir}/nvdimm_${hexid}_$(hostname).blob"
+> +----
+> +
+> +Reload the keys and enable the dimm. 'load-keys' names each key after
+> +its blob file, so the copy is installed as the key the kernel requests:
+> +----
+> +# ndctl load-keys
+> +# ndctl enable-dimm nmem0
+> +# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
+> +unlocked
+> +----
+> +
+> +=== Migration after upgrading to a fixed kernel
+> +
+> +Only serial numbers with bit 63 set need to be migrated. Their blob is
+> +named by the negative 'id' that the previous kernel reported, while the
+> +fixed kernel requests the key by the unsigned decimal serial number.
+> +Other serial numbers require no migration. A hexadecimal copy made by
+> +the recovery procedure above is no longer used and may be removed.
+> +
+> +Copy the blob from the previous negative 'id' to the current 'id'.
+> +Shell arithmetic cannot portably represent these values, so compute the
+> +previous 'id' with bc(1), which must be installed:
+> +----
+> +# id=$(cat /sys/bus/nd/devices/nmem0/cxl/id)
+> +# oldid=$(echo "$id - 2^64" | bc)
+> +# cp "${keydir}/nvdimm_${oldid}_$(hostname).blob" \
+> +     "${keydir}/nvdimm_${id}_$(hostname).blob"
+> +----
+> +
+> +Reload the keys and enable the dimm:
+> +----
+> +# ndctl load-keys
+> +# ndctl enable-dimm nmem0
+> +# ndctl list -i -d nmem0 | jq -r '.[].dimms[0].security'
+> +unlocked
+> +----
+> +
+>  include::intel-nvdimm-security.txt[]
+>  
+>  include::../copyright.txt[]
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
