@@ -1,108 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.25
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795023846;
-	b=CM2OO47y4626QZjFfpqv9fEEyQQdfw7px2bSKGBHoioJma03K7p6HfwkJz7VSPyyo0ri
-	 bra8O1rBE4ePDY3d0flUqbz6rjOWHc19Q+WnIt6G6J8HlmpqtN9xU20pwRuMUs5axKQIz
-	 5kWm6r06l661YYBJg1pfXa8N5oUhOYpPhpxbjuXmz8jmKjimnO3lmUFoG4VVWcvBUAtW8
-	 uPvsuNVviVOwBnYeDBsZEznrv7JAg1c7iscP3FWZPu2q4FSvliodInJMR7iUbHypsOUP5
-	 ujH0o6l8CFfDcp1Zwmr+gwjfAqJfhJ1ko2HAOemCf7l7fFJvJ8N/GM8XKgBZQkOvdBw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795023846;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:
-	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=Bb8M6jvnGOaZ0wkjMl/FVxsXE9kqCNNJZOGSXFU/Ew4=;
-	b=asH8kKN7/PpYLa19/13TMWPQuA4CaLKXDsAUr+V1XspNVBGYNeJwWZDqLAwvSkSYcEPq
-	 da827njvHMZSpxknxIRWZTjkV5JflTPvFaEYSlATX7BiHdTh0SvH2Vl22x+V+XP65Kwds
-	 /+hBbEWo2x6tGa7TMmjFmVkggeJHiMYuOWBoCnG+oA2BlVFtYL6IVE4eDHT95rm2OyOE7
-	 FvFqvAYi0AFTwcB/8b6A+fmHVivDmu1wx4F368lIcQgFjgeIKEhHugqJJi4oOQWgAG4HY
-	 135gL4OGuWacrnofMXUY0u5R4vW5uzgjHKwzh9Ykxvumnv1Zh/vS5jQVT0R+dApIOfg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=zvms7zoJ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.25
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010025.outbound.protection.outlook.com [40.93.198.25])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795024831;
+	b=RngCS4zsoborE3Namhuph43XPbiEVz/qMqXsbGL4M/wMOHvaaNJKH3u4IEsrzV7qiUks
+	 zmm4j9D805E3nR4VaVOmJ6ueI2lMTLiU/yDUJ19eM/OyE2zDhXGR14WkKwLNnOVGNcdMx
+	 ibIZ5FjEybz7Am06HRjWrcQ9NDbfqI8amx0MW3o7SRi3iNfHbQ8Db4IaDmZE2T52FL7kL
+	 nfsVh69Li5/wpIhF/janxLOeyQON9ETpDu2lxbugqZZjQy1mEnSgI1P5MQfmCMUi7wO47
+	 CqwMoDMpE1xCI25h+zzKW5P7RbuQQ7SfS2wuLxuMtY3QoK60bcLCDKnGfL8IxEx5lXg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795024831;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=spGJBelfAvjQeObbOmrJaqjUIiuWKt1FXlZ//MJVCus=;
+	b=ddTary6gA2jLGqVvP4GZ4hTycHmJqSyt5Yat7rjgBmwFd6ZUY+2ng8FI/yVlUhTp0PCk
+	 vcC9Eso4efRTtqc/6CX+p9YDvR7fIqM7zl5fHsVOyJlFJQQqzx8uonXx7LiaJzCGBYPTb
+	 LRcSfiiyJ9lwAkxGqPgJNsQ+soR/mLiStTx1DN41qOFtj9Q+kO3eh96wmMlFQFA68nMbp
+	 FxFdlbGn6wEvw/B+FR6+8Y9Y3en/3Y23ZAAx/Jnxtwm/CuQh1//iYqPPeXlCR7FhtfR4e
+	 DjUWMuXlXW4ZK1owqUj75jIk8eQxxMecogRixuT5P1tgf52lTTYmRBsL95PBNZiYweQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UjKbSogk;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4A2606A31C
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 17:44:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C4A2606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741BC606A334
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 18:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=zvms7zoJ
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xidPpGnWngFDaKVYn6VS40HCnrgjgn7DXMwBU85o04+0Y5BA8ue/i72DwmUEYHbpHNJBFZrQoOxSj/uJThBt38fnZaWVEHvjO5+l98f9on2OuSY3xl1dyr2UTgggWMVmuLh5UlBErG+LUvG1rpLqwROeM4u+SSfnNaExy4RuPeWp1KTOVpDaResAehSq2u5DkQbJbL28XEYVjlsDUTS4uYfI2Elg6LrnP9Jlp07sCmR1KQerU+wKerU81RVwrfLvflGidsfXGL7nuWuLTVs18qfyrTNGi3nXdW3VCB3F5Kg+znCVl793pSk24Nm1bLbse2iTRYoi8alOmmDqzZvUpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bb8M6jvnGOaZ0wkjMl/FVxsXE9kqCNNJZOGSXFU/Ew4=;
- b=AqOwUaGqYW1lAzkgRyIWZR1rwICsEgbTeozOU0XKx2c38p0AjxdOcdjaArhKNA5YYACqZxMj0HgDd7hYQCLG3Q5XrG0u/THSW4dmuMUEPurONExBwBl0CyOxWAsLmxnzNT53TPEDz8zeLqFZfa8drfpPvnuxstzQTjFVsYg2MG2LKRxRP2CU/Leu9Afjxf+RSP+xV04pABaLUJoTmlBdebnHkN8Ap1pSilT3mQUdQjby4XhxrM+pPy1GkNkW1aOAZP6oUpVadtGErWvuAWxnmZ36/XMg9pJ5dXlzi7zDTWWudr4paS9SNv2pRN9QJXCV4KWJk0TeKjQoPc7vXZpm2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bb8M6jvnGOaZ0wkjMl/FVxsXE9kqCNNJZOGSXFU/Ew4=;
- b=zvms7zoJDHKW97PgdtyeE/JSX8R39CnWFhN/f0dzTcag+yAl9o3mR4KPK6rb8C2TCWzYMPP3IrIJOAYLoO+7jqFsE5yvds5vyPnJaOAR4E0HiyCMZpPp7cn57FTJfsgnW61eC1Cw2oVBQt/LHHjkFf/iFVvfF4uSPgOq7eVDuNY=
-Received: from CH2PR08CA0002.namprd08.prod.outlook.com (2603:10b6:610:5a::12)
- by PH7PR12MB8826.namprd12.prod.outlook.com (2603:10b6:510:26a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Wed, 18 Nov
- 2026 17:43:44 +0000
-Received: from BL6PEPF0006C3DE.namprd02.prod.outlook.com
- (2603:10b6:610:5a:cafe::2b) by CH2PR08CA0002.outlook.office365.com
- (2603:10b6:610:5a::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.13 via Frontend Transport; Wed,
- 18 Nov 2026 17:43:44 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF0006C3DE.mail.protection.outlook.com (10.167.249.233) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Wed, 18 Nov 2026 17:43:44 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Wed, 18 Nov
- 2026 11:43:43 -0600
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Wed, 18 Nov
- 2026 11:43:43 -0600
-Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.57 via Frontend Transport; Wed, 18 Nov 2026 11:43:42 -0600
-From: <alucerop@amd.com>
-To: <linux-cxl@vger.kernel.org>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
-	<jic23@kernel.org>, <alison.schofield@intel.com>, <vishal.l.verma@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [RFC 0/3] Type2 unwinding ordering change
-Date: Wed, 18 Nov 2026 19:14:28 +0000
-Message-ID: <20261118191431.21781-1-alucerop@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UjKbSogk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DDC1F000C7;
+	Wed, 18 Nov 2026 18:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795024831;
+	bh=spGJBelfAvjQeObbOmrJaqjUIiuWKt1FXlZ//MJVCus=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=UjKbSogk/iPgX2P/mOgljqIK6qLZ49dagI3A+ahOixDG0jjcYW8x2C2ZY9b8iCi5m
+	 /+vlgnCZWI6WynQ2QR7k9uxNTemQQTSug7jcyvhpn5EmYGW+0ffetib55RrnmF978w
+	 ToTVg9g4L46Ywwdd1kfUXJDBRkPgtVKnw4BPJom6ooxzbTdRU9hYGwOd5Tl5i6PP76
+	 lLJHW7gHfRqZ6itQ02qqNKeFPQsKaMWKcE71Kq8QvIqOe4mQ4J8+8p/JjrxhiGNDaI
+	 Mjp2QdH32uqKKEL0544+UZw4qoYGVfUzs5dz+d4UIDlVxPFB0Otl2RwqIPbCg8HvgN
+	 eHyUsjUVqbaYQ==
+Message-ID: <sashiko-outbox-221716@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC 1/3] cxl: add tracepoints to the unwinding code path
+Reply-To: sashiko-reviews@lists.linux.dev
+To: alucerop@amd.com, linux-cxl@vger.kernel.org
+In-Reply-To: <20261118191431.21781-2-alucerop@amd.com>
+References: <20261118191431.21781-1-alucerop@amd.com>
+ <20261118191431.21781-2-alucerop@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 18:00:30 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -111,215 +58,310 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0006C3DE:EE_|PH7PR12MB8826:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4f08cc9-11be-435a-a47e-08df459b7e02
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|376014|1800799024|82310400026|23010399003|261022075727099003|261102123227099003|261026121527099003|11063799006|5023799004|261028144727099003|56012099006|261026140227099003|261022105027099003|261021121427099003|261021123027099003|10067099003|261009223027099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	QMo82lXhkA272/CLPC52n7PBGuftmtMsV1cb9qmWU0Y5dWU8RPiYmrRxN6BZWAPadIrdwff5t/Uf569udMa4MAswXODOx4n2KUdS66R3r6Xzr3IsC2c1Nt/+o3FW3lDUsJwC3y4fs/oN4vkQOdoBiGq1F67UTQc/Va12xm+x1UCmdD627F5RogP6zXpgd/6Lj/G5fKHjbMntz5ZKt6BEdD+3TpuIzZtTQ10C2WyHl2lYBF0k0GdghTEWkR4csrlTezRH1GwubDgqW1dmDNfRbxQRd94cpLdf2n97usIPmNb1FlpP43WEBZq3Q0U7XxQ7fL4CANIjgSNwT2sYUrIFysDwVFerC9RP0K58iGwiBN5ktdXtKeVIy2Zsl0SRLg9DjQtnGxvgIBEbSvpi9F8Ubr4Yg6C8lNWzRj/EPWekNL+K5S9FC76IQwRYM/vABw+EVVPQXddk4eaR4u6FqmatVXfLxAXNKn6GIl+WHHDyH7XllHQ87x0O1U/ei155Om2U0qiYzKjeGXipgz8VfGu+yFfpT3grmZejbCTAZtVP4E8/pYb85kohv5i0W5qcfEKPpfnmrgNRkWgkWH7XpKps3lwkKZx55hpBWMW6lSJhaOrSrVBapTrhP3TQ9rCfFdShxYRtkZFdXAWhc+QKfX0RkIFE0ReOoaEYaEpVMrLgogHWIobgHtzSfcSFntaSAusqmw9gVbqeT+XVMxzjKjsgiw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(376014)(1800799024)(82310400026)(23010399003)(261022075727099003)(261102123227099003)(261026121527099003)(11063799006)(5023799004)(261028144727099003)(56012099006)(261026140227099003)(261022105027099003)(261021121427099003)(261021123027099003)(10067099003)(261009223027099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	5Jt/isYhsya5RmK63OrIE59XIoRI1yVBe/jptxw5hef7M/64B0sJ9/dt1EJKS7rkxz8yS/zY8xB6hLlZxWsuyQab8sM4eckMFG6XQLwlgUQjcEsI+ZgQWEqZA7QQNhIrCHDDTo2zYQi3apG0HTVqxlgmi41cTa+r/4UohTcxts2zbzzmqs3bA/xCpEU2ziy+tzc/nFwBC/TXzBqr3XDFs3gLYsBrS5tF8z1FWSlaA/K8bmuSoHaqBu4VXVJ20btaB+RGwkR2sMw4uSVloeiC/SfBz0Cxr8/xeldEfemHrhIbFeeh6nUsKwiBvNpyuJdwbW15O8Ry+mEK5D7mlfaYzQrC7FzuTa27vrTRRqf/MTsY41nmaBSmZIuFJ78aY4KpZeRinlThoZP1nsu7z3p1D/NLEQy8AD4pdeFsJigmtc92sXu2Ca3mtfg/Fl2s43on
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2026 17:43:44.5798
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4f08cc9-11be-435a-a47e-08df459b7e02
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0006C3DE.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8826
 
-From: Alejandro Lucero <alucerop@amd.com>
+Thank you for your contribution! Sashiko AI review found 3 potential
+issues to consider:
+- [High] cxl: use-after-free in unwinding tracepoints after kfree() and
+  put_device()
+- [Low] cxl: unmatched start tracepoint on early return in
+  __cxl_decoder_detach()
+- [Low] cxl: missing multi-read guards and convention defects in
+  tracepoint headers
+--
 
-This RFC requires more work mainly with the tracepoints and surely with
-documentation which, I hope, will get better with help from reviewers.
+commit a8dc1dbd6b765af2c082df04014f6b4732355967
+Author: Alejandro Lucero <alucerop@amd.com>
 
-Regarding the solution proposed for the described problem, I know there could
-be other solutions, so I'll be happy if someone comes with a better one, but
-my feeling is the current design based strongly on devm actions is adding
-complexity which would be desirable to reduce somehow.
+cxl: add tracepoints to the unwinding code path
 
+This commit adds start and done tracepoints under the cxl_unwinding trace
+system across CXL memdev, port, decoder, and region teardown paths.
 
-The summary
-===========
-Current Type2 support is safe but semantically wrong: a Type2 driver could not
-be (temporarily) aware about the CXL region (the one creating the Host physical
-range to work with) is not there anymore. It could because it depends on the
-unwinding triggering point which changes the ordering of CXL objects unwinding.
-It is safe because for current Type2 expectations the physical mapping will
-remain: those HDM decoders building up the path and programmed by the BIOS will
-not be reset.
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 787988e92965a..7333fe7594bd9 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+[ ... ]
+> @@ -27,9 +30,11 @@ static void cxl_memdev_release(struct device *dev)
+>  	struct cxl_memdev *cxlmd =3D to_cxl_memdev(dev);
+>  	struct device *parent =3D dev->parent;
+> =20
+> +	trace_cxl_memdev_release(cxlmd, "start");
+>  	ida_free(&cxl_memdev_ida, cxlmd->id);
+>  	kfree(cxlmd);
+>  	put_device(parent);
+> +	trace_cxl_memdev_release(cxlmd, "done");
+>  }
+> =20
+>  static char *cxl_memdev_devnode(const struct device *dev, umode_t *mode,=
+ kuid_t *uid,
+> @@ -752,9 +757,11 @@ static void cxl_memdev_unregister(void *_cxlmd)
+>  	struct cxl_memdev *cxlmd =3D _cxlmd;
+>  	struct device *dev =3D &cxlmd->dev;
+> =20
+> +	trace_cxl_memdev_unregister(cxlmd, "start");
+>  	cdev_device_del(&cxlmd->cdev, dev);
+>  	cxl_memdev_shutdown(dev);
+>  	put_device(dev);
+> +	trace_cxl_memdev_unregister(cxlmd, "done");
+>  }
+> =20
+>  static void detach_memdev(struct work_struct *work)
+> @@ -763,6 +770,7 @@ static void detach_memdev(struct work_struct *work)
+> =20
+>  	cxlmd =3D container_of(work, typeof(*cxlmd), detach_work);
+> =20
+> +	trace_cxl_memdev_detach(cxlmd, "start");
+>  	/*
+>  	 * When the creator of @cxlmd sets ->attach it indicates CXL operation
+>  	 * is required. In that case, @cxlmd detach escalates to parent device
+> @@ -772,7 +780,9 @@ static void detach_memdev(struct work_struct *work)
+>  		device_release_driver(cxlmd->dev.parent);
+>  	else
+>  		device_release_driver(&cxlmd->dev);
+> +
+>  	put_device(&cxlmd->dev);
+> +	trace_cxl_memdev_detach(cxlmd, "done");
+>  }
+> =20
+>  static struct lock_class_key cxl_memdev_key;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f3705ea44db77..9ccb0d1859047 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+[ ... ]
+> @@ -540,8 +544,10 @@ EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+> =20
+>  static void cxl_ep_release(struct cxl_ep *ep)
+>  {
+> +	trace_cxl_ep_release(ep->ep, "start");
+>  	put_device(ep->ep);
+>  	kfree(ep);
+> +	trace_cxl_ep_release(ep->ep, "done");
+>  }
+> =20
+>  static void cxl_ep_remove(struct cxl_port *port, struct cxl_ep *ep)
+> @@ -558,6 +564,7 @@ static void cxl_port_release(struct device *dev)
+>  	unsigned long index;
+>  	struct cxl_ep *ep;
+> =20
+> +	trace_cxl_port_release(dev, "start");
+>  	xa_for_each(&port->endpoints, index, ep)
+>  		cxl_ep_remove(port, ep);
+>  	xa_destroy(&port->endpoints);
+> @@ -571,6 +578,7 @@ static void cxl_port_release(struct device *dev)
+>  		put_device(dev->parent);
+>  		kfree(port);
+>  	}
+> +	trace_cxl_port_release(dev, "done");
+>  }
+> =20
+>  static ssize_t decoders_committed_show(struct device *dev,
+> @@ -1478,6 +1486,8 @@ static void delete_endpoint(void *data)
+>  	struct cxl_port *endpoint =3D cxlmd->endpoint;
+>  	struct device *host =3D port_to_host(endpoint);
+> =20
+> +	trace_cxl_delete_endpoint(&endpoint->dev, "start");
+> +
+>  	scoped_guard(device, host) {
+>  		if (host->driver && !endpoint->dead) {
+>  			devm_release_action(host, cxl_unlink_parent_dport, endpoint);
+> @@ -1488,6 +1498,7 @@ static void delete_endpoint(void *data)
+>  	}
+>  	put_device(&endpoint->dev);
+>  	put_device(host);
+> +	trace_cxl_delete_endpoint(&endpoint->dev, "done");
+>  }
+[ ... ]
+> @@ -2283,6 +2296,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, "CXL");
+> =20
+>  static void cxld_unregister(void *dev)
+>  {
+> +	trace_cxld_unregister(dev, "start");
+>  	if (is_endpoint_decoder(dev))
+>  		cxl_decoder_detach(NULL, to_cxl_endpoint_decoder(dev), -1,
+>  				   DETACH_INVALIDATE);
+> @@ -2290,6 +2304,7 @@ static void cxld_unregister(void *dev)
+>  		kill_regions(to_cxl_root_decoder(dev));
+> =20
+>  	device_unregister(dev);
+> +	trace_cxld_unregister(dev, "done");
+>  }
+> =20
+>  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld)
+[ ... ]
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a048bd5c06cb6..efbd53a37405d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+[ ... ]
+> @@ -2275,6 +2278,7 @@ __cxl_decoder_detach(struct cxl_region *cxlr,
+>  	lockdep_assert_held_write(&cxl_rwsem.region);
+> =20
+>  	if (!cxled) {
+> +		trace_cxl_decoder_detach(&cxlr->dev, "start");
+>  		p =3D &cxlr->params;
+> =20
+>  		if (pos >=3D p->interleave_ways) {
 
-While implementing multiPF support for Type2 I found this behaviour specially
-annoying because potential concurrency problems due to this non deterministic
-unwinding order of Type2 related objects. Adding to this the semantical problem
-which will likely be a bigger problem when adhoc Type2 regions are supported, I
-propose a change to how the current design works for the unwinding of objects
-for a Type2 device.
+[Severity: Low]
+Does emitting trace_cxl_decoder_detach(&cxlr->dev, "start") before
+checking pos and p->targets[pos] leave an unmatched "start" trace event
+when __cxl_decoder_detach() returns NULL early?
 
-I seize the necessity of explaining below the problem in detail for also
-proposing to add to the CXL kernel documentation such (adjusted) explanation for
-helping other to understand how the CXL subsystem works.
+When unregister_region() loops over p->interleave_ways calling
+detach_target(cxlr, i), any target already detached by cxld_unregister()
+has p->targets[pos] =3D=3D NULL and returns without a matching "done" event
+(as does the dev_WARN_ONCE() return later in __cxl_decoder_detach()).
 
+> @@ -2521,6 +2528,7 @@ static void cxl_region_release(struct device *dev)
+>  	struct cxl_root_decoder *cxlrd =3D cxlr->cxlrd;
+>  	int id =3D atomic_read(&cxlrd->region_id);
+> =20
+> +	trace_cxl_region_release(dev, "start");
+>  	/*
+>  	 * Try to reuse the recently idled id rather than the cached
+>  	 * next id to prevent the region id space from increasing
+> @@ -2536,6 +2544,7 @@ static void cxl_region_release(struct device *dev)
+>  out:
+>  	put_device(dev->parent);
+>  	kfree(cxlr);
+> +	trace_cxl_region_release(dev, "done");
+>  }
+> =20
+>  const struct device_type cxl_region_type =3D {
+> @@ -2565,6 +2574,7 @@ static void unregister_region(struct cxl_region *cx=
+lr)
+>  	struct cxl_region_params *p =3D &cxlr->params;
+>  	int i;
+> =20
+> +	trace_cxl_unregister_region(&cxlr->dev, "start");
+>  	xa_erase(&cxlrd->regions, cxlr->id);
+>  	device_del(&cxlr->dev);
+> =20
+> @@ -2580,6 +2590,7 @@ static void unregister_region(struct cxl_region *cx=
+lr)
+> =20
+>  	cxl_region_iomem_release(cxlr);
+>  	put_device(&cxlr->dev);
+> +	trace_cxl_unregister_region(&cxlr->dev, "done");
+>  }
+> =20
+>  static void endpoint_unregister_region(void *_cxlr)
+> @@ -2587,10 +2598,12 @@ static void endpoint_unregister_region(void *_cxl=
+r)
+>  	struct cxl_region *cxlr =3D _cxlr;
+>  	struct cxl_root_decoder *cxlrd =3D to_cxl_root_decoder(cxlr->dev.parent=
+);
+> =20
+> +	trace_cxl_endpoint_unregister_region(&cxlr->dev, "start");
+>  	guard(mutex)(&cxlrd->regions_lock);
+>  	if (xa_load(&cxlrd->regions, cxlr->id))
+>  		unregister_region(cxlr);
+>  	put_device(&cxlr->dev);
+> +	trace_cxl_endpoint_unregister_region(&cxlr->dev, "done");
+>  }
 
-The long story
-==============
-Current CXL subsystem relies on the linux kernel device abstraction for
-representing the different componentes building up the subsystem itself. The
-core or root devices of the subsystem are created from data coming through ACPI
-and are not discussed in this document, with the target being Type2 devices and
-the binding/unbinding of those physical devices into the CXL subsystem.
+[Severity: High]
+Do the "done" tracepoints in these release and unregister callbacks trigger
+a use-after-free?
 
-Along with logical devices come CXL drivers which allow to perform this
-binding/unbinding through usual kernel probe mechanisms. Moreover, current CXL
-subsystem design relies on devres (managed resources) kernel functionality
-linking actions to device unbinding from drivers helping with all the unwinding
-required.
+Each of these tracepoints reads dev->kobj.name (or cxlmd->dev.kobj.name),
+but the "done" call runs after kfree(), put_device(), or
+device_unregister() has already freed the object and its kobject name:
 
-When a device is unbound the kernel will first invoke those devm actions linked
-to the device and then, if there is no further references to the device kobject,
-it will be released or freed. This implies actions linked to the unbinding
-happen at the unbinding time but the final device release can happen at a later
-time. Furthermore, those actions can lead to other related objects to be removed
-as well as their existence depends on the current one being removed. For a Type2
-device doing CXL initialization, these are the objects created with order from
-left to right and with dependencies in the opposite direction:
+- cxl_ep_release() calls kfree(ep) after put_device(ep->ep), and then
+  trace_cxl_ep_release(ep->ep, "done") evaluates ep->ep from the freed
+  struct cxl_ep even when tracing is disabled.
+- cxl_memdev_release(), cxl_port_release(), and cxl_region_release() call
+  kfree() on the enclosing struct before the "done" tracepoint reads
+  dev->kobj.name.
+- cxl_memdev_unregister(), detach_memdev(), delete_endpoint(),
+  cxld_unregister(), unregister_region(), and
+  endpoint_unregister_region() drop the final device reference via
+  put_device() or device_unregister() before calling the "done"
+  tracepoint.
 
-  cxl_memdev --> endpoint (cxl_port) --> cxl_decoder --> cxl_region
+> diff --git a/drivers/cxl/cxl_memdev_tracepoints.h b/drivers/cxl/cxl_memde=
+v_tracepoints.h
+> new file mode 100644
+> index 0000000000000..6e8206cf178a0
+> --- /dev/null
+> +++ b/drivers/cxl/cxl_memdev_tracepoints.h
+> @@ -0,0 +1,58 @@
+[ ... ]
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl_unwinding
+> +
+> +#include <linux/tracepoint.h>
+> +#include "cxlmem.h"
+> +
+> +TRACE_EVENT(cxl_memdev_release,
+> +	    TP_PROTO(struct cxl_memdev *cxlmd, char *action),
+> +	    TP_ARGS(cxlmd, action),
+> +	    TP_STRUCT__entry(__string(devname, cxlmd->dev.kobj.name)
+> +			     __string(action, action)
+> +	    ),
+> +	    TP_fast_assign(__assign_str(devname);
+> +			   __assign_str(action);
+> +	    ),
+> +	    TP_printk("%s, %s", __get_str(devname), __get_str(action))
+> +);
+[ ... ]
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE cxl_memdev_tracepoints
+> +
+> +#include <trace/define_trace.h>
+> diff --git a/drivers/cxl/cxl_port_tracepoints.h b/drivers/cxl/cxl_port_tr=
+acepoints.h
+> new file mode 100644
+> index 0000000000000..faefa418d9684
+> --- /dev/null
+> +++ b/drivers/cxl/cxl_port_tracepoints.h
+> @@ -0,0 +1,91 @@
+[ ... ]
+> +TRACE_EVENT(schedule_cxl_memdev_detach,
+> +	    TP_PROTO(struct cxl_memdev *cxlmd),
+> +	    TP_ARGS(cxlmd),
+> +	    TP_STRUCT__entry(__string(devname, cxlmd->dev.kobj.name)),
+> +	    TP_fast_assign(__assign_str(devname);
+> +	    ),
+> +	    TP_printk("%s", __get_str(devname))
+> +);
+[ ... ]
+> +TRACE_EVENT(cxld_unregister,
+> +	    TP_PROTO(struct device *dev, char *action),
+[ ... ]
+> diff --git a/drivers/cxl/cxl_region_tracepoints.h b/drivers/cxl/cxl_regio=
+n_tracepoints.h
+> new file mode 100644
+> index 0000000000000..977eb45b6aad8
+> --- /dev/null
+> +++ b/drivers/cxl/cxl_region_tracepoints.h
+> @@ -0,0 +1,78 @@
+[ ... ]
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl_unwinding
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(cxl_decoder_detach,
+> +	    TP_PROTO(struct device *dev, char *action),
 
-A CXL region defines the Host physical range where the device memory (HDM) is
-mapped and someone, a client, will likely be using it somehow. For a Type2 this
-client is the Type2 "generic" driver, like a network driver using CXL for some
-kind of acceleration. For a Type3 the client could be the kernel memory
-management or some user space functionality using such a physical range through
-a dax device, with the driver taking over the device being the CXL core mem
-driver. Note this last driver is also used in Type2 for the cxl_memdev created,
-as next paragraph does explain.
+[Severity: Low]
+Should these new tracepoint headers wrap their definitions in a
+"#if !defined(...) || defined(TRACE_HEADER_MULTI_READ)" guard with #endif
+placed before #include <trace/define_trace.h>, like
+drivers/cxl/core/trace.h?
 
-The above object chain is created when a new memdev device is added to the
-kernel device core and such a device binding to the cxl_mem driver. This will
-trigger port(s) creation, at least one, a cxl_port device which will bind to
-the cxl_port driver when added to the kernel device core. For a decoder only a
-device is created (or as many as decoders advertises the Type2 device) but no
-binding as there is no decoder driver to bind to. Finally, the region device
-will be automatically created during initialization for current Type2 devices
-expectation (this is called autodiscovery but work for supporting adhoc region
-creation is in the way) and it will bind to the cxl_region driver. Once there
-exists a driver bound to a device, it can be unbound through the sysfs files
-created by default by the kernel device core.
+Also, schedule_cxl_memdev_detach and cxld_unregister do not start with the
+cxl_ subsystem prefix, the events read dev->kobj.name directly instead of
+using dev_name(dev) (and take char *action instead of const char *action),
+and the twelve identical (dev, action) TRACE_EVENT definitions could share
+a DECLARE_EVENT_CLASS in drivers/cxl/core/trace.h.
 
-
-Unwinding expectation
-=====================
-One could think a Type2 driver creating all those objects should control the
-unwinding of all of them, not necessarily because some driver action but maybe
-because the kernel signals the driver about that necessity. However, with the
-current design those objects can end up being unbound through different paths
-and not always the Type2 driver receives the signal or not in time to safely
-stop using the CXL pathway created:
-
- 1) The pci device owning the Type2 CXL "device" unbinds from its driver.
- 2) The type2 driver is removed triggering the pci device unbinding.
- 3) The cxl memdev is unbound from the cxl mem driver through sysfs.
- 4) The cxl endpoint port is unbound from the cxl port driver through systfs.
- 5) The cxl_region is unbound from the cxl region driver through sysfs.
- 8) Root port linked to the device is unbound frmo the cxl port through sysfs.
- 9) cxl acpi kernel module is removed.
-
-
-The first two cases go through the driver remove code path allowing a Type2
-aware driver to stop using the CXL region memory range while all the CXL
-objects are still there. Devm actions will start the CXL unwinding just after
-that code path is executed with the cxl_memdev object being the first one
-getting the unwinding signal, but the order here is not so relevant as there is
-no client using the CXL region after the driver exit code path execution.
-
-The next case makes ordering an issue. A cxl_memdev unbindng triggers several
-demv release/clean actions:
-
-        - cxl_detach_ep
-                - endpoint_unregister_region
-                - cxld_unregister
-                - schedule_detach_memdev
-
-As we can see, the chain-reaction leads to the endpoint unbinding, which in
-turn leads to such endpoint unregistered from a region and that implying the
-region unregistered itself and the related HDM decoder(s) "likely" being reset.
-The related memdev is also scheduled for detachment. What about the Type2 driver
-using the HPA linked to those objects?
-
-Currently a Type2 driver is signalled to unbind when its memdev is going to be
-removed. Following this previous chain, that happens when the memdev is going
-to detach, but not when its detachment is scheduled. As stated earlier, that
-implies the Type2 driver keeps using the mapping region after the objects
-creating it have already disappeared. Linking a devm action between endpoint
-and memdev is not so trivial and the locking issues arise quickly.
-
-Using sysfs unbind for endpoint and region objects leads to the same problem.
-Trying to change the devm chain could fix one case but easily destroying the
-proper unwinding for the other ones leaving objects which should not be there
-anymore.
-
-This problem is solvable changing the way some devm action are used for Type2:
-
-        1) Any object unbinding should make the memdev to be detached first,
-           implying the Type2 driver will be removed as the first step in the
-           unwinding chain.
-
-        2) Make explicit the removal of endpoint and decoder from the memdev
-           detachment.
-
-This solution implies to remove some of current devm actions linking region and
-endpoint port unbinding to cxl memdev detach without allowing other actions to
-happen independently of such memdev unbinding. Then some of those actions to
-be invoked at the right time within the general unwinding of the chain.
-
-For helping other people to study and visualize the problem, some tracepoints
-are added hopefully showing the current unwinding and the new one after the
-full patchset is applied.
-
-Another consequence coming with this change is the state of those objects linked
-to a memdev owned by a Type2 driver can only disappear through a specific order
-facilitating handling potential concurrency of related functionlities like
-supporting multipf where other non-PF0 functions will link to a cxl_memdev which
-can onbly disappear through a well-protected and deterministic path precluding
-problems with potential concurrency.
-
-Alejandro Lucero (3):
-  cxl: add tracepoints to the unwinding code path
-  cxl: make explicit removal of endpoint and decoder for Type2
-  Documentation/cxl: add document about Type2 binding and unbinding
-
- .../cxl/type2/cxl_type2_objects_unwinding.rst | 102 ++++++++++++++++++
- drivers/cxl/core/memdev.c                     |  26 ++++-
- drivers/cxl/core/port.c                       |  39 ++++++-
- drivers/cxl/core/region.c                     |  42 +++++++-
- drivers/cxl/cxl.h                             |   3 +
- drivers/cxl/cxl_memdev_tracepoints.h          |  58 ++++++++++
- drivers/cxl/cxl_port_tracepoints.h            |  91 ++++++++++++++++
- drivers/cxl/cxl_region_tracepoints.h          |  78 ++++++++++++++
- drivers/cxl/cxlmem.h                          |  11 ++
- drivers/cxl/port.c                            |   5 -
- 10 files changed, 443 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/driver-api/cxl/type2/cxl_type2_objects_unwinding.rst
- create mode 100644 drivers/cxl/cxl_memdev_tracepoints.h
- create mode 100644 drivers/cxl/cxl_port_tracepoints.h
- create mode 100644 drivers/cxl/cxl_region_tracepoints.h
-
-
-base-commit: 9d66f26fefacebfeed15de31c1123451a17ff119
--- 
-2.34.1
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118191431.2178=
+1-2-alucerop@amd.com?part=3D1
