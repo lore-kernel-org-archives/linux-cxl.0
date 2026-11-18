@@ -1,56 +1,160 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795025392;
-	b=iEM3UQsxc6Vyl3Rz0RUU2zbu5FXh8fqHTfLm0l4CDFBwIJPB+4xdRYlLFpGZXLcX7Y7B
-	 TjIUaX2LX0TjpMvNYAiEbQL1U9wYeJc4AXvJ/LOQ61jtrX6JPHS9l29rxH7q2EJheI1y6
-	 iNyxuOSAUuSwHKyMOLyT3yAwRXhcpmBQ3WJ4ycDH035XnxqiIPdJRnVExxz2tuh+8IEAL
-	 RIz41i/iLouP4VO4nJsofWN9RiD03saaFSI8DlLm1iJj/0ztmGQ9OrzqksRXysxrrg4es
-	 pE3lcnLJ8anWNmzkVvbMpjhIPIkH9ipE90mzhzmQ5DQMIjr5GyGf/ae7bHK5vyFTDJQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795025392;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=UwpPf3r3mppEZO5QKOfq3lzKabKp0bG9iB/l7EczDjU=;
-	b=v/4GKtIUYYQEl3KDHq55oqkvp4aWwlWLZMRG0ttr6Msker4Ilpn3Qc+UnetTZINaR1D5
-	 Fg+IkUI/hQfzlnRF8NT9Fzw8m2e4XkaD8PyQg1bQ+ucwruSpuT/3mU4qzduPgUN8EEQ9Q
-	 sASZuaXqaVCJSAJTjLkyJritkejgz5jdw1OAsffhvyqp1+bzG15XquE8p2/W900Md/B4/
-	 jezODi/vBMUmvdUtsXgEJCKwnaS/+10JIz1uOTehQ4ErNaWhBzsnbs7WACsifEtSL97Np
-	 q8/HhokPDB4Oz6dYKhEwXAbmSacQjAfj4jSAsp+5zCXTDXflU5pf8rUkIZiI2nfyFcw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ReFWxF6N;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.68
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795025741;
+	b=TH4Pb713jKTOMu2XOIhZeWBiXGLfgxB2R/XKA9fkiLNkcFQYxUoae7zJtnwQ0zllcHBO
+	 H8hyTiZCIdrRH5i4PsspvXvXsKQytO6ezplTujDbW8Y7QAaFtyM8Jqfb15vLIfSkSiF9u
+	 rMe5BjqNhVOUP+D1K3819Qf9ibDLH0xEs2DNvINaM+lmemE0OW6PZ3/IlN02NhgY5Rv8p
+	 7HYlTpC1b8FtrZa6vm9mkOqCsZj5Zw7fOgOWSXIbyLKUJUP8tXrXGfHfSASYyre08HPsb
+	 i5o9vtuaV/Dt1H4lR3WPLFOt/JdAvm+c2sYs3PWlW6Likorf9C/eBebEuI6a+PPEnLg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795025741;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
+	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:x-ms-exchange-senderadcheck:
+	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+	 X-MS-Exchange-CrossTenant-userprincipalname:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=oYfQZSZ4rU41tyj1yiviiuyJBZdj8z0mGlbOhsssmD4=;
+	b=nuRoJVyLJVM3VH7H75/viOdsp4j847HXsaP0FeNGDXzvOPCuNNgq8fXph3Gis4+9uGBs
+	 zjszSbCXyPSwgF/byHkBc4TgPYAGEU3kZ5eq5RYOIPjLUBCYQYxagckoQwncdqUUTOr2X
+	 eyVaEQg17qAcPMrE20Xk3IuEapvXoOrRYVkryNuaL+g27ijCVl5OiEoD3icx6ZmlvcJXi
+	 xccHkfg8STA5Ljlg6QYjmzZRKn6cr4m+w1y963JZgHJGtEqpH+zQ+MwXHDYwVUS8/nbk9
+	 BcTYtFHyWdiwlUMOB4EtMmeARlRbNCibE7y49eH75/wUBZVVH8+vbg3t40cK99EwNdw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HaRF4ZM+;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.68
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012068.outbound.protection.outlook.com [52.101.48.68])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59376606A31C
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 18:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5318F60A2603
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Nov 2026 18:15:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5318F60A2603
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ReFWxF6N
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B7F1F000C4;
-	Wed, 18 Nov 2026 18:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795025392;
-	bh=UwpPf3r3mppEZO5QKOfq3lzKabKp0bG9iB/l7EczDjU=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=ReFWxF6Nqa+5EqRDMX4Ls3jT3BKUijL6O9batr5HnFGfY1tW7mOpoVitEMPy9VnP0
-	 cAwwyHb14S/V3OpuypjizFbyQ1hvL7jvu52zNCiBTi8gJlk8+Sgdrz6t3eoMewQSAC
-	 MSsA2bzqk1L9rssQisFAlOK7p/mhO7IICuotlTZDLUIMOILSjhqkejlIBezS8LiDdS
-	 lltyWTwZ2ksxlnPsbamdbeBbBrzmR/HjUOEPjrwdQJTmCBvdxRE3l3s2VCJDpUUWwk
-	 m/s268CzcCXNUYA1t2Lc3tfvplHP/lXSxpszWPvS5myv6jYQAt1UP7Axj3RXtkCxCI
-	 wCk65eJ7i07rg==
-Message-ID: <sashiko-outbox-221725@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC 2/3] cxl: make explicit removal of endpoint and decoder
- for Type2
-Reply-To: sashiko-reviews@lists.linux.dev
-To: alucerop@amd.com, linux-cxl@vger.kernel.org
-In-Reply-To: <20261118191431.21781-3-alucerop@amd.com>
-References: <20261118191431.21781-1-alucerop@amd.com>
- <20261118191431.21781-3-alucerop@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 18:09:51 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HaRF4ZM+
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=skTwFlcOeij/TveQYUffXQJWslqtkx/fUBFnlpS16TXCkiDosqAxwhvqdwOo5xF9A57re1qXB5zZZ/+vtOFYOsmoJykJfomzBXClD7VogzTOCbcI5kNtgdhKzpbIIK1SuCdW8DVowYRlCVdj0tYi/Ns3MEbXn+Z7w4ojIer2r9iwLF7GQt+9hzTzyCZ1mPF2dv0P1LKkcHudVqsKSNRq0oLEhy91lOog+/KUdEIXFoNDFxCrmN2fLUzQGSPYul2apSsmD3sT9uELcL3qGjJmpK03kwhUzQmgO5Uw7EkKkgF66JYec3MzIU88fP9HjnTPnJVmH7qLD9d1rLExy1Gl1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oYfQZSZ4rU41tyj1yiviiuyJBZdj8z0mGlbOhsssmD4=;
+ b=bkVeFbt0oJuKbvPLjzf9z+2o7huVsrd9QCmnYvlgqmP9n4npgON2/XFRmgb34HlC4Wl9tn4EF9gF6WO4SDiLw0RqO5EIYw8HBuQwcActQ6x0fbIywyekvM+pte63cQMowV/00ypjWsmuzzcur3iik3W4f1thUWHLYsK/oYF0BGT3sc8cxDh6nMxpsUmzuceSG+ZWC4eSRP7g041CWxU6cI9CcRMjKipMfrEucylTNgyAcaTjPSxrr/OFP52IeF9L8YJ4DYmd63FtuhmZUU2ZrL+mjypw0OIchO9NQalTmXeHYVTMgmB2HNrK5O9TZcLp3kPF0x8Xis3W+Hj0vo08lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oYfQZSZ4rU41tyj1yiviiuyJBZdj8z0mGlbOhsssmD4=;
+ b=HaRF4ZM+83Q/8aGgqiEk/7cfzkA+fvAC79M6RNCy74s8d50m2e/vSmPqy9rmF8dc1qPYJEM25z1BzOIOhNU1c3OwepIIMAFtGyT0e0VFG7o+Tb0jq+eVPq356+Ggm3Glf7jXsNIwmQVWRYLxUpycIxlb1ioRqzkrNjYhEmbcMV4LkZCMCG1FAGImj9tTKrVQfQBnrqlrp8eZkPgIyPz1s3/wQOOyUTLJl/QMkab6DQ1cs4nuEC6QnB5A3Aoc5/tRj01vkKZidC0DqojgMEOpbUx8fheHVgHHtVbkQMkY0LEUEeWin1BkqLP11A8gVeXkw+RXTuSVgzJ6CWYVehirEA==
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
+ by IA1PR12MB8263.namprd12.prod.outlook.com (2603:10b6:208:3f8::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.16; Wed, 18 Nov
+ 2026 18:15:36 +0000
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.21.0615.013; Wed, 18 Nov 2026
+ 18:15:36 +0000
+From: Manish Honap <mhonap@nvidia.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Alex Williamson <alwilliamson@nvidia.com>, "clg@redhat.com"
+	<clg@redhat.com>, "xueshuai@linux.alibaba.com" <xueshuai@linux.alibaba.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, Zhi Wang <zhiw@nvidia.com>,
+	"mst@redhat.com" <mst@redhat.com>, "pierrick.bouvier@oss.qualcomm.com"
+	<pierrick.bouvier@oss.qualcomm.com>, "junjie.cao@linux.dev"
+	<junjie.cao@linux.dev>, "anisa.su@samsung.com" <anisa.su@samsung.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Ankit Agrawal
+	<ankita@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Shameer Kolothum Thodi
+	<skolothumtho@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>,
+	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, Yukiya Takaki <fj2110jc@fujitsu.com>, Manish
+ Honap <mhonap@nvidia.com>
+Subject: RE: [RFC 00/18] hw/cxl: Add a CXL Type-2 device
+Thread-Topic: [RFC 00/18] hw/cxl: Add a CXL Type-2 device
+Thread-Index: AQHdbaNI9BestQseBkmfHNtrqrfRx7cptaCAgAqAeBA=
+Date: Wed, 18 Nov 2026 18:15:36 +0000
+Message-ID:
+ <IA1PR12MB9030985CC6D7060CC7511C10BD7A2@IA1PR12MB9030.namprd12.prod.outlook.com>
+References: <20261106035911.1280066-1-mhonap@nvidia.com>
+ <20261112015219.55bb312a@jic23-hlaptop>
+In-Reply-To: <20261112015219.55bb312a@jic23-hlaptop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|IA1PR12MB8263:EE_
+x-ms-office365-filtering-correlation-id: 7f963814-5f9e-4ae8-38d4-08df459ff1be
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|38070700021|4143699003|11063799006|260925021311599003|56012099006|260925021911599003|260925022911599003|18002099003|22082099003|10067099003|261022105027099003|261021123027099003|261021121427099003|261102123227099003|261026140227099003|261026121527099003|261028144727099003;
+x-microsoft-antispam-message-info:
+ iAHihCLzSV6E4h41+lDEx/BOCe0m/GFYehYiEmSJ6Y5RL2ZCxyBvg6+ra9Ae8Nz/3aM89wJOe2tQuO/CmfnMuT1wHkmAUzECMCgFu2gmxQ/LbQR27nB0paHL3RqVTUcCOnnA+GEIIsmv/eO3IxMPK8iohGzSvpSkBWJ8DkjkoP5PSIBJsy+wawy2T7KM/j3YDUyJTVf/+lhXfjnCOfkQ1OSGLMs0mQLl+BhCUNNJlDfX9A1kdMYkKGNA6qk280yFi6l/EIPUYTcPVlRTE3XXnrOchRdwr+l7rm9XQOfNNMZqhIGwVjIpeA8aIWg7c2MiJfrClrRs+4yw8CH67mVraYs20xOEs0sy5en6qZF6q7stT5XsohF4DpSZAedu8xosQp61abZrsbae4tIhyVtIQTM7Cyu/rArexId8U0/FW3e9IEvAYyRg5yDuTkqxWZlM1lSTtdYO9g90GcpWLjWv5f09wLy35cLu1YKV4s7QyMfOmMNGo7Mt0lIBxQt4PSu+zdkGW0o0/ql/zPRwVn2dSboC4b/pg9DSjVK6T82psSFIOLZFDIJUDDoM+pPa95L7TTGhgPucas7sycQ1YdaXlKVC1AIPwdRGD5Yt0hIhtsQyus9FU5XeAsMRLTVLfV9gwzt5eBfaLkihHa7fhNxFfrUF1OP5ek7ix+fdkjgbPeHosernU6dZXxdmc5o8zUAJJ+cJytZE9CwpNb49kKDhDqud49feeihXHYQDsCxvB88=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(38070700021)(4143699003)(11063799006)(260925021311599003)(56012099006)(260925021911599003)(260925022911599003)(18002099003)(22082099003)(10067099003)(261022105027099003)(261021123027099003)(261021121427099003)(261102123227099003)(261026140227099003)(261026121527099003)(261028144727099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZDRBNnhKMmVqTHMrZWxFMENJTFBNa2gvaDRpbGxwNmVDbThtV2xveUtNU2px?=
+ =?utf-8?B?UC9OallhUXJhcFhGbUU3c1JYSGpJaTNaWElrWk8vRTRnQ1BWK3g4bUtlQThK?=
+ =?utf-8?B?azdaT3BuTlBzVFBSL2JkNEkrLzI4Um1sOVFHK3RSYmhyZk91WjJaSVErNjNX?=
+ =?utf-8?B?YktLS2Z2NUFmN2RxMFVJTVlISE1QcFV5djdBeE5keTdHRkNWWGpxTmFWenln?=
+ =?utf-8?B?Kzdhb1E1Y3cxVVZ4Y0hrRXk2UWdpQVkycGZOTVNiN0JLU0YrNENneFQ1M0d1?=
+ =?utf-8?B?b3A0MlVpdEpEeElUUWxMbFJlRkg4ZVlzVnNtWmwyQTZ4V1lxVmhHUTdGZG9z?=
+ =?utf-8?B?VC9sRjRGRzlBVWZ2b3JpZmZxb1dEM1hkZHdGY3EyNFE0MFQzcjFMQk55d2xu?=
+ =?utf-8?B?UzVaYlQrSGJYZkV5QmFZb3lDdkw1QzAzVE5BV1VRRVo1L0dkbmpSQ2F3bmpa?=
+ =?utf-8?B?OG9laWRsS21IN2VtbWhFZVdqWkRmMitzTXRhZnBnWk50SndxOGxQeVVDUjVF?=
+ =?utf-8?B?UU9McG0xT1IzczE2ei9ieVgwb2REY0I1SXZLUFNtUGRSZ1N5dFNWWkhsZ0Rm?=
+ =?utf-8?B?YVRCV0NNM281WVJKWERFUUs5d01MbWZUTkFoR1A5NENDN0hYTHc5dUI2dlE4?=
+ =?utf-8?B?TnUzYzhZZXhqc3NSc2UxQXJNNndxaENqNmt2aU5lTGRZZ1NDaG9uT05LR1dG?=
+ =?utf-8?B?Qy9jdlZ1b242YWtBVlZpWjBXNk84Mk1ZY1krUjhUWEhnNTZMZVJyK1JNb1kv?=
+ =?utf-8?B?TFRZQ2tBRjJ2WGVMempTTXZ2RjUvcFo0T0JJZHJIeTFQVE9ZSWxyRUdQeUo2?=
+ =?utf-8?B?amYxUzRRTW9jVVZQQWRPeVJmbThKMHFQaUlnZ2RKTVhLeTdjbW5ZT0JGbUxZ?=
+ =?utf-8?B?UUpPemlOK2NBWWRsbExkMFZOZE5oYnNjb01yWU5ldE5MY3JrNWFFZGFRa2hx?=
+ =?utf-8?B?M1g5OWpRdGhUOXdWTGN6V3poN2toZERLM1BJYldCZHpEUDdtRUtjblhlUDNI?=
+ =?utf-8?B?bTI0d3NwZGFKc3dxSmFOSnFnRThqTnFtOWxudHRqdytlSGZOTDBaYTZDTG80?=
+ =?utf-8?B?c2E5NDU0NkUyaVhkUms0KzZxV1RyUFBFNmYvenZyY3dtbnZpTC9yOExud1A1?=
+ =?utf-8?B?dlZndFQxUCtwUU1MQUt6MVdiRDVCTmIzUlNVa3lUQjk3QWV2cGxQdHFJM0hP?=
+ =?utf-8?B?b1lBNUZsWDlrUy8xaDMrZ0tvaHlrMVdBMUQ1RHlvaElPYWhVMGJiK3ZObmVK?=
+ =?utf-8?B?b1hLWFRDZEErRVdKT205SWo4c0JvTlhWYk9lamJSSHJHQW5LakIzNmdnRW9x?=
+ =?utf-8?B?NTNBV1h3RjUrRnk0WEEyK3VmZkM0UisyczYzbVZ1MWFjMGh6TVp1OXFscUdh?=
+ =?utf-8?B?c21VbUVvWXVzcDdyZEU5SUZqTGFtV3BJc2txN3pzaFJ0eEdXcHJOdDdIQWRp?=
+ =?utf-8?B?Ui83Rm9XdW5NK3IvM3pTcW1jS09ZN3FnRnA2Q3liemYrRExtakF4dGlRV0pa?=
+ =?utf-8?B?UlZId1lrTVdVejAyb2d6TFpVV3RUWlNLeGE2aXFYT3RDeDFXUlNHTnRDaWNx?=
+ =?utf-8?B?SEhKaHNTQmVPVGJ5dzBSQytnL1l2YWJJS3ZRQmNvejdUSFJNbjJsaDVycnN3?=
+ =?utf-8?B?ektOUFM1aUJxdG9Xb3NqaHJjYXlDaUtObHNzYjJTUVdFTWxGNFZVTlpxempX?=
+ =?utf-8?B?MFhGbVVhNk5wY0g3dFZDOFZ4VkkzSWxOUmNYNTdCYk5CY3A1TzlVQ1lHdi9X?=
+ =?utf-8?B?RS9wWkZwaU1Gb09IMVZrZ01jdm1CVFFlTDF3T2tDZXdraXZIalR6bCtRSjYr?=
+ =?utf-8?B?TjVyNUFxWnR0Y0hCMVptYmRab0xyeGQwMEJCZVFCQWVFYmQ1dWhnSFFlVS91?=
+ =?utf-8?B?VnNJUDNiTHVNVUY5Y3FyenAzTnVuOS9DNlVTMi9wQWJxczRDLzQydHNyUnpK?=
+ =?utf-8?B?bVlOZ3RYWUxsOWhtOFVzSUwzMUk2Z2UrYU5zbmVIL2dpU3EvZm5XVUdTbDJr?=
+ =?utf-8?B?UWxJVDViRTMvTWpRUWZ1a3VpYjRZYVhIK0ZXT3dVY2g5RkFxa1pleVg4UXph?=
+ =?utf-8?B?a1hIWnpVWG1zK3lUc3d3MURtT0RWV1ZIcmh3R2ZySmwzTmNYZXVWeHVQcE1q?=
+ =?utf-8?B?WmhwK1JEdU0ra1QyUUhrVmRwZVAyWTFsMk1xQWlBeUlJUWVQM0hqcWMydTdV?=
+ =?utf-8?B?T1NxekJIeDhQVjE1UXJLQXFHck8xa0pSbjE5S0syMEpMVnFNREVUQmhpSW9G?=
+ =?utf-8?B?TG5GaW95RGxvT3pacldrYW1sZDVzc2x2TmUxWU9RdExjbXd3WklIbnp4S05r?=
+ =?utf-8?Q?9OsVRYvPIkl7gu5SAw?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,297 +163,88 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f963814-5f9e-4ae8-38d4-08df459ff1be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2026 18:15:36.6744
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OOnetP69a5Hn/u1IO92nWP2vQ9CKA2SUFIEULkwOKqP73cx/GgkRsPLOH8DrUGe403gSumJL91UO96DlbKAsRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8263
 
-Thank you for your contribution! Sashiko AI review found 8 potential
-issues to consider:
-- [High] cxl: double cxld_unregister() and use-after-free in
-  delete_endpoint()
-- [High] cxl: endpoint->dev reference leak in detach_memdev() after
-  delete_endpoint()
-- [High] cxl: invalid pointer dereference in delete_endpoint() on Type2
-  probe failure
-- [High] cxl: cxl_detach_ep() runs before delete_endpoint() on Type2
-  memdev unbind
-- [High] cxl: cxlmd->detach_scheduled is never reset and races across
-  device locks
-- [Medium] cxl: link failure on endpoint_unregister_region() when
-  CONFIG_CXL_REGION=3Dn
-- [Medium] cxl: reference leak in cxl_memdev_attach_region() on devm
-  registration error
-- [Medium] cxl: use-after-free in unwinding tracepoints after
-  put_device()
---
-
-commit 5ea2db5ceee405003c55ceb45874754b74107942
-Author: Alejandro Lucero <alucerop@amd.com>
-
-cxl: make explicit removal of endpoint and decoder for Type2
-
-This commit replaces devm-based endpoint and region teardown for Type 2 CXL
-devices with explicit teardown in cxl_memdev_unregister() and
-delete_endpoint(), while pinning the endpoint device and adding
-schedule_detach actions in cxl_memdev_attach_region().
-
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 7333fe7594bd9..c699c5561037e 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -758,6 +758,14 @@ static void cxl_memdev_unregister(void *_cxlmd)
->  	struct device *dev =3D &cxlmd->dev;
-> =20
->  	trace_cxl_memdev_unregister(cxlmd, "start");
-> +
-> +	/*
-> +	 * Type2 requires to explicitly remove endpoint while Type3 relies on
-> +	 * devm mechanisms.
-> +	 */
-> +	if (cxlmd->attach)
-> +		delete_endpoint(cxlmd);
-> +
-
-[Severity: High]
-Can this dereference an invalid cxlmd->endpoint pointer when a Type 2
-memdev fails to probe cxl_mem?
-
-cxl_memdev_alloc() initializes cxlmd->endpoint to ERR_PTR(-ENXIO).  If
-cxl_mem_probe() does not run or fails before registering the endpoint
-(for example when !cxlds->media_ready returns -EBUSY),
-__devm_cxl_add_memdev() -> cxl_memdev_autoremove() sees
-cxl_memdev_attach_failed(cxlmd) and calls cxl_memdev_unregister(cxlmd).
-Because cxlmd->attach is set, delete_endpoint(cxlmd) runs and immediately
-dereferences cxlmd->endpoint in port_to_host(endpoint) and
-trace_cxl_delete_endpoint().
-
->  	cdev_device_del(&cxlmd->cdev, dev);
->  	cxl_memdev_shutdown(dev);
->  	put_device(dev);
-> @@ -776,10 +784,14 @@ static void detach_memdev(struct work_struct *work)
->  	 * is required. In that case, @cxlmd detach escalates to parent device
->  	 * detach.
->  	 */
-> -	if (cxlmd->attach)
-> +	if (cxlmd->attach) {
->  		device_release_driver(cxlmd->dev.parent);
-> -	else
-> +
-> +		/* Type2 attach region did a get. */
-> +		put_device(&cxlmd->endpoint->dev);
-> +	} else {
->  		device_release_driver(&cxlmd->dev);
-> +	}
-
-[Severity: High]
-Does put_device(&cxlmd->endpoint->dev) here leak the endpoint->dev
-reference taken in cxl_memdev_attach_region()?
-
-device_release_driver(cxlmd->dev.parent) synchronously releases devres on
-the parent device, which runs cxl_memdev_unregister() ->
-delete_endpoint(cxlmd).  delete_endpoint() sets cxlmd->endpoint =3D NULL and
-only drops the reference taken in cxl_endpoint_autoremove().  When control
-returns to detach_memdev(), cxlmd->endpoint is NULL (and since dev is at
-offset 0 of struct cxl_port, put_device(NULL) is a no-op).  The extra
-reference is also leaked if cxlmd->dev.parent is unbound directly without
-going through detach_memdev().
-
-> =20
->  	put_device(&cxlmd->dev);
->  	trace_cxl_memdev_detach(cxlmd, "done");
-
-[Severity: Medium]
-Can trace_cxl_memdev_detach(cxlmd, "done") read freed memory after
-put_device(&cxlmd->dev)?
-
-For a Type 2 device, device_release_driver(cxlmd->dev.parent) has already
-run cxl_memdev_unregister() and dropped the initial reference on
-cxlmd->dev, so put_device(&cxlmd->dev) here drops the final reference and
-frees cxlmd before trace_cxl_memdev_detach() reads cxlmd->dev.kobj.name.
-The same issue exists in endpoint_unregister_region(), cxld_unregister(),
-and delete_endpoint(), where the "done" tracepoints read dev->kobj.name
-after put_device() or device_unregister().
-
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 9ccb0d1859047..de109fb600386 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1480,14 +1480,24 @@ static struct device *grandparent(struct device *=
-dev)
->  	return NULL;
->  }
-> =20
-> -static void delete_endpoint(void *data)
-> +static void cxld_unregister(void *dev);
-> +
-> +void delete_endpoint(void *data)
->  {
->  	struct cxl_memdev *cxlmd =3D data;
->  	struct cxl_port *endpoint =3D cxlmd->endpoint;
->  	struct device *host =3D port_to_host(endpoint);
-> +	struct cxl_attach_region *attach =3D
-> +		container_of(cxlmd->attach, typeof(*attach), attach);
-> =20
->  	trace_cxl_delete_endpoint(&endpoint->dev, "start");
-> =20
-> +	/* Type2 requires to explicitly remove region and decoder */
-> +	if (attach && attach->cxlr) {
-> +		endpoint_unregister_region(attach->cxlr);
-> +		cxld_unregister(&attach->cxled->cxld.dev);
-> +	}
-
-[Severity: High]
-Won't calling cxld_unregister(&attach->cxled->cxld.dev) directly here
-cause a double unregister and use-after-free of attach->cxled?
-
-add_hdm_decoder() still registers cxld_unregister as a devm action on
-&endpoint->dev via cxl_decoder_autoremove() for both Type 2 and Type 3
-devices, and cxl_memdev_attach_region() drops the device_find_child()
-reference on &cxled->cxld.dev when dev goes out of scope.  Calling
-cxld_unregister() directly in delete_endpoint() unregisters the decoder
-while leaving the devm action queued on &endpoint->dev; a few lines below,
-devm_release_action(host, unregister_port, endpoint) unregisters
-&endpoint->dev and runs devres_release_all(&endpoint->dev), which calls
-cxld_unregister() a second time and then runs cxl_dpa_release() on the
-freed decoder.
-
-Conversely, if &endpoint->dev is unbound via sysfs first,
-__device_release_driver(&endpoint->dev) runs devres_release_all() and
-frees attach->cxled immediately (get_device(&endpoint->dev) only prevents
-device_release(), not driver unbind devres cleanup), after which
-delete_endpoint() calls cxld_unregister() on the already-freed
-attach->cxled.
-
-> +
->  	scoped_guard(device, host) {
->  		if (host->driver && !endpoint->dead) {
->  			devm_release_action(host, cxl_unlink_parent_dport, endpoint);
-> @@ -1509,7 +1519,10 @@ int cxl_endpoint_autoremove(struct cxl_memdev *cxl=
-md, struct cxl_port *endpoint)
->  	get_device(host);
->  	get_device(&endpoint->dev);
->  	cxlmd->depth =3D endpoint->depth;
-> -	return devm_add_action_or_reset(dev, delete_endpoint, cxlmd);
-> +	/* Only Type3 relies on devm for decoder unwinding. */
-> +	if (cxlmd->cxlds->type =3D=3D CXL_DEVTYPE_CLASSMEM)
-> +		return devm_add_action_or_reset(dev, delete_endpoint, cxlmd);
-> +	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
-
-[Severity: High]
-When cxlmd->dev is unbound on a Type 2 device, doesn't skipping the
-devm action here cause cxl_detach_ep() to run before delete_endpoint()?
-
-devm_cxl_enumerate_ports() registers cxl_detach_ep on &cxlmd->dev.
-Previously delete_endpoint was registered on &cxlmd->dev after
-cxl_detach_ep, so devres ran delete_endpoint() first.  Now, when
-&cxlmd->dev unbinds (or fails in cxl_memdev_attach_region() after
-devm_cxl_add_endpoint()), devres on &cxlmd->dev runs cxl_detach_ep()
-before cxl_memdev_unregister() calls delete_endpoint().  cxl_detach_ep()
-frees the struct cxl_ep entries in ancestor ports and deletes empty switch
-ports while the endpoint port and region are still attached, causing
-delete_endpoint() to hit dangling cxl_ep pointers (or NULL ep in
-cxl_region_teardown_targets() / cxl_region_decode_reset()) or skip
-unregister_port(endpoint) if a parent switch port's driver was detached.
-
-> @@ -2413,6 +2426,12 @@ EXPORT_SYMBOL_NS_GPL(cxl_bus_drain, "CXL");
->  bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
->  {
->  	trace_schedule_cxl_memdev_detach(cxlmd);
-> +
-> +	if (cxlmd->detach_scheduled)
-> +		return 0;
-> +
-> +	cxlmd->detach_scheduled =3D true;
-> +
->  	return queue_work(cxl_bus_wq, &cxlmd->detach_work);
->  }
->  EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, "CXL");
-
-[Severity: High]
-Since cxlmd->detach_scheduled is never cleared in detach_memdev(), won't
-a Type 3 cxl_memdev that is detached and later re-probed fail to detach on
-any subsequent port removal and leak the cxlmd->dev reference taken by
-cxl_endpoint_port_probe()?
-
-In addition, cxlmd->detach_scheduled is a plain bool accessed without
-synchronization from schedule_detach actions on three different devices
-(&cxlr->dev, &endpoint->dev, and &cxlmd->dev), and if a Type 2 parent
-driver is unbound directly while cxlmd->detach_scheduled is still false,
-cxl_memdev_unregister() will trigger those schedule_detach actions and
-queue detach_work while cxlmd is already being unregistered.
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index efbd53a37405d..6a188041791c2 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-
-[ ... ]
-
-> @@ -4177,11 +4177,33 @@ int cxl_memdev_attach_region(struct cxl_memdev *c=
-xlmd)
->  	/* Only teardown regions that pass validation, ignore the rest */
->  	get_device(&cxlr->dev);
-> =20
-> -	rc =3D devm_add_action_or_reset(&endpoint->dev,
-> -				      endpoint_unregister_region, cxlr);
-> +	/*
-> +	 * While region in use by the Type2 device driver, no unbinding can
-> +	 * happen. Keeping a reference to the endpoint device avoids release.
-> +	 * The endpoint can be released after unwinding from the memdev forced
-> +	 * with the below actions.
-> +	 */
-> +	get_device(&endpoint->dev);
-> +
-> +	/*
-> +	 * All these next devm actions are necessary for dealing with unbind
-> +	 * triggered through sysfs with the CXL objects linked to a Type2.
-> +	 */
-> +	rc =3D devm_add_action_or_reset(&cxlr->dev, schedule_detach, cxlmd);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc =3D devm_add_action_or_reset(&endpoint->dev, schedule_detach, cxlmd);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc =3D devm_add_action_or_reset(&cxlmd->dev, schedule_detach, cxlmd);
->  	if (rc)
->  		return rc;
-> =20
-> +	attach->cxlr =3D cxlr;
-> +	attach->cxled =3D cxled;
-
-[Severity: Medium]
-If any of the devm_add_action_or_reset() calls above fails, aren't the
-cxlr->dev and endpoint->dev references leaked?
-
-attach->cxlr is only assigned after all three devm_add_action_or_reset()
-calls succeed, so on early return delete_endpoint() sees
-attach->cxlr =3D=3D NULL and skips endpoint_unregister_region(attach->cxlr).
-
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index baa6df2d362a4..eaa663f25699a 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -942,6 +942,9 @@ void cxl_coordinates_combine(struct access_coordinate=
- *out,
->  			     struct access_coordinate *c1,
->  			     struct access_coordinate *c2);
-> =20
-> +void endpoint_unregister_region(void *_cxlr);
-> +void delete_endpoint(void *data);
-> +
-
-[Severity: Medium]
-Does building with CONFIG_CXL_BUS enabled and CONFIG_CXL_REGION=3Dn fail to
-link on endpoint_unregister_region()?
-
-drivers/cxl/core/port.o is built unconditionally under CONFIG_CXL_BUS and
-calls endpoint_unregister_region() from delete_endpoint(), while
-endpoint_unregister_region() in drivers/cxl/core/region.c is only built
-when CONFIG_CXL_REGION is enabled and has no !CONFIG_CXL_REGION stub in
-drivers/cxl/cxl.h.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118191431.2178=
-1-2-alucerop@amd.com?part=3D2
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9uYXRoYW4gQ2FtZXJv
+biA8amljMjNAa2VybmVsLm9yZz4NCj4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDEyLCAyMDI2
+IDc6MjIgQU0NCj4gVG86IE1hbmlzaCBIb25hcCA8bWhvbmFwQG52aWRpYS5jb20+DQo+IENjOiBB
+bGV4IFdpbGxpYW1zb24gPGFsd2lsbGlhbXNvbkBudmlkaWEuY29tPjsgY2xnQHJlZGhhdC5jb207
+DQo+IHh1ZXNodWFpQGxpbnV4LmFsaWJhYmEuY29tOyBpcmEud2VpbnlAaW50ZWwuY29tOyBaaGkg
+V2FuZw0KPiA8emhpd0BudmlkaWEuY29tPjsgbXN0QHJlZGhhdC5jb207IHBpZXJyaWNrLmJvdXZp
+ZXJAb3NzLnF1YWxjb21tLmNvbTsNCj4ganVuamllLmNhb0BsaW51eC5kZXY7IGFuaXNhLnN1QHNh
+bXN1bmcuY29tOyBwYm9uemluaUByZWRoYXQuY29tOyBBbmtpdA0KPiBBZ3Jhd2FsIDxhbmtpdGFA
+bnZpZGlhLmNvbT47IFZpa3JhbSBTZXRoaSA8dnNldGhpQG52aWRpYS5jb20+OyBTaGFtZWVyDQo+
+IEtvbG90aHVtIFRob2RpIDxza29sb3RodW10aG9AbnZpZGlhLmNvbT47IE1hdHQgT2Nocw0KPiA8
+bW9jaHNAbnZpZGlhLmNvbT47IE5lbyBKaWEgPGNqaWFAbnZpZGlhLmNvbT47IEtyaXNobmFrYW50
+IEphanUNCj4gPGtqYWp1QG52aWRpYS5jb20+OyBxZW11LWRldmVsQG5vbmdudS5vcmc7IGxpbnV4
+LWN4bEB2Z2VyLmtlcm5lbC5vcmc7DQo+IFl1a2l5YSBUYWtha2kgPGZqMjExMGpjQGZ1aml0c3Uu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyAwMC8xOF0gaHcvY3hsOiBBZGQgYSBDWEwgVHlwZS0y
+IGRldmljZQ0KPiANCj4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mg
+b3IgYXR0YWNobWVudHMNCj4gDQo+IA0KPiBPbiBGcmksIDYgTm92IDIwMjYgMDk6Mjg6NTMgKzA1
+MzANCj4gPG1ob25hcEBudmlkaWEuY29tPiB3cm90ZToNCj4gDQo+ID4gRnJvbTogTWFuaXNoIEhv
+bmFwIDxtaG9uYXBAbnZpZGlhLmNvbT4NCj4gPg0KPiA+IEhlbGxvLA0KPiA+DQo+ID4gVGhpcyBz
+ZXJpZXMgYWRkcyBjeGwtdHlwZTIsIGFuIGVtdWxhdGVkIENYTCBUeXBlLTIgZGV2aWNlIHdpdGgN
+Cj4gPiB2b2xhdGlsZSBkZXZpY2UgbWVtb3J5LiBJdCBpcyBlbXVsYXRlZCBpbiBzdWNoIGEgd2F5
+IHRoYXQgYWxsIHRoZQ0KPiA+IExpbnV4IGNoZWNrcyBhcmUgc2F0aXNmaWVkIHNvIHRoYXQgQ1hM
+IHBhc3N0aHJvdWdoIHVzaW5nIHZmaW8tcGNpDQo+ID4gKHZmaW8tY3hsKSBjYW4gYmUgZGV2ZWxv
+cGVkIGFuZCB0ZXN0ZWQgaW4gYSBndWVzdCB3aXRob3V0IFR5cGUtMiBoYXJkd2FyZS4NCj4gPg0K
+PiA+IFRoaXMgc2VyaWVzIGJ1aWxkcyBvbiB0aGUgVHlwZS0yIG1vZGVsIGZyb20gWmhpJ3Mgc2Vy
+aWVzIChjYXJyaWVkIGluDQo+ID4gQ8OpZHJpYydzIHRyZWUpIGFuZCBjYXJyaWVzIG9uZSBmaXgg
+ZnJvbSBTaHVhaSdzIHRyZWUuIFNodWFpJ3MgdHJlZQ0KPiA+IGFsc28gc2V0IHVwIHRoZSBkZWNv
+ZGVycyB0aHJvdWdoIGRldmljZSBwcm9wZXJ0aWVzIGFuZCBzdHViYmVkIENYTA0KPiA+IFJlc2V0
+OyB0aGUgZmlybXdhcmUgc2V0dXAgYW5kIENYTCBSZXNldCBoZXJlIGFyZSBuZXcgY29kZS4NCj4g
+PiBDYXJyaWVkIHBhdGNoZXMga2VlcCB0aGVpciBhdXRob3JzLCB3aXRoIGEgbm90ZSBmb3IgZWFj
+aCBjaGFuZ2UuDQo+ID4NCj4gPiBUaGUgZGV2aWNlOg0KPiA+IC0gUENJIElEIDFiMzY6MDAxNyBh
+bmQgdGhlIHByb2Nlc3NpbmcgYWNjZWxlcmF0b3IgY2xhc3MgMHgxMjAwOw0KPiA+IC0gUENJZSBE
+VlNFQyBmb3IgQ1hMIERldmljZXMgd2l0aCBDWEwuY2FjaGUsIENYTC5tZW0sIG9uZSBIRE0gcmFu
+Z2UsDQo+ID4gICBjYWNoZSB3cml0ZS1iYWNrIGFuZCBpbnZhbGlkYXRlLCBDWEwgUmVzZXQgYW5k
+IE1lbSBDbHI7IFJlZ2lzdGVyDQo+ID4gICBMb2NhdG9yIGFuZCBGbGV4IEJ1cyBQb3J0IERWU0VD
+czsNCj4gPiAtIENYTC5jYWNoZSBhZHZlcnRpc2VkIGJ1dCBub3QgbW9kZWxsZWQuIFRoZSBkZXZp
+Y2Ugc2VuZHMgbm8gQ1hMLmNhY2hlDQo+ID4gICByZXF1ZXN0cywgYW5kIGl0cyBtZW1vcnkgaXMg
+aG9zdCBSQU0sIHdoaWNoIGlzIGNvaGVyZW50IGFscmVhZHkuIEENCj4gPiAgIGNhY2hlIHdyaXRl
+LWJhY2sgYW5kIGludmFsaWRhdGUgY29tcGxldGVzIGF0IG9uY2UuIFRoZSBjYXBhYmlsaXR5IGlz
+DQo+ID4gICBzZXQgYmVjYXVzZSB2ZmlvLWN4bCB0YWtlcyBhIGRldmljZSBhcyBUeXBlLTIgb25s
+eSB3aGVuIGl0IHJlcG9ydHMNCj4gPiAgIGJvdGggQ1hMLmNhY2hlIGFuZCBDWEwubWVtOw0KPiA+
+IC0gY29tcG9uZW50IHJlZ2lzdGVycyB3aXRoIG9uZSBIRE0gZGVjb2RlcjsNCj4gPiAtIHNsb3Qg
+MCwgZnVuY3Rpb24gMCBiZWxvdyBhIENYTCByb290IHBvcnQgb2YgYSBweGItY3hsLCBtZW1vcnkg
+aW4gb25lDQo+ID4gICBmaXhlZCBtZW1vcnkgd2luZG93IHNlbGVjdGVkIHdpdGggZm13LWluZGV4
+LCBjb2xkIHBsdWcgb25seSAobm8NCj4gPiAgIGhvdHBsdWcgb3IgdW5wbHVnKSwgbm90IG1pZ3Jh
+dGFibGUuDQo+ID4NCj4gPiBObyBMaW51eCBkcml2ZXIgY2xhaW1zIHRoZSBkZXZpY2Ugb24gaXRz
+IG93bi4gY3hsX3BjaSBkb2VzIG5vdCBiaW5kIHRvDQo+ID4gdGhlIGFjY2VsZXJhdG9yIGNsYXNz
+LCBhbmQgc2ZjLCB0aGUgb3RoZXIgZHJpdmVyIHRoYXQgY2FsbHMgdGhlIENYTA0KPiA+IGNvcmUg
+VHlwZS0yIGludGVyZmFjZSwgbWF0Y2hlcyBvbmx5IGl0cyBvd24gZGV2aWNlcy4gQSBndWVzdCBi
+aW5kcw0KPiA+IGN4bC10eXBlMiB0byB2ZmlvLXBjaSwgd2hpY2ggaGFuZHMgaXQgdG8gdmZpby1j
+eGwuIFRlc3RpbmcgdGhlIENYTA0KPiA+IGNvcmUNCj4gPiBUeXBlLTIgaW50ZXJmYWNlIHdpdGhv
+dXQgdmZpby1jeGwgbmVlZHMgYSBkcml2ZXIgZm9yIDFiMzY6MDAxNyB0aGF0DQo+ID4gY2FsbHMg
+aXQuIFRoZXJlIGlzIG5vbmUgeWV0Lg0KPiA+DQo+ID4gUUVNVSBoYXMgbm8gZmlybXdhcmUgdGhh
+dCBjb21taXRzIHRoZSBIRE0gZGVjb2RlcnMgb2YgYSBDWEwgcm91dGUgYXQNCj4gPiBib290LCBh
+bmQgTGludXggYXR0YWNoZXMgYSBUeXBlLTIgZGV2aWNlIG9ubHkgdG8gYSBjb21taXR0ZWQgcmVn
+aW9uDQo+ID4gKGRldm1fY3hsX3Byb2JlX21lbSgpKS4gU28gUUVNVSBkb2VzIHRoYXQgc3RlcCBp
+dHNlbGYuDQo+IA0KPiBKdXN0IGluIGNhc2UgeW91IG1pc3NlZCBpdCwgWXVraXlhIFRha2FraSBp
+cyBsb29raW5nIGF0IGJpb3MgcHJvZ3JhbW1lZCBmbG93cy4NCj4gaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvYWxsL2NvdmVyLjE3OTMwMDM5ODMuZ2l0LmZqMjExMGpjQGZ1aml0c3UuY29tLw0KPiAN
+Cj4gTXkgaW1tZWRpYXRlIHRob3VnaHQgaXMgZm9sbG93IGEgc2ltaWxhciBmbG93IHRvIHRoZSBv
+bmUgSSBzdWdnZXN0ZWQgaW4gdGhhdA0KPiBwYXRjaC4gRG9pbmcgQ1hMIHNldHVwIGluIFFFTVUg
+YnV0IHRoZSBQQ0kgZW51bWVyYXRpb24gaW4gdGhlIGJpb3MgZG9lc24ndA0KPiBzZWVtIGxpa2Ug
+YSBzdXN0YWluYWJsZSBtb2RlbCB0byBtZS4gSSdkIG11Y2ggcHJlZmVyIHRvIHNlZSBhIGJpb3Mg
+ZmxvdyB3aXRoDQo+IGp1c3QgdGhlIFFFTVUgZ2VuZXJhdGUgdGFibGVzIHVwZGF0ZWQgaW4gYSBz
+aW1pbGFyIGZhc2hpb24gdG8gaG93IERTRFQgaXMNCj4gdXBkYXRlZCBmb3IgUFhCcy4NCj4gDQo+
+IEFsdGVybmF0aXZlIGZvciB5b3UgKGFzc3VtaW5nIHlvdSBjYXJlIG1vcmUgYWJvdXQgYXJtIHRo
+YW4geDg2KSBtaWdodCBiZSB0bw0KPiBqdXN0IHVzZSB0aGUgU0JTQSBtb2RlbCBhbmQgZG8gdGhl
+IGZ1bGwgZW51bWVyYXRpb24gaW4gZmlybXdhcmUuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5IEkgaGF2
+ZSBxdWl0ZSBhIGxhcmdlIGJhY2tsb2cgc28gbWlnaHQgYmUgYSB3aGlsZSBiZWZvcmUgSSBnZXQg
+YQ0KPiBjaGFuY2UgdG8gdGFrZSBhIGNsb3NlIGxvb2sgYXQgdGhpcyBzZXJpZXMgKG9yIHRoZSBr
+ZXJuZWwgb25lcyEpDQo+IA0KPiBKb25hdGhhbg0KPiANCg0KVGhhbmsgeW91IEpvbmF0aGFuOyBJ
+IHdpbGwgdGFrZSBhIGxvb2sgYXQgdGhlIHN1Z2dlc3RlZCBzZXJpZXMgYW5kIFNCU0EgbW9kZWwg
+Zm9yIHRoaXMuDQo=
