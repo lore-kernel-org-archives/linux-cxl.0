@@ -1,79 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795052678;
-	b=5dMQd73sYG9yWjKvZefz13y6v0PHRjazE30YfLFwlxAvyV5tapAi6YUfsO8yi5+wuLEQ
-	 0fn+QEECrtOXSlcpswfT0thmrehapwajaXZnmwKNfNd3QDHCCrdsFb11aQVkNNUJ2PCV/
-	 6h3rm+LCSB4kWsw3xAPUVb/rFeryAcw4SrXKa3bIyBEOgtOAP3oXmplq2x2tqXdjty28t
-	 lWNFEXx4yEDw9TwWo3tzQhve71dmcrw4n62972OAztnL1PTCaGQ5MEDwph7NVFNTjKJL0
-	 wfz2PYOiynD2J1WrJdj+vLjsnN63oLWVQFJm0c+kOqIarVtSI1hDUAe92NAgYqBGFVw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795052678;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=cnK7ZBiBaKI1wtqWRmai1VEkIh10lPuIV34Zp2OGQBs=;
-	b=HiImNxUJkafDGvlLIVfrRpuqB0RjAbXMZED164XBRozw1rne10CaJ3CFLD8HmZ4HydSo
-	 NSRm2TwfVISEtSrAHAm9XcG8YNJjsqx5s7zUP72Wrlp7dMX64FzwU2Tpb+SiUE+HE0sds
-	 OHab+s/YTRPrNTFqnFRLu3P237CeQf+hAOSeFUXkv+EQ88D6m/9dVNnsybo3u6IAsLUri
-	 BrzVmDj8CMyJ970px1LgkQdknwI7rfspr/rW85QxfbH47a+cWixaxGddzBZYKBcwaFyBy
-	 rYmhoMRjXVXumaWcf7hQPabhAGnRVU7xM5/1rNgmE6jhS1eT1Cf0soOg1n+MeBjvHaw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HbUUQCY+;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F030E606A332;
-	Thu, 19 Nov 2026 01:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HbUUQCY+
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795052677;
-	b=WGASDUjfqp8FPTy5LYKcXpKSZqT8jKIupeZUsHIPtX30HHoHy51dy84t3SorwLkhhhy2
-	 VrfdP6kFakAD2R9LlVwoTwYn1irMlXXpQE55DK3cXKJghpl1DyJpwIJdjHPFhJDFe1Rxx
-	 P6QEQTbjxMbqHuZP9FPTTeMFbVRm+scJ7S0afwStpP/tt1dRO/ibT7Yht2zu4Orfe0tst
-	 8bArZ30RlKQmM0snKWC0xkh39L4o6zqPPWHk152BvwTtuQ7uRw9yC/8xaczjbOKn5xWG5
-	 shCo8p7dLQHBxPDCoEzHAM5xJnu5XS2fpjjJY2SxxUHOeRxAVM8HjXwm/LSYqfolRHA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795052677;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=cnK7ZBiBaKI1wtqWRmai1VEkIh10lPuIV34Zp2OGQBs=;
-	b=VBWjnFKjxephhrtRW/FEFnDGrERHMoEfLYQ/11TeVRPcaFkLwkFM1dHj0M4mQrooE3PP
-	 qQLxjfiWGr4RkJRCujXTumTS87HM2TL5JSYW0Buigl0LIEyBokMxVN/NhkGfZI168ZdME
-	 tTq6MLCmJCB+lThBVxFsUjJQvqj/06ySla7/OcSPFQkkxKj5ucSZ2SOe4XcLQbHFP8THl
-	 /ME7zpLlq6QXHMW8LmAjnPg5TCJgKE8mu4ZVXgJdphDroHqihDgSg5EoFj3K72rpZWRzW
-	 zH7OgCumA5KYI3/8gHTRDfRt9j5WBx11oqjzy5t1+ERLqhd88xFBuW4HYWBxdbRnsnw==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.212.19
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795055444;
+	b=2aCjo5muHNVfNM9SbOo3atGO29dNQmoybhYMw54EpQzD9X+hYkIIZgNHXbMh0Vw8mfzx
+	 JjINzPJW6vFJvr+GRVL/DmrS65MdFjHu1UIDu3Iwi8qeeGOuR/DLuD8SoXiAlUg17x4kN
+	 B1PsWxtPpXSsn9lm/fsamzNlCNr/WcaelG12Ymd0KS8WccGUyc0BQHtgzEiMkObTfTN6f
+	 XnUFcQUZYLpErA6fcq91mc9MEOn4m7MhF1tt1EekyAFMs2W/Dc/HfB4Y8FZskJuVV3wxc
+	 LgVBWevlrfZuhnlXu+ZTyBSdyag6gVkiEdep/baA4lGjJad+zRUOl3y1BLT3oYaGsjw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795055444;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Scare-Illegal:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=odpgVvQxoVIUP2TRoLvMKGzTKw8uurYOBWkrR0hOEUM=;
+	b=Fet1yhWDMuWfYakcbol0EpuptkYs7apAFzMZdOgWKhQ8MooNvro3F5rPTDyfEK6M51V4
+	 dWad1hxXQzjiZOIezoTN+6PHnwDidnQoqpZeg6ZyGvdMu90YJtowe8cV4hL75t/a8ngLJ
+	 ACOyID4A3IwPaOGFixmunKQh3TgHEjhs5PYOGy54AUK47QSyBCOuicugLnh0rRRthryrL
+	 iB4kOwXUBW5/PWlahC1TOWap323DvOxt9HiBEFoPrq5uWAMTkeb9k5zIhJcZKS6397YHt
+	 HQDqIZBBfDX1HpFiXOChuy+3D3lEtgtIayf9QGMW9faLSQz2e4xf9gxh6HxDSZXtnDg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=mzvvfqCP;
+	arc=none smtp.remote-ip=23.83.212.19
+Received: from black.elm.relay.mailchannels.net (black.elm.relay.mailchannels.net [23.83.212.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 252C71F000C7;
-	Thu, 19 Nov 2026 01:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795052677;
-	bh=cnK7ZBiBaKI1wtqWRmai1VEkIh10lPuIV34Zp2OGQBs=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=HbUUQCY+enpn050nWnV5iFURe8gAF+UuUh+WyoeliCKh1FveFMzow+6mM0/ybuWNh
-	 nQeOveMdYJRHlnbokCpvGgh6tibNS2opO/7oWqWYPK/33PDLb2yFTP0ABzgs2YVVIc
-	 UguicG6pEJ9ihL27yBsNsjEiGumV7J5V2ca7cPE6Uh9x40K2MLWCCbu92bIyaAzMik
-	 3CSqKqKbhemR7uVQI7lPy8wLWCbUzDpY5MgzvZPldYIFSFdAnln1D0CBgZ2reeB6l3
-	 nMUlEat3wUdlHAmlIn93594UOkTy0QIX4nckw67YzVUJeRqGULZCR44rHPCEwjUWGa
-	 hzCbkeoIY0hGg==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 7B03C4B071;
-	Thu, 19 Nov 2026 01:44:36 +0000 (UTC)
-From: Junho Cha via B4 Relay <devnull+junho.cha.xcena.com@kernel.org>
-Date: Thu, 19 Nov 2026 10:44:36 +0900
-Subject: [PATCH v2] cxl/region: Fix self-deadlock when
- cxl_memdev_attach_region() fails
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA00C606A332
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Nov 2026 02:30:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA00C606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=mzvvfqCP
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7787B7A10F4;
+	Thu, 19 Nov 2026 02:30:37 +0000 (UTC)
+Received: from pdx1-sub0-mail-a220.dreamhost.com (100-103-220-8.trex-nlb.outbound.svc.cluster.local [100.103.220.8])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 4F6947A051A;
+	Thu, 19 Nov 2026 02:30:37 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Scare-Illegal: 196087ac5ce3276b_1795055437389_1522502550
+X-MC-Loop-Signature: 1795055437389:1788871034
+X-MC-Ingress-Time: 1795055437388
+Received: from pdx1-sub0-mail-a220.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.220.8 (trex/8.0.2);
+	Thu, 19 Nov 2026 02:30:37 +0000
+Received: from offworld.tailf5af7a.ts.net (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4jVMrr5Jf2z1V;
+	Wed, 18 Nov 2026 18:30:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1795055437;
+	bh=odpgVvQxoVIUP2TRoLvMKGzTKw8uurYOBWkrR0hOEUM=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=mzvvfqCPjFx6P3YvvO+7dY3dE/pVPsNynZQkghJMPyNSvTWAV+oCDYl25Ltr0V+BV
+	 6ttcedLOgM0XaJS1tYelYTLU1XS2e7iEmyf/L9WEyrFSWVCJahRLgRDpK0cyWJFQO5
+	 8PADKiE2mc2Mq5awHY3JnsO5BsvAFr65SeGcr2T2Jq+JPa9XaAUBN6LznVcwroRo2k
+	 rdDK73AEuC5G61MDksyFLTF2TTIzxSjSwAKD+F4aVtkXisNaRjSbt4VQUWlvEujedA
+	 sIUSm18QGP6evO07l++kwPb414LdUs/LJlHGRS8cduA/H/umSFW4osaMyzK4UlqRi+
+	 5ms1P3t817DzQ==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: alison.schofield@intel.com
+Cc: dave.jiang@intel.com,
+	linux-cxl@vger.kernel.org,
+	dave@stgolabs.net
+Subject: [PATCH 2/2] libcxl: report Back-Invalidate decoder state
+Date: Wed, 18 Nov 2026 18:30:28 -0800
+Message-Id: <8f761db5611a1a141f0cf8209566134238c0915b.1795050773.git.dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <cover.1795050773.git.dave@stgolabs.net>
+References: <cover.1795050773.git.dave@stgolabs.net>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,164 +92,170 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261119-junhomax-fix-cxl-attach-region-deadlock-v2-1-32ddef645e52@xcena.com>
-X-B4-Tracking: v=1; b=H4sIAINU/moC/42Oyw4CIQxFf8WwtiqM4ySu/A8zi07pCD7AAE4wZ
- v5d0Lh3edre0/sSkYPlKPaLlwg82Wi9K6CWC0EG3YnB6sJCbdROStnA+eGMv2GG0WagfAVMCcl
- A4FOJgmbUV08XGGmDW9WOndq1otjugUvi8+nYfzk+hjNTqvp6MWBkGAI6MnVU3GvHOdWVsTH58
- Py0nGRV/Ap1fxeaJEgYm65B2bSstTpkYocr8jfRz/P8Bjz7J3wLAQAA
-X-Change-ID: 20261113-junhomax-fix-cxl-attach-region-deadlock-fc0a425f7265
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, 
- Li Ming <ming.li@zohomail.com>, Ben Cheatham <benjamin.cheatham@amd.com>, 
- Alejandro Lucero <alucerop@amd.com>, Richard Cheng <icheng@nvidia.com>, 
- linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>, 
- Junho Cha <junho.cha@xcena.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795052675; l=4969;
- i=junho.cha@xcena.com; s=20261113; h=from:subject:message-id;
- bh=BzCoR+CtJdDu/2UmEZ5eieYhLBnjjCJCk7PJaGYt0VM=;
- b=R8gEPdS1ts+/teNCGYIS1PUdYfum3DZ3Pe8lqwiCWS65WPngOAm8oI373gSWHLTgwXKQ8InHI
- CBvdUtJR9CRBXAIFxghz2b4BwsjVWv7oDt7FjD1ue2yPYna772vEdsg
-X-Developer-Key: i=junho.cha@xcena.com; a=ed25519;
- pk=OkFm4PnuJSze1AVqDdvnpHO7nnDQIheH2qYwg2a6Dyc=
-X-Endpoint-Received: by B4 Relay for junho.cha@xcena.com/20261113 with
- auth_id=1507
-X-Original-From: Junho Cha <junho.cha@xcena.com>
-Reply-To: junho.cha@xcena.com
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Junho Cha <junho.cha@xcena.com>
+The kernel exposes two Back-Invalidate attributes: cap_back_invalidate
+on a root decoder, for a CFMWS window carrying the BI restriction, and
+back_invalidate on an endpoint decoder, set while it decodes an HDM-DB
+region. Update libcxl accordingly.
 
-cxl_memdev_attach_region() holds cxl_rwsem.region for read while it
-registers endpoint_unregister_region() with devm_add_action_or_reset().
-If registering the action fails, devm_add_action_or_reset() runs the
-action at once, which reaches cxl_decoder_detach() through
-unregister_region() and detach_target():
+A root decoder whose window permits BI:
 
-  cxl_memdev_attach_region()
-    down_read(&cxl_rwsem.region)
-    devm_add_action_or_reset()          /* fails with -ENOMEM */
-      endpoint_unregister_region()
-        unregister_region()
-          detach_target()
-            cxl_decoder_detach()
-              down_write_killable(&cxl_rwsem.region)
+  {
+    "decoder":"decoder0.6",
+    "resource":70308077764608,
+    "size":1073741824,
+    "interleave_ways":1,
+    "accelmem_capable":true,
+    "back_invalidate_capable":true,
+    "qos_class":42,
+    "nr_targets":1
+  }
 
-The task then waits for a write lock while holding the same rwsem for
-read, and never makes progress.  Before it hangs, lockdep also reports
-a circular dependency: endpoint_unregister_region() takes
-cxlrd->regions_lock under cxl_rwsem.dpa, while cxl_add_to_region()
-takes cxlrd->regions_lock before both rwsems.
+An endpoint decoder currently decoding a region under it:
 
-Register the action with devm_add_action() instead, still under both
-rwsems, and if that fails, run it only after the rwsems are dropped.
-The endpoint device lock stays held throughout, as before.
+  {
+    "decoder":"decoder9.0",
+    "resource":70308077764608,
+    "size":1073741824,
+    "interleave_ways":1,
+    "region":"region6",
+    "dpa_resource":0,
+    "dpa_size":1073741824,
+    "mode":"ram",
+    "back_invalidate":true
+  }
 
-Reproduced with cxl_test (type2_test=1) by failing the devres
-allocation through failslab, with the stack filter limited to
-cxl_memdev_attach_region().  Without this patch the probing task hangs
-in cxl_decoder_detach().  With it, the cxl_mem probe fails with
--ENOMEM, the region is unregistered, and lockdep stays quiet.
-
-Fixes: d8dcb0b74b04 ("cxl/region: Introduce devm_cxl_probe_mem()")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Link: https://lore.kernel.org/all/20260805080537.7489E1F000E9@smtp.kernel.org/
-Assisted-by: LLM
-Signed-off-by: Junho Cha <junho.cha@xcena.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
-Dave pointed at this reset path while reviewing the Type2 multipf
-series [1]. This is a standalone fix for the existing code that keeps
-the region teardown when registering the action fails.
+ Documentation/cxl/lib/libcxl.txt |  2 ++
+ cxl/json.c                       | 16 ++++++++++++++++
+ cxl/lib/libcxl.c                 | 15 +++++++++++++++
+ cxl/lib/libcxl.sym               |  6 ++++++
+ cxl/lib/private.h                |  2 ++
+ cxl/libcxl.h                     |  2 ++
+ 6 files changed, 43 insertions(+)
 
-[1] https://lore.kernel.org/linux-cxl/6bc33514-8bfb-44d6-8fde-28f45dff5eb9@intel.com/
----
-Changes in v2:
-- Register the action under both rwsems as before and only run the
-  unwind after dropping them.  v1 left a window where the region could
-  be detached before the action was registered (Ben).
-- Add Reported-by/Link for Sashiko.
-- Drop Alejandro's Reviewed-by, since the fix changed.
-- Link to v1: https://patch.msgid.link/20261117-junhomax-fix-cxl-attach-region-deadlock-v1-1-f373a135edd2@xcena.com
----
- drivers/cxl/core/region.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 237172b33f55..f9538ac98a1f 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -4437,7 +4437,8 @@ static int first_mapped_decoder(struct device *dev, const void *data)
-  * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
-  * simple case of single mapped decoder per memdev.
-  */
--int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-+static int __cxl_memdev_attach_region(struct cxl_memdev *cxlmd,
-+				      struct cxl_region **unwind)
- {
- 	struct cxl_attach_region *attach =
- 		container_of(cxlmd->attach, typeof(*attach), attach);
-@@ -4446,10 +4447,6 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
- 	struct cxl_region *cxlr;
- 	int rc;
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index 5c3ebd4b786b..187e19f99ec0 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -461,6 +461,8 @@ bool cxl_decoder_is_pmem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
++bool cxl_decoder_is_back_invalidate_capable(struct cxl_decoder *decoder);
++bool cxl_decoder_is_back_invalidate(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
+ ----
+ The kernel protects the enumeration of the physical address layout of
+diff --git a/cxl/json.c b/cxl/json.c
+index a92548828582..ae4a936cf26c 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -927,6 +927,22 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 					       jobj);
+ 	}
  
--	/* hold endpoint lock to setup autoremove of the region */
--	guard(device)(&endpoint->dev);
--	if (!endpoint->dev.driver)
--		return -ENXIO;
- 	guard(rwsem_read)(&cxl_rwsem.region);
- 	guard(rwsem_read)(&cxl_rwsem.dpa);
- 
-@@ -4484,10 +4481,11 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
- 
- 	/* Only teardown regions that pass validation, ignore the rest */
- 	get_device(&cxlr->dev);
--	rc = devm_add_action_or_reset(&endpoint->dev,
--				      endpoint_unregister_region, cxlr);
--	if (rc)
-+	rc = devm_add_action(&endpoint->dev, endpoint_unregister_region, cxlr);
-+	if (rc) {
-+		*unwind = cxlr;
- 		return rc;
++	if (cxl_port_is_root(port) &&
++	    cxl_decoder_is_back_invalidate_capable(decoder)) {
++		jobj = json_object_new_boolean(true);
++		if (jobj)
++			json_object_object_add(jdecoder,
++					       "back_invalidate_capable", jobj);
 +	}
++
++	if (cxl_port_is_endpoint(port) &&
++	    cxl_decoder_is_back_invalidate(decoder)) {
++		jobj = json_object_new_boolean(true);
++		if (jobj)
++			json_object_object_add(jdecoder, "back_invalidate",
++					       jobj);
++	}
++
+ 	if (cxl_port_is_root(port)) {
+ 		int qos_class = cxl_root_decoder_get_qos_class(decoder);
  
- 	attach->hpa_range = (struct range) {
- 		.start = cxlr->params.res->start,
-@@ -4495,6 +4493,24 @@ int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
- 	};
- 	return 0;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index e55a7b41d77a..fa8dc8b1ab3e 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -2490,6 +2490,9 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 
+ 	switch (port->type) {
+ 	case CXL_PORT_ENDPOINT:
++		sprintf(path, "%s/back_invalidate", cxldecoder_base);
++		if (sysfs_read_attr(ctx, path, buf) == 0)
++			decoder->back_invalidate = !!strtoul(buf, NULL, 0);
+ 		sprintf(path, "%s/dpa_resource", cxldecoder_base);
+ 		if (sysfs_read_attr(ctx, path, buf) < 0)
+ 			decoder->dpa_resource = ULLONG_MAX;
+@@ -2528,6 +2531,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 			{ "cap_type3", &decoder->mem_capable },
+ 			{ "cap_ram", &decoder->volatile_capable },
+ 			{ "cap_pmem", &decoder->pmem_capable },
++			{ "cap_back_invalidate",
++			  &decoder->back_invalidate_capable },
+ 			{ "locked", &decoder->locked },
+ 		};
+ 
+@@ -2839,6 +2844,16 @@ CXL_EXPORT bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder)
+ 	return decoder->accelmem_capable;
  }
-+
-+int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct cxl_region *unwind = NULL;
-+	int rc;
-+
-+	/* hold endpoint lock to setup autoremove of the region */
-+	guard(device)(&endpoint->dev);
-+	if (!endpoint->dev.driver)
-+		return -ENXIO;
-+
-+	/* Detaching the region takes cxl_rwsem.region, so unwind without it */
-+	rc = __cxl_memdev_attach_region(cxlmd, &unwind);
-+	if (unwind)
-+		endpoint_unregister_region(unwind);
-+	return rc;
-+}
- EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
  
- /*
-
----
-base-commit: 32af7819352bae9c690ebe277a44eceb501d5c68
-change-id: 20261113-junhomax-fix-cxl-attach-region-deadlock-fc0a425f7265
-
-Best regards,
---  
-Junho Cha <junho.cha@xcena.com>
-
++CXL_EXPORT bool cxl_decoder_is_back_invalidate_capable(struct cxl_decoder *decoder)
++{
++	return decoder->back_invalidate_capable;
++}
++
++CXL_EXPORT bool cxl_decoder_is_back_invalidate(struct cxl_decoder *decoder)
++{
++	return decoder->back_invalidate;
++}
++
+ CXL_EXPORT bool cxl_decoder_is_locked(struct cxl_decoder *decoder)
+ {
+ 	return decoder->locked;
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index ed4429f175ef..599d45e07350 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -320,3 +320,9 @@ LIBCXL_12 {
+ global:
+ 	cxl_region_locked_state;
+ } LIBCXL_11;
++
++LIBCXL_13 {
++global:
++	cxl_decoder_is_back_invalidate_capable;
++	cxl_decoder_is_back_invalidate;
++} LIBCXL_12;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index d2d71fc1a9f0..e5e532c52611 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -161,6 +161,8 @@ struct cxl_decoder {
+ 	bool volatile_capable;
+ 	bool mem_capable;
+ 	bool accelmem_capable;
++	bool back_invalidate_capable;
++	bool back_invalidate;
+ 	bool locked;
+ 	enum cxl_decoder_target_type target_type;
+ 	int regions_init;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index e91af905be3a..fcc1340d02b2 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -265,6 +265,8 @@ bool cxl_decoder_is_pmem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
++bool cxl_decoder_is_back_invalidate_capable(struct cxl_decoder *decoder);
++bool cxl_decoder_is_back_invalidate(struct cxl_decoder *decoder);
+ bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
+ unsigned int
+ cxl_decoder_get_interleave_granularity(struct cxl_decoder *decoder);
+-- 
+2.39.5
 
