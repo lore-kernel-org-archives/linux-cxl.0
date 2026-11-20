@@ -1,78 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795198181;
-	b=YIp6t0DbV00bTrPWqT6I5TJyZvtycIOGHNGDma3wrCBDWvvV20jfmeRbqW8U3SNWa2wr
-	 8baYh3usFU5x4T8oSvsi5sqmNJlkmIYIb5tuO/45xaQMqyZbir+1Phqme+SQe0GQtxKNJ
-	 FggVVfa7nwGuD7RqCsMPS8pnzbhlrEgg9smAHxIbFjmWOSbndCOqFPY5hnwQa0/EBJ29N
-	 0bJRs8e6tNoRWYw67vBkDWLzE0r7q7ukGd149h5LdKtF77CEFzZd9ELrfFnf36UkZ5OTe
-	 +CTyprXDHFEwtFf4nPbT4py6Wol4vVxylQaBRoWRlOaAahi4p9Pfg9iGLuYSFLYxDgw==
+	t=1795198198;
+	b=YiuSRdy33LBSsnkygr4wx9sXL6tnDE/8fP1iF69NVNXwjhaS6unq9sZ93otHDYwKRm1H
+	 FS6LLrvYteRkSbvx2QycHwHitmgSbjzVVJ7SAhi0UPzaoLSSAZyj/JLXEE9yH87aQCo4z
+	 hgK02tfdhCQ6y4FsjwNrjMEskZPULbRdWDij9VojiHL2aM/TfIsBSeIal95udDDMr7xUM
+	 M7SsiZxcLQjMdGd7k5TGBUjVXBzgsK/n+anHvKa4CEna1VON/ppBe0iegAsjzrXFLWt0A
+	 e9az3Y2NDSDnwGJTnLvBg6DxUZK1FaxTtKqufpRVunsHDI5EOCy/SseVMAYOWOTar9Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795198181;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795198198;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
-	b=upXSeXyqBFelDul301orJ/tpFRMS1psrJD2jFN6A53nAym3Z71UjzqPojyUybWDdhYHx
-	 UwXRNh+w7nGWrC1oruocckE1VHd6nEPb4dKg1WAztFwzCAMQXOKct3dk+GUlrRh1N+8Dj
-	 fUEycAzdgGAP5fRx08FNQiFNsq07VC9ZvS37vZHGg8oVlBh4q1D+Z2x+pyrBzAg+vLTon
-	 PKMpMP3krGy81IpJGrYEWrjTvekZoy2UukiKPyWSfYSezrcW3jkKTFNkffq8dJKPzhvWq
-	 qe/SDF4ZbXy3nKBvLx4F0ngL+wr8ijKbSiiPNblOrtAecZujmSJlFufu1xug2TnoQxw==
+	bh=Im7ezlywxNUuwRgGis5+rWWOQyX3m2uPTqHdnIjcZAs=;
+	b=RjQ44AQaKCqUi+vSMEpa/Klbsj7e8xPAN7qLK+uKQlhjuC3vpoFzUmmOroYXj7mb/E+C
+	 BXxnrMLQVmL4KSIPKrrc/NGfWCh07YLeRfkgHxm5z9rh5gA52BJAi+lxaehFLi8au73JS
+	 BjfI0ql2OU3HVbq5L3A98s+eRzvHQLxi9CRe3fwqRD5e97xOeZYE9egFWFCeeNZpNRdyM
+	 Y7OrHa4m3/Bs+fh1N/+WbZPCxyZN6l+w7HPL8D673DrgwG3wuYWzS3z7t2LunnYMEgKvY
+	 ojw3sDDk0qmKzD1mg9JreMvnugYRUQsFZMMRlymmV8ivIdlj8lyHAT4FY8p3sRPWB3w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="QQNLjO/A";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dchYLp+h;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B160A2623;
-	Fri, 20 Nov 2026 18:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41E606A892;
+	Fri, 20 Nov 2026 18:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QQNLjO/A
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dchYLp+h
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795198181;
-	b=tkiLDR64Na+wfBYnDDJfn/s65Xoq4YHJXxEtveXrL44aO389zZsTNok1N/T5436mVSEb
-	 bByGx6wIDb9CGV3/JSH+Wm1imk5zraEBJJ3N1yuOr8m7PC8znYXB0HoSSceV9miRHaqxs
-	 ouFl4IIBp/UnAJXocV/a+vUcobCMPAAbaB3yzbMBRrL+bDs3jYnHpMG83Gz8BK5ebEmdW
-	 mvzzykZWFNTWO/DF2e130R1RXtn19B4f9xNsx2HK7ZcGxuDdl19n240uFr44ZBsGjOIpP
-	 fcdwBf+jo3QtakTfrNAj2IqI1N09DEjzT7ZZlcFGz+HgRT89VKLs8sRqmrglBihTVQA==
+	t=1795198198;
+	b=UvPwsINDuioUsGg9iJs5YK4/OWQNZOYOephrlVkuNLjJDhJMV+UOfgawpfX5JJBexpc5
+	 6vFeGKeHLM7UlDwNypxs3vMCsTRQlTL8HGqPJWUBwDXjQj6KlXdDg/gRhXdcHcxCMC6Gr
+	 s8NLaVNhmtO5rzECkb+KR1eGId7IwvEgDNZ4rDFfIRjC8pcCUyEX2ptfNp5SAsNt/fNWs
+	 Rm8EbCtiRZNxdZ8JTP4lxkN570Qfwu7ijt381sUzAdicZAS69WiElBJuSX+Gmoyza2dQD
+	 8wuw+xTSOoIcEcrWioFxDPhM2Ho0MjhlHeiXOa9o2qvJpwehmEHt18QgZObYKzPC/KQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795198181;
+	c=relaxed/relaxed; t=1795198198;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
-	b=yJPlilkdB/Uj5DREtZqIp2hjevTLMFgw4oq7ikPSj8i5EwL4zksYFFJojvT+EPdqwwYp
-	 IppHn8JHeMS11QdAfFuneOzoWUYf6kVAWwCuLYvOS7UICk0mTqowAdg1vFSelayMo0DdD
-	 D5+pWM5+YUV8M3/ijc+9Ia18x7A5ygBjxTD/Op62zKwhn+75hmUn6EIgwl9xvi8hWVpze
-	 TPd18IJatsu8IYVR5nAYcQObokxpeYbztF8XWpIDJUtZETWAv9p4ZAfmaOIJTfp7xArgX
-	 baXo5mbCEOC+nxUjkdnTnIMz0f84iXiVdcKQjCC2FWigWidSPT6t/1/2is3HnvkK54Q==
+	bh=Im7ezlywxNUuwRgGis5+rWWOQyX3m2uPTqHdnIjcZAs=;
+	b=EJEu691U4b4DCfV3Jr3lHBYVHGuC/MISRfMt87JxQFNmKUGOJRkqYotfs2dilnv2PY0N
+	 fvYTgaGsjHI7o9YUPYde7N7vqkjBtwQTBzS4BPFUyzG/6sAWxD2vTz40kC2Ap+Ykm1DqB
+	 OcgHAIzndbbw3F0ngmHiedQHk6Dk6c1bMtLIti/s/mkBgEehmKer3MLCJ8gle5RmT5NgA
+	 hcWVlqUJKYUbUuqfL9B8JEHFPdmGeEcXMUSNGbguFQjFks8h08UM1pRoclWFdgmc25nAm
+	 ouF7MoEkeb4Oq/o5a/qQyVSPapRnnMerQ15tcoO7MxUlofzbV8g6YWnL2GsofvgJ/iQ==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id AE0CC1F000EB;
-	Fri, 20 Nov 2026 18:09:30 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id 140A31F0283C;
+	Fri, 20 Nov 2026 18:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795198181;
-	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
+	s=k20260515; t=1795198198;
+	bh=Im7ezlywxNUuwRgGis5+rWWOQyX3m2uPTqHdnIjcZAs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=QQNLjO/AGEsdVDWq/dxgiR6dej4HbQKtukVFuY5he60ufYSkQ1oWWGrbr1rhQU54D
-	 /775ZjzZXOCikDHf0Qn0ql775/A3AFaDGXWoutbch5nBfzJ9EIEB0YANrWDLwDgF8S
-	 ufK73d4VtcQElmApOr8vrZ0hi9k0iL1jk8BKWjSwYk0SQNL63IIbpyL5bhx1bp6/6L
-	 7+z4wghYetMtR9Iwg+jjugoUPGW5/mQCSY/+ez08D5sqhOY0EZiYyMDEQBptn3H3e/
-	 wb6hlndjcyVPT6dpGbnytedZGUR5LEhFo2eJndfduqG5SjE1DrZkOpPkmmnrnN1+jq
-	 aCg9VKf5kd2Ng==
+	b=dchYLp+hrjFDOCm0ytR1h2GPWngIoMng7Pd5UlPgUC8+P8Uln5NrpAvQbD7RZ6E6+
+	 DQBWIh4YZWOtF7HGgUGUOlasWGLHr1wq7YXr9AjibLWflIWharbECkXcZaH57GvWXp
+	 rckveu07RFzbSJ3TOJc3QuP0jdehxgd035OR2ZqQI2ahxaMeX0jzOLWkeK03QaVOS3
+	 ecJ4tg7Sx19Fm5dnHBun836psesQTrl/ju4sDQwn+2mCYohlVys8w+tqSCc9OcgVYT
+	 lNDeCQFAVMqJM36HxcrcivInYUpoGNso7kfI805G30G8lz+OC+lfj9DAtUY5pCv30+
+	 uV4rWPjRYlyig==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 7ECCF4B8D1;
-	Fri, 20 Nov 2026 18:09:17 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id DDC054B901;
+	Fri, 20 Nov 2026 18:09:18 +0000 (UTC)
 From: Gregory Price via B4 Relay <devnull+gourry.gourry.net@kernel.org>
-Date: Fri, 20 Nov 2026 13:08:55 -0500
-Subject: [PATCH 04/60] mm/page_alloc: build zonelists from common memory
+Date: Fri, 20 Nov 2026 13:09:07 -0500
+Subject: [PATCH 16/60] mm/oom_kill: compare OOM constraints against common
+ memory
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,7 +84,7 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261120-private_nodes_v6-v1-4-74f5f9a115c2@gourry.net>
+Message-Id: <20261120-private_nodes_v6-v1-16-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -140,11 +141,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org, "Gregory Price (Meta)" <gourry@gourry.net>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=2108;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=1433;
  i=gourry@gourry.net; s=20261120; h=from:subject:message-id;
- bh=hYnZoxMJ3yP49nfY0PYkTWJ6krAi0Bs8xOcweeGlZSI=;
- b=0+ENTTd09K3orEMzSi6wiR5qOFJD5dDrUYY3xdoPrBK5gY7zLwZQW1DS5dBPmSiXPxJfW0mkv
- 12JJVCclp0MC6jQLSgCNEVIyNSUniufk9x/6ovTQjJziND5MyE5ogoK
+ bh=CGbgCesiUK7FaS3uE7XEsjS4RivbEoofszYkkl9tolQ=;
+ b=Rl5iRdBywuqFmQMQRF7nrZzOaOma19N8ic11E9/UVk+2PB3MAEYUmgBsm8qCfHUD/luGjWSnn
+ 1y963MhGKdIDVXBwN1DmjehCfEvUCZJcZl0Bhfm95sNHcGlPv8/lJgd
 X-Developer-Key: i=gourry@gourry.net; a=ed25519;
  pk=BZWDlx4htkR5KcvGjGtSDfx1tM0E5dlyBR43FEhjWVc=
 X-Endpoint-Received: by B4 Relay for gourry@gourry.net/20261120 with
@@ -155,67 +156,42 @@ Content-Transfer-Encoding: 7bit
 
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 
-Zonelists decide which nodes an allocation can reach.
-
-The fallback lists hold every node in N_MEMORY, and a node's
-__GFP_THISNODE list holds its own zones whatever the node's state.
-
-Ordinary allocations should reach only common (general purpose) memory.
-
-Build the fallback zonelists from N_MEMORY_COMMON, and __GFP_THISNODE
-zonelists only for a common node.
-
-The build_local_zonelist() refactor lets us reuse the code to build
-a local-only zonelist for nodes outside the N_MEMORY_COMMON set later.
+Ordinary allocations reach only common-memory zonelists. Compare policy
+and cpuset constraints against N_MEMORY_COMMON, so nodes outside it
+neither make an otherwise global policy appear constrained nor inflate
+the constrained capacity.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/page_alloc.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ mm/oom_kill.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ddb04b72a160..0448d04e048a 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5947,17 +5947,14 @@ int find_next_best_node_in(int node, nodemask_t *used_node_mask,
- }
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 5d48bd862c27..1ec22bdad1fd 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -274,9 +274,9 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
+ 	 * get_page_from_freelist().
+ 	 */
+ 	if (oc->nodemask &&
+-	    !nodes_subset(node_states[N_MEMORY], *oc->nodemask)) {
++	    !nodes_subset(node_states[N_MEMORY_COMMON], *oc->nodemask)) {
+ 		oc->totalpages = total_swap_pages;
+-		for_each_node_mask(nid, *oc->nodemask)
++		for_each_node_mask_state(nid, *oc->nodemask, N_MEMORY_COMMON)
+ 			oc->totalpages += node_present_pages(nid);
+ 		return CONSTRAINT_MEMORY_POLICY;
+ 	}
+@@ -289,7 +289,8 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
  
- 
--/*
-- * Build __GFP_THISNODE zonelists
-- */
--static void build_thisnode_zonelists(pg_data_t *pgdat)
-+/* Build a local-only zonelist when this node is eligible. */
-+static void build_local_zonelist(pg_data_t *pgdat, int zlidx, bool eligible)
- {
--	struct zoneref *zonerefs;
--	int nr_zones;
-+	struct zoneref *zonerefs =
-+		pgdat->node_zonelists[zlidx]._zonerefs;
- 
--	zonerefs = pgdat->node_zonelists[ZONELIST_NOFALLBACK]._zonerefs;
--	nr_zones = build_zonerefs_node(pgdat, zonerefs);
--	zonerefs += nr_zones;
-+	if (eligible)
-+		zonerefs += build_zonerefs_node(pgdat, zonerefs);
- 	zonerefs->zone = NULL;
- 	zonerefs->zone_idx = 0;
- }
-@@ -6001,8 +5998,12 @@ static void build_node_zonelist(pg_data_t *pgdat, const nodemask_t *candidates,
- 
- static void build_zonelists(pg_data_t *pgdat)
- {
--	build_node_zonelist(pgdat, &node_states[N_MEMORY], ZONELIST_FALLBACK);
--	build_thisnode_zonelists(pgdat);
-+	int nid = pgdat->node_id;
-+
-+	build_node_zonelist(pgdat, &node_states[N_MEMORY_COMMON],
-+			    ZONELIST_FALLBACK);
-+	build_local_zonelist(pgdat, ZONELIST_NOFALLBACK,
-+			     node_state(nid, N_MEMORY_COMMON));
- }
- 
- #ifdef CONFIG_HAVE_MEMORYLESS_NODES
+ 	if (cpuset_limited) {
+ 		oc->totalpages = total_swap_pages;
+-		for_each_node_mask(nid, cpuset_current_mems_allowed)
++		for_each_node_mask_state(nid, cpuset_current_mems_allowed,
++					 N_MEMORY_COMMON)
+ 			oc->totalpages += node_present_pages(nid);
+ 		return CONSTRAINT_CPUSET;
+ 	}
 
 -- 
 2.56.1
