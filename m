@@ -1,79 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795198239;
-	b=PdkjHbV/UA0NVPuv7Xk9BCG++Qz+XK7/arrFmzhJExLSVTrVlU4/Drak8/8SSu8FKsQ+
-	 wSallv2WdoDsmJQ8dmSH0EMm+lKLQ3oIsw1obgGgBFFDXNC8V6rABkjdgeb1KgUN0/gGP
-	 L2GfE2MArLOr77mL/lwZmxM/HeLqo1xJj24dmlSo92dTyjmzPOgT3ZkmoMJFA9VCCxfyK
-	 xXcuuqYFMZHrWLTFHEWLbTqhl/eOdsuJhRjon0OiFDo5m3UuTZZbo+HvQOAgOuW7lBG3o
-	 He8OMV3fuv/wSx/u21UINKKmA4Q+1TFAWj6ZO2+3WbUrqteP4Ks9h6T0vrmHkx5C7RA==
+	t=1795198245;
+	b=Jb3ocF9gSynO2qYHQ8lOFm7US5wu4/3Zc3/IWrvBLY7pNKiyfKnTazk7eVJL709ORATw
+	 NCgEOzSYHIRcpv+cUKz7zVF/tQrw5X1JOGXUJ3+xZEdOqgkfwqgjIMVSgzvlu6ej4XfRB
+	 L++KBJ9dFZ2+algY14sVYL17ZCxnjCGzsQiqIyAwPcsW0oncI0kexmGmjOpVQut5vOOQa
+	 vqqKjlGg1GUlubYRQYTcMi0nGpIqDXdHinfmOPTLvrhpaWHKA+TbMx9MhVp3BvWOzvIqH
+	 fzsLWri+5D1UN+1cI8GmIjd9tEnqnuZv0P8u+M5WnmOqY79rTNTPbC9MpLPOX6Yik6Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795198239;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795198245;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=r0JQqq0QcNOC5zLbyFWvr2UyNsYB0EDGYPVXscJvS70=;
-	b=1PxZVqnYcBgQsSI79c8KBaOBAQXhXWeHHIqCNNXv0G0rqXFSrvmCxkCnN8OlwlH0z+ow
-	 eNTLqQY2RD4TUxUxZnxQek+c5L5rmvIoMckgcSytTHEyzMvrMuPj49RKBoBYt9aeg68qp
-	 kR1ohXnNXhSE2Yknxhggm1IfqMUzArnChhUIBGkHjTdQG4EFKB4Q9PZrlk//cvUDfTE/S
-	 t9WcLg3cn3sJUvgQnKDRuiSpV50D9S31aH9lPwn69+Bw+hWGC4YRfXhDyfuUVwUsG1aOk
-	 E0Edz8Aq/4PDWVDkxi29KPqrQJaif7z/Ch9g3CqeZR8FL8BoykQKSln174b3pEmRoOw==
+	bh=6Ag3N9FpJk876fPWs4rnvyKIM3F00ANMUIQWknOquWM=;
+	b=HkJtAxhwvFgnMEU+kEhHrykSnIg4PWFyqRkyFvAajCQvbDWJom/itmtCFFF8hxSulpIt
+	 UgHD1hWd3Uv9793p/M1e2TIll3fPwZlLBoXh7Wchiwc1ypOw7iXzGi1AFKmtlokUSdoG2
+	 MgKzOtJ6koM+OXlDx/S8rZYeW3yE9/ziGzfSDlHmYxARe5lRrpmTIz/nGZtQtFEEdC1k2
+	 dHyKrMLcZTpqzJ0ddygewtX2waxJCEAiVnoIis0WHXVEXXcESAfMyoi7vdrAEEMkNsZ2y
+	 avTwiSR+w5NgFRQW5K+huqSur2ZFcyGK4PMfF7Nf7+1hiZAETrxrhTr3/3Uw5pZiVHQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eFOCvjqq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ES+4c+8/";
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EBB60A6F5F;
-	Fri, 20 Nov 2026 18:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621E7606D48D;
+	Fri, 20 Nov 2026 18:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eFOCvjqq
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ES+4c+8/
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795198238;
-	b=ADhTnukhE5KJiv3+DDwBkM4lnd/qAKegPct5ZemJlDzAIJi9DI0c8TUvjdpci2BqInn2
-	 50xJur9pbh+9ee+gvQxdQB+s4jA2VI/tKuCIOULBoGHRTb37cr/Dc935qq3HTWfsgqkdm
-	 vQ0+6zKtAXlEdwzItv2K0cys355bML0i53CpOF79knGZLXVkl0By3OnJlm5tWPguyXhe1
-	 78I3N4+YVkKsEhPNuJhw20E6WY7kCABAOoJi7OGaC9hE8EHrB5Pt9NOtLxiG3/xYsh2a9
-	 b/haZ9GD+TPDKy78ZZE6HDxPWh04Tov7PvnDQW9vyCD0obEXSgtbu1A92sFmt/nn+yg==
+	t=1795198244;
+	b=u3WZ95Wqeu5RIXSxsPaH7fCOL2EpF0Ubf3XewvP+qlb1hnhOpPpRspKnT6RO928aT4TS
+	 KgV4Its3aTLvmb1+Ooefr3Ju9LIchcNHxjcQvRxNh7iJpvw1Q0YVX2TER77W59c9CRGQU
+	 NObpB5ruC36JNZlA9fcReVpJISh0wXqdfI30jxO/xV5WRAR/e98lhMiCTi2aHXHfg6Zoo
+	 YQxuTgFUxJVbKKe0CwAXCgLNDhbqCuFe+FGt49HrJVS+GIhtalvtiaIymlRxpmhcumkfn
+	 DvkCNKW/OHEYyfuF8fdqDMhyFyDVxtf2XYGjdIndjbVOOliOEIttWscAV7sTEgqWNDg==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795198238;
+	c=relaxed/relaxed; t=1795198244;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=r0JQqq0QcNOC5zLbyFWvr2UyNsYB0EDGYPVXscJvS70=;
-	b=ajL5Bp7v0Z6hpKInprU+FYfAe6IZmRgEHCPklc4AC/zihNZvIZo6LhN7jjhPjWmZaVLp
-	 epqyWsbivnWg9OfX0IKOkdeTYLm20tPxITpupsXL07+RKvsB/R4B/Q/kDjZsszRGBQh7s
-	 CgVlrSAIlbq2afKtVqDT3vwhtnGnpPt8hQ22ig9jX/M+9c/O0Ukk1IUsWsp8hLVLpY/oM
-	 ToxjaqXZ4AZAvFnHfp2qCdfHIKJT5qvO+/q23GimeHrUcIF1BPUDGPHaZbpannoeXhXMq
-	 l5UVbBUlmOteSPgfCHIoP21I10iSGXA1cB4fHnhaJMYz8bernEV2zu8Qx+2Zv1w27ig==
+	bh=6Ag3N9FpJk876fPWs4rnvyKIM3F00ANMUIQWknOquWM=;
+	b=xt8ovL5LQ6225RSifh3iIKMCt1lhQCwyCL7vfSpYsv+EG+aXb/lkzpqehS2yoeAKZuKJ
+	 otwQwko/SLH/QXbkqCzzZdVJ1MJzmyZjEzeNdWiuVtI8vwsYgU2LUrf30aBb05MEtcIpQ
+	 +Av9JXKHRi4+ujS0qbcwKy0ozB9kWkxES0/mmg+yoAX7U0eCRInLfQYqIXKsSGrrE/wAu
+	 Uawhrc04bOMDpwzbQThztJVk7ppZSPfsyDA/gxfuz8Ufzj00olDeIaQxokVTQy/sRD1/I
+	 oY3X5VM64N6WqrsSDUZCSv6pdKBPxTatKvOART5tg19++QiKwpEzb+SPeuB5EEuLE7g==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id E0D301F01579;
-	Fri, 20 Nov 2026 18:10:27 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id 6B4391F000ED;
+	Fri, 20 Nov 2026 18:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795198238;
-	bh=r0JQqq0QcNOC5zLbyFWvr2UyNsYB0EDGYPVXscJvS70=;
+	s=k20260515; t=1795198244;
+	bh=6Ag3N9FpJk876fPWs4rnvyKIM3F00ANMUIQWknOquWM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=eFOCvjqq/hzbQsZGhGUOLRXvfxme1t+QAX90jvrxmoGJzEJhGuylVwLaQOoqwulOI
-	 IrkqiZtlFOQAYPXIqFYubYaEtq3lCFfbfGAnwINVSxPk84UjEMQH5j+dwk91TJZ9uy
-	 EZJzyyf55n3n1OTcxo39TpwkPN3BmISvj6Y10azqiU/cMqWu6iKLQGh/eFTLzL4JOc
-	 792FjImkJ/WzhbKbCn/0BxX4iA0QDxe0wRmaPZe0n4kuxvVG/Vm4nps8r8B+qoqZOj
-	 niHy5IM6m3S+p7ZAq2tJp9me1H8DpvU6WP1FrndQEN/WcGi0X2REGEs+lYDjopk4N6
-	 n8s9ByJH51LqQ==
+	b=ES+4c+8/NdOzj+5GGwnxS1Gu8RK6aylMDv1Rgw30Rd+B1NP4mBI2obNIOk3IySboZ
+	 yOA0OtaNKSMm9dukST38coIJFZA4f18Dnv/Vdu8T8hkaqO48/aUD4JU42q6xC+KypS
+	 KOZPr6ykslIX/lyF3DQMy3b5Mbi2HNKtUyTaWqw9buqp3Y5eGWLKFX4Zn1rWrAUtVT
+	 Wxjf4Uv8a7izAY3dNypQQsdC1JyrZASdaS5Tax0CpTJfONP6eq0hDE9B/kBcZ2kH4e
+	 PvHL4ETcmsm4eT2IW6XlP58dtyogKpEhubPa773YpdDebLGs+1+3atzrTlDi/oFdPh
+	 wCjKJdVgSK6mA==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 5B9844B951;
-	Fri, 20 Nov 2026 18:09:21 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id B7DB14B93D;
+	Fri, 20 Nov 2026 18:09:20 +0000 (UTC)
 From: Gregory Price via B4 Relay <devnull+gourry.gourry.net@kernel.org>
-Date: Fri, 20 Nov 2026 13:09:27 -0500
-Subject: [PATCH 36/60] mm: refuse explicit reclaim and compaction of
- private nodes
+Date: Fri, 20 Nov 2026 13:09:22 -0500
+Subject: [PATCH 31/60] cgroup/cpuset: inherit common memory when a nodemask
+ is private only
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -84,7 +84,7 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261120-private_nodes_v6-v1-36-74f5f9a115c2@gourry.net>
+Message-Id: <20261120-private_nodes_v6-v1-31-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -141,11 +141,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org, "Gregory Price (Meta)" <gourry@gourry.net>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198153; l=1212;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198153; l=8729;
  i=gourry@gourry.net; s=20261120; h=from:subject:message-id;
- bh=eVaoyJoyzU9zyOtulCuIbI+hG2+czzxVMTo5PX+qnoE=;
- b=67qX9eYJBrvlvPcdtzToXyRPuTdmsGPvAub9aazmEHJk4ZHCWWJWu7Tqa8XRPOPW+PAeiRoBS
- +WMnYQ09bUHA4ZgWD9y4UJK3j2zi7pY+0jx9YkmAbm61ZjkvAHWzQu6
+ bh=lhAjAk7Sm6BaAakto+KbG1/rEMIjEBUTFNJJhHnsEgg=;
+ b=0w6zXkqUQAxwMZHNpdjCJwh22P2ZJENxucUISEDMrEBkWvfPDRkY99+RSVag9NWwOq11MJQRH
+ IcyhSRPQT3UDQwfXY7yDZh+nJ2+FXeoiiQ9r1UMnmnYyaJVB/NX9klN
 X-Developer-Key: i=gourry@gourry.net; a=ed25519;
  pk=BZWDlx4htkR5KcvGjGtSDfx1tM0E5dlyBR43FEhjWVc=
 X-Endpoint-Received: by B4 Relay for gourry@gourry.net/20261120 with
@@ -156,46 +156,215 @@ Content-Transfer-Encoding: 7bit
 
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 
-kswapd and kcompactd do not run on private nodes, but nodeN/reclaim and
-nodeN/compact name a node directly. Reject them for a private node with
--EOPNOTSUPP.
+cpuset.mems governs every N_MEMORY node, but ordinary allocations
+can use only N_MEMORY_COMMON memory.
 
-Memoryless nodes keep accepting the requests.
+An effective mask without N_MEMORY_COMMON nodes creates an unsatisfiable
+condition for ordinary system allocations, such as page tables. This
+can cause an unsatisfiable OOM or an infinite fault retry loop.
+
+Treat a cpuset.mems mask without a common memory node as a condition
+to inherit the parent's common memory nodes.
+
+The inheritance behavior differs subtly between v1 and v2:
+
+operation                             v1              v2
+ write {}, no tasks                 remain empty    inherit all
+ write {}, populated                -ENOSPC         inherit all
+ write {private}                    -ENOSPC         inherit common
+ write {outside parent}             -EACCES         inherit common
+ write {common, private}             normal intersection in both modes
+ task attach w/ {private}           -ENOSPC         use effective mask
+ {common, private}, unplug common   clear & move    keep & add common
+
+In the v2 {private} case, the cpuset inherits only the parent's common
+nodes and gains no access to unrelated private nodes. A request naming
+no node the parent allows does the same. Systems without private nodes
+are entirely unchanged by this commit.
+
+An actual empty request still inherits the parent's full effective mask.
+
+Example: (C=common, P=private)
+  parent.cpuset.mems = {C0, C1, P2, P3}
+  child.cpuset.mems  = {C0, P2}
+
+  /* User sets private-only mask */
+  echo {P2} > child.cpuset.mems
+  child.cpuset.mems  = P2
+  child.cpuset.effective_mems = {C0, C1, P2}
+
+      or
+
+  /* Hot-unplug removes C0 */
+  hotunplug {C0}
+  child.cpuset.mems  = {C0, P2}
+  child.cpuset.effective_mems = {C1, P2}
+
+      or
+
+  /* User clears the nodemask entirely */
+  echo {} > child.cpuset.mems
+  child.cpuset.effective_mems => {C0, C1, P2, P3}
+
+Private nodes are thus non-inheritable unless the nodemask is empty.
+
+Rejecting a private-only nodemask in v2 would be confusing (-EINVAL
+on a valid node) and inconsistent with hotplug, which can still leave
+a cpuset with only private memory. Resolve every case the same way:
+effective_mems inherits only the common nodes.
+
+For v1, a write rejects a mask without common memory with -ENOSPC,
+even with no tasks attached: v1 has no effective mask to add common
+nodes to, so tasks attached later would have no common memory. Memory
+hotplug that leaves a mask with only private memory moves its tasks to
+an ancestor.
+
+Automatic memory migration uses only common-memory destinations.
+
+A task's mems_allowed comes from guarantee_online_mems(), which walks
+up the hierarchy while a cpuset has no memory. Walk up while it has no
+common memory instead, so a task never gets a private-only mask in the
+window between memory going offline and the hotplug update of the
+effective masks.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/compaction.c | 3 +++
- mm/vmscan.c     | 3 +++
- 2 files changed, 6 insertions(+)
+ kernel/cgroup/cpuset.c | 58 +++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 46 insertions(+), 12 deletions(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 879f372a891e..283d4d4e78c3 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -3038,6 +3038,9 @@ static ssize_t compact_store(struct device *dev,
- 	int nid = dev->id;
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index db32d330cfbc..6802ca13c46b 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -534,22 +534,24 @@ static void guarantee_active_cpus(struct task_struct *tsk,
  
- 	if (nid >= 0 && nid < nr_node_ids && node_online(nid)) {
-+		if (node_state(nid, N_MEMORY_PRIVATE))
-+			return -EOPNOTSUPP;
-+
- 		/* Flush pending updates to the LRU lists */
- 		lru_add_drain_all();
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 5b53e0391d80..3e934135e805 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -8268,6 +8268,9 @@ static ssize_t reclaim_store(struct device *dev,
+ /*
+  * Return in *pmask the portion of a cpusets's mems_allowed that
+- * are online, with memory.  If none are online with memory, walk
+- * up the cpuset hierarchy until we find one that does have some
+- * online mems.  The top cpuset always has some mems online. With v2,
++ * are online, with memory.  If none of them is common memory, walk
++ * up the cpuset hierarchy until we find one that does have some.
++ * The top cpuset always has some common memory online. With v2,
+  * effective_mems should always contain online memory nodes except
+  * during the transition period where a memory node hotunplug operation
+  * is in progress.
+  *
+- * One way or another, we guarantee to return some non-empty subset
+- * of node_states[N_MEMORY].
++ * One way or another, we guarantee to return some subset of
++ * node_states[N_MEMORY] that includes common memory.
+  *
+  * Call with callback_lock or cpuset_mutex held.
+  */
+ static void guarantee_online_mems(struct cpuset *cs, nodemask_t *pmask)
  {
- 	int ret, nid = dev->id;
- 
-+	if (node_state(nid, N_MEMORY_PRIVATE))
-+		return -EOPNOTSUPP;
-+
- 	ret = user_proactive_reclaim((char *)buf, NULL, NODE_DATA(nid));
- 	return ret ? ret : count;
+-	while (!nodes_and(*pmask, cs->effective_mems, node_states[N_MEMORY]))
++	while (!nodes_intersects(cs->effective_mems,
++				 node_states[N_MEMORY_COMMON]))
+ 		cs = parent_cs(cs);
++	nodes_and(*pmask, cs->effective_mems, node_states[N_MEMORY]);
  }
+ 
+ /**
+@@ -1684,22 +1686,40 @@ static void compute_effective_cpumask(struct cpumask *new_cpus,
+ 		cpumask_copy(new_cpus, parent->effective_cpus);
+ }
+ 
++/* @mems names private memory nodes but no common memory node. */
++static bool mems_private_only(const nodemask_t *mems)
++{
++	return nodes_intersects(*mems, node_states[N_MEMORY_PRIVATE]) &&
++	       !nodes_intersects(*mems, node_states[N_MEMORY_COMMON]);
++}
++
+ /**
+  * compute_effective_nodemask - Compute the effective nodemask of the cpuset
+  * @new_mems: the temp variable for the new effective_mems mask
+  * @cs: the cpuset the need to recompute the new effective_mems mask
+  * @parent: the parent cpuset
+  *
+- * For v2, the parent's effective_mems is inherited if nodemask is empty.
++ * A nodemask whose memory is all private cannot serve an ordinary allocation.
++ * In v2, a non-empty request retains the requested nodes granted by the parent
++ * and inherits the parent's nodes other than private ones.
++ * In v1, cpuset_hotplug_update_tasks() empties such a mask, so the tasks move
++ * to an ancestor.
+  */
+ static void compute_effective_nodemask(nodemask_t *new_mems,
+ 				       struct cpuset *cs, struct cpuset *parent)
+ {
+-	bool has_mems;
++	nodemask_t inherited;
+ 
+-	has_mems = nodes_and(*new_mems, cs->mems_allowed, parent->effective_mems);
+-	if (!has_mems && is_in_v2_mode())
++	nodes_and(*new_mems, cs->mems_allowed, parent->effective_mems);
++	if (!is_in_v2_mode())
++		return;
++	if (nodes_empty(cs->mems_allowed)) {
+ 		nodes_copy(*new_mems, parent->effective_mems);
++	} else if (nodes_empty(*new_mems) || mems_private_only(new_mems)) {
++		nodes_andnot(inherited, parent->effective_mems,
++			     node_states[N_MEMORY_PRIVATE]);
++		nodes_or(*new_mems, *new_mems, inherited);
++	}
+ }
+ 
+ /*
+@@ -2667,6 +2687,8 @@ static void cpuset_migrate_mm_workfn(struct work_struct *work)
+ 	struct cpuset_migrate_mm_work *mwork =
+ 		container_of(work, struct cpuset_migrate_mm_work, work);
+ 
++	/* Private nodes are never migration destinations. */
++	nodes_andnot(mwork->to, mwork->to, node_states[N_MEMORY_PRIVATE]);
+ 	/* on a wq worker, no need to worry about %current's mems_allowed */
+ 	do_migrate_pages(mwork->mm, &mwork->from, &mwork->to, MPOL_MF_MOVE_ALL);
+ 	mmput(mwork->mm);
+@@ -2900,6 +2922,14 @@ static int update_nodemask(struct cpuset *cs, struct cpuset *trialcs,
+ 			  top_cpuset.mems_allowed))
+ 		return -EINVAL;
+ 
++	/*
++	 * In v1, if a mask has no common memory nodes, it's treated as empty
++	 * because there is no effective-mems inherited fallback. As a result,
++	 * we treat this state the same as-if there was no memory at all.
++	 */
++	if (!is_in_v2_mode() && mems_private_only(&trialcs->mems_allowed))
++		return -ENOSPC;
++
+ 	/* No change? nothing to do */
+ 	if (nodes_equal(cs->mems_allowed, trialcs->mems_allowed))
+ 		return 0;
+@@ -3090,7 +3120,7 @@ static int update_prstate(struct cpuset *cs, int new_prs)
+ 
+ /*
+  * Check to see if a cpuset can accept a new task
+- * For v1, cpus_allowed and mems_allowed can't be empty.
++ * For v1, cpus_allowed can't be empty and mems_allowed must have common memory.
+  * For v2, effective_cpus can't be empty.
+  * Note that in v1, effective_cpus = cpus_allowed.
+  *
+@@ -3103,7 +3133,8 @@ static int cpuset_can_attach_check(struct cpuset *cs, struct cpuset *oldcs,
+ 	bool cpus_updated, mems_updated;
+ 
+ 	if (cpumask_empty(cs->effective_cpus) ||
+-	   (!is_in_v2_mode() && nodes_empty(cs->mems_allowed)))
++	   (!is_in_v2_mode() && (nodes_empty(cs->mems_allowed) ||
++				 mems_private_only(&cs->mems_allowed))))
+ 		return -ENOSPC;
+ 
+ 	if (!oldcs)
+@@ -3988,6 +4019,9 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 	parent = parent_cs(cs);
+ 	compute_effective_cpumask(&new_cpus, cs, parent);
+ 	compute_effective_nodemask(&new_mems, cs, parent);
++	/* A legacy cpuset left with only private memory moves its tasks. */
++	if (!is_in_v2_mode() && mems_private_only(&new_mems))
++		nodes_clear(new_mems);
+ 
+ 	if (!tmp || !cs->partition_root_state)
+ 		goto update_tasks;
 
 -- 
 2.56.1
