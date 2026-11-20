@@ -1,79 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795198203;
-	b=nSa1lHEZvltOSt//X/YiEA8MUv8p3O2aZl15FRIfumlO1rNah87JjYH6EJB5Nj7YukZw
-	 r+xhxU8FxSSfjqyXEw5P/aD3cE/7d8yUTHKzYk5i/cB2Tn1wG7FBjlAr6rLVVgaAADMKD
-	 Qyp6W3d0MM8xh6NGR1mZ+urJauHGEXpe0eY4wsPk70JEHFsbQhd+oPgwnq9hwWLq24va1
-	 66xKNSgyUnBhi1mFYmhupVsLSw0u5yWRk9SW+awLeT0OmrLVDN5dkM1zTk/lHCfHhe6aI
-	 FCYrmAAdRn5r6dxQeR/kgJxeqDzzlsvhkCd3//9r3C3klrY0Ct9Jwn8qkB5obJXBDuQ==
+	t=1795198207;
+	b=RN2uS4o+R91XtvU5Es0hiPPyorClkqsRpp7PcihLxNFF2wblCRylFDpLLqdnT61s2L0A
+	 J4GqN4+eaF6gPWQWipjVHn0ejab1b1GZtroqVve9qI4JHWYU/h3obvpBD2T5sowqB8ivf
+	 63zSqcWZnk/HJHYnfi6QBKt3ceP4ZMUWV2nPIHoOa91h1h3rDdTJtstyv/kyfLmSepUZH
+	 4+rhJMMPMOUshGPHnRrZFBFu55fMDgkMeJylLpIwLPB+pbWcEhElNr9VYGUYvJLYJpHis
+	 hsEurfhBYZ3Ri6AO8O4fvw8uobvehtLe7mAKRKNmpUEk0A/IAKk+rbvKfkGeXkKEPeQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795198203;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795198207;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=gr73u4IkiOa9BCictU2VtS3g9h9o19ZGrPCxtMBrlkU=;
-	b=1M8Ouc2ydTwVgpI3Hg1CD+z3FZBvIthvpTgU1LyklXxtY5JKtxWG3R0F4vdG3jjs33iK
-	 lz6uLUOzTpyAWJ6+YhLAkHUVjCS3C5RFUNEgy8iw6qYvntzs5t524zrl2ZfIuUJL+5rdS
-	 1KQjZyBe5T6TAX3HwPF1TwJMzyd7aSEUs6Um23KJkSdRN2rPEw3QHUdwGHj7AKn+mjDkF
-	 YkURr3+MaX093dVwENL8+PaHeL2sXQi48tUyB5Oxdxb7uK9Z5QjCrCuLhNIvSiobeWIhk
-	 bbOuk0eOP9usnQY4ATWNEl5xLcgC298XBkJkbq/862OlOGRV33+sA+jVI1PGhiQ1O1w==
+	bh=/2GT9+cT6aXktwJ+E8xAruZNdnX0GNZG3Q3TOZjuPW8=;
+	b=YXUWEKMRYrsfOJRbw9rTfBSu24e1RElgKpjaSsEwknIpipcYS4ONmDC46ob9T554DToh
+	 uwG8Qegfi6x7YTYCyNV8f2oM4CFDZ/f2yfzgUwMlPFLp3Htw+2oHJqOTi9TaifwpIr7hr
+	 9MJ34yO5jf4Sx/Fiz+ibcWgov4BUQQn0xnLvY2CwcZ1VZIcR/wxsiPNo7Rv+Gp5siWXeh
+	 7PVqM48abwPOBauF05vzVJjoqfliEon8ruGeueY/f9VLuIGAeWIXEZVJeBPN2nYCRpx+B
+	 yjvBVZOmn87vEMQF6yUR+UeRKfNFyWlFEFMKckXY7ci2ASgvBfnJ3y0EU7k88EiVDKw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V9t4NOrO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X3kX2aRW;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A945860A3821;
-	Fri, 20 Nov 2026 18:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F99760A262B;
+	Fri, 20 Nov 2026 18:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V9t4NOrO
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X3kX2aRW
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795198203;
-	b=pcy6TrsYtbxPT00FFvMrWxXBm1BvXD+RrBzPHwHerYQDTPFtwJdJA5XJahkQbNBc7WEM
-	 Xk4NtW0MD97lz3yaShzWH0hsHZJO1bXAi6bIPkAYFlE0muF+FzoMmjTumU089+1I8/4cN
-	 AsBxLJPh3iq4HfPCa+aBy23vRBvIAhPTKZ/EymnD5J31jkL3hG1krzuvsZZQI4TZpFKTM
-	 BXJ/YnzVx0bO7hQDknSc4mzgD4gOjP5ySipbZzLAVUv61qBGWiUXDtRiw8rkIADu7RVaQ
-	 mEUwG8wQ7ju1Fiqeb/8ni7qI4ZBaFa53CfEkyew7/oHGUTL+2GiBQf9T2lAyCroM0pA==
+	t=1795198207;
+	b=DrFtKV+B5VOmawHl8nh/Nf6edLRADW7EvdCwNcYBD6WTNgiwNkYfsvcdxUJzuWp8pdcY
+	 SbuLr+xcFU5T1gT/6K3DwEBkQqsGMmmEUwJ3exGaSE2HBYCIFHGa2wYh+P5FMLHjQ5apL
+	 RwNybQ/Q7o3CjHT4GVYuRtoWlHTISsbkwTQdiIXBmOAACVmQ8s30b1RLMwFzyKbe9L7Fz
+	 oBIf+0a+PglzODLS/xnSLU1syudflLhlr6fU/EngYW3WGEJqP9H/Te9KWWczbJYeTTGLv
+	 oPGJOQWxuvxdn1UP76X5foFMzBuj0rv+zH3FxVUsY42P4GtdTg8GpXK65S9e00gnIvA==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795198203;
+	c=relaxed/relaxed; t=1795198207;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=gr73u4IkiOa9BCictU2VtS3g9h9o19ZGrPCxtMBrlkU=;
-	b=WeZWO+IwlNudUoUdh0s8YJ1GUqI/4tDzw28u5/J47P4X2QCV9Kmkk33gEWEomstNd8mh
-	 uuBdTc0Q1WNObr9UE6wuBXRqvl9bKovJDeNznB+Ic4Fda/Ek7hgK/j//R4Dm+oJS1WSmJ
-	 1UKpysKz0bU+UmHPEBBb6rY1+qqF2w17hBtG7jUNFc+pZyd04ZGv2tP7AH+82umL8EMt2
-	 3ZgyNnBQrkS5OgvlGV4FoBCmjfcGKGekMRaqnXsFYD2q+ez+SlwRdNGc83IJjNgsPTvyY
-	 GySuD+lK7F4qUcAzygYX1oJMBDX/czQz5ak/mzYLWr9thA9B+TIWBPbX00rA1ph3DFg==
+	bh=/2GT9+cT6aXktwJ+E8xAruZNdnX0GNZG3Q3TOZjuPW8=;
+	b=iU7p/dSq3N3mU299fPDL2JVsHo0Nn7T7hcEYS/1cWtTwXtHHd4S4jTNSC99zdlzVh0yj
+	 q9IhjT0+KGjW/thzyQQOSvvfI1vOnrJ9VMJeUkg/emG3jL45C6Ff5ndYwCK9r9yINVgib
+	 zHx1Zasq5wDt/05aBtUgjeWTMgt10gS2/WAWnvATrSM5HCtYrauYMEeQ2hVZ11LtPgd2X
+	 JrfhlCmASEMRyIcZYsgYzD134QIMhYFHjgkgoI2aJZhfsz6y0jLBJKFocSJ1SqieMW2nW
+	 bvEBmCh2grmFXmtWnNfzcq3S8iLLyerrKBuAXFKHp+1/P0U7XEjfw7IfPDBJhEiaLvw==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 33BA51F000C6;
-	Fri, 20 Nov 2026 18:09:40 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id B7FFE1F01803;
+	Fri, 20 Nov 2026 18:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795198202;
-	bh=gr73u4IkiOa9BCictU2VtS3g9h9o19ZGrPCxtMBrlkU=;
+	s=k20260515; t=1795198207;
+	bh=/2GT9+cT6aXktwJ+E8xAruZNdnX0GNZG3Q3TOZjuPW8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=V9t4NOrOpwKjlJTSqfVNs2ckW7HzMjb+nEVmUZZ0v3HqmXVn89EzNv+FjnJYR5YuV
-	 zw6H5C4aBVGOHHOqJGAn/47aPFcQDb4Pa/ak15Cp1iHMt3KQR4ZEdmfcT6ECFWQQM8
-	 eQLAAHScIUH2Z8ICdKMb2wf8mECAjDzACzUDhDtefxHi2yXlXZ9ImxnFF+5KR1vS1L
-	 WcP2At4FYuKxScI4u15+PpVeFK/h8ayZTeVYSlkTvYYP5OY805Mi7gm0HKFfpy/V27
-	 fPtrbFu/UIGXO5OM+Ji5+fr0PsV9r+3CJMEVLpn4g4Wohi7q4PP2+I3lnePq2OPgUn
-	 1mK1l/3GDIGrg==
+	b=X3kX2aRWgVtrSH8Vxt7BvKZE1Wu7jU2PNp1+FDyOt5BNEeDYqFqkzDYcMJ3jQ7yao
+	 wocgNQe2UkCi85bpmoUkzqmBzaG/X6YyM5S89NrG3QFyXZmEROMHu4ScCz0v3DUGIK
+	 32BpzVsVSYv/McXtYkHBuWXve+1ms7/juDTnVigkW5a84B6SMAhQlqy+VwJ4/kFaHn
+	 nQahRByeoWfCOyOeFP0inmaQUyBfqI+U/2a57CwLfxmG2g2yFqaXroUGUt/byHAu1m
+	 Ks5krxmg5gwMB356wisbx5GTPkY4ma/5UTiOgJzi/zQtnpXVWhqfJEPF/6h6/HG8ad
+	 QoeaTPRy2QPvg==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 175F44B8E5;
+	by lkml.kernel.org (Postfix) with ESMTP id BF35F4B8FD;
 	Fri, 20 Nov 2026 18:09:18 +0000 (UTC)
 From: Gregory Price via B4 Relay <devnull+gourry.gourry.net@kernel.org>
-Date: Fri, 20 Nov 2026 13:09:00 -0500
-Subject: [PATCH 09/60] mm/damon: reject migration destinations outside
- common memory
+Date: Fri, 20 Nov 2026 13:09:06 -0500
+Subject: [PATCH 15/60] mm/page_alloc: count common memory nodes for kswapd
+ recovery
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -84,7 +84,7 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261120-private_nodes_v6-v1-9-74f5f9a115c2@gourry.net>
+Message-Id: <20261120-private_nodes_v6-v1-15-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -141,11 +141,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org, "Gregory Price (Meta)" <gourry@gourry.net>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=912;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=954;
  i=gourry@gourry.net; s=20261120; h=from:subject:message-id;
- bh=PHs1dwZV5jWDY/oD9jV+dBublSOMfq9XyD2sA1X67ls=;
- b=EHjtqMd7/8EaTbdZ+vJ1PCa8apdnUFyPwhm5wisIAr5smnjEwxj+N6vWTCoyNXJw98hRk2en0
- +blI33RHe8NCH5zVJHV0l2+J4bHQKjBy4yR6u86Gh0NgqVYPfJ4g5b/
+ bh=aFOBkE3dz1xwSTmNPK2kJnfdjjcB92u911EXeeybS5k=;
+ b=miZr9gvtGaEB+gbuRcJGykPJI+d+lB6tSrF2muK1MI3mjI5Sn4TSITCLQ17YsndpWzcCDgzxv
+ qw/A7tFHGb3BeDl3swCP0HsgD2rlRnitjHD2V8ZURSMeMu3SzxBJkCC
 X-Developer-Key: i=gourry@gourry.net; a=ed25519;
  pk=BZWDlx4htkR5KcvGjGtSDfx1tM0E5dlyBR43FEhjWVc=
 X-Endpoint-Received: by B4 Relay for gourry@gourry.net/20261120 with
@@ -156,30 +156,31 @@ Content-Transfer-Encoding: 7bit
 
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 
-DAMOS migration actions move folios to a node the user picks. As with
-move_pages(2), the destination should be general purpose memory.
+When a zone recovers above its high watermark, free_frozen_page_commit()
+clears a hopeless kswapd state if more than one memory node exists,
+since allocations could then have fallen back to another node without
+triggering direct reclaim here.
 
-Reject a destination outside N_MEMORY_COMMON, exactly the same as a
-node without memory is rejected today.
+Only common memory provide fallbacks, so count N_MEMORY_COMMON nodes.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/damon/ops-common.c | 2 +-
+ mm/page_alloc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/damon/ops-common.c b/mm/damon/ops-common.c
-index 2216a0023154..15cabc79613b 100644
---- a/mm/damon/ops-common.c
-+++ b/mm/damon/ops-common.c
-@@ -498,7 +498,7 @@ unsigned long damon_migrate_pages(struct list_head *folio_list, int target_nid)
- 		return nr_migrated;
- 
- 	if (target_nid < 0 || target_nid >= MAX_NUMNODES ||
--			!node_state(target_nid, N_MEMORY)) {
-+			!node_state(target_nid, N_MEMORY_COMMON)) {
- 		damon_putback_folio_list(folio_list);
- 		return nr_migrated;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0448d04e048a..1ec7d8000792 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2958,7 +2958,7 @@ static bool free_frozen_page_commit(struct zone *zone,
+ 		 * kswapd work again by resetting kswapd_failures.
+ 		 */
+ 		if (kswapd_test_hopeless(pgdat) &&
+-		    num_node_state(N_MEMORY) > 1)
++		    num_node_state(N_MEMORY_COMMON) > 1)
+ 			kswapd_clear_hopeless(pgdat, KSWAPD_CLEAR_HOPELESS_PCP);
  	}
+ 	return ret;
 
 -- 
 2.56.1
