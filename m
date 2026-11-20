@@ -1,79 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795198190;
-	b=EOJHcGoxkbiXIuDG7Qjbg4SvB4hnzaHZIA5FjyOAp+Eu7WozaAlEfHGPsG4mhtjJhj+l
-	 8FolIGpH/lIco7b5ocZ+oxZhZxKYIdCnsUS0I9kVYD9qJYRt+/GMEX0OKKRix1xRyYNdL
-	 0Jceu6lpo5OWCRa+8m1K8mjGtHcqba5lZ4QdW6y1g+EujkgiV7ZtgtLOc5t2KtoCjeHFK
-	 cHlBnCTJgo+Z+XaaNMKFrxkuNW5uayT/Fu7lrrcGnEavqLHQESuBFYII69QsY2TQSv7Aj
-	 1vz8ZW61LUffd6j2r1I+Axaa48KanQ2GqZGGLAtjcwLnj7tVTSC/IMTk/+PPAa/re5w==
+	t=1795198181;
+	b=YIp6t0DbV00bTrPWqT6I5TJyZvtycIOGHNGDma3wrCBDWvvV20jfmeRbqW8U3SNWa2wr
+	 8baYh3usFU5x4T8oSvsi5sqmNJlkmIYIb5tuO/45xaQMqyZbir+1Phqme+SQe0GQtxKNJ
+	 FggVVfa7nwGuD7RqCsMPS8pnzbhlrEgg9smAHxIbFjmWOSbndCOqFPY5hnwQa0/EBJ29N
+	 0bJRs8e6tNoRWYw67vBkDWLzE0r7q7ukGd149h5LdKtF77CEFzZd9ELrfFnf36UkZ5OTe
+	 +CTyprXDHFEwtFf4nPbT4py6Wol4vVxylQaBRoWRlOaAahi4p9Pfg9iGLuYSFLYxDgw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795198190;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795198181;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=fIKOUmmLdQgPnP1xFnX34WDRbVk3GTUL06zL9py5teA=;
-	b=mYSxxQYNFzPV5ligj5gUcRfvIh/URYknwbstffuLbb87g8bIwkHMELVRk5cJkidVNRvz
-	 KqXRLjewc4tnd4nodDM77igGMwsRf2fOM6CC5BB8VhD3bbzHVCtH+GuPcJvuM6nh3Jw6D
-	 ePZUYFTCU5jlscijdHChDjCiKPjdkCg2OdKheQsO37nFETyYzlKhpPjpmx2B2txe2PTt9
-	 EWGyEJbnhCxlPY5Twyn4H0tewhnaeIoTX6ehn1mTVbivq7cWo39fZI51EZ4XJ/S71048d
-	 LYtNu+hi0MNno8/AKea3aC49V6+t2BDAbTVkNkZGrcEhPKCI9XzZ5mart06DOhQ+Lkw==
+	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
+	b=upXSeXyqBFelDul301orJ/tpFRMS1psrJD2jFN6A53nAym3Z71UjzqPojyUybWDdhYHx
+	 UwXRNh+w7nGWrC1oruocckE1VHd6nEPb4dKg1WAztFwzCAMQXOKct3dk+GUlrRh1N+8Dj
+	 fUEycAzdgGAP5fRx08FNQiFNsq07VC9ZvS37vZHGg8oVlBh4q1D+Z2x+pyrBzAg+vLTon
+	 PKMpMP3krGy81IpJGrYEWrjTvekZoy2UukiKPyWSfYSezrcW3jkKTFNkffq8dJKPzhvWq
+	 qe/SDF4ZbXy3nKBvLx4F0ngL+wr8ijKbSiiPNblOrtAecZujmSJlFufu1xug2TnoQxw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acTnM16E;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="QQNLjO/A";
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E4B606A8B6;
-	Fri, 20 Nov 2026 18:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B160A2623;
+	Fri, 20 Nov 2026 18:09:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acTnM16E
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QQNLjO/A
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795198189;
-	b=S3+SRABtsFBU545c0w3BgQpBOppF+4VZJpBqUvvPY6WJX9Swq0guEQuXxxbvX0Oappsj
-	 0pq3TCon6k5UBUNufZhg4yAgWhHL4QbapW/r7Os4wZ5LJ3SA+/2fKsTLPSqPMjsh4WCnl
-	 CZJdXQvLt61AbCsXwaxx33pzljff5zhj0Wq2aSpFq/ppFbABaYkPQgkMaRDSkkKfskIZb
-	 rGeTNv6c6BPrQ9IjXJHai0hLA0o6v3JQW4/dYC/blkrGwu6sYdkaPYczKjbHsOiANOz42
-	 HOFsE/2P9hNBFl1268sKGeDL882os8rWshApDtQ43uWhsA8HsEAGZ2ulBNHZmxlD3jw==
+	t=1795198181;
+	b=tkiLDR64Na+wfBYnDDJfn/s65Xoq4YHJXxEtveXrL44aO389zZsTNok1N/T5436mVSEb
+	 bByGx6wIDb9CGV3/JSH+Wm1imk5zraEBJJ3N1yuOr8m7PC8znYXB0HoSSceV9miRHaqxs
+	 ouFl4IIBp/UnAJXocV/a+vUcobCMPAAbaB3yzbMBRrL+bDs3jYnHpMG83Gz8BK5ebEmdW
+	 mvzzykZWFNTWO/DF2e130R1RXtn19B4f9xNsx2HK7ZcGxuDdl19n240uFr44ZBsGjOIpP
+	 fcdwBf+jo3QtakTfrNAj2IqI1N09DEjzT7ZZlcFGz+HgRT89VKLs8sRqmrglBihTVQA==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795198189;
+	c=relaxed/relaxed; t=1795198181;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=fIKOUmmLdQgPnP1xFnX34WDRbVk3GTUL06zL9py5teA=;
-	b=w4dTiZjbGSRIEklDJa96QaxAPFXO/qN9MzkrIzUr65QWhmM4Mytp172T5rJEYjv2X4Z7
-	 x1f/wnl/50/Z6/SMnFHN4CwaKngCSPhoPX6f7V5NcZBAm5XgOsS53e4BZ3rBe1UxjX+TV
-	 EOy/xdVLGXEYgOT9NDJHmwYUNlJyHFcHCj8y4mx4ZbBgclO2cYwPI9IQYQvCKqGWK7ZD1
-	 a36KM/PPxapTpXqHKv1jIPeVrZvtYHB0CakMarMFnZTFfUDE7TLCFzTMiiJzF9xMAWFR8
-	 szpX0uOnDY/f+PKg3V0CBc1lQbyDzwOX6mQ6iXDKqk91eoRF66yaZz7piElpTi6Ud5Q==
+	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
+	b=yJPlilkdB/Uj5DREtZqIp2hjevTLMFgw4oq7ikPSj8i5EwL4zksYFFJojvT+EPdqwwYp
+	 IppHn8JHeMS11QdAfFuneOzoWUYf6kVAWwCuLYvOS7UICk0mTqowAdg1vFSelayMo0DdD
+	 D5+pWM5+YUV8M3/ijc+9Ia18x7A5ygBjxTD/Op62zKwhn+75hmUn6EIgwl9xvi8hWVpze
+	 TPd18IJatsu8IYVR5nAYcQObokxpeYbztF8XWpIDJUtZETWAv9p4ZAfmaOIJTfp7xArgX
+	 baXo5mbCEOC+nxUjkdnTnIMz0f84iXiVdcKQjCC2FWigWidSPT6t/1/2is3HnvkK54Q==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 2FE671F000D0;
-	Fri, 20 Nov 2026 18:09:37 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id AE0CC1F000EB;
+	Fri, 20 Nov 2026 18:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795198189;
-	bh=fIKOUmmLdQgPnP1xFnX34WDRbVk3GTUL06zL9py5teA=;
+	s=k20260515; t=1795198181;
+	bh=1fr3kKexKN6/LyygAXFTIEKl3iK6RW/c/i9QMIazwjQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=acTnM16EDyCvAGFc9O+e30hi98cMcpdcpJOsx9fpjQRMWjqSbgKApKzEheIZEb5IO
-	 qx+HIfa/zZcgNne7qhE9ht7tqnb2oBOlzqM+t2652oMwn3fBXtxBoqwKLBotZcmLIR
-	 oEDnHzAIhUI68rp5C7go+g8OGatsB5/G3rTI+kuk9OTbArx9BPBNd5oneP6DQBPoUv
-	 FbxPEn/ZiGIIWCbqKluK4cuDTjq1Z0+vxOtmsIeyYALZh4EfAsL+Tg1NXt6G7i7Qzt
-	 Vscq3UHhKF0UGg+tqv0qOFAGOdXZORB/yYHw2I+IqnzC6Vxn8HXsy0Fh2UtKVDr1Fy
-	 0NT4sTUUWlpBA==
+	b=QQNLjO/AGEsdVDWq/dxgiR6dej4HbQKtukVFuY5he60ufYSkQ1oWWGrbr1rhQU54D
+	 /775ZjzZXOCikDHf0Qn0ql775/A3AFaDGXWoutbch5nBfzJ9EIEB0YANrWDLwDgF8S
+	 ufK73d4VtcQElmApOr8vrZ0hi9k0iL1jk8BKWjSwYk0SQNL63IIbpyL5bhx1bp6/6L
+	 7+z4wghYetMtR9Iwg+jjugoUPGW5/mQCSY/+ez08D5sqhOY0EZiYyMDEQBptn3H3e/
+	 wb6hlndjcyVPT6dpGbnytedZGUR5LEhFo2eJndfduqG5SjE1DrZkOpPkmmnrnN1+jq
+	 aCg9VKf5kd2Ng==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id CF9BD4B8DD;
+	by lkml.kernel.org (Postfix) with ESMTP id 7ECCF4B8D1;
 	Fri, 20 Nov 2026 18:09:17 +0000 (UTC)
 From: Gregory Price via B4 Relay <devnull+gourry.gourry.net@kernel.org>
-Date: Fri, 20 Nov 2026 13:08:58 -0500
-Subject: [PATCH 07/60] mm/memory-tiers: restrict demotion topology to
- common memory
+Date: Fri, 20 Nov 2026 13:08:55 -0500
+Subject: [PATCH 04/60] mm/page_alloc: build zonelists from common memory
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -84,7 +83,7 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261120-private_nodes_v6-v1-7-74f5f9a115c2@gourry.net>
+Message-Id: <20261120-private_nodes_v6-v1-4-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -141,11 +140,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org, "Gregory Price (Meta)" <gourry@gourry.net>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=4041;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=2108;
  i=gourry@gourry.net; s=20261120; h=from:subject:message-id;
- bh=Ext7MJ+xSeMP4IZ0P2+5bubjxg6YItpPPyY245ptKwA=;
- b=77z5saMzmlS7WuTHEiIf8+6SjbA1jSdRtgEyOkufSBTTbdVuWCTYUK70piMdHImpjzWCl8Jgv
- pKO7a4CGnM8BRAQ7IjzE1Ga6YyebvLho8JkT9M06RFxX2wvQHw+JNzl
+ bh=hYnZoxMJ3yP49nfY0PYkTWJ6krAi0Bs8xOcweeGlZSI=;
+ b=0+ENTTd09K3orEMzSi6wiR5qOFJD5dDrUYY3xdoPrBK5gY7zLwZQW1DS5dBPmSiXPxJfW0mkv
+ 12JJVCclp0MC6jQLSgCNEVIyNSUniufk9x/6ovTQjJziND5MyE5ogoK
 X-Developer-Key: i=gourry@gourry.net; a=ed25519;
  pk=BZWDlx4htkR5KcvGjGtSDfx1tM0E5dlyBR43FEhjWVc=
 X-Endpoint-Received: by B4 Relay for gourry@gourry.net/20261120 with
@@ -156,111 +155,67 @@ Content-Transfer-Encoding: 7bit
 
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 
-Memory outside N_MEMORY_COMMON is outside the ordinary allocation pool
-and cannot be a generic demotion source or destination.
+Zonelists decide which nodes an allocation can reach.
 
-Build demotion paths and the default DRAM performance reference from
-N_MEMORY_COMMON rather than every node that has memory, and do not
-assign other nodes to a memory tier through the generic hotplug path.
+The fallback lists hold every node in N_MEMORY, and a node's
+__GFP_THISNODE list holds its own zones whatever the node's state.
 
-Removing a node's memory already resets its demotion targets, so a node
-that unplugs and returns outside N_MEMORY_COMMON keeps none.
+Ordinary allocations should reach only common (general purpose) memory.
+
+Build the fallback zonelists from N_MEMORY_COMMON, and __GFP_THISNODE
+zonelists only for a common node.
+
+The build_local_zonelist() refactor lets us reuse the code to build
+a local-only zonelist for nodes outside the N_MEMORY_COMMON set later.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- mm/memory-tiers.c | 23 ++++++++++++-----------
+ mm/page_alloc.c | 23 ++++++++++++-----------
  1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 7fc56a8c6651..97d5ecefd89f 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -370,7 +370,8 @@ int next_demotion_node(int node, const nodemask_t *allowed_mask)
- 	 * closest demotion target.
- 	 */
- 	nodes_complement(mask, *allowed_mask);
--	return find_next_best_node_in(node, &mask, &node_states[N_MEMORY]);
-+	return find_next_best_node_in(node, &mask,
-+				      &node_states[N_MEMORY_COMMON]);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ddb04b72a160..0448d04e048a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5947,17 +5947,14 @@ int find_next_best_node_in(int node, nodemask_t *used_node_mask,
  }
  
- static void disable_all_demotion_targets(void)
-@@ -405,7 +406,7 @@ static void dump_demotion_targets(void)
+ 
+-/*
+- * Build __GFP_THISNODE zonelists
+- */
+-static void build_thisnode_zonelists(pg_data_t *pgdat)
++/* Build a local-only zonelist when this node is eligible. */
++static void build_local_zonelist(pg_data_t *pgdat, int zlidx, bool eligible)
  {
- 	int node;
+-	struct zoneref *zonerefs;
+-	int nr_zones;
++	struct zoneref *zonerefs =
++		pgdat->node_zonelists[zlidx]._zonerefs;
  
--	for_each_node_state(node, N_MEMORY) {
-+	for_each_node_state(node, N_MEMORY_COMMON) {
- 		struct memory_tier *memtier = __node_get_memory_tier(node);
- 		nodemask_t preferred = node_demotion[node].preferred;
+-	zonerefs = pgdat->node_zonelists[ZONELIST_NOFALLBACK]._zonerefs;
+-	nr_zones = build_zonerefs_node(pgdat, zonerefs);
+-	zonerefs += nr_zones;
++	if (eligible)
++		zonerefs += build_zonerefs_node(pgdat, zonerefs);
+ 	zonerefs->zone = NULL;
+ 	zonerefs->zone_idx = 0;
+ }
+@@ -6001,8 +5998,12 @@ static void build_node_zonelist(pg_data_t *pgdat, const nodemask_t *candidates,
  
-@@ -441,7 +442,7 @@ static void establish_demotion_targets(void)
+ static void build_zonelists(pg_data_t *pgdat)
+ {
+-	build_node_zonelist(pgdat, &node_states[N_MEMORY], ZONELIST_FALLBACK);
+-	build_thisnode_zonelists(pgdat);
++	int nid = pgdat->node_id;
++
++	build_node_zonelist(pgdat, &node_states[N_MEMORY_COMMON],
++			    ZONELIST_FALLBACK);
++	build_local_zonelist(pgdat, ZONELIST_NOFALLBACK,
++			     node_state(nid, N_MEMORY_COMMON));
+ }
  
- 	disable_all_demotion_targets();
- 
--	for_each_node_state(node, N_MEMORY) {
-+	for_each_node_state(node, N_MEMORY_COMMON) {
- 		best_distance = -1;
- 		nd = &node_demotion[node];
- 
-@@ -459,7 +460,7 @@ static void establish_demotion_targets(void)
- 		 * nodelist to skip list so that we find the best node from the
- 		 * memtier nodelist.
- 		 */
--		nodes_andnot(tier_nodes, node_states[N_MEMORY], tier_nodes);
-+		nodes_andnot(tier_nodes, node_states[N_MEMORY_COMMON], tier_nodes);
- 
- 		/*
- 		 * Find all the nodes in the memory tier node list of same best distance.
-@@ -468,7 +469,7 @@ static void establish_demotion_targets(void)
- 		 */
- 		do {
- 			target = find_next_best_node_in(node, &tier_nodes,
--							&node_states[N_MEMORY]);
-+							&node_states[N_MEMORY_COMMON]);
- 			if (target == NUMA_NO_NODE)
- 				break;
- 
-@@ -507,7 +508,7 @@ static void establish_demotion_targets(void)
- 	 * allocation to a set of nodes that is closer the above selected
- 	 * preferred node.
- 	 */
--	lower_tier = node_states[N_MEMORY];
-+	lower_tier = node_states[N_MEMORY_COMMON];
- 	list_for_each_entry(memtier, &memory_tiers, list) {
- 		/*
- 		 * Keep removing current tier from lower_tier nodes,
-@@ -554,7 +555,7 @@ static struct memory_tier *set_node_memory_tier(int node)
- 
- 	lockdep_assert_held_once(&memory_tier_lock);
- 
--	if (!node_state(node, N_MEMORY))
-+	if (!node_state(node, N_MEMORY_COMMON))
- 		return ERR_PTR(-EINVAL);
- 
- 	mt_calc_adistance(node, &adist);
-@@ -706,8 +707,8 @@ static int __init memory_tier_late_init(void)
- 	get_online_mems();
- 	guard(mutex)(&memory_tier_lock);
- 
--	/* Assign each uninitialized N_MEMORY node to a memory tier. */
--	for_each_node_state(nid, N_MEMORY) {
-+	/* Assign each uninitialized common memory node to a memory tier. */
-+	for_each_node_state(nid, N_MEMORY_COMMON) {
- 		/*
- 		 * Some device drivers may have initialized
- 		 * memory tiers, potentially bringing memory nodes
-@@ -929,8 +930,8 @@ static int __init memory_tier_init(void)
- 	if (IS_ERR(default_dram_type))
- 		panic("%s() failed to allocate default DRAM tier\n", __func__);
- 
--	/* Record nodes with memory and CPU to set default DRAM performance. */
--	nodes_and(default_dram_nodes, node_states[N_MEMORY],
-+	/* Record common-memory nodes with CPUs for default DRAM performance. */
-+	nodes_and(default_dram_nodes, node_states[N_MEMORY_COMMON],
- 		  node_states[N_CPU]);
- 
- 	hotplug_node_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
+ #ifdef CONFIG_HAVE_MEMORYLESS_NODES
 
 -- 
 2.56.1
