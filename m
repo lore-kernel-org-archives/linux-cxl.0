@@ -1,61 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795192751;
-	b=lBKIwZAv7b20VlkWtXAsgVqiknIPGZQsiHAAmuOpfiGJIg9/ySO3O/9ugfgXIJT1ii/4
-	 IhXCnQCGj3uqnaLn4uneJnAiZw2ev5lAlV3Q06Dv4x9taAafu8yfjvEs0kC8b1VLxsh8Y
-	 bRf2IbCECLwMX/1NQYGsgIsEZvIijuLkIb7k7GC/oo3nb5kk0N9hacAWuM+oXh1ZsPgwV
-	 qpiDm9QVKhtl4I6WJCj4LAGck3L6ICvbB+Tp2OjylXlJFyLYMMVXvDYIe5zbPCqB//aB/
-	 cS3Kr5nIv0ud4r75q/nxlqJhOZi1ctd8744KEqwQGtpC6FQpvqpsPzfedAwoodQ6xAw==
+	t=1795196089;
+	b=vnyexLVSbr18MqUWM1NPfcy6UQ6y13g89GaPckHXN1B2DehpYYLvplE9yFj4VAO4C7i7
+	 8u7dxMs7isw4h9gRmee3dhLxNxxQLhLpRdlZMZ4QIXYD2N3UrCsjkaHNrsCmMiOE2qqtG
+	 F1Mv7shl6RZkgBDeLSUF+CoS5Q5tIv2SBCJXJuq/6SbR9JNaWz5r/zoJR9FmRYuIrqF+D
+	 XgfQdhD7sd9IuUXZyfbx554bpmS392WMDrcHCQhb8emzI0+bPl0fnJwM4AlxZ8qo2QN9F
+	 dd5eR3COEhiQTqgIodanmDu34o11UTt4kcehzs1coMofMmN1eUGN1ndciQmYkqilpzQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795192751;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=o2Gchlovjpt7GczhTpNg1ZhDn2KN/WvMSeZUox3Hoa4=;
-	b=BeScogtzm/Cuv50qjrBhdSPegj1XYoLZN7lnoENmC82Es8LaS+vXlyhHMHHo6IdeQ/DU
-	 5lWjwFzLqoQWvEHYTgwuvhqLM3FlFyjhSz0UxO6ma72HY6WsnpeefUJ/MqmOvMHywGZC5
-	 5e1HOGEkyxl7Y0sAPCYoHI9vnaJgsuP0T9kIjOIefazuXb5xg10z3NT9UbFtbXjWT3gkj
-	 sRfAcbyQFx4v06FtcMj9k0ZIF8iOHKByVBsah4Xbd4HdXVVHOcPKV6D0OjNLg8dUTsK5u
-	 PdirvmcgIzc1YNGGKvLVsOx9Q7dFMrKxZYXxTWoyBFImN20ooKWSXKNgzKGU/IB9UuQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795196089;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:From:Content-Language:To:Cc:Subject:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=IJSoYfDGNElU2HGzFeCIxk25wKCRD+genvhBATiMOo0=;
+	b=TIOglbMUwa3J41iNYBO6oM4n8evTjNruHOEujNnUbh4o1k1ksLoYhmcIKIXXK7FdkwvY
+	 cuPJcqm00wcuiMK9HpBFW7LLVQIXIlDsH+xazJ1dnZTS70pq4AJdC+8crEvy+2J/9319q
+	 NyDKtx35T5T5RnmXE3fizGhbx2xyW9EIiEh2i21xEbblzZp0OvJSZQJQxlKx/IWOezSXI
+	 1qC7pcDiLWtJ88YCiAAwOTtOZWfd1WedXBeie0niwbGdWJgTElowzMPqU9eCecdrSCqgI
+	 JSWzm41IKwDbdt3M+l8mJNlQ3+yZfA1YbaXXb1k91I6zITPKmiCQZM7T7bXIS5PuVtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R0diO3R0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="SbgitGF/";
+	arc=none smtp.remote-ip=192.198.163.9
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05CC606A338;
-	Fri, 20 Nov 2026 16:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2246606A32A;
+	Fri, 20 Nov 2026 17:34:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A2246606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R0diO3R0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BB11F000F0;
-	Fri, 20 Nov 2026 16:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795192750;
-	bh=o2Gchlovjpt7GczhTpNg1ZhDn2KN/WvMSeZUox3Hoa4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=R0diO3R0IwdCFQBi8ev6UvmGHq45+73ZelTh5K2rpzujd/HbZ0CqAoOtQdRCTuPzu
-	 YIrI0q+UudpMC3trJzl1eS6cCYK9kk2VtN0jEhD2ODYeXpeAeAsjuY+8IGegifY9aj
-	 JLriM43csRHqFXYmI5b029uPhNAKPYa3JPQ7v1a0kTw2/XQ+BD7jkGxdBNxZ+eI0lm
-	 FQuS2Xb1RB0wDngBTXTHMSHPMOth3MhnSF2fyx5CdKXN26ZhIQA8kKbEJpm4KPDPoL
-	 EFOSJ4I8MLb6F/LDKvT1Jc0KwNseYtZvUKo/5jzy9GDGW8Ipb7sxwqo59WUG3gMvrO
-	 XbmLk9Iib6yaw==
-Date: Fri, 20 Nov 2026 10:39:09 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	helgaas@google.com, iweiny@kernel.org, ming.li@zohomail.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, tglx@kernel.org, wangruikang@iscas.ac.cn,
-	alifm@linux.ibm.com, shawn.lin@rock-chips.com,
-	lihaoxiang@isrc.iscas.ac.cn, 18255117159@163.com,
-	xiangzao@linux.alibaba.com, vidyas@nvidia.com, kaihengf@nvidia.com,
-	kobak@nvidia.com, newtonl@nvidia.com, kristinc@nvidia.com,
-	Benjamin Cheatham <benjamin.cheatham@amd.com>,
-	Alex Williamson <alex@shazbot.org>
-Subject: Re: [PATCH v3 1/2] PCI/MSI: Skip MSI/MSI-X restoration when config
- space is inaccessible
-Message-ID: <20261120163909.GA878361@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SbgitGF/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795196088; x=1826732088;
+  h=message-id:date:mime-version:from:to:cc:subject:
+   content-transfer-encoding;
+  bh=tVIl1oy/CboezVgy3jBsegn6rNWOcKOdQzuPeDENzoM=;
+  b=SbgitGF/iT6IekcXrApIhHi5oZEucUKgys2wJ2frx+/uWPXVtXoEzci1
+   aPCg791pNyu6otvmNKns8oonCgby0vUDGs/5n8QBQm3sgpY2x22Wd4wz4
+   YJtAIKK8fQSJ+0aFZKldMTR2v3GKEpUGOfeS//5IAZcQvqHBp9l2msURw
+   A6hygmOFlgb8yKT+mnlwiqpXHmdirdP1EoSUi4y75gvhZyFaCRSfwKruD
+   XKl5MVcoeRCOdRsU+YFdIO1Fc0IOtnFxMR7rK2qey/ZhNzZMBbGZfGG7T
+   fIwTdpGAHAYqiHGyOy//FUhm3BNXJqfKJRpsRWtnquBAGAXHReSxiQY6J
+   w==;
+X-CSE-ConnectionGUID: Y3aj2JqpTvSHnPZZVIpcxQ==
+X-CSE-MsgGUID: bl73grPvQ6inXnlC+I5lkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="3962504"
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="3962504"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:34:47 -0800
+X-CSE-ConnectionGUID: 9YT1AebQQ4WvpXnE14ZqNg==
+X-CSE-MsgGUID: im+REL5qScq/4oV8ZIehrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="10561234"
+Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.109.138]) ([10.125.109.138])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:34:46 -0800
+Message-ID: <c2b42261-71e8-46c1-b847-16b12ee81676@intel.com>
+Date: Fri, 20 Nov 2026 10:34:45 -0700
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -65,169 +72,60 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <av_8-NLyjXUQC0lK@MWDK4CY14F>
+User-Agent: Mozilla Thunderbird
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 7.4-rc4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-[+cc Ben, Alex]
+Hi Linus, please pull from:
 
-On Fri, Nov 20, 2026 at 04:09:13PM +0800, Richard Cheng wrote:
-> On Mon, Nov 16, 2026 at 01:09:39PM +0800, Bjorn Helgaas wrote:
-> > On Mon, Nov 16, 2026 at 02:52:28PM +0800, Richard Cheng wrote:
-> > > PCI state restoration runs even when a reset fails. If the device's
-> > > config space remains inaccessible, MSI-X restoration still writes the
-> > > MSI-X table. The table lives in device memory space, and these MMIO
-> > > accesses can trigger additional errors, including DPC.
-> > > 
-> > > MSI is programmed entirely through config space, so it doesn't issue
-> > > such MMIO accesses. Restoring it is still pointless when config space is
-> > > inaccessible: reads return all ones and the restore path writes back
-> > > values derived from them.
-> > > 
-> > > Check whether config space of pci device is accessible or not at the
-> > > start of both MSI and MSI-X path, after msi_enabled/msix_enabled test
-> > > and before any config access, and skip the restoration if the device is
-> > > inaccessible.
-> > > Make the helper non-static and declare it in pci.h so the MSI code can
-> > > use it, too.
-> > > 
-> > > Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> > > ---
-> > > Changelog:
-> > > 
-> > > v2 -> v3:
-> > > - Cover MSI restoration path as well (Farhan)
-> > > - Use pci_dev_config_accessible() instead of open-coding the check, and
-> > >   make it non-static (Farhan)
-> > > - Move the check before any config space access in the restore
-> > >   functions (Farhan)
-> > > - The return value of the PCI Command read is no longer checked, since
-> > >   the helper only tests for an all-ones value.
-> > > - Update the subject and commit message accordingly
-> > > ---
-> > >  drivers/pci/msi/msi.c | 6 ++++++
-> > >  drivers/pci/pci.c     | 2 +-
-> > >  drivers/pci/pci.h     | 1 +
-> > >  3 files changed, 8 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-> > > index 8a0133a6a286..2865f73f5ead 100644
-> > > --- a/drivers/pci/msi/msi.c
-> > > +++ b/drivers/pci/msi/msi.c
-> > > @@ -524,6 +524,9 @@ void __pci_restore_msi_state(struct pci_dev *dev)
-> > >  	if (!dev->msi_enabled)
-> > >  		return;
-> > >  
-> > > +	if (!pci_dev_config_accessible(dev, "restore MSI state"))
-> > > +		return;
-> > 
-> > Sigh.  I hate the fact that pci_dev_config_accessible() is
-> > proliferating even though it's obviously racy.  Maybe it's the best we
-> > can do, but I just feel like we're digging this hole deeper.
-> >
-> Hmm I agree this is racy even though we're holding the device lock
-> throughout the reset/restore process.
-> 
-> I assume you mean something like a separate sources DPC happened and
-> make the device inaccessible , some scenario like that ?
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.4-rc4
 
-Yes.  A PCI device can stop responding at any time, e.g., it got
-physically removed from a slot, a cable was removed, its internal
-firmware crashed, power failed, etc.
+...to receive a small collection of CXL fixes. These have all appeared in -next
+for a few days with no reported issues.
 
-> > Also, this is called in the pci_restore_state() path, which is full of
-> > other things that also write to config space and will also fail in
-> > this situation.
-> 
-> Actually I was trying to cover the whole pci_restore_state() in v1 [1],
-> and Benjamin raise the concern about the drivers may depen on PCI state
-> having been restored by the time reset_done() runs.
+---
 
-I think you're referring specifically to Ben's comment [2] that driver
-.reset_done() handlers expect that pci_restore_state() has already
-been completed, and your "[PATCH 3/4] PCI: Skip state restoration when
-configuration is inaccessible" patch calls .reset_done() without any
-restoration if the device was inaccessible:
+The following changes since commit aebb7274476403040d582c61478df8f4a7bf9cd3:
 
-  static void pci_dev_restore(struct pci_dev *dev)
-  {
-        const struct pci_error_handlers *err_handler =
-                        dev->driver ? dev->driver->err_handler : NULL;
+  Linux 7.4-rc3 (2026-11-15 14:30:11 -0800)
 
- -      pci_restore_state(dev);
- +      /* MSI-X restoration may access device MMIO. */
- +      if (pci_dev_config_accessible(dev, "restore state"))
- +              pci_restore_state(dev);
+are available in the Git repository at:
 
-        /*
-         * dev->driver->err_handler->reset_done() is protected against
-         * races with ->remove() by the device lock, which must be held by
-         * the caller.
-         */
-        if (err_handler && err_handler->reset_done)
-                err_handler->reset_done(dev);
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.4-rc4
 
-I think Ben is absolutely right that .reset_done() handlers expect the
-device to be accessible and config state to have been restored, and I
-don't think it's reasonable to expect every driver's .reset_done() to
-handle that generic problem.
+for you to fetch changes up to a02576de05178f15ffe6fc7551496de7de8acfde:
 
-I think pci_restore_state() needs to return failure and callers need
-to figure out how to deal with that.  There are a lot of callers, so
-it's messy, but we should recognize that it can fail.
+  cxl/port: Fix endpoint RAS error unmasking (2026-11-17 15:37:49 -0700)
 
-> What my bug actually hit was MSI-X table write triggered DPC, I can't
-> justify for all kinds of driver, so I limited the scope.
-> 
-> If you think a broader check in pci_dev_restore() is a better place to
-> handle this, I'm happy to give a deeper research and revisit it.
-> 
-> Best regards,
-> Richard Cheng.
-> 
-> [1]: https://lore.kernel.org/all/20260929020405.9724-1-icheng@nvidia.com/
+----------------------------------------------------------------
+cxl fixes for v7.4-rc4
 
-[2] https://lore.kernel.org/all/8a19d63c-db9a-40ab-a811-5d761252638f@amd.com/
+cxl/port: Fix endpoint RAS error unmasking
+cxl/test: Free the decoder registry when cxl_test_init() fails
+cxl/region: Reject a repeat write of an endpoint decoder to targetN
+cxl/region: Restore a target's position from its slot after sorting
 
-> > >  	entry = irq_get_msi_desc(dev->irq);
-> > >  
-> > >  	pci_intx_for_msi(dev, 0);
-> > > @@ -877,6 +880,9 @@ void __pci_restore_msix_state(struct pci_dev *dev)
-> > >  	if (!dev->msix_enabled)
-> > >  		return;
-> > >  
-> > > +	if (!pci_dev_config_accessible(dev, "restore MSI-X state"))
-> > > +		return;
-> > > +
-> > >  	/* route the table */
-> > >  	pci_intx_for_msi(dev, 0);
-> > >  	pci_msix_clear_and_set_ctrl(dev, 0,
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 7c6f2aba8144..671ffe4da1c8 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -714,7 +714,7 @@ u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
-> > >  
-> > > -static bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
-> > > +bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
-> > >  {
-> > >  	u32 val;
-> > >  
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 77efa4c5c960..98dd3dbd5edb 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -240,6 +240,7 @@ enum pci_mmap_api {
-> > >  int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
-> > >  		  enum pci_mmap_api mmap_api);
-> > >  
-> > > +bool pci_dev_config_accessible(struct pci_dev *dev, char *msg);
-> > >  bool pci_reset_supported(struct pci_dev *dev);
-> > >  void pci_init_reset_methods(struct pci_dev *dev);
-> > >  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
-> > > -- 
-> > > 2.43.0
-> > > 
-> > 
+----------------------------------------------------------------
+Alison Schofield (2):
+      cxl/region: Reject a repeat write of an endpoint decoder to targetN
+      cxl/test: Free the decoder registry when cxl_test_init() fails
+
+Davidlohr Bueso (1):
+      cxl/region: Restore a target's position from its slot after sorting
+
+Richard Cheng (1):
+      cxl/port: Fix endpoint RAS error unmasking
+
+ drivers/cxl/core/region.c    | 11 ++++++++---
+ drivers/cxl/port.c           | 16 +++++++++-------
+ tools/testing/cxl/test/cxl.c | 24 +++++++++++++-----------
+ 3 files changed, 30 insertions(+), 21 deletions(-)
