@@ -1,78 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795198170;
-	b=RYS94LFQo8KmowxcPLU1YxDyewCeB/SJYONMtfdcGYAV3XqbHzRULyuwmR/1v6NACUwP
-	 AM0q6cUvb6YvXHSkWBArHzIf3612xtOLfyEfZtWVqB94Rz/4q8ODwgcAgn0OkQzlrBu2x
-	 Wlx9dn8DG9nxgmCnXYIWOM3s91xU6G7PwioemBqildOhJiYUVzbWQYJnK0rS9MiQVTtw4
-	 WjxfS0k2xhZa7TpC8d1/s7aR2frdErV/hWINPp71XBQ8cSkpEmU9q+K+skI3Gnrn59cRK
-	 zHJq9wUazqVIIB2OiuGtjK1AqqfeD5bPRgEdkCNkr1/fIACQU4RLLNP1hsjnx/Z0suA==
+	t=1795198176;
+	b=4dL8+dTWejH1mUTa7IThbqOb85sF6q1bTVhQ70dGplui2f2hnvfQVfH6lvbpSbjAT2Er
+	 SG/cG+cfAYA/RpclCTFMhX54gmY8pvNtCSmRs+W60BGb2wrYIY+wXo6Fu1I6X+fpNIlVS
+	 b7bSM1LBqMewcmLRYeqyBrfmG6H0hsRG4LC2CRNjPyJY3a1JZUpvnfLfEva1vwEHrewaO
+	 UuCvfIHC/h1qhPDYq5jKIokTtlmZ9y9Cj5pfuogh0tL1uiFLMuN6ZlLzHI22MVSg2CXoI
+	 2SxfoHVvO5I/FeKXSmzBRvpstOT8xnlDnGWD8R4ohsR2G48HF6i2AQ7mCtmAYdPC+1Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795198170;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795198176;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=NTsNDMBuz7zPhiY5EdCthhkTLILbhAv/FdI9gjXNQX4=;
-	b=09joYTU4NEQEkqaO5lifnx0QmtpSjHGDQrB6AexiC3wtanAzM5aCJ81VQc8SjqtTxkZK
-	 1EhQt9LZsXhffJz2QPUM2C5InJ5c+NafznpRu/ZZ0Vmpdi9lp6uOSroDipWW/zWR2PdSr
-	 dCo3rLtzCZDd9Ar1plTKt/W01oq+XL8E7ckZY/qxlcjauk8t4ft/Be+VpYGuaqtfsQ49q
-	 U0JALq3CP4M1qdKmEtmmBTvTQybb9wrkgPuDQ0BVgf1+4qkrv5dc9C7JiOHYs3iZjcKsB
-	 S3rmqieOi0TZPkfz8W0AOxam7d2bo6jrnKJ255l/MuVT9abApoodx4cFNYo8ioMyF6g==
+	bh=HDhBzinWWamnegvT9ExdyfioDJiSgPrUC+Mo3CWLBjU=;
+	b=BWCkgr478rj061l0dNYoashO4K69mL4d65GBgRaklphXZIRQPyLvOu0NkWfIfVnw0y9G
+	 TnEf1AOI0eC3/sizpPNCv4Oi0XDquFIJ2KleHnCTpq9791Gm5NcZe7HoJpp24SX0DJbwx
+	 HpWh5MAmIqCyS9tSeUxanvmTKmoTC+xyMfziJcDPsSU6aLaO3wiB5fwa7+yLDAsSTK1YT
+	 5lyEGrQHmEtA+bLGpePnb4jWdYEYHBkO8kwQOjp6A43gxW9e9B9vWUlO3O9cM+Sy/Ncc5
+	 6IzPaEOlhkOtm1fBsa2Q0fSb5/Oreh1eMTVXPp9cAmXP2+5B2V06uEiw2jBFXi6qS4w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="l5V/+EuU";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nss9RHgS;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C34606A335;
-	Fri, 20 Nov 2026 18:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A43F606A883;
+	Fri, 20 Nov 2026 18:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l5V/+EuU
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nss9RHgS
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795198169;
-	b=2fm3oJIfacRV58tKr04+SjQjMgImPzFLABofcMO1aHpUdC9kBYP0m3RljKh2gdP3nlgb
-	 55wWHmckTLkwcoIHxkxqsZ5tZ4HHtEgAlMErealMjIoKIEqQCTpMhy24G0xdjAlWgg0pE
-	 Xcm3QE6CgufIwHs/vpqtNAkxTAm7qEHq84x5Vz27pP26M3EMoDC50j0isf320mIaKNaUT
-	 QA6hQ0SQ9WVmXnX8VaTZ7YCIvVOhDyhZo45lIoo2acQoOtiEUs/tFCYrocBtctFQOBD3Z
-	 bZWNo9ugj0QyPNfXiwEQPdYqETWwtKCJl/1e4Xn+Vdgn4EscvSK9tt9DJ1/snCG0qKQ==
+	t=1795198176;
+	b=u/AFiC68+xdVbrbQYrVI0U7/li9o8eap+AYhTBOklDAWrj2dzjqSrX1oLkH0OtPP9sIX
+	 JIqPHIfXaaNyk0pFICQuUNQfk5yjOWU3Ae3nRiLMJhYBC1dPm95E12HaZzYDCtUzPngdc
+	 zZ/uoWrdXeq2b54SL+netHOiDW0Ea0uhlH2VpI4K5D+wd4puZnDJaLL864qZLJ2wCLYIZ
+	 iHjFmzwVR/W6YWQOBKVKFf+g5Ybfg7nGDIFBEJgH9QtSnFmgmOoPV2N0B9z+2PTKcG2JZ
+	 Y4/JpqNYFtVRjDjiaa3PutFPAxc0A8Hj8tr/1OdyDATYFWqGraP93gya6r47QZdjFjg==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795198169;
+	c=relaxed/relaxed; t=1795198176;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=NTsNDMBuz7zPhiY5EdCthhkTLILbhAv/FdI9gjXNQX4=;
-	b=LJoIBWBFUvpUJrpm17RNmyFzxgu+lnaz0+GBXz7ntuzt06i3N0MCEp4CDhOjR2UQwOsA
-	 e5xXve3wzj0seFIStGNRb5mjSFW6VcLyPbz+Jk/FCREtfuLzk9QLFyaptxG0YRSSAG7SG
-	 y/QvplTB8MvM+edaSl/uit8iun7LxDnNsZCxl0tDoolpwOAYmWK+15S0ibjx1+nZcZTP5
-	 OBEiAQbihcGI1szIsvGro3XGfGCvESujPoFgDv77sZudeXh9/NA+B+ZQfJtz39mSHqgzd
-	 4kIGGHg7/i64kHItu/AVV4/N1XA2sxJy5ROtKtTQOr60PMD/eIXw7B2RkkRilEZULKA==
+	bh=HDhBzinWWamnegvT9ExdyfioDJiSgPrUC+Mo3CWLBjU=;
+	b=uknVBNPuaH1lNuJ+qymgbf6j091pOVmLUh1ZUvEgZqfRxXqIpdRQAoR2zULQxxMg2H42
+	 OybFmmbrleDq+JDmdpWNvfkyCYj5WN8WlFQ/0qrIfoYSYKyPX9WWym5R3w2nAoAVK50SL
+	 qKDSIJAwRHleu7cddSznpeAcotmYuE4WG/RBdSRb6W5hCqI4X1G9ztf+/bJX7ZgfBtxJC
+	 r+MqGq54m6C0GZy8xdEmMouO8wWXiwqAIFPJ6+ru5Rqh0Irg5LxvvdlCdmCapxIoxGfZY
+	 fCihR4qGFYJxhn2IxOfcOQhwCu5+d4GN9067ZQ9JGw8nSnekBU1KUO0Q/IhAatnkhOA==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id A20D41F000D1;
-	Fri, 20 Nov 2026 18:09:17 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id 84D261F000E6;
+	Fri, 20 Nov 2026 18:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795198169;
-	bh=NTsNDMBuz7zPhiY5EdCthhkTLILbhAv/FdI9gjXNQX4=;
+	s=k20260515; t=1795198176;
+	bh=HDhBzinWWamnegvT9ExdyfioDJiSgPrUC+Mo3CWLBjU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=l5V/+EuU4PvP0RiYrfLT3SAD6U0KHvuf8qFxU309jSif57nh8Q0kGkmO7OPyCYr0q
-	 xbfFznMM+Rqz9WIWIl7p6AkSSmv4OXaITj37z1Z64zPRjTIjI3x2ePMyPViiqBtKIv
-	 tB1yxIe0zridNxcKT1HYPTrvCG19lO5fk3WiT2wrXmI2YE3qs4p29+bUMh3+OnUb+v
-	 YMGpWtO24FIJ8Ye2j0cUBzu9SKjH9PAIGHaQS8YPTTUYxLp+YTa70ZCXxSQp2/4CVH
-	 B78U1I1xMApAe4FrDnZw4c1bUfl1u4ifFc4AiOypCExWG6d8IS+xvJVEakaynbeP8I
-	 0iJeg6O21zthw==
+	b=Nss9RHgSjfsbp1BVPgl3vhR9LtXz/hFfjfq/vOL5tg1lfVFTKbR60soP7pTbBNqrg
+	 DUwVAv+Z9qd08SjDdXYgxOei603OUwTGz8Tlpsf0dh2pZeDr4J4/RLataHzzz2eWLz
+	 wykTLaeaohnyDsuDq8YDCDLCOOqSdHwOrFd5SJO0RvSWMy5xVIFjFYi4tKAIFBb+9y
+	 n7LFEP43TaIVZh/Jphqbp+lTZeDPi8mlvTBR+aztsPlig6MX1yfISIUYroB2lVxzLu
+	 hB2OezEu1f89y7O9pIIN+rb3E6FR1vGrK5he7R8l20CeejWCCEc2TxA+4VJjjapBCw
+	 wmBBED8FILoXA==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 26D6D4B8C9;
+	by lkml.kernel.org (Postfix) with ESMTP id 433624B8C5;
 	Fri, 20 Nov 2026 18:09:17 +0000 (UTC)
 From: Gregory Price via B4 Relay <devnull+gourry.gourry.net@kernel.org>
-Date: Fri, 20 Nov 2026 13:08:52 -0500
-Subject: [PATCH 01/60] nodemask: add node-state iterators
+Date: Fri, 20 Nov 2026 13:08:53 -0500
+Subject: [PATCH 02/60] mm: publish and clear node memory states via helpers
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -83,7 +83,7 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261120-private_nodes_v6-v1-1-74f5f9a115c2@gourry.net>
+Message-Id: <20261120-private_nodes_v6-v1-2-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -140,11 +140,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org, "Gregory Price (Meta)" <gourry@gourry.net>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=2119;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795198152; l=3460;
  i=gourry@gourry.net; s=20261120; h=from:subject:message-id;
- bh=G4ssD0bod7vgjZxwR56nCucNo1kgkEnObUnor5Z23Ok=;
- b=RjAl7uvfEf4NqVkoeEx7BN6LIu7ylgrHkEUd9mkFu97o60NZ4EyCUrePrl7IYTdG0pVE3cvIL
- Tfn22wnQtSZAtJ0uk4weMboEXWaQLw3lMEAfCsBn1GD/x5mvmm8mTel
+ bh=bHuUN4m1rYdeHd2n9uTV5bvIEOwz0W65sMVI4gQRCFE=;
+ b=5PaC3uuW3KE0lNJmW+SARs1O0zlNg2YD6FwQIBFs9Daq6H1QsV7mc6KO2+wYEThTdvpSt7rTR
+ V6KaOerJChvCGaLx48xIa9FWmn4rD0/KaqOmHyfps7bojLi6JOB8mrX
 X-Developer-Key: i=gourry@gourry.net; a=ed25519;
  pk=BZWDlx4htkR5KcvGjGtSDfx1tM0E5dlyBR43FEhjWVc=
 X-Endpoint-Received: by B4 Relay for gourry@gourry.net/20261120 with
@@ -155,60 +155,110 @@ Content-Transfer-Encoding: 7bit
 
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 
-Add first_node_state() and next_node_state(), so callers can walk any
-node state the way first_memory_node and next_memory_node walk N_MEMORY.
+N_MEMORY is set in free_area_init() and online_pages(), and cleared in
+offline_pages().
 
-Add for_each_node_mask_state(), which iterates a nodemask intersected
-with a node state using the bitmap intersection helpers, without a
-temporary nodemask.
+Centralize those updates in node_set/clear_memory_state(), so states
+that subdivide N_MEMORY can be published together with it.
+
+Behavior is unchanged.
 
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 ---
- include/linux/nodemask.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ mm/internal.h       |  3 +++
+ mm/memory_hotplug.c |  4 ++--
+ mm/mm_init.c        |  8 ++++----
+ mm/page_alloc.c     | 10 ++++++++++
+ 4 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 607373bd83ee..90bdcffa42ea 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -411,6 +411,11 @@ enum node_states {
+diff --git a/mm/internal.h b/mm/internal.h
+index de4593b3e3b6..c102e0f498bf 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -62,6 +62,9 @@ void lru_add_drain_cpu_zone(struct zone *zone);
+ void folio_deactivate(struct folio *folio);
+ void folio_mark_lazyfree(struct folio *folio);
  
- extern nodemask_t node_states[NR_NODE_STATES];
- 
-+/* Iterate the nodes in a mask that also belong to the specified state. */
-+#define for_each_node_mask_state(node, mask, state)			\
-+	for_each_and_bit(node, nodes_addr(mask),			\
-+			 nodes_addr(node_states[state]), MAX_NUMNODES)
++void node_set_memory_state(int nid);
++void node_clear_memory_state(int nid);
 +
- #if MAX_NUMNODES > 1
- static __always_inline int node_state(int node, enum node_states state)
+ /* mm/vmscan.c */
+ unsigned long zone_reclaimable_pages(struct zone *zone);
+ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e5024f934932..e5cb770e4b09 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1197,7 +1197,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+ 	adjust_present_page_count(pfn_to_page(pfn), group, nr_pages);
+ 
+ 	if (node_arg.nid >= 0)
+-		node_set_state(nid, N_MEMORY);
++		node_set_memory_state(nid);
+ 	/*
+ 	 * Check whether we are adding normal memory to the node for the first
+ 	 * time.
+@@ -2165,7 +2165,7 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+ 	 * list. Otherwise this node would still appear in the fallback lists.
+ 	 */
+ 	if (node_arg.nid >= 0)
+-		node_clear_state(node, N_MEMORY);
++		node_clear_memory_state(node);
+ 	if (!populated_zone(zone)) {
+ 		zone_pcp_reset(zone);
+ 		build_all_zonelists(NULL);
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index a9d848c92678..46fe9a274a7a 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1763,11 +1763,13 @@ static void __init free_area_init_node(int nid)
+ 	lru_gen_init_pgdat(pgdat);
+ }
+ 
+-/* Any regular or high memory on that node? */
++/* Publish the memory states of a node that has present pages. */
+ static void __init check_for_memory(pg_data_t *pgdat)
  {
-@@ -435,6 +440,12 @@ static __always_inline int num_node_state(enum node_states state)
- #define for_each_node_state(__node, __state) \
- 	for_each_node_mask((__node), node_states[__state])
+ 	enum zone_type zone_type;
  
-+#define first_node_state(state)	first_node(node_states[state])
-+static __always_inline unsigned int next_node_state(int nid, enum node_states state)
++	node_set_memory_state(pgdat->node_id);
++
+ 	for (zone_type = 0; zone_type <= ZONE_MOVABLE - 1; zone_type++) {
+ 		struct zone *zone = &pgdat->node_zones[zone_type];
+ 		if (populated_zone(zone)) {
+@@ -1924,10 +1926,8 @@ static void __init free_area_init(void)
+ 		 *memory-less node. The pgdat will get fully initialized by
+ 		 *hotadd_init_pgdat() when memory is hotplugged into this node.
+ 		 */
+-		if (pgdat->node_present_pages) {
+-			node_set_state(nid, N_MEMORY);
++		if (pgdat->node_present_pages)
+ 			check_for_memory(pgdat);
+-		}
+ 	}
+ 
+ 	calc_nr_kernel_pages();
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index aa1ed599c7c6..88d507f93b1a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -208,6 +208,16 @@ nodemask_t node_states[NR_NODE_STATES] __read_mostly = {
+ };
+ EXPORT_SYMBOL(node_states);
+ 
++void __meminit node_set_memory_state(int nid)
 +{
-+	return next_node(nid, node_states[state]);
++	node_set_state(nid, N_MEMORY);
 +}
 +
- #define first_online_node	first_node(node_states[N_ONLINE])
- #define first_memory_node	first_node(node_states[N_MEMORY])
- static __always_inline unsigned int next_online_node(int nid)
-@@ -481,6 +492,12 @@ static __always_inline int num_node_state(enum node_states state)
- #define for_each_node_state(node, __state) \
- 	for ( (node) = 0; (node) == 0; (node) = 1)
- 
-+#define first_node_state(state)	0
-+static __always_inline unsigned int next_node_state(int nid, enum node_states state)
++void __meminit node_clear_memory_state(int nid)
 +{
-+	return MAX_NUMNODES;
++	node_clear_state(nid, N_MEMORY);
 +}
 +
- #define first_online_node	0
- #define first_memory_node	0
- #define next_online_node(nid)	(MAX_NUMNODES)
+ gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
+ 
+ #ifdef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
 
 -- 
 2.56.1
