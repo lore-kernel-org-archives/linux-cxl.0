@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795201012;
-	b=yMGfoWklGmjxGN4FMJ8QStvk+FlvhOTAZaWSXYdb7j4S94WGXVD3fwfRS1HZD7pOElqq
-	 m/hY7vMD2IDvOBvGzlnhveBDJKOVrPgsIT01UVfj4KmUlToc/CnTHOJCuRlJNri6BWPsv
-	 wl9yxsWXKVmjk8tVa79vaKsY9ez4WQrQEyxyj76qiNEEDO8J5VACWIFfB6paHSkRf+8Yo
-	 r8Q3roR3RQm1kzXU3yAg5PXeCp5dHmVVNDGvE6TFecvu/bqrPL56GW5QWij9bT7pee9Zw
-	 5jOSa/UvcwsuooUy7HDS+kIJt9Jo7+5E0B39KlP3bY7CWpZAxn+pcsNwNGiza4ktBrg==
+	t=1795201147;
+	b=AZw7V5+vlDzSBntp9II76kqZO0hbMOZ/G7EE41YmT5b2qAH0RIkdBB6iIJ5ZTYCTBz0H
+	 HkFlpsDYVwxTjGx/jhuBoGTCwRnO8v0qrb+T5TNSTxJ5c2PMTE1XfhoRR7b+yAY2f4NjY
+	 N7YY8f4Ca5TJx6E2O0ZXyXQjGfo0G6ksrDPxEfTkFrgoZ5FU6nwHd2fo9chRd1ohHtq/Z
+	 0/mBBFyTfzYaAi518sbVDwx17wIp7sCsIjpwFlOzstHDwo0wJ7K+3pOOrF+gqVYsHNcgj
+	 0O+bFGjAQYJBm33Qd4wZFKEjNtJMsoDvyGV/22Kd4xJkvhUaorngfxK50OWpH+4Pz5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795201012;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795201147;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=CO2FmI+t47mxhoA5B32c/6+xEdoEj1zDOKWg0tAGKfI=;
-	b=UTmyK9TUk8uzk+IDvK0LcmU2vrIrhm/QjD3ozIdWsWw8BL9BRKCJgKVEi4XHTEOq2/sd
-	 3k2ilZKQuia77RSw+t1aRSG0aXCfLmC3j24ALBeRw5LQryHs9M0vUGSQkghJUONss3Rkz
-	 zENtCvDRwAViXYT0jq41uQmuEa56edKn82I3u71t0KVYsJjszRumDYwtmyFNvRPp3SlZz
-	 Wk+d3ntfY1dlsfdbTmNCvUg2Vk91JnJorATnkQ5Fj/dAZvT7uPDG6wR++I6OfCjITAzMm
-	 AF3BGgqe3dspqQaj4cg8JlmLt8YRD0GQ7S6xbdkBbuMZekziHQsIRas1T9Sa5wOGooQ==
+	bh=QpjWV7nVPK4jNL88HvKbtHJ/44FkOvQPFo/KHrxl1Aw=;
+	b=YIHr/e7BZXHGwYD96YBm1BNXwQhh+cgnv06gOfnfGLknxe1fNZCRn7TlJsxJ7pjQQbas
+	 AmGizSwkP75WdIpSQsEwvvlu148Ba95/Wzd5HWkSwzUfkr/vUDO1rDKN5c3MrjQ4m6HP2
+	 5b0TBw2gd8MmIwQOZgmT79VSI2eVjLB2u4+1fwyjtwFBTCWk3Lf+SiBnSO+r3td0WF8fY
+	 zHK21syTxxlyRg/vUMRJQbAn7VaR84oaYqTwm4iptv0Zrir4vdjT4F4Ino/a5BScW8PN3
+	 W1tLUOFp6S9+7lAndh8IK/wTZA/VBbNkWAFERr7S2u9sV+a2nP2+rFmbaI49quVGDyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EItwh9YN;
-	arc=none smtp.remote-ip=209.85.219.50
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=jP9mDgSk;
+	arc=none smtp.remote-ip=209.85.160.181
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E271960A2637
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Nov 2026 18:56:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E271960A2637
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B845660A2606
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Nov 2026 18:59:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B845660A2606
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EItwh9YN
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-9212dac247aso14137226d6.1
-        for <linux-cxl@vger.kernel.org>; Fri, 20 Nov 2026 10:56:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=jP9mDgSk
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-53644b28706so19849551cf.3
+        for <linux-cxl@vger.kernel.org>; Fri, 20 Nov 2026 10:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1795201001; x=1795805801; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1795201146; x=1795805946; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=CO2FmI+t47mxhoA5B32c/6+xEdoEj1zDOKWg0tAGKfI=;
-        b=EItwh9YNKW9pf3i/0vZ29SiS9P8j0QntBkSZlZWkAbgPf469odvYPi59InAkSI+FHj
-         oJH1cI9uRxoEpG/9Jw6zrjqXbCWu2B/T7yOurq7TU5R+/jIZwViFq8biaqHAfQzt//Hi
-         Zz8LYriCwByz3fv69UXxOW2X4hHN1a4ZSnDxNWObfy3X3AWRD4GQDAezhNQKexBztOAO
-         P0Bied3oVorOFbttkeYH3mAV0beqC2Yp0W4Xrc4EEdg9Qqw2RIkmdSrrYZZ4gUdvn0/4
-         13Va7FSAQ9FuYLOE9UcA8WQO5n1uzscOJReJBfV2ro1cYtaZ7iEfQku4yAipDNQic4eV
-         qQ7g==
+        bh=QpjWV7nVPK4jNL88HvKbtHJ/44FkOvQPFo/KHrxl1Aw=;
+        b=jP9mDgSkXq83tjLxbrSbvJK4VhOzYkMGnT1Jm7gDQe/tOWOQWw88VffPoBHzpHtdXZ
+         AtKDL72AvMbm6K8+SFolZTdZsq5YCre7TYo+p4r5NsYo5qfix5Rkg5grOkKDHVKVNOAS
+         7oCG+E2fpkpUAmmLwq+0Xp2+UXqhc1fXlcHYaL5btJezkYRzJilsdIXdINfLoFlm9DO8
+         6CbBfgZVvOJVM+JRwdAK0Dvz71rzy7UBvr/rr8US3Cw4d/p7KopxcO/pFRWbieVCQcWx
+         SzmzqLmCMHfM5PgM23TucdXta6FY4M5TN5xDVyML6rCM56A5+RYnYnryKZHICDqx3uzd
+         4qmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795201001; x=1795805801;
+        d=1e100.net; s=20260707; t=1795201146; x=1795805946;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CO2FmI+t47mxhoA5B32c/6+xEdoEj1zDOKWg0tAGKfI=;
-        b=VT9THUnef2OWG+TxP60rfA1s+D0l2hQqvm2wpxiWc/Q31nj2A7NOZuWgE9SIwECdCD
-         ADrLRmZ2o5cCsW+9Xru5ivdUaNB2KPpQZYmEp3Bi1GFoHEUvM5vMvHiCGyIpQ04mAe+f
-         ZSY9XRrpX/ZJc3llJG2ozLam4qCui88EPlDnA7l37sAlGdxPZpj89xBhFFna6LoW7JwN
-         wvkYoSVFdC7INZ2pUdx8bHOOXH/WwAqzTOPHXLFhHyNKGGKbqEXa9tk6cEkRVqVIQxZG
-         BCNyiJufHbfGU70pc+Oet0q/EJWwVi+YcdUw4yQ3uFoBICYEPl5FrSraZPGt21f6sp7F
-         3y8Q==
-X-Forwarded-Encrypted: i=1; AL+hErGySJXn3zZBnD/VmgmEnU8fLtMSTRWMc+0VHrU8UxKPyM0XGrecVC09QaT1En+XzO7kou2i2coawN8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8BM3GYJKZRaSy+0G/p+b+rPXsV+2K7HOMjRPSE4zJmgaNyLaXc
-	AhYikjotjKCwlgh46Q64HCsiinnlmAaKUX7pbgAWlLBvLf9DgQrnpwz15wnYdFh5Ajc=
-X-Gm-Gg: AZFdTZcI0G1hzrj0uKmYG8EWZSgF+RAM77qpWUppMhLGNGKZk5SFoqyuD9ElcVkVeJ8
-	/NghkKIaWFWewXsk5r6+8mnipBaruO3FrC0D0UFWLAlq8PGC0ZEEdMOzlj1JFBomDhdQCL8UHxm
-	hLYzYbB1FQ62pTxjcON0K36GHILSvOc4WJNTFHum5z6S4M5QZShYHDFFFSQSZGXxHasbYsUt5l7
-	6Ujz6b8oyq54Gf3Nw4ttKFKb5CTPvINRmef2mX8q533LK55NDg7e7Ahhle3cACwfG/bGqXZUpvT
-	cS29X/7sYrZC38MiomhudcH+R9YenS8Oiu0tORQ/O1LTBRlsD29GY6DRH8TFHBTpLZmu6YfwwdX
-	dxQxhkJDmVzzB7IMq/xBIHc1Lzige3JMOYlAEM/heafH/SGtPgEF0q0bV7QGrwhOsChIpapNbxr
-	PHimzRzOZIt/sDFQigiBlr83kBk8ir5vu6a5es95YS/aXvEPt0L04Vkf4ROrK5NoOedhAM1rP+x
-	DDKT2Qrp7SyNWmHY/PdAeT67jYgy75QzJQ4WoS1ThIgHRrs9x9fVqyOWlxjYYvkyPzIhq4D/AF9
-	b1+HEbXrrwkhLyH8M9Rq8wqpLi6Z/3l69LuC84vbjb2aaqHc44ND4zHNj5hsVAHAVBFUEhKKBJB
-	TuXxrU2A=
-X-Received: by 2002:a05:6214:320f:b0:921:3541:ed1a with SMTP id 6a1803df08f44-9213541f3eemr56576466d6.32.1795201000560;
-        Fri, 20 Nov 2026 10:56:40 -0800 (PST)
+        bh=QpjWV7nVPK4jNL88HvKbtHJ/44FkOvQPFo/KHrxl1Aw=;
+        b=yFI2GheUdBdHmN7q6iRBWkozM3wTY/nzro+PQhA4cKa7XlULQ3VQCl40e7XH6S0VZv
+         JQstPdXUOhB9gTU+pDrPq/IZ60dXqKJYkkBbfXtHKslnq5s8TJGmTbSsVS4smP3eH5FE
+         KxGkW5pVpZUxf6Nc2IEZM8RuHQyOwW1b+mCwJku2hyVycx85UzIC2sQIfFSjGqfmSMZN
+         /37MpgKvix/2x0b9lDzatcMdkQrv2D+xg/W4jwU/rbUI8tbLw/WilfLtcHX7byJx3gHX
+         a/4iXBHkolVXcYGbxKt6j6Bojq8I2rPcUtyqxKRJfBLQDnmcErshE+ikqKWONr+GD6ej
+         VkTA==
+X-Forwarded-Encrypted: i=1; AL+hErG6JZ9xowSqJtpQhx2mI0mG5mQhXOtJbLDdOHcpWtFWh2Tyl3kU17/RyZd9WzSqa+7vtP9ApfBBRzA=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+7kuH3bgQJsPeb2y2EcasJHDwb9B6Lwyln+OyoyXAOgR3lArjW
+	XhNY0uaGvMwHN+bsSWjhtpUW8siziSVkGBVIIiBDeWyQyCz+zCCp7RLjD0xAo8m/2c0=
+X-Gm-Gg: AYBFou2KD2l7/D6Pag2J+FdlMwtVbKDw51VIoX221/TqU01tISkpUVZ9ASnoXBo8Pbq
+	IGJUYYS9jnGI9L5FSBHqdxopO4utyi3LVc7w+IVavoAMz2c8FFVp5+y8eHTF7899ISl2y3NzZaw
+	xBzt63SF1GogNh79pZnILEbzd6i7RYJIjKjxmwQrO0qmgF1c0t0KBCjvZlXnPtpPLz2Mk9SdWwn
+	Yxzu8IOAOvOl+J+d+ZocCF0eNZsHKC490iEMKoLPiQ/Jdc3gfnuS/tTZzJqL184lEGKBh0NRN7q
+	NrJWypDfdYhNbjMaA0S19wMFcIVDwY32E5xWNI0E+LuodtMY8pu9OsXlHfwhiu8Sudbc0xDXn80
+	sGhobp2sZnbJ8CgSSvqywnXMovok7ht6AfRzBJ0UNlnhfUsBmL0tzIUcHtQMbk4GmaCpP5+z0Dt
+	b5zfpiGpGA752CWEbc63ln7Opl6dPYMGRXASz+BWp8bFRZEKwZf80r7CtSj0RamfesULUb/7XN9
+	rwp0qLJsfgqe1hPwkfWkJmKp8Lq4jMRysGP/K85v8IwYy0J/2vypyXFjThcSM+UsUnvZha7ZBUw
+	q400eA6Ks089umptnYhnd5F83nQVq5xO4l4J0LPhrNNVJLQ5AhI4HyRCFwkwcGSDnua+mNGlHtU
+	I8lsVoeY=
+X-Received: by 2002:a05:622a:1a89:b0:55d:2c9a:3776 with SMTP id d75a77b69052e-55d76a811c8mr74428711cf.65.1795201145651;
+        Fri, 20 Nov 2026 10:59:05 -0800 (PST)
 Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-921366d853esm26687146d6.27.2026.11.20.10.56.35
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-55d7884d01csm30305771cf.21.2026.11.20.10.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 10:56:40 -0800 (PST)
+        Fri, 20 Nov 2026 10:59:05 -0800 (PST)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,12 +91,10 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 54/60] mm/migrate: route explicit NUMA migration to
- private nodes
+Subject: Re: [PATCH 00/60] Private NUMA nodes
 From: "Gregory Price (Meta)" <gourry@gourry.net>
-To: sashiko-reviews@lists.linux.dev
-Cc: "Gregory Price (Meta)" <gourry@gourry.net>, 
- Yury Norov <yury.norov@gmail.com>, 
+To: "Gregory Price (Meta)" <gourry@gourry.net>
+Cc: Yury Norov <yury.norov@gmail.com>, 
  Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
  David Hildenbrand <david@kernel.org>, 
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
@@ -142,65 +140,47 @@ Cc: "Gregory Price (Meta)" <gourry@gourry.net>,
  Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
  Dave Jiang <dave.jiang@intel.com>, 
  Alison Schofield <alison.schofield@intel.com>, 
- Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org, 
- linux-cxl@vger.kernel.org, damon@lists.linux.dev, nvdimm@lists.linux.dev
-In-Reply-To: <sashiko-outbox-225861@kernel.org>
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
+ driver-core@lists.linux.dev, damon@lists.linux.dev, 
+ linux-pm@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
+ linux-kselftest@vger.kernel.org
+In-Reply-To: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
- <20261120-private_nodes_v6-v1-54-74f5f9a115c2@gourry.net>
- <sashiko-outbox-225861@kernel.org>
-Date: Fri, 20 Nov 2026 13:56:34 -0500
-Message-Id: <179520099481.412063.3035407964761903218.b4-reply@b4>
+Date: Fri, 20 Nov 2026 13:59:03 -0500
+Message-Id: <179520114342.412063.6068641130948664600.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
-On 2026-11-20 18:42 +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [High] mm/migrate: call to undeclared __folio_alloc_flags() in
->   alloc_migration_target()
-> --
+On 2026-11-20 13:08 -0500, Gregory Price (Meta) wrote:
+> This is v6 of the Private NUMA node series. The series falls into four
+> parts, each building on the one before:
 > 
-> commit ca3cf1708bab40e7c2c443ad00cbc882e2163cee
-> Author: Gregory Price (Meta) <gourry@gourry.net>
+>    1-18  mm: introduce N_MEMORY_COMMON
+>   19-26  restrict folio-walking MM services to common memory
+>   27-44  N_MEMORY_PRIVATE, kept out of cpusets, mempolicy, accounting
+>          and the page allocator's ordinary paths
+>   45-61  private node features, memory hotplug of private memory,
+>          dax/kmem private mode, selftests and documentation
 > 
-> mm/migrate: route explicit NUMA migration to private nodes
+> Patches 1-26 change no behavior on any system and can be reviewed and
+> merged on their own. Without private nodes, every path in patches 27-61
+> behaves as before.
 > 
-> This commit routes move_pages(2) and migrate_pages(2) allocations for
-> N_MEMORY_MEMPOLICY private destination nodes through the node's private
-> zonelist by passing ALLOC_ZONELIST_PRIVATE via migration_target_control.
-> 
-> > diff --git a/mm/migrate.c b/mm/migrate.c
-> > index 6791834f14fe1..eda961d43df0e 100644
-> > --- a/mm/migrate.c
-> > +++ b/mm/migrate.c
-> > @@ -2250,6 +2250,9 @@ struct folio *alloc_migration_target(struct folio *src, unsigned long private)
-> >  	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
-> >  		gfp_mask |= __GFP_HIGHMEM;
-> >  
-> > +	if (mtc->alloc_flags)
-> > +		return __folio_alloc_flags(gfp_mask, order, nid, mtc->nmask,
-> > +					   mtc->alloc_flags);
-> >  	return __folio_alloc(gfp_mask, order, nid, mtc->nmask);
-> >  }
-> 
-> [Severity: High]
-> Where is __folio_alloc_flags() declared?  Neither include/linux/gfp.h nor
-> mm/page_alloc.c defines __folio_alloc_flags() or
-> __folio_alloc_flags_noprof(), so building mm/migrate.c with
-> CONFIG_MIGRATION=y fails with an implicit function declaration error.
+> The full stack is also available at:
+> https://github.com/gourryinverse/linux/tree/scratch/gourry/managed_nodes/private_nodes_v6
 >
 
-b4 dropped a commit on me when i made the prep branch because it
-it was tagged Author: Brendan Jackman and I filtered on myself.
-
-this commit should have immediately preceded this one:
+Apologies - my b4 prep dropped a commit from the stack because I made
+the mistake of filtering on author (myself) and it stripped out this
+commit:
 
 https://lore.kernel.org/linux-mm/20260923211041.3127588-4-gourry@gourry.net/
 
-the branch in the cover letter has everything
+The commit is one the branch listed above, and should be otherwise
+indepedent of the series (can be pulled in ahead of everything else).
 
-I will respin this again, but i'll address the sashiko reports and
-let this sit for a bit.  The first 2 chunks are still largely
-reviewable.
+Sorry for the noise / compilation error, won't happen again.
 
 -- 
 ~Gregory
