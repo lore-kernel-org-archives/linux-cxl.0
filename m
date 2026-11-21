@@ -1,136 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=198.175.65.13
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795227393;
-	b=A6hFtL4ftloITcoyfhg9FnK4cayFni/PVC3I94Wguuuc4u0fWeNIUkp8LxgrxWIGPQ56
-	 1J2E6zpQcyaal4gxcS6HcyAd8m7q2+F0fxHelSnEhRlsSQeeEDpowz+BgTPNDw5tsTxKB
-	 baH3nxe4DIB/on+1x15HfcQav+w83JL4ZrV/FJAmxgsnQswTQZFqQrip9I+LyW4QbFTX/
-	 5jOx9mKh/b667JYTzPN94XijMcJ787YAxLI59cmSBUyQX20eb9pk1vd3KhUqK0qb0Kjoj
-	 VBRVEpDIK7Gohoz+2g0FTPh6tM/2KyzzlytiNerPue1PKigQRwxxC/15qj2jS7THzXA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795227393;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:DKIM-Signature:Received:Received:Date:From:To:CC:Subject:
-	 Message-ID:References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=u6mQc8VntlwQ9s8Kr2Qpk4SnvKm7/vIzNcAsDi3kSCE=;
-	b=qv+oxhvQQHAjiCDi1T3IzxxGvpceoir8ryej3cWYcPb86E+mzxim/U//bPRl+lCL3t5H
-	 GEAQ7m0miOd51pAxH2gAK8a8BS9PVFe10OC1UrKH8IA3p1fz6JdGsWJLg6X7JlVX63Alr
-	 aYtSRqCfK2eRvR087F08+HUrZrbR7YGPuKb0qEbN0kjS2PkeEupF4MOfeybg6uFabyHUB
-	 jRrPa79jJ6GX7e9T9yzsAbLoSA5F6mRoQPsbKXfiTpBfSaSz3OZ8puCg7xshJ2LKtXGWV
-	 4zgKdxJluAH6fwv9r3gaTMDQe78J3A7z8tcTWCPqhHKRcocddyROQOWng3HCVvrMyEA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VZo3BbNi;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b="j/2slrkV";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=198.175.65.13
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.170
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795258641;
+	b=OavbpaUc1hKVdQyddGEWdsreJi2VjuOJ3SYyEdOOhGfErzofriQCXWQhuQ6IHdHnPARn
+	 zJd7P6obZPdtHeSzeWpWKRvktO7c7ay5IrfITi1n4UcZR7pezBUbzZEDelU958A7hntG1
+	 EbDL9ZuAhCW0WpXmTqNvyI/qubyzMzVKi1rMZqn8xk0lva3Ks5rIz1aPPhfyMLYQwccFf
+	 POGHyLxY5I9VygPpfxJE/rxekkUOMItIbGksCdbMOKYaeDctuwyzRYELEzRgmuQNrRJWM
+	 oZS/Jj3+5GUpG4iQGMQiOcB6Mk1bKIEaruhg8K1muW8XKXDG0n/EgcHXCLaxJ0LmgtA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795258641;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
+	b=sZEsTFHykKn7UK4wlgwtg+sdZq8yWSVgWZWtREAhUHIdBlcSchcEwgpgOLCEmhMLbVS/
+	 +uhPAKiTdAsaDxrgrSXib55C9dvQfOOdeLSuutxbhkXT9YS473G7N+AuF2XZCZzZz7uL1
+	 hW+A+FfRZNbTG5HhIVOn+HNP4GAi9NxQuWDsugxxl9KcoA22A0uyax758d73/YHRZ+sFX
+	 0zurkss+vyGj6pOuP/LU60Yxibsncxp00pPKXdKVqqOn9efQvObWWA4bcdsQDEWjrjlYR
+	 m6lIbojiUqDYl8k9jxRasODqFPlVQrzIiGk54psCWdX3K24gmP46OwptC5Hh2FTEO3w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F7mvumBZ;
+	arc=none smtp.remote-ip=209.85.215.170
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332A7606A686
-	for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 02:16:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 332A7606A686
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64BB606A325
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 10:57:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D64BB606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VZo3BbNi;
-	dkim=pass (1024-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b=j/2slrkV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795227385; x=1826763385;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=AfuhPcWN7VnaKbZ+DtvwaseGvXsu40OVl2m1yOw9bTM=;
-  b=VZo3BbNiaYssbl7mbjCWjva7LeOlQOFMElhfjXifPyA8sOY+z8q9qrU6
-   mwMHVJ5PCYE+4cw2jeuPEPSaWrLt+/FGiiXrbNOlz8A7omaSyj6TB6FZ4
-   xVqw9jiJoTeiA6PSrozGpS1JurwJ8FC4LOx3ipDV9U/s1/kYILGdlWVmL
-   jr0c9NExfOjA6/T5+uxo7c6Dq/KMVZTIpDHs85OBXss8OSSMEEg5C/07r
-   iclXYAg/CXSo9MBfw/kidyOjXPnEDx5DUxeJ68UueyMc6lvtFRWo4DsTF
-   1Q8jQ/9IUeE8pyDR2IzFzpln5iwnvcyDZAPKZhAdaU+QaxpVBN6kDrm8O
-   g==;
-X-CSE-ConnectionGUID: bzXGadr9Tt6gdvkrNWP88A==
-X-CSE-MsgGUID: 95D52f5nRcOaX8SH+Fq1qA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4005193"
-X-IronPort-AV: E=Sophos;i="6.27,224,1787036400"; 
-   d="scan'208";a="4005193"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 18:16:24 -0800
-X-CSE-ConnectionGUID: VTk+XiBDQpO8MIKskmzYLQ==
-X-CSE-MsgGUID: Vi8eQMmQQ/yHfHbnUmCZpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,224,1787036400"; 
-   d="scan'208";a="10779239"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 18:16:24 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Fri, 20 Nov 2026 18:16:24 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56 via Frontend Transport; Fri, 20 Nov 2026 18:16:24 -0800
-Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.23) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Fri, 20 Nov 2026 18:16:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ErpqxLw9ygTBbfxNIkZo0w+oRVL2vq53/MKn6iivxq+86/J/qNxIzMMILwsWN4cMw/+WTLDOWH3UMYTndklqHV4divajlzvi5CeQDHIFacV1CXBTCbk1FUBvU03TjjM0Z8m3i+qT7vID6xVMuSr7kEWE3z+fpuDkEqBwwgdOPUGBPIJ6fGhBmsPK2upjH0gayvWwzbsAvqrJdEq6GMQR2IVQFocO3QwLnHTKcnfwmEBlWWgX+mLPcaDKzRQqZ9xH4/LCQn0/9ZgrGza5dmN/lsz8N1rwLnwDivvM0Syn/Blmn0lf08vk9JooQyHrTQZO8QUyqciONz2Bz+1HP3IqJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u6mQc8VntlwQ9s8Kr2Qpk4SnvKm7/vIzNcAsDi3kSCE=;
- b=VV5tmu46MuG0h/cVqbV1LW1cqIvK8jBz7WtRfC5kny4fe8kB/uUZKL8K6wqIV8EzpIwtpRyXFBtkqxNGkKV6lRHq3fbUIUNFd2vxj7m1+Y3KbAp2mF5TS1HXxyrsLzmmns06fag3FKulJ3pwDu8rIFtyIgV/nsnPrhESeIvFYfuucWc/NGBHBl/Nsbso+AbAIaIcQyO3d0NjzsF0w3IBprzAg++aUYFAWRdB5GQmV5ZrocZqkLxDD9Qg+uyockMXDeQd4fOMJoSwFiNa6yKWTcZY48RlrGp6nYJxALdjdjrXvGHi/AFnLMhUp8qVb3kj4XCvy8gljg6mnV1la6SCZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6mQc8VntlwQ9s8Kr2Qpk4SnvKm7/vIzNcAsDi3kSCE=;
- b=j/2slrkVlX4moF5sryTDK+l9G0LQS5/6X4OGxKbpWzZSnu/KYxHtSBvxsb50WxV+7qZh4pnBKi2AxULYGsBvyfh/kmCd05YOX0gTg+W4yYnZaHec5BM4Q5c+oQIMTzAvmD+4empa02fIJ4pailcdClUJhy/AtaKcB/a+ww7z+Uc=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by IA3PR11MB9349.namprd11.prod.outlook.com (2603:10b6:208:571::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Sat, 21 Nov
- 2026 02:16:22 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::6fbf:c112:d0a8:f1a8%5]) with mapi id 15.21.0639.011; Sat, 21 Nov 2026
- 02:16:21 +0000
-Date: Fri, 20 Nov 2026 18:16:18 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <jic23@kernel.org>, <dave.jiang@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH 2/2] test/cxl-translate.sh: Wait for test
- completion before checking result
-Message-ID: <awD-8ghA6C3bQ6PU@aschofie-mobl2.lan>
-References: <20261120071415.29279-1-ming.li@zohomail.com>
- <20261120071415.29279-3-ming.li@zohomail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261120071415.29279-3-ming.li@zohomail.com>
-X-ClientProxiedBy: MW4PR03CA0328.namprd03.prod.outlook.com
- (2603:10b6:303:dd::33) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F7mvumBZ
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-cd69954c755so1322312a12.3
+        for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 02:57:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795258640; x=1795863440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
+        b=F7mvumBZSNwUedRX/cSE3MAY0k3rNpC7uDfmktW6cnOKvRDx4tyOqsu2K+I4l7l3T8
+         3aLhuFewdglnMdpfLouXvldpnLhlvesV0G0vpHu1pC39SIWYn+oDXsGZW190OsixRSiI
+         AGnagRozSnXHHL8NmYZOFhoZauduuxONZs2GJ/9XDck7Ex9DPNBI5Zy6sR0HeKxNI2Bg
+         IpxKUT1OiQuFIamfv7PcsQz0/xYydfgBDy72p6aubxM17XB03tqvjmR2GFxL7HPG8pHd
+         iuPVijjBShiSsjqlU+eJLkv7B+2sUqEzhzKfPxBruIEZDf9tBBMgJ6gJZB+EBsGIErzd
+         ktdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795258640; x=1795863440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
+        b=2gfX1OtMiTNJUcx0L6i57P6CIpo8w3Ut8i8oCNvbyh+6Z/1tKqeFex+HVBToRP6cxN
+         2T5sxncGXfZEOS8meC7HlZvLFEfr3GcHOXAvYFBnFZosu1PpBS7LrDyesfwTNBrNTf03
+         3OblNOU5CvkcgstLvQQlpCh8DFIWC+y6uvVn+ApFCowPMhiADlbVs3J6d6fitfK2c6Fc
+         6jzgctHWO7AqPgLgcyu2qSnMcadhOcnuag/yBeizho7lW0DEZk1dg3ZBx+nSH2oyxQwe
+         fjuH670aspR/g00uCB2VcCB4SBesmOJWiHR1/mJi01ose3Q4EE2uxIiJLsQqXvza12do
+         yiVw==
+X-Gm-Message-State: APuU4Z/Sfl5x2xL6tLuU+6vsN5kQ1tWacEXRdi8W79rx9myPAFNGaW0Z
+	gT2p5jmI7d+C1UZ+nbMBOLydhIUvwpfzr/rTeTHO5V0JJROfGtw+7/pHoAgdxYfd
+X-Gm-Gg: AZFdTZfYLBkKraII/rDMTvbneIoNCe5jnypvRV6YfYUzPSz+cfzWKEljeOg8W8/76BT
+	pMT3HeapuDINdOEwmWHT6LiYiVoEiZBNW6LVFWJtx8MISit2IeSBFdkSiJisrGeZr0tdaeKOnTa
+	uEe01Idlj50wCnf4KsrrVYxuQUTAsS3HT1fdjkOLQYq5G8e3oENtgtQkBSgHV2W3PKxwmUrybNC
+	29JLv0IxfVja2lW45Pu6NapzjojG7PTzyhVpxOwAlFcw7dx5S2TZ0VzqJIXXEYZZi7a954fs7/I
+	0BKxg+MVSHQ5pvi9t1j4kjvu9bJG85W0Nt4dtuXWjf0shsDn9JVT3vMLQUPmyfb4kZ3z6c/JZIA
+	RDrePbusty7tcw6CiKS6V6tFO5Er/KIN0PhJm91UdSZKpHHTaRkJZLaky3OaGAo50lR+v6woP5x
+	WiN7wvxyZ3tp4PI47SRyrizWMkVHhf7B8MNcQVEn9tEi4/P3E+JUuq4uPvwlx/MzJAAeMtXnwfi
+	1aEvKMn5oui/sRFRTmi7D9lhA3zHYM73XeZSriM8HjFleWpFjsLIFN8NH0EkakFXAa4irOXRACT
+	oVYkGe14qGySAltECSIrdz2L6hjbYnE2dQNkw0nHkMgeER0WURsb7s01JN4onVcq
+X-Received: by 2002:a17:90a:d2cf:b0:3b0:9781:ee8b with SMTP id 98e67ed59e1d1-3b41c9e46b9mr5178411a91.26.1795258640080;
+        Sat, 21 Nov 2026 02:57:20 -0800 (PST)
+Received: from localhost.localdomain ([121.134.184.225])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b44b21e19fsm1494739a91.0.2026.11.21.02.57.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 02:57:19 -0800 (PST)
+From: Unsung Lee <unsung0317@gmail.com>
+To: linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH] cxl/region: Fail region creation for a root decoder without a CXL window
+Date: Sat, 21 Nov 2026 19:57:14 +0900
+Message-Id: <20261121105714.1542859-1-unsung0317@gmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -140,97 +99,83 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA3PR11MB9349:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3f2699a-d21e-4349-8e4b-08df47756f35
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|6133799003|22082099003|18002099003|261021121427099003|261021123027099003|261022105027099003|261028144727099003|261026140227099003|56012099006|10067099003|261102123227099003|11063799006|4143699003;
-X-Microsoft-Antispam-Message-Info: Is8hjBWsrc747FWb9sxzRcwei34IxQzh7rdv2pNNz5qFyxgHNieAkitGxOy7RZWYMk2GIkFA7+KAMdfc3gV8HJPY2mya1xqD+qKV6jbcKXTgPVt9rJcaVHbPdo0LCi/WHdLTTOM3VxjjgpajRP2eKZBBeGktRMaVDBx+eKtINyvUW4Jl2tLiftGmQhk1O5w+I3LEvN++UEf2S5/aN7YyVoIVbmMKwNfmRxTb49FGspZDMyqVl2g6fffj+uuuGj3gG2B9ZCCp1Hoqs/7DwX5EgdNxEWdGjOriFwbV5X79qC7AUQstWLrf31UIOqFO7aolqtx2ink8huppkWN+qy1PRCmnBoi/7rzWtGbiaz+dpoUgoant0pMCQ8se0K5nTif+NvSSLv/i4A2h7Xj1i2RaG8Cq8ifzPVp58hwiyMXGLqMFolHVSDS9zyhc5nHPWgWBhoovftrBzUEquy1mSbGbi8pkt2TN6brSxRTGBYnXnUdT74XQMpccmQTZfsxCTTJ8B9mWBg4qtdtDEpNF24HqVcq207uNVJVEon8hhya5UHMAdJ7wMUZ1V/H2jrwaMS8RmfiObboGag7ZDc6f5+hXFdRbSa1wfZyt25bkMGorZSTgwuKYrG8G+KSCPLF2+2a24nXfzxt2a2c7UE4mgOvugKRCzkAF3Bo86f3q0Q8/PQM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(6133799003)(22082099003)(18002099003)(261021121427099003)(261021123027099003)(261022105027099003)(261028144727099003)(261026140227099003)(56012099006)(10067099003)(261102123227099003)(11063799006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BOSL+1/sj7KTirFNRgTIscU/RwrSwtsL1/T3/KTPzlwqwrB/kogVcG3bOLvm?=
- =?us-ascii?Q?nMNDNlZs/zNX7GA85EfhVbpYKZ1A8sCKkvcxrwtq9GUtwvqzub8LJVMkwLVl?=
- =?us-ascii?Q?JWSccsEAlqHsFhz58CuvTCnf299vtTBuD1msvdHLcNMBtxlN1cZ4ZUKVMZZk?=
- =?us-ascii?Q?iMSE+TEZ7b1hgpCgjxGrmW+G/zbrm6LDrKXVFiRhzxtY13LOclMcgS6gsix6?=
- =?us-ascii?Q?hmH05fZDa0J94qJq9gC44RU7kZsrcy7C7piZZq3wgksLZFAPIeh20DluaIzD?=
- =?us-ascii?Q?TMwCiATSeVFTYA4eSREv5f8+cxZcd2nwOIQJ66B04BOzBNoIwHMPjfmHVFf+?=
- =?us-ascii?Q?z1uRPF/i7N0be4Ridt4oji4sFHMtz7jWGySBmH3mxnnC3SQwk/9TRLFFMB+O?=
- =?us-ascii?Q?fiAskdi6Dk0L0IRK293vP+zQ9FZT2orrJ85T6lw15rIN7R84Iz4+fI8Dp3Sk?=
- =?us-ascii?Q?AfjUMJWPeJJ2a+avXBk2KANxrjcC0DSRAGra2b29oiChjUJFpqIQ9WqnQig5?=
- =?us-ascii?Q?UIeOSD+FuurENlLs0XKUm/AyHMOoWRoyaygQYRFnO8aGgIyEmAvYZ9n8xq+j?=
- =?us-ascii?Q?jsKPhS3jgdiQjvIOz4iwA/1ngOhnvCvgoac84SZuSfd4oB1BES4R4tblE30F?=
- =?us-ascii?Q?YDWAEuGFnFDnyl8qgaYzgRNL32pbRlXzCJ7kmBydgV/m85KJiVU3TztwDK/z?=
- =?us-ascii?Q?jP9vssP8/ofma8pIIF9A5J/uWPAgFKaPpdvGwUAJoxJuQHZJP+c54irp04zJ?=
- =?us-ascii?Q?Y4mA44qOy0nTBntXtWujhls34uVd/944819LYg90nWLKUbG8BU6eswhB2vSF?=
- =?us-ascii?Q?jzBsHJbprNtWfowHmXWN45En7mfMikzyscWAqI9gI3TP5RG0r+oLQHWim1Bo?=
- =?us-ascii?Q?+EJ8FeB8XDGIODZioDPFZGCN7dvTrixE2N2JKpKExI62ZD+cT4n+alDzjKA7?=
- =?us-ascii?Q?AqpYpa1AiaobIcWIyBV6q+2NytxcZov+LLM7Fy0AaeFwm9kAY126rTUgH+bU?=
- =?us-ascii?Q?OzSZtTXMCkIik0H5eRaXqpEJ8tw1MAB+yQFwXetXKvUpHHlMMFEAVgepfByQ?=
- =?us-ascii?Q?ePKEUhg2+KQVncc1VuGxYj6qbPrwgh0tZeTAOaN5ycQearDjkb65Ua+HGWkv?=
- =?us-ascii?Q?54ofQ6DL855joAWeEsjFVV138g/cJBo/BrCh3MXTjVxNArZwpktM5+skC7/h?=
- =?us-ascii?Q?td2BJvlsyGpcHtvUylYilgCA1IICjaGhCf+lPEf7PjmPdY1sF7EuHRSL8nZp?=
- =?us-ascii?Q?ynhGnx+OqKoN3bhun4w9Csl1myqrZbSYsH9NWLlKPgVgSJeIKvPBM26upD/s?=
- =?us-ascii?Q?mUaV8IjZH/OM/VDfVOaYXl3+ITbxup+qhUbnlLoxuWLqseOS/o6eVO2v4b+Q?=
- =?us-ascii?Q?uSSbheieJqM0bsvsKPF6CUYGeG4LAW/GhhMHfEIc1wKoUE8iDDvvnoGcXXJ0?=
- =?us-ascii?Q?mD1nWucyToqTGUB1NM7Dn5L01aynPw8yDd0V3gcJ1MKXUdBXYWgkOTuDB3FM?=
- =?us-ascii?Q?6mWW6wmHKoQ9zWfwTdYOSjBKtQldlG3F+1ml4YAbP7TdyJ+HyRYhPPZRKA3A?=
- =?us-ascii?Q?zwRottTA4skvAAhwZZuphutr3m/voYo63ozFNkJO0if/3Pn0TsDBCm3BjSpe?=
- =?us-ascii?Q?oWKy2TDUdmRPZaF0bF5jfXfI6ypUXh922zamqL+mmHEKv8iwbdoCo3r+z/Ws?=
- =?us-ascii?Q?AtPXx0VzVkTXmNZMg+3coPoHf0Y8eGmXGJy5rys+Z3xtT/C6BhBBy6gjxwWT?=
- =?us-ascii?Q?E356wakh/QdbIcHZU0st1rF7dWHpdtc=3D?=
-X-Exchange-RoutingPolicyChecked: ZuzI8oqhquoTmvzIv5kM3Ld7O83wIEHfzH9NYA5NwdsULGkA3a7SZgaCSmlY/oV+3tlsshNfLMKf2sR4vtYtl4HliNulMKeKSG25JmRPWgbt24dtEQLjkW3dcCVsD0GBtwlv83LtYaMlypJc4CWxUUBPaXuZZZwdpT+lL8fCydU0gHLMLC90bNE25kRAyMoaiPf7LicBY1OpNJPVSngacxzhy0MiQi9BFNhydlaYarLihVZtUDFBsCXxDudLHZe0+2fXoldvQs/Eh+Ml4pW/UcpV7EaLMgKnncDCLpAzVvJcI8JWWwoFxnwC216ehBnPL+4u6Z524eXksN7yAw840A==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3f2699a-d21e-4349-8e4b-08df47756f35
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2026 02:16:21.4311
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RPtA5woaLm1G2jxcx0hc70SfM818pGSB98kQzVR2wbeenXIE62uzlMoKCuwbi9pcyWBilPqgXNZgTw9eaQzeUcNsczzQPygkeNpzO4HLsws=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9349
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 20, 2026 at 03:14:15PM +0800, Li Ming wrote:
-> The cxl-translate test emits multiple PASS/FAIL messages while the test
-> is still running. Checking the results immediately after seeing a
-> PASS/FAIL message may race with the remaining test execution and lead to
-> incorrect result accounting.
+add_cxl_resources() expands a CXL window over a conflicting resource
+and then removes any following window that the expanded one contains,
+or trims the start of one that it partly overlaps. pair_cxl_resource()
+only sets cxlrd->res when a window still contains the whole HPA range
+of the root decoder, so the root decoder of a removed or trimmed window
+stays registered with cxlrd->res == NULL.
 
-Clarify that the test has finished when modprobe returns, but journalctl
-can read the journal before journald has recorded all the results?
+Region code uses cxlrd->res without a check. Writing a region size
+under such a decoder passes NULL to alloc_free_mem_region() and oopses
+with resource_lock held for write, which then stalls every other
+resource tree user:
 
-> 
-> Use the "CXL translate test completed" message as the completion marker
-> before collecting PASS/FAIL statistics, since it is printed only after
-> all test cases have finished.
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  test/cxl-translate.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/test/cxl-translate.sh b/test/cxl-translate.sh
-> index 2fbc310..51d0676 100755
-> --- a/test/cxl-translate.sh
-> +++ b/test/cxl-translate.sh
-> @@ -65,7 +65,7 @@ check_dmesg_results() {
->  	local expect_failures=${2:-false} # Optional param, builtin true|false
->  	local log nr_pass nr_fail
->  
-> -	log=$(wait_for_expected_log "CXL Translate Test.*(PASS|FAIL)")
-> +	log=$(wait_for_expected_log "CXL translate test completed")
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  RIP: 0010:get_free_mem_region+0xfa/0x360
+   alloc_free_mem_region+0x1e/0x30
+   size_store+0x1d5/0x300 [cxl_core]
+   kernfs_fop_write_iter+0x13f/0x1e0
 
-Please fold this into patch 1 so the table tests wait for the completion
-marker from the first commit that adds polling. Waiting for the first
-PASS/FAIL line still leaves the count check racy.
+Auto-assembly of a committed region under such a decoder would do the
+same in __construct_region() and cxl_extended_linear_cache_resize().
 
--- Alison
+Both the sysfs and the auto-assembly paths create the region with
+__create_region(), so reject a root decoder without a window there,
+next to the existing check for a dead root decoder.
 
->  
->  	nr_pass=$(echo "$log" | grep -c "CXL Translate Test.*PASS") || nr_pass=0
->  	nr_fail=$(echo "$log" | grep -c "CXL Translate Test.*FAIL") || nr_fail=0
-> -- 
-> 2.43.0
-> 
+This was hit with cxl_test in a QEMU guest whose 64-bit PCI window
+overlaps the cxl_test mock windows: CXL Window 0 is expanded over
+PCI Bus 0000:00 and swallows Window 1 and 2.
+
+The problem was found, reproduced and the fix tested with an LLM coding
+assistant driving the QEMU and cxl_test runs.
+
+Fixes: 23a22cd1c98b ("cxl/region: Allocate HPA capacity to regions")
+Signed-off-by: Unsung Lee <unsung0317@gmail.com>
+---
+Notes:
+
+- How this patch was made: an LLM coding assistant found the problem
+  while running cxl_test in QEMU, analysed it, drafted the fix and this
+  changelog, and drove the reproduction and test runs below. I reviewed
+  the analysis and the fix against the code.
+- Reproduced on v7.3.1, v7.4-rc3 and cxl/next (32af781935). With the
+  fix on cxl/next, all four root decoders without a window fail
+  create_pmem_region/create_ram_region with -ENXIO and the guest
+  stays up; the ndctl v85 cxl suite gives the same results as
+  without the fix, except cxl-poison.sh, which now fails instead of
+  oopsing the kernel.
+- Only the alloc_hpa() path was reproduced. The auto-assembly path and
+  the case in the add_cxl_resources() comment (System RAM spanning two
+  windows, the second window trimmed) are from reading the code.
+- With the trimmed window, its decoder now gets -ENXIO instead of
+  using the remaining tail of the window for dynamic regions, as that
+  comment suggests. That matches what pair_cxl_resource() already does
+  (no window, no cxlrd->res); making the tail usable would need the
+  decoder range to follow the trimmed window and is left alone here.
+- An alternative is to warn in pair_cxl_resource() or not to register
+  such a root decoder at all. Rejecting in __create_region() is the
+  smallest change that covers every user of cxlrd->res.
+
+ drivers/cxl/core/region.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 27e63e6da..a2cd18571 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2792,7 +2792,7 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+ {
+ 	int rc;
+ 
+-	if (cxlrd->dead)
++	if (cxlrd->dead || !cxlrd->res)
+ 		return ERR_PTR(-ENXIO);
+ 
+ 	switch (mode) {
+-- 
+2.43.0
+
