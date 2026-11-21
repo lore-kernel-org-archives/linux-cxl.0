@@ -1,94 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795258641;
-	b=OavbpaUc1hKVdQyddGEWdsreJi2VjuOJ3SYyEdOOhGfErzofriQCXWQhuQ6IHdHnPARn
-	 zJd7P6obZPdtHeSzeWpWKRvktO7c7ay5IrfITi1n4UcZR7pezBUbzZEDelU958A7hntG1
-	 EbDL9ZuAhCW0WpXmTqNvyI/qubyzMzVKi1rMZqn8xk0lva3Ks5rIz1aPPhfyMLYQwccFf
-	 POGHyLxY5I9VygPpfxJE/rxekkUOMItIbGksCdbMOKYaeDctuwyzRYELEzRgmuQNrRJWM
-	 oZS/Jj3+5GUpG4iQGMQiOcB6Mk1bKIEaruhg8K1muW8XKXDG0n/EgcHXCLaxJ0LmgtA==
+	t=1795262713;
+	b=FBY2B/GZfbATmnnuHGvKb+RdxwvgvIqZ/Hf6k9qiQmKpmsoCxXsS2yhvFtNsWHOvI0qf
+	 CRwAuqz8h1DSbPsShTwEz3qlkLbBmUOVUuXGET+/TVY10VdW3JGnJrVQif2xGkwlAhbEP
+	 fu62KwaFWhxdaOTWsdgU/ScbqADYp1kqOCVBmMxjMr827eMsOYz40tDn9AmrR0OfIIKtb
+	 WHwMvEBkYKZ4b8maOi1Xa6/fvHA7jlWiRuIjxi3uilSA5rikJo5/so8IAxeH/PPjNu/a7
+	 lgWPpzN0gEmMic4lac0qiDC7B+/7mFFqG9alfR0SA5fnO2GTwOnOwWQiDb1aWG5N90Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795258641;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795262713;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
-	b=sZEsTFHykKn7UK4wlgwtg+sdZq8yWSVgWZWtREAhUHIdBlcSchcEwgpgOLCEmhMLbVS/
-	 +uhPAKiTdAsaDxrgrSXib55C9dvQfOOdeLSuutxbhkXT9YS473G7N+AuF2XZCZzZz7uL1
-	 hW+A+FfRZNbTG5HhIVOn+HNP4GAi9NxQuWDsugxxl9KcoA22A0uyax758d73/YHRZ+sFX
-	 0zurkss+vyGj6pOuP/LU60Yxibsncxp00pPKXdKVqqOn9efQvObWWA4bcdsQDEWjrjlYR
-	 m6lIbojiUqDYl8k9jxRasODqFPlVQrzIiGk54psCWdX3K24gmP46OwptC5Hh2FTEO3w==
+	bh=2N0f8Hnh84LuhQkUbe8zo17SuoG8Y6Lvd2KUvSPrbpY=;
+	b=hxX+NcPrWnxHcGiG4qZoplCVJb3xflVZhslgJ8rbsb6WAISdtl+GV1FZldJLVhRrI6m+
+	 DiV1M/XughNJZZDtidpgBi/UAepYC+Udw0Hto4Hz5qnYo17I8rnXRCSQTu8LPvXtoChx7
+	 YgriQ0DYeJCmU75hHXmqBHP3JL54XYp1Z4OtkuKcXk787BtNhrssUNMRLHI1/Y94gx2v/
+	 rVdVdzHaz0ixM9WKtIugJybQq2Lam6lFSIBAVIvbtDMYN2LvfJ7EHU3+pHHr/IyjbMV0b
+	 rNxh6yVgv9ytDCv+2ZVB+2DeEcilodyLYc/Nz5dS9org0N/Teo2WsNVzoKBNiAfqIOQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F7mvumBZ;
-	arc=none smtp.remote-ip=209.85.215.170
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GvYqcO17;
+	arc=none smtp.remote-ip=209.85.210.181
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64BB606A325
-	for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 10:57:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D64BB606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8788E606A32C
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 12:05:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8788E606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F7mvumBZ
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-cd69954c755so1322312a12.3
-        for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 02:57:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GvYqcO17
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-8a052aff9e9so1544961b3a.0
+        for <linux-cxl@vger.kernel.org>; Sat, 21 Nov 2026 04:05:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795258640; x=1795863440; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795262713; x=1795867513; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
-        b=F7mvumBZSNwUedRX/cSE3MAY0k3rNpC7uDfmktW6cnOKvRDx4tyOqsu2K+I4l7l3T8
-         3aLhuFewdglnMdpfLouXvldpnLhlvesV0G0vpHu1pC39SIWYn+oDXsGZW190OsixRSiI
-         AGnagRozSnXHHL8NmYZOFhoZauduuxONZs2GJ/9XDck7Ex9DPNBI5Zy6sR0HeKxNI2Bg
-         IpxKUT1OiQuFIamfv7PcsQz0/xYydfgBDy72p6aubxM17XB03tqvjmR2GFxL7HPG8pHd
-         iuPVijjBShiSsjqlU+eJLkv7B+2sUqEzhzKfPxBruIEZDf9tBBMgJ6gJZB+EBsGIErzd
-         ktdQ==
+        bh=2N0f8Hnh84LuhQkUbe8zo17SuoG8Y6Lvd2KUvSPrbpY=;
+        b=GvYqcO17g6WpnQubwJyUD4qVaGWGsyrb3+vDZkx+LP34XoCVXiLgUJfu06nEmtGd7t
+         D47mj+ughCeLSX0e70od6roIsf/F2gdaoZVuUTnfe62YxR3iexQW9plRdo/phARQ7wSn
+         t3xMff7cTGiAaDF0lt6FKp2UumpzxrSusG9kKWN8WzeLMcoSUrqRj4MnduibSf6tdaQ2
+         b7FHOF4ip9OnAUsscoo/cOBhRsJzwYrdKdBORkJOSyvF4GJJpl0MOf8JmEXhLsJH33J+
+         C0oy3KFz+4erdBRtVRMF7IxWDrXwgfAOC+tg+uF/HF4tw4/E2UexNpNY3l5k0+7M1Ce7
+         NDZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795258640; x=1795863440;
+        d=1e100.net; s=20260707; t=1795262713; x=1795867513;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=1m48DwzUGi6gFDDhXUxXisAF/EvcOOcumTNdjVePDOI=;
-        b=2gfX1OtMiTNJUcx0L6i57P6CIpo8w3Ut8i8oCNvbyh+6Z/1tKqeFex+HVBToRP6cxN
-         2T5sxncGXfZEOS8meC7HlZvLFEfr3GcHOXAvYFBnFZosu1PpBS7LrDyesfwTNBrNTf03
-         3OblNOU5CvkcgstLvQQlpCh8DFIWC+y6uvVn+ApFCowPMhiADlbVs3J6d6fitfK2c6Fc
-         6jzgctHWO7AqPgLgcyu2qSnMcadhOcnuag/yBeizho7lW0DEZk1dg3ZBx+nSH2oyxQwe
-         fjuH670aspR/g00uCB2VcCB4SBesmOJWiHR1/mJi01ose3Q4EE2uxIiJLsQqXvza12do
-         yiVw==
-X-Gm-Message-State: APuU4Z/Sfl5x2xL6tLuU+6vsN5kQ1tWacEXRdi8W79rx9myPAFNGaW0Z
-	gT2p5jmI7d+C1UZ+nbMBOLydhIUvwpfzr/rTeTHO5V0JJROfGtw+7/pHoAgdxYfd
-X-Gm-Gg: AZFdTZfYLBkKraII/rDMTvbneIoNCe5jnypvRV6YfYUzPSz+cfzWKEljeOg8W8/76BT
-	pMT3HeapuDINdOEwmWHT6LiYiVoEiZBNW6LVFWJtx8MISit2IeSBFdkSiJisrGeZr0tdaeKOnTa
-	uEe01Idlj50wCnf4KsrrVYxuQUTAsS3HT1fdjkOLQYq5G8e3oENtgtQkBSgHV2W3PKxwmUrybNC
-	29JLv0IxfVja2lW45Pu6NapzjojG7PTzyhVpxOwAlFcw7dx5S2TZ0VzqJIXXEYZZi7a954fs7/I
-	0BKxg+MVSHQ5pvi9t1j4kjvu9bJG85W0Nt4dtuXWjf0shsDn9JVT3vMLQUPmyfb4kZ3z6c/JZIA
-	RDrePbusty7tcw6CiKS6V6tFO5Er/KIN0PhJm91UdSZKpHHTaRkJZLaky3OaGAo50lR+v6woP5x
-	WiN7wvxyZ3tp4PI47SRyrizWMkVHhf7B8MNcQVEn9tEi4/P3E+JUuq4uPvwlx/MzJAAeMtXnwfi
-	1aEvKMn5oui/sRFRTmi7D9lhA3zHYM73XeZSriM8HjFleWpFjsLIFN8NH0EkakFXAa4irOXRACT
-	oVYkGe14qGySAltECSIrdz2L6hjbYnE2dQNkw0nHkMgeER0WURsb7s01JN4onVcq
-X-Received: by 2002:a17:90a:d2cf:b0:3b0:9781:ee8b with SMTP id 98e67ed59e1d1-3b41c9e46b9mr5178411a91.26.1795258640080;
-        Sat, 21 Nov 2026 02:57:20 -0800 (PST)
+        bh=2N0f8Hnh84LuhQkUbe8zo17SuoG8Y6Lvd2KUvSPrbpY=;
+        b=0P6y28nK2JgMeTLReHgDlUMcoj0UAU4YlNs++bU/jyjXSPd9UJIdzQoNVYM4/ih9Sg
+         wLQg/ujHIFdIprwqU8JSDtULIp9CndF0i0eAPwt9hZMclHWvTtQVYT9jixq5F2uXgw3p
+         8h4PXGFCUPRCFkSoc+mA19KPVpnlXp02x54GzW7vnChmDAaL10+6wUU3DtuIASmHCWZv
+         QtLd+F+IWo8BsrRxQSvsVJ2YSav0iARdm600n8nI2LDFygF8ZYyQXmiQNF1i6hX+D7js
+         n6Niw/ehdXfr38/W6ZT0TE2oTFEWzW/HxREbVfXc+lQZQ1EZGzDhRc3Q/W4DiYuu6WgQ
+         9DMw==
+X-Gm-Message-State: APuU4Z/87yxhmmzrMLR4ogXfu37uICUCw9IiasuQPE5vD2QzB9wVX1k+
+	E6sYoYidt+lVmzCMeOvKduIaL1VJK0i58p2HZHDv73KK5bXDeeEvRezHIqf0R2FV
+X-Gm-Gg: AZFdTZeTVSMqYvbvy2VcHgwrnelX0Rtoe587FOJsxLAQNt22hZ0hRkfDvtftkZp3NWZ
+	coDNMjWh7SlX4P6apjXSH05QQxlludOMuRQC9139X/4HRSRz/8w/gXHo2EtDKW9L6Plo8dxQTmp
+	Zdzh5MDkM4oT6BDu29EBCwahjLQnHmi6jye9snhhJWChpbf7dZCZvdDJmMcwo4sRVmSEyJrPVWo
+	g6cZBWu1YE05MAPI71jiYV3tLXOwWZHKp76OWrgZFM9bDxc252uua3cDKVjz5Yt6wv49+yls/a3
+	3aEXSIYEGUHnPqlwNN54teSjkh8Aodw7WKYu9nlE2rwmj6QY+Kc2LEkuusPrIIdhiGOgm9ELqz6
+	+/pFH7cZYUbH91oXzguGU7dtslCFLUitA3sQ/Wt/ixx02gTgs20tIyjW1UnkO9/Yi5O9GKY5HgW
+	+Z/rND0cPgoNqU0k9ah+vkO1wk0nKF7uBszmh4UqSKrPlKaTgQ6XXrODZ+yRWZBvhZ+Q0w9XsiY
+	ODW7dlQ5zpyur1gDpY26+VJ8iAWHg7G/ZApF6/bK5WTfSU25tlk1MpYVL/G5YctbafE+Jzeak5Y
+	Yd7Cp35YGAP6axx9Licbv4WFYYkEElEDgaG7Cxq5sN8=
+X-Received: by 2002:a05:6a00:4388:b0:8a0:1acb:677a with SMTP id d2e1a72fcca58-8c87d806cf8mr5796736b3a.57.1795262712765;
+        Sat, 21 Nov 2026 04:05:12 -0800 (PST)
 Received: from localhost.localdomain ([121.134.184.225])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b44b21e19fsm1494739a91.0.2026.11.21.02.57.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c8706844a0sm2857177b3a.1.2026.11.21.04.05.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 02:57:19 -0800 (PST)
+        Sat, 21 Nov 2026 04:05:12 -0800 (PST)
 From: Unsung Lee <unsung0317@gmail.com>
-To: linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH] cxl/region: Fail region creation for a root decoder without a CXL window
-Date: Sat, 21 Nov 2026 19:57:14 +0900
-Message-Id: <20261121105714.1542859-1-unsung0317@gmail.com>
+To: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH 0/3] cxl/memdev: Fix update-firmware --wait after a failed upload
+Date: Sat, 21 Nov 2026 21:05:03 +0900
+Message-Id: <20261121120506.1562043-1-unsung0317@gmail.com>
 X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -101,81 +93,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-add_cxl_resources() expands a CXL window over a conflicting resource
-and then removes any following window that the expanded one contains,
-or trims the start of one that it partly overlaps. pair_cxl_resource()
-only sets cxlrd->res when a window still contains the whole HPA range
-of the root decoder, so the root decoder of a removed or trimmed window
-stays registered with cxlrd->res == NULL.
+'cxl update-firmware --wait' does not return after an upload that was
+cancelled or failed, because it also waits for remaining_size to reach
+0 and the kernel leaves remaining_size as it was on errors. Patch 2
+waits on the loader status only and extends the cancel test to cover
+it. Patch 1 fixes the test helper that was meant to catch a hang like
+this but never times out. Patch 3 makes '-F <file> --wait' fail when
+the upload ended with data left, so a script can tell a failed update
+from a successful one.
 
-Region code uses cxlrd->res without a check. Writing a region size
-under such a decoder passes NULL to alloc_free_mem_region() and oopses
-with resource_lock held for write, which then stalls every other
-resource tree user:
+Reproducer on a cxl_test or QEMU memdev:
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  RIP: 0010:get_free_mem_region+0xfa/0x360
-   alloc_free_mem_region+0x1e/0x30
-   size_store+0x1d5/0x300 [cxl_core]
-   kernfs_fop_write_iter+0x13f/0x1e0
+  cxl update-firmware -F fw.bin mem0
+  cxl update-firmware --cancel mem0      # while still transferring
+  cxl update-firmware --wait mem0        # never returns before patch 2
 
-Auto-assembly of a committed region under such a decoder would do the
-same in __construct_region() and cxl_extended_linear_cache_resize().
+Tested on a QEMU CXL type 3 memdev, 10 runs per case, each --wait under
+'timeout 60' (exit code in parentheses):
 
-Both the sysfs and the auto-assembly paths create the region with
-__create_region(), so reject a root decoder without a window there,
-next to the existing check for a dead root decoder.
+  case                              v85         with this series
+  normal upload with --wait         returns (0) returns (0)
+  --cancel during transfer, --wait  timed out   returns (0)
+  --wait alone after a cancel       timed out   returns (0)
+  ->prepare() fails (busy), --wait  timed out   returns (1)
 
-This was hit with cxl_test in a QEMU guest whose 64-bit PCI window
-overlaps the cxl_test mock windows: CXL Window 0 is expanded over
-PCI Bus 0000:00 and swallows Window 1 and 2.
+and with 'meson test cxl-update-firmware.sh' against cxl_test on
+lockdep and KASAN kernels: the series passes; the patched test with the
+v85 cxl/memdev.c fails at the new --wait check, and the test of patch 3
+fails with the cxl/memdev.c of patch 2. The whole cxl test suite gives
+the same results with v85 and with this series.
 
-The problem was found, reproduced and the fix tested with an LLM coding
-assistant driving the QEMU and cxl_test runs.
+An LLM-based tool was used to check that the experiments were safe to
+run and to drive the repeated test runs.
 
-Fixes: 23a22cd1c98b ("cxl/region: Allocate HPA capacity to regions")
-Signed-off-by: Unsung Lee <unsung0317@gmail.com>
----
-Notes:
+Patch 3 only sees failures that leave remaining_size non-zero, that is
+a ->prepare() failure or a failure or cancel during the transfer. A
+failure in the programming step leaves remaining_size at 0 and still
+exits 0. Reporting that needs the loader 'error' attribute
+("programming:hw-error" etc.), which libcxl does not read; I can add an
+API such as cxl_memdev_fw_update_get_error() if that is the preferred
+direction. With several memdevs, the command still exits 0 when any of
+them succeeded, as for the other memdev commands.
 
-- How this patch was made: an LLM coding assistant found the problem
-  while running cxl_test in QEMU, analysed it, drafted the fix and this
-  changelog, and drove the reproduction and test runs below. I reviewed
-  the analysis and the fix against the code.
-- Reproduced on v7.3.1, v7.4-rc3 and cxl/next (32af781935). With the
-  fix on cxl/next, all four root decoders without a window fail
-  create_pmem_region/create_ram_region with -ENXIO and the guest
-  stays up; the ndctl v85 cxl suite gives the same results as
-  without the fix, except cxl-poison.sh, which now fails instead of
-  oopsing the kernel.
-- Only the alloc_hpa() path was reproduced. The auto-assembly path and
-  the case in the add_cxl_resources() comment (System RAM spanning two
-  windows, the second window trimmed) are from reading the code.
-- With the trimmed window, its decoder now gets -ENXIO instead of
-  using the remaining tail of the window for dynamic regions, as that
-  comment suggests. That matches what pair_cxl_resource() already does
-  (no window, no cxlrd->res); making the tail usable would need the
-  decoder range to follow the trimmed window and is left alone here.
-- An alternative is to warn in pair_cxl_resource() or not to register
-  such a root decoder at all. Rejecting in __create_region() is the
-  smallest change that covers every user of cxlrd->res.
+Unsung Lee (3):
+  test/cxl-update-firmware: Make wait_complete() honor its timeout
+  cxl/memdev: Stop waiting on remaining_size in update-firmware --wait
+  cxl/memdev: Fail update-firmware --wait when the upload did not
+    complete
 
- drivers/cxl/core/region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/cxl/cxl-update-firmware.txt |  5 +++
+ cxl/memdev.c                              | 15 ++++++--
+ test/cxl-update-firmware.sh               | 42 +++++++++++++++++++----
+ 3 files changed, 54 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 27e63e6da..a2cd18571 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2792,7 +2792,7 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- {
- 	int rc;
- 
--	if (cxlrd->dead)
-+	if (cxlrd->dead || !cxlrd->res)
- 		return ERR_PTR(-ENXIO);
- 
- 	switch (mode) {
 -- 
-2.43.0
+2.34.1
 
