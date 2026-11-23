@@ -1,85 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=35.155.198.111
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795442719;
-	b=kSg1KaDaNLga6oJOY1XomujuO6twy2QMgNcFlqytbsYSZjlXdfcz7x0GsqyZWezQec59
-	 8cz7iICvmiy2o7LWRepzfnB3qMZ3PXyZQPXy9gn5d+lH1m/IA9txDOoYvsvlVudR037i5
-	 GvgMdwAe+wMxDkBQKufGgYW0OEpL64Gv/wl61CRVbHAP1VVrELQteXB5+TO2eLYJLFfQJ
-	 rvMykOHq4h8hEfvsFLa+kss7lSRsWOELqCqIGpwxELzjPIUplMjSmcFSSSbT8Uc6wkcDb
-	 uBViHeBbUWupuxGJbN09W5ygcPcXE+qOWKMhd6GmvrSG9XnI2Vguj3OdaK/vZqOr8Rw==
+	t=1795450811;
+	b=kWwsYFBronbtaUFs5p8RMmj8Pl21lX+Sqck0wrmnE7pYtSVSgNHcj2l+pORbGhKFi9OM
+	 Hw4Y5C8sNoxonSxnDl6bv2q/DrrrQDbpwHgPmsoXJwCpPgqtSr9/TWkW2AtVLpot1PFMG
+	 7biqhxVeShUF1KzFnf1IteOIA4Wjsp0yO/bPq0RU+5L5bWzY8ScODC0ffCwXJ2MESP97i
+	 ieoGnMSJe4SS+hu99tmNd1TyIlLAXlW+CHfffWdrmPPSw25l68TGoVRZ5mwK7Bl1YDuV7
+	 MQ4Z+caK4kBPS6PlemOMW61Ul55DIwTzwVc3e3E28BMYD7/C/KtR/tXyK13rhVd9MQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795442719;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
-	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=njozbmbCn9bcbYemCFYN4fFcerXn8LRoys/sYPRNDos=;
-	b=hzmshLDacrDTxDBiyKSQxxZIhwHti4fQUtsRrjFlQGIxEMkLv7ZU83wNJOTHddsLfBVR
-	 6Q7SsNhU6xvOFGHUqzLe9D8x9tpxTENzCmEX0h8Y0ucqEdbL/2JvqGF9sP8YAPxILUKHB
-	 YpiCa0OddD344ovvjevaJUXEbJaTXi5UTUaFUbfOQSW1Uoo3Q8PLSTL3SnbhbM34B5ug2
-	 hF1hntV4oqziCZmuYsC/iBdxocLRK2DNOSr9JRPZtVEWTndSPUsS2scI/C059EiGLklSf
-	 zqdBQ99NmmflMZ4FR6ncCPL6avvwg1e/yCiYVRJUoz/ixVHV7cDUO4aF/qq0vyJTYKw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795450811;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:Received:Received:X-Farcaster-Flow-ID:Received:Received:
+	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=WacPhnHWjpSW9oV2WJtNqRk4Z2GjJVGHsagrSw8p4i0=;
+	b=VvKnBd1/yClOW+r1CJeZiBgzXt9Dizk2ZYUe0Q2fddmFYE8cAFHJpVOJ4zzs9o4Q2sax
+	 GuXHaJHIEbGV0+5RXpBIfqz1DdP9fqyGto3bIXHg7IkWGdVVT9Hw/2zcaljLEIYKEdRI8
+	 MxQEOMPM8gJ2SgWnpPjP5uBMZKCydiKiGqHiSyPFiTh0uTc81gfBKtYqHd3Fd5OGxAc0V
+	 NHUn7eIR/K6N0et9K5mrg0373c+l3zQpDFhjcZAK/D9nJA4gtpLbMSJpFAmP8T9EgrHk2
+	 bKW8tqJt9LGDqzdQK23cPnsHtGAwLMjeltNZ6ZjcbSw10Ce/qCpL82UiYU5gdNnJD+w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=igq0rNBf;
-	arc=none smtp.remote-ip=74.125.224.52
-Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=amazon.de;
+	spf=pass smtp.mailfrom=amazon.de;
+	dkim=pass header.d=amazon.de header.i=@amazon.de header.a=rsa-sha256 header.s=amazoncorp2 header.b=ZPb1quOq;
+	arc=none smtp.remote-ip=35.155.198.111
+Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.155.198.111])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B25606A32C
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 14:05:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65B25606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F699606A336;
+	Mon, 23 Nov 2026 16:20:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F699606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=igq0rNBf
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-679a2b5fe87so3115359d50.3
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 06:05:18 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=amazon.de header.i=@amazon.de header.a=rsa-sha256 header.s=amazoncorp2 header.b=ZPb1quOq
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1795442717; x=1796047517; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=njozbmbCn9bcbYemCFYN4fFcerXn8LRoys/sYPRNDos=;
-        b=igq0rNBfR5HbxAZkN3J9ZVhbsB1qEA961sp/d7IqeNGyTiy13BYtzWR9s/RamaGEgu
-         kc4sU+btJ7XNLZ5KXBxvURVrVQTw+iIpKNkheMbVp3xGacR1R1kfOolkY9OvEfyDy2WU
-         t8c3MRu8Ph/FVIkYBtPSoZ4kr+2q46nvdG4OkaZ8HKw2uHjsXYgGlmshpBuDHEEM6Ue2
-         CnIWmzY9CuCkfe/LjkxDPgvTI37B5eL8NNhGF5PzhFOodXssf4pgSvAhXFcLZzhsXatI
-         zvry3mYpF+760cfsuTrJwWemnN2NLrmMWr51jTqFRXg7TtEf6JJSY0VorkioDqKLVzoA
-         4mWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795442717; x=1796047517;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=njozbmbCn9bcbYemCFYN4fFcerXn8LRoys/sYPRNDos=;
-        b=cV8p121XLRubzVUNV878sb7/LbNCLc9f0/UhkhaVTB68xOBj04o/t0FBLpWfvP5NMz
-         KkibU07ct6VO/D2Jf9KrcvNXeGFLkPMEkpD5fBeQp1wMzNgSJbVCC8ZpWnbsRugTZZ+K
-         uuxXt3oY1BcP8jWJ77SKYhoLS2UKFcFWI5qiideWCbTWMSp/otiFHXTyQNDHVTIG9Mxb
-         XtRflnXsMRg3274B5nmhoCTYK1zM4XoEOrKymE7pA0Xwn/TL6qf5aUFaAGNwgrFPJ18A
-         GtO6HfYcqKsIh6STw0ojSJggiN57KXZctDoaOkc2TqKvU1WsByPtgvhld9nh6H7TwBHE
-         pMaQ==
-X-Forwarded-Encrypted: i=1; AL+hErEW1ik9dZkdRQo4+ICSgbgRhwfhnvRuy1I9R9nXe8GB7jetJPUhMHI6180GzKE8Ntx6wEGb4sIT4lA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/gXQgmO05eqbJDRPrk1obQ+eaRIXeqFX+DuBOnxYfW4yIsnLHm
-	E3k5HVQCKUMWdvq+xc8YT5kYmpcSDgGUed+0wmVP5eAm+p1PwmIUtTfjTbtlepuclYw=
-X-Gm-Gg: AZFdTZcTYc6Yl8zG/KmqoOHa5MMlEA7MZ8b4RMnWfbFCIZw9xsD5DXHQXsKWINAcqL1
-	cFqQBZKQZKhThNuS7Dz+bx5NchI2+0vEit7fwQAEqhoxuRTTycul3S/LRmi7UzmuhkqdiS56DY+
-	IBFbuiN9rjGr1ppY+N/JO5Jcix8553ldXIUen3tRnpuNTU1X4fYcIT/Siqbq4Esd68E6yMm4DkH
-	UNDtId27G0V2go5i9Us0TuYF2qbUwUyjXqb+cw3HFOzD/L18tLq97OhVUFjmUwFT1Y2Tz8Pb21N
-	pTGdxPZqgjRBWaahc2D+XjmpzZ2dFxFavbGzZeR17+WQVeGPzyZkiZ1UGUIFRsOpcZUgGoXN81P
-	DEvHw2V0mJul/HlwmZGqhc01hvGbs13DcpesBUkkqWQPbsBiCB3waI4CTFVBzIVgKCyuEIvEZ0j
-	fdPhZICoABn9pZ34K+S5qChy9/AYiWxn9LFRk58JYkqpZfhQepOTl0dLHiUdIWIWqNai2Fi6XeL
-	mMP6GaIZ4cVsXtnHU/UGvmsOPvGV9XnZWHDdqgykutcqYtxfTwLu/GVAeuaWSYEcpzgvcyt4uBH
-	VurbJc19LIf2U5x66nfdfJXjGH7pCk/q/4p4FXAaR6akRBRQ/IxjtBF6IWcVgBVu5skSTbcxMcM
-	nOc9GFNG60FWF6y+4P44E0PHrkf99
-X-Received: by 2002:a05:690e:4881:10b0:67c:efb:636c with SMTP id 956f58d0204a3-67df4425656mr2221811d50.51.1795442717363;
-        Mon, 23 Nov 2026 06:05:17 -0800 (PST)
-Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-92134a08552sm106091806d6.34.2026.11.23.06.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 06:05:16 -0800 (PST)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1795450811; x=1826986811;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WacPhnHWjpSW9oV2WJtNqRk4Z2GjJVGHsagrSw8p4i0=;
+  b=ZPb1quOq+zka4SuA2N3b2rHzvIbTC/QoqFBfvA0tZtRgR7s0nhoS6AGa
+   R52GiToz6CLPk/mKlaT+SPxt7FVE78Nr27zCn+4Pl06Hx6ghrlL/113er
+   2NVlPHQamzaLSzLER3qXVFDSKIWMX4o5uq1H8qn4nq/0cEQZ+rqalitoK
+   XoR5IhchaOd7A5QoKGezqZAyBiYeNBmbfuN9hMbA0zRfxtIME55qppZCf
+   B3J0eJuIjnT2AbsJnzDmJC+6nGT3/cWhSzvO4qCTCmVpVTxif+zjnGoTJ
+   YD+K8ajLYJNnLTq0idJ+Lzw97n+2iJzFo98f+Tas0wz88TdTbXVeqbrf+
+   Q==;
+X-CSE-ConnectionGUID: 20j9gBo5Tg+T6iXmFB3Bjg==
+X-CSE-MsgGUID: x0SdqDL7R06yG470JpSEbQ==
+X-IronPort-AV: E=Sophos;i="6.27,229,1787011200"; 
+   d="scan'208";a="34833635"
+Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
+  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 16:20:09 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:5629]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.36.222:2525] with esmtp (Farcaster)
+ id 7e935b20-9c49-48b8-8da7-fda9e8922f09; Mon, 23 Nov 2026 16:20:08 +0000 (UTC)
+X-Farcaster-Flow-ID: 7e935b20-9c49-48b8-8da7-fda9e8922f09
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.57;
+ Mon, 23 Nov 2026 16:20:08 +0000
+Received: from dev-dsk-machaujo-1c-d6b511e2.eu-west-1.amazon.com
+ (10.253.100.8) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.57; Mon, 23 Nov 2026
+ 16:20:07 +0000
+From: Joshua Machauer <machaujo@amazon.de>
+To: Richard Cheng <icheng@nvidia.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Dave Jiang <dave.jiang@intel.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
+Subject: Re: [PATCH] PCI: Skip the CXL state update for a VF
+Date: Mon, 23 Nov 2026 16:19:56 +0000
+Message-ID: <20261123161956.72689-1-machaujo@amazon.de>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <awOxn3BcKl8Ru-QS@MWDK4CY14F>
+References: <20261119164219.51540-1-machaujo@amazon.de> <awOxn3BcKl8Ru-QS@MWDK4CY14F>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -89,120 +86,37 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 23/60] mm/damon: restrict DAMON-native folio operations
- to common memory
-From: "Gregory Price (Meta)" <gourry@gourry.net>
-To: Yury Norov <ynorov@nvidia.com>
-Cc: gourry@gourry.net, Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- David Hildenbrand <david@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Oscar Salvador <osalvador@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, 
- Suren Baghdasaryan <surenb@google.com>, 
- Brendan Jackman <brendan.jackman@linux.dev>, Zi Yan <ziy@nvidia.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Johan Hovold <johan@kernel.org>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
- Rakie Kim <rakie.kim@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
- Matthew Brost <matthew.brost@intel.com>, Byungchul Park <byungchul@sk.com>, 
- Alistair Popple <apopple@nvidia.com>, SJ Park <sj@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- K Prateek Nayak <kprateek.nayak@amd.com>, Kees Cook <kees@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Michal Hocko <mhocko@kernel.org>, David Rientjes <rientjes@google.com>, 
- Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Lance Yang <lance.yang@linux.dev>, 
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Lorenzo Stoakes <ljs@kernel.org>, Pedro Falcato <pfalcato@suse.de>, 
- Jann Horn <jannh@google.com>, Chris Li <chrisl@kernel.org>, 
- Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
- Youngjun Park <youngjun.park@lge.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Waiman Long <longman@redhat.com>, Ridong Chen <ridong.chen@linux.dev>, 
- Tejun Heo <tj@kernel.org>, 
- =?utf-8?q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
- Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
- driver-core@lists.linux.dev, damon@lists.linux.dev, 
- linux-pm@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
- linux-kselftest@vger.kernel.org
-In-Reply-To: <awMcsTqyCgQ0dISw@yury>
-References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
- <20261120-private_nodes_v6-v1-23-74f5f9a115c2@gourry.net>
- <awMcsTqyCgQ0dISw@yury>
-Date: Mon, 23 Nov 2026 09:05:14 -0500
-Message-Id: <179544271490.412063.3555696768623975197.b4-reply@b4>
-X-Mailer: b4 0.17-dev
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-On 2026-11-22 11:47 -0500, Yury Norov wrote:
-> On Fri, Nov 20, 2026 at 01:09:14PM -0500, Gregory Price via B4 Relay wrote:
-> > From: "Gregory Price (Meta)" <gourry@gourry.net>
-> > 
-> > DAMON acquires folios to age them, check their accesses, and apply LRU
-> > operations and migration. Treat these as general-purpose MM services
-> > and restrict them to N_MEMORY_COMMON.
-> > 
-> > Memory outside N_MEMORY_COMMON can still hold ordinary LRU folios, so
-> > it would pass the checks that keep ZONE_DEVICE memory out of these
-> > operations.
-> > 
-> > Treat these folios like ZONE_DEVICE memory.
-> > 
-> > DAMON cannot acquire such a folio, so it never ages one and virtual
-> > address monitoring reports it as accessed, and DAMOS cannot isolate
-> > one for migration.
-> > 
-> > Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
-> > ---
-> >  mm/damon/ops-common.c | 5 +++--
-> >  mm/damon/vaddr.c      | 2 +-
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/mm/damon/ops-common.c b/mm/damon/ops-common.c
-> > index 15cabc79613b..57201a0c5e3a 100644
-> > --- a/mm/damon/ops-common.c
-> > +++ b/mm/damon/ops-common.c
-> > @@ -17,8 +17,9 @@
-> >  
-> >  static bool damon_folio_acceptable(struct folio *folio, bool monitor)
-> >  {
-> > -	return folio_test_lru(folio) ||
-> > -		(monitor && folio_test_hugetlb(folio));
-> > +	return folio_is_common_memory(folio) &&
-> > +		(folio_test_lru(folio) ||
-> > +		 (monitor && folio_test_hugetlb(folio)));
-> 
-> Can you minimize the diff? That would also improve on readability IMO:
-> 
->         if (!folio_is_common_memory())
->                 return false;
-> 
-> 	return folio_test_lru(folio) ||
-> 		(monitor && folio_test_hugetlb(folio));
+On Mon, Nov 23, 2026 at 11:29:10AM +0800, Richard Cheng wrote:
+> One nit on the sentence above, before this patch, each VF add also re-read
+> the Flex Bus Port Status of every bridge above the PF.
+> That refresh is now gone. I don't think anything depends on it, but
+> it is a behavior change, might be worth to mention it.
 
-that's reasonable, thanks!
+[...]
 
--- 
-~Gregory
+> I would like the spec section to be cited here, CXL r4.0, sec 8.1.8
+> "PCIe DVSEC for Flex Bus Port"
 
+Thanks. v2 states the dropped refresh and cites the spec section in
+the comment.
+
+> Is the walk to the RP needed, or would refreshing only the immediate parent
+> would be enough ?
+> If it's the former case, we can cut more cost for non-VF devices too.
+
+Refreshing the immediate parent looks enough to me. A device is only
+visible once the link to its parent's downstream port has trained, and
+the links further up were already read when the device directly below
+each of them was added. The link speed in pci_bus is handled that way
+too: it is read when the bus is added and updated on link events
+(retrain, bandwidth notification, hotplug), not on every child add.
+
+I don't have a system with a CXL switch to test that change on, so I
+have kept v2 to the VF case.
+
+Joshua
