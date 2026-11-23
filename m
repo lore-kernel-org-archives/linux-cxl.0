@@ -1,158 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.56.25
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795381955;
-	b=3cFsXumZojxr6+B6hJN6hU4hJ7KjIfEv/U57MUaPQFaQjCREtolClhDfM2040OZEuoUM
-	 0+fXdFiZEyKaUZwNprtTCUfFFLHfM6N5J28ab5MlLN3e8zKkiAQf6eXZaTCrmVla+zB42
-	 KCBuIYjUUEpxBFXu1OTKJG51ja/iuxsGgQ8lLKDt0MRap6jWeF4AUMqfqrJGm66lfqvG8
-	 LKRJ2zQoCwVoZXPuRz735xU/EQM9ZlIvt8iNvPudsV0c2Yq9X8KRP6V0F6ttWuF+huPfn
-	 PC6aPzrIUXnuwUh49p79nQ2FLL/W/yTjPFzfelMrbxXy8YWGP4QWbIpz7kiHLu4cpJg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795381955;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=5dXpHbsCwZA0kvg/byCaQokRceHG2Kc5PP29z/ePbVg=;
-	b=P0UzLqi4ugZXOehPMQr8v5pkZn4/w3zH4BQRxAM1JwosO6CkPhECWgaRI05GtpRaLLIv
-	 p78At9es+SUk/nS0P21vP28q24o2iVdmMlomKOpUQivWxW058ILcc6LZ5GpGCPNsKDNet
-	 LPQe39lGqoaubL4R6G1CxoaAYcEparm4NN9bQiz5waCzCWPNNaU3IbBO30r1bSofwTWnq
-	 eOoJqDF9ChNGUTmkYGHB4RP3EiQjhmfFQLFebl/Q68DgHee1nT2Bn+uDwQBI5hrrpY9BJ
-	 BQgupPvRHeYAnEMMqmucGcaXpJltExWp7WFR21N4T6bPk1TAI5D5+HRBNyW/BcbwH/w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=O1bwyTfE;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.56.25
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010025.outbound.protection.outlook.com [52.101.56.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795401814;
+	b=CyTGudNmlMUhurUXN61amyNaoVYJiZ0kt+UUmAq9JIO6zdgAt1Vtu0+DfFMwC9eks2sT
+	 JZyDsk+KjXlUX/lbZ/0zIM2L0jZ9pubxY3TCm+CIfYlxVSOlWd6EEfEXUSMGGXBx+UghF
+	 1F9I/bTbbHI88A2RXnKbKT82q9F7sodPM/jwfRLfwgS/hjZwmvSGqEkDPZjskfgeesM7h
+	 ZRYlsMvkNLrvB0n8wGPMcE+XVicWA+f/DcE1SIAA0qwZjffEAm9rxDwBMZXFnF+zY4T2a
+	 1zX06qYFd97X+sl01RBAUnE2+APoAbtBIlWQ7hrnIBiNQYXJ9Eqa0cgDn0vZvF6w9AQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795401814;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=edLt5Tq/BLcPWiJ/50P772+XAlfYh5g07EE3TpZCGKk=;
+	b=0I2Yi9BQa2+yZ0JSbFGDkrkXlkphuDeK2U87xlz7f1fbI67PwwvbJupezRwkmcEp3Jy/
+	 h2wDByxshInJWnQyNBepLjH+UQpwHyWEWuq901c/5puINAlWE5xk+CJjrbVmiC0TpGgvK
+	 dE1xp2VuF6kzkYMULunxy15R1zLB26zOz6PUGp5eBNdqQ1hxf0uwxBfmSY4L7ZcYwPII1
+	 L3cbUbJ4E44htR8aQj/sWlNHIWWZU3rqmXo7BybEffHN0pO8wKCAFKoLZkK19JtDPeaKx
+	 pwDxV7C2pNGEUuB++6BKHRzbp0XxW6foXjOlJerjFbtl10CuPISkW9akk/ODF/rsRpw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z41RKKTf;
+	arc=none smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A99F606A31A;
-	Sun, 22 Nov 2026 21:12:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A99F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BDF606A31E
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 02:43:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85BDF606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=O1bwyTfE
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lVuUeonjHJzX6hy1X1OcEVKH5ThoVKGNM5hQ2elvE1J6E4pPVR2sBt+7ugzx6Lwv3rQznykdvwcPpVmIyMT/mk4w/3lp6Bo5k+BMatvv178J3+7HKfO/JVSsHaUk3WoYbnA0SuGCs0bQNHXlNmZRep6AnmXTZC2E6vq6SUlFdoeUCN4hKZRftg44dNiyjVrgCJaVNiIx3u3KV4rcT/e8ZNaEWGRLPEOoUi/PIICXcyQYDfaeISzRhIgnk5QJJFCrn7Fi7IVWnxBiku1Z85F2qMYxy5gadKLOrcK+4QRzXXXPcMfBjN93AF1W2Y+sZ2mp/l7QEEzKuND5LvWxUfKigA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5dXpHbsCwZA0kvg/byCaQokRceHG2Kc5PP29z/ePbVg=;
- b=s7SMN4UGTc/84Gkl+JYcxgmfLa0MNKNRd63uBDqe9vjm0O25E06+Fczg18ppOy62KJA0pV5Vqjt3WSp2eZByjAiOJOwTXXU8bAAmeuJt3XZ0rbeceQxpnCzcQ4ZcxRPu4diZOI8Rz/jI+68slfBFaLjdcioevX0bzPJM+TsxngHQhtEkEfbkZXyb+XDx1dOTvzv0L3Ccsk+s045jpHStW+7bceFTDicDpc69qOTNI2wBwYVHWS8IQPQBFaGZ05e73my8qrTivTHQwbD3JgB5dcjZPFEISlA0LbEHQRuf7wslMsyofHlwExEjUL6W0z39S2KvpqhJ7QPFeCngKtH7ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5dXpHbsCwZA0kvg/byCaQokRceHG2Kc5PP29z/ePbVg=;
- b=O1bwyTfEdzUXQzowi6rkQG4HrlTtI7bRNuCjNpexC6Bud8xSGzc0M4Vc9jrWjtgVjwBOg9UMYL07ZurxFo4aydVheJvabD8YOrNg7gDsjF8bhSu1GE3CoE0lkdVI+XMlsUoRktaRzBo9I4q/07K/V2R3xEzSldG2Ffv9Kk+mPto3eOmhKtEP20kh/DCqRgS7JixrPNd5RzvzdSNcAweNuxTKKeGyihVo8g0UPqIcXaPz/yWK874R/v5UzNvxCeE4dQokrz2kHaXvWhCVfKnsAILjXpdeI9pMYQ+tHAnkCWOmkbltLe3q4t8zxzYafIRLNNo4D2hS9lfENxt5q+oiTA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
- by SADPR12MB140239.namprd12.prod.outlook.com (2603:10b6:802:101::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Sun, 22 Nov
- 2026 21:12:30 +0000
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286%4]) with mapi id 15.21.0639.012; Sun, 22 Nov 2026
- 21:12:29 +0000
-Date: Sun, 22 Nov 2026 16:12:28 -0500
-From: Yury Norov <ynorov@nvidia.com>
-To: "Gregory Price (Meta)" <gourry@gourry.net>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	David Hildenbrand <david@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Zi Yan <ziy@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Alistair Popple <apopple@nvidia.com>, SJ Park <sj@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kees Cook <kees@kernel.org>, Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Lance Yang <lance.yang@linux.dev>,
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
-	Xu Xin <xu.xin@linux.dev>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Lorenzo Stoakes <ljs@kernel.org>, Pedro Falcato <pfalcato@suse.de>,
-	Jann Horn <jannh@google.com>, Chris Li <chrisl@kernel.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Youngjun Park <youngjun.park@lge.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>, Waiman Long <longman@redhat.com>,
-	Ridong Chen <ridong.chen@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, driver-core@lists.linux.dev,
-	damon@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 00/60] Private NUMA nodes
-Message-ID: <awNavE8dAGr-amfQ@yury>
-References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
- <awMdeK8O-5mffg2m@yury>
- <179537469194.412063.13456998694958645706.b4-reply@b4>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <179537469194.412063.13456998694958645706.b4-reply@b4>
-X-ClientProxiedBy: BN9PR03CA0970.namprd03.prod.outlook.com
- (2603:10b6:408:109::15) To LV3PR12MB9356.namprd12.prod.outlook.com
- (2603:10b6:408:20c::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z41RKKTf
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4b467581b98so25188165e9.0
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Nov 2026 18:43:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795401813; x=1796006613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=edLt5Tq/BLcPWiJ/50P772+XAlfYh5g07EE3TpZCGKk=;
+        b=z41RKKTfhxE+vR7EsIrps3H7/BS1tcS39Sqf9sQqAKgSZB3S3Uix5FYU1qOrOCR+/q
+         c0NRwlZFdThVnStdRTnaGi6m5o1xt6t92JAWwWdOMjJ6Nu4Ll0fPkPWSewO6+Gn9Hm+o
+         qC2A0a9DUlWeQOyud69Q4E/DojX+NZStVIjCo2k5ug3LRvY6FtwnvhfWr1/ilGOSGWb0
+         N44opGVKU3+NX6Ks8O05b8UgXeiBfJeTl/XmYCYrLlwSFprr0eE/IyQGfhqgtJz/CqRD
+         WplN+ORhsJ9+G9Zc74uSm0HNN5+pWLn05r3bdR6ShgzfKUYnnFnjKtDc5C9T1Vhwc9bU
+         /qGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795401813; x=1796006613;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=edLt5Tq/BLcPWiJ/50P772+XAlfYh5g07EE3TpZCGKk=;
+        b=i7XhRud4XlibEnZjX4Gc/fg4MVD9r6ThI2bzgvdtY70cZk5eFUSzo/wui5anhVoBZh
+         LwG1jWJdgMlHwZ8t1A0uoWyb7f75T+IRBAQ3/7ln6O8aVLRoBiuiHpv2So6DiVyymunI
+         mv23czfNxMBXxI0a1S+cegN+nDs+H3x2reMUMAJjriV3pVV3ztnpUXueuIfCzRS4dM6O
+         feoorG6prvGOuzspnixeh7953vSwdKwZOleXnzuBpCiCy+Lyvc0FlLW2xM5Abd1ujPIk
+         1OF0MEQYAcpIFmKOHX+1bcDgR1E/Gj+Pr1G+6bkIhRfTVQEx8ZZsqcpxkoX2WaW3DNt4
+         aRWg==
+X-Gm-Message-State: APuU4Z+yk2HTagUzakZJD7ke4mi8UJRg+SYEyhBTsr+CsuBWihPzzT2g
+	PCe7wVaA44gMnyoO9oGv8kHMTcgDWuAbJ8pZYpYyrrPyPdyfd80t42jQXCRC/F52oT5efQ==
+X-Gm-Gg: AZFdTZcuEQjhar3kI8ajbkdbmYRmMGBoadqYtBkFb8wskC4NRG94OTg4dX4DFJPVR9f
+	Skb+OMYHTlHT6mPc/7C2zSVlnw9e33mopnEfhrtoJnad4H7lKmxdZh6l/EWgHqvSJSIY9Ao+xoB
+	xAUTvGz8WlDyHK0gEdzLS5pD7UqLKNQ0bIABIW/hQ1J1nPiFakEV3k7y9FOlVVheH1/8yzcOdu3
+	zfT+1MDA+4L0B/QW3fbX0cjTessMqqijfveECm2x84i0mbqBb7WDAwGFLHYIQJWJ0fHsA4VhZIj
+	KwrYqbjRXNMvdBUUoSP43NeFQe57iywfSzTLjo6Ng3wptSL+4eXU0IbSm1yIRglv/efSNMmNVdT
+	18cuGPIgIbe1W26ZnzS754GbTWo1sUvS5svB9RD79kHXFnpOgpglIFi/gGcZ2wNCZLTgT2PxnPq
+	uwx2NiZrINu92yNszzNVYpWBtIEzdtuPHf+qRsLY77rKUPUYyFOim0cuLOS1OksAVf9Hc1YXY4d
+	X2DOusNNIAbpAs6++5leVYtZJC17D8slSuGW/VNYD/Sny2B07He7C0LrDMKYwJ5utQIBd3+SOyF
+	lQv63sY56hnD1VxZR585zH0k/2oD0s+GAfek
+X-Received: by 2002:a05:600c:4e0d:b0:4ab:e27d:e241 with SMTP id 5b1f17b1804b1-4bb88922c6amr196520605e9.15.1795401812683;
+        Sun, 22 Nov 2026 18:43:32 -0800 (PST)
+Received: from Yee-680G4.lan ([178.162.242.209])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8849247asm307444625e9.7.2026.11.22.18.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Nov 2026 18:43:32 -0800 (PST)
+From: YeeLi <seven.yi.lee@gmail.com>
+To: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org,
+	yeeli <seven.yi.lee@gmail.com>
+Subject: [ndctl PATCH] cxl/filter: reject trailing characters in identifiers
+Date: Mon, 23 Nov 2026 10:43:25 +0800
+Message-Id: <20261123024325.2321309-1-seven.yi.lee@gmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -162,130 +92,160 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|SADPR12MB140239:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c70776f-1524-4c64-40c7-08df48dd5123
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|10070799003|7416014|376014|366016|1800799024|10067099003|4143699003|5023799004|11063799006|56012099006|261009223027099003|261022075727099003|261022105027099003|261021121427099003|261102123227099003|261026121527099003|261026140227099003|261028144727099003|18002099003|22082099003|6133799003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	9gCBtPNnzfkQsU5GjDnnYwSa2mDQD6GUGZUsKRsNEliR2IwFOgSUumiZRHIA6ta/8RvHQ7Cwir/qFe6Dmx9x/gdyj/Zu7SGSR5AWOhCbAdUVEXtADDCZDYafbrurBJktxi6cQCQLhaHNrfMYvTsBysm35HvRpxkyYHnFuM6886ElkbnuFLTNxW+3qCkFhOmE4rU4mSqonJ6voprNobIkAfjwAfjMp/2WFmtLBBrhj1NuZmdyjWi5r/zmC0dpueyQbQdIiCiCvcINIcsHFd6FCwPJFDxzl7XSAZo2M6mo56P50E+1e2cCWxBj5+bu8WcrZ55UzmCL8csipY4xuRNRo0C2UV+r6mIwRgyDWSTOwjJxmSrQU5LKjS4EtyMQDLJUtkURzg6JK/we6lKUwpLpW7WUJ46nsIUI0ISwfiBke5BqiFuBDfubVVQgOKllXozGsxwmodhkYDvitHhwMaM6YyMLP+giHj65QeYWdXny6N6WSER08IVIjcsScnCLXtix+0JJAQtzRI80bCxGrccZIcWUH1VALB1drlC238PAXcYA25tJRVBKx42EWGYopqv3QnwYkHOAX4IxjI0SjsTfrKpL7koQKAmaxqOewYwTAZvaFgfLahVaaMffmjXcn7uX09ggR6QreKk286Aj8tUfmIkbMy4nY4cz9IhY2JzIKfA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(10070799003)(7416014)(376014)(366016)(1800799024)(10067099003)(4143699003)(5023799004)(11063799006)(56012099006)(261009223027099003)(261022075727099003)(261022105027099003)(261021121427099003)(261102123227099003)(261026121527099003)(261026140227099003)(261028144727099003)(18002099003)(22082099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFFvVWphL1o4a28rQTBvRC82bWRXWXBUZkgvcG1BVEZmaFpCbGVpd1lIOFpZ?=
- =?utf-8?B?dUgzcERHYlVxQ2RaZHJaY0Z2ODl5RXdxbTJwNHhtRlUvWlZheDdMeUFmNWVu?=
- =?utf-8?B?VHlCR3l0T2swemZPUE1QQW1ub0pJaktZTWtSNE00SUlHd1kzbTJ5N0kxTkJY?=
- =?utf-8?B?VUlPOUltcUxHV2dJcXgyKzNxSy91R2VZUG9xNnRGYkRNZktwcmsrYUpTbjdy?=
- =?utf-8?B?Nk8rUFhaZitVdzBvS0gyRnpxOW5EUVFCbVZjUk9oSUpqWnJ5Z3BORFNML1dj?=
- =?utf-8?B?NzVpaGFHQStMbk54TWxSMGVZSmRxOVhxWDhOUGh3V1o2cnhGUGN6Z1BJcWFL?=
- =?utf-8?B?dkF3WGVkUkNkQ3ZpeVdTYmJtQUlnRjNhYk5RZUw0WkJrd2pidTBPQ1AvQ0lj?=
- =?utf-8?B?bjhuVWVoQzBxemk5UHF3R0ViUjFIaU40TWNXTUNIWnBFZVJyWDlNR2wyMXVy?=
- =?utf-8?B?S3VyU0Q3cVlFbmpGQkxvUFNKTEhUd2QxRFlPUEU2ZUpkWGNVbmNnN2lOY1JK?=
- =?utf-8?B?YWRpU0RVNXM1aGVLL0RKS0FaTVFWL3FtQmxxYU9Db0JNMjI3RzJJcDlyR1E0?=
- =?utf-8?B?MnY4ZmRWL2RIS2RGWDBwdG8vQ0N5RzhJbFlFM29QdnprRUNhOWhFYjgwVjhG?=
- =?utf-8?B?VnRydUVDR2FXNCs1OXZSWjh3WEd5TGFCdzNPdWpuSjR1Ym1NRWZERm1PV3c2?=
- =?utf-8?B?cUFmbjRORk05Q2JJc29MTzN0QkdoUVBBdE1tQVZpMXdRRXhGNStzMnZlaGRz?=
- =?utf-8?B?eisraHNnWWdPa1I3MDIrSVB2S3FZYzNLT1pWRnBZVlYwMUVlQmxUUURxU1c0?=
- =?utf-8?B?WmpEZWh4OVF2V0JXS3BVSEFyZTNKZnRXSy9DT0V4TTlQREFIdUFCNHpuejBE?=
- =?utf-8?B?anc4WUZDVytEVFAydmR2VWF4dGhRU3ViWkwyaUREZWJERmR0QVhla25HVVNR?=
- =?utf-8?B?dHdXcjNmR2dKRGxGWWZ6SHVaSEZubHhtZitBbGNqQmQxSlY2Tlg4M1ZxM1hr?=
- =?utf-8?B?cy9BZU1CTndhc09ZVkNLbGFJcmF2YmVuakU4ckRrdG9TUm9OZTlHamNNVlgw?=
- =?utf-8?B?Q1VCWVRXazJxVU4yZFNDbm9XWHhraE1Pd0tkKy9sMWJBeXRVQXRJckV0NTVE?=
- =?utf-8?B?T0VONVl0NWl5N2JLRmY2czdqOGhid1VRZXFURkNMZ3B3TXhsbVlMdmhTMDNw?=
- =?utf-8?B?ZEQ5WkVqOWwxY3ZSVktyS1JVNGdRbzZqYjdISEcyZjhiYmpkTTF5Z2Y5RmR6?=
- =?utf-8?B?bUc1Yk5HaU4wa0RHbk8rN0dqNStOZlI0a0Ric01KV0F0QmNWdXROK2ZvN1l3?=
- =?utf-8?B?ZVRscWtxdDFZS2gweHRIMTkzbXFzcTRiV011RDNYdGNsN2dwclhjdjE5dEQz?=
- =?utf-8?B?MzBWd0w1bHc2UnJmNUI5QTY4NUI5bXlMT2NNeW56TVJRVm5wQW9KbXJhZ2wz?=
- =?utf-8?B?SUxEYzZRNE1XcDdBN3JFZkNTT3dmTnV1NDVvTUdFeVExaE9ETGpSQjVGTmRI?=
- =?utf-8?B?Ty8vZFB0OC9NbnFVK2FTTnc5aVEvQk80VmVKNGx6QmdlR3lrY1RSSEQ0Y002?=
- =?utf-8?B?RStzVTdYOXRIQnJXaFdadnJxQ3ZKc2JlWjhLRnZJcm1ldU5sRkp6VnJIVlJX?=
- =?utf-8?B?NlNnOGNIcThKdUgzUmJvUkNGbFhxVTRhaEdiVzBBZnA0YVNsL0IrUkQ5bXlB?=
- =?utf-8?B?R3JQWDBRUEk3U05oMFVkdWtuVnhZbHhQalpIS1doQnVpZzk5SlQ3eGhvSXho?=
- =?utf-8?B?VmFpRHZ5Qmg3cTFMSHYwUUdzL0NybTczM0hzZXRnbEtXU25DMktOWER0Mzkw?=
- =?utf-8?B?TTkwd29tOUl4eVQxbjdLN1E2bVdRSDYrR01GNU9sVG1Wcm5nSFFCODNNeG14?=
- =?utf-8?B?YlltUWdIditucC9kajJVUFRmMUdlSFFoaFJoZU9QWTdkeStCZHlMczFwaU1n?=
- =?utf-8?B?YUxRZE5EL2pjcHh2ai9uelo3KzJTUWpDS2Y2bjBKZEx3a2ZzV3dTS3JEWGJx?=
- =?utf-8?B?YW5pYmtmU2ZsalJjVlJmQXVKdy9vWTZ5Vmh5SGIyVm9aMklvOEVoOG5mMmR0?=
- =?utf-8?B?UXkwb2V2RkpUTVhNbmxYMUo4d1hHWE9XRmU1V1p0L0xzZDBib2ppa0owekRo?=
- =?utf-8?B?NUhuelJ3ejJVSTFTUlpHNlhiQVUzRkFWajZISjZlL2YwNmxnclN1SThxc1ZF?=
- =?utf-8?B?eXVpWXBZWHVwNWY0dDkvL2FoKzZBcVpqbThsbVZiTC8yQ2FhS0JFZ0NsNFJZ?=
- =?utf-8?B?SXVwZisza1IzMXBOWDhTaG1kTGQwem5iZWw5Tll2MU5mMkRuUlZCTHo4bnNp?=
- =?utf-8?B?M0prejdPK3RDM0IrTXdVb2FwbjlaWEdLanVxUjEwQUwvR3Z5YVhQc1ZhQ1ZO?=
- =?utf-8?Q?fyrFrjyuGOLLwaJtiv2LkhY3yhs/kdPf4iyM4?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c70776f-1524-4c64-40c7-08df48dd5123
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2026 21:12:29.8862
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9PI6Nz4kQxZ8iurdT0IkaBNBC+ca8r7TxNtVBgEkOwekPnVnnLgiqU1SUv41bgvIBZknHXYGfMvCvHet+EoWVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SADPR12MB140239
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 22, 2026 at 02:11:31PM -0500, Gregory Price (Meta) wrote:
-> On 2026-11-22 11:51 -0500, Yury Norov wrote:
-> > On Fri, Nov 20, 2026 at 01:08:51PM -0500, Gregory Price via B4 Relay wrote:
-> > > This is v6 of the Private NUMA node series. The series falls into four
-> > > parts, each building on the one before:
-> > > 
-> > >    1-18  mm: introduce N_MEMORY_COMMON
-> > 
-> > I walked through this part, mostly. It looks like you can substantially
-> > decrease the patch count if you keep N_MEMORY meaning unchanged, and
-> > add another type, like N_MEMORY_NOALLOC.
-> > 
-> 
-> I don't see how this would reduce the patch count substatially, you
-> still need to convert existing N_MEMORY users and need to differentiate
-> between general purpose memory nodes and private memory nodes.
+From: yeeli <seven.yi.lee@gmail.com>
 
-Please check this quick attempt with my codex. The patch count is reduced
-to 52:
+The CXL filter helpers parse identifiers with sscanf("%d") and
+prefixed variants such as "mem%d".  These conversions stop at the
+first non-digit, so a malformed identifier such as "0abc" or
+"mem0abc" still matches object 0.
 
-https://github.com/norov/linux/tree/private-nodes-v6-n-memory-folded
+Reproduce on a system with CXL memdevs and regions:
 
-The brief summary for dropped/simplified patches is:
+    cxl list -M -m 0abc        # matches mem0
+    cxl list -R -r region0abc  # matches region0
 
-02    ->   dropped - State helpers: no publication/clearing helpers needed.
-06–11 ->   dropped - Migration, tiers, DAMON, scheduler, stack locality:
-           existing N_MEMORY checks already select ordinary memory.
-14–15 ->   dropped - Hash distribution, kswapd recovery: existing N_MEMORY
-           counts remain correct.
-03 -> 02 - Common-memory state: documentation only; no new state or sysfs
-           attribute.
-05 -> 04 - Interleave/tmpfs policies: only the three-line weighted-interleave
-           hotplug filter remains.
-12 -> 05 - Reclaim: only hotplug kswapd gating remains; iterator conversion
-           moves to the reclaim-state patch.
-13 -> 06 - Compaction: only system-wide/proactive filtering and hotplug
-           kcompactd gating remain.
-16 -> 07 - OOM constraints: only capacity-summing intersections remain.
-27 -> 18 - Private-memory state: expands to 16 files; topology/accounting
-           users must include both memory sets.
-31 -> 22 - Cpuset handling: requires ordinary memory while preserving
-           allowed private nodes in the returned mask.
-44 -> 36,
-46 -> 38,
-50 -> 42 - Service states: direct updates at boot,
-           online, and offline sites replace shared helpers, increasing
-           duplication.
+A typo in a destructive command such as
+"cxl disable-memdev -m mem0abc" can therefore operate on mem0
+instead of failing.
 
-The new N_MEMORY_NOALLOC patch is not split intentionally. If you do it, it
-would probably turn into 4 individual patches.
+Require the whole token to be consumed by adding a trailing %c and
+checking that the conversion returns only the expected fields.
 
-The more important thing is that N_MEMORY and the proposed N_MEMORY_NOALLOC
-is a disjoint, contrary to N_MEMORY and N_MEMORY_COMMON.
+Tested by building cxl locally and on the target test system.  Valid
+forms (numeric ids, devnames, host names, "all" and lists) still
+match, while "0abc", "mem0abc", "region0abc", "0x0" and "0.0" now
+match nothing.  The same matrix passes for the memdev, bus, port,
+endpoint, decoder and region filters.
+
+AI disclosure: the analysis, reproducer and initial fix were produced
+with an AI coding assistant (DeepSeek V4.1 Flash, OpenCode).  The
+submitter reviewed and verified the change and added the sign-off.
+
+Signed-off-by: yeeli <seven.yi.lee@gmail.com>
+---
+ cxl/filter.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/cxl/filter.c b/cxl/filter.c
+index 5d634d3..bff4409 100644
+--- a/cxl/filter.c
++++ b/cxl/filter.c
+@@ -53,6 +53,7 @@ struct cxl_endpoint *util_cxl_endpoint_filter(struct cxl_endpoint *endpoint,
+ 	char *ident, *save;
+ 	const char *arg;
+ 	int endpoint_id;
++	char c;
  
-> And N_MEMORY_NOALLOC is not a good name.
+ 	if (!__ident)
+ 		return endpoint;
+@@ -66,8 +67,8 @@ struct cxl_endpoint *util_cxl_endpoint_filter(struct cxl_endpoint *endpoint,
+ 		if (strcmp(arg, "all") == 0)
+ 			break;
+ 
+-		if ((sscanf(arg, "%d", &endpoint_id) == 1 ||
+-		     sscanf(arg, "endpoint%d", &endpoint_id) == 1) &&
++		if ((sscanf(arg, "%d%c", &endpoint_id, &c) == 1 ||
++		     sscanf(arg, "endpoint%d%c", &endpoint_id, &c) == 1) &&
+ 		    cxl_endpoint_get_id(endpoint) == endpoint_id)
+ 			break;
+ 
+@@ -90,6 +91,7 @@ static struct cxl_port *__util_cxl_port_filter(struct cxl_port *port,
+ 	char *ident, *save;
+ 	const char *arg;
+ 	int port_id;
++	char c;
+ 
+ 	if (!__ident)
+ 		return port;
+@@ -112,8 +114,8 @@ static struct cxl_port *__util_cxl_port_filter(struct cxl_port *port,
+ 		if (strcmp(arg, "endpoint") == 0 && cxl_port_is_endpoint(port))
+ 			break;
+ 
+-		if ((sscanf(arg, "%d", &port_id) == 1 ||
+-		     sscanf(arg, "port%d", &port_id) == 1) &&
++		if ((sscanf(arg, "%d%c", &port_id, &c) == 1 ||
++		     sscanf(arg, "port%d%c", &port_id, &c) == 1) &&
+ 		    cxl_port_get_id(port) == port_id)
+ 			break;
+ 
+@@ -213,6 +215,7 @@ struct cxl_bus *util_cxl_bus_filter(struct cxl_bus *bus, const char *__ident)
+ 	char *ident, *save;
+ 	const char *arg;
+ 	int bus_id;
++	char c;
+ 
+ 	if (!__ident)
+ 		return bus;
+@@ -226,8 +229,8 @@ struct cxl_bus *util_cxl_bus_filter(struct cxl_bus *bus, const char *__ident)
+ 		if (strcmp(arg, "all") == 0)
+ 			break;
+ 
+-		if ((sscanf(arg, "%d", &bus_id) == 1 ||
+-		     sscanf(arg, "root%d", &bus_id) == 1) &&
++		if ((sscanf(arg, "%d%c", &bus_id, &c) == 1 ||
++		     sscanf(arg, "root%d%c", &bus_id, &c) == 1) &&
+ 		    cxl_bus_get_id(bus) == bus_id)
+ 			break;
+ 
+@@ -334,6 +337,7 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
+ 	char *ident, *save;
+ 	const char *name;
+ 	int memdev_id;
++	char c;
+ 
+ 	if (!__ident)
+ 		return util_cxl_memdev_serial_filter(memdev, serials);
+@@ -347,8 +351,8 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
+ 		if (strcmp(name, "all") == 0)
+ 			break;
+ 
+-		if ((sscanf(name, "%d", &memdev_id) == 1 ||
+-		     sscanf(name, "mem%d", &memdev_id) == 1) &&
++		if ((sscanf(name, "%d%c", &memdev_id, &c) == 1 ||
++		     sscanf(name, "mem%d%c", &memdev_id, &c) == 1) &&
+ 		    cxl_memdev_get_id(memdev) == memdev_id)
+ 			break;
+ 
+@@ -432,6 +436,7 @@ struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
+ 	int pid, did;
+ 	char *ident, *save;
+ 	const char *name;
++	char c;
+ 
+ 	if (!__ident)
+ 		return decoder;
+@@ -452,8 +457,8 @@ struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
+ 		if (strcmp(name, "endpoint") == 0 && cxl_port_is_endpoint(port))
+ 			break;
+ 
+-		if ((sscanf(name, "%d.%d", &pid, &did) == 2 ||
+-		     sscanf(name, "decoder%d.%d", &pid, &did) == 2) &&
++		if ((sscanf(name, "%d.%d%c", &pid, &did, &c) == 2 ||
++		     sscanf(name, "decoder%d.%d%c", &pid, &did, &c) == 2) &&
+ 		    cxl_port_get_id(port) == pid &&
+ 		    cxl_decoder_get_id(decoder) == did)
+ 			break;
+@@ -668,6 +673,7 @@ struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
+ 	char *ident, *save;
+ 	const char *name;
+ 	int id;
++	char c;
+ 
+ 	if (!__ident)
+ 		return region;
+@@ -681,8 +687,8 @@ struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
+ 		if (strcmp(name, "all") == 0)
+ 			break;
+ 
+-		if ((sscanf(name, "%d", &id) == 1 ||
+-		     sscanf(name, "region%d", &id) == 1) &&
++		if ((sscanf(name, "%d%c", &id, &c) == 1 ||
++		     sscanf(name, "region%d%c", &id, &c) == 1) &&
+ 		    cxl_region_get_id(region) == id)
+ 			break;
+ 
+-- 
+2.34.1
 
-Sure, I'm not attached to any particular name. Although,
-N_MEMORY_COMMON nothing better to me. It answers the question
-'what for this thing' even worse.
-
-Thanks,
-Yury
