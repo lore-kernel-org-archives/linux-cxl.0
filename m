@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795442486;
-	b=t9s4VFBP9miyXDvVaFSAHXzW7Zq0IZY/VDPZ1i0NARG8qrrPR2Ub72yw4G2UOw8ocLt0
-	 j9NdSUahwu0anMbznLZ9/vSKGtKsCzIZNebgF87NcS+Uf611Iwa3/l/tDXImbboIvkO3F
-	 B1cVMoPPttF2td9+Vedv/2LP7bJPKBESYu8LJ5FMzqosJMmnvvhKCuYNW/8RXzJ1u5Lpy
-	 S8RIeLuk9/hpZy621hSJ4jy5Txh4hlTPx0Z61rCIkjFzmtd8wdeo/Q/R6Wnz66iSyCuIm
-	 msvHsjACxKzVs/x7JwR+sm8RLR5DOU28M18h8pauHYUJfYJjvPqDDyqdhMFAm0aF2+A==
+	t=1795442546;
+	b=HPXOCoLzPAOY7LvQqqsDtPIcIv8kVs6ydgRoH6tewgd/sPmvkTgahH+lBfSmnXUs7Sqm
+	 A02LgMdHhTruNqBCb1HILrS5KPOIODMEf4wYagCL2ZOa6XxdBrpD6DK7ZouXNRTeRS+uU
+	 SmYMYvvgsosxw+819+JFT+5xOgbhYIT51BLmIhiUgfc6Kv+YCpLrdoYjRZW/WCI3tYdDL
+	 jo20ktTZL83b0Ctby6HUaiin4UDcYY5rLviAjjmyo1y8la8V0TtX7qt4N4T9pEsZcr5mO
+	 itPknlVGE0AE2N5evJEZx7hwLaTtDtPMuklTO3r/pDRuMCF398MF8ECgEKaVyT4lw7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795442486;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795442546;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
 	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
-	bh=vG8DGIHiY7DMGeo+eA0u14jrv8r12vq2uH5/qp0e+4w=;
-	b=IV+cqPVkp0t8iYyckiEwKXIGiwIH6can4S0Pl76DVzlekEP3J0HrIwHE/DM/hZD4RTk0
-	 sRhLH/ZlruBws1fbfmanftJsxc+xq9pC8bzrMlB8kIv2GYnv0u+iNh9QKWDyC/bP8BYaQ
-	 y4jE7Q8nnl/asce3wECF+5KguBAUaXstjoSNgEffV8HCK2/tgUw7XJQtfDad3OavUaXCs
-	 6fFKjkYSLzZyojQYB24s8WPtpqR4jQkGYw3j82e52ZLRP/ONvQUVe4Yaq9gFrcDjOAFmo
-	 vUei1Avxx5KnUCdV7fUnNHJw1GGqwB28hp4wkTP7+n7CLLQJ6e0puIlUBg8gzovnKCA==
+	bh=K3PKiWxJL5rA78k4RAfL19Ict6G9pZhcXRFYMUNqZcE=;
+	b=2otcJ6MCZV8QJphTTtVaqMe+zlypmFvhER64GvR70jOUcLQVzNwSdRDb1qSKSY3gzI8a
+	 vOYbJofUed8L1/0CmuyIPLWtbDqc58SafFxxC7CzUJMWFMPmOM/JuF/vKiPvOE1Ke2J9/
+	 0cH7ASx6t5aj5UyFJhsq1s29M7kiCZCHCXePk1aSYcAJXnh8UEXzadctEORxbBDwvcUYF
+	 0mcsWDSsmQdJZmDQpszbGY/dvEZ1gfp26IXnGSZG6FJ4gYDZTdR6DubhsWj0cEYfZN/NN
+	 soOIMarFExBxGfv8qxnx3VaRK8xm9rPt6zpUuQ3kLz+e1XLCug1UoP3QXjRbKAD7GSA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=HvoqpFfv;
-	arc=none smtp.remote-ip=209.85.160.178
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=VljreHg9;
+	arc=none smtp.remote-ip=209.85.128.172
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CED606A32E
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 14:01:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 00CED606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88311606A33A
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 14:02:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88311606A33A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=HvoqpFfv
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5495d549924so38072311cf.1
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 06:01:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=VljreHg9
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-8b0dba37a7fso25533077b3.0
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 06:02:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1795442485; x=1796047285; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1795442545; x=1796047345; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=vG8DGIHiY7DMGeo+eA0u14jrv8r12vq2uH5/qp0e+4w=;
-        b=HvoqpFfvQJEyD7yCLKdxLSgIAzaLXp3MuIOJlQD/xTNp3eiDg6Ra/gTk2UwtMg8a7r
-         51Fdi8rwbAEzrbgpfyQRcX6ocwx3JbZqs3lMtg+oSCOxztbX4sMSEqwzwBMMXIZhbH2z
-         +cWKiZlrDbUnOjK2Dc/xmxc6lhEP7P0zCv9fK8Q6R+LbGf8sSkVAJ3VI047utN/3Xvv4
-         E+aRxCbXLC4Q26EJEfMDphlos6jB6B2Elx2CW7JhFNTETwNm4m8/cfY28pwtDbaTGmPb
-         vBtJ7fUBmY372UX/XLhDP7oxTPwPWEyn4GbQKKsOdOJ00EB3fq5g2EwkvonKgUxXTVD5
-         DPmw==
+        bh=K3PKiWxJL5rA78k4RAfL19Ict6G9pZhcXRFYMUNqZcE=;
+        b=VljreHg9fqduoNCuhUvYdI6zY5hBHSeYwhiI7vf7summ4dEKYq9hFOCCfR6aYF0/2P
+         L2riCG2gI435GeC7ZNsfR6fHTud24o8gBnAqDt7qJDsirWdVpATYePJDvcAuDTpix9n4
+         LGwyZSTUtozFudCUJyvSw4q4iZ39AoKFu/CZ9iyFv+g5+PfiwXHcWW/55SiIwIHTxq95
+         +D/FF6JCGPVqldEw7rHVuKYVNkvZaIANpP3McjVm/7nMaF69sLbbfoPbYTj1aNHccjUA
+         BzZMskVSpQ48oEk7/U4zjyTsdufPf56rPR+BY3dYNsiQKYzFM3LIFVLAYoI1XW3G3WoN
+         vQOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795442485; x=1796047285;
+        d=1e100.net; s=20260707; t=1795442545; x=1796047345;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vG8DGIHiY7DMGeo+eA0u14jrv8r12vq2uH5/qp0e+4w=;
-        b=OjRYQF7am3Ni8t5dlb9WsHOlcg7CFzJ31/CEUqzml26cyygUC7Xat2Zdj9fnYHbqR5
-         MXbahDF8qI7vZYo1ohcu5Sr+USu8Xl28A8dtDmnia4/Enm6uOCW5o4luSNDjjmaE8xMA
-         ACHE9qnPkAiZG6OszQ4cFnicYXoUFaewM4oFd46gVUS2/DSUmdiziOlFIqyTrdPwUMMj
-         n/e3nBMk9UlM5RXT+A+0UYfD9wgs+S4k56cbwKiyCeMGDKYy7D+KECOe0KStx+wQyimy
-         y/CE0ZbQdL1EynCNas++zbw3decLdneGCgi+qA9qZukMaGvA4X4xNUxiRIrFOcW+hkwl
-         j+vw==
-X-Forwarded-Encrypted: i=1; AL+hErHn0z19PRDIKbOaCKMXOZd/An/EDgVW4jN6vltF/pI1SzbFk5LvdCiJVd4wimxyoDVN6lFDdqEEcCs=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8tGD2b6DUmLmoCyBfayYXx2NhYbN5up6jVvnF61W4wriLlxafQ
-	rKFSL7rSU3+zysVw3ggDpiVEfGSsFoEFupcuGPB1jpm5+AYIvQFNiHM/BNiiLPpR19I=
-X-Gm-Gg: AZFdTZdR6BkknY7RVItFQ4heyxvA/vC0ILFD73nT8wH6GJoh4hrY45kIUSgNFRzayQe
-	3U1zRCNlC3zA/VmvFiEEqC5Xu4uePQWAZv54Wb+fLrG5jZlqFuU6LMVvraCovQ0XctNNnhDI2X8
-	RsCdZKIwnJb0R5TWcPH2zFQbnZIX/2vKZBMYYKtwC30VE9/dcCdqb5LyUBiRxGCFwojdC42/asi
-	M06vBjtMJAJJsKdYqgGr+F/J+UI88iTgy/goRKZBSejVw1GoRslEyO/pqr9TxSz9LC7w8bvDniE
-	UWi5in5gg/fTMMued0yUWPNnRhOvthlWQ0TvdKOywNEEqIT+DOT7zzZG0P8o7LsU71xgJciqHLJ
-	hnVfx0XOCBNx45Z3TlveSVqBhR6jUeFqWIINaThuwmtdl/cvL/jN0/2Do+O+mm5PcdZsLhBiSZB
-	OxV+x3hazZk2i7ZKpceCEbU36Lp+qZo9HuCDqW6nQGpceNwCdS4+5tiLzIqwRngoWyZC8v1XwtJ
-	UGSgVooy0T0OwlEf8MdF6yh0pUe1H9BRdHel6M97e+trMf5yQzXKLJYisTbl1qoWgH/Kx0CHjau
-	MTD0uoxcmrYrqrRF24h7MN1zmpJS/IJgfrykCIivArPAkgBCgGLTzWEl197l601YpvQMjYbTQ04
-	0dFZFSwA=
-X-Received: by 2002:a05:622a:8413:10b0:55d:8475:aafb with SMTP id d75a77b69052e-55d8475ad43mr113506371cf.71.1795442484804;
-        Mon, 23 Nov 2026 06:01:24 -0800 (PST)
+        bh=K3PKiWxJL5rA78k4RAfL19Ict6G9pZhcXRFYMUNqZcE=;
+        b=CCmgT3VddhJEKiPHgetrMQ9xtkRi4ksV1EOhhu9dNWz0vFnEA2BGBVNhdStIL4eRyA
+         nji7JeD1qwaz1pQter11M0hIauXUGOBgPjTfzu37oOk+mb0C1VlmYKiAUWag7gjuUgTz
+         ga0fUE7cnl+2NM1n0AuuZfY8za+Fy10P1FK/oECZmtV9VUW6gCJTSRzbgB+KlJzR2b25
+         4b66hGtIyboEPklPfTcZu2mpnEnzEJ6nMypli3Uga4pnSR1ajuOes57NgnXsHpypsurF
+         SGvMHB3NwVsrBziQ9DiVCAMIHv7v472gjgapnXMaB6SUy9WL594ryYe7/pVGhjbluEfU
+         0APg==
+X-Forwarded-Encrypted: i=1; AL+hErEfS5j+qKJYVt9GQr7ZYza5MXyV/cIs95yVgbBuNOJ30qjaIC6xrMK+/fPm5wA+EI/ihZu+odor2P4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8PpoZYx7wIe+qXnHwpMGdOoBt1J9XVrlVjPdlYd7fikhwyASJT
+	mxwUigNUQeZ7b2cAEoOHTOoAU9iweCWyT19oGO/3RkjcSOr2Xvpc7tvZquT7NFMKsZk=
+X-Gm-Gg: AZFdTZehPr2SDm1CC7HRM+9dqi9feRdD/KpeNbTuebLbBBrn56wCPsCXMl8AmcBU4jS
+	e8mMXMezyHIyK6oNcUJeaD6+qu7dG9IzpKIhbKvzYU9wra+924af6Kh9TBZDA9/C/KE1qKVR8jA
+	NcssQwvbMF7Ds2+XdGCV83JJj1dIJKncaO5QaViea6dXTHCAvufTxLGpjGwBwX1onFO/8GhGszH
+	rsUYwCjzUxeyu5pZU8F4gRaCaArsrLku8X3SY/JoJMpzPdC9eZ/mT3b13yLSRfUrjnqyl8WW6xg
+	le4btH/AWRQwfplJwDIwaYNZSZkBh2Od8su8W4JDtsl66BNL3hPJNNubwXoaZ4fzvlcr+jqmYza
+	KiJ1czv4kbX2r+8QvaCIlmGqGAWlhug9x/cz6DCUx4ORwrY2FHwAyggqei1fE6SvoCFrCqbsKrT
+	i/utbsLpctWm4G9ZYLeQxkgrQ4o+LB8OTUd0dPsNz1R7kR0JCw3fYv5+3ufEXMqGHWOud5lS/0M
+	eehcR8vFz65GG7c1Ghh8To7f26T26gd5erzyBr1t6xGp0A4X4Kff7U92L4Ozg7Y95FiHznPr+Ff
+	4/Tgb538wgEfiHPNnSWyvaL22CZcGs761Y4EuRYjfOswFNs2L/x2YMscF79xGFRu8bLEUA0YBH5
+	iCYACcgw=
+X-Received: by 2002:a05:690e:1449:b0:67c:b95:6753 with SMTP id 956f58d0204a3-67df451a476mr4209002d50.146.1795442545280;
+        Mon, 23 Nov 2026 06:02:25 -0800 (PST)
 Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-55d788074desm99999281cf.7.2026.11.23.06.01.22
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9213515f467sm104854846d6.41.2026.11.23.06.02.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 06:01:24 -0800 (PST)
+        Mon, 23 Nov 2026 06:02:24 -0800 (PST)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -91,7 +91,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 01/60] nodemask: add node-state iterators
+Subject: Re: [PATCH 18/60] mm/khugepaged: base the recommended
+ min_free_kbytes on common memory
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: Yury Norov <ynorov@nvidia.com>
 Cc: gourry@gourry.net, Yury Norov <yury.norov@gmail.com>, 
@@ -146,84 +147,58 @@ Cc: gourry@gourry.net, Yury Norov <yury.norov@gmail.com>,
  linux-pm@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  cgroups@vger.kernel.org, nvdimm@lists.linux.dev, 
  linux-kselftest@vger.kernel.org
-In-Reply-To: <awMK9V6TbU9Xtzn9@yury>
+In-Reply-To: <awMbTMt2M876rTy9@yury>
 References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
- <20261120-private_nodes_v6-v1-1-74f5f9a115c2@gourry.net>
- <awMK9V6TbU9Xtzn9@yury>
-Date: Mon, 23 Nov 2026 09:01:22 -0500
-Message-Id: <179544248227.412063.16491857533875192357.b4-reply@b4>
+ <20261120-private_nodes_v6-v1-18-74f5f9a115c2@gourry.net>
+ <awMbTMt2M876rTy9@yury>
+Date: Mon, 23 Nov 2026 09:02:22 -0500
+Message-Id: <179544254257.412063.6102711886866280853.b4-reply@b4>
 X-Mailer: b4 0.17-dev
 
-On 2026-11-22 10:32 -0500, Yury Norov wrote:
-> On Fri, Nov 20, 2026 at 01:08:52PM -0500, Gregory Price via B4 Relay wrote:
+On 2026-11-22 11:41 -0500, Yury Norov wrote:
+> On Fri, Nov 20, 2026 at 01:09:09PM -0500, Gregory Price via B4 Relay wrote:
 > > From: "Gregory Price (Meta)" <gourry@gourry.net>
 > > 
-> > Add first_node_state() and next_node_state(), so callers can walk any
-> > node state the way first_memory_node and next_memory_node walk N_MEMORY.
-> > 
-> > Add for_each_node_mask_state(), which iterates a nodemask intersected
-> > with a node state using the bitmap intersection helpers, without a
-> > temporary nodemask.
+> > set_recommended_min_free_kbytes() reserves two pageblocks per populated
+> > zone to help THP allocations avoid fragmentation. The reserve serves
+> > ordinary allocations, which use only common memory, so count only the
+> > zones on N_MEMORY_COMMON nodes.
 > > 
 > > Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
 > > ---
-> >  include/linux/nodemask.h | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
+> >  mm/khugepaged.c | 3 +++
+> >  1 file changed, 3 insertions(+)
 > > 
-> > diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-> > index 607373bd83ee..90bdcffa42ea 100644
-> > --- a/include/linux/nodemask.h
-> > +++ b/include/linux/nodemask.h
-> > @@ -411,6 +411,11 @@ enum node_states {
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 2dc4245814df..a930d99f89da 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -3151,6 +3151,9 @@ void set_recommended_min_free_kbytes(void)
+> >  	}
 > >  
-> >  extern nodemask_t node_states[NR_NODE_STATES];
-> >  
-> > +/* Iterate the nodes in a mask that also belong to the specified state. */
-> > +#define for_each_node_mask_state(node, mask, state)			\
+> >  	for_each_populated_zone(zone) {
+> > +		if (!node_state(zone_to_nid(zone), N_MEMORY_COMMON))
+> > +			continue;
 > 
-> for_each_node_state_and? We've got for_each_node(), and we've got
-> for_each_node_state(), so let's figure out consistent naming.
+> This is the 2nd time you add this check. Maybe fold it into the
+> for_each()? Assuming, you keep N_MEMORY meaning unchanged, that would
+> look like:
 > 
-> Did you check the codebase for exsisting candidates for this helper?
+>  #define for_each_populated_zone_state(zone, state)            \
+>          for (zone = (first_online_pgdat())->node_zones;       \
+>               zone;                                            \
+>               zone = next_zone(zone))                          \
+>                  if (!populated_zone(zone) ||                  \
+>                      !node_state(zone_to_nid(zone), state))    \
+>                          ; /* do nothing */                    \
+>                  else 
+>  
+>  #define for_each_populated_n_memory_zone(zone)                \
+>             for_each_populated_zone_state(zone, N_MEMORY)
 > 
-
-for_each_node_mask_and() would be more consistent, change just requires
-passing node_state[N_MEMORY_X] instead of just the node state bit.
-
-> > +	for_each_and_bit(node, nodes_addr(mask),			\
-> > +			 nodes_addr(node_states[state]), MAX_NUMNODES)
-> > +
-> 
-> Please use nr_node_ids instead of MAX_NUMNODES.
-> 
-
-I followed for_each_node_mask() which uses MAX_NUMANODES but let me
-look.
-
-> >  #if MAX_NUMNODES > 1
-> >  static __always_inline int node_state(int node, enum node_states state)
-> >  {
-> > @@ -435,6 +440,12 @@ static __always_inline int num_node_state(enum node_states state)
-> >  #define for_each_node_state(__node, __state) \
-> >  	for_each_node_mask((__node), node_states[__state])
-> >  
-> > +#define first_node_state(state)	first_node(node_states[state])
-> > +static __always_inline unsigned int next_node_state(int nid, enum node_states state)
-> > +{
-> > +	return next_node(nid, node_states[state]);
-> > +}
-> 
-> At least the following {first,next}_{online,memory}_node must be
-> switched to the new helpers. Can you check through the rest of the
-> kernel to make sure all candidates of the proposed helpers are
-> converted?
 > 
 
-I originally intended to delete first/next_memory_node, to make
-usage of N_MEMORY a bit more obviously, but dropped it to save an
-extra patch or two.  I will probably add that back in.
-
-But yeah i can update these otherwise.
+thats reasonable, thanks!
 
 -- 
 ~Gregory
