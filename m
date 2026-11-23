@@ -1,114 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.135.74
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795412787;
-	b=TqMboEFGvXdoXl9z9X101jXewPzVSDLx8upcyTE5jge/1yHrxXHSKdAIoAmcO+itB1AM
-	 lNU5Pow/RjZmBzcX4+r0ljZiR0VHPeTjj7+Pp4y0tERmmhoPYljilkAHVFtuT/Qn4P+O0
-	 qUxl8owq9vPQPucOCnNFDcO+IAwtTQRErNKIlLsKgzRkHNHtnOZ5AFvzFXSoRFaKFu4vn
-	 b8rYO2mBvtEjxD2lko6iHxYrEDMNMzsYtWLT/6qtmcmNuCG7/6uPd8bilJZ46SYr3de/d
-	 kKnNLSSllO82D+JR73Mbsg3gdb+jJ0vhd3iGrA5izoI98ZVgtlj+oKN7mQyzORJNqCQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795412787;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Authority-Analysis:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
-	b=kHlnkbp9UXO3fLf2eK/fA8FhdZKkZIq9MGcVRxykZ1sfaqK99pz/qQOGSik8Wp6fY/0Q
-	 2RXZa9TJ0uvZH6xwoSH9+06CW9O+VSNj8IK56HBZ9HMjn1dVTrB0Una0IoUelhNTTEI3O
-	 VPhdLH9/xbaWEAf/9X8bb7FTNGa2Q98ezA68LzPrdqhPUjebOCKtBizNFvADt7JFKK8IC
-	 YS98dEDdPzb+kKI9LJc1dhp0oOcU5k8k4uJh+CZ2iqTAl33Yo4qLUVhKgBHdVLzj2O4Jn
-	 aVekXq+kh8tWQX7ZeSfDc+q8cxe/KYaZM4cAq+Vt9Y1vub6cGeL6+6izvNec5krRnXQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=columbia.edu;
-	spf=pass smtp.mailfrom=columbia.edu;
-	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=eyBQmLoc;
-	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=iY5Le221;
-	arc=none smtp.remote-ip=148.163.135.74
-Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.92
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795418074;
+	b=cEhZ0i+EMbsGKNTJklGTRLEKJvUVevPgG+Z/z6f5JVptF26EPFKj9t5sQL/1kiYAOm3c
+	 In5jrRt5ckaPUwnN76Y/5YBKIGh5931MvuNa1ntVXSr5K9B1RM/mAPEdqmwTBG1drIsq9
+	 q1veOHZfmc08nMQRJvCD/k7IuOqZQP0FC87lFCw6Zj4FRcr/Xiqxr8lTdrtrDEt3iqe75
+	 0AYIuTh7FEUGDOu89WYT9TU7Zap4tt0y5jZwa+wpSCul5HTwr5bTZwM6ckWY56tKHhC89
+	 qmbM4VZqch7PPpmkKnrdOf3A6d0DuR0TdvI6jPmhk62jn8zv/9hoJj7/sLarqNuONIg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795418074;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:Feedback-ID:X-Zoho-CM-AccountID:
+	 X-ZohoMailClient;
+	bh=P/zQg7tpsjTGTAH9tHHBKpLs9Ukp8tVrYLDerfWrYsI=;
+	b=Qo8hCpFdwEB+VN9rh7gQoqg+BxOb3uTY5DKrGOz+ViDq86XBC999IlgO/WkU0rXoW2qE
+	 //WHBbmbF0uoYUCJqZTRhQm6w0W0SvEh7++ZoYxRa2eFcj7M7qDM0qXysk9Md6Kd4RclF
+	 4SIi1j5oT/1ofVMHQproV2drzC79/9zbEGLLfnhpo5L5TytfA7folEWcaJ/66cS0QEoSy
+	 tzkLOuMGmSdA4OLkaXE2R+rpiCrTVe4DIcj+diH8ljIPvGkJBYVBD4DA4JHmkpCG1ic1b
+	 6HgadrdxGm+VpKmhExtExEADceRBsYYIyHhwNTKRhvkhx2WphupwbMTy4dbxqrtRbrQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=zohomail.com;
+	spf=pass smtp.mailfrom=zohomail.com;
+	dkim=pass header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=H43EoM5K;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.92
+Received: from sender6-pp-o92.zoho.com (sender6-pp-o92.zoho.com [165.173.180.92])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB857606A31E
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 05:46:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB857606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FA6606A31A
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 07:14:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92FA6606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=eyBQmLoc;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=iY5Le221
-Received: from pps.filterd (m0167070.ppops.net [127.0.0.1])
-	by mx0a-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AN3XUwT1206266
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 00:46:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps01; bh=WDdO
-	ZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=; b=eyBQmLocBEnxAn3RL7SN
-	cxpvSnKSDfx4CShgBEFehjOQkpPAto2AqDp1fZc3OV6rEchZANMo3ed39PVKMCuQ
-	rlIaSuz6+KHv2xwQSPeGMJCwwzyGmyteNde7PYNE4qOcfLkq8m7RQf4df9WqNU5S
-	OGu4TKiVPPLMEYcukEciniTiC0A2W99NS0wwhyL6s/q9LBLCoFhEJDjH1OLYebJQ
-	s40EfeUkrq4RYceMa4Sk+5kmmowqEer1xw2BkHWOB2dGL1BPh5AACK7oW06otfwy
-	h7uu2lNzh6gdYQz1I/9lNZsD9mOjkRcIBpzSURKurTJk5wK2lumfS8J2jFrUz4nf
-	0Q==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 4j42cx3a8t-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 00:46:19 -0500 (EST)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-9213659143bso59009486d6.0
-        for <linux-cxl@vger.kernel.org>; Sun, 22 Nov 2026 21:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=columbia.edu; s=lionmail; t=1795412778; x=1796017578; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
-        b=iY5Le221neFbE3zr5ARx+0f1B8tbd8Q1gPbGPei3hF+X4oLEENJjEZtIZRTjY5UuQS
-         aQykmgvUNHDc9mhC+YlPdytgTm4wQQlDOa1Zzwu6gr5+vdihGK9bqwvNW/TbinvnM5Rj
-         xXyACtSh2oVFn0rwGSO4luDQsDw5M4JgfK74EoQxLeKtICr8eRhu2uMO/cZCRvTxPm8c
-         /wq8OfinG7ofM80QY3mUrf3zpD2f3TLbERi3Eyz+Xka7Z4MtMJ05iyovkeHskb/unl07
-         Xvk2gXCwu5VHYZDf/2rVFxgTMMTRNYCvrATFpjyB3pvltkROK+HcarIuuXnKgfumTvNZ
-         qMYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795412778; x=1796017578;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
-        b=rP228C7lhDJt2ZugFJ6aJHCYvzYLh5+0IlaTCMgOC2YRoG0qhPnxevek3dWjWT0LxN
-         5JWbsigNSrkxhyka37PnvBqvrjOufSNqH4riv+N3anXKSUobHiE+2Lda5tQmlBQsc5+P
-         wc9V7qLyghmQtIKa+sQ/vQB28wJPUmee0/u6rnSC345F57v7ROQwIFD4jzKYJ31XXLvj
-         f4X3SC+X1HKtpFQ0e3SFlPCpLPivsJLEK0h/hiGQYlbqOrgL9uJ+SqXCN3Ces2RH4tv/
-         UBl8d4Sb42M2in7ym+whrB9yVKK333u8NXuySAM5kQpSvvDmwAYzVYJGpwBY9mnoqWMC
-         /Ftg==
-X-Forwarded-Encrypted: i=1; AL+hErF4+zIn7wTVuE52DAqp75sLUeTCFgbbF01tzsnbZjZajg94eVHuzI1PKhDS8pOMBArtkk1mu+2yZ4Q=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9BrCVqEiuqRrrJWAbyK9IgQRoaG3YCUaNSY+U0TEB2cH/MZw28
-	KYchP35sOaE+/p8qcHPx4JSqtGMXc7l+2Sa2tQQenUqtEvnO9L/gQwXLTmON/G5NHn9fyZFD6Yr
-	UEqB7oGKvfIALQEmw602Ia6Cf5ppf8JG+qegzgfeue6kGPAJzNPimDFsANQ==
-X-Gm-Gg: AZFdTZdcs37Lu8KsA7ngiSG72eyPokVSNIxxsFXcQ/y6t5lYj975gHQVa8rxY2+CMrq
-	UUxQSawjSdKV8J3JtCFJAHbTvbQ5kg2V/u3XQbiiGK4mT+JUd/HPFmYDBZ4DzZGuoxDQZ3gwUoE
-	JyYAUAZ9NP/w2PG5BEt+rKwDNFgfjHgL+bcDtoAks0aq7zN8hzT03YkcMnZVOPEyt6QA8sXfV3y
-	+MlZdKW97EDHpGE5WyuiSqmy0PC9YIILc3LA03svSGlM7TyPDzA/YGUDSarKI6FtBdwP7S6uNcT
-	aAItaCH4iTe3yK6a7m85McFh7NElz8uFCnfMTIScNBtyRykS0sBobpLJrhbtKUrxZcsIADljOAu
-	CX+sXoz07buZEPONiL4x+sW9X7uS1C2QWMYeHnlbimxekidjD8F88e+wCn140cl6XhUgOjeJroo
-	/hn6AgrGYTeQg1l98tKV5J8XHWB9Za4I7cqfDRKcxUL72pYxcjUnC4GM7JKG4PTTvH4QS9oHeQL
-	dzCAZatWKCfVog37hpcHZn/3QD/bq9hJmeTk0eMtttjxNeMuWJU7b6SbKKmZLrwdSqlM8O6Db8M
-	NMXiiX2ZrSVQoMxF829H5ZU=
-X-Received: by 2002:ad4:5dcc:0:b0:91e:76a7:187 with SMTP id 6a1803df08f44-92134a9e8bcmr183190056d6.43.1795412778490;
-        Sun, 22 Nov 2026 21:46:18 -0800 (PST)
-X-Received: by 2002:ad4:5dcc:0:b0:91e:76a7:187 with SMTP id 6a1803df08f44-92134a9e8bcmr183189906d6.43.1795412778183;
-        Sun, 22 Nov 2026 21:46:18 -0800 (PST)
-Received: from [192.168.0.76] (dyn-160-39-51-212.dyn.columbia.edu. [160.39.51.212])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-92134a0a454sm95684796d6.35.2026.11.22.21.46.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Nov 2026 21:46:17 -0800 (PST)
-Message-ID: <2e11ba52-b5c6-463e-a5ea-c165ba935704@columbia.edu>
-Date: Mon, 23 Nov 2026 00:46:16 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=zohomail.com header.i=@zohomail.com header.a=rsa-sha256 header.s=zm2022 header.b=H43EoM5K
+ARC-Seal: i=1; a=rsa-sha256; t=1795418059; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dc2VsM1bPp0RcDmuipuC9QtYWDjKkUOOPdjoIn7c2jyc5lPM/D8snQ+pypJ3gMQ/sd4OO7j96Z/PX6YReltzDF0B0ughSHLDCoArGb20Gt84BRs0YdQ94Y5wO+N0dyB87TYrJeOQuJqWdUeCIXlsTZtA9/ZZm58RUEH+eJsbQgY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795418059; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=P/zQg7tpsjTGTAH9tHHBKpLs9Ukp8tVrYLDerfWrYsI=; 
+	b=jdvP3p9Xtqip4WpAD5TTwQTj0hpGFH64WhZfkf4pR/SqyuJMOJ/1gpqKAvzYWW/Whsu79xRy3tP7K8vANVPmbiPMXnq1xLV/GwcrI2zWMhbueksrEYh/Pra8Zqq+OgO0MK668oforbtGzWOI4SH9Bqg5ZmC/NQ1ooi83dYVjpVs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: a=rsa-sha256; b=H43EoM5KG4EFZUC4KlP5elR4LuCMWvSevDOo6/ITaKwYiDw7dcPt3Pbe2ZKh2q+h9DMr61+sFjyMRo9l81giimyghVKzJq5bbQxjQe5fcHwbgisEjw4D5qV1hakSS1VDS6QMACXKQQv2mgyxp8LFxkWvNXoxIJ+SfdDp0CzRddI=; c=relaxed/relaxed; s=zm2022; d=zohomail.com; v=1; bh=P/zQg7tpsjTGTAH9tHHBKpLs9Ukp8tVrYLDerfWrYsI=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795418056699217.7770071191337;
+	Sun, 22 Nov 2026 23:14:16 -0800 (PST)
+Message-ID: <991536fb-baaa-4855-bba6-a60ab44f6879@zohomail.com>
+Date: Mon, 23 Nov 2026 15:14:13 +0800
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -119,76 +60,76 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
- still in the page cache
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>,
-        Naoya Horiguchi <nao.horiguchi@gmail.com>,
-        Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>,
-        linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tz2294@columbia.edu,
-        stable@vger.kernel.org
-References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
- <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
-Content-Language: en-US
-From: Mani Tofigh <mt4022@columbia.edu>
-In-Reply-To: <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
+Subject: Re: [ndctl PATCH 0/2] Fix cxl-translate.sh test failures
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
+ linux-cxl@vger.kernel.org
+References: <20261120071415.29279-1-ming.li@zohomail.com>
+ <awD5YKbS1R6xGW4n@aschofie-mobl2.lan>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <awD5YKbS1R6xGW4n@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIzMDAyMiBTYWx0ZWRfX7Vc5zjsvLhmd
- 2tpq61tqeR6qyPOGJb5/xZF8/LRM6vADz6sndmt2jG+Hvu9jwxKHK1sumbx8VKxvx4ebh+W36DY
- Err7fVWFnhCWI1MFt6aLGmed+je0lzqh8BDO9r7cvl5IHN3uaZb6
-X-Proofpoint-GUID: td0ef_2Wz0NUIaZJcX1ckDIlHW6Asvb7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIzMDAyMiBTYWx0ZWRfX6KqzvkXf5eNu
- XfeiMNGz9zZsfsUm/FmHKmH0l6NObOeJTKWC4qKZEfRL2fV+OtgnOZyQnKYNVYp/zps3HOWO/Xq
- VTnF7BUss9sE1MIYc/b71iglftJd9V8JCPR7H+QQyqu/1UowqH8DkczPq38FcJR6JRbf5lVwWa3
- zItZvTXLoNUM7885D2/AaJ1VQPNS2kszrPuQ4nDqxKsjMUjB9YvVz1qOAXzhgJOQk8dxs5x3ETH
- IlWSbe6sodtGLwAekxntnLujU0aOdUA4Wb6R6UmrZIrFWo1UOvUBhDP9ppfij5M94yIv/kF/7m3
- QLfRKuhPXQHNoHiQLfWddve2uAoBip4Dcd359UgmX2vi1hBZfWFB1du6kf+tBZs3cdmZug2P55s
- nY51UrTMiAsCu3AmPrCqzSB0/zkIvvUA34AfkhqnHPi/0nBzyhDPaM6OMS0pIXgpI6miZLNDuev
- 6dPJh5LRQe50nTdNf2A==
-X-Proofpoint-ORIG-GUID: td0ef_2Wz0NUIaZJcX1ckDIlHW6Asvb7
-X-Authority-Analysis: v=2.4 cv=GNOdgeNK c=1 sm=1 tr=0 ts=6b03d32b cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=l9izRfKDRJJ6Wn/vzKnQSA==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=x7bEGLp0ZPQA:10 a=A0y_DWxS2BwA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Da8U98TiO7q1upZEImrf:22 a=svvvyxlR1OQQkelhaPoB:22
- a=CtMvlx9HVXp8zQbR6KoA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11974
- signatures=596817
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=10 priorityscore=1501 lowpriorityscore=10
- bulkscore=10 malwarescore=0 suspectscore=0 adultscore=0 phishscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
- definitions=main-2611230022
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu080112277a0f3b2514810a6ad831e84700009ac8e83ae725cd5afc2482b2f5494dc9fd37a0113ba76150c6:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
 
+在 2026/11/21 09:52, Alison Schofield 写道:
+> On Fri, Nov 20, 2026 at 03:14:13PM +0800, Li Ming wrote:
+>> When running cxl-translate.sh repeatedly in my test environment, I can
+>> occasionally reproduce test failures. The failure point varies from run
+>> to run, but the root cause is the same: the test is unable to find the
+>> expected kernel log messages.
+>>
+>> Investigation shows that the expected messages are actually present in
+>> dmesg. However, immediately after "modprobe cxl_translate" completes,
+>> "journalctl --reverse --dmesg" may not yet have received all kernel
+>> messages emitted during cxl_translate_init(). This timing gap causes the
+>> test script to miss expected log entries and report false failures.
+> Hi Ming,
+>
+> Good catch! Can you fold patch 2 into patch 1. Both address the same delay
+> between modprobe returning and the results becoming visible in the journal.
+> Patch 1 can still fail if journald has recorded only the first PASS or FAIL
+> line, and patch 2 supplies the completion marker that makes the polling work.
+>
+> -- Alison
 
-On 11/6/26 3:58 PM, David Hildenbrand (Arm) wrote:
-> I didn't understand why just checking for the refcount is not sufficient. Can
-> you elaborate once more (and please not send a new revision before the
-> discussion is over).
-> 
-> Memory poisoning must grab a reference when setting the folio hwpoison. Any
-> other reference (pin, pagecache, swapcache, mapping) keeps it alive.
-> 
-> Why can't we build on and?
+Hi Alison,
 
 
-Right, but memory_failure() doesn't always hold that reference. It i)
-sets the flag before get_hwpoison_page() grabs it, which waits on
-pcp_batch_high_lock that offline_pages() holds, and ii) gives up with 
-the flag set and no reference when get_hwpoison_page() fails (e.g.,
-a pagecache folio briefly off the LRU). In both cases the pagecache
-holds the only reference, so offline can't tell it apart from a
-page memory_failure() already handled.
+Thanks for your review.
 
-So I think if we move zone_pcp_disable() in memory_failure() before
-setting the flag and keep the reference when it gives up, offline could
-simply treat any poisoned page with refcount > 1 as busy. That'd cover
-pins too. What do you think?
+I have read all your comments, will send out v2 based on your suggestions.
 
-Mani
 
+Ming
+
+>
+>> This patchset addresses the issue in two steps:
+>> Patch 1 adds a helper that retries fetching the expected kernel log
+>> message for up to 5 seconds. This mitigates failures caused by temporary
+>> delays in log visibility through journalctl.
+>>
+>> Patch 2 updates the result checking logic for test cases that use a
+>> specific translation table. Instead of treating the appearance of a "CXL
+>> Translate Test.*PASS|FAIL" message as an indication that the test has
+>> finished, it waits for the "CXL translate test completed" message.
+>> During test execution, multiple "CXL Translate Test.*PASS|FAIL" messages
+>> may be emitted as individual checks complete, so the presence of such
+>> messages does not necessarily mean that the entire test has finished.
+>> The completion message provides a reliable indication that all test
+>> cases have completed and all results are available for verification.
+>>
+>> Li Ming (2):
+>>    test/cxl-translate.sh: Wait expected log before checking result
+>>    test/cxl-translate.sh: Wait for test completion before checking result
+>>
+>>   test/cxl-translate.sh | 23 +++++++++++++++++++++--
+>>   1 file changed, 21 insertions(+), 2 deletions(-)
+>>
+>> -- 
+>> 2.43.0
+>>
+>>
