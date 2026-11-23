@@ -1,91 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.209.34
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795404567;
-	b=l4AeUMkUgFEVtl6MDmaTj3UuU+CxqjEt7EjNy63gcS005Ahl2SPcNYsiFuc/H8vlYe9U
-	 c47nESNlHQpe5GtzwbU5BkbLFRhhXAr5NcEGbi+IaNwmmIjUEz4euMFsLgVj75iiHNecw
-	 ymr2K8xUDNcL9/0TVS7MwMPKsNvHNdgTv27uF09yXVNU+9YBfW+SQSpkrwxXSnNfMKpwf
-	 Kwm8dtQesk63ZdJpeuJZtgRubC44kkQE5vb1GNZGcFFNU+pstEaIDTLy4cOJk0NOFCjd4
-	 NZ1ouPL5YCoLikLvQZFg284pQjaYV0rFznPPFsLo4NUFqF/5B7BFJanR3b1P6CaBv6Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795404567;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:Content-Type:Content-Disposition:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=tVszMbjndaPMTNR/SQIXqX+WRdGEDtnm+7EGT5tXqNQ=;
-	b=sYAnFbZDot2wR0B2s7a8OpnTM72iLrJmnyNerqJAB21Mq/DWIC2Mx8AvXO+2eLokO6Rw
-	 VsHPVBcEwiD4fVI8krBrh3R5SvVuFs9h2gRUabZw9PYgbO8unf/aXuhF60gjQS/3ac+ck
-	 /sv4vdDNttKFkaJ99jrDg8LyrrutB7DZbte5LDSaQsVdSpQ/u1FNbXXxOEvC9llGH6uDp
-	 p3gZgJlhSc3euixa1maXVwE+8GLAFGjn9ol5mzNFhPNAoLjj9wcSo/jR0lehaXGT+OSSe
-	 CGXI5PvvKfJne2kcN7n6TEztpTQeoXBLmku6lzb7CVQngxeGtMDJjGGrVHfkJANlnKg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=DIWHE8o4;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.209.34
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012034.outbound.protection.outlook.com [40.107.209.34])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.135.74
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795412787;
+	b=TqMboEFGvXdoXl9z9X101jXewPzVSDLx8upcyTE5jge/1yHrxXHSKdAIoAmcO+itB1AM
+	 lNU5Pow/RjZmBzcX4+r0ljZiR0VHPeTjj7+Pp4y0tERmmhoPYljilkAHVFtuT/Qn4P+O0
+	 qUxl8owq9vPQPucOCnNFDcO+IAwtTQRErNKIlLsKgzRkHNHtnOZ5AFvzFXSoRFaKFu4vn
+	 b8rYO2mBvtEjxD2lko6iHxYrEDMNMzsYtWLT/6qtmcmNuCG7/6uPd8bilJZ46SYr3de/d
+	 kKnNLSSllO82D+JR73Mbsg3gdb+jJ0vhd3iGrA5izoI98ZVgtlj+oKN7mQyzORJNqCQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795412787;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
+	 X-Authority-Analysis:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
+	b=kHlnkbp9UXO3fLf2eK/fA8FhdZKkZIq9MGcVRxykZ1sfaqK99pz/qQOGSik8Wp6fY/0Q
+	 2RXZa9TJ0uvZH6xwoSH9+06CW9O+VSNj8IK56HBZ9HMjn1dVTrB0Una0IoUelhNTTEI3O
+	 VPhdLH9/xbaWEAf/9X8bb7FTNGa2Q98ezA68LzPrdqhPUjebOCKtBizNFvADt7JFKK8IC
+	 YS98dEDdPzb+kKI9LJc1dhp0oOcU5k8k4uJh+CZ2iqTAl33Yo4qLUVhKgBHdVLzj2O4Jn
+	 aVekXq+kh8tWQX7ZeSfDc+q8cxe/KYaZM4cAq+Vt9Y1vub6cGeL6+6izvNec5krRnXQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=columbia.edu;
+	spf=pass smtp.mailfrom=columbia.edu;
+	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=eyBQmLoc;
+	dkim=pass header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=iY5Le221;
+	arc=none smtp.remote-ip=148.163.135.74
+Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6D4606A31A;
-	Mon, 23 Nov 2026 03:29:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D6D4606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB857606A31E
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 05:46:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB857606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=DIWHE8o4
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o4KFDqwKASj8lXs0DW38Awun6I//IWjZQpfrT5CmAsU4IlIlYxE/xWe2WLtnoNGhV7fXpYeEPYuEwVqCVXGFKPeOZz4WtFE14ezKeU0ik81NnPdBmgu/rm6uJu0N6O/+ZF12rLkW9FQZ5zyqSP7IPUKnWp9JYLBuYfctqNQqF8YvYKdmByqeoV7GIR8melF3+Rvi3y5xOQAE4kh/Yjo9pbB3GG9PE7P3oLQsZyko3gyRyUI8UmjWe6+1fwUzZrzd5ThJ4gQ7EChxXRzp0eQFIF4eXYeYVOU8wYVEcBszNwgDa3gM/aRR+VLKcEaL71CiUgs6q6UQ3BfXaEofz+4p7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tVszMbjndaPMTNR/SQIXqX+WRdGEDtnm+7EGT5tXqNQ=;
- b=aQ0ID+LxqrWB5RD8JgOx1+iiQvFr0fnZX/DI+3Rb9/B9zH2Dghfpekc/uJqNqcAKNlh9W82mkQkbyNRBSYwUy5mQ8rkxhXsNtfFeruUBZJOpgfEnMBcPbWWkv/22/zNtLhrbMS1j8F+hLGNLV15WS5AObqpQAfEpULLFr6EmxnjF4ylYgYTWzxxUk5DNXRWI25nrhBVvmwPH057UBo0fz+frcig/g4yZPy34K+V28AG4+3rW0WLpN+scxCqtvTYIoVpJy3IMCEg1VD0nM6YDGlaEZkTg/1VcmXVqPSTxhFcYBc+DddDyQ7+mgajeqnuTqDy1YTjh7OpJJUJofX//Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tVszMbjndaPMTNR/SQIXqX+WRdGEDtnm+7EGT5tXqNQ=;
- b=DIWHE8o4leVQyCOYmUEkg/5h0g086oT71OCfwPZpHo6th1ertXG2ntAyaQ/f75lzaI7dVFlD8jiTeJdqmtj9X8Am8r5tHE370nZVk7V0jyWo5x1el63LD9Tqd0QNntsDptSTBj3XqzbpDsZ6+98qsOGXd0TrJnAP5G6Uk88nCdJzWaaQYeB/xcTVjvh9Zsp+MtdJb8jJBmtdZTiJYiH2rp32qSN7lSHeM0YFF8zVjc5J3gZTJwZbcs7cHplKqwHmGL4us9SJuquOTmD4kw83y/m1/OSLOCjJ1FzY2VH6CiQOMq/m6A+gp1OHmOrS9AwtdH6J5X9UX22knZibXQcXJg==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by DS7PR12MB9476.namprd12.prod.outlook.com (2603:10b6:8:250::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Mon, 23 Nov
- 2026 03:29:24 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0615.009; Mon, 23 Nov 2026
- 03:29:18 +0000
-Date: Mon, 23 Nov 2026 11:29:10 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Joshua Machauer <machaujo@amazon.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, nh-open-source@amazon.com
-Subject: Re: [PATCH] PCI: Skip the CXL state update for a VF
-Message-ID: <awOxn3BcKl8Ru-QS@MWDK4CY14F>
-References: <20261119164219.51540-1-machaujo@amazon.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261119164219.51540-1-machaujo@amazon.de>
-X-ClientProxiedBy: JH0PR01CA0162.apcprd01.prod.exchangelabs.com
- (2603:1096:990:7::10) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=pps01 header.b=eyBQmLoc;
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.a=rsa-sha256 header.s=lionmail header.b=iY5Le221
+Received: from pps.filterd (m0167070.ppops.net [127.0.0.1])
+	by mx0a-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AN3XUwT1206266
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 00:46:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps01; bh=WDdO
+	ZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=; b=eyBQmLocBEnxAn3RL7SN
+	cxpvSnKSDfx4CShgBEFehjOQkpPAto2AqDp1fZc3OV6rEchZANMo3ed39PVKMCuQ
+	rlIaSuz6+KHv2xwQSPeGMJCwwzyGmyteNde7PYNE4qOcfLkq8m7RQf4df9WqNU5S
+	OGu4TKiVPPLMEYcukEciniTiC0A2W99NS0wwhyL6s/q9LBLCoFhEJDjH1OLYebJQ
+	s40EfeUkrq4RYceMa4Sk+5kmmowqEer1xw2BkHWOB2dGL1BPh5AACK7oW06otfwy
+	h7uu2lNzh6gdYQz1I/9lNZsD9mOjkRcIBpzSURKurTJk5wK2lumfS8J2jFrUz4nf
+	0Q==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 4j42cx3a8t-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Nov 2026 00:46:19 -0500 (EST)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-9213659143bso59009486d6.0
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Nov 2026 21:46:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=columbia.edu; s=lionmail; t=1795412778; x=1796017578; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
+        b=iY5Le221neFbE3zr5ARx+0f1B8tbd8Q1gPbGPei3hF+X4oLEENJjEZtIZRTjY5UuQS
+         aQykmgvUNHDc9mhC+YlPdytgTm4wQQlDOa1Zzwu6gr5+vdihGK9bqwvNW/TbinvnM5Rj
+         xXyACtSh2oVFn0rwGSO4luDQsDw5M4JgfK74EoQxLeKtICr8eRhu2uMO/cZCRvTxPm8c
+         /wq8OfinG7ofM80QY3mUrf3zpD2f3TLbERi3Eyz+Xka7Z4MtMJ05iyovkeHskb/unl07
+         Xvk2gXCwu5VHYZDf/2rVFxgTMMTRNYCvrATFpjyB3pvltkROK+HcarIuuXnKgfumTvNZ
+         qMYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795412778; x=1796017578;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WDdOZbAef0VZJUq8GHeZZN1Befvz7h+o1H703vna+VE=;
+        b=rP228C7lhDJt2ZugFJ6aJHCYvzYLh5+0IlaTCMgOC2YRoG0qhPnxevek3dWjWT0LxN
+         5JWbsigNSrkxhyka37PnvBqvrjOufSNqH4riv+N3anXKSUobHiE+2Lda5tQmlBQsc5+P
+         wc9V7qLyghmQtIKa+sQ/vQB28wJPUmee0/u6rnSC345F57v7ROQwIFD4jzKYJ31XXLvj
+         f4X3SC+X1HKtpFQ0e3SFlPCpLPivsJLEK0h/hiGQYlbqOrgL9uJ+SqXCN3Ces2RH4tv/
+         UBl8d4Sb42M2in7ym+whrB9yVKK333u8NXuySAM5kQpSvvDmwAYzVYJGpwBY9mnoqWMC
+         /Ftg==
+X-Forwarded-Encrypted: i=1; AL+hErF4+zIn7wTVuE52DAqp75sLUeTCFgbbF01tzsnbZjZajg94eVHuzI1PKhDS8pOMBArtkk1mu+2yZ4Q=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9BrCVqEiuqRrrJWAbyK9IgQRoaG3YCUaNSY+U0TEB2cH/MZw28
+	KYchP35sOaE+/p8qcHPx4JSqtGMXc7l+2Sa2tQQenUqtEvnO9L/gQwXLTmON/G5NHn9fyZFD6Yr
+	UEqB7oGKvfIALQEmw602Ia6Cf5ppf8JG+qegzgfeue6kGPAJzNPimDFsANQ==
+X-Gm-Gg: AZFdTZdcs37Lu8KsA7ngiSG72eyPokVSNIxxsFXcQ/y6t5lYj975gHQVa8rxY2+CMrq
+	UUxQSawjSdKV8J3JtCFJAHbTvbQ5kg2V/u3XQbiiGK4mT+JUd/HPFmYDBZ4DzZGuoxDQZ3gwUoE
+	JyYAUAZ9NP/w2PG5BEt+rKwDNFgfjHgL+bcDtoAks0aq7zN8hzT03YkcMnZVOPEyt6QA8sXfV3y
+	+MlZdKW97EDHpGE5WyuiSqmy0PC9YIILc3LA03svSGlM7TyPDzA/YGUDSarKI6FtBdwP7S6uNcT
+	aAItaCH4iTe3yK6a7m85McFh7NElz8uFCnfMTIScNBtyRykS0sBobpLJrhbtKUrxZcsIADljOAu
+	CX+sXoz07buZEPONiL4x+sW9X7uS1C2QWMYeHnlbimxekidjD8F88e+wCn140cl6XhUgOjeJroo
+	/hn6AgrGYTeQg1l98tKV5J8XHWB9Za4I7cqfDRKcxUL72pYxcjUnC4GM7JKG4PTTvH4QS9oHeQL
+	dzCAZatWKCfVog37hpcHZn/3QD/bq9hJmeTk0eMtttjxNeMuWJU7b6SbKKmZLrwdSqlM8O6Db8M
+	NMXiiX2ZrSVQoMxF829H5ZU=
+X-Received: by 2002:ad4:5dcc:0:b0:91e:76a7:187 with SMTP id 6a1803df08f44-92134a9e8bcmr183190056d6.43.1795412778490;
+        Sun, 22 Nov 2026 21:46:18 -0800 (PST)
+X-Received: by 2002:ad4:5dcc:0:b0:91e:76a7:187 with SMTP id 6a1803df08f44-92134a9e8bcmr183189906d6.43.1795412778183;
+        Sun, 22 Nov 2026 21:46:18 -0800 (PST)
+Received: from [192.168.0.76] (dyn-160-39-51-212.dyn.columbia.edu. [160.39.51.212])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-92134a0a454sm95684796d6.35.2026.11.22.21.46.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Nov 2026 21:46:17 -0800 (PST)
+Message-ID: <2e11ba52-b5c6-463e-a5ea-c165ba935704@columbia.edu>
+Date: Mon, 23 Nov 2026 00:46:16 -0500
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -95,137 +118,77 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DS7PR12MB9476:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b495c62-2748-4939-8c2b-08df4911f49d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|10067099003|5023799004|11063799006|56012099006|261022105027099003|261021121427099003|261026121527099003|261026140227099003|261102123227099003|261028144727099003|18002099003|22082099003|6133799003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	SyyeIb9YxCEE5acXf85JHQ35h2gtXyG2CF03OPDhHYZPdywkqnkXx25GKlJGG8X9gl8ln4U7iMyKAznbwPBEKPy0GwDh9NX7JE/+DGgFvioePSU3bwa/QuKwLvauV3zfjZXVlatg4MA2Jfbw3x18SSplGDKKS+iGtlMmJtgb5D0kmIkXtljLyFsFM2MstVUVWPUKG/iQE+Y/R/XfdEMKvESxfwyXaSqGWEuvDrrHhMlHnAXbM+VmSYfEvXh2jd2sKmT7UyPQL58K9tJWT4ZMHUdtpQZF73VBnmReeqJzR+IjfooFtXs6Ud/wG2h4OfAsAgwgj1H0/7VjQUnOI1z1FURFSnWstbXtbSQRJGVxcSQ4dQ3B2/v3NuVLdDPfNI+QnMwCilmBTgoBqWMA12IqBQeQin5n0Ygb4pqWvNDxYG/PKi0ZjwomxCduUTWYFaJse76kjDaFgFHZvVV7r/znWXkvsrS4Z/84rTbZu7pdGTpTXTxoGExZgw1AYYc9cXfupVXBbL3pE5VtvKa6kQugNAG5StV78G+l9dt17mCuDr7fVUOQG3KzIFM0DrL1I/b6HAErj4UurObgo7O3DjoZqzFB/MOgbaGkeRmLrXmuGrEzJR0tZGRexSUPVmZH9og3NcoIsten8DZiXUgR/Ut0G3xgFGE8FSxTiFZr3pXa+8I=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(10067099003)(5023799004)(11063799006)(56012099006)(261022105027099003)(261021121427099003)(261026121527099003)(261026140227099003)(261102123227099003)(261028144727099003)(18002099003)(22082099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Rs17MgZQqj+QHEOtJkusnpX+KVxX1C4vhnUdiQnutBehEiBQ4Zo+mBgnU/3P?=
- =?us-ascii?Q?iTrhYi3gmCrP1EvEjQ7ccxoIRrPriSH3ZgMRH91rD5Dzb+f0CqAbzkclRUNS?=
- =?us-ascii?Q?y2IpnG+iECH+4qqDLlAxMcwS5P0Z/5JZlUWfwZTr4/HpYvHhy2aG64QXF1R/?=
- =?us-ascii?Q?FljL2tUUWxnUTp7XrQ/1yYqqXO4PFu+gQib0wvABF7p30P54s8iJKNhsLNrQ?=
- =?us-ascii?Q?z2Uh08frMYC06RnOdZ6AirH8xOVXYHIGcctkyYc7iRiwNA3iuo3lXGAvvpdr?=
- =?us-ascii?Q?qVSk2x72XYif3mAt1hccOC0f9qD7kygLmn372M3VIg9CJgmfrJBxNGewGIKV?=
- =?us-ascii?Q?s5mWCKk24ZIpde7+6xGZGsNhbY674ye719HOY6zBwrrdMps0t63YL252QdhB?=
- =?us-ascii?Q?8FidPx0oeOAy6lJeW4k5k3w/lnHZjLn/gqlIe6mW32/TVwzGlYQ8hvlnAiUx?=
- =?us-ascii?Q?/v8/8JKSgJPqgjqjEL8AQsu40WT8SS9wN6Y4x1ZqpNbEMiUP3BYmWv4k0+W1?=
- =?us-ascii?Q?uWebW3sPZqcrR8nV7vDiZqWZ+Vq3Dn7mhkDGz9FpRo5f0a+yosro+cp6h7jV?=
- =?us-ascii?Q?KFbQ1Y6dIHfygeMLqYP5vGQTucIswQ72z1bnRlrRASBmnLvbXbyLWntlffWQ?=
- =?us-ascii?Q?ZKFtXhhvZ7NcK61W8SvOTO826wfmWeiYMbRvwM5BxbB29QjN2nXXyxaQIKVk?=
- =?us-ascii?Q?XLa6DbBrwha9ikTePvIQVSwy5vtdyKPsfUljnaGrfqwHkZBZ8gacT7LXQS2B?=
- =?us-ascii?Q?QCaffBgwNRjtqL0nWv2xNGLgCBYSRUnUH3VJUS3NzHBe3r/+fA9Io46+vUAi?=
- =?us-ascii?Q?dw23lxHq+FIFvWuHh/3Z/Wv7HsEtf7dKLTITlpkLZD8eWwHEy27HY04HCwlU?=
- =?us-ascii?Q?NaDRMrhy769jt+X3P8wD1IWUH8ZGwApRsVNLiKFSjD35VWUnOTHJRPxeLyXa?=
- =?us-ascii?Q?DM/LCpsqMLEbj+xE86jReHQpi8nmQWjJHmMNAEJd7lhlMCv3BqRGfk1jU7rk?=
- =?us-ascii?Q?ujnimljy2P5/0N+QUlqWx5gaqxa1+PSBYkBru+Z8JYKNjc9nUXPgMVvr264f?=
- =?us-ascii?Q?FaD+4XLnfeUcKRKiCjC1i5Q1SPdO074pPKERY3AyCXPmzbJ+aVIgA/MI6Rch?=
- =?us-ascii?Q?JMjCHHfN/Rkq7igP2n5EPkF62MivElbnwtfXHUyki9XeeUzWPf04757c3wJD?=
- =?us-ascii?Q?h/zHbfFj+ck3Ko309++lihGBzLL0qKQ1M7vNuNeDO/zpoV+w9Val4chPk/gv?=
- =?us-ascii?Q?jDR+9cfxwAR8qReoZS6l+I46dOhjzeLPQcaJO8d1GJGZtKAcrFzEVYzqZz61?=
- =?us-ascii?Q?KtwGxCpVKzHtZ5hRkbBZ4tx+lSkAOe6JID+bnReMD625sQUJFfn60ThpKsWq?=
- =?us-ascii?Q?VHVEFh3/Q99ZUZW3wbjcQKef1YkdaLcnLmi4HIeIviTmqfjQbX9nGyAJGs3B?=
- =?us-ascii?Q?yCjXtEj/2tXV+H8EXA9FpjvQN0AIWfEPcQAUaaynRK6wCHzJ6yE57Vv8kb33?=
- =?us-ascii?Q?wpIksOZEaY4QGwmwF5J07rhkmVhAomLkf8PX3gervGmm+sNOaoCNkIe3UBev?=
- =?us-ascii?Q?JvyLRl5434I8W4Iq+YSO+GJdv8yb9rnWKYPGVKctkRIFQ9hw56+UuNHynSS5?=
- =?us-ascii?Q?SEk828odZYu6y1TRp9eEdNHm/E/BStCPm1kO6ZPRX0i8rtABj+BszU11qd0O?=
- =?us-ascii?Q?IuoMVdgqL0zavb5hqHg6mYYoYBbDiEqbyB4ZKpu4z5SAwDPJRoBYG9uIQjf6?=
- =?us-ascii?Q?JLqIAeGUOA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b495c62-2748-4939-8c2b-08df4911f49d
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2026 03:29:18.1124
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TVFCkUzdZG5P3iiegblvGVGslLPU32yq5ACIZFOrL0sEhxODiWtAGA3zVEnLxULDp+w32etFookFk0eaOnnolA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9476
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
+ still in the page cache
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Miaohe Lin <linmiaohe@huawei.com>,
+        Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Vlastimil Babka <vbabka@kernel.org>, Gregory Price <gourry@gourry.net>,
+        linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tz2294@columbia.edu,
+        stable@vger.kernel.org
+References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
+ <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
+Content-Language: en-US
+From: Mani Tofigh <mt4022@columbia.edu>
+In-Reply-To: <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIzMDAyMiBTYWx0ZWRfX7Vc5zjsvLhmd
+ 2tpq61tqeR6qyPOGJb5/xZF8/LRM6vADz6sndmt2jG+Hvu9jwxKHK1sumbx8VKxvx4ebh+W36DY
+ Err7fVWFnhCWI1MFt6aLGmed+je0lzqh8BDO9r7cvl5IHN3uaZb6
+X-Proofpoint-GUID: td0ef_2Wz0NUIaZJcX1ckDIlHW6Asvb7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIzMDAyMiBTYWx0ZWRfX6KqzvkXf5eNu
+ XfeiMNGz9zZsfsUm/FmHKmH0l6NObOeJTKWC4qKZEfRL2fV+OtgnOZyQnKYNVYp/zps3HOWO/Xq
+ VTnF7BUss9sE1MIYc/b71iglftJd9V8JCPR7H+QQyqu/1UowqH8DkczPq38FcJR6JRbf5lVwWa3
+ zItZvTXLoNUM7885D2/AaJ1VQPNS2kszrPuQ4nDqxKsjMUjB9YvVz1qOAXzhgJOQk8dxs5x3ETH
+ IlWSbe6sodtGLwAekxntnLujU0aOdUA4Wb6R6UmrZIrFWo1UOvUBhDP9ppfij5M94yIv/kF/7m3
+ QLfRKuhPXQHNoHiQLfWddve2uAoBip4Dcd359UgmX2vi1hBZfWFB1du6kf+tBZs3cdmZug2P55s
+ nY51UrTMiAsCu3AmPrCqzSB0/zkIvvUA34AfkhqnHPi/0nBzyhDPaM6OMS0pIXgpI6miZLNDuev
+ 6dPJh5LRQe50nTdNf2A==
+X-Proofpoint-ORIG-GUID: td0ef_2Wz0NUIaZJcX1ckDIlHW6Asvb7
+X-Authority-Analysis: v=2.4 cv=GNOdgeNK c=1 sm=1 tr=0 ts=6b03d32b cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=l9izRfKDRJJ6Wn/vzKnQSA==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=x7bEGLp0ZPQA:10 a=A0y_DWxS2BwA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=Da8U98TiO7q1upZEImrf:22 a=svvvyxlR1OQQkelhaPoB:22
+ a=CtMvlx9HVXp8zQbR6KoA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11974
+ signatures=596817
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=10 priorityscore=1501 lowpriorityscore=10
+ bulkscore=10 malwarescore=0 suspectscore=0 adultscore=0 phishscore=0
+ spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
+ definitions=main-2611230022
 
-On Thu, Nov 19, 2026 at 04:42:19PM +0800, Joshua Machauer wrote:
-> set_pcie_cxl() runs for every device that is added. It first updates
-> the CXL state of the upstream bridge, which walks that bridge's
-> extended capabilities and recurses up to the root port. It then walks
-> the device's own extended capabilities for the Flex Bus Port DVSEC.
+
+
+On 11/6/26 3:58 PM, David Hildenbrand (Arm) wrote:
+> I didn't understand why just checking for the refcount is not sufficient. Can
+> you elaborate once more (and please not send a new revision before the
+> discussion is over).
 > 
-> For a VF neither walk can change anything. A CXL device exposes its
-> Flex Bus Port DVSEC through Function 0 (CXL 4.0, section 8.1.8), so
-> the search in a VF finds nothing and the VF's is_cxl stays false.
-> pci_upstream_bridge() resolves a VF through its PF, so the bridge is
-> the one that was already updated when the PF was added.
+> Memory poisoning must grab a reference when setting the folio hwpoison. Any
+> other reference (pin, pagecache, swapcache, mapping) keeps it alive.
 > 
-> Enabling SR-IOV adds the VFs one after another, and each add repeats
-> both walks against the same bridges.
-> 
-> On an NVIDIA Vera system, enabling 256 VFs on a PF whose upstream
-> bridge has 18 extended capabilities takes 296 ms instead of 402 ms.
-> Enabling 32 VFs on a Rubin GPU takes 218 ms instead of 235 ms. The
-> times are for the write to sriov_numvfs, with the PF bound to
-> pci-pf-stub and VF driver autoprobe disabled, so no VF driver probes.
-> 
-> Return early for a VF. Every device keeps the is_cxl value it gets
-> today.
->
+> Why can't we build on and?
 
-Hi Joshua,
 
-The fix looks correct to me.
+Right, but memory_failure() doesn't always hold that reference. It i)
+sets the flag before get_hwpoison_page() grabs it, which waits on
+pcp_batch_high_lock that offline_pages() holds, and ii) gives up with 
+the flag set and no reference when get_hwpoison_page() fails (e.g.,
+a pagecache folio briefly off the LRU). In both cases the pagecache
+holds the only reference, so offline can't tell it apart from a
+page memory_failure() already handled.
 
-One nit on the sentence above, before this patch, each VF add also re-read
-the Flex Bus Port Status of every bridge above the PF.
-That refresh is now gone. I don't think anything depends on it, but
-it is a behavior change, might be worth to mention it.
- 
-> Signed-off-by: Joshua Machauer <machaujo@amazon.de>
-> ---
->  drivers/pci/probe.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 9a178e0e5f7f..34acebd1c706 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1717,6 +1717,14 @@ static void set_pcie_cxl(struct pci_dev *dev)
->  	if (!pci_is_pcie(dev))
->  		return;
->  
-> +	/*
-> +	 * A CXL device exposes its Flex Bus Port DVSEC through Function 0,
-> +	 * so a VF has none. Its upstream bridge is the PF's, which was
-> +	 * updated when the PF was added.
-> +	 */
-> +	if (dev->is_virtfn)
-> +		return;
-> +
+So I think if we move zone_pcp_disable() in memory_failure() before
+setting the flag and keep the reference when it gives up, offline could
+simply treat any poisoned page with refcount > 1 as busy. That'd cover
+pins too. What do you think?
 
-I would like the spec section to be cited here, CXL r4.0, sec 8.1.8
-"PCIe DVSEC for Flex Bus Port"
-
->  	/*
->  	 * Update parent's CXL state because alternate protocol training
->  	 * may have changed
-> -- 
-> 2.47.3
-> 
-> 
-
-A wider question, not specifically a request for this patch.
-The repeated walks are not specific to VFs. The recursion runs for every PCIe
-device and goes up to the Root Port, so every function added below a switch
-walks the extend capabilities of all the bridges above it again.
-
-Is the walk to the RP needed, or would refreshing only the immediate parent
-would be enough ?
-If it's the former case, we can cut more cost for non-VF devices too.
-
-Best regards,
-Richard Cheng.
+Mani
 
