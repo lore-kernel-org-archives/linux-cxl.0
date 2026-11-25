@@ -1,91 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795611253;
-	b=hT30thOWXxCBkB58eIuCtYdG+wdnO6OnCEA6emv21rdBULPENwDYIjEusquCQnCHeABt
-	 e+3EQj2m/c2h7Yd+gouRcPYhkJMf4ZORy37B4HHVBTT86p2YdbRBcc6EQZxuIk/gXnm1f
-	 XYeWALexxBwkjo0MuHVdm6zHSmUWVQOKCC/6JH9GxkLGqNA9FMS4fYoYEjBJ+YWbG8D6S
-	 Rknq2FQ1JyW9mM420chPQqMHWrOIaxv8XiwcMmoTCm98/eu8JVjHNgtHAD2lqm2estuUx
-	 l4hDzz2Xcp+WNivj326f2rVx21O97DFqJItybfI891tmv+KlY+JafAzkz2J0pK9ZYIQ==
+	t=1795611478;
+	b=yXDGn1ryHjzExm/VbGDoxpm8KTlwEW22XjNsgU77bZqIOlvp6HkhsImX+BBcJDNjOACo
+	 uGWR7gwRsjBzkKGlkm6Jha2uAIZX2AqtVu2SiuW/AYKpcKvb0vVi8svFqhzCupwP0r+fe
+	 WAX2nx6BP+JwwiGrzDI88hhoBOw92M7Ll4EM+VLiU+hcLFnkFYUJFMsw2tad2YyMnFeEF
+	 5d0Z8SsUw0pBcln0g/6PqhqB9YmGcI5zPjAOMjHQtPmJaIJw4vO/hE0xayvkHuMVRMi7u
+	 PXKTZqzmUrmrMNqEcclVQkBIzFVewsFGrPNi3GzSPqZum+ciShBvHmlA+TOFJzDtF9g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795611253;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=oqDE8X8d+SNdchG37m3I0xn7gitvbo9INEy7a8wSuJo=;
-	b=eaT2IyuSKRLpPhZm3iS2wO4NED5bl7TSx4gPLL3AUqbJoXeBjaUYgscmpM5osx/MbPYz
-	 W5HM/iVJV9Oswn16e77JpIdY1L+SwcYFhxXWOETXSQGC9wgVOwzbOcLcCuMhwFObKin+A
-	 xQ+u8rt04PAMxVlmUQrEqorNOO5kSc7kMpv/6+NZu45IW3q1CTgfgk3poBGgxGoWyPE4O
-	 hhdcUftndMZLk5uoFXUOPhV2E7gwJibefLcHVySxpL2rJIOzJTv6DJMeLmraghqnI0/mY
-	 Uwtky2YikZraYmKbT7D2WmCeJGpjn8T41D9kDjfQc89+uWsH8Q9Ad3WP6VsrEQbopqw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795611478;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=CkhgNAPN8vMVElrFRD9LK5ArtwIDN2VcTS60zUwfxoU=;
+	b=Fk2HgywB3djD4nLw4D6HdiD72qWoQkB3XC0ihx1i9QIERcZT604PsLwbvSp8mxVi5Lee
+	 GjLAl8IkyNDuLroHf53IimfFwJrUOOE0TwdlNOJPrrnZ6zI9ukJozvWAflg8KfUZu4g18
+	 eMJYc4RspoKpZMhFXrg25uoBhoiGiAWR0M6R9T18ni9ixyEqxR1DB43IMFd/izTac/IWm
+	 hSUd1xHPjCQYGPNumSjmTcwRS2l+oPpCQWV6asl/2xZ03C/MATCR8/hz/0MMsoca1AisU
+	 1EvW+KEGZMMHW6vDo6MAHThxAJ7Er/ePscVCbXYmjltEPXtA9f6g9TXkE7G74RJUcag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c7dxQvho;
-	arc=none smtp.remote-ip=209.85.215.169
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YROFDrfX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77204606A6A8
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:54:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77204606A6A8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD89606A323
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c7dxQvho
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-cd62c570b5dso3836130a12.2
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 04:54:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795611253; x=1796216053; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=oqDE8X8d+SNdchG37m3I0xn7gitvbo9INEy7a8wSuJo=;
-        b=c7dxQvhoD/U0l9DHjCDDjSOOdIQYP9sh4Sh+xyLlp99/DjuvXTylhvkFM9Oqteg7ia
-         VbVZd1VAqnDivseBVcTgKWpKEZq6uO9ByH26wKJmn6XhjrIEgSCuKCYKnHfWVLLKjLNj
-         K3o+vBxG0yRwmigUlSsXGv1Wetxnee6iptSxg0HI0HhugVEFAXtGKG1GjmqCiZ6Jw7ps
-         cWkhuIbAsmWQqXjhWO5TXg0M1tKFwSk18OWHJTqw8vmgMjeIRWPYa8diWBj+xIq4OTnj
-         9smGzQCRJhsDmQPrwUtZhSTFDyRzR9GiP/27Bt23z5469DNBVQAEjzdOt7lwIkQBwu/b
-         uGJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795611253; x=1796216053;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=oqDE8X8d+SNdchG37m3I0xn7gitvbo9INEy7a8wSuJo=;
-        b=JZHkQHM0IcYD1Z7lkA4K69EGYFV8mZmBbtp6ZT6foROuKy8gKsjQ9ZX6eJJpYRraZc
-         vuBPVcZ09Uno1WXoIpsqlBwOUB7YOyrOU1D5yVr8tE27aQVGDAZVmKwBPT+vX2M4eFR2
-         1iyrZ3kltPQJwB3ENAY1DZfF6e4QAoBWflVHXdflTUmAjsGNIgY8ztlQ29fXqaV0pg9I
-         3ObKyM6jYMQAQrQpyg8lit9eRypjH6YCL7ci9omF/+8QeZeDgBotN/9On46NtxZcj/qA
-         H6UPlyqyXwNwT9NGL+rSwOnooKDmh/6AdHGzSZKaBVLAW8rWbONmOhxcLXVb35bSmtQt
-         aRNQ==
-X-Gm-Message-State: APuU4Z9livdj/BV2P8Bi10BSSc/gxYNPVJ2N5BAad37hbK6i9c797eK7
-	r76UvKqYTd62q7HeTffk7vad93Uc/asopqwaPyd9KobnOLK4pvZHEJZughz8Ukug
-X-Gm-Gg: AZFdTZfJDaMdt8cvUzHV/oNkAbBQgNe4AWFAMIzatKOeRdyYZlEcm0ud/zWq/pH7HK6
-	6TNpusI0zPtxC/ojGzL3kR7uzzOsB82iSZqPz6RYmHiTrbtTr21Kp8x2Iy2DlEP/BQA1LtN4mSK
-	M3SyZg+8Bugd4q9ryTkgdLWIfvhSl5SqGJBNwhilfKqq8YjkmyqCbAHDv1NzfkVI9052zJis56e
-	wCOJGJM9skRzm5hR2zzVqBaztR4jm2xaWgZdbG39FiuCE40FHsMONHezGuAQi6H0jTK/687dzKl
-	NPan6wuRP7/jHf72V/LS9Lk9lT3gutWGtyP/oaQyTtwXORjAqe/sVGwwI/CLwbatl4BjJn4MldV
-	8vlnXUJJetBhodSCxxU8OClqRuXAsQYeIhZPa33UYHbw+Z/hMWx6qlojtJQ7RK1gLbk7bNW7CHI
-	tJd6+EVs1Xm7m4ZeLt+Gn3YevGQlFF5K6iz0Akq3xugcpEMYAZZ0MOK7K9OvoGJa9fpfWIgEmXc
-	Z3kprwf4OKNUUG8AeUZKD2g9XWX4viJmyAQqpYDn46bAKLWmCqeID7wXtD3K6RvJHjSd5uxoe5V
-	kKwYay98Dgko0Ux672RCRVlMOF/DyG+idRM4gckp/+G9/j3MmlDaOCnnxX2gDKgi
-X-Received: by 2002:a05:6a20:430a:b0:3f9:bcb9:30f1 with SMTP id adf61e73a8af0-4014c3508ccmr19863846637.44.1795611252740;
-        Wed, 25 Nov 2026 04:54:12 -0800 (PST)
-Received: from localhost.localdomain ([121.134.184.225])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c873c1d71dsm9013579b3a.53.2026.11.25.04.54.11
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 04:54:12 -0800 (PST)
-From: Unsung Lee <unsung0317@gmail.com>
-To: linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] cxl/memdev: Activate firmware without a reset
-Date: Wed, 25 Nov 2026 21:53:43 +0900
-Message-Id: <20261125125343.3585547-1-unsung0317@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261125124358.3583223-1-unsung0317@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YROFDrfX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E7D1F000CA;
+	Wed, 25 Nov 2026 12:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795611477;
+	bh=CkhgNAPN8vMVElrFRD9LK5ArtwIDN2VcTS60zUwfxoU=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=YROFDrfX4Aqdr2WsZcTNeauO/02YwZFDSfmHoHHycA6AEYSlDRqlII5Ba4r0L9qV8
+	 aJ4Wswq4/8So/kdxLI5LYOT3twBg13OBtkhPe9hdGivfzjpRNtsGaepoGNZdwUWuXR
+	 BMxWTSBCX/wOZIfWOYwQIKXWlFVpb3S5MmeRRmI+JFgiI4kAZu/Mb4j9XC8aucOxHm
+	 Dz7bHswBSSNZN98s0aMHsX/ph31RCsLczlIaYKfztw7ipvJwop2XKbB7Jf49l5n5pz
+	 P3sQlb7a4oLOZ0aHzOUr9vK5HpqG0iIvB+zzNvWKe1M0I6BkXMMJwTSMViDX8uA4dl
+	 SIradDy4e/azw==
+Message-ID: <sashiko-outbox-233405@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH 3/4] cxl/memdev: Add firmware_activate to activate
+ firmware without a reset
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Unsung Lee" <unsung0317@gmail.com>, linux-cxl@vger.kernel.org
+In-Reply-To: <20261125124358.3583223-4-unsung0317@gmail.com>
 References: <20261125124358.3583223-1-unsung0317@gmail.com>
+ <20261125124358.3583223-4-unsung0317@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 12:57:56 +0000
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -94,12 +59,171 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Sorry for the noise. A mistake in my test sends put six copies of this
-cover letter on the list on their own (12:10 to 12:42 UTC), without the
-patches, and some with older text. Please ignore those; this thread,
-with patches 1-4, is the series.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] cxl/memdev: stale CXL_FW_ACTIVATING bit in
+  cxl_mem_activate_fw_online()
+- [Medium] cxl/memdev: activating_slot overwrite in
+  cxl_mem_activate_fw_online()
+--
 
-Unsung
+commit 19d55015d9b6225e3059d6173d8fb4365535c893
+Author: Unsung Lee <unsung0317@gmail.com>
+
+cxl/memdev: Add firmware_activate to activate firmware without a reset
+
+This commit adds a write-only firmware_activate sysfs attribute to activate
+a firmware slot online when the device is not decoding memory, while blocki=
+ng
+decoder commits, firmware uploads, and sanitization until activation
+completes.
+
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index cdbebd12258b9..cc9ff0dd9cd8a 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+[ ... ]
+> @@ -966,13 +1010,136 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
+state *mds, int slot)
+>  		.poll_count =3D 30,
+>  	};
+> =20
+> -	/* Only offline activation supported for now */
+> -	activate.action =3D CXL_FW_ACTIVATE_OFFLINE;
+> +	activate.action =3D action;
+>  	activate.slot =3D slot;
+> =20
+>  	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+>  }
+> =20
+> +/*
+> + * cxl_mem_activate_fw_online - Activate a FW slot without a reset
+> + *
+> + * How long a device holds CXL.mem requests while it switches to the new
+> + * firmware is not known here, and a stall the platform does not tolerate
+> + * would take the memory down. Like sanitize, only proceed when the devi=
+ce
+> + * is not decoding any HPA range, i.e. no endpoint decoder is committed,
+> + * and set CXL_FW_ACTIVATING under cxl_rwsem.region so that none can be
+> + * committed until the command has completed. After a timeout the device
+> + * may still be activating: keep CXL_FW_ACTIVATING until Get FW Info
+> + * reports the slot as running or an activation succeeds. A device that
+> + * keeps its old firmware then refuses regions until cxl_pci is bound
+> + * again.
+> + *
+> + * Decoders of other hosts sharing the device are not visible here.
+> + */
+> +static int cxl_mem_activate_fw_online(struct cxl_memdev_state *mds,
+> +				      unsigned int slot)
+> +{
+> +	struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
+> +	struct cxl_memdev *cxlmd =3D mds->cxlds.cxlmd;
+> +	int rc, info_rc;
+> +
+> +	rc =3D cxl_mem_get_fw_info(mds);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* An activation that timed out has completed (cur_slot is never 0) */
+> +	if (mds->fw.activating_slot =3D=3D mds->fw.cur_slot) {
+> +		mds->fw.activating_slot =3D 0;
+> +		clear_bit(CXL_FW_ACTIVATING, mds->fw.state);
+> +	}
+
+[Severity: Medium]
+What happens if an online activation of one slot times out (leaving
+mds->fw.activating_slot set) and a subsequent write to firmware_activate
+requests a different slot before the first activation finishes?
+
+cxl_mem_activate_fw_online() proceeds to issue an online Activate FW
+command for the new slot while the earlier activation may still be running.
+If the second command also times out, mds->fw.activating_slot =3D slot
+overwrites the original slot number; once the device finishes switching to
+the first slot, mds->fw.cur_slot will not match the overwritten
+mds->fw.activating_slot, leaving CXL_FW_ACTIVATING set and blocking region
+commits, firmware uploads, and sanitization.
+
+> +
+> +	if (!(mds->fw.activation_cap &
+> +	      CXL_FW_INFO_ACTIVATION_CAP_HAS_LIVE_ACTIVATE))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!slot || slot > mds->fw.num_slots || slot =3D=3D mds->fw.cur_slot)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * A different slot set up for activation on the next cold reset
+> +	 * would silently replace this firmware at that reset.
+> +	 */
+> +	if (mds->fw.pending_slot && mds->fw.pending_slot !=3D slot &&
+> +	    mds->fw.pending_slot !=3D mds->fw.cur_slot) {
+> +		dev_err(&cxlmd->dev,
+> +			"slot %d is pending activation on reset, not activating slot %u\n",
+> +			mds->fw.pending_slot, slot);
+> +		return -EBUSY;
+> +	}
+> +
+> +	/*
+> +	 * synchronize with cxl_mem_probe(), sanitize and decoder write
+> +	 * operations
+> +	 */
+> +	guard(device)(&cxlmd->dev);
+> +
+> +	/* A running sanitize owns the device until it completes */
+> +	scoped_guard(mutex, &cxl_mbox->mbox_mutex) {
+> +		if (mds->security.sanitize_active)
+> +			return -EBUSY;
+> +	}
+> +
+> +	scoped_guard(rwsem_read, &cxl_rwsem.region) {
+> +		/* Without a bound endpoint the device may still be mapped */
+> +		if (!cxlmd->dev.driver ||
+> +		    cxl_num_decoders_committed(cxlmd->endpoint)) {
+> +			dev_err(&cxlmd->dev,
+> +				"device is decoding memory, not activating firmware online\n");
+> +			return -EBUSY;
+> +		}
+> +		set_bit(CXL_FW_ACTIVATING, mds->fw.state);
+> +	}
+> +
+> +	rc =3D cxl_mem_activate_fw(mds, slot, CXL_FW_ACTIVATE_ONLINE);
+> +	if (rc =3D=3D -ETIMEDOUT) {
+> +		mds->fw.activating_slot =3D slot;
+> +		dev_warn(&cxlmd->dev,
+> +			 "slot %u may still be activating, refusing regions on this device\n",
+> +			 slot);
+> +	} else if (!rc || !mds->fw.activating_slot) {
+> +		/*
+> +		 * After a timeout only a success shows that the device is
+> +		 * done. Any error may come while it is still busy with the
+> +		 * activation that timed out, so the mark stays.
+> +		 */
+> +		mds->fw.activating_slot =3D 0;
+> +		clear_bit(CXL_FW_ACTIVATING, mds->fw.state);
+> +	}
+> +
+> +	/* Report the slot the device runs now, also after a failure */
+> +	info_rc =3D cxl_mem_get_fw_info(mds);
+> +	if (info_rc)
+> +		dev_warn(&cxlmd->dev, "cannot read FW slot state: %d\n",
+> +			 info_rc);
+
+[Severity: Medium]
+Should the post-command cxl_mem_get_fw_info() call also clear
+mds->fw.activating_slot and CXL_FW_ACTIVATING when
+mds->fw.activating_slot =3D=3D mds->fw.cur_slot?
+
+If cxl_mem_activate_fw() times out (or fails while a previous timed-out
+activation was finishing) and the activation completes right before this
+second cxl_mem_get_fw_info() call, mds->fw.cur_slot is updated to the new
+slot, but CXL_FW_ACTIVATING remains set and locks out region commits,
+firmware uploads, and sanitization until another write to
+firmware_activate. Re-attempting firmware_activate on that same slot will
+also see slot =3D=3D mds->fw.cur_slot and fail with -EINVAL after clearing =
+the
+bit.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125124358.3583=
+223-1-unsung0317@gmail.com?part=3D3
