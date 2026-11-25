@@ -1,56 +1,159 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795611478;
-	b=yXDGn1ryHjzExm/VbGDoxpm8KTlwEW22XjNsgU77bZqIOlvp6HkhsImX+BBcJDNjOACo
-	 uGWR7gwRsjBzkKGlkm6Jha2uAIZX2AqtVu2SiuW/AYKpcKvb0vVi8svFqhzCupwP0r+fe
-	 WAX2nx6BP+JwwiGrzDI88hhoBOw92M7Ll4EM+VLiU+hcLFnkFYUJFMsw2tad2YyMnFeEF
-	 5d0Z8SsUw0pBcln0g/6PqhqB9YmGcI5zPjAOMjHQtPmJaIJw4vO/hE0xayvkHuMVRMi7u
-	 PXKTZqzmUrmrMNqEcclVQkBIzFVewsFGrPNi3GzSPqZum+ciShBvHmlA+TOFJzDtF9g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795611478;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CkhgNAPN8vMVElrFRD9LK5ArtwIDN2VcTS60zUwfxoU=;
-	b=Fk2HgywB3djD4nLw4D6HdiD72qWoQkB3XC0ihx1i9QIERcZT604PsLwbvSp8mxVi5Lee
-	 GjLAl8IkyNDuLroHf53IimfFwJrUOOE0TwdlNOJPrrnZ6zI9ukJozvWAflg8KfUZu4g18
-	 eMJYc4RspoKpZMhFXrg25uoBhoiGiAWR0M6R9T18ni9ixyEqxR1DB43IMFd/izTac/IWm
-	 hSUd1xHPjCQYGPNumSjmTcwRS2l+oPpCQWV6asl/2xZ03C/MATCR8/hz/0MMsoca1AisU
-	 1EvW+KEGZMMHW6vDo6MAHThxAJ7Er/ePscVCbXYmjltEPXtA9f6g9TXkE7G74RJUcag==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YROFDrfX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.55
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795627797;
+	b=AzZueaxs0xOpKQMDwI5wedpUB2kMhkplpzOXksDtTNC5KkO5REALyLGPXBbH9RfRApSD
+	 pREgKVmggSt6LT19ACMIyOVLYjFaxSJhN6KrXW/vvAvNIE34yPzboUQ9Z2WLicxeJ9EMQ
+	 s8iq3WjdeJ3grXi6foSlgkeyMTvxO8cWKc83W30A7awTYLMaMfuYxfCO5Y9WBNXX7b+ro
+	 JwrGXpIgCvZfF3sQjgOEmXAAus9qdi04+Sj5akiwS89CcXfvljChPsyjbEiPjvMpusOLD
+	 4h2cqnqNcizYzKVsh1EYliDZin46ce8OqtlygvkG2x67/SZvDxgDl55XtDxsHRGbVUA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795627797;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=gtE1ORfttJBbVDCk2rU4kzSWC8bZM3qjD/p/ShxG7IQ=;
+	b=wpFxTfRf81dE4DO0y257e1ibIijsOHW86gJV0OT7YHVhHOpI8mD7fWV95ZVGmppgbO1w
+	 EYQpRj5q/MDsHHrqiiN3Os6dpESj4l9PS4S35Nd7BhCL7AYqEV5akpT9lsYp46LZeGRn/
+	 Mb/QFjwYzIRdKEhPFs0Z3ObMhuyFbpMPxR8HDDxalmVUudqKPvAjnugdUGW5GS3If51Fu
+	 YCCGsvXgdkKyhJY8UuslEyMVJmsy5iGI+MCPH/qnLX4y/jS4xBiv/Qcb8jYg9QGYFCxUg
+	 m+7rpSa+Vb4eAqrj2Ietd4xJzjWTUiL+0XZFYuqc+Eg92t4NE+wz/cOzleSEjcJ9l3w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=BgYpbJea;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.55
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011055.outbound.protection.outlook.com [40.93.194.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD89606A323
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF530606A31E;
+	Wed, 25 Nov 2026 17:29:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF530606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YROFDrfX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E7D1F000CA;
-	Wed, 25 Nov 2026 12:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795611477;
-	bh=CkhgNAPN8vMVElrFRD9LK5ArtwIDN2VcTS60zUwfxoU=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=YROFDrfX4Aqdr2WsZcTNeauO/02YwZFDSfmHoHHycA6AEYSlDRqlII5Ba4r0L9qV8
-	 aJ4Wswq4/8So/kdxLI5LYOT3twBg13OBtkhPe9hdGivfzjpRNtsGaepoGNZdwUWuXR
-	 BMxWTSBCX/wOZIfWOYwQIKXWlFVpb3S5MmeRRmI+JFgiI4kAZu/Mb4j9XC8aucOxHm
-	 Dz7bHswBSSNZN98s0aMHsX/ph31RCsLczlIaYKfztw7ipvJwop2XKbB7Jf49l5n5pz
-	 P3sQlb7a4oLOZ0aHzOUr9vK5HpqG0iIvB+zzNvWKe1M0I6BkXMMJwTSMViDX8uA4dl
-	 SIradDy4e/azw==
-Message-ID: <sashiko-outbox-233405@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 3/4] cxl/memdev: Add firmware_activate to activate
- firmware without a reset
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Unsung Lee" <unsung0317@gmail.com>, linux-cxl@vger.kernel.org
-In-Reply-To: <20261125124358.3583223-4-unsung0317@gmail.com>
-References: <20261125124358.3583223-1-unsung0317@gmail.com>
- <20261125124358.3583223-4-unsung0317@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 12:57:56 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=BgYpbJea
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XGv8ggejiKYgRA4XwsTymacWQ39bbQUHST68Bl4b+D855cbhD0+SM76FGtqkw/uEBgvr0Diq6czkq/U1hBs+jntAbNCa81KMU+V1sp7Wus2Khg6YbBk/9NCbc89LF20N8F4G6NHphoIibHajoYmzQO4Ez1cUyINdwt0XUuuAhyAC4Uv6i0QWisb2RmbdJFaFbvp9VUfvvAXFG3QGOarzKGR6ZMVGMeDgjwqoBD4uenQUH9Ijc/widgZTXNmcFsZcKlW9EK+ytGpDKQpaB3+t66nrsTeGCxEiNNWNPy4cpKHB9YEHFUFjBfeXSTNI2JieRrW6v8lbn0ndoVZweBwuHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gtE1ORfttJBbVDCk2rU4kzSWC8bZM3qjD/p/ShxG7IQ=;
+ b=L7McMASK1mUIcTk3hOiBE1eSm0Opyij8BXpuI8L1xfr4QYaGwo2AKVTLC3Z2O0t2vzHBPShnVDZMDI/CKws+tHVm+re1TQJaFAaEAKOg50VvKfl7trCsEIz3SbzZ7kGNE4DxvExVnf2AJ41dtD6SUQ4Xq1amIWscv/teKagIQ1wJpkSin1SHqnrIOeP2l7XgPBVZV9DPTvApBl7lOCVj8JGBfB6fh/2LoFFMZSxFyQX9M5ByZLsL6Uq745qwQNIC28qJ8bWfVXxOPyaXiuY2WB0coDfslcvd+3I/VcEAVN9eXtACHSgesal98xI1SgttWF3MrAAN0QMX3oTLR1fL7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gtE1ORfttJBbVDCk2rU4kzSWC8bZM3qjD/p/ShxG7IQ=;
+ b=BgYpbJea/YbiFFCZEzOo8FWTJ9qPRWfxAA9ZGBLGhBAAI8CVXdn5P2QftclCa74HmxwRqwzR22aMHjpRSfZ3+2731EcG2pk1H+G7XqjGBYsHiD9fMQBSWiK25gvee5hE8PibETajrBS8MZFeNMa8CKgcatA/PZ/fR/5w0R3e6JXzSMWpSAbViL9MqwdJudK2bI1E9oTg3RByg3Fjfh/cNstV3r1aHQSt4oT5HX4wTHR9Ez2xGfuMUvZxPv+Vg9nVNm121XDPiY0A5Opc2kK2ilEXAlMeyE80Dw8UotYrFXr3KWx3dfw/g8LeW2B3VRqaS8OHK1tRuNYOFgJYBvM6sQ==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN6PR12MB2814.namprd12.prod.outlook.com (2603:10b6:805:72::33)
+ by CY8PR12MB8314.namprd12.prod.outlook.com (2603:10b6:930:7b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Wed, 25 Nov
+ 2026 17:29:49 +0000
+Received: from SN6PR12MB2814.namprd12.prod.outlook.com
+ ([fe80::9a18:413c:9702:8f59]) by SN6PR12MB2814.namprd12.prod.outlook.com
+ ([fe80::9a18:413c:9702:8f59%6]) with mapi id 15.21.0639.012; Wed, 25 Nov 2026
+ 17:29:47 +0000
+Date: Wed, 25 Nov 2026 12:29:46 -0500
+From: Yury Norov <ynorov@nvidia.com>
+To: "Gregory Price (Meta)" <gourry@gourry.net>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	David Hildenbrand <david@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Zi Yan <ziy@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Alistair Popple <apopple@nvidia.com>, SJ Park <sj@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Kees Cook <kees@kernel.org>, Kairui Song <kasong@tencent.com>,
+	Barry Song <baohua@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Michal Hocko <mhocko@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Nico Pache <nico.pache@linux.dev>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Lance Yang <lance.yang@linux.dev>,
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+	Xu Xin <xu.xin@linux.dev>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Lorenzo Stoakes <ljs@kernel.org>, Pedro Falcato <pfalcato@suse.de>,
+	Jann Horn <jannh@google.com>, Chris Li <chrisl@kernel.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Youngjun Park <youngjun.park@lge.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>, Waiman Long <longman@redhat.com>,
+	Ridong Chen <ridong.chen@linux.dev>, Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, driver-core@lists.linux.dev,
+	damon@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 00/60] Private NUMA nodes
+Message-ID: <awcbCkFUNfBp3ANM@yury>
+References: <20261120-private_nodes_v6-v1-0-74f5f9a115c2@gourry.net>
+ <awMdeK8O-5mffg2m@yury>
+ <179537469194.412063.13456998694958645706.b4-reply@b4>
+ <awNavE8dAGr-amfQ@yury>
+ <179542121527.412063.3452837736734095837.b4-reply@b4>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179542121527.412063.3452837736734095837.b4-reply@b4>
+X-ClientProxiedBy: MN0PR04CA0019.namprd04.prod.outlook.com
+ (2603:10b6:208:52d::33) To SN6PR12MB2814.namprd12.prod.outlook.com
+ (2603:10b6:805:72::33)
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -59,171 +162,208 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2814:EE_|CY8PR12MB8314:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5d88457-3d2b-4b10-0448-08df4b19b3e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|10070799003|261009223027099003|22082099003|10067099003|18002099003|6133799003|261028144727099003|261026140227099003|261021123027099003|261102123227099003|261022105027099003|261022075727099003|261021121427099003|261026121527099003|4143699003|56012099006|5023799004|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	S6a7ir1CjBjuN1oV+qaB35nNB4bQGn5y/wfHeFzO4FdU0Ur+JtBtCwKtb05ZDx4TsmyJ7AZCB4neEi96R+tWIJ/vBRRJqmwzBN2EynZNaUXfjL2lQL8YfHQ+N7c7+BTWXC6kaSRNjbw9rltkecIxW66pAmiNs4HckJfh+mMI+ybrywCiWzomYg8BY23U1IhsQwIJldYP9UPHRv/VtjujSDL9EK/l2Ov6HXWKXEl32IOHcXjCE3DTbxyPlntX0P9KTmcG0mS1bhFZquxoNz8T+Tpdcb0bsB0Twwn71THBuWTDNKB2t8Xvvxd3HQQv4GGq9vEau9z45W6RogYZ40BKRo9ay9PbDtAw3OTBNsEPD+Kt4xrIE+44MuschiBtQZJDqiS9eOvOKttEHDBG7XG+AzeDp8ta5cMyj3j7eb0qQuoUzl1DofDGnML9M0dm3aQiWwvgg0mlYPelqgWFsxt+UPZx64nqsYOWrZfsoa20WbdXUcQajmuyaOAOUEryE8lyS9aVtMBx1Amdl5tmX4d18IJs5tX8Jczw77t+I5tVc0sAaslUw89bmF+yFasSujac/87ggGXVE/u6aI22ynHtdssBBlIPBuJ+zgcA/ShWUzJ7UgU8D5hFaqgONzoJ0TbKcYyiL1TsX9fpKwnm/xpe9mU5fYNYuibSpYeVzbTXl54=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2814.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(10070799003)(261009223027099003)(22082099003)(10067099003)(18002099003)(6133799003)(261028144727099003)(261026140227099003)(261021123027099003)(261102123227099003)(261022105027099003)(261022075727099003)(261021121427099003)(261026121527099003)(4143699003)(56012099006)(5023799004)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wJ3WfKdNOzaNDTQKLpLp26qyY/Yenu41z+NJ6qCYXXXBOYbXGa/jxipQYAfi?=
+ =?us-ascii?Q?/RH8t+w7BabiOqko9r+QLr/z+Ez9mPVfX4EIjxEHrCNtPq5PZs1oBphPV9U7?=
+ =?us-ascii?Q?CQNmDqYaNLkXZg1xKQZLOqPVlJ5m9VMLe9i6w6XfwqJkkRtzXNK+dn6fgeKP?=
+ =?us-ascii?Q?P0Nwy8FmrVad4YE7kA4Sqv+QMuPbPQgpzveFino/VDckdPK8pNVvHOMdvbZ3?=
+ =?us-ascii?Q?h/X9SBqmnZiE+bz3M79jT+2ghYXm9YYRtf9GbFvy/oHBT3M+iD4nYAS61Ipz?=
+ =?us-ascii?Q?Vwmuq0MzWckFxQ3NuxzDHpTIj5Pgq45z7BWa/QqFqfHhkDsehlv4LIXVPjYW?=
+ =?us-ascii?Q?JsS4C37Ij2qz01fDj8iG82aNaE8rDKWZ7vU1mPoxpMy50RA3HDIYKo1pSn4v?=
+ =?us-ascii?Q?dCP+FfyA1F5azHHZQ3LvRhlqFmOzWSnulSaEanj1X5qJLIn+054rCPsiu8RM?=
+ =?us-ascii?Q?ytlzQV4iX5tYQj2w294ILZRx6YRi2sDjXsWWuasx5BRz0ypR+suDkt0/dKWD?=
+ =?us-ascii?Q?u/GaGp8u4frIavMByyr9k8dlokzbB9IyuUovDsyPWZuZn5sd6Klg/LkbrjHQ?=
+ =?us-ascii?Q?Bs2qIVANsHj02VgTpUAVzD2M1/anddkxOAp3jLLg3nZ/t/qkKuh+Eaznm1Ur?=
+ =?us-ascii?Q?L/E1knY8HOHIwj+/MV3UutdLSMoXXEKXoFqcLdNG1CFDpAefKvlGFoNlo5wu?=
+ =?us-ascii?Q?LjHrpQBCJJPDtAARgUfx6gD9AlWUim5xzzP382LRfDFuakQjfP1QQ0/lMEXF?=
+ =?us-ascii?Q?ylU/f5ZGFnrdQxvNaXl3npHrllQ7BDuZ+R2CgEnnv6lUyUEiEOGJqnp1TZoF?=
+ =?us-ascii?Q?3qRxEWEG3isJq4qcX2gjorAXBdrHHjnnmCdHP0VpYoP/6fHWeh5LE1XgmCXe?=
+ =?us-ascii?Q?dE8ShDfs+oSTGiGV22Kcc6gqpWK6IZ2oQOjogV7MtJ5TNsrntnA0JVH+VblA?=
+ =?us-ascii?Q?5QeLB0bbabhQ8VAT5pORPKImriLvQ3uFWmnfCjnWziI1HpxL07aofgVVnYTS?=
+ =?us-ascii?Q?k8luCkMAuRgJttOyyzUnUplEn8OmVHljRl314SkGzcUdjJ/P9F0ammXh2mEs?=
+ =?us-ascii?Q?tUEsS6EQhcClN3n1RQMBLwa5XrycrZ77taqdkPLvUc1vf+lgDXSSmzfEAo8K?=
+ =?us-ascii?Q?7FfHaEo0Jh6ncaJ1Q+tISamzveSmdWc2mSWtHzUfw3kcw9fh2m8jqJJJ0cQ3?=
+ =?us-ascii?Q?ORJAECzM0aT15DMaSnsUH8J+yiAgeQNpHRMuNN6385sZtjjSrQyAPm2zRBAW?=
+ =?us-ascii?Q?hKCULe+SSWU5Ygz+Dkfbe5yo8F/Wa8G/qe+3IOhT0lHnzJYP+3qQGEXBfouv?=
+ =?us-ascii?Q?Ry2LMabSh7zQWGy7RUGSHHyZ04hiCWNomg7FIVjNZZFjp4ZXdY/aPlpRG5hF?=
+ =?us-ascii?Q?QlIQaLc14KU7Q3g+gJ/pr3429+aveCP04a0JXHpS5KiDVHgo5YPvo4eWG7Aw?=
+ =?us-ascii?Q?i/DA5XxjSMM5dgsEURsA7Y7Uja1e5071wRM9ed7K16ych/IsNYzwSBkSYZNP?=
+ =?us-ascii?Q?Pt9P+g6vSvfh4Sl5Sn4cue8q7zNvnn1y/jEHZltnoYDnkrnNDSR6CJZ9Xpiz?=
+ =?us-ascii?Q?tv7lU0gcXzMMwzw1iZEK+w0Q2cnqTRNKskhAacQGZZsuxDZwTuzc4eLW8hgt?=
+ =?us-ascii?Q?HZduGXrRI7Ma4uTyelrPof9+w6vlHs9ubCMAH+Bo9/q9++Ok7ZRe+Xv1LpsV?=
+ =?us-ascii?Q?x+Mt5QY6t1EFtryt8qabgPseHjTTDnKfXf36m0iWfI6+BwqGWCfDkbsoCYwF?=
+ =?us-ascii?Q?/1glgq5ypjqNx5oa7HwOAsuTSob5JSK6S7C2pf7FVIPhwaLihmAH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5d88457-3d2b-4b10-0448-08df4b19b3e5
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2814.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 17:29:47.6685
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: efay+3I/SGVXTOgozIoQvNMiu2Rw1tWrsU7vICz6j0zKlJYopkRTzZVUnSP4yfoxaqwvwfqxWbP5Xb5vM51/SA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8314
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] cxl/memdev: stale CXL_FW_ACTIVATING bit in
-  cxl_mem_activate_fw_online()
-- [Medium] cxl/memdev: activating_slot overwrite in
-  cxl_mem_activate_fw_online()
---
+On Mon, Nov 23, 2026 at 03:06:55AM -0500, Gregory Price (Meta) wrote:
+> On 2026-11-22 16:12 -0500, Yury Norov wrote:
+> > On Sun, Nov 22, 2026 at 02:11:31PM -0500, Gregory Price (Meta) wrote:
+> > > On 2026-11-22 11:51 -0500, Yury Norov wrote:
+> > > > On Fri, Nov 20, 2026 at 01:08:51PM -0500, Gregory Price via B4 Relay wrote:
+> > > > > This is v6 of the Private NUMA node series. The series falls into four
+> > > > > parts, each building on the one before:
+> > > > > 
+> > > > >    1-18  mm: introduce N_MEMORY_COMMON
+> > > > 
+> > > > I walked through this part, mostly. It looks like you can substantially
+> > > > decrease the patch count if you keep N_MEMORY meaning unchanged, and
+> > > > add another type, like N_MEMORY_NOALLOC.
+> > > > 
+> > > 
+> > > I don't see how this would reduce the patch count substatially, you
+> > > still need to convert existing N_MEMORY users and need to differentiate
+> > > between general purpose memory nodes and private memory nodes.
+> > 
+> > Please check this quick attempt with my codex. The patch count is reduced
+> > to 52:
+> > 
+> > https://github.com/norov/linux/tree/private-nodes-v6-n-memory-folded
+> > 
+> ... snip ...
+> 
+> Patch count is not what we want to be optimizing for here.
+> 
+> Your branch carries the same code (+3 lines net actually).
 
-commit 19d55015d9b6225e3059d6173d8fb4365535c893
-Author: Unsung Lee <unsung0317@gmail.com>
+Line count is neither the metrics.
+ 
+> The patch reduction comes from squashing the per-subsystem conversions
+> into one 16-file commit.
 
-cxl/memdev: Add firmware_activate to activate firmware without a reset
+No, and I mentioned that.
 
-This commit adds a write-only firmware_activate sysfs attribute to activate
-a firmware slot online when the device is not decoding memory, while blocki=
-ng
-decoder commits, firmware uploads, and sanitization until activation
-completes.
+> It also broke get_mempolicy(MPOL_F_MEMS_ALLOWED) - it now returns
+> memoryless nodes even if the system doesn't have a private node.
+>
+> > The more important thing is that N_MEMORY and the proposed N_MEMORY_NOALLOC
+> > is a disjoint, contrary to N_MEMORY and N_MEMORY_COMMON.
+> 
+> The proposal here is not novel - version 5 was also disjoint:
+> https://lore.kernel.org/linux-mm/20260720193431.3841992-5-gourry@gourry.net/
 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index cdbebd12258b9..cc9ff0dd9cd8a 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-[ ... ]
-> @@ -966,13 +1010,136 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
-state *mds, int slot)
->  		.poll_count =3D 30,
->  	};
-> =20
-> -	/* Only offline activation supported for now */
-> -	activate.action =3D CXL_FW_ACTIVATE_OFFLINE;
-> +	activate.action =3D action;
->  	activate.slot =3D slot;
-> =20
->  	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->  }
-> =20
-> +/*
-> + * cxl_mem_activate_fw_online - Activate a FW slot without a reset
-> + *
-> + * How long a device holds CXL.mem requests while it switches to the new
-> + * firmware is not known here, and a stall the platform does not tolerate
-> + * would take the memory down. Like sanitize, only proceed when the devi=
-ce
-> + * is not decoding any HPA range, i.e. no endpoint decoder is committed,
-> + * and set CXL_FW_ACTIVATING under cxl_rwsem.region so that none can be
-> + * committed until the command has completed. After a timeout the device
-> + * may still be activating: keep CXL_FW_ACTIVATING until Get FW Info
-> + * reports the slot as running or an activation succeeds. A device that
-> + * keeps its old firmware then refuses regions until cxl_pci is bound
-> + * again.
-> + *
-> + * Decoders of other hosts sharing the device are not visible here.
-> + */
-> +static int cxl_mem_activate_fw_online(struct cxl_memdev_state *mds,
-> +				      unsigned int slot)
-> +{
-> +	struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
-> +	struct cxl_memdev *cxlmd =3D mds->cxlds.cxlmd;
-> +	int rc, info_rc;
-> +
-> +	rc =3D cxl_mem_get_fw_info(mds);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* An activation that timed out has completed (cur_slot is never 0) */
-> +	if (mds->fw.activating_slot =3D=3D mds->fw.cur_slot) {
-> +		mds->fw.activating_slot =3D 0;
-> +		clear_bit(CXL_FW_ACTIVATING, mds->fw.state);
-> +	}
+Alright, this is the important piece of information, and it's not
+highlighted in the cover letter at all.
 
-[Severity: Medium]
-What happens if an online activation of one slot times out (leaving
-mds->fw.activating_slot set) and a subsequent write to firmware_activate
-requests a different slot before the first activation finishes?
+For the next iteration, please use the [PATCH v7] tag to highlight that
+there's some history and background for the current design.
 
-cxl_mem_activate_fw_online() proceeds to issue an online Activate FW
-command for the new slot while the earlier activation may still be running.
-If the second command also times out, mds->fw.activating_slot =3D slot
-overwrites the original slot number; once the device finishes switching to
-the first slot, mds->fw.cur_slot will not match the overwritten
-mds->fw.activating_slot, leaving CXL_FW_ACTIVATING set and blocking region
-commits, firmware uploads, and sanitization.
+The cover letter is wordy enough to exceed my ability to perceive the 
+plain text, TBH. I followed it to, maybe, a MODEL section, and then
+switched to the actual code. I don't think I'm alone here.
 
-> +
-> +	if (!(mds->fw.activation_cap &
-> +	      CXL_FW_INFO_ACTIVATION_CAP_HAS_LIVE_ACTIVATE))
-> +		return -EOPNOTSUPP;
-> +
-> +	if (!slot || slot > mds->fw.num_slots || slot =3D=3D mds->fw.cur_slot)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * A different slot set up for activation on the next cold reset
-> +	 * would silently replace this firmware at that reset.
-> +	 */
-> +	if (mds->fw.pending_slot && mds->fw.pending_slot !=3D slot &&
-> +	    mds->fw.pending_slot !=3D mds->fw.cur_slot) {
-> +		dev_err(&cxlmd->dev,
-> +			"slot %d is pending activation on reset, not activating slot %u\n",
-> +			mds->fw.pending_slot, slot);
-> +		return -EBUSY;
-> +	}
-> +
-> +	/*
-> +	 * synchronize with cxl_mem_probe(), sanitize and decoder write
-> +	 * operations
-> +	 */
-> +	guard(device)(&cxlmd->dev);
-> +
-> +	/* A running sanitize owns the device until it completes */
-> +	scoped_guard(mutex, &cxl_mbox->mbox_mutex) {
-> +		if (mds->security.sanitize_active)
-> +			return -EBUSY;
-> +	}
-> +
-> +	scoped_guard(rwsem_read, &cxl_rwsem.region) {
-> +		/* Without a bound endpoint the device may still be mapped */
-> +		if (!cxlmd->dev.driver ||
-> +		    cxl_num_decoders_committed(cxlmd->endpoint)) {
-> +			dev_err(&cxlmd->dev,
-> +				"device is decoding memory, not activating firmware online\n");
-> +			return -EBUSY;
-> +		}
-> +		set_bit(CXL_FW_ACTIVATING, mds->fw.state);
-> +	}
-> +
-> +	rc =3D cxl_mem_activate_fw(mds, slot, CXL_FW_ACTIVATE_ONLINE);
-> +	if (rc =3D=3D -ETIMEDOUT) {
-> +		mds->fw.activating_slot =3D slot;
-> +		dev_warn(&cxlmd->dev,
-> +			 "slot %u may still be activating, refusing regions on this device\n",
-> +			 slot);
-> +	} else if (!rc || !mds->fw.activating_slot) {
-> +		/*
-> +		 * After a timeout only a success shows that the device is
-> +		 * done. Any error may come while it is still busy with the
-> +		 * activation that timed out, so the mark stays.
-> +		 */
-> +		mds->fw.activating_slot =3D 0;
-> +		clear_bit(CXL_FW_ACTIVATING, mds->fw.state);
-> +	}
-> +
-> +	/* Report the slot the device runs now, also after a failure */
-> +	info_rc =3D cxl_mem_get_fw_info(mds);
-> +	if (info_rc)
-> +		dev_warn(&cxlmd->dev, "cannot read FW slot state: %d\n",
-> +			 info_rc);
+Can you please structure it so the really important things will be
+mentioned in the first ~20 lines, and please provide links to the
+previous iterations.
+ 
+>    N_MEMORY and N_MEMORY_PRIVATE are mutually exclusive states.
+> 
+> I moved away from that because it changes the definition of N_MEMORY.
+> 
+> The subset model is easy to understand
+> 
+> N_MEMORY               - a node has memory
+>  -> N_HIGH_MEMORY      - subset of N_MEMORY
+>  -> N_NORMAL_MEMORY    - subset of N_MEMORY
+>  -> N_MEMORY_COMMON    - subset of N_MEMORY
+>  -> N_MEMORY_PRIVATE   - subset of N_MEMORY
+>                          (COMMON and PRIVATE partition N_MEMORY)
+>  -> N_MEMORY_<FEATURE> - subset of N_MEMORY
+>                          all N_MEMORY_COMMON
+> 			 some N_MEMORY_PRIVATE
+> 
+> It's additive. Users pick the set of nodes they want for their purpose
+> and don't have to cobble sets together or remember special helpers.
+> Users don't even need to know about private nodes most of the time
+> (mempolicy being the one major exception here).
 
-[Severity: Medium]
-Should the post-command cxl_mem_get_fw_info() call also clear
-mds->fw.activating_slot and CXL_FW_ACTIVATING when
-mds->fw.activating_slot =3D=3D mds->fw.cur_slot?
+Do you support private nodes for HIGH_MEMORY? 
 
-If cxl_mem_activate_fw() times out (or fails while a previous timed-out
-activation was finishing) and the activation completes right before this
-second cxl_mem_get_fw_info() call, mds->fw.cur_slot is updated to the new
-slot, but CXL_FW_ACTIVATING remains set and locks out region commits,
-firmware uploads, and sanitization until another write to
-firmware_activate. Re-attempting firmware_activate on that same slot will
-also see slot =3D=3D mds->fw.cur_slot and fail with -EINVAL after clearing =
-the
-bit.
+If yes, it would look like:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125124358.3583=
-223-1-unsung0317@gmail.com?part=3D3
+N_MEMORY
+ -> N_HIGH_MEMORY
+    -> N_NORMAL_MEMORY
+ -> N_MEMORY_COMMON
+ -> N_MEMORY_PRIVATE
+
+If no, I'd organize it like:
+
+N_MEMORY
+ -> N_HIGH_MEMORY
+    -> N_NORMAL_MEMORY
+       -> N_MEMORY_COMMON
+       -> N_MEMORY_PRIVATE
+
+Does it mean that COMMON and PRIVATE is a disjoint in this model(s)?
+If so, the COMMON is excessive. If not, can a node be COMMON and
+PRIVATE at the same time? What would it mean?
+
+I didn't understand the N_MEMORY_<FEATURE> passage. Can you please
+elaborate on the 'all this, some that' part?
+
+> In the disjoint model, N_MEMORY no longer means "has memory". Recovering
+> that set requires new helpers, and the meaning changes silently for
+> every in-tree and out-of-tree user. Anything that wanted "has memory"
+> quietly misses private nodes.
+> 
+> Either way you have to audit each N_MEMORY reference and decide whether
+> it wants that state or a feature variant (N_MEMORY_RECLAIM, COMPACTION).
+> 
+> The difference is how a missed site fails. In the joint model the
+> zonelist and the common-memory folio checks backstop allocation and
+> access, so a missed placement site costs some additional work.
+>
+> In the disjoint model a missed site silently drops a node from stats
+> and accounting - or worse fails to allocate per-node meta data.
+> 
+> So no, I do not think we should go back to the disjoint model.
+
+You already did that analysis I was looking for, but discussed it only
+in reply to my question... In v7 please wrap the design decision up in
+the cover letter.
+
+I feel convinced, despite that hierarchical approach seemingly
+requires to touch more subsystems. But I would like to get feedback
+from those followed v5 and earlier discussions.  
+ 
+> > > and n_memory_noalloc is not a good name.
+> > 
+> > sure, i'm not attached to any particular name. although,
+> > n_memory_common nothing better to me. it answers the question
+> > 'what for this thing' even worse.
+> > 
+> 
+> happy to wordsmith the names here.
+> 
+> N_MEMORY_GENERAL? _DEFAULT?  _COMMON felt intuitive but I am happy
+> to rename it whatever.
+
+If common and private is a disjoint, you need a single flag to cover
+both states. Or I miss something on it?
+
+Also, it looks like the 'COMMON' memory is one that available to MM
+allocator and other API. Maybe N_MEMORY_MM then, if you still need the
+name?
