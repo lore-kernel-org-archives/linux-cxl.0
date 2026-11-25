@@ -1,80 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795610645;
-	b=vtxADSXUsjOlbM/zIVxtHiouGAVSOPVE8zHC5KUjoALxsKo3Cuv0f74PUqNEyWB8xqEy
-	 IzwJFjD2mrmiqeDtjT3NxjJ9eTsWKnNHHU9rxPMBHWdqmevRqKp8wuw7gaR5Kn2QzlOft
-	 YMFhj7KwEx7y3kiANJGkmrmz1DnWdFDf3+dt2juAsofZz9J6QgUlgPNBls1b7OhKrFxo9
-	 sEsCvji9iXZEtSJLQlUOQljbdULh7IzGigO+75fFHS1wpKCA8vhPn7FHgPoLzHyrRLEMI
-	 aqIYd2eh/fY/JofTOXw7Yq86O4Vk3eAYNCp34ycH3+j+K/cjxxHqC3xQ3cJw2/4SeKA==
+	t=1795610647;
+	b=EMZqtKUb8C0KjInvFkOLLzP71iOMo/3qrl7gRkTozoad2ivMylL51jhv4cSSHOTbD6kD
+	 MefHkjn97PpHDzjfuqfH5tDjZ5UUXZeYa8SSjv5AJREvav4gmK+Q/+k0435roq+0IFsFl
+	 z4ZO5uTZovh4fGOkT2d7F/rTOSGz2wc280r9bykPHoZgriNMMsiTEcvBIVNiW4gBmkjTW
+	 Wwo2l9JE9NmJ2zQ3+5TakvFNqK/LWP12uqTmr1SONsZDL7djd8Q+wTBwtq6UKm80/GWsd
+	 5hLyZ3YM0GyeDYqTvh+VOrE2uFphVmEICN9OHZDohJblviu4af7QDeUyUtOcJlT8uaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795610645;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795610647;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=SHWtXulVx+NJs1MOoLJTeedDG+BaUJLRXW17KRhzrqc=;
-	b=jxQGUUkgtmFj2XhYnnRNvspyPM+QnyeFz23UZn3yAI9l9KPOr4GvfSncr0okdbZCqX3d
-	 sbsXzzPaz8sXAnxhQoDQYDGGxF3dsj+6VbiZxkfiQEMn/95QfbcZCCRq7q5NKQW+L6Fuh
-	 rEMiKjxFwXRij2/rG8xqXsO1hL8YOvmw2ijk/o+AKa89QRQswHutuHWC5kd4U4jtya8f5
-	 BBlizf2VEINcoO9vPyt55nwBiNNafUlpE3MWemuzccN1h2a5nuX+pSbMjbe8ts3OO6aBP
-	 fCQXLDOwEtwIEUhlAV36fw1NBgZM6RJhAUxA5fnye/P8ANu0hzV2/gVloBHj4JWGpMw==
+	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=Ly8SpXlXBNY7NQGo8GyDm0rJw1CY1nj9SXG0VugS/hk=;
+	b=ar4gIHj4kSgpVQ5Y8AY6cd+3rN8x2ZeMWAXLm7AlsUsPEp4K4qL5ukg0gMvIe2kZMOpk
+	 sxJISzo2YJ1itDwwrDu3t3hevmPNpty+bqZ15p4d4J5/wowFGNq5+frOnXcuZ406dQuQq
+	 l2XlIF/b5k5qRO1mbLl2ls/k+n/UXJ/g4fC91Xac9Wc7XO4QqiM66tdoIqwURtaJw2F9k
+	 T6FDPO+d+G8R9WrJt2qLFywepRPSeLK5ZbOXFkKNRd7lx7OQs+9UV86UrBdecBI7Ez3Dy
+	 j2HAL3HgkRSqS0KUS3QNiefHn/5xBMh+jbJKiXocXsU5x9EkUj7qoF6N12ic0TjBg7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qZUlKqTc;
-	arc=none smtp.remote-ip=74.125.82.173
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pLS4vSCn;
+	arc=none smtp.remote-ip=74.125.82.50
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6815606A31E
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:44:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A6815606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E927E606A31E
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:44:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E927E606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qZUlKqTc
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-385d8a00598so8445214eec.1
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 04:44:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pLS4vSCn
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-1b50a4bd2f3so3296601c88.1
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 04:44:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795610644; x=1796215444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SHWtXulVx+NJs1MOoLJTeedDG+BaUJLRXW17KRhzrqc=;
-        b=qZUlKqTcN5p56BxyZZmeuC1b3uSeZzEsKFG5Bf22PhYORte5Z911Q5/5DiZH3Kp0m2
-         M3IotSHl5HfME/9nLYvMyud08m5mEimYDNO3E0RVQ7BwN3nwesE6AJnOLBKRCfdz8iPQ
-         YW0hXN1bLp4eUYlEBeSxfwFlyu5csecY7ttQ+bNIm8b2rpc4RuLOHOk55Ur5UZmHko/i
-         yMKliz+3CW0rbsJJvSnybTjS7p3TWYYtoD9Oj9/8SAiuv7sKDGBVQiZY4XjiOsydsOsW
-         c1LxinaibkVr0xphTwmBhUoZuTHGd9BL3D7Z2Jf0dUjCRJInq+AWDsu5I4A/TidmX8QN
-         Vgzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795610644; x=1796215444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795610646; x=1796215446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=SHWtXulVx+NJs1MOoLJTeedDG+BaUJLRXW17KRhzrqc=;
-        b=ljMcaTkcb++vVjdFFYfbVv1rhYp+m41iq5JqYzb8NhcMVaN5LqTIZjtsXEGPE4GPNa
-         XUtHsGzgbHiE4bBuLoL13iiUY19U9/ctE0uyvzD3wMKA9pr82Id1e1dYEr2UwCld6A6B
-         eRpo0+K0OEmFXcpn9JTHwbbAhGH5K1rqnbnem3wiojFvjS6F4NzGQW3oAiTRKIWncl2B
-         VgFFzo8ZJ2bwtfZd6GrTVMEz+AXZjLFl6+3GgvL6JidcyizZhYZnR9OybhMOr+8fXxhP
-         PrjStawx6jnW7gT4v+M4JB5QSCTix8hQGlA/rsJzXDI3tyMVo3N9/LlYBiqFIvJY7G3N
-         z9Zw==
-X-Gm-Message-State: APuU4Z+2mfatP3f9KHbeZtiawnflCFijDD2PscAjyKdwBn4aiwnwgjEp
-	tIMyHkJsUSLfdh2WFjdRqnuHnIsGVoIeVpu70H5nQEHMmAJAaS/trLQkKMtStlnL
-X-Gm-Gg: AZFdTZfN2DZnh0ZRpuY8q8TLrCCKe8tIOCzBherMkY/CM0mkzJzQVLhdPvjL5xEyW6H
-	/hZKPk/FdUx/Jve9JagZfc8wc83gukvtHmjqZBs5LBGWYwZRZpnN/HGup2uZUz9+g9yxFj9rOOY
-	MzQ0BWHaFsRHcqY2wbehRSNbq10uzCASkY0hU+HCNOmEyMsKZRzRfgOO3Mh5RYs+Z0srqk+HCP4
-	A24SZ4jKewzhzJx63RBIkvGO2J6HdYbMjElWY0wXENTRP3P1rqM3WLSIHObSXwLxqt8VPx69RDE
-	DugiVCyUtlY5ZziOVYYACAxxMeYplKdCr2y4uamLWU+qMYnhCgdrG0p9+fpYw9B2DPT2ePX/HE8
-	4UQXhnygSebmFmQilPToEbH8Q38RNaSuFHrFEAGfP0dh5YxmnFaL7JcKUKTOj2ZXjp9D0iLKamr
-	GW7YrjsA12pMzAObVY213oz6xRB/rh/eTZ+4UecKNXrYGtyZj2dZwrq2CIpP44nTj6lG6IsH/Zm
-	i2T+w9kRcWSF+Vqs9LZeQAiMKuHiBxwnuheCPFv9dVJbli8Up9CvSHEqqUhSyiRhihQi9xwAfDL
-	S6V5lFnhU3wIHTnXjvAN6MxrlRuRtUtYpHTiNTL6t+M=
-X-Received: by 2002:a05:693c:8641:20b0:383:50b7:1d78 with SMTP id 5a478bee46e88-38571223ee7mr20197872eec.40.1795610643703;
-        Wed, 25 Nov 2026 04:44:03 -0800 (PST)
+        bh=Ly8SpXlXBNY7NQGo8GyDm0rJw1CY1nj9SXG0VugS/hk=;
+        b=pLS4vSCnHrqpyIYH+YvggPOnuseo8Oa8k6AyRdzVMvE+Joqj6L8BrzONuidLnP2L2l
+         /fKGRT5gTsqbhhD9MqvzIKU2rOGptKJJc9izwXsoMYCmrYaIkN2alIjM2WNgDdItaaqF
+         QDXs13Wa6lBpLrxqAs97hzwWATt09QJKaLBUN4sKU/U/GPe6pHcfNvj3xE/C1kyPR9Hb
+         Hfm8FPzdfy3QvOqq8Pfn9QG42sIkCrxq1skCUuoLjIz/7aWvsBjuCuuKytV5QGCNOc8t
+         /lrm4MGRyO/4WwCmRXfxwAeO8Kpp663NhM+DwIdX2DMA8Hjksis5BRiXFUdD4Mw25B4z
+         FMCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795610646; x=1796215446;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ly8SpXlXBNY7NQGo8GyDm0rJw1CY1nj9SXG0VugS/hk=;
+        b=sPtNzwKSlOjBrRZECszMaKc8lIXaAK5J3dTSqzrHTDaZIinc+l7iUcLge5/WLVr9Gm
+         Z6abhUixthm8v8Q+kjONlJ18C1hIAbR67dUNPmEEKGUh9f590MCJTv9rH6OQaTIL2Jgm
+         Qn1JMTV81L1AWwtL5GU67GvqiFiE2LXCqlbIchi3xFqdeS4dO/c5zjCIZZZ28e8pFf4a
+         vMCfeAFxkAWOUsv6CPnHMj0i8MqWGW5bAQH4yYKGd3guPODR7vVNZpyumFTjN3Zm6mck
+         /RsLOm2kJ+BULpmfN5KD05gozp37JzmajavfiuyRAjWv7p0tyyGtbaH83CoumkoI3+2m
+         pVSw==
+X-Gm-Message-State: APuU4Z9F4LySPr8oSNOEq83GJGKszFT/HQzo+5mVw0WBmF9pfpd/SYNV
+	C+o2AQcr3m8/7xFNC9MKN+DLyR8S/KRGABym3ryGSdOAWXCMPDDlslGZGHDB8eek
+X-Gm-Gg: AZFdTZda78a/9TOblSbhWjd5MzMNNvY/uFj+/FIFPEJ6/RmvN2rghxpDeVa0yvxoJ7q
+	hyRBmaFu0eI+nV0iBR7NZ0Jm0EXx5IzXz+o0vbpgEDpK83RSjkHxD/KSD2J3ZTTUwKH6gPBEsH6
+	HTv+z6iChSJ7wK3sMsjESHWz8H7/bSj499+G0g3CgzRj8SkvJ68dIbvLqQm7MhzPQpSsIGUV6OY
+	mUQCwLp4lu+cNBUFvMj+jmMv1QiL9FbgCyXYTsuYSkGKLLBJa1iRFCADxYw/fRjHno8Mfo1ZVd7
+	L+MgwivwAp0DtlMakXDc9h2Z+Nb1lTjNQlWnUPyJDIQVD0nAByWeItPierbLEu7nHdthtkaJLYb
+	h7YbzsvcZOYZr7wRmYkKv5KWZaVBUkoFd2gJxnOj3bPKvlu6a5T8mxAu29ie5PWnbCG980PXI77
+	rr6QPXyV6N5eyyGXYKXt2T+EvY8Al1VaEssw7qE9vbipXoYolQJoFAGX8GBLciz+Iy71bqIPM2v
+	DkBWg6iRR7Hzf2GcRDx4MGrN6owbfF3bNWKDnnl4vs4eQBOIQC9V7rvQIzruiPHrk5mOUBkvi65
+	aCe+fMCAvNohwj2DZQ/p9KqWWWD8NnxuFwj0lj33WJo=
+X-Received: by 2002:a05:693c:41d4:20b0:386:cedf:5e51 with SMTP id 5a478bee46e88-386cedf61efmr2398665eec.26.1795610645949;
+        Wed, 25 Nov 2026 04:44:05 -0800 (PST)
 Received: from localhost.localdomain ([121.134.184.225])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385666e7f59sm55841836eec.6.2026.11.25.04.44.01
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385666e7f59sm55841836eec.6.2026.11.25.04.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 04:44:03 -0800 (PST)
+        Wed, 25 Nov 2026 04:44:05 -0800 (PST)
 From: Unsung Lee <unsung0317@gmail.com>
 To: linux-cxl@vger.kernel.org
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
@@ -85,10 +87,12 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Dan Williams <djbw@kernel.org>,
 	John Groves <jgroves@micron.com>
-Subject: [RFC PATCH 0/4] cxl/memdev: Activate firmware without a reset
-Date: Wed, 25 Nov 2026 21:43:54 +0900
-Message-Id: <20261125124358.3583223-1-unsung0317@gmail.com>
+Subject: [RFC PATCH 1/4] cxl/memdev: Poll for completion of Activate FW
+Date: Wed, 25 Nov 2026 21:43:55 +0900
+Message-Id: <20261125124358.3583223-2-unsung0317@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261125124358.3583223-1-unsung0317@gmail.com>
+References: <20261125124358.3583223-1-unsung0317@gmail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -100,110 +104,42 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series lets userspace activate an uploaded slot online once the
-device no longer decodes any memory, the same condition sanitize uses.
-Uploads keep their current behaviour; activation is a separate,
-explicit step:
+cxl_mem_activate_fw() sends Activate FW without poll_interval_ms and
+poll_count. If the device answers "background command started", the
+mailbox code skips its wait loop and fails at once with -ETIMEDOUT
+("timeout waiting for background (0 ms)"), so the firmware upload is
+reported as a hardware error while the device may still be activating.
 
-  1. upload as today (slot N becomes pending for the next cold reset)
-  2. move the data away, offline the memory, destroy the region
-  3. echo N > /sys/bus/cxl/devices/memX/firmware_activate
-  4. recreate the region and online the memory
+Give the command the same 1 s x 30 budget as Transfer FW.
 
-Patch 1 lets Activate FW complete as a background command; without a
-poll budget the mailbox reports a timeout at once.
-Patch 2 keeps the pending slot and the activation capability from Get
-FW Info.
-Patch 3 adds the attribute.
-Patch 4 lets cxl_test advertise online activation.
+Signed-off-by: Unsung Lee <unsung0317@gmail.com>
+---
+ drivers/cxl/core/memdev.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Questions:
-- Patch 3 requires that the device decode no memory, as sanitize does.
-  The driver cannot tell how long a device holds CXL.mem requests while
-  it switches firmware, and the comment on the RAW command block list
-  says activation "requires adjustment / coordination of transaction
-  timeout values at the root bridge level". With no memory decoded
-  nothing can time out. Is that the right condition, or too strict? It
-  means moving the data away first.
-- The Online FW Activation Capabilities ECN to CXL 3.1 allows Activate
-  FW to complete as a background command (8.2.9.3.3), so patch 1 waits
-  for it like Transfer FW. Should it carry a Fixes: tag? John Groves
-  raised activations longer than the 2 s mailbox timeout at the June
-  2025 CXL collab sync; patch 1 may overlap with a patch from that.
-- Patch 3 holds cxl_rwsem.region only to check the decoders and set a
-  FW state bit that makes decoder commit refuse the device with EBUSY,
-  as sanitize does. An earlier version held the rwsem across the
-  command (up to 30 s); with an activation emulated in the kernel,
-  create-region and region sysfs reads on other devices then waited
-  for the whole activation. The cost is that a create-region on this
-  device that races the write fails instead of waiting. Is that the
-  preferred trade-off?
-- After a timeout the device may still be activating, so patch 3 keeps
-  refusing regions, uploads and sanitize until the slot shows as
-  running or a later activation succeeds. A later error does not count,
-  since it may come while the device is still busy. A device that ends
-  up on its old firmware stays refused until cxl_pci is bound again.
-  Reading the Background Command Status register would end this
-  sooner, but needs a new mailbox callback. Would that be acceptable?
-- Should the pending slot stay set after an online activation? QEMU
-  keeps it, cxl_test clears it.
-
-Not addressed in this series:
-- State cached at probe (CEL, timestamp, event interrupt policy,
-  features, Identify, CDAT) is not re-read after activation.
-- Unbinding the port above the endpoint during the command tears the
-  endpoint down, which clears HDM decoder enable and Mem_Enable on the
-  activating device (exercised in QEMU without kernel warnings).
-
-Testing (QEMU 11.1.3, one type3 device, guest v7.3.1 unless noted; no
-real hardware, so an activation that really takes long, polling while
-it runs, other hosts and other CCIs are not covered):
-- Functional and race tests (concurrent writes, upload, create-region,
-  cxl_mem and cxl_pci unbind, mailbox readers, kill -9, sanitize,
-  upload cancel) on release and lockdep/KASAN kernels, 20-50x: no
-  warnings; kprobes showed no activation while a decoder was committed
-  and no commit while activating.
-- A test-only build emulating slow and timed-out activations, release
-  and debug, 20x each: refusal during and after a timeout; a failed
-  activation after a timeout stays refused, with uploads and sanitize,
-  until cxl_pci is bound again; a cxl_mem unbind waits for the command;
-  a port unbind during the command. Create-region failing after the
-  port is bound again also happens on plain v7.3.1, so that test does
-  not check regions afterwards.
-- The whole flow (move the data away, offline, activate, online, move
-  it back): 100x without data; 20x with a process rewriting 2 GB on
-  the device's node (longest write stall 78 ms, in QEMU only); through
-  a maintenance script, deferring when there is no room (10x), rolling
-  back when room runs out (20x), and SIGINT/SIGTERM/SIGKILL at each step
-  (60x); and these mixed for 4 hours (1,462 iterations). No failures,
-  and the data was intact after every iteration.
-- cxl/next 32af781935: applies cleanly, no W=1 warnings; QEMU gets no
-  root decoder there (CFMWS with both HDM-H and HDM-DB, rejected since
-  e4c3f0d966), so only the tests without a region ran (all passing).
-
-I designed the change and directed the work. An LLM coding assistant
-(Claude Code) wrote parts of the code, the changelogs and the test
-harness at my direction, and was used to review the code and run the
-tests. I reviewed every line of the series and take responsibility for
-it.
-
-Unsung Lee (4):
-  cxl/memdev: Poll for completion of Activate FW
-  cxl/memdev: Keep pending slot and activation capabilities from Get FW
-    Info
-  cxl/memdev: Add firmware_activate to activate firmware without a reset
-  tools/testing/cxl: Add a knob to advertise online FW activation
-
- Documentation/ABI/testing/sysfs-bus-cxl |  45 +++++
- drivers/cxl/core/hdm.c                  |   7 +
- drivers/cxl/core/mbox.c                 |   5 +
- drivers/cxl/core/memdev.c               | 209 +++++++++++++++++++++++-
- drivers/cxl/cxlmem.h                    |   8 +
- tools/testing/cxl/test/mem.c            |   8 +-
- 6 files changed, 274 insertions(+), 8 deletions(-)
-
-
-base-commit: 32af7819352bae9c690ebe277a44eceb501d5c68
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 787988e929..67f467c267 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -949,10 +949,18 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
+ 	if (slot == 0 || slot > mds->fw.num_slots)
+ 		return -EINVAL;
+ 
++	/*
++	 * Activate FW may complete as a background operation. Without a
++	 * poll budget the mailbox gives up at once and reports a timeout
++	 * even though the device is still activating. Use the same budget
++	 * as Transfer FW.
++	 */
+ 	mbox_cmd = (struct cxl_mbox_cmd) {
+ 		.opcode = CXL_MBOX_OP_ACTIVATE_FW,
+ 		.size_in = sizeof(activate),
+ 		.payload_in = &activate,
++		.poll_interval_ms = 1000,
++		.poll_count = 30,
+ 	};
+ 
+ 	/* Only offline activation supported for now */
 -- 
 2.34.1
 
