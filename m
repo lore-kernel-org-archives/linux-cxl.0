@@ -1,92 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795594988;
-	b=zwzavA2FgWZXI4tFpar/lCjFZZ50/w4bLf6QBhNVz3aWQO9RRRj+A/E2eA97AOlRnRV5
-	 b/yF/zQRUkbC9V9qgVBPXFEE3lalas+SKP6OxobTAjcawkMR/O3f/NvG9ySlCrw/ehjY5
-	 ZwycEGRXJi5OGlEGWQMBPd2VhR5Xnh6Wa54OX/qN4QcLxcD3kX5eBoJaefrcajUdYbprO
-	 MfHPaQR1gLHarzR1hVdv0jCvyFD6m5xvVh/1HC5Ac2seshY6F5LFqLJ5xFSgC3YQDL+Jv
-	 Ls4eFy8Hft87CnUF3/HQuRjNh02nm+Mjst6O7BOHQE1r0gwvwqdcR/JFeTIQY/aIsXQ==
+	t=1795608633;
+	b=jdIGtmV5iQ+9qML4Y3g7Rd00r3lCPhb3KhDq7wojpGpWvZ9Ht+cPuEmQJYS6aswP3/iy
+	 S+fwkZGVpCSBzxmoKWvLd2BARToZ5nZN7sdQ41q//9t5KmVljGMc0SooeDe7mGCpMClMG
+	 mFNF3fhkV/WFkeHFruo7ctIteAwv2Qz2xPOrT7nbBJVpydqVIw1nnxAaYS3s0SgDbwkk0
+	 p6mQZy1NWsM/EhQTzTJ0CCWijG3BPvTyQjAs+Pl67GFUUrpOp7cUjUH3yjnzEqyFxrGvM
+	 PJmu1uiMMXpdFiN0v+zaaUncxsghmZ5I6sLWSfq30pE0F0C1qbJNiZvDplohItOr+6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795594988;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Date:From:To:
-	 Cc:Subject:Message-ID:In-Reply-To:References:Organization:X-Mailer:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Last-TLS-Session-Version;
-	bh=uNybJMbMTjSA7ZZcWlQYQU8MlFHRVpDuABhvHlqOToo=;
-	b=3E6j38j/Peo/W3u6iYeZ3sVYg1MJREdxHL/uFbSQlGdkMJckya7Pz715JTf/JiWLkQZS
-	 MeDuZqsOgA6erJaYeEwiDlh5jOYBevTgtVhj8o1SvYVkM+BTXvrvXrNHKjRSHRLThATiR
-	 xWNi4IBdxz2qLZw8xDPhIYrZ421H4lnJkzpV0V0R6gCEi5IWHMULq60zeYt9VEE7eI/ih
-	 uw34R64IFHlYug2G0QF7fp99HWsy7cSKZ1WVEo0Y30VGkbnXtnlfC/xj1Gl6J6zg2YvgQ
-	 yZi0tJO5q/+oZROiF7kpKnie7yKn5JffRwPKsN7iXDvhoH64/r4MmibCJuUR1OXJxAg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795608633;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=teCiq3/IJSOFnCwrRz/KsIITrdIRIZwu2S42elp1laQ=;
+	b=tXk/kLZstSUCErrpLk8TQ2xVwqnCrGSAswVqPmlu1rc2L6N3FgiSF3HFTbAnb9f+mEWt
+	 elxF1Vox3ac9fH266FGUd+WiT6jJxPvcp6bVt6v/a0HxnYKlSXo9gt+fqapaO553BK6LH
+	 t9q5L/XK++LPbAlTYuHg2h9SLki4Jh0KmCDRAAb6TPrnwHDjgGmZPfwbUXhcXopZfC2hp
+	 p5/3nslmNjAE4b79t3lBE/ckD769spcvcFnsCphm6oYaqEvHWNZvel8HCjMrX4CkaodUb
+	 Y3ZRN5HrDMmVXbxi/zC2sU94Irod6E/yvC/O6ifAgNV8HG1pAFN9khaw/Rngwl+kNyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bootlin.com;
-	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=Hx+CY+Md;
-	arc=none smtp.remote-ip=185.171.202.116
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qyShYa2N;
+	arc=none smtp.remote-ip=209.85.215.176
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD7D606A32E;
-	Wed, 25 Nov 2026 08:23:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBD7D606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB793606A323
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 12:10:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB793606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=Hx+CY+Md
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id B0B45C2BB3E;
-	Wed, 25 Nov 2026 08:23:11 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B77A960480;
-	Wed, 25 Nov 2026 08:23:03 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F2F3A11E6929F;
-	Wed, 25 Nov 2026 09:22:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1795594981; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=uNybJMbMTjSA7ZZcWlQYQU8MlFHRVpDuABhvHlqOToo=;
-	b=Hx+CY+MdlcBHskvgsPz/EZoyN+RpIKBjjgZ1d8pt+Uzc62IQAftvqcbYZc4buUfDHHIlcb
-	iLOWhlJuYSoYowQrRUwFv0od2eHHVOFj+rNLHW+1iYWk+S6tVqoFYqXiZMqexCI7NvAaCq
-	kkgp5Wq2jhuQAABmvbd50+kpEQIy4ULwV/wygKSj4T35++WLTBnXXx05S9hkMH2hFYX3yg
-	/yLpXIGZTENyxHO72+HdSRcC7C+MCJ9XmsRB/tqnU6lz8TeRyY5tMp+hDQGIKJJru+E0FN
-	musR9Hk9FSDzVa1rPfF7hXkK+BlG1U3m+Ovc/z6r8jID84oI06p5fsmqpiTgxQ==
-Date: Wed, 25 Nov 2026 09:22:40 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Abdurrahman Hussain <abdurrahman@nexthop.ai>, Richard Cheng
- <icheng@nvidia.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring
- <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Johan Hovold
- <johan@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, David Rhodes
- <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>, Linus Walleij
- <linusw@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, Len
- Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
- Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, Herve Codina
- <herve.codina@bootlin.com>, Lizhi Hou <lizhi.hou@amd.com>
-Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v14 00/10] lan966x pci device: Add support for SFPs, PCI
- part
-Message-ID: <20261125092240.43499f8f@bootlin.com>
-In-Reply-To: <20261103155540.365294-1-herve.codina@bootlin.com>
-References: <20261103155540.365294-1-herve.codina@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qyShYa2N
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cde1479f76fso3186105a12.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 04:10:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795608632; x=1796213432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=teCiq3/IJSOFnCwrRz/KsIITrdIRIZwu2S42elp1laQ=;
+        b=qyShYa2NzKEmUjiLHvQZ5zAyVtUqHrOVOJO4l4btuLjfE5yTEIBYyYkhagXPqHx6o2
+         rKx9MS0L3ewKwCCW6p5wXYnVEepOHP492a3/WHPvE0ItJAy1jyT8wFPQ17/OCHy7jPqH
+         vwVcRNg2oyAKioIeo/KxHoREtE8twFhv+RpRXH5osOtaSZ4qYMdN0HrXByDynB16PMXz
+         F4EYvNODcMN3uz2a6MGlub92OjdyhcwOwopZhoUX9Y87stQJZUdVp2M6zfJSoiOIfPvw
+         xYxhFCLP24qe8WLRVOKO9o1lTSaVI86ClMOVW/YhlLj5yAe/qo/7cZ94P6OV+a4wt18w
+         5h3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795608632; x=1796213432;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=teCiq3/IJSOFnCwrRz/KsIITrdIRIZwu2S42elp1laQ=;
+        b=WWh/Yo4VVWBUIs3NjILW39CKbCYON8Xxfu6Y2cBhfIQiXLbdeirLww8Vfte+8/uw5i
+         rF3RI98UK2HcqHyI/bIKWRLPczuYf7ndBbkFQ4EnqCi+A8IIYXoZ7xMfOwRmUIjZ6yDV
+         DPOBMCMO1J6LJZe2HW8HMoTxabjQgurosXZ0TvJhu3tqOhgK0Cpim1KqfbcVA7Le5yqe
+         3BoEBqA9rEBzFgfs7EFcCJv46Y9d/xBIitNFMh8QotV3v2w/tp/ZAIrVD1D+12LTvVyN
+         N3rz2Ctjicz8lLgYkLdVYP06ypNelCP2hasaMtOqJzZWuCVp86PZVArmuM0bNcj1ZP7r
+         Nc/w==
+X-Forwarded-Encrypted: i=1; AL+hErGVcmKQ1BTHhcPuuYZDb2+SRWB5gaAfuKcjy/1GOPv5WSvM27X74tsIupCEoBAJw2IM1+nzYoq67S8=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9q1WPVPzaxPgGrDnN5h1taV+tOROm3vsz94ZFJC7mjFEAACj7C
+	1cN0NYurPVjBAds7sTN9rgxYuDTKZmLFWyrMhcSlPhMXtuKaI/oqko1eSOkF+g==
+X-Gm-Gg: AZFdTZe5gtVkpk/Dczt2He5Khh1drphZMUVb8R/SroU/oa/q3oFlDi9Atm8PD0dX9dk
+	TRMd3ugtXv1NVNxIqQxnwI0/l4DAqvRdzo9habQCIWmzhh6vl+MyCdH3/HsnuCW5GBliCCK7Wkw
+	mEk+tXii6qTy0QG6v/5YZrA190wa7xkOjixLWn1/i0QK+EWY15PZQIjz4gvKLmEjZabep29UJjV
+	P95RJ6ksKbvOeZFYByly6a5eeNvCQaNOlRNTyRYN4/wYl10xlD86i6IaXf1gRw+P4efP7s2liSz
+	+VGmC0hsH1iKvZWFHATEJxWd4A0RZUwwJQL9JFosOxa7h9C5TFEyICP2shOFxOeV6qvOZFPsZQz
+	MugwujUQpM38i1a7m6/ZMUZDzrztP+49wbLWELpX02COPyv6LPFiK31kyshE3cnsyVYqa/sMlQn
+	xU6SvRv4OQ6mFWnFrV48w5Yg8hMwCccYatzlcBp8/aczl92kAMclIFH3stVcRqEnnFyuR84toT4
+	CdVc4FgCKtanqEmSI1T8hCKmZB8vXc7XeKlSDQWMUuIvXCYvUlkAa7nCY9q3Eh8XPqq/arafaQi
+	aZPq7Rb20gZLkLzrG0VABqvGf/YL3vlQp3TPC7h7cHQ=
+X-Received: by 2002:a17:90b:1c81:b0:3b3:c179:45b2 with SMTP id 98e67ed59e1d1-3b41c9735bfmr16305811a91.64.1795608631864;
+        Wed, 25 Nov 2026 04:10:31 -0800 (PST)
+Received: from localhost.localdomain ([121.134.184.225])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b44b217a5bsm12707554a91.0.2026.11.25.04.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 04:10:31 -0800 (PST)
+From: Unsung Lee <unsung0317@gmail.com>
+To: unsung0317@gmail.com,
+	linux-cxl@vger.kernel.org
+Subject: [RFC PATCH 0/4] cxl/memdev: Activate firmware without a reset
+Date: Wed, 25 Nov 2026 21:10:21 +0900
+Message-Id: <20261125121025.3574705-1-unsung0317@gmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -96,208 +93,131 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Bjorn, Maintainers,
+This series lets userspace activate an uploaded slot online once the
+device no longer decodes any memory, the same condition sanitize uses.
+Uploads keep their current behaviour; activation is a separate,
+explicit step:
 
-Just a gentle ping on this series, as it has been three weeks since it was
-posted and hasn't received any feedback yet.
+  1. upload as today (slot N becomes pending for the next cold reset)
+  2. move the data away, offline the memory, destroy the region
+  3. echo N > /sys/bus/cxl/devices/memX/firmware_activate
+  4. recreate the region and online the memory
 
-Please let me know if any changes or clarifications are needed from my side,
-or if it looks good to be applied.
+Patch 1 lets Activate FW complete as a background command; without a
+poll budget the mailbox reports a timeout at once.
+Patch 2 keeps the pending slot and the activation capability from Get
+FW Info.
+Patch 3 adds the attribute.
+Patch 4 lets cxl_test advertise online activation.
 
-Best regards,
-Hervé
+Open questions:
+- Online activation is meant to let the device keep serving requests.
+  Patch 3 still requires the device not to decode memory, as sanitize
+  does, because the driver cannot tell how long a given device holds
+  CXL.mem requests while it switches firmware. The comment on the RAW
+  command block list says activation "requires adjustment /
+  coordination of transaction timeout values at the root bridge level";
+  with no memory decoded there is no transaction to time out, which is
+  how patch 3 avoids that coordination. Is that the right condition, or
+  too strict? It means moving the data away first.
+- Can Activate FW be a background command per the spec? QEMU's CEL
+  marks it so, and patch 1 waits for it like Transfer FW; no Fixes: tag
+  until that is confirmed.
+- John Groves raised at the CXL collab sync in June 2025 that firmware
+  activation can take longer than the 2 s mailbox timeout. A patch from
+  that discussion may overlap with patch 1.
+- Patch 1 assumes the device can still be polled for completion while
+  it activates in the background. A device may stop answering the
+  mailbox meanwhile; this needs checking on real devices.
+- State cached at probe (CEL, timestamp, event interrupt policy,
+  features, Identify, CDAT) may change with the new firmware. This
+  series does not refresh it.
+- Patch 3 holds cxl_rwsem.region only to check the decoders and set a
+  FW state bit; decoder commit then refuses this device with EBUSY,
+  like sanitize. An earlier version held the rwsem across the command
+  (up to 30 s). With an activation emulated in the kernel (QEMU
+  completes it at once), create-region and region sysfs reads on other
+  devices then waited as long as the activation (about 30 s for 30 s),
+  against tens of ms with the bit; after a timeout the earlier version
+  let a decoder of the still activating device commit. The cost is that
+  a create-region on the device racing the write fails instead of
+  waiting, and after a timeout the device refuses regions until a later
+  write finds the slot running or an activation succeeds. Is that the
+  preferred trade-off?
+- After a timeout patch 3 clears its mark only on a fact: the slot shows
+  as running, or a later activation succeeds. An error from a later
+  Activate FW is not taken as a sign that the device is done, since it
+  may come while the device is still busy with the earlier one. The cost
+  is that a device which ends up keeping its old firmware refuses
+  regions, firmware uploads and sanitize until cxl_pci is bound again
+  (uploads and sanitize are refused so that no state changing command
+  depends on the device answering Busy). The Background Command Status
+  register, which cxl_pci already uses to detect completion, would tell
+  when the earlier activation has finished; reading it from patch 3
+  needs a new mailbox callback. Would that be acceptable?
+- Hosts sharing the device are not visible to the decoder check, and an
+  activation through another CCI (e.g. MCTP from a BMC) is not reported
+  to the host.
+- The device lock held across the command keeps cxl_mem from being
+  unbound or probed meanwhile, but unbinding the port above the endpoint
+  (or the endpoint port) still tears the endpoint down. No decoder is
+  committed then, so none is reset, but the teardown clears HDM decoder
+  enable and Mem_Enable if the driver set them, i.e. it writes to the
+  device while it activates.
+- Should the pending slot stay set after an online activation? QEMU
+  keeps it, cxl_test clears it.
 
+Testing (QEMU 11.1.3, one type3 device, guest v7.3.1 unless noted; no
+real hardware, so an activation that really takes long, other hosts and
+other CCIs are not covered):
+- Functional and race tests (concurrent writes, upload, create-region,
+  cxl_mem and cxl_pci unbind, mailbox readers, kill -9, sanitize,
+  upload cancel) on release and lockdep/KASAN kernels, 20-50x: no
+  warnings; kprobes showed no activation while a decoder was committed
+  and no commit while activating.
+- A test-only build emulating slow and timed-out activations, release
+  and debug, 20x each: refusal during and after a timeout; a failed
+  activation after a timeout stays refused, with uploads and sanitize,
+  until cxl_pci is bound again; a cxl_mem unbind waits for the command;
+  a port unbind during the command. Once the port is bound again,
+  create-region fails on plain v7.3.1 as well, so that test checks no
+  region afterwards.
+- The whole flow (move the data away, offline, activate, online, move
+  it back): 100x without data; 20x with a process rewriting 2 GB on
+  the device's node (longest write stall 78 ms, in QEMU only); through
+  a maintenance script, deferring when there is no room (10x), rolling
+  back when room runs out (20x), and SIGINT/SIGTERM/SIGKILL at each step
+  (60x); and these mixed for 4 hours (1,462 iterations). No failures,
+  and the data was intact after every iteration.
+- cxl/next 32af781935: applies cleanly, no W=1 warnings; QEMU gets no
+  root decoder there (CFMWS with both HDM-H and HDM-DB, rejected since
+  e4c3f0d966), so only the tests without a region ran (all passing).
 
-On Tue,  3 Nov 2026 16:55:06 +0100
-Herve Codina <herve.codina@bootlin.com> wrote:
+I designed the change and directed the work. An LLM coding assistant
+(Claude Code) wrote parts of the code, the changelogs and the test
+harness at my direction, and was used to review the code and run the
+tests. I reviewed every line of the series and take responsibility for
+it.
 
-> Hi,
-> 
-> Previously, I sent a big picture series adding support for SFP ports
-> available on the LAN966x PCI device [0].
-> 
-> In this series patches touch several parts and sub-system in the kernel.
-> Reviews have be done and it makes sense to split the series and send
-> parts separately.
-> 
-> This current series is the extraction of patches related to issues in
-> the PCI subsystem. It has to be seen as a continuation of the big
-> picture series but related to this specific core part.
-> 
-> Patches 1 to 6 introduce and use fw_devlink_set_device() in already
-> existing code. No functional change but the introduction of the
-> fw_devlink_set_device() wrapper.
-> 
-> Patch 7 avoids a dangling pointer.
-> 
-> Patches 8 and 9 fix fw_devlink issues specific to PCI and the
-> device-tree nodes created during enumeration.
-> 
-> Patch 10 avoids the usage of np->data and adds guards to prevent
-> incorrect nodes removal.
-> 
-> [0] https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
-> 
-> Best regards,
-> Hervé
-> 
-> Changes:
-> 
-> v13 -> v14
->   v13: https://lore.kernel.org/all/20261012142826.159178-1-herve.codina@bootlin.com/
-> 
->   Rebase on top of v7.4-rc1
-> 
->   - Patches 1, 2, 6, 8, 9
->     Add 'Tested-by: Abdurrahman Hussain'
-> 
->   - Patch 10:
->     Add 'Acked-by: Bjorn Helgaas'
-> 
->   - Other patches:
->     No changes
-> 
-> v12 -> v13
->   v12: https://lore.kernel.org/all/20261001142815.277550-1-herve.codina@bootlin.com/
-> 
->   - Patches 1 to 9
->     No changes
-> 
->   - Patch 10
->     Split a test condition into two distinct checks as suggested by
->     Andy. No functional change but readability improvement. Split done
->     in both of_pci_remove_node() and of_pci_remove_host_bridge_node().
-> 
-> v11 -> v12
->   v11: https://lore.kernel.org/all/20260909080114.591938-1-herve.codina@bootlin.com/
-> 
->   - Patches 1 to 7
->     Add 'Reviewed-by: Bartosz Golaszewski'
-> 
->   - Patches 8 and 9
->     No changes
-> 
->   - Patch 10
->     Add a NULL check for the retrieved OF node in removal functions to
->     avoid any NULL pointer dereferences.
->     Robustify the guard setting cset to NULL after freeing it.
->     Those issues have been reported by Shashiko:
->     https://lore.kernel.org/all/20260909081755.444E91F00A3A@smtp.kernel.org/
-> 
-> v10 -> v11
->   v10: https://lore.kernel.org/all/20260717145147.823749-1-herve.codina@bootlin.com/
-> 
->   Rebase on top of v7.3-rc1
-> 
->   - Patches 1 to 5
->     Add 'Reviewed-by: Richard Cheng'
-> 
->   - Patches 6, 7 and 8
->     Add 'Reviewed-by: Richard Cheng'
->     Add 'Acked-by: Manivannan Sadhasivam'
-> 
->   - Patch 9
->     Add 'Reviewed-by: Richard Cheng'
-> 
->   - Patch 10
->     Rework removing np->data usage in the PCI devicetree node creation
->     and removal.
-> 
-> v9 -> v10
->   v9: https://lore.kernel.org/all/20260708100302.517792-1-herve.codina@bootlin.com/
-> 
->   - Patches 1 to 6
->     No changes
-> 
->   - Patch 7
->     Clear fwnode->dev also on error path.
-> 
->   - Patch 8
->     Clear fwnode->dev also on error path.
-> 
->   - Patch 9
->     No changes
-> 
->   - Patch 10 (New patch in v10)
->     Guard against node removal with incorrect np->data.
-> 
-> v8 -> v9
->   v8: https://lore.kernel.org/all/20260630102804.413563-1-herve.codina@bootlin.com/
-> 
->   - Patch 7 (new patch in v9)
->     Clear fwnode->dev during root bridge node removal (avoid a dangling
->     pointer).
-> 
->   - Patch 8 (patch 7 in v8)
->     Clear fwnode->dev during PCI device node removal.
-> 
-> v7 -> v8
->   v7: https://lore.kernel.org/all/20260511155930.34604-1-herve.codina@bootlin.com/
-> 
->   Rebase on top of v7.2-rc1
-> 
->   - patches 4 and 5
->     Add 'Reviewed-by: Andy Shevchenko'
-> 
->   - Other Patches
->     No other changes
-> 
-> v6 -> v7
-> 
->   Rebase on top of v7.1-rc1
-> 
->   - Patch 1
->      Add Cc stable. Needed for patches 11 and 12
-> 
->   - Patches 2 to 5
->     No changes
-> 
->   - Patch 6
->      Add Cc stable. Needed for patch 13
->      Add 'Acked-by: Bjorn Helgaas'
-> 
->   - Patch 7
->      Fix a typo in commit log
->      Add Fixes tag + Cc stable
->      Add 'Acked-by: Bjorn Helgaas'
-> 
->   - Patch 8
->      Add Fixes tag + Cc stable
->      Add 'Acked-by: Bjorn Helgaas'
-> Older iterations:
->   Patches 6 to 13 in the big picture series
->   https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
-> 
-> Herve Codina (10):
->   driver core: fw_devlink: Introduce fw_devlink_set_device()
->   drivers: core: Use fw_devlink_set_device()
->   pinctrl: cs42l43: Use fw_devlink_set_device()
->   cxl/test: Use device_set_node()
->   cxl/test: Use fw_devlink_set_device()
->   PCI: of: Use fw_devlink_set_device()
->   PCI: of: Clear fwnode->dev during root bridge node removal and error
->     path
->   PCI: of: Set fwnode device of newly created PCI device nodes
->   PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
->     node
->   PCI: of: Avoid np->data usage for the node changeset
-> 
->  drivers/base/core.c                      |  4 +-
->  drivers/pci/of.c                         | 52 ++++++++++++++++--------
->  drivers/pinctrl/cirrus/pinctrl-cs42l43.c |  2 +-
->  include/linux/fwnode.h                   |  6 +++
->  include/linux/pci.h                      | 11 +++++
->  tools/testing/cxl/test/cxl.c             |  4 +-
->  6 files changed, 58 insertions(+), 21 deletions(-)
-> 
+Unsung Lee (4):
+  cxl/memdev: Poll for completion of Activate FW
+  cxl/memdev: Keep pending slot and activation capabilities from Get FW
+    Info
+  cxl/memdev: Add firmware_activate to activate firmware without a reset
+  tools/testing/cxl: Add a knob to advertise online FW activation
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  45 +++++
+ drivers/cxl/core/hdm.c                  |   7 +
+ drivers/cxl/core/mbox.c                 |   5 +
+ drivers/cxl/core/memdev.c               | 209 +++++++++++++++++++++++-
+ drivers/cxl/cxlmem.h                    |   8 +
+ tools/testing/cxl/test/mem.c            |   8 +-
+ 6 files changed, 274 insertions(+), 8 deletions(-)
 
 
-
+base-commit: 32af7819352bae9c690ebe277a44eceb501d5c68
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
