@@ -1,84 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795660596;
-	b=QhyQfVB97FDvPhVRNud2LKxLS1zboSjpGHdLIT429epkz7THhPn90QHPPhlvhjVUsBRF
-	 CHRqZ8j2i4wdzA05mtQKVI1XSvHvnlW0hHH0CT4LxXI8lbfJy+gtyMcSggtuD47EkBlq8
-	 NtblO414fu46H1l5nG3/ypg0VQkKOmoYUwwWD3kgoLi/WrrApEmuQk/JPjgxKtj5M4TF3
-	 quDlisvi2WPQZTtpr3J9Ca9neYHFwO9EwvFBjCvZ8FvElo5BHnCQfGUib25/oXUK31iUX
-	 uIi6RpAykycpvwZX7pqqL4jLITj4enfUEDhsddychgWTFGyEVaJPyno7KLuUnOyLQPw==
+	t=1795660604;
+	b=G1dmGs6Bk6oQrYtEhCRHQp4lExYdPgcDcW7m3ygvf28l6kG+yL6UBufzN1xt5+uN1emY
+	 YtEHrTnjuTR0H/HIDHdjXl08giTOF0W2sJMK5DNsYE9EmsawHO7aw7R8x9V7SA9ee8aMU
+	 A83osusuwdCWdQyQqPIXbpmFFugZAdiaKSxihfmhZTwhur9KMWH8vR5W7h92bv/CzeR3s
+	 kmXFEWk/5xRseWqISLg3wdWduQoadXDGeVd2ZDjrLh2hEimZyrwGetmvG+CwbKTTDOdbx
+	 +Fhc1h9WaJ8NTfeMcDRtL5UESzKfz2Qq7D4t+NHWiZzJdTeKmm1lMcnHLcdwDgGhs6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795660596;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795660604;
 	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:In-Reply-To:References:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=z10TiqzuITDCTYtzs59wQFiEMTJflteO0aiswGXuo5M=;
-	b=W3ymdhXP56ak8sA/MavI4Fcps7K2Usbee4T0nVV3kkrrQ0YaLr80n6X+OlmhWTZ/hyq/
-	 MZaB0Dc6R3tlVN0qSCT4EuT557noGw2HXHhh4C6o9S1yvrgYX8sCYurYtS8AVLI2WiGRd
-	 DgDi34EMMC/8hKntf40tV6OgfkvNugsPSf0nEFADvX2kTJ0CZ+cxMqtkDPIZZLARrwPs6
-	 /tOY5obTSRK/NsIOBabhrOMSK5cuf0czJP5OkDgO91YLVilcwodfEduTuFmlmGndQkEMj
-	 BUr4UWZfnF0DMaqW6iQCz9zH2b3ZhAdeZQykBJYDUdHrYqeLvUdwjMkNY4rygoWoZHw==
+	bh=K/aHZfwOuM3vv3+Mu5WDfRhGgSzCzcwBQ2N9xkpTI/8=;
+	b=odcZNhfYybOCJlElNPXRfeW2SOveMJtom2UFhs36gJ92ybqsKnRrw9/TjquRQfkESaJs
+	 11ohUOQT3x2zYYnbealoNuRw8AuSSXVLDsZaCazZroFCEls2rCVyDzigDy3qvnihKr4yj
+	 bsvc7BnXf+zVKRrXhFI4kMRAzKi28jY2BHGPP9TaREtt/U1apQU37igJ9XGVgl1ehHsd/
+	 8fAlqT9jaH0gcjGKZH5flcXYzDwdD2t5n61uu6sEsIdgoCqo2K5rdBVmZPW1/uJ8LSeXm
+	 50GG+sWoVQB/wNG2ArPcqScwmxRz9klpT6JoxzmskRTv2UV7ZtC41QtIYxCXhgqvueA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=fail header.from=linux.com;
 	spf=pass smtp.mailfrom=korea.io;
-	arc=none smtp.remote-ip=74.125.82.173
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
+	arc=none smtp.remote-ip=74.125.82.178
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BFB606A32E
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Nov 2026 02:36:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18BFB606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6014606A321
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Nov 2026 02:36:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6014606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-386d1859e1cso1119491eec.0
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 18:36:35 -0800 (PST)
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-3863db981d4so9164802eec.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 18:36:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795660595; x=1796265395;
+        d=1e100.net; s=20260707; t=1795660603; x=1796265403;
         h=mime-version:content-transfer-encoding:content-type:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=z10TiqzuITDCTYtzs59wQFiEMTJflteO0aiswGXuo5M=;
-        b=xF3NQGHLkpMkqYEIfug66+7vmxahajrd0rlZFdgvA+O1M0oYKfly3jyp2uAH8lafOj
-         JpOUNfF9E//j7m1BIvm4f/VxtZLMqIzpRQmg2UF6Wv7Zs3YEsRnBS4VjkSyE4OJakWPo
-         9lPgSY1xuLlNtGrBcuSGZh1eZ6t9O0/P3yVxAM5uZbWA6436oC+BwJlEm+eqgR4Bfvci
-         e+T60/L0RlI4ll6/DlgpZ8lvMdKGzHs6bKKqbFUpLuV9Ai7Wzp+bFWXD4gHaDbl/+0W+
-         5mw0S5eu6v6U1t2MZXpKuiZQcMAWcKGwa39kwMWiT1yl/k3OHGD3WBX63U+NXgE72EuV
-         2VtQ==
-X-Forwarded-Encrypted: i=1; AL+hErFvOvS+g2l+/hOXrby46/aCIIcnOzEJvx/YrIaGRhQj8jdWGDafWxBiW/Ucv9uAnRCYbvU1LXw+Nec=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8HuVHSFF+LY/Vi59MEwisaGIeONZr2KnRNF+F2lJx/VQ4PCOdW
-	2Lj8jxciezDotDsEcrcqzbh9j5blmBt0bjeEAmaoe9sfCnloT/KjjdZDUt0FADU+jUL7
-X-Gm-Gg: AZFdTZdQtfnpHBlAyHPMgfNkaLUfzzpqYl8pxyACbp221H5iiNBDPIHJTiH8SLRoPZj
-	YNuI20BlkrEWGrQpF6BRUrgLtnF+TZK/O561CpP3HeAhPkkVoIT20qqPhxgEqHF2hw5TEeOrG0T
-	gslcoJMOZ3KE3hqVJH/ZNqBsYqFtLSqYpmDJpBIrE2TIzD4zzYoEYbvubIBNWs8aZzFYdNYnAV1
-	AgzLuPVHY8XO94ULsqVH+IXV9ZjSShMqspyq9LDHATTCnMb3MMToBtYC5eRK46k4sS2FFlcXBoE
-	58rL4iVPVU9kxJvyYPMbs7D8KJ0shb5GJ2b6loH89y6IcVMGl9HDSvylpWrBuyhKJTn09Hhl/Vh
-	e6wC/5qKQqgku9L+7Qk2+4bPFmEiDwgk2bwCqtNDLIL969kBDQVHOmTkeu3o/SKF+0Ps5fP6SfL
-	wXr6hRZ0hbZGBOvwVtCob3C+d9MqXtBcOdadg6mkxY2laxTQjicQjnX1ofEUfCQ3ShmqU92aeDq
-	DXtInS80qJa40N4GwiHbvKoxdj55JGmw1XtKezCFs9WXS7/OvyuhLDzJUtZ+XnnCjLAm9FcLAie
-	m0ufIzmD/DilTfwEExuauPDBIxVsEtsUJzx72TzDCzTU6/4hNQ==
-X-Received: by 2002:a05:693c:811c:b0:386:ddd5:14e2 with SMTP id 5a478bee46e88-386ddd52196mr840587eec.0.1795660594957;
-        Wed, 25 Nov 2026 18:36:34 -0800 (PST)
+        bh=K/aHZfwOuM3vv3+Mu5WDfRhGgSzCzcwBQ2N9xkpTI/8=;
+        b=CPdnu36uqtWnDhTsAFLjE2Kq51PPBCmAEnJfIXNFvaULFNe8ZUW0xQTG3SBet5ECSk
+         ra/9Y7KGTjWUa8t7/3WXH6RMlrrrqq2K+arCLm8Y+BKUkzlKRs/kC5W1jyf54JPs2L/Q
+         7YaorC5ug4RacQYerjzz1pZNlCfLsLOmo3ZC5SuAfLswlDctGrWpS4wLggRIqVVkr1bs
+         CYVke/+8sk+rM4g6wWFfJld06T2bUiMH53AcJWwDn1Ak7aI7AxPTCeZlRnsuMWs8iBG4
+         Kd1/dKB12XXLoYwBLokjO9i7RoJBAKGc40Phpaf2ofpUJS95ZN4IsXDrbl9Zk6QoK9pU
+         O0wA==
+X-Forwarded-Encrypted: i=1; AL+hErFGgAFT1PnVSV1WB9FXgu4QjLkX3DCHXK8S9//TuBFKM6/h9rR8hDidAMnLjmeXl5h1nXH2/LmAfCw=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9z+WC95YZVvEx7l+6dnwd2CcVjU0/BNa15XgMIQ+tG7nR2uAnY
+	tl6Sbeqna3ztz9rpwB1qQQbRfdSlyJgAeY/+XHb8zhYNJcHo9IUz6OvJpAYvZe1fFG8X
+X-Gm-Gg: AZFdTZfWUbmSNwsLpmRQa9PHm+/2r365+caWN151Kl6brDIKks/Rx0UP6KbX093TIhZ
+	xFEvTIrUZCBy5ETloWI+4xs8dzfOYWNyOEVX36Py5yv3XZJ/Sl42awn/dO26mZO7gWK6TQFh2W/
+	K2D4yWeSnQluUjUl+XMPZFnMqGavcSU8GmjQJnpO6EVxhgoLYvtAzZ8dtiIrZsoV4FfSMoQiNu6
+	CSlV2NbyVXVcBRKsNV0gk8qw5U1GCHo3/632d3V9tfZSo4SSr9R8mgJDGQzdmnjBaDfACUdy2NT
+	mrX3G31oy9sFVuQuPm0DTCOYL6MHfWEYszXMdl6G14rTiFBQT9VN0P7qJxB555l1x8+5ODjlJy2
+	7IB7V9iukQBkUqgdf1bmKC5FPLZJudNmWzRJhNfX+By4oUbEEoRW6csrMOrYmmPPZpe1TFiL7ZR
+	OBr+hQksfJUDKtRjxw3o46PskeWf3u9P3s7xmosUsr5tD3mtZlefWQ6jGelLOrXsIqvfSabIb1X
+	CJKo0CXoCe/dNWOO5jx3HKRnBLlYYiWEtX5gcfFkhrgmzP64WurFw2poxUNQ1hjfrDTe9zwok1l
+	Y51hzCXTj9lvf26BEh3SjBoewVouLsfwqCHPTFfHroMiox6diA==
+X-Received: by 2002:a05:7301:391c:b0:379:f7aa:1013 with SMTP id 5a478bee46e88-3856fd59fcemr20034878eec.15.1795660602731;
+        Wed, 25 Nov 2026 18:36:42 -0800 (PST)
 Received: from alanui-MacBookPro.local ([118.217.70.161])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b1965c02sm26703230eec.27.2026.11.25.18.36.30
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b1965c02sm26703230eec.27.2026.11.25.18.36.37
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Nov 2026 18:36:34 -0800 (PST)
+        Wed, 25 Nov 2026 18:36:41 -0800 (PST)
 From: Jongwon Lee <ai@linux.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Richard Cheng <icheng@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] cxl/edac: Read cached DRAM event records under the
- xarray lock
-Date: Thu, 26 Nov 2026 11:35:31 +0900
-Message-ID: <20261126023520.39368-r2-ai@linux.com>
-In-Reply-To: <20261117013521.5b4d034a@jic23-hlaptop>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] cxl/edac: Skip event records marked NOT_REPAIRABLE
+Date: Thu, 26 Nov 2026 11:35:32 +0900
+Message-ID: <20261126023520.39368-r3-ai@linux.com>
+In-Reply-To: <av0ENg0EwkGRVY1R@aschofie-mobl2.lan>
 References: <20261108022022.3352-1-ai@linux.com>
- <20261108022022.3352-2-ai@linux.com> <20261117013521.5b4d034a@jic23-hlaptop>
+ <20261108022022.3352-3-ai@linux.com> <av0ENg0EwkGRVY1R@aschofie-mobl2.lan>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -91,15 +89,21 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 
-On Tue, 17 Nov 2026 01:35:21 +0000, Jonathan Cameron wrote:
-> As I just sent to next patch. It would be nice to have a guard()
-> for these. Maybe it is worth including as part of this.
+On Tue, 17 Nov 2026 17:49:42 -0800, Alison Schofield wrote:
+> How about writing "so these records cannot satisfy the cached-event requirement
+> for an online repair"? Offline repairs skip these lookups, so the current wording
+> sounds broader than the check.
 
-Thanks for the review. I answered on 2/3: since this patch has Fixes
-tags and is likely to be backported, I'd rather add the guard in a
-follow-up than make the fix depend on an xarray.h change. v6 keeps the
-explicit xa_lock() and xa_unlock().
+Right, the lookups only run when the memory is online. v6 uses your
+wording:
+
+  Skip NOT_REPAIRABLE records in both lookups, so these records cannot
+  satisfy the cached-event requirement for an online repair. The trace
+  events already show dpa_flags='NOT_REPAIRABLE' for them, so user
+  space can tell before it asks for a repair.
 
 v6: https://lore.kernel.org/r/20261126023520.39368-1-ai@linux.com
+
+Thanks for the reviews.
 
 Jongwon
