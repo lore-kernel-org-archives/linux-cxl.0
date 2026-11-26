@@ -1,67 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795671285;
-	b=bdzT4CxQvL6n1bKU9ycX76CNTjPABsEK3wWeDd2yfchBx7u5r/VtC6Fo8lGgY/qcvRJL
-	 MzZZYUdz6+O0SgE2FdaaK+d35NCjbsjX0vlcLM99qZrGhMCb8O465sLzWOt3AGV1R+QcJ
-	 6CHEW/WofaGOojaVBnlWBmKhO1MJgBwVEDP44Jhmxx5LMJ9D3zoXufhj8h0da21SPXrDL
-	 tepTTbZZ9xD58WHmdNni9FqndUZ8kq48Odf4cqAzYHHXc5dmkSVDUYYb7mZrqyeyqJruq
-	 T162qHN/xXERdimUlsv+E8HT4Hpviwfiy54lBAeOGDqm9aqQ8LNID1MmJXNE66I64oQ==
+	t=1795684941;
+	b=yX/JbeJVP9FLBGWwCIbhOwRQUDF9XiI64XzZFrMn0DffDMlTfft11lRmkOYQ3M/OHhXV
+	 MvCRmwUNHgsxfy/KNOoOcrdAtTOyx5MRUdpMwWzAbIV9F/hISj+zNtK7U7EjCCbR4LR8o
+	 kFTQopEqf3D4CObu26lbv9/cAZMEDbKmtrTbQsZM0p4OS4RPxsPnLvuA5Zw92MEitN0u2
+	 58Ht1dW/xTnbJ1XXQ2rBG+boPN/u/6BDK3zO3fMO8SLAGInVrdY90/Uwln8dI1HgYRBtL
+	 xnKmgeL+xx1d38qXAaU2CLMBMWn8rSB0KbRAJkivoXuvht/39EhZvMdCeb8ePC3rbxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795671285;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-Spam-Status:X-Spam-Checker-Version;
-	bh=UJ+8MsoQlMt7ippaBHIRpOExH3OMdJs3rL46l0+BjYY=;
-	b=hDU1yjiK3R6BaEF2jEP+6D2Ccj3qtCtbWOxYCAFsIBZZjuDeWuSRUa4Al2uPbDzDvPLP
-	 Btwt4IvkPwn0jJM54cIHWwQ7ESDbxi5KInUDA9L+bZjJrns57J5Wpg2itwANCoUeOKngP
-	 CHtXuO62fpq8lcdiRdOy4YMUtCXIQ9oEoF61EuQtbVPPO/6hCEP8IgAjAknMheQRbYWjl
-	 HxuWpssU/dNxzxWZoTb4PhaLOTg/HpKraPTjEXJnxOSyU7EjdvyQ18qGriRrobxHc0zcQ
-	 BXcX/xnbal/R0nghqucL7m5mz62gzxsKVPG3alp8Ba0g3QzCjuNlbS/UI5avmit2KaQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795684941;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=f9NuElDwmx9JKzBH+xtXilAFMLSLkvMpGnhqiyMaCkE=;
+	b=Q+83W+9YgnVzpJ9M94Pn3MHTv4ejZktqn6dto4fjc8nnz0jBZwVgnG7lpP/OFMNzZnWC
+	 bXAbroG5Ifo7hwHVBH7aSp9ceAWSuvaCf+k07E91w/Y/W8dH4dEgr/BsyJ++yxG5R0Osu
+	 SiyvoevAVvy6uZ/s3z1qq6Ty/iVnz432P2xi920AUHbADYZLXxpGk71Gv7pRmjL62wQ8U
+	 qYMWAvm56F2yJcUetFclR8HSeLKiTbZKO9EbV5W6kgiQysJuq3iCm3OGsnVCxmENU/6at
+	 AJqgoddyTIc5WLkOl3L1kuHZNF31h09ZAR6Bq/uDc8B1VXHTjzxHoUYGOkdNa2F+6pg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.microsoft.com;
-	spf=pass smtp.mailfrom=linux.microsoft.com;
-	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=NsK73AF1;
-	arc=none smtp.remote-ip=13.77.154.182
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3921E606A31E;
-	Thu, 26 Nov 2026 05:34:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3921E606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UUwelAap;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1B8606A31E;
+	Thu, 26 Nov 2026 09:22:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=NsK73AF1
-Received: from CPC-namja-026ON.localdomain (unknown [4.213.232.22])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4B42420B7166;
-	Wed, 25 Nov 2026 21:34:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4B42420B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1795671279;
-	bh=UJ+8MsoQlMt7ippaBHIRpOExH3OMdJs3rL46l0+BjYY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NsK73AF1/58D1ommrNJwFydZ1fP6q4zi10VfDT6LGHko+x/GK/EjL+6Z83cVawBi9
-	 rWanWfrNs3ylGDS8BN/WX9mgTXEymSNGibKse2E6DyFzNoc7TFHzIDb3e9Qh3T0RtH
-	 sBNHopDrk+M2KR5asloqhpWjOGdMWOdbCkK9/weM=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UUwelAap
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 785BC1F000C0;
+	Thu, 26 Nov 2026 09:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795684940;
+	bh=f9NuElDwmx9JKzBH+xtXilAFMLSLkvMpGnhqiyMaCkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UUwelAap3lS3Bvdnj9h0Qtbpx8sIJc00DcdbYb4TcBr1Ymzp0wFoeXKcYyCZ/K7af
+	 QEapR5Bdj+9HKP+NimN/goz+/EdUA2WO3VMuz6OKgHycexEPT7ITVxLLWW5feSm4jc
+	 HLdrI3SLTELdvHViFvbaIgi1kWFj/YAaM4DOSH4HXfAbzDr96emSYfaZ+Wva7Memwp
+	 qtFCWL3yfmS8pR4qY0zqI69JLx+/kZTWfVpMpyhnspBiPR75EyrCQ8kOBAKmpuEEu3
+	 XdRSjEPIZT2sdn7YT86n2I0gEydYkTyjkb2B8pRU8SMl9RZJJgsFpFmILJc28cfGxx
+	 oJSxPglwibcPA==
+Date: Thu, 26 Nov 2026 10:22:14 +0100
+From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Mani Tofigh <mt4022@columbia.edu>, Oscar Salvador <osalvador@suse.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	stable@vger.kernel.org,
-	namjain@linux.microsoft.com
-Subject: [PATCH] iov_iter: Fix direct I/O across compatible device pgmaps
-Date: Thu, 26 Nov 2026 05:34:33 +0000
-Message-ID: <20261126053433.88531-1-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Gregory Price <gourry@gourry.net>, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tz2294@columbia.edu, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
+ still in the page cache
+Message-ID: <awf6RghUETgb41pr@localhost.localdomain>
+References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
+ <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
+ <2e11ba52-b5c6-463e-a5ea-c165ba935704@columbia.edu>
+ <89037847-8875-4d8b-a8f3-d77a59aaddea@kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -71,120 +66,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89037847-8875-4d8b-a8f3-d77a59aaddea@kernel.org>
 
-Commit 38446014648c ("block: don't merge different kinds of P2P transfers
-in a single bio") made bio_add_page() reject pages from different
-dev_pagemaps. This was needed for PCI P2PDMA, but also rejected pages
-with compatible DMA mapping requirements.
+On Mon, Nov 23, 2026 at 08:45:37PM +0100, David Hildenbrand (Arm) wrote:
+> We'll have to find a way to make that reliable. Everything else is just hacking
+> around it.
+> 
+> Why can we block concurrent offlining through get_online_mems/put_online_mems?
+> But I hate these functions.
+> 
+> Or alternatively (better?), have a memory notifier that block concurrent
+> memory_failure() by grabbing the mf_mutex when MEM_GOING_OFFLINE and releasing
+> it when MEM_CANCEL_OFFLINE/MEM_OFFLINE.
 
-Commit 41c665aae2b5 ("block: relax pgmap check in bio_add_page for
-compatible zone device pages") allows these pages in separate bvecs.
-Commit 13920e4b7b784 ("block: add pgmap check to biovec_phys_mergeable")
-prevents physically contiguous bvecs from different pgmaps from being
-merged into one segment.
+I think this is the way to go.
+memory-failure is a shaky operation and over the years we have seen how challenging
+was to interact with other parts of the kernel without crashing.
 
-But direct I/O now fills a bio using iov_iter_extract_bvecs(), which
-retained the original restriction and bypasses bio_add_page().
-For a non-atomic request handled by a single bio, only the data before
-the pgmap boundary is submitted. The rest is not transferred, and the
-request completes with fewer bytes than requested.
+IMHO, we can try to be clever and try to workaround those issues
+(memhotplug vs memfailure) or just make the two exclusive.
 
-Fix this by moving zone_device_pages_compatible() from blk.h to
-memremap.h and using it in iov_iter_extract_bvecs(). This allows
-compatible pages to be added as separate bvecs without relaxing the
-same-pgmap requirement for PCI P2PDMA.
+@Miaohe: Thoughts?
 
-Fixes: 38446014648c ("block: don't merge different kinds of P2P transfers in a single bio")
-Cc: stable@vger.kernel.org
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
- block/blk.h              | 19 -------------------
- include/linux/memremap.h | 19 +++++++++++++++++++
- lib/iov_iter.c           |  3 ++-
- 3 files changed, 21 insertions(+), 20 deletions(-)
-
-diff --git a/block/blk.h b/block/blk.h
-index 50abfd9328861..460c064f1d1b0 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -142,25 +142,6 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
- 	return true;
- }
- 
--/*
-- * Check if two pages from potentially different zone device pgmaps can
-- * coexist as separate bvec entries in the same bio.
-- *
-- * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
-- * state from the first segment and applies it to all subsequent segments, so
-- * P2PDMA pages from different pgmaps must not be mixed in the same bio.
-- *
-- * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
-- * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
-- */
--static inline bool zone_device_pages_compatible(const struct page *a,
--						const struct page *b)
--{
--	if (is_pci_p2pdma_page(a) || is_pci_p2pdma_page(b))
--		return zone_device_pages_have_same_pgmap(a, b);
--	return true;
--}
--
- static inline bool __bvec_gap_to_prev(const struct queue_limits *lim,
- 		struct bio_vec *bprv, unsigned int offset)
- {
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index c8a4979d4c780..a1d447a847990 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -202,6 +202,25 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
- 		folio_is_pci_p2pdma(page_folio(page));
- }
- 
-+/*
-+ * Check if two pages from potentially different zone device pgmaps can
-+ * coexist as separate bvec entries in the same bio.
-+ *
-+ * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
-+ * state from the first segment and applies it to all subsequent segments, so
-+ * P2PDMA pages from different pgmaps must not be mixed in the same bio.
-+ *
-+ * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
-+ * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
-+ */
-+static inline bool zone_device_pages_compatible(const struct page *a,
-+						const struct page *b)
-+{
-+	if (is_pci_p2pdma_page(a) || is_pci_p2pdma_page(b))
-+		return zone_device_pages_have_same_pgmap(a, b);
-+	return true;
-+}
-+
- static inline bool folio_is_device_coherent(const struct folio *folio)
- {
- 	return folio_is_zone_device(folio) &&
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 56c59a2b589d3..a0c76b40a4f90 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -4,6 +4,7 @@
- #include <linux/fault-inject-usercopy.h>
- #include <linux/uio.h>
- #include <linux/pagemap.h>
-+#include <linux/memremap.h>
- #include <linux/highmem.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-@@ -1968,7 +1969,7 @@ ssize_t iov_iter_extract_bvecs(struct iov_iter *iter, struct bio_vec *bv,
- 		unsigned int nr_to_add;
- 
- 		if (*nr_vecs > 0 &&
--		    !zone_device_pages_have_same_pgmap(bv[*nr_vecs - 1].bv_page,
-+		    !zone_device_pages_compatible(bv[*nr_vecs - 1].bv_page,
- 				pages[i]))
- 			break;
- 
 -- 
-2.43.0
-
+Oscar Salvador
+SUSE Labs
