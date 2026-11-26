@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795691606;
-	b=l5lrer5piwsKMzt/gM4Rb7ZivTDVliJvwfsRx7qtUkZIAztHOGcHZXvkQTWAumUH4W8l
-	 VpWgTW0t2gquV1rZqhIw3f09rsrnlhqFOUHj24Dk80UWcppMjOe54c9UPjoVMJBr66J2Y
-	 4swd+BFNwqiyeihLhZ7CKDw9ZZ7APDPZ1/oOWmkJeSPbOKYUwO5YjCxA1j7E/jwbx0jF8
-	 3l6heVjVk8o00R1hCSOHtzYxP8opat45xkt2/OeZ7R+jQ6sbSTpP3Ll66Xjf4kZXpCNd/
-	 bchJ4P6SfhbblwFzg/mopeYPNzUtRSvsQxFPfi5rEY/+O1Q9O+ftpj/l2tq02IfDy0Q==
+	t=1795698758;
+	b=Po49oFgX3ztoy/ROWEKsJ+vvSa8uWouy9FDVdCi0fDrnYW0JI1v2Sr9hmEjGfwGIwSQf
+	 KQdfHNIfbG44XBQkkltbsrWkcokpHgLSidRoH9O3DtoUHVBd3wABc3bQ0ciqyGlxhMvM7
+	 Bemiq+55EVgB+KtYEREdxcWdEvJKMHx4dc9CJTMdKAMEliSFiF2QNynhKoa8NFXDtiaQ+
+	 TCxW/vSoFRoTZ10AL+0FrVUyD4E6y0IHpY94iD6sTSLufDLqOY021wrU1zdRA5PP06CCk
+	 CbnIZwijJI+IiPh131dhNgiGXWkOwOl6q+B0yO0WDRudOrhlisxzVkmiz/na3+Xvj/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795691606;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795698758;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=QyEzruHSk3PWNRGlXxnoXSvBzuBF1VHW0e91SegwgI4=;
-	b=ZvBeWNJjYh4YE4laN/BPJ5zusjEd+gfBr4rzmVGnRek0j9nR0UY1SoEZTNLXBV18auba
-	 qTdGfo5pofaV6j/NPjgHtVBxXTQsSFAxvCwUeD6kcr304b0PsnBEaU21f6oaTCUKzMn0Y
-	 9eTY8lXlpW6taj1TOMJC/5vbTEQUwIZFs2vhdtKX1hnSdEVDSv7I+ITA2CIQnvpCloBGo
-	 5fS8PT2kolMI3tvW2QuLZ+nqNcJ+pLip9H9md6QWEvEhN6uWkzAmMV7Vw0vhAwfca4xOD
-	 8o/6l8nZydvmb23A/tDrmImr5gFVsYkE+PoT5CmCpBFRtgjBVMvSgO9YJv9WYrWWYlg==
+	bh=04Pw5/OY8msg1N4ni7fthpRWs4dsPaaWOmyW/Ryrtok=;
+	b=ZDaWUaKRXn8Pd2HrZgqURCpOFeILEt9fP88dCSMuwRqSRxlcwHm9RFHTFHoUT2crU+XX
+	 gXaGqDyt7wFPWaklSqaTc8M6WYaF48Y64jZ2kQ5INZENSHuBMD+cbMTy+sKEBneAlH1gD
+	 su0rnNGs59ynj1u8ZAy9SOi5YYW71OXqD368bY3B8fysSx9ZFm4Oo11vupUQ729OrW+bN
+	 dShtZIutvCj/0RNXBdodexN7ueELDBpHxDlTCgU/B0O/WdGzdmPPzLBhmFfB3cd9zRVkN
+	 Uh+snhxGu0ezLCR8SQRBt4+rQn7yKg0lnTZW2YZcj7Vu6b7PTDt7HdzzGMZNgy4YN8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KHqd8jGo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W0vPQuJM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CB2606A31C;
-	Thu, 26 Nov 2026 11:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E743606A31E;
+	Thu, 26 Nov 2026 13:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KHqd8jGo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750331F000C4;
-	Thu, 26 Nov 2026 11:13:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W0vPQuJM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731561F000C6;
+	Thu, 26 Nov 2026 13:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795691606;
-	bh=QyEzruHSk3PWNRGlXxnoXSvBzuBF1VHW0e91SegwgI4=;
+	s=k20260515; t=1795698758;
+	bh=04Pw5/OY8msg1N4ni7fthpRWs4dsPaaWOmyW/Ryrtok=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KHqd8jGoK63FBGz6hruXqVsJj0+OR5Kg92zKXvALh22HB3TDrcoyFshXfuUHkjShG
-	 X43MCgVG6Ql4ImY/4qE+dBYhOUtvDRdQ5Wev2E9cRKsZ6KE56T5+f0qr/tW6uiQKbW
-	 hVaGU1yCLlVKfSlzPravL9m5+aPBHHTQGkVJ8Ux9BezoV6AQkCI3nItKg0iJXcd7e9
-	 z3KKWdCcYd2b+f17PRrxM5csYQg9fJ8v5RHyyq6mxVrzii7ig9D4ko62yh1MVahScK
-	 B3lfEeMOIyw0XxB7xd7Ep+vMDo6FusSnITcevpn8wBF65Z76U2DPREUVw3v/TSJmiu
-	 HTpO4GMb6fWBQ==
-Message-ID: <d1d7e82c-a113-48e3-801e-61dcffc4c747@kernel.org>
-Date: Thu, 26 Nov 2026 12:13:19 +0100
+	b=W0vPQuJMT+/oHXZHnqDlw703OaMHbf9w2Yg2CfsBeQqcQFeJ3KRryyUQrVG6gjCBZ
+	 SfxCBZBXSDJPKATvOgElt98JC++9M1kiyuHDEN+ykHhCkgGbLPMqp4g7rpyQH3fY+i
+	 oP3lPp37BZRKQvNOQ/0K7i1FWpK+2jNcCQ6WhKwnQf/5gkNLgBt217e2SvbMQrActz
+	 PQ+fW5PxActHc15mqtmbnNRjFvRlWvvMtqNYdwRhYGa7Zuu2KKTgcm0i1uFb5gh/LY
+	 wbuVOJOHhT3AkJUvtGIkwpgGjPJlccc3sCHETam5mnkOkTlBSx/MPcPYeEnn/3cTnY
+	 reDX0Jl6KU4ug==
+Message-ID: <5cc60faa-002c-4c96-97e3-46d3002718c9@kernel.org>
+Date: Thu, 26 Nov 2026 14:12:29 +0100
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -52,15 +52,16 @@ List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: Fix the name of the memory hotplug online type
- configs
-To: TAKANO Mitsuhiro <takano32@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261125193039.2437025-1-takano32@gmail.com>
+Subject: Re: [PATCH] iov_iter: Fix direct I/O across compatible device pgmaps
+To: Naman Jain <namjain@linux.microsoft.com>, Christoph Hellwig <hch@lst.de>,
+ Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Oscar Salvador <osalvador@suse.de>, Logan Gunthorpe
+ <logang@deltatee.com>, Leon Romanovsky <leon@kernel.org>,
+ Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, stable@vger.kernel.org
+References: <20261126053433.88531-1-namjain@linux.microsoft.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -107,63 +108,97 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20261125193039.2437025-1-takano32@gmail.com>
+In-Reply-To: <20261126053433.88531-1-namjain@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/25/26 20:30, TAKANO Mitsuhiro wrote:
-> The default online type is a Kconfig choice, so the symbols it defines
-> are CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE, _ONLINE_AUTO,
-> _ONLINE_KERNEL and _ONLINE_MOVABLE.  There is no
-> CONFIG_MHP_DEFAULT_ONLINE_TYPE symbol, but five files name one:
+On 11/26/26 06:34, Naman Jain wrote:
+> Commit 38446014648c ("block: don't merge different kinds of P2P transfers
+> in a single bio") made bio_add_page() reject pages from different
+> dev_pagemaps. This was needed for PCI P2PDMA, but also rejected pages
+> with compatible DMA mapping requirements.
 > 
->   Documentation/admin-guide/kernel-parameters.txt
->   Documentation/admin-guide/mm/memory-hotplug.rst
->   Documentation/driver-api/cxl/linux/early-boot.rst
->   Documentation/driver-api/cxl/linux/memory-hotplug.rst
->   Documentation/driver-api/cxl/linux/overview.rst
+> Commit 41c665aae2b5 ("block: relax pgmap check in bio_add_page for
+> compatible zone device pages") allows these pages in separate bvecs.
+> Commit 13920e4b7b784 ("block: add pgmap check to biovec_phys_mergeable")
+> prevents physically contiguous bvecs from different pgmaps from being
+> merged into one segment.
 > 
-> Spell the family with a trailing _* so that a reader looking the symbol
-> up in a .config finds one that exists.
+> But direct I/O now fills a bio using iov_iter_extract_bvecs(), which
+> retained the original restriction and bypasses bio_add_page().
+> For a non-atomic request handled by a single bio, only the data before
+> the pgmap boundary is submitted. The rest is not transferred, and the
+> request completes with fewer bytes than requested.
 > 
-> early-boot.rst also gives the zone choices as _NORMAL and _MOVABLE.
-> The symbols are _ONLINE_KERNEL and _ONLINE_MOVABLE, so write those.
+> Fix this by moving zone_device_pages_compatible() from blk.h to
+> memremap.h and using it in iov_iter_extract_bvecs(). This allows
+> compatible pages to be added as separate bvecs without relaxing the
+> same-pgmap requirement for PCI P2PDMA.
 > 
-> Verification: a build of the tree defines
-> CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE and no bare
-> CONFIG_MHP_DEFAULT_ONLINE_TYPE in include/generated/autoconf.h, and
-> grep finds no reference to the bare symbol under Documentation/ after
-> the change.
-> 
-> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+> Fixes: 38446014648c ("block: don't merge different kinds of P2P transfers in a single bio")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
-
-[...]
-
->  		       See the ``state`` property of memory blocks for details.
-> diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-> index 414481f33819..be9d5e510f99 100644
-> --- a/Documentation/driver-api/cxl/linux/early-boot.rst
-> +++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-> @@ -34,7 +34,7 @@ which dictate how memory will be managed by Linux during early boot.
->    * Linux Build config option that dictates whether the kernel supports
->      Specific Purpose memory.
+>  block/blk.h              | 19 -------------------
+>  include/linux/memremap.h | 19 +++++++++++++++++++
+>  lib/iov_iter.c           |  3 ++-
+>  3 files changed, 21 insertions(+), 20 deletions(-)
+> 
+> diff --git a/block/blk.h b/block/blk.h
+> index 50abfd9328861..460c064f1d1b0 100644
+> --- a/block/blk.h
+> +++ b/block/blk.h
+> @@ -142,25 +142,6 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
+>  	return true;
+>  }
 >  
-> -* CONFIG_MHP_DEFAULT_ONLINE_TYPE
-> +* CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
+> -/*
+> - * Check if two pages from potentially different zone device pgmaps can
+> - * coexist as separate bvec entries in the same bio.
+> - *
+> - * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
+> - * state from the first segment and applies it to all subsequent segments, so
+> - * P2PDMA pages from different pgmaps must not be mixed in the same bio.
+> - *
+> - * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
+> - * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
+> - */
+> -static inline bool zone_device_pages_compatible(const struct page *a,
+> -						const struct page *b)
+> -{
+> -	if (is_pci_p2pdma_page(a) || is_pci_p2pdma_page(b))
+> -		return zone_device_pages_have_same_pgmap(a, b);
+> -	return true;
+> -}
+> -
+>  static inline bool __bvec_gap_to_prev(const struct queue_limits *lim,
+>  		struct bio_vec *bprv, unsigned int offset)
+>  {
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index c8a4979d4c780..a1d447a847990 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -202,6 +202,25 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
+>  		folio_is_pci_p2pdma(page_folio(page));
+>  }
 >  
->    * Linux Build config that dictates whether and how Specific Purpose memory
->      converted to a dax device should be managed (left as DAX or onlined as
-> @@ -61,7 +61,7 @@ SystemRAM.  This will expose the memory to the kernel page allocator in
->  If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
->  dictates whether the memory is onlined by default (:code:`_OFFLINE` or
->  :code:`_ONLINE_*`), and if online which zone to online this memory to by default
-> -(:code:`_NORMAL` or :code:`_MOVABLE`).
-> +(:code:`_ONLINE_KERNEL` or :code:`_ONLINE_MOVABLE`).
-But combining "CONFIG_MHP_DEFAULT_ONLINE_TYPE_*" with "_ONLINE_KERNEL" doesn't
-make any sense. What am I missing?
+> +/*
+> + * Check if two pages from potentially different zone device pgmaps can
+> + * coexist as separate bvec entries in the same bio.
+> + *
+> + * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
+> + * state from the first segment and applies it to all subsequent segments, so
+> + * P2PDMA pages from different pgmaps must not be mixed in the same bio.
+> + *
+> + * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
+> + * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
+> + */
+>
 
-Maybe we should just spell out the full config names then?
+Can you convert this to proper kernel doc while at it?
+
+Also this should all be working on folios instead of pages. But that will need a
+zone_device_folios_have_same_pgmap() so we can defer it, not suitable for this fix.
 
 -- 
 Cheers,
