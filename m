@@ -1,98 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795635048;
-	b=cwU47gEGQCh9IFEm9s11BcYHBHH/IS8IkL9bgygsbkfQivzK1eYbIq0TlOy7++Wx8QIE
-	 j87Qp34eEOhb++KW8R/MR+OpUJNxTfgdmYig+ffDAZRGypGbf7vfRMxa9VjQrKInlDUcT
-	 0QbjpDc03XEVR2TpkD1TEjj8HZCio21pSv3ATl8W3IxN87FUUaxisNjT33vAjwSYb8j2H
-	 P+NqT+s3ig1e4bOwC/MVVPFnbm21E11u5QvxmBSbK/+1edxHndyRMZADs2/R4v07+25Rk
-	 gatKX1cfpapinEk57Ohk01XRiahE0V0U3UM9VHECvZM0AKg7XezsyCHHa3FzkZpBdeA==
+	t=1795660533;
+	b=ktgjSTXpxJukCD2fBBdO2A7c4yEmS5spt24ZtcRBn8sI6mj5bAMfHAOgBSH4HahRaUiC
+	 CoaFL55PKMewz8h8MEzyXwH8Gh2cTEL+sGcWpmN8YwyBHEb+XcU1Tfjl2CJ6AGP8kfEuu
+	 pJ16+hdGLzLOdDsbqUBgv8mCKcFrZgMvJ8v3Ree/QfKXASqMBZ9/yD2cqI9Pu9U7oG0t3
+	 zmtRLkCyPkQKHztK9SRT6phw/nXs7jxOFcS2P1OgbYpM478IvjelslfmjJvSHsxz3+Ogg
+	 9Q5gjI4jhQPqqq3lRXWkrbC+1jBEgPL82VywdoxZzMOAi+B39PQZFvp5YsSdtbG9rnA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795635048;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=4c1FYCoWuV0D5AZnd9JhUkc3urYu3tiqyGnrAo0dVsQ=;
-	b=YL7jiJIrn3Pv14vFIDH1eHMeZCmnG2llcOLigqPZj4m3YzhoMz0rMoH9pqOaRTGwb2fp
-	 6NCG8ypqkIpHPRDxAdUBNd2bbBDgQ3t47wETUCJ0W5cqhhX4FHHY2PHtP45RFlvgq1Ruy
-	 34gFygT3yVFfDVeIptnf8+A4FpEJAURq3W8CHbuFLrctk2Tb4jh5pOVAxgPauqHNy2ion
-	 LhD41t/NycD1TOYokckg+trJUSdjhMCTbwgDBQnmsYSoiYtl1aGmKvnTNevCeyHQ1EJYm
-	 qHWJVir1tVz43zli0h46DdlOElJSQRjSqI6w12ieOOC4+G9DS9XSD/Xdul+OJWKWqJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795660533;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	bh=TLKltpFTvCBeWSNaBoTW1xp096x+k2FfaL+MU1v8opA=;
+	b=KS18dC0vXcZu26FT6Xe1PDIRr1nCAV+L2a7AV2ZP9Cbs/L19KJL74RYiKRuuoUOBYxYh
+	 m9hZPucuxf+4b61/Ggv0b4DZGRL6rypvZ+UrtjnOghPv2ith9KlMC6NDqdgqSuGDzVaNC
+	 LXPgwt9cPQVRUQx0fKMJ9q/B4+UbXmb77+rm/7yZ0WTWDzaoGqU6ktzPpDYUs8LFkV58F
+	 E2R0SF5EKTDqQdIU+lXmzVkk2FvLutpLIOm1F2J9zLHif67oXTrmBrmlgpbJI/JxiQ44c
+	 Wf0Q7AQS8R481xDtlE8k0M5zwef3plAOSTPB2cm3BSWytL+kMpXYP5bCfd6VlUb5tkw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tdCXUk2b;
-	arc=none smtp.remote-ip=209.85.214.171
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	dmarc=fail header.from=linux.com;
+	spf=pass smtp.mailfrom=korea.io;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46947606A323
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 19:30:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46947606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tdCXUk2b
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2f04fab527eso47653535ad.0
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 11:30:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795635047; x=1796239847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4c1FYCoWuV0D5AZnd9JhUkc3urYu3tiqyGnrAo0dVsQ=;
-        b=tdCXUk2bln2JaFny46JeCc5ZMNDw/3+qR+WmADxAJaxlBXAqX0v7O+dGqHDQ7i9OSO
-         HbGkyILfSoi2nqfk8zUQWh5tDLUrxLt3p6sOytd4oLf7WVgE71Wp5Lihy5FPwPFaBdLh
-         AlZc4yBCwG/sE+NOF4koYCSIT//r7D3Kb041g2LQMvdiJa97tXnZREWzUbqsDTNvvk09
-         t3r5BXnhfp4OWgjpsu7ninDi+MrCPp05mwXwwCH3+hMI10yLSwnsYAf2X+Vz71K2i1ps
-         +D5udO8qxBudO1hPoqXH+t9LpgyRwdoRTAkmaN3dxj/FOvhXutPMEGExsJqi+wVE5f6D
-         R3sQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B25C606A321
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Nov 2026 02:35:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9B25C606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korea.io
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-386d1859e1cso1118883eec.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2026 18:35:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795635047; x=1796239847;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=4c1FYCoWuV0D5AZnd9JhUkc3urYu3tiqyGnrAo0dVsQ=;
-        b=gLMSdU6hI5BJPi3OhlZrEcFcV8ImhXkRTpoI/zg7sFnrydBg2DUu4GlHPq5x4Uinm9
-         2hnhO4DbaWHQ36nKMAtZ8gZnm4PZxMd3FGUSNbj2AnOdWf+0lucorI9mYUSFlC5fUDBd
-         tD5N/yP9TvouQxmCSDQYRhAuAVg9XZcSdQJsBfC3LV4SBF7Ksq7tOj/jsMYb3ZSpUn0T
-         TQcuiPOUYTV1nZyBWI6/eC4m983gD2uReVduN/L+TIIsHuRl/FCacQG/mA1GjJlOochk
-         aUlcOw5bonZ4re+1qNpe11sprxhh9CvFz3ioxTalyR1hzK0yaD5ynrUelfKptDzXGKYx
-         afNA==
-X-Forwarded-Encrypted: i=1; AL+hErE5rH7Qzkk10NOfg+1urDs+2bksS4qtoZrXDityzUzRY8rgyh/dycMDSEuraSBR32Wk5KeELhr6lCk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/XSkkj1H6u5bM4Ow1OlE2aL+bmc/Ox21pZcmNv96SdpQqG/U68
-	DGtVQKcbWPEjnV0Wry0k6abTG72h5/vOR/6nq28omw0ig/+3YVw/K05s
-X-Gm-Gg: AZFdTZfPbmmkA1DVuuxkC4w+tLW5OOfDokIs+lqQRnUkPXfIw/9fp+//BvMt29wfkWc
-	8c0jxV7F1aD6crp12dvKW1tnHuYrWXN5hrkqrBILWZ3AqnsRLamJdVae+fZiUHlg/jHbjai2Qmw
-	dnR1XiqKhuVeYLAk8ShZjaXTmtiFdXcphIJ5RgSYLS10vzujXTQeGcR7h2FywQh548y/C8ZR60G
-	lG10M8qD96FT369Tb/a9qfJBUxLhkwk2kk0FzEd5+ExXrckMzMjGiaNSpG/lFW53+AHvViwqOWM
-	GB18cahKUzSC6YrKJYYMlPQxBpo7GgrzKJbHgyIURY05mqWRIHfgkuyeyeQg7HpFkEj4JSY7MM4
-	veC8/ueo5SG7pToTdL4RojbUhrQOcOrQOSGy3IklQi7CYf+yz6OvnJ4z1gAXbkpOZ4bTI6Np7MM
-	1QDRytPDGOEOegjG4iiGATXInQfhGWPl3B69QTrhOTqd1SC2dSyrStFggsV0vROVeKyHbRE+qk9
-	0QJc4ZuvPmJOuFu05Z/LmwDayQZDUZhp5zJhiBpkPTmKsUDTnwP6E8kaNzj2LTqbdvQttKAME4i
-	EHD++pWhp8lyCyxLd+Gb
-X-Received: by 2002:a17:903:19cb:b0:2e9:3dd0:c8d with SMTP id d9443c01a7336-2f03f1cf44emr208593395ad.14.1795635047369;
-        Wed, 25 Nov 2026 11:30:47 -0800 (PST)
-Received: from a1-free ([2603:c021:8021:f000:0:1865:8c38:18fc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03ee84425sm93698535ad.6.2026.11.25.11.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 11:30:46 -0800 (PST)
-From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Dan Williams <djbw@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: [PATCH] docs: Fix the name of the memory hotplug online type configs
-Date: Wed, 25 Nov 2026 19:30:39 +0000
-Message-ID: <20261125193039.2437025-1-takano32@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        d=1e100.net; s=20260707; t=1795660532; x=1796265332;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TLKltpFTvCBeWSNaBoTW1xp096x+k2FfaL+MU1v8opA=;
+        b=Fs58BArB+igst+i4njrq498E05QxxyKPnoNFhUSBga1YRhlIJ7No+sl1I7UtY9e1te
+         XbY3Sdn0BgaJXdHeW2j0aglexWI8v4iAeufh1jbqS0tUqB/BUKQCAHGOS7piB4NjOlFk
+         w66FrhrDeNkG4oYfOuzCfshmaZ81T7JFw5zzRV45BpXvRQdQqhgdM94oHVAZFH8uPCFh
+         WlyxsVAP9nCt71szDFb9+7YbPirmivud2WsGBArBLGnAmirBQ1OAUBHQGQgG3oZgmf/J
+         Nr0y76mrq4AFU4fnGB5NVPOwnXo6YCKPmVNNswwmt3r75ayX3L70MSkMD4+ZEkNADyMu
+         5X+w==
+X-Forwarded-Encrypted: i=1; AL+hErEHEni623Xm6mciSIscBlZtGN5gAo/2P3QZNAalGBI+XBz6756+AArmnllvWoliUD5p/CU35qNiP9E=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/ajX6Rkc2FgVXBWUnnU0kZRrVfhQCDZxfPoGg0j5vASxBm449R
+	CFjrLrvsYmQaBiUIm2QcYSNYxj7kA0QHfUops67PixiNGpVmc23u+ulHnWCaddDpzTLl
+X-Gm-Gg: AZFdTZeADz8O2228bOEO+j9JRkgyIXe/P12nvR/LfRkcya/NsIi27W2uum5F0LVvzIN
+	wIuLji7pGFI2qZcx6XSHSJSe2GnNwdC5rWKAFd1D4g2cpGbeNIDV2nnxvakSn/aVZUeClwLBeVW
+	mc0ubj1rENqFswO8NSoqoEQ843R/djZZoginnaqc/H99MJ+dbwfK3kEjQXn2rKFJlWr5Ud4oUSW
+	09+E4iJR4vN1VTAeTYtPmqMxW4bA734DGx6LOX6p2u9ciTa06Y3rz66bOAPxY5OgmvcO3WU6C0g
+	/ONRHsR1rKyast9kpkJuGTL0JGTMn0TDTz8SWkSJdV5EWF+jyA7foR0gg6zQk5OxDa7jHKp8wU3
+	C+cidNa7eVT5PtvPhH4rJx4tkHaO3wYNKVKyll5yltHQLyzq8d37oDx3cM0nQflQODLAZTGxb6E
+	EaGBTLY6/PPCVTDcBn+Eh7+hRwsm9SZdZbEjnDbVUDmLj6q6nx8UehNSm52XhSt0YvAyTEQ2b1s
+	7p6LB9MGvq4xakFCnmMVNN79jfyFd26xVGQUaFJUbvNci38RwRm53inpyUqKbKDTMckjGIGdM7Y
+	M55yg29S+4a7HfbSRVOJZ/5tsSeiUWvFHuL8js4GQNfzzi1M4g==
+X-Received: by 2002:a05:693c:884d:b0:386:d9ab:5cf4 with SMTP id 5a478bee46e88-386d9ab6c21mr1512813eec.3.1795660531373;
+        Wed, 25 Nov 2026 18:35:31 -0800 (PST)
+Received: from alanui-MacBookPro.local ([118.217.70.161])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b1965c02sm26703230eec.27.2026.11.25.18.35.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 25 Nov 2026 18:35:30 -0800 (PST)
+From: Jongwon Lee <ai@linux.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Richard Cheng <icheng@nvidia.com>,
+ Ben Cheatham <benjamin.cheatham@amd.com>,
+ Michal Schmidt <mschmidt@redhat.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/3] cxl/edac: Fix event record lookups for memory repair
+Date: Thu, 26 Nov 2026 11:35:20 +0900
+Message-ID: <20261126023520.39368-1-ai@linux.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -102,116 +86,109 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The default online type is a Kconfig choice, so the symbols it defines
-are CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE, _ONLINE_AUTO,
-_ONLINE_KERNEL and _ONLINE_MOVABLE.  There is no
-CONFIG_MHP_DEFAULT_ONLINE_TYPE symbol, but five files name one:
+This series fixes the cached event record lookups in the CXL memory
+repair path.
 
-  Documentation/admin-guide/kernel-parameters.txt
-  Documentation/admin-guide/mm/memory-hotplug.rst
-  Documentation/driver-api/cxl/linux/early-boot.rst
-  Documentation/driver-api/cxl/linux/memory-hotplug.rst
-  Documentation/driver-api/cxl/linux/overview.rst
+Patch 1 fixes a use-after-free that Sashiko reported on v2 [1]. The
+repair path reads cached DRAM records without a lock, and the event
+path can free them at the same time. The DRAM lookup now runs under
+the xarray lock, and the sparing path works on a copy of the record.
 
-Spell the family with a trailing _* so that a reader looking the symbol
-up in a .config finds one that exists.
+Patch 2 makes both lookups skip records that the device marked
+NOT_REPAIRABLE.
 
-early-boot.rst also gives the zone choices as _NORMAL and _MOVABLE.
-The symbols are _ONLINE_KERNEL and _ONLINE_MOVABLE, so write those.
+Patch 3 masks the DPA flag bits in the cache key, and depends on
+patch 2. With the masked key alone, the trace event DPA would also
+match NOT_REPAIRABLE records and let them be repaired.
 
-Verification: a build of the tree defines
-CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE and no bare
-CONFIG_MHP_DEFAULT_ONLINE_TYPE in include/generated/autoconf.h, and
-grep finds no reference to the bare symbol under Documentation/ after
-the change.
+I used xa_lock() for the race. kfree_rcu() would need a wrapper with
+an rcu_head around the record structs from the spec. Taking
+device_lock() in the repair path could deadlock with unbind, which
+removes the EDAC sysfs files while holding device_lock().
 
-Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt       | 2 +-
- Documentation/admin-guide/mm/memory-hotplug.rst       | 2 +-
- Documentation/driver-api/cxl/linux/early-boot.rst     | 4 ++--
- Documentation/driver-api/cxl/linux/memory-hotplug.rst | 2 +-
- Documentation/driver-api/cxl/linux/overview.rst       | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+Changes in v6:
+- Rebase on cxl/next (32af7819352b), no conflicts
+- Patch 2: rename cxl_find_rec_gen_media() to
+  cxl_check_for_rec_gen_media() and split the two tests (Jonathan)
+- Patch 2: changelog wording for the online repair case (Alison)
+- Patch 2: drop the Fixes: tag (Jonathan). Patch 3 keeps its Fixes:
+  tag, so a backport of patch 3 needs patch 2.
+- Add the Reviewed-by tags from v5
+- Cc Michal Schmidt for guard(xa_lock), as Jonathan suggested, and
+  Ben Cheatham as a CXL reviewer
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 176648941aec..8580099b98c1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3948,7 +3948,7 @@ Kernel parameters
- 			[KNL] Set the initial state for the memory hotplug
- 			onlining policy. If not specified, the default value is
- 			set according to the
--			CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel config
-+			CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel config
- 			options.
- 			See Documentation/admin-guide/mm/memory-hotplug.rst.
- 
-diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-index 0207f8725142..c7de458a962f 100644
---- a/Documentation/admin-guide/mm/memory-hotplug.rst
-+++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-@@ -280,7 +280,7 @@ The following files are currently defined:
- 		       blocks; configure auto-onlining.
- 
- 		       The default value depends on the
--		       CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel configuration
-+		       CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel configuration
- 		       options.
- 
- 		       See the ``state`` property of memory blocks for details.
-diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-index 414481f33819..be9d5e510f99 100644
---- a/Documentation/driver-api/cxl/linux/early-boot.rst
-+++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-@@ -34,7 +34,7 @@ which dictate how memory will be managed by Linux during early boot.
-   * Linux Build config option that dictates whether the kernel supports
-     Specific Purpose memory.
- 
--* CONFIG_MHP_DEFAULT_ONLINE_TYPE
-+* CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
- 
-   * Linux Build config that dictates whether and how Specific Purpose memory
-     converted to a dax device should be managed (left as DAX or onlined as
-@@ -61,7 +61,7 @@ SystemRAM.  This will expose the memory to the kernel page allocator in
- If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
- dictates whether the memory is onlined by default (:code:`_OFFLINE` or
- :code:`_ONLINE_*`), and if online which zone to online this memory to by default
--(:code:`_NORMAL` or :code:`_MOVABLE`).
-+(:code:`_ONLINE_KERNEL` or :code:`_ONLINE_MOVABLE`).
- 
- If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
- kernel allocations (such as :code:`struct page` or page tables).  This may
-diff --git a/Documentation/driver-api/cxl/linux/memory-hotplug.rst b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-index af368c2bc9cf..df27520b193f 100644
---- a/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-+++ b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-@@ -19,7 +19,7 @@ Default Online Behavior
- The default-online behavior of hotplug memory is dictated by the following,
- in order of precedence:
- 
--- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE` Build Configuration
-+- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*` Build Configuration
- - :code:`memhp_default_state` Boot parameter
- - :code:`/sys/devices/system/memory/auto_online_blocks` value
- 
-diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
-index 648beb2c8c83..d567353e1dab 100644
---- a/Documentation/driver-api/cxl/linux/overview.rst
-+++ b/Documentation/driver-api/cxl/linux/overview.rst
-@@ -17,7 +17,7 @@ are generated.
- 
-     i) EFI_MEMORY_SP
-     ii) CONFIG_EFI_SOFT_RESERVE
--    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
-+    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
-     iv) nosoftreserve
- 
-   b) Memory Map Creation
+There is no guard(xa_lock) in the tree, and the 2024 patch for it [2]
+was not merged. v6 keeps xa_lock()/xa_unlock(), and I can convert
+these sites in a follow-up once a guard exists.
 
-base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+Changes in v5:
+- New patch 2: NOT_REPAIRABLE check split out of v4 patch 2 and moved
+  before the masking patch (Li Ming)
+- Patch 3: rename cxl_rec_key() to cxl_rec_dpa() (Li Ming)
+- Patch 1: drop the found variable in cxl_find_rec_dram() (Li Ming)
+- Richard's Reviewed-by on v4 2/2 not carried over, as it was split
+- Rebase on cxl/next (e44dc3a303)
+
+Changes in v4:
+- Patch 1: copy the whole struct cxl_event_dram out instead of only
+  validity_flags (Richard Cheng)
+- Patch 2: make cxl_rec_key() and cxl_rec_not_repairable() static
+  inline (Richard Cheng)
+- Cover letter: describe patch 1 first (Richard Cheng)
+
+Changes in v3:
+- New patch 1 for the record lifetime race (Sashiko)
+- Patch 2: General Media lookup under the xarray lock, returns bool
+
+Changes in v2:
+- Moved the Claude Code note below the --- (Dave Jiang)
+
+v5: https://lore.kernel.org/r/20261108022022.3352-1-ai@linux.com
+v4: https://lore.kernel.org/r/20261102123233.74598-1-ai@linux.com
+v3: https://lore.kernel.org/r/20261101013418.87326-1-ai@linux.com
+v2: https://lore.kernel.org/r/20261031161121.15948-1-ai@linux.com
+v1: https://lore.kernel.org/r/20261030072721.31970-1-ai@linux.com
+
+Tested in QEMU (master b574eaf) with a CXL type 3 device and a
+committed region, on cxl/next 32af7819352b, with KASAN, lockdep,
+kmemleak and preempt=full. Not tested on real CXL hardware.
+
+- Repair requests for eight DPAs on all five mem_repair devices. With
+  the series, 0x1000 and 0x2000 succeed, 0x5000 succeeds for PPR only,
+  and NOT_REPAIRABLE (0x3000, 0x6000), missing (0x7000) and unmasked
+  (0x1001, 0x3002) DPAs get -EINVAL. Unpatched, 0x1000 and PPR at
+  0x5000 fail, and 0x1001 and 0x3002 are accepted.
+- Race test: event injection from the host, four guest repair loops,
+  and a test-only mdelay(20) after the lookups. Unpatched, KASAN
+  reports a slab-use-after-free in cxl_find_rec_dram() within seconds.
+  With the series: 600 s, 10,950 repairs, 274,946 events, no report.
+  Without the delay, on the previous base (2101c39473a0) with the same
+  code: 1,800 s, 98,220 repairs, 1,155,590 events, no report.
+- Unbind test: cxl_mem unbound and rebound in a loop during repairs
+  and event injection. 600 s, 78 cycles, 7,260 repairs, no report.
+- kmemleak finds nothing after each run.
+- edac.o builds with W=1 after each patch, sparse, clang W=1 (x86_64,
+  arm64) and CONFIG_CXL_EDAC_MEM_REPAIR=n with no new warnings. The
+  series also applies to cxl/fixes and v7.4-rc4.
+
+This series was developed with Claude Code.
+
+Thanks to Richard, Li Ming, Jonathan and Alison for the reviews.
+
+[1] https://lore.kernel.org/r/sashiko-outbox-192042@kernel.org
+[2] https://lore.kernel.org/all/20240228135352.14444-1-mschmidt@redhat.com/
+
+Jongwon Lee (3):
+  cxl/edac: Read cached DRAM event records under the xarray lock
+  cxl/edac: Skip event records marked NOT_REPAIRABLE
+  cxl/edac: Mask DPA flags in the event record cache key
+
+ drivers/cxl/core/edac.c | 116 ++++++++++++++++++++++++++--------------
+ 1 file changed, 77 insertions(+), 39 deletions(-)
+
+
+base-commit: 32af7819352bae9c690ebe277a44eceb501d5c68
 -- 
-2.53.0
+2.55.0
 
