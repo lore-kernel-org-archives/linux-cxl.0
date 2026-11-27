@@ -1,146 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795769464;
-	b=3vmcZn7Jpe8VKDy7Ay8xuQmiIfOAl6kZO6UQuc3+Pyo8jGm7v/fRuMDD9Xj/oHJvxrv8
-	 cLXJLtNXdAyK6fjz+6gB8eSEiGpNUBlW2Z/6EBFinZ9Cv9UgOO+ooPc66TPrCEOd4HCAc
-	 fcz2KGuvH2bc1uqsRa5mNaonMTDmkECgosdmoIvDauL4pha6Lrj1Kb7V4fgihrUjcvdF8
-	 h6Lm/v+YvEU6Qspd1dxzgd9S0IQtadoVKQsRQ00LuruHWhvQaWClHmyMDOlWbnjeIsEqB
-	 sZ8KJ47GhtgYshTDfyKNDQj9Qimm2MFc7vaUJ1rKpr7BVFRLY98aqw9Zho1BIAlWjzw==
+	t=1795806133;
+	b=kqWQGRzrbTuSQ29Nya4RRwQejHxspj2gEP+U91UcKaH6JNcVwAJahP50BrXyIOTcexN3
+	 I5Z+lJ97MCVrA2V5sO9qItHPqWT7ziELesTap1yemguADt9iCSr4ObQKVPWamIqyoq9h1
+	 0v6wlOzNWjgKt3s2luLd9rOYnDFQRTuR5KKwzojHl/nxEQs0aO1JaTPaLUbpJ/pXFGUtc
+	 zuTK+ti3HfKZaIIC476CeYsdAgG2RkUvAWXS7CCvduyyDVIsLuN4r5wWuLFG4CqcaY9zs
+	 HY3F0c23m0xABAKz5RDp6CHgtz7WKUhoAfYd3hAz4VtUdKk8j8YrKQbuo33YkA+EUQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795769464;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=njh3SQBBAQE61UxliWgOlIeTiJ2q96ejV3+knyCCvnY=;
-	b=d1DXSzToQ+NSWw3JPfbbCrAQhkNYUaW9zaQ0Kq36JP/8woKgKUTQgShqaZ81EMafXCG8
-	 DiMpPZ97OccqrKo7UFt334tkVjALPM2IZ1xomiHQXsloYBKIPjRZgTPZkfTXEgIuMKm9Q
-	 b7sz4NZ/jrYEC4SK/QralyrpABcEM3c4IqS4+t1BQJ4t0IGFt36KPGh/71hEPyzFmrovC
-	 nxc+Wj+vndn+a79SArUDt7iPLwuEgjZVc4EU2LwUiuG5EFKMkjzbdHTWlbJk9g5Ghhk3i
-	 +gyaUSwMT4DyVt4FMfzdvMPL6rGzFmLXNPqHEwk7ssXWB+RiqyGc5V3rVm/N0hQbEkQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795806133;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
+	b=h08unqv6XnejCH/1hs/UBZ8+z3EPIIQwna87WJAaU8KE07g6EAFEMDTv4Qal/fbFL6Su
+	 1ib77HNst6BCefd8tPamN73N11NxxwOfyPbELP7+jPBrTLs4WabNCU7WnadJV0Tf06qJf
+	 UUiXQ1D10Fz8/TZfxIxpyFOej9ETDarjEpfCOxCN6+Xj8lUj2Qxl2KgTnx2r+uyicqvQk
+	 7KZ+/EndAdvr+Yittd3O0taQnRcBO4/NYUF/QCkXyAHeRrZh3MLmaQu1K7bzZNnNhEcml
+	 x4a/VHI8vV5eN4TtF/StKyXrXKnevD1HF6tp3BRFBzBdIA7TGMoIbsYm9PuvURXJ8dQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=csail.mit.edu;
-	spf=pass smtp.mailfrom=csail.mit.edu;
-	dkim=pass header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.a=rsa-sha256 header.s=test20231205 header.b=xCF78GQE;
-	arc=none smtp.remote-ip=128.30.2.78
-Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENoUf1Ar;
+	arc=none smtp.remote-ip=74.125.82.43
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CD4606A31C;
-	Fri, 27 Nov 2026 08:51:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48CD4606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA14606A326
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Nov 2026 19:02:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BA14606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.a=rsa-sha256 header.s=test20231205 header.b=xCF78GQE
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=njh3SQBBAQE61UxliWgOlIeTiJ2q96ejV3+knyCCvnY=; t=1795769464; x=1796633464; 
-	b=xCF78GQEoFuR5VSaFZJwsaQMsUqzxgkhr09s1AQlGBjs9gBHC90OExhT7yjx4EsH4WivLTHbGpI
-	p1E/a5+X4T4RCZDkcyYHblwO39qcnCS/jX+2rUBbwS1mQZgFvoM/x2kdWTDEyGuqBWjJm6feGtK2Z
-	wFpefSVLt7txJoZA0iIqI5jyU1zgPndu9WsOj6WeNxR3WovhoLSiXmJUNYFRfVro1Za1MGilJ19PW
-	Hz4feHPtbiuyFMlqUrY+NSp8E4S+LNWmiuwiqTCvoNSDozbzEFxQ7prI17GmZtzkMkrajaIxy6L5f
-	r/0Om6ynlQj5DoUoMwLx+tY8sfilr31FNhtg==;
-Received: from [167.220.238.14] (helo=csail.mit.edu)
-	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srivatsa@csail.mit.edu>)
-	id 1xWreR-007Btx-5B;
-	Fri, 27 Nov 2026 03:49:51 -0500
-Date: Fri, 27 Nov 2026 14:19:20 +0530
-From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jens Axboe <axboe@kernel.dk>, Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Heiko Stuebner <heiko@sntech.de>, Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Sizhe Liu <liusizhe5@huawei.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"Joerg Roedel (AMD)" <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai@fygo.io>, Li Nan <magiclinan@didiglobal.com>,
-	Xiao Ni <xiao@kernel.org>, Haren Myneni <haren@linux.ibm.com>,
-	Rick Lindsley <ricklind@linux.ibm.com>,
-	Nick Child <nnac123@linux.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marcin Wojtas <marcin.s.wojtas@gmail.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENoUf1Ar
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-1aefd1bf74aso4777209c88.1
+        for <linux-cxl@vger.kernel.org>; Fri, 27 Nov 2026 11:02:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795806131; x=1796410931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
+        b=ENoUf1ArcEfIE2J7WrvZgIIMCYa4qWfn/gtvnY4g+FpJfoheJfm9CBabxVkguJTPUP
+         YQfjn7Vl3LN6DzpCxX5sW7o/Ng56wA6wxD7Q2pWnbn94mfSHn5DyMQMO5IRoTlGV5Tu8
+         Q1/0fcIA69vkPToJSVsdZpA2IXZOFCoHOi89tSVF4pihin3oEpDQiZSI5plyB2rNVkPl
+         8HAxisjmU2AreweJcKethZOCv1qYvUvtH5JwBsXSvanho6QP2iyc+g0vEs/40RdCqhcj
+         h3RiNO1IlZDS8WBJQTRBBiITDlSwLsfeQlUOSEOCgy0ZToiTU7K6AjUsqfsZdegDpI2k
+         2/6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795806131; x=1796410931;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
+        b=CpOpzcXUJe3RKMZIhE2gAbSTLC22BmwUXOze9FpzsEJg/B5E9TITo6rU/mu1o17jBi
+         d2NozsfzRmvcalUUddjVPCQimGcrAMH/d8PPT0GjRZLPkoVh6H3CEWQpYvhvGkvwVJHS
+         DcO0OUeINUtSeNjhlWNExXf/dFp0+kFQf0tCILylz63Pu1WjsSAhighZDoTt5E3KagJn
+         xo9O93tr1ZZ5y+ypLNuJg8chQUUy/uekfhF37mpcl+Q9nNcq4wdjVAHRMbDffTVHF1QD
+         AbeEYA1SxcPjg51XlW64v/5XPRPujDi6mtgxmNa1WghBGVbC+6dyifU/dA5al8PeOMJt
+         xOEA==
+X-Forwarded-Encrypted: i=1; AL+hErG5vvKt0NQyesA3F3eqM3H7pfgVpj8YCke4/N9QgAsjbw7kflXUEnz/UIlwpUpHKTzWa3/bNASs3i4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9gJGP9q5Pv3aP2NLXmM43lRi3+6NLqrEIbdlKVvZ1UzQcSWAPC
+	71uTCYCBXnS76XAZfaPueFV9Jey2+JacEKf9jjQng4kLbtZBF4sUDd/o
+X-Gm-Gg: AZFdTZcBIaOQIYZ+XoLKra0178HivkCXeGmecm7so+ZMjXn2NCI5pgrAtfwr2vODvbT
+	Zd+V7AFwzv7YQDgtuvqgtq/slxK+v/rK5My1LdTJlfLRJR4/PB6zCrDhjz58AJAL9h2rmsx8jPA
+	OWH4THOgYVZfmiXaATsiJfm7YCkTPaW8hYIy5jCnSUKYvezu+asmzKn51+qeVcKJZ56UOOLhd+n
+	URVzCQNLKm0ohLiHNXsSSUsqvglKOl+esUkFZlpK8VR2OfK1SeWofRizyZ90yV2yk6UdMu2KmuC
+	N2dm8ctfXhi2lUZ+d6krAAJ61CaWQuUm47A/jdWSVNJO/vswObeyuzFBH4pbySMyOEk6Vn3Wt8G
+	n+xzAt1T3xpy95dowE7SN9Hxya+jJlPDMngFnFa9pUb8ye6rT2/f89WcdMfGzpMznfHY51kKSFP
+	qgEQueUfab3WliXOV6ELLfzc08h/bwLh2hVcdav1t4fzN/KKOdybfFLxbl3twT2Vas0ENruFLvU
+	UAZzwnCRBf368bqeTn+db+kQpdIynYmrVn56zlC9FNS8Z342bc7GNm18QPhmwmtePv3Ou5fgsH0
+	DTyvQBjgQ5F3Lu6DcKPO
+X-Received: by 2002:a05:7023:a41:b0:1b2:67f9:43cb with SMTP id a92af1059eb24-1b5525e786cmr25527192c88.17.1795806130946;
+        Fri, 27 Nov 2026 11:02:10 -0800 (PST)
+Received: from a1-free ([2603:c021:8021:f000:0:1865:8c38:18fc])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5566c3052sm58116574c88.1.2026.11.27.11.02.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Nov 2026 11:02:10 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
 	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Mark Rutland <mark.rutland@arm.com>,
 	Jonathan Cameron <jic23@kernel.org>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Frank Li <Frank.li@nxp.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Yushan Wang <wangyushan12@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Justin Tee <justin.tee@broadcom.com>,
-	Paul Ely <paul.ely@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Daniel Jordan <daniel.m.jordan@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Yosry Ahmed <yosry@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
-	coresight@lists.linaro.org, iommu@lists.linux.dev,
-	linux-raid@vger.kernel.org, netdev@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev,
-	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-cxl@vger.kernel.org, imx@lists.linux.dev,
-	linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: Re: [PATCH] cpu/hotplug: Rename cpuhp_remove_multi_state to be
- symmetric with setup
-Message-ID: <awlEEAmT4k7fvQck@csail.mit.edu>
-References: <20261127-fix-rename_cpuhp_remove_multi_state-v1-1-097db4564cbd@csail.mit.edu>
- <awk6TGp9riwDD55i@MWDK4CY14F>
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH v2] docs: Name the memory hotplug online type configs that exist
+Date: Fri, 27 Nov 2026 19:02:07 +0000
+Message-ID: <20261127190207.245175-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261125193039.2437025-1-takano32@gmail.com>
+References: <20261125193039.2437025-1-takano32@gmail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -150,35 +105,123 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <awk6TGp9riwDD55i@MWDK4CY14F>
+Content-Transfer-Encoding: 8bit
 
-Hi Richard,
+The default online type is a Kconfig choice, so the symbols it defines are
+CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE, _ONLINE_AUTO, _ONLINE_KERNEL and
+_ONLINE_MOVABLE.  There is no CONFIG_MHP_DEFAULT_ONLINE_TYPE symbol, but
+five files name one.
 
-On Fri, Nov 27, 2026 at 04:09:11PM +0800, Richard Cheng wrote:
-> On Fri, Nov 27, 2026 at 01:07:40PM +0800, Srivatsa S. Bhat (Microsoft) wrote:
-> > The multi-instance CPU hotplug state setup API is named as
-> > cpuhp_setup_state_multi(), whereas the corresponding remove API is
-> > currently named as cpuhp_remove_multi_state(). Rename the latter as
-> > cpuhp_remove_state_multi() to fix the asymmetry. This also helps
-> > maintain consistency in the API names by letting them share a common
-> > prefix, i.e., cpuhp_setup/remove_state_*() across all the variants
-> > [none|nocalls|nocalls_cpuslocked].
-> > 
-> > Signed-off-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
-> 
-> Hi Srivatsa,
-> 
-> Not sure whether this is really needed, it doesn't harm anything,
-> but IMHO it doesn't really brings us benefit.
-> 
+Where a file lists the config, name the family with a trailing _*.  Where
+it names a choice value, spell the whole symbol out: early-boot.rst gave
+the zone choices as _NORMAL and _MOVABLE, which are not suffixes.
 
-I agree, this is not intended to be a functional change. The cleanup benefit is
-on the side of the CPU hotplug core API to provide better consistency in terms
-of the API naming pattern, but the current callsites that consume this API
-should see no functional difference as a result of this change. The consistency
-will help future callsites though!
+Verification: a build of the tree defines
+CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE and no bare
+CONFIG_MHP_DEFAULT_ONLINE_TYPE in include/generated/autoconf.h, and grep
+finds no reference to the bare symbol under Documentation/ afterwards.
 
-Regards,
-Srivatsa
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+v2: Spell the full config names in early-boot.rst.  David Hildenbrand pointed
+    out that CONFIG_MHP_DEFAULT_ONLINE_TYPE_* with _ONLINE_KERNEL appended
+    does not parse.  The other four files keep the _* form because they list
+    the config, not one of its values.
+
+    Written with Hermes Agent, an LLM assistant; the author reviewed the
+    wording and the diff.
+
+ Documentation/admin-guide/kernel-parameters.txt      |  2 +-
+ Documentation/admin-guide/mm/memory-hotplug.rst      |  2 +-
+ Documentation/driver-api/cxl/linux/early-boot.rst    | 12 +++++++-----
+ .../driver-api/cxl/linux/memory-hotplug.rst          |  2 +-
+ Documentation/driver-api/cxl/linux/overview.rst      |  2 +-
+ 5 files changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 176648941aec..8580099b98c1 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3948,7 +3948,7 @@ Kernel parameters
+ 			[KNL] Set the initial state for the memory hotplug
+ 			onlining policy. If not specified, the default value is
+ 			set according to the
+-			CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel config
++			CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel config
+ 			options.
+ 			See Documentation/admin-guide/mm/memory-hotplug.rst.
+ 
+diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
+index 0207f8725142..c7de458a962f 100644
+--- a/Documentation/admin-guide/mm/memory-hotplug.rst
++++ b/Documentation/admin-guide/mm/memory-hotplug.rst
+@@ -280,7 +280,7 @@ The following files are currently defined:
+ 		       blocks; configure auto-onlining.
+ 
+ 		       The default value depends on the
+-		       CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel configuration
++		       CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel configuration
+ 		       options.
+ 
+ 		       See the ``state`` property of memory blocks for details.
+diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
+index 414481f33819..c3a3def3b3c6 100644
+--- a/Documentation/driver-api/cxl/linux/early-boot.rst
++++ b/Documentation/driver-api/cxl/linux/early-boot.rst
+@@ -34,7 +34,7 @@ which dictate how memory will be managed by Linux during early boot.
+   * Linux Build config option that dictates whether the kernel supports
+     Specific Purpose memory.
+ 
+-* CONFIG_MHP_DEFAULT_ONLINE_TYPE
++* CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
+ 
+   * Linux Build config that dictates whether and how Specific Purpose memory
+     converted to a dax device should be managed (left as DAX or onlined as
+@@ -58,10 +58,12 @@ SystemRAM.  This will expose the memory to the kernel page allocator in
+ :code:`ZONE_NORMAL`, making it available for use for most allocations (including
+ :code:`struct page` and page tables).
+ 
+-If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
+-dictates whether the memory is onlined by default (:code:`_OFFLINE` or
+-:code:`_ONLINE_*`), and if online which zone to online this memory to by default
+-(:code:`_NORMAL` or :code:`_MOVABLE`).
++If `Specific Purpose` is set and supported,
++:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE` leaves the memory offline,
++:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_KERNEL` onlines it by default to
++:code:`ZONE_NORMAL`, and
++:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE` onlines it by default to
++:code:`ZONE_MOVABLE`.
+ 
+ If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
+ kernel allocations (such as :code:`struct page` or page tables).  This may
+diff --git a/Documentation/driver-api/cxl/linux/memory-hotplug.rst b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
+index af368c2bc9cf..df27520b193f 100644
+--- a/Documentation/driver-api/cxl/linux/memory-hotplug.rst
++++ b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
+@@ -19,7 +19,7 @@ Default Online Behavior
+ The default-online behavior of hotplug memory is dictated by the following,
+ in order of precedence:
+ 
+-- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE` Build Configuration
++- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*` Build Configuration
+ - :code:`memhp_default_state` Boot parameter
+ - :code:`/sys/devices/system/memory/auto_online_blocks` value
+ 
+diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
+index 648beb2c8c83..d567353e1dab 100644
+--- a/Documentation/driver-api/cxl/linux/overview.rst
++++ b/Documentation/driver-api/cxl/linux/overview.rst
+@@ -17,7 +17,7 @@ are generated.
+ 
+     i) EFI_MEMORY_SP
+     ii) CONFIG_EFI_SOFT_RESERVE
+-    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
++    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
+     iv) nosoftreserve
+ 
+   b) Memory Map Creation
+
+base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+-- 
+2.53.0
+
