@@ -1,101 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.83.223.161
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795806133;
-	b=kqWQGRzrbTuSQ29Nya4RRwQejHxspj2gEP+U91UcKaH6JNcVwAJahP50BrXyIOTcexN3
-	 I5Z+lJ97MCVrA2V5sO9qItHPqWT7ziELesTap1yemguADt9iCSr4ObQKVPWamIqyoq9h1
-	 0v6wlOzNWjgKt3s2luLd9rOYnDFQRTuR5KKwzojHl/nxEQs0aO1JaTPaLUbpJ/pXFGUtc
-	 zuTK+ti3HfKZaIIC476CeYsdAgG2RkUvAWXS7CCvduyyDVIsLuN4r5wWuLFG4CqcaY9zs
-	 HY3F0c23m0xABAKz5RDp6CHgtz7WKUhoAfYd3hAz4VtUdKk8j8YrKQbuo33YkA+EUQQ==
+	t=1795809105;
+	b=rE0w/DYLvqC0iVmVtsN9yt0HbrEB3N3V5uNsIpE8YACGdQc0yvgpOEBZ1xe+sHgYFk2z
+	 dQSgJki0AnaMj8WlUOWJpW3SBQrZ7RyA720dGQyRgbC24Zm1IAxgsCUMRJrThiMZsthyL
+	 G6vn/0XPNstj3tW3wmi7TENxEcTTPiV0Fk7x85hYvc8t5SwpAPvh8I9pSVYIQdcV4IZVO
+	 hEL5iDAWN7rTkcxFjgn9B0w/KoRRxjc0gPUiOoym+N+PHpGxgE/V8mS/XtC1xwaZ4VKOb
+	 onheJ/NzauyVF0BiMOQ7UGhsD2D69UThPmrRbkrOdfK7OWA6soiRgv/J2RhqXiOvx5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795806133;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
-	b=h08unqv6XnejCH/1hs/UBZ8+z3EPIIQwna87WJAaU8KE07g6EAFEMDTv4Qal/fbFL6Su
-	 1ib77HNst6BCefd8tPamN73N11NxxwOfyPbELP7+jPBrTLs4WabNCU7WnadJV0Tf06qJf
-	 UUiXQ1D10Fz8/TZfxIxpyFOej9ETDarjEpfCOxCN6+Xj8lUj2Qxl2KgTnx2r+uyicqvQk
-	 7KZ+/EndAdvr+Yittd3O0taQnRcBO4/NYUF/QCkXyAHeRrZh3MLmaQu1K7bzZNnNhEcml
-	 x4a/VHI8vV5eN4TtF/StKyXrXKnevD1HF6tp3BRFBzBdIA7TGMoIbsYm9PuvURXJ8dQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795809105;
+	h=DMARC-Filter:X-Sender-Id:Received:Received:X-Sender-Id:X-MC-Relay:
+	 X-MailChannels-SenderId:X-MailChannels-Auth-Id:X-Shelf-Thread:
+	 X-MC-Loop-Signature:X-MC-Ingress-Time:Received:Received:
+	 DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=HcvIrPb2cxSgvcGV74mI37tQYpZJDLpnaqRSLO6J+P0=;
+	b=Vi+rHAmncgESxSFnhuEfN4E8NkVaeJLMCL7cuqZgElyWgx4UlnGKv6ifV7v8OHPItwCk
+	 hUEvS/8k+5V+u7bXoxQ5d8V4j/jPrnkjFJqJq9HgQp2zFU55hLgHjLV5xNLEplQvmB6dH
+	 cdyVaRr83T6nLlM/LilxP5DBXaXpC+2+p7wQSJuWSXfC3813znplo+TYp8esVSSgnWOZO
+	 kHw+aeoqexG/u+18i1KB5Mp8N5UdHFet82FdDZOjv3xSN0vw6E6wcnz01iy0CSgTEXvim
+	 A9X57e7u/eemino2bCkBMSWMJUuLvcfHF8FpTa1BUXp2rmTbkujxCWAmIVG5XtDtUxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENoUf1Ar;
-	arc=none smtp.remote-ip=74.125.82.43
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=stgolabs.net;
+	spf=fail smtp.mailfrom=stgolabs.net;
+	dkim=pass header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=btLb2nnT;
+	arc=none smtp.remote-ip=23.83.223.161
+Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA14606A326
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Nov 2026 19:02:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BA14606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1007606A31C
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Nov 2026 19:51:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1007606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ENoUf1Ar
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-1aefd1bf74aso4777209c88.1
-        for <linux-cxl@vger.kernel.org>; Fri, 27 Nov 2026 11:02:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795806131; x=1796410931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
-        b=ENoUf1ArcEfIE2J7WrvZgIIMCYa4qWfn/gtvnY4g+FpJfoheJfm9CBabxVkguJTPUP
-         YQfjn7Vl3LN6DzpCxX5sW7o/Ng56wA6wxD7Q2pWnbn94mfSHn5DyMQMO5IRoTlGV5Tu8
-         Q1/0fcIA69vkPToJSVsdZpA2IXZOFCoHOi89tSVF4pihin3oEpDQiZSI5plyB2rNVkPl
-         8HAxisjmU2AreweJcKethZOCv1qYvUvtH5JwBsXSvanho6QP2iyc+g0vEs/40RdCqhcj
-         h3RiNO1IlZDS8WBJQTRBBiITDlSwLsfeQlUOSEOCgy0ZToiTU7K6AjUsqfsZdegDpI2k
-         2/6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795806131; x=1796410931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zkQBPyKgHhzReYEqUfH52eqklLDsrHQN3rdcMHP01SI=;
-        b=CpOpzcXUJe3RKMZIhE2gAbSTLC22BmwUXOze9FpzsEJg/B5E9TITo6rU/mu1o17jBi
-         d2NozsfzRmvcalUUddjVPCQimGcrAMH/d8PPT0GjRZLPkoVh6H3CEWQpYvhvGkvwVJHS
-         DcO0OUeINUtSeNjhlWNExXf/dFp0+kFQf0tCILylz63Pu1WjsSAhighZDoTt5E3KagJn
-         xo9O93tr1ZZ5y+ypLNuJg8chQUUy/uekfhF37mpcl+Q9nNcq4wdjVAHRMbDffTVHF1QD
-         AbeEYA1SxcPjg51XlW64v/5XPRPujDi6mtgxmNa1WghBGVbC+6dyifU/dA5al8PeOMJt
-         xOEA==
-X-Forwarded-Encrypted: i=1; AL+hErG5vvKt0NQyesA3F3eqM3H7pfgVpj8YCke4/N9QgAsjbw7kflXUEnz/UIlwpUpHKTzWa3/bNASs3i4=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9gJGP9q5Pv3aP2NLXmM43lRi3+6NLqrEIbdlKVvZ1UzQcSWAPC
-	71uTCYCBXnS76XAZfaPueFV9Jey2+JacEKf9jjQng4kLbtZBF4sUDd/o
-X-Gm-Gg: AZFdTZcBIaOQIYZ+XoLKra0178HivkCXeGmecm7so+ZMjXn2NCI5pgrAtfwr2vODvbT
-	Zd+V7AFwzv7YQDgtuvqgtq/slxK+v/rK5My1LdTJlfLRJR4/PB6zCrDhjz58AJAL9h2rmsx8jPA
-	OWH4THOgYVZfmiXaATsiJfm7YCkTPaW8hYIy5jCnSUKYvezu+asmzKn51+qeVcKJZ56UOOLhd+n
-	URVzCQNLKm0ohLiHNXsSSUsqvglKOl+esUkFZlpK8VR2OfK1SeWofRizyZ90yV2yk6UdMu2KmuC
-	N2dm8ctfXhi2lUZ+d6krAAJ61CaWQuUm47A/jdWSVNJO/vswObeyuzFBH4pbySMyOEk6Vn3Wt8G
-	n+xzAt1T3xpy95dowE7SN9Hxya+jJlPDMngFnFa9pUb8ye6rT2/f89WcdMfGzpMznfHY51kKSFP
-	qgEQueUfab3WliXOV6ELLfzc08h/bwLh2hVcdav1t4fzN/KKOdybfFLxbl3twT2Vas0ENruFLvU
-	UAZzwnCRBf368bqeTn+db+kQpdIynYmrVn56zlC9FNS8Z342bc7GNm18QPhmwmtePv3Ou5fgsH0
-	DTyvQBjgQ5F3Lu6DcKPO
-X-Received: by 2002:a05:7023:a41:b0:1b2:67f9:43cb with SMTP id a92af1059eb24-1b5525e786cmr25527192c88.17.1795806130946;
-        Fri, 27 Nov 2026 11:02:10 -0800 (PST)
-Received: from a1-free ([2603:c021:8021:f000:0:1865:8c38:18fc])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5566c3052sm58116574c88.1.2026.11.27.11.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 11:02:10 -0800 (PST)
-From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Dan Williams <djbw@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: [PATCH v2] docs: Name the memory hotplug online type configs that exist
-Date: Fri, 27 Nov 2026 19:02:07 +0000
-Message-ID: <20261127190207.245175-1-takano32@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261125193039.2437025-1-takano32@gmail.com>
-References: <20261125193039.2437025-1-takano32@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=stgolabs.net header.i=@stgolabs.net header.a=rsa-sha256 header.s=dreamhost header.b=btLb2nnT
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 945E73E0C54;
+	Fri, 27 Nov 2026 19:51:38 +0000 (UTC)
+Received: from pdx1-sub0-mail-a223.dreamhost.com (trex-green-6.trex.outbound.svc.cluster.local [100.96.15.253])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id EC9153E0F8D;
+	Fri, 27 Nov 2026 19:51:37 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Shelf-Thread: 7f21c2f25a4e6cd5_1795809098245_2862993013
+X-MC-Loop-Signature: 1795809098245:3966688462
+X-MC-Ingress-Time: 1795809098245
+Received: from pdx1-sub0-mail-a223.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.15.253 (trex/8.0.2);
+	Fri, 27 Nov 2026 19:51:38 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4jbkZK14Hcz1q;
+	Fri, 27 Nov 2026 11:51:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1795809097;
+	bh=HcvIrPb2cxSgvcGV74mI37tQYpZJDLpnaqRSLO6J+P0=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=btLb2nnT/aN2onc8mR4uChl7Qy0rHtrMD93QrEWAST1qAk0M6Zw2FVrxVA8NR/MwR
+	 SzH0Uq7aV4u1CjYPLszPpbICymNvJqugCZbb8nedkb/QtQF7yqdVti0U//KHiLCCze
+	 1FZ6Rs9nsw0+rYMUsABuV3OCnl/PR0E1VsSb6ZfVNlbgBOhYQbT/QQ2ilZD7xmNfPa
+	 30qhxuYx0bqnz3qxa2+s8CFtgWW69BROkyYSc96XrRcIygb8p2N5bSxrMOckeQHb2a
+	 FhUJGzFVDUZ9B1JFyrMbrVV0EZG6WUAkd6YWpkN/7o/YGuNNvqRWU0Ch12Lg6XFVz9
+	 VoVt3jFz+1woA==
+Date: Fri, 27 Nov 2026 11:51:33 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Unsung Lee <unsung0317@gmail.com>
+Cc: linux-cxl@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>,
+	John Groves <jgroves@micron.com>
+Subject: Re: [RFC PATCH 0/4] cxl/memdev: Activate firmware without a reset
+Message-ID: <20261127195133.dwixro55ocba7qes@offworld>
+References: <20261125124358.3583223-1-unsung0317@gmail.com>
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -105,123 +93,135 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20261125124358.3583223-1-unsung0317@gmail.com>
+User-Agent: NeoMutt/20220429
 
-The default online type is a Kconfig choice, so the symbols it defines are
-CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE, _ONLINE_AUTO, _ONLINE_KERNEL and
-_ONLINE_MOVABLE.  There is no CONFIG_MHP_DEFAULT_ONLINE_TYPE symbol, but
-five files name one.
+On Wed, 25 Nov 2026, Unsung Lee wrote:
 
-Where a file lists the config, name the family with a trailing _*.  Where
-it names a choice value, spell the whole symbol out: early-boot.rst gave
-the zone choices as _NORMAL and _MOVABLE, which are not suffixes.
+>This series lets userspace activate an uploaded slot online once the
+>device no longer decodes any memory, the same condition sanitize uses.
+>Uploads keep their current behaviour; activation is a separate,
+>explicit step:
+>
+>  1. upload as today (slot N becomes pending for the next cold reset)
+>  2. move the data away, offline the memory, destroy the region
+>  3. echo N > /sys/bus/cxl/devices/memX/firmware_activate
 
-Verification: a build of the tree defines
-CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE and no bare
-CONFIG_MHP_DEFAULT_ONLINE_TYPE in include/generated/autoconf.h, and grep
-finds no reference to the bare symbol under Documentation/ afterwards.
+Is this a real use case for online activation?
 
-Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
----
-v2: Spell the full config names in early-boot.rst.  David Hildenbrand pointed
-    out that CONFIG_MHP_DEFAULT_ONLINE_TYPE_* with _ONLINE_KERNEL appended
-    does not parse.  The other four files keep the _* form because they list
-    the config, not one of its values.
+This now seems like an interface clash, memX/firmware/activate would
+be better. The upload device is registered to the fw class.
 
-    Written with Hermes Agent, an LLM assistant; the author reviewed the
-    wording and the diff.
+>  4. recreate the region and online the memory
 
- Documentation/admin-guide/kernel-parameters.txt      |  2 +-
- Documentation/admin-guide/mm/memory-hotplug.rst      |  2 +-
- Documentation/driver-api/cxl/linux/early-boot.rst    | 12 +++++++-----
- .../driver-api/cxl/linux/memory-hotplug.rst          |  2 +-
- Documentation/driver-api/cxl/linux/overview.rst      |  2 +-
- 5 files changed, 11 insertions(+), 9 deletions(-)
+So this work requires a CXL equivalent of
+	   Documentation/driver-api/nvdimm/firmware-activate.rst
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 176648941aec..8580099b98c1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3948,7 +3948,7 @@ Kernel parameters
- 			[KNL] Set the initial state for the memory hotplug
- 			onlining policy. If not specified, the default value is
- 			set according to the
--			CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel config
-+			CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel config
- 			options.
- 			See Documentation/admin-guide/mm/memory-hotplug.rst.
- 
-diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-index 0207f8725142..c7de458a962f 100644
---- a/Documentation/admin-guide/mm/memory-hotplug.rst
-+++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-@@ -280,7 +280,7 @@ The following files are currently defined:
- 		       blocks; configure auto-onlining.
- 
- 		       The default value depends on the
--		       CONFIG_MHP_DEFAULT_ONLINE_TYPE kernel configuration
-+		       CONFIG_MHP_DEFAULT_ONLINE_TYPE_* kernel configuration
- 		       options.
- 
- 		       See the ``state`` property of memory blocks for details.
-diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-index 414481f33819..c3a3def3b3c6 100644
---- a/Documentation/driver-api/cxl/linux/early-boot.rst
-+++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-@@ -34,7 +34,7 @@ which dictate how memory will be managed by Linux during early boot.
-   * Linux Build config option that dictates whether the kernel supports
-     Specific Purpose memory.
- 
--* CONFIG_MHP_DEFAULT_ONLINE_TYPE
-+* CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
- 
-   * Linux Build config that dictates whether and how Specific Purpose memory
-     converted to a dax device should be managed (left as DAX or onlined as
-@@ -58,10 +58,12 @@ SystemRAM.  This will expose the memory to the kernel page allocator in
- :code:`ZONE_NORMAL`, making it available for use for most allocations (including
- :code:`struct page` and page tables).
- 
--If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
--dictates whether the memory is onlined by default (:code:`_OFFLINE` or
--:code:`_ONLINE_*`), and if online which zone to online this memory to by default
--(:code:`_NORMAL` or :code:`_MOVABLE`).
-+If `Specific Purpose` is set and supported,
-+:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE` leaves the memory offline,
-+:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_KERNEL` onlines it by default to
-+:code:`ZONE_NORMAL`, and
-+:code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE` onlines it by default to
-+:code:`ZONE_MOVABLE`.
- 
- If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
- kernel allocations (such as :code:`struct page` or page tables).  This may
-diff --git a/Documentation/driver-api/cxl/linux/memory-hotplug.rst b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-index af368c2bc9cf..df27520b193f 100644
---- a/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-+++ b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-@@ -19,7 +19,7 @@ Default Online Behavior
- The default-online behavior of hotplug memory is dictated by the following,
- in order of precedence:
- 
--- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE` Build Configuration
-+- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*` Build Configuration
- - :code:`memhp_default_state` Boot parameter
- - :code:`/sys/devices/system/memory/auto_online_blocks` value
- 
-diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
-index 648beb2c8c83..d567353e1dab 100644
---- a/Documentation/driver-api/cxl/linux/overview.rst
-+++ b/Documentation/driver-api/cxl/linux/overview.rst
-@@ -17,7 +17,7 @@ are generated.
- 
-     i) EFI_MEMORY_SP
-     ii) CONFIG_EFI_SOFT_RESERVE
--    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
-+    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
-     iv) nosoftreserve
- 
-   b) Memory Map Creation
+.. describing the flow, states and the results. Patch 3 only extends the
+ABI file. The capability would be quiescence-like.
 
-base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
--- 
-2.53.0
+>
+>Patch 1 lets Activate FW complete as a background command; without a
+>poll budget the mailbox reports a timeout at once.
+>Patch 2 keeps the pending slot and the activation capability from Get
+>FW Info.
+>Patch 3 adds the attribute.
+>Patch 4 lets cxl_test advertise online activation.
+>
+>Questions:
+>- Patch 3 requires that the device decode no memory, as sanitize does.
+>  The driver cannot tell how long a device holds CXL.mem requests while
+>  it switches firmware, and the comment on the RAW command block list
+>  says activation "requires adjustment / coordination of transaction
+>  timeout values at the root bridge level". With no memory decoded
+>  nothing can time out. Is that the right condition, or too strict? It
+>  means moving the data away first.
 
+This makes sense but really is the show stopper for your patch 1, where
+bg polling timeouts (albeit 30 secs) leave things in a very bad state if
+the device is to ever be onlined again.
+
+>- The Online FW Activation Capabilities ECN to CXL 3.1 allows Activate
+>  FW to complete as a background command (8.2.9.3.3), so patch 1 waits
+>  for it like Transfer FW. Should it carry a Fixes: tag? John Groves
+>  raised activations longer than the 2 s mailbox timeout at the June
+>  2025 CXL collab sync; patch 1 may overlap with a patch from that.
+
+Semantically, transfer fw makes sense to have with the timeouts because
+users can partition the work, which is the whole point. Activate fw
+lacks those semantics, so while 30 secs seems like a value unlikely
+to timeout, there are no guarantees (I have no idea about activation
+time expectations really).
+
+This plus the above answer means that we should just move activate fw
+to the sanitize category as a potential mailbox hogger and just wait
+asynchronously... which is what I did with the followup series to this
+collab sync meeting:
+
+https://lore.kernel.org/all/20250617193611.564668-3-dave@stgolabs.net/
+
+(i am rebasing this series and will send out)
+
+>- Patch 3 holds cxl_rwsem.region only to check the decoders and set a
+>  FW state bit that makes decoder commit refuse the device with EBUSY,
+>  as sanitize does. An earlier version held the rwsem across the
+>  command (up to 30 s); with an activation emulated in the kernel,
+>  create-region and region sysfs reads on other devices then waited
+>  for the whole activation. The cost is that a create-region on this
+>  device that races the write fails instead of waiting. Is that the
+>  preferred trade-off?
+>- After a timeout the device may still be activating, so patch 3 keeps
+>  refusing regions, uploads and sanitize until the slot shows as
+>  running or a later activation succeeds. A later error does not count,
+>  since it may come while the device is still busy. A device that ends
+>  up on its old firmware stays refused until cxl_pci is bound again.
+>  Reading the Background Command Status register would end this
+>  sooner, but needs a new mailbox callback. Would that be acceptable?
+
+See above.
+
+>- Should the pending slot stay set after an online activation? QEMU
+>  keeps it, cxl_test clears it.
+>
+>Not addressed in this series:
+>- State cached at probe (CEL, timestamp, event interrupt policy,
+>  features, Identify, CDAT) is not re-read after activation.
+>- Unbinding the port above the endpoint during the command tears the
+>  endpoint down, which clears HDM decoder enable and Mem_Enable on the
+>  activating device (exercised in QEMU without kernel warnings).
+>
+>Testing (QEMU 11.1.3, one type3 device, guest v7.3.1 unless noted; no
+>real hardware, so an activation that really takes long, polling while
+>it runs, other hosts and other CCIs are not covered):
+>- Functional and race tests (concurrent writes, upload, create-region,
+>  cxl_mem and cxl_pci unbind, mailbox readers, kill -9, sanitize,
+>  upload cancel) on release and lockdep/KASAN kernels, 20-50x: no
+>  warnings; kprobes showed no activation while a decoder was committed
+>  and no commit while activating.
+>- A test-only build emulating slow and timed-out activations, release
+>  and debug, 20x each: refusal during and after a timeout; a failed
+>  activation after a timeout stays refused, with uploads and sanitize,
+>  until cxl_pci is bound again; a cxl_mem unbind waits for the command;
+>  a port unbind during the command. Create-region failing after the
+>  port is bound again also happens on plain v7.3.1, so that test does
+>  not check regions afterwards.
+>- The whole flow (move the data away, offline, activate, online, move
+>  it back): 100x without data; 20x with a process rewriting 2 GB on
+>  the device's node (longest write stall 78 ms, in QEMU only); through
+>  a maintenance script, deferring when there is no room (10x), rolling
+>  back when room runs out (20x), and SIGINT/SIGTERM/SIGKILL at each step
+>  (60x); and these mixed for 4 hours (1,462 iterations). No failures,
+>  and the data was intact after every iteration.
+>- cxl/next 32af781935: applies cleanly, no W=1 warnings; QEMU gets no
+>  root decoder there (CFMWS with both HDM-H and HDM-DB, rejected since
+>  e4c3f0d966), so only the tests without a region ran (all passing).
+
+Dave wants new features without dependencies to be based against Linus'
+latest, instead of cxl/next. That said, testing cxl/next is quite welcome
+always, so while the qemu breakage is inconvenient, it's worth just using
+a newer qemu from source.
+
+Thanks,
+Davidlohr
