@@ -1,76 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795750768;
-	b=c4DMP8x1YC11Bp79r0WuJwchzGUnDh6uN+K1g36VLw2KiVjTJ4VJyQOBlLc9hqVBhaqq
-	 djfLsQwlF1NP8ioM21POlYz1n7q4EWLea7QCnEto1vHvSigV3DIo4BnHwst73V62C5d4R
-	 CILgF+STBC+vQ/YQ6/8VJwaYM5P1Q/CKnaUSObTZhGG93jeXnJI4eDTOIU0U93Kk0EWe0
-	 voHmOxAG5RCcX/2xFuuUgPql3VHKJNTXyvdvfhY1W/OnH5pSvp5NiZQflgSv/gy1IElc4
-	 MAMGqbYos97VL0dWwd7stqgGbry1DUlZKxErrRnNNEvhNRpg48ctpQAZFUfixzfvBbQ==
+	t=1795752346;
+	b=gpvis/d+Qef8fjzXwk1sZJKgnUBpdXM4BYp0m/U4Orkq8HAbPZe55gJopnf1Vomw50J0
+	 sUOC/d3dY0sQu/FO5TdjaR/3m+ueHi4mhgacR/nyxvvjq8gxLB0UDcRqUFs9yvz12GNn2
+	 GsWa3ih9QN62bmfttOOH52Rtb/vyRg1Bw0D4AH9pRPBDTP2Q7+ABzXsYYhVOHoqqfXFyU
+	 ZMm7hSr8EIQkhVxmFCjJLpSDIEjK4lYQTS7tiWjRGb2POGKdMW+qPunX2VkaNQX9ybUmD
+	 SyfToWFroeMChuXAIs/uJXPXn2LAXefqtsioFdYe/NpKnq2ayaclykrJ1ujBAfhQ7fw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795750768;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:Subject:To:CC:
-	 References:From:Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-	 Content-Type:Content-Language:Content-Transfer-Encoding:
-	 X-Originating-IP:X-ClientProxiedBy;
-	bh=IHm+FzKE36SnVI1ZswFKXcG12/LjELz3/7Uez7uAtfw=;
-	b=jPsruzMh6DgUxBjIGuJ8zKyphyegrGWFNPbCriP3UUcWomFEoMfb7IC5bpfzsdYt2cv4
-	 Pt2a2lEWi3DTuM8TfhUgePVon7WxHS6Ok/D+nOkK22b2AMGCI41stcXMxCmclZ2W44BsV
-	 Hp9wgWaXuEUWFiK+UJDx7SfWNi/aByIZGx1sYz5uDEcCHuhnglJLRVWjYuvNQOF1PQgcc
-	 AN4peunNDBdFQ7+VLN0ZP5gLjKWWd5nfO1YhIhoGCLnx+rcIHshS8N8OGAoDGzY4wBanq
-	 f8u91ppf507/Ps36QzXnj4hggcc2NoGMy7GhtidRM5o+/7mTa4+E9pSWnghcedzGVJA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795752346;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Spam-Status:
+	 X-Spam-Checker-Version;
+	bh=Ma+f5p80haJszFPPAIIEC1l3WLdFdBqpV7MIoNSrF48=;
+	b=YNxnj9mVSoZOHp2szQzNGUxYK5QlsbGOKBP6MNHw2La7sxopmRqV6l257NuvbC7aEJmP
+	 Egq4TnKkgug6vQkdyp70nITRAFyUBmRjJBBQUgky6vRyGG9/Fnmq+pJQG5IhKftCMI+KF
+	 Eu5VqUk/3KZym38pANVcvuoLeekUOvUYCXQ3mqo6E9nuWc4xgT9nVl11f3UwbEG7qrlZu
+	 /VAI+ccXa8osjKh581uEq5byU71q03tkYEpPG00KpMYm5hgrTXVBuW+FQlb1qPMs0PN4z
+	 UhvTPU+QBzVpiYnkRQL+c3nq7+9RYAfPqYij+SuMi2KluumMwiQ0uRkqz4lxPJBk57Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Hn0vhtFS;
-	arc=none smtp.remote-ip=113.46.200.219
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EB4606A31C;
-	Fri, 27 Nov 2026 03:39:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B2EB4606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=omijfA5C;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555EE606A31C;
+	Fri, 27 Nov 2026 04:05:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 555EE606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Hn0vhtFS
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=IHm+FzKE36SnVI1ZswFKXcG12/LjELz3/7Uez7uAtfw=;
-	b=Hn0vhtFSl58AK7IVHA/YiEIzohLqbCLCGUmSwjcbzQy2l2GmeVkpwjZIyIAR4RzvvNyUb3BWB
-	Gc+l5mOP5/i2dfAGiSxUkFrHLW25kC2TE/l9+bZ/MaPNKH0ZtFnZBMes/LQRuyrebWgfrhZbUxu
-	+LCKQ/Kw8BIhUy0nwOjinzU=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4jbK0B5kz2z1prMP;
-	Fri, 27 Nov 2026 11:39:06 +0800 (CST)
-Received: from whupemk100004.china.huawei.com (unknown [7.152.185.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D12D540575;
-	Fri, 27 Nov 2026 11:39:24 +0800 (CST)
-Received: from [10.173.98.163] (10.173.98.163) by
- whupemk100004.china.huawei.com (7.152.185.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Fri, 27 Nov 2026 11:39:23 +0800
-Subject: Re: [PATCH v2] mm/memory_hotplug: don't offline a hwpoisoned page
- still in the page cache
-To: "Oscar Salvador (SUSE)" <osalvador@kernel.org>, "David Hildenbrand (Arm)"
-	<david@kernel.org>
-CC: Mani Tofigh <mt4022@columbia.edu>, Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>, Naoya Horiguchi
-	<nao.horiguchi@gmail.com>, Vlastimil Babka <vbabka@kernel.org>, Gregory Price
-	<gourry@gourry.net>, <linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tz2294@columbia.edu>,
-	<stable@vger.kernel.org>
-References: <20261105-memhp-hwpoison-pagecache-v2-1-029d35634d42@columbia.edu>
- <d4812513-6cfb-4865-8636-b83dd92c23a0@kernel.org>
- <2e11ba52-b5c6-463e-a5ea-c165ba935704@columbia.edu>
- <89037847-8875-4d8b-a8f3-d77a59aaddea@kernel.org>
- <awf6RghUETgb41pr@localhost.localdomain>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <0b947b66-81d8-e921-ec57-76bad1ae1202@huawei.com>
-Date: Fri, 27 Nov 2026 11:39:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=omijfA5C
+Received: from [192.168.1.70] (unknown [52.172.102.222])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B8EB620B7166;
+	Thu, 26 Nov 2026 20:05:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B8EB620B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1795752334;
+	bh=Ma+f5p80haJszFPPAIIEC1l3WLdFdBqpV7MIoNSrF48=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=omijfA5Cc+HumzTDcN5RSmmeizr3nKcpgIVYDhAvwS//fyO3Q0ZVB9vJcRC2PgeEF
+	 wHmv+J2D80WDkMAfjOng7PYGhhK8l6++MR12DNtgPLS4XD/KyuXdoc345KtLyBkKrL
+	 aqpWukiJnUHIJRehA/GrQzwhk3naYp9gHsqHHn9Y=
+Message-ID: <74edd490-26bd-41a4-81ee-cd18b9f28154@linux.microsoft.com>
+Date: Fri, 27 Nov 2026 09:35:34 +0530
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Post: <mailto:linux-cxl@vger.kernel.org>
@@ -80,49 +53,141 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-cxl+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <awf6RghUETgb41pr@localhost.localdomain>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iov_iter: Fix direct I/O across compatible device pgmaps
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Oscar Salvador <osalvador@suse.de>, Logan Gunthorpe
+ <logang@deltatee.com>, Leon Romanovsky <leon@kernel.org>,
+ Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, stable@vger.kernel.org
+References: <20261126053433.88531-1-namjain@linux.microsoft.com>
+ <5cc60faa-002c-4c96-97e3-46d3002718c9@kernel.org>
 Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <5cc60faa-002c-4c96-97e3-46d3002718c9@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- whupemk100004.china.huawei.com (7.152.185.74)
 
-On 2026/11/26 17:22, Oscar Salvador (SUSE) wrote:
-> On Mon, Nov 23, 2026 at 08:45:37PM +0100, David Hildenbrand (Arm) wrote:
->> We'll have to find a way to make that reliable. Everything else is just hacking
->> around it.
+
+
+On 11/26/2026 6:42 PM, David Hildenbrand (Arm) wrote:
+> On 11/26/26 06:34, Naman Jain wrote:
+>> Commit 38446014648c ("block: don't merge different kinds of P2P transfers
+>> in a single bio") made bio_add_page() reject pages from different
+>> dev_pagemaps. This was needed for PCI P2PDMA, but also rejected pages
+>> with compatible DMA mapping requirements.
 >>
->> Why can we block concurrent offlining through get_online_mems/put_online_mems?
-
-I once tried to fix the race between memory_failure and memory offlining [1],
-but ultimately failed.
-
->> But I hate these functions.
+>> Commit 41c665aae2b5 ("block: relax pgmap check in bio_add_page for
+>> compatible zone device pages") allows these pages in separate bvecs.
+>> Commit 13920e4b7b784 ("block: add pgmap check to biovec_phys_mergeable")
+>> prevents physically contiguous bvecs from different pgmaps from being
+>> merged into one segment.
 >>
->> Or alternatively (better?), have a memory notifier that block concurrent
->> memory_failure() by grabbing the mf_mutex when MEM_GOING_OFFLINE and releasing
->> it when MEM_CANCEL_OFFLINE/MEM_OFFLINE.
+>> But direct I/O now fills a bio using iov_iter_extract_bvecs(), which
+>> retained the original restriction and bypasses bio_add_page().
+>> For a non-atomic request handled by a single bio, only the data before
+>> the pgmap boundary is submitted. The rest is not transferred, and the
+>> request completes with fewer bytes than requested.
+>>
+>> Fix this by moving zone_device_pages_compatible() from blk.h to
+>> memremap.h and using it in iov_iter_extract_bvecs(). This allows
+>> compatible pages to be added as separate bvecs without relaxing the
+>> same-pgmap requirement for PCI P2PDMA.
+>>
+>> Fixes: 38446014648c ("block: don't merge different kinds of P2P transfers in a single bio")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   block/blk.h              | 19 -------------------
+>>   include/linux/memremap.h | 19 +++++++++++++++++++
+>>   lib/iov_iter.c           |  3 ++-
+>>   3 files changed, 21 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/block/blk.h b/block/blk.h
+>> index 50abfd9328861..460c064f1d1b0 100644
+>> --- a/block/blk.h
+>> +++ b/block/blk.h
+>> @@ -142,25 +142,6 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
+>>   	return true;
+>>   }
+>>   
+>> -/*
+>> - * Check if two pages from potentially different zone device pgmaps can
+>> - * coexist as separate bvec entries in the same bio.
+>> - *
+>> - * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
+>> - * state from the first segment and applies it to all subsequent segments, so
+>> - * P2PDMA pages from different pgmaps must not be mixed in the same bio.
+>> - *
+>> - * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
+>> - * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
+>> - */
+>> -static inline bool zone_device_pages_compatible(const struct page *a,
+>> -						const struct page *b)
+>> -{
+>> -	if (is_pci_p2pdma_page(a) || is_pci_p2pdma_page(b))
+>> -		return zone_device_pages_have_same_pgmap(a, b);
+>> -	return true;
+>> -}
+>> -
+>>   static inline bool __bvec_gap_to_prev(const struct queue_limits *lim,
+>>   		struct bio_vec *bprv, unsigned int offset)
+>>   {
+>> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+>> index c8a4979d4c780..a1d447a847990 100644
+>> --- a/include/linux/memremap.h
+>> +++ b/include/linux/memremap.h
+>> @@ -202,6 +202,25 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
+>>   		folio_is_pci_p2pdma(page_folio(page));
+>>   }
+>>   
+>> +/*
+>> + * Check if two pages from potentially different zone device pgmaps can
+>> + * coexist as separate bvec entries in the same bio.
+>> + *
+>> + * The block DMA iterator (blk_dma_map_iter_start) caches the P2PDMA mapping
+>> + * state from the first segment and applies it to all subsequent segments, so
+>> + * P2PDMA pages from different pgmaps must not be mixed in the same bio.
+>> + *
+>> + * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys() path
+>> + * as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
+>> + */
+>>
 > 
-> I think this is the way to go.
-> memory-failure is a shaky operation and over the years we have seen how challenging
-> was to interact with other parts of the kernel without crashing.
-
-I'd also prefer making memory_failure() and memory offlining mutually
-exclusive instead of adding more ad-hoc synchronization or spreading
-get_online_mems()/put_online_mems() into another path.
-
+> Can you convert this to proper kernel doc while at it?
 > 
-> IMHO, we can try to be clever and try to workaround those issues
-> (memhotplug vs memfailure) or just make the two exclusive.
+> Also this should all be working on folios instead of pages. But that will need a
+> zone_device_folios_have_same_pgmap() so we can defer it, not suitable for this fix.
 > 
-> @Miaohe: Thoughts?
 
-We've already run into quite a few race conditions, and there will likely be
-more in the future. memory_failure and memory offlining happen very infrequently,
-so it's not really worth adding all sorts of code just for them. Therefore, I feel
-that making the two mutually exclusive is a better, more permanent fix.
+IIUC, you want me to change this comment to kernel doc, something like this.
 
-[1] https://lore.kernel.org/all/20220226094034.23938-1-linmiaohe@huawei.com/
+/**
+  * zone_device_pages_compatible() - Check if pages can share a bio
+  * @a: First page
+  * @b: Second page
+  *
+  * Check if two pages from potentially different zone device pgmaps can
+  * coexist as separate bvec entries in the same bio.
+  *
+  * The block DMA iterator (blk_dma_map_iter_start()) caches the P2PDMA
+  * mapping state from the first segment and applies it to all subsequent
+  * segments, so P2PDMA pages from different pgmaps must not be mixed in
+  * the same bio.
+  *
+  * Other zone device types (FS_DAX, GENERIC) use the same dma_map_phys()
+  * path as normal RAM.  PRIVATE and COHERENT pages never appear in bios.
+  *
+  * Return: %true if the pages can coexist as separate bvec entries in the
+  * same bio, otherwise %false.
+  */
 
-Thanks.
-.
+I can do that in next version. Thanks.
+
+Regards,
+Naman
+
